@@ -1,4 +1,7 @@
-import Plugin
+import PluginError
+
+import imp
+import os
 
 class PluginRegistry(object):
     def __init__(self):
@@ -13,13 +16,16 @@ class PluginRegistry(object):
         if name in self._plugins:
             return self._plugins[name]
         
-        location = self._findPlugin(name)
-        if not location:
-            raise FileNotFoundError("Could not find plugin {name}")
+        module = self._findPlugin(name)
+        if not module:
+            raise PluginError.PluginNotFoundError(name)
             
-        plugin = None
-        #TODO: Instantiate plugin at location
-        return plugin
+        try:
+            module.register()
+        except PluginError as e:
+            print(e)
+        except AttributeError as e:
+            print(e)
     
     # Load a set of plugins of a certain type
     # \param type The type of plugin to load
@@ -31,7 +37,7 @@ class PluginRegistry(object):
     # Get the metadata for a certain plugin
     # \param name The name of the plugin
     def getMetaData(self, name):
-        pass
+        return self._metaData[name]
     
     # Get a list of metadata for a certain plugin type
     # \param type The type of plugin to get metadata for
@@ -51,13 +57,55 @@ class PluginRegistry(object):
     # Private
     # Populate the list of metadata
     def _populateMetaData(self):
+        pluginNames = []
         for folder in self._pluginLocations:
-            #TODO: find plugins in folder and load metadata
-            pass
+            #find plugins in folder and load metadata
+            for name in os.listdir(folder):
+                root, ext = os.path.splitext(name)
+                if ext == '.py':
+                    pluginNames.append(os.path.basename(root))
+
+        for name in pluginNames:
+            plugin = self._findPlugin(name)
+            
+            if not plugin:
+                continue
+            
+            #try:
+                #file, path, desc = imp.find_module(name, self._pluginLocations)
+            #except ImportError:
+                #continue
+            
+            #module = None
+            #try:
+                #module = imp.load_module(name, file, path, desc)
+            #except ImportError:
+                #continue
+            #finally:
+                #pass
+                ##if file:
+                    ##os.close(file)
+            
+            try:
+                self._metaData[name] = plugin.getMetaData()
+            except AttributeError as e:
+                print(e)
+                continue
+            
+                
     
     def _findPlugin(self, name):
-        for folder in self._pluginLocations:
-            #TODO: Implement find plugins and read class
-            pass
-            
+        try:
+            file, path, desc = imp.find_module(name, self._pluginLocations)
+        except ImportError as e:
+            print(e)
+            return False
+        
+        try:
+            module = imp.load_module(name, file, path, desc)
+        except ImportError as e:
+            print(e)
+            return False
+                        
+        return module
     
