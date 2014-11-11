@@ -1,6 +1,6 @@
-from Cura.Application import Application
+from Cura.WxApplication import WxApplication
 
-class ScannerApplication(Application):
+class ScannerApplication(WxApplication):
     def __init__(self):
         super(ScannerApplication, self).__init__()
         
@@ -11,3 +11,4 @@ class ScannerApplication(Application):
         
     def run(self):
         print("Imma scanning ma laz0rs")
+        super(ScannerApplication, self).run()
