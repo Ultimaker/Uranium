@@ -4,10 +4,17 @@ class MeshFileHandler(object):
         self._mesh_writers = []
         
     def read(self, file_name):
-        pass
+        for reader in self._mesh_writers:
+            result = reader.read(file_name) 
+            if(result is not None):
+                return result
+        return None #unable to read
     
     def write(self, file_name):
-        pass
+        for writer in self._mesh_readers:
+            if(writer.write(file_name)):
+                return True
+        return False
     
     def addWriter(self, writer):
         self._mesh_writers.append(writer)
