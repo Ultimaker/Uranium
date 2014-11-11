@@ -7,7 +7,7 @@ class MeshFileHandler(object):
     # \param file_name
     # \returns MeshData if it was able to read the file, None otherwise.
     def read(self, file_name):
-        for reader in self._mesh_writers:
+        for reader in self._mesh_readers:
             result = reader.read(file_name) 
             if(result is not None):
                 return result
@@ -20,7 +20,7 @@ class MeshFileHandler(object):
     def write(self, file_name, mesh_data):
         if(mesh_data is None):
             return False
-        for writer in self._mesh_readers:
+        for writer in self._mesh_writers:
             if(writer.write(file_name)):
                 return True
         return False
