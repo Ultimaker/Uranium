@@ -21,7 +21,7 @@ class MeshFileHandler(object):
         if(mesh_data is None):
             return False
         for writer in self._mesh_writers:
-            if(writer.write(file_name)):
+            if(writer.write(file_name, mesh_data)):
                 return True
         return False
     

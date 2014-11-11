@@ -9,6 +9,7 @@ class STLReader(MeshReader):
     
     # Decide if we need to use ascii or binary in order to read file
     def read(self, file_name):
+        print 'reading yeah'
         mesh = None
         if(self._supported_extension in file_name):
             mesh = MeshData()

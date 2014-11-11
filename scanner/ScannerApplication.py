@@ -10,6 +10,7 @@ class ScannerApplication(WxApplication):
         self._plugin_registry.loadPlugin("MeshView")
         self._plugin_registry.loadPlugin("TransformTool")
         test_mesh = self._mesh_file_handler.read("plugins/STLReader/simpleTestCube.stl")
+        print self._mesh_file_handler.write("plugins/STLWriter/simpleTestCube.stl",test_mesh)
         print test_mesh.getNumVerts()
         
     def run(self):
