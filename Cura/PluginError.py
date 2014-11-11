@@ -12,3 +12,10 @@ class PluginNotFoundError(Exception):
         
     def __str__(self):
         return "Could not find plugin " + self._name
+    
+class InvalidMetaDataError(Exception):
+    def __init__(self, name):
+        self._name = name
+        
+    def __str__(self):
+        return "Invalid metadata for plugin " + self._name

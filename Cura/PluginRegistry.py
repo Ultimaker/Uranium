@@ -1,4 +1,4 @@
-from Cura.PluginError import PluginNotFoundError, PluginError
+from Cura.PluginError import PluginError, PluginNotFoundError, InvalidMetaDataError
 
 import imp
 import os
@@ -14,14 +14,19 @@ class PluginRegistry(object):
     # \param name The name of the plugin
     def loadPlugin(self, name):
         if name in self._plugins:
-            return self._plugins[name]
+            # Already loaded, do not load again
+            return
         
-        module = self._findPlugin(name)
-        if not module:
+        if not self._metaData:
+            self._populateMetaData()
+        
+        plugin = self._findPlugin(name)
+        if not plugin:
             raise PluginNotFoundError(name)
             
         try:
-            module.register(self._application)
+            plugin.register(self._application)
+            self._plugins[name] = plugin
         except PluginError as e:
             print(e)
         except AttributeError as e:
@@ -30,14 +35,19 @@ class PluginRegistry(object):
     # Load a set of plugins of a certain type
     # \param type The type of plugin to load
     def loadPlugins(self, type):
+        pluginNames = []
         for folder in self._pluginLocations:
-            #for each entry, load plugin
-            pass
-    
+            for file in os.listdir(folder):
+                if os.path.isdir(file):
+                    pluginNames.append(file)
+                    
+        for name in pluginNames:
+            self.loadPlugin(name)
+
     # Get the metadata for a certain plugin
     # \param name The name of the plugin
     def getMetaData(self, name):
-        if len(self._metaData) == 0:
+        if not self._metaData:
             self._populateMetaData()
 
         return self._metaData[name]
@@ -45,7 +55,7 @@ class PluginRegistry(object):
     # Get a list of metadata for a certain plugin type
     # \param type The type of plugin to get metadata for
     def getAllMetaData(self, type):
-        if len(self._metaData) == 0:
+        if not self._metaData:
             self._populateMetaData()
             
         returnVal = []
@@ -78,20 +88,27 @@ class PluginRegistry(object):
         for folder in self._pluginLocations:
             #find plugins in folder and load metadata
             for name in os.listdir(folder):
-                if os.path.isdir(name):
+                if os.path.isdir(os.path.join(folder, name)):
                     pluginNames.append(name)
 
         for name in pluginNames:
             plugin = self._findPlugin(name)
             
             if not plugin:
+                print("Could not load plugin: " + name)
                 continue
             
+            metaData = None
             try:
-                self._metaData[name] = plugin.getMetaData()
+                metaData = plugin.getMetaData()
             except AttributeError as e:
                 print(e)
                 continue
+            
+            if not metaData or (not "name" in metaData and not "type" in metaData):
+                raise InvalidMetaDataError(name)
+            
+            self._metaData[name] = plugin.getMetaData()
             
                 
     # Private
