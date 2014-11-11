@@ -25,6 +25,22 @@ class MeshFileHandler(object):
                 return True
         return False
     
+    # Get list of all supported filetypes for writing.
+    # \returns List of strings with all supported filetypes.
+    def getSupportedFileTypesWrite(self):
+        supported_types = []
+        for writer in self._mesh_writer:
+            supported_types.append(writer.getSupportedExtention())
+        return supported_types
+    
+    # Get list of all supported filetypes for reading.
+    # \returns List of strings with all supported filetypes.
+    def getSupportedFileTypesRead(self):
+        supported_types = []
+        for reader in self._mesh_readers:
+            supported_types.append(reader.getSupportedExtention())
+        return supported_types
+        
     def addWriter(self, writer):
         self._mesh_writers.append(writer)
         
