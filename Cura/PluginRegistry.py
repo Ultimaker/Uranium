@@ -1,4 +1,4 @@
-import PluginError
+from Cura.PluginError import PluginNotFoundError
 
 import imp
 import os
@@ -8,7 +8,7 @@ class PluginRegistry(object):
         self._plugins = {}
         self._metaData = {}
         self._pluginLocations = []
-        pass
+        self._application = None
     
     # Load a single plugin by name
     # \param name The name of the plugin
@@ -18,10 +18,10 @@ class PluginRegistry(object):
         
         module = self._findPlugin(name)
         if not module:
-            raise PluginError.PluginNotFoundError(name)
+            raise PluginNotFoundError(name)
             
         try:
-            module.register()
+            module.register(self._application)
         except PluginError as e:
             print(e)
         except AttributeError as e:
@@ -37,12 +37,23 @@ class PluginRegistry(object):
     # Get the metadata for a certain plugin
     # \param name The name of the plugin
     def getMetaData(self, name):
+        if len(self._metaData) == 0:
+            self._populateMetaData()
+
         return self._metaData[name]
     
     # Get a list of metadata for a certain plugin type
     # \param type The type of plugin to get metadata for
     def getAllMetaData(self, type):
-        pass
+        if len(self._metaData) == 0:
+            self._populateMetaData()
+            
+        returnVal = []
+        for data in self._metaData:
+            if type in data and data["type"] == type:
+                returnVal.append(data)
+            
+        return returnVal
     
     # Get the list of plugin locations
     def getPluginLocations(self):
@@ -53,6 +64,12 @@ class PluginRegistry(object):
     def addPluginLocation(self, location):
         #TODO: Add error checking!
         self._pluginLocations.append(location)
+        
+    # Set the central application object
+    # This is used by plugins as a central access point for other objects
+    # \param app The application object to use
+    def setApplication(self, app):
+        self._application = app
     
     # Private
     # Populate the list of metadata
@@ -61,30 +78,14 @@ class PluginRegistry(object):
         for folder in self._pluginLocations:
             #find plugins in folder and load metadata
             for name in os.listdir(folder):
-                root, ext = os.path.splitext(name)
-                if ext == '.py':
-                    pluginNames.append(os.path.basename(root))
+                if os.path.isdir(name):
+                    pluginNames.append(name)
 
         for name in pluginNames:
             plugin = self._findPlugin(name)
             
             if not plugin:
                 continue
-            
-            #try:
-                #file, path, desc = imp.find_module(name, self._pluginLocations)
-            #except ImportError:
-                #continue
-            
-            #module = None
-            #try:
-                #module = imp.load_module(name, file, path, desc)
-            #except ImportError:
-                #continue
-            #finally:
-                #pass
-                ##if file:
-                    ##os.close(file)
             
             try:
                 self._metaData[name] = plugin.getMetaData()
@@ -93,7 +94,9 @@ class PluginRegistry(object):
                 continue
             
                 
-    
+    # Private
+    # Try to find a module implementing a plugin
+    # \param name The name of the plugin to find
     def _findPlugin(self, name):
         try:
             file, path, desc = imp.find_module(name, self._pluginLocations)

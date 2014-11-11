@@ -1,7 +1,7 @@
 
-import PluginRegistry
-import Controller
-from MeshHandling.MeshFileHandler import MeshFileHandler
+from Cura.Controller import Controller
+from Cura.PluginRegistry import PluginRegistry
+from Cura.MeshHandling.MeshFileHandler import MeshFileHandler
 
 class Application(object):
     def __init__(self):

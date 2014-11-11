@@ -1,6 +1,7 @@
-import InputDevice
-import Tool
-from View.View import View
+from Cura.InputDevice import InputDevice
+from Cura.View.View import View
+from Cura.Tool import Tool
+
 class Controller(object):
     def __init__(self):
         self._active_tool = None
