@@ -1,4 +1,4 @@
-from Cura.PluginError import PluginNotFoundError
+from Cura.PluginError import PluginNotFoundError, PluginError
 
 import imp
 import os

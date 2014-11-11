@@ -2,7 +2,9 @@ from Cura.Application import Application
 
 class ScannerApplication(Application):
     def __init__(self):
-        super(Application, self).__init__()
+        super(ScannerApplication, self).__init__()
+        
+        self._plugin_registry.loadPlugin("STLReader")
         
     def run(self):
         print("Imma scanning ma laz0rs")
