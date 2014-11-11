@@ -4,7 +4,7 @@ class MeshWriter(object):
     
     #Tries to write to file, returns False if it's unable to do it (either due to type or due to permission / locking)
     def write(self, file_name):
-        return False
+        raise NotImplementedError('Writer plugin was not correctly implemented, no write was specified')
     
     def getSupportedType(self):
         return self._supported_type
