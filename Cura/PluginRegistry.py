@@ -22,8 +22,8 @@ The plugin locations are scanned recursively for plugins.
 class PluginRegistry(object):
     def __init__(self):
         self._plugins = {}
-        self._metaData = {}
-        self._pluginLocations = []
+        self._meta_data = {}
+        self._plugin_locations = []
         self._application = None
     
     # Load a single plugin by name
@@ -33,7 +33,7 @@ class PluginRegistry(object):
             # Already loaded, do not load again
             return
         
-        if name not in self._metaData:
+        if name not in self._meta_data:
             self._populateMetaData(name)
         
         plugin = self._findPlugin(name)
@@ -62,10 +62,10 @@ class PluginRegistry(object):
     # Get the metadata for a certain plugin
     # \param name The name of the plugin
     def getMetaData(self, name):
-        if name not in self._metaData:
+        if name not in self._meta_data:
             self._populateMetaData(name)
 
-        return self._metaData[name]
+        return self._meta_data[name]
     
     # Get a list of all metadata matching a certain subset of metaData
     # \param metaData The subset of metadata that should be matched.
@@ -82,13 +82,13 @@ class PluginRegistry(object):
     
     # Get the list of plugin locations
     def getPluginLocations(self):
-        return self._pluginLocations
+        return self._plugin_locations
     
     # Add a plugin location to the list of locations to search
     # \param location The location to add to the list
     def addPluginLocation(self, location):
         #TODO: Add error checking!
-        self._pluginLocations.append(location)
+        self._plugin_locations.append(location)
         
     # Set the central application object
     # This is used by plugins as a central access point for other objects
@@ -122,7 +122,7 @@ class PluginRegistry(object):
         if not metaData or (not "name" in metaData and not "type" in metaData):
             raise InvalidMetaDataError(name)
         
-        self._metaData[name] = plugin.getMetaData()
+        self._meta_data[name] = plugin.getMetaData()
             
                 
     # Private
@@ -130,7 +130,7 @@ class PluginRegistry(object):
     # \param name The name of the plugin to find
     def _findPlugin(self, name):
         location = None
-        for folder in self._pluginLocations:
+        for folder in self._plugin_locations:
             location = self._locatePlugin(name, folder)
         
         try:
@@ -153,7 +153,7 @@ class PluginRegistry(object):
         names = []
         
         if not paths:
-            paths = self._pluginLocations
+            paths = self._plugin_locations
         
         for folder in paths:
             for file in os.listdir(folder):
@@ -163,7 +163,6 @@ class PluginRegistry(object):
                         names.append(file)
                     else:
                         names += self._findAllPlugins([ filepath ])
-                        
         return names
     
     # Private
@@ -180,7 +179,6 @@ class PluginRegistry(object):
                     filepath = self._locatePlugin(name, filepath)
                     if filepath:
                         return filepath
-        
         return False
     
     # Private
@@ -193,5 +191,4 @@ class PluginRegistry(object):
                 return False
             if dictionary[key] != value:
                 return False
-        
         return True
