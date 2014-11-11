@@ -6,7 +6,6 @@ from Cura.MeshHandling.MeshFileHandler import MeshFileHandler
 class Application(object):
     def __init__(self):
         self._plugin_registry = PluginRegistry()
-        self._plugin_registry.addPluginLocation(".")
         self._plugin_registry.addPluginLocation("plugins")
         self._plugin_registry.setApplication(self)
         self._controller = Controller()
