@@ -55,9 +55,10 @@ class Controller(object):
         except KeyError: #No such tool
             return None
     
-    # Request tool by name. Returns None if no tool is found.
+    # Add an Tool (transform object, translate object) by name if it's not already addded.
     # \param name Unique identifier of tool (usually the plugin name)
-    # \return View if name was found, None otherwise.    
+    # \param tool Tool to be added
+    # \return Tool if name was found, None otherwise.    
     def addTool(self, name, tool):
         if(name not in self._tools):
             self._tools[name] = tool
