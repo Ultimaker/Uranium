@@ -8,10 +8,10 @@ from Cura.PluginRegistry import PluginRegistry
 
 class TestApplication(Application):
     def registerTestPlugin(self, name):
-        self._testPlugin = name
+        self._test_plugin = name
         
     def getTestPlugin(self):
-        return self._testPlugin
+        return self._test_plugin
 
 class TestPluginRegistry(unittest.TestCase):
     # Called before the first testfunction is executed
