@@ -15,5 +15,8 @@ class Application(object):
     def getController(self):
         return self._controller
     
+    def getMeshFileHanlder(self):
+        return self._mesh_file_handler
+    
     def run(self):
         pass
