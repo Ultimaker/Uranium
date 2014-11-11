@@ -1,4 +1,4 @@
-from Cura.WxApplication import WxApplication
+from Cura.Wx.WxApplication import WxApplication
 
 class ScannerApplication(WxApplication):
     def __init__(self):
