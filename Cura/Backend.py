@@ -1,5 +1,5 @@
 class Backend(object):
-    __init__(self):
+    def __init__(self):
         self._supported_commands = {}
         self._socket = None
         

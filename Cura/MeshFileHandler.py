@@ -1,5 +1,5 @@
 class MeshFileHandler(object):
-    __init__(self):
+    def __init__(self):
         self._mesh_readers = []
         self._mesh_writers = []
         
@@ -8,3 +8,9 @@ class MeshFileHandler(object):
     
     def write(self, file_name):
         pass
+    
+    def addWriter(self, writer):
+        self._mesh_writers.append(writer)
+        
+    def addReader(self, reader):
+        self._mesh_readers.append(reader)

@@ -6,7 +6,7 @@ p = Cura.PluginRegistry.PluginRegistry()
 p.addPluginLocation("plugins")
 
 p._populateMetaData()
-#p.loadPlugin("ExamplePlugin")
+p.loadPlugin("ExamplePlugin")
 
 print(p.getMetaData("ExamplePlugin"))
 

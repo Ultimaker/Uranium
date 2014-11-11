@@ -1,11 +1,13 @@
 
 import PluginRegistry
 import Controller
+import MeshFileHandler
 
 class Application(object):
     def __init__(self):
         self._plugin_registry = PluginRegistry()
         self._controller = Controller()
+        self._mesh_file_handler = MeshFileHandler()
         
     def getPluginRegistry(self):
         return self._plugin_registry
