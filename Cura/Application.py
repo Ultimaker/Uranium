@@ -1,7 +1,7 @@
 
 import PluginRegistry
 import Controller
-import MeshFileHandler
+from MeshHandling.MeshFileHandler import MeshFileHandler
 
 class Application(object):
     def __init__(self):

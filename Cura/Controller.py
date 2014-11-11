@@ -1,6 +1,6 @@
 import InputDevice
 import Tool
-import View
+from View.View import View
 class Controller(object):
     def __init__(self):
         self._active_tool = None
