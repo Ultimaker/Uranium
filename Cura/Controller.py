@@ -8,6 +8,7 @@ class Controller(object):
         self._tools = {}
         
         self._input_devices = {}
+        
         self._active_view = None
         self._views = {}
         
@@ -20,6 +21,9 @@ class Controller(object):
         except KeyError: #No such view
             return None
     
+    def addInputDevice(self, name, device):
+        self._input_devices[name] = device
+    
     def getTool(self, name):
         try:
             return self._tools[name]
@@ -28,7 +32,6 @@ class Controller(object):
         
     def addTool(self, name, tool):
         self._tools[name] = tool
-    
 
     def getActiveTool(self):
         return self._active_tool
