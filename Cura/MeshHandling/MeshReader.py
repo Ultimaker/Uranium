@@ -6,5 +6,5 @@ class MeshReader(object):
     def read(self, file_name):
         raise NotImplementedError('Reader plugin was not correctly implemented, no read was specified')
     
-    def getSupportedExtention(self):
-        return self._supported_type
+    def getSupportedExtension(self):
+        return self._supported_extension

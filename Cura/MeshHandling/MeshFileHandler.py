@@ -3,8 +3,8 @@ class MeshFileHandler(object):
         self._mesh_readers = []
         self._mesh_writers = []
     
-    # Try to read the mesh_data from file. Based on the extention in the file_name a correct meshreader is selected.
-    # \param file_name
+    # Try to read the mesh_data from a file. Based on the extension in the file a correct meshreader is selected.
+    # \param file_name The name of the mesh to load.
     # \returns MeshData if it was able to read the file, None otherwise.
     def read(self, file_name):
         for reader in self._mesh_readers:
@@ -13,8 +13,8 @@ class MeshFileHandler(object):
                 return result
         return None #unable to read
     
-    # Try to write the mesh_data to file. Based on the extention in the file_name a correct meshwriter is selected.
-    # \param file_name
+    # Try to write the mesh_data to file. Based on the extension in the file_name a correct meshwriter is selected.
+    # \param file_name The name of the file to write.
     # \param mesh_data
     # \returns True if it was able to create the file, otherwise False
     def write(self, file_name, mesh_data):
@@ -30,7 +30,7 @@ class MeshFileHandler(object):
     def getSupportedFileTypesWrite(self):
         supported_types = []
         for writer in self._mesh_writer:
-            supported_types.append(writer.getSupportedExtention())
+            supported_types.append(writer.getSupportedExtension())
         return supported_types
     
     # Get list of all supported filetypes for reading.
@@ -38,7 +38,7 @@ class MeshFileHandler(object):
     def getSupportedFileTypesRead(self):
         supported_types = []
         for reader in self._mesh_readers:
-            supported_types.append(reader.getSupportedExtention())
+            supported_types.append(reader.getSupportedExtension())
         return supported_types
         
     def addWriter(self, writer):

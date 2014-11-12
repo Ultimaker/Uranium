@@ -5,7 +5,7 @@ import struct
 class STLWriter(MeshWriter):
     def __init__(self):
         super(STLWriter, self).__init__()
-        self._supported_extention = ".stl"
+        self._supported_extension = ".stl"
         
     #TODO: Only a single mesh can be saved to a single file, we might want to save multiple meshes to a single file
     def write(self, file_name, mesh_data):
