@@ -23,7 +23,7 @@ class Matrix(object):
     
     #Set the matrix by translation vector
     def setByTranslation(self,direction):
-        M = createIdentityMat()
+        M = numpy.identity(4)
         M[:3, 3] = direction.getData()[:3]
         self._data = M
     
