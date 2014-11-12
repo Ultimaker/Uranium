@@ -5,23 +5,25 @@ class MeshFileHandler(object):
     
     # Try to read the mesh_data from a file. Based on the extension in the file a correct meshreader is selected.
     # \param file_name The name of the mesh to load.
+    # \param storage_device The StorageDevice where the mesh can be found.
     # \returns MeshData if it was able to read the file, None otherwise.
-    def read(self, file_name):
+    def read(self, file_name, storage_device):
         for reader in self._mesh_readers:
-            result = reader.read(file_name) 
+            result = reader.read(file_name, storage_device) 
             if(result is not None):
                 return result
         return None #unable to read
     
     # Try to write the mesh_data to file. Based on the extension in the file_name a correct meshwriter is selected.
     # \param file_name The name of the file to write.
+    # \param storage_device The StorageDevice where the file should be written to.
     # \param mesh_data
     # \returns True if it was able to create the file, otherwise False
-    def write(self, file_name, mesh_data):
+    def write(self, file_name, storage_location, mesh_data):
         if(mesh_data is None):
             return False
         for writer in self._mesh_writers:
-            if(writer.write(file_name, mesh_data)):
+            if(writer.write(storage_location, mesh_data)):
                 return True
         return False
     

@@ -3,7 +3,7 @@ class MeshReader(object):
         self._supported_extension = ""
     
     # Tries to read the file from specified file_name, returns None if it's uncessfull or unable to read.
-    def read(self, file_name):
+    def read(self, file_name, storage_device):
         raise NotImplementedError('Reader plugin was not correctly implemented, no read was specified')
     
     def getSupportedExtension(self):

@@ -10,16 +10,25 @@ class Application(object):
         self._plugin_registry.setApplication(self)
         self._controller = Controller()
         self._mesh_file_handler = MeshFileHandler()
-        
+        self._storage_devices = {}
+
     def getPluginRegistry(self):
         return self._plugin_registry
 
     def getController(self):
         return self._controller
-    
+
     def getMeshFileHandler(self):
         return self._mesh_file_handler
-    
+
+    def getStorageDevice(self, name):
+        return self._storage_devices[name]
+
+    def addStorageDevice(self, name, device):
+        self._storage_devices[name] = device
+
+    def removeStorageDevice(self, name):
+        del self._storage_devices[name]
+
     def run(self):
         pass
-        
