@@ -1,24 +1,31 @@
 from Cura.Math.Matrix import Matrix
 from copy import copy, deepcopy
 
+'''
+\brief  A scene node object. These objects can hold a mesh and multiple children. Each node has a transformation matrix
+        that maps it it's parents space to the local space (it's inverse maps local space to parent). 
+'''
+
 class SceneObject(object):
     def __init__(self, parent = None):
         self._children = []
         self._mesh_data = None
-        self._transformation = Matrix() #Transformation of this SceneObject with respect to its parent (or origin in case of root)
+        self._transformation = Matrix() 
         self._parent = parent
-        #print(self._transformation.getData())
         
     # Get the parent of this node. If the node has no parent, it is the root node.
+    # \returns SceneObject if it has a parent and None if it's the root node.
     def getParent(self):
         return self._parent
     
+    # Set the parent of this object
+    # \param scene_object SceneObject that is the parent of this object.
     def setParent(self, scene_object):
         self._parent = scene_object
     
     # Get the mesh data from the scene node/object. 
     # \param transformed False if you want the original (un-scaled/rotated/transformed) mesh and True if you do want this.
-    # \returns mesh_data
+    # \returns MeshData
     def getMeshData(self,transformed = True):
         if(transformed):
             transformed_mesh = deepcopy(self._mesh_data)
@@ -27,6 +34,8 @@ class SceneObject(object):
         else:
             return self._mesh_data
     
+    # Set the mesh of this node/object
+    # \param mesh_data MeshData object
     def setMeshData(self, mesh_data):
         self._mesh_data = mesh_data
     
@@ -34,7 +43,6 @@ class SceneObject(object):
     def addChild(self, scene_object):
         scene_object.setParent(self)
         self._children.append(scene_object)
-        
         
     def removeChild(self):
         #TODO: We need to think about how children are removed (if ever?).
@@ -46,15 +54,21 @@ class SceneObject(object):
             child.removeAllChildren()
         del self._children[:] #Actually destroy the children (and not just replace it with empty list
     
-    # Returns a list of local children
+    # Get the list of direct children
+    # \returns List of children
     def getChildren(self):
         return self._children
     
+    # Get list of all children (including it's children children children etc.)
+    # \returns list ALl children in this 'tree'
+    def getAllChildren(self):
+        children = []
+        for child in self._children:
+            children.extend(child.getAllChildren())
+    
     # Computes and returns the transformation from origin to local space
+    # \returns 4x4 transformation matrix
     def getGlobalTransformation(self):
-        #print("Own transformation" + self._transformation.getData())
-        ##TODO: Implement finding the global transformation with respect to origin
-        
         if(self._parent is None):
             return self._transformation
         else:
@@ -74,17 +88,20 @@ class SceneObject(object):
     
     # Rotate the scene object (and thus its children) by given amount
     def rotate(self, rotation):
+        #TODO: Implement
         pass
     
     # Scale the scene object (and thus its children) by given amount
     def scale(self, scale):
+        #TODO Implement
         pass
     
-    # Translate the scene object (and thus its children) by given amount
+    # Translate the scene object (and thus its children) by given amount.
+    # \param translation Vector(x,y,z).
     def translate(self, translation):
-        pass
+        self._transformation.translate(translation)
     
-    # Check if this node is at the bottom of the tree (and thus a leaf node)
+    # Check if this node is at the bottom of the tree (and thus a leaf node).
     def isLeafNode(self):
         if len(self._children) == 0:
             return True
