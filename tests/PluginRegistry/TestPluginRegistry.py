@@ -5,6 +5,7 @@ import os
 
 from Cura.Application import Application
 from Cura.PluginRegistry import PluginRegistry
+from Cura.PluginError import PluginNotFoundError
 
 class TestApplication(Application):
     def registerTestPlugin(self, name):
@@ -46,6 +47,11 @@ class TestPluginRegistry(unittest.TestCase):
         
         names = registry._findAllPlugins()
         self.assertEqual(["TestPlugin", "TestPlugin2"], names)
+        
+    def test_PluginNotFound(self):
+        registry = self._createRegistry()
+        
+        self.assertRaises(PluginNotFoundError, registry.loadPlugin, "NoSuchPlugin")
         
     def _createRegistry(self):
         registry = PluginRegistry()
