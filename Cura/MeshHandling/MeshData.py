@@ -11,6 +11,11 @@ class MeshData(object):
     def getNumVerts(self):
         return self._num_verts
     
+    # Transform the meshdata by given Matrix
+    def transform(self, transformation):
+        #TODO: Implement
+        pass
+    
     #Set the amount of faces before loading data to the mesh. This way we can create the numpy array before we fill it.
     def reserveFaceCount(self, num_faces):    
         self._verts = numpy.zeros((num_faces * 3, 6), numpy.float32)

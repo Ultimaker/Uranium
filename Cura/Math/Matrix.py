@@ -1,17 +1,18 @@
 import numpy
+import math
 
 # Heavily based (in most cases a straight copy with some refactoring) on the excellent 'library' Transformations.py created by Christoph Gohlke.
 # This class is a 4x4 homogenous matrix wrapper arround numpy. 
 
 class Matrix(object):
     def __init__(self):
-        self._data = self.setToIdentity()
+        self._data = numpy.identity(4)
     
     def at(x,y): #TODO add out of index checking
         return self._data[x,y]
     
     def multiply(self, matrix):
-        self._data = numpy.dot(self._data,matrix.getData())
+        self._data = numpy.dot(self._data, matrix.getData())
     
     def preMultiply(self, matrix):
         self._data = numpy.dot(matrix.getData(),self._data)
@@ -20,17 +21,29 @@ class Matrix(object):
     def getData(self):
         return self._data
     
-    #Create a 4x4 identity matrix
+    #Create a 4x4 identity matrix. This overwrites any existing data
     def setToIdentity(self):
         self._data = numpy.identity(4)
     
-    #Set the matrix by translation vector
-    def setByTranslation(self,direction):
+    # Translate the matrix based on Vector
+    def translate(self, direction):
+        translation_matrix = Matrix()
+        translation_matrix.setByTranslation(direction)
+        self.multiply(translation_matrix)
+    
+    #Set the matrix by translation vector. This overwrites any existing data
+    def setByTranslation(self, direction):
         M = numpy.identity(4)
         M[:3, 3] = direction.getData()[:3]
         self._data = M
     
-    #Set the matrix based on rotation axis
+    # Rotate the matrix based on rotation axis
+    def rotateByAxis(self, angle, direction, point = None):
+        rotation_matrix = Matrix()
+        rotation_matrix.setByRotationAxis(angle, direction, point)
+        self.multiply(rotation_matrix)
+    
+    # Set the matrix based on rotation axis. This overwrites any existing data.
     def setByRotationAxis(self, angle, direction, point = None):
         sina = math.sin(angle)
         cosa = math.cos(angle)
@@ -38,10 +51,10 @@ class Matrix(object):
         # rotation matrix around unit vector
         R = numpy.diag([cosa, cosa, cosa])
         R += numpy.outer(direction_data, direction_data) * (1.0 - cosa)
-        direction *= sina
-        R += numpy.array([[ 0.0,         -direction_data[2],  direction_data[1]],
-                        [ direction_data[2], 0.0,          -direction_data[0]],
-                        [-direction_data[1], direction_data[0],  0.0]])
+        direction_data *= sina
+        R += numpy.array([[ 0.0, -direction_data[2], direction_data[1]],
+                        [ direction_data[2], 0.0, -direction_data[0]],
+                        [-direction_data[1], direction_data[0], 0.0]])
         M = numpy.identity(4)
         M[:3, :3] = R
         if point is not None:
@@ -50,8 +63,16 @@ class Matrix(object):
             M[:3, 3] = point - numpy.dot(R, point)
         self._data = M
     
-    #Set the matrix by scale by factor wrt origin & direction
-    def setByScaleFactor(self, factor, origin=None, direction=None):
+    def scaleByFactor(self, factor, origin = None, direction = None):
+        scale_matrix = Matrix()
+        scale_matrix.setByScaleFactor(factor, origin, direction)
+        self.multiply(scale_matrix)
+    
+    # Set the matrix by scale by factor wrt origin & direction. This overwrites any existing data
+    # \param factor The factor by which to scale
+    # \param origin From where does the scaling need to be done
+    # \param direction In what direction is the scaling (if None, it's uniform)
+    def setByScaleFactor(self, factor, origin = None, direction = None):
         if direction is None:
             # uniform scaling
             M = numpy.diag([factor, factor, factor, 1.0])
@@ -68,7 +89,8 @@ class Matrix(object):
                 M[:3, 3] = (factor * numpy.dot(origin[:3], direction_data)) * direction_data
         self._data = M
     
-    # Set the matrix by proving a quaternion.
+    # Set the matrix by proving a quaternion. This overwrites any existing data
+    # \param quaternion The quaternion used to set the matrix data.
     def setByQuaternion(self, quaternion):
         q = numpy.array(quaternion.getData(), dtype=numpy.float64, copy=True)
         n = numpy.dot(q, q)
