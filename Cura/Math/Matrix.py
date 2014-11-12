@@ -5,8 +5,8 @@ import math
 # This class is a 4x4 homogenous matrix wrapper arround numpy. 
 
 class Matrix(object):
-    def __init__(self):
-        self._data = numpy.identity(4)
+    def __init__(self, data = numpy.identity(4)):
+        self._data = data
     
     def at(x,y): #TODO add out of index checking
         return self._data[x,y]
@@ -24,6 +24,13 @@ class Matrix(object):
     #Create a 4x4 identity matrix. This overwrites any existing data
     def setToIdentity(self):
         self._data = numpy.identity(4)
+        
+        
+    def invert(self):
+        self._data = numpy.linalg.inv(self._data)
+    
+    def getInverse(self):
+        return Matrix(numpy.linalg.inv(self._data))
     
     # Translate the matrix based on Vector
     def translate(self, direction):

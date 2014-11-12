@@ -50,7 +50,7 @@ class SceneObject(object):
     def getChildren(self):
         return self._children
     
-    # Computes and returns the transformation with respect to origin
+    # Computes and returns the transformation from origin to local space
     def getGlobalTransformation(self):
         #print("Own transformation" + self._transformation.getData())
         ##TODO: Implement finding the global transformation with respect to origin
@@ -62,12 +62,12 @@ class SceneObject(object):
             global_transformation.preMultiply(self._parent.getGlobalTransformation())
             return global_transformation
     
-    # Returns the local transformation with respect to its parent.
+    # Returns the local transformation with respect to its parent. (from parent to local)
     # \retuns transformation 4x4 (homogenous) matrix
     def getLocalTransformation(self):
         return self._transformation
     
-    # Sets the local transformation with respect to its parent.
+    # Sets the local transformation with respect to its parent. (from parent to local)
     # \param transformation 4x4 (homogenous) matrix
     def setLocalTransformation(self, transformation):
         self._transformation = transformation
