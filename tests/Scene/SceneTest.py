@@ -27,7 +27,6 @@ class SceneTest(unittest.TestCase):
 
     def test_CheckGlobalTransformation(self):
         numpy.testing.assert_array_almost_equal(self._scene_object2.getGlobalTransformation().getData(), numpy.array([[0.5,0,0,5],[0,0.5,0,5],[0,0,0.5,5],[0,0,0,1]]))
-        pass
 
 if __name__ == "__main__":
     unittest.main()

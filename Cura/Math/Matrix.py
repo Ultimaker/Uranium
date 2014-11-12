@@ -17,40 +17,51 @@ class Matrix(object):
     def preMultiply(self, matrix):
         self._data = numpy.dot(matrix.getData(),self._data)
         
-    #Get raw data
+    # Get raw data.
+    # \returns 4x4 numpy array
     def getData(self):
         return self._data
     
-    #Create a 4x4 identity matrix. This overwrites any existing data
+    # Create a 4x4 identity matrix. This overwrites any existing data.
     def setToIdentity(self):
         self._data = numpy.identity(4)
         
-        
+    # Invert the matrix
     def invert(self):
         self._data = numpy.linalg.inv(self._data)
     
+    # Return a inverted copy of the matrix.
+    # \returns The invertex matrix.
     def getInverse(self):
         return Matrix(numpy.linalg.inv(self._data))
     
-    # Translate the matrix based on Vector
+    # Translate the matrix based on Vector.
+    # \param direction The vector by which the matrix needs to be translated.
     def translate(self, direction):
         translation_matrix = Matrix()
         translation_matrix.setByTranslation(direction)
         self.multiply(translation_matrix)
     
-    #Set the matrix by translation vector. This overwrites any existing data
+    # Set the matrix by translation vector. This overwrites any existing data.
+    # \param direction The vector by which the (unit) matrix needs to be translated.
     def setByTranslation(self, direction):
         M = numpy.identity(4)
         M[:3, 3] = direction.getData()[:3]
         self._data = M
     
     # Rotate the matrix based on rotation axis
+    # \param angle The angle by which matrix needs to be rotated.
+    # \param direction Axis by which the matrix needs to be rotated about.
+    # \param point Point where from where the rotation happens. If None, origin is used.
     def rotateByAxis(self, angle, direction, point = None):
         rotation_matrix = Matrix()
         rotation_matrix.setByRotationAxis(angle, direction, point)
         self.multiply(rotation_matrix)
     
     # Set the matrix based on rotation axis. This overwrites any existing data.
+    # \param angle The angle by which matrix needs to be rotated.
+    # \param direction Axis by which the matrix needs to be rotated about.
+    # \param point Point where from where the rotation happens. If None, origin is used.
     def setByRotationAxis(self, angle, direction, point = None):
         sina = math.sin(angle)
         cosa = math.cos(angle)
@@ -70,6 +81,10 @@ class Matrix(object):
             M[:3, 3] = point - numpy.dot(R, point)
         self._data = M
     
+    # Scale the matrix by factor wrt origin & direction.
+    # \param factor The factor by which to scale
+    # \param origin From where does the scaling need to be done
+    # \param direction In what direction is the scaling (if None, it's uniform)
     def scaleByFactor(self, factor, origin = None, direction = None):
         scale_matrix = Matrix()
         scale_matrix.setByScaleFactor(factor, origin, direction)
