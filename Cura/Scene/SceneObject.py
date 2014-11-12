@@ -1,8 +1,11 @@
+from Cura import Trans
+
 class SceneObject(object):
     def __init__(self):
         self._children = []
         self._mesh_data = None
         self._transformation = None #Transformation of this SceneObject with respect to its parent (or origin in case of root)
+        bla = Transformations.identity_matrix()
         
     def getMeshData(self):
         return self._mesh_data

@@ -13,11 +13,9 @@ class STLWriter(MeshWriter):
         if(self._supported_extention in file_name):
             f = open(file_name, 'wb')
             f.write(("PLUGGABLE UNICORN BINARY STL EXPORT. " + time.strftime('%a %d %b %Y %H:%M:%S')).ljust(80, '\000'))
-            #print mesh_data.getNumVerts()
             num_verts = mesh_data.getNumVerts()
-            f.write(struct.pack("<I", int(num_verts / 3)))
+            f.write(struct.pack("<I", int(num_verts / 3))) #Write number of faces to STL
             for index in xrange(0, num_verts, 3):
-                #print index
                 verts = mesh_data.getVerts()
                 v1 = verts[index]
                 v2 = verts[index + 1]

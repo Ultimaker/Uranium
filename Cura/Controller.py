@@ -1,6 +1,7 @@
 from Cura.InputDevice import InputDevice
 from Cura.View.View import View
 from Cura.Tool import Tool
+from Cura.Scene.Scene import Scene
 
 # Glue glass that holds the scene, (active) view(s), (active) tool(s) and possible user inputs.
 # The different types of views / tools / inputs are defined by plugins.
@@ -13,6 +14,7 @@ class Controller(object):
         
         self._active_view = None
         self._views = {}
+        self._scene = Scene()
     
     # Add a view by name if it's not already added.
     # \param name Unique identifier of view (usually the plugin name)
