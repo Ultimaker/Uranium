@@ -33,12 +33,12 @@ class PluginRegistry(object):
             # Already loaded, do not load again
             return
         
-        if name not in self._meta_data:
-            self._populateMetaData(name)
-        
         plugin = self._findPlugin(name)
         if not plugin:
             raise PluginNotFoundError(name)
+        
+        if name not in self._meta_data:
+            self._populateMetaData(name)
             
         try:
             plugin.register(self._application)
@@ -136,14 +136,15 @@ class PluginRegistry(object):
         try:
             file, path, desc = imp.find_module(name, [ location ])
         except ImportError as e:
-            print(e)
             return False
         
         try:
             module = imp.load_module(name, file, path, desc)
         except ImportError as e:
-            print(e)
             return False
+        finally:
+            if file:
+                os.close(file)
                         
         return module
     
