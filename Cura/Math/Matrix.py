@@ -10,8 +10,11 @@ class Matrix(object):
     def at(x,y): #TODO add out of index checking
         return self._data[x,y]
     
-    def dot(self, matrix):
+    def multiply(self, matrix):
         self._data = numpy.dot(self._data,matrix.getData())
+    
+    def preMultiply(self, matrix):
+        self._data = numpy.dot(matrix.getData(),self._data)
         
     #Get raw data
     def getData(self):
