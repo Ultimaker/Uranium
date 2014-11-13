@@ -85,3 +85,7 @@ class Controller(object):
         except KeyError:
             pass
 
+    ##  Return the scene
+    def getScene(self):
+        return self._scene
+
