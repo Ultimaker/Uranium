@@ -13,15 +13,13 @@ class Setting(object):
         self._tooltip = ''
         self._default_value = unicode(default)
         self._value = None
-        self._machine = None
         self._type = type
         self._visible = True
         self._validator = None
         self._callbacks = [] #Callbacks trigged when the value is changed
         self._conditions = []
-        self._parent_setting = None
+        self._parent = None
         self._hide_if_all_children_visible = True
-        self._copy_from_parent_function = lambda machine, value: value
         self._children = []
 
         if type == 'float':
@@ -36,7 +34,7 @@ class Setting(object):
         return self._validator
     
     def setParent(self, setting):
-        self._parent_setting = setting
+        self._parent = setting
     
     def addChild(self, setting):
         setting.setParent(self)
@@ -53,17 +51,15 @@ class Setting(object):
                 return ret
         return None
 
-    def setMachine(self, machine):
-        self._machine = machine
-
     def setVisible(self, visible):
         self._visible = visible
-        return self
     
+    ## Set the default value of the setting.
+    # \param value
     def setDefaultValue(self, value):
         self._default_value = value
         return self
-
+    ## get the default value of the setting.
     def getDefaultValue(self):
         return self._default_value
 
@@ -86,39 +82,45 @@ class Setting(object):
             if not child.isVisible()
                 return False
         return True
-
-    def setLabel(self, label):
-        self._label = label
-        
-    def setTooltip(self, tooltip)
-        self._tooltip = tooltip
-
+    
+    # Set the range of the setting. The validator will give errors or warnings if these are met.
     def setRange(self, min_value = None, max_value = None, min_value_warning = None, max_value_warning = None):
         if(self._validator = None):
             return
         validator.setRange(min_value, max_value, min_value_warning, max_value_warning)
 
-    ## Sets the function used to copy data from parent
-    # \param function
-    def setCopyFromParentFunction(self, function):
-        self._copy_from_parent_function = function
-
+    ## Get the display name of the setting
     def getLabel(self):
         return self._label
+    
+    ## Set the label (display name) of setting.
+    # \param label 
+    def setLabel(self, label):
+        self._label = label
 
+    ## Get the tooltip (if any) from the setting
     def getTooltip(self):
         return self._tooltip
+    
+    ## Set the tooltip of this setting
+    # \param tooltip
+    def setTooltip(self, tooltip)
+        self._tooltip = tooltip
 
+    ## Get the identifier of the setting
     def getKey(self):
         return self._key
 
+    ## Get the type of the setting
     def getType(self):
         return self._type
-
+    
+    ## Get the effective value of the setting. This can be 'overriden' by a parent function if this function is invisible.
+    # \returns value
     def getValue(self):
         if not self._visible:
-            if self._copy_from_parent_function is not None and self._parent_setting is not None:
-                self._value = str(self._copy_from_parent_function(self._machine, self._parent_setting.getValue()))
+            if self._parent is not None:
+                self._value = self._parent.getValue()
             else:
                 return self._default_value
         if self._value is None:
