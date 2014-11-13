@@ -76,3 +76,12 @@ class Controller(object):
     #  \return Tool if an view is active, None otherwise.
     def getActiveView(self):
         return self._active_view
+
+    ##  Set the currently active view.
+    #   \parma name The name of the view to set as active
+    def setActiveView(self, name):
+        try:
+            self._active_view = self._views[name]
+        except KeyError:
+            pass
+
