@@ -12,7 +12,8 @@ class ScannerApplication(WxApplication):
         test_mesh = self._mesh_file_handler.read("plugins/STLReader/simpleTestCube.stl",self.getStorageDevice('local'))
         
     def run(self):
+        self.getController().setActiveView("MeshView")
         print("Imma scanning ma laz0rs")
-        window = MainWindow("Cura Scanner")
+        window = MainWindow("Cura Scanner",self)
         window.Show()
         super(ScannerApplication, self).run()
