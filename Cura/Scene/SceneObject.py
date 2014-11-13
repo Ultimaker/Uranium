@@ -23,12 +23,12 @@ class SceneObject(object):
     
     ## Get the (original) mesh data from the scene node/object. 
     # \returns MeshData
-    def getMeshData(self,transformed = True):
+    def getMeshData(self):
         return self._mesh_data
     
     ## Get the transformed mesh data from the scene node/object, based on the transformation of scene nodes wrt root. 
     # \returns MeshData    
-    def getMeshDataTransformed):
+    def getMeshDataTransformed(self):
         transformed_mesh = deepcopy(self._mesh_data)
         transformed_mesh.transform(self.getGlobalTransformation())
         return transformed_mesh
