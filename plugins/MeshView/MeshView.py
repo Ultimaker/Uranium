@@ -1,11 +1,18 @@
 from Cura.View.View import View
 
-from OpenGL import GL
-
 class MeshView(View):
     def __init__(self):
         super(MeshView, self).__init__()
 
-    def render(self, glcontext):
-        GL.glClearColor(1.0, 0.0, 0.0, 1.0)
-        GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
+    def render(self):
+        scene = self.getController().getScene()
+        renderer = self.getRenderer()
+
+        self._renderObject(scene.getRoot(), renderer)
+
+    def _renderObject(self, object, renderer):
+        if object.getMeshData():
+            renderer.renderMesh(object.getGlobalTransformation(), object.getMeshData())
+
+        for child in object.getChildren():
+            self._renderObject(child, renderer)
