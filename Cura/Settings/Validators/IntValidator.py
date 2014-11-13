@@ -1,18 +1,21 @@
 from Cura.Settings.Validators.Validator import Validator
+from Cura.Settings.Validators.ResultCodes import ResultCodes
 
+## Validates if a setting is within two possible ranges (error range & warning range) and if setting is integer.
 class IntValidator(Validator):
-    def __init__(self, setting, min_value = None, max_value = None):
+    def __init__(self, setting, min_value = None, max_value = None, min_value_warning = None, max_value_warning = None):
         super(IntValidator,self).__init__(setting)   
         self._min_value = min_value
         self._max_value = max_value
+        self._min_value_warning = min_value_warning
+        self._max_value_warning = max_value_warning
     
+    ## Validate the setting. 
+    # \returns result Returns value as defined in ResultCodes.py
+    # \returns message Message providing more detail about warning / error (if any)
     def validate(self):
         try:
             f = int(eval(self._setting.getValue(), {}, {}))
-            if self._min_value is not None and f < self._min_value:
-                return self._error_code, 'This setting should not be below ' + str(self._min_value)
-            if self._max_value is not None and f > self._max_value:
-                return self._error_code, 'This setting should not be above ' + str(self._max_value)
-            return self._succes_code, ''
+            return self._checkRange(f,self._min_value, self._max_value, self._min_value_warning, self._max_value_warning)
         except (ValueError, SyntaxError, TypeError, NameError):
-            return self._error_code, '"' + str(self._setting.getValue()) + '" is not a valid whole number or expression'
+            return ResultCodes.not_valid_error
