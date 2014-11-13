@@ -2,3 +2,6 @@
 class View(object):
     def __init__(self):
         self._renderer = None
+
+    def render(self, glcontext):
+        pass
