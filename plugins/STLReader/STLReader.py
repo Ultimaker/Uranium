@@ -7,7 +7,7 @@ class STLReader(MeshReader):
         super(STLReader, self).__init__()
         self._supported_extension = ".stl"
     
-    # Decide if we need to use ascii or binary in order to read file
+    ## Decide if we need to use ascii or binary in order to read file
     def read(self, file_name):
         mesh = None
         if(self._supported_extension in file_name):
@@ -25,7 +25,7 @@ class STLReader(MeshReader):
         return mesh
 
     # Private
-    # Load the STL data from file by consdering the data as ascii.
+    ## Load the STL data from file by consdering the data as ascii.
     # \param mesh The MeshData object where the data is written to.
     # \param f The file handle
     def _loadAscii(self, mesh, f):
@@ -48,7 +48,7 @@ class STLReader(MeshReader):
                         num_verts = 0
 
     # Private
-    # Load the STL data from file by consdering the data as Binary.
+    ## Load the STL data from file by consdering the data as Binary.
     # \param mesh The MeshData object where the data is written to.
     # \param f The file handle
     def _loadBinary(self, mesh, f):

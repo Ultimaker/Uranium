@@ -26,7 +26,7 @@ class PluginRegistry(object):
         self._plugin_locations = []
         self._application = None
     
-    # Load a single plugin by name
+    ## Load a single plugin by name
     # \param name The name of the plugin
     def loadPlugin(self, name):
         if name in self._plugins:
@@ -48,7 +48,7 @@ class PluginRegistry(object):
         except AttributeError as e:
             print(e)
     
-    # Load all plugins matching a certain set of metadata
+    ## Load all plugins matching a certain set of metadata
     # \param metaData The metaData that needs to be matched.
     def loadPlugins(self, metaData):
         pluginNames = self._findAllPlugins()
@@ -59,7 +59,7 @@ class PluginRegistry(object):
             if self._subsetInDict(pluginData, metaData):
                 self.loadPlugin(name)
 
-    # Get the metadata for a certain plugin
+    ## Get the metadata for a certain plugin
     # \param name The name of the plugin
     def getMetaData(self, name):
         if name not in self._meta_data:
@@ -67,7 +67,7 @@ class PluginRegistry(object):
 
         return self._meta_data[name]
     
-    # Get a list of all metadata matching a certain subset of metaData
+    ## Get a list of all metadata matching a certain subset of metaData
     # \param metaData The subset of metadata that should be matched.
     def getAllMetaData(self, metaData):
         pluginNames = self._findAllPlugins()
@@ -80,24 +80,24 @@ class PluginRegistry(object):
             
         return returnVal
     
-    # Get the list of plugin locations
+    ## Get the list of plugin locations
     def getPluginLocations(self):
         return self._plugin_locations
     
-    # Add a plugin location to the list of locations to search
+    ## Add a plugin location to the list of locations to search
     # \param location The location to add to the list
     def addPluginLocation(self, location):
         #TODO: Add error checking!
         self._plugin_locations.append(location)
         
-    # Set the central application object
+    ## Set the central application object
     # This is used by plugins as a central access point for other objects
     # \param app The application object to use
     def setApplication(self, app):
         self._application = app
     
     # Private
-    # Populate the list of metadata
+    ## Populate the list of metadata
     def _populateMetaData(self, name):
         #pluginNames = []
         #for folder in self._pluginLocations:
@@ -126,7 +126,7 @@ class PluginRegistry(object):
             
                 
     # Private
-    # Try to find a module implementing a plugin
+    ## Try to find a module implementing a plugin
     # \param name The name of the plugin to find
     def _findPlugin(self, name):
         location = None
@@ -149,7 +149,7 @@ class PluginRegistry(object):
         return module
     
     # Private
-    # Returns a list of all possible plugin names in the plugin locations
+    ## Returns a list of all possible plugin names in the plugin locations
     def _findAllPlugins(self, paths = None):
         names = []
         
@@ -167,7 +167,7 @@ class PluginRegistry(object):
         return names
     
     # Private
-    # Try to find a directory we can use to load a plugin from
+    ## Try to find a directory we can use to load a plugin from
     # \param name The name of the plugin to locate
     # \param folder The base folder to look into
     def _locatePlugin(self, name, folder):
@@ -183,7 +183,7 @@ class PluginRegistry(object):
         return False
     
     # Private
-    # Check if a certain dictionary contains a certain subset of key/value pairs
+    ## Check if a certain dictionary contains a certain subset of key/value pairs
     # \param dictionary The dictionary to search
     # \param subset The subset to search for
     def _subsetInDict(self, dictionary, subset):

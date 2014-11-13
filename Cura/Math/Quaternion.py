@@ -3,7 +3,7 @@ class Quaternion(object):
     def __init__(self):
         self._data = numpy.zeros((4, ))
     
-    # Set quaternion by providing rotation about an axis.
+    ## Set quaternion by providing rotation about an axis.
     # \example q.setByAxis(0.123,[1,0,0])
     def setByAxis(self,angle, axis):
         q = numpy.array([0.0, axis[0], axis[1], axis[2]])
@@ -12,19 +12,26 @@ class Quaternion(object):
             q *= math.sin(angle/2.0) / qlen
         q[0] = math.cos(angle/2.0)
         self._data = q
+        
+    def getData(self):
+        return self._data
     
+    ## Multiply this quaternion with another quaternion.
+    # \param quaterion The quaternion to multiply with.
     def multiply(self, quaternion):
-        w0, x0, y0, z0 = quaternion
+        w0, x0, y0, z0 = quaternion.getData()
         w1, x1, y1, z1 = self._data
         self._data = numpy.array([-x1*x0 - y1*y0 - z1*z0 + w1*w0,
                          x1*w0 + y1*z0 - z1*y0 + w1*x0,
                         -x1*z0 + y1*w0 + z1*x0 + w1*y0,
                          x1*y0 - y1*x0 + z1*w0 + w1*z0], dtype=numpy.float64)
     
-    # Set quaternion by providing a homogenous (4x4) rotation matrix.
-    def setByMatrix(self,matrix, isprecise=False):
+    ## Set quaternion by providing a homogenous (4x4) rotation matrix.
+    # \param matrix 4x4 Matrix object
+    # \param is_precise
+    def setByMatrix(self, matrix, is_precise = False):
         M = numpy.array(matrix.getData(), dtype=numpy.float64, copy=False)[:4, :4]
-        if isprecise:
+        if is_precise:
             q = numpy.empty((4, ))
             t = numpy.trace(M)
             if t > M[3, 3]:

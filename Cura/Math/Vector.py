@@ -10,7 +10,7 @@ class Vector(object):
     def getData(self):
         return self._data
     
-    # Get the angle from this vector to another
+    ## Get the angle from this vector to another
     def angleToVector(self, vector,):
         v0 = numpy.array(self._data, dtype=numpy.float64, copy=False)
         v1 = numpy.array(vector.getData(), dtype = numpy.float64, copy=False)
@@ -22,7 +22,7 @@ class Vector(object):
     def normalize(data):
         self._data = self._normalizeVector(self._data)
     
-    #Return length, i.e. Euclidean norm, of ndarray along axis.
+    ## Return length, i.e. Euclidean norm, of ndarray along axis.
     def _normalizeVector(self,data):
         data = numpy.array(data, dtype=numpy.float64, copy=True)
         if data.ndim == 1:
