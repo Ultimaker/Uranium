@@ -71,6 +71,8 @@ class WindowsRemoveableDrives(object):
         #TODO: This really should not be calling magic external executables that are not contained in the source
         #or properly documented. Since we have WinAPI stuff here anyway, we could just use the WinAPI functions for
         #ejecting.
+        #
+        #See http://support2.microsoft.com/?scid=kb%3Ben-us%3B165721&x=18&y=13 for how to do it with just WinAPI
         command = [os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'EjectMedia.exe')), driveName]
         kwargs = {}
         if subprocess.mswindows:
