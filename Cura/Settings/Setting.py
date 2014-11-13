@@ -1,5 +1,6 @@
 from Cura.Settings.Validators.IntValidator import IntValidator
 from Cura.Settings.Validators.FloatValidator import FloatValidator
+from Cura.Settings.Validators.ResultCodes import ResultCodes
 
 ## A setting object contains a (single) configuration setting.
 # Settings have validators that check if the value is valid, but do not prevent invalid values!
@@ -10,18 +11,18 @@ class Setting(object):
         self._key = key
         self._label = key
         self._tooltip = ''
-        self._default = unicode(default)
+        self._default_value = unicode(default)
         self._value = None
         self._machine = None
         self._type = type
         self._visible = True
         self._validator = None
-        self._callbacks = []
+        self._callbacks = [] #Callbacks trigged when the value is changed
         self._conditions = []
         self._parent_setting = None
         self._hide_if_all_children_visible = True
         self._copy_from_parent_function = lambda machine, value: value
-        self._child_settings = []
+        self._children = []
 
         if type == 'float':
             FloatValidator(self) # Validator sets itself as validator to this setting
@@ -37,16 +38,16 @@ class Setting(object):
     def setParent(self, setting):
         self._parent_setting = setting
     
-    def addSetting(self, setting):
+    def addChild(self, setting):
         setting.setParent(self)
-        self._child_settings.append(setting)
+        self._children.append(setting)
 
     ## Recursively check it's children to see if the key matches.
     # \returns Setting if key match is found, None otherwise.
     def getSettingByKey(self, key):
         if self._key == key:
             return self
-        for s in self._child_settings:
+        for s in self._children:
             ret = s.getSettingByKey(key)
             if ret is not None:
                 return ret
@@ -58,17 +59,17 @@ class Setting(object):
     def setVisible(self, visible):
         self._visible = visible
         return self
-
-    def setDefault(self, value):
-        self._default = value
+    
+    def setDefaultValue(self, value):
+        self._default_value = value
         return self
 
-    def getDefault(self):
-        return self._default
+    def getDefaultValue(self):
+        return self._default_value
 
-    def getVisibleProperty(self):
-        return self._visible
-
+    ## Check if the setting is visible. It can be that the setting visible is true, 
+    #  but it still should be invisible as all it's children are visible (and the setting is thus not visible!).
+    # \returns bool
     def isVisible(self):
         if not self._visible:
             return False
@@ -79,10 +80,10 @@ class Setting(object):
     ## Check if all children are visible.
     # \returns True if all children are visible. False otherwise
     def checkAllChildrenVisible(self):
-        if len(self._child_settings) < 1:
+        if len(self._children) < 1:
             return False
-        for c in self._child_settings:
-            if not c._visible and not c.checkAllChildrenVisible():
+        for child in self._children:
+            if not child.isVisible()
                 return False
         return True
 
@@ -92,14 +93,13 @@ class Setting(object):
     def setTooltip(self, tooltip)
         self._tooltip = tooltip
 
-    def setRange(self, min_value = None, max_value = None,min_value_warning = None, max_value_warning):
+    def setRange(self, min_value = None, max_value = None, min_value_warning = None, max_value_warning = None):
         if(self._validator = None):
             return
-        
-        validator.setRange(min_value, max_value 
-        self._validators[0].maxValue = maxValue
-        return self
+        validator.setRange(min_value, max_value, min_value_warning, max_value_warning)
 
+    ## Sets the function used to copy data from parent
+    # \param function
     def setCopyFromParentFunction(self, function):
         self._copy_from_parent_function = function
 
@@ -120,55 +120,42 @@ class Setting(object):
             if self._copy_from_parent_function is not None and self._parent_setting is not None:
                 self._value = str(self._copy_from_parent_function(self._machine, self._parent_setting.getValue()))
             else:
-                return self._default
+                return self._default_value
         if self._value is None:
-            return self._default
+            return self._default_value
         return self._value
 
-    def getDefault(self):
-        return self._default
-
+    ## Set the value of this setting and call the registered callbacks.
+    # \param value Value to be set.
     def setValue(self, value):
         if self._value != value:
             self._value = value
+            self.validate()
             for callback in self._callbacks:
                 callback()
-            self._machine.onSettingUpdated()
-
-    def validate(self):
-        result = settingValidators.SUCCESS
-        msgs = []
-        for validator in self._validators:
-            res, err = validator.validate()
-            if res == settingValidators.ERROR:
-                result = res
-            elif res == settingValidators.WARNING and result != settingValidators.ERROR:
-                result = res
-            if res != settingValidators.SUCCESS:
-                msgs.append(err)
-        return result, '\n'.join(msgs)
-
-    def addCondition(self, conditionFunction):
-        self._conditions.append(conditionFunction)
-
-    def checkConditions(self):
-        for condition in self._conditions:
-            if not condition():
-                return False
-        return True
-
-    def addCallback(self, callback):
+    
+    ## Add function to be called when value is changed.
+    # \param function to be added.
+    def addValueChangedCallback(self, callback):
         self._callbacks.append(callback)
+    
+    ## validate the value of this setting. 
+    # \returns ResultCodes.succes if there is no validator or if validation is succesfull. Returns warning or error code otherwise.
+    def validate(self):
+        if(self._validator is not None):
+            return self._validator.validate()
+        else:
+            return ResultCodes.succes
 
-    def getSettings(self):
-        settings = []
-        for s in self._child_settings:
-            settings.append(s)
-            settings += s.getSettings()
-        return settings
+    def getAllChildren(self):
+        all_children = []
+        for s in self._children:
+            all_children.extend(s)
+            all_children.extend(s.getAllSettings())
+        return all_children
 
     def getChildren(self):
-        return self._child_settings
+        return self._children
 
     def __repr__(self):
         return '<Setting: %s>' % (self._key)
