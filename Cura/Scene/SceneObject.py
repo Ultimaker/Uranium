@@ -21,16 +21,17 @@ class SceneObject(object):
     def setParent(self, scene_object):
         self._parent = scene_object
     
-    ## Get the mesh data from the scene node/object. 
-    # \param transformed False if you want the original (un-scaled/rotated/transformed) mesh and True if you do want this.
+    ## Get the (original) mesh data from the scene node/object. 
     # \returns MeshData
     def getMeshData(self,transformed = True):
-        if(transformed):
-            transformed_mesh = deepcopy(self._mesh_data)
-            transformed_mesh.transform(self.getGlobalTransformation())
-            return transformed_mesh
-        else:
-            return self._mesh_data
+        return self._mesh_data
+    
+    ## Get the transformed mesh data from the scene node/object, based on the transformation of scene nodes wrt root. 
+    # \returns MeshData    
+    def getMeshDataTransformed):
+        transformed_mesh = deepcopy(self._mesh_data)
+        transformed_mesh.transform(self.getGlobalTransformation())
+        return transformed_mesh
     
     ## Set the mesh of this node/object
     # \param mesh_data MeshData object

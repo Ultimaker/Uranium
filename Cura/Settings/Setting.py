@@ -1,3 +1,6 @@
+from Cura.Settings.Validators.IntValidator import IntValidator
+from Cura.Settings.Validators.FloatValidator import FloatValidator
+
 ## A setting object contains a (single) configuration setting.
 # Settings have validators that check if the value is valid, but do not prevent invalid values!
 # Settings have conditions that enable/disable this setting depending on other settings. (Ex: Dual-extrusion)
@@ -12,7 +15,7 @@ class Setting(object):
         self._machine = None
         self._type = type
         self._visible = True
-        self._validators = []
+        self._validator = None
         self._callbacks = []
         self._conditions = []
         self._parent_setting = None
@@ -21,14 +24,25 @@ class Setting(object):
         self._child_settings = []
 
         if type == 'float':
-            settingValidators.validFloat(self)
+            FloatValidator(self) # Validator sets itself as validator to this setting
         elif type == 'int':
-            settingValidators.validInt(self)
-
+            IntValidator(self) 
+    
+    def setValidator(self, validator):
+        self._validator = validator
+        
+    def getValidator(self):
+        return self._validator
+    
+    def setParent(self, setting):
+        self._parent_setting = setting
+    
     def addSetting(self, setting):
-        setting._parent_setting = self
+        setting.setParent(self)
         self._child_settings.append(setting)
 
+    ## Recursively check it's children to see if the key matches.
+    # \returns Setting if key match is found, None otherwise.
     def getSettingByKey(self, key):
         if self._key == key:
             return self
@@ -58,36 +72,36 @@ class Setting(object):
     def isVisible(self):
         if not self._visible:
             return False
-        if self._hide_if_all_children_visible and self.allChildrenVisible():
+        if self._hide_if_all_children_visible and self.checkAllChildrenVisible():
             return False
         return True
 
-    def allChildrenVisible(self):
+    ## Check if all children are visible.
+    # \returns True if all children are visible. False otherwise
+    def checkAllChildrenVisible(self):
         if len(self._child_settings) < 1:
             return False
         for c in self._child_settings:
-            if not c._visible and not c.allChildrenVisible():
+            if not c._visible and not c.checkAllChildrenVisible():
                 return False
         return True
 
-    def setAlwaysVisible(self):
-        self._hide_if_all_children_visible = False
-        return self
-
-    def setLabel(self, label, tooltip=''):
+    def setLabel(self, label):
         self._label = label
+        
+    def setTooltip(self, tooltip)
         self._tooltip = tooltip
-        return self
 
-    def setRange(self, minValue=None, maxValue=None):
-        if len(self._validators) < 1:
+    def setRange(self, min_value = None, max_value = None,min_value_warning = None, max_value_warning):
+        if(self._validator = None):
             return
-        self._validators[0].minValue = minValue
+        
+        validator.setRange(min_value, max_value 
         self._validators[0].maxValue = maxValue
         return self
 
-    def setCopyFromParentFunction(self, func):
-        self._copy_from_parent_function = func
+    def setCopyFromParentFunction(self, function):
+        self._copy_from_parent_function = function
 
     def getLabel(self):
         return self._label

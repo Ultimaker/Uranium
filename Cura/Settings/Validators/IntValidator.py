@@ -9,6 +9,13 @@ class IntValidator(Validator):
         self._max_value = max_value
         self._min_value_warning = min_value_warning
         self._max_value_warning = max_value_warning
+        
+        
+    def setRange(self, min_value = None, max_value = None, min_value_warning = None , max_value_warning = None):
+        self._min_value = min_value
+        self._max_value = max_value
+        self._min_value_warning = min_value_warning
+        self._max_value_warning = max_value_warning
     
     ## Validate the setting. 
     # \returns result Returns value as defined in ResultCodes.py
