@@ -8,11 +8,11 @@ class STLReader(MeshReader):
         self._supported_extension = ".stl"
     
     ## Decide if we need to use ascii or binary in order to read file
-    def read(self, file_name):
+    def read(self, file_name, storage_device):
         mesh = None
         if(self._supported_extension in file_name):
             mesh = MeshData()
-            f = open(file_name, "rb")
+            f = storage_device.openFile(file_name, "rb")
             if f.read(5).lower() == "solid":
                 self._loadAscii(mesh, f)
                 if mesh.getNumVerts() < 3:

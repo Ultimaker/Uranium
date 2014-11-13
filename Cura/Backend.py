@@ -1,5 +1,6 @@
 class Backend(object):
     def __init__(self):
+        super(Backend, self).__init__()
         self._supported_commands = {}
         self._socket = None
     ## Get a list of supported commands of this backend instance.

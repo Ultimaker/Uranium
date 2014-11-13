@@ -187,9 +187,9 @@ class PluginRegistry(object):
     # \param dictionary The dictionary to search
     # \param subset The subset to search for
     def _subsetInDict(self, dictionary, subset):
-        for key, value in subset:
+        for key in subset:
             if key not in dictionary:
                 return False
-            if dictionary[key] != value:
+            if dictionary[key] != subset[key]:
                 return False
         return True

@@ -1,2 +1,4 @@
 *.pyc
 *kdev*
+__pycache__
+docs/html

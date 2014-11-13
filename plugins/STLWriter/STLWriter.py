@@ -5,13 +5,13 @@ import struct
 class STLWriter(MeshWriter):
     def __init__(self):
         super(STLWriter, self).__init__()
-        self._supported_extention = ".stl"
+        self._supported_extension = ".stl"
         
     #TODO: Only a single mesh can be saved to a single file, we might want to save multiple meshes to a single file
-    def write(self, file_name, mesh_data):
+    def write(self, file_name, storage_device, mesh_data):
         print 'WRITING YEAAH' 
-        if(self._supported_extention in file_name):
-            f = open(file_name, 'wb')
+        if(self._supported_extension in file_name):
+            f = storage_device.openFile(file_name, 'wb')
             f.write(("PLUGGABLE UNICORN BINARY STL EXPORT. " + time.strftime('%a %d %b %Y %H:%M:%S')).ljust(80, '\000'))
             num_verts = mesh_data.getNumVerts()
             f.write(struct.pack("<I", int(num_verts / 3))) #Write number of faces to STL
