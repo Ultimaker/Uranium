@@ -1,5 +1,6 @@
 from Cura.Wx.WxApplication import WxApplication
 from Cura.Wx.MainWindow import MainWindow
+from Cura.Scene.SceneObject import SceneObject
 class ScannerApplication(WxApplication):
     def __init__(self):
         super(ScannerApplication, self).__init__()
@@ -9,10 +10,14 @@ class ScannerApplication(WxApplication):
         self._plugin_registry.loadPlugin("MeshView")
         self._plugin_registry.loadPlugin("TransformTool")
         self._plugin_registry.loadPlugins({ "type": "StorageDevice" })
-        test_mesh = self._mesh_file_handler.read("plugins/STLReader/simpleTestCube.stl",self.getStorageDevice('local'))
+
         
     def run(self):
         self.getController().setActiveView("MeshView")
+        root = self.getController().getScene().getRoot()
+        mesh = SceneObject()
+        mesh.setMeshData(self.getMeshFileHandler().read("plugins/STLReader/simpleTestCube.stl",self.getStorageDevice('local')))
+        root.addChild(mesh)
         print("Imma scanning ma laz0rs")
         window = MainWindow("Cura Scanner",self)
         window.Show()
