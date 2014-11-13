@@ -24,6 +24,7 @@ class Controller(object):
     def addView(self, name, view):
         if(name not in self._views):
             self._views[name] = view
+            view.setController(self)
     
     ## Request view by name. Returns None if no view is found.
     #  \param name Unique identifier of view (usually the plugin name)
@@ -84,4 +85,8 @@ class Controller(object):
             self._active_view = self._views[name]
         except KeyError:
             pass
+
+    ##  Return the scene
+    def getScene(self):
+        return self._scene
 

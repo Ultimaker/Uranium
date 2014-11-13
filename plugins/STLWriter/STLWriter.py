@@ -20,9 +20,12 @@ class STLWriter(MeshWriter):
                 v2 = verts[index + 1]
                 v3 = verts[index + 2]
                 f.write(struct.pack("<fff", 0.0, 0.0, 0.0))
-                f.write(struct.pack("<fff", v1[0], v1[1], v1[2]))
-                f.write(struct.pack("<fff", v2[0], v2[1], v2[2]))
-                f.write(struct.pack("<fff", v3[0], v3[1], v3[2]))
+                vertPos = v1.getPosition()
+                f.write(struct.pack("<fff", vertPos.x, vertPos.y, vertPos.z))
+                vertPos = v2.getPosition()
+                f.write(struct.pack("<fff", vertPos.x, vertPos.y, vertPos.z))
+                vertPos = v3.getPosition()
+                f.write(struct.pack("<fff", vertPos.x, vertPos.y, vertPos.z))
                 f.write(struct.pack("<H", 0))
             f.close()
             return True
