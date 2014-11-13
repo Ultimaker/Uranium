@@ -9,7 +9,6 @@ class STLWriter(MeshWriter):
         
     #TODO: Only a single mesh can be saved to a single file, we might want to save multiple meshes to a single file
     def write(self, file_name, storage_device, mesh_data):
-        print 'WRITING YEAAH' 
         if(self._supported_extension in file_name):
             f = storage_device.openFile(file_name, 'wb')
             f.write(("PLUGGABLE UNICORN BINARY STL EXPORT. " + time.strftime('%a %d %b %Y %H:%M:%S')).ljust(80, '\000'))
