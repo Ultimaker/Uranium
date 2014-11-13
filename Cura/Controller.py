@@ -7,6 +7,7 @@ from Cura.Scene.Scene import Scene
 # The different types of views / tools / inputs are defined by plugins.
 class Controller(object):
     def __init__(self):
+        super(Controller, self).__init__()
         self._active_tool = None
         self._tools = {}
         

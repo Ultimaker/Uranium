@@ -1,3 +1,3 @@
 class Command(object):
     def __init__(self):
-        pass
+        super(Command, self).__init__()
