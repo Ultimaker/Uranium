@@ -9,6 +9,36 @@ class Vector(object):
         
     def getData(self):
         return self._data
+
+    ## Return the x component of this vector
+    @property
+    def x(self):
+        return self._data[0]
+
+    ##  Set the x component of this vector
+    #   \param value The value for the x component
+    def setX(self, value):
+        self._data[0] = value
+
+    ## Return the y component of this vector
+    @property
+    def y(self):
+        return self._data[1]
+
+    ##  Set the y component of this vector
+    #   \param value The value for the y component
+    def setY(self, value):
+        self._data[1] = value
+
+    ## Return the z component of this vector
+    @property
+    def z(self):
+        return self._data[2]
+
+    ##  Set the z component of this vector
+    #   \param value The value for the z component
+    def setZ(self, value):
+        self._data[2] = value
     
     ## Get the angle from this vector to another
     def angleToVector(self, vector,):
@@ -19,11 +49,11 @@ class Vector(object):
         return numpy.arccos(numpy.fabs(dot))
     
     
-    def normalize(data):
+    def normalize(self, data):
         self._data = self._normalizeVector(self._data)
     
     ## Return length, i.e. Euclidean norm, of ndarray along axis.
-    def _normalizeVector(self,data):
+    def _normalizeVector(self, data):
         data = numpy.array(data, dtype=numpy.float64, copy=True)
         if data.ndim == 1:
             return math.sqrt(numpy.dot(data, data))
