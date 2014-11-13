@@ -14,4 +14,7 @@ class MainWindow(wx.Frame):
         menuBar.Append(fileMenu, "&File")
         self.SetMenuBar(menuBar)
         
-        canvas = Canvas(self, app)
+        self._canvas = Canvas(self, app)
+
+    def getCanvas(self):
+        return self._canvas
