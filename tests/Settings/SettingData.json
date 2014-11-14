@@ -1,0 +1,49 @@
+{
+    "Categories": [
+        {
+            "key": "TestCategory",
+            "label": "Test category",
+            "visibility": true,
+            "Settings": [
+                {
+                    "key": "TestSetting",
+                    "label": "Test setting!",
+                    "type": "int",
+                    "default": "",
+                    "min_value": 0,
+                    "max_value": 10,
+                    "children": [
+                        {
+                            "key": "Nested1",
+                            "default": "",
+                            "type": "int",
+                            "children": [
+                                {
+                                    "key": "Nested2",
+                                    "type": "int",
+                                    "default": "",
+                                    "children": []
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "key": "TestSetting2",
+                    "label": "Test setting 2",
+                    "type": "int",
+                    "default": "",
+                    "min_value": 0,
+                    "max_value": 100,
+                    "children": []
+                }
+            ]
+        },
+        {
+            "key": "TestCategory123",
+            "label": "Test category",
+            "visibility": true,
+            "Settings": []
+        }
+    ]
+}
