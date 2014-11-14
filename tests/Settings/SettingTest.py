@@ -8,15 +8,17 @@ class SettingTest(unittest.TestCase):
         self._setting = Setting('TestSetting',10,'int')
         self._machine_settings = MachineSettings()
         category = SettingsCategory('TestCategory')
+        #category.addSetting(self._setting)
         self._machine_settings.addSettingsCategory(category)
-
+        self._machine_settings.loadSettingsFromFile("tests/Settings/SettingData.json")
+        print self._machine_settings.getSettingByKey("Nested1").getParent()
 
     def tearDown(self):
         # Called after the last testfunction was executed
         pass
 
     def test_GetSettingByKey(self):
-        
+        #self.assertEqual(self._machine_settings.getSettingByKey('TestSetting'), self._setting)
         pass
 
     def test_Category(self):

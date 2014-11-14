@@ -1,13 +1,21 @@
 import traceback, sys
+import json
+from Cura.Settings.SettingsCategory import SettingsCategory
 class MachineSettings(object):
     def __init__(self):
         self._categories = []
     
+    ## Load settings from JSON file
     def loadSettingsFromFile(self, file_name):
-        pass
+        json_data = open(file_name)
+        data = json.load(json_data)
+        
+        for category in data["Categories"]:
+            temp_category = SettingsCategory(category["key"])
+            temp_category.fillByDict(category)
+            self.addSettingsCategory(temp_category)
     
     def addSettingsCategory(self, category):
-        assert(self.getSettingsCategory(category.getKey()) is None)
         self._categories.append(category)
         self._categories.sort()
         

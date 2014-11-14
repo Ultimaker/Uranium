@@ -28,6 +28,15 @@ class Setting(object):
         elif type == 'int':
             IntValidator(self) 
     
+    ## Set values of the setting by providing it with a dict object (as decoded by JSON parser)
+    # \param data Decoded JSON dict
+    def fillByDict(self, data):
+        for setting in data["children"]:
+            temp_setting = Setting(setting["key"],setting["default"],setting["type"])
+            temp_setting.fillByDict(setting)
+            temp_setting.setParent(self)
+            self._children.append(temp_setting)
+
     def setValidator(self, validator):
         self._validator = validator
         
@@ -36,12 +45,17 @@ class Setting(object):
     
     def setCategory(self, category):
         self._category = category
+        for child in self._children:
+            child.setCategory(category)
         
     def getValidator(self):
         return self._validator
     
     def setParent(self, setting):
         self._parent = setting
+        
+    def getParent(self):
+        return self._parent
     
     def addChild(self, setting):
         setting.setParent(self)
