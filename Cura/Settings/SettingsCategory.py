@@ -13,6 +13,7 @@ class SettingsCategory(object):
     # \param data Decoded JSON dict
     def fillByDict(self, data):
         self._label = data["label"]
+        self._visible = data["visible"]
         for setting in data["Settings"]:
             temp_setting = Setting(setting["key"],setting["default"],setting["type"])
             temp_setting.fillByDict(setting)
