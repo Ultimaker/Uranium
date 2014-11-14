@@ -12,13 +12,17 @@ class SettingsCategory(object):
     ## Set values of the setting by providing it with a dict object (as decoded by JSON parser)
     # \param data Decoded JSON dict
     def fillByDict(self, data):
-        self._label = data["label"]
-        self._visible = data["visible"]
-        for setting in data["Settings"]:
-            temp_setting = Setting(setting["key"],setting["default"],setting["type"])
-            temp_setting.fillByDict(setting)
-            temp_setting.setCategory(self)
-            self._settings.append(temp_setting)
+        if "label" in data:
+            self._label = data["label"]
+        if "visible" in data:
+            self._visible = data["visible"]
+        if "Settings" in data:
+            for setting in data["Settings"]:
+                if "key" in setting and "default" in setting and "type" in setting:
+                    temp_setting = Setting(setting["key"],setting["default"],setting["type"])
+                    temp_setting.fillByDict(setting)
+                    temp_setting.setCategory(self)
+                    self._settings.append(temp_setting)
 
     def setLabel(self, label):
         self._label = label

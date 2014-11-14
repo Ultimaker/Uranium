@@ -9,11 +9,12 @@ class MachineSettings(object):
     def loadSettingsFromFile(self, file_name):
         json_data = open(file_name)
         data = json.load(json_data)
-        
-        for category in data["Categories"]:
-            temp_category = SettingsCategory(category["key"])
-            temp_category.fillByDict(category)
-            self.addSettingsCategory(temp_category)
+        if "Categories" in data:
+            for category in data["Categories"]:
+                if "key" in category:
+                    temp_category = SettingsCategory(category["key"])
+                    temp_category.fillByDict(category)
+                    self.addSettingsCategory(temp_category)
     
     def addSettingsCategory(self, category):
         self._categories.append(category)

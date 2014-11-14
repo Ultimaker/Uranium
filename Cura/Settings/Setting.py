@@ -31,11 +31,13 @@ class Setting(object):
     ## Set values of the setting by providing it with a dict object (as decoded by JSON parser)
     # \param data Decoded JSON dict
     def fillByDict(self, data):
-        for setting in data["children"]:
-            temp_setting = Setting(setting["key"],setting["default"],setting["type"])
-            temp_setting.fillByDict(setting)
-            temp_setting.setParent(self)
-            self._children.append(temp_setting)
+        if "children" in data:
+            for setting in data["children"]:
+                if "key" in setting and "default" in setting and "type" in setting:
+                    temp_setting = Setting(setting["key"],setting["default"],setting["type"])
+                    temp_setting.fillByDict(setting)
+                    temp_setting.setParent(self)
+                    self._children.append(temp_setting)
 
     def setValidator(self, validator):
         self._validator = validator
