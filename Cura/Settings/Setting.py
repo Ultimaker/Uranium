@@ -7,7 +7,7 @@ from Cura.Settings.Validators.ResultCodes import ResultCodes
 # Settings have conditions that enable/disable this setting depending on other settings. (Ex: Dual-extrusion)
 
 class Setting(object):    
-    def __init__(self, key, default, type):
+    def __init__(self, key, default, type, category = None):
         self._key = key
         self._label = key
         self._tooltip = ''
@@ -21,6 +21,7 @@ class Setting(object):
         self._parent = None
         self._hide_if_all_children_visible = True
         self._children = []
+        self._category = category
 
         if type == 'float':
             FloatValidator(self) # Validator sets itself as validator to this setting
@@ -29,6 +30,12 @@ class Setting(object):
     
     def setValidator(self, validator):
         self._validator = validator
+        
+    def getCategory(self):
+        return self._category
+    
+    def setCategory(self, category):
+        self._category = category
         
     def getValidator(self):
         return self._validator
@@ -79,13 +86,13 @@ class Setting(object):
         if len(self._children) < 1:
             return False
         for child in self._children:
-            if not child.isVisible()
+            if not child.isVisible():
                 return False
         return True
     
     # Set the range of the setting. The validator will give errors or warnings if these are met.
     def setRange(self, min_value = None, max_value = None, min_value_warning = None, max_value_warning = None):
-        if(self._validator = None):
+        if(self._validator is None):
             return
         validator.setRange(min_value, max_value, min_value_warning, max_value_warning)
 
@@ -104,7 +111,7 @@ class Setting(object):
     
     ## Set the tooltip of this setting
     # \param tooltip
-    def setTooltip(self, tooltip)
+    def setTooltip(self, tooltip):
         self._tooltip = tooltip
 
     ## Get the identifier of the setting
@@ -132,7 +139,6 @@ class Setting(object):
     def setValue(self, value):
         if self._value != value:
             self._value = value
-            self.validate()
             for callback in self._callbacks:
                 callback()
     

@@ -1,5 +1,5 @@
 ## Class that holds static values for the result messages of validators
-class ResultCodes(Object):
+class ResultCodes(object):
     min_value_error = 0
     max_value_error = 1
     not_valid_error = 2
