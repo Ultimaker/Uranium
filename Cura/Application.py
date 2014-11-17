@@ -34,10 +34,11 @@ class Application(object):
     #   \param message List of variables to be added to the message
     def log(self, log_type, message, *args):
         for logger in self._loggers:
-            filled_message = message % args #replace all the %s with the variables
+            filled_message = message % args # Replace all the %s with the variables. Python formating is magic.
             logger.log(log_type, filled_message)
 
     ##  Get the PluginRegistry of this application.
+    #   \returns PluginRegistry
     def getPluginRegistry(self):
         return self._plugin_registry
 

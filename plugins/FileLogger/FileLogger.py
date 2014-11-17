@@ -17,7 +17,10 @@ class FileLogger(Logger):
             self._logger.addHandler(file_handler)
         else:
             pass #TODO, add handling
-        
+    
+    ##  Log message to file. 
+    #   \param log_type 'e' (error) , 'i'(info), 'd'(debug) or 'w'(warning)
+    #   \param message String containing message to be logged
     def log(self, log_type, message):
         if(log_type == 'w'): # Warning
             self._logger.warning(message)
