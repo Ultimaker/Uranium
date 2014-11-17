@@ -21,6 +21,7 @@ The plugin locations are scanned recursively for plugins.
 '''
 class PluginRegistry(object):
     def __init__(self):
+        super(PluginRegistry,self).__init__() # Call super to make multiple inheritence work.
         self._plugins = {}
         self._meta_data = {}
         self._plugin_locations = []

@@ -3,7 +3,7 @@
 #
 class StorageDevice(object):
     def __init__(self):
-        super(StorageDevice, self).__init__()
+        super(StorageDevice, self).__init__() # Call super to make multiple inheritence work.
         self._properties = {}
     
     ## Open a file so it can be read from or written to.

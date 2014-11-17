@@ -7,8 +7,8 @@ from Cura.Scene.Scene import Scene
 #
 #  The different types of views / tools / inputs are defined by plugins.
 class Controller(object):
-    def __init__(self):
-        super(Controller, self).__init__()
+    def __init__(self, application):
+        super(Controller, self).__init__() # Call super to make multiple inheritence work.
         self._active_tool = None
         self._tools = {}
         
@@ -17,6 +17,7 @@ class Controller(object):
         self._active_view = None
         self._views = {}
         self._scene = Scene()
+        self._application = application
     
     ## Add a view by name if it's not already added.
     #  \param name Unique identifier of view (usually the plugin name)

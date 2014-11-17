@@ -9,11 +9,11 @@ from Cura.MeshHandling.MeshFileHandler import MeshFileHandler
 #   used to access objects required for those plugins.
 class Application(object):
     def __init__(self):
-        super(Application, self).__init__()
+        super(Application, self).__init__() # Call super to make multiple inheritence work.
         self._plugin_registry = PluginRegistry()
         self._plugin_registry.addPluginLocation("plugins")
         self._plugin_registry.setApplication(self)
-        self._controller = Controller()
+        self._controller = Controller(self)
         self._mesh_file_handler = MeshFileHandler()
         self._storage_devices = {}
         self._loggers = []
