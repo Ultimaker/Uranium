@@ -83,12 +83,14 @@ class MeshData(object):
 
     ## Get all vertices of this mesh as a list
     def getVerticesList(self):
-        out = []
+        out = numpy.zeros(self._num_verts * 3, dtype=numpy.float32)
+        v = 0
         for i in xrange(self._num_verts):
             vertex = self._verts[i]
-            out.append(vertex.getPosition().x)
-            out.append(vertex.getPosition().y)
-            out.append(vertex.getPosition().z)
+            out[v] = vertex.getPosition().x
+            out[v+1] = vertex.getPosition().y
+            out[v+2] = vertex.getPosition().z
+            v += 3
 
         return out
         
