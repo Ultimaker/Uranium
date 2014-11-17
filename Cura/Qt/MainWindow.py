@@ -1,4 +1,4 @@
-from PyQt5.QtCore import pyqtProperty, QObject
+from PyQt5.QtCore import pyqtProperty, QObject, Qt
 from PyQt5.QtGui import QColor
 from PyQt5.QtQuick import QQuickWindow, QQuickItem
 
@@ -13,7 +13,7 @@ class MainWindow(QQuickWindow):
         self._backgroundColor = QColor(204, 204, 204, 255)
 
         self.setClearBeforeRendering(False)
-        self.beforeRendering.connect(self._render)
+        self.beforeRendering.connect(self._render, type=Qt.DirectConnection)
 
     def getApplication(self):
         return self._app
