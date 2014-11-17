@@ -16,6 +16,9 @@ class GL2Renderer(Renderer):
         self._initialized = False
 
     def initialize(self):
+        print(GL.glGetString(GL.GL_VERSION))
+        print(GL.glGetString(GL.GL_VENDOR))
+
         self._defaultShader = Shader()
 
         self._defaultShader.setVertexSource("""
