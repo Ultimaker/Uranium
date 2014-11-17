@@ -11,6 +11,11 @@ class GL2Renderer(Renderer):
     def __init__(self):
         super(Renderer, self).__init__()
 
+        self._bufferCache = {}
+
+        self._initialized = False
+
+    def initialize(self):
         self._defaultShader = Shader()
 
         self._defaultShader.setVertexSource("""
@@ -28,16 +33,21 @@ class GL2Renderer(Renderer):
         self._defaultShader.setFragmentSource("""
             void main()
             {
-                gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+                gl_FragColor = vec4(1.0, 0.0, 1.0, 1.0);
             }
         """)
+        self._defaultShader.build()
 
-        self._bufferCache = {}
+        self._initialized = True
 
     def renderMesh(self, position, mesh):
+        if not self._initialized:
+            self.initialize()
+
         if mesh not in self._bufferCache:
             vertexBuffer = Buffer(GL.GL_ARRAY_BUFFER, GL.GL_STATIC_DRAW)
             vertexBuffer.create(mesh.getVerticesList())
+            self._bufferCache[mesh] = vertexBuffer
 
         self._defaultShader.bind()
         self._defaultShader.setUniform("projectionMatrix", Matrix())
@@ -45,6 +55,8 @@ class GL2Renderer(Renderer):
         self._defaultShader.setUniform("modelMatrix", position)
         buffer = self._bufferCache[mesh]
         buffer.bind()
-        GL.glDrawArrays(GL.GL_TRIANGLES, 0, 0)
+        self._defaultShader.bindAttribute("vertex", 3, GL.GL_FLOAT, 0)
+        GL.glDrawArrays(GL.GL_TRIANGLES, 0, mesh.getNumVerts())
+        self._defaultShader.releaseAttribute("vertex")
         buffer.release()
         self._defaultShader.release()

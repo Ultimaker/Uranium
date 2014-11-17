@@ -3,3 +3,4 @@ module Cura
 Panel 1.0 Panel.qml
 FilePanel 1.0 FilePanel.qml
 ToolPanel 1.0 ToolPanel.qml
+DefaultWindow 1.0 DefaultWindow.qml
