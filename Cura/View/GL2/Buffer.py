@@ -1,8 +1,8 @@
 from OpenGL.GL import *
 
-class Buffer:
+class Buffer(object):
     def __init__(self, type, usage):
-        super().__init__()
+        super(Buffer, self).__init__()
         self._buffer = 0
         self._type = type
         self._usage = usage
