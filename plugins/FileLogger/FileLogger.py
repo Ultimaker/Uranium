@@ -16,13 +16,13 @@ class FileLogger(Logger):
     
         
     def log(self, log_type, message):
-        if(log_type is 'w'): # Warning
+        if(log_type == 'w'): # Warning
             self._logger.warning(message)
-        else if(log_type is 'i'): # Info
+        elif(log_type == 'i'): # Info
             self._logger.info(message)
-        else if(log_type is 'e'): # Error
+        elif(log_type == 'e'): # Error
             self._logger.error(message)
-        else if(log_type is 'd'):
+        elif(log_type == 'd'):
             self._logger.debug(message)
         else:
             pass
