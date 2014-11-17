@@ -5,7 +5,6 @@ from Cura.Settings.Validators.ResultCodes import ResultCodes
 ## A setting object contains a (single) configuration setting.
 # Settings have validators that check if the value is valid, but do not prevent invalid values!
 # Settings have conditions that enable/disable this setting depending on other settings. (Ex: Dual-extrusion)
-
 class Setting(object):    
     def __init__(self, key, default, type, category = None):
         self._key = key
