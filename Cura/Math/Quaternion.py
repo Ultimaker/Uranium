@@ -6,7 +6,7 @@ class Quaternion(object):
     ## Set quaternion by providing rotation about an axis.
     # \example q.setByAxis(0.123,[1,0,0])
     def setByAxis(self,angle, axis):
-        q = numpy.array([0.0, axis[0], axis[1], axis[2]])
+        q = numpy.array([0.0, axis[0], axis[1], axis[2]],dtype=numpy.float32)
         qlen = vector_norm(q)
         if qlen > _EPS:
             q *= math.sin(angle/2.0) / qlen
@@ -30,7 +30,7 @@ class Quaternion(object):
     # \param matrix 4x4 Matrix object
     # \param is_precise
     def setByMatrix(self, matrix, is_precise = False):
-        M = numpy.array(matrix.getData(), dtype=numpy.float64, copy=False)[:4, :4]
+        M = numpy.array(matrix.getData(), dtype=numpy.float32, copy=False)[:4, :4]
         if is_precise:
             q = numpy.empty((4, ))
             t = numpy.trace(M)
