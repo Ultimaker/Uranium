@@ -19,6 +19,11 @@ class Controller(object):
         self._scene = Scene()
         self._application = application
     
+    ##  Get the application.
+    #   \returns Application
+    def getApplication(self):
+        return self._application
+    
     ## Add a view by name if it's not already added.
     #  \param name Unique identifier of view (usually the plugin name)
     #  \param view The view to be added
@@ -26,6 +31,8 @@ class Controller(object):
         if(name not in self._views):
             self._views[name] = view
             view.setController(self)
+        else:
+            self._application.log('w', '%s was already added to view list. Unable to add it again.',name)
     
     ## Request view by name. Returns None if no view is found.
     #  \param name Unique identifier of view (usually the plugin name)
@@ -34,6 +41,7 @@ class Controller(object):
         try:
             return self._views[name]
         except KeyError: #No such view
+            self._application.log('e', "Unable to find %s in view list",name)
             return None
         
     ## Add an input device (eg; mouse, keyboard, etc) by name if it's not already addded.
@@ -42,6 +50,8 @@ class Controller(object):
     def addInputDevice(self, name, device):
         if(name not in self._input_devices):
             self._input_devices[name] = device
+        else:
+            self._application.log('w', '%s was already added to input device list. Unable to add it again.', name)
     
     ## Request input device by name. Returns None if no device is found.
     #  \param name Unique identifier of input device (usually the plugin name)
@@ -50,6 +60,7 @@ class Controller(object):
         try:
             return self._input_devices[name]
         except KeyError: #No such tool
+            self._application.log('e', "Unable to find %s in input devices",name)
             return None
     
     ## Request tool by name. Returns None if no view is found.
@@ -59,6 +70,7 @@ class Controller(object):
         try:
             return self._tools[name]
         except KeyError: #No such tool
+            self._application.log('e', "Unable to find %s in tools",name)
             return None
     
     ## Add an Tool (transform object, translate object) by name if it's not already addded.
@@ -68,6 +80,8 @@ class Controller(object):
     def addTool(self, name, tool):
         if(name not in self._tools):
             self._tools[name] = tool
+        else: 
+            self._application.log('w', '%s was already added to tool list. Unable to add it again.', name)
     
     ## Request active tool. Returns None if there is no active tool
     #  \return Tool if an tool is active, None otherwise.
@@ -85,7 +99,7 @@ class Controller(object):
         try:
             self._active_view = self._views[name]
         except KeyError:
-            pass
+            self._application.log('e', "No view named %s found", name)
 
     ##  Return the scene
     def getScene(self):

@@ -32,11 +32,16 @@ class PluginRegistry(object):
     def loadPlugin(self, name):
         if name in self._plugins:
             # Already loaded, do not load again
+            if(self._application is not None):
+                self._application.log('w', 'Plugin %s was already loaded',name)
             return
         
         plugin = self._findPlugin(name)
         if not plugin:
             raise PluginNotFoundError(name)
+        
+        if(self._application is not None):
+            self._application.log('i', 'Loading plugin %s',name)
         
         if name not in self._meta_data:
             self._populateMetaData(name)
