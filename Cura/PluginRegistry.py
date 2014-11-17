@@ -99,14 +99,6 @@ class PluginRegistry(object):
     # Private
     ## Populate the list of metadata
     def _populateMetaData(self, name):
-        #pluginNames = []
-        #for folder in self._pluginLocations:
-            ##find plugins in folder and load metadata
-            #for name in os.listdir(folder):
-                #if os.path.isdir(os.path.join(folder, name)):
-                    #pluginNames.append(name)
-
-        #for name in pluginNames:
         plugin = self._findPlugin(name)
         
         if not plugin:
@@ -118,13 +110,12 @@ class PluginRegistry(object):
         except AttributeError as e:
             print(e)
             return
-        
+
         if not metaData or (not "name" in metaData and not "type" in metaData):
             raise InvalidMetaDataError(name)
-        
+
         self._meta_data[name] = plugin.getMetaData()
-            
-                
+
     # Private
     ## Try to find a module implementing a plugin
     # \param name The name of the plugin to find
@@ -132,15 +123,20 @@ class PluginRegistry(object):
         location = None
         for folder in self._plugin_locations:
             location = self._locatePlugin(name, folder)
-        
+
+        if not location:
+            return None
+
         try:
             file, path, desc = imp.find_module(name, [ location ])
         except ImportError as e:
+            print(e)
             return False
-        
+
         try:
             module = imp.load_module(name, file, path, desc)
         except ImportError as e:
+            print(e)
             return False
         finally:
             if file:
