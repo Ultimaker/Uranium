@@ -1,11 +1,10 @@
-from Cura.View.ClassicGLRenderer import ClassicGLRenderer
-#from Cura.View.GL2Renderer import GL2Renderer
+from Cura.View.GL2Renderer import GL2Renderer
 
 ## Abstract base class for view objects.
 class View(object):
     def __init__(self):
         super(View, self).__init__()
-        self._renderer = ClassicGLRenderer()
+        self._renderer = GL2Renderer()
         self._controller = None
 
     def getController(self):
