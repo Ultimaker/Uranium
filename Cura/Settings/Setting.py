@@ -37,27 +37,42 @@ class Setting(object):
                     temp_setting.fillByDict(setting)
                     temp_setting.setParent(self)
                     self._children.append(temp_setting)
-
+    
+    ## Set the validator of the Setting
+    # \param validator Validator
     def setValidator(self, validator):
         self._validator = validator
-        
+    
+    ## Get the validator
+    # \returns Validator
+    def getValidator(self):
+        return self._validator
+    
+    ## Get the category of this setting.
+    # \returns SettingCategory
     def getCategory(self):
         return self._category
     
+    ## Set the category
+    # \params category SettingCategory
     def setCategory(self, category):
         self._category = category
         for child in self._children:
             child.setCategory(category)
-        
-    def getValidator(self):
-        return self._validator
     
+    ## Set the parent of this setting. Parents can override the value of the setting if the child setting is not visible.
+    #  mostly used for giving a 'global' setting (such as speed), with children being travel speed, infill speed, etc.
+    # \param setting Setting
     def setParent(self, setting):
         self._parent = setting
-        
+    
+    ## Get the parent.
+    # \returns Setting
     def getParent(self):
         return self._parent
     
+    ## Add a child to this setting. See setParent for more info.
+    # \param setting Setting
     def addChild(self, setting):
         setting.setParent(self)
         self._children.append(setting)
@@ -72,7 +87,9 @@ class Setting(object):
             if ret is not None:
                 return ret
         return None
-
+    
+    ## Set the visibility of this setting. See setParent for more info.
+    # \param visible Bool
     def setVisible(self, visible):
         self._visible = visible
     
@@ -81,7 +98,9 @@ class Setting(object):
     def setDefaultValue(self, value):
         self._default_value = value
         return self
+   
     ## get the default value of the setting.
+    # \returns default_value
     def getDefaultValue(self):
         return self._default_value
 
@@ -105,7 +124,8 @@ class Setting(object):
                 return False
         return True
     
-    # Set the range of the setting. The validator will give errors or warnings if these are met.
+    ## Set the range of the setting. The validator will give errors or warnings if these are met.
+    #  See Validator for more info
     def setRange(self, min_value = None, max_value = None, min_value_warning = None, max_value_warning = None):
         if(self._validator is None):
             return
@@ -134,6 +154,7 @@ class Setting(object):
         return self._key
 
     ## Get the type of the setting
+    # \returns type
     def getType(self):
         return self._type
     
