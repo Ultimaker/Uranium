@@ -80,6 +80,17 @@ class MeshData(object):
         self.addVertex(x0, y0, z0)
         self.addVertex(x1, y1, z1)
         self.addVertex(x2, y2, z2)
+
+    ## Get all vertices of this mesh as a list
+    def getVerticesList(self):
+        out = []
+        for i in xrange(self._num_verts):
+            vertex = self._verts[i]
+            out.append(vertex.getPosition().x)
+            out.append(vertex.getPosition().y)
+            out.append(vertex.getPosition().z)
+
+        return out
         
     ## Calculate the normals of this mesh, assuming it was created by using addFace (eg; the verts are connected)    
     def calculateNormals(self):
