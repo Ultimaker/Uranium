@@ -30,5 +30,7 @@ class FileLogger(Logger):
             self._logger.error(message)
         elif(log_type == 'd'):
             self._logger.debug(message)
+        elif(log_type == 'c'):
+            self._logger.critical(message)
         else:
             print("Unable to log")
