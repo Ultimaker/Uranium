@@ -1,6 +1,6 @@
-from TransformTool import TransformTool
+from . import TransformTool
 def getMetaData():
     return { "name": "TransformTool", "type": "tool"  }
 
 def register(app):
-    app.getController().addTool("TransformTool",TransformTool())
+    app.getController().addTool("TransformTool", TransformTool.TransformTool())

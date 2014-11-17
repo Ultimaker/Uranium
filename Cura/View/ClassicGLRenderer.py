@@ -14,7 +14,7 @@ class ClassicGLRenderer(Renderer):
 
         glBegin(GL_TRIANGLES)
         vertex_count = mesh.getNumVerts()
-        for index in xrange(vertex_count):
+        for index in range(vertex_count):
             vertex = mesh.getVertex(index)
 
             position = vertex.getPosition()
