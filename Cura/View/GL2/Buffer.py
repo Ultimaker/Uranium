@@ -9,7 +9,7 @@ class Buffer(object):
 
     def create(self, data = None):
         self._buffer = glGenBuffers(1)
-        if data:
+        if data != None:
             self.setData(data)
 
     def setData(self, data):

@@ -4,6 +4,8 @@ from Cura.Math.Vector import Vector
 from Cura.Math.Quaternion import Quaternion
 from Cura.Math.Matrix import Matrix
 
+from ctypes import c_void_p
+
 class Shader(object):
     def __init__(self):
         super(Shader, self).__init__()
@@ -17,6 +19,7 @@ class Shader(object):
         self._bound = False
 
         self._uniformLocations = {}
+        self._attributeLocations = {}
 
     def setVertexSource(self, source):
         self._vertexSource = source
@@ -44,11 +47,12 @@ class Shader(object):
     def bind(self):
         if not self._bound:
             glUseProgram(self._program)
-            self.bound = True
+            self._bound = True
 
     def release(self):
-        glUseProgram(0)
-        self._bound = False
+        if self._bound:
+            glUseProgram(0)
+            self._bound = False
 
     def setUniform(self, name, value):
         self.bind()
@@ -67,5 +71,20 @@ class Shader(object):
         elif type(value) is Quaternion:
             glUniform4fv(loc, value.getData())
         elif type(value) is Matrix:
-            glUniformMatrix4fv(loc, value.getData())
+            glUniformMatrix4fv(loc, 1, False, value.getData())
 
+    def bindAttribute(self, name, components, type, offset):
+        self.bind()
+        if name not in self._attributeLocations:
+            loc = glGetAttribLocation(self._program, name)
+            self._attributeLocations[name] = loc
+
+        loc = self._attributeLocations[name]
+        glVertexAttribPointer(loc, components, type, False, 0, c_void_p(offset))
+        glEnableVertexAttribArray(loc)
+
+    def releaseAttribute(self, name):
+        if name not in self._attributeLocations:
+            return #It was never bound in the first place, so just ignore
+
+        glDisableVertexAttribArray(self._attributeLocations[name])
