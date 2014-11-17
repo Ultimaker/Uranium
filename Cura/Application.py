@@ -17,6 +17,17 @@ class Application(object):
         self._mesh_file_handler = MeshFileHandler()
         self._storage_devices = {}
         self._loggers = []
+        self._backend = None
+    
+    ##  Set the backend of the application (the program that does the heavy lifting).
+    #   \param backend Backend
+    def setBackend(self, backend):
+        self._backend = backend
+    
+    ##  Get the backend of the application (the program that does the heavy lifting).
+    #   \returns Backend
+    def getBackend(self):
+        return self._backend
 
     ##  Add a logger to the list.
     #   \param logger Logger
