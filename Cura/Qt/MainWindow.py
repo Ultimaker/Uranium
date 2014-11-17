@@ -3,6 +3,7 @@ from PyQt5.QtGui import QColor
 from PyQt5.QtQuick import QQuickWindow, QQuickItem
 
 from OpenGL import GL
+from OpenGL.GL.GREMEDY.string_marker import *
 
 class MainWindow(QQuickWindow):
     def __init__(self, parent = None):
@@ -31,8 +32,16 @@ class MainWindow(QQuickWindow):
     backgroundColor = pyqtProperty(QColor, fget=getBackgroundColor, fset=setBackgroundColor)
 
     def _render(self):
+        if bool(glStringMarkerGREMEDY):
+            msg = b"Begin Rendering Background"
+            glStringMarkerGREMEDY(len(msg), msg)
+
         GL.glClearColor(self._backgroundColor.redF(), self._backgroundColor.greenF(), self._backgroundColor.blueF(), self._backgroundColor.alphaF())
         GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
 
         if self._app:
             self._app.getController().getActiveView().render()
+
+        if bool(glStringMarkerGREMEDY):
+            msg = "End Rendering Background"
+            glStringMarkerGREMEDY(len(msg), msg)
