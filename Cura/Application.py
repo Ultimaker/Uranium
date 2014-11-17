@@ -31,9 +31,11 @@ class Application(object):
     ##  Send a message of certain type to all loggers to be handled.
     #   \param log_type 'e' (error) , 'i'(info), 'd'(debug) or 'w'(warning)
     #   \param message String containing message to be logged
-    def log(self, log_type, message):
-        for logger in loggers:
-            logger.log(log_type, message)
+    #   \param message List of variables to be added to the message
+    def log(self, log_type, message, *args):
+        for logger in self._loggers:
+            filled_message = message % args #replace all the %s with the variables
+            logger.log(log_type, filled_message)
 
     ##  Get the PluginRegistry of this application.
     def getPluginRegistry(self):

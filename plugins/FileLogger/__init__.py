@@ -5,4 +5,4 @@ def getMetaData():
     return { "name": "Local File Logger", "type": "Logger" }
 
 def register(app):
-    app.addLogger(FileLogger())
+    app.addLogger(FileLogger.FileLogger('cura.log'))
