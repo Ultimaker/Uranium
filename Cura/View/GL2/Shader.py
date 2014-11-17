@@ -4,9 +4,9 @@ from Cura.Math.Vector import Vector
 from Cura.Math.Quaternion import Quaternion
 from Cura.Math.Matrix import Matrix
 
-class Shader:
+class Shader(object):
     def __init__(self):
-        super().__init__()
+        super(Shader, self).__init__()
         self._vertexSource = None
         self._fragmentSource = None
 
