@@ -9,7 +9,7 @@
                     "key": "TestSetting",
                     "label": "Test setting!",
                     "type": "int",
-                    "default": "",
+                    "default": 10,
                     "min_value": 0,
                     "max_value": 10,
                     "children": [
