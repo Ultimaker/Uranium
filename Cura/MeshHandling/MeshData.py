@@ -85,7 +85,7 @@ class MeshData(object):
     def getVerticesList(self):
         out = numpy.zeros(self._num_verts * 3, dtype=numpy.float32)
         v = 0
-        for i in xrange(self._num_verts):
+        for i in range(self._num_verts):
             vertex = self._verts[i]
             out[v] = vertex.getPosition().x
             out[v+1] = vertex.getPosition().y
