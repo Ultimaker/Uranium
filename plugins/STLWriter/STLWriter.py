@@ -8,6 +8,10 @@ class STLWriter(MeshWriter):
         self._supported_extension = ".stl"
         
     #TODO: Only a single mesh can be saved to a single file, we might want to save multiple meshes to a single file
+    ##  Write the Mesh to file.
+    #   \param file_name Location to write to
+    #   \param storage_device Device to write to.
+    #   \param mesh_data MeshData to write.
     def write(self, file_name, storage_device, mesh_data):
         if(self._supported_extension in file_name):
             f = storage_device.openFile(file_name, 'wb')

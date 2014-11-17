@@ -9,6 +9,8 @@ class Matrix(object):
         self._data = data
     
     def at(x,y): #TODO add out of index checking
+        if(x > 4 or y > 4 or x < 0 or y < 0):
+            raise IndexError
         return self._data[x,y]
     
     def multiply(self, matrix):
