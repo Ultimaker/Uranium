@@ -16,16 +16,36 @@ class Application(object):
         self._controller = Controller()
         self._mesh_file_handler = MeshFileHandler()
         self._storage_devices = {}
+        self._loggers = []
+
+    ##  Add a logger to the list.
+    #   \param logger Logger
+    def addLogger(self, logger):
+        self._loggers.append(logger)
+    
+    ##  Get all loggers
+    #   \returns List of Loggers
+    def getLoggers(self):
+        return self._loggers
+
+    ##  Send a message of certain type to all loggers to be handled.
+    #   \param log_type 'e' (error) , 'i'(info), 'd'(debug) or 'w'(warning)
+    #   \param message String containing message to be logged
+    def log(self, log_type, message):
+        for logger in loggers:
+            logger.log(log_type, message)
 
     ##  Get the PluginRegistry of this application.
     def getPluginRegistry(self):
         return self._plugin_registry
 
     ##  Get the Controller of this application.
+    #   \returns Controller
     def getController(self):
         return self._controller
 
     ##  Get the MeshFileHandler of this application.
+    #   \returns MeshFileHandler
     def getMeshFileHandler(self):
         return self._mesh_file_handler
 
@@ -55,4 +75,4 @@ class Application(object):
     ##  Run the main eventloop.
     #   This method should be reimplemented by subclasses to start the main event loop.
     def run(self):
-        pass
+        raise NotImplementedError("Run must be implemented by application")
