@@ -1,3 +1,3 @@
 #!/bin/bash
 
-PYTHONPATH=. python2 -m unittest discover tests "Test*.py"
+PYTHONPATH=. python -m unittest discover tests "Test*.py"

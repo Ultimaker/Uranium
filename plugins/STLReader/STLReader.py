@@ -1,6 +1,8 @@
 from Cura.MeshHandling.MeshReader import MeshReader
 from Cura.MeshHandling.MeshData import MeshData
+
 import os
+import struct
 
 class STLReader(MeshReader):
     def __init__(self):
@@ -12,14 +14,14 @@ class STLReader(MeshReader):
         mesh = None
         if(self._supported_extension in file_name):
             mesh = MeshData()
-            f = storage_device.openFile(file_name, "rb")
-            if f.read(5).lower() == "solid":
+            f = storage_device.openFile(file_name, 'rt')
+            if f.read(5).lower() == 'solid':
                 self._loadAscii(mesh, f)
-                if mesh.getNumVerts() < 3:
-                    f.seek(5, os.SEEK_SET)
-                    self._loadBinary(mesh, f)
             else:
+                f.close()
+                f = storage_device.openFile(file_name, 'rb')
                 self._loadBinary(mesh, f)
+
             f.close()
             mesh.calculateNormals()
         return mesh
@@ -34,6 +36,7 @@ class STLReader(MeshReader):
             for line in lines.split('\r'):
                 if 'vertex' in line:
                     num_verts += 1
+
         mesh.reserveVertexCount(num_verts)
         f.seek(5, os.SEEK_SET)
         num_verts = 0
@@ -54,8 +57,8 @@ class STLReader(MeshReader):
     def _loadBinary(self, mesh, f):
         f.read(80-5) #Skip the header
         
-        num_faces = struct.unpack('<I', f.read(4))[0]
+        num_faces = struct.unpack(b'<I', f.read(4))[0]
         mesh.reserveFaceCount(num_faces)
         for idx in xrange(0, num_faces):
-            data = struct.unpack("<ffffffffffffH", f.read(50))
+            data = struct.unpack(b'<ffffffffffffH', f.read(50))
             mesh.addFace(data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10], data[11])

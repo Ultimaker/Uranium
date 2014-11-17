@@ -30,14 +30,14 @@ class MeshData(object):
     # \param num_faces Number of faces for which memory must be reserved.
     def reserveFaceCount(self, num_faces):
         # Create an array of (num_faces * 3) Vertex objects
-        self._verts = [Vertex() for v in xrange(num_faces * 3)]
+        self._verts = [Vertex() for v in range(num_faces * 3)]
         self._num_verts = 0
     
     ## Set the amount of verts before loading data to the mesh. This way we can create the array before we fill it.
     # \param num_verts Number of verts to be reserved.
     def reserveVertexCount(self, num_verts):
         # Create an array of num_verts Vertex objects
-        self._verts = [Vertex() for v in xrange(num_verts)]
+        self._verts = [Vertex() for v in range(num_verts)]
         self._num_verts = 0
     
     ## Add a vertex to the mesh.

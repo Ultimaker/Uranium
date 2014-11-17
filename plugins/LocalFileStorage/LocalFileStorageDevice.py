@@ -25,14 +25,14 @@ class LocalFileStorageDevice(StorageDevice):
 
     def _createRemovableDrives(self):
         if platform.system() == "Windows":
-            from WindowsRemovableDrives import WindowsRemoveableDrives
-            return WindowsRemovableDrives()
+            from . import WindowsRemoveableDrives
+            return WindowsRemovableDrives.WindowsRemovableDrives()
         elif platform.system() == "Darwin":
-            from OSXRemovableDrives import OSXRemovableDrives
-            return OSXRemovableDrives()
+            from . import OSXRemovableDrives
+            return OSXRemovableDrives.OSXRemovableDrives()
         elif platform.system() == "Linux":
-            from LinuxRemovableDrives import LinuxRemovableDrives
-            return LinuxRemovableDrives()
+            from . import LinuxRemovableDrives
+            return LinuxRemovableDrives.LinuxRemovableDrives()
         else:
             print("Unsupported system " + platform.system() + ", no removable device hotplugging support available.")
             return None
