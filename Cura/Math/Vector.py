@@ -4,13 +4,19 @@ class Vector(object):
     def __init__(self,x = 0 ,y = 0,z = 0):
         self._data = numpy.array([x, y, z],dtype=numpy.float32)
     
+    ##  Set the data of the vector
+    #   \param x X coordinate of vector.
+    #   \param y Y coordinate of vector.
+    #   \param z Z coordinate of vector.
     def setData(self, x = 0,y = 0,z = 0):
         self._data = numpy.array([x,y,z],dtype=numpy.float32)
-        
+    
+    ##  Get numpy array with the data
+    #   \returns numpy array of length 3 holding xyz data.
     def getData(self):
         return self._data
 
-    ## Return the x component of this vector
+    ##  Return the x component of this vector
     @property
     def x(self):
         return self._data[0]
@@ -20,7 +26,7 @@ class Vector(object):
     def setX(self, value):
         self._data[0] = value
 
-    ## Return the y component of this vector
+    ##  Return the y component of this vector
     @property
     def y(self):
         return self._data[1]
@@ -40,7 +46,7 @@ class Vector(object):
     def setZ(self, value):
         self._data[2] = value
     
-    ## Get the angle from this vector to another
+    ##  Get the angle from this vector to another
     def angleToVector(self, vector,):
         v0 = numpy.array(self._data, dtype=numpy.float32, copy=False)
         v1 = numpy.array(vector.getData(), dtype = numpy.float32, copy=False)
@@ -52,7 +58,7 @@ class Vector(object):
     def normalize(self, data):
         self._data = self._normalizeVector(self._data)
     
-    ## Return length, i.e. Euclidean norm, of ndarray along axis.
+    ##  Return length, i.e. Euclidean norm, of ndarray along axis.
     def _normalizeVector(self, data):
         data = numpy.array(data, dtype=numpy.float32, copy=True)
         if data.ndim == 1:
