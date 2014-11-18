@@ -57,19 +57,20 @@ class PluginRegistry(object):
     ## Load all plugins matching a certain set of metadata
     # \param metaData The metaData that needs to be matched.
     def loadPlugins(self, metaData):
-        pluginNames = self._findAllPlugins()
+        plugin_names = self._findAllPlugins()
         
-        for name in pluginNames:
-            pluginData = self.getMetaData(name)
+        for name in plugin_names:
+            plugin_data = self.getMetaData(name)
             
-            if self._subsetInDict(pluginData, metaData):
+            if self._subsetInDict(plugin_data, meta_data):
                 self.loadPlugin(name)
 
-    ## Get the metadata for a certain plugin
-    # \param name The name of the plugin
+    ##  Get the metadata for a certain plugin
+    #   \param name The name of the plugin
     def getMetaData(self, name):
         if name not in self._meta_data:
-            self._populateMetaData(name)
+            if not self._populateMetaData(name):
+                return {}
 
         return self._meta_data[name]
     
@@ -106,18 +107,18 @@ class PluginRegistry(object):
     ## Populate the list of metadata
     def _populateMetaData(self, name):
         plugin = self._findPlugin(name)
-        
         if not plugin:
-            raise InvalidMetaDataError(name)
+            self._application.log('e', 'Could not find plugin %s', name)
+            return False
         
-        metaData = None
+        meta_data = None
         try:
-            metaData = plugin.getMetaData()
+            meta_data = plugin.getMetaData()
         except AttributeError as e:
             print(e)
             return
 
-        if not metaData or (not "name" in metaData and not "type" in metaData):
+        if not meta_data or (not "name" in meta_data and not "type" in meta_data):
             raise InvalidMetaDataError(name)
 
         self._meta_data[name] = plugin.getMetaData()

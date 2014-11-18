@@ -59,7 +59,7 @@ class GL2Renderer(Renderer):
         buffer = self._bufferCache[mesh]
         buffer.bind()
         self._defaultShader.bindAttribute(b"vertex", 3, GL.GL_FLOAT, 0)
-        GL.glDrawArrays(GL.GL_TRIANGLES, 0, mesh.getNumVerts())
+        GL.glDrawArrays(GL.GL_TRIANGLES, 0, mesh.getNumVertices())
         self._defaultShader.releaseAttribute(b"vertex")
         buffer.release()
         self._defaultShader.release()

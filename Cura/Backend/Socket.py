@@ -7,10 +7,10 @@ class Socket(object):
             try:
                 self._socket.bind(('127.0.0.1', self._server_port))
             except:
-                print "Failed to listen on port: %d" % (self._server_port)
+                print("Failed to listen on port: %d" % (self._server_port))
                 self._self._server_port += 1
                 if self._self._server_port > 0xFFFF:
-                    print "Failed to listen on any port..." #TODO; add Logging
+                    print("Failed to listen on any port...") #TODO; add Logging
                     break
             else:
                 break
@@ -24,14 +24,14 @@ class Socket(object):
     
     def _socketListenFunction(self):
         self._socket.listen(1)
-        print 'Listening for engine communications on %d' % (self._server_port) #TODO; add logging
+        print('Listening for engine communications on %d' % (self._server_port)) #TODO; add logging
         while True:
             try:
                 self._data_socket, _ = self._socket.accept()
                 self._thread = threading.Thread(target = self._socketConnectFunction)
                 self._thread.daemon = True
                 self._thread.start()
-            except socket.error, e:
+            except socket.error as e:
                 if e.errno != errno.EINTR:
                     raise
     

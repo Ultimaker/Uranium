@@ -1,7 +1,5 @@
 from Cura.Backend.CommandFactory import CommandFactory
 from Cura.Backend.Socket import Socket
-from threading import threading
-from Queue import Queue
 
 ##      Base class for any backend communication (seperate piece of software)
 class Backend(object):
