@@ -9,6 +9,13 @@ Rectangle {
     width: childrenRect.width
     height: childrenRect.height
 
+    MouseArea {
+        //Used to filter mouse events so they do not pass into the background.
+        anchors.fill: parent;
+
+        acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
+    }
+
     ColumnLayout {
         spacing: 0
 
