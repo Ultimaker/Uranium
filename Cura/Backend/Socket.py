@@ -1,3 +1,12 @@
+import struct
+import threading
+from Queue import Queue
+
+class CommandData(object):
+    def __init__(self, command_id, data):
+        self.command_id = command_id
+        self.data = data
+
 class Socket(object):
     def __init__(self,backend, server_port=0xC20A):
         super(Socket, self).__init__() # Call super to make multiple inheritence work.
@@ -21,6 +30,12 @@ class Socket(object):
         self._listen_thread.daemon = True
         self._listen_thread.start()
         self._backend = backend
+        self._command_queue = Queue()
+    
+    ##  Return the next command_id & data that was recieved
+    def getNextCommand(self):
+        command_data = self._command_queue.get()
+        return command_data.command_id , command_data.data
     
     def _socketListenFunction(self):
         self._socket.listen(1)
@@ -35,16 +50,15 @@ class Socket(object):
                 if e.errno != errno.EINTR:
                     raise
     
-    def recievedRawCommand(self, command_id, data):
-        backend.recievedRawCommand(command_id, data)
-    
+    ##  Read data and stomp em in a queue
     def _socketConnectFunction(self):
         try:
             while self._data_socket is not None:
                 command = self.readInt32()
                 size = self.readInt32()
                 data = self.read(size)
-                self.received(command, data)
+                self._command_queue.put(CommandData(command,data))
+                self._command_queue.task_done()
         except IOError:
             pass
         self._close()
@@ -74,7 +88,20 @@ class Socket(object):
                 raise IOError()
         return data
 
-    def sendData(self, command_id, data):
+    ##  Send command with unpacked data
+    def sendCommand(self, command_id, data):
+        if self._data_socket is None:
+            return False
+        self._data_socket.sendall(struct.pack('@i', command_id))
+        if data is not None:
+            self._data_socket.sendall(struct.pack('@i', len(data)))
+            self._data_socket.sendall(struct.pack('@i', data)
+        else:
+            self._data_socket.sendall(struct.pack('@i', 0))
+        return True
+    
+    ##  Send command with packed data
+    def sendCommandPacked(self, command_id, data):
         if self._data_socket is None:
             return False
         self._data_socket.sendall(struct.pack('@i', command_id))
