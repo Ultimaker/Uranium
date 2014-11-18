@@ -1,16 +1,19 @@
 from Cura.Math.Matrix import Matrix
 from copy import copy, deepcopy
 
-
 ## \brief A scene node object. These objects can hold a mesh and multiple children. Each node has a transformation matrix
-#         that maps it it's parents space to the local space (it's inverse maps local space to parent). 
+#         that maps it it's parents space to the local space (it's inverse maps local space to parent).
+#
+#   \todo Add unit testing
 class SceneObject(object):
     def __init__(self, parent = None):
         self._children = []
         self._mesh_data = None
-        self._transformation = Matrix() 
+        self._transformation = Matrix()
         self._parent = parent
-        
+        if parent:
+            parent.addChild(self)
+
     ## Get the parent of this node. If the node has no parent, it is the root node.
     # \returns SceneObject if it has a parent and None if it's the root node.
     def getParent(self):
@@ -88,8 +91,12 @@ class SceneObject(object):
     
     ## Rotate the scene object (and thus its children) by given amount
     def rotate(self, rotation):
-        #TODO: Implement
-        pass
+        rotMatrix = Matrix()
+        rotMatrix.setByQuaternion(rotation)
+        self._transformation.multiply(rotMatrix)
+
+    def rotateByAngleAxis(self, angle, axis):
+        self._transformation.rotateByAxis(angle, axis)
     
     ## Scale the scene object (and thus its children) by given amount
     def scale(self, scale):
@@ -100,6 +107,11 @@ class SceneObject(object):
     # \param translation Vector(x,y,z).
     def translate(self, translation):
         self._transformation.translate(translation)
+
+    ## Set
+    def setPosition(self, position):
+        self._transformation.setByTranslation(position)
+
     
     ## Check if this node is at the bottom of the tree (and thus a leaf node).
     # \returns True if its a leaf object, false otherwise.
@@ -107,3 +119,13 @@ class SceneObject(object):
         if len(self._children) == 0:
             return True
         return False
+
+    ##  Can be overridden by child nodes if they need to perform special rendering.
+    #   If you need to handle rendering in a special way, for example for tool handles,
+    #   you can override this method and render the node. Return True to prevent the
+    #   view from rendering any attached mesh data.
+    #
+    #   \return False if the view should render this node, True if we handle our own rendering.
+    def render(self):
+        return False
+
