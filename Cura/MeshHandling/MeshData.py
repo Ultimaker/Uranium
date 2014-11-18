@@ -5,19 +5,19 @@ import numpy
 # Class to hold a list of verts and possibly how (and if) they are connected.
 class MeshData(object):
     def __init__(self):
-        self._verts = None
-        self._num_verts = 0
+        self._vertices = None
+        self._num_vertices = 0
         
-    def getVerts(self):
-        return self._verts
+    def getVertices(self):
+        return self._vertices[0 : self._num_vertices] #Only return up until point where data was filled
     
-    def getNumVerts(self):
-        return self._num_verts
+    def getNumVertices(self):
+        return self._num_vertices
 
     ## Get a vertex by index
     def getVertex(self, index):
         try:
-            return self._verts[index]
+            return self._vertices[index]
         except IndexError:
             return None
     
@@ -30,26 +30,26 @@ class MeshData(object):
     # \param num_faces Number of faces for which memory must be reserved.
     def reserveFaceCount(self, num_faces):
         # Create an array of (num_faces * 3) Vertex objects
-        self._verts = [Vertex() for v in range(num_faces * 3)]
-        self._num_verts = 0
+        self._vertices = [Vertex() for v in range(num_faces * 3)]
+        self._num_vertices = 0
     
     ## Set the amount of verts before loading data to the mesh. This way we can create the array before we fill it.
-    # \param num_verts Number of verts to be reserved.
-    def reserveVertexCount(self, num_verts):
-        # Create an array of num_verts Vertex objects
-        self._verts = [Vertex() for v in range(num_verts)]
-        self._num_verts = 0
+    # \param num_vertices Number of verts to be reserved.
+    def reserveVertexCount(self, num_vertices):
+        # Create an array of num_vertices Vertex objects
+        self._vertices = [Vertex() for v in range(num_vertices)]
+        self._num_vertices = 0
     
     ## Add a vertex to the mesh.
     # \param x x coordinate of vertex.
     # \param y y coordinate of vertex.
     # \param z z coordinate of vertex.
     def addVertex(self,x,y,z):
-        if len(self._verts) == self._num_verts:
-            self._verts.append(Vertex())
+        if len(self._vertices) == self._num_vertices:
+            self._vertices.append(Vertex())
 
-        self._verts[self._num_verts].setPosition(Vector(x, y, z))
-        self._num_verts += 1
+        self._vertices[self._num_vertices].setPosition(Vector(x, y, z))
+        self._num_vertices += 1
     
     ## Add a vertex to the mesh.
     # \param x x coordinate of vertex.
@@ -59,12 +59,12 @@ class MeshData(object):
     # \param ny y part of normal.
     # \param nz z part of normal.
     def addVertexWithNormal(self,x,y,z,nx,ny,nz):
-        if len(self._verts) == self._num_verts:
-            self._verts.append(Vertex())
+        if len(self._vertices) == self._num_vertices:
+            self._vertices.append(Vertex())
 
-        self._verts[self._num_verts].setPosition(Vector(x, y, z))
-        self._verts[self._num_verts].setNormal(Vector(nx, ny, nz))
-        self._num_verts += 1
+        self._vertices[self._num_vertices].setPosition(Vector(x, y, z))
+        self._vertices[self._num_vertices].setNormal(Vector(nx, ny, nz))
+        self._num_vertices += 1
     
     ## Add a face by providing three verts.
     # \param x0 x coordinate of first vertex.
@@ -83,10 +83,10 @@ class MeshData(object):
 
     ## Get all vertices of this mesh as a list
     def getVerticesList(self):
-        out = numpy.zeros(self._num_verts * 3, dtype=numpy.float32)
+        out = numpy.zeros(self._num_vertices * 3, dtype=numpy.float32)
         v = 0
-        for i in range(self._num_verts):
-            vertex = self._verts[i]
+        for i in range(self._num_vertices):
+            vertex = self._vertices[i]
             out[v] = vertex.getPosition().x
             out[v+1] = vertex.getPosition().y
             out[v+2] = vertex.getPosition().z
@@ -98,7 +98,7 @@ class MeshData(object):
     def calculateNormals(self):
         pass
         #TODO: Port this code to using Vertex objects
-        #vertex_data = self._verts.reshape(self._num_verts / 3, 6, 3)
+        #vertex_data = self._vertices.reshape(self._num_vertices / 3, 6, 3)
         #normals = numpy.cross(vertex_data[::, 2] - vertex_data[::, 0], vertex_data[::, 4] - vertex_data[::, 0])
         #length = numpy.sqrt(normals[:, 0] ** 2 + normals[:, 1] ** 2 + normals[:, 2] ** 2)
 
