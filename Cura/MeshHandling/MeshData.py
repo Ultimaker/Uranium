@@ -20,6 +20,14 @@ class MeshData(object):
             return self._vertices[index]
         except IndexError:
             return None
+        
+    def hasNormals(self):
+        #TODO: Implement
+        return False
+    
+    def hasFaces(self):
+        #TODO: Implement
+        return False
     
     ## Transform the meshdata by given Matrix
     def transform(self, transformation):
