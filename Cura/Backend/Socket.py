@@ -1,6 +1,6 @@
 import struct
 import threading
-from Queue import Queue
+import queue
 
 class CommandData(object):
     def __init__(self, command_id, data):
@@ -30,7 +30,7 @@ class Socket(object):
         self._listen_thread.daemon = True
         self._listen_thread.start()
         self._backend = backend
-        self._command_queue = Queue()
+        self._command_queue = queue()
     
     ##  Return the next command_id & data that was recieved
     def getNextCommand(self):
@@ -89,15 +89,15 @@ class Socket(object):
         return data
 
     ##  Send command with unpacked data
-    def sendCommand(self, command_id, data):
+    '''def sendCommand(self, command_id, data):
         if self._data_socket is None:
             return False
         self._data_socket.sendall(struct.pack('@i', command_id))
         if data is not None:
             self._data_socket.sendall(struct.pack('@i', len(data)))
             self._data_socket.sendall(struct.pack('@i', data)
-        else:
-            self._data_socket.sendall(struct.pack('@i', 0))
+        #else:
+            #self._data_socket.sendall(struct.pack('@i', 0))
         return True
     
     ##  Send command with packed data
@@ -110,4 +110,4 @@ class Socket(object):
             self._data_socket.sendall(data)
         else:
             self._data_socket.sendall(struct.pack('@i', 0))
-        return True
+        return True''' 

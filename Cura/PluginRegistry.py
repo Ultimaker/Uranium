@@ -56,7 +56,7 @@ class PluginRegistry(object):
     
     ## Load all plugins matching a certain set of metadata
     # \param metaData The metaData that needs to be matched.
-    def loadPlugins(self, metaData):
+    def loadPlugins(self, meta_data):
         plugin_names = self._findAllPlugins()
         
         for name in plugin_names:
