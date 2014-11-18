@@ -67,7 +67,7 @@ class Matrix(object):
     def setByRotationAxis(self, angle, direction, point = None):
         sina = math.sin(angle)
         cosa = math.cos(angle)
-        direction_data = direction.getData()
+        direction_data = self._unit_vector(direction.getData())
         # rotation matrix around unit vector
         R = numpy.diag([cosa, cosa, cosa])
         R += numpy.outer(direction_data, direction_data) * (1.0 - cosa)
@@ -127,3 +127,46 @@ class Matrix(object):
             [    q[1, 2]+q[3, 0], 1.0-q[1, 1]-q[3, 3],     q[2, 3]-q[1, 0], 0.0],
             [    q[1, 3]-q[2, 0],     q[2, 3]+q[1, 0], 1.0-q[1, 1]-q[2, 2], 0.0],
             [                0.0,                 0.0,                 0.0, 1.0]])
+        
+    def _unit_vector(data, axis=None, out=None):
+        """Return ndarray normalized by length, i.e. Euclidean norm, along axis.
+
+        >>> v0 = numpy.random.random(3)
+        >>> v1 = unit_vector(v0)
+        >>> numpy.allclose(v1, v0 / numpy.linalg.norm(v0))
+        True
+        >>> v0 = numpy.random.rand(5, 4, 3)
+        >>> v1 = unit_vector(v0, axis=-1)
+        >>> v2 = v0 / numpy.expand_dims(numpy.sqrt(numpy.sum(v0*v0, axis=2)), 2)
+        >>> numpy.allclose(v1, v2)
+        True
+        >>> v1 = unit_vector(v0, axis=1)
+        >>> v2 = v0 / numpy.expand_dims(numpy.sqrt(numpy.sum(v0*v0, axis=1)), 1)
+        >>> numpy.allclose(v1, v2)
+        True
+        >>> v1 = numpy.empty((5, 4, 3))
+        >>> unit_vector(v0, axis=1, out=v1)
+        >>> numpy.allclose(v1, v2)
+        True
+        >>> list(unit_vector([]))
+        []
+        >>> list(unit_vector([1]))
+        [1.0]
+
+        """
+        if out is None:
+            data = numpy.array(data, dtype=numpy.float64, copy=True)
+            if data.ndim == 1:
+                data /= math.sqrt(numpy.dot(data, data))
+                return data
+        else:
+            if out is not data:
+                out[:] = numpy.array(data, copy=False)
+            data = out
+        length = numpy.atleast_1d(numpy.sum(data*data, axis))
+        numpy.sqrt(length, length)
+        if axis is not None:
+            length = numpy.expand_dims(length, axis)
+        data /= length
+        if out is None:
+            return data

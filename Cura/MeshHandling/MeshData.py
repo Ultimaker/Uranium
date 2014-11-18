@@ -81,6 +81,11 @@ class MeshData(object):
         self.addVertex(x1, y1, z1)
         self.addVertex(x2, y2, z2)
 
+    def addFaceWithNormals(self,x0, y0, z0, nx0, ny0, nz0, x1, y1, z1, nx1, ny1, nz1, x2, y2, z2, nx2, ny2, nz2):
+        self.addVertexWithNormal(x0, y0, z0, nx0, ny0, nz0)
+        self.addVertexWithNormal(x1, y1, z1, nx1, ny1, nz1)
+        self.addVertexWithNormal(x2, y2, z2, nx2, ny2, nz2)
+        
     ## Get all vertices of this mesh as a list
     def getVerticesList(self):
         out = numpy.zeros(self._num_vertices * 3, dtype=numpy.float32)
