@@ -1,4 +1,5 @@
 from Cura.Math.Matrix import Matrix
+from Cura.Signal import Signal
 from copy import copy, deepcopy
 
 ## \brief A scene node object. These objects can hold a mesh and multiple children. Each node has a transformation matrix
@@ -7,6 +8,11 @@ from copy import copy, deepcopy
 #   \todo Add unit testing
 class SceneObject(object):
     def __init__(self, parent = None):
+        # Signals
+        self.parentChanged = Signal()
+        self.childrenChanged = Signal()
+        self.transformationChanged = Signal()
+
         self._children = []
         self._mesh_data = None
         self._transformation = Matrix()
@@ -23,6 +29,10 @@ class SceneObject(object):
     # \param scene_object SceneObject that is the parent of this object.
     def setParent(self, scene_object):
         self._parent = scene_object
+        self.parentChanged.emit()
+
+    ##  Signal. Emitted whenever the parent changes.
+    parentChanged = None
     
     ## Get the (original) mesh data from the scene node/object. 
     # \returns MeshData
@@ -40,15 +50,23 @@ class SceneObject(object):
     # \param mesh_data MeshData object
     def setMeshData(self, mesh_data):
         self._mesh_data = mesh_data
+        self.meshDataChanged.emit(self)
+
+    ##  Signal. Emitted whenever the attached mesh data object changes.
+    meshDataChanged = Signal()
     
     ## Add a child to this node and set it's parent as this node.
     # \params scene_object SceneObject to add.
     def addChild(self, scene_object):
         scene_object.setParent(self)
+        scene_object.transformationChanged.connect(self.transformationChanged)
+        scene_object.childrenChanged.connect(self.childrenChanged)
         self._children.append(scene_object)
+        self.childrenChanged.emit(self)
         
     def removeChild(self):
         # TODO : We need to think about how children are removed (if ever?).
+        self.childrenChanged.emit(self)
         pass
     
     ## Removes all children and its children's children.
@@ -56,6 +74,7 @@ class SceneObject(object):
         for child in self._children:
             child.removeAllChildren()
         del self._children[:] #Actually destroy the children (and not just replace it with empty list
+        self.childrenChanged.emit(self)
     
     ## Get the list of direct children
     # \returns List of children
@@ -68,6 +87,10 @@ class SceneObject(object):
         children = []
         for child in self._children:
             children.extend(child.getAllChildren())
+
+    ##  Signal. Emitted whenever the list of children of this object or any child object changes.
+    #   \param object The object that triggered the change.
+    childrenChanged = None
     
     ## Computes and returns the transformation from origin to local space
     # \returns 4x4 transformation matrix
@@ -88,30 +111,39 @@ class SceneObject(object):
     # \param transformation 4x4 (homogenous) matrix
     def setLocalTransformation(self, transformation):
         self._transformation = transformation
+        self.transformationChanged.emit(self)
     
     ## Rotate the scene object (and thus its children) by given amount
     def rotate(self, rotation):
         rotMatrix = Matrix()
         rotMatrix.setByQuaternion(rotation)
         self._transformation.multiply(rotMatrix)
+        self.transformationChanged.emit(self)
 
     def rotateByAngleAxis(self, angle, axis):
         self._transformation.rotateByAxis(angle, axis)
+        self.transformationChanged.emit(self)
     
     ## Scale the scene object (and thus its children) by given amount
     def scale(self, scale):
         #TODO Implement
+        self.transformationChanged.emit(self)
         pass
     
     ## Translate the scene object (and thus its children) by given amount.
     # \param translation Vector(x,y,z).
     def translate(self, translation):
         self._transformation.translate(translation)
+        self.transformationChanged.emit(self)
 
     ## Set
     def setPosition(self, position):
         self._transformation.setByTranslation(position)
+        self.transformationChanged.emit(self)
 
+    ##  Signal. Emitted whenever the transformation of this object or any child object changes.
+    #   \param object The object that caused the change.
+    transformationChanged = None
     
     ## Check if this node is at the bottom of the tree (and thus a leaf node).
     # \returns True if its a leaf object, false otherwise.

@@ -30,10 +30,12 @@ class MainWindow(QQuickWindow):
 
         if self._app:
             self._app.getController().removeInputDevice("Mouse")
+            self._app.getController().getScene().sceneChanged.disconnect(self.update)
 
         self._app = app
         if self._app:
             self._app.getController().addInputDevice("Mouse", self._mouseDevice)
+            self._app.getController().getScene().sceneChanged.connect(self._onSceneChanged)
 
     application = pyqtProperty(QObject, fget=getApplication, fset=setApplication)
 
@@ -78,3 +80,6 @@ class MainWindow(QQuickWindow):
         if bool(glStringMarkerGREMEDY):
             msg = "End Rendering Background"
             glStringMarkerGREMEDY(len(msg), msg)
+
+    def _onSceneChanged(self, object):
+        self.update()
