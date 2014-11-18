@@ -101,6 +101,14 @@ class Controller(object):
         except KeyError:
             self._application.log('e', "No view named %s found", name)
 
+    ##  Set the current active tool.
+    #   \param name The name of the tool to set as active.
+    def setActiveTool(self, name):
+        try:
+            self._active_tool = self._tools[name]
+        except KeyError:
+            pass
+
     ##  Return the scene
     def getScene(self):
         return self._scene
