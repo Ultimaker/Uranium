@@ -54,7 +54,7 @@ class OBJReader(MeshReader):
                 else:
                     mesh.addFace(vertex_list[i][0], vertex_list[i][1], vertex_list[i][2], vertex_list[j][0], vertex_list[j][1], vertex_list[j][2], vertex_list[k][0], vertex_list[k][1], vertex_list[k][2])
                 
-            if(num_normals != num_vertices) # We didn't get enough normals for the verts, so calculate them
+            if(num_normals != num_vertices): # We didn't get enough normals for the verts, so calculate them
                 volume.calculateNormals()
         return mesh
     

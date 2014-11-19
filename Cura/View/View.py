@@ -15,6 +15,7 @@ class View(object):
 
     def setController(self, controller):
         self._controller = controller
+        self._renderer.setController(controller)
 
     def render(self, glcontext):
         pass

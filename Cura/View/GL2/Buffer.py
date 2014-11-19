@@ -14,7 +14,7 @@ class Buffer(object):
 
     def setData(self, data):
         self.bind()
-        glBufferData(self._type, len(data), data, self._usage)
+        glBufferData(self._type, data.size * 4, data, self._usage)
         self.release()
 
     def destroy(self):

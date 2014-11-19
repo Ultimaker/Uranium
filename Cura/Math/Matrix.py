@@ -1,6 +1,8 @@
 import numpy
 import math
 
+from Cura.Math.Quaternion import Quaternion
+
 ## Heavily based (in most cases a straight copy with some refactoring) on the excellent 'library' Transformations.py created by Christoph Gohlke.
 # This class is a 4x4 homogenous matrix wrapper arround numpy. 
 
@@ -36,6 +38,9 @@ class Matrix(object):
     # \returns The invertex matrix.
     def getInverse(self):
         return Matrix(numpy.linalg.inv(self._data,dtype=numpy.float32))
+
+    def getTransposed(self):
+        return Matrix(numpy.transpose(self._data))
     
     ## Translate the matrix based on Vector.
     # \param direction The vector by which the matrix needs to be translated.
@@ -50,6 +55,9 @@ class Matrix(object):
         M = numpy.identity(4,dtype=numpy.float32)
         M[:3, 3] = direction.getData()[:3]
         self._data = M
+
+    def setTranslation(self, translation):
+        self._data[:3, 3] = translation.getData()[:3]
     
     ## Rotate the matrix based on rotation axis
     # \param angle The angle by which matrix needs to be rotated.
@@ -61,7 +69,7 @@ class Matrix(object):
         self.multiply(rotation_matrix)
     
     ## Set the matrix based on rotation axis. This overwrites any existing data.
-    # \param angle The angle by which matrix needs to be rotated.
+    # \param angle The angle by which matrix needs to be rotated in radians.
     # \param direction Axis by which the matrix needs to be rotated about.
     # \param point Point where from where the rotation happens. If None, origin is used.
     def setByRotationAxis(self, angle, direction, point = None):
@@ -116,9 +124,9 @@ class Matrix(object):
     ## Set the matrix by proving a quaternion. This overwrites any existing data
     # \param quaternion The quaternion used to set the matrix data.
     def setByQuaternion(self, quaternion):
-        q = numpy.array(quaternion.getData(), dtype=numpy.float64, copy=True)
+        q = numpy.array(quaternion.getData(), dtype=numpy.float32, copy=True)
         n = numpy.dot(q, q)
-        if n < _EPS:
+        if n < Quaternion.EPS:
             return numpy.identity(4)
         q *= math.sqrt(2.0 / n)
         q = numpy.outer(q, q)
@@ -127,8 +135,41 @@ class Matrix(object):
             [    q[1, 2]+q[3, 0], 1.0-q[1, 1]-q[3, 3],     q[2, 3]-q[1, 0], 0.0],
             [    q[1, 3]-q[2, 0],     q[2, 3]+q[1, 0], 1.0-q[1, 1]-q[2, 2], 0.0],
             [                0.0,                 0.0,                 0.0, 1.0]])
-        
-    def _unit_vector(data, axis=None, out=None):
+
+
+    ##  Set the matrix to an orthographic projection. This overwrites any existing data.
+    #   \param left The left edge of the projection
+    #   \param right The right edge of the projection
+    #   \param top The top edge of the projection
+    #   \param bottom The bottom edge of the projection
+    #   \param near The near plane of the projection
+    #   \param far The far plane of the projection
+    def setOrtho(self, left, right, bottom, top, near, far):
+        self.setToIdentity()
+        self._data[0, 0] = 2 / (right - left)
+        self._data[1, 1] = 2 / (top - bottom)
+        self._data[2, 2] = -2 / (far - near)
+        self._data[3, 0] = -((right + left) / (right - left))
+        self._data[3, 1] = -((top + bottom) / (top - bottom))
+        self._data[3, 2] = -((far + near) / (far - near))
+
+    ##  Set the matrix to a perspective projection. This overwrites any existing data.
+    #   \param fovy Field of view in the Y direction
+    #   \param aspect The aspect ratio
+    #   \param near Distance to the near plane
+    #   \param far Distance to the far plane
+    def setPerspective(self, fovy, aspect, near, far):
+        self.setToIdentity()
+
+        f = math.cos(math.radians(fovy) / 2) / math.sin(math.radians(fovy) / 2)
+
+        self._data[0, 0] = f / aspect
+        self._data[1, 1] = f
+        self._data[2, 2] = (far + near)/(near - far)
+        self._data[2, 3] = -1
+        self._data[3, 2] = (2 * far * near)/(near - far)
+
+    def _unit_vector(self, data, axis=None, out=None):
         """Return ndarray normalized by length, i.e. Euclidean norm, along axis.
 
         >>> v0 = numpy.random.random(3)
@@ -155,7 +196,7 @@ class Matrix(object):
 
         """
         if out is None:
-            data = numpy.array(data, dtype=numpy.float64, copy=True)
+            data = numpy.array(data, dtype=numpy.float32, copy=True)
             if data.ndim == 1:
                 data /= math.sqrt(numpy.dot(data, data))
                 return data
@@ -170,3 +211,4 @@ class Matrix(object):
         data /= length
         if out is None:
             return data
+

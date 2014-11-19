@@ -2,6 +2,9 @@ from Cura.InputDevice import InputDevice
 from Cura.View.View import View
 from Cura.Tool import Tool
 from Cura.Scene.Scene import Scene
+from Cura.Event import Event, MouseEvent, ToolEvent
+from Cura.Math.Vector import Vector
+from Cura.Math.Quaternion import Quaternion
 
 ## Glue glass that holds the scene, (active) view(s), (active) tool(s) and possible user inputs.
 #
@@ -101,7 +104,63 @@ class Controller(object):
         except KeyError:
             self._application.log('e', "No view named %s found", name)
 
+    ##  Set the current active tool.
+    #   \param name The name of the tool to set as active.
+    def setActiveTool(self, name):
+        try:
+            if self._active_tool:
+                self._active_tool.event(ToolEvent(ToolEvent.ToolDeactivateEvent))
+
+            self._active_tool = self._tools[name]
+
+            if self._active_tool:
+                self._active_tool.event(ToolEvent(ToolEvent.ToolActivateEvent))
+        except KeyError:
+            pass
+
     ##  Return the scene
     def getScene(self):
         return self._scene
+
+    ## Process an event
+    def event(self, event):
+        # First, try to perform camera control
+        if type(event) is MouseEvent:
+            if MouseEvent.RightButton in event.buttons:
+                self._rotateCamera(event)
+                return
+            elif MouseEvent.MiddleButton in event.buttons:
+                self._moveCamera(event)
+                return
+
+        # If we are not doing camera control, pass the event to the active tool.
+        if self._active_tool and self._active_tool.event(event):
+            return
+
+        #TODO: Handle selection
+
+    def _moveCamera(self, event):
+        camera = self._scene.getActiveCamera()
+        if not camera:
+            return
+
+        if camera.isLocked():
+            return
+
+        camera.translate(Vector(event.deltaX / 100.0, event.deltaY / 100.0, 0))
+
+    def _rotateCamera(self, event):
+        camera = self._scene.getActiveCamera()
+        if not camera:
+            return
+
+        if camera.isLocked():
+            return
+
+        rot = Quaternion()
+        rot.setByAxis(event.deltaX / 100.0, Vector(0, 1, 0))
+        camera.rotate(rot)
+
+        rot.setByAxis(-event.deltaY / 100.0, Vector(1, 0 ,0))
+        camera.rotate(rot)
 

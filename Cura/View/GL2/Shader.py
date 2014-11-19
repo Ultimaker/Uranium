@@ -71,7 +71,7 @@ class Shader(object):
         elif type(value) is Quaternion:
             glUniform4fv(loc, value.getData())
         elif type(value) is Matrix:
-            glUniformMatrix4fv(loc, 1, False, value.getData())
+            glUniformMatrix4fv(loc, 1, False, value.getTransposed().getData())
 
     def bindAttribute(self, name, components, type, offset):
         self.bind()
@@ -80,8 +80,8 @@ class Shader(object):
             self._attributeLocations[name] = loc
 
         loc = self._attributeLocations[name]
-        glVertexAttribPointer(loc, components, type, False, 0, c_void_p(offset))
         glEnableVertexAttribArray(loc)
+        glVertexAttribPointer(loc, components, type, False, 0, c_void_p(offset))
 
     def releaseAttribute(self, name):
         if name not in self._attributeLocations:

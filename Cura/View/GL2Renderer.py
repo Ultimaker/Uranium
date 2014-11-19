@@ -16,9 +16,6 @@ class GL2Renderer(Renderer):
         self._initialized = False
 
     def initialize(self):
-        print(GL.glGetString(GL.GL_VERSION))
-        print(GL.glGetString(GL.GL_VENDOR))
-
         self._defaultShader = Shader()
 
         self._defaultShader.setVertexSource("""
@@ -53,9 +50,15 @@ class GL2Renderer(Renderer):
             self._bufferCache[mesh] = vertexBuffer
 
         self._defaultShader.bind()
-        self._defaultShader.setUniform(b"projectionMatrix", Matrix())
-        self._defaultShader.setUniform(b"viewMatrix", Matrix())
+        camera = self.getController().getScene().getActiveCamera()
+        if camera:
+            self._defaultShader.setUniform(b"projectionMatrix", camera.getProjectionMatrix())
+            self._defaultShader.setUniform(b"viewMatrix", camera.getGlobalTransformation())
+        else:
+            self._defaultShader.setUniform(b"projectionMatrix", Matrix())
+            self._defaultShader.setUniform(b"viewMatrix", Matrix())
         self._defaultShader.setUniform(b"modelMatrix", position)
+
         buffer = self._bufferCache[mesh]
         buffer.bind()
         self._defaultShader.bindAttribute(b"vertex", 3, GL.GL_FLOAT, 0)

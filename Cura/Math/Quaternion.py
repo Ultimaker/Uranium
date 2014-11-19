@@ -1,14 +1,20 @@
+import numpy
+import math
+
 # Wrapper for Quaternion
 class Quaternion(object):
+    EPS = numpy.finfo(float).eps * 4.0
+
     def __init__(self):
         self._data = numpy.zeros((4, ))
     
     ## Set quaternion by providing rotation about an axis.
     # \example q.setByAxis(0.123,[1,0,0])
     def setByAxis(self,angle, axis):
-        q = numpy.array([0.0, axis[0], axis[1], axis[2]],dtype=numpy.float32)
-        qlen = vector_norm(q)
-        if qlen > _EPS:
+        a = axis.getData()
+        q = numpy.array([0.0, a[0], a[1], a[2]], dtype=numpy.float32)
+        qlen = self._vector_norm(q)
+        if qlen > self.EPS:
             q *= math.sin(angle/2.0) / qlen
         q[0] = math.cos(angle/2.0)
         self._data = q
@@ -73,3 +79,18 @@ class Quaternion(object):
         if q[0] < 0.0:
             numpy.negative(q, q)
         self._data = q
+
+
+    def _vector_norm(self, data, axis = None, out = None):
+        data = numpy.array(data, dtype=numpy.float32, copy=True)
+        if out is None:
+            if data.ndim == 1:
+                return math.sqrt(numpy.dot(data, data))
+            data *= data
+            out = numpy.atleast_1d(numpy.sum(data, axis=axis))
+            numpy.sqrt(out, out)
+            return out
+        else:
+            data *= data
+            numpy.sum(data, axis=axis, out=out)
+            numpy.sqrt(out, out)
