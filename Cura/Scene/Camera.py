@@ -2,6 +2,9 @@ from . import SceneObject
 
 from Cura.Math.Matrix import Matrix
 
+##  A SceneObject subclass that provides a camera object.
+#   The camera provides a projection matrix and its transformation matrix
+#   can be used as view matrix.
 class Camera(SceneObject.SceneObject):
     def __init__(self, parent = None):
         super().__init__(parent)
@@ -10,14 +13,11 @@ class Camera(SceneObject.SceneObject):
         #self._projectionMatrix.setPerspective(45, 1, 0, 5)
         self._locked = False
 
+    ##  Get the projection matrix of this camera.
     def getProjectionMatrix(self):
         return self._projectionMatrix
 
+    ##  Set the projection matrix of this camera.
+    #   \param matrix The projection matrix to use for this camera.
     def setProjectionMatrix(self, matrix):
         self._projectionMatrix = matrix
-
-    def isLocked(self):
-        return self._locked
-
-    def setLocked(self, lock):
-        self._locked = lock

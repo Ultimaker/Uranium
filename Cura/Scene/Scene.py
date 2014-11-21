@@ -1,6 +1,7 @@
 from Cura.Scene.SceneObject import SceneObject
 from Cura.Signal import Signal
 
+##  Container object for the scene graph.
 class Scene(object):
     def __init__(self):
         self.sceneChanged = Signal()
@@ -11,12 +12,16 @@ class Scene(object):
         self._root.meshDataChanged.connect(self.sceneChanged)
         self._active_camera = None
         
+    ##  Get the root node of the scene.
     def getRoot(self):
         return self._root
 
+    ##  Get the camera that should be used for rendering.
     def getActiveCamera(self):
         return self._active_camera
 
+    ##  Set the camera that should be used for rendering.
+    #   \param camera The camera to use.
     def setActiveCamera(self, camera):
         self._active_camera = camera
 

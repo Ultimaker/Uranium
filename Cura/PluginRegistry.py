@@ -105,8 +105,8 @@ class PluginRegistry(object):
     def setApplication(self, app):
         self._application = app
     
-    #   Private
-    ##  Populate the list of metadata
+    ##  Private
+    #   Populate the list of metadata
     def _populateMetaData(self, name):
         plugin = self._findPlugin(name)
         if not plugin:
@@ -125,8 +125,8 @@ class PluginRegistry(object):
 
         self._meta_data[name] = plugin.getMetaData()
 
-    #   Private
-    ##  Try to find a module implementing a plugin
+    ##  Private
+    #   Try to find a module implementing a plugin
     #   \param name The name of the plugin to find
     #   \returns module if it was found None otherwise
     def _findPlugin(self, name):
@@ -154,8 +154,8 @@ class PluginRegistry(object):
                         
         return module
     
-    #   Private
-    ##  Returns a list of all possible plugin names in the plugin locations
+    ##  Private
+    #   Returns a list of all possible plugin names in the plugin locations
     def _findAllPlugins(self, paths = None):
         names = []
         
@@ -172,8 +172,8 @@ class PluginRegistry(object):
                         names += self._findAllPlugins([ filepath ])
         return names
     
-    #   Private
-    ##  Try to find a directory we can use to load a plugin from
+    ##   Private
+    #   Try to find a directory we can use to load a plugin from
     #   \param name The name of the plugin to locate
     #   \param folder The base folder to look into
     def _locatePlugin(self, name, folder):
@@ -188,8 +188,8 @@ class PluginRegistry(object):
                         return filepath
         return False
     
-    #   Private
-    ##  Check if a certain dictionary contains a certain subset of key/value pairs
+    ##  Private
+    #   Check if a certain dictionary contains a certain subset of key/value pairs
     #   \param dictionary The dictionary to search
     #   \param subset The subset to search for
     def _subsetInDict(self, dictionary, subset):

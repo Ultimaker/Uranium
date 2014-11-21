@@ -1,3 +1,4 @@
+##  Abstract base class for logging classes.
 class Logger(object):
     def __init__(self):
         super(Logger, self).__init__() # Call super to make multiple inheritence work.

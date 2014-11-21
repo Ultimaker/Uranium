@@ -11,6 +11,7 @@ from Cura.Application import Application
 
 from Cura.Qt.MainWindow import MainWindow
 
+##  Application subclass that provides a Qt application object.
 class QtApplication(QApplication, Application):
     def __init__(self):
         super(QtApplication, self).__init__(sys.argv)

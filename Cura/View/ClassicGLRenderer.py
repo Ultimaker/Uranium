@@ -2,6 +2,7 @@ from Cura.View.Renderer import Renderer
 
 from OpenGL.GL import *
 
+##  A Renderer subclass using classic (1.0-style) OpenGL to render.
 class ClassicGLRenderer(Renderer):
     def __init__(self):
         super(Renderer, self).__init__()

@@ -7,6 +7,7 @@ from Cura.View.GL2.Shader import Shader
 
 from Cura.Math.Matrix import Matrix
 
+##  A Renderer implementation using OpenGL2 to render.
 class GL2Renderer(Renderer):
     def __init__(self):
         super(Renderer, self).__init__()

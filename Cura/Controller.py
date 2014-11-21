@@ -139,6 +139,8 @@ class Controller(object):
 
         #TODO: Handle selection
 
+    ##  Private
+    #   Moves the camera in response to a mouse event.
     def _moveCamera(self, event):
         camera = self._scene.getActiveCamera()
         if not camera:
@@ -149,6 +151,8 @@ class Controller(object):
 
         camera.translate(Vector(event.deltaX / 100.0, event.deltaY / 100.0, 0))
 
+    ##  Private
+    #   Rotates the camera in response to a mouse event.
     def _rotateCamera(self, event):
         camera = self._scene.getActiveCamera()
         if not camera:

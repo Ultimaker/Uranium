@@ -4,6 +4,7 @@ from PyQt5.QtGui import QMouseEvent
 from Cura.InputDevice import InputDevice
 from Cura.Event import MouseEvent
 
+##  An InputDevice subclass that processes Qt mouse events and returns a Cura.Event.MouseEvent
 class QtMouseDevice(InputDevice):
     def __init__(self):
         super().__init__()

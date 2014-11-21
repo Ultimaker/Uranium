@@ -8,6 +8,8 @@ from OpenGL.GL.GREMEDY.string_marker import *
 from Cura.Math.Vector import Vector
 from Cura.Qt.QtMouseDevice import QtMouseDevice
 
+
+##  QQuickWindow subclass that provides the main window.
 class MainWindow(QQuickWindow):
     def __init__(self, parent = None):
         super(MainWindow, self).__init__(parent)

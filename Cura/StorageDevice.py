@@ -12,12 +12,3 @@ class StorageDevice(object):
     #  \return An open stream that can be read from or written to.
     def openFile(self, file_name, mode):
         raise NotImplementedError()
-    
-    def getStorageProperty(self, name):
-        try:
-            return self._properties[name]
-        except KeyError:
-            return None
-        
-    def setStorageProperty(self, name, value):
-        self._properties[name] = value

@@ -161,3 +161,14 @@ class SceneObject(object):
     def render(self):
         return False
 
+    ##  Get whether this SceneObject is locked, that is, its transformation relative to its parent should not change.
+    def isLocked(self):
+        return self._locked
+
+    ##  Set whether this SceneObject is locked.
+    #   \param lock True if this object should be locked, False if not.
+    #   \sa isLocked
+    def setLocked(self, lock):
+        self._locked = lock
+
+

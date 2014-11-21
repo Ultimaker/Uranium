@@ -6,6 +6,9 @@ from Cura.Math.Matrix import Matrix
 
 from ctypes import c_void_p
 
+##  Wrapper around an OpenGL shader program.
+#   This class wraps an OpenGL shader program and the shaders it contains. Currently only
+#   vertex and fragment shaders are supported.
 class Shader(object):
     def __init__(self):
         super(Shader, self).__init__()
@@ -21,12 +24,20 @@ class Shader(object):
         self._uniformLocations = {}
         self._attributeLocations = {}
 
+    ##  Set the source code for the vertex shader.
+    #   \param source The source code to use.
     def setVertexSource(self, source):
         self._vertexSource = source
 
+    ##  Set the source code for the fragment shader.
+    #   \param source The source code to use.
     def setFragmentSource(self, source):
         self._fragmentSource = source
 
+    ##  Compile and link the shader program.
+    #   This will create the actual OpenGL shaders and program and use
+    #   the set vertex and fragment sources to compile and link the program.
+    #   It does nothing if vertex or fragment source is not set.
     def build(self):
         if not self._vertexSource or not self._fragmentSource:
             return
@@ -44,16 +55,22 @@ class Shader(object):
         glAttachShader(self._program, self._fragmentShader)
         glLinkProgram(self._program)
 
+    ##  Bind the shader program so it can be used for rendering.
     def bind(self):
         if not self._bound:
             glUseProgram(self._program)
             self._bound = True
 
+    ##  Release the shader program. Does nothing if the shader was not bound in the first place.
     def release(self):
         if self._bound:
             glUseProgram(0)
             self._bound = False
 
+    ##  Set a uniform value.
+    #   \param name The name of the uniform to set.
+    #   \param value The value to set the uniform to. Recognised types are int, float, Vector, Quaternion and Matrix.
+    #   \note This will bind the shader if it was not already bound, clearing any previous shader binding.
     def setUniform(self, name, value):
         self.bind()
         if name not in self._uniformLocations:
@@ -73,6 +90,11 @@ class Shader(object):
         elif type(value) is Matrix:
             glUniformMatrix4fv(loc, 1, False, value.getTransposed().getData())
 
+    ##  Bind a vertex attribute to the current shader.
+    #   \param name The name of the attribute.
+    #   \param components The number of components for each entry in the attribute array. For example, this is 3 for a 3-dimensional vector.
+    #   \param type The type of the attribute. Should be one of the OpenGL type constants like GL_FLOAT.
+    #   \param offset The offset into the current bound buffer object where this attribute starts.
     def bindAttribute(self, name, components, type, offset):
         self.bind()
         if name not in self._attributeLocations:
@@ -83,6 +105,8 @@ class Shader(object):
         glEnableVertexAttribArray(loc)
         glVertexAttribPointer(loc, components, type, False, 0, c_void_p(offset))
 
+    ##  Release a bound vertex attribute.
+    #   \param name The name of the attribute to release.
     def releaseAttribute(self, name):
         if name not in self._attributeLocations:
             return #It was never bound in the first place, so just ignore
