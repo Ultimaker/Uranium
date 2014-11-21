@@ -5,8 +5,8 @@ class PCDReader(MeshReader):
     def __init__(self):
         super(PCDReader, self).__init__()
         self._supported_extension = ".pcd"
-    
-     def read(self, file_name, storage_device):
+
+    def read(self, file_name, storage_device):
         mesh = None
         if(self._supported_extension in file_name):
             mesh = MeshData()
