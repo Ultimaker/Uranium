@@ -118,12 +118,13 @@ class PluginRegistry(object):
             meta_data = plugin.getMetaData()
         except AttributeError as e:
             print(e)
-            return
+            raise InvalidMetaDataError(name)
 
         if not meta_data or (not "name" in meta_data and not "type" in meta_data):
             raise InvalidMetaDataError(name)
 
-        self._meta_data[name] = plugin.getMetaData()
+        self._meta_data[name] = meta_data
+        return True
 
     ##  Private
     #   Try to find a module implementing a plugin
@@ -151,7 +152,7 @@ class PluginRegistry(object):
         finally:
             if file:
                 os.close(file)
-                        
+
         return module
     
     ##  Private
@@ -186,6 +187,7 @@ class PluginRegistry(object):
                     filepath = self._locatePlugin(name, filepath)
                     if filepath:
                         return filepath
+
         return False
     
     ##  Private
