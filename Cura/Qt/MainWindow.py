@@ -7,7 +7,7 @@ from OpenGL.GL.GREMEDY.string_marker import *
 
 from Cura.Math.Vector import Vector
 from Cura.Qt.QtMouseDevice import QtMouseDevice
-
+from Cura.Qt.QtKeyDevice import QtKeyDevice
 
 ##  QQuickWindow subclass that provides the main window.
 class MainWindow(QQuickWindow):
@@ -21,7 +21,7 @@ class MainWindow(QQuickWindow):
         self.beforeRendering.connect(self._render, type=Qt.DirectConnection)
 
         self._mouseDevice = QtMouseDevice()
-        self._keyboardDevice = None
+        self._keyDevice = QtKeyDevice()
 
     def getApplication(self):
         return self._app
@@ -32,11 +32,13 @@ class MainWindow(QQuickWindow):
 
         if self._app:
             self._app.getController().removeInputDevice("Mouse")
+            self._app.getController().removeInputDevice("Keyboard")
             self._app.getController().getScene().sceneChanged.disconnect(self.update)
 
         self._app = app
         if self._app:
             self._app.getController().addInputDevice("Mouse", self._mouseDevice)
+            self._app.getController().addInputDevice("Keyboard", self._keyDevice)
             self._app.getController().getScene().sceneChanged.connect(self._onSceneChanged)
 
     application = pyqtProperty(QObject, fget=getApplication, fset=setApplication)
