@@ -1,4 +1,4 @@
-from Cura.Scene.SceneObject import SceneObject
+from Cura.Scene.SceneNode import SceneNode
 from Cura.Signal import Signal
 
 ##  Container object for the scene graph.
@@ -6,7 +6,7 @@ class Scene(object):
     def __init__(self):
         self.sceneChanged = Signal()
         
-        self._root = SceneObject()
+        self._root = SceneNode()
         self._root.transformationChanged.connect(self.sceneChanged)
         self._root.childrenChanged.connect(self.sceneChanged)
         self._root.meshDataChanged.connect(self.sceneChanged)

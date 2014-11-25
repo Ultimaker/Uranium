@@ -1,6 +1,6 @@
 from Cura.Wx.WxApplication import WxApplication
 from Cura.Wx.MainWindow import MainWindow
-from Cura.Scene.SceneObject import SceneObject
+from Cura.Scene.SceneNode import SceneNode
 class ScannerApplication(WxApplication):
     def __init__(self):
         super(ScannerApplication, self).__init__()
@@ -15,7 +15,7 @@ class ScannerApplication(WxApplication):
     def run(self):
         self.getController().setActiveView("MeshView")
         root = self.getController().getScene().getRoot()
-        mesh = SceneObject()
+        mesh = SceneNode()
         mesh.setMeshData(self.getMeshFileHandler().read("plugins/STLReader/simpleTestCube.stl",self.getStorageDevice('local')))
         root.addChild(mesh)
         print("Imma scanning ma laz0rs")

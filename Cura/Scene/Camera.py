@@ -1,11 +1,11 @@
-from . import SceneObject
+from . import SceneNode
 
 from Cura.Math.Matrix import Matrix
 
-##  A SceneObject subclass that provides a camera object.
+##  A SceneNode subclass that provides a camera object.
 #   The camera provides a projection matrix and its transformation matrix
 #   can be used as view matrix.
-class Camera(SceneObject.SceneObject):
+class Camera(SceneNode.SceneNode):
     def __init__(self, parent = None):
         super().__init__(parent)
         self._projectionMatrix = Matrix()

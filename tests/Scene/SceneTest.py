@@ -1,7 +1,7 @@
 import unittest
 
 from Cura.Scene.Scene import Scene
-from Cura.Scene.SceneObject import SceneObject
+from Cura.Scene.SceneNode import SceneNode
 from Cura.Math.Matrix import Matrix
 from Cura.Math.Vector import Vector
 from copy import copy, deepcopy
@@ -11,8 +11,8 @@ class SceneTest(unittest.TestCase):
     def setUp(self):
         # Called before the first testfunction is executed
         self._scene = Scene()
-        self._scene_object = SceneObject()
-        self._scene_object2 = SceneObject()
+        self._scene_object = SceneNode()
+        self._scene_object2 = SceneNode()
         self._scene_object.addChild(self._scene_object2)
         self._scene.getRoot().addChild(self._scene_object)
         temp_matrix = Matrix()

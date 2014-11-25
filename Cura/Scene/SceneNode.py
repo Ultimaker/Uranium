@@ -6,12 +6,13 @@ from copy import copy, deepcopy
 #         that maps it it's parents space to the local space (it's inverse maps local space to parent).
 #
 #   \todo Add unit testing
-class SceneObject(object):
+class SceneNode(object):
     def __init__(self, parent = None):
         # Signals
         self.parentChanged = Signal()
         self.childrenChanged = Signal()
         self.transformationChanged = Signal()
+        self.meshDataChanged = Signal()
 
         self._children = []
         self._mesh_data = None
@@ -20,48 +21,48 @@ class SceneObject(object):
         if parent:
             parent.addChild(self)
 
-    ## Get the parent of this node. If the node has no parent, it is the root node.
-    # \returns SceneObject if it has a parent and None if it's the root node.
+    ##  Get the parent of this node. If the node has no parent, it is the root node.
+    #   \returns SceneNode if it has a parent and None if it's the root node.
     def getParent(self):
         return self._parent
     
-    ## Set the parent of this object
-    # \param scene_object SceneObject that is the parent of this object.
-    def setParent(self, scene_object):
-        self._parent = scene_object
+    ##  Set the parent of this object
+    #   \param scene_node SceneNode that is the parent of this object.
+    def setParent(self, scene_node):
+        self._parent = scene_node
         self.parentChanged.emit()
 
     ##  Signal. Emitted whenever the parent changes.
     parentChanged = None
     
-    ## Get the (original) mesh data from the scene node/object. 
-    # \returns MeshData
+    ##  Get the (original) mesh data from the scene node/object. 
+    #   \returns MeshData
     def getMeshData(self):
         return self._mesh_data
     
-    ## Get the transformed mesh data from the scene node/object, based on the transformation of scene nodes wrt root. 
-    # \returns MeshData    
+    ##  Get the transformed mesh data from the scene node/object, based on the transformation of scene nodes wrt root. 
+    #   \returns MeshData    
     def getMeshDataTransformed(self):
         transformed_mesh = deepcopy(self._mesh_data)
         transformed_mesh.transform(self.getGlobalTransformation())
         return transformed_mesh
     
-    ## Set the mesh of this node/object
-    # \param mesh_data MeshData object
+    ##  Set the mesh of this node/object
+    #   \param mesh_data MeshData object
     def setMeshData(self, mesh_data):
         self._mesh_data = mesh_data
         self.meshDataChanged.emit(self)
 
     ##  Signal. Emitted whenever the attached mesh data object changes.
-    meshDataChanged = Signal()
+    meshDataChanged = None
     
-    ## Add a child to this node and set it's parent as this node.
-    # \params scene_object SceneObject to add.
-    def addChild(self, scene_object):
-        scene_object.setParent(self)
-        scene_object.transformationChanged.connect(self.transformationChanged)
-        scene_object.childrenChanged.connect(self.childrenChanged)
-        self._children.append(scene_object)
+    ##  Add a child to this node and set it's parent as this node.
+    #   \params scene_node SceneNode to add.
+    def addChild(self, scene_node):
+        scene_node.setParent(self)
+        scene_node.transformationChanged.connect(self.transformationChanged)
+        scene_node.childrenChanged.connect(self.childrenChanged)
+        self._children.append(scene_node)
         self.childrenChanged.emit(self)
         
     def removeChild(self):
@@ -69,20 +70,20 @@ class SceneObject(object):
         self.childrenChanged.emit(self)
         pass
     
-    ## Removes all children and its children's children.
+    ##  Removes all children and its children's children.
     def removeAllChildren(self):
         for child in self._children:
             child.removeAllChildren()
         del self._children[:] #Actually destroy the children (and not just replace it with empty list
         self.childrenChanged.emit(self)
     
-    ## Get the list of direct children
-    # \returns List of children
+    ##  Get the list of direct children
+    #   \returns List of children
     def getChildren(self):
         return self._children
     
-    ## Get list of all children (including it's children children children etc.)
-    # \returns list ALl children in this 'tree'
+    ##  Get list of all children (including it's children children children etc.)
+    #   \returns list ALl children in this 'tree'
     def getAllChildren(self):
         children = []
         for child in self._children:
@@ -92,8 +93,8 @@ class SceneObject(object):
     #   \param object The object that triggered the change.
     childrenChanged = None
     
-    ## Computes and returns the transformation from origin to local space
-    # \returns 4x4 transformation matrix
+    ##  Computes and returns the transformation from origin to local space
+    #   \returns 4x4 transformation matrix
     def getGlobalTransformation(self):
         if(self._parent is None):
             return self._transformation
@@ -102,18 +103,18 @@ class SceneObject(object):
             global_transformation.preMultiply(self._parent.getGlobalTransformation())
             return global_transformation
     
-    ## Returns the local transformation with respect to its parent. (from parent to local)
-    # \retuns transformation 4x4 (homogenous) matrix
+    ##  Returns the local transformation with respect to its parent. (from parent to local)
+    #   \retuns transformation 4x4 (homogenous) matrix
     def getLocalTransformation(self):
         return self._transformation
     
-    ## Sets the local transformation with respect to its parent. (from parent to local)
-    # \param transformation 4x4 (homogenous) matrix
+    ##  Sets the local transformation with respect to its parent. (from parent to local)
+    #   \param transformation 4x4 (homogenous) matrix
     def setLocalTransformation(self, transformation):
         self._transformation = transformation
         self.transformationChanged.emit(self)
     
-    ## Rotate the scene object (and thus its children) by given amount
+    ##  Rotate the scene object (and thus its children) by given amount
     def rotate(self, rotation):
         rotMatrix = Matrix()
         rotMatrix.setByQuaternion(rotation)
@@ -124,19 +125,19 @@ class SceneObject(object):
         self._transformation.rotateByAxis(angle, axis)
         self.transformationChanged.emit(self)
     
-    ## Scale the scene object (and thus its children) by given amount
+    ##  Scale the scene object (and thus its children) by given amount
     def scale(self, scale):
         #TODO Implement
         self.transformationChanged.emit(self)
         pass
     
-    ## Translate the scene object (and thus its children) by given amount.
-    # \param translation Vector(x,y,z).
+    ##  Translate the scene object (and thus its children) by given amount.
+    #   \param translation Vector(x,y,z).
     def translate(self, translation):
         self._transformation.translate(translation)
         self.transformationChanged.emit(self)
 
-    ## Set
+    ##  Set
     def setPosition(self, position):
         self._transformation.setByTranslation(position)
         self.transformationChanged.emit(self)
@@ -145,8 +146,8 @@ class SceneObject(object):
     #   \param object The object that caused the change.
     transformationChanged = None
     
-    ## Check if this node is at the bottom of the tree (and thus a leaf node).
-    # \returns True if its a leaf object, false otherwise.
+    ##  Check if this node is at the bottom of the tree (and thus a leaf node).
+    #   \returns True if its a leaf object, false otherwise.
     def isLeafNode(self):
         if len(self._children) == 0:
             return True
@@ -161,11 +162,11 @@ class SceneObject(object):
     def render(self):
         return False
 
-    ##  Get whether this SceneObject is locked, that is, its transformation relative to its parent should not change.
+    ##  Get whether this SceneNode is locked, that is, its transformation relative to its parent should not change.
     def isLocked(self):
         return self._locked
 
-    ##  Set whether this SceneObject is locked.
+    ##  Set whether this SceneNode is locked.
     #   \param lock True if this object should be locked, False if not.
     #   \sa isLocked
     def setLocked(self, lock):
