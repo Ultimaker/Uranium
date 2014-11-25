@@ -33,7 +33,7 @@ class PCDWriter(MeshWriter):
                 normal = vertex.getNormal()
                 f.write("%s %s %s", position.x(),position.y(),position.z(),normal.x(),normal.y(),normal.z())
                 
-            f.close()
+            storage_device.closeFile(f)
             return True
         else:
             return False

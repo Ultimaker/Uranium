@@ -18,11 +18,11 @@ class STLReader(MeshReader):
             if f.read(5).lower() == 'solid':
                 self._loadAscii(mesh, f)
             else:
-                f.close()
+                storage_device.closeFile(f)
                 f = storage_device.openFile(file_name, 'rb')
                 self._loadBinary(mesh, f)
 
-            f.close()
+            storage_device.closeFile(f)
             mesh.calculateNormals()
         return mesh
 
@@ -59,6 +59,6 @@ class STLReader(MeshReader):
         
         num_faces = struct.unpack(b'<I', f.read(4))[0]
         mesh.reserveFaceCount(num_faces)
-        for idx in xrange(0, num_faces):
+        for idx in range(0, num_faces):
             data = struct.unpack(b'<ffffffffffffH', f.read(50))
             mesh.addFace(data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10], data[11])

@@ -18,4 +18,4 @@ class OBJWriter(MeshWriter):
                 f.write("#Normals ")
                 for vertex in vertices:
                     f.write("nv %s %s %s", vertex.getNormal().x,vertex.getNormal().x,vertex.getNormal().x)
-            f.close()
+            storage_device.closeFile(f)

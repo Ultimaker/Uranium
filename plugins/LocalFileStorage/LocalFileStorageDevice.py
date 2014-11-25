@@ -1,6 +1,7 @@
 from Cura.StorageDevice import StorageDevice
 
 import platform
+import os
 
 class LocalFileStorageDevice(StorageDevice):
     def __init__(self):
@@ -10,6 +11,9 @@ class LocalFileStorageDevice(StorageDevice):
 
     def openFile(self, file_name, mode):
         return open(file_name, mode)
+
+    def closeFile(self, file):
+        file.close()
 
     def ejectRemovableDrive(self, name):
         if self._removableDrives:

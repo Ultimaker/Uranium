@@ -35,6 +35,8 @@ class PCDReader(MeshReader):
                             addVertexWithNormal(vertex_data[0],vertex_data[1],vertex_data[2],vertex_data[3],vertex_data[4],vertex_data[5])
                         else:
                             addVertex(vertex_data[0],vertex_data[1],vertex_data[2])
+
+            storage_device.closeFile(f)
             return True
         else:
             return False

@@ -33,7 +33,8 @@ class OBJReader(MeshReader):
                         if len(parts[1]) > 2:
                             data += [int(parts[1][2]), int(parts[idx+1][2]), int(parts[idx+2][2])]
                         face_list.append(data)
-            f.close()
+            storage_device.closeFile(f)
+
             mesh.reserveFaceCount(len(face_list))
             num_vertices = len(vertex_list)
             num_normals = len(normal_list)

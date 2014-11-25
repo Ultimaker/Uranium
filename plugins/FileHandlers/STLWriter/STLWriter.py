@@ -31,7 +31,7 @@ class STLWriter(MeshWriter):
                 vertPos = v3.getPosition()
                 f.write(struct.pack("<fff", vertPos.x, vertPos.y, vertPos.z))
                 f.write(struct.pack("<H", 0))
-            f.close()
+            storage_device.closeFile(f)
             return True
         else:
             return False
