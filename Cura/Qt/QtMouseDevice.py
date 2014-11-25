@@ -1,4 +1,4 @@
-from PyQt5.QtCore import Qt, QEvent
+from PyQt5.QtCore import Qt, QEvent, QObject
 from PyQt5.QtGui import QMouseEvent
 
 from Cura.InputDevice import InputDevice
@@ -16,19 +16,17 @@ class QtMouseDevice(InputDevice):
             e = MouseEvent(MouseEvent.MousePressEvent, event.x(), event.y(), self._x, self._y, self._qtButtonsToButtonList(event.buttons()))
             self._x = event.x()
             self._y = event.y()
-            return e
+            self.event.emit(e)
         elif event.type() == QEvent.MouseMove:
             e = MouseEvent(MouseEvent.MouseMoveEvent, event.x(), event.y(), self._x, self._y, self._qtButtonsToButtonList(event.buttons()))
             self._x = event.x()
             self._y = event.y()
-            return e
+            self.event.emit(e)
         elif event.type() == QEvent.MouseButtonRelease:
             e = MouseEvent(MouseEvent.MouseReleaseEvent, event.x(), event.y(), self._x, self._y, self._qtButtonsToButtonList(event.buttons()))
             self._x = event.x()
             self._y = event.y()
-            return e
-
-        return None
+            self.event.emit(e)
 
     def _qtButtonsToButtonList(self, qtButtons):
         buttons = []
