@@ -4,6 +4,7 @@ from Cura.Signal import Signal
 ##  Container object for the scene graph.
 class Scene(object):
     def __init__(self):
+        super(Scene, self).__init__() # Call super to make multiple inheritence work.
         self.sceneChanged = Signal()
         
         self._root = SceneNode()

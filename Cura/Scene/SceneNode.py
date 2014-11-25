@@ -8,6 +8,7 @@ from copy import copy, deepcopy
 #   \todo Add unit testing
 class SceneNode(object):
     def __init__(self, parent = None):
+        super(SceneNode, self).__init__() # Call super to make multiple inheritence work.
         # Signals
         self.parentChanged = Signal()
         self.childrenChanged = Signal()
