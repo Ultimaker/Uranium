@@ -49,24 +49,44 @@ class MainWindow(QQuickWindow):
 
     backgroundColor = pyqtProperty(QColor, fget=getBackgroundColor, fset=setBackgroundColor)
 
-    def event(self, event):
-        super().event(event)
+#   Warning! Never reimplemented this as a QExposeEvent can cause a deadlock with QSGThreadedRender due to both trying
+#   to claim the Python GIL.
+#   def event(self, event):
 
+    def mousePressEvent(self, event):
+        super().mousePressEvent(event)
         if event.isAccepted():
-           return True
+            return
 
-        e = None
-        if self._mouseDevice:
-            e = self._mouseDevice.handleEvent(event)
+        self._mouseDevice.handleEvent(event)
 
-        if not e and self._keyboardDevice:
-            e = self._keyboardDevice.handleEvent(event)
+    def mouseMoveEvent(self, event):
+        super().mouseMoveEvent(event)
+        if event.isAccepted():
+            return
 
-        if e:
-            self._app.getController().event(e)
-            return True
-        else:
-            return False
+        self._mouseDevice.handleEvent(event)
+
+    def mouseReleaseEvent(self, event):
+        super().mouseReleaseEvent(event)
+        if event.isAccepted():
+            return
+
+        self._mouseDevice.handleEvent(event)
+
+    def keyPressEvent(self, event):
+        super().keyPressEvent(event)
+        if event.isAccepted():
+            return
+
+        self._keyDevice.handleEvent(event)
+
+    def keyReleaseEvent(self, event):
+        super().keyReleaseEvent(event)
+        if event.isAccepted():
+            return
+
+        self._keyDevice.handleEvent(event)
 
     def _render(self):
         if bool(glStringMarkerGREMEDY):
