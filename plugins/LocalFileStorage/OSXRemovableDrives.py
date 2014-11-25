@@ -13,7 +13,7 @@ except:
 
 class OSXRemovableDriveThread(threading.Thread):
     def __init__(self, drives):
-        super(OSXRemovableDrive, self).__init__()
+        super(OSXRemovableDriveThread, self).__init__()
         self.daemon = True
         self._driveManager = drives
 
@@ -113,8 +113,8 @@ class OSXRemovableDrives(object):
         output = p.communicate()
 
         if p.wait():
-            print output[0]
-            print output[1]
+            print(output[0])
+            print(output[1])
             return False
         else:
             return True
