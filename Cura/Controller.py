@@ -53,6 +53,7 @@ class Controller(object):
     def addInputDevice(self, name, device):
         if(name not in self._input_devices):
             self._input_devices[name] = device
+            device.event.connect(self.event)
         else:
             self._application.log('w', '%s was already added to input device list. Unable to add it again.', name)
     
@@ -65,6 +66,14 @@ class Controller(object):
         except KeyError: #No such tool
             self._application.log('e', "Unable to find %s in input devices",name)
             return None
+
+    ##  Remove an input device from the list of input devices.
+    #   Does nothing if the input device is not in the list.
+    #   \param name The name of the device to remove.
+    def removeInputDevice(self, name):
+        if name in self._input_devices:
+            self._input_devices[name].event.disconnect(self.event)
+            del self._input_devices[name]
     
     ## Request tool by name. Returns None if no view is found.
     #  \param name Unique identifier of tool (usually the plugin name)
