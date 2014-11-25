@@ -16,7 +16,7 @@ class Buffer(object):
     #   \param data The data to use for the buffer. Can be None. Should be a type supported by PyOpenGL, like a numpy array.
     def create(self, data = None):
         self._buffer = glGenBuffers(1)
-        if data != None:
+        if data is not None:
             self.setData(data)
 
     ##  Set the data of this buffer.

@@ -68,13 +68,13 @@ class Shader(object):
             self._bound = False
 
     ##  Set a uniform value.
-    #   \param name The name of the uniform to set.
+    #   \param name The name of the uniform to set as Unicode String.
     #   \param value The value to set the uniform to. Recognised types are int, float, Vector, Quaternion and Matrix.
     #   \note This will bind the shader if it was not already bound, clearing any previous shader binding.
     def setUniform(self, name, value):
         self.bind()
         if name not in self._uniformLocations:
-            loc = glGetUniformLocation(self._program, name)
+            loc = glGetUniformLocation(self._program, name.encode('ascii'))
             self._uniformLocations[name] = loc
 
         loc = self._uniformLocations[name]
@@ -91,14 +91,14 @@ class Shader(object):
             glUniformMatrix4fv(loc, 1, False, value.getTransposed().getData())
 
     ##  Bind a vertex attribute to the current shader.
-    #   \param name The name of the attribute.
+    #   \param name The name of the attribute as Unicode String.
     #   \param components The number of components for each entry in the attribute array. For example, this is 3 for a 3-dimensional vector.
     #   \param type The type of the attribute. Should be one of the OpenGL type constants like GL_FLOAT.
     #   \param offset The offset into the current bound buffer object where this attribute starts.
     def bindAttribute(self, name, components, type, offset):
         self.bind()
         if name not in self._attributeLocations:
-            loc = glGetAttribLocation(self._program, name)
+            loc = glGetAttribLocation(self._program, name.encode('ascii'))
             self._attributeLocations[name] = loc
 
         loc = self._attributeLocations[name]

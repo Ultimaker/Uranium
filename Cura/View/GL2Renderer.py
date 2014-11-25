@@ -53,17 +53,17 @@ class GL2Renderer(Renderer):
         self._defaultShader.bind()
         camera = self.getController().getScene().getActiveCamera()
         if camera:
-            self._defaultShader.setUniform(b"projectionMatrix", camera.getProjectionMatrix())
-            self._defaultShader.setUniform(b"viewMatrix", camera.getGlobalTransformation())
+            self._defaultShader.setUniform("projectionMatrix", camera.getProjectionMatrix())
+            self._defaultShader.setUniform("viewMatrix", camera.getGlobalTransformation())
         else:
-            self._defaultShader.setUniform(b"projectionMatrix", Matrix())
-            self._defaultShader.setUniform(b"viewMatrix", Matrix())
-        self._defaultShader.setUniform(b"modelMatrix", position)
+            self._defaultShader.setUniform("projectionMatrix", Matrix())
+            self._defaultShader.setUniform("viewMatrix", Matrix())
+        self._defaultShader.setUniform("modelMatrix", position)
 
         buffer = self._bufferCache[mesh]
         buffer.bind()
-        self._defaultShader.bindAttribute(b"vertex", 3, GL.GL_FLOAT, 0)
+        self._defaultShader.bindAttribute("vertex", 3, GL.GL_FLOAT, 0)
         GL.glDrawArrays(GL.GL_TRIANGLES, 0, mesh.getNumVertices())
-        self._defaultShader.releaseAttribute(b"vertex")
+        self._defaultShader.releaseAttribute("vertex")
         buffer.release()
         self._defaultShader.release()
