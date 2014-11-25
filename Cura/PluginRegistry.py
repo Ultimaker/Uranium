@@ -40,19 +40,17 @@ class PluginRegistry(object):
         if not plugin:
             raise PluginNotFoundError(name)
         
-        if(self._application is not None):
-            self._application.log('i', 'Loading plugin %s',name)
-        
         if name not in self._meta_data:
             self._populateMetaData(name)
             
         try:
             plugin.register(self._application)
+            self._application.log('i', 'Loaded plugin %s', name)
             self._plugins[name] = plugin
         except PluginError as e:
-            print(e)
+            self._application.log('e', e)
         except AttributeError as e:
-            print(e)
+            self._application.log('e', e)
     
     ## Load all plugins matching a certain set of metadata
     # \param metaData The metaData that needs to be matched.
