@@ -8,7 +8,6 @@ class MeshView(View):
     def render(self):
         scene = self.getController().getScene()
         renderer = self.getRenderer()
-        print("Herpaderp")
         self._renderObject(scene.getRoot(), renderer)
 
     def _renderObject(self, object, renderer):
