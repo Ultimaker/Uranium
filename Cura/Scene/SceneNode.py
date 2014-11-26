@@ -87,8 +87,10 @@ class SceneNode(object):
     #   \returns list ALl children in this 'tree'
     def getAllChildren(self):
         children = []
+        children.extend(self._children)
         for child in self._children:
             children.extend(child.getAllChildren())
+        return children
 
     ##  Signal. Emitted whenever the list of children of this object or any child object changes.
     #   \param object The object that triggered the change.
