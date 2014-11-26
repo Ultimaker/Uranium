@@ -5,6 +5,7 @@ from Cura.Scene.Scene import Scene
 from Cura.Event import Event, MouseEvent, ToolEvent
 from Cura.Math.Vector import Vector
 from Cura.Math.Quaternion import Quaternion
+from Cura.Signal import Signal
 
 ## Glue glass that holds the scene, (active) view(s), (active) tool(s) and possible user inputs.
 #
@@ -21,6 +22,11 @@ class Controller(object):
         self._views = {}
         self._scene = Scene()
         self._application = application
+
+        self.viewsChanged = Signal()
+        self.activeViewChanged = Signal()
+        self.toolsChanged = Signal()
+        self.activeToolChanged = Signal()
     
     ##  Get the application.
     #   \returns Application
@@ -34,6 +40,7 @@ class Controller(object):
         if(name not in self._views):
             self._views[name] = view
             view.setController(self)
+            self.viewsChanged.emit()
         else:
             self._application.log('w', '%s was already added to view list. Unable to add it again.',name)
     
@@ -46,6 +53,30 @@ class Controller(object):
         except KeyError: #No such view
             self._application.log('e', "Unable to find %s in view list",name)
             return None
+
+    ##  Return all views.
+    def getAllViews(self):
+        return self._views
+
+    ## Request active view. Returns None if there is no active view
+    #  \return Tool if an view is active, None otherwise.
+    def getActiveView(self):
+        return self._active_view
+
+    ##  Set the currently active view.
+    #   \parma name The name of the view to set as active
+    def setActiveView(self, name):
+        try:
+            self._active_view = self._views[name]
+            self.activeViewChanged.emit()
+        except KeyError:
+            self._application.log('e', "No view named %s found", name)
+
+    ##  Signal. Emitted when the list of views changes.
+    viewsChanged = None
+
+    ##  Signal. Emitted when the active view changes.
+    activeViewChanged = None
         
     ## Add an input device (eg; mouse, keyboard, etc) by name if it's not already addded.
     #  \param name Unique identifier of device (usually the plugin name)
@@ -92,6 +123,7 @@ class Controller(object):
     def addTool(self, name, tool):
         if(name not in self._tools):
             self._tools[name] = tool
+            self.toolsChanged.emit()
         else: 
             self._application.log('w', '%s was already added to tool list. Unable to add it again.', name)
     
@@ -99,19 +131,6 @@ class Controller(object):
     #  \return Tool if an tool is active, None otherwise.
     def getActiveTool(self):
         return self._active_tool
-    
-    ## Request active view. Returns None if there is no active view
-    #  \return Tool if an view is active, None otherwise.
-    def getActiveView(self):
-        return self._active_view
-
-    ##  Set the currently active view.
-    #   \parma name The name of the view to set as active
-    def setActiveView(self, name):
-        try:
-            self._active_view = self._views[name]
-        except KeyError:
-            self._application.log('e', "No view named %s found", name)
 
     ##  Set the current active tool.
     #   \param name The name of the tool to set as active.
@@ -124,8 +143,16 @@ class Controller(object):
 
             if self._active_tool:
                 self._active_tool.event(ToolEvent(ToolEvent.ToolActivateEvent))
+
+            self.activeToolChanged.emit()
         except KeyError:
-            pass
+            self._application.log('e', 'No tool named %s found.', name)
+
+    ##  Signal. Emitted when the list of tools changes.
+    toolsChanged = None
+
+    ##  Signal. Emitted when the active tool changes.
+    activeToolChanged = None
 
     ##  Return the scene
     def getScene(self):
