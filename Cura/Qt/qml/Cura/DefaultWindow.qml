@@ -8,8 +8,6 @@ Cura.MainWindow {
     id: base
     visible: true
 
-    application: curaApplication
-
     width: 1024
     height: 768
 
@@ -25,10 +23,10 @@ Cura.MainWindow {
         title: "Camera"
 
         contents: RowLayout {
-            ToolButton { text: "3D" }
-            ToolButton { text: "Left" }
-            ToolButton { text: "Top" }
-            ToolButton { text: "Front" }
+            ToolButton { text: "3D"; onClicked: Cura.Scene.setActiveCamera('3d'); }
+            ToolButton { text: "Left"; onClicked: Cura.Scene.setActiveCamera('left'); }
+            ToolButton { text: "Top"; onClicked: Cura.Scene.setActiveCamera('top'); }
+            ToolButton { text: "Front"; onClicked: Cura.Scene.setActiveCamera('front'); }
         }
     }
 
@@ -44,10 +42,9 @@ Cura.MainWindow {
         title: "View"
 
         contents: ComboBox {
-            model: ListModel {
-                ListElement { text: "Normal" }
-                ListElement { text: "Layers" }
-            }
+            model: Cura.Models.viewModel
+
+            onCurrentIndexChanged: Cura.Controller.setActiveView(model.items[currentIndex].text)
         }
     }
 

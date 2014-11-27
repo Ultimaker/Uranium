@@ -2,6 +2,8 @@ import QtQuick 2.1
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 
+import Cura 1.0 as Cura
+
 Panel {
     title: "Transform"
 
@@ -11,14 +13,10 @@ Panel {
 
         Repeater {
             id: repeat
-            model: ListModel {
-                ListElement { name: "Move" }
-                ListElement { name: "Rotate" }
-                ListElement { name: "Scale" }
-                ListElement { name: "Mirror" }
-            }
 
-            delegate: ToolButton { text: model.name }
+            model: Cura.Models.toolModel
+
+            delegate: ToolButton { text: model.name; onClicked: Cura.Controller.setActiveTool(text); }
         }
     }
 }
