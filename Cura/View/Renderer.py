@@ -4,6 +4,10 @@
 #
 #   TODO: Remove get/setController and associate the renderer with a view.
 class Renderer(object):
+    RenderTriangles = 1
+    RenderLines = 2
+    RenderPoints = 3
+
     def __init__(self):
         super(Renderer, self).__init__()
         self._controller = None
@@ -16,7 +20,7 @@ class Renderer(object):
     ##  Render a mesh using a certain transformation matrix.
     #   \param transform The transformation matrix to use to render the mesh.
     #   \param mesh The MeshData object to render.
-    def renderMesh(self, transform, mesh):
+    def renderMesh(self, transform, mesh, mode = RenderTriangles):
         raise NotImplementedError("renderMesh should be reimplemented by subclasses")
 
     ##  Get the controller associated with this renderer.

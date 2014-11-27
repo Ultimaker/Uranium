@@ -7,6 +7,8 @@ from Cura.View.GL2.Shader import Shader
 
 from Cura.Math.Matrix import Matrix
 
+import numpy
+
 ##  A Renderer implementation using OpenGL2 to render.
 class GL2Renderer(Renderer):
     def __init__(self):
@@ -41,7 +43,7 @@ class GL2Renderer(Renderer):
 
         self._initialized = True
 
-    def renderMesh(self, position, mesh):
+    def renderMesh(self, position, mesh, mode = Renderer.RenderTriangles):
         if not self._initialized:
             self.initialize()
 
@@ -63,7 +65,15 @@ class GL2Renderer(Renderer):
         buffer = self._bufferCache[mesh]
         buffer.bind()
         self._defaultShader.bindAttribute("vertex", 3, GL.GL_FLOAT, 0)
-        GL.glDrawArrays(GL.GL_TRIANGLES, 0, mesh.getNumVertices())
+
+        type = GL.GL_TRIANGLES
+        if mode is Renderer.RenderLines:
+            type = GL.GL_LINES
+        elif mode is Renderer.RenderPoints:
+            type = GL.GL_POINTS
+
+        GL.glDrawArrays(type, 0, mesh.getNumVertices())
+        
         self._defaultShader.releaseAttribute("vertex")
         buffer.release()
         self._defaultShader.release()
