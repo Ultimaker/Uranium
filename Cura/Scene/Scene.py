@@ -1,4 +1,5 @@
 from Cura.Scene.SceneNode import SceneNode
+from Cura.Scene.Camera import Camera
 from Cura.Signal import Signal
 
 ##  Container object for the scene graph.
@@ -22,10 +23,17 @@ class Scene(object):
         return self._active_camera
 
     ##  Set the camera that should be used for rendering.
-    #   \param camera The camera to use.
-    def setActiveCamera(self, camera):
-        self._active_camera = camera
+    #   \param name The name of the camera to use.
+    def setActiveCamera(self, name):
+        camera = self._findCamera(name)
+        if camera:
+            self._active_camera = camera
 
     ##  Signal. Emitted whenever something in the scene changes.
     #   \param object The object that triggered the change.
     sceneChanged = None
+
+    def _findCamera(self, name):
+        for node in self._root.getChildren():
+            if type(node) is Camera and node.getName() == name:
+                return node

@@ -116,6 +116,9 @@ class Controller(object):
             self._application.log('e', "Unable to find %s in tools",name)
             return None
     
+    def getAllTools(self):
+        return self._tools
+
     ## Add an Tool (transform object, translate object) by name if it's not already addded.
     #  \param name Unique identifier of tool (usually the plugin name)
     #  \param tool Tool to be added
