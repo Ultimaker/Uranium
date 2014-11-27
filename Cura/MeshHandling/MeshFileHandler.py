@@ -8,10 +8,15 @@ class MeshFileHandler(object):
     # \param storage_device The StorageDevice where the mesh can be found.
     # \returns MeshData if it was able to read the file, None otherwise.
     def read(self, file_name, storage_device):
-        for reader in self._mesh_readers:
-            result = reader.read(file_name, storage_device) 
-            if(result is not None):
-                return result
+        try:
+            for reader in self._mesh_readers:
+                result = reader.read(file_name, storage_device)
+                if(result is not None):
+                    return result
+
+        except OSError as e:
+            print(e)
+
         return None #unable to read
     
     # Try to write the mesh_data to file. Based on the extension in the file_name a correct meshwriter is selected.
