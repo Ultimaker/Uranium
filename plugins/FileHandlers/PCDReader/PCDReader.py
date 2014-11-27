@@ -37,6 +37,5 @@ class PCDReader(MeshReader):
                             addVertex(vertex_data[0],vertex_data[1],vertex_data[2])
 
             storage_device.closeFile(f)
-            return True
-        else:
-            return False
+
+        return mesh
