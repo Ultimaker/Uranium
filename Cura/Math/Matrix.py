@@ -41,22 +41,15 @@ class Matrix(object):
 
     ##  Return the transpose of the matrix.
     def getTransposed(self):
-        print("Begin getTransposed()")
-        print(self._data)
         m = Matrix(numpy.transpose(self._data))
-        print(m.getData())
-        print("End getTransposed()")
         return m
     
     ## Translate the matrix based on Vector.
     # \param direction The vector by which the matrix needs to be translated.
     def translate(self, direction):
-        print("translating")
-        print(self._data)
         translation_matrix = Matrix()
         translation_matrix.setByTranslation(direction)
         self.multiply(translation_matrix)
-        print(self._data)
     
     ## Set the matrix by translation vector. This overwrites any existing data.
     # \param direction The vector by which the (unit) matrix needs to be translated.

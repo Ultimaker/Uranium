@@ -89,9 +89,7 @@ class Shader(object):
         elif type(value) is Quaternion:
             glUniform4fv(loc, value.getData())
         elif type(value) is Matrix:
-            m = value #.getTransposed()
-            print("Going into GL")
-            print(m.getData())
+            m = value.getTransposed()
             #glUniformMatrix4fv(loc, 1, False, m.getData())
             glUniformMatrix4fv(loc, 1, False, m.getData())
 

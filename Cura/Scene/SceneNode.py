@@ -102,7 +102,6 @@ class SceneNode(object):
         if(self._parent is None):
             return self._transformation
         else:
-            print("fhfhhfhf")
             global_transformation = deepcopy(self._transformation)
             global_transformation.preMultiply(self._parent.getGlobalTransformation())
             return global_transformation
