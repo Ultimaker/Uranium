@@ -1,4 +1,4 @@
-from PyQt5.QtCore import pyqtProperty, QObject, Qt
+from PyQt5.QtCore import pyqtProperty, QObject, Qt, QCoreApplication
 from PyQt5.QtGui import QColor
 from PyQt5.QtQuick import QQuickWindow, QQuickItem
 
@@ -14,7 +14,6 @@ class MainWindow(QQuickWindow):
     def __init__(self, parent = None):
         super(MainWindow, self).__init__(parent)
 
-        self._app = None
         self._backgroundColor = QColor(204, 204, 204, 255)
 
         self.setClearBeforeRendering(False)
@@ -23,25 +22,28 @@ class MainWindow(QQuickWindow):
         self._mouseDevice = QtMouseDevice()
         self._keyDevice = QtKeyDevice()
 
-    def getApplication(self):
-        return self._app
+        self._app = QCoreApplication.instance()
+        self._app.getController().addInputDevice("Mouse", self._mouseDevice)
+        self._app.getController().addInputDevice("Keyboard", self._keyDevice)
+        self._app.getController().getScene().sceneChanged.connect(self._onSceneChanged)
 
-    def setApplication(self, app):
-        if app == self._app:
-            return
+    #def getApplication(self):
+        #return self._app
 
-        if self._app:
-            self._app.getController().removeInputDevice("Mouse")
-            self._app.getController().removeInputDevice("Keyboard")
-            self._app.getController().getScene().sceneChanged.disconnect(self.update)
+    #def setApplication(self, app):
+        #if app == self._app:
+            #return
 
-        self._app = app
-        if self._app:
-            self._app.getController().addInputDevice("Mouse", self._mouseDevice)
-            self._app.getController().addInputDevice("Keyboard", self._keyDevice)
-            self._app.getController().getScene().sceneChanged.connect(self._onSceneChanged)
+        #if self._app:
+            #self._app.getController().removeInputDevice("Mouse")
+            #self._app.getController().removeInputDevice("Keyboard")
+            #self._app.getController().getScene().sceneChanged.disconnect(self.update)
 
-    application = pyqtProperty(QObject, fget=getApplication, fset=setApplication)
+        #self._app = app
+        #if self._app:
+
+
+    #application = pyqtProperty(QObject, fget=getApplication, fset=setApplication)
 
     def getBackgroundColor(self):
         return self._backgroundColor
@@ -98,8 +100,7 @@ class MainWindow(QQuickWindow):
         GL.glClearColor(self._backgroundColor.redF(), self._backgroundColor.greenF(), self._backgroundColor.blueF(), self._backgroundColor.alphaF())
         GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
 
-        if self._app:
-            self._app.getController().getActiveView().render()
+        self._app.getController().getActiveView().render()
 
         if bool(glStringMarkerGREMEDY):
             msg = "End Rendering Background"
