@@ -6,7 +6,7 @@ class Quaternion(object):
     EPS = numpy.finfo(float).eps * 4.0
 
     def __init__(self):
-        self._data = numpy.zeros((4, ))
+        self._data = numpy.zeros((4, ), dtype=numpy.float32)
     
     ## Set quaternion by providing rotation about an axis.
     # \example q.setByAxis(0.123,[1,0,0])
@@ -30,7 +30,7 @@ class Quaternion(object):
         self._data = numpy.array([-x1*x0 - y1*y0 - z1*z0 + w1*w0,
                          x1*w0 + y1*z0 - z1*y0 + w1*x0,
                         -x1*z0 + y1*w0 + z1*x0 + w1*y0,
-                         x1*y0 - y1*x0 + z1*w0 + w1*z0], dtype=numpy.float64)
+                         x1*y0 - y1*x0 + z1*w0 + w1*z0], dtype=numpy.float32)
     
     ## Set quaternion by providing a homogenous (4x4) rotation matrix.
     # \param matrix 4x4 Matrix object
@@ -71,7 +71,7 @@ class Quaternion(object):
             K = numpy.array([[m00-m11-m22, 0.0,         0.0,         0.0],
                             [m01+m10,     m11-m00-m22, 0.0,         0.0],
                             [m02+m20,     m12+m21,     m22-m00-m11, 0.0],
-                            [m21-m12,     m02-m20,     m10-m01,     m00+m11+m22]])
+                            [m21-m12,     m02-m20,     m10-m01,     m00+m11+m22]], dtype=numpy.float32)
             K /= 3.0
             # quaternion is eigenvector of K that corresponds to largest eigenvalue
             w, V = numpy.linalg.eigh(K)

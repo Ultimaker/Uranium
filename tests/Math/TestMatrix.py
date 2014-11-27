@@ -49,6 +49,12 @@ class TestMatrix(unittest.TestCase):
     def test_GetData(self):
         pass
 
+    def test_Transposed(self):
+        temp_matrix = Matrix()  
+        temp_matrix.setByTranslation(Vector(10,10,10))
+        temp_matrix = temp_matrix.getTransposed()
+        numpy.testing.assert_array_almost_equal(temp_matrix.getData(), numpy.array([[1,0,0,0],[0,1,0,0],[0,0,1,0],[10,10,10,1]]))
+
     def test_Dot(self):
         pass
 

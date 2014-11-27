@@ -3,6 +3,7 @@ from OpenGL.GL import *
 from Cura.Math.Vector import Vector
 from Cura.Math.Quaternion import Quaternion
 from Cura.Math.Matrix import Matrix
+import numpy
 
 from ctypes import c_void_p
 
@@ -67,7 +68,7 @@ class Shader(object):
             glUseProgram(0)
             self._bound = False
 
-    ##  Set a uniform value.
+    ##  Set a uniform value. (send variables to shader)
     #   \param name The name of the uniform to set as Unicode String.
     #   \param value The value to set the uniform to. Recognised types are int, float, Vector, Quaternion and Matrix.
     #   \note This will bind the shader if it was not already bound, clearing any previous shader binding.
@@ -88,7 +89,11 @@ class Shader(object):
         elif type(value) is Quaternion:
             glUniform4fv(loc, value.getData())
         elif type(value) is Matrix:
-            glUniformMatrix4fv(loc, 1, False, value.getTransposed().getData())
+            m = value #.getTransposed()
+            print("Going into GL")
+            print(m.getData())
+            #glUniformMatrix4fv(loc, 1, False, m.getData())
+            glUniformMatrix4fv(loc, 1, False, m.getData())
 
     ##  Bind a vertex attribute to the current shader.
     #   \param name The name of the attribute as Unicode String.

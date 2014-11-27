@@ -10,7 +10,7 @@ class Matrix(object):
     def __init__(self, data = numpy.identity(4,dtype=numpy.float32)):
         self._data = data
     
-    def at(x,y): #TODO add out of index checking
+    def at(x,y):
         if(x > 4 or y > 4 or x < 0 or y < 0):
             raise IndexError
         return self._data[x,y]
@@ -24,7 +24,7 @@ class Matrix(object):
     ## Get raw data.
     # \returns 4x4 numpy array
     def getData(self):
-        return self._data
+        return self._data.astype(numpy.float32)
     
     ## Create a 4x4 identity matrix. This overwrites any existing data.
     def setToIdentity(self):
@@ -39,15 +39,24 @@ class Matrix(object):
     def getInverse(self):
         return Matrix(numpy.linalg.inv(self._data,dtype=numpy.float32))
 
+    ##  Return the transpose of the matrix.
     def getTransposed(self):
-        return Matrix(numpy.transpose(self._data))
+        print("Begin getTransposed()")
+        print(self._data)
+        m = Matrix(numpy.transpose(self._data))
+        print(m.getData())
+        print("End getTransposed()")
+        return m
     
     ## Translate the matrix based on Vector.
     # \param direction The vector by which the matrix needs to be translated.
     def translate(self, direction):
+        print("translating")
+        print(self._data)
         translation_matrix = Matrix()
         translation_matrix.setByTranslation(direction)
         self.multiply(translation_matrix)
+        print(self._data)
     
     ## Set the matrix by translation vector. This overwrites any existing data.
     # \param direction The vector by which the (unit) matrix needs to be translated.
@@ -82,12 +91,12 @@ class Matrix(object):
         direction_data *= sina
         R += numpy.array([[ 0.0, -direction_data[2], direction_data[1]],
                         [ direction_data[2], 0.0, -direction_data[0]],
-                        [-direction_data[1], direction_data[0], 0.0]])
+                        [-direction_data[1], direction_data[0], 0.0]],dtype=numpy.float32)
         M = numpy.identity(4)
         M[:3, :3] = R
         if point is not None:
             # rotation not around origin
-            point = numpy.array(point[:3], dtype=numpy.float64, copy=False)
+            point = numpy.array(point[:3], dtype=numpy.float32, copy=False)
             M[:3, 3] = point - numpy.dot(R, point)
         self._data = M
     
@@ -115,7 +124,7 @@ class Matrix(object):
             # nonuniform scaling
             direction_data = direction.getData()
             factor = 1.0 - factor
-            M = numpy.identity(4)
+            M = numpy.identity(4,dtype=numpy.float32)
             M[:3, :3] -= factor * numpy.outer(direction_data, direction_data)
             if origin is not None:
                 M[:3, 3] = (factor * numpy.dot(origin[:3], direction_data)) * direction_data
