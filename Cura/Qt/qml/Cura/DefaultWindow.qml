@@ -50,28 +50,7 @@ Cura.MainWindow {
             }
         }
     }
-
-    Panel {
-        anchors.right: parent.right;
-        anchors.verticalCenter: parent.verticalCenter
-
-        title: "Settings"
-
-        contents: ColumnLayout {
-            Layout.preferredWidth: 200
-            Layout.preferredHeight: 400
-
-            Rectangle {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-
-                color: "grey"
-            }
-
-            Button {
-                Layout.fillWidth: true
-                text: "Save"
-            }
-        }
-    }
+    
+    SettingsPanel{}
+    
 }

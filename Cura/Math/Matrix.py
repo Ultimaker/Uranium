@@ -21,21 +21,21 @@ class Matrix(object):
     def preMultiply(self, matrix):
         self._data = numpy.dot(matrix.getData(),self._data)
         
-    ## Get raw data.
-    # \returns 4x4 numpy array
+    ##  Get raw data.
+    #   \returns 4x4 numpy array
     def getData(self):
         return self._data.astype(numpy.float32)
     
-    ## Create a 4x4 identity matrix. This overwrites any existing data.
+    ##  Create a 4x4 identity matrix. This overwrites any existing data.
     def setToIdentity(self):
         self._data = numpy.identity(4,dtype=numpy.float32)
         
-    ## Invert the matrix
+    ##  Invert the matrix
     def invert(self):
         self._data = numpy.linalg.inv(self._data,dtype=numpy.float32)
     
-    ## Return a inverted copy of the matrix.
-    # \returns The invertex matrix.
+    ##  Return a inverted copy of the matrix.
+    #   \returns The invertex matrix.
     def getInverse(self):
         return Matrix(numpy.linalg.inv(self._data,dtype=numpy.float32))
 
@@ -44,15 +44,15 @@ class Matrix(object):
         m = Matrix(numpy.transpose(self._data))
         return m
     
-    ## Translate the matrix based on Vector.
-    # \param direction The vector by which the matrix needs to be translated.
+    ##  Translate the matrix based on Vector.
+    #   \param direction The vector by which the matrix needs to be translated.
     def translate(self, direction):
         translation_matrix = Matrix()
         translation_matrix.setByTranslation(direction)
         self.multiply(translation_matrix)
     
-    ## Set the matrix by translation vector. This overwrites any existing data.
-    # \param direction The vector by which the (unit) matrix needs to be translated.
+    ##  Set the matrix by translation vector. This overwrites any existing data.
+    #   \param direction The vector by which the (unit) matrix needs to be translated.
     def setByTranslation(self, direction):
         M = numpy.identity(4,dtype=numpy.float32)
         M[:3, 3] = direction.getData()[:3]
@@ -61,19 +61,19 @@ class Matrix(object):
     def setTranslation(self, translation):
         self._data[:3, 3] = translation.getData()[:3]
     
-    ## Rotate the matrix based on rotation axis
-    # \param angle The angle by which matrix needs to be rotated.
-    # \param direction Axis by which the matrix needs to be rotated about.
-    # \param point Point where from where the rotation happens. If None, origin is used.
+    ##  Rotate the matrix based on rotation axis
+    #   \param angle The angle by which matrix needs to be rotated.
+    #   \param direction Axis by which the matrix needs to be rotated about.
+    #   \param point Point where from where the rotation happens. If None, origin is used.
     def rotateByAxis(self, angle, direction, point = None):
         rotation_matrix = Matrix()
         rotation_matrix.setByRotationAxis(angle, direction, point)
         self.multiply(rotation_matrix)
     
-    ## Set the matrix based on rotation axis. This overwrites any existing data.
-    # \param angle The angle by which matrix needs to be rotated in radians.
-    # \param direction Axis by which the matrix needs to be rotated about.
-    # \param point Point where from where the rotation happens. If None, origin is used.
+    ##  Set the matrix based on rotation axis. This overwrites any existing data.
+    #   \param angle The angle by which matrix needs to be rotated in radians.
+    #   \param direction Axis by which the matrix needs to be rotated about.
+    #   \param point Point where from where the rotation happens. If None, origin is used.
     def setByRotationAxis(self, angle, direction, point = None):
         sina = math.sin(angle)
         cosa = math.cos(angle)
@@ -93,19 +93,19 @@ class Matrix(object):
             M[:3, 3] = point - numpy.dot(R, point)
         self._data = M
     
-    ## Scale the matrix by factor wrt origin & direction.
-    # \param factor The factor by which to scale
-    # \param origin From where does the scaling need to be done
-    # \param direction In what direction is the scaling (if None, it's uniform)
+    ##  Scale the matrix by factor wrt origin & direction.
+    #   \param factor The factor by which to scale
+    #   \param origin From where does the scaling need to be done
+    #   \param direction In what direction is the scaling (if None, it's uniform)
     def scaleByFactor(self, factor, origin = None, direction = None):
         scale_matrix = Matrix()
         scale_matrix.setByScaleFactor(factor, origin, direction)
         self.multiply(scale_matrix)
     
-    ## Set the matrix by scale by factor wrt origin & direction. This overwrites any existing data
-    # \param factor The factor by which to scale
-    # \param origin From where does the scaling need to be done
-    # \param direction In what direction is the scaling (if None, it's uniform)
+    ##  Set the matrix by scale by factor wrt origin & direction. This overwrites any existing data
+    #   \param factor The factor by which to scale
+    #   \param origin From where does the scaling need to be done
+    #   \param direction In what direction is the scaling (if None, it's uniform)
     def setByScaleFactor(self, factor, origin = None, direction = None):
         if direction is None:
             # uniform scaling
@@ -123,8 +123,8 @@ class Matrix(object):
                 M[:3, 3] = (factor * numpy.dot(origin[:3], direction_data)) * direction_data
         self._data = M
     
-    ## Set the matrix by proving a quaternion. This overwrites any existing data
-    # \param quaternion The quaternion used to set the matrix data.
+    ##  Set the matrix by proving a quaternion. This overwrites any existing data
+    #   \param quaternion The quaternion used to set the matrix data.
     def setByQuaternion(self, quaternion):
         q = numpy.array(quaternion.getData(), dtype=numpy.float32, copy=True)
         n = numpy.dot(q, q)
