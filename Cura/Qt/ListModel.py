@@ -56,6 +56,11 @@ class ListModel(QAbstractListModel):
         self.beginResetModel()
         self._items.clear()
         self.endResetModel()
+        
+    @pyqtSlot(int, str, QVariant)
+    def setProperty(self, index, property, value):
+        self._items[index][property] = value
+        self.dataChanged.emit(self.index(index, 0), self.index(index, 0))
 
     ##  Sort the list.
     #   \param fun The callable to use for determining the sort key.

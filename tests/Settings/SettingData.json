@@ -6,8 +6,8 @@
             "visibility": true,
             "Settings": [
                 {
-                    "key": "TestSetting",
-                    "label": "Test setting!",
+                    "key": "TestSetfffting",
+                    "label": "Test sefhfhfhfhtting!",
                     "type": "int",
                     "default": 10,
                     "min_value": 0,
@@ -31,6 +31,33 @@
                 {
                     "key": "TestSetting2",
                     "label": "Test setting 2",
+                    "type": "int",
+                    "default": "",
+                    "min_value": 0,
+                    "max_value": 100,
+                    "children": []
+                },
+                {
+                    "key": "TestSefftting2",
+                    "label": "Test setffting 2",
+                    "type": "int",
+                    "default": "",
+                    "min_value": 0,
+                    "max_value": 100,
+                    "children": []
+                },
+                {
+                    "key": "TestSaaefftting2",
+                    "label": "Test sssetffting 2",
+                    "type": "int",
+                    "default": "",
+                    "min_value": 0,
+                    "max_value": 100,
+                    "children": []
+                },
+                {
+                    "key": "TestSarsaefftting2",
+                    "label": "Testrr sssetffting 2",
                     "type": "int",
                     "default": "",
                     "min_value": 0,
@@ -72,6 +99,19 @@
             "Settings": [[{
                     "key": "TestSetting1231231",
                     "label": "Test setting!",
+                    "type": "int",
+                    "default": 10,
+                    "min_value": 0,
+                    "max_value": 10,
+                    "children": []}]]
+        },
+        {
+            "key": "TestCategory5",
+            "label": "Test category5",
+            "visibility": true,
+            "Settings": [[{
+                    "key": "TestSettingddd1231231",
+                    "label": "Test settdding!",
                     "type": "int",
                     "default": 10,
                     "min_value": 0,

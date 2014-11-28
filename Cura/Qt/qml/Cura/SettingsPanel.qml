@@ -9,28 +9,40 @@ Panel
     anchors.right: parent.right;
     anchors.verticalCenter: parent.verticalCenter
 
-    title: "Settings"
 
     contents: ColumnLayout 
     {
         Layout.preferredWidth: 200
         Layout.preferredHeight: 400
-
+        Rectangle
+        {
+            Layout.fillWidth:true
+            height:25
+            color:"black"
+            Label {
+                text: "Settings" 
+                anchors.centerIn: parent
+                color: "white"
+            }
+        }
         Rectangle 
         {
             Layout.fillWidth: true
             Layout.fillHeight: true
             ListView
             {
+                id:settingsList
                 model: Cura.Models.settingsModel
                 anchors.fill: parent
                 delegate: settingDelegate
                 section.property: "category"
-                section.delegate:categoryDelegate
-                
+                section.delegate: categoryDelegate
+                clip: true
+                boundsBehavior: Flickable.StopAtBounds
             }
-
-            color: "blue"
+            ScrollBar {
+                flickable: settingsList
+            }
         }
 
         Button 
@@ -44,6 +56,8 @@ Panel
         text:"s"
         width: 20
         height: 20
+        y:2
+        x:2
         onClicked: settingDialog.visible = true
     }
     
@@ -51,17 +65,25 @@ Panel
     {
         id: settingDelegate
         Item 
-        {
-            width: 180; height: 40
+        {            
+            width: 180; 
+       
+            height: model.visible ? 40 : 0
+            Behavior on height { NumberAnimation { } }
+            
+            opacity: model.visible ? 1 : 0
+            Behavior on opacity { NumberAnimation { } }
+            
             Column {
-                Text { text: '<b>Name:</b> ' + name }
+                Text { text: name }
             }
         }
     }
     Component
     {
         id: categoryDelegate
-        Rectangle { color: "red"; width: 150; height: 20 }
+       
+         Button{text:section; onClicked: settingsList.model.toggleVisibilityByCategory(section)}
     }
     
     Window {
