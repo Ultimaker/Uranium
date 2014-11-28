@@ -58,8 +58,8 @@ class SettingsCategory(object):
     def getAllSettings(self):
         all_settings = []
         for s in self._settings:
-            all_settings.extend(s)
-            all_settings.extend(s.getAllSettings())
+            all_settings.append(s)
+            all_settings.extend(s.getAllChildren())
         return all_settings
 
     def getChildren(self):

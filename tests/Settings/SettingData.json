@@ -1,7 +1,7 @@
 {
     "Categories": [
         {
-            "key": "TestCategory",
+            "key": "TestCategory1",
             "label": "Test category",
             "visibility": true,
             "Settings": [
@@ -40,10 +40,43 @@
             ]
         },
         {
-            "key": "TestCategory123",
-            "label": "Test category",
+            "key": "TestCategory2",
+            "label": "Test category2",
             "visibility": true,
-            "Settings": []
+            "Settings": [{
+                    "key": "TestSetting1231",
+                    "label": "Test setting!",
+                    "type": "int",
+                    "default": 10,
+                    "min_value": 0,
+                    "max_value": 10,
+                    "children": []}]
+        },
+        {
+            "key": "TestCategory3",
+            "label": "Test category3",
+            "visibility": true,
+            "Settings": [{
+                    "key": "TestSettingffaaa",
+                    "label": "Test setting!",
+                    "type": "int",
+                    "default": 10,
+                    "min_value": 0,
+                    "max_value": 10,
+                    "children": []}]
+        },
+        {
+            "key": "TestCategory4",
+            "label": "Test category4",
+            "visibility": true,
+            "Settings": [[{
+                    "key": "TestSetting1231231",
+                    "label": "Test setting!",
+                    "type": "int",
+                    "default": 10,
+                    "min_value": 0,
+                    "max_value": 10,
+                    "children": []}]]
         }
     ]
 }

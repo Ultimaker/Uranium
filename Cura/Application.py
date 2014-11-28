@@ -1,6 +1,7 @@
 from Cura.Controller import Controller
 from Cura.PluginRegistry import PluginRegistry
 from Cura.MeshHandling.MeshFileHandler import MeshFileHandler
+from Cura.Settings.MachineSettings import MachineSettings
 
 ##  Central object responsible for running the main event loop and creating other central objects.
 #
@@ -18,11 +19,18 @@ class Application(object):
         self._storage_devices = {}
         self._loggers = []
         self._backend = None
+        self._machine_settings = MachineSettings()
+        self._machine_settings.loadSettingsFromFile("tests/Settings/SettingData.json") #TODO: Debug code
     
     ##  Set the backend of the application (the program that does the heavy lifting).
     #   \param backend Backend
     def setBackend(self, backend):
         self._backend = backend
+    
+    ##  Get reference of the machine settings object
+    #   \returns machine_settings
+    def getMachineSettings(self):
+        return self._machine_settings
     
     ##  Get the backend of the application (the program that does the heavy lifting).
     #   \returns Backend

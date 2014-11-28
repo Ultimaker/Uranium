@@ -38,6 +38,7 @@ class Bindings:
         qmlRegisterType(ViewModel, "Cura", 1, 0, "ViewModel")
         #qmlRegisterType(FileModel, "Cura", 1, 0, "FileModel")
         qmlRegisterType(ToolModel, "Cura", 1, 0, "ToolModel")
+        #qmlRegisterType(SettingModel
 
         # Singleton proxy objects
         qmlRegisterSingletonType(ControllerProxy, "Cura", 1, 0, "Controller", Bindings.createControllerProxy)

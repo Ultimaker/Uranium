@@ -10,7 +10,7 @@ class Setting(object):
         self._key = key
         self._label = key
         self._tooltip = ''
-        self._default_value = unicode(default)
+        self._default_value = str(default)
         self._value = None
         self._type = type
         self._visible = True
@@ -158,8 +158,8 @@ class Setting(object):
     def getType(self):
         return self._type
     
-    ## Get the effective value of the setting. This can be 'overriden' by a parent function if this function is invisible.
-    # \returns value
+    ##  Get the effective value of the setting. This can be 'overriden' by a parent function if this function is invisible.
+    #   \returns value
     def getValue(self):
         if not self._visible:
             if self._parent is not None:
@@ -170,16 +170,16 @@ class Setting(object):
             return self._default_value
         return self._value
 
-    ## Set the value of this setting and call the registered callbacks.
-    # \param value Value to be set.
+    ##  Set the value of this setting and call the registered callbacks.
+    #   \param value Value to be set.
     def setValue(self, value):
         if self._value != value:
             self._value = value
             for callback in self._callbacks:
                 callback()
     
-    ## Add function to be called when value is changed.
-    # \param function to be added.
+    ##   Add function to be called when value is changed.
+    #   \param function to be added.
     def addValueChangedCallback(self, callback):
         self._callbacks.append(callback)
     
@@ -194,8 +194,8 @@ class Setting(object):
     def getAllChildren(self):
         all_children = []
         for s in self._children:
-            all_children.extend(s)
-            all_children.extend(s.getAllSettings())
+            all_children.append(s)
+            all_children.extend(s.getAllChildren())
         return all_children
 
     def getChildren(self):

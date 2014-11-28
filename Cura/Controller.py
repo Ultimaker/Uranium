@@ -78,9 +78,9 @@ class Controller(object):
     ##  Signal. Emitted when the active view changes.
     activeViewChanged = None
         
-    ## Add an input device (eg; mouse, keyboard, etc) by name if it's not already addded.
-    #  \param name Unique identifier of device (usually the plugin name)
-    #  \param view The input device to be added
+    ##  Add an input device (eg; mouse, keyboard, etc) by name if it's not already addded.
+    #   \param name Unique identifier of device (usually the plugin name)
+    #   \param view The input device to be added
     def addInputDevice(self, name, device):
         if(name not in self._input_devices):
             self._input_devices[name] = device
@@ -88,9 +88,9 @@ class Controller(object):
         else:
             self._application.log('w', '%s was already added to input device list. Unable to add it again.', name)
     
-    ## Request input device by name. Returns None if no device is found.
-    #  \param name Unique identifier of input device (usually the plugin name)
-    #  \return input device if name was found, none otherwise.
+    ##  Request input device by name. Returns None if no device is found.
+    #   \param name Unique identifier of input device (usually the plugin name)
+    #   \return input device if name was found, none otherwise.
     def getInputDevice(self, name):
         try:
             return self._input_devices[name]
@@ -106,9 +106,9 @@ class Controller(object):
             self._input_devices[name].event.disconnect(self.event)
             del self._input_devices[name]
     
-    ## Request tool by name. Returns None if no view is found.
-    #  \param name Unique identifier of tool (usually the plugin name)
-    #  \return tool if name was found, none otherwise.
+    ##  Request tool by name. Returns None if no view is found.
+    #   \param name Unique identifier of tool (usually the plugin name)
+    #   \return tool if name was found, none otherwise.
     def getTool(self, name):
         try:
             return self._tools[name]
@@ -119,10 +119,10 @@ class Controller(object):
     def getAllTools(self):
         return self._tools
 
-    ## Add an Tool (transform object, translate object) by name if it's not already addded.
-    #  \param name Unique identifier of tool (usually the plugin name)
-    #  \param tool Tool to be added
-    #  \return Tool if name was found, None otherwise.    
+    ##  Add an Tool (transform object, translate object) by name if it's not already addded.
+    #   \param name Unique identifier of tool (usually the plugin name)
+    #   \param tool Tool to be added
+    #   \return Tool if name was found, None otherwise.    
     def addTool(self, name, tool):
         if(name not in self._tools):
             self._tools[name] = tool

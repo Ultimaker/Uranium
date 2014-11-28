@@ -18,7 +18,7 @@ class MachineSettings(object):
     
     def addSettingsCategory(self, category):
         self._categories.append(category)
-        self._categories.sort()
+        #self._categories.sort()
         
     def getSettingsCategory(self, key):
         for category in self._categories:
@@ -28,6 +28,12 @@ class MachineSettings(object):
     
     def getAllCategories(self):
         return self._categories
+    
+    def getAllSettings(self):
+        all_settings = []
+        for category in self._categories:
+            all_settings.extend(category.getAllSettings())
+        return all_settings
     
     def getSettingByKey(self, key):
         for category in self._categories:
