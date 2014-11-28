@@ -5,27 +5,29 @@ from Cura.Qt.ListModel import ListModel
 class SettingsModel(ListModel):
     NameRole = Qt.UserRole + 1
     CategoryRole =Qt.UserRole + 2
-    VisibilityRole = Qt.UserRole + 3
+    CollapsedRole = Qt.UserRole + 3
+    TypeRole = Qt.UserRole + 4
+    ValueRole = Qt.UserRole + 5
     def __init__(self, parent = None):
         super().__init__(parent)
         self._machine_settings = QCoreApplication.instance().getMachineSettings()
         self._updateSettings()
         
     def roleNames(self):
-        return {self.NameRole:'name', self.CategoryRole:"category", self.VisibilityRole:"visible"}
+        return {self.NameRole:'name', self.CategoryRole:"category", self.CollapsedRole:"collapsed",self.TypeRole:"type",self.ValueRole:"value"}
         
     def _updateSettings(self):
         self.clear()
         settings = self._machine_settings.getAllSettings()
         for setting in settings:
-            self.appendItem({"name":setting.getLabel(),"category":setting.getCategory().getLabel(),"visible":False})
+            self.appendItem({"name":setting.getLabel(),"category":setting.getCategory().getLabel(),"collapsed":True,"type":setting.getType(),"value":setting.getValue()})
             
     @pyqtSlot(str)
-    def toggleVisibilityByCategory(self, category_key):
+    def toggleCollapsedByCategory(self, category_key):
         for index in range(0, len(self.items)):
             item = self.items[index]
             if item["category"] == category_key:
-                self.setProperty(index, 'visible', not item['visible'])
+                self.setProperty(index, 'collapsed', not item['collapsed'])
             
         
         

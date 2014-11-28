@@ -29,20 +29,22 @@ Panel
         {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            ListView
-            {
-                id:settingsList
-                model: Cura.Models.settingsModel
+            ScrollView {
                 anchors.fill: parent
-                delegate: settingDelegate
-                section.property: "category"
-                section.delegate: categoryDelegate
-                clip: true
-                boundsBehavior: Flickable.StopAtBounds
+                ListView
+                {
+                    id:settingsList
+                    model: Cura.Models.settingsModel
+                    delegate: settingDelegate
+                    section.property: "category"
+                    section.delegate: categoryDelegate
+                    clip: true
+                    boundsBehavior: Flickable.StopAtBounds
+                }
             }
-            ScrollBar {
-                flickable: settingsList
-            }
+//             ScrollBar {
+//                 flickable: settingsList
+//             }
         }
 
         Button 
@@ -64,26 +66,26 @@ Panel
     Component 
     {
         id: settingDelegate
-        Item 
-        {            
-            width: 180; 
-       
-            height: model.visible ? 40 : 0
-            Behavior on height { NumberAnimation { } }
-            
-            opacity: model.visible ? 1 : 0
-            Behavior on opacity { NumberAnimation { } }
-            
-            Column {
-                Text { text: name }
+        
+        
+        Loader
+        {
+            source: {
+                switch(model.type) {
+                    case "int":
+                        return "SettingTextField.qml"
+                    case "float":
+                        return "SettingTextField.qml" 
+                }
             }
+            
         }
     }
     Component
     {
         id: categoryDelegate
        
-         Button{text:section; onClicked: settingsList.model.toggleVisibilityByCategory(section)}
+         Button{text:section; onClicked: settingsList.model.toggleCollapsedByCategory(section)}
     }
     
     Window {

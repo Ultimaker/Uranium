@@ -8,20 +8,20 @@
                 {
                     "key": "TestSetfffting",
                     "label": "Test sefhfhfhfhtting!",
-                    "type": "int",
-                    "default": 10,
+                    "type": "float",
+                    "default": 0.5,
                     "min_value": 0,
                     "max_value": 10,
                     "children": [
                         {
                             "key": "Nested1",
-                            "default": "",
-                            "type": "int",
+                            "default": 50,
+                            "type": "float",
                             "children": [
                                 {
                                     "key": "Nested2",
                                     "type": "int",
-                                    "default": "",
+                                    "default": 20,
                                     "children": []
                                 }
                             ]
@@ -32,7 +32,7 @@
                     "key": "TestSetting2",
                     "label": "Test setting 2",
                     "type": "int",
-                    "default": "",
+                    "default": 3,
                     "min_value": 0,
                     "max_value": 100,
                     "children": []
@@ -41,7 +41,7 @@
                     "key": "TestSefftting2",
                     "label": "Test setffting 2",
                     "type": "int",
-                    "default": "",
+                    "default": "9901",
                     "min_value": 0,
                     "max_value": 100,
                     "children": []
@@ -50,7 +50,7 @@
                     "key": "TestSaaefftting2",
                     "label": "Test sssetffting 2",
                     "type": "int",
-                    "default": "",
+                    "default": 3,
                     "min_value": 0,
                     "max_value": 100,
                     "children": []
@@ -70,53 +70,65 @@
             "key": "TestCategory2",
             "label": "Test category2",
             "visibility": true,
-            "Settings": [{
+            "Settings": [
+                {
                     "key": "TestSetting1231",
                     "label": "Test setting!",
                     "type": "int",
                     "default": 10,
                     "min_value": 0,
                     "max_value": 10,
-                    "children": []}]
+                    "children": []
+                }
+            ]
         },
         {
             "key": "TestCategory3",
             "label": "Test category3",
             "visibility": true,
-            "Settings": [{
+            "Settings": [
+                {
                     "key": "TestSettingffaaa",
                     "label": "Test setting!",
                     "type": "int",
                     "default": 10,
                     "min_value": 0,
                     "max_value": 10,
-                    "children": []}]
+                    "children": []
+                }
+            ]
         },
         {
             "key": "TestCategory4",
             "label": "Test category4",
             "visibility": true,
-            "Settings": [[{
+            "Settings": [
+                {
                     "key": "TestSetting1231231",
                     "label": "Test setting!",
                     "type": "int",
                     "default": 10,
                     "min_value": 0,
                     "max_value": 10,
-                    "children": []}]]
+                    "children": []
+                }
+            ]
         },
         {
             "key": "TestCategory5",
             "label": "Test category5",
             "visibility": true,
-            "Settings": [[{
-                    "key": "TestSettingddd1231231",
-                    "label": "Test settdding!",
-                    "type": "int",
-                    "default": 10,
-                    "min_value": 0,
-                    "max_value": 10,
-                    "children": []}]]
+            "Settings": [
+                    {
+                        "key": "TestSettingddd1231231",
+                        "label": "Test settdding!",
+                        "type": "int",
+                        "default": 10,
+                        "min_value": 0,
+                        "max_value": 10,
+                        "children": []
+                    }
+                ]
         }
     ]
 }
