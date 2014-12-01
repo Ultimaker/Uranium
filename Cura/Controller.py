@@ -5,14 +5,14 @@ from Cura.Scene.Scene import Scene
 from Cura.Event import Event, MouseEvent, ToolEvent
 from Cura.Math.Vector import Vector
 from Cura.Math.Quaternion import Quaternion
-from Cura.Signal import Signal
+from Cura.Signal import Signal, SignalEmitter
 
 ## Glue glass that holds the scene, (active) view(s), (active) tool(s) and possible user inputs.
 #
 #  The different types of views / tools / inputs are defined by plugins.
-class Controller(object):
+class Controller(SignalEmitter):
     def __init__(self, application):
-        super(Controller, self).__init__() # Call super to make multiple inheritence work.
+        super().__init__() # Call super to make multiple inheritence work.
         self._active_tool = None
         self._tools = {}
         
@@ -22,20 +22,15 @@ class Controller(object):
         self._views = {}
         self._scene = Scene()
         self._application = application
-
-        self.viewsChanged = Signal()
-        self.activeViewChanged = Signal()
-        self.toolsChanged = Signal()
-        self.activeToolChanged = Signal()
     
     ##  Get the application.
     #   \returns Application
     def getApplication(self):
         return self._application
     
-    ## Add a view by name if it's not already added.
-    #  \param name Unique identifier of view (usually the plugin name)
-    #  \param view The view to be added
+    ##  Add a view by name if it's not already added.
+    #   \param name Unique identifier of view (usually the plugin name)
+    #   \param view The view to be added
     def addView(self, name, view):
         if(name not in self._views):
             self._views[name] = view
@@ -44,9 +39,9 @@ class Controller(object):
         else:
             self._application.log('w', '%s was already added to view list. Unable to add it again.',name)
     
-    ## Request view by name. Returns None if no view is found.
-    #  \param name Unique identifier of view (usually the plugin name)
-    #  \return View if name was found, none otherwise.
+    ##  Request view by name. Returns None if no view is found.
+    #   \param name Unique identifier of view (usually the plugin name)
+    #   \return View if name was found, none otherwise.
     def getView(self, name):
         try:
             return self._views[name]
@@ -72,11 +67,11 @@ class Controller(object):
         except KeyError:
             self._application.log('e', "No view named %s found", name)
 
-    ##  Signal. Emitted when the list of views changes.
-    viewsChanged = None
+    ##  Emitted when the list of views changes.
+    viewsChanged = Signal()
 
-    ##  Signal. Emitted when the active view changes.
-    activeViewChanged = None
+    ##  Emitted when the active view changes.
+    activeViewChanged = Signal()
         
     ##  Add an input device (eg; mouse, keyboard, etc) by name if it's not already addded.
     #   \param name Unique identifier of device (usually the plugin name)
@@ -151,11 +146,11 @@ class Controller(object):
         except KeyError:
             self._application.log('e', 'No tool named %s found.', name)
 
-    ##  Signal. Emitted when the list of tools changes.
-    toolsChanged = None
+    ##  Emitted when the list of tools changes.
+    toolsChanged = Signal()
 
-    ##  Signal. Emitted when the active tool changes.
-    activeToolChanged = None
+    ##  Emitted when the active tool changes.
+    activeToolChanged = Signal()
 
     ##  Return the scene
     def getScene(self):

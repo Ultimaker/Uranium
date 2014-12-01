@@ -1,11 +1,10 @@
-from Cura.Signal import Signal
+from Cura.Signal import Signal, SignalEmitter
 
 ##  Abstract base class for all input devices
-class InputDevice(object):
+class InputDevice(SignalEmitter):
     def __init__(self):
-        super(InputDevice, self).__init__()
-        self.event = Signal()
+        super().__init__()
 
-    ## Signal. Emitted whenever the device produces an event.
+    ## Emitted whenever the device produces an event.
     #  \param event The event that is emitted.
-    event = None
+    event = Signal()
