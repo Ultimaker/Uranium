@@ -53,6 +53,7 @@ Panel
         {
             Layout.fillWidth: true
             text: "Save"
+            onClicked: settingsList.model.saveSettingValues()
             
         }
     }

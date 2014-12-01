@@ -45,6 +45,10 @@ class SettingsModel(ListModel):
         if self._machine_settings.getSettingByKey(key) is not None:
             return self._machine_settings.getSettingByKey(key).validate()
         return 5
+    
+    @pyqtSlot()
+    def saveSettingValues(self):
+        self._machine_settings.saveValuesToFile("settings.ini")
         
         
         
