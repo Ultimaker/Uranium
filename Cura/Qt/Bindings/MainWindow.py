@@ -2,9 +2,6 @@ from PyQt5.QtCore import pyqtProperty, QObject, Qt, QCoreApplication
 from PyQt5.QtGui import QColor
 from PyQt5.QtQuick import QQuickWindow, QQuickItem
 
-from OpenGL import GL
-from OpenGL.GL.GREMEDY.string_marker import *
-
 from Cura.Math.Vector import Vector
 from Cura.Qt.QtMouseDevice import QtMouseDevice
 from Cura.Qt.QtKeyDevice import QtKeyDevice
