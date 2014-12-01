@@ -6,10 +6,14 @@ import Cura 1.0 as Cura
 
 Panel 
 {
+    id: settingsPanel
+    color:"#ebebeb"
     anchors.right: parent.right;
     anchors.verticalCenter: parent.verticalCenter
+    //background:Rectangle {color:}
     contents: ColumnLayout 
     {
+        
         Layout.preferredWidth: 250
         Layout.preferredHeight: 500
         Rectangle
@@ -28,6 +32,7 @@ Panel
         {
             Layout.fillWidth: true
             Layout.fillHeight: true
+            color: settingsPanel.color
             ScrollView 
             {
                 anchors.fill: parent
@@ -48,6 +53,7 @@ Panel
         {
             Layout.fillWidth: true
             text: "Save"
+            
         }
     }
     Button
@@ -77,7 +83,8 @@ Panel
             }
             
             onLoaded: {
-                item.model = settingsList.model; 
+                item.model = settingsList.model;
+                item.key = model.key
 //                 item.valid = parseInt(model.valid); 
 //                 item.value = model.value
                 item.index = parseInt(index);

@@ -2,13 +2,14 @@ from Cura.Settings.Validators.IntValidator import IntValidator
 from Cura.Settings.Validators.FloatValidator import FloatValidator
 from Cura.Settings.Validators.ResultCodes import ResultCodes
 
-## A setting object contains a (single) configuration setting.
-# Settings have validators that check if the value is valid, but do not prevent invalid values!
-# Settings have conditions that enable/disable this setting depending on other settings. (Ex: Dual-extrusion)
+##    A setting object contains a (single) configuration setting.
+#     Settings have validators that check if the value is valid, but do not prevent invalid values!
+#     Settings have conditions that enable/disable this setting depending on other settings. (Ex: Dual-extrusion)
 class Setting(object):    
-    def __init__(self, key, default, type, category = None):
+    def __init__(self, key = None, default = None, type = None, category = None, label = None):
         self._key = key
-        self._label = key
+        if label is None:
+            self._label = key
         self._tooltip = ''
         self._default_value = str(default)
         self._value = None
@@ -22,35 +23,45 @@ class Setting(object):
         self._children = []
         self._category = category
 
-        if type == 'float':
+
+##      Bind new validator to object based on it's current type
+    def bindValidator(self):
+        if self._type == 'float':
             FloatValidator(self) # Validator sets itself as validator to this setting
-        elif type == 'int':
-            IntValidator(self) 
-    
-    ## Set values of the setting by providing it with a dict object (as decoded by JSON parser)
-    # \param data Decoded JSON dict
+        elif self._type == 'int':
+            IntValidator(self)
+            
+    ##  Set values of the setting by providing it with a dict object (as decoded by JSON parser)
+    #   \param data Decoded JSON dict
     def fillByDict(self, data):
+        if "key" in data and "default" in data and "type" in data:
+            self._key = data["key"]
+            self._default_value = str(data["default"])
+            self._type = data["type"]
+            self.bindValidator()
+            if "label" in data:
+                self.setLabel(data["label"])
+            min_value = None
+            max_value = None
+            min_value_warning = None
+            max_value_warning = None
+            if "min_value" in data:
+                min_value = data["min_value"]
+            if "max_value" in data:
+                max_value = data["max_value"]
+            if "min_value_warning" in data:
+                min_value_warning = data["min_value_warning"]
+            if "max_value_warning" in data:
+                max_value_warning = data["max_value_warning"]
+            self.getValidator().setRange(min_value,max_value,min_value_warning,max_value_warning)
+        
         if "children" in data:
             for setting in data["children"]:
-                if "key" in setting and "default" in setting and "type" in setting:
-                    temp_setting = Setting(setting["key"],setting["default"],setting["type"])
-                    temp_setting.fillByDict(setting)
-                    temp_setting.setParent(self)
-                    min_value = None
-                    max_value = None
-                    min_value_warning = None
-                    max_value_warning = None
-                    if "min_value" in setting:
-                        min_value = setting["min_value"]
-                    if "max_value" in setting:
-                        max_value = setting["max_value"]
-                    if "min_value_warning" in setting:
-                        min_value_warning = setting["min_value_warning"]
-                    if "max_value_warning" in setting:
-                        max_value_warning = setting["max_value_warning"]
-                    temp_setting.getValidator().setRange(min_value,max_value,min_value_warning,max_value_warning)
-                    
-                    self._children.append(temp_setting)
+                temp_setting = Setting()
+                temp_setting.fillByDict(setting)
+                self._children.append(temp_setting)
+            
+         
     
     ## Set the validator of the Setting
     # \param validator Validator
@@ -147,6 +158,8 @@ class Setting(object):
 
     ## Get the display name of the setting
     def getLabel(self):
+        if self._label is None:
+            return self._key # Return key so it will always have some sort of display name
         return self._label
     
     ## Set the label (display name) of setting.
@@ -165,6 +178,7 @@ class Setting(object):
 
     ## Get the identifier of the setting
     def getKey(self):
+        print("KEY %s" % self._key)
         return self._key
 
     ## Get the type of the setting

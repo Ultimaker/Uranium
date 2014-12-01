@@ -4,26 +4,27 @@ from Cura.Qt.ListModel import ListModel
 
 class SettingsModel(ListModel):
     
-    NameRole = Qt.UserRole + 1
-    CategoryRole =Qt.UserRole + 2
-    CollapsedRole = Qt.UserRole + 3
-    TypeRole = Qt.UserRole + 4
-    ValueRole = Qt.UserRole + 5
-    ValidRole = Qt.UserRole + 6
-    
+    NameRole = Qt.UserRole + 1 #Label 
+    CategoryRole =Qt.UserRole + 2 #Key of category
+    CollapsedRole = Qt.UserRole + 3 #Is it collapsed
+    TypeRole = Qt.UserRole + 4 # Type of setting (int, float, string, etc)
+    ValueRole = Qt.UserRole + 5 # Value of setting
+    ValidRole = Qt.UserRole + 6 # Is value valid (5 = correct, 0-4 is error/warning)
+    KeyRole = Qt.UserRole + 7 #Unique identifier of setting
     def __init__(self, parent = None):
         super().__init__(parent)
         self._machine_settings = QCoreApplication.instance().getMachineSettings()
         self._updateSettings()
         
     def roleNames(self):
-        return {self.NameRole:'name', self.CategoryRole:"category", self.CollapsedRole:"collapsed",self.TypeRole:"type",self.ValueRole:"value",self.ValidRole:"valid"}
+        return {self.NameRole:'name', self.CategoryRole:"category", self.CollapsedRole:"collapsed",self.TypeRole:"type",self.ValueRole:"value",self.ValidRole:"valid",self.KeyRole:"key"}
         
     def _updateSettings(self):
         self.clear()
         settings = self._machine_settings.getAllSettings()
         for setting in settings:
-            self.appendItem({"name":setting.getLabel(),"category":setting.getCategory().getLabel(),"collapsed":True,"type":setting.getType(),"value":setting.getValue(),"valid":setting.validate()})
+            print("setting updated %s " %setting.getKey())
+            self.appendItem({"name":setting.getLabel(),"category":setting.getCategory().getLabel(),"collapsed":True,"type":setting.getType(),"value":setting.getValue(),"valid":setting.validate(),"key":setting.getKey()})
             
     @pyqtSlot(str)
     def toggleCollapsedByCategory(self, category_key):

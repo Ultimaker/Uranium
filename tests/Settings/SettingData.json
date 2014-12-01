@@ -15,6 +15,7 @@
                     "children": [
                         {
                             "key": "Nested1",
+                            "label": "test  test",
                             "default": 50,
                             "min_value":0,
                             "max_value":50,

@@ -10,7 +10,9 @@ Rectangle {
     property int valid;
     property variant value;
     property int index;
+    property variant key;
     width: 180; 
+    color:"#ebebeb"
 
     height: collapsed ? 0 : 40
     Behavior on height { NumberAnimation { } }
@@ -39,9 +41,8 @@ Rectangle {
                 textColor: "black"
                 background: Rectangle 
                 {
-                    radius: 2
-                    implicitWidth: 100
-                    implicitHeight: 24
+                    radius: 5
+                    implicitHeight: 25
                     color:  {
                         switch(base.valid)
                         {
@@ -66,7 +67,7 @@ Rectangle {
                 }
             }
             text: value
-            onEditingFinished: base.model.settingChanged(base.index,name,text)
+            onEditingFinished: base.model.settingChanged(base.index,base.key,text)
         }     
     }
 }
