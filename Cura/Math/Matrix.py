@@ -3,9 +3,11 @@ import math
 
 from Cura.Math.Quaternion import Quaternion
 
-## Heavily based (in most cases a straight copy with some refactoring) on the excellent 'library' Transformations.py created by Christoph Gohlke.
-# This class is a 4x4 homogenous matrix wrapper arround numpy. 
 
+## This class is a 4x4 homogenous matrix wrapper arround numpy.
+#
+# Heavily based (in most cases a straight copy with some refactoring) on the excellent
+# 'library' Transformations.py created by Christoph Gohlke.
 class Matrix(object):
     def __init__(self, data = numpy.identity(4,dtype=numpy.float32)):
         self._data = data

@@ -1,7 +1,9 @@
 import numpy
 import math
 
-# Wrapper for Quaternion
+##  Quaternion class based on numpy arrays.
+#
+#   This class represents a quaternion that can be used for rotations.
 class Quaternion(object):
     EPS = numpy.finfo(float).eps * 4.0
 

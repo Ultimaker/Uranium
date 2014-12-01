@@ -1,5 +1,9 @@
 import numpy
 import math
+
+##  Simple 3D-vector class based on numpy arrays.
+#
+#   This class represents a 3-dimensional vector.
 class Vector(object):
     def __init__(self,x = 0 ,y = 0,z = 0):
         self._data = numpy.array([x, y, z],dtype=numpy.float32)
