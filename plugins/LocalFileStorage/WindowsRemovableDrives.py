@@ -9,9 +9,9 @@ import subprocess
 
 ## Removable drive support for windows
 
-class WindowsRemoveableDrive(threading.Thread):
+class WindowsRemovableDriveThread(threading.Thread):
     def __init__(self, drives):
-        super(WindowsRemoveableDrive, self).__init__()
+        super().__init__()
         self.daemon = True
         self._driveManager = drives
         
@@ -39,17 +39,17 @@ class WindowsRemoveableDrive(threading.Thread):
                     if freeBytes.value < 1:
                         continue
                     
-                    drives[('%s (%s:)' % (volume_name, letter)] = letter + ':/'
+                    drives['%s (%s:)' % (volume_name, letter)] = letter + ':/'
                 bitmask >>= 1
                 
             self._driveManager.setDrives(drives)
             time.sleep(5)
 
 
-class WindowsRemoveableDrives(object):
+class WindowsRemovableDrives(object):
     def __init__(self):
-        super(WindowsRemoveableDrives, self).__init__()
-        self._thread = WindowsRemoveableDriveThread(self)
+        super(WindowsRemovableDrives, self).__init__()
+        self._thread = WindowsRemovableDriveThread(self)
         self._thread.start()
         self._drives = {}
 
@@ -84,8 +84,8 @@ class WindowsRemoveableDrives(object):
         output = p.communicate()
 
         if p.wait():
-            print output[0]
-            print output[1]
+            print(output[0])
+            print(output[1])
             return False
         else:
             return True
