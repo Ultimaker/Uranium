@@ -29,7 +29,7 @@ class LocalFileStorageDevice(StorageDevice):
 
     def _createRemovableDrives(self):
         if platform.system() == "Windows":
-            from . import WindowsRemoveableDrives
+            from . import WindowsRemovableDrives
             return WindowsRemovableDrives.WindowsRemovableDrives()
         elif platform.system() == "Darwin":
             from . import OSXRemovableDrives
