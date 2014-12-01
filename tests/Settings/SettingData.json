@@ -33,6 +33,17 @@
                                     "max_value_warning":40,
                                     "children": [],
                                     "visible": true
+                                },
+                                {
+                                    "key": "NNSetting2",
+                                    "type": "int",
+                                    "default": 20,
+                                    "min_value":0,
+                                    "max_value":50,
+                                    "min_value_warning":10,
+                                    "max_value_warning":40,
+                                    "children": [],
+                                    "visible": false
                                 }
                             ]
                         }

@@ -41,8 +41,9 @@ Rectangle {
                 textColor: "black"
                 background: Rectangle 
                 {
-                    radius: 5
+                    radius: 3
                     implicitHeight: 25
+                    border.width: 1
                     color:  {
                         switch(base.valid)
                         {

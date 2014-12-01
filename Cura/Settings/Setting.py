@@ -132,7 +132,8 @@ class Setting(object):
         return self._default_value
 
     ##  Check if the setting is visible. It can be that the setting visible is true, 
-    #   but it still should be invisible as all it's children are visible (and the setting is thus not visible!).
+    #   but it still should be invisible as all it's children are visible (at this point this setting is overiden by its children 
+    #   changing it does nothing, so it needs to be hidden!)
     #   \returns bool
     def isVisible(self):
         if not self._visible:
@@ -142,7 +143,7 @@ class Setting(object):
         return True
 
     ##  Check if all children are visible.
-    #   \returns True if all children are visible. False otherwise
+    #   \returns bool True if all children are visible. False otherwise
     def checkAllChildrenVisible(self):
         if len(self._children) < 1:
             return False

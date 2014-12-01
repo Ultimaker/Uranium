@@ -5,7 +5,8 @@ class MachineSettings(object):
     def __init__(self):
         self._categories = []
     
-    ## Load settings from JSON file
+    ##  Load settings from JSON file. Used to load tree structure & default values etc from file.
+    #   /param file_name String 
     def loadSettingsFromFile(self, file_name):
         json_data = open(file_name)
         data = json.load(json_data)
@@ -15,6 +16,20 @@ class MachineSettings(object):
                     temp_category = SettingsCategory(category["key"])
                     temp_category.fillByDict(category)
                     self.addSettingsCategory(temp_category)
+    
+    ##  Load values of settings from file. 
+    def loadValuesFromFile(self, file_name):
+        pass
+    
+    def saveValuesToFile(self,file_name):
+        f = open(file_name,'w')
+        category in self._categories:
+            f.write("CATEGORY: %s\n" % category.getKey())
+            for setting in category.getAllSettings():
+                if setting.isVisible():
+                    f.write("%s %s\n" % (setting.getKey(),setting.getValue())
+        f.close()
+        
     
     def addSettingsCategory(self, category):
         self._categories.append(category)
