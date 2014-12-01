@@ -93,18 +93,8 @@ class MainWindow(QQuickWindow):
         self._keyDevice.handleEvent(event)
 
     def _render(self):
-        if bool(glStringMarkerGREMEDY):
-            msg = b"Begin Rendering Background"
-            glStringMarkerGREMEDY(len(msg), msg)
-
-        GL.glClearColor(self._backgroundColor.redF(), self._backgroundColor.greenF(), self._backgroundColor.blueF(), self._backgroundColor.alphaF())
-        GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
-
+        self._app.getRenderer().clear(self._backgroundColor)
         self._app.getController().getActiveView().render()
-
-        if bool(glStringMarkerGREMEDY):
-            msg = "End Rendering Background"
-            glStringMarkerGREMEDY(len(msg), msg)
 
     def _onSceneChanged(self, object):
         self.update()
