@@ -36,6 +36,20 @@ class Setting(object):
                     temp_setting = Setting(setting["key"],setting["default"],setting["type"])
                     temp_setting.fillByDict(setting)
                     temp_setting.setParent(self)
+                    min_value = None
+                    max_value = None
+                    min_value_warning = None
+                    max_value_warning = None
+                    if "min_value" in setting:
+                        min_value = setting["min_value"]
+                    if "max_value" in setting:
+                        max_value = setting["max_value"]
+                    if "min_value_warning" in setting:
+                        min_value_warning = setting["min_value_warning"]
+                    if "max_value_warning" in setting:
+                        max_value_warning = setting["max_value_warning"]
+                    temp_setting.getValidator().setRange(min_value,max_value,min_value_warning,max_value_warning)
+                    
                     self._children.append(temp_setting)
     
     ## Set the validator of the Setting

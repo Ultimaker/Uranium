@@ -2,6 +2,7 @@
 ## Base class for a setting validator. Each validator is tied to a single setting. 
 #  They can have a minimum & maximum value as well as a minimum & maximum warning value.
 # TODO: The validators are not yet used to validate any settings.
+from Cura.Settings.Validators.ResultCodes import ResultCodes
 class Validator(object):
     def __init__(self, setting):
         self._setting = setting
@@ -35,3 +36,4 @@ class Validator(object):
             return ResultCodes.max_value_warning
         
         return ResultCodes.succes
+    

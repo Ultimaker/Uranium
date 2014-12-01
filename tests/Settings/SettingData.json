@@ -16,12 +16,20 @@
                         {
                             "key": "Nested1",
                             "default": 50,
+                            "min_value":0,
+                            "max_value":50,
+                            "min_value_warning":10,
+                            "max_value_warning":40,
                             "type": "float",
                             "children": [
                                 {
                                     "key": "Nested2",
                                     "type": "int",
                                     "default": 20,
+                                    "min_value":0,
+                                    "max_value":50,
+                                    "min_value_warning":10,
+                                    "max_value_warning":40,
                                     "children": []
                                 }
                             ]

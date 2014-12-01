@@ -8,18 +8,17 @@ Panel
 {
     anchors.right: parent.right;
     anchors.verticalCenter: parent.verticalCenter
-
-
     contents: ColumnLayout 
     {
-        Layout.preferredWidth: 200
-        Layout.preferredHeight: 400
+        Layout.preferredWidth: 250
+        Layout.preferredHeight: 500
         Rectangle
         {
             Layout.fillWidth:true
             height:25
             color:"black"
-            Label {
+            Label 
+            {
                 text: "Settings" 
                 anchors.centerIn: parent
                 color: "white"
@@ -29,7 +28,8 @@ Panel
         {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            ScrollView {
+            ScrollView 
+            {
                 anchors.fill: parent
                 ListView
                 {
@@ -42,9 +42,6 @@ Panel
                     boundsBehavior: Flickable.StopAtBounds
                 }
             }
-//             ScrollBar {
-//                 flickable: settingsList
-//             }
         }
 
         Button 
@@ -65,13 +62,13 @@ Panel
     
     Component 
     {
-        id: settingDelegate
-        
-        
+        id: settingDelegate  
         Loader
         {
-            source: {
-                switch(model.type) {
+            source: 
+            {
+                switch(model.type) 
+                {
                     case "int":
                         return "SettingTextField.qml"
                     case "float":
@@ -79,13 +76,26 @@ Panel
                 }
             }
             
+            onLoaded: {
+                item.model = settingsList.model; 
+//                 item.valid = parseInt(model.valid); 
+//                 item.value = model.value
+                item.index = parseInt(index);
+            }
+         
+            Binding { target: item; property: "valid"; value: model.valid; }
+            Binding { target: item; property: "value"; value: model.value; }
         }
     }
     Component
     {
         id: categoryDelegate
        
-         Button{text:section; onClicked: settingsList.model.toggleCollapsedByCategory(section)}
+        Button
+        {
+            text:section; 
+            onClicked: settingsList.model.toggleCollapsedByCategory(section)
+        }
     }
     
     Window {
@@ -96,7 +106,13 @@ Panel
         width:250
         height:250
         
-        Rectangle { color: "red"; width: 150; height: 100 }
+        Rectangle 
+        { 
+            color: "red";
+            width: 150;
+            height: 100 
+            
+        }
         Button
         { 
             onClicked:settingDialog.visible = false
