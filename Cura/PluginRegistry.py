@@ -140,13 +140,13 @@ class PluginRegistry(object):
         try:
             file, path, desc = imp.find_module(name, [ location ])
         except ImportError as e:
-            print(e)
+            print("Import error when importing {0}: {1}".format(name, e))
             return False
 
         try:
             module = imp.load_module(name, file, path, desc)
         except ImportError as e:
-            print(e)
+            print("Import error loading module {0}: {1}".format(name, e))
             return False
         finally:
             if file:
