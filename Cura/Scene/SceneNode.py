@@ -1,19 +1,16 @@
 from Cura.Math.Matrix import Matrix
-from Cura.Signal import Signal
+from Cura.Signal import Signal, SignalEmitter
 from copy import copy, deepcopy
 
-## \brief A scene node object. These objects can hold a mesh and multiple children. Each node has a transformation matrix
-#         that maps it it's parents space to the local space (it's inverse maps local space to parent).
+##  A scene node object.
+#
+#   These objects can hold a mesh and multiple children. Each node has a transformation matrix
+#   that maps it it's parents space to the local space (it's inverse maps local space to parent).
 #
 #   \todo Add unit testing
-class SceneNode(object):
+class SceneNode(SignalEmitter):
     def __init__(self, parent = None):
-        super(SceneNode, self).__init__() # Call super to make multiple inheritence work.
-        # Signals
-        self.parentChanged = Signal()
-        self.childrenChanged = Signal()
-        self.transformationChanged = Signal()
-        self.meshDataChanged = Signal()
+        super().__init__() # Call super to make multiple inheritence work.
 
         self._children = []
         self._mesh_data = None
@@ -34,8 +31,8 @@ class SceneNode(object):
         self._parent = scene_node
         self.parentChanged.emit()
 
-    ##  Signal. Emitted whenever the parent changes.
-    parentChanged = None
+    ##  Emitted whenever the parent changes.
+    parentChanged = Signal()
 
     ##  Get the (original) mesh data from the scene node/object. 
     #   \returns MeshData
@@ -55,8 +52,8 @@ class SceneNode(object):
         self._mesh_data = mesh_data
         self.meshDataChanged.emit(self)
 
-    ##  Signal. Emitted whenever the attached mesh data object changes.
-    meshDataChanged = None
+    ##  Emitted whenever the attached mesh data object changes.
+    meshDataChanged = Signal()
 
     ##  Add a child to this node and set it's parent as this node.
     #   \params scene_node SceneNode to add.
@@ -93,9 +90,9 @@ class SceneNode(object):
             children.extend(child.getAllChildren())
         return children
 
-    ##  Signal. Emitted whenever the list of children of this object or any child object changes.
+    ##  Emitted whenever the list of children of this object or any child object changes.
     #   \param object The object that triggered the change.
-    childrenChanged = None
+    childrenChanged = Signal()
 
     ##  Computes and returns the transformation from origin to local space
     #   \returns 4x4 transformation matrix
@@ -163,8 +160,8 @@ class SceneNode(object):
 
     ##  Signal. Emitted whenever the transformation of this object or any child object changes.
     #   \param object The object that caused the change.
-    transformationChanged = None
-
+    transformationChanged = Signal()
+    
     ##  Check if this node is at the bottom of the tree (and thus a leaf node).
     #   \returns True if its a leaf object, false otherwise.
     def isLeafNode(self):

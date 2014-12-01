@@ -3,22 +3,19 @@ from Cura.PluginError import PluginError, PluginNotFoundError, InvalidMetaDataEr
 import imp
 import os
 
-'''
-\brief A central object to dynamically load modules as plugins.
-
-The PluginRegistry class can load modules dynamically and use
-them as plugins. Each plugin module is expected to be a directory with
-and __init__ file defining a getMetaData and a register function. 
-
-getMetaData should return a dictionary of metadata, with the "name" 
-and "type" keys expected to be set. The register function is passed 
-the application object as parameter and is expected to register the 
-appropriate classes with the appropriate objects.
-
-Plugins can be located in any location listed in the plugin locations.
-The plugin locations are scanned recursively for plugins.
-
-'''
+##  A central object to dynamically load modules as plugins.
+#
+#   The PluginRegistry class can load modules dynamically and use
+#   them as plugins. Each plugin module is expected to be a directory with
+#   and `__init__` file defining a `getMetaData` and a `register` function.
+#
+#   `getMetaData` should return a dictionary of metadata, with the "name"
+#   and "type" keys expected to be set. The register function is passed
+#   the application object as parameter and is expected to register the
+#   appropriate classes with the appropriate objects.
+#
+#   Plugins can be located in any location listed in the plugin locations.
+#   The plugin locations are scanned recursively for plugins.
 class PluginRegistry(object):
     def __init__(self):
         super(PluginRegistry,self).__init__() # Call super to make multiple inheritence work.
@@ -27,8 +24,9 @@ class PluginRegistry(object):
         self._plugin_locations = []
         self._application = None
     
-    ## Load a single plugin by name
-    # \param name The name of the plugin
+    ##  Load a single plugin by name
+    #   \param name \type{string} The name of the plugin
+    #   \exception PluginNotFoundError Raised when the plugin could not be found.
     def loadPlugin(self, name):
         if name in self._plugins:
             # Already loaded, do not load again
@@ -52,8 +50,9 @@ class PluginRegistry(object):
         except AttributeError as e:
             self._application.log('e', e)
     
-    ## Load all plugins matching a certain set of metadata
-    # \param metaData The metaData that needs to be matched.
+    ##  Load all plugins matching a certain set of metadata
+    #   \param metaData \type{dict} The metaData that needs to be matched.
+    #   \sa loadPlugin
     def loadPlugins(self, meta_data):
         plugin_names = self._findAllPlugins()
         
@@ -64,8 +63,9 @@ class PluginRegistry(object):
                 self.loadPlugin(name)
 
     ##  Get the metadata for a certain plugin
-    #   \param name The name of the plugin
-    #   \returns dict (can be empty if plugin was not found)
+    #   \param name \type{string} The name of the plugin
+    #   \return \type{dict} The metadata of the plugin. Can be an empty dict.
+    #   \exception InvalidMetaDataError Raised when no metadata can be found or the metadata misses the right keys.
     def getMetaData(self, name):
         if name not in self._meta_data:
             if not self._populateMetaData(name):
@@ -73,8 +73,9 @@ class PluginRegistry(object):
 
         return self._meta_data[name]
     
-    ## Get a list of all metadata matching a certain subset of metaData
-    # \param metaData The subset of metadata that should be matched.
+    ##  Get a list of all metadata matching a certain subset of metaData
+    #   \param metaData \type{dict} The subset of metadata that should be matched.
+    #   \sa getMetaData
     def getAllMetaData(self, metaData):
         pluginNames = self._findAllPlugins()
         
@@ -87,23 +88,24 @@ class PluginRegistry(object):
         return returnVal
     
     ##  Get the list of plugin locations
-    #   \returns list of strings
+    #   \return \type{list} The plugin locations
     def getPluginLocations(self):
         return self._plugin_locations
     
     ##  Add a plugin location to the list of locations to search
-    #   \param location The location to add to the list
+    #   \param location \type{string} The location to add to the list
     def addPluginLocation(self, location):
         #TODO: Add error checking!
         self._plugin_locations.append(location)
         
     ##  Set the central application object
     #   This is used by plugins as a central access point for other objects
-    #   \param app The application object to use
+    #   \param app \type{Application} The application object to use
     def setApplication(self, app):
         self._application = app
     
-    ##  Private
+    ## private:
+
     #   Populate the list of metadata
     def _populateMetaData(self, name):
         plugin = self._findPlugin(name)
@@ -124,7 +126,6 @@ class PluginRegistry(object):
         self._meta_data[name] = meta_data
         return True
 
-    ##  Private
     #   Try to find a module implementing a plugin
     #   \param name The name of the plugin to find
     #   \returns module if it was found None otherwise
@@ -153,7 +154,6 @@ class PluginRegistry(object):
 
         return module
     
-    ##  Private
     #   Returns a list of all possible plugin names in the plugin locations
     def _findAllPlugins(self, paths = None):
         names = []
@@ -171,7 +171,6 @@ class PluginRegistry(object):
                         names += self._findAllPlugins([ filepath ])
         return names
     
-    ##   Private
     #   Try to find a directory we can use to load a plugin from
     #   \param name The name of the plugin to locate
     #   \param folder The base folder to look into
@@ -188,7 +187,6 @@ class PluginRegistry(object):
 
         return False
     
-    ##  Private
     #   Check if a certain dictionary contains a certain subset of key/value pairs
     #   \param dictionary The dictionary to search
     #   \param subset The subset to search for

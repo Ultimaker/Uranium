@@ -98,3 +98,7 @@ class Application(object):
     #   This method should be reimplemented by subclasses to start the main event loop.
     def run(self):
         raise NotImplementedError("Run must be implemented by application")
+
+    ##  Return an application-specific renderer object.
+    def getRenderer(self):
+        raise NotImplementedError("getRenderer must be implemented by subclasses.")

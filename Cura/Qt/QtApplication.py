@@ -8,9 +8,8 @@ from PyQt5.QtWidgets import QApplication
 from PyQt5.QtGui import QGuiApplication
 
 from Cura.Application import Application
+from Cura.Qt.QtGL2Renderer import QtGL2Renderer
 from Cura.Qt.Bindings.Bindings import Bindings
-
-from Cura.Qt.Bindings.ViewModel import ViewModel
 
 ##  Application subclass that provides a Qt application object.
 class QtApplication(QApplication, Application):
@@ -18,6 +17,7 @@ class QtApplication(QApplication, Application):
         super(QtApplication, self).__init__(sys.argv)
         self._mainQml = "main.qml"
         self._engine = None
+        self._renderer = None
 
         signal.signal(signal.SIGINT, signal.SIG_DFL)
 
@@ -40,3 +40,9 @@ class QtApplication(QApplication, Application):
 
     def registerObjects(self, engine):
         pass
+
+    def getRenderer(self):
+        if not self._renderer:
+            self._renderer = QtGL2Renderer(self)
+
+        return self._renderer

@@ -1,3 +1,9 @@
+#   Author:  Thiago Marcos P. Santos
+#   Author:  Christopher S. Case
+#   Author:  David H. Bronke
+#   Author:  Arjen Hiemstra
+#   License: MIT
+
 import inspect
 from weakref import WeakSet, WeakKeyDictionary
 
@@ -7,49 +13,47 @@ from weakref import WeakSet, WeakKeyDictionary
 #   define signals that other classes can connect functions or methods to, called slots.
 #   Whenever the signal is called, it will proceed to call the connected slots.
 #
-#   To create a signal, create an instance variable of type Signal, using "attribute = Signal()"
-#   Other objects can then use `attribute.connect()` to connect slots to that signal.
-#   To emit the signal, call emit on the signal like `attribute.emit()`. Arguments can be
-#   passed along to the signal, but slots will need to handle them.
-#
-#   In addition, signals can be connected to other signals. This will emit the connected
-#   signal whenever the signal is emitted.
+#   To create a signal, create an instance variable of type Signal. Other objects can then
+#   use that variable's `connect()` method to connect methods, callables or signals to the
+#   signal. To emit the signal, call `emit()` on the signal. Arguments can be passed along
+#   to the signal, but slots will be required to handle them. When connecting signals to
+#   other signals, the connected signal will be emitted whenever the signal is emitted.
 #
 #   Signal-slot connections are weak references and as such will not prevent objects
 #   from being destroyed. In addition, all slots will be implicitly disconnected when
 #   the signal is destroyed.
 #
 #   \warning It is imperative that the signals are created as instance variables, otherwise
-#   emitting signals will get confused. In this codebase, we therefore declare signal class
-#   variables with None to make them easy to document but set the actual signal objects in
-#   the class' __init__() method.
+#   emitting signals will get confused. To help with this, see the SignalEmitter class.
 #
-#   Taken from http://code.activestate.com/recipes/577980-improved-signalsslots-implementation-in-python/
+#   Based on http://code.activestate.com/recipes/577980-improved-signalsslots-implementation-in-python/
 #
-#   Author:  Thiago Marcos P. Santos
-#   Author:  Christopher S. Case
-#   Author:  David H. Bronke
-#   Author:  Arjen Hiemstra
-#   License: MIT
 class Signal:
     def __init__(self):
-        self._functions = WeakSet()
-        self._methods = WeakKeyDictionary()
-        self._signals = WeakSet()
+        self.__functions = WeakSet()
+        self.__methods = WeakKeyDictionary()
+        self.__signals = WeakSet()
 
-    ## Emit the signal, indirectly calling all connected slots.
+    def __call__(self):
+        raise NotImplementedError("Call emit() to emit a signal")
+
+    ##  Emit the signal, indirectly calling all connected slots.
+    #   \param args The positional arguments to pass along.
+    #   \param kargs The keyword arguments to pass along.
     def emit(self, *args, **kargs):
+        #obj = inspect.currentframe().f_back.f_locals['self']
+
         # Call handler functions
-        for func in self._functions:
+        for func in self.__functions:
             func(*args, **kargs)
 
         # Call handler methods
-        for obj, funcs in self._methods.items():
+        for dest, funcs in self.__methods.items():
             for func in funcs:
-                func(obj, *args, **kargs)
+                func(dest, *args, **kargs)
 
         # Emit connected signals
-        for signal in self._signals:
+        for signal in self.__signals:
             signal.emit(*args, **kargs)
 
     ##  Connect to this signal.
@@ -58,32 +62,44 @@ class Signal:
         if type(connector) == Signal:
             if connector == self:
                 return
-            self._signals.add(connector)
+            self.__signals.add(connector)
         elif inspect.ismethod(connector):
-            if connector.__self__ not in self._methods:
-                self._methods[connector.__self__] = set()
+            if connector.__self__ not in self.__methods:
+                self.__methods[connector.__self__] = set()
 
-            self._methods[connector.__self__].add(connector.__func__)
+            self.__methods[connector.__self__].add(connector.__func__)
         else:
-            self._functions.add(connector)
+            self.__functions.add(connector)
 
     ##  Disconnect from this signal.
     #   \param connector The signal or slot to disconnect.
     def disconnect(self, connector):
-        if type(connector) == Signal:
-            if connector in self._signals:
-                if connector == self:
-                    return
-                self._signals.remove(connector)
-        if inspect.ismethod(connector):
-            if connector.__self__ in self._methods:
-                self._methods[connector.__self__].remove(connector.__func__)
+        if connector in self.__signals:
+            self.__signals.remove(connector)
+        elif connector.__self__ in self.__methods:
+                self.__methods[connector.__self__].remove(connector.__func__)
         else:
-            if connector in self._functions:
-                self._functions.remove(connector)
+            if connector in self.__functions:
+                self.__functions.remove(connector)
 
     ##  Disconnect all connected slots.
     def disconnectAll(self):
-        self._functions.clear()
-        self._methods.clear()
-        self._signals.clear()
+        self.__functions.clear()
+        self.__methods.clear()
+        self.__signals.clear()
+
+##  Convenience class to simplify signal creation.
+#
+#   This class is a Convenience class to simplify signal creation. Since signals
+#   need to be instance variables, normally you would need to create all singals
+#   in the class' `__init__` method. However, this makes them rather awkward to
+#   document. This class instead makes it possible to declare them as class variables
+#   and properly document them. During the call to `__init__()`, this class will
+#   then search through all the properties of the instance and create instance
+#   variables for each class variable that is an instance of Signal.
+class SignalEmitter:
+    ##  Initialize method.
+    def __init__(self):
+        for name in self.__dict__:
+            if type(self.__dict__[name]) == Signal:
+                setattr(self, name, Signal())

@@ -1,13 +1,14 @@
 from Cura.Scene.SceneNode import SceneNode
 from Cura.Scene.Camera import Camera
-from Cura.Signal import Signal
+from Cura.Signal import Signal, SignalEmitter
 
 ##  Container object for the scene graph.
-class Scene(object):
+#
+#   The main purpose of this class is to provide the root SceneNode.
+class Scene(SignalEmitter):
     def __init__(self):
-        super(Scene, self).__init__() # Call super to make multiple inheritence work.
-        self.sceneChanged = Signal()
-        
+        super().__init__() # Call super to make multiple inheritence work.
+
         self._root = SceneNode()
         self._root.transformationChanged.connect(self.sceneChanged)
         self._root.childrenChanged.connect(self.sceneChanged)
@@ -31,8 +32,9 @@ class Scene(object):
 
     ##  Signal. Emitted whenever something in the scene changes.
     #   \param object The object that triggered the change.
-    sceneChanged = None
+    sceneChanged = Signal()
 
+    ## private:
     def _findCamera(self, name):
         for node in self._root.getChildren():
             if type(node) is Camera and node.getName() == name:
