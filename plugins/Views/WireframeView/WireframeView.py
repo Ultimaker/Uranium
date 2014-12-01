@@ -1,5 +1,6 @@
 from Cura.View.View import View
 from Cura.View.Renderer import Renderer
+from Cura.Scene.Iterator.DepthFirstIterator import DepthFirstIterator
 
 class WireframeView(View):
     def __init__(self):
@@ -9,12 +10,8 @@ class WireframeView(View):
         scene = self.getController().getScene()
         renderer = self.getRenderer()
 
-        self._renderObject(scene.getRoot(), renderer)
+        for node in DepthFirstIterator(scene.getRoot()):
+            if not node.render():
+                if node.getMeshData():
+                    renderer.renderMesh(node.getGlobalTransformation(), node.getMeshData(), Renderer.RenderLines)
 
-    def _renderObject(self, object, renderer):
-        if not object.render():
-            if object.getMeshData():
-                renderer.renderMesh(object.getGlobalTransformation(), object.getMeshData(), Renderer.RenderLines)
-
-        for child in object.getChildren():
-            self._renderObject(child, renderer)
