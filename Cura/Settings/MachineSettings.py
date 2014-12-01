@@ -23,11 +23,11 @@ class MachineSettings(object):
     
     def saveValuesToFile(self,file_name):
         f = open(file_name,'w')
-        category in self._categories:
+        for category in self._categories:
             f.write("CATEGORY: %s\n" % category.getKey())
             for setting in category.getAllSettings():
                 if setting.isVisible():
-                    f.write("%s %s\n" % (setting.getKey(),setting.getValue())
+                    f.write("%s %s\n" % (setting.getKey(),setting.getValue()))
         f.close()
         
     
