@@ -10,7 +10,7 @@ class Matrix(object):
     def __init__(self, data = numpy.identity(4,dtype=numpy.float32)):
         self._data = data
     
-    def at(x,y):
+    def at(self, x, y):
         if(x > 4 or y > 4 or x < 0 or y < 0):
             raise IndexError
         return self._data[x,y]
