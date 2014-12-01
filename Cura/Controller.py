@@ -35,6 +35,7 @@ class Controller(SignalEmitter):
         if(name not in self._views):
             self._views[name] = view
             view.setController(self)
+            view.setRenderer(self._application.getRenderer())
             self.viewsChanged.emit()
         else:
             self._application.log('w', '%s was already added to view list. Unable to add it again.',name)

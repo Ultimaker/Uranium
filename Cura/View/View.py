@@ -1,25 +1,27 @@
-from Cura.View.GL2Renderer import GL2Renderer
-
 ## Abstract base class for view objects.
 class View(object):
     def __init__(self):
         super(View, self).__init__()
-        self._renderer = GL2Renderer()
+        self._renderer = None
         self._controller = None
 
     ##  Get the controller object associated with this View.
     def getController(self):
         return self._controller
 
-    ##  Get the Renderer instance for this View.
-    def getRenderer(self):
-        return self._renderer
-
     ##  Set the controller object associated with this View.
     #   \param controller The controller object to use.
     def setController(self, controller):
         self._controller = controller
-        self._renderer.setController(controller)
+
+    ##  Get the Renderer instance for this View.
+    def getRenderer(self):
+        return self._renderer
+
+    ##  Set the renderer object to use with this View.
+    #   \param renderer \type{Renderer} The renderer to use.
+    def setRenderer(self, renderer):
+        self._renderer = renderer
 
     ##  Render the view.
     #   This method should be reimplemented by subclasses to perform the actual rendering.

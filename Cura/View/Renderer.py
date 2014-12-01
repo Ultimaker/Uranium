@@ -3,14 +3,17 @@
 #   details about the underlying graphics API that is used to render.
 #
 #   TODO: Remove get/setController and associate the renderer with a view.
-class Renderer(object):
+class Renderer():
     RenderTriangles = 1
     RenderLines = 2
     RenderPoints = 3
 
-    def __init__(self):
-        super(Renderer, self).__init__()
-        self._controller = None
+    def __init__(self, application):
+        super().__init__()
+        self._application = application
+
+    def getApplication(self):
+        return self._application
 
     ##  Initialize the renderer.
     #   This can be reimplemented to allow the renderer to setup any needed resources.
@@ -22,11 +25,3 @@ class Renderer(object):
     #   \param mesh The MeshData object to render.
     def renderMesh(self, transform, mesh, mode = RenderTriangles):
         raise NotImplementedError("renderMesh should be reimplemented by subclasses")
-
-    ##  Get the controller associated with this renderer.
-    def getController(self):
-        return self._controller
-
-    ##  Set the controller to use with this renderer.
-    def setController(self, controller):
-        self._controller = controller
