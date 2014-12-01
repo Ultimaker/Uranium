@@ -2,7 +2,7 @@ from Cura.MeshHandling.Vertex import Vertex
 from Cura.Math.Vector import Vector
 
 import numpy
-# Class to hold a list of verts and possibly how (and if) they are connected.
+##  Class to hold a list of verts and possibly how (and if) they are connected.
 class MeshData(object):
     def __init__(self):
         self._vertices = None

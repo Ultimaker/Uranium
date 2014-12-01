@@ -1,3 +1,7 @@
+
+##  Central class for reading and writing meshes.
+#
+#   This class is created by Application and handles reading and writing mesh files.
 class MeshFileHandler(object):
     def __init__(self):
         self._mesh_readers = []
