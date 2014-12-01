@@ -2,6 +2,8 @@ from Cura.MeshHandling.Vertex import Vertex
 from Cura.Math.Vector import Vector
 
 import numpy
+from struct import pack
+
 ##  Class to hold a list of verts and possibly how (and if) they are connected.
 class MeshData(object):
     def __init__(self):
@@ -118,6 +120,16 @@ class MeshData(object):
 
         return out
         
+    ##  Get all vertices of this mesh as a bytearray
+    def getVerticesAsByteArray(self):
+        out = bytearray()
+        for i in range(self._num_vertices):
+            vertex = self._vertices[i]
+            out += pack('@f', vertex.getPosition().x)
+            out += pack('@f', vertex.getPosition().y)
+            out += pack('@f', vertex.getPosition().z)
+        return out
+
     ##  Calculate the normals of this mesh, assuming it was created by using addFace (eg; the verts are connected)    
     def calculateNormals(self):
         pass
