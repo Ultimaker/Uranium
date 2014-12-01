@@ -3,6 +3,7 @@ from . import SceneNode
 from Cura.Math.Matrix import Matrix
 
 ##  A SceneNode subclass that provides a camera object.
+#
 #   The camera provides a projection matrix and its transformation matrix
 #   can be used as view matrix.
 class Camera(SceneNode.SceneNode):

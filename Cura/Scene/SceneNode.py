@@ -2,8 +2,10 @@ from Cura.Math.Matrix import Matrix
 from Cura.Signal import Signal, SignalEmitter
 from copy import copy, deepcopy
 
-## \brief A scene node object. These objects can hold a mesh and multiple children. Each node has a transformation matrix
-#         that maps it it's parents space to the local space (it's inverse maps local space to parent).
+##  A scene node object.
+#
+#   These objects can hold a mesh and multiple children. Each node has a transformation matrix
+#   that maps it it's parents space to the local space (it's inverse maps local space to parent).
 #
 #   \todo Add unit testing
 class SceneNode(SignalEmitter):
