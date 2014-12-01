@@ -17,6 +17,7 @@ class Event:
         super().__init__()
         self._type = type
 
+    ##  The type of event.
     @property
     def type(self):
         return self._type

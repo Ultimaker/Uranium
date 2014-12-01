@@ -6,7 +6,7 @@ class Tool(object):
         self._renderer = None
 
     ##  Handle an event.
-    #   \param event The event to handle.
+    #   \param event \type{Event} The event to handle.
     #   \sa Event
     def event(self, event):
         pass
