@@ -1,21 +1,21 @@
 {
     "Categories": [
         {
-            "key": "TestCategory1",
-            "label": "Test category",
-            "visibility": true,
+            "key": "Category1",
+            "label": "Test Category1",
+            "visible": true,
             "Settings": [
                 {
-                    "key": "TestSetfffting",
-                    "label": "Test sefhfhfhfhtting!",
+                    "key": "Setting1",
+                    "label": "Test Setting1",
                     "type": "float",
                     "default": 0.5,
                     "min_value": 0,
                     "max_value": 10,
                     "children": [
                         {
-                            "key": "Nested1",
-                            "label": "test  test",
+                            "key": "NSetting1",
+                            "label": "NestedSetting1",
                             "default": 50,
                             "min_value":0,
                             "max_value":50,
@@ -24,22 +24,23 @@
                             "type": "float",
                             "children": [
                                 {
-                                    "key": "Nested2",
+                                    "key": "NNSetting1",
                                     "type": "int",
                                     "default": 20,
                                     "min_value":0,
                                     "max_value":50,
                                     "min_value_warning":10,
                                     "max_value_warning":40,
-                                    "children": []
+                                    "children": [],
+                                    "visible": true
                                 }
                             ]
                         }
                     ]
                 },
                 {
-                    "key": "TestSetting2",
-                    "label": "Test setting 2",
+                    "key": "Setting2",
+                    "label": "Test Setting2",
                     "type": "int",
                     "default": 3,
                     "min_value": 0,
@@ -47,8 +48,8 @@
                     "children": []
                 },
                 {
-                    "key": "TestSefftting2",
-                    "label": "Test setffting 2",
+                    "key": "Setting3",
+                    "label": "Test setting3",
                     "type": "int",
                     "default": "9901",
                     "min_value": 0,
@@ -56,8 +57,8 @@
                     "children": []
                 },
                 {
-                    "key": "TestSaaefftting2",
-                    "label": "Test sssetffting 2",
+                    "key": "Setting4",
+                    "label": "Test setting4",
                     "type": "int",
                     "default": 3,
                     "min_value": 0,
@@ -65,8 +66,8 @@
                     "children": []
                 },
                 {
-                    "key": "TestSarsaefftting2",
-                    "label": "Testrr sssetffting 2",
+                    "key": "Setting5",
+                    "label": "Test setting5",
                     "type": "int",
                     "default": "",
                     "min_value": 0,
@@ -78,7 +79,7 @@
         {
             "key": "TestCategory2",
             "label": "Test category2",
-            "visibility": true,
+            "visible": true,
             "Settings": [
                 {
                     "key": "TestSetting1231",
@@ -94,7 +95,7 @@
         {
             "key": "TestCategory3",
             "label": "Test category3",
-            "visibility": true,
+            "visible": true,
             "Settings": [
                 {
                     "key": "TestSettingffaaa",
@@ -110,7 +111,7 @@
         {
             "key": "TestCategory4",
             "label": "Test category4",
-            "visibility": true,
+            "visible": true,
             "Settings": [
                 {
                     "key": "TestSetting1231231",
@@ -126,7 +127,7 @@
         {
             "key": "TestCategory5",
             "label": "Test category5",
-            "visibility": true,
+            "visible": true,
             "Settings": [
                     {
                         "key": "TestSettingddd1231231",

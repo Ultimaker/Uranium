@@ -23,8 +23,8 @@ class SettingsModel(ListModel):
         self.clear()
         settings = self._machine_settings.getAllSettings()
         for setting in settings:
-            print("setting updated %s " %setting.getKey())
-            self.appendItem({"name":setting.getLabel(),"category":setting.getCategory().getLabel(),"collapsed":True,"type":setting.getType(),"value":setting.getValue(),"valid":setting.validate(),"key":setting.getKey()})
+            if setting.isVisible():
+                self.appendItem({"name":setting.getLabel(),"category":setting.getCategory().getLabel(),"collapsed":True,"type":setting.getType(),"value":setting.getValue(),"valid":setting.validate(),"key":setting.getKey()})
             
     @pyqtSlot(str)
     def toggleCollapsedByCategory(self, category_key):

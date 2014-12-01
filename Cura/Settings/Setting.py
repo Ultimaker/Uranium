@@ -24,7 +24,7 @@ class Setting(object):
         self._category = category
 
 
-##      Bind new validator to object based on it's current type
+    ##  Bind new validator to object based on it's current type
     def bindValidator(self):
         if self._type == 'float':
             FloatValidator(self) # Validator sets itself as validator to this setting
@@ -41,6 +41,8 @@ class Setting(object):
             self.bindValidator()
             if "label" in data:
                 self.setLabel(data["label"])
+            if "visible" in data:
+                self.setVisible(data["visible"])
             min_value = None
             max_value = None
             min_value_warning = None
@@ -63,47 +65,47 @@ class Setting(object):
             
          
     
-    ## Set the validator of the Setting
-    # \param validator Validator
+    ##  Set the validator of the Setting
+    #   \param validator Validator
     def setValidator(self, validator):
         self._validator = validator
     
-    ## Get the validator
-    # \returns Validator
+    ##  Get the validator
+    #   \returns Validator
     def getValidator(self):
         return self._validator
     
-    ## Get the category of this setting.
-    # \returns SettingCategory
+    ##  Get the category of this setting.
+    #   \returns SettingCategory
     def getCategory(self):
         return self._category
     
-    ## Set the category
-    # \params category SettingCategory
+    ##  Set the category
+    #   \params category SettingCategory
     def setCategory(self, category):
         self._category = category
         for child in self._children:
             child.setCategory(category)
     
-    ## Set the parent of this setting. Parents can override the value of the setting if the child setting is not visible.
-    #  mostly used for giving a 'global' setting (such as speed), with children being travel speed, infill speed, etc.
-    # \param setting Setting
+    ##  Set the parent of this setting. Parents can override the value of the setting if the child setting is not visible.
+    #   mostly used for giving a 'global' setting (such as speed), with children being travel speed, infill speed, etc.
+    #   \param setting Setting
     def setParent(self, setting):
         self._parent = setting
     
-    ## Get the parent.
-    # \returns Setting
+    ##  Get the parent.
+    #   \returns Setting
     def getParent(self):
         return self._parent
     
-    ## Add a child to this setting. See setParent for more info.
-    # \param setting Setting
+    ##  Add a child to this setting. See setParent for more info.
+    #   \param setting Setting
     def addChild(self, setting):
         setting.setParent(self)
         self._children.append(setting)
 
-    ## Recursively check it's children to see if the key matches.
-    # \returns Setting if key match is found, None otherwise.
+    ##  Recursively check it's children to see if the key matches.
+    #   \returns Setting if key match is found, None otherwise.
     def getSettingByKey(self, key):
         if self._key == key:
             return self
@@ -113,25 +115,25 @@ class Setting(object):
                 return ret
         return None
     
-    ## Set the visibility of this setting. See setParent for more info.
-    # \param visible Bool
+    ##  Set the visibility of this setting. See setParent for more info.
+    #   \param visible Bool
     def setVisible(self, visible):
         self._visible = visible
     
-    ## Set the default value of the setting.
-    # \param value
+    ##  Set the default value of the setting.
+    #   \param value
     def setDefaultValue(self, value):
         self._default_value = value
         return self
    
-    ## get the default value of the setting.
-    # \returns default_value
+    ##  get the default value of the setting.
+    #   \returns default_value
     def getDefaultValue(self):
         return self._default_value
 
-    ## Check if the setting is visible. It can be that the setting visible is true, 
-    #  but it still should be invisible as all it's children are visible (and the setting is thus not visible!).
-    # \returns bool
+    ##  Check if the setting is visible. It can be that the setting visible is true, 
+    #   but it still should be invisible as all it's children are visible (and the setting is thus not visible!).
+    #   \returns bool
     def isVisible(self):
         if not self._visible:
             return False
@@ -139,46 +141,45 @@ class Setting(object):
             return False
         return True
 
-    ## Check if all children are visible.
-    # \returns True if all children are visible. False otherwise
+    ##  Check if all children are visible.
+    #   \returns True if all children are visible. False otherwise
     def checkAllChildrenVisible(self):
         if len(self._children) < 1:
             return False
         for child in self._children:
-            if not child.isVisible():
+            if not child.isVisible() and not child.checkAllChildrenVisible():
                 return False
         return True
     
-    ## Set the range of the setting. The validator will give errors or warnings if these are met.
-    #  See Validator for more info
+    ##  Set the range of the setting. The validator will give errors or warnings if these are met.
+    #   See Validator for more info
     def setRange(self, min_value = None, max_value = None, min_value_warning = None, max_value_warning = None):
         if(self._validator is None):
             return
         validator.setRange(min_value, max_value, min_value_warning, max_value_warning)
 
-    ## Get the display name of the setting
+    ##  Get the display name of the setting
     def getLabel(self):
         if self._label is None:
             return self._key # Return key so it will always have some sort of display name
         return self._label
     
-    ## Set the label (display name) of setting.
-    # \param label 
+    ##  Set the label (display name) of setting.
+    #   \param label 
     def setLabel(self, label):
         self._label = label
 
-    ## Get the tooltip (if any) from the setting
+    ##  Get the tooltip (if any) from the setting
     def getTooltip(self):
         return self._tooltip
     
-    ## Set the tooltip of this setting
-    # \param tooltip
+    ##  Set the tooltip of this setting
+    #   \param tooltip
     def setTooltip(self, tooltip):
         self._tooltip = tooltip
 
-    ## Get the identifier of the setting
+    ##  Get the identifier of the setting
     def getKey(self):
-        print("KEY %s" % self._key)
         return self._key
 
     ## Get the type of the setting
@@ -211,10 +212,10 @@ class Setting(object):
     def addValueChangedCallback(self, callback):
         self._callbacks.append(callback)
     
-    ## validate the value of this setting. 
-    # \returns ResultCodes.succes if there is no validator or if validation is succesfull. Returns warning or error code otherwise.
+    ##  Validate the value of this setting. 
+    #   \returns ResultCodes.succes if there is no validator or if validation is succesfull. Returns warning or error code otherwise.
     def validate(self):
-        if(self._validator is not None):
+        if self._validator is not None:
             return self._validator.validate()
         else:
             return ResultCodes.succes
