@@ -125,6 +125,10 @@ class MeshData(object):
         out = bytearray()
         for i in range(self._num_vertices):
             vertex = self._vertices[i]
+            # This is a bit magic, because Python sucks when having to deal with bytes.
+            # pack() will convert a value to a byte representation of that value, using
+            # a magic "format string". In this case, the format string means "convert a
+            # float value using native ordering and size.
             out += pack('@f', vertex.getPosition().x)
             out += pack('@f', vertex.getPosition().y)
             out += pack('@f', vertex.getPosition().z)
