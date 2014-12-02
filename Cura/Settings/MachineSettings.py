@@ -19,7 +19,18 @@ class MachineSettings(object):
     
     ##  Load values of settings from file. 
     def loadValuesFromFile(self, file_name):
-        pass
+        f = open(file_name,'r')
+        for line in f:
+            if "CATEGORY" in line:
+                continue
+            data = line.split()
+            setting = self.getSettingByKey(data[0])
+            print(data)
+            try :
+                if setting is not None:
+                    setting.setValue(data[1])
+            except IndexError:
+                pass # Ignore
     
     def saveValuesToFile(self,file_name):
         f = open(file_name,'w')
