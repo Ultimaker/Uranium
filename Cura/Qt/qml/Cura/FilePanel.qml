@@ -7,17 +7,20 @@ import QtQuick.Controls.Styles 1.1
 Panel {
     title: "Files"
 
-    contents: ColumnLayout {
+    contents: ColumnLayout 
+    {
         Layout.preferredWidth: 200
         Layout.preferredHeight: 400
 
-        Button {
+        Button 
+        {
             Layout.fillWidth: true
             text: "Open File"
             onClicked: fileDialog.open()
         }
 
-        TableView {
+        TableView 
+        {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
@@ -25,12 +28,14 @@ Panel {
 
             headerVisible: false
 
-            model: ListModel {
+            model: ListModel 
+            {
                 id: fileModel
             }
         }
 
-        Button {
+        Button 
+        {
             Layout.fillWidth: true
             text: "Machine"
             onClicked: messageDialog.open()
@@ -41,8 +46,8 @@ Panel {
                     Layout.fillWidth: true
                     color: "transparent"
                     anchors.centerIn: parent
-                    
-                    Row {
+                    Row 
+                    {
                         anchors.centerIn: parent;
                         width: childrenRect.width;
                         height: childrenRect.height;
@@ -85,8 +90,10 @@ Panel {
         modality: Qt.NonModal
         selectMultiple: true
 
-        onAccepted: {
-            for(var i in fileDialog.fileUrls) {
+        onAccepted: 
+        {
+            for(var i in fileDialog.fileUrls) 
+            {
                 fileModel.append({ "text": fileDialog.fileUrls[i] })
             }
         }
