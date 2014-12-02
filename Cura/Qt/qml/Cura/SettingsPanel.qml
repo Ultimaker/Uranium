@@ -158,9 +158,23 @@ Panel
        
         Button
         {
+            id:categoryDelegateButton
+            property bool on: false
+            property int border_thickness: 0  //Stupid hack as propertychanges won't let me change it.
+            function toggle() 
+            {
+                if(on)
+                {
+                    border_thickness = 0;
+                    on = !on;
+                } else {
+                    border_thickness = 1;
+                    on = !on;
+                }
+            }
+
             style: ButtonStyle 
             {
-                
                 label: Rectangle
                 {  
                     Layout.fillWidth: true
@@ -174,7 +188,6 @@ Panel
                         spacing:4
                         Image
                         {
-
                             source:"../../../Resources/icon_resolution.png"
                         }
                         Text 
@@ -187,12 +200,18 @@ Panel
                 }
                 background: Rectangle 
                 {
-                    implicitWidth: 100
+                    id:categoryDelegateButtonBackground
+                    implicitWidth: 240
                     implicitHeight: 50
                     color:"transparent"
+                    radius:3
+                    border.width:border_thickness
                 }
             }
-            onClicked: settingsList.model.toggleCollapsedByCategory(section)
+            onClicked: {
+                settingsList.model.toggleCollapsedByCategory(section); 
+                toggle();
+            }
         }
     }
     
