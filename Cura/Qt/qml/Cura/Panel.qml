@@ -25,7 +25,11 @@ Rectangle {
 
             visible: titleBarLabel.text != ""
 
-            color: "black"
+            gradient: Gradient 
+            {
+                GradientStop { position: 0 ; color: "#646464"}
+                GradientStop { position: 1 ; color: "#353535" }
+            }
 
             Label {
                 id: titleBarLabel
