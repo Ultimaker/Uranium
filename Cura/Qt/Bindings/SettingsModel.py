@@ -11,20 +11,21 @@ class SettingsModel(ListModel):
     ValueRole = Qt.UserRole + 5 # Value of setting
     ValidRole = Qt.UserRole + 6 # Is value valid (5 = correct, 0-4 is error/warning)
     KeyRole = Qt.UserRole + 7 #Unique identifier of setting
+    DepthRole = Qt.UserRole + 8
+    VisibilityRole = Qt.UserRole + 9
     def __init__(self, parent = None):
         super().__init__(parent)
         self._machine_settings = QCoreApplication.instance().getMachineSettings()
         self._updateSettings()
         
     def roleNames(self):
-        return {self.NameRole:'name', self.CategoryRole:"category", self.CollapsedRole:"collapsed",self.TypeRole:"type",self.ValueRole:"value",self.ValidRole:"valid",self.KeyRole:"key"}
+        return {self.NameRole:'name', self.CategoryRole:"category", self.CollapsedRole:"collapsed",self.TypeRole:"type",self.ValueRole:"value",self.ValidRole:"valid",self.KeyRole:"key", self.DepthRole:"depth", self.VisibilityRole:"visible"}
         
     def _updateSettings(self):
         self.clear()
         settings = self._machine_settings.getAllSettings()
         for setting in settings:
-            if setting.isVisible():
-                self.appendItem({"name":setting.getLabel(),"category":setting.getCategory().getLabel(),"collapsed":True,"type":setting.getType(),"value":setting.getValue(),"valid":setting.validate(),"key":setting.getKey()})
+            self.appendItem({"name":setting.getLabel(),"category":setting.getCategory().getLabel(),"collapsed":True,"type":setting.getType(),"value":setting.getValue(),"valid":setting.validate(),"key":setting.getKey(), "depth":setting.getDepth(),"visible":setting.isVisible()})
             
     @pyqtSlot(str)
     def toggleCollapsedByCategory(self, category_key):

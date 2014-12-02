@@ -82,6 +82,7 @@ Panel
                         Image
                         {
                             id:saveButtonIcon
+
                             source:"../../../Resources/save_button.png"
                         }
                     }
@@ -125,18 +126,21 @@ Panel
         id: settingDelegate  
         Loader
         {
-            source: 
-            {
-                switch(model.type) 
+            source: {
+                if(model.visible)
                 {
-                    case "int":
-                        return "SettingTextField.qml"
-                    case "float":
-                        return "SettingTextField.qml" 
-                }
+                    switch(model.type) 
+                    {
+                        case "int":
+                            return "SettingTextField.qml"
+                        case "float":
+                            return "SettingTextField.qml" 
+                    }
+                } else { return ""}
             }
             
-            onLoaded: {
+            onLoaded: 
+            {
                 item.model = settingsList.model;
                 item.key = model.key
 //                 item.valid = parseInt(model.valid); 
@@ -159,27 +163,8 @@ Panel
         }
     }
     
-    Window {
+    SettingsVisibilityWindow 
+    {
         id: settingDialog
-        title: "Setting configuration"
-        
-        flags: Qt.Dialog
-        width:250
-        height:250
-        
-        Rectangle 
-        { 
-            color: "red";
-            width: 150;
-            height: 100 
-            
-        }
-        Button
-        { 
-            onClicked:settingDialog.visible = false
-            text: "Close" 
-            anchors.bottom:parent.bottom
-            anchors.horizontalCenter: parent.horizontalCenter
-        }
     }
 }

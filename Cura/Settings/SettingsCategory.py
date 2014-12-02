@@ -8,6 +8,7 @@ class SettingsCategory(object):
         self._order = order
         self._visible = True
         self._settings = []
+        self._depth = 0 #Depth of category is 0 by definition (used for display purposes)
         
     ## Set values of the setting by providing it with a dict object (as decoded by JSON parser)
     # \param data Decoded JSON dict
@@ -22,11 +23,15 @@ class SettingsCategory(object):
                     temp_setting = Setting(setting["key"],setting["default"],setting["type"])
                     temp_setting.fillByDict(setting)
                     temp_setting.setCategory(self)
+                    temp_setting.setParent(self)
                     self._settings.append(temp_setting)
 
     def setLabel(self, label):
         self._label = label
-
+    
+    def getDepth(self):
+        return self._depth
+    
     def setVisible(self, visible):
         self._visible = visible
 

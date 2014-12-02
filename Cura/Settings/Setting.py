@@ -30,7 +30,11 @@ class Setting(object):
             FloatValidator(self) # Validator sets itself as validator to this setting
         elif self._type == 'int':
             IntValidator(self)
-            
+    
+    ##  Get the depth of this setting (how many steps is it 'away' from its category)
+    def getDepth(self):
+        return self._parent.getDepth() + 1
+    
     ##  Set values of the setting by providing it with a dict object (as decoded by JSON parser)
     #   \param data Decoded JSON dict
     def fillByDict(self, data):
@@ -60,6 +64,7 @@ class Setting(object):
         if "children" in data:
             for setting in data["children"]:
                 temp_setting = Setting()
+                temp_setting.setParent(self)
                 temp_setting.fillByDict(setting)
                 self._children.append(temp_setting)
             
