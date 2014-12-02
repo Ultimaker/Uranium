@@ -1,6 +1,8 @@
 import sys
-import os.path
+import os
+import site
 import signal
+import platform
 
 from PyQt5.QtCore import QObject
 from PyQt5.QtQml import QQmlApplicationEngine, qmlRegisterType, qmlRegisterSingletonType
@@ -14,6 +16,15 @@ from Cura.Qt.Bindings.Bindings import Bindings
 ##  Application subclass that provides a Qt application object.
 class QtApplication(QApplication, Application):
     def __init__(self):
+        if platform.system() == "Windows":
+            # QT needs to be able to find the Qt5 dlls on windows. However, these are installed in site-packages/PyQt5
+            # Add this path to the environment so the dlls are found. (Normally the PyQt installer adds this path global.
+            # However, we do not want to set system global paths from our applications)
+            # This needs to be done before the QtApplication is initialized.
+            for site_package_path in site.getsitepackages():
+                pyqt_path = os.path.join(site_package_path, 'PyQt5')
+                if os.path.isdir(pyqt_path):
+                    os.environ['PATH'] = "%s;%s" % (pyqt_path, os.environ['PATH'])
         super(QtApplication, self).__init__(sys.argv)
         self._mainQml = "main.qml"
         self._engine = None
