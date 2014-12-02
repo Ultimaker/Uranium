@@ -128,19 +128,17 @@ Panel
         {
             opacity: (model.visibility && !model.collapsed) ? 1 : 0
             Behavior on opacity { NumberAnimation { } }
-            height: (model.visibility && !model.collapsed) ? 50 : 0
+            height: (model.visibility && !model.collapsed) ? 30 : 0
             Behavior on height { NumberAnimation { } }
-            source: {
-//                 if(model.visibility)
-//                 {
-                    switch(model.type) 
-                    {
-                        case "int":
-                            return "SettingTextField.qml"
-                        case "float":
-                            return "SettingTextField.qml" 
-                    }
-//                 } else { return ""}
+            source: 
+            {
+                switch(model.type) 
+                {
+                    case "int":
+                        return "SettingTextField.qml"
+                    case "float":
+                        return "SettingTextField.qml" 
+                }
             }
             
             onLoaded: 
@@ -160,7 +158,40 @@ Panel
        
         Button
         {
-            text:section; 
+            style: ButtonStyle 
+            {
+                
+                label: Rectangle
+                {  
+                    Layout.fillWidth: true
+                    color: "transparent"
+                    anchors.centerIn: parent
+                    Row
+                    {
+                        anchors.centerIn: parent;
+                        width: parent.width;
+                        height: childrenRect.height;
+                        spacing:4
+                        Image
+                        {
+
+                            source:"../../../Resources/icon_resolution.png"
+                        }
+                        Text 
+                        {
+                            text: section
+                            color:"#404040"
+                        }
+                        
+                    }
+                }
+                background: Rectangle 
+                {
+                    implicitWidth: 100
+                    implicitHeight: 50
+                    color:"transparent"
+                }
+            }
             onClicked: settingsList.model.toggleCollapsedByCategory(section)
         }
     }

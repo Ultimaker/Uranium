@@ -14,11 +14,11 @@ Rectangle {
     width: 180; 
     color: "transparent"
 
-    height: collapsed ? 0 : 40
+    /*height: collapsed ? 0 : 40
     Behavior on height { NumberAnimation { } }
     
     opacity: collapsed ? 0 : 1
-    Behavior on opacity { NumberAnimation { } }
+    Behavior on opacity { NumberAnimation { } }*/
     
     RowLayout 
     {
