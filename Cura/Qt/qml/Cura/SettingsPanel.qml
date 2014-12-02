@@ -2,6 +2,7 @@ import QtQuick 2.1
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 import QtQuick.Window 2.
+import QtQuick.Controls.Styles 1.1
 import Cura 1.0 as Cura
 
 Panel 
@@ -52,8 +53,39 @@ Panel
         Button 
         {
             Layout.fillWidth: true
-            text: "Save"
+            //text: "Save"
             onClicked: settingsList.model.saveSettingValues()
+            style: ButtonStyle 
+            {
+                
+                label: Text 
+                {
+                    text: "Save"
+                    font.pointSize: 20
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+                }
+                background: Rectangle 
+                {
+                    implicitWidth: 100
+                    implicitHeight: 25
+                    border.width: control.activeFocus ? 2 : 1
+                    border.color: "#888"
+                    gradient: Gradient 
+                    {
+                         GradientStop 
+                         { 
+                             position: 0 ; 
+                             color: control.pressed ? "#B2B2B2" : "#A1A1A1" 
+                        }
+                        GradientStop 
+                        { 
+                            position: 1 ; 
+                            color: control.pressed ? "#B2B2B2" : "#B2B2B2" 
+                        }
+                    }
+                }
+            }
             
         }
     }
