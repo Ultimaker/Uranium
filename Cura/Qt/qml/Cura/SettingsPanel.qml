@@ -19,9 +19,14 @@ Panel
         Layout.preferredHeight: 500
         Rectangle
         {
+            id: settingPanelTitleBar
             Layout.fillWidth:true
             height:25
-            color:"black"
+            gradient: Gradient 
+            {
+                GradientStop { position: 0 ; color: "#646464"}
+                GradientStop { position: 1 ; color: "#353535" }
+            }
             Label 
             {
                 text: "Settings" 
@@ -49,34 +54,49 @@ Panel
                 }
             }
         }
-
         Button 
         {
             Layout.fillWidth: true
             //text: "Save"
             onClicked: settingsList.model.saveSettingValues()
+            //iconSource:"../../../Resources/save_button.png"
             style: ButtonStyle 
-            {
-                
-                label: Text 
-                {
-                    text: "Save"
-                    font.pointSize: 20
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignHCenter
+            { 
+                label: Rectangle
+                {  
+                    Layout.fillWidth: true
+                    color: "transparent"
+                    anchors.centerIn: parent
+                    Text 
+                    {
+                        id:saveButtonText
+                        text: "Save"
+                        font.pointSize: 20
+                        color:"#404040"
+                        verticalAlignment: Text.AlignVCenter
+                        anchors.centerIn: parent
+                    }
+                    Image
+                    {
+                        id:saveButtonIcon
+                        anchors.left: saveButtonText.right
+                        source:"../../../Resources/save_button.png"
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.leftMargin:5
+                    }
                 }
                 background: Rectangle 
                 {
                     implicitWidth: 100
-                    implicitHeight: 25
-                    border.width: control.activeFocus ? 2 : 1
-                    border.color: "#888"
+                    implicitHeight: 50
+                    border.width: 1
+                    border.color: "#404040"
                     gradient: Gradient 
                     {
-                         GradientStop 
-                         { 
-                             position: 0 ; 
-                             color: control.pressed ? "#B2B2B2" : "#A1A1A1" 
+                        GradientStop 
+                        { 
+                            position: 0 ; 
+                            color: control.pressed ? "#B2B2B2" : "#A1A1A1" 
                         }
                         GradientStop 
                         { 

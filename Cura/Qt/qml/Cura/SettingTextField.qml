@@ -12,7 +12,7 @@ Rectangle {
     property int index;
     property variant key;
     width: 180; 
-    color:"#ebebeb"
+    color: "transparent"
 
     height: collapsed ? 0 : 40
     Behavior on height { NumberAnimation { } }
