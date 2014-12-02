@@ -41,21 +41,25 @@ Panel {
                     Layout.fillWidth: true
                     color: "transparent"
                     anchors.centerIn: parent
-                    Text 
-                    {
-                        id:machineButtonText
-                        text: "Machine"
-                        font.pointSize: 20
-                        color:"white"
-                        verticalAlignment: Text.AlignVCenter
-                        anchors.centerIn: parent
-                    }
-                    Image
-                    {
-                        id:machineButtonIcon
-                        source: "../../../Resources/icon_ultimaker2.png" //TODO: HARDCODED
-                        anchors.verticalCenter: parent.verticalCenter
-                        anchors.leftMargin:5
+                    
+                    Row {
+                        anchors.centerIn: parent;
+                        width: childrenRect.width;
+                        height: childrenRect.height;
+                        spacing:4
+                        Image
+                        {
+                            id:machineButtonIcon
+                            source: "../../../Resources/icon_ultimaker2.png" //TODO: HARDCODED
+                        }
+                        Text 
+                        {
+                            id:machineButtonText
+                            text: "Machine"
+                            font.pointSize: 20
+                            color:"white"
+                        }
+                       
                     }
                 }
                 background: Rectangle 

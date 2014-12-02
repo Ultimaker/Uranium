@@ -66,22 +66,24 @@ Panel
                     Layout.fillWidth: true
                     color: "transparent"
                     anchors.centerIn: parent
-                    Text 
+                    Row
                     {
-                        id:saveButtonText
-                        text: "Save"
-                        font.pointSize: 20
-                        color:"#404040"
-                        verticalAlignment: Text.AlignVCenter
-                        anchors.centerIn: parent
-                    }
-                    Image
-                    {
-                        id:saveButtonIcon
-                        anchors.left: saveButtonText.right
-                        source:"../../../Resources/save_button.png"
-                        anchors.verticalCenter: parent.verticalCenter
-                        anchors.leftMargin:5
+                        anchors.centerIn: parent;
+                        width: childrenRect.width;
+                        height: childrenRect.height;
+                        spacing:4
+                        Text 
+                        {
+                            id:saveButtonText
+                            text: "Save"
+                            font.pointSize: 20
+                            color:"#404040"
+                        }
+                        Image
+                        {
+                            id:saveButtonIcon
+                            source:"../../../Resources/save_button.png"
+                        }
                     }
                 }
                 background: Rectangle 
