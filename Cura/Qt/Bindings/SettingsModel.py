@@ -13,19 +13,20 @@ class SettingsModel(ListModel):
     KeyRole = Qt.UserRole + 7 #Unique identifier of setting
     DepthRole = Qt.UserRole + 8
     VisibilityRole = Qt.UserRole + 9
+    DisabledRole = Qt.UserRole + 10
     def __init__(self, parent = None):
         super().__init__(parent)
         self._machine_settings = QCoreApplication.instance().getMachineSettings()
         self._updateSettings()
         
     def roleNames(self):
-        return {self.NameRole:'name', self.CategoryRole:"category", self.CollapsedRole:"collapsed",self.TypeRole:"type",self.ValueRole:"value",self.ValidRole:"valid",self.KeyRole:"key", self.DepthRole:"depth", self.VisibilityRole:"visible"}
+        return {self.NameRole:'name', self.CategoryRole:"category", self.CollapsedRole:"collapsed",self.TypeRole:"type",self.ValueRole:"value",self.ValidRole:"valid",self.KeyRole:"key", self.DepthRole:"depth", self.VisibilityRole:"visibility",self.DisabledRole:"disabled"}
         
     def _updateSettings(self):
         self.clear()
         settings = self._machine_settings.getAllSettings()
         for setting in settings:
-            self.appendItem({"name":setting.getLabel(),"category":setting.getCategory().getLabel(),"collapsed":True,"type":setting.getType(),"value":setting.getValue(),"valid":setting.validate(),"key":setting.getKey(), "depth":setting.getDepth(),"visible":setting.isVisible()})
+            self.appendItem({"name":setting.getLabel(),"category":setting.getCategory().getLabel(),"collapsed":True,"type":setting.getType(),"value":setting.getValue(),"valid":setting.validate(),"key":setting.getKey(), "depth":setting.getDepth(),"visibility":setting.isVisible(),"disabled":setting.checkAllChildrenVisible()})
             
     @pyqtSlot(str)
     def toggleCollapsedByCategory(self, category_key):
@@ -50,6 +51,19 @@ class SettingsModel(ListModel):
     @pyqtSlot()
     def saveSettingValues(self):
         self._machine_settings.saveValuesToFile("settings.ini")
+    
+    @pyqtSlot(str,bool)
+    def setVisibility(self, key, visibility):
+        setting = self._machine_settings.getSettingByKey(key)
+        if setting is not None:
+            setting.setVisible(visibility)
+        
+        for index in range(0,len(self.items)):
+            temp_setting = self._machine_settings.getSettingByKey(self.items[index]["key"])
+            if temp_setting is not None:
+                self.setProperty(index, 'disabled', temp_setting.checkAllChildrenVisible())
+                self.setProperty(index, 'visibility', temp_setting.isVisible())
+            
         
         
         

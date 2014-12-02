@@ -126,9 +126,13 @@ Panel
         id: settingDelegate  
         Loader
         {
+            opacity: (model.visibility && !model.collapsed) ? 1 : 0
+            Behavior on opacity { NumberAnimation { } }
+            height: (model.visibility && !model.collapsed) ? 50 : 0
+            Behavior on height { NumberAnimation { } }
             source: {
-                if(model.visible)
-                {
+//                 if(model.visibility)
+//                 {
                     switch(model.type) 
                     {
                         case "int":
@@ -136,15 +140,13 @@ Panel
                         case "float":
                             return "SettingTextField.qml" 
                     }
-                } else { return ""}
+//                 } else { return ""}
             }
             
             onLoaded: 
             {
                 item.model = settingsList.model;
                 item.key = model.key
-//                 item.valid = parseInt(model.valid); 
-//                 item.value = model.value
                 item.index = parseInt(index);
             }
          
