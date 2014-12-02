@@ -59,7 +59,6 @@ Panel
             Layout.fillWidth: true
             //text: "Save"
             onClicked: settingsList.model.saveSettingValues()
-            //iconSource:"../../../Resources/save_button.png"
             style: ButtonStyle 
             { 
                 label: Rectangle

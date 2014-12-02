@@ -2,6 +2,7 @@ import QtQuick 2.1
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 import QtQuick.Dialogs 1.1
+import QtQuick.Controls.Styles 1.1
 
 Panel {
     title: "Files"
@@ -33,6 +34,43 @@ Panel {
             Layout.fillWidth: true
             text: "Machine"
             onClicked: messageDialog.open()
+            style: ButtonStyle 
+            { 
+                label: Rectangle
+                {  
+                    Layout.fillWidth: true
+                    color: "transparent"
+                    anchors.centerIn: parent
+                    Text 
+                    {
+                        id:machineButtonText
+                        text: "Machine"
+                        font.pointSize: 20
+                        color:"white"
+                        verticalAlignment: Text.AlignVCenter
+                        anchors.centerIn: parent
+                    }
+                    Image
+                    {
+                        id:machineButtonIcon
+                        source: "../../../Resources/icon_ultimaker2.png" //TODO: HARDCODED
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.leftMargin:5
+                    }
+                }
+                background: Rectangle 
+                {
+                    implicitWidth: 100
+                    implicitHeight: 50
+                    border.width: 1
+                    border.color: "#404040"
+                    gradient: Gradient 
+                    {
+                        GradientStop { position: 0; color: "#48BCDD"}
+                        GradientStop { position: 1; color: "#6CCBE1"}
+                    }
+                }
+            }
         }
     }
 
