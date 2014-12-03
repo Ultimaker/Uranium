@@ -3,38 +3,26 @@ import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 import QtQuick.Window 2.
 import QtQuick.Controls.Styles 1.1
+
 import Cura 1.0 as Cura
+
+import ".."
 
 Panel 
 {
     id: settingsPanel
     color:"#ebebeb"
-    anchors.right: parent.right;
-    anchors.verticalCenter: parent.verticalCenter
-    //background:Rectangle {color:}
+    title: "Settings";
+
+    signal settingConfigurationRequested;
+
     contents: ColumnLayout 
     {
         
         Layout.preferredWidth: 250
         Layout.preferredHeight: 500
+
         Rectangle
-        {
-            id: settingPanelTitleBar
-            Layout.fillWidth:true
-            height:25
-            gradient: Gradient 
-            {
-                GradientStop { position: 0 ; color: "#646464"}
-                GradientStop { position: 1 ; color: "#353535" }
-            }
-            Label 
-            {
-                text: "Settings" 
-                anchors.centerIn: parent
-                color: "white"
-            }
-        }
-        Rectangle 
         {
             Layout.fillWidth: true
             Layout.fillHeight: true
@@ -111,45 +99,54 @@ Panel
             
         }
     }
-    Button
-    {
-        text:"s"
-        width: 20
-        height: 20
-        y:2
-        x:2
-        onClicked: settingDialog.visible = true
-    }
-    
+
     Component 
     {
         id: settingDelegate  
+
         Loader
         {
             opacity: (model.visibility && !model.collapsed) ? 1 : 0
             Behavior on opacity { NumberAnimation { } }
             height: (model.visibility && !model.collapsed) ? 30 : 0
             Behavior on height { NumberAnimation { } }
-            source: 
+
+            source:
             {
-                switch(model.type) 
+                switch(model.type)
                 {
                     case "int":
                         return "SettingTextField.qml"
                     case "float":
-                        return "SettingTextField.qml" 
+                        return "SettingTextField.qml"
                 }
             }
-            
-            onLoaded: 
+
+            onLoaded:
             {
                 item.model = settingsList.model;
                 item.key = model.key
                 item.index = parseInt(index);
             }
-         
+
             Binding { target: item; property: "valid"; value: model.valid; }
             Binding { target: item; property: "value"; value: model.value; }
+
+            MouseArea
+            {
+                anchors.fill: parent;
+                acceptedButtons: Qt.RightButton;
+                onClicked: contextMenu.popup();
+            }
+
+            Menu
+            {
+                id: contextMenu;
+
+                MenuItem { text: "Hide this setting"; onTriggered: settingsList.model.setVisibility(model.key, false); }
+                MenuItem { text: "Configure setting visiblity..."; onTriggered: settingsPanel.settingConfigurationRequested(); }
+            }
+
         }
     }
     Component
@@ -171,7 +168,7 @@ Panel
                         anchors.centerIn: parent;
                         width: parent.width;
                         height: childrenRect.height;
-                        spacing:4
+                        spacing: 4
                         Image
                         {
 
@@ -194,10 +191,5 @@ Panel
             }
             onClicked: settingsList.model.toggleCollapsedByCategory(section)
         }
-    }
-    
-    SettingsVisibilityWindow 
-    {
-        id: settingDialog
     }
 }
