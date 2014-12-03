@@ -99,6 +99,6 @@ class Application(object):
     def run(self):
         raise NotImplementedError("Run must be implemented by application")
 
-    ##  Return an application-specific renderer object.
+    ##  Return an application-specific Renderer object.
     def getRenderer(self):
         raise NotImplementedError("getRenderer must be implemented by subclasses.")
