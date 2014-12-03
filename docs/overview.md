@@ -127,7 +127,23 @@ Scene class also provides the active [Camera] object.
 Settings
 --------
 
-The %Settings module provides classes for handling machine settings.
+The %Settings module provides classes for handling machine settings. The [MachineSettings]
+class provides a central object to read and write all settings related to a machine.
+It provides a list of [SettingsCategory] objects. Each settings category then provides
+a tree of [Setting] objects that are used to represent the settings of the machine.
+The leaves of this tree represent more detailed settings, for example, a "Speed" setting
+could have a "Wall Speed" and an "Infill Speed" setting as children. The MachineSettings
+class can load this tree structure from a JSON file and also store the values in an ini
+file.
+
+The Validators submodule of the settings module provides several classes that are used
+to validate settings. These validators are created by the MachineSettings object as
+specified in the JSON it loads. They are supplied with an error range, a warning range
+and a safe range.
+
+[MachineSettings]:  \ref Cura#Settings#MachineSettings#MachineSettings
+[SettingsCategory]: \ref Cura#Settings#SettingsCategory#SettingsCategory
+[Setting]:          \ref Cura#Settings#Setting#Setting
 
 View
 ----
@@ -140,3 +156,15 @@ make use of the renderer provided by the application to render the scene. The
 
 [View]:     \ref Cura#View#View#View
 [Renderer]: \ref Cura#View#Renderer#Renderer
+
+Toolkit Specifics
+-----------------
+
+Most of the library does not contain any toolkit specific code. Instead, most toolkit
+specific code is contained in a toolkit-specific submodule. Currently, this concerns the
+Qt submodule, which contains toolkit specific classes that implement most of the UI bits
+on top of Qt, using PyQt.
+
+Class Diagram
+-------------
+![Pluggable Unicorn Class Diagram](classes.png)
