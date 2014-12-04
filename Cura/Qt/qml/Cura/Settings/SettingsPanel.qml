@@ -71,7 +71,7 @@ Panel
                         {
                             id:saveButtonIcon
 
-                            source:"../../../Resources/save_button.png"
+                            source: Cura.Resources.getIcon("save_button.png")
                         }
                     }
                 }
@@ -172,7 +172,7 @@ Panel
                         Image
                         {
 
-                            source:"../../../Resources/icon_resolution.png"
+                            source: Cura.Resources.getIcon("icon_resolution.png")
                         }
                         Text 
                         {
