@@ -74,5 +74,56 @@ class Vector(object):
         numpy.sqrt(out, out)
         return out
 
-        
-        
+    def __add__(self, other):
+        v = Vector(self._data[0], self._data[1], self._data[2])
+        v += other
+        return v
+
+    def __iadd__(self, other):
+        if type(other) is float:
+            self._data[0] += other
+            self._data[1] += other
+            self._data[2] += other
+        elif type(other) is Vector:
+            self._data[0] += other._data[0]
+            self._data[1] += other._data[1]
+            self._data[2] += other._data[2]
+        else:
+            raise NotImplementedError()
+
+        return self
+
+    def __sub__(self, other):
+        v = Vector(self._data[0], self._data[1], self._data[2])
+        v -= other
+        return v
+
+    def __isub__(self, other):
+        if type(other) is float:
+            self._data[0] -= other
+            self._data[1] -= other
+            self._data[2] -= other
+        elif type(other) is Vector:
+            self._data[0] -= other._data[0]
+            self._data[1] -= other._data[1]
+            self._data[2] -= other._data[2]
+        else:
+            raise NotImplementedError()
+
+        return self
+
+    def __neg__(self):
+        self._data = -self._data
+        return self
+
+    def __pos__(self):
+        self._data = +self._data
+        return self
+
+    def cross(self, other):
+        result = numpy.cross(self._data, other._data)
+        return Vector(result[0], result[1], result[2])
+
+    def __repr__(self):
+        return "Vector({0}, {1}, {2})".format(self._data[0], self._data[1], self._data[2])
+
