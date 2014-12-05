@@ -14,7 +14,7 @@ class Vertex(object):
     #   - x, y, z passed as numbers.
     def __init__(self, *args, **kwargs):
         self._position = Vector()
-        self._normal = Vector()
+        self._normal = None
 
         if len(args) == 3:
             self._position = Vector(args[0], args[1], args[2])
@@ -27,7 +27,8 @@ class Vertex(object):
 
     ##  Get the position the vertex
     #   \returns position Vector
-    def getPosition(self):
+    @property
+    def position(self):
         return self._position
 
     ##  Set the position the vertex
@@ -37,13 +38,17 @@ class Vertex(object):
     
     ##  Get the normal the vertex
     #   \returns normal Vector
-    def getNormal(self):
+    @property
+    def normal(self):
         return self._normal
     
     ##  Set the normal the vertex
     #   \param normal Vector
     def setNormal(self, normal):
         self._normal = normal
+
+    def hasNormal(self):
+        return self._normal != None
     
     ##  Convert the vertex into a string, which is required for parsing over sockets / streams
     #   It's kinda hackish to do it this way, but it would take to much effort to implement myself.
