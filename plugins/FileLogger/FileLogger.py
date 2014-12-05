@@ -1,9 +1,10 @@
-from Cura.Logger import Logger
+from Cura.Logger import LogOutput
+
 import logging
 
-class FileLogger(Logger):
+class FileLogger(LogOutput):
     def __init__(self, file_name):
-        super(FileLogger,self).__init__()
+        super().__init__()
         self._logger =  logging.getLogger(self._name) #Create python logger 
         self._logger.setLevel(logging.DEBUG)
         self.setFileName(file_name)

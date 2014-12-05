@@ -17,7 +17,6 @@ class Application(object):
         self._controller = Controller(self)
         self._mesh_file_handler = MeshFileHandler()
         self._storage_devices = {}
-        self._loggers = []
         self._backend = None
         self._machine_settings = MachineSettings()
         self._machine_settings.loadSettingsFromFile("tests/Settings/SettingData.json") #TODO: Debug code
@@ -36,25 +35,6 @@ class Application(object):
     #   \returns Backend
     def getBackend(self):
         return self._backend
-
-    ##  Add a logger to the list.
-    #   \param logger Logger
-    def addLogger(self, logger):
-        self._loggers.append(logger)
-    
-    ##  Get all loggers
-    #   \returns List of Loggers
-    def getLoggers(self):
-        return self._loggers
-
-    ##  Send a message of certain type to all loggers to be handled.
-    #   \param log_type 'e' (error) , 'i'(info), 'd'(debug) or 'w'(warning)
-    #   \param message String containing message to be logged
-    #   \param message List of variables to be added to the message
-    def log(self, log_type, message, *args):
-        for logger in self._loggers:
-            filled_message = message % args # Replace all the %s with the variables. Python formating is magic.
-            logger.log(log_type, filled_message)
 
     ##  Get the PluginRegistry of this application.
     #   \returns PluginRegistry
