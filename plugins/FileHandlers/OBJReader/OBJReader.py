@@ -23,12 +23,12 @@ class OBJReader(MeshReader):
                 if len(parts) < 1:
                     continue
                 if parts[0] == 'v': # The data is loaded so that it's axis make more sense
-                    vertex_list.append([float(parts[1]), -float(parts[3]), float(parts[2])])
+                    vertex_list.append([float(parts[1]), float(parts[2]), float(parts[3])])
                 if parts[0] == 'vn':
-                    normal_list.append([float(parts[1]), -float(parts[3]), float(parts[2])])
+                    normal_list.append([float(parts[1]), float(parts[2]), float(parts[3])])
                 if parts[0] == 'f':
-                    parts = map(lambda p: p.split('/'), parts)
-                    for idx in xrange(1, len(parts)-2):
+                    parts = [i for i in map(lambda p: p.split('/'), parts)]
+                    for idx in range(1, len(parts)-2):
                         data = [int(parts[1][0]), int(parts[idx+1][0]), int(parts[idx+2][0])]
                         if len(parts[1]) > 2:
                             data += [int(parts[1][2]), int(parts[idx+1][2]), int(parts[idx+2][2])]
