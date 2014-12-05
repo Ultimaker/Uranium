@@ -1,4 +1,5 @@
 import numpy
+import numpy.linalg
 import math
 
 ##  Simple 3D-vector class based on numpy arrays.
@@ -59,8 +60,9 @@ class Vector(object):
         return numpy.arccos(numpy.fabs(dot))
     
     
-    def normalize(self, data):
-        self._data = self._normalizeVector(self._data)
+    def normalize(self):
+        self._data /= numpy.linalg.norm(self._data)
+        return self
     
     ##  Return length, i.e. Euclidean norm, of ndarray along axis.
     def _normalizeVector(self, data):
