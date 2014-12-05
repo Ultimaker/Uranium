@@ -16,7 +16,12 @@ Panel {
 
             model: Cura.Models.toolModel
 
-            delegate: ToolButton { text: model.name; onClicked: Cura.Controller.setActiveTool(text); }
+            delegate: ToolButton {
+                text: model.name;
+                iconSource: Cura.Resources.getIcon(model.icon);
+                tooltip: model.name;
+                onClicked: Cura.Controller.setActiveTool(text);
+            }
         }
     }
 }
