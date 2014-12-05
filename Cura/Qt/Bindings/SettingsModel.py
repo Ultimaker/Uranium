@@ -63,6 +63,16 @@ class SettingsModel(ListModel):
             if temp_setting is not None:
                 self.setProperty(index, 'disabled', temp_setting.checkAllChildrenVisible())
                 self.setProperty(index, 'visibility', temp_setting.isVisible())
+                
+                
+    @pyqtSlot(str,result=bool)
+    def checkVisibilityCategory(self,key):
+        category = self._machine_settings.getSettingsCategory(key)
+        if category is not None:
+            for setting in category.getAllSettings():
+                if setting.checkAllChildrenVisible() or setting.isVisible:
+                    return True
+        return False
             
         
         

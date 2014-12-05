@@ -29,7 +29,7 @@ Panel
             }
             Label 
             {
-                text: "Settings" 
+                text: qsTr("Settings") 
                 anchors.centerIn: parent
                 color: "white"
             }
@@ -160,7 +160,8 @@ Panel
         {
             id:categoryDelegateButton
             property bool on: false
-            property int border_thickness: 0  //Stupid hack as propertychanges won't let me change it.
+            property int border_thickness: 0  //Stupid hack as propertychanges won't let me change it.'
+            //opacity:
             function toggle() 
             {
                 if(on)
@@ -208,7 +209,8 @@ Panel
                     border.width:border_thickness
                 }
             }
-            onClicked: {
+            onClicked: 
+            {
                 settingsList.model.toggleCollapsedByCategory(section); 
                 toggle();
             }
