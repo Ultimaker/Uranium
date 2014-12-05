@@ -5,6 +5,13 @@ class Resources:
     SettingsLocation = 2
     PreferencesLocation = 3
 
+    @classmethod
+    def locate(cls, type, *args):
+        path = os.path.join(cls.getPath(type), *args)
+        if os.path.isfile(path):
+            return path
+
+        return ''
 
     ##  Return a path to read a certain resource type from.
     #
