@@ -1,5 +1,6 @@
 from Cura.MeshHandling.MeshReader import MeshReader
 from Cura.MeshHandling.MeshData import MeshData
+from Cura.Logger import Logger
 
 import os
 import struct
@@ -14,16 +15,24 @@ class STLReader(MeshReader):
         mesh = None
         if(self._supported_extension in file_name):
             mesh = MeshData()
+            success = False
             f = storage_device.openFile(file_name, 'rt')
-            if f.read(5).lower() == 'solid':
-                self._loadAscii(mesh, f)
-            else:
+            try:
+                if f.read(5).lower() == 'solid':
+                    self._loadAscii(mesh, f)
+                    success = True
+            except UnicodeDecodeError:
+                pass
+
+            if not success:
                 storage_device.closeFile(f)
                 f = storage_device.openFile(file_name, 'rb')
                 self._loadBinary(mesh, f)
 
             storage_device.closeFile(f)
             mesh.calculateNormals()
+
+        Logger.log("d", "Loaded a mesh with %s vertices", mesh.getNumVertices())
         return mesh
 
     # Private
@@ -55,9 +64,9 @@ class STLReader(MeshReader):
     # \param mesh The MeshData object where the data is written to.
     # \param f The file handle
     def _loadBinary(self, mesh, f):
-        f.read(80-5) #Skip the header
+        f.read(80) #Skip the header
         
-        num_faces = struct.unpack(b'<I', f.read(4))[0]
+        num_faces = struct.unpack('<I', f.read(4))[0]
         mesh.reserveFaceCount(num_faces)
         for idx in range(0, num_faces):
             data = struct.unpack(b'<ffffffffffffH', f.read(50))
