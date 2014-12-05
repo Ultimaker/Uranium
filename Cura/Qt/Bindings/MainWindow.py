@@ -24,24 +24,6 @@ class MainWindow(QQuickWindow):
         self._app.getController().addInputDevice("Keyboard", self._keyDevice)
         self._app.getController().getScene().sceneChanged.connect(self._onSceneChanged)
 
-    #def getApplication(self):
-        #return self._app
-
-    #def setApplication(self, app):
-        #if app == self._app:
-            #return
-
-        #if self._app:
-            #self._app.getController().removeInputDevice("Mouse")
-            #self._app.getController().removeInputDevice("Keyboard")
-            #self._app.getController().getScene().sceneChanged.disconnect(self.update)
-
-        #self._app = app
-        #if self._app:
-
-
-    #application = pyqtProperty(QObject, fget=getApplication, fset=setApplication)
-
     def getBackgroundColor(self):
         return self._backgroundColor
 

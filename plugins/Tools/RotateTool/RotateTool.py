@@ -9,4 +9,5 @@ class RotateTool(Tool):
         if event.type == Event.ToolActivateEvent:
             print("Activate Rotate tool")
 
-        pass
+    def getIconName(self):
+        return 'rotate.png'

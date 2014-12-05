@@ -39,7 +39,7 @@ class Matrix(object):
     ##  Return a inverted copy of the matrix.
     #   \returns The invertex matrix.
     def getInverse(self):
-        return Matrix(numpy.linalg.inv(self._data,dtype=numpy.float32))
+        return Matrix(numpy.linalg.inv(self._data))
 
     ##  Return the transpose of the matrix.
     def getTransposed(self):

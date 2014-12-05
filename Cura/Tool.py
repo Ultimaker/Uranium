@@ -10,3 +10,7 @@ class Tool(object):
     #   \sa Event
     def event(self, event):
         pass
+
+    ##  Return the name of the icon to use for this tool.
+    def getIconName(self):
+        return 'default.png'

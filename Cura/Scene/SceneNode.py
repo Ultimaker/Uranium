@@ -2,6 +2,8 @@ from Cura.Math.Matrix import Matrix
 from Cura.Signal import Signal, SignalEmitter
 from copy import copy, deepcopy
 
+import math
+
 ##  A scene node object.
 #
 #   These objects can hold a mesh and multiple children. Each node has a transformation matrix
@@ -132,12 +134,12 @@ class SceneNode(SignalEmitter):
         if self._locked:
             return
 
-        self._transformation.rotateByAxis(angle, axis)
+        self._transformation.rotateByAxis(math.radians(angle), axis)
         self.transformationChanged.emit(self)
 
     ##  Scale the scene object (and thus its children) by given amount
     def scale(self, scale):
-        #TODO Implement
+        self._transformation.scaleByFactor(scale)
         self.transformationChanged.emit(self)
         pass
 

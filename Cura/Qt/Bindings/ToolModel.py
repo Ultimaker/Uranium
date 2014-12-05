@@ -4,6 +4,7 @@ from Cura.Qt.ListModel import ListModel
 
 class ToolModel(ListModel):
     NameRole = Qt.UserRole + 1
+    IconRole = Qt.UserRole + 2
 
     def __init__(self, parent = None):
         super().__init__(parent)
@@ -13,12 +14,12 @@ class ToolModel(ListModel):
         self._onToolsChanged()
 
     def roleNames(self):
-        return { self.NameRole: 'name' }
+        return { self.NameRole: 'name', self.IconRole: 'icon' }
 
     def _onToolsChanged(self):
         self.clear()
 
         tools = self._controller.getAllTools()
         for name in tools:
-            self.appendItem({ 'name': name })
+            self.appendItem({ 'name': name, 'icon': tools[name].getIconName() })
 

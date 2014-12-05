@@ -1,8 +1,10 @@
-from Cura.Logger import Logger
+from Cura.Logger import LogOutput
+
 import logging
-class ConsoleLogger(Logger):
+
+class ConsoleLogger(LogOutput):
     def __init__(self):
-        super(ConsoleLogger,self).__init__()
+        super().__init__()
         self._logger = logging.getLogger(self._name) #Create python logger 
         self._logger.setLevel(logging.DEBUG)
         stream_handler = logging.StreamHandler() # Log to stream

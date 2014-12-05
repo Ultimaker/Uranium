@@ -9,4 +9,5 @@ class ScaleTool(Tool):
         if event.type == Event.ToolActivateEvent:
             print("Activate Scale tool")
 
-        pass
+    def getIconName(self):
+        return 'scale.png'

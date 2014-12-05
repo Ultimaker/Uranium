@@ -4,6 +4,8 @@ import QtQuick.Layouts 1.1
 import QtQuick.Dialogs 1.1
 import QtQuick.Controls.Styles 1.1
 
+import Cura 1.0 as Cura
+
 Panel {
     title: "Files"
 
@@ -55,7 +57,7 @@ Panel {
                         Image
                         {
                             id:machineButtonIcon
-                            source: "../../../Resources/icon_ultimaker2.png" //TODO: HARDCODED
+                            source: Cura.Resources.getIcon("icon_ultimaker2.png")
                         }
                         Text 
                         {

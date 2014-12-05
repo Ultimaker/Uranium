@@ -25,8 +25,7 @@ class MeshData(object):
             return None
         
     def hasNormals(self):
-        #TODO: Implement
-        return False
+        return self._vertices[0].hasNormal()
     
     def hasFaces(self):
         if(len(self._face_indices) is not 0):
@@ -113,36 +112,61 @@ class MeshData(object):
         v = 0
         for i in range(self._num_vertices):
             vertex = self._vertices[i]
-            out[v] = vertex.getPosition().x
-            out[v+1] = vertex.getPosition().y
-            out[v+2] = vertex.getPosition().z
+            out[v] = vertex.position.x
+            out[v+1] = vertex.position.y
+            out[v+2] = vertex.position.z
             v += 3
 
         return out
         
     ##  Get all vertices of this mesh as a bytearray
+    #
+    #   Primarily needed for graphics API support.
+    #   \return A bytearray object with 3 floats per vertex followed by 3 floats per normal if the mesh has normals.
     def getVerticesAsByteArray(self):
         out = bytearray()
         for i in range(self._num_vertices):
             vertex = self._vertices[i]
-            out += pack('@f', vertex.getPosition().x)
-            out += pack('@f', vertex.getPosition().y)
-            out += pack('@f', vertex.getPosition().z)
+            # This is a bit magic, because Python sucks when having to deal with bytes.
+            # pack() will convert a value to a byte representation of that value, using
+            # a magic "format string". In this case, the format string means "convert a
+            # float value using native ordering and size.
+            out += pack('@f', vertex.position.x)
+            out += pack('@f', vertex.position.y)
+            out += pack('@f', vertex.position.z)
+
+            if vertex.normal:
+                out += pack('@f', vertex.normal.x)
+                out += pack('@f', vertex.normal.y)
+                out += pack('@f', vertex.normal.z)
+
+        return out
+
+    ##  Get all indices as a bytearray
+    def getIndicesAsByteArray(self):
+        out = bytearray()
+        for i in self._face_indices:
+            out += pack('@i', i[0])
+            out += pack('@i', i[1])
+            out += pack('@i', i[2])
+
         return out
 
     ##  Calculate the normals of this mesh, assuming it was created by using addFace (eg; the verts are connected)    
     def calculateNormals(self):
-        pass
-        #TODO: Port this code to using Vertex objects
-        #vertex_data = self._vertices.reshape(self._num_vertices / 3, 6, 3)
-        #normals = numpy.cross(vertex_data[::, 2] - vertex_data[::, 0], vertex_data[::, 4] - vertex_data[::, 0])
-        #length = numpy.sqrt(normals[:, 0] ** 2 + normals[:, 1] ** 2 + normals[:, 2] ** 2)
+        for i in range(0, self._num_vertices, 3):
+            vertex1 = self._vertices[i]
+            vertex2 = self._vertices[i+1]
+            vertex3 = self._vertices[i+2]
 
-        #normals[:, 0] /= length
-        #normals[:, 1] /= length
-        #normals[:, 2] /= length
+            v1 = vertex2.position - vertex1.position
+            v2 = vertex3.position - vertex1.position
+            normal = v1.cross(v2).normalize()
 
-        #vertex_data[::, 1] = normals
-        #vertex_data[::, 3] = normals
-        #vertex_data[::, 5] = normals
-        
+            vertex1.setNormal(vertex1.normal + normal if vertex1.hasNormal() else normal)
+            vertex2.setNormal(vertex2.normal + normal if vertex2.hasNormal() else normal)
+            vertex3.setNormal(vertex3.normal + normal if vertex3.hasNormal() else normal)
+
+        for i in range(self._num_vertices):
+            self._vertices[i].setNormal(self._vertices[i].normal.normalize())
+

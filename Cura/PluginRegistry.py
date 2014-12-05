@@ -1,4 +1,5 @@
 from Cura.PluginError import PluginError, PluginNotFoundError, InvalidMetaDataError
+from Cura.Logger import Logger
 
 import imp
 import os
@@ -31,7 +32,7 @@ class PluginRegistry(object):
         if name in self._plugins:
             # Already loaded, do not load again
             if(self._application is not None):
-                self._application.log('w', 'Plugin %s was already loaded',name)
+                Logger.log('w', 'Plugin %s was already loaded',name)
             return
         
         plugin = self._findPlugin(name)
@@ -43,7 +44,7 @@ class PluginRegistry(object):
             
         try:
             plugin.register(self._application)
-            self._application.log('i', 'Loaded plugin %s', name)
+            Logger.log('i', 'Loaded plugin %s', name)
             self._plugins[name] = plugin
         except PluginError as e:
             self._application.log('e', e)
@@ -110,7 +111,7 @@ class PluginRegistry(object):
     def _populateMetaData(self, name):
         plugin = self._findPlugin(name)
         if not plugin:
-            self._application.log('e', 'Could not find plugin %s', name)
+            Logger.log('e', 'Could not find plugin %s', name)
             return False
         
         meta_data = None
@@ -140,13 +141,13 @@ class PluginRegistry(object):
         try:
             file, path, desc = imp.find_module(name, [ location ])
         except ImportError as e:
-            print("Import error when importing {0}: {1}".format(name, e))
+            Logger.log("Import error when importing %s: %s", name, e)
             return False
 
         try:
             module = imp.load_module(name, file, path, desc)
         except ImportError as e:
-            print("Import error loading module {0}: {1}".format(name, e))
+            Logger.log("Import error loading module %s: %s", name, e)
             return False
         finally:
             if file:

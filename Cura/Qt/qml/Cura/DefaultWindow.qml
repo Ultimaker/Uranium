@@ -4,6 +4,9 @@ import QtQuick.Layouts 1.1
 
 import Cura 1.0 as Cura
 
+import "Settings"
+import "Preferences"
+
 Cura.MainWindow {
     id: base
     visible: true
@@ -39,15 +42,27 @@ Cura.MainWindow {
         anchors.top: parent.top
         anchors.right: parent.right
 
-        title: "View"
+        contents: RowLayout {
+            ComboBox {
+                model: Cura.Models.viewModel
 
-        contents: ComboBox {
-            model: Cura.Models.viewModel
+                onCurrentIndexChanged: Cura.Controller.setActiveView(model.items[currentIndex].text)
+            }
 
-            onCurrentIndexChanged: Cura.Controller.setActiveView(model.items[currentIndex].text)
+            ToolButton { text: "Settings"; onClicked: preferences.visible = true; }
+            ToolButton { text: "Help"; }
         }
     }
     
-    SettingsPanel{}
-    
+    SettingsPanel {
+        anchors.right: parent.right;
+        anchors.verticalCenter: parent.verticalCenter
+
+        onSettingConfigurationRequested: {
+            preferences.visible = true;
+            preferences.setPage(1);
+        }
+    }
+
+    PreferencesDialog { id: preferences }
 }

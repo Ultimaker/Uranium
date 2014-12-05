@@ -10,6 +10,7 @@ from Cura.Qt.Bindings.ControllerProxy import ControllerProxy
 from Cura.Qt.Bindings.BackendProxy import BackendProxy
 from Cura.Qt.Bindings.SceneProxy import SceneProxy
 from Cura.Qt.Bindings.Models import Models
+from Cura.Qt.Bindings.ResourcesProxy import ResourcesProxy
 
 class Bindings:
     @classmethod
@@ -33,6 +34,10 @@ class Bindings:
         return Models()
 
     @classmethod
+    def createResourcesProxy(cls, engine, scriptEngine):
+        return ResourcesProxy()
+
+    @classmethod
     def register(self):
         qmlRegisterType(MainWindow, "Cura", 1, 0, "MainWindow")
         qmlRegisterType(ViewModel, "Cura", 1, 0, "ViewModel")
@@ -46,3 +51,4 @@ class Bindings:
         qmlRegisterSingletonType(BackendProxy, "Cura", 1, 0, "Backend", Bindings.createBackendProxy)
         qmlRegisterSingletonType(SceneProxy, "Cura", 1, 0, "Scene", Bindings.createSceneProxy)
         qmlRegisterSingletonType(Models, "Cura", 1, 0, "Models", Bindings.createModels)
+        qmlRegisterSingletonType(ResourcesProxy, "Cura", 1, 0, "Resources", Bindings.createResourcesProxy)
