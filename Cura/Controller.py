@@ -196,10 +196,6 @@ class Controller(SignalEmitter):
         if camera.isLocked():
             return
 
-        rot = Quaternion()
-        rot.setByAxis(event.deltaX / 100.0, Vector(0, 1, 0))
-        camera.rotate(rot)
-
-        rot.setByAxis(-event.deltaY / 100.0, Vector(1, 0 ,0))
-        camera.rotate(rot)
+        camera.rotateByAngleAxis(event.deltaX / 10.0, Vector(0, 1, 0))
+        camera.rotateByAngleAxis(event.deltaY / 10.0, Vector(1, 0, 0))
 
