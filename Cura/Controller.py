@@ -7,6 +7,8 @@ from Cura.Math.Vector import Vector
 from Cura.Math.Quaternion import Quaternion
 from Cura.Signal import Signal, SignalEmitter
 
+import math
+
 ## Glue glass that holds the scene, (active) view(s), (active) tool(s) and possible user inputs.
 #
 #  The different types of views / tools / inputs are defined by plugins.
@@ -22,6 +24,7 @@ class Controller(SignalEmitter):
         self._views = {}
         self._scene = Scene()
         self._application = application
+        self._alpha = 0.0
     
     ##  Get the application.
     #   \returns Application
@@ -209,6 +212,17 @@ class Controller(SignalEmitter):
         if camera.isLocked():
             return
 
-        camera.rotateByAngleAxis(event.deltaX / 10.0, Vector(0, 1, 0))
-        camera.rotateByAngleAxis(event.deltaY / 10.0, Vector(1, 0, 0))
+        c = Vector(0, 0, 0)
+        p = camera.getGlobalPosition()
+        dx = -(event.deltaX / 100.0)
 
+        r = math.sqrt((c.x - p.x)**2 + (c.z - p.z)**2)
+        self._alpha += dx
+
+        n = Vector(0, 0, 0)
+        n.setX(c.x + r * math.cos(self._alpha + math.pi - (math.pi / 180.0)))
+        n.setZ(c.z + r * math.sin(self._alpha + math.pi - (math.pi / 180.0)))
+        n.setY(p.y)
+
+        camera.setPosition(n)
+        camera.lookAt(Vector(0, 0, 0), Vector(0, 1, 0))
