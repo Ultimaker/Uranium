@@ -1,6 +1,7 @@
 from Cura.Scene.SceneNode import SceneNode
 from Cura.Scene.Camera import Camera
 from Cura.Signal import Signal, SignalEmitter
+from Cura.Scene.Iterator.BreadthFirstIterator import BreadthFirstIterator
 
 ##  Container object for the scene graph.
 #
@@ -23,6 +24,14 @@ class Scene(SignalEmitter):
     def getActiveCamera(self):
         return self._active_camera
 
+    def getAllCameras(self):
+        cameras = []
+        for node in BreadthFirstIterator(self._root):
+            if type(node) is Camera:
+                cameras.append(node)
+
+        return cameras
+
     ##  Set the camera that should be used for rendering.
     #   \param name The name of the camera to use.
     def setActiveCamera(self, name):
@@ -36,6 +45,6 @@ class Scene(SignalEmitter):
 
     ## private:
     def _findCamera(self, name):
-        for node in self._root.getChildren():
+        for node in BreadthFirstIterator(self._root):
             if type(node) is Camera and node.getName() == name:
                 return node
