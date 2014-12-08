@@ -74,28 +74,29 @@ class QtGL2Renderer(Renderer):
 
         self._defaultShader.bind()
         camera = self.getApplication().getController().getScene().getActiveCamera()
-        if camera:
-            self._defaultShader.setUniformValue("u_projectionMatrix", self._matrixToQMatrix4x4(camera.getProjectionMatrix()))
-            self._defaultShader.setUniformValue("u_viewMatrix", self._matrixToQMatrix4x4(camera.getGlobalTransformation().getInverse()))
-        else:
-            self._defaultShader.setUniformValue("u_projectionMatrix", QMatrix4x4())
-            self._defaultShader.setUniformValue("u_viewMatrix", QMatrix4x4())
+        if not camera:
+            Logger.log("e", "No active camera set, can not render")
+            return
+
+        self._defaultShader.setUniformValue("u_projectionMatrix", self._matrixToQMatrix4x4(camera.getProjectionMatrix()))
+        self._defaultShader.setUniformValue("u_viewMatrix", self._matrixToQMatrix4x4(camera.getGlobalTransformation().getInverse()))
+        self._defaultShader.setUniformValue("u_viewPosition", self._vectorToQVector3D(camera.getGlobalPosition()))
         self._defaultShader.setUniformValue("u_modelMatrix", self._matrixToQMatrix4x4(position))
 
-        self._defaultShader.setUniformValue("u_ambientColor", QColor(128, 128, 128))
-        self._defaultShader.setUniformValue("u_diffuseColor", QColor(190, 190, 190))
+        normalMatrix = position
+        normalMatrix.setRow(3, [0, 0, 0, 1])
+        normalMatrix.setColumn(3, [0, 0, 0, 1])
+        normalMatrix = normalMatrix.getInverse().getTransposed()
+        self._defaultShader.setUniformValue("u_normalMatrix", self._matrixToQMatrix4x4(normalMatrix))
+
+        self._defaultShader.setUniformValue("u_ambientColor", QColor(80, 80, 80))
+        self._defaultShader.setUniformValue("u_diffuseColor", QColor(128, 128, 128))
         self._defaultShader.setUniformValue("u_specularColor", QColor(255, 255, 255))
 
-        self._defaultShader.setUniformValue("u_lightPosition", QVector3D(0.0, 200.0, 200.0))
-        self._defaultShader.setUniformValue("u_lightIntensity", 1.0)
+        self._defaultShader.setUniformValue("u_lightPosition", self._vectorToQVector3D(self._lightPosition))
         self._defaultShader.setUniformValue("u_lightColor", QColor(255, 255, 255))
 
-        self._defaultShader.setUniformValue("u_viewPosition", QVector3D(0.0, 0.0, 200.0))
-
-        self._defaultShader.setUniformValue("u_ambientFactor", 0.2)
-        self._defaultShader.setUniformValue("u_diffuseFactor", 0.8)
-        self._defaultShader.setUniformValue("u_specularFactor", 0.5)
-        self._defaultShader.setUniformValue("u_specularStrength", 5.0)
+        self._defaultShader.setUniformValue("u_shininess", 50.0)
 
         vertexBuffer = self._vertexBufferCache[mesh]
         vertexBuffer.bind()
@@ -143,4 +144,6 @@ class QtGL2Renderer(Renderer):
                           m.at(2,0), m.at(2, 1), m.at(2, 2), m.at(2, 3),
                           m.at(3,0), m.at(3, 1), m.at(3, 2), m.at(3, 3))
 
+    def _vectorToQVector3D(self, v):
+        return QVector3D(v.x, v.y, v.z)
 
