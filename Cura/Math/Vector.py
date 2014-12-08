@@ -2,6 +2,8 @@ import numpy
 import numpy.linalg
 import math
 
+from copy import deepcopy
+
 ##  Simple 3D-vector class based on numpy arrays.
 #
 #   This class represents a 3-dimensional vector.
@@ -63,6 +65,10 @@ class Vector(object):
     def normalize(self):
         self._data /= numpy.linalg.norm(self._data)
         return self
+
+    def getNormalized(self):
+        other = deepcopy(self)
+        return other.normalize()
     
     ##  Return length, i.e. Euclidean norm, of ndarray along axis.
     def _normalizeVector(self, data):
