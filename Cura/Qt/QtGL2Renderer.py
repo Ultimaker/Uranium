@@ -1,8 +1,10 @@
 from PyQt5.QtGui import QOpenGLShader, QOpenGLShaderProgram, QOpenGLBuffer, QMatrix4x4, QOpenGLContext, QOpenGLVersionProfile, QVector3D, QColor
 
 from Cura.View.Renderer import Renderer
+from Cura.Math.Vector import Vector
 from Cura.Math.Matrix import Matrix
 from Cura.Resources import Resources
+from Cura.Logger import Logger
 
 import numpy
 from ctypes import c_void_p
@@ -16,6 +18,7 @@ class QtGL2Renderer(Renderer):
         self._indexBufferCache = {}
 
         self._initialized = False
+        self._lightPosition = Vector(0, 0, 0)
 
     def initialize(self):
         profile = QOpenGLVersionProfile()
@@ -44,6 +47,9 @@ class QtGL2Renderer(Renderer):
         #self._defaultShader.release()
 
         self._initialized = True
+
+    def setLightPosition(self, position):
+        self._lightPosition = position
 
     def renderMesh(self, position, mesh, mode = Renderer.RenderTriangles):
         if not self._initialized:
