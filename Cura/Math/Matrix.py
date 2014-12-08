@@ -13,9 +13,27 @@ class Matrix(object):
         self._data = data
     
     def at(self, x, y):
-        if(x > 4 or y > 4 or x < 0 or y < 0):
+        if(x >= 4 or y >= 4 or x < 0 or y < 0):
             raise IndexError
         return self._data[x,y]
+
+    def setRow(self, index, value):
+        if index < 0 or index > 3:
+            raise IndexError()
+
+        self._data[0, index] = value[0]
+        self._data[1, index] = value[1]
+        self._data[2, index] = value[2]
+        self._data[3, index] = value[3]
+
+    def setColumn(self, index, value):
+        if index < 0 or index > 3:
+            raise IndexError()
+
+        self._data[index, 0] = value[0]
+        self._data[index, 1] = value[1]
+        self._data[index, 2] = value[2]
+        self._data[index, 3] = value[3]
     
     def multiply(self, matrix):
         self._data = numpy.dot(self._data, matrix.getData())
@@ -138,7 +156,8 @@ class Matrix(object):
             [1.0-q[2, 2]-q[3, 3],     q[1, 2]-q[3, 0],     q[1, 3]+q[2, 0], 0.0],
             [    q[1, 2]+q[3, 0], 1.0-q[1, 1]-q[3, 3],     q[2, 3]-q[1, 0], 0.0],
             [    q[1, 3]-q[2, 0],     q[2, 3]+q[1, 0], 1.0-q[1, 1]-q[2, 2], 0.0],
-            [                0.0,                 0.0,                 0.0, 1.0]])
+            [                0.0,                 0.0,                 0.0, 1.0]],
+            dtype=numpy.float32)
 
 
     ##  Set the matrix to an orthographic projection. This overwrites any existing data.
