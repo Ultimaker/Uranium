@@ -3,6 +3,7 @@ from PyQt5.QtGui import QColor
 from PyQt5.QtQuick import QQuickWindow, QQuickItem
 
 from Cura.Math.Vector import Vector
+from Cura.Math.Matrix import Matrix
 from Cura.Qt.QtMouseDevice import QtMouseDevice
 from Cura.Qt.QtKeyDevice import QtKeyDevice
 
@@ -77,6 +78,19 @@ class MainWindow(QQuickWindow):
             return
 
         self._mouseDevice.handleEvent(event)
+
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+
+        w = event.size().width() / 2
+        h = event.size().height() / 2
+        for camera in self._app.getController().getScene().getAllCameras():
+            proj = Matrix()
+            if camera.isPerspective():
+                proj.setPerspective(45, w/h, 1, 500)
+            else:
+                proj.setOrtho(-w, w, -h, h, 1, 500)
+            camera.setProjectionMatrix(proj)
 
     def _render(self):
         self._app.getRenderer().clear(self._backgroundColor)
