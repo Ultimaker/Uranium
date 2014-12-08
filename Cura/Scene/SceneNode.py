@@ -1,4 +1,5 @@
 from Cura.Math.Matrix import Matrix
+from Cura.Math.Vector import Vector
 from Cura.Signal import Signal, SignalEmitter
 from copy import copy, deepcopy
 
@@ -159,6 +160,14 @@ class SceneNode(SignalEmitter):
 
         self._transformation.setByTranslation(position)
         self.transformationChanged.emit(self)
+
+    def getPosition(self):
+        pos = self._transformation.getData()
+        return Vector(pos[0,3], pos[1,3], pos[2,3])
+
+    def getGlobalPosition(self):
+        pos = self.getGlobalTransformation().getData()
+        return Vector(float(pos[0,3]), pos[1,3], pos[2,3])
 
     ##  Signal. Emitted whenever the transformation of this object or any child object changes.
     #   \param object The object that caused the change.
