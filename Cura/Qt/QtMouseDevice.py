@@ -2,7 +2,7 @@ from PyQt5.QtCore import Qt, QEvent, QObject
 from PyQt5.QtGui import QMouseEvent
 
 from Cura.InputDevice import InputDevice
-from Cura.Event import MouseEvent
+from Cura.Event import MouseEvent, WheelEvent
 
 ##  An InputDevice subclass that processes Qt mouse events and returns a Cura.Event.MouseEvent
 class QtMouseDevice(InputDevice):
@@ -26,6 +26,10 @@ class QtMouseDevice(InputDevice):
             e = MouseEvent(MouseEvent.MouseReleaseEvent, event.x(), event.y(), self._x, self._y, self._qtButtonsToButtonList(event.buttons()))
             self._x = event.x()
             self._y = event.y()
+            self.event.emit(e)
+        elif event.type() == QEvent.Wheel:
+            delta = event.angleDelta()
+            e = WheelEvent(delta.x(), delta.y())
             self.event.emit(e)
 
     def _qtButtonsToButtonList(self, qtButtons):

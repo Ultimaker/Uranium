@@ -71,6 +71,13 @@ class MainWindow(QQuickWindow):
 
         self._keyDevice.handleEvent(event)
 
+    def wheelEvent(self, event):
+        super().wheelEvent(event)
+        if event.isAccepted():
+            return
+
+        self._mouseDevice.handleEvent(event)
+
     def _render(self):
         self._app.getRenderer().clear(self._backgroundColor)
         self._app.getController().getActiveView().render()

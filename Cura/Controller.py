@@ -167,6 +167,8 @@ class Controller(SignalEmitter):
             elif MouseEvent.MiddleButton in event.buttons:
                 self._moveCamera(event)
                 return
+        elif event.type is Event.MouseWheelEvent:
+            self._zoomCamera(event)
 
         # If we are not doing camera control, pass the event to the active tool.
         if self._active_tool and self._active_tool.event(event):
@@ -174,7 +176,8 @@ class Controller(SignalEmitter):
 
         #TODO: Handle selection
 
-    ##  Private
+    ##  private:
+
     #   Moves the camera in response to a mouse event.
     def _moveCamera(self, event):
         camera = self._scene.getActiveCamera()
@@ -186,7 +189,17 @@ class Controller(SignalEmitter):
 
         camera.translate(Vector(event.deltaX / 100.0, event.deltaY / 100.0, 0))
 
-    ##  Private
+    #   Zooms the camera in response to a mouse event.
+    def _zoomCamera(self, event):
+        camera = self._scene.getActiveCamera()
+        if not camera:
+            return
+
+        if camera.isLocked():
+            return
+
+        camera.translate(Vector(0.0, 0.0, -event.vertical / 10.0))
+
     #   Rotates the camera in response to a mouse event.
     def _rotateCamera(self, event):
         camera = self._scene.getActiveCamera()

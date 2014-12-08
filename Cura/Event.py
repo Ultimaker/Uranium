@@ -12,6 +12,7 @@ class Event:
     SceneChangeEvent = 6
     ToolActivateEvent = 7
     ToolDeactivateEvent = 8
+    MouseWheelEvent = 9
 
     def __init__(self, type):
         super().__init__()
@@ -86,6 +87,20 @@ class MouseEvent(Event):
     @property
     def buttons(self):
         return self._buttons
+
+class WheelEvent(Event):
+    def __init__(self, horizontal, vertical):
+        super().__init__(Event.MouseWheelEvent)
+        self._horizontal = horizontal
+        self._vertical = vertical
+
+    @property
+    def horizontal(self):
+        return self._horizontal
+
+    @property
+    def vertical(self):
+        return self._vertical
 
 ##  Key Event class.
 class KeyEvent(Event):
