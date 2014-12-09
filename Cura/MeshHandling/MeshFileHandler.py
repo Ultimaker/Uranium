@@ -1,3 +1,4 @@
+from Cura.Logger import Logger
 
 ##  Central class for reading and writing meshes.
 #
@@ -19,8 +20,9 @@ class MeshFileHandler(object):
                     return result
 
         except OSError as e:
-            print(e)
+            Logger.log("e", e)
 
+        Logger.log("w", "Unable to read file %s", file_name)
         return None #unable to read
     
     # Try to write the mesh_data to file. Based on the extension in the file_name a correct meshwriter is selected.
