@@ -10,6 +10,9 @@ from Cura.Settings.MachineSettings import MachineSettings
 #   used to access objects required for those plugins.
 class Application(object):
     def __init__(self):
+        if(Application._instance != None):
+            raise ValueError("Duplicate singleton creation")
+
         super(Application, self).__init__() # Call super to make multiple inheritence work.
         self._plugin_registry = PluginRegistry()
         self._plugin_registry.addPluginLocation("plugins")
@@ -82,3 +85,14 @@ class Application(object):
     ##  Return an application-specific Renderer object.
     def getRenderer(self):
         raise NotImplementedError("getRenderer must be implemented by subclasses.")
+
+    ##  Return the singleton instance of the application object
+    @classmethod
+    def getInstance(cls):
+        # Note: Explicit use of class name to prevent issues with inheritance.
+        if Application._instance is None:
+            Application._instance = cls()
+
+        return Application._instance
+
+    _instance = None
