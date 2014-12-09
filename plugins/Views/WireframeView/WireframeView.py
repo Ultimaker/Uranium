@@ -11,7 +11,7 @@ class WireframeView(View):
         renderer = self.getRenderer()
 
         for node in DepthFirstIterator(scene.getRoot()):
-            if not node.render():
+            if not node.render(renderer):
                 if node.getMeshData():
                     renderer.renderMesh(node.getGlobalTransformation(), node.getMeshData(), Renderer.RenderLines)
 

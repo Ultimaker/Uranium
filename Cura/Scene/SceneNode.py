@@ -185,8 +185,10 @@ class SceneNode(SignalEmitter):
     #   you can override this method and render the node. Return True to prevent the
     #   view from rendering any attached mesh data.
     #
+    #   \param renderer The renderer object to use for rendering.
+    #
     #   \return False if the view should render this node, True if we handle our own rendering.
-    def render(self):
+    def render(self, renderer):
         return False
 
     ##  Get whether this SceneNode is locked, that is, its transformation relative to its parent should not change.
