@@ -2,6 +2,7 @@ from Cura.Controller import Controller
 from Cura.PluginRegistry import PluginRegistry
 from Cura.MeshHandling.MeshFileHandler import MeshFileHandler
 from Cura.Settings.MachineSettings import MachineSettings
+from Cura.Resources import Resources
 
 ##  Central object responsible for running the main event loop and creating other central objects.
 #
@@ -21,8 +22,10 @@ class Application(object):
         self._mesh_file_handler = MeshFileHandler()
         self._storage_devices = {}
         self._backend = None
+
+        #TODO: This needs to be loaded from preferences
         self._machine_settings = MachineSettings()
-        self._machine_settings.loadSettingsFromFile("tests/Settings/SettingData.json") #TODO: Debug code
+        self._machine_settings.loadSettingsFromFile(Resources.locate(Resources.SettingsLocation, "ultimaker2.json"))
     
     ##  Set the backend of the application (the program that does the heavy lifting).
     #   \param backend Backend
