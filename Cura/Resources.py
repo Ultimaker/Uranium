@@ -4,6 +4,7 @@ class Resources:
     ResourcesLocation = 1
     SettingsLocation = 2
     PreferencesLocation = 3
+    MeshesLocation = 4
 
     @classmethod
     def locate(cls, type, *args):
@@ -27,6 +28,8 @@ class Resources:
             return cls.__relativeToFile("..", "resources", "settings")
         elif type == cls.PreferencesLocation:
             return cls.__relativeToFile("..", "resources", "preferences")
+        elif type == cls.MeshesLocation:
+            return cls.__relativeToFile("..", "resources", "meshes")
         else:
             raise ValueError("Unknonw location {0}".format(type))
 
@@ -53,14 +56,6 @@ class Resources:
             return path
         else:
             return os.path.join(cls.getPath(cls.ResourcesLocation), 'icons', 'default.png')
-
-    @classmethod
-    def getMesh(cls, name):
-        path = os.path.join(cls.getPath(cls.ResourcesLocation), 'meshes', name)
-        if os.path.isfile(path):
-            return path
-        else:
-            return os.path.join(cls.getPath(cls.ResourcesLocation), 'meshes', 'simplecube.stl')
 
     ## private:
 
