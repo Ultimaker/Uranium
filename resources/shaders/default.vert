@@ -1,14 +1,14 @@
-uniform mat4 u_modelMatrix;
-uniform mat4 u_viewMatrix;
-uniform mat4 u_projectionMatrix;
-uniform mat4 u_normalMatrix;
+uniform highp mat4 u_modelMatrix;
+uniform highp mat4 u_viewMatrix;
+uniform highp mat4 u_projectionMatrix;
+uniform highp mat4 u_normalMatrix;
 
-attribute vec4 a_vertex;
-attribute vec4 a_normal;
+attribute highp vec4 a_vertex;
+attribute highp vec4 a_normal;
 
-varying vec3 v_vertex;
-varying vec3 v_normal;
-varying vec3 v_viewVector;
+varying highp vec3 v_vertex;
+varying highp vec3 v_normal;
+varying highp vec3 v_viewVector;
 
 void main()
 {
@@ -17,5 +17,4 @@ void main()
 
     v_vertex = (u_modelMatrix * a_vertex).xyz;
     v_normal = (u_normalMatrix * normalize(a_normal)).xyz;
-//     v_viewVector = (-viewspaceVert).xyz;
 }
