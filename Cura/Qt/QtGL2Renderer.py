@@ -72,11 +72,14 @@ class QtGL2Renderer(Renderer):
             indexBuffer.release()
             self._indexBufferCache[mesh] = indexBuffer
 
-        self._defaultShader.bind()
         camera = self.getApplication().getController().getScene().getActiveCamera()
         if not camera:
             Logger.log("e", "No active camera set, can not render")
             return
+
+        if not self._defaultShader.isLinked():
+            return
+        self._defaultShader.bind()
 
         self._defaultShader.setUniformValue("u_projectionMatrix", self._matrixToQMatrix4x4(camera.getProjectionMatrix()))
         self._defaultShader.setUniformValue("u_viewMatrix", self._matrixToQMatrix4x4(camera.getGlobalTransformation().getInverse()))
