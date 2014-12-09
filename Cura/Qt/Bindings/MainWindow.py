@@ -89,7 +89,7 @@ class MainWindow(QQuickWindow):
             if camera.isPerspective():
                 proj.setPerspective(45, w/h, 1, 500)
             else:
-                proj.setOrtho(-w, w, -h, h, 1, 500)
+                proj.setOrtho(-w, w, -h, h, -500, 500)
             camera.setProjectionMatrix(proj)
 
     def _render(self):
