@@ -6,6 +6,7 @@ from Cura.Event import Event, MouseEvent, ToolEvent
 from Cura.Math.Vector import Vector
 from Cura.Math.Quaternion import Quaternion
 from Cura.Signal import Signal, SignalEmitter
+from Cura.Logger import Logger
 
 import math
 
@@ -17,20 +18,20 @@ class Controller(SignalEmitter):
         super().__init__() # Call super to make multiple inheritence work.
         self._active_tool = None
         self._tools = {}
-        
+
         self._input_devices = {}
-        
+
         self._active_view = None
         self._views = {}
         self._scene = Scene()
         self._application = application
         self._alpha = 0.0
-    
+
     ##  Get the application.
     #   \returns Application
     def getApplication(self):
         return self._application
-    
+
     ##  Add a view by name if it's not already added.
     #   \param name Unique identifier of view (usually the plugin name)
     #   \param view The view to be added
@@ -41,8 +42,8 @@ class Controller(SignalEmitter):
             view.setRenderer(self._application.getRenderer())
             self.viewsChanged.emit()
         else:
-            self._application.log('w', '%s was already added to view list. Unable to add it again.',name)
-    
+            Logger.log('w', '%s was already added to view list. Unable to add it again.',name)
+
     ##  Request view by name. Returns None if no view is found.
     #   \param name Unique identifier of view (usually the plugin name)
     #   \return View if name was found, none otherwise.
@@ -50,7 +51,7 @@ class Controller(SignalEmitter):
         try:
             return self._views[name]
         except KeyError: #No such view
-            self._application.log('e', "Unable to find %s in view list",name)
+            Logger.log('e', "Unable to find %s in view list",name)
             return None
 
     ##  Return all views.
@@ -69,7 +70,7 @@ class Controller(SignalEmitter):
             self._active_view = self._views[name]
             self.activeViewChanged.emit()
         except KeyError:
-            self._application.log('e', "No view named %s found", name)
+            Logger.log('e', "No view named %s found", name)
 
     ##  Emitted when the list of views changes.
     viewsChanged = Signal()
@@ -85,8 +86,8 @@ class Controller(SignalEmitter):
             self._input_devices[name] = device
             device.event.connect(self.event)
         else:
-            self._application.log('w', '%s was already added to input device list. Unable to add it again.', name)
-    
+            Logger.log('w', '%s was already added to input device list. Unable to add it again.', name)
+
     ##  Request input device by name. Returns None if no device is found.
     #   \param name Unique identifier of input device (usually the plugin name)
     #   \return input device if name was found, none otherwise.
@@ -94,7 +95,7 @@ class Controller(SignalEmitter):
         try:
             return self._input_devices[name]
         except KeyError: #No such tool
-            self._application.log('e', "Unable to find %s in input devices",name)
+            Logger.log('e', "Unable to find %s in input devices",name)
             return None
 
     ##  Remove an input device from the list of input devices.
@@ -104,7 +105,7 @@ class Controller(SignalEmitter):
         if name in self._input_devices:
             self._input_devices[name].event.disconnect(self.event)
             del self._input_devices[name]
-    
+
     ##  Request tool by name. Returns None if no view is found.
     #   \param name Unique identifier of tool (usually the plugin name)
     #   \return tool if name was found, none otherwise.
@@ -112,9 +113,9 @@ class Controller(SignalEmitter):
         try:
             return self._tools[name]
         except KeyError: #No such tool
-            self._application.log('e', "Unable to find %s in tools",name)
+            Logger.log('e', "Unable to find %s in tools",name)
             return None
-    
+
     def getAllTools(self):
         return self._tools
 
@@ -127,8 +128,8 @@ class Controller(SignalEmitter):
             self._tools[name] = tool
             self.toolsChanged.emit()
         else: 
-            self._application.log('w', '%s was already added to tool list. Unable to add it again.', name)
-    
+            Logger.log('w', '%s was already added to tool list. Unable to add it again.', name)
+
     ## Request active tool. Returns None if there is no active tool
     #  \return Tool if an tool is active, None otherwise.
     def getActiveTool(self):
@@ -148,7 +149,7 @@ class Controller(SignalEmitter):
 
             self.activeToolChanged.emit()
         except KeyError:
-            self._application.log('e', 'No tool named %s found.', name)
+            Logger.log('e', 'No tool named %s found.', name)
 
     ##  Emitted when the list of tools changes.
     toolsChanged = Signal()
