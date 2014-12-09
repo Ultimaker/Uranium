@@ -4,12 +4,17 @@ from Cura.Settings.SettingsCategory import SettingsCategory
 class MachineSettings(object):
     def __init__(self):
         self._categories = []
+        self._platformMesh = None
     
     ##  Load settings from JSON file. Used to load tree structure & default values etc from file.
     #   /param file_name String 
     def loadSettingsFromFile(self, file_name):
         json_data = open(file_name)
         data = json.load(json_data)
+
+        if "platform" in data:
+            self._platformMesh = data["platform"]
+
         if "Categories" in data:
             for category in data["Categories"]:
                 if "key" in category:
@@ -94,3 +99,6 @@ class MachineSettings(object):
         traceback.print_stack()
         sys.stderr.write('Setting key not found: %s' % key)
         return None
+
+    def getPlatformMesh(self):
+        return self._platformMesh
