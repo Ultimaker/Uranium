@@ -20,7 +20,16 @@ Panel {
                 text: model.name;
                 iconSource: Cura.Resources.getIcon(model.icon);
                 tooltip: model.name;
-                onClicked: Cura.Controller.setActiveTool(text);
+
+                checkable: true;
+                checked: model.active;
+
+                //Workaround since using ToolButton's onClicked would break the binding of the checked property, instead
+                //just catch the click so we do not trigger that behaviour.
+                MouseArea {
+                    anchors.fill: parent;
+                    onClicked: parent.checked ? Cura.Controller.setActiveTool(null) : Cura.Controller.setActiveTool(model.name);
+                }
             }
         }
     }
