@@ -142,7 +142,10 @@ class Controller(SignalEmitter):
             if self._active_tool:
                 self._active_tool.event(ToolEvent(ToolEvent.ToolDeactivateEvent))
 
-            self._active_tool = self._tools[name]
+            if name:
+                self._active_tool = self._tools[name]
+            else:
+                self._active_tool = None
 
             if self._active_tool:
                 self._active_tool.event(ToolEvent(ToolEvent.ToolActivateEvent))
