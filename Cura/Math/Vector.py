@@ -8,6 +8,10 @@ from copy import deepcopy
 #
 #   This class represents a 3-dimensional vector.
 class Vector(object):
+    Unit_X = None
+    Unit_Y = None
+    Unit_Z = None
+
     def __init__(self,x = 0 ,y = 0,z = 0):
         self._data = numpy.array([x, y, z],dtype=numpy.float32)
     
@@ -63,7 +67,9 @@ class Vector(object):
     
     
     def normalize(self):
-        self._data /= numpy.linalg.norm(self._data)
+        l = self.length()
+        if l != 0:
+            self._data /= l
         return self
 
     def getNormalized(self):
@@ -79,6 +85,9 @@ class Vector(object):
         out = numpy.atleast_1d(numpy.sum(data))
         numpy.sqrt(out, out)
         return out
+
+    def length(self):
+        return numpy.linalg.norm(self._data)
 
     def __add__(self, other):
         v = Vector(self._data[0], self._data[1], self._data[2])
@@ -133,3 +142,13 @@ class Vector(object):
     def __repr__(self):
         return "Vector({0}, {1}, {2})".format(self._data[0], self._data[1], self._data[2])
 
+    def rotated(self, matrix):
+        result = Vector()
+        result.setX(matrix.at(0, 0) * self._data[0] + matrix.at(1, 0) * self._data[1] + matrix.at(2, 0) * self._data[2])
+        result.setY(matrix.at(0, 1) * self._data[0] + matrix.at(1, 1) * self._data[1] + matrix.at(2, 1) * self._data[2])
+        result.setZ(matrix.at(0, 2) * self._data[0] + matrix.at(1, 2) * self._data[1] + matrix.at(2, 2) * self._data[2])
+        return result
+
+Vector.Unit_X = Vector(1, 0, 0)
+Vector.Unit_Y = Vector(0, 1, 0)
+Vector.Unit_Z = Vector(0, 0, 1)
