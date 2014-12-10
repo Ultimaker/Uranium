@@ -7,6 +7,7 @@ from Cura.Math.Vector import Vector
 from Cura.Math.Quaternion import Quaternion
 from Cura.Signal import Signal, SignalEmitter
 from Cura.Logger import Logger
+from Cura.View.CameraControls import CameraControls
 
 import math
 
@@ -25,7 +26,7 @@ class Controller(SignalEmitter):
         self._views = {}
         self._scene = Scene()
         self._application = application
-        self._alpha = 0.0
+        self._cameraControls = CameraControls(self._scene)
 
     ##  Get the application.
     #   \returns Application
@@ -167,15 +168,8 @@ class Controller(SignalEmitter):
     ## Process an event
     def event(self, event):
         # First, try to perform camera control
-        if type(event) is MouseEvent:
-            if MouseEvent.RightButton in event.buttons:
-                self._rotateCamera(event)
-                return
-            elif MouseEvent.MiddleButton in event.buttons:
-                self._moveCamera(event)
-                return
-        elif event.type is Event.MouseWheelEvent:
-            self._zoomCamera(event)
+        if self._cameraControls.event(event):
+            return
 
         # If we are not doing camera control, pass the event to the active tool.
         if self._active_tool and self._active_tool.event(event):
@@ -184,49 +178,3 @@ class Controller(SignalEmitter):
         #TODO: Handle selection
 
     ##  private:
-
-    #   Moves the camera in response to a mouse event.
-    def _moveCamera(self, event):
-        camera = self._scene.getActiveCamera()
-        if not camera:
-            return
-
-        if camera.isLocked():
-            return
-
-        camera.translate(Vector(event.deltaX / 100.0, event.deltaY / 100.0, 0))
-
-    #   Zooms the camera in response to a mouse event.
-    def _zoomCamera(self, event):
-        camera = self._scene.getActiveCamera()
-        if not camera:
-            return
-
-        if camera.isLocked():
-            return
-
-        camera.translate(Vector(0.0, 0.0, -event.vertical / 10.0))
-
-    #   Rotates the camera in response to a mouse event.
-    def _rotateCamera(self, event):
-        camera = self._scene.getActiveCamera()
-        if not camera:
-            return
-
-        if camera.isLocked():
-            return
-
-        c = Vector(0, 0, 0)
-        p = camera.getGlobalPosition()
-        dx = -(event.deltaX / 100.0)
-
-        r = math.sqrt((c.x - p.x)**2 + (c.z - p.z)**2)
-        self._alpha += dx
-
-        n = Vector(0, 0, 0)
-        n.setX(c.x + r * math.cos(self._alpha + math.pi - (math.pi / 180.0)))
-        n.setZ(c.z + r * math.sin(self._alpha + math.pi - (math.pi / 180.0)))
-        n.setY(p.y)
-
-        camera.setPosition(n)
-        camera.lookAt(Vector(0, 0, 0), Vector(0, 1, 0))
