@@ -93,7 +93,7 @@ class MainWindow(QQuickWindow):
             camera.setProjectionMatrix(proj)
 
     def _render(self):
-        self._app.getRenderer().clear(self._backgroundColor)
+        self._app.getRenderer().preRender(self.size(), self._backgroundColor)
         self._app.getController().getActiveView().render()
 
     def _onSceneChanged(self, object):

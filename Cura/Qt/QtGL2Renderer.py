@@ -126,10 +126,11 @@ class QtGL2Renderer(Renderer):
         indexBuffer.release()
         self._defaultShader.release()
 
-    def clear(self, color):
+    def preRender(self, size, color):
         if not self._initialized:
             self.initialize()
 
+        self._gl.glViewport(0, 0, size.width(), size.height())
         self._gl.glClearColor(color.redF(), color.greenF(), color.blueF(), color.alphaF())
         self._gl.glClear(self._gl.GL_COLOR_BUFFER_BIT | self._gl.GL_DEPTH_BUFFER_BIT)
 
