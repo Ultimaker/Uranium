@@ -90,14 +90,12 @@ Panel {
 
         title: "Choose files"
         modality: Qt.NonModal
-        selectMultiple: true
+        //TODO: Support multiple file selection, workaround bug in KDE file dialog
+        //selectMultiple: true
 
         onAccepted: 
         {
-            for(var i in fileDialog.fileUrls) 
-            {
-                fileModel.append({ "text": fileDialog.fileUrls[i] })
-            }
+            Cura.Controller.addMesh(fileUrl)
         }
     }
 }
