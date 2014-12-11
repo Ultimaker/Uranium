@@ -31,8 +31,11 @@ class SceneNode(SignalEmitter):
     ##  Set the parent of this object
     #   \param scene_node SceneNode that is the parent of this object.
     def setParent(self, scene_node):
-        self._parent = scene_node
-        self.parentChanged.emit()
+        if self._parent:
+            self._parent.removeChild(self)
+
+        if scene_node:
+            scene_node.addChild(self)
 
     ##  Emitted whenever the parent changes.
     parentChanged = Signal()
@@ -61,14 +64,26 @@ class SceneNode(SignalEmitter):
     ##  Add a child to this node and set it's parent as this node.
     #   \params scene_node SceneNode to add.
     def addChild(self, scene_node):
-        scene_node.setParent(self)
-        scene_node.transformationChanged.connect(self.transformationChanged)
-        scene_node.childrenChanged.connect(self.childrenChanged)
-        self._children.append(scene_node)
-        self.childrenChanged.emit(self)
+        if scene_node not in self._children:
+            scene_node.transformationChanged.connect(self.transformationChanged)
+            scene_node.childrenChanged.connect(self.childrenChanged)
+            self._children.append(scene_node)
+            self.childrenChanged.emit(self)
 
-    def removeChild(self):
-        # TODO : We need to think about how children are removed (if ever?).
+            if not scene_node._parent is self:
+                scene_node._parent = self
+                scene_node.parentChanged.emit()
+
+    def removeChild(self, child):
+        if child not in self._children:
+            return
+
+        child.transformationChanged.disconnect(self.transformationChanged)
+        child.childrenChanged.disconnect(self.childrenChanged)
+        self._children.remove(child)
+        child._parent = None
+        child.parentChanged.emit()
+
         self.childrenChanged.emit(self)
         pass
 
@@ -76,7 +91,8 @@ class SceneNode(SignalEmitter):
     def removeAllChildren(self):
         for child in self._children:
             child.removeAllChildren()
-        del self._children[:] #Actually destroy the children (and not just replace it with empty list
+            self.removeChild(child)
+
         self.childrenChanged.emit(self)
 
     ##  Get the list of direct children
