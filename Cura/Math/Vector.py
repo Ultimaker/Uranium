@@ -89,6 +89,20 @@ class Vector(object):
     def length(self):
         return numpy.linalg.norm(self._data)
 
+    def dot(self, other):
+        return numpy.dot(self._data, other._data)
+
+    def cross(self, other):
+        result = numpy.cross(self._data, other._data)
+        return Vector(result[0], result[1], result[2])
+
+    def rotated(self, matrix):
+        result = Vector()
+        result.setX(matrix.at(0, 0) * self._data[0] + matrix.at(1, 0) * self._data[1] + matrix.at(2, 0) * self._data[2])
+        result.setY(matrix.at(0, 1) * self._data[0] + matrix.at(1, 1) * self._data[1] + matrix.at(2, 1) * self._data[2])
+        result.setZ(matrix.at(0, 2) * self._data[0] + matrix.at(1, 2) * self._data[1] + matrix.at(2, 2) * self._data[2])
+        return result
+
     def __add__(self, other):
         v = Vector(self._data[0], self._data[1], self._data[2])
         v += other
@@ -127,6 +141,15 @@ class Vector(object):
 
         return self
 
+    def __truediv__(self, other):
+        v = Vector(self._data[0], self._data[1], self._data[2])
+        v /= other
+        return v
+
+    def __itruediv__(self, other):
+        self._data /= other._data
+        return self
+
     def __neg__(self):
         self._data = -self._data
         return self
@@ -135,19 +158,9 @@ class Vector(object):
         self._data = +self._data
         return self
 
-    def cross(self, other):
-        result = numpy.cross(self._data, other._data)
-        return Vector(result[0], result[1], result[2])
-
     def __repr__(self):
         return "Vector({0}, {1}, {2})".format(self._data[0], self._data[1], self._data[2])
 
-    def rotated(self, matrix):
-        result = Vector()
-        result.setX(matrix.at(0, 0) * self._data[0] + matrix.at(1, 0) * self._data[1] + matrix.at(2, 0) * self._data[2])
-        result.setY(matrix.at(0, 1) * self._data[0] + matrix.at(1, 1) * self._data[1] + matrix.at(2, 1) * self._data[2])
-        result.setZ(matrix.at(0, 2) * self._data[0] + matrix.at(1, 2) * self._data[1] + matrix.at(2, 2) * self._data[2])
-        return result
 
 Vector.Unit_X = Vector(1, 0, 0)
 Vector.Unit_Y = Vector(0, 1, 0)
