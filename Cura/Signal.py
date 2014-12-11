@@ -76,8 +76,8 @@ class Signal:
     def disconnect(self, connector):
         if connector in self.__signals:
             self.__signals.remove(connector)
-        elif connector.__self__ in self.__methods:
-                self.__methods[connector.__self__].remove(connector.__func__)
+        elif inspect.ismethod(connector) and connector.__self__ in self.__methods:
+            self.__methods[connector.__self__].remove(connector.__func__)
         else:
             if connector in self.__functions:
                 self.__functions.remove(connector)
