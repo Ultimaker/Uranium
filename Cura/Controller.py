@@ -127,6 +127,7 @@ class Controller(SignalEmitter):
     def addTool(self, name, tool):
         if(name not in self._tools):
             self._tools[name] = tool
+            tool.setController(self)
             self.toolsChanged.emit()
         else: 
             Logger.log('w', '%s was already added to tool list. Unable to add it again.', name)
