@@ -25,7 +25,7 @@ class Application(object):
 
         #TODO: This needs to be loaded from preferences
         self._machine_settings = MachineSettings()
-        self._machine_settings.loadSettingsFromFile(Resources.locate(Resources.SettingsLocation, "ultimaker2.json"))
+        self._machine_settings.loadSettingsFromFile(Resources.getPath(Resources.SettingsLocation, "ultimaker2.json"))
     
     ##  Set the backend of the application (the program that does the heavy lifting).
     #   \param backend Backend

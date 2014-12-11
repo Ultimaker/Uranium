@@ -1,4 +1,12 @@
+import os
 import os.path
+import platform
+
+class UnknownLocationError(Exception):
+    pass
+
+class UnsupportedStorageLocationError(Exception):
+    pass
 
 class Resources:
     ResourcesLocation = 1
@@ -6,22 +14,48 @@ class Resources:
     PreferencesLocation = 3
     MeshesLocation = 4
 
+    ##  Get the path to a certain resource file
+    #
+    #   \param type \type{int} The type of resource to retrieve a path for.
+    #   \param args Arguments that are appended to the location to locate the correct file.
+    #
+    #   \return A path to the file
+    #
+    #   \exception FileNotFoundError Raised when the file could not be found.
     @classmethod
-    def locate(cls, type, *args):
-        path = os.path.join(cls.getPath(type), *args)
+    def getPath(cls, type, *args):
+        try:
+            path = os.path.join(cls.getStorageLocation(type), *args)
+            if os.path.isfile(path):
+                return path
+        except UnsupportedStorageLocationError:
+            pass
+
+        path = os.path.join(cls.getLocation(type), *args)
         if os.path.isfile(path):
             return path
 
-        return ''
+        raise FileNotFoundError('Could not find resource {0}'.format(os.path.join(*args)))
 
-    ##  Return a path to read a certain resource type from.
+
+    ##  Get the path that can be used to write a certain resource file.
+    #
+    #   \param type The type of resource to retrieve a path for.
+    #   \param args Arguments that are appended to the location for the correct path.
+    #
+    #   \return A path that can be used to write the file.
+    @classmethod
+    def getStoragePath(cls, type, *args):
+        return os.path.join(cls.getStorageLocation(type), *args)
+
+    ##  Return a path for a certain resource location.
     #
     #   \param type \type{int} The type of resource to retrieve.
     #   \return \type{string} An absolute path where the resource type can be found.
     #
-    #   \exception ValueError Raised when type is an unknown value.
+    #   \exception UnknownLocationError Raised when type is an unknown value.
     @classmethod
-    def getPath(cls, type):
+    def getLocation(cls, type):
         if type == cls.ResourcesLocation:
             return cls.__relativeToFile("..", "resources")
         elif type == cls.SettingsLocation:
@@ -31,17 +65,34 @@ class Resources:
         elif type == cls.MeshesLocation:
             return cls.__relativeToFile("..", "resources", "meshes")
         else:
-            raise ValueError("Unknonw location {0}".format(type))
+            raise UnknownLocationError("Unknonw location {0}".format(cls.type))
 
     ##  Return a path where a certain resource type can be stored.
     #
     #   \param type \type{int} The type of resource to store.
     #   \return \type{string} An absolute path where the given resource type can be stored.
     #
-    #   \exception ValueError Raised when type is an unknown value.
+    #   \exception UnsupportedStorageLocationError Raised when writing type is not supported.
     @classmethod
-    def getStoragePath(cls, type):
-        pass
+    def getStorageLocation(cls, type):
+        if cls.__config_storage_path is None or cls.__data_storage_path is None:
+            cls.__initializeStoragePaths()
+
+        path = None
+        if type == cls.PreferencesLocation:
+            path = cls.__config_storage_path
+        elif type == cls.SettingsLocation:
+            path = os.path.join(cls.__data_storage_path, 'Settings')
+        else:
+            raise UnsupportedStorageLocationError('No known location to store type {0}'.format(type))
+
+        # Ensure the directory we want to write to exists
+        try:
+            os.makedirs(path)
+        except OSError:
+            pass
+
+        return path
 
     ##  Return the location of an icon by name.
     #
@@ -51,10 +102,9 @@ class Resources:
     #   \todo Move this to Theme once we implement that.
     @classmethod
     def getIcon(cls, name):
-        path = os.path.join(cls.getPath(cls.ResourcesLocation), 'icons', name)
-        if os.path.isfile(path):
-            return path
-        else:
+        try:
+            return cls.getPath(cls.ResourcesLocation, 'icons', name)
+        except FileNotFoundError:
             return os.path.join(cls.getPath(cls.ResourcesLocation), 'icons', 'default.png')
 
     ## private:
@@ -63,3 +113,34 @@ class Resources:
     @classmethod
     def __relativeToFile(cls, *args):
         return os.path.join(os.path.abspath(os.path.dirname(__file__)), *args)
+
+    @classmethod
+    def __initializeStoragePaths(cls):
+        if platform.system() == 'Windows':
+            cls.__config_storage_path = os.path.expanduser('~/AppData/Local/Cura')
+        elif platform.system() == 'Darwin':
+            cls.__config_storage_path = os.path.expanduser('~/.cura')
+        elif platform.system() == 'Linux':
+            xdg_config_home = ''
+            try:
+                xdg_config_home = os.environ['XDG_CONFIG_HOME']
+            except KeyError:
+                xdg_config_home = os.path.expanduser('~/.config')
+            cls.__config_storage_path = os.path.join(xdg_config_home, 'Cura')
+
+            xdg_data_home = ''
+            try:
+                xdg_data_home = os.environ['XDG_DATA_HOME']
+            except KeyError:
+                xdg_data_home = os.path.expanduser('~/.local/share')
+
+            cls.__data_storage_path = os.path.join(xdg_data_home, 'Cura')
+        else:
+            cls.__config_storage_path = cls.__relativeToFile('..')
+
+        if not cls.__data_storage_path:
+            cls.__data_storage_path = cls.__config_storage_path
+
+    __config_storage_path = None
+    __data_storage_path = None
+
