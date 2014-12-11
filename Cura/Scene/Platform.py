@@ -11,7 +11,7 @@ class Platform(SceneNode.SceneNode):
         app = Application.getInstance()
         mesh = app.getInstance().getMachineSettings().getPlatformMesh()
         if mesh is not None:
-            self.setMeshData(app.getMeshFileHandler().read(Resources.locate(Resources.MeshesLocation, mesh), app.getStorageDevice("local")))
+            self.setMeshData(app.getMeshFileHandler().read(Resources.getPath(Resources.MeshesLocation, mesh), app.getStorageDevice("local")))
 
     def render(self, renderer):
         if self.getMeshData():
