@@ -1,6 +1,10 @@
 import traceback, sys
 import json
+import configparser
+import os.path
+
 from Cura.Settings.SettingsCategory import SettingsCategory
+
 class MachineSettings(object):
     def __init__(self):
         self._categories = []
@@ -24,27 +28,28 @@ class MachineSettings(object):
     
     ##  Load values of settings from file. 
     def loadValuesFromFile(self, file_name):
-        f = open(file_name,'r')
-        for line in f:
-            if "CATEGORY" in line:
-                continue
-            data = line.split()
-            setting = self.getSettingByKey(data[0])
-            print(data)
-            try :
+        config = configparser.ConfigParser()
+        config.read(file_name)
+
+        for name, section in config.items():
+            for key in section:
+                setting = self.getSettingByKey(key)
+
                 if setting is not None:
-                    setting.setValue(data[1])
-            except IndexError:
-                pass # Ignore
+                    setting.setValue(section[key])
     
-    def saveValuesToFile(self,file_name):
-        f = open(file_name,'w')
+    def saveValuesToFile(self, file_name):
+        config = configparser.ConfigParser()
+
         for category in self._categories:
-            f.write("CATEGORY: %s\n" % category.getKey())
+            configData = {}
             for setting in category.getAllSettings():
                 if setting.isVisible():
-                    f.write("%s %s\n" % (setting.getKey(),setting.getValue()))
-        f.close()
+                    configData[setting.getKey()] = setting.getValue()
+            config[category.getKey()] = configData
+
+        with open(file_name, 'w') as f:
+            config.write(f)
         
     
     def addSettingsCategory(self, category):
