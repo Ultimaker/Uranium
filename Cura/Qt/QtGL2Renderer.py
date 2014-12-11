@@ -27,11 +27,11 @@ class QtGL2Renderer(Renderer):
         self._gl.initializeOpenGLFunctions()
 
         vertexShader = QOpenGLShader(QOpenGLShader.Vertex)
-        with open(Resources.locate(Resources.ResourcesLocation, "shaders", "default.vert")) as f:
+        with open(Resources.getPath(Resources.ResourcesLocation, "shaders", "default.vert")) as f:
             vertexShader.compileSourceCode(f.read())
 
         fragmentShader = QOpenGLShader(QOpenGLShader.Fragment)
-        with open(Resources.locate(Resources.ResourcesLocation, "shaders", "default.frag")) as f:
+        with open(Resources.getPath(Resources.ResourcesLocation, "shaders", "default.frag")) as f:
             fragmentShader.compileSourceCode(f.read())
 
         self._defaultShader = QOpenGLShaderProgram()
@@ -50,6 +50,60 @@ class QtGL2Renderer(Renderer):
 
     def setLightPosition(self, position):
         self._lightPosition = position
+
+    def renderLines(self, position, mesh):
+        if not self._initialized:
+            self.initialize()
+
+        if mesh not in self._vertexBufferCache:
+            vertexBuffer = QOpenGLBuffer(QOpenGLBuffer.VertexBuffer)
+            vertexBuffer.create()
+            vertexBuffer.bind()
+            data = mesh.getVerticesAsByteArray()
+            vertexBuffer.allocate(data, len(data))
+            vertexBuffer.release()
+            self._vertexBufferCache[mesh] = vertexBuffer
+
+        camera = self.getApplication().getController().getScene().getActiveCamera()
+        if not camera:
+            Logger.log("e", "No active camera set, can not render")
+            return
+
+        if not self._defaultShader.isLinked():
+            return
+        self._defaultShader.bind()
+
+        self._defaultShader.setUniformValue("u_projectionMatrix", self._matrixToQMatrix4x4(camera.getProjectionMatrix()))
+        self._defaultShader.setUniformValue("u_viewMatrix", self._matrixToQMatrix4x4(camera.getGlobalTransformation().getInverse()))
+        self._defaultShader.setUniformValue("u_viewPosition", self._vectorToQVector3D(camera.getGlobalPosition()))
+        self._defaultShader.setUniformValue("u_modelMatrix", self._matrixToQMatrix4x4(position))
+
+        normalMatrix = position
+        normalMatrix.setRow(3, [0, 0, 0, 1])
+        normalMatrix.setColumn(3, [0, 0, 0, 1])
+        normalMatrix = normalMatrix.getInverse().getTransposed()
+        self._defaultShader.setUniformValue("u_normalMatrix", self._matrixToQMatrix4x4(normalMatrix))
+
+        self._defaultShader.setUniformValue("u_ambientColor", QColor(255, 0, 0))
+        self._defaultShader.setUniformValue("u_diffuseColor", QColor(0, 0, 0))
+        self._defaultShader.setUniformValue("u_specularColor", QColor(0, 0, 0))
+
+        self._defaultShader.setUniformValue("u_lightPosition", self._vectorToQVector3D(self._lightPosition))
+        self._defaultShader.setUniformValue("u_lightColor", QColor(255, 255, 255))
+
+        self._defaultShader.setUniformValue("u_shininess", 50.0)
+
+        vertexBuffer = self._vertexBufferCache[mesh]
+        vertexBuffer.bind()
+
+        self._defaultShader.setAttributeBuffer("a_vertex", self._gl.GL_FLOAT, 0, 3, 0)
+        self._defaultShader.enableAttributeArray("a_vertex")
+
+        self._gl.glDrawArrays(self._gl.GL_LINES, 0, mesh.getNumVertices())
+
+        self._defaultShader.disableAttributeArray("a_vertex")
+        vertexBuffer.release()
+        self._defaultShader.release()
 
     def renderMesh(self, position, mesh, mode = Renderer.RenderTriangles):
         if not self._initialized:
@@ -117,8 +171,13 @@ class QtGL2Renderer(Renderer):
             type = self._gl.GL_LINES
         elif mode is Renderer.RenderPoints:
             type = self._gl.GL_POINTS
+        elif mode is Renderer.RenderWireframe:
+            self._gl.glPolygonMode(self._gl.GL_FRONT_AND_BACK, self._gl.GL_LINE)
 
         self._gl.glDrawElements(type, mesh.getNumVertices(), self._gl.GL_UNSIGNED_INT, None)
+
+        if mode is Renderer.RenderWireframe:
+            self._gl.glPolygonMode(self._gl.GL_FRONT_AND_BACK, self._gl.GL_FILL)
 
         self._defaultShader.disableAttributeArray("a_vertex")
         self._defaultShader.disableAttributeArray("a_normal")
@@ -150,4 +209,10 @@ class QtGL2Renderer(Renderer):
 
     def _vectorToQVector3D(self, v):
         return QVector3D(v.x, v.y, v.z)
+
+    def setDepthTesting(self, depthTesting):
+        if depthTesting:
+            self._gl.glEnable(self._gl.GL_DEPTH_TEST)
+        else:
+            self._gl.glDisable(self._gl.GL_DEPTH_TEST)
 
