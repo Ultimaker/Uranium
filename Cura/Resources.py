@@ -13,6 +13,7 @@ class Resources:
     SettingsLocation = 2
     PreferencesLocation = 3
     MeshesLocation = 4
+    ShadersLocation = 5
 
     ##  Get the path to a certain resource file
     #
@@ -64,6 +65,8 @@ class Resources:
             return cls.__relativeToFile("..", "resources", "preferences")
         elif type == cls.MeshesLocation:
             return cls.__relativeToFile("..", "resources", "meshes")
+        elif type == cls.ShadersLocation:
+            return cls.__relativeToFile("..", "resources", "shaders")
         else:
             raise UnknownLocationError("Unknonw location {0}".format(cls.type))
 

@@ -26,17 +26,9 @@ class QtGL2Renderer(Renderer):
         self._gl = QOpenGLContext.currentContext().versionFunctions(profile)
         self._gl.initializeOpenGLFunctions()
 
-        vertexShader = QOpenGLShader(QOpenGLShader.Vertex)
-        with open(Resources.getPath(Resources.ResourcesLocation, "shaders", "default.vert")) as f:
-            vertexShader.compileSourceCode(f.read())
-
-        fragmentShader = QOpenGLShader(QOpenGLShader.Fragment)
-        with open(Resources.getPath(Resources.ResourcesLocation, "shaders", "default.frag")) as f:
-            fragmentShader.compileSourceCode(f.read())
-
         self._defaultShader = QOpenGLShaderProgram()
-        self._defaultShader.addShader(vertexShader);
-        self._defaultShader.addShader(fragmentShader);
+        self._defaultShader.addShaderFromSourceFile(QOpenGLShader.Vertex, Resources.getPath(Resources.ShadersLocation, 'default.vert'));
+        self._defaultShader.addShaderFromSourceFile(QOpenGLShader.Fragment, Resources.getPath(Resources.ShadersLocation, 'default.frag'));
         self._defaultShader.link()
 
         #TODO: Use proper uniform location indices
