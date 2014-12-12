@@ -1,40 +1,59 @@
 from Cura.MeshHandling.Vertex import Vertex
 from Cura.Math.Vector import Vector
+from Cura.Math.AxisAlignedBox import AxisAlignedBox
 
 import numpy
-from struct import pack
+import numpy.linalg
 
 ##  Class to hold a list of verts and possibly how (and if) they are connected.
+#
+#   This class stores three numpy arrays that contain the data for a mesh. Vertices
+#   are stored as a two-dimensional array of floats with the rows being individual
+#   vertices and the three columns being the X, Y and Z components of the vertices.
+#   Normals are stored in the same manner and kept in sync with the vertices. Indices
+#   are stored as a two-dimensional array of integers with the rows being the individual
+#   faces and the three columns being the indices that refer to the individual vertices.
 class MeshData(object):
     def __init__(self):
         self._vertices = None
-        self._num_vertices = 0
-        self._face_indices = [] #List of tuples of size 3
+        self._normals = None
+        self._indices = None
+        self._vertex_count = 0
+        self._face_count = 0
         
+    ##  Get the array of vertices
     def getVertices(self):
-        return self._vertices[0 : self._num_vertices] #Only return up until point where data was filled
-    
-    def getNumVertices(self):
-        return self._num_vertices
+        if self._vertices is None:
+            return None
 
-    ## Get a vertex by index
+        return self._vertices[0 : self._vertex_count] #Only return up until point where data was filled
+    
+    ##  Get the number of vertices
+    def getVertexCount(self):
+        return self._vertex_count
+
+    ##  Get a vertex by index
     def getVertex(self, index):
         try:
             return self._vertices[index]
         except IndexError:
             return None
-        
+
+    ##  Return whether this mesh has vertex normals.
     def hasNormals(self):
-        return self._vertices[0].hasNormal()
+        return self._normals is not None
+
+    ##  Return the list of vertex normals.
+    def getNormals(self):
+        return self._normals
     
-    def hasFaces(self):
-        if(len(self._face_indices) is not 0):
-            return True
-        return False
+    ##  Return whether this mesh has indices.
+    def hasIndices(self):
+        return self._indices is not None
     
-    ##  Get list of face indices 
-    #   \returns list of tuples
-    def getFaceIndices(self):
+    ##  Get the array of indices
+    #   \return \type{numpy.ndarray}
+    def getIndices(self):
         return self._face_indices
     
     ##  Transform the meshdata by given Matrix
@@ -42,31 +61,59 @@ class MeshData(object):
     def transform(self, transformation):
         #TODO: Implement
         pass
+
+    ##  Get the extents of this mesh.
+    #
+    #
+    def getExtents(self):
+        #TODO: Implement
+        return AxisAlignedBox()
     
-    ##  Set the amount of faces before loading data to the mesh. This way we can create the array before we fill it.
+    ##  Set the amount of faces before loading data to the mesh.
+    #
+    #   This way we can create the array before we fill it. This method will reserve
+    #   `(num_faces * 3)` amount of space for vertices, `(num_faces * 3)` amount of space
+    #   for normals and `num_faces` amount of space for indices.
+    #
     #   \param num_faces Number of faces for which memory must be reserved.
     def reserveFaceCount(self, num_faces):
-        # Create an array of (num_faces * 3) Vertex objects
-        self._vertices = [Vertex() for v in range(num_faces * 3)]
-        self._num_vertices = 0
+        self._vertices = numpy.zeros((num_faces * 3, 3), dtype=numpy.float32)
+        self._normals = numpy.zeros((num_faces * 3, 3), dtype=numpy.float32)
+        self._indices = numpy.zeros((num_faces, 3), dtype=numpy.int32)
+
+        self._vertex_count = 0
+        self._face_count = 0
     
-    ##  Set the amount of verts before loading data to the mesh. This way we can create the array before we fill it.
+    ##  Set the amount of verts before loading data to the mesh.
+    #
+    #   This way we can create the array before we fill it. This method will reserve
+    #   `num_vertices` amount of space for vertices. It will not reserve space for
+    #   normals or indices.
+    #
     #   \param num_vertices Number of verts to be reserved.
     def reserveVertexCount(self, num_vertices):
-        # Create an array of num_vertices Vertex objects
-        self._vertices = [Vertex() for v in range(num_vertices)]
-        self._num_vertices = 0
+        self._vertices = numpy.zeros((num_vertices, 3), dtype=numpy.float32)
+        self._normals = None
+        self._indices = None
+
+        self._vertex_count = 0
+        self._face_count = 0
     
     ##  Add a vertex to the mesh.
     #   \param x x coordinate of vertex.
     #   \param y y coordinate of vertex.
     #   \param z z coordinate of vertex.
     def addVertex(self,x,y,z):
-        if len(self._vertices) == self._num_vertices:
-            self._vertices.append(Vertex())
+        if self._vertices is None:
+            self.reserveVertexCount(10)
 
-        self._vertices[self._num_vertices].setPosition(Vector(x, y, z))
-        self._num_vertices += 1
+        if len(self._vertices) == self._vertex_count:
+            self._vertices.resize((self._vertex_count * 2, 3))
+
+        self._vertices[self._vertex_count, 0] = x
+        self._vertices[self._vertex_count, 1] = y
+        self._vertices[self._vertex_count, 2] = z
+        self._vertex_count += 1
     
     ##  Add a vertex to the mesh.
     #   \param x x coordinate of vertex.
@@ -76,12 +123,25 @@ class MeshData(object):
     #   \param ny y part of normal.
     #   \param nz z part of normal.
     def addVertexWithNormal(self,x,y,z,nx,ny,nz):
-        if len(self._vertices) == self._num_vertices:
-            self._vertices.append(Vertex())
+        if self._vertices is None:
+            self.reserveVertexCount(10)
 
-        self._vertices[self._num_vertices].setPosition(Vector(x, y, z))
-        self._vertices[self._num_vertices].setNormal(Vector(nx, ny, nz))
-        self._num_vertices += 1
+        if len(self._vertices) == self._vertex_count:
+            self._vertices.resize((self._vertex_count * 2, 3))
+
+        if self._normals is None:
+            self._normals = numpy.zeros((self._vertex_count, 3), dtype=numpy.float32)
+
+        if len(self._normals) == self._vertex_count:
+            self._normals.resize((self._vertex_count * 2, 3))
+
+        self._vertices[self._vertex_count, 0] = x
+        self._vertices[self._vertex_count, 1] = y
+        self._vertices[self._vertex_count, 2] = z
+        self._normals[self._vertex_count, 0] = nx
+        self._normals[self._vertex_count, 1] = ny
+        self._normals[self._vertex_count, 2] = nz
+        self._vertex_count += 1
     
     ##  Add a face by providing three verts.
     #   \param x0 x coordinate of first vertex.
@@ -94,79 +154,101 @@ class MeshData(object):
     #   \param y2 y coordinate of third vertex.
     #   \param z2 z coordinate of third vertex.
     def addFace(self, x0, y0, z0, x1, y1, z1, x2, y2, z2):
+        if self._indices is None:
+            self._indices = numpy.zeros((10, 3), dtype=numpy.int32)
+
+        if len(self._indices) == self._face_count:
+            self._indices.resize((self._face_count * 2, 3))
         
-        self._face_indices.append((self._num_vertices,self._num_vertices+1,self._num_vertices+2))
+        self._indices[self._face_count, 0] = self._vertex_count
+        self._indices[self._face_count, 1] = self._vertex_count + 1
+        self._indices[self._face_count, 2] = self._vertex_count + 2
+        self._face_count += 1
+
         self.addVertex(x0, y0, z0)
         self.addVertex(x1, y1, z1)
         self.addVertex(x2, y2, z2)
 
+    ##  Add a face by providing three vertices and the normals that go with those vertices.
+    #
+    #   \param x0 The X coordinate of the first vertex.
+    #   \param y0 The Y coordinate of the first vertex.
+    #   \param z0 The Z coordinate of the first vertex.
+    #   \param nx0 The X coordinate of the normal of the first vertex.
+    #   \param ny0 The Y coordinate of the normal of the first vertex.
+    #   \param nz0 The Z coordinate of the normal of the first vertex.
+    #
+    #   \param x1 The X coordinate of the second vertex.
+    #   \param y1 The Y coordinate of the second vertex.
+    #   \param z1 The Z coordinate of the second vertex.
+    #   \param nx1 The X coordinate of the normal of the second vertex.
+    #   \param ny1 The Y coordinate of the normal of the second vertex.
+    #   \param nz1 The Z coordinate of the normal of the second vertex.
+    #
+    #   \param x2 The X coordinate of the third vertex.
+    #   \param y2 The Y coordinate of the third vertex.
+    #   \param z2 The Z coordinate of the third vertex.
+    #   \param nx2 The X coordinate of the normal of the third vertex.
+    #   \param ny2 The Y coordinate of the normal of the third vertex.
+    #   \param nz2 The Z coordinate of the normal of the third vertex.
     def addFaceWithNormals(self,x0, y0, z0, nx0, ny0, nz0, x1, y1, z1, nx1, ny1, nz1, x2, y2, z2, nx2, ny2, nz2):
-        self._face_indices.append((self._num_vertices,self._num_vertices+1,self._num_vertices+2))
+        if self._indices is None:
+            self._indices = numpy.zeros((10, 3), dtype=numpy.int32)
+
+        if len(self._indices) == self._face_count:
+            self._indices.resize((self._face_count * 2, 3))
+
+        self._indices[self._face_count, 0] = self._vertex_count
+        self._indices[self._face_count, 1] = self._vertex_count + 1
+        self._indices[self._face_count, 2] = self._vertex_count + 2
+        self._face_count += 1
+
         self.addVertexWithNormal(x0, y0, z0, nx0, ny0, nz0)
         self.addVertexWithNormal(x1, y1, z1, nx1, ny1, nz1)
         self.addVertexWithNormal(x2, y2, z2, nx2, ny2, nz2)
         
-    ##  Get all vertices of this mesh as a list
-    def getVerticesList(self):
-        out = numpy.zeros(self._num_vertices * 3, dtype=numpy.float32)
-        v = 0
-        for i in range(self._num_vertices):
-            vertex = self._vertices[i]
-            out[v] = vertex.position.x
-            out[v+1] = vertex.position.y
-            out[v+2] = vertex.position.z
-            v += 3
-
-        return out
-        
     ##  Get all vertices of this mesh as a bytearray
     #
-    #   Primarily needed for graphics API support.
-    #   \return A bytearray object with 3 floats per vertex followed by 3 floats per normal if the mesh has normals.
+    #   \return A bytearray object with 3 floats per vertex.
     def getVerticesAsByteArray(self):
-        out = bytearray()
-        for i in range(self._num_vertices):
-            vertex = self._vertices[i]
-            # This is a bit magic, because Python sucks when having to deal with bytes.
-            # pack() will convert a value to a byte representation of that value, using
-            # a magic "format string". In this case, the format string means "convert a
-            # float value using native ordering and size.
-            out += pack('@f', vertex.position.x)
-            out += pack('@f', vertex.position.y)
-            out += pack('@f', vertex.position.z)
+        if self._vertices is not None:
+            return self._vertices[0 : self._vertex_count].tobytes()
 
-            if vertex.normal:
-                out += pack('@f', vertex.normal.x)
-                out += pack('@f', vertex.normal.y)
-                out += pack('@f', vertex.normal.z)
-
-        return out
+    ##  Get all normals of this mesh as a bytearray
+    #
+    #   \return A bytearray object with 3 floats per normal.
+    def getNormalsAsByteArray(self):
+        if self._normals is not None:
+            return self._normals[0 : self._vertex_count].tobytes()
 
     ##  Get all indices as a bytearray
+    #
+    #   \return A bytearray object with 3 ints per face.
     def getIndicesAsByteArray(self):
-        out = bytearray()
-        for i in self._face_indices:
-            out += pack('@i', i[0])
-            out += pack('@i', i[1])
-            out += pack('@i', i[2])
-
-        return out
+        if self._indices is not None:
+            return self._indices[0 : self._face_count].tobytes()
 
     ##  Calculate the normals of this mesh, assuming it was created by using addFace (eg; the verts are connected)    
     def calculateNormals(self):
-        for i in range(0, self._num_vertices, 3):
-            vertex1 = self._vertices[i]
-            vertex2 = self._vertices[i+1]
-            vertex3 = self._vertices[i+2]
+        # Numpy magic!
+        # First, reset the normals
+        self._normals = numpy.zeros((self._vertex_count, 3), dtype=numpy.float32)
 
-            v1 = vertex2.position - vertex1.position
-            v2 = vertex3.position - vertex1.position
-            normal = v1.cross(v2).normalize()
+        # Then, take the cross product of each pair of vectors formed from a set of three vertices.
+        # The [] operator on a numpy array returns itself a numpy array. The slicing syntax is [begin:end:step],
+        # so in this case we perform the cross over a two arrays. The first array is built from  the difference
+        # between every second item in the array starting at two and every third item in the array starting at
+        # zero. The second array is built from the difference between every third item in the array starting at
+        # two and every third item in the array starting at zero. The cross operation then returns an array of
+        # the normals of each set of three vertices.
+        n = numpy.cross(self._vertices[1::3] - self._vertices[::3], self._vertices[2::3] - self._vertices[::3])
 
-            vertex1.setNormal(vertex1.normal + normal if vertex1.hasNormal() else normal)
-            vertex2.setNormal(vertex2.normal + normal if vertex2.hasNormal() else normal)
-            vertex3.setNormal(vertex3.normal + normal if vertex3.hasNormal() else normal)
+        # We then calculate the length for each normal and perform normalization on the normals.
+        l = numpy.linalg.norm(n, axis=1)
+        n[:, 0] /= l
+        n[:, 1] /= l
+        n[:, 2] /= l
 
-        for i in range(self._num_vertices):
-            self._vertices[i].setNormal(self._vertices[i].normal.normalize())
-
+        # Finally, we store the normals per vertex, with each face normal being repeated three times, once for
+        # every vertex.
+        self._normals = n.repeat(3, axis=0)

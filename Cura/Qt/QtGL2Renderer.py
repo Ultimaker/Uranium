@@ -91,7 +91,7 @@ class QtGL2Renderer(Renderer):
         self._defaultShader.setAttributeBuffer("a_vertex", self._gl.GL_FLOAT, 0, 3, 0)
         self._defaultShader.enableAttributeArray("a_vertex")
 
-        self._gl.glDrawArrays(self._gl.GL_LINES, 0, mesh.getNumVertices())
+        self._gl.glDrawArrays(self._gl.GL_LINES, 0, mesh.getVertexCount())
 
         self._defaultShader.disableAttributeArray("a_vertex")
         vertexBuffer.release()
@@ -105,8 +105,17 @@ class QtGL2Renderer(Renderer):
             vertexBuffer = QOpenGLBuffer(QOpenGLBuffer.VertexBuffer)
             vertexBuffer.create()
             vertexBuffer.bind()
-            data = mesh.getVerticesAsByteArray()
-            vertexBuffer.allocate(data, len(data))
+            vertices = mesh.getVerticesAsByteArray()
+
+            if mesh.hasNormals():
+                normals = mesh.getNormalsAsByteArray()
+                #Number of vertices * number of components (3 for vertex, 3 for normal) * size of 32-bit float (4)
+                vertexBuffer.allocate(mesh.getVertexCount() * 6 * 4)
+                vertexBuffer.write(0, vertices, len(vertices))
+                vertexBuffer.write(len(vertices), normals, len(normals))
+            else:
+                vertexBuffer.allocate(data, mesh.getVertexCount() * 3 * 4)
+
             vertexBuffer.release()
             self._vertexBufferCache[mesh] = vertexBuffer
 
@@ -152,10 +161,10 @@ class QtGL2Renderer(Renderer):
         indexBuffer = self._indexBufferCache[mesh]
         indexBuffer.bind()
 
-        self._defaultShader.setAttributeBuffer("a_vertex", self._gl.GL_FLOAT, 0, 3, 24)
+        self._defaultShader.setAttributeBuffer("a_vertex", self._gl.GL_FLOAT, 0, 3)
         self._defaultShader.enableAttributeArray("a_vertex")
 
-        self._defaultShader.setAttributeBuffer("a_normal", self._gl.GL_FLOAT, 12, 3, 24)
+        self._defaultShader.setAttributeBuffer("a_normal", self._gl.GL_FLOAT, mesh.getVertexCount() * 3 * 4, 3)
         self._defaultShader.enableAttributeArray("a_normal")
 
         type = self._gl.GL_TRIANGLES
@@ -166,7 +175,7 @@ class QtGL2Renderer(Renderer):
         elif mode is Renderer.RenderWireframe:
             self._gl.glPolygonMode(self._gl.GL_FRONT_AND_BACK, self._gl.GL_LINE)
 
-        self._gl.glDrawElements(type, mesh.getNumVertices(), self._gl.GL_UNSIGNED_INT, None)
+        self._gl.glDrawElements(type, mesh.getVertexCount(), self._gl.GL_UNSIGNED_INT, None)
 
         if mode is Renderer.RenderWireframe:
             self._gl.glPolygonMode(self._gl.GL_FRONT_AND_BACK, self._gl.GL_FILL)
