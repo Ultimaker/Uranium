@@ -147,8 +147,11 @@ class Vector(object):
         return v
 
     def __itruediv__(self, other):
-        self._data /= other._data
-        return self
+        if type(other) is float:
+            self._data /= other
+            return self
+        else:
+            raise NotImplementedError()
 
     def __neg__(self):
         self._data = -self._data
