@@ -1,5 +1,6 @@
 from Cura.Math.Matrix import Matrix
 from Cura.Math.Vector import Vector
+from Cura.Math.AxisAlignedBox import AxisAlignedBox
 from Cura.Signal import Signal, SignalEmitter
 from copy import copy, deepcopy
 
@@ -216,5 +217,12 @@ class SceneNode(SignalEmitter):
     #   \sa isLocked
     def setLocked(self, lock):
         self._locked = lock
+
+    def getBoundingBox(self):
+        if self._mesh_data:
+            aabb = self._mesh_data.getExtents(self.getGlobalTransformation())
+            return aabb
+
+        return AxisAlignedBox()
 
 
