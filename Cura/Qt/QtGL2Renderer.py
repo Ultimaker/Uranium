@@ -114,7 +114,7 @@ class QtGL2Renderer(Renderer):
                 vertexBuffer.write(0, vertices, len(vertices))
                 vertexBuffer.write(len(vertices), normals, len(normals))
             else:
-                vertexBuffer.allocate(data, mesh.getVertexCount() * 3 * 4)
+                vertexBuffer.allocate(vertices, mesh.getVertexCount() * 3 * 4)
 
             vertexBuffer.release()
             self._vertexBufferCache[mesh] = vertexBuffer
@@ -161,8 +161,9 @@ class QtGL2Renderer(Renderer):
         self._defaultShader.setAttributeBuffer("a_vertex", self._gl.GL_FLOAT, 0, 3)
         self._defaultShader.enableAttributeArray("a_vertex")
 
-        self._defaultShader.setAttributeBuffer("a_normal", self._gl.GL_FLOAT, mesh.getVertexCount() * 3 * 4, 3)
-        self._defaultShader.enableAttributeArray("a_normal")
+        if mesh.hasNormals():
+            self._defaultShader.setAttributeBuffer("a_normal", self._gl.GL_FLOAT, mesh.getVertexCount() * 3 * 4, 3)
+            self._defaultShader.enableAttributeArray("a_normal")
 
         type = self._gl.GL_TRIANGLES
         if mode is Renderer.RenderLines:
