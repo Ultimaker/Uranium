@@ -150,10 +150,7 @@ class QtGL2Renderer(Renderer):
         self._defaultShader.setUniformValue("u_ambientColor", QColor(80, 80, 80))
         self._defaultShader.setUniformValue("u_diffuseColor", QColor(128, 128, 128))
         self._defaultShader.setUniformValue("u_specularColor", QColor(255, 255, 255))
-
         self._defaultShader.setUniformValue("u_lightPosition", self._vectorToQVector3D(self._lightPosition))
-        self._defaultShader.setUniformValue("u_lightColor", QColor(255, 255, 255))
-
         self._defaultShader.setUniformValue("u_shininess", 50.0)
 
         vertexBuffer = self._vertexBufferCache[mesh]

@@ -1,12 +1,8 @@
 uniform mediump vec4 u_ambientColor;
 uniform mediump vec4 u_diffuseColor;
 uniform mediump vec4 u_specularColor;
-
 uniform highp vec3 u_lightPosition;
-uniform mediump vec4 u_lightColor;
-
 uniform mediump float u_shininess;
-
 uniform highp vec3 u_viewPosition;
 
 varying highp vec3 v_vertex;
@@ -24,9 +20,10 @@ void main()
 
     /* Diffuse Component */
     highp float NdotL = clamp(dot(normal, lightDir), 0.0, 1.0);
-    finalColor += (NdotL * u_lightColor * u_diffuseColor);
+    finalColor += (NdotL * u_diffuseColor);
 
-    /* Specular Component*/
+    /* Specular Component */
+    /* TODO: We should not do specularity for fragments facing away from the light.*/
     highp vec3 reflectedLight = reflect(-lightDir, normal);
     highp vec3 viewVector = normalize(u_viewPosition - v_vertex);
     highp float NdotR = clamp(dot(viewVector, reflectedLight), 0.0, 1.0);
