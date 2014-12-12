@@ -65,9 +65,21 @@ class MeshData(object):
     ##  Get the extents of this mesh.
     #
     #
-    def getExtents(self):
-        #TODO: Implement
-        return AxisAlignedBox()
+    def getExtents(self, matrix = None):
+        if self._vertices is None:
+            return AxisAlignedBox()
+
+        data = numpy.pad(self._vertices.copy(), (0,1), 'constant', constant_values=(0.0, 1.0))
+
+        if matrix is not None:
+            data = data.dot(matrix.getData())
+
+        data += matrix.getData()[:,3]
+
+        min = data.min(axis=0)
+        max = data.max(axis=0)
+
+        return AxisAlignedBox(rightTopFront=Vector(max[0], max[1], max[2]), leftBottomBack=Vector(min[0], min[1], min[2]))
     
     ##  Set the amount of faces before loading data to the mesh.
     #
