@@ -2,6 +2,7 @@ from PyQt5.QtCore import QObject, QCoreApplication, pyqtSlot, QUrl
 
 from Cura.Application import Application
 from Cura.Scene.SceneNode import SceneNode
+from Cura.Scene.BoxRenderer import BoxRenderer
 
 class ControllerProxy(QObject):
     def __init__(self, parent = None):
@@ -24,3 +25,4 @@ class ControllerProxy(QObject):
         mesh = SceneNode(self._controller.getScene().getRoot())
         app = Application.getInstance()
         mesh.setMeshData(app.getMeshFileHandler().read(file_name.toLocalFile(), app.getStorageDevice('local')))
+        box = BoxRenderer(mesh.getBoundingBox(), self._controller.getScene().getRoot())
