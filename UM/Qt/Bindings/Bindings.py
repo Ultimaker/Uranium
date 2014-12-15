@@ -39,16 +39,16 @@ class Bindings:
 
     @classmethod
     def register(self):
-        qmlRegisterType(MainWindow, "Cura", 1, 0, "MainWindow")
-        qmlRegisterType(ViewModel, "Cura", 1, 0, "ViewModel")
-        #qmlRegisterType(FileModel, "Cura", 1, 0, "FileModel")
-        qmlRegisterType(ToolModel, "Cura", 1, 0, "ToolModel")
+        qmlRegisterType(MainWindow, "UM", 1, 0, "MainWindow")
+        qmlRegisterType(ViewModel, "UM", 1, 0, "ViewModel")
+        #qmlRegisterType(FileModel, "UM", 1, 0, "FileModel")
+        qmlRegisterType(ToolModel, "UM", 1, 0, "ToolModel")
         #qmlRegisterType(SettingModel
 
         # Singleton proxy objects
-        qmlRegisterSingletonType(ControllerProxy, "Cura", 1, 0, "Controller", Bindings.createControllerProxy)
-        qmlRegisterSingletonType(ApplicationProxy, "Cura", 1, 0, "Application", Bindings.createApplicationProxy)
-        qmlRegisterSingletonType(BackendProxy, "Cura", 1, 0, "Backend", Bindings.createBackendProxy)
-        qmlRegisterSingletonType(SceneProxy, "Cura", 1, 0, "Scene", Bindings.createSceneProxy)
-        qmlRegisterSingletonType(Models, "Cura", 1, 0, "Models", Bindings.createModels)
-        qmlRegisterSingletonType(ResourcesProxy, "Cura", 1, 0, "Resources", Bindings.createResourcesProxy)
+        qmlRegisterSingletonType(ControllerProxy, "UM", 1, 0, "Controller", Bindings.createControllerProxy)
+        qmlRegisterSingletonType(ApplicationProxy, "UM", 1, 0, "Application", Bindings.createApplicationProxy)
+        qmlRegisterSingletonType(BackendProxy, "UM", 1, 0, "Backend", Bindings.createBackendProxy)
+        qmlRegisterSingletonType(SceneProxy, "UM", 1, 0, "Scene", Bindings.createSceneProxy)
+        qmlRegisterSingletonType(Models, "UM", 1, 0, "Models", Bindings.createModels)
+        qmlRegisterSingletonType(ResourcesProxy, "UM", 1, 0, "Resources", Bindings.createResourcesProxy)

@@ -2,7 +2,7 @@ import QtQuick 2.1
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 
-import Cura 1.0 as Cura
+import UM 1.0 as UM
 
 Panel {
     title: "Transform"
@@ -14,11 +14,11 @@ Panel {
         Repeater {
             id: repeat
 
-            model: Cura.Models.toolModel
+            model: UM.Models.toolModel
 
             delegate: ToolButton {
                 text: model.name;
-                iconSource: Cura.Resources.getIcon(model.icon);
+                iconSource: UM.Resources.getIcon(model.icon);
                 tooltip: model.name;
 
                 checkable: true;
@@ -28,7 +28,7 @@ Panel {
                 //just catch the click so we do not trigger that behaviour.
                 MouseArea {
                     anchors.fill: parent;
-                    onClicked: parent.checked ? Cura.Controller.setActiveTool(null) : Cura.Controller.setActiveTool(model.name);
+                    onClicked: parent.checked ? UM.Controller.setActiveTool(null) : UM.Controller.setActiveTool(model.name);
                 }
             }
         }

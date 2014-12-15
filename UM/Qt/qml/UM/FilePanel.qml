@@ -4,7 +4,7 @@ import QtQuick.Layouts 1.1
 import QtQuick.Dialogs 1.1
 import QtQuick.Controls.Styles 1.1
 
-import Cura 1.0 as Cura
+import UM 1.0 as UM
 
 Panel {
     title: "Files"
@@ -57,7 +57,7 @@ Panel {
                         Image
                         {
                             id:machineButtonIcon
-                            source: Cura.Resources.getIcon("icon_ultimaker2.png")
+                            source: UM.Resources.getIcon("icon_ultimaker2.png")
                         }
                         Text 
                         {
@@ -95,7 +95,7 @@ Panel {
 
         onAccepted: 
         {
-            Cura.Controller.addMesh(fileUrl)
+            UM.Controller.addMesh(fileUrl)
         }
     }
 }

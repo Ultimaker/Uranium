@@ -2,12 +2,12 @@ import QtQuick 2.1
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 
-import Cura 1.0 as Cura
+import UM 1.0 as UM
 
 import "Settings"
 import "Preferences"
 
-Cura.MainWindow {
+UM.MainWindow {
     id: base
     visible: true
 
@@ -26,10 +26,10 @@ Cura.MainWindow {
         title: "Camera"
 
         contents: RowLayout {
-            ToolButton { text: "3D"; onClicked: Cura.Scene.setActiveCamera('3d'); }
-            ToolButton { text: "Left"; onClicked: Cura.Scene.setActiveCamera('left'); }
-            ToolButton { text: "Top"; onClicked: Cura.Scene.setActiveCamera('top'); }
-            ToolButton { text: "Front"; onClicked: Cura.Scene.setActiveCamera('front'); }
+            ToolButton { text: "3D"; onClicked: UM.Scene.setActiveCamera('3d'); }
+            ToolButton { text: "Left"; onClicked: UM.Scene.setActiveCamera('left'); }
+            ToolButton { text: "Top"; onClicked: UM.Scene.setActiveCamera('top'); }
+            ToolButton { text: "Front"; onClicked: UM.Scene.setActiveCamera('front'); }
         }
     }
 
@@ -44,9 +44,9 @@ Cura.MainWindow {
 
         contents: RowLayout {
             ComboBox {
-                model: Cura.Models.viewModel
+                model: UM.Models.viewModel
 
-                onCurrentIndexChanged: Cura.Controller.setActiveView(model.items[currentIndex].text)
+                onCurrentIndexChanged: UM.Controller.setActiveView(model.items[currentIndex].text)
             }
 
             ToolButton { text: "Settings"; onClicked: preferences.visible = true; }

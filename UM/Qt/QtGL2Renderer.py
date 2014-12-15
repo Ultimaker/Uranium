@@ -199,7 +199,7 @@ class QtGL2Renderer(Renderer):
 
     ## private:
 
-    # Get a transposed QMatrix4x4 out of a Cura Matrix
+    # Get a transposed QMatrix4x4 out of a UM Matrix
     def _matrixToQMatrix4x4(self, m):
         return QMatrix4x4(m.at(0,0), m.at(0, 1), m.at(0, 2), m.at(0, 3),
                           m.at(1,0), m.at(1, 1), m.at(1, 2), m.at(1, 3),

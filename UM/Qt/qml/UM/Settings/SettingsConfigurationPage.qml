@@ -2,7 +2,7 @@ import QtQuick 2.1
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 
-import Cura 1.0 as Cura
+import UM 1.0 as UM
 
 import "../Preferences"
 
@@ -13,7 +13,7 @@ PreferencesPage {
         anchors.fill: parent;
         ListView {
             delegate: settingDelegate
-            model: Cura.Models.settingsModel
+            model: UM.Models.settingsModel
 
             section.property: "category"
             section.delegate: Label { text: section }

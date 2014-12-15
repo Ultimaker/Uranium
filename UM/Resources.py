@@ -120,16 +120,16 @@ class Resources:
     @classmethod
     def __initializeStoragePaths(cls):
         if platform.system() == 'Windows':
-            cls.__config_storage_path = os.path.expanduser('~/AppData/Local/Cura')
+            cls.__config_storage_path = os.path.expanduser('~/AppData/Local/UM')
         elif platform.system() == 'Darwin':
-            cls.__config_storage_path = os.path.expanduser('~/.cura')
+            cls.__config_storage_path = os.path.expanduser('~/.UM')
         elif platform.system() == 'Linux':
             xdg_config_home = ''
             try:
                 xdg_config_home = os.environ['XDG_CONFIG_HOME']
             except KeyError:
                 xdg_config_home = os.path.expanduser('~/.config')
-            cls.__config_storage_path = os.path.join(xdg_config_home, 'Cura')
+            cls.__config_storage_path = os.path.join(xdg_config_home, 'UM')
 
             xdg_data_home = ''
             try:
@@ -137,7 +137,7 @@ class Resources:
             except KeyError:
                 xdg_data_home = os.path.expanduser('~/.local/share')
 
-            cls.__data_storage_path = os.path.join(xdg_data_home, 'Cura')
+            cls.__data_storage_path = os.path.join(xdg_data_home, 'UM')
         else:
             cls.__config_storage_path = cls.__relativeToFile('..')
 

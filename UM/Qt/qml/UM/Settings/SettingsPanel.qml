@@ -4,7 +4,7 @@ import QtQuick.Layouts 1.1
 import QtQuick.Window 2.
 import QtQuick.Controls.Styles 1.1
 
-import Cura 1.0 as Cura
+import UM 1.0 as UM
 
 import ".."
 
@@ -33,7 +33,7 @@ Panel
                 ListView
                 {
                     id:settingsList
-                    model: Cura.Models.settingsModel
+                    model: UM.Models.settingsModel
                     delegate: settingDelegate
                     section.property: "category"
                     section.delegate: categoryDelegate
@@ -71,7 +71,7 @@ Panel
                         {
                             id:saveButtonIcon
 
-                            source: Cura.Resources.getIcon("save_button.png")
+                            source: UM.Resources.getIcon("save_button.png")
                         }
                     }
                 }
@@ -172,7 +172,7 @@ Panel
                         Image
                         {
 
-                            source: Cura.Resources.getIcon("icon_resolution.png")
+                            source: UM.Resources.getIcon("icon_resolution.png")
                         }
                         Text 
                         {
