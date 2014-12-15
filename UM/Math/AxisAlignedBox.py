@@ -1,5 +1,7 @@
 from UM.Math.Vector import Vector
 
+import numpy
+
 class AxisAlignedBox:
     def __init__(self, *args, **kwargs):
         super().__init__()
@@ -104,6 +106,25 @@ class AxisAlignedBox:
     def setMaximum(self, m):
         self._max = m
         self._ensureMinMax()
+
+    def intersectsRay(self, ray):
+        inv = ray.inverseDirection
+
+        t = numpy.empty((2,3), dtype=numpy.float32)
+        t[0, 0] = inv.x * (self._min.x - ray.origin.x)
+        t[0, 1] = inv.y * (self._min.y - ray.origin.y)
+        t[0, 2] = inv.z * (self._min.z - ray.origin.z)
+        t[1, 0] = inv.x * (self._max.x - ray.origin.x)
+        t[1, 1] = inv.y * (self._max.y - ray.origin.y)
+        t[1, 2] = inv.z * (self._max.z - ray.origin.z)
+
+        tmin = numpy.min(t, axis=0)
+        tmax = numpy.max(t, axis=0)
+
+        largest_min = numpy.max(tmin)
+        smallest_max = numpy.min(tmax)
+
+        return smallest_max > largest_min
 
     ##  private:
 
