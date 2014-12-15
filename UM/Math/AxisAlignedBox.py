@@ -14,14 +14,14 @@ class AxisAlignedBox:
             self.setTop(args[1] / 2)
             self.setBottom(-args[1] / 2)
 
-            self.setFront(args[2] / 2)
             self.setBack(-args[2] / 2)
+            self.setFront(args[2] / 2)
 
-        if 'min' in kwargs:
-            self._min = kwargs['min']
+        if 'minimum' in kwargs:
+            self._min = kwargs['minimum']
 
-        if 'max' in kwargs:
-            self._max = kwargs['max']
+        if 'maximum' in kwargs:
+            self._max = kwargs['maximum']
 
         self._ensureMinMax()
 
@@ -62,7 +62,7 @@ class AxisAlignedBox:
         return self._min.y
 
     def setBottom(self, value):
-        self._max.setY(value)
+        self._min.setY(value)
         self._ensureMinMax()
 
     @property
@@ -90,19 +90,19 @@ class AxisAlignedBox:
         self._ensureMinMax()
 
     @property
-    def min(self):
+    def minimum(self):
         return self._min
 
-    def setMin(self, min):
-        self._min = min
+    def setMinimum(self, m):
+        self._min = m
         self._ensureMinMax()
 
     @property
-    def max(self):
+    def maximum(self):
         return self._max
 
-    def setMax(self, max):
-        self._max = max
+    def setMaximum(self, m):
+        self._max = m
         self._ensureMinMax()
 
     ##  private:
@@ -111,18 +111,18 @@ class AxisAlignedBox:
     def _ensureMinMax(self):
         if self._max.x < self._min.x:
             x = self._min.x
-            self._max.x = self._min.x
-            self._max.x = x
+            self._min.setX(self._max.x)
+            self._max.setX(x)
 
         if self._max.y < self._min.y:
             y = self._min.y
-            self._max.y = self._min.y
-            self._max.y = y
+            self._min.setY(self._max.y)
+            self._max.setY(y)
 
         if self._max.z < self._min.z:
             z = self._min.z
-            self._max.x = self._min.z
-            self._max.x = z
+            self._min.setZ(self._max.z)
+            self._max.setZ(z)
 
     #def __add__(self, other):
         #b = AxisAlignedBox()
