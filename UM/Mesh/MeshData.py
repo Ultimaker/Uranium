@@ -79,7 +79,7 @@ class MeshData(object):
         min = data.min(axis=0)
         max = data.max(axis=0)
 
-        return AxisAlignedBox(rightTopFront=Vector(max[0], max[1], max[2]), leftBottomBack=Vector(min[0], min[1], min[2]))
+        return AxisAlignedBox(min=Vector(min[0], min[1], min[2]), max=Vector(max[0], max[1], max[2]))
     
     ##  Set the amount of faces before loading data to the mesh.
     #
