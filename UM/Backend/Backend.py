@@ -7,7 +7,7 @@ class Backend(object):
         super(Backend, self).__init__() # Call super to make multiple inheritence work.
         self._supported_commands = {}
         self._command_factory = CommandFactory()
-        #self._socket_connection = Socket(self)
+        self._socket_connection = Socket(self)
     
     ##  Get a list of supported commands of this backend instance.
     #   \returns List of Command objects

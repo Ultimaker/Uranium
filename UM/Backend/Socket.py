@@ -1,6 +1,7 @@
 import struct
 import threading
-import queue
+from queue import Queue
+import socket
 
 class CommandData(object):
     def __init__(self, command_id, data):
@@ -30,7 +31,7 @@ class Socket(object):
         self._listen_thread.daemon = True
         self._listen_thread.start()
         self._backend = backend
-        self._command_queue = queue()
+        self._command_queue = Queue()
     
     ##  Return the next command_id & data that was recieved
     def getNextCommand(self):
