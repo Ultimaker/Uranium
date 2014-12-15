@@ -1,5 +1,9 @@
 import numpy
 import numpy.linalg
+
+# Disable divide-by-zero warnings so that 1.0 / (1.0, 0.0, 0.0) returns (1.0, Inf, Inf) without complaining
+numpy.seterr(divide='ignore')
+
 import math
 
 from copy import deepcopy
@@ -103,6 +107,9 @@ class Vector(object):
         result.setZ(matrix.at(0, 2) * self._data[0] + matrix.at(1, 2) * self._data[1] + matrix.at(2, 2) * self._data[2])
         return result
 
+    def __eq__(self, other):
+        return self._data.all() == other._data.all()
+
     def __add__(self, other):
         v = Vector(self._data[0], self._data[1], self._data[2])
         v += other
@@ -150,6 +157,13 @@ class Vector(object):
         if type(other) is float:
             self._data /= other
             return self
+        else:
+            raise NotImplementedError()
+
+    def __rtruediv__(self, other):
+        if type(other) is float:
+            v = numpy.float32(other) / self._data
+            return Vector(v[0], v[1], v[2])
         else:
             raise NotImplementedError()
 
