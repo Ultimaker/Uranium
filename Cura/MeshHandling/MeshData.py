@@ -224,21 +224,21 @@ class MeshData(object):
     #   \return A bytearray object with 3 floats per vertex.
     def getVerticesAsByteArray(self):
         if self._vertices is not None:
-            return self._vertices[0 : self._vertex_count].tobytes()
+            return self._vertices[0 : self._vertex_count].tostring()
 
     ##  Get all normals of this mesh as a bytearray
     #
     #   \return A bytearray object with 3 floats per normal.
     def getNormalsAsByteArray(self):
         if self._normals is not None:
-            return self._normals[0 : self._vertex_count].tobytes()
+            return self._normals[0 : self._vertex_count].tostring()
 
     ##  Get all indices as a bytearray
     #
     #   \return A bytearray object with 3 ints per face.
     def getIndicesAsByteArray(self):
         if self._indices is not None:
-            return self._indices[0 : self._face_count].tobytes()
+            return self._indices[0 : self._face_count].tostring()
 
     ##  Calculate the normals of this mesh, assuming it was created by using addFace (eg; the verts are connected)    
     def calculateNormals(self):
