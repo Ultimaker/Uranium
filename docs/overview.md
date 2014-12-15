@@ -1,10 +1,10 @@
 High Level Overview
 ===================
 
-The Pluggable Unicorn library consists of several parts, divided over
-several modules. These modules are Core, Backend, Math, MeshHandling,
-Scene, Settings and View. In addition, there are two toolkit-specific
-modules that implement a lot of UI bits for the applications.
+The Uranium framework consists of several parts, divided over several
+modules. These modules are Core, Backend, Math, Mesh, Scene, Settings
+and View. In addition, there are two toolkit-specific modules that
+implement a lot of UI bits for the applications.
 
 Core
 ----
@@ -21,7 +21,9 @@ file that provides a `getMetaData()` and a `register()` function. Plugins
 are loaded from all configured plugin paths. The `register()` function is
 called to register any objects exposed by the plugin. Plugins are free to
 expose any number of objects as long as they can be registered with the
-rest of the system.
+rest of the system. The `getMetaData()` function should return a dictionary
+object containing metadata for the plugin. For more details on writing
+plugins, see [plugins].
 
 Another important class is the [Signal] class. This provides a mechanism for
 simplified event handling using callbacks. This is used throughout the
@@ -53,6 +55,7 @@ the scene.
 [Logger]:         \ref Cura#Logger#Logger
 [StorageDevice]:  \ref Cura#StorageDevice#StorageDevice
 [Tool]:           \ref Cura#Tool#Tool
+[plugins]:        docs/plugins.md
 
 Backend
 -------
