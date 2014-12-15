@@ -1,7 +1,7 @@
 from . import SceneNode
 
 from UM.View.Renderer import Renderer
-from UM.MeshHandling.MeshData import MeshData
+from UM.Mesh.MeshData import MeshData
 
 class ToolHandle(SceneNode.SceneNode):
     def __init__(self, parent = None):

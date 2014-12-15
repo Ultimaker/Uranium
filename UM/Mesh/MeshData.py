@@ -1,4 +1,4 @@
-from UM.MeshHandling.Vertex import Vertex
+from UM.Mesh.Vertex import Vertex
 from UM.Math.Vector import Vector
 from UM.Math.AxisAlignedBox import AxisAlignedBox
 

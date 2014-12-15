@@ -1,4 +1,4 @@
-from UM.MeshHandling.MeshWriter import MeshWriter
+from UM.Mesh.MeshWriter import MeshWriter
 import time
 import struct
 

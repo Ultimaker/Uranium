@@ -1,6 +1,6 @@
 from UM.Controller import Controller
 from UM.PluginRegistry import PluginRegistry
-from UM.MeshHandling.MeshFileHandler import MeshFileHandler
+from UM.Mesh.MeshFileHandler import MeshFileHandler
 from UM.Settings.MachineSettings import MachineSettings
 from UM.Resources import Resources
 

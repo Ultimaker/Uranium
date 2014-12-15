@@ -1,4 +1,4 @@
 #Shoopdawoop
 
-## \package MeshHandling
+## \package Mesh
 #  Classes for loading and working with mesh data.

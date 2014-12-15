@@ -1,4 +1,4 @@
-from UM.MeshHandling.MeshData import MeshData
+from UM.Mesh.MeshData import MeshData
 
 @profile
 def reserveFaceCount(mesh):

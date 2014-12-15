@@ -1,5 +1,5 @@
-from UM.MeshHandling.MeshReader import MeshReader
-from UM.MeshHandling.MeshData import MeshData
+from UM.Mesh.MeshReader import MeshReader
+from UM.Mesh.MeshData import MeshData
 from UM.Logger import Logger
 
 import os
