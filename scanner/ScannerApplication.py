@@ -18,6 +18,7 @@ class ScannerApplication(QtApplication):
         self._plugin_registry.loadPlugins({ "type": "View" })
         self._plugin_registry.loadPlugins({ "type": "MeshHandler" })
         self._plugin_registry.loadPlugins({ "type": "Tool" })
+        self._plugin_registry.loadPlugin("ScannerEngineBackend")
         
         self.getController().setActiveView("MeshView")
         
