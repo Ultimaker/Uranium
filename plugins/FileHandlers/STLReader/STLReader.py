@@ -1,6 +1,6 @@
-from Cura.MeshHandling.MeshReader import MeshReader
-from Cura.MeshHandling.MeshData import MeshData
-from Cura.Logger import Logger
+from UM.MeshHandling.MeshReader import MeshReader
+from UM.MeshHandling.MeshData import MeshData
+from UM.Logger import Logger
 
 import os
 import struct

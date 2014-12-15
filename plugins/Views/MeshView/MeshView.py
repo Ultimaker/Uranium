@@ -1,5 +1,5 @@
-from Cura.View.View import View
-from Cura.Scene.Iterator.DepthFirstIterator import DepthFirstIterator
+from UM.View.View import View
+from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator
 
 class MeshView(View):
     def __init__(self):

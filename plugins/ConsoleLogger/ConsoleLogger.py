@@ -1,4 +1,4 @@
-from Cura.Logger import LogOutput
+from UM.Logger import LogOutput
 
 import logging
 

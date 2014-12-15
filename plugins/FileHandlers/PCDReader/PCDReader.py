@@ -1,5 +1,5 @@
-from Cura.MeshHandling.MeshReader import MeshReader
-from Cura.MeshHandling.MeshData import MeshData
+from UM.MeshHandling.MeshReader import MeshReader
+from UM.MeshHandling.MeshData import MeshData
 
 class PCDReader(MeshReader):
     def __init__(self):

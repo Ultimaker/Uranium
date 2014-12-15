@@ -1,7 +1,7 @@
 import unittest
 import numpy
 
-from Cura.Math.Vector import Vector
+from UM.Math.Vector import Vector
 
 class TestVector(unittest.TestCase):
     def setUp(self):

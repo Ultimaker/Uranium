@@ -3,9 +3,9 @@
 import unittest
 import os
 
-from Cura.Application import Application
-from Cura.PluginRegistry import PluginRegistry
-from Cura.PluginError import PluginNotFoundError
+from UM.Application import Application
+from UM.PluginRegistry import PluginRegistry
+from UM.PluginError import PluginNotFoundError
 
 class TestApplication(Application):
     def registerTestPlugin(self, name):

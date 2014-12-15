@@ -1,7 +1,7 @@
 import unittest
 import numpy
-from Cura.Math.Matrix import Matrix
-from Cura.Math.Vector import Vector
+from UM.Math.Matrix import Matrix
+from UM.Math.Vector import Vector
 
 class TestMatrix(unittest.TestCase):
     def setUp(self):

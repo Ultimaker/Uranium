@@ -1,7 +1,7 @@
 #Shoopdawoop
 from . import ConsoleLogger
 
-from Cura.Logger import Logger
+from UM.Logger import Logger
 
 def getMetaData():
     return { "name": "Console Logger", "type": "Logger" }

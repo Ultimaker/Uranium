@@ -1,6 +1,6 @@
 import unittest
 import numpy
-from Cura.Math.Quaternion import Quaternion
+from UM.Math.Quaternion import Quaternion
 
 class TestQuaternion(unittest.TestCase):
     def setUp(self):

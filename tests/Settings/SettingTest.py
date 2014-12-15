@@ -1,7 +1,7 @@
 import unittest
-from Cura.Settings.Setting import Setting
-from Cura.Settings.SettingsCategory import SettingsCategory
-from Cura.Settings.MachineSettings import MachineSettings
+from UM.Settings.Setting import Setting
+from UM.Settings.SettingsCategory import SettingsCategory
+from UM.Settings.MachineSettings import MachineSettings
 class SettingTest(unittest.TestCase):
     def setUp(self):
         # Called before the first testfunction is executed

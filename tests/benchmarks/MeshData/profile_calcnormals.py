@@ -1,4 +1,4 @@
-from Cura.MeshHandling.MeshData import MeshData
+from UM.MeshHandling.MeshData import MeshData
 
 @profile
 def calcNormals(mesh):

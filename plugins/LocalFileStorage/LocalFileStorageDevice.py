@@ -1,4 +1,4 @@
-from Cura.StorageDevice import StorageDevice
+from UM.StorageDevice import StorageDevice
 
 import platform
 import os

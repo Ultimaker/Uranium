@@ -1,5 +1,5 @@
-from Cura.Tool import Tool
-from Cura.Event import Event
+from UM.Tool import Tool
+from UM.Event import Event
 
 class RotateTool(Tool):
     def __init__(self):

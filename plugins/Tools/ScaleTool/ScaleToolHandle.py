@@ -1,4 +1,4 @@
-from Cura.Scene.ToolHandle import ToolHandle
+from UM.Scene.ToolHandle import ToolHandle
 
 class ScaleToolHandle(ToolHandle):
     def __init__(self, parent = None):

@@ -1,6 +1,5 @@
-from Cura.Wx.WxApplication import WxApplication
-from Cura.Wx.MainWindow import MainWindow
-from Cura.Scene.SceneNode import SceneNode
+from UM.Qt.QtApplication import QtApplication
+from UM.Scene.SceneNode import SceneNode
 class ScannerApplication(WxApplication):
     def __init__(self):
         super(ScannerApplication, self).__init__()

@@ -1,4 +1,4 @@
-from Cura.MeshHandling.MeshWriter import MeshWriter
+from UM.MeshHandling.MeshWriter import MeshWriter
 import time
 import struct
 

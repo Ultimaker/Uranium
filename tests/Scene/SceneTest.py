@@ -1,9 +1,9 @@
 import unittest
 
-from Cura.Scene.Scene import Scene
-from Cura.Scene.SceneNode import SceneNode
-from Cura.Math.Matrix import Matrix
-from Cura.Math.Vector import Vector
+from UM.Scene.Scene import Scene
+from UM.Scene.SceneNode import SceneNode
+from UM.Math.Matrix import Matrix
+from UM.Math.Vector import Vector
 from copy import copy, deepcopy
 import numpy
 
