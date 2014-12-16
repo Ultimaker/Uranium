@@ -8,6 +8,7 @@ from UM.Math.Quaternion import Quaternion
 from UM.Signal import Signal, SignalEmitter
 from UM.Logger import Logger
 from UM.View.CameraControls import CameraControls
+from UM.View.SelectionControls import SelectionControls
 
 import math
 
@@ -27,6 +28,7 @@ class Controller(SignalEmitter):
         self._scene = Scene()
         self._application = application
         self._cameraControls = CameraControls(self._scene)
+        self._selectionControls = SelectionControls(self._scene)
 
     ##  Get the application.
     #   \returns Application
@@ -176,6 +178,8 @@ class Controller(SignalEmitter):
         if self._active_tool and self._active_tool.event(event):
             return
 
-        #TODO: Handle selection
+        self._selectionControls.event(event)
+
+
 
     ##  private:
