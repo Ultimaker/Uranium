@@ -124,7 +124,10 @@ class AxisAlignedBox:
         largest_min = numpy.max(tmin)
         smallest_max = numpy.min(tmax)
 
-        return smallest_max > largest_min
+        if smallest_max > largest_min:
+            return (largest_min, smallest_max)
+        else:
+            return False
 
     ##  private:
 
