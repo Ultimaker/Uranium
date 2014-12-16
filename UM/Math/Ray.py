@@ -17,3 +17,6 @@ class Ray:
     @property
     def inverseDirection(self):
         return self._invDirection
+
+    def __repr__(self):
+        return "Ray(origin = {0}, direction = {1})".format(self._origin, self._direction)
