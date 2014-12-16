@@ -66,8 +66,8 @@ class CameraControls:
         if camera.isLocked():
             return
 
-        dx = event.deltaX / 100.0 #TODO: Make this time based
-        dy = event.deltaY / 100.0
+        dx = event.deltaX
+        dy = event.deltaY
 
         diff = camera.getGlobalPosition() - self._origin
         r = diff.length()
@@ -76,7 +76,7 @@ class CameraControls:
         m.setByRotationAxis(dx, Vector.Unit_Y)
         m.rotateByAxis(dy, Vector.Unit_X)
 
-        n = diff.rotated(m)
+        n = diff.multiply(m)
         n += self._origin
 
         # Limit the vertical rotation by calculating the dot product between the
@@ -85,7 +85,7 @@ class CameraControls:
         d = n.getNormalized().dot(Vector.Unit_Y)
         if d < 0.05 or d > math.pi * 0.3:
             m.setByRotationAxis(dx, Vector.Unit_Y)
-            n = diff.rotated(m)
+            n = diff.multiply(m)
 
         camera.setPosition(n)
         camera.lookAt(self._origin, Vector(0, 1, 0))
