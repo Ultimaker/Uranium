@@ -17,7 +17,7 @@ class MainWindow(QQuickWindow):
         self.setClearBeforeRendering(False)
         self.beforeRendering.connect(self._render, type=Qt.DirectConnection)
 
-        self._mouseDevice = QtMouseDevice()
+        self._mouseDevice = QtMouseDevice(self)
         self._keyDevice = QtKeyDevice()
 
         self._app = QCoreApplication.instance()
