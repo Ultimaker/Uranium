@@ -16,8 +16,13 @@ class Vector(object):
     Unit_Y = None
     Unit_Z = None
 
-    def __init__(self,x = 0 ,y = 0,z = 0):
-        self._data = numpy.array([x, y, z],dtype=numpy.float32)
+    def __init__(self, *args, **kwargs):
+        if len(args) == 3:
+            self._data = numpy.array([args[0], args[1], args[2]],dtype=numpy.float32)
+        elif 'data' in kwargs:
+            self._data = kwargs['data'].copy()
+        else:
+            self._data = numpy.zeros(3, dtype=numpy.float32)
     
     ##  Set the data of the vector
     #   \param x X coordinate of vector.
@@ -69,7 +74,6 @@ class Vector(object):
         dot /= self._normalizeVector(v0) * self._normalizeVector(v1)
         return numpy.arccos(numpy.fabs(dot))
     
-    
     def normalize(self):
         l = self.length()
         if l != 0:
@@ -115,7 +119,7 @@ class Vector(object):
         return self._data.all() == other._data.all()
 
     def __add__(self, other):
-        v = Vector(self._data[0], self._data[1], self._data[2])
+        v = Vector(data = self._data)
         v += other
         return v
 
@@ -134,7 +138,7 @@ class Vector(object):
         return self
 
     def __sub__(self, other):
-        v = Vector(self._data[0], self._data[1], self._data[2])
+        v = Vector(data = self._data)
         v -= other
         return v
 
@@ -152,8 +156,21 @@ class Vector(object):
 
         return self
 
+    def __mul__(self, other):
+        v = Vector(data = self._data)
+        v *= other
+        return v
+
+    def __imul__(self, other):
+        t = type(other)
+        if t is float or t is numpy.float32 or t is numpy.float64 or t is int:
+            self._data *= other
+            return self
+        else:
+            raise NotImplementedError()
+
     def __truediv__(self, other):
-        v = Vector(self._data[0], self._data[1], self._data[2])
+        v = Vector(data = self._data)
         v /= other
         return v
 
@@ -172,12 +189,10 @@ class Vector(object):
             raise NotImplementedError()
 
     def __neg__(self):
-        self._data = -self._data
-        return self
+        return Vector(data = -self._data)
 
     def __pos__(self):
-        self._data = +self._data
-        return self
+        return Vector(data = +self._data)
 
     def __repr__(self):
         return "Vector({0}, {1}, {2})".format(self._data[0], self._data[1], self._data[2])
