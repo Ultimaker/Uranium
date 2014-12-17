@@ -66,30 +66,26 @@ class CameraControls:
         if camera.isLocked():
             return
 
-        dx = event.deltaX / 100.0 #TODO: Make this time based
-        dy = event.deltaY / 100.0
-
-        self._yaw += dx
-        if self._yaw > math.pi:
-            self._yaw -= math.pi
-        elif self._yaw < -math.pi:
-            self._yaw += math.pi
-
-        self._pitch += dy
-        if self._pitch > math.pi:
-            self._pitch -= math.pi
-        elif self._pitch < -math.pi:
-            self._pitch += math.pi
+        dx = event.deltaX
+        dy = event.deltaY
 
         diff = camera.getGlobalPosition() - self._origin
         r = diff.length()
 
         m = Matrix()
-        m.setByRotationAxis(dy, Vector.Unit_X)
-        m.rotateByAxis(dx, Vector.Unit_Y)
+        m.setByRotationAxis(dx, Vector.Unit_Y)
+        m.rotateByAxis(dy, Vector.Unit_X)
 
-        n = diff.rotated(m)
+        n = diff.multiply(m)
         n += self._origin
 
+        # Limit the vertical rotation by calculating the dot product between the
+        # new vector and the up vector then checking if that is within a certain
+        # threshold. If not, perform the rotation only along the Y axis.
+        d = n.getNormalized().dot(Vector.Unit_Y)
+        if d < 0.05 or d > math.pi * 0.3:
+            m.setByRotationAxis(dx, Vector.Unit_Y)
+            n = diff.multiply(m)
+
         camera.setPosition(n)
-        camera.lookAt(Vector(0, 0, 0), Vector(0, 1, 0))
+        camera.lookAt(self._origin, Vector(0, 1, 0))

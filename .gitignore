@@ -2,3 +2,5 @@
 *kdev*
 __pycache__
 docs/html
+*.lprof
+*.log

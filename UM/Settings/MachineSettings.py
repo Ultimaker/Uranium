@@ -15,6 +15,7 @@ class MachineSettings(object):
     def loadSettingsFromFile(self, file_name):
         json_data = open(file_name)
         data = json.load(json_data)
+        json_data.close()
 
         if "platform" in data:
             self._platformMesh = data["platform"]

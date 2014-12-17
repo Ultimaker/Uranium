@@ -21,6 +21,9 @@ class SceneNode(SignalEmitter):
         self._transformation = Matrix()
         self._parent = parent
         self._locked = False
+        self._selectionMask = 0
+        self._aabb = None
+
         if parent:
             parent.addChild(self)
 
@@ -57,6 +60,7 @@ class SceneNode(SignalEmitter):
     #   \param mesh_data MeshData object
     def setMeshData(self, mesh_data):
         self._mesh_data = mesh_data
+        self._aabb = None
         self.meshDataChanged.emit(self)
 
     ##  Emitted whenever the attached mesh data object changes.
@@ -69,6 +73,7 @@ class SceneNode(SignalEmitter):
             scene_node.transformationChanged.connect(self.transformationChanged)
             scene_node.childrenChanged.connect(self.childrenChanged)
             self._children.append(scene_node)
+            self._aabb = None
             self.childrenChanged.emit(self)
 
             if not scene_node._parent is self:
@@ -136,7 +141,7 @@ class SceneNode(SignalEmitter):
             return
 
         self._transformation = transformation
-        self.transformationChanged.emit(self)
+        self._transformChanged()
 
     ##  Rotate the scene object (and thus its children) by given amount
     def rotate(self, rotation):
@@ -146,20 +151,19 @@ class SceneNode(SignalEmitter):
         rotMatrix = Matrix()
         rotMatrix.setByQuaternion(rotation)
         self._transformation.multiply(rotMatrix)
-        self.transformationChanged.emit(self)
+        self._transformChanged()
 
     def rotateByAngleAxis(self, angle, axis):
         if self._locked:
             return
 
         self._transformation.rotateByAxis(math.radians(angle), axis)
-        self.transformationChanged.emit(self)
+        self._transformChanged()
 
     ##  Scale the scene object (and thus its children) by given amount
     def scale(self, scale):
         self._transformation.scaleByFactor(scale)
-        self.transformationChanged.emit(self)
-        pass
+        self._transformChanged()
 
     ##  Translate the scene object (and thus its children) by given amount.
     #   \param translation Vector(x,y,z).
@@ -168,7 +172,7 @@ class SceneNode(SignalEmitter):
             return
 
         self._transformation.translate(translation)
-        self.transformationChanged.emit(self)
+        self._transformChanged()
 
     ##  Set
     def setPosition(self, position):
@@ -176,7 +180,7 @@ class SceneNode(SignalEmitter):
             return
 
         self._transformation.setByTranslation(position)
-        self.transformationChanged.emit(self)
+        self._transformChanged()
 
     def getPosition(self):
         pos = self._transformation.getData()
@@ -219,10 +223,23 @@ class SceneNode(SignalEmitter):
         self._locked = lock
 
     def getBoundingBox(self):
+        # TODO: Cache this result
         if self._mesh_data:
-            aabb = self._mesh_data.getExtents(self.getGlobalTransformation())
-            return aabb
+            if not self._aabb:
+                self._aabb = self._mesh_data.getExtents(self.getGlobalTransformation())
+
+            return self._aabb
 
         return AxisAlignedBox()
 
+    def getSelectionMask(self):
+        return self._selectionMask
 
+    def setSelectionMask(self, mask):
+        self._selectionMask = mask
+
+    ##  private:
+
+    def _transformChanged(self):
+        self._aabb = None
+        self.transformationChanged.emit(self)

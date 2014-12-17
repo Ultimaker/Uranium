@@ -52,7 +52,7 @@ class Matrix(object):
         
     ##  Invert the matrix
     def invert(self):
-        self._data = numpy.linalg.inv(self._data,dtype=numpy.float32)
+        self._data = numpy.linalg.inv(self._data)
     
     ##  Return a inverted copy of the matrix.
     #   \returns The invertex matrix.

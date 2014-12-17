@@ -8,8 +8,8 @@ class BoxRenderer(ToolHandle):
 
         md = self.getMeshData()
 
-        rtf = box.rightTopFront
-        lbb = box.leftBottomBack
+        rtf = box.maximum
+        lbb = box.minimum
 
         md.addVertex(rtf.x, rtf.y, rtf.z) #Right - Top - Front
         md.addVertex(lbb.x, rtf.y, rtf.z) #Left - Top - Front
