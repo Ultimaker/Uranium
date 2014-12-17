@@ -3,6 +3,7 @@ from UM.PluginRegistry import PluginRegistry
 from UM.Mesh.MeshFileHandler import MeshFileHandler
 from UM.Settings.MachineSettings import MachineSettings
 from UM.Resources import Resources
+from UM.Operations.OperationStack import OperationStack
 
 ##  Central object responsible for running the main event loop and creating other central objects.
 #
@@ -26,6 +27,8 @@ class Application(object):
         #TODO: This needs to be loaded from preferences
         self._machine_settings = MachineSettings()
         self._machine_settings.loadSettingsFromFile(Resources.getPath(Resources.SettingsLocation, "ultimaker2.json"))
+
+        self._operation_stack = OperationStack()
     
     ##  Set the backend of the application (the program that does the heavy lifting).
     #   \param backend Backend
@@ -56,6 +59,9 @@ class Application(object):
     #   \returns MeshFileHandler
     def getMeshFileHandler(self):
         return self._mesh_file_handler
+
+    def getOperationStack(self):
+        return self._operation_stack
 
     ##  Get a StorageDevice object by name
     #   \param name The name of the StorageDevice to get.
