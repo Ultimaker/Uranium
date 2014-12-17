@@ -96,7 +96,7 @@ class SocketThread(threading.Thread):
         print("Listening for backend on " + str(self._port))
         self._server_socket.listen(1)
         
-        self._data_socket, address = self._server_socket.acscept()
+        self._data_socket, address = self._server_socket.accept()
         print("Backend connected on " + str(address))
  
     
@@ -106,7 +106,6 @@ class SocketThread(threading.Thread):
         self._reply_queue.put(reply)
     
     def _handle_SEND(self, cmd):
-        print(self._data_socket)
         try:
             self._data_socket.sendall(struct.pack('@i', len(cmd.data)))
             self._data_socket.sendall(cmd.data)
