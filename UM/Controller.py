@@ -27,8 +27,8 @@ class Controller(SignalEmitter):
         self._views = {}
         self._scene = Scene()
         self._application = application
-        self._cameraControls = CameraControls(self._scene)
-        self._selectionControls = SelectionControls(self._scene)
+        self._camera_tool = None
+        self._selection_tool = None
 
     ##  Get the application.
     #   \returns Application
@@ -171,15 +171,20 @@ class Controller(SignalEmitter):
     ## Process an event
     def event(self, event):
         # First, try to perform camera control
-        if self._cameraControls.event(event):
+        if self._camera_tool and self._camera_tool.event(event):
             return
 
         # If we are not doing camera control, pass the event to the active tool.
         if self._active_tool and self._active_tool.event(event):
             return
 
-        self._selectionControls.event(event)
+        if self._selection_tool:
+            self._selection_tool.event(event)
 
+    ##  Set the tool used for handling camera controls
+    def setCameraTool(self, tool):
+        self._camera_tool = self.getTool(tool)
 
-
-    ##  private:
+    ##  Set the tool used for performing selections
+    def setSelectionTool(self, tool):
+        self._selection_tool = self.getTool(tool)
