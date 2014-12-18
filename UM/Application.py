@@ -14,7 +14,11 @@ class Application(object):
     def __init__(self):
         if(Application._instance != None):
             raise ValueError("Duplicate singleton creation")
+        # If the constructor is called and there is no instance, set the instance to self. 
+        # This is done because we can't make constructor private
+        Application._instance = self 
 
+        
         super(Application, self).__init__() # Call super to make multiple inheritence work.
         self._plugin_registry = PluginRegistry()
         self._plugin_registry.addPluginLocation("plugins")

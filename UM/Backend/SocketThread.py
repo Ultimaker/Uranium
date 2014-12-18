@@ -60,7 +60,7 @@ class SocketThread(threading.Thread):
         return self._reply_queue.get(True)
         
     def recieve(self):
-        self._command_queue.put(ClientCommand(ClientCommand.RECEIVE, ""))
+        self._command_queue.put(ClientCommand(ClientCommand.RECEIVE))
         
     def sendCommand(self,command_id, data = None):
         packed_command = struct.pack('@i', int(command_id))

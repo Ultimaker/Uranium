@@ -119,13 +119,14 @@ class QtGL2Renderer(Renderer):
             vertexBuffer.release()
             self._vertexBufferCache[mesh] = vertexBuffer
 
-            indexBuffer = QOpenGLBuffer(QOpenGLBuffer.IndexBuffer)
-            indexBuffer.create()
-            indexBuffer.bind()
+            index_buffer = QOpenGLBuffer(QOpenGLBuffer.IndexBuffer)
+            index_buffer.create()
+            index_buffer.bind()
             data = mesh.getIndicesAsByteArray()
-            indexBuffer.allocate(data, len(data))
-            indexBuffer.release()
-            self._indexBufferCache[mesh] = indexBuffer
+            if data is not None:
+                index_buffer.allocate(data, len(data))
+                index_buffer.release()
+            self._indexBufferCache[mesh] = index_buffer
 
         camera = self.getApplication().getController().getScene().getActiveCamera()
         if not camera:

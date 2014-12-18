@@ -5,6 +5,7 @@ from UM.Logger import Logger
 import struct
 import subprocess
 from time import sleep
+from UM.Backend.SocketThread import ClientReply
 
 ##      Base class for any backend communication (seperate piece of software).
 
@@ -22,19 +23,16 @@ class Backend(object):
         self._process = self._runEngineProcess([Preferences.getPreference("BackendLocation"), '--port', str(self._socket_thread.getPort())])
         #self._socket_thread.command_queue.put(ClientCommand(ClientCommand.CONNECT, ('localhost', 0xC20A)))
         
-        
-    ##  Get a list of supported commands of this backend instance.
-    #   \returns List of Command objects
-    def getSupportedCommands(self):
-        return self._supported_commands
-    
-    ##  Add a command to be supported
-    #   \param command The Command to be supported
-    def addSupportedCommand(self,command):
-        pass
-    
-    def recievedRawCommand(self,command_id, data):
-        self._command_factory.create(command_id,data).run()
+    def recieveData(self):
+        while True:
+            self._socket_thread.recieve()
+            reply = self._socket_thread.getNextReply()
+            if reply.type is ClientReply.SUCCESS:
+                if reply.data is not None:
+                    return reply.data
+            if reply.type is ClientReply.ERROR:
+                print("An error occured with connection with message: " + str(reply.data))
+                return None
         
     def convertBytesToVerticeList(self, data):
         result = []

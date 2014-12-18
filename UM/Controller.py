@@ -53,7 +53,7 @@ class Controller(SignalEmitter):
     def getView(self, name):
         try:
             return self._views[name]
-        except KeyError: #No such view
+        except KeyError: #No such view  
             Logger.log('e', "Unable to find %s in view list",name)
             return None
 
