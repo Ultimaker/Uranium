@@ -25,7 +25,9 @@ class QtApplication(QApplication, Application):
                 pyqt_path = os.path.join(site_package_path, 'PyQt5')
                 if os.path.isdir(pyqt_path):
                     os.environ['PATH'] = "%s;%s" % (pyqt_path, os.environ['PATH'])
-        super(QtApplication, self).__init__(sys.argv)
+
+        super().__init__(sys.argv)
+
         self._mainQml = "main.qml"
         self._engine = None
         self._renderer = None
@@ -57,3 +59,7 @@ class QtApplication(QApplication, Application):
             self._renderer = QtGL2Renderer(self)
 
         return self._renderer
+
+    #   Overridden from QApplication::setApplicationName to call our internal setApplicationName
+    def setApplicationName(self, name):
+        Application.setApplicationName(self, name)

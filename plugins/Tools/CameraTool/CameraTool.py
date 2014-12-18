@@ -1,14 +1,15 @@
+from UM.Tool import Tool
 from UM.Event import Event, MouseEvent
 from UM.Math.Vector import Vector
 from UM.Math.Matrix import Matrix
-
-from copy import deepcopy
+from UM.Application import Application
 
 import math
 
-class CameraControls:
-    def __init__(self, scene):
-        self._scene = scene
+class CameraTool(Tool):
+    def __init__(self, name):
+        super().__init__(name)
+        self._scene = Application.getInstance().getController().getScene()
 
         self._yaw = 0
         self._pitch = 0

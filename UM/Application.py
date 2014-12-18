@@ -10,7 +10,7 @@ from UM.Operations.OperationStack import OperationStack
 #   The Application object is a central object for accessing other important objects. It is also
 #   responsible for starting the main event loop. It is passed on to plugins so it can be easily
 #   used to access objects required for those plugins.
-class Application(object):
+class Application():
     def __init__(self):
         if(Application._instance != None):
             raise ValueError("Duplicate singleton creation")
@@ -18,8 +18,10 @@ class Application(object):
         # This is done because we can't make constructor private
         Application._instance = self 
 
-        
-        super(Application, self).__init__() # Call super to make multiple inheritence work.
+        super().__init__() # Call super to make multiple inheritence work.
+
+        self._application_name = "application"
+
         self._plugin_registry = PluginRegistry()
         self._plugin_registry.addPluginLocation("plugins")
         self._plugin_registry.setApplication(self)
@@ -33,6 +35,13 @@ class Application(object):
         self._machine_settings.loadSettingsFromFile(Resources.getPath(Resources.SettingsLocation, "ultimaker2.json"))
 
         self._operation_stack = OperationStack()
+
+    def getApplicationName(self):
+        return self._application_name
+
+    def setApplicationName(self, name):
+        print('setApplicationName', name)
+        self._application_name = name
     
     ##  Set the backend of the application (the program that does the heavy lifting).
     #   \param backend Backend

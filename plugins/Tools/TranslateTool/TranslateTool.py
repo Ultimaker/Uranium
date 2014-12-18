@@ -7,8 +7,8 @@ from UM.Math.Vector import Vector
 from . import TranslateToolHandle
 
 class TranslateTool(Tool):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, name):
+        super().__init__(name)
         self._handle = TranslateToolHandle.TranslateToolHandle()
 
         self._object = None
@@ -16,6 +16,7 @@ class TranslateTool(Tool):
 
     def event(self, event):
         if event.type == Event.ToolActivateEvent:
+            #TODO: This should be done on the selection
             self._handle.setParent(self.getController().getScene().getRoot())
 
         if event.type == Event.MousePressEvent:
@@ -26,6 +27,7 @@ class TranslateTool(Tool):
                 if obj.getBoundingBox().intersectsRay(ray):
                     self._object = obj
                     self._handle.setPosition(self._object.getGlobalPosition())
+                    return True
 
         if event.type == Event.MouseMoveEvent:
             if self._object:
@@ -36,10 +38,11 @@ class TranslateTool(Tool):
                     self._object.setPosition(ray.getPointAlongRay(target))
                     self._handle.setPosition(ray.getPointAlongRay(target))
 
+                return True
+
 
         if event.type == Event.MouseReleaseEvent:
             self._object = None
-
 
         if event.type == Event.ToolDeactivateEvent:
             self._handle.setParent(None)

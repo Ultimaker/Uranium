@@ -1,4 +1,6 @@
-from PyQt5.QtCore import Qt, QCoreApplication
+from PyQt5.QtCore import Qt
+
+from UM.Application import Application
 
 from UM.Qt.ListModel import ListModel
 
@@ -6,24 +8,45 @@ class ToolModel(ListModel):
     NameRole = Qt.UserRole + 1
     IconRole = Qt.UserRole + 2
     ToolActiveRole = Qt.UserRole + 3
+    DescriptionRole = Qt.UserRole + 4
 
     def __init__(self, parent = None):
         super().__init__(parent)
 
-        self._controller = QCoreApplication.instance().getController()
+        self._controller = Application.getInstance().getController()
         self._controller.toolsChanged.connect(self._onToolsChanged)
         self._controller.activeToolChanged.connect(self._onActiveToolChanged)
         self._onToolsChanged()
 
     def roleNames(self):
-        return { self.NameRole: 'name', self.IconRole: 'icon', self.ToolActiveRole: 'active' }
+        return {
+            self.NameRole: 'name',
+            self.IconRole: 'icon',
+            self.ToolActiveRole: 'active',
+            self.DescriptionRole: 'description'
+        }
 
     def _onToolsChanged(self):
         self.clear()
 
         tools = self._controller.getAllTools()
         for name in tools:
-            self.appendItem({ 'name': name, 'icon': tools[name].getIconName(), 'active': False })
+            toolMetaData = Application.getInstance().getPluginRegistry().getMetaData(name)
+
+            # Skip tools that are marked as not visible
+            if 'visible' in toolMetaData and not toolMetaData['visible']:
+                continue
+
+            # Skip tools that are marked as not visible for this application
+            appName = Application.getInstance().getApplicationName()
+            if appName in toolMetaData and 'visible' in toolMetaData[appName] and not toolMetaData[appName]['visible']:
+                continue
+
+            # Optional metadata elements
+            description = toolMetaData['description'] if 'description' in toolMetaData else ''
+            iconName = toolMetaData['icon'] if 'icon' in toolMetaData else 'default.png'
+
+            self.appendItem({ 'name': name, 'icon': iconName, 'active': False, 'description': description })
 
     def _onActiveToolChanged(self):
         activeTool = self._controller.getActiveTool()

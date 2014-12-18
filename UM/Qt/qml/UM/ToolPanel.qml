@@ -19,7 +19,7 @@ Panel {
             delegate: ToolButton {
                 text: model.name;
                 iconSource: UM.Resources.getIcon(model.icon);
-                tooltip: model.name;
+                tooltip: model.description;
 
                 checkable: true;
                 checked: model.active;

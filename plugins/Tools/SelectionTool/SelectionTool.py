@@ -1,13 +1,16 @@
 from UM.Event import Event
-
+from UM.Tool import Tool
+from UM.Application import Application
 from UM.Scene.BoxRenderer import BoxRenderer
 from UM.Scene.RayRenderer import RayRenderer
 
 from UM.Scene.Iterator.BreadthFirstIterator import BreadthFirstIterator
 
-class SelectionControls:
-    def __init__(self, scene):
-        self._scene = scene
+class SelectionTool(Tool):
+    def __init__(self, name):
+        super().__init__(name)
+
+        self._scene = Application.getInstance().getController().getScene()
         self._selection = []
         self._bboxes = {}
         self._selectionMask = 1
