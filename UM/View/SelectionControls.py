@@ -29,11 +29,12 @@ class SelectionControls:
                 intersections.sort(key=lambda k: k[1])
 
                 node = intersections[0][0]
-                if node in self._selection:
-                    self._bboxes[node].setParent(None)
-                    del self._bboxes[node]
-                    self._selection.remove(node)
-                else:
-                    box = BoxRenderer(node.getBoundingBox(), root)
-                    self._bboxes[node] = box
-                    self._selection.append(node)
+                for i in self._bboxes:
+                    self._bboxes[i].setParent(None)
+
+                self._bboxes.clear()
+                self._selection.clear()
+
+                box = BoxRenderer(node.getBoundingBox(), root)
+                self._bboxes[node] = box
+                self._selection.append(node)

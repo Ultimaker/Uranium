@@ -18,5 +18,8 @@ class Ray:
     def inverseDirection(self):
         return self._invDirection
 
+    def getPointAlongRay(self, distance):
+        return self._origin + (self._direction * distance)
+
     def __repr__(self):
         return "Ray(origin = {0}, direction = {1})".format(self._origin, self._direction)

@@ -11,6 +11,7 @@ from UM.Qt.Bindings.BackendProxy import BackendProxy
 from UM.Qt.Bindings.SceneProxy import SceneProxy
 from UM.Qt.Bindings.Models import Models
 from UM.Qt.Bindings.ResourcesProxy import ResourcesProxy
+from . import OperationStackProxy
 
 class Bindings:
     @classmethod
@@ -38,6 +39,10 @@ class Bindings:
         return ResourcesProxy()
 
     @classmethod
+    def createOperationStackProxy(cls, engine, scriptEngine):
+        return OperationStackProxy.OperationStackProxy()
+
+    @classmethod
     def register(self):
         qmlRegisterType(MainWindow, "UM", 1, 0, "MainWindow")
         qmlRegisterType(ViewModel, "UM", 1, 0, "ViewModel")
@@ -52,3 +57,4 @@ class Bindings:
         qmlRegisterSingletonType(SceneProxy, "UM", 1, 0, "Scene", Bindings.createSceneProxy)
         qmlRegisterSingletonType(Models, "UM", 1, 0, "Models", Bindings.createModels)
         qmlRegisterSingletonType(ResourcesProxy, "UM", 1, 0, "Resources", Bindings.createResourcesProxy)
+        qmlRegisterSingletonType(OperationStackProxy.OperationStackProxy, 'UM', 1, 0, 'OperationStack', Bindings.createOperationStackProxy)

@@ -4,6 +4,8 @@ from UM.Application import Application
 from UM.Scene.SceneNode import SceneNode
 from UM.Scene.BoxRenderer import BoxRenderer
 
+from UM.Operations.AddMeshOperation import AddMeshOperation
+
 class ControllerProxy(QObject):
     def __init__(self, parent = None):
         super().__init__(parent)
@@ -22,7 +24,7 @@ class ControllerProxy(QObject):
         if not file_name.isValid():
             return
 
-        mesh = SceneNode(self._controller.getScene().getRoot())
         app = Application.getInstance()
-        mesh.setMeshData(app.getMeshFileHandler().read(file_name.toLocalFile(), app.getStorageDevice('local')))
-        box = BoxRenderer(mesh.getBoundingBox(), self._controller.getScene().getRoot())
+
+        op = AddMeshOperation(app.getMeshFileHandler().read(file_name.toLocalFile(), app.getStorageDevice('local')), self._controller.getScene().getRoot())
+        app.getOperationStack().push(op)
