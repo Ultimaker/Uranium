@@ -56,6 +56,12 @@ class SocketThread(threading.Thread):
     def connectTo(self, host, port):
         self._command_queue.put(ClientCommand(ClientCommand.CONNECT, (port)))
         
+    def getNextReply(self):
+        return self._reply_queue.get(True)
+        
+    def recieve(self):
+        self._command_queue.put(ClientCommand(ClientCommand.RECEIVE, ""))
+        
     def sendCommand(self,command_id, data = None):
         packed_command = struct.pack('@i', int(command_id))
         if data is not None:
@@ -121,18 +127,17 @@ class SocketThread(threading.Thread):
             if len(data) == message_length:
                 self._reply_queue.put(self._success_reply(data))
                 return
-            
             self._reply_queue.put(self._error_reply('Socket closed prematurely'))     
         except IOError as e:
             self._reply_queue.put(self._error_reply(str(e)))
     
-    def _recv_n_bytes(self, n):
+    def _recieve_n_bytes(self, size):
         data = b''
         while len(data) < size:
             if self._data_socket is None:
                 #Raise an IO error to signal the socket is closed.
-                raise IOError() 
-            recieved = self._socket.recv(size - len(data))
+                raise IOError()
+            recieved = self._data_socket.recv(size - len(data))
             data += recieved
             if len(recieved) <= 0:
                 #Raise an IO error to signal the socket is closed.
@@ -140,7 +145,7 @@ class SocketThread(threading.Thread):
         return data
     
     def _recieveInt32(self):
-        return struct.unpack('@i', self._recv_n_bytes(4))[0]
+        return struct.unpack('@i', self._recieve_n_bytes(4))[0]
     
     def _error_reply(self, errstr):
         return ClientReply(ClientReply.ERROR, errstr)

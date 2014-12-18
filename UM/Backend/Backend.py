@@ -1,6 +1,8 @@
 from UM.Backend.CommandFactory import CommandFactory
 from UM.Backend.SocketThread import SocketThread
 from UM.Preferences import Preferences
+from UM.Logger import Logger
+import struct
 import subprocess
 from time import sleep
 
@@ -34,6 +36,29 @@ class Backend(object):
     def recievedRawCommand(self,command_id, data):
         self._command_factory.create(command_id,data).run()
         
+    def convertBytesToVerticeList(self, data):
+        result = []
+        if not (len(data) % 12):
+            if data is not None:
+                for index in range(0,int(len(data)/12)): #For each 12 bits (3 floats)
+                    result.append(struct.unpack('fff',data[index*12:index*12+12]))
+                return result
+        else:
+            Logger.log('e', "Data length was incorrect for requested type")
+            return None            
+        
+    def convertBytesToVerticeWithNormalsList(self,data):
+        result = []
+        if not (len(data) % 24):
+            if data is not None:
+                for index in range(0,int(len(data)/24)): #For each 24 bits (6 floats)
+                    result.append(struct.unpack('ffffff',data[index*24:index*24+24]))
+                return result
+        else:
+            Logger.log('e', "Data length was incorrect for requested type")
+            return None
+    
+    
     def _runEngineProcess(self, command_list):
         kwargs = {}
         if subprocess.mswindows:
