@@ -7,8 +7,6 @@ from UM.Math.Vector import Vector
 from UM.Math.Quaternion import Quaternion
 from UM.Signal import Signal, SignalEmitter
 from UM.Logger import Logger
-from UM.View.CameraControls import CameraControls
-from UM.View.SelectionControls import SelectionControls
 
 import math
 
