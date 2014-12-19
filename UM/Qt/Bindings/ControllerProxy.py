@@ -3,8 +3,7 @@ from PyQt5.QtCore import QObject, QCoreApplication, pyqtSlot, QUrl
 from UM.Application import Application
 from UM.Scene.SceneNode import SceneNode
 from UM.Scene.BoxRenderer import BoxRenderer
-
-from UM.Operations.AddMeshOperation import AddMeshOperation
+from UM.Operations.AddSceneNodeOperation import AddSceneNodeOperation
 
 class ControllerProxy(QObject):
     def __init__(self, parent = None):
@@ -26,5 +25,9 @@ class ControllerProxy(QObject):
 
         app = Application.getInstance()
 
-        op = AddMeshOperation(app.getMeshFileHandler().read(file_name.toLocalFile(), app.getStorageDevice('local')), self._controller.getScene().getRoot())
+        node = SceneNode()
+        node.setMeshData(app.getMeshFileHandler().read(file_name.toLocalFile(), app.getStorageDevice('local')))
+        node.setSelectionMask(1)
+
+        op = AddSceneNodeOperation(node, self._controller.getScene().getRoot())
         app.getOperationStack().push(op)

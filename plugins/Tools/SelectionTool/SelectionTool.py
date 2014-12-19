@@ -3,7 +3,7 @@ from UM.Tool import Tool
 from UM.Application import Application
 from UM.Scene.BoxRenderer import BoxRenderer
 from UM.Scene.RayRenderer import RayRenderer
-
+from UM.Scene.Selection import Selection
 from UM.Scene.Iterator.BreadthFirstIterator import BreadthFirstIterator
 
 class SelectionTool(Tool):
@@ -11,7 +11,6 @@ class SelectionTool(Tool):
         super().__init__(name)
 
         self._scene = Application.getInstance().getController().getScene()
-        self._selection = []
         self._bboxes = {}
         self._selectionMask = 1
 
@@ -32,12 +31,10 @@ class SelectionTool(Tool):
                 intersections.sort(key=lambda k: k[1])
 
                 node = intersections[0][0]
-                for i in self._bboxes:
-                    self._bboxes[i].setParent(None)
 
-                self._bboxes.clear()
-                self._selection.clear()
-
-                box = BoxRenderer(node.getBoundingBox(), root)
-                self._bboxes[node] = box
-                self._selection.append(node)
+                if Selection.isSelected(node):
+                    Selection.remove(node)
+                else:
+                    Selection.add(node)
+            else:
+                Selection.clear()
