@@ -119,14 +119,15 @@ class QtGL2Renderer(Renderer):
             vertexBuffer.release()
             self._vertexBufferCache[mesh] = vertexBuffer
 
-            index_buffer = QOpenGLBuffer(QOpenGLBuffer.IndexBuffer)
-            index_buffer.create()
-            index_buffer.bind()
-            data = mesh.getIndicesAsByteArray()
-            if data is not None:
+            if mesh.hasIndices():
+                index_buffer = QOpenGLBuffer(QOpenGLBuffer.IndexBuffer)
+                index_buffer.create()
+                index_buffer.bind()
+
+                data = mesh.getIndicesAsByteArray()
                 index_buffer.allocate(data, len(data))
                 index_buffer.release()
-            self._indexBufferCache[mesh] = index_buffer
+                self._indexBufferCache[mesh] = index_buffer
 
         camera = self.getApplication().getController().getScene().getActiveCamera()
         if not camera:
@@ -156,8 +157,10 @@ class QtGL2Renderer(Renderer):
 
         vertexBuffer = self._vertexBufferCache[mesh]
         vertexBuffer.bind()
-        indexBuffer = self._indexBufferCache[mesh]
-        indexBuffer.bind()
+
+        if mesh.hasIndices():
+            indexBuffer = self._indexBufferCache[mesh]
+            indexBuffer.bind()
 
         self._defaultShader.setAttributeBuffer("a_vertex", self._gl.GL_FLOAT, 0, 3)
         self._defaultShader.enableAttributeArray("a_vertex")
@@ -174,7 +177,10 @@ class QtGL2Renderer(Renderer):
         elif mode is Renderer.RenderWireframe:
             self._gl.glPolygonMode(self._gl.GL_FRONT_AND_BACK, self._gl.GL_LINE)
 
-        self._gl.glDrawElements(type, mesh.getVertexCount(), self._gl.GL_UNSIGNED_INT, None)
+        if mesh.hasIndices():
+            self._gl.glDrawElements(type, mesh.getVertexCount(), self._gl.GL_UNSIGNED_INT, None)
+        else:
+            self._gl.glDrawArrays(type, 0, mesh.getVertexCount())
 
         if mode is Renderer.RenderWireframe:
             self._gl.glPolygonMode(self._gl.GL_FRONT_AND_BACK, self._gl.GL_FILL)
@@ -182,7 +188,10 @@ class QtGL2Renderer(Renderer):
         self._defaultShader.disableAttributeArray("a_vertex")
         self._defaultShader.disableAttributeArray("a_normal")
         vertexBuffer.release()
-        indexBuffer.release()
+
+        if mesh.hasIndices():
+            indexBuffer.release()
+
         self._defaultShader.release()
 
     def preRender(self, size, color):
@@ -197,6 +206,7 @@ class QtGL2Renderer(Renderer):
         self._gl.glDepthFunc(self._gl.GL_LESS)
         self._gl.glDepthMask(self._gl.GL_TRUE)
         self._gl.glEnable(self._gl.GL_CULL_FACE)
+        self._gl.glPointSize(16)
 
     ## private:
 
