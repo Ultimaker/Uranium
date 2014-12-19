@@ -1,10 +1,11 @@
 from UM.Backend.Backend import Backend
 from UM.Preferences import Preferences
-from UM.Operations.AddMeshOperation import AddMeshOperation
+from UM.Operations.AddSceneNodeOperation import AddSceneNodeOperation
 from UM.Mesh.MeshData import MeshData
 import struct
 import time
 from UM.Application import Application
+from UM.Scene.PointCloudNode import PointCloudNode
 
 
 class ScannerEngineBackend(Backend):
@@ -25,7 +26,9 @@ class ScannerEngineBackend(Backend):
             recieved_mesh = MeshData()
             for vert in self.convertBytesToVerticeList(data[4:len(data)]):
                 recieved_mesh.addVertex(vert[0],vert[1],vert[2])
-            operation = AddMeshOperation(recieved_mesh,app.getController().getScene().getRoot())
+            node = PointCloudNode(app.getController().getScene().getRoot())
+            node.setMeshData(recieved_mesh)
+            operation = AddSceneNodeOperation(node,app.getController().getScene().getRoot())
             app.getOperationStack().push(operation)
             #print(self.convertBytesToVerticeList(data[4:len(data)]))
         if data_id == 3:#recieved pointcloud with normals

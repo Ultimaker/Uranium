@@ -21,8 +21,8 @@ class ScannerApplication(QtApplication):
         self._plugin_registry.loadPlugin("ScannerEngineBackend")
 
         self.getController().setActiveView('MeshView')
-        controller.setCameraTool("CameraTool")
-        controller.setSelectionTool("SelectionTool")
+        self.getController().setCameraTool("CameraTool")
+        self.getController().setSelectionTool("SelectionTool")
         
         root = self.getController().getScene().getRoot()
         
