@@ -21,8 +21,19 @@ class Backend(object):
         self._socket_thread.connectTo('127.0.0.1' , 0xC20A)
         sleep(1) #Wait a bit until engine is running properly
         self._process = self._runEngineProcess([Preferences.getPreference("BackendLocation"), '--port', str(self._socket_thread.getPort())])
-        #self._socket_thread.command_queue.put(ClientCommand(ClientCommand.CONNECT, ('localhost', 0xC20A)))
-        
+        #self._socket_thread.command_queue.put(ClientCommand(ClientCommand.CONNECT, ('localhost', 0xC20A)))'
+        self._command_handlers = {}
+
+    ##  Interpret a byte stream as a command. 
+    #   Based on the command_id (the fist 4 bits of the message) a different action will be taken.
+    def interpretData(self, data):
+        data_id = struct.unpack('i', data[0:4])[0]
+        if data_id in self._command_handlers:
+            return self._command_handlers[data_id](data[4:len(data)])
+        else:
+            Logger.log('e', "Command type %s not recognised" % (data_id))
+            return None
+    
     def recieveData(self):
         while True:
             self._socket_thread.recieve()
