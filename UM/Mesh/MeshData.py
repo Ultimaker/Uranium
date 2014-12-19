@@ -137,6 +137,8 @@ class MeshData(object):
     def addVertexWithNormal(self,x,y,z,nx,ny,nz):
         if self._vertices is None:
             self.reserveVertexCount(10)
+            if self._normals is None: #Specific case, reserve vert count does not reservere size for normals
+                self._normals = numpy.zeros((10, 3), dtype=numpy.float32)
 
         if len(self._vertices) == self._vertex_count:
             self._vertices.resize((self._vertex_count * 2, 3))

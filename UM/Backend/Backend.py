@@ -33,7 +33,8 @@ class Backend(object):
             if reply.type is ClientReply.ERROR:
                 print("An error occured with connection with message: " + str(reply.data))
                 return None
-        
+    
+    ## Convert byte array containing 3 floats per vertex  
     def convertBytesToVerticeList(self, data):
         result = []
         if not (len(data) % 12):
@@ -44,7 +45,8 @@ class Backend(object):
         else:
             Logger.log('e', "Data length was incorrect for requested type")
             return None            
-        
+    
+    ## Convert byte array containing 6 floats per vertex
     def convertBytesToVerticeWithNormalsList(self,data):
         result = []
         if not (len(data) % 24):

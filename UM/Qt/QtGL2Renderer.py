@@ -206,7 +206,7 @@ class QtGL2Renderer(Renderer):
         self._gl.glDepthFunc(self._gl.GL_LESS)
         self._gl.glDepthMask(self._gl.GL_TRUE)
         self._gl.glEnable(self._gl.GL_CULL_FACE)
-        self._gl.glPointSize(16)
+        self._gl.glPointSize(2)
 
     ## private:
 
