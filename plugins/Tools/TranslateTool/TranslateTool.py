@@ -4,6 +4,11 @@ from UM.Event import Event
 from UM.Math.Plane import Plane
 from UM.Math.Vector import Vector
 
+from UM.Operations.TranslateOperation import TranslateOperation
+from UM.Application import Application
+
+from UM.Scene.Selection import Selection
+
 from . import TranslateToolHandle
 
 class TranslateTool(Tool):
@@ -13,36 +18,50 @@ class TranslateTool(Tool):
 
         self._object = None
         self._dragPlane = Plane(Vector.Unit_Y, 0.0)
+        self._target = None
 
     def event(self, event):
         if event.type == Event.ToolActivateEvent:
-            #TODO: This should be done on the selection
-            self._handle.setParent(self.getController().getScene().getRoot())
+            if Selection.getCount() > 0:
+                #TODO: Support multiple selection
+                self._handle.setParent(self.getController().getScene().getRoot())
+                self._handle.setPosition(Selection.getSelectedObject(0).getGlobalPosition())
 
         if event.type == Event.MousePressEvent:
-            #TODO: Add a proper selection class
-            if self.getController()._selectionControls._selection:
-                obj = self.getController()._selectionControls._selection[0]
+            #TODO: Support selection of multiple objects
+            if Selection.getCount() > 0:
+                obj = Selection.getSelectedObject(0)
                 ray = self.getController().getScene().getActiveCamera().getRay(event.x, event.y)
                 if obj.getBoundingBox().intersectsRay(ray):
                     self._object = obj
                     self._handle.setPosition(self._object.getGlobalPosition())
+
+                    target = self._dragPlane.intersectsRay(ray)
+                    if target:
+                        self._target = ray.getPointAlongRay(target)
+
                     return True
+                else:
+                    return False
 
         if event.type == Event.MouseMoveEvent:
             if self._object:
                 ray = self.getController().getScene().getActiveCamera().getRay(event.x, event.y)
 
-                target = self._dragPlane.intersectsRay(ray)
-                if target:
-                    self._object.setPosition(ray.getPointAlongRay(target))
-                    self._handle.setPosition(ray.getPointAlongRay(target))
+                newTarget = self._dragPlane.intersectsRay(ray)
+                if newTarget:
+                    n = ray.getPointAlongRay(newTarget)
+                    if self._target:
+                        t = n - self._target
+                        op = TranslateOperation(self._object, t)
+                        Application.getInstance().getOperationStack().push(op)
 
+                    self._target = n
                 return True
-
 
         if event.type == Event.MouseReleaseEvent:
             self._object = None
+            self._target = None
 
         if event.type == Event.ToolDeactivateEvent:
             self._handle.setParent(None)
