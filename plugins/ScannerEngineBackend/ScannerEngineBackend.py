@@ -15,12 +15,11 @@ class ScannerEngineBackend(Backend):
         
         
         self.interpretData(self.recieveData())
-        
 
+    ##  Interpret a byte stream as a command. 
+    #   Based on the command_id (the fist 4 bits of the message) a different action will be taken.
     def interpretData(self, data):
         app = Application.getInstance()
-        #op = AddMeshOperation(app.getMeshFileHandler().read(file_name.toLocalFile(), app.getStorageDevice('local')), self._controller.getScene().getRoot())
-        #app.getOperationStack().push(op)
         data_id = struct.unpack('i', data[0:4])[0] #The data ID tells us how to handle the data.
         if data_id == 2:#Recieved pointcloud without normals
             recieved_mesh = MeshData()

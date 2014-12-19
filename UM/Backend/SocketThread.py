@@ -41,7 +41,11 @@ class SocketThread(threading.Thread):
         self.alive.set()
         self._host = '127.0.0.1'
         self._port = None
+        
+        ## The server socket is where the GUI is listening for connections from the backend.
         self._server_socket = None
+        
+        ## Socket created when the engine connects. As we only have one backend, we only need one data socket.
         self._data_socket = None
         self.handlers = {
             ClientCommand.CONNECT: self._handle_CONNECT,
@@ -50,15 +54,22 @@ class SocketThread(threading.Thread):
             ClientCommand.RECEIVE: self._handle_RECEIVE,
         }
     
+   
     def getPort(self):
         return self._port
     
     def connectTo(self, host, port):
         self._command_queue.put(ClientCommand(ClientCommand.CONNECT, (port)))
-        
+    
+    ## Get the latest reply.
     def getNextReply(self):
         return self._reply_queue.get(True)
-        
+    
+    ## \brief Start listening for communication 'package'
+    #   This will start listening for the next burst of communication.
+    #   It pushes a ClientReply to the response queue. The type of this
+    #   command indicates if it was succesfull or not. Use getNextReply to
+    #   obtain the next reply
     def recieve(self):
         self._command_queue.put(ClientCommand(ClientCommand.RECEIVE))
         
@@ -67,11 +78,6 @@ class SocketThread(threading.Thread):
         if data is not None:
             packed_command += struct.pack('@i',data)
         self._command_queue.put(ClientCommand(ClientCommand.SEND, packed_command))
-    
-    ##  Return the next command_id & data that was recieved
-    def getNextCommand(self):
-        command_data = self._command_queue.get()
-        return command_data.command_id , command_data.data
     
     def run(self):
         while self.alive.isSet():
@@ -82,10 +88,13 @@ class SocketThread(threading.Thread):
             except queue.Empty as e:
                 continue
     
+    ## Try to join the thread.
+    # \param timeout The timeout for the join operation
     def join(self, timeout = None):
         self.alive.clear()
         threading.Thread.join(self, timeout)
     
+    ##  Function that is executed if a connect command is sent.
     def _handle_CONNECT(self, cmd):
         self._host = "127.0.0.1"
         self._port = 49674 #Hardcoded stuff
@@ -105,32 +114,38 @@ class SocketThread(threading.Thread):
         self._data_socket, address = self._server_socket.accept()
         print("Backend connected on " + str(address))
  
-    
+    ##  Function that is executed if a close command is sent.
     def _handle_CLOSE(self, cmd):
         self._data_socket.close()
         reply = ClientReply(ClientReply.SUCCESS)
         self._reply_queue.put(reply)
     
+    ##  Function that is executed if a send command is sent.
     def _handle_SEND(self, cmd):
         try:
             self._data_socket.sendall(struct.pack('@i', len(cmd.data)))
             self._data_socket.sendall(cmd.data)
-            self._reply_queue.put(self._success_reply())
+            self._reply_queue.put(self._createSuccessReply())
         except IOError as e:
             print(e)
-            self._reply_queue.put(self._error_reply(str(e)))
+            self._reply_queue.put(self._createErrorReply(str(e)))
     
+    ##  Function that is executed if a recieve command is sent.
     def _handle_RECEIVE(self, cmd):
         try:
             message_length = self._recieveInt32()
             data = self._recieve_n_bytes(message_length)
             if len(data) == message_length:
-                self._reply_queue.put(self._success_reply(data))
+                self._reply_queue.put(self._createSuccessReply(data))
                 return
-            self._reply_queue.put(self._error_reply('Socket closed prematurely'))     
+            self._reply_queue.put(self._createErrorReply('Socket closed prematurely'))     
         except IOError as e:
-            self._reply_queue.put(self._error_reply(str(e)))
+            self._reply_queue.put(self._createErrorReply(str(e)))
     
+    ##  Recieve a certain number of bytes.
+    #   \param size Number of bytes to recieve
+    #   \return data byte array (packed).
+    #   \throws IOError When socket has been closed.
     def _recieve_n_bytes(self, size):
         data = b''
         while len(data) < size:
@@ -147,8 +162,9 @@ class SocketThread(threading.Thread):
     def _recieveInt32(self):
         return struct.unpack('@i', self._recieve_n_bytes(4))[0]
     
-    def _error_reply(self, errstr):
+    ##  Convenience function to create error reply
+    def _createErrorReply(self, errstr):
         return ClientReply(ClientReply.ERROR, errstr)
-    
-    def _success_reply(self, data=None):
+    ##  Convenience function to create succes reply
+    def _createSuccessReply(self, data=None):
         return ClientReply(ClientReply.SUCCESS, data)
