@@ -41,7 +41,7 @@ class AxisAlignedBox:
 
     @property
     def center(self):
-        return (self._max - self._min) / 2.0
+        return self._min + ((self._max - self._min) / 2.0)
 
     @property
     def left(self):
