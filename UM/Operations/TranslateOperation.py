@@ -29,4 +29,4 @@ class TranslateOperation(Operation.Operation):
 
     ## private:
 
-    _mergeWindow = 1.0 #If the time between this operation and a different operation is less than this they can be merged.
+    _mergeWindow = 0.5 #If the time between this operation and a different operation is less than this they can be merged.
