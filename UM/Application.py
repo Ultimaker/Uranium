@@ -40,19 +40,18 @@ class Application():
         return self._application_name
 
     def setApplicationName(self, name):
-        print('setApplicationName', name)
         self._application_name = name
-    
+
     ##  Set the backend of the application (the program that does the heavy lifting).
     #   \param backend Backend
     def setBackend(self, backend):
         self._backend = backend
-    
+
     ##  Get reference of the machine settings object
     #   \returns machine_settings
     def getMachineSettings(self):
         return self._machine_settings
-    
+
     ##  Get the backend of the application (the program that does the heavy lifting).
     #   \returns Backend
     def getBackend(self):
