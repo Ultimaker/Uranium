@@ -1,6 +1,9 @@
+import time
+
 class Operation:
     def __init__(self):
         super().__init__()
+        self._timestamp = time.time()
 
     def undo(self):
         raise NotImplementedError("Undo should be reimplemented by subclasses")
@@ -9,4 +12,4 @@ class Operation:
         raise NotImplementedError("Redo should be reimplemented by subclasses")
 
     def mergeWith(self, other):
-        pass
+        return False
