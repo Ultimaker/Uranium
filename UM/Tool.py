@@ -1,8 +1,10 @@
+from UM.Signal import Signal, SignalEmitter
+
 ##  Abstract base class for tools that manipulate the scene.
 #
-class Tool(object):
+class Tool(SignalEmitter):
     def __init__(self, name):
-        super(Tool, self).__init__() # Call super to make multiple inheritence work.
+        super().__init__() # Call super to make multiple inheritence work.
         self._name = name
         self._renderer = None
         self._controller = None
@@ -22,3 +24,6 @@ class Tool(object):
 
     def setController(self, controller):
         self._controller = controller
+
+    beginOperation = Signal()
+    endOperation = Signal()

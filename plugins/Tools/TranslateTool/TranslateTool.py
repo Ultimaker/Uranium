@@ -40,6 +40,8 @@ class TranslateTool(Tool):
                     if target:
                         self._target = ray.getPointAlongRay(target)
 
+                    self.beginOperation.emit()
+
                     return True
                 else:
                     return False
@@ -62,6 +64,7 @@ class TranslateTool(Tool):
         if event.type == Event.MouseReleaseEvent:
             self._object = None
             self._target = None
+            self.endOperation.emit()
 
         if event.type == Event.ToolDeactivateEvent:
             self._handle.setParent(None)
