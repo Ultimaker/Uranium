@@ -19,3 +19,14 @@ class Float:
             return True
 
         return f1 > (f2 - tolerance) and f1 < (f2 + tolerance)
+
+    ##  Return the value clamped to a minimum and maximum value.
+    #
+    #   \param f1 \type{float} The value to clamp.
+    #   \param minimum \type{float} The minimum value.
+    #   \param maximum \type{float} The maximum value.
+    #
+    #   \return \type{float} Minimum if f1 < minimum, maximum if f1 > maximum, else f1.
+    @staticmethod
+    def clamp(f1, minimum, maximum):
+        return min(max(f1, minimum), maximum)
