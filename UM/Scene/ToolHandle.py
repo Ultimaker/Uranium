@@ -10,7 +10,7 @@ class ToolHandle(SceneNode.SceneNode):
         self.setMeshData(MeshData())
 
     def render(self, renderer):
-        renderer.setDepthTesting(False)
+        #renderer.setDepthTesting(False)
         renderer.renderLines(self.getGlobalTransformation(), self.getMeshData())
-        renderer.setDepthTesting(True)
+        #renderer.setDepthTesting(True)
         return True

@@ -15,5 +15,5 @@ class Platform(SceneNode.SceneNode):
 
     def render(self, renderer):
         if self.getMeshData():
-            renderer.renderMesh(self.getGlobalTransformation(), self.getMeshData(), Renderer.RenderTriangles)
+            renderer.renderMesh(self.getGlobalTransformation(), self.getMeshData())
             return True

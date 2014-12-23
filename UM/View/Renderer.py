@@ -16,10 +16,9 @@ class Renderer():
     def getApplication(self):
         return self._application
 
-    ##  Initialize the renderer.
-    #   This can be reimplemented to allow the renderer to setup any needed resources.
-    def initialize(self):
-        pass
+    ##  Setup the rendering state so we can do correct rendering.
+    def preRender(self):
+        raise NotImplementedError()
 
     def renderLines(self, transform, mesh):
         raise NotImplementedError("renderLines should be reimplemented by subclasses")
@@ -27,8 +26,13 @@ class Renderer():
     ##  Render a mesh using a certain transformation matrix.
     #   \param transform The transformation matrix to use to render the mesh.
     #   \param mesh The MeshData object to render.
-    def renderMesh(self, transform, mesh, mode = RenderTriangles):
+    #   \param kwargs Keyword arguments.
+    #                 Possible keywords:
+    #                 - material: The material to use to render. By default this is a standard grey lighted material.
+    #                 - mode: The mode to render in. By default this is Renderer.RenderTriangles.
+    def renderMesh(self, transform, mesh, **kwargs):
         raise NotImplementedError("renderMesh should be reimplemented by subclasses")
 
-    def setDepthTesting(self, depthTesting):
-        raise NotImplementedError("setDepthTesting should be reimplemented by subclasses")
+    ##  Create an instance of a renderer-specific subclass of Material
+    def createMaterial(self):
+        raise NotImplementedError()
