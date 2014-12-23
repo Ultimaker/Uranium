@@ -9,7 +9,7 @@ class Selection:
 
     @classmethod
     def remove(cls, object):
-        if object in cls._selection:
+        if object in cls.__selection:
             cls.__selection.remove(object)
             cls.selectionChanged.emit()
 
