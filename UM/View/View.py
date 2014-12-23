@@ -23,8 +23,15 @@ class View(object):
     def setRenderer(self, renderer):
         self._renderer = renderer
 
-    ##  Render the view.
-    #   This method should be reimplemented by subclasses to perform the actual rendering.
-    #   It is assumed there is an active, cleared OpenGL context when this method is called.
-    def render(self):
-        raise NotImplementedError("Views must implement the render() method")
+    ##  Begin the rendering process.
+    #
+    #   This should queue all the meshes that should be rendered.
+    def beginRendering(self):
+        raise NotImplementedError()
+
+    ##  Perform any steps needed when ending the rendering process.
+    #
+    #   If there is any cleanup or other tasks that need to be performed
+    #   after rendering this method should be used.
+    def endRendering(self):
+        raise NotImplementedError()

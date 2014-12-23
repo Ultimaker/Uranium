@@ -56,7 +56,7 @@ class QtApplication(QApplication, Application):
 
     def getRenderer(self):
         if not self._renderer:
-            self._renderer = QtGL2Renderer(self)
+            self._renderer = QtGL2Renderer()
 
         return self._renderer
 

@@ -30,6 +30,7 @@ class MainWindow(QQuickWindow):
 
     def setBackgroundColor(self, color):
         self._backgroundColor = color
+        self._app.getRenderer().setBackgroundColor(color)
 
     backgroundColor = pyqtProperty(QColor, fget=getBackgroundColor, fset=setBackgroundColor)
 
@@ -92,9 +93,17 @@ class MainWindow(QQuickWindow):
                 proj.setOrtho(-w, w, -h, h, -500, 500)
             camera.setProjectionMatrix(proj)
 
+        self._app.getRenderer().setViewportSize(event.size().width(), event.size().height())
+
     def _render(self):
-        self._app.getRenderer().preRender(self.size(), self._backgroundColor)
-        self._app.getController().getActiveView().render()
+        renderer = self._app.getRenderer()
+        view = self._app.getController().getActiveView()
+
+        renderer.beginRendering()
+        view.beginRendering()
+        renderer.renderQueuedMeshes()
+        view.endRendering()
+        renderer.endRendering()
 
     def _onSceneChanged(self, object):
         self.update()

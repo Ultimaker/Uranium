@@ -9,5 +9,5 @@ class PointCloudNode(SceneNode.SceneNode):
     def render(self, renderer):
         if self.getMeshData():
 
-            renderer.renderMesh(self.getGlobalTransformation(), self.getMeshData(), Renderer.RenderPoints)
+            renderer.queueMesh(self.getMeshData(), self.getGlobalTransformation(), mode = Renderer.RenderPoints)
             return True

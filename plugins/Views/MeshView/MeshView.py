@@ -7,7 +7,7 @@ class MeshView(View):
         super().__init__()
         self._material = None
 
-    def render(self):
+    def beginRendering(self):
         scene = self.getController().getScene()
         renderer = self.getRenderer()
 
@@ -22,4 +22,7 @@ class MeshView(View):
         for node in DepthFirstIterator(scene.getRoot()):
             if not node.render(renderer):
                 if node.getMeshData():
-                    renderer.renderMesh(node.getGlobalTransformation(), node.getMeshData(), material = self._material)
+                    renderer.queueMesh(node.getMeshData(), node.getGlobalTransformation(), material = self._material)
+
+    def endRendering(self):
+        pass

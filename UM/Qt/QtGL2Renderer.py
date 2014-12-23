@@ -1,5 +1,6 @@
-from PyQt5.QtGui import QOpenGLBuffer, QOpenGLContext, QOpenGLVersionProfile
+from PyQt5.QtGui import QColor, QOpenGLBuffer, QOpenGLContext, QOpenGLVersionProfile
 
+from UM.Application import Application
 from UM.View.Renderer import Renderer
 from UM.Math.Vector import Vector
 from UM.Math.Matrix import Matrix
@@ -13,16 +14,109 @@ from ctypes import c_void_p
 
 ##  A Renderer implementation using OpenGL2 to render.
 class QtGL2Renderer(Renderer):
-    def __init__(self, application):
-        super().__init__(application)
+    def __init__(self):
+        super().__init__()
 
         self._vertexBufferCache = {}
         self._indexBufferCache = {}
 
         self._initialized = False
-        self._lightPosition = Vector(0, 0, 0)
 
-    def initialize(self):
+        self._lightPosition = Vector(0, 0, 0)
+        self._backgroundColor = QColor(128, 128, 128)
+        self._viewportWidth = 0
+        self._viewportHeight = 0
+
+        self._solidsQueue = []
+        self._transparentQueue = []
+        self._overlayQueue = []
+
+    def createMaterial(self, vert, frag):
+        mat = QtGL2Material.QtGL2Material(self)
+        mat.loadVertexShader(vert)
+        mat.loadFragmentShader(frag)
+        mat.build()
+        return mat
+
+    def setLightPosition(self, position):
+        self._lightPosition = position
+
+    def setBackgroundColor(self, color):
+        print('setBackgroundColor')
+        self._backgroundColor = color
+
+    def setViewportSize(self, width, height):
+        self._viewportWidth = width
+        self._viewportHeight = height
+
+    def beginRendering(self):
+        if not self._initialized:
+            self._initialize()
+
+        self._gl.glViewport(0, 0, self._viewportWidth, self._viewportHeight)
+        self._gl.glClearColor(self._backgroundColor.redF(), self._backgroundColor.greenF(), self._backgroundColor.blueF(), self._backgroundColor.alphaF())
+        self._gl.glClear(self._gl.GL_COLOR_BUFFER_BIT | self._gl.GL_DEPTH_BUFFER_BIT)
+
+        self._gl.glPointSize(2)
+
+        self._solidsQueue.clear()
+        self._transparentQueue.clear()
+        self._overlayQueue.clear()
+
+    def queueMesh(self, mesh, transform, **kwargs):
+        queueItem = { 'transform': transform, 'mesh': mesh }
+
+        if 'material' in kwargs:
+            queueItem['material'] = kwargs['material']
+        else:
+            queueItem['material'] = self._defaultMaterial
+
+        if 'mode' in kwargs:
+            mode = kwargs['mode']
+            if mode is Renderer.RenderLines:
+                queueItem['mode'] = self._gl.GL_LINES
+            elif mode is Renderer.RenderPoints:
+                queueItem['mode'] = self._gl.GL_POINTS
+            elif mode is Renderer.RenderWireframe:
+                queueItem['mode'] = self._gl.GL_TRIANGLES
+                queueItem['wireframe'] = True
+            else:
+                queueItem['mode'] = self._gl.GL_TRIANGLES
+        else:
+            queueItem['mode'] = self._gl.GL_TRIANGLES
+
+        if 'transparent' in kwargs and kwargs['transparent']:
+            self._transparentQueue.append(queueItem)
+        elif 'overlay' in kwargs and kwargs['overlay']:
+            self._overlayQueue.append(queueItem)
+        else:
+            self._solidsQueue.append(queueItem)
+
+    def renderQueuedMeshes(self):
+        self._gl.glEnable(self._gl.GL_DEPTH_TEST)
+        self._gl.glDepthFunc(self._gl.GL_LESS)
+        self._gl.glDepthMask(self._gl.GL_TRUE)
+        self._gl.glEnable(self._gl.GL_CULL_FACE)
+
+        for item in self._solidsQueue:
+            self._renderItem(item)
+
+        self._gl.glDepthMask(self._gl.GL_FALSE)
+        self._gl.glEnable(self._gl.GL_BLEND)
+        #self._gl.glDisable(self._gl.GL_CULL_FACE)
+
+        for item in self._transparentQueue:
+            self._renderItem(item)
+
+        self._gl.glDisable(self._gl.GL_DEPTH_TEST)
+
+        for item in self._overlayQueue:
+            self._renderItem(item)
+
+    def endRendering(self):
+        pass
+
+    def _initialize(self):
         profile = QOpenGLVersionProfile()
         profile.setVersion(2, 0)
         self._gl = QOpenGLContext.currentContext().versionFunctions(profile)
@@ -40,65 +134,15 @@ class QtGL2Renderer(Renderer):
 
         self._initialized = True
 
-    def setLightPosition(self, position):
-        self._lightPosition = position
-
-    def renderLines(self, position, mesh):
-        if not self._initialized:
-            self.initialize()
-
-        if mesh not in self._vertexBufferCache:
-            vertexBuffer = QOpenGLBuffer(QOpenGLBuffer.VertexBuffer)
-            vertexBuffer.create()
-            vertexBuffer.bind()
-            data = mesh.getVerticesAsByteArray()
-            vertexBuffer.allocate(data, len(data))
-            vertexBuffer.release()
-            self._vertexBufferCache[mesh] = vertexBuffer
-
-        camera = self.getApplication().getController().getScene().getActiveCamera()
-        if not camera:
-            Logger.log("e", "No active camera set, can not render")
-            return
-
-        self._defaultMaterial.bind()
-
-        self._defaultMaterial.setUniformValue("u_projectionMatrix", camera.getProjectionMatrix(), cache = False)
-        self._defaultMaterial.setUniformValue("u_viewMatrix", camera.getGlobalTransformation().getInverse(), cache = False)
-        self._defaultMaterial.setUniformValue("u_viewPosition", camera.getGlobalPosition(), cache = False)
-        self._defaultMaterial.setUniformValue("u_modelMatrix", position, cache = False)
-        self._defaultMaterial.setUniformValue("u_lightPosition", self._lightPosition, cache = False)
-
-        normalMatrix = position
-        normalMatrix.setRow(3, [0, 0, 0, 1])
-        normalMatrix.setColumn(3, [0, 0, 0, 1])
-        normalMatrix = normalMatrix.getInverse().getTransposed()
-        self._defaultMaterial.setUniformValue("u_normalMatrix", normalMatrix, cache = False)
-
-        vertexBuffer = self._vertexBufferCache[mesh]
-        vertexBuffer.bind()
-
-        self._defaultMaterial.enableAttribute("a_vertex", Vector, 0)
-
-        self._gl.glDrawArrays(self._gl.GL_LINES, 0, mesh.getVertexCount())
-
-        self._defaultMaterial.disableAttribute("a_vertex")
-        vertexBuffer.release()
-        self._defaultMaterial.release()
-
-    def renderMesh(self, position, mesh, **kwargs):
-        if not self._initialized:
-            self.initialize()
-
-        mode = Renderer.RenderTriangles
-        if 'mode' in kwargs:
-            mode = kwargs['mode']
-
-        material = self._defaultMaterial
-        if 'material' in kwargs:
-            material = kwargs['material']
+    def _renderItem(self, item):
+        mesh = item['mesh']
+        transform = item['transform']
+        material = item['material']
+        mode = item['mode']
+        wireframe = item['wireframe'] if 'wireframe' in item else False
 
         if mesh not in self._vertexBufferCache:
+            ##TODO: Empty the cache when the meshdata gets destroyed
             vertexBuffer = QOpenGLBuffer(QOpenGLBuffer.VertexBuffer)
             vertexBuffer.create()
             vertexBuffer.bind()
@@ -106,7 +150,7 @@ class QtGL2Renderer(Renderer):
 
             if mesh.hasNormals():
                 normals = mesh.getNormalsAsByteArray()
-                #Number of vertices * number of components (3 for vertex, 3 for normal) * size of 32-bit float (4)
+                ##Number of vertices * number of components (3 for vertex, 3 for normal) * size of 32-bit float (4)
                 vertexBuffer.allocate(mesh.getVertexCount() * 6 * 4)
                 vertexBuffer.write(0, vertices, len(vertices))
                 vertexBuffer.write(len(vertices), normals, len(normals))
@@ -126,7 +170,7 @@ class QtGL2Renderer(Renderer):
                 index_buffer.release()
                 self._indexBufferCache[mesh] = index_buffer
 
-        camera = self.getApplication().getController().getScene().getActiveCamera()
+        camera = Application.getInstance().getController().getScene().getActiveCamera()
         if not camera:
             Logger.log("e", "No active camera set, can not render")
             return
@@ -136,14 +180,15 @@ class QtGL2Renderer(Renderer):
         material.setUniformValue("u_projectionMatrix", camera.getProjectionMatrix(), cache = False)
         material.setUniformValue("u_viewMatrix", camera.getGlobalTransformation().getInverse(), cache = False)
         material.setUniformValue("u_viewPosition", camera.getGlobalPosition(), cache = False)
-        material.setUniformValue("u_modelMatrix", position, cache = False)
+        material.setUniformValue("u_modelMatrix", transform, cache = False)
         material.setUniformValue("u_lightPosition", self._lightPosition, cache = False)
 
-        normalMatrix = position
-        normalMatrix.setRow(3, [0, 0, 0, 1])
-        normalMatrix.setColumn(3, [0, 0, 0, 1])
-        normalMatrix = normalMatrix.getInverse().getTransposed()
-        material.setUniformValue("u_normalMatrix", normalMatrix, cache = False)
+        if mesh.hasNormals():
+            normalMatrix = transform
+            normalMatrix.setRow(3, [0, 0, 0, 1])
+            normalMatrix.setColumn(3, [0, 0, 0, 1])
+            normalMatrix = normalMatrix.getInverse().getTransposed()
+            material.setUniformValue("u_normalMatrix", normalMatrix, cache = False)
 
         vertexBuffer = self._vertexBufferCache[mesh]
         vertexBuffer.bind()
@@ -157,20 +202,15 @@ class QtGL2Renderer(Renderer):
         if mesh.hasNormals():
             material.enableAttribute("a_normal", Vector, mesh.getVertexCount() * 3 * 4)
 
-        type = self._gl.GL_TRIANGLES
-        if mode is Renderer.RenderLines:
-            type = self._gl.GL_LINES
-        elif mode is Renderer.RenderPoints:
-            type = self._gl.GL_POINTS
-        elif mode is Renderer.RenderWireframe:
+        if wireframe:
             self._gl.glPolygonMode(self._gl.GL_FRONT_AND_BACK, self._gl.GL_LINE)
 
         if mesh.hasIndices():
-            self._gl.glDrawElements(type, mesh.getVertexCount(), self._gl.GL_UNSIGNED_INT, None)
+            self._gl.glDrawElements(mode, mesh.getVertexCount(), self._gl.GL_UNSIGNED_INT, None)
         else:
-            self._gl.glDrawArrays(type, 0, mesh.getVertexCount())
+            self._gl.glDrawArrays(mode, 0, mesh.getVertexCount())
 
-        if mode is Renderer.RenderWireframe:
+        if wireframe:
             self._gl.glPolygonMode(self._gl.GL_FRONT_AND_BACK, self._gl.GL_FILL)
 
         material.disableAttribute("a_vertex")
@@ -181,24 +221,3 @@ class QtGL2Renderer(Renderer):
             indexBuffer.release()
 
         material.release()
-
-    def preRender(self, size, color):
-        if not self._initialized:
-            self.initialize()
-
-        self._gl.glViewport(0, 0, size.width(), size.height())
-        self._gl.glClearColor(color.redF(), color.greenF(), color.blueF(), color.alphaF())
-        self._gl.glClear(self._gl.GL_COLOR_BUFFER_BIT | self._gl.GL_DEPTH_BUFFER_BIT)
-
-        self._gl.glEnable(self._gl.GL_DEPTH_TEST)
-        self._gl.glDepthFunc(self._gl.GL_LESS)
-        self._gl.glDepthMask(self._gl.GL_TRUE)
-        self._gl.glEnable(self._gl.GL_CULL_FACE)
-        self._gl.glPointSize(2)
-
-    def createMaterial(self, vert, frag):
-        mat = QtGL2Material.QtGL2Material(self)
-        mat.loadVertexShader(vert)
-        mat.loadFragmentShader(frag)
-        mat.build()
-        return mat

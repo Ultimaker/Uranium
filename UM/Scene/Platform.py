@@ -15,5 +15,5 @@ class Platform(SceneNode.SceneNode):
 
     def render(self, renderer):
         if self.getMeshData():
-            renderer.renderMesh(self.getGlobalTransformation(), self.getMeshData())
+            renderer.queueMesh(self.getMeshData(), self.getGlobalTransformation())
             return True

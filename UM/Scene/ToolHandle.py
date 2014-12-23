@@ -8,9 +8,8 @@ class ToolHandle(SceneNode.SceneNode):
         super().__init__(parent)
 
         self.setMeshData(MeshData())
+        self._material = None
 
     def render(self, renderer):
-        #renderer.setDepthTesting(False)
-        renderer.renderLines(self.getGlobalTransformation(), self.getMeshData())
-        #renderer.setDepthTesting(True)
+        renderer.queueMesh(self.getMeshData(), self.getGlobalTransformation(), mode = Renderer.RenderLines, overlay = True)
         return True
