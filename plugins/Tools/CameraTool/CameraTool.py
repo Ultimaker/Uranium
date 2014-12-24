@@ -89,7 +89,7 @@ class CameraTool(Tool):
 
         m = Matrix()
         m.setByRotationAxis(dx, Vector.Unit_Y)
-        m.rotateByAxis(dy, Vector.Unit_X)
+        m.rotateByAxis(dy, Vector.Unit_Y.cross(diff).normalize())
 
         n = diff.multiply(m)
         n += self._origin
