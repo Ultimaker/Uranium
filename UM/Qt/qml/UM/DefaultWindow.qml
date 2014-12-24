@@ -14,6 +14,18 @@ UM.MainWindow {
     width: 1024
     height: 768
 
+    DropArea {
+        anchors.fill: parent
+
+        onDropped: {
+            if(drop.urls.length > 0) {
+                for(var i in drop.urls) {
+                    UM.Controller.addMesh(drop.urls[i]);
+                }
+            }
+        }
+    }
+
     FilePanel {
         anchors.left: parent.left
         anchors.verticalCenter: parent.verticalCenter
