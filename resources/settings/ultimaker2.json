@@ -1,5 +1,5 @@
 {
-    "platform": "ultimaker2_platform.stl",
+    "platform": "ultimaker2_platform.obj",
     "Categories": [
         {
             "key": "resolution",
