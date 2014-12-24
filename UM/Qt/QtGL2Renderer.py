@@ -66,28 +66,22 @@ class QtGL2Renderer(Renderer):
     def queueMesh(self, mesh, transform, **kwargs):
         queueItem = { 'transform': transform, 'mesh': mesh }
 
-        if 'material' in kwargs:
-            queueItem['material'] = kwargs['material']
-        else:
-            queueItem['material'] = self._defaultMaterial
+        queueItem['material'] = kwargs.get('material', self._defaultMaterial)
 
-        if 'mode' in kwargs:
-            mode = kwargs['mode']
-            if mode is Renderer.RenderLines:
-                queueItem['mode'] = self._gl.GL_LINES
-            elif mode is Renderer.RenderPoints:
-                queueItem['mode'] = self._gl.GL_POINTS
-            elif mode is Renderer.RenderWireframe:
-                queueItem['mode'] = self._gl.GL_TRIANGLES
-                queueItem['wireframe'] = True
-            else:
-                queueItem['mode'] = self._gl.GL_TRIANGLES
+        mode = kwargs.get('mode', Renderer.RenderTriangles)
+        if mode is Renderer.RenderLines:
+            queueItem['mode'] = self._gl.GL_LINES
+        elif mode is Renderer.RenderPoints:
+            queueItem['mode'] = self._gl.GL_POINTS
+        elif mode is Renderer.RenderWireframe:
+            queueItem['mode'] = self._gl.GL_TRIANGLES
+            queueItem['wireframe'] = True
         else:
             queueItem['mode'] = self._gl.GL_TRIANGLES
 
-        if 'transparent' in kwargs and kwargs['transparent']:
+        if kwargs.get('transparent', False):
             self._transparentQueue.append(queueItem)
-        elif 'overlay' in kwargs and kwargs['overlay']:
+        elif kwargs.get('overlay', False):
             self._overlayQueue.append(queueItem)
         else:
             self._solidsQueue.append(queueItem)
@@ -103,7 +97,6 @@ class QtGL2Renderer(Renderer):
 
         self._gl.glDepthMask(self._gl.GL_FALSE)
         self._gl.glEnable(self._gl.GL_BLEND)
-        #self._gl.glDisable(self._gl.GL_CULL_FACE)
 
         for item in self._transparentQueue:
             self._renderItem(item)
@@ -139,7 +132,7 @@ class QtGL2Renderer(Renderer):
         transform = item['transform']
         material = item['material']
         mode = item['mode']
-        wireframe = item['wireframe'] if 'wireframe' in item else False
+        wireframe = item.get('wireframe', False)
 
         if mesh not in self._vertexBufferCache:
             ##TODO: Empty the cache when the meshdata gets destroyed
