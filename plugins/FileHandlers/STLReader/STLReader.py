@@ -1,9 +1,12 @@
 from UM.Mesh.MeshReader import MeshReader
 from UM.Mesh.MeshData import MeshData
 from UM.Logger import Logger
+from UM.Math.Matrix import Matrix
+from UM.Math.Vector import Vector
 
 import os
 import struct
+import math
 
 class STLReader(MeshReader):
     def __init__(self):
@@ -30,6 +33,12 @@ class STLReader(MeshReader):
                 self._loadBinary(mesh, f)
 
             storage_device.closeFile(f)
+
+            # Correct for the fact that most STL files are saved with Z as up axis.
+            transform = Matrix()
+            transform.rotateByAxis(math.pi / 2, Vector.Unit_X)
+            mesh = mesh.getTransformed(transform)
+
             mesh.calculateNormals()
 
             Logger.log("d", "Loaded a mesh with %s vertices", mesh.getVertexCount())
