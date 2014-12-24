@@ -22,7 +22,7 @@ class OBJReader(MeshReader):
                 parts = line.split()
                 if len(parts) < 1:
                     continue
-                if parts[0] == 'v': # The data is loaded so that it's axis make more sense
+                if parts[0] == 'v':
                     vertex_list.append([float(parts[1]), float(parts[2]), float(parts[3])])
                 if parts[0] == 'vn':
                     normal_list.append([float(parts[1]), float(parts[2]), float(parts[3])])
@@ -56,7 +56,7 @@ class OBJReader(MeshReader):
                     mesh.addFace(vertex_list[i][0], vertex_list[i][1], vertex_list[i][2], vertex_list[j][0], vertex_list[j][1], vertex_list[j][2], vertex_list[k][0], vertex_list[k][1], vertex_list[k][2])
                 
             if(num_normals != num_vertices): # We didn't get enough normals for the verts, so calculate them
-                volume.calculateNormals()
+                mesh.calculateNormals()
         return mesh
     
     
