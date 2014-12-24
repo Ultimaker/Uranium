@@ -1,6 +1,7 @@
 from UM.Mesh.Vertex import Vertex
 from UM.Math.Vector import Vector
 from UM.Math.AxisAlignedBox import AxisAlignedBox
+from UM.Signal import Signal, SignalEmitter
 
 import numpy
 import numpy.linalg
@@ -13,14 +14,14 @@ import numpy.linalg
 #   Normals are stored in the same manner and kept in sync with the vertices. Indices
 #   are stored as a two-dimensional array of integers with the rows being the individual
 #   faces and the three columns being the indices that refer to the individual vertices.
-class MeshData(object):
-    def __init__(self):
-        self._vertices = None
-        self._normals = None
-        self._indices = None
-        self._vertex_count = 0
-        self._face_count = 0
-        
+class MeshData(SignalEmitter):
+    def __init__(self, **kwargs):
+        self._vertices = kwargs.get('vertices', None)
+        self._normals = kwargs.get('normals', None)
+        self._indices = kwargs.get('indices', None)
+        self._vertex_count = len(self._vertices) if self._vertices is not None else 0
+        self._face_count = len(self._indices) if self._indices is not None else 0
+
     ##  Get the array of vertices
     def getVertices(self):
         if self._vertices is None:
@@ -58,22 +59,24 @@ class MeshData(object):
     
     ##  Transform the meshdata by given Matrix
     #   \param transformation 4x4 homogenous transformation matrix
-    def transform(self, transformation):
-        #TODO: Implement
-        pass
+    def getTransformed(self, transformation):
+        data = numpy.pad(self._vertices.copy(), ((0,0), (0,1)), 'constant', constant_values=(0.0, 1.0))
+        data = data.dot(transformation.getData())
+        data += transformation.getData()[:,3]
+        data = data[:,0:3]
+        return MeshData(vertices = data, indices = self._indices.copy())
 
     ##  Get the extents of this mesh.
     #
-    #
+    #   \param matrix The transformation matrix from model to world coordinates.
     def getExtents(self, matrix = None):
         if self._vertices is None:
             return AxisAlignedBox()
 
-        data = numpy.pad(self._vertices.copy(), (0,1), 'constant', constant_values=(0.0, 1.0))
+        data = numpy.pad(self._vertices.copy(), ((0,0), (0,1)), 'constant', constant_values=(0.0, 1.0))
 
         if matrix is not None:
             data = data.dot(matrix.getData())
-
         data += matrix.getData()[:,3]
 
         min = data.min(axis=0)
