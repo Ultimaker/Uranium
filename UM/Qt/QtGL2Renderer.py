@@ -174,7 +174,7 @@ class QtGL2Renderer(Renderer):
         material.setUniformValue("u_viewMatrix", camera.getGlobalTransformation().getInverse(), cache = False)
         material.setUniformValue("u_viewPosition", camera.getGlobalPosition(), cache = False)
         material.setUniformValue("u_modelMatrix", transform, cache = False)
-        material.setUniformValue("u_lightPosition", self._lightPosition, cache = False)
+        material.setUniformValue("u_lightPosition", camera.getGlobalPosition(), cache = False)
 
         if mesh.hasNormals():
             normalMatrix = transform
