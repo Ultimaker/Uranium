@@ -1,5 +1,7 @@
 task :test do
-    sh "python -m unittest discover tests \"Test*.py\""
+    FileList['tests/*/Test*.py'].each do |file|
+        sh "PYTHONPATH=. python #{file}"
+    end
 end
 
 task :benchmark do
