@@ -134,6 +134,5 @@ class Signal:
 class SignalEmitter:
     ##  Initialize method.
     def __init__(self):
-        for name in self.__dict__:
-            if type(self.__dict__[name]) == Signal:
-                setattr(self, name, Signal())
+        for name, signal in inspect.getmembers(self, lambda i: isinstance(i, Signal)):
+            setattr(self, name, Signal(type = signal.getType()))
