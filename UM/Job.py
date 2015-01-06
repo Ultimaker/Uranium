@@ -1,0 +1,77 @@
+
+from UM.Signal import Signal, SignalEmitter
+
+from UM.JobQueue import JobQueue
+
+##  Base class for things that should be performed in a thread.
+#
+#   The Job class provides a basic interface for a 'job', that is a
+#   self-contained task that should be performed in a thread. It makes
+#   use of the JobQueue for the actual threading.
+class Job(SignalEmitter):
+    ##  Initialize.
+    #
+    #   \param description \type{string} A short description of the job that can be displayed in the UI.
+    def __init__(self, description = None):
+        super().__init__()
+        self._description = description
+        self._running = False
+        self._finished = False
+        self._result = None
+
+    ##  Get the description for this job.
+    def getDescription(self):
+        return self._description
+
+    ##  Perform the actual task of this job. Should be reimplemented by subclasses.
+    def run(self):
+        raise NotImplementedError()
+
+    ##  Get the result of the job.
+    #
+    #   The actual result object returned by this method is dependant on the implementation.
+    def getResult(self):
+        return self._result
+
+    ##  Set the result of this job.
+    #
+    #   This should be called by run() to set the actual result of the Job.
+    def setResult(self, result):
+        self._result = result
+
+    ##  Start the job.
+    #
+    #   This will put the Job into the JobQueue to be processed whenever a thread is available.
+    #
+    #   \sa JobQueue::add()
+    def start(self):
+        JobQueue.getInstance().add(self)
+
+    ##  Cancel the job.
+    #
+    #   This will remove the Job from the JobQueue. If the run() function has already been called,
+    #   this will do nothing.
+    def cancel(self):
+        JobQueue.getInstance().remove(self)
+
+    ##  Check whether the job is currently running.
+    #
+    #   \return True if run() has been called, False if not.
+    def isRunning(self):
+        return self._running
+
+    ##  Check whether the job has finished processing.
+    #
+    #   \return True if the job has finished, False if not.
+    def isFinished(self):
+        return self._finished
+
+    ##  Emitted when the job has finished processing.
+    #
+    #   \param job The finished job.
+    finished = Signal(type = Signal.Queued)
+
+    ##  Emitted when the job processing has progressed.
+    #
+    #   \param amount \type{int} The amount of progress made, from 0 to 100.
+    progress = Signal(type = Signal.Queued)
