@@ -107,6 +107,9 @@ class AxisAlignedBox:
         self._max = m
         self._ensureMinMax()
 
+    def isValid(self):
+        return (self._min.x != self._max.x and self._min.y != self._max.y and self._min.z != self._max.z)
+
     def intersectsRay(self, ray):
         inv = ray.inverseDirection
 
@@ -148,16 +151,30 @@ class AxisAlignedBox:
             self._min.setZ(self._max.z)
             self._max.setZ(z)
 
-    #def __add__(self, other):
-        #b = AxisAlignedBox()
-        #b += self
-        #b += other
-        #return b
+    def __add__(self, other):
+        b = AxisAlignedBox()
+        b += self
+        b += other
+        return b
 
-    #def __iadd__(self, other):
-        #self._dimensions += other._dimensions
-        #self._center = self._dimensions / 2.0
-        #return self
+    def __iadd__(self, other):
+        if not other.isValid():
+            return self
+
+        newMin = Vector()
+        newMin.setX(min(self._min.x, other.left))
+        newMin.setY(min(self._min.y, other.bottom))
+        newMin.setZ(min(self._min.z, other.back))
+
+        newMax = Vector()
+        newMax.setX(max(self._max.x, other.right))
+        newMax.setY(max(self._max.y, other.top))
+        newMax.setZ(max(self._max.z, other.front))
+
+        self._min = newMin
+        self._max = newMax
+
+        return self
 
     #def __sub__(self, other):
         #b = AxisAlignedBox()
