@@ -4,7 +4,10 @@
 #   Author:  Arjen Hiemstra
 #   License: MIT
 
+from UM.Event import CallFunctionEvent
+
 import inspect
+import threading
 from weakref import WeakSet, WeakKeyDictionary
 
 ##  Simple implementation of signals and slots.
@@ -29,19 +32,44 @@ from weakref import WeakSet, WeakKeyDictionary
 #   Based on http://code.activestate.com/recipes/577980-improved-signalsslots-implementation-in-python/
 #
 class Signal:
-    def __init__(self):
+    ##  Signal types.
+    #   These indicate the type of signal, that is, how the signal handles calling the connected
+    #   slots. Direct connections immediately call the connected slots from the thread calling
+    #   emit(). Queued connections will make sure to only call the connected slots from the
+    #   main application thread.
+    Direct = 1
+    Queued = 2
+
+    ##  Initialize the instance.
+    #
+    #   \param kwargs Keyword arguments.
+    #                 Possible keywords:
+    #                 - type: The signal type. Defaults to Direct.
+    def __init__(self, **kwargs):
         self.__functions = WeakSet()
         self.__methods = WeakKeyDictionary()
         self.__signals = WeakSet()
+        self.__type = kwargs.get('type', Signal.Direct)
 
     def __call__(self):
         raise NotImplementedError("Call emit() to emit a signal")
 
+    def getType(self):
+        return self.__type
+
     ##  Emit the signal, indirectly calling all connected slots.
+    #
     #   \param args The positional arguments to pass along.
     #   \param kargs The keyword arguments to pass along.
+    #
+    #   \note If the Signal type is Queued and this is not called from the application thread
+    #   the call will be posted as an event to the application main thread, which means the
+    #   function will be called on the next application event loop tick.
     def emit(self, *args, **kargs):
-        #obj = inspect.currentframe().f_back.f_locals['self']
+        if self.__type == Signal.Queued:
+            if threading.current_thread() is not Signal._app.getMainThread():
+                Signal._app.functionEvent(CallFunctionEvent(self.emit, args, kargs))
+                return
 
         # Call handler functions
         for func in self.__functions:
@@ -87,6 +115,12 @@ class Signal:
         self.__functions.clear()
         self.__methods.clear()
         self.__signals.clear()
+
+    ##  private:
+
+    #   To avoid circular references when importing Application, this should be
+    #   set by the Application instance.
+    _app = None
 
 ##  Convenience class to simplify signal creation.
 #

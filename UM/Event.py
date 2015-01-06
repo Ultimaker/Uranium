@@ -13,6 +13,7 @@ class Event:
     ToolActivateEvent = 7
     ToolDeactivateEvent = 8
     MouseWheelEvent = 9
+    CallFunctionEvent = 10
 
     def __init__(self, type):
         super().__init__()
@@ -116,3 +117,14 @@ class KeyEvent(Event):
 class ToolEvent(Event):
     def __init__(self, type):
         super().__init__(type)
+
+##  Event used to call a function.
+class CallFunctionEvent(Event):
+    def __init__(self, function, args, kwargs):
+        super().__init__(Event.CallFunctionEvent)
+        self._function = function
+        self._args = args
+        self._kwargs = kwargs
+
+    def call(self):
+        self._function(*self._args, **self._kwargs)

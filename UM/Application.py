@@ -4,19 +4,25 @@ from UM.Mesh.MeshFileHandler import MeshFileHandler
 from UM.Settings.MachineSettings import MachineSettings
 from UM.Resources import Resources
 from UM.Operations.OperationStack import OperationStack
+from UM.Event import CallFunctionEvent
+from UM.Signal import Signal
+
+import threading
 
 ##  Central object responsible for running the main event loop and creating other central objects.
 #
 #   The Application object is a central object for accessing other important objects. It is also
 #   responsible for starting the main event loop. It is passed on to plugins so it can be easily
 #   used to access objects required for those plugins.
-class Application():
+class Application:
     def __init__(self):
         if(Application._instance != None):
             raise ValueError("Duplicate singleton creation")
         # If the constructor is called and there is no instance, set the instance to self. 
         # This is done because we can't make constructor private
-        Application._instance = self 
+        Application._instance = self
+
+        Signal._app = self
 
         super().__init__() # Call super to make multiple inheritence work.
 
@@ -35,6 +41,8 @@ class Application():
         self._machine_settings.loadSettingsFromFile(Resources.getPath(Resources.SettingsLocation, "ultimaker2.json"))
 
         self._operation_stack = OperationStack()
+
+        self._main_thread = threading.current_thread()
 
     def getApplicationName(self):
         return self._application_name
@@ -106,6 +114,16 @@ class Application():
     ##  Return an application-specific Renderer object.
     def getRenderer(self):
         raise NotImplementedError("getRenderer must be implemented by subclasses.")
+
+    ##  Post a function event onto the event loop.
+    #
+    #   This takes a CallFunctionEvent object and puts it into the actual event loop.
+    def functionEvent(self, event):
+        raise NotImplementedError("postEvent must be implemented by subclasses.")
+
+    ##  Get the application's main thread.
+    def getMainThread(self):
+        return self._main_thread
 
     ##  Return the singleton instance of the application object
     @classmethod
