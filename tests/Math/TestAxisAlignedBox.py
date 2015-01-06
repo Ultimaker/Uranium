@@ -76,6 +76,15 @@ class TestAxisAlignedBox(unittest.TestCase):
         self.assertEqual(-10.0, box.back)
         self.assertEqual(-5.0, box.front)
 
+    def test_Add(self):
+        box1 = AxisAlignedBox(minimum = Vector(-10.0, -10.0, -10.0), maximum = Vector(0.0, 0.0, 0.0))
+        box2 = AxisAlignedBox(minimum = Vector(0.0, 0.0, 0.0), maximum = Vector(10.0, 10.0, 10.0))
+
+        joined = box1 + box2
+
+        self.assertEqual(Vector(-10.0, -10.0, -10.0), joined.minimum)
+        self.assertEqual(Vector(10.0, 10.0, 10.0), joined.maximum)
+
     def test_Intersect(self):
         box = AxisAlignedBox(10.0, 10.0, 10.0)
 
