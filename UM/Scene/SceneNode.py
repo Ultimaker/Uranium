@@ -2,6 +2,8 @@ from UM.Math.Matrix import Matrix
 from UM.Math.Vector import Vector
 from UM.Math.AxisAlignedBox import AxisAlignedBox
 from UM.Signal import Signal, SignalEmitter
+from UM.Job import Job
+
 from copy import copy, deepcopy
 
 import math
@@ -23,6 +25,7 @@ class SceneNode(SignalEmitter):
         self._locked = False
         self._selectionMask = 0
         self._aabb = None
+        self._aabbJob = None
 
         if parent:
             parent.addChild(self)
@@ -60,7 +63,7 @@ class SceneNode(SignalEmitter):
     #   \param mesh_data MeshData object
     def setMeshData(self, mesh_data):
         self._mesh_data = mesh_data
-        self._aabb = None
+        self._resetAABB()
         self.meshDataChanged.emit(self)
 
     ##  Emitted whenever the attached mesh data object changes.
@@ -222,16 +225,25 @@ class SceneNode(SignalEmitter):
     def setLocked(self, lock):
         self._locked = lock
 
+    ##  Get the bounding box of this node and its children.
+    #
+    #   Note that the AABB is calculated in a separate thread. This method will return an invalid (size 0) AABB
+    #   while the calculation happens.
     def getBoundingBox(self):
-        # TODO: Cache this result
-        if self._mesh_data:
-            if not self._aabb:
-                self._aabb = self._mesh_data.getExtents(self.getGlobalTransformation())
-
+        if self._aabb:
             return self._aabb
+
+        if self._aabbJob:
+            if self._aabbJob.isFinished():
+                self._aabb = self._aabbJob.getResult()
+                self._aabbJob = None
+                return self._aabb
+        else:
+            self._resetAABB()
 
         return AxisAlignedBox()
 
+    # TODO: This can probably be simplified to an enabled property or similar. Maybe combine with locked?
     def getSelectionMask(self):
         return self._selectionMask
 
@@ -241,5 +253,33 @@ class SceneNode(SignalEmitter):
     ##  private:
 
     def _transformChanged(self):
-        self._aabb = None
+        self._resetAABB()
         self.transformationChanged.emit(self)
+
+    def _resetAABB(self):
+        self._aabb = None
+
+        if self._aabbJob:
+            self._aabbJob.cancel()
+
+        self._aabbJob = _CalculateAABBJob(self)
+        self._aabbJob.start()
+
+##  Internal
+#   Calculates the AABB of a node and its children.
+class _CalculateAABBJob(Job):
+    def __init__(self, node):
+        super().__init__()
+        self._node = node
+
+    def run(self):
+        aabb = None
+        if self._node._mesh_data:
+            aabb = self._node._mesh_data.getExtents(self._node.getGlobalTransformation())
+        else:
+            aabb = AxisAlignedBox()
+
+        for child in self._node._children:
+            aabb += child.getBoundingBox()
+
+        self.setResult(aabb)
