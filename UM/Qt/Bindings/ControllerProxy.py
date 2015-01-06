@@ -4,6 +4,7 @@ from UM.Application import Application
 from UM.Scene.SceneNode import SceneNode
 from UM.Scene.BoxRenderer import BoxRenderer
 from UM.Operations.AddSceneNodeOperation import AddSceneNodeOperation
+from UM.Mesh.LoadMeshJob import LoadMeshJob
 
 class ControllerProxy(QObject):
     def __init__(self, parent = None):
@@ -26,8 +27,15 @@ class ControllerProxy(QObject):
         app = Application.getInstance()
 
         node = SceneNode()
-        node.setMeshData(app.getMeshFileHandler().read(file_name.toLocalFile(), app.getStorageDevice('local')))
         node.setSelectionMask(1)
 
         op = AddSceneNodeOperation(node, self._controller.getScene().getRoot())
         app.getOperationStack().push(op)
+
+        job = LoadMeshJob(node, file_name.toLocalFile())
+        job.finished.connect(self._loadMeshFinished)
+        job.start()
+
+    def _loadMeshFinished(self, job):
+        job.getNode().setMeshData(job.getResult())
+        self._controller.getScene().sceneChanged.emit(job.getNode())
