@@ -3,6 +3,7 @@ from PyQt5.QtCore import QObject, pyqtProperty
 from . import ViewModel
 from . import ToolModel
 from . import SettingsModel
+from . import JobsModel
 
 ##  This class is a workaround for a bug in PyQt.
 #   For some reason, a QAbstractItemModel subclass instantiated from QML
@@ -14,6 +15,7 @@ class Models(QObject):
         self._viewModel = None
         self._toolModel = None
         self._settingsModel = None
+        self._jobsModel = None
 
     @pyqtProperty(ViewModel.ViewModel, constant = True)
     def viewModel(self):
@@ -34,3 +36,9 @@ class Models(QObject):
         if not self._settingsModel:
             self._settingsModel = SettingsModel.SettingsModel()
         return self._settingsModel
+
+    @pyqtProperty(JobsModel.JobsModel, constant = True)
+    def jobsModel(self):
+        if not self._jobsModel:
+            self._jobsModel = JobsModel.JobsModel()
+        return self._jobsModel

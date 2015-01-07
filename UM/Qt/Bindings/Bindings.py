@@ -12,6 +12,7 @@ from UM.Qt.Bindings.SceneProxy import SceneProxy
 from UM.Qt.Bindings.Models import Models
 from UM.Qt.Bindings.ResourcesProxy import ResourcesProxy
 from . import OperationStackProxy
+from . import JobsModel
 
 class Bindings:
     @classmethod
@@ -48,7 +49,7 @@ class Bindings:
         qmlRegisterType(ViewModel, "UM", 1, 0, "ViewModel")
         #qmlRegisterType(FileModel, "UM", 1, 0, "FileModel")
         qmlRegisterType(ToolModel, "UM", 1, 0, "ToolModel")
-        #qmlRegisterType(SettingModel
+        qmlRegisterType(JobsModel.JobsModel, "UM", 1, 0, "JobsModel")
 
         # Singleton proxy objects
         qmlRegisterSingletonType(ControllerProxy, "UM", 1, 0, "Controller", Bindings.createControllerProxy)
