@@ -35,4 +35,3 @@ class JobsModel(ListModel):
             self.removeItem(self._watchedJobIndices[job])
             job.progress.disconnect(self._onJobProgress)
             del self._watchedJobIndices[job]
-

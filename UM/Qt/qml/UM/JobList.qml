@@ -20,4 +20,12 @@ ListView {
             text: model.description;
         }
     }
+
+    add: Transition {
+        NumberAnimation { property: 'opacity'; from: 0.0; to: 1.0; }
+    }
+
+    remove: Transition {
+        NumberAnimation { property: 'opacity'; to: 0.0; }
+    }
 }
