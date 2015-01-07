@@ -6,12 +6,14 @@ class WireframeView(View):
     def __init__(self):
         super().__init__()
 
-    def render(self):
+    def beginRendering(self):
         scene = self.getController().getScene()
         renderer = self.getRenderer()
 
         for node in DepthFirstIterator(scene.getRoot()):
             if not node.render(renderer):
                 if node.getMeshData():
-                    renderer.renderMesh(node.getGlobalTransformation(), node.getMeshData(), mode = Renderer.RenderWireframe)
+                    renderer.queueMesh(node.getMeshData(), node.getGlobalTransformation(), mode = Renderer.RenderWireframe)
 
+    def endRendering(self):
+        pass
