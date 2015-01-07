@@ -12,7 +12,8 @@ class ListModel(QAbstractListModel):
         self._items = []
 
     ##  Reimplemented from QAbstractListModel
-    def rowCount(self, parent):
+    @pyqtSlot(result=int)
+    def rowCount(self, parent = None):
         return len(self._items)
 
     ##  Reimplemented from QAbstractListModel
@@ -38,7 +39,7 @@ class ListModel(QAbstractListModel):
     #   \param item The item to add.
     @pyqtSlot(int, dict)
     def insertItem(self, index, item):
-        self.beginInsertRows(QModelIndex(), index, index + 1)
+        self.beginInsertRows(QModelIndex(), index, index)
         self._items.insert(index, item)
         self.endInsertRows()
 
@@ -46,7 +47,7 @@ class ListModel(QAbstractListModel):
     #   \param index The index of the item to remove.
     @pyqtSlot(int)
     def removeItem(self, index):
-        self.beginRemoveRows(QModelIndex(), index, index + 1)
+        self.beginRemoveRows(QModelIndex(), index, index)
         del self._items[index]
         self.endRemoveRows()
 
