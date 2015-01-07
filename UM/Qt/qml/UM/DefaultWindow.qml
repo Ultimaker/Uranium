@@ -80,4 +80,6 @@ UM.MainWindow {
     }
 
     PreferencesDialog { id: preferences }
+
+    JobList { anchors.left: parent.left; anchors.bottom: parent.bottom; width: parent.width / 10; height: parent.height / 5; }
 }
