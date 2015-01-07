@@ -11,17 +11,25 @@ from UM.JobQueue import JobQueue
 class Job(SignalEmitter):
     ##  Initialize.
     #
-    #   \param description \type{string} A short description of the job that can be displayed in the UI.
-    def __init__(self, description = None):
+    #   \param kwargs Keyword arguments.
+    #                 Possible keywords:
+    #                 - description \type{string} A short description of the job that can be displayed in the UI. Defaults to an empty string.
+    #                 - visible \type{bool} True if this job should be shown in the UI, False if not. Defaults to False
+    def __init__(self, **kwargs):
         super().__init__()
-        self._description = description
         self._running = False
         self._finished = False
         self._result = None
+        self._description = kwargs.get('description', '')
+        self._visible = kwargs.get('visible', False)
 
     ##  Get the description for this job.
     def getDescription(self):
         return self._description
+
+    ##  Should this job be shown in the UI?
+    def isVisible(self):
+        return self._visible
 
     ##  Perform the actual task of this job. Should be reimplemented by subclasses.
     def run(self):
@@ -73,5 +81,6 @@ class Job(SignalEmitter):
 
     ##  Emitted when the job processing has progressed.
     #
+    #   \param job The job reporting progress.
     #   \param amount \type{int} The amount of progress made, from 0 to 100.
     progress = Signal(type = Signal.Queued)
