@@ -1,4 +1,4 @@
-from PyQt5.QtCore import QObject, pyqtSlot
+from PyQt5.QtCore import QObject, pyqtSlot, pyqtProperty, pyqtSignal
 
 from UM.Application import Application
 
@@ -7,6 +7,17 @@ class OperationStackProxy(QObject):
         super().__init__(parent)
 
         self._operation_stack = Application.getInstance().getOperationStack()
+        self._operation_stack.changed.connect(self._onUndoStackChanged)
+
+    undoStackChanged = pyqtSignal()
+
+    @pyqtProperty(bool, notify=undoStackChanged)
+    def canUndo(self):
+        return self._operation_stack.canUndo()
+
+    @pyqtProperty(bool, notify=undoStackChanged)
+    def canRedo(self):
+        return self._operation_stack.canRedo()
 
     @pyqtSlot()
     def undo(self):
@@ -15,3 +26,6 @@ class OperationStackProxy(QObject):
     @pyqtSlot()
     def redo(self):
         self._operation_stack.redo()
+
+    def _onUndoStackChanged(self):
+        self.undoStackChanged.emit()

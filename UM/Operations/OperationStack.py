@@ -66,7 +66,7 @@ class OperationStack(SignalEmitter):
         return self._current_index >= 0
 
     def canRedo(self):
-        return self._current_index < len(self._operations - 1)
+        return self._current_index < len(self._operations) - 1
 
     changed = Signal()
 
