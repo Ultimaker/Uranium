@@ -24,18 +24,14 @@ class ControllerProxy(QObject):
         if not file_name.isValid():
             return
 
-        app = Application.getInstance()
-
-        node = SceneNode()
-        node.setSelectionMask(1)
-
-        op = AddSceneNodeOperation(node, self._controller.getScene().getRoot())
-        app.getOperationStack().push(op)
-
-        job = LoadMeshJob(node, file_name.toLocalFile())
+        job = LoadMeshJob(file_name.toLocalFile())
         job.finished.connect(self._loadMeshFinished)
         job.start()
 
     def _loadMeshFinished(self, job):
-        job.getNode().setMeshData(job.getResult())
-        self._controller.getScene().sceneChanged.emit(job.getNode())
+        node = SceneNode(self._controller.getScene().getRoot())
+        node.setSelectionMask(1)
+        node.setMeshData(job.getResult())
+
+        op = AddSceneNodeOperation(node, self._controller.getScene().getRoot())
+        Application.getInstance().getOperationStack().push(op)
