@@ -24,6 +24,8 @@ Rectangle {
 
     color: palette.window;
 
+    Keys.forwardTo: menu.__contentItem;
+
     MenuBar {
         id: menu
 

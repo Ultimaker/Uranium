@@ -85,6 +85,10 @@ Panel {
         }
     }
 
+    function openFile() {
+        fileDialog.open();
+    }
+
     FileDialog {
         id: fileDialog
 
