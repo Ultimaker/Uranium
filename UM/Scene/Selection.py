@@ -34,6 +34,10 @@ class Selection:
         cls.__selection.clear()
         cls.selectionChanged.emit()
 
+    @classmethod
+    def hasSelection(cls):
+        return bool(cls.__selection)
+
     selectionChanged = Signal()
 
     __selection = []

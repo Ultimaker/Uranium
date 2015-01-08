@@ -5,6 +5,8 @@ from UM.Scene.SceneNode import SceneNode
 from UM.Scene.BoxRenderer import BoxRenderer
 from UM.Operations.AddSceneNodeOperation import AddSceneNodeOperation
 from UM.Mesh.LoadMeshJob import LoadMeshJob
+from UM.Scene.Selection import Selection
+from UM.Operations.RemoveSceneNodesOperation import RemoveSceneNodesOperation
 
 class ControllerProxy(QObject):
     def __init__(self, parent = None):
@@ -28,10 +30,19 @@ class ControllerProxy(QObject):
         job.finished.connect(self._loadMeshFinished)
         job.start()
 
+    @pyqtSlot()
+    def removeSelection(self):
+        if not Selection.hasSelection():
+            return
+
+        op = RemoveSceneNodesOperation(Selection.getAllSelectedObjects())
+        op.push()
+        Selection.clear()
+
     def _loadMeshFinished(self, job):
         node = SceneNode(self._controller.getScene().getRoot())
         node.setSelectionMask(1)
         node.setMeshData(job.getResult())
 
         op = AddSceneNodeOperation(node, self._controller.getScene().getRoot())
-        Application.getInstance().getOperationStack().push(op)
+        op.push()
