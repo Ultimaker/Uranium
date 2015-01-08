@@ -25,6 +25,11 @@ UM.MainWindow {
             Menu {
                 title: '&File';
 
+                MenuItem { action: loadFileAction; }
+                MenuItem { action: saveFileAction; }
+
+                MenuSeparator { }
+
                 MenuItem { action: quitAction; }
             }
 
@@ -33,26 +38,35 @@ UM.MainWindow {
 
                 MenuItem { action: undoAction; }
                 MenuItem { action: redoAction; }
+                MenuSeparator { }
+                MenuItem { action: deleteAction; }
+                MenuItem { action: deleteAllAction; }
             }
 
             Menu {
-                title: '&View';
+                title: "&Machine";
 
+                MenuSeparator { }
+                MenuItem { text: "Add new machine..."; enabled: false; }
             }
 
             Menu {
-                title: '&Extensions';
+                title: 'E&xtensions';
+
+                MenuItem { text: "No extensions loaded"; enabled: false; }
             }
 
             Menu {
                 title: '&Settings';
+
+                MenuItem { action: preferencesAction; }
             }
 
             Menu {
                 title: '&Help';
 
-                MenuItem { action: helpAction; }
-                MenuItem { text: '&About'; }
+                MenuItem { action: helpAction; enabled: false; }
+                MenuItem { action: aboutAction; enabled: false; }
             }
         }
 
@@ -62,6 +76,8 @@ UM.MainWindow {
             y: menu.height
             width: parent.width;
             height: parent.height - menu.height;
+
+            Keys.forwardTo: menu
 
             DropArea {
                 anchors.fill: parent
@@ -76,6 +92,8 @@ UM.MainWindow {
             }
 
             FilePanel {
+                id: filePanel;
+
                 anchors.left: parent.left
                 anchors.verticalCenter: parent.verticalCenter
             }
@@ -136,7 +154,7 @@ UM.MainWindow {
 
     Action {
         id: undoAction;
-        text: "&Undo";
+        text: "Undo";
         iconName: "edit-undo";
         shortcut: StandardKey.Undo;
         onTriggered: UM.OperationStack.undo();
@@ -145,7 +163,7 @@ UM.MainWindow {
 
     Action {
         id: redoAction;
-        text: "&Redo";
+        text: "Redo";
         iconName: "edit-redo";
         shortcut: StandardKey.Redo;
         onTriggered: UM.OperationStack.redo();
@@ -154,16 +172,66 @@ UM.MainWindow {
 
     Action {
         id: quitAction;
-        text: "&Quit";
-        iconName: "quit";
+        text: "Quit";
+        iconName: "application-exit";
         shortcut: StandardKey.Quit;
         onTriggered: Qt.quit();
     }
 
     Action {
+        id: preferencesAction;
+        text: "Preferences";
+        iconName: "configure";
+        onTriggered: preferences.visible = true;
+    }
+
+    Action {
         id: helpAction;
-        text: "Show &Manual";
-        iconName: "help";
+        text: "Show Manual";
+        iconName: "help-contents";
         shortcut: StandardKey.Help;
+    }
+
+    Action {
+        id: aboutAction;
+        text: "About...";
+        iconName: "help-about";
+    }
+
+    Action {
+        id: deleteAction;
+        text: "Delete Selection";
+        iconName: "edit-delete";
+        shortcut: StandardKey.Delete;
+        onTriggered: UM.Controller.removeSelection();
+    }
+
+    Action {
+        id: deleteAllAction;
+        text: "Clear Build Platform";
+        iconName: "edit-clear";
+        enabled: false;
+    }
+
+    Action {
+        id: loadFileAction;
+        text: "Open...";
+        iconName: "document-open";
+        shortcut: StandardKey.Open;
+        onTriggered: filePanel.openFile();
+    }
+
+    Action {
+        id: saveFileAction;
+        text: "Save...";
+        iconName: "document-save";
+        shortcut: StandardKey.Save;
+        enabled: false;
+    }
+
+    Menu {
+        id: contextMenu;
+
+        MenuItem { action: deleteAction; }
     }
 }
