@@ -62,8 +62,8 @@ class QtGL2Renderer(Renderer):
         self._gl.glClearColor(self._backgroundColor.redF(), self._backgroundColor.greenF(), self._backgroundColor.blueF(), self._backgroundColor.alphaF())
         self._gl.glClear(self._gl.GL_COLOR_BUFFER_BIT | self._gl.GL_DEPTH_BUFFER_BIT)
 
-        if not QOpenGLContext.currentContext().isOpenGLES():
-            self._gl.glPointSize(2)
+        #if not QOpenGLContext.currentContext().isOpenGLES():
+         #   self._gl.glPointSize(2)
 
         self._solidsQueue.clear()
         self._transparentQueue.clear()

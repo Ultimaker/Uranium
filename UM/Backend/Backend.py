@@ -8,7 +8,9 @@ from time import sleep
 from UM.Backend.SocketThread import ClientReply
 
 ##      Base class for any backend communication (seperate piece of software).
-
+#       It uses the command_handlers to know what to do with each command. 
+#       The command_handler dict should be filled with id, function pairs (where the function requres a byte stream to be passed to it)
+#       The ID is formed by the first 4 bits of the message. 
 class Backend(object):
     def __init__(self,):
         super(Backend, self).__init__() # Call super to make multiple inheritence work.
@@ -19,13 +21,20 @@ class Backend(object):
         self._socket_thread.start()
        
         self._socket_thread.connectTo('127.0.0.1' , 0xC20A)
-        sleep(1) #Wait a bit until engine is running properly
-        self._process = self._runEngineProcess([Preferences.getPreference("BackendLocation"), '--port', str(self._socket_thread.getPort())])
-        #self._socket_thread.command_queue.put(ClientCommand(ClientCommand.CONNECT, ('localhost', 0xC20A)))'
         self._command_handlers = {}
+        self._socket_thread.socketOpen.connect(self.startEngine)
+        self._socket_thread.replyAdded.connect(self.handleNextReply)
+    
+    def startEngine(self):
+        self._process = self._runEngineProcess([Preferences.getPreference("BackendLocation"), '--port', str(self._socket_thread.getPort())])
 
+    def handleNextReply(self):
+        self.interpretData(self.recieveData())
+    
     ##  Interpret a byte stream as a command. 
     #   Based on the command_id (the fist 4 bits of the message) a different action will be taken.
+    #   \param data byte stream to interpret
+    #   \returns None if command was not recognised, result of command if it was (can still be None!)
     def interpretData(self, data):
         data_id = struct.unpack('i', data[0:4])[0]
         if data_id in self._command_handlers:
@@ -34,9 +43,9 @@ class Backend(object):
             Logger.log('e', "Command type %s not recognised" % (data_id))
             return None
     
+    ##  Recieve a single package of data (this should be a 'full' command)
     def recieveData(self):
         while True:
-            self._socket_thread.recieve()
             reply = self._socket_thread.getNextReply()
             if reply.type is ClientReply.SUCCESS:
                 if reply.data is not None:
@@ -69,7 +78,7 @@ class Backend(object):
             Logger.log('e', "Data length was incorrect for requested type")
             return None
     
-    
+    ## Start the (external) backend process 
     def _runEngineProcess(self, command_list):
         kwargs = {}
         if subprocess.mswindows:

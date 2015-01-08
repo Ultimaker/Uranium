@@ -7,15 +7,20 @@ import time
 from UM.Application import Application
 from UM.Scene.PointCloudNode import PointCloudNode
 
-
+## Class that is responsible for listening to the backend.
 class ScannerEngineBackend(Backend):
     def __init__(self):
         super(ScannerEngineBackend,self).__init__()
         time.sleep(2)
         self._socket_thread.sendCommand(1) # Debug stuff
+        
+        #Add the 'recieve pointcloud with normals' command with id 3 to the command list
         self._command_handlers.update({3:self._addPointCloudWithNormals}) 
         
-        self.interpretData(self.recieveData())
+        
+        self._socket_thread.replyAdded.connect(self.handleNextReply)
+        #Listen for data once
+        #self.interpretData(self.recieveData())
 
     def _addPointCloudWithNormals(self, data):
         app = Application.getInstance()

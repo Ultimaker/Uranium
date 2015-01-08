@@ -2,7 +2,7 @@ import struct
 import threading
 import queue
 import socket
-
+from UM.Signal import Signal, SignalEmitter
 # server_port=0xC20A
 
 class ClientCommand(object):
@@ -10,7 +10,6 @@ class ClientCommand(object):
     Each command type has its associated data:
     CONNECT: (host, port) tuple
     SEND: Data string
-    RECEIVE: None
     CLOSE: None
     """
     CONNECT, SEND, RECEIVE, CLOSE = range(4)
@@ -30,9 +29,8 @@ class ClientReply(object):
         self.type = type
         self.data = data
 
-# The socket thread acts as a server. 
-
-class SocketThread(threading.Thread):
+# The socket thread acts as a server which emits signals when there is a new response on reply queue
+class SocketThread(threading.Thread, SignalEmitter):
     def __init__(self, command_queue=queue.Queue(), reply_queue=queue.Queue()):
         super(SocketThread, self).__init__()
         self._command_queue = command_queue
@@ -51,10 +49,8 @@ class SocketThread(threading.Thread):
             ClientCommand.CONNECT: self._handle_CONNECT,
             ClientCommand.CLOSE: self._handle_CLOSE,
             ClientCommand.SEND: self._handle_SEND,
-            ClientCommand.RECEIVE: self._handle_RECEIVE,
         }
     
-   
     def getPort(self):
         return self._port
     
@@ -65,14 +61,12 @@ class SocketThread(threading.Thread):
     def getNextReply(self):
         return self._reply_queue.get(True)
     
-    ## \brief Start listening for communication 'package'
-    #   This will start listening for the next burst of communication.
-    #   It pushes a ClientReply to the response queue. The type of this
-    #   command indicates if it was succesfull or not. Use getNextReply to
-    #   obtain the next reply
-    def recieve(self):
-        self._command_queue.put(ClientCommand(ClientCommand.RECEIVE))
-        
+    
+
+    
+    ##  \brief Send a command to the backend.
+    #   \param command_id 4 bit id to indentify the command sent.
+    #   \param data byte array with data
     def sendCommand(self,command_id, data = None):
         packed_command = struct.pack('@i', int(command_id))
         if data is not None:
@@ -85,11 +79,25 @@ class SocketThread(threading.Thread):
                 # Queue.get with timeout to allow checking self.alive
                 command = self._command_queue.get(True, 0.1)
                 self.handlers[command.type](command)
-            except queue.Empty as e:
-                continue
+            except queue.Empty as e: #No commands to be send, listen to connection from the other side
+                try:
+                    message_length = self._recieveInt32()
+                    data = self._recieve_n_bytes(message_length)
+                    if len(data) == message_length:
+                        self._reply_queue.put(self._createSuccessReply(data))
+                        self.replyAdded.emit()
+                        return
+                    self._reply_queue.put(self._createErrorReply('Socket closed prematurely'))
+                    self.replyAdded.emit()
+                except socket.timeout:
+                    continue
+                except IOError as e:
+                    self._reply_queue.put(self._createErrorReply(str(e)))
+                    self.replyAdded.emit()
+                
     
-    ## Try to join the thread.
-    # \param timeout The timeout for the join operation
+    ##  Try to join the thread.
+    #   \param timeout The timeout for the join operation
     def join(self, timeout = None):
         self.alive.clear()
         threading.Thread.join(self, timeout)
@@ -108,12 +116,17 @@ class SocketThread(threading.Thread):
                     break
             else:
                 break
-        print("Listening for backend on " + str(self._port))
+        self.socketOpen.emit()
         self._server_socket.listen(1)
         
         self._data_socket, address = self._server_socket.accept()
+        self._data_socket.settimeout(1)
         print("Backend connected on " + str(address))
- 
+    
+    #signal to indicate that the thread is accepting new connections
+    socketOpen = Signal()
+    
+    
     ##  Function that is executed if a close command is sent.
     def _handle_CLOSE(self, cmd):
         self._data_socket.close()
@@ -130,17 +143,9 @@ class SocketThread(threading.Thread):
             print(e)
             self._reply_queue.put(self._createErrorReply(str(e)))
     
-    ##  Function that is executed if a recieve command is sent.
-    def _handle_RECEIVE(self, cmd):
-        try:
-            message_length = self._recieveInt32()
-            data = self._recieve_n_bytes(message_length)
-            if len(data) == message_length:
-                self._reply_queue.put(self._createSuccessReply(data))
-                return
-            self._reply_queue.put(self._createErrorReply('Socket closed prematurely'))     
-        except IOError as e:
-            self._reply_queue.put(self._createErrorReply(str(e)))
+        
+    
+    replyAdded = Signal()
     
     ##  Recieve a certain number of bytes.
     #   \param size Number of bytes to recieve
@@ -165,6 +170,7 @@ class SocketThread(threading.Thread):
     ##  Convenience function to create error reply
     def _createErrorReply(self, errstr):
         return ClientReply(ClientReply.ERROR, errstr)
+    
     ##  Convenience function to create succes reply
     def _createSuccessReply(self, data=None):
         return ClientReply(ClientReply.SUCCESS, data)
