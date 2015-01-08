@@ -25,9 +25,13 @@ class Backend(object):
         self._socket_thread.socketOpen.connect(self.startEngine)
         self._socket_thread.replyAdded.connect(self.handleNextReply)
     
+    
+    ##   \brief Start the backend / engine. 
+    #   Runs the engine, this is only called when the socket is fully opend & ready to accept connections
     def startEngine(self):
         self._process = self._runEngineProcess([Preferences.getPreference("BackendLocation"), '--port', str(self._socket_thread.getPort())])
-
+    
+    ##   Parse the next reply and handle it (based on command_handlers)
     def handleNextReply(self):
         self.interpretData(self.recieveData())
     
@@ -43,7 +47,7 @@ class Backend(object):
             Logger.log('e', "Command type %s not recognised" % (data_id))
             return None
     
-    ##  Recieve a single package of data (this should be a 'full' command)
+    ##  \brief Recieve a single package of data (this should be a 'full' command)
     def recieveData(self):
         while True:
             reply = self._socket_thread.getNextReply()
@@ -54,7 +58,7 @@ class Backend(object):
                 print("An error occured with connection with message: " + str(reply.data))
                 return None
     
-    ## Convert byte array containing 3 floats per vertex  
+    ##  \brief Convert byte array containing 3 floats per vertex  
     def convertBytesToVerticeList(self, data):
         result = []
         if not (len(data) % 12):
@@ -66,7 +70,7 @@ class Backend(object):
             Logger.log('e', "Data length was incorrect for requested type")
             return None            
     
-    ## Convert byte array containing 6 floats per vertex
+    ##  \brief Convert byte array containing 6 floats per vertex
     def convertBytesToVerticeWithNormalsList(self,data):
         result = []
         if not (len(data) % 24):
@@ -78,7 +82,7 @@ class Backend(object):
             Logger.log('e', "Data length was incorrect for requested type")
             return None
     
-    ## Start the (external) backend process 
+    ## \brief Start the (external) backend process.
     def _runEngineProcess(self, command_list):
         kwargs = {}
         if subprocess.mswindows:

@@ -90,11 +90,13 @@ class SocketThread(threading.Thread, SignalEmitter):
                     self._reply_queue.put(self._createErrorReply('Socket closed prematurely'))
                     self.replyAdded.emit()
                 except socket.timeout:
-                    continue
+                    continue #No data recieved, go back to checking if there is a command that needs to be sent.
                 except IOError as e:
                     self._reply_queue.put(self._createErrorReply(str(e)))
                     self.replyAdded.emit()
                 
+    
+    replyAdded = Signal() 
     
     ##  Try to join the thread.
     #   \param timeout The timeout for the join operation
@@ -126,7 +128,6 @@ class SocketThread(threading.Thread, SignalEmitter):
     #signal to indicate that the thread is accepting new connections
     socketOpen = Signal()
     
-    
     ##  Function that is executed if a close command is sent.
     def _handle_CLOSE(self, cmd):
         self._data_socket.close()
@@ -143,11 +144,7 @@ class SocketThread(threading.Thread, SignalEmitter):
             print(e)
             self._reply_queue.put(self._createErrorReply(str(e)))
     
-        
-    
-    replyAdded = Signal()
-    
-    ##  Recieve a certain number of bytes.
+    ##  \brief Recieve a certain number of bytes.
     #   \param size Number of bytes to recieve
     #   \return data byte array (packed).
     #   \throws IOError When socket has been closed.
@@ -167,10 +164,10 @@ class SocketThread(threading.Thread, SignalEmitter):
     def _recieveInt32(self):
         return struct.unpack('@i', self._recieve_n_bytes(4))[0]
     
-    ##  Convenience function to create error reply
+    ##  \brief Convenience function to create error reply
     def _createErrorReply(self, errstr):
         return ClientReply(ClientReply.ERROR, errstr)
     
-    ##  Convenience function to create succes reply
+    ##  \brief Convenience function to create succes reply
     def _createSuccessReply(self, data=None):
         return ClientReply(ClientReply.SUCCESS, data)
