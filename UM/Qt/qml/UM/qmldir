@@ -5,3 +5,7 @@ FilePanel 1.0 FilePanel.qml
 ToolPanel 1.0 ToolPanel.qml
 DefaultWindow 1.0 DefaultWindow.qml
 JobList 1.0 JobList.qml
+ApplicationMenu 1.0 ApplicationMenu.qml
+SettingsPanel 1.0 Settings/SettingsPanel.qml
+PreferencesDialog 1.0 Preferences/PreferencesDialog.qml
+MeshListPanel 1.0 MeshListPanel.qml
