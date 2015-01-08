@@ -20,7 +20,7 @@ class ScannerEngineBackend(Backend):
     def _addPointCloudWithNormals(self, data):
         app = Application.getInstance()
         recieved_mesh = MeshData()
-        for vert in self.convertBytesToVerticeWithNormalsListPCL(data):
+        for vert in self._convertBytesToVerticeWithNormalsListPCL(data):
             recieved_mesh.addVertexWithNormal(vert[0],vert[1],vert[2],vert[3],vert[4],vert[5])
         node = PointCloudNode(app.getController().getScene().getRoot())
         node.setMeshData(recieved_mesh)
@@ -28,7 +28,7 @@ class ScannerEngineBackend(Backend):
         app.getOperationStack().push(operation)
     
     ## Convert byte array using pcl::pointNormal type
-    def convertBytesToVerticeWithNormalsListPCL(self,data):
+    def _convertBytesToVerticeWithNormalsListPCL(self,data):
         result = []
         derp = struct.unpack('ffffffffffff',data[0:48])
         if not (len(data) % 48):
