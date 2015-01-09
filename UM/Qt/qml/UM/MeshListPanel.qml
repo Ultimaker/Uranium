@@ -31,7 +31,7 @@ Panel {
         id: meshDelegate
         Rectangle 
         {
-            color: index % 2 ? "#FCFCFC" : "#EBEBEB"
+//             color: index % 2 ? "#FCFCFC" : "#EBEBEB"
             width:200
             height:25
             CheckBox 

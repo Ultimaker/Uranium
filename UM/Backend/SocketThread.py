@@ -96,7 +96,7 @@ class SocketThread(threading.Thread, SignalEmitter):
                     self.replyAdded.emit()
                 
     
-    replyAdded = Signal() 
+    replyAdded = Signal(type = Signal.Queued) #Queued signal to force execution on main thread.
     
     ##  Try to join the thread.
     #   \param timeout The timeout for the join operation
@@ -126,7 +126,7 @@ class SocketThread(threading.Thread, SignalEmitter):
         print("Backend connected on " + str(address))
     
     #signal to indicate that the thread is accepting new connections
-    socketOpen = Signal()
+    socketOpen = Signal(type = Signal.Queued) #Queued signal to force execution on main thread.
     
     ##  Function that is executed if a close command is sent.
     def _handle_CLOSE(self, cmd):
