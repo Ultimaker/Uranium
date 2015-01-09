@@ -61,16 +61,16 @@ class SocketThread(threading.Thread, SignalEmitter):
     def getNextReply(self):
         return self._reply_queue.get(True)
     
-    
-
-    
     ##  \brief Send a command to the backend.
     #   \param command_id 4 bit id to indentify the command sent.
     #   \param data byte array with data
     def sendCommand(self,command_id, data = None):
         packed_command = struct.pack('@i', int(command_id))
         if data is not None:
-            packed_command += struct.pack('@i',data)
+            if type(data) is bytearray or type(data) is bytes:
+                packed_command += struct.pack('@s', data)
+            else:
+                packed_command += struct.pack('@i',data)
         self._command_queue.put(ClientCommand(ClientCommand.SEND, packed_command))
     
     def run(self):
@@ -86,7 +86,7 @@ class SocketThread(threading.Thread, SignalEmitter):
                     if len(data) == message_length:
                         self._reply_queue.put(self._createSuccessReply(data))
                         self.replyAdded.emit()
-                        return
+                        continue
                     self._reply_queue.put(self._createErrorReply('Socket closed prematurely'))
                     self.replyAdded.emit()
                 except socket.timeout:
@@ -119,6 +119,7 @@ class SocketThread(threading.Thread, SignalEmitter):
             else:
                 break
         self.socketOpen.emit()
+        print('listening on', self._port)
         self._server_socket.listen(1)
         
         self._data_socket, address = self._server_socket.accept()
@@ -137,13 +138,13 @@ class SocketThread(threading.Thread, SignalEmitter):
     ##  Function that is executed if a send command is sent.
     def _handle_SEND(self, cmd):
         try:
-            self._data_socket.sendall(struct.pack('@i', len(cmd.data)))
-            self._data_socket.sendall(cmd.data)
+            self._data_socket.send(struct.pack('@i', len(cmd.data)))
+            self._data_socket.send(cmd.data)
             self._reply_queue.put(self._createSuccessReply())
         except IOError as e:
-            print(e)
+            print('An error occured during send:', e)
             self._reply_queue.put(self._createErrorReply(str(e)))
-    
+
     ##  \brief Recieve a certain number of bytes.
     #   \param size Number of bytes to recieve
     #   \return data byte array (packed).
