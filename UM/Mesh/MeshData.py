@@ -21,6 +21,13 @@ class MeshData(SignalEmitter):
         self._indices = kwargs.get('indices', None)
         self._vertex_count = len(self._vertices) if self._vertices is not None else 0
         self._face_count = len(self._indices) if self._indices is not None else 0
+        self._name = "Mesh"
+    
+    def getName(self):
+        return self._name
+    
+    def setName(self, name):
+        self._name = name
 
     ##  Get the array of vertices
     def getVertices(self):

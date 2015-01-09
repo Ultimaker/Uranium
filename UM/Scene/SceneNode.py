@@ -26,16 +26,17 @@ class SceneNode(SignalEmitter):
         self._selectionMask = 0
         self._aabb = None
         self._aabbJob = None
+        self._visible = True
 
         if parent:
             parent.addChild(self)
 
-    ##  Get the parent of this node. If the node has no parent, it is the root node.
+    ##  \brief Get the parent of this node. If the node has no parent, it is the root node.
     #   \returns SceneNode if it has a parent and None if it's the root node.
     def getParent(self):
         return self._parent
 
-    ##  Set the parent of this object
+    ##  \brief Set the parent of this object
     #   \param scene_node SceneNode that is the parent of this object.
     def setParent(self, scene_node):
         if self._parent:
@@ -47,19 +48,30 @@ class SceneNode(SignalEmitter):
     ##  Emitted whenever the parent changes.
     parentChanged = Signal()
 
-    ##  Get the (original) mesh data from the scene node/object. 
+    ##  \brief Get the visibility of this node. The parents visibility overrides the visibility.
+    #   TODO: Let renderer actually use the visibility to decide wether to render or not.
+    def getVisibility(self):
+        if self._parent != None:
+            return parent.getVisibility()
+        else:
+            return self._visible
+    
+    def setVisibility(self):
+        return self._visible
+
+    ##  \brief Get the (original) mesh data from the scene node/object. 
     #   \returns MeshData
     def getMeshData(self):
         return self._mesh_data
 
-    ##  Get the transformed mesh data from the scene node/object, based on the transformation of scene nodes wrt root. 
+    ##  \brief Get the transformed mesh data from the scene node/object, based on the transformation of scene nodes wrt root. 
     #   \returns MeshData    
     def getMeshDataTransformed(self):
         transformed_mesh = deepcopy(self._mesh_data)
         transformed_mesh.transform(self.getGlobalTransformation())
         return transformed_mesh
 
-    ##  Set the mesh of this node/object
+    ##  \brief Set the mesh of this node/object
     #   \param mesh_data MeshData object
     def setMeshData(self, mesh_data):
         self._mesh_data = mesh_data
@@ -69,7 +81,7 @@ class SceneNode(SignalEmitter):
     ##  Emitted whenever the attached mesh data object changes.
     meshDataChanged = Signal()
 
-    ##  Add a child to this node and set it's parent as this node.
+    ##  \brief Add a child to this node and set it's parent as this node.
     #   \params scene_node SceneNode to add.
     def addChild(self, scene_node):
         if scene_node not in self._children:
@@ -81,8 +93,10 @@ class SceneNode(SignalEmitter):
 
             if not scene_node._parent is self:
                 scene_node._parent = self
-                scene_node.parentChanged.emit()
-
+                scene_node.parentChanged.emit(self)
+    
+    ##  \brief remove a single child
+    #   \param child Scene node that needs to be removed. 
     def removeChild(self, child):
         if child not in self._children:
             return
@@ -91,12 +105,12 @@ class SceneNode(SignalEmitter):
         child.childrenChanged.disconnect(self.childrenChanged)
         self._children.remove(child)
         child._parent = None
-        child.parentChanged.emit()
+        child.parentChanged.emit(self)
 
         self.childrenChanged.emit(self)
         pass
 
-    ##  Removes all children and its children's children.
+    ##  \brief Removes all children and its children's children.
     def removeAllChildren(self):
         for child in self._children:
             child.removeAllChildren()
@@ -104,12 +118,12 @@ class SceneNode(SignalEmitter):
 
         self.childrenChanged.emit(self)
 
-    ##  Get the list of direct children
+    ##  \brief Get the list of direct children
     #   \returns List of children
     def getChildren(self):
         return self._children
 
-    ##  Get list of all children (including it's children children children etc.)
+    ##  \brief Get list of all children (including it's children children children etc.)
     #   \returns list ALl children in this 'tree'
     def getAllChildren(self):
         children = []
@@ -118,11 +132,11 @@ class SceneNode(SignalEmitter):
             children.extend(child.getAllChildren())
         return children
 
-    ##  Emitted whenever the list of children of this object or any child object changes.
+    ##  \brief Emitted whenever the list of children of this object or any child object changes.
     #   \param object The object that triggered the change.
     childrenChanged = Signal()
 
-    ##  Computes and returns the transformation from origin to local space
+    ##  \brief Computes and returns the transformation from origin to local space
     #   \returns 4x4 transformation matrix
     def getGlobalTransformation(self):
         if(self._parent is None):
@@ -132,12 +146,12 @@ class SceneNode(SignalEmitter):
             global_transformation.preMultiply(self._parent.getGlobalTransformation())
             return global_transformation
 
-    ##  Returns the local transformation with respect to its parent. (from parent to local)
+    ##  \brief Returns the local transformation with respect to its parent. (from parent to local)
     #   \retuns transformation 4x4 (homogenous) matrix
     def getLocalTransformation(self):
         return self._transformation
 
-    ##  Sets the local transformation with respect to its parent. (from parent to local)
+    ##  \brief Sets the local transformation with respect to its parent. (from parent to local)
     #   \param transformation 4x4 (homogenous) matrix
     def setLocalTransformation(self, transformation):
         if self._locked:
@@ -146,7 +160,7 @@ class SceneNode(SignalEmitter):
         self._transformation = transformation
         self._transformChanged()
 
-    ##  Rotate the scene object (and thus its children) by given amount
+    ##  \brief Rotate the scene object (and thus its children) by given amount
     def rotate(self, rotation):
         if self._locked:
             return
