@@ -14,20 +14,32 @@ Panel {
         Layout.preferredWidth: 200
         Layout.preferredHeight: 400
 
-        TableView 
+        ListView
         {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            TableViewColumn { role: "text" }
-
-            headerVisible: false
-
-            model: ListModel 
-            {
-                id: fileModel
-            }
+            //headerVisible: false
+            //TableViewColumn{ role: "name" ; title: "Name" ; width: 200 }
+            delegate: meshDelegate      
+            model: UM.Models.meshListModel
         }
 
+    }
+    Component 
+    {
+        id: meshDelegate
+        Rectangle 
+        {
+            color: index % 2 ? "#FCFCFC" : "#EBEBEB"
+            width:200
+            height:25
+            CheckBox 
+            {
+                text: model.name
+                checked: model.visibility
+            }
+        }
+        
     }
 }

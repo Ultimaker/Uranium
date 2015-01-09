@@ -4,6 +4,7 @@ from . import ViewModel
 from . import ToolModel
 from . import SettingsModel
 from . import JobsModel
+from . import MeshListModel
 
 ##  This class is a workaround for a bug in PyQt.
 #   For some reason, a QAbstractItemModel subclass instantiated from QML
@@ -16,6 +17,7 @@ class Models(QObject):
         self._toolModel = None
         self._settingsModel = None
         self._jobsModel = None
+        self._meshListModel = None
 
     @pyqtProperty(ViewModel.ViewModel, constant = True)
     def viewModel(self):
@@ -42,3 +44,9 @@ class Models(QObject):
         if not self._jobsModel:
             self._jobsModel = JobsModel.JobsModel()
         return self._jobsModel
+    
+    @pyqtProperty(MeshListModel.MeshListModel, constant = True)
+    def meshListModel(self):
+        if not self._meshListModel:
+            self._meshListModel = MeshListModel.MeshListModel()
+        return self._meshListModel
