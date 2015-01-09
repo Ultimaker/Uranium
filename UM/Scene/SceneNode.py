@@ -50,14 +50,14 @@ class SceneNode(SignalEmitter):
 
     ##  \brief Get the visibility of this node. The parents visibility overrides the visibility.
     #   TODO: Let renderer actually use the visibility to decide wether to render or not.
-    def getVisibility(self):
-        if self._parent != None:
-            return parent.getVisibility()
+    def isVisible(self):
+        if self._parent != None and self._visible:
+            return self._parent.isVisible()
         else:
             return self._visible
     
-    def setVisibility(self):
-        return self._visible
+    def setVisibility(self,visible):
+        self._visible = visible
 
     ##  \brief Get the (original) mesh data from the scene node/object. 
     #   \returns MeshData

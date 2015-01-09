@@ -7,7 +7,6 @@ class PointCloudNode(SceneNode.SceneNode):
         super().__init__(parent)
 
     def render(self, renderer):
-        if self.getMeshData():
-
+        if self.getMeshData() and self.isVisible():
             renderer.queueMesh(self.getMeshData(), self.getGlobalTransformation(), mode = Renderer.RenderPoints)
             return True

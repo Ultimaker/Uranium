@@ -18,7 +18,7 @@ Panel {
         {
             Layout.fillWidth: true
             Layout.fillHeight: true
-
+            id:meshList
             //headerVisible: false
             //TableViewColumn{ role: "name" ; title: "Name" ; width: 200 }
             delegate: meshDelegate      
@@ -38,6 +38,7 @@ Panel {
             {
                 text: model.name
                 checked: model.visibility
+                onClicked: meshList.model.setVisibility(model.name, checked)
             }
         }
         
