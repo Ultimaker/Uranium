@@ -24,12 +24,14 @@ class Backend(object):
         self._command_handlers = {}
         self._socket_thread.socketOpen.connect(self.startEngine)
         self._socket_thread.replyAdded.connect(self.handleNextReply)
+
+        self._process = None
     
     
     ##   \brief Start the backend / engine. 
     #   Runs the engine, this is only called when the socket is fully opend & ready to accept connections
     def startEngine(self):
-        self._process = self._runEngineProcess([Preferences.getPreference("BackendLocation"), '--port', str(self._socket_thread.getPort())])
+        self._process = self._runEngineProcess(self.getEngineCommand())
     
     ##   Parse the next reply and handle it (based on command_handlers)
     def handleNextReply(self):
@@ -81,7 +83,10 @@ class Backend(object):
         else:
             Logger.log('e', "Data length was incorrect for requested type")
             return None
-    
+
+    def getEngineCommand(self):
+        return [Preferences.getPreference("BackendLocation"), '--port', str(self._socket_thread.getPort())]
+
     ## \brief Start the (external) backend process.
     def _runEngineProcess(self, command_list):
         kwargs = {}
