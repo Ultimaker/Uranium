@@ -29,18 +29,34 @@ Panel {
     Component 
     {
         id: meshDelegate
+       
+                
         Rectangle 
         {
-            color: model.selected ? "#FCFCFC" : "#EBEBEB"
+            color: model.selected ?"#2EB5E7": "#EBEBEB" 
             width:200
             height:25
-            CheckBox 
+            MouseArea
             {
-                text: model.name
-                checked: model.visibility
-                onClicked: meshList.model.setVisibility(model.key, checked)
+                anchors.fill: parent;
+                onClicked: meshList.model.setSelected(model.key)
             }
+            RowLayout 
+            {
+                CheckBox 
+                {
+                    checked: model.visibility
+                    implicitWidth: 25
+                    onClicked: meshList.model.setVisibility(model.key, checked)
+                }
+                Text 
+                {
+                    text:model.name
+                }
+                
+            }
+            
+            
         }
-        
     }
 }
