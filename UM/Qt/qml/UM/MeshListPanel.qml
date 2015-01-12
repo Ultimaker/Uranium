@@ -38,7 +38,7 @@ Panel {
             {
                 text: model.name
                 checked: model.visibility
-                onClicked: meshList.model.setVisibility(model.name, checked)
+                onClicked: meshList.model.setVisibility(model.key, checked)
             }
         }
         
