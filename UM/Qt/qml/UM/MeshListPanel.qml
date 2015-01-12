@@ -39,8 +39,24 @@ Panel {
             MouseArea
             {
                 anchors.fill: parent;
+                acceptedButtons: Qt.LeftButton 
                 onClicked: meshList.model.setSelected(model.key)
             }
+            MouseArea
+            {
+                anchors.fill: parent;
+                acceptedButtons: Qt.RightButton;
+                onClicked: contextMenu.popup();
+            }
+
+            Menu
+            {
+                id: contextMenu;
+
+                MenuItem { text: "Delete"; onTriggered: meshList.model.removeMesh(model.key); }
+                MenuItem { text: "Save"; onTriggered: meshList.model.saveMesh(model.key); }
+            }
+
             RowLayout 
             {
                 CheckBox 

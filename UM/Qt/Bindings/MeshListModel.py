@@ -3,6 +3,7 @@ from PyQt5.QtCore import Qt, QCoreApplication, pyqtSlot
 from UM.Qt.ListModel import ListModel
 from UM.Application import Application
 from UM.Scene.Selection import Selection
+from UM.Operations.RemoveSceneNodesOperation import RemoveSceneNodesOperation
 
 import threading
 
@@ -49,7 +50,18 @@ class MeshListModel(ListModel):
                         Selection.add(node)
             else:
                 self.setProperty(index,"selected", False)
-        
+    
+    @pyqtSlot("long")
+    def saveMesh(self,key):
+        print("saving ",key)
+
+    @pyqtSlot("long")
+    def removeMesh(self, key):
+        for node in Application.getInstance().getController().getScene().getRoot().getAllChildren():
+            if id(node) == key:
+                op = RemoveSceneNodesOperation([node])
+                op.push()
+                break
 
     
     
