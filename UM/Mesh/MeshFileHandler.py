@@ -30,11 +30,11 @@ class MeshFileHandler(object):
     # \param storage_device The StorageDevice where the file should be written to.
     # \param mesh_data
     # \returns True if it was able to create the file, otherwise False
-    def write(self, file_name, storage_location, mesh_data):
+    def write(self, file_name, storage_device, mesh_data):
         if(mesh_data is None):
             return False
         for writer in self._mesh_writers:
-            if(writer.write(storage_location, mesh_data)):
+            if(writer.write(file_name, storage_device, mesh_data)):
                 return True
         return False
     

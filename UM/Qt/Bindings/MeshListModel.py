@@ -1,4 +1,4 @@
-from PyQt5.QtCore import Qt, QCoreApplication, pyqtSlot
+from PyQt5.QtCore import Qt, QCoreApplication, pyqtSlot,QUrl
 
 from UM.Qt.ListModel import ListModel
 from UM.Application import Application
@@ -51,10 +51,14 @@ class MeshListModel(ListModel):
             else:
                 self.setProperty(index,"selected", False)
     
-    @pyqtSlot("long")
-    def saveMesh(self,key):
+    @pyqtSlot("long",QUrl)
+    def saveMesh(self,key,file_url):
+        for node in Application.getInstance().getController().getScene().getRoot().getAllChildren():
+            if id(node) == key:
+                Application.getInstance().getMeshFileHandler().write(file_url.toLocalFile(),Application.getInstance().getStorageDevice('local'),node.getMeshData())
         print("saving ",key)
 
+    #Remove mesh by key (triggered by context menu)
     @pyqtSlot("long")
     def removeMesh(self, key):
         for node in Application.getInstance().getController().getScene().getRoot().getAllChildren():

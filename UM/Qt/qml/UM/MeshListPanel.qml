@@ -8,7 +8,6 @@ import UM 1.0 as UM
 
 Panel {
     title: "Layers"
-
     contents: ColumnLayout 
     {
         Layout.preferredWidth: 200
@@ -54,7 +53,8 @@ Panel {
                 id: contextMenu;
 
                 MenuItem { text: "Delete"; onTriggered: meshList.model.removeMesh(model.key); }
-                MenuItem { text: "Save"; onTriggered: meshList.model.saveMesh(model.key); }
+                MenuItem { text: "Save"; onTriggered: {fileDialog.key = model.key;
+                                                        fileDialog.open();} }
             }
 
             RowLayout 
@@ -73,6 +73,22 @@ Panel {
             }
             
             
+        }
+    }
+    
+    FileDialog {
+        id: fileDialog
+        property variant key;
+
+        title: "Save"
+        modality: Qt.NonModal
+        selectMultiple: false
+        selectExisting:false
+
+        onAccepted: 
+        {
+            meshList.model.saveMesh(key,fileUrl)
+            //UM.Controller.addMesh(fileUrl)
         }
     }
 }
