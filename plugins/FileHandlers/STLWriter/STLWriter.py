@@ -18,8 +18,8 @@ class STLWriter(MeshWriter):
             f.write(bytes("PLUGGABLE UNICORN BINARY STL EXPORT. " + time.strftime('%a %d %b %Y %H:%M:%S'),"utf-8"))
             num_verts = mesh_data.getVertexCount()
             f.write(struct.pack("<I", int(num_verts / 3))) #Write number of faces to STL
+            verts = mesh_data.getVertices()
             for index in range(0, num_verts-1, 3):
-                verts = mesh_data.getVertices()
                 v1 = verts[index]
                 v2 = verts[index + 1]
                 v3 = verts[index + 2]
