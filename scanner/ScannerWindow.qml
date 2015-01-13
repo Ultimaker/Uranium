@@ -1,6 +1,7 @@
 import QtQuick 2.2
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
+import QtQuick.Dialogs 1.1
 
 import UM 1.0 as UM
 
@@ -150,7 +151,8 @@ UM.MainWindow {
 
     UM.PreferencesDialog { id: preferences }
 
-    Action {
+    Action 
+    {
         id: undoAction;
         text: "Undo";
         iconName: "edit-undo";
@@ -159,7 +161,8 @@ UM.MainWindow {
         enabled: UM.OperationStack.canUndo;
     }
 
-    Action {
+    Action 
+    {
         id: redoAction;
         text: "Redo";
         iconName: "edit-redo";
@@ -168,7 +171,8 @@ UM.MainWindow {
         enabled: UM.OperationStack.canRedo;
     }
 
-    Action {
+    Action 
+    {
         id: quitAction;
         text: "Quit";
         iconName: "application-exit";
@@ -176,27 +180,31 @@ UM.MainWindow {
         onTriggered: Qt.quit();
     }
 
-    Action {
+    Action 
+    {
         id: preferencesAction;
         text: "Preferences";
         iconName: "configure";
         onTriggered: preferences.visible = true;
     }
 
-    Action {
+    Action 
+    {
         id: helpAction;
         text: "Show Manual";
         iconName: "help-contents";
         shortcut: StandardKey.Help;
     }
 
-    Action {
+    Action 
+    {
         id: aboutAction;
         text: "About...";
         iconName: "help-about";
     }
 
-    Action {
+    Action 
+    {
         id: deleteAction;
         text: "Delete Selection";
         iconName: "edit-delete";
@@ -204,22 +212,25 @@ UM.MainWindow {
         onTriggered: UM.Controller.removeSelection();
     }
 
-    Action {
+    Action 
+    {
         id: deleteAllAction;
         text: "Clear Build Platform";
         iconName: "edit-clear";
         enabled: false;
     }
 
-    Action {
+    Action 
+    {
         id: loadFileAction;
         text: "Open...";
         iconName: "document-open";
         shortcut: StandardKey.Open;
-        onTriggered: filePanel.openFile();
+        onTriggered: openFileDialog.open()
     }
 
-    Action {
+    Action 
+    {
         id: saveFileAction;
         text: "Save...";
         iconName: "document-save";
@@ -231,5 +242,19 @@ UM.MainWindow {
         id: contextMenu;
 
         MenuItem { action: deleteAction; }
+    }
+   
+   FileDialog {
+        id: openFileDialog
+
+        title: "Choose files"
+        modality: Qt.NonModal
+        //TODO: Support multiple file selection, workaround bug in KDE file dialog
+        //selectMultiple: true
+
+        onAccepted: 
+        {
+            UM.Controller.addMesh(fileUrl)
+        }
     }
 }

@@ -34,7 +34,10 @@ class PLYReader(MeshReader):
             for index, line in enumerate(line_list):
                 parts = line.split()
                 if index == 0:
-                    if parts[0] is not "ply" or parts[0] is not "PLY":
+                    print(parts)
+                    print(parts[0])
+                    if parts[0] != "ply" and parts[0] != "PLY":
+                        Logger.log("e", "The ply file does not adhere to the ply standard. Aborting.")
                         return # First line does not have the magic number. Stop right away!
                 
                 if parts[0] == "end_header": # End of header, stop reading header (start reading vert data)
@@ -63,7 +66,7 @@ class PLYReader(MeshReader):
             for line in line_list[start_index:-1]:  # Go over all data after header data (-1 indicates end of list)
                 parts = line.split()
                 if has_normals: 
-                    mesh.addVertexWithNormals(parts[x_location],parts[y_location],parts[z_location],parts[nx_location],parts[ny_location],parts[nz_location])
+                    mesh.addVertexWithNormal(parts[x_location],parts[y_location],parts[z_location],parts[nx_location],parts[ny_location],parts[nz_location])
                 else:
                     mesh.addVertex(parts[x_location],parts[y_location],parts[z_location])
             Logger.log("d", "Loaded a mesh with %s vertices", mesh.getVertexCount())

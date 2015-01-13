@@ -88,7 +88,6 @@ Panel {
         onAccepted: 
         {
             meshList.model.saveMesh(key,fileUrl)
-            //UM.Controller.addMesh(fileUrl)
         }
     }
 }
