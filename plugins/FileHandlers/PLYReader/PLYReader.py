@@ -40,7 +40,7 @@ class PLYReader(MeshReader):
                 if parts[0] == "end_header": # End of header, stop reading header (start reading vert data)
                     start_index = index + 1
                     break
-                if parts[0] == "element" and parts[1] == "vertex" #Found vertex element
+                if parts[0] == "element" and parts[1] == "vertex": #Found vertex element
                     element_location = index
                 
                 if parts[0] == "property" and parts[1] == 'float': #The order of these elements decides what the data of the verts means
