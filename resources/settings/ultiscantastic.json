@@ -1,0 +1,51 @@
+{
+    "platform": "ultiscantastic.obj",
+    "Categories": [
+        {
+            "key": "calibration",
+            "label": "Calibration",
+            "visible": true,
+            "Settings": [
+                {
+                    "key": "physical_object_size",
+                    "label": "Calibration marker size",
+                    "type": "int",
+                    "default": 125,
+                    "min_value": 0,
+                    "max_value": 250
+                }   
+            ]
+        },
+        {
+            "key": "meshing",
+            "label": "Meshing",
+            "visible": true,
+            "Settings": [
+                {
+                    "key": "TestSetting",
+                    "label": "testtest",
+                    "type": "int",
+                    "default": 210,
+                    "min_value": 150,
+                    "max_value": 280
+                }
+            ]
+        },
+        {
+            "key": "scanning",
+            "label": "Scanning",
+            "visible": true,
+            "Settings": [
+                {
+                    "key": "TestSettingffaaa",
+                    "label": "Test setting!",
+                    "type": "int",
+                    "default": 10,
+                    "min_value": 0,
+                    "max_value": 10,
+                    "children": []
+                }
+            ]
+        }
+    ]
+}
