@@ -1,5 +1,6 @@
 from UM.Mesh.MeshReader import MeshReader
 from UM.Mesh.MeshData import MeshData
+from UM.Logger import Logger
 import os
 import struct
 
@@ -65,3 +66,5 @@ class PLYReader(MeshReader):
                     mesh.addVertexWithNormals(parts[x_location],parts[y_location],parts[z_location],parts[nx_location],parts[ny_location],parts[nz_location])
                 else:
                     mesh.addVertex(parts[x_location],parts[y_location],parts[z_location])
+            Logger.log("d", "Loaded a mesh with %s vertices", mesh.getVertexCount())
+            return mesh
