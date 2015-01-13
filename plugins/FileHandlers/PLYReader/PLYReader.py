@@ -1,5 +1,6 @@
 from UM.Mesh.MeshReader import MeshReader
 from UM.Mesh.MeshData import MeshData
+from UM.Mesh.MeshData import MeshType
 from UM.Logger import Logger
 import os
 import struct
@@ -102,4 +103,5 @@ class PLYReader(MeshReader):
                         mesh.addVertex(data[x_location],data[y_location],data[z_location])
                 
             Logger.log("d", "Loaded a mesh with %s vertices", mesh.getVertexCount())
+            mesh.setType(MeshType.pointcloud) #PLY reading defaults to pointcloud at the moment
             return mesh

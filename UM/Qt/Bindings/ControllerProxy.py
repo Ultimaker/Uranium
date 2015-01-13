@@ -7,6 +7,8 @@ from UM.Operations.AddSceneNodeOperation import AddSceneNodeOperation
 from UM.Mesh.LoadMeshJob import LoadMeshJob
 from UM.Scene.Selection import Selection
 from UM.Operations.RemoveSceneNodesOperation import RemoveSceneNodesOperation
+from UM.Mesh.MeshData import MeshType
+from UM.Scene.PointCloudNode import PointCloudNode
 
 class ControllerProxy(QObject):
     def __init__(self, parent = None):
@@ -40,9 +42,13 @@ class ControllerProxy(QObject):
         Selection.clear()
 
     def _loadMeshFinished(self, job):
-        node = SceneNode(self._controller.getScene().getRoot())
+        mesh = job.getResult()
+        if mesh.getType() is MeshType.pointcloud:  #Depending on the type we need a different node (as pointclouds are rendered differently)
+            node = PointCloudNode(self._controller.getScene().getRoot())
+        else: 
+            node = SceneNode(self._controller.getScene().getRoot())
         node.setSelectionMask(1)
-        node.setMeshData(job.getResult())
+        node.setMeshData(mesh)
 
         op = AddSceneNodeOperation(node, self._controller.getScene().getRoot())
         op.push()

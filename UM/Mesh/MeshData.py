@@ -5,6 +5,13 @@ from UM.Signal import Signal, SignalEmitter
 
 import numpy
 import numpy.linalg
+from enum import Enum
+
+
+class MeshType(Enum):
+    faces = 1 # Start at one, as 0 is false (so if this is used in a if statement, it's always true)
+    pointcloud = 2
+
 
 ##  Class to hold a list of verts and possibly how (and if) they are connected.
 #
@@ -22,6 +29,16 @@ class MeshData(SignalEmitter):
         self._vertex_count = len(self._vertices) if self._vertices is not None else 0
         self._face_count = len(self._indices) if self._indices is not None else 0
         self._name = "Mesh"
+        self._type = MeshType.faces
+    
+    ##  Set the type of the mesh 
+    #   \param mesh_type MeshType enum 
+    def setType(self, mesh_type):
+        if isinstance(mesh_type, MeshType):
+            self._type = mesh_type
+    
+    def getType(self):
+        return self._type
     
     def getName(self):
         return self._name
