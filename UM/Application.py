@@ -38,7 +38,7 @@ class Application:
 
         #TODO: This needs to be loaded from preferences, and moved to CURA (as the um2 json has little to do with other applications!)
         self._machine_settings = MachineSettings()
-        self._machine_settings.loadSettingsFromFile(Resources.getPath(Resources.SettingsLocation, "ultimaker2.json"))
+        
 
         self._operation_stack = OperationStack()
 

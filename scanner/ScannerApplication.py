@@ -10,6 +10,7 @@ import os.path
 class ScannerApplication(QtApplication):
     def __init__(self):
         super(ScannerApplication, self).__init__()
+        #self._machine_settings.loadSettingsFromFile(Resources.getPath(Resources.SettingsLocation, "ultiscantastic.json"))
 
         
     def run(self):
