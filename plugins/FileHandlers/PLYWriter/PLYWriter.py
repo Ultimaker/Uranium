@@ -20,9 +20,9 @@ class PLYWriter(MeshWriter):
             f.write(bytes("property float x\n", "utf-8")) # Tell the ply that there is a property called x for vertex.
             f.write(bytes("property float y\n", "utf-8")) # Tell the ply that there is a property called y for vertex.
             f.write(bytes("property float z\n", "utf-8")) # Tell the ply that there is a property called z for vertex.
-            f.write(bytes("property float Nx\n", "utf-8")) # Tell the ply that there is a property called n_x for vertex (normal).
-            f.write(bytes("property float Ny\n", "utf-8")) # Tell the ply that there is a property called n_x for vertex (normal).
-            f.write(bytes("property float Nz\n", "utf-8")) # Tell the ply that there is a property called n_x for vertex (normal).
+            f.write(bytes("property float nx\n", "utf-8")) # Tell the ply that there is a property called n_x for vertex (normal).
+            f.write(bytes("property float ny\n", "utf-8")) # Tell the ply that there is a property called n_x for vertex (normal).
+            f.write(bytes("property float nz\n", "utf-8")) # Tell the ply that there is a property called n_x for vertex (normal).
             f.write(bytes("end_header\n", "utf-8")) #Notify end of header  (and start of verts)
             
             positions = mesh_data.getVertices()
