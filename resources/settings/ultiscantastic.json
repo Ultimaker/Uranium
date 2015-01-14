@@ -25,7 +25,7 @@
                     "active_if": 
                     {
                         "setting": "calibration_type",
-                        "value": 0
+                        "value": "Board"
                     },
                     "max_value": 250
                 }
