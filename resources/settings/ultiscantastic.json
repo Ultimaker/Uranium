@@ -7,13 +7,27 @@
             "visible": true,
             "Settings": [
                 {
-                    "key": "physical_object_size",
-                    "label": "Calibration marker size",
+                    "key": "calibration_type",
+                    "label": "Calibration type",
                     "type": "int",
-                    "default": 125,
+                    "default": 1,
                     "min_value": 0,
+                    "max_value": 1
+                },
+                {
+                    "key": "number_of_calibration_boards",
+                    "label": "num calib boards",
+                    "type": "int",
+                    "default": 1,
+                    "min_value": 0,
+                    "active_if": 
+                    {
+                        "setting": "calibration_type",
+                        "value": 1
+                    },
                     "max_value": 250
-                }   
+                }
+                
             ]
         },
         {

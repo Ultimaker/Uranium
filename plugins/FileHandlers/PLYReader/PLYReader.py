@@ -5,7 +5,8 @@ from UM.Logger import Logger
 import os
 import struct
 
-# In it's current implementation it reads *only* pointclouds (with or without normals). 
+##      In it's current implementation it reads *only* pointclouds (with or without normals). 
+#       It uses the definition as found on http://paulbourke.net/dataformats/ply/
 
 class PLYReader(MeshReader):
     def __init__(self):

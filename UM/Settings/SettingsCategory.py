@@ -10,8 +10,8 @@ class SettingsCategory(object):
         self._settings = []
         self._depth = 0 #Depth of category is 0 by definition (used for display purposes)
         
-    ## Set values of the setting by providing it with a dict object (as decoded by JSON parser)
-    # \param data Decoded JSON dict
+    ##  Set values of the setting by providing it with a dict object (as decoded by JSON parser)
+    #   \param data Decoded JSON dict
     def fillByDict(self, data):
         if "label" in data:
             self._label = data["label"]

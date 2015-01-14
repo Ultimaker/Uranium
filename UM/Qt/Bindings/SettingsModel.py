@@ -1,6 +1,7 @@
 from PyQt5.QtCore import Qt, QCoreApplication, pyqtSlot
 
 from UM.Qt.ListModel import ListModel
+from UM.Settings.Setting import Setting
 
 class SettingsModel(ListModel):
     
@@ -27,7 +28,17 @@ class SettingsModel(ListModel):
         settings = self._machine_settings.getAllSettings()
         for setting in settings:
             self.appendItem({"name":setting.getLabel(),"category":setting.getCategory().getLabel(),"collapsed":True,"type":setting.getType(),"value":setting.getValue(),"valid":setting.validate(),"key":setting.getKey(), "depth":setting.getDepth(),"visibility":setting.isVisible(),"disabled":setting.checkAllChildrenVisible()})
-            
+            if setting._active_if_setting != None:
+                setting.activeChanged.connect(self.handleActiveChanged)
+    
+    ##  Triggred by setting if it has a conditional activation
+    def handleActiveChanged(self,key):
+        for index in range(0,len(self.items)):
+            temp_setting = self._machine_settings.getSettingByKey(self.items[index]["key"])
+            if temp_setting is not None:
+                self.setProperty(index, 'disabled', temp_setting.checkAllChildrenVisible())
+                self.setProperty(index, 'visibility', temp_setting.isVisible())
+
     @pyqtSlot(str)
     def toggleCollapsedByCategory(self, category_key):
         for index in range(0, len(self.items)):

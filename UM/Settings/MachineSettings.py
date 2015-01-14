@@ -4,6 +4,8 @@ import configparser
 import os.path
 
 from UM.Settings.SettingsCategory import SettingsCategory
+from UM.Signal import Signal, SignalEmitter
+from PyQt5.QtCore import QCoreApplication
 
 class MachineSettings(object):
     def __init__(self):
@@ -26,6 +28,8 @@ class MachineSettings(object):
                     temp_category = SettingsCategory(category["key"])
                     temp_category.fillByDict(category)
                     self.addSettingsCategory(temp_category)
+        self.settingsLoaded.emit() #Emit signal that all settings are loaded (some setting stuff can only be done when all settings are loaded (eg; the conditional stuff)
+    settingsLoaded = Signal()
     
     ##  Load values of settings from file. 
     def loadValuesFromFile(self, file_name):

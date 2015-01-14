@@ -1,11 +1,13 @@
 from UM.Settings.Validators.IntValidator import IntValidator
 from UM.Settings.Validators.FloatValidator import FloatValidator
 from UM.Settings.Validators.ResultCodes import ResultCodes
+from PyQt5.QtCore import QCoreApplication
+from UM.Signal import Signal, SignalEmitter
 
 ##    A setting object contains a (single) configuration setting.
 #     Settings have validators that check if the value is valid, but do not prevent invalid values!
 #     Settings have conditions that enable/disable this setting depending on other settings. (Ex: Dual-extrusion)
-class Setting(object):    
+class Setting(SignalEmitter):    
     def __init__(self, key = None, default = None, type = None, category = None, label = None):
         self._key = key
         if label is None:
@@ -16,13 +18,43 @@ class Setting(object):
         self._type = type
         self._visible = True
         self._validator = None
-        self._callbacks = [] #Callbacks trigged when the value is changed
         self._conditions = []
         self._parent = None
         self._hide_if_all_children_visible = True
         self._children = []
         self._category = category
-
+        self._active = True
+        self._machine_settings = QCoreApplication.instance().getMachineSettings()
+        self._active_if_setting = None
+        self._active_if_value = None
+    
+    valueChanged = Signal()
+    
+    ##  Triggered when all settings are loaded and the setting has a conditional param
+    def activeIfHandler(self):
+        setting = QCoreApplication.instance().getMachineSettings().getSettingByKey(self._active_if_setting)
+        if setting is not None:
+            setting.valueChanged.connect(self.conditionalActiveHandler)
+        #QCoreApplication.instance().getMachineSettings().getSettingByKey(self._active_if_setting).valueChanged.connect(self.conditionalActiveHandler)
+        
+    #   Triggered when the setting it's dependant on changes it's value
+    def conditionalActiveHandler(self):
+        print("triggeredConditionalActiveHandler")
+        self.setActive(int(QCoreApplication.instance().getMachineSettings().getSettingByKey(self._active_if_setting).getValue()) == int(self._active_if_value))
+    
+    def isActive(self):
+        if self._parent != None:
+            if self._parent.isActive is True:
+                return self._active
+        else:
+            return self._active
+        return False    
+    
+    def setActive(self, active):
+        self._active = active
+        self.activeChanged.emit(self._key)
+    
+    activeChanged = Signal()
 
     ##  Bind new validator to object based on it's current type
     def bindValidator(self):
@@ -60,6 +92,12 @@ class Setting(object):
             if "max_value_warning" in data:
                 max_value_warning = data["max_value_warning"]
             self.getValidator().setRange(min_value,max_value,min_value_warning,max_value_warning)
+            
+            if "active_if" in data:
+                if "setting" in data["active_if"] and "value" in data["active_if"]:
+                    self._active_if_setting = data["active_if"]["setting"]
+                    self._active_if_value = data["active_if"]["value"]
+                    self._machine_settings = QCoreApplication.instance().getMachineSettings().settingsLoaded.connect(self.activeIfHandler)
         
         if "children" in data:
             for setting in data["children"]:
@@ -139,9 +177,11 @@ class Setting(object):
     ##  Check if the setting is visible. It can be that the setting visible is true, 
     #   but it still should be invisible as all it's children are visible (at this point this setting is overiden by its children 
     #   changing it does nothing, so it needs to be hidden!)
+    #   The value is also hidden if it's not active (due to condition (some properties are active based on values of other settings)
     #   \returns bool
     def isVisible(self):
-        if not self._visible:
+        print("self._visible ", self._visible)
+        if not self._visible or not self._active:
             return False
         if self._hide_if_all_children_visible and self.checkAllChildrenVisible():
             return False
@@ -205,18 +245,13 @@ class Setting(object):
             return self._default_value
         return self._value
 
-    ##  Set the value of this setting and call the registered callbacks.
+    ##  Set the value of this setting and emit valueChanged signal
     #   \param value Value to be set.
     def setValue(self, value):
         if self._value != value:
             self._value = value
-            for callback in self._callbacks:
-                callback()
+            self.valueChanged.emit()
     
-    ##   Add function to be called when value is changed.
-    #   \param function to be added.
-    def addValueChangedCallback(self, callback):
-        self._callbacks.append(callback)
     
     ##  Validate the value of this setting. 
     #   \returns ResultCodes.succes if there is no validator or if validation is succesfull. Returns warning or error code otherwise.
