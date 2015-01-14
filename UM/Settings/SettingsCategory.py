@@ -26,6 +26,9 @@ class SettingsCategory(object):
                     temp_setting.setParent(self)
                     self._settings.append(temp_setting)
 
+    def isActive(self):
+        return True
+    
     def setLabel(self, label):
         self._label = label
     

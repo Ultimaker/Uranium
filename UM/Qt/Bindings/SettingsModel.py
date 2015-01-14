@@ -44,11 +44,27 @@ class SettingsModel(ListModel):
     
     ##  Triggred by setting if it has a conditional activation
     def handleActiveChanged(self,key):
-        for index in range(0,len(self.items)):
-            temp_setting = self._machine_settings.getSettingByKey(self.items[index]["key"])
-            if temp_setting is not None:
+        temp_setting = self._machine_settings.getSettingByKey(key)
+        if temp_setting is not None:
+            index = self._find(self.items,"key",temp_setting.getKey())
+            if index != -1:
                 self.setProperty(index, 'disabled', temp_setting.checkAllChildrenVisible())
-                self.setProperty(index, 'visibility', temp_setting.isVisible())
+                self.setProperty(index, 'visibility', (temp_setting.isVisible() and temp_setting.isActive()))
+            
+            for child_setting in temp_setting.getAllChildren():
+                index = self._find(self.items,"key",child_setting.getKey())
+                if index != -1:
+                    self.setProperty(index, 'disabled', child_setting.checkAllChildrenVisible())
+                    self.setProperty(index, 'visibility', (child_setting.isVisible() and child_setting.isActive()))
+            
+            
+
+    #   Convenience function that finds the index in a list of dicts based on key value pair
+    def _find(self,lst, key, value):
+        for i, dic in enumerate(lst):
+            if dic[key] == value:
+                return i
+        return -1
 
     @pyqtSlot(str)
     def toggleCollapsedByCategory(self, category_key):

@@ -10,26 +10,56 @@
                     "key": "calibration_type",
                     "label": "Calibration type",
                     "type": "enum",
-                    "default": 1,
-                    "options": ["Board", "Corner"],
-                    "min_value": 0,
-                    "max_value": 1
+                    "default": "Board",
+                    "options": [
+                        "Board",
+                        "Corner"
+                    ]
+                },
+                {
+                    "key": "setup_type",
+                    "label": "Setup",
+                    "type": "enum",
+                    "default": "Platform",
+                    "options": [
+                        "Platform",
+                        "Freeform"
+                    ]
                 },
                 {
                     "key": "number_of_calibration_boards",
                     "label": "num calib boards",
                     "type": "int",
                     "default": 1,
-                    
                     "min_value": 0,
-                    "active_if": 
-                    {
+                    "active_if": {
                         "setting": "calibration_type",
                         "value": "Board"
                     },
-                    "max_value": 250
+                    "max_value": 250,
+                    "children": [
+                        {
+                            "key": "number_of_calibration_boards_scanner",
+                            "label": "num calib boards scanner",
+                            "type": "int",
+                            "default": 1,
+                            "min_value": 0,
+                            "max_value": 250
+                        },
+                        {
+                            "key": "number_of_calibration_boards_projector",
+                            "label": "num calib boards projector",
+                            "type": "int",
+                            "default": 1,
+                            "active_if": {
+                                "setting": "setup_type",
+                                "value": "Platform"
+                            },
+                            "min_value": 0,
+                            "max_value": 250
+                        }
+                    ]
                 }
-                
             ]
         },
         {

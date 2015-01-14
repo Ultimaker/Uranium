@@ -44,15 +44,19 @@ class Setting(SignalEmitter):
     
     def isActive(self):
         if self._parent != None:
-            if self._parent.isActive is True:
+            if self._parent.isActive() == True:
                 return self._active
         else:
             return self._active
         return False    
     
     def setActive(self, active):
-        self._active = active
-        self.activeChanged.emit(self._key)
+        if self._active != active: 
+            self._active = active
+            #for child in self._children:
+                #print("child setActive ", child._key)
+                #child.setActive(True)
+            self.activeChanged.emit(self._key)
     
     activeChanged = Signal()
 
@@ -185,7 +189,7 @@ class Setting(SignalEmitter):
     #   The value is also hidden if it's not active (due to condition (some properties are active based on values of other settings)
     #   \returns bool
     def isVisible(self):
-        if not self._visible or not self._active:
+        if not self._visible:
             return False
         if self._hide_if_all_children_visible and self.checkAllChildrenVisible():
             return False
