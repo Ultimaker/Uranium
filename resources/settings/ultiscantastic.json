@@ -9,7 +9,7 @@
                 {
                     "key": "calibration_type",
                     "label": "Calibration type",
-                    "type": "string",
+                    "type": "enum",
                     "default": 1,
                     "options": ["Board", "Corner"],
                     "min_value": 0,
@@ -25,7 +25,7 @@
                     "active_if": 
                     {
                         "setting": "calibration_type",
-                        "value": 1
+                        "value": 0
                     },
                     "max_value": 250
                 }

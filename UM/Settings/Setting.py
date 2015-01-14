@@ -186,7 +186,6 @@ class Setting(SignalEmitter):
     #   The value is also hidden if it's not active (due to condition (some properties are active based on values of other settings)
     #   \returns bool
     def isVisible(self):
-        print("self._visible ", self._visible)
         if not self._visible or not self._active:
             return False
         if self._hide_if_all_children_visible and self.checkAllChildrenVisible():
