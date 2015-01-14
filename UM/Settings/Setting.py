@@ -27,6 +27,7 @@ class Setting(SignalEmitter):
         self._machine_settings = QCoreApplication.instance().getMachineSettings()
         self._active_if_setting = None
         self._active_if_value = None
+        self._options = []
     
     valueChanged = Signal()
     
@@ -91,13 +92,16 @@ class Setting(SignalEmitter):
                 min_value_warning = data["min_value_warning"]
             if "max_value_warning" in data:
                 max_value_warning = data["max_value_warning"]
-            self.getValidator().setRange(min_value,max_value,min_value_warning,max_value_warning)
+            if  self.getValidator() is not None: #Strings don't have validators as of yet
+                self.getValidator().setRange(min_value,max_value,min_value_warning,max_value_warning)
             
             if "active_if" in data:
                 if "setting" in data["active_if"] and "value" in data["active_if"]:
                     self._active_if_setting = data["active_if"]["setting"]
                     self._active_if_value = data["active_if"]["value"]
                     self._machine_settings = QCoreApplication.instance().getMachineSettings().settingsLoaded.connect(self.activeIfHandler)
+            if "options" in data:
+                self._options = data["options"]
         
         if "children" in data:
             for setting in data["children"]:
@@ -106,7 +110,9 @@ class Setting(SignalEmitter):
                 temp_setting.fillByDict(setting)
                 self._children.append(temp_setting)
             
-         
+    ##  Return the values this setting can have (needs to be set if this is setting is an enum!)
+    def getOptions(self):
+        return self._options
     
     ##  Set the validator of the Setting
     #   \param validator Validator

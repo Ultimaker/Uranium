@@ -119,6 +119,8 @@ Panel
                         return "SettingTextField.qml"
                     case "float":
                         return "SettingTextField.qml"
+                    case "string":
+                        return "SettingComboBox.qml"
                 }
             }
 

@@ -16,9 +16,11 @@ class JobsModel(ListModel):
         jobQueue.jobFinished.connect(self._onJobFinished)
 
         self._watchedJobIndices = {}
-
-    def roleNames(self):
-        return { self.IdRole: 'id', self.DescriptionRole: 'description', self.ProgressRole: 'progress' }
+        self.addRoleName(self.IdRole, 'id')
+        self.addRoleName(self.DescriptionRole, 'description')
+        self.addRoleName(self.ProgressRole, 'progress')
+    #def roleNames(self):
+     #   return { self.IdRole: 'id', self.DescriptionRole: 'description', self.ProgressRole: 'progress' }
 
     def _onJobStarted(self, job):
         if job.isVisible():

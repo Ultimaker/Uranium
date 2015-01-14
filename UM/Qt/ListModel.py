@@ -10,19 +10,24 @@ class ListModel(QAbstractListModel):
     def __init__(self, parent = None):
         super().__init__(parent)
         self._items = []
+        self._role_names = {}
 
     ##  Reimplemented from QAbstractListModel
     @pyqtSlot(result=int)
     def rowCount(self, parent = None):
         return len(self._items)
 
+    def addRoleName(self,role,name):
+        self._role_names[role] = name
+        
+    def roleNames(self):
+        return self._role_names
+    
     ##  Reimplemented from QAbstractListModel
     def data(self, index, role):
         if not index.isValid():
             return QVariant()
-
-        roleNames = self.roleNames()
-        return self._items[index.row()][roleNames[role]]
+        return self._items[index.row()][self._role_names[role]]
 
     ##  The list of items in this model.
     @pyqtProperty('QVariantList')

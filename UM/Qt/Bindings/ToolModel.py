@@ -17,14 +17,11 @@ class ToolModel(ListModel):
         self._controller.toolsChanged.connect(self._onToolsChanged)
         self._controller.activeToolChanged.connect(self._onActiveToolChanged)
         self._onToolsChanged()
-
-    def roleNames(self):
-        return {
-            self.NameRole: 'name',
-            self.IconRole: 'icon',
-            self.ToolActiveRole: 'active',
-            self.DescriptionRole: 'description'
-        }
+        
+        self.addRoleName(self.NameRole, 'name')
+        self.addRoleName(self.IconRole, 'icon')
+        self.addRoleName(self.ToolActiveRole, 'active')
+        self.addRoleName(self.DescriptionRole, 'description')
 
     def _onToolsChanged(self):
         self.clear()

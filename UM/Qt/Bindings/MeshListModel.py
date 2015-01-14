@@ -17,8 +17,11 @@ class MeshListModel(ListModel):
         super().__init__(parent)
         self.updateList(Application.getInstance().getController().getScene().getRoot())
         Application.getInstance().getController().getScene().getRoot().childrenChanged.connect(self.updateList)
+        self.addRoleName(self.NameRole,"name")
+        self.addRoleName(self.VisibilityRole, "visibility")
+        self.addRoleName(self.UniqueKeyRole, "key")
+        self.addRoleName(self.SelectedRole, "selected")
         
-    
     def updateList(self, trigger_node):
         self.clear()
         scene_nodes = trigger_node.getAllChildren()
@@ -27,8 +30,8 @@ class MeshListModel(ListModel):
             if node.getMeshData() is not None:
                 self.appendItem({"name":node.getMeshData().getName(), "visibility": node.isVisible(), "key": (id(node)), "selected": Selection.isSelected(node)})
     
-    def roleNames(self):
-        return {self.NameRole:'name', self.VisibilityRole:"visibility",self.UniqueKeyRole: "key", self.SelectedRole: "selected"}
+    #def roleNames(self):
+    #    return {self.NameRole:'name', self.VisibilityRole:"visibility",self.UniqueKeyRole: "key", self.SelectedRole: "selected"}
     
     # set the visibility of a node (by key)
     @pyqtSlot("long",bool)

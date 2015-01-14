@@ -10,9 +10,9 @@ class ViewModel(ListModel):
         self._controller = QCoreApplication.instance().getController()
         self._controller.viewsChanged.connect(self._onViewsChanged)
         self._onViewsChanged()
+        
+        self.addRoleName(self.TextRole, 'text')
 
-    def roleNames(self):
-        return { self.TextRole: 'text' }
 
     def _onViewsChanged(self):
         self.clear()

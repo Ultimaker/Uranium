@@ -15,19 +15,30 @@ class SettingsModel(ListModel):
     DepthRole = Qt.UserRole + 8
     VisibilityRole = Qt.UserRole + 9
     DisabledRole = Qt.UserRole + 10
+    OptionsRole = Qt.UserRole + 11
+    
     def __init__(self, parent = None):
         super().__init__(parent)
         self._machine_settings = QCoreApplication.instance().getMachineSettings()
         self._updateSettings()
-        
-    def roleNames(self):
-        return {self.NameRole:'name', self.CategoryRole:"category", self.CollapsedRole:"collapsed",self.TypeRole:"type",self.ValueRole:"value",self.ValidRole:"valid",self.KeyRole:"key", self.DepthRole:"depth", self.VisibilityRole:"visibility",self.DisabledRole:"disabled"}
-        
+
+        self.addRoleName(self.NameRole, "name")
+        self.addRoleName(self.CategoryRole,"category")
+        self.addRoleName(self.CollapsedRole,"collapsed")
+        self.addRoleName(self.TypeRole,"type")
+        self.addRoleName(self.ValueRole,"value") 
+        self.addRoleName(self.ValidRole,"valid")
+        self.addRoleName(self.KeyRole,"key") 
+        self.addRoleName(self.DepthRole,"depth")
+        self.addRoleName(self.VisibilityRole,"visibility")
+        self.addRoleName(self.DisabledRole,"disabled")
+        self.addRoleName(self.OptionsRole,"options")
+               
     def _updateSettings(self):
         self.clear()
         settings = self._machine_settings.getAllSettings()
         for setting in settings:
-            self.appendItem({"name":setting.getLabel(),"category":setting.getCategory().getLabel(),"collapsed":True,"type":setting.getType(),"value":setting.getValue(),"valid":setting.validate(),"key":setting.getKey(), "depth":setting.getDepth(),"visibility":setting.isVisible(),"disabled":setting.checkAllChildrenVisible()})
+            self.appendItem({"name":setting.getLabel(),"category":setting.getCategory().getLabel(),"collapsed":True,"type":setting.getType(),"value":setting.getValue(),"valid":setting.validate(),"key":setting.getKey(), "depth":setting.getDepth(),"visibility":setting.isVisible(),"disabled":setting.checkAllChildrenVisible(), "options": self.createOptionsModel(setting.getOptions())})
             if setting._active_if_setting != None:
                 setting.activeChanged.connect(self.handleActiveChanged)
     
@@ -58,6 +69,13 @@ class SettingsModel(ListModel):
         if self._machine_settings.getSettingByKey(key) is not None:
             return self._machine_settings.getSettingByKey(key).validate()
         return 5
+    
+    def createOptionsModel(self, options):
+        model = ListModel()
+        model.addRoleName(self.NameRole,"text")
+        for option in options:
+            model.appendItem({"text":str(option)})
+        return model    
     
     @pyqtSlot()
     def saveSettingValues(self):

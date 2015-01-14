@@ -9,8 +9,9 @@
                 {
                     "key": "calibration_type",
                     "label": "Calibration type",
-                    "type": "int",
+                    "type": "string",
                     "default": 1,
+                    "options": ["Board", "Corner"],
                     "min_value": 0,
                     "max_value": 1
                 },
@@ -19,6 +20,7 @@
                     "label": "num calib boards",
                     "type": "int",
                     "default": 1,
+                    
                     "min_value": 0,
                     "active_if": 
                     {
