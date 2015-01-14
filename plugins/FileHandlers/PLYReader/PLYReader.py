@@ -29,6 +29,8 @@ class PLYReader(MeshReader):
             read_type = -1
             num_vertices = -1
             mesh = MeshData()
+            formatting = b''
+            vert_byte_size = 0
             f = storage_device.openFile(file_name, 'rb')
             #line_list = list(f) #Put all lines in a list, usefull because we need to read the header first
             
@@ -46,8 +48,10 @@ class PLYReader(MeshReader):
                         read_type = 0
                     if parts[1] == "binary_little_endian":
                         read_type = 1
+                        formatting += b'<'
+                        
                     if parts[1] == "binary_big_endian":
-                        read_type = 2
+                        formatting += b'>'
                 
                 if parts[0] == "end_header": # End of header, stop reading header (start reading vert data)
                     #start_index = index + 1
@@ -57,7 +61,7 @@ class PLYReader(MeshReader):
                         element_location = index
                         num_vertices = int(parts[2])
                 
-                if parts[0] == "property" and parts[1] == 'float': #The order of these elements decides what the data of the verts means
+                if parts[0] == "property": #Check ordering 
                     if parts[2] == "x":
                         x_location = index - element_location - 1
                     if parts[2] == "y":
@@ -70,6 +74,11 @@ class PLYReader(MeshReader):
                         ny_location = index - element_location - 1
                     if parts[2] == "nz":
                         nz_location = index - element_location - 1
+                        
+                    if parts[1] == 'float': #check type!
+                        formatting += b'f'
+                        vert_byte_size += 4
+                        
             
             has_normals = (nx_location != -1 and ny_location != -1 and nz_location != -1)
             
@@ -82,24 +91,12 @@ class PLYReader(MeshReader):
                         mesh.addVertexWithNormal(parts[x_location],parts[y_location],parts[z_location],parts[nx_location],parts[ny_location],parts[nz_location])
                     else:
                         mesh.addVertex(parts[x_location],parts[y_location],parts[z_location])
-            elif read_type == 1: #Binary little endian
+            else: #binary
                 for index in range(0, num_vertices):
+                    data = struct.unpack(formatting, f.read(vert_byte_size))
                     if has_normals:
-                        #TODO: The read size should be defined by the actual properties used (number * size) instead of hardcoding.
-                        data = struct.unpack(b'<ffffff', f.read(24))
                         mesh.addVertexWithNormal(data[x_location],data[y_location],data[z_location],data[nx_location],data[ny_location],data[nz_location])
                     else: 
-                        data = struct.unpack(b'<fff', f.read(12))
-                        mesh.addVertex(data[x_location],data[y_location],data[z_location])
-                    
-                pass
-            elif read_type == 2: #Binary big endian
-                for index in range(0, num_vertices):
-                    if has_normals:
-                        data = struct.unpack(b'>ffffff', f.read(24))
-                        mesh.addVertexWithNormal(data[x_location],data[y_location],data[z_location],data[nx_location],data[ny_location],data[nz_location])
-                    else: 
-                        data = struct.unpack(b'>fff', f.read(12))
                         mesh.addVertex(data[x_location],data[y_location],data[z_location])
                 
             Logger.log("d", "Loaded a mesh with %s vertices", mesh.getVertexCount())
