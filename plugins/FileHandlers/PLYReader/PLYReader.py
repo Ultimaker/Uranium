@@ -84,7 +84,9 @@ class PLYReader(MeshReader):
             
             # Read vert data
             if read_type == 0: # ASCII
-                for line in f.readlines():
+                for index, line in enumerate(f.readlines()):
+                    if index > num_vertices: #The ply can have edges, but we ignore them as we interpret it as a point cloud
+                        break
                     line = line.decode("utf-8") # This is ascii type, not bytes
                     parts = line.split()
                     if has_normals: 
