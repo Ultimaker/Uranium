@@ -38,7 +38,7 @@ class SettingsModel(ListModel):
         self.clear()
         settings = self._machine_settings.getAllSettings()
         for setting in settings:
-            self.appendItem({"name":setting.getLabel(),"category":setting.getCategory().getLabel(),"collapsed":True,"type":setting.getType(),"value":setting.getValue(),"valid":setting.validate(),"key":setting.getKey(), "depth":setting.getDepth(),"visibility":setting.isVisible(),"disabled":setting.checkAllChildrenVisible(), "options": self.createOptionsModel(setting.getOptions())})
+            self.appendItem({"name":setting.getLabel(),"category":setting.getCategory().getLabel(),"collapsed":True,"type":setting.getType(),"value":setting.getValue(),"valid":setting.validate(),"key":setting.getKey(), "depth":setting.getDepth(),"visibility":setting.isVisible(),"disabled":(setting.checkAllChildrenVisible() or not setting.isActive()), "options": self.createOptionsModel(setting.getOptions())})
             if setting._active_if_setting != None:
                 setting.activeChanged.connect(self.handleActiveChanged)
     
@@ -48,13 +48,13 @@ class SettingsModel(ListModel):
         if temp_setting is not None:
             index = self._find(self.items,"key",temp_setting.getKey())
             if index != -1:
-                self.setProperty(index, 'disabled', temp_setting.checkAllChildrenVisible())
+                self.setProperty(index, 'disabled', (temp_setting.checkAllChildrenVisible() or not temp_setting.isActive())) 
                 self.setProperty(index, 'visibility', (temp_setting.isVisible() and temp_setting.isActive()))
             
             for child_setting in temp_setting.getAllChildren():
                 index = self._find(self.items,"key",child_setting.getKey())
                 if index != -1:
-                    self.setProperty(index, 'disabled', child_setting.checkAllChildrenVisible())
+                    self.setProperty(index, 'disabled', (child_setting.checkAllChildrenVisible() or not child_setting.isActive()))
                     self.setProperty(index, 'visibility', (child_setting.isVisible() and child_setting.isActive()))
             
             

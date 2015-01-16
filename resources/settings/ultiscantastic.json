@@ -78,18 +78,31 @@
             ]
         },
         {
-            "key": "scanning",
+            "key": "canning",
             "label": "Scanning",
             "visible": true,
             "Settings": [
                 {
-                    "key": "TestSettingffaaa",
-                    "label": "Test setting!",
+                    "key": "pattern_type",
+                    "label": "Pattern type",
+                    "type": "enum",
+                    "default": "Grey code",
+                    "options": [
+                        "Grey code",
+                        "Phase shift"
+                    ]
+                },
+                {
+                    "key": "num_phase_pattern_shifts",
+                    "label": "Pattern shifts",
                     "type": "int",
-                    "default": 10,
-                    "min_value": 0,
-                    "max_value": 10,
-                    "children": []
+                    "default": 16,
+                    "min_value": 3,
+                    "max_value": 150,
+                    "active_if": {
+                        "setting": "pattern_type",
+                        "value": "Phase shift"
+                    }
                 }
             ]
         }
