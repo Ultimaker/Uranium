@@ -29,7 +29,7 @@ Rectangle {
     MenuBar {
         id: menu
 
-        __parentWindow: menuBackground.window
+        //__parentWindow: menuBackground.window
 
         Component.onCompleted: {
             __contentItem.parent = menuBackground;
