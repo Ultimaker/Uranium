@@ -31,7 +31,10 @@ class Backend(object):
     ##   \brief Start the backend / engine. 
     #   Runs the engine, this is only called when the socket is fully opend & ready to accept connections
     def startEngine(self):
-        self._process = self._runEngineProcess(self.getEngineCommand())
+        try:
+            self._process = self._runEngineProcess(self.getEngineCommand())
+        except FileNotFoundError as e:
+            Logger.log('e', "Unable to find backend executable")
     
     ##   Parse the next reply and handle it (based on command_handlers)
     def handleNextReply(self):
