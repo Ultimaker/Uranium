@@ -43,7 +43,7 @@ class SettingsModel(ListModel):
                 setting.activeChanged.connect(self.handleActiveChanged)
     
     ##  Triggred by setting if it has a conditional activation
-    def handleActiveChanged(self,key):
+    def handleActiveChanged(self, key):
         temp_setting = self._machine_settings.getSettingByKey(key)
         if temp_setting is not None:
             index = self._find(self.items,"key",temp_setting.getKey())
@@ -57,8 +57,6 @@ class SettingsModel(ListModel):
                     self.setProperty(index, 'disabled', (child_setting.checkAllChildrenVisible() or not child_setting.isActive()))
                     self.setProperty(index, 'visibility', (child_setting.isVisible() and child_setting.isActive()))
             
-            
-
     #   Convenience function that finds the index in a list of dicts based on key value pair
     def _find(self,lst, key, value):
         for i, dic in enumerate(lst):
@@ -67,6 +65,7 @@ class SettingsModel(ListModel):
         return -1
 
     @pyqtSlot(str)
+    ##  collapse an entire category
     def toggleCollapsedByCategory(self, category_key):
         for index in range(0, len(self.items)):
             item = self.items[index]
@@ -74,18 +73,23 @@ class SettingsModel(ListModel):
                 self.setProperty(index, 'collapsed', not item['collapsed'])
     
     @pyqtSlot(int, str, str)
+    ##  Notification that setting has changed.  
     def settingChanged(self, index, key, value):
-        #index = self.items.index(key)
         if self._machine_settings.getSettingByKey(key) is not None:
             self._machine_settings.getSettingByKey(key).setValue(value)
         self.setProperty(index,'valid', self.isValid(key))
     
     @pyqtSlot(str,result=int)
+    ##  Check if the entered value of the setting is valid (warning/error)
+    #   \returns error key.
     def isValid(self,key):
         if self._machine_settings.getSettingByKey(key) is not None:
             return self._machine_settings.getSettingByKey(key).validate()
         return 5
     
+    ##  Create model for combo box (used by enum type setting) 
+    #   \param options List of strings
+    #   \return ListModel with "text":value pairs
     def createOptionsModel(self, options):
         model = ListModel()
         model.addRoleName(self.NameRole,"text")
@@ -94,10 +98,15 @@ class SettingsModel(ListModel):
         return model    
     
     @pyqtSlot()
+    ##  Save the current setting values to file.
     def saveSettingValues(self):
         self._machine_settings.saveValuesToFile("settings.ini")
     
     @pyqtSlot(str,bool)
+    ##  Set the visibility of a setting.
+    #   Note that this might or might not effect the disabled property aswel!
+    #   \param key Key of the setting that is affected
+    #   \param visibility Visibility of the setting.
     def setVisibility(self, key, visibility):
         setting = self._machine_settings.getSettingByKey(key)
         if setting is not None:
@@ -111,6 +120,10 @@ class SettingsModel(ListModel):
                 
                 
     @pyqtSlot(str,result=bool)
+    ##  Check the visibility of an category.
+    #   It's possible that all children settings are invisible, so there is no need to show the category.
+    #   \param key key of the category to check
+    #   \return bool 
     def checkVisibilityCategory(self,key):
         category = self._machine_settings.getSettingsCategory(key)
         if category is not None:
