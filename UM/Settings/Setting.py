@@ -74,38 +74,43 @@ class Setting(SignalEmitter):
     ##  Set values of the setting by providing it with a dict object (as decoded by JSON parser)
     #   \param data Decoded JSON dict
     def fillByDict(self, data):
-        if "key" in data and "default" in data and "type" in data:
+        if "key" in data:
             self._key = data["key"]
-            self._default_value = str(data["default"])
-            self._type = data["type"]
-            self.bindValidator()
-            if "label" in data:
-                self.setLabel(data["label"])
-            if "visible" in data:
-                self.setVisible(data["visible"])
-            min_value = None
-            max_value = None
-            min_value_warning = None
-            max_value_warning = None
-            if "min_value" in data:
-                min_value = data["min_value"]
-            if "max_value" in data:
-                max_value = data["max_value"]
-            if "min_value_warning" in data:
-                min_value_warning = data["min_value_warning"]
-            if "max_value_warning" in data:
-                max_value_warning = data["max_value_warning"]
-            if  self.getValidator() is not None: #Strings don't have validators as of yet
-                self.getValidator().setRange(min_value,max_value,min_value_warning,max_value_warning)
-            
-            if "active_if" in data:
-                if "setting" in data["active_if"] and "value" in data["active_if"]:
-                    self._active_if_setting = data["active_if"]["setting"]
-                    self._active_if_value = data["active_if"]["value"]
-                    self._machine_settings = QCoreApplication.instance().getMachineSettings().settingsLoaded.connect(self.activeIfHandler)
-            if "options" in data:
-                self._options = data["options"]
         
+        if "default" in data:
+            self._default_value = str(data["default"])
+        
+        if "type" in data:
+            self._type = data["type"]
+            
+        self.bindValidator()
+        if "label" in data:
+            self.setLabel(data["label"])
+        if "visible" in data:
+            self.setVisible(data["visible"])
+        min_value = None
+        max_value = None
+        min_value_warning = None
+        max_value_warning = None
+        if "min_value" in data:
+            min_value = data["min_value"]
+        if "max_value" in data:
+            max_value = data["max_value"]
+        if "min_value_warning" in data:
+            min_value_warning = data["min_value_warning"]
+        if "max_value_warning" in data:
+            max_value_warning = data["max_value_warning"]
+        if  self.getValidator() is not None: #Strings don't have validators as of yet
+            self.getValidator().setRange(min_value,max_value,min_value_warning,max_value_warning)
+        
+        if "active_if" in data:
+            if "setting" in data["active_if"] and "value" in data["active_if"]:
+                self._active_if_setting = data["active_if"]["setting"]
+                self._active_if_value = data["active_if"]["value"]
+                self._machine_settings = QCoreApplication.instance().getMachineSettings().settingsLoaded.connect(self.activeIfHandler)
+        if "options" in data:
+            self._options = data["options"]
+    
         if "children" in data:
             for setting in data["children"]:
                 temp_setting = Setting()

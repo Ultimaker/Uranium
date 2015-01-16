@@ -4,6 +4,7 @@ import configparser
 import os.path
 
 from UM.Settings.SettingsCategory import SettingsCategory
+from UM.Settings.Setting import Setting
 from UM.Signal import Signal, SignalEmitter
 from PyQt5.QtCore import QCoreApplication
 from UM.Logger import Logger
@@ -12,6 +13,7 @@ class MachineSettings(object):
     def __init__(self):
         self._categories = []
         self._platformMesh = None
+        self._machine_settings = []   ## Settings that don't have a category are 'fixed' (eg; they can not be changed by the user, unless they change the json)
     
     ##  Load settings from JSON file. Used to load tree structure & default values etc from file.
     #   /param file_name String 
@@ -22,7 +24,12 @@ class MachineSettings(object):
 
         if "platform" in data:
             self._platformMesh = data["platform"]
-
+        if "machine_settings" in data:
+            for setting_dict in data["machine_settings"]:
+                temp_setting = Setting(setting_dict["key"])
+                temp_setting.fillByDict(setting_dict)
+                self.addSetting(temp_setting)
+        
         if "Categories" in data:
             for category in data["Categories"]:
                 if "key" in category:
@@ -30,7 +37,6 @@ class MachineSettings(object):
                     temp_category.fillByDict(category)
                     self.addSettingsCategory(temp_category)
         self.settingsLoaded.emit() #Emit signal that all settings are loaded (some setting stuff can only be done when all settings are loaded (eg; the conditional stuff)
-    
     settingsLoaded = Signal()
     
     ##  Load values of settings from file. 
@@ -93,24 +99,16 @@ class MachineSettings(object):
             setting = category.getSettingByKey(key)
             if setting is not None:
                 return setting
+        for setting in self._machine_settings:
+            setting = setting.getSettingByKey(key)
+            if setting is not None:
+                return setting
         return None #No setting found
    
-    ##  Add setting to machine.
-    #   \param parent_key Key of the category that the seting needs to be added to
-    #   \param setting Setting to add.
-    def addSetting(self, parent_key, setting):
-        setting.setMachine(self)        
-        category = self.getSettingsCategory(parent_key)
-        if category is not None:
-            category.addSetting(setting)
-            setting.setCategory(category)
-            return
-        
-        setting_parent = self.getSettingByKey(parent_key)
-        if setting_parent is not None:
-            setting_parent.addSetting(setting)
-            setting.setCategory(setting_parent.getCategory())
-            return
+    ##  Add (machine) setting to machine.
+    def addSetting(self, setting):
+        print("Adding machine setting")
+        self._machine_settings.append(setting)
     
     ##  Set the value of a setting by key.
     #   \param key Key of setting to change.

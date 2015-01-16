@@ -1,5 +1,16 @@
 {
     "platform": "ultiscantastic.obj",
+    "machine_settings": 
+    [
+        {
+            "key":"machine_width",
+            "default": 100
+        },
+        {
+            "key":"machine_height",
+            "default": 100
+        }
+    ],
     "Categories": [
         {
             "key": "calibration",
