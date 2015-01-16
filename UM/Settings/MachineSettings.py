@@ -107,7 +107,6 @@ class MachineSettings(object):
    
     ##  Add (machine) setting to machine.
     def addSetting(self, setting):
-        print("Adding machine setting")
         self._machine_settings.append(setting)
     
     ##  Set the value of a setting by key.

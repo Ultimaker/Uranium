@@ -38,7 +38,7 @@ class SettingsModel(ListModel):
         self.clear()
         settings = self._machine_settings.getAllSettings()
         for setting in settings:
-            self.appendItem({"name":setting.getLabel(),"category":setting.getCategory().getLabel(),"collapsed":True,"type":setting.getType(),"value":setting.getValue(),"valid":setting.validate(),"key":setting.getKey(), "depth":setting.getDepth(),"visibility":setting.isVisible(),"disabled":(setting.checkAllChildrenVisible() or not setting.isActive()), "options": self.createOptionsModel(setting.getOptions())})
+            self.appendItem({"name":setting.getLabel(),"category":setting.getCategory().getLabel(),"collapsed":True,"type":setting.getType(),"value":setting.getValue(),"valid":setting.validate(),"key":setting.getKey(), "depth":setting.getDepth(),"visibility":(setting.isVisible() and setting.isActive()),"disabled":(setting.checkAllChildrenVisible() or not setting.isActive()), "options": self.createOptionsModel(setting.getOptions())})
             if setting._active_if_setting != None:
                 setting.activeChanged.connect(self.handleActiveChanged)
     

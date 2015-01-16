@@ -36,7 +36,8 @@ class Setting(SignalEmitter):
         setting = QCoreApplication.instance().getMachineSettings().getSettingByKey(self._active_if_setting)
         if setting is not None:
             setting.valueChanged.connect(self.conditionalActiveHandler)
-        #QCoreApplication.instance().getMachineSettings().getSettingByKey(self._active_if_setting).valueChanged.connect(self.conditionalActiveHandler)
+            # Check current value and update active status. (It can happen that the default value is that it's not active)
+            self.setActive(str(QCoreApplication.instance().getMachineSettings().getSettingByKey(self._active_if_setting).getValue()) == str(self._active_if_value))
         
     #   Triggered when the setting it's dependant on changes it's value
     def conditionalActiveHandler(self):
