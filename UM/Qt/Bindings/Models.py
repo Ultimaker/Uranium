@@ -5,6 +5,7 @@ from . import ToolModel
 from . import SettingsModel
 from . import JobsModel
 from . import MeshListModel
+from . import PluginsModel
 
 ##  This class is a workaround for a bug in PyQt.
 #   For some reason, a QAbstractItemModel subclass instantiated from QML
@@ -13,40 +14,46 @@ class Models(QObject):
     def __init__(self, parent = None):
         super().__init__(parent)
 
-        self._viewModel = None
-        self._toolModel = None
-        self._settingsModel = None
-        self._jobsModel = None
-        self._meshListModel = None
+        self._view_model = None
+        self._tool_model = None
+        self._settings_model = None
+        self._jobs_model = None
+        self._mesh_list_model = None
+        self._plugins_model = None
 
     @pyqtProperty(ViewModel.ViewModel, constant = True)
     def viewModel(self):
-        if not self._viewModel:
-            self._viewModel = ViewModel.ViewModel()
+        if not self._view_model:
+            self._view_model = ViewModel.ViewModel()
 
-        return self._viewModel
+        return self._view_model
 
     @pyqtProperty(ToolModel.ToolModel, constant = True)
     def toolModel(self):
-        if not self._toolModel:
-            self._toolModel = ToolModel.ToolModel()
+        if not self._tool_model:
+            self._tool_model = ToolModel.ToolModel()
 
-        return self._toolModel
+        return self._tool_model
     
     @pyqtProperty(SettingsModel.SettingsModel, constant = True)
     def settingsModel(self):
-        if not self._settingsModel:
-            self._settingsModel = SettingsModel.SettingsModel()
-        return self._settingsModel
+        if not self._settings_model:
+            self._settings_model = SettingsModel.SettingsModel()
+        return self._settings_model
 
     @pyqtProperty(JobsModel.JobsModel, constant = True)
     def jobsModel(self):
-        if not self._jobsModel:
-            self._jobsModel = JobsModel.JobsModel()
-        return self._jobsModel
+        if not self._jobs_model:
+            self._jobs_model = JobsModel.JobsModel()
+        return self._jobs_model
     
     @pyqtProperty(MeshListModel.MeshListModel, constant = True)
     def meshListModel(self):
-        if not self._meshListModel:
-            self._meshListModel = MeshListModel.MeshListModel()
-        return self._meshListModel
+        if not self._mesh_list_model:
+            self._mesh_list_model = MeshListModel.MeshListModel()
+        return self._mesh_list_model
+    
+    def pluginsModel(self):
+        if not self._plugins_model:
+            self._plugins_model = PluginsModel.PluginsModel()
+        return self._plugins_model
