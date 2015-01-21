@@ -45,19 +45,15 @@ UM.MainWindow {
                 title: "&Machine";
 
                 MenuSeparator { }
-                MenuItem { text: "Add new machine..."; enabled: false; }
-            }
-
-            Menu {
-                title: 'E&xtensions';
-
-                MenuItem { text: "No extensions loaded"; enabled: false; }
+                MenuItem{text: "UltiScanTastic"; enabled: false;}
             }
 
             Menu {
                 title: '&Settings';
 
-                MenuItem { action: preferencesAction; }
+                MenuItem { action: preferences_action; }
+                MenuItem { action: plugin_action; }
+                MenuItem { action: settings_action; }
             }
 
             Menu {
@@ -182,10 +178,32 @@ UM.MainWindow {
 
     Action 
     {
-        id: preferencesAction;
+        id: preferences_action;
         text: "Preferences";
         iconName: "configure";
         onTriggered: preferences.visible = true;
+    }
+    
+    Action
+    {   
+        id: plugin_action;
+        text: "Plugins";
+        onTriggered: 
+        {
+            preferences.visible = true;
+            preferences.setPage(2);  
+        }
+    }
+    
+    Action
+    {   
+        id: settings_action;
+        text: "Settings";
+        onTriggered: 
+        {
+            preferences.visible = true;
+            preferences.setPage(1);  
+        }
     }
 
     Action 
