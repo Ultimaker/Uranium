@@ -78,9 +78,13 @@ PreferencesPage {
         {
             Text 
             {
-                text: about_window.about_text
+                text: about_window.plugin_name
                 font.pointSize: 20
                 color:"#404040"
+            }
+            Text 
+            {
+                text: about_window.about_text
             }
             Text 
             {
@@ -91,6 +95,5 @@ PreferencesPage {
                 text: about_window.version_text
             }
         }
-        
     }
 }
