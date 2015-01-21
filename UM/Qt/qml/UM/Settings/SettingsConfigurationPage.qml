@@ -9,9 +9,11 @@ import "../Preferences"
 PreferencesPage {
     title: "Machine Settings"
 
-    contents: ScrollView {
+    contents: ScrollView 
+    {
         anchors.fill: parent;
-        ListView {
+        ListView 
+        {
             delegate: settingDelegate
             model: UM.Models.settingsModel
 

@@ -24,7 +24,7 @@ class PluginRegistry(object):
         self._meta_data = {}
         self._plugin_locations = []
         self._application = None
-    
+        self._active_plugins = []
     
     #   Check if all required plugins are loaded. 
     #   \param required_plugins List of keys of all plugins that must be activated.
@@ -35,7 +35,20 @@ class PluginRegistry(object):
                 Logger.log('e', "Plugin %s is required, but not added or loaded",name)
                 return False
         return True
-       
+    
+    def getActivePlugins(self):
+        return self._active_plugins
+    
+    ##  Remove pugin name from active list
+    def removeActivePlugin(self,name):
+        if name in self._active_plugins:
+            self._active_plugins.remove(name)
+    
+    ##  Set a plugin to active
+    def addActivePlugin(self, name):
+        if name not in self._active_plugins:
+            self._active_plugins.append(name)
+    
     ##  Load a single plugin by name
     #   \param name \type{string} The name of the plugin
     #   \exception PluginNotFoundError Raised when the plugin could not be found.
@@ -55,6 +68,7 @@ class PluginRegistry(object):
             
         try:
             plugin.register(self._application)
+            self.addActivePlugin(name)
             Logger.log('i', 'Loaded plugin %s', name)
             self._plugins[name] = plugin
         except PluginError as e:
