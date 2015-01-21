@@ -41,6 +41,10 @@ class ControllerProxy(QObject):
         op.push()
         Selection.clear()
 
+    @pyqtSlot()
+    def saveWorkSpace(self):
+        pass #TODO: Implement workspace saving
+
     def _loadMeshFinished(self, job):
         mesh = job.getResult()
         if mesh.getType() is MeshType.pointcloud:  #Depending on the type we need a different node (as pointclouds are rendered differently)

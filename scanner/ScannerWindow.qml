@@ -15,7 +15,7 @@ UM.MainWindow
 
     Item 
     {
-        id: backgroundItem;
+        id: background_item;
         anchors.fill: parent;
 
         UM.ApplicationMenu 
@@ -251,14 +251,6 @@ UM.MainWindow
 
     Action 
     {
-        id: delete_all_action;
-        text: "Clear Build Platform";
-        iconName: "edit-clear";
-        enabled: false;
-    }
-
-    Action 
-    {
         id: load_file_action;
         text: "Open...";
         iconName: "document-open";
@@ -272,7 +264,7 @@ UM.MainWindow
         text: "Save...";
         iconName: "document-save";
         shortcut: StandardKey.Save;
-        enabled: false;
+        onTriggered: UM.Controller.saveWorkspace();
     }
 
     Menu {
