@@ -53,6 +53,7 @@ class Models(QObject):
             self._mesh_list_model = MeshListModel.MeshListModel()
         return self._mesh_list_model
     
+    @pyqtProperty(PluginsModel.PluginsModel, constant = True)
     def pluginsModel(self):
         if not self._plugins_model:
             self._plugins_model = PluginsModel.PluginsModel()
