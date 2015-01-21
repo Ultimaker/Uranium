@@ -88,16 +88,16 @@ class PluginRegistry(object):
     ##  Get a list of all metadata matching a certain subset of metaData
     #   \param metaData \type{dict} The subset of metadata that should be matched.
     #   \sa getMetaData
-    def getAllMetaData(self, metaData):
-        pluginNames = self._findAllPlugins()
+    def getAllMetaData(self, meta_data):
+        plugin_names = self._findAllPlugins()
         
-        returnVal = []
-        for name in pluginNames:
-            pluginData = self.getMetaData(name)
-            if self._subsetInDict(pluginData, metaData):
-                returnVal.append(pluginData)
+        return_values = []
+        for name in plugin_names:
+            plugin_data = self.getMetaData(name)
+            if self._subsetInDict(plugin_data, meta_data):
+                return_values.append(plugin_data)
             
-        return returnVal
+        return return_values
     
     ##  Get the list of plugin locations
     #   \return \type{list} The plugin locations
