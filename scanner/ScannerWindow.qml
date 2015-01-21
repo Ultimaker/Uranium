@@ -5,50 +5,57 @@ import QtQuick.Dialogs 1.1
 
 import UM 1.0 as UM
 
-UM.MainWindow {
+UM.MainWindow 
+{
     id: base
     visible: true
 
     width: 1024
     height: 768
 
-    Item {
+    Item 
+    {
         id: backgroundItem;
         anchors.fill: parent;
 
-        UM.ApplicationMenu {
+        UM.ApplicationMenu 
+        {
             id: menu
             window: base
 
-            Menu {
+            Menu 
+            {
                 title: '&File';
 
-                MenuItem { action: loadFileAction; }
-                MenuItem { action: saveFileAction; }
+                MenuItem { action: load_file_action; }
+                MenuItem { action: save_file_action; }
 
                 MenuSeparator { }
 
-                MenuItem { action: quitAction; }
+                MenuItem { action: quit_action; }
             }
 
-            Menu {
+            Menu 
+            {
                 title: '&Edit';
 
-                MenuItem { action: undoAction; }
-                MenuItem { action: redoAction; }
+                MenuItem { action: undo_action; }
+                MenuItem { action: redo_action; }
                 MenuSeparator { }
-                MenuItem { action: deleteAction; }
-                MenuItem { action: deleteAllAction; }
+                MenuItem { action: delete_action; }
+                MenuItem { action: delete_all_action; }
             }
 
-            Menu {
+            Menu 
+            {
                 title: "&Machine";
 
                 MenuSeparator { }
                 MenuItem{text: "UltiScanTastic"; enabled: false;}
             }
 
-            Menu {
+            Menu 
+            {
                 title: '&Settings';
 
                 MenuItem { action: preferences_action; }
@@ -56,7 +63,8 @@ UM.MainWindow {
                 MenuItem { action: settings_action; }
             }
 
-            Menu {
+            Menu 
+            {
                 title: '&Help';
 
                 MenuItem { action: helpAction; enabled: false; }
@@ -64,7 +72,8 @@ UM.MainWindow {
             }
         }
 
-        Item {
+        Item 
+        {
             id: contentItem;
 
             y: menu.height
@@ -73,12 +82,15 @@ UM.MainWindow {
 
             Keys.forwardTo: menu
 
-            DropArea {
+            DropArea 
+            {
                 anchors.fill: parent
 
                 onDropped: {
-                    if(drop.urls.length > 0) {
-                        for(var i in drop.urls) {
+                    if(drop.urls.length > 0) 
+                    {
+                        for(var i in drop.urls) 
+                        {
                             UM.Controller.addMesh(drop.urls[i]);
                         }
                     }
@@ -93,13 +105,15 @@ UM.MainWindow {
                 anchors.verticalCenter: parent.verticalCenter
             }
 
-            UM.Panel {
+            UM.Panel 
+            {
                 anchors.top: parent.top
                 anchors.left: parent.left
 
-                contents: RowLayout {
-                    ToolButton { action: undoAction }
-                    ToolButton { action: redoAction }
+                contents: RowLayout 
+                {
+                    ToolButton { action: undo_action }
+                    ToolButton { action: redo_action }
 
                     Item { width: 10; }
 
@@ -110,7 +124,8 @@ UM.MainWindow {
                 }
             }
 
-            UM.ToolPanel {
+            UM.ToolPanel 
+            {
                 anchors.top: parent.top;
                 anchors.horizontalCenter: parent.horizontalCenter
             }
@@ -119,8 +134,10 @@ UM.MainWindow {
                 anchors.top: parent.top
                 anchors.right: parent.right
 
-                contents: RowLayout {
-                    ComboBox {
+                contents: RowLayout 
+                {
+                    ComboBox 
+                    {
                         model: UM.Models.viewModel
 
                         onCurrentIndexChanged: UM.Controller.setActiveView(model.items[currentIndex].text)
@@ -131,11 +148,13 @@ UM.MainWindow {
                 }
             }
 
-            UM.SettingsPanel {
+            UM.SettingsPanel 
+            {
                 anchors.right: parent.right;
                 anchors.verticalCenter: parent.verticalCenter
 
-                onSettingConfigurationRequested: {
+                onSettingConfigurationRequested: 
+                {
                     preferences.visible = true;
                     preferences.setPage(1);
                 }
@@ -149,7 +168,7 @@ UM.MainWindow {
 
     Action 
     {
-        id: undoAction;
+        id: undo_action;
         text: "Undo";
         iconName: "edit-undo";
         shortcut: StandardKey.Undo;
@@ -159,7 +178,7 @@ UM.MainWindow {
 
     Action 
     {
-        id: redoAction;
+        id: redo_action;
         text: "Redo";
         iconName: "edit-redo";
         shortcut: StandardKey.Redo;
@@ -169,7 +188,7 @@ UM.MainWindow {
 
     Action 
     {
-        id: quitAction;
+        id: quit_action;
         text: "Quit";
         iconName: "application-exit";
         shortcut: StandardKey.Quit;
@@ -223,7 +242,7 @@ UM.MainWindow {
 
     Action 
     {
-        id: deleteAction;
+        id: delete_action;
         text: "Delete Selection";
         iconName: "edit-delete";
         shortcut: StandardKey.Delete;
@@ -232,7 +251,7 @@ UM.MainWindow {
 
     Action 
     {
-        id: deleteAllAction;
+        id: delete_all_action;
         text: "Clear Build Platform";
         iconName: "edit-clear";
         enabled: false;
@@ -240,16 +259,16 @@ UM.MainWindow {
 
     Action 
     {
-        id: loadFileAction;
+        id: load_file_action;
         text: "Open...";
         iconName: "document-open";
         shortcut: StandardKey.Open;
-        onTriggered: openFileDialog.open()
+        onTriggered: open_file_dialog.open()
     }
 
     Action 
     {
-        id: saveFileAction;
+        id: save_file_action;
         text: "Save...";
         iconName: "document-save";
         shortcut: StandardKey.Save;
@@ -259,11 +278,11 @@ UM.MainWindow {
     Menu {
         id: contextMenu;
 
-        MenuItem { action: deleteAction; }
+        MenuItem { action: delete_action; }
     }
    
    FileDialog {
-        id: openFileDialog
+        id: open_file_dialog
 
         title: "Choose files"
         modality: Qt.NonModal
