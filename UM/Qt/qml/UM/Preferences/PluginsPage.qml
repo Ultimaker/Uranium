@@ -2,7 +2,9 @@ import QtQuick 2.1
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 import QtQuick.Window 2.1
+import QtQuick.Controls.Styles 1.1
 import UM 1.0 as UM
+
 PreferencesPage {
     title: "Plugins"
     contents: ScrollView 
@@ -23,18 +25,28 @@ PreferencesPage {
         id: pluginDelegate
         RowLayout 
         {
-            
             CheckBox
             {
                 text: model.name;
                 x: 0
+                Layout.minimumWidth: 50
+                Layout.preferredWidth: 250
                 checked: model.enabled
                 onClicked: plugin_list.model.setEnabled(model.name, checked)
                 enabled: !model.required 
             }
             Button 
             {
-                text:"i"
+                style: ButtonStyle 
+                {
+                    background: Rectangle 
+                    {
+                        implicitWidth: 25
+                        implicitHeight: 25
+                        color:"transparent"
+                    }
+                    
+                }
                 onClicked:
                 {
                     about_window.about_text = plugin_list.model.getAboutText(model.name)
@@ -43,7 +55,11 @@ PreferencesPage {
                     about_window.version_text = plugin_list.model.getVersionText(model.name)
                     about_window.visibility = 1
                 }
-
+                Image
+                {
+                    id:info_icon
+                    source: UM.Resources.getIcon("icon_info.png")
+                }
             }
         }
     }
