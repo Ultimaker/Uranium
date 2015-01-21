@@ -25,6 +25,17 @@ class PluginRegistry(object):
         self._plugin_locations = []
         self._application = None
     
+    
+    #   Check if all required plugins are loaded. 
+    #   \param required_plugins List of keys of all plugins that must be activated.
+    def checkRequiredPlugins(self,required_plugins):
+        plugin_names = self._findAllPlugins()
+        for name in required_plugins:
+            if name not in plugin_names:
+                Logger.log('e', "Plugin %s is required, but not added or loaded",name)
+                return False
+        return True
+       
     ##  Load a single plugin by name
     #   \param name \type{string} The name of the plugin
     #   \exception PluginNotFoundError Raised when the plugin could not be found.

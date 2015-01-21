@@ -36,9 +36,9 @@ class Application:
         self._storage_devices = {}
         self._backend = None
 
-        #TODO: This needs to be loaded from preferences, and moved to CURA (as the um2 json has little to do with other applications!)
         self._machine_settings = MachineSettings()
         
+        self._required_plugins = [] 
 
         self._operation_stack = OperationStack()
 
@@ -49,6 +49,16 @@ class Application:
 
     def setApplicationName(self, name):
         self._application_name = name
+        
+    ##  Application has a list of plugins that it *must* have. If it does not have these, it cannot function.
+    #   These plugins can not be disabled in any way.
+    def getRequiredPlugins(self):
+        return self._required_plugins
+    
+    ##  Set the plugins that the application *must* have in order to function.
+    #   \param plugin_names List of strings with the names of the required plugins
+    def setRequiredPlugins(self, plugin_names):
+        self._required_plugins = plugin_names
 
     ##  Set the backend of the application (the program that does the heavy lifting).
     #   \param backend Backend

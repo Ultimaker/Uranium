@@ -26,6 +26,8 @@ class ScannerApplication(QtApplication):
         self.getController().setSelectionTool("SelectionTool")
         
         root = self.getController().getScene().getRoot()
+        #TODO: hardcoded
+        self.setRequiredPlugins(["ScannerEngineBackend","PLYWriter","PLYReader"])
         
         try:
             self.getMachineSettings().loadValuesFromFile(Resources.getPath(Resources.SettingsLocation, 'UltiScantastic.cfg'))
@@ -46,6 +48,8 @@ class ScannerApplication(QtApplication):
         
         self.setMainQml(os.path.dirname(__file__) + "/Scanner.qml")
         self.initializeEngine()
-        
+        self._plugin_registry.checkRequiredPlugins(self.getRequiredPlugins())
         if self._engine.rootObjects:
             self.exec_()
+        
+        
