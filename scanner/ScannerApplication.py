@@ -11,23 +11,22 @@ class ScannerApplication(QtApplication):
     def __init__(self):
         super(ScannerApplication, self).__init__()
         self._machine_settings.loadSettingsFromFile(Resources.getPath(Resources.SettingsLocation, "ultiscantastic.json"))
+        self.setRequiredPlugins(["ScannerEngineBackend","PLYWriter","PLYReader"])
 
-        
-    def run(self):
+    def _loadPlugins(self):
         self._plugin_registry.loadPlugins({ "type": "Logger"})
         self._plugin_registry.loadPlugins({ "type": "StorageDevice" })
         self._plugin_registry.loadPlugins({ "type": "View" })
         self._plugin_registry.loadPlugins({ "type": "MeshHandler" })
         self._plugin_registry.loadPlugins({ "type": "Tool" })
         self._plugin_registry.loadPlugin("ScannerEngineBackend")
-
+    
+    def run(self):
         self.getController().setActiveView('MeshView')
         self.getController().setCameraTool("CameraTool")
         self.getController().setSelectionTool("SelectionTool")
         
         root = self.getController().getScene().getRoot()
-        #TODO: hardcoded
-        self.setRequiredPlugins(["ScannerEngineBackend","PLYWriter","PLYReader"])
         
         try:
             self.getMachineSettings().loadValuesFromFile(Resources.getPath(Resources.SettingsLocation, 'UltiScantastic.cfg'))

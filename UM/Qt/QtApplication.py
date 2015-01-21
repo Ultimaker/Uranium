@@ -34,6 +34,10 @@ class QtApplication(QApplication, Application):
         self._renderer = None
 
         signal.signal(signal.SIGINT, signal.SIG_DFL)
+        # This is done here as a lot of plugins require a correct gl context. If you want to change the framework,
+        # these checks need to be done in your <framework>Application.py class __init__().
+        self._loadPlugins()
+        self._plugin_registry.checkRequiredPlugins(self.getRequiredPlugins())
 
     def run(self):
         pass

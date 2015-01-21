@@ -27,6 +27,7 @@ class Application:
         super().__init__() # Call super to make multiple inheritence work.
 
         self._application_name = "application"
+        self._renderer = None
 
         self._plugin_registry = PluginRegistry()
         self._plugin_registry.addPluginLocation("plugins")
@@ -43,7 +44,13 @@ class Application:
         self._operation_stack = OperationStack()
 
         self._main_thread = threading.current_thread()
-
+        
+    
+    ##  Function that needs to be overriden by child classes with a list of plugin it needs (see printer application & scanner application)
+    def _loadPlugins(self):
+        print("zomg")
+        pass
+    
     def getApplicationName(self):
         return self._application_name
 
