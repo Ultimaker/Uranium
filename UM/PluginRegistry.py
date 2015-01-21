@@ -68,7 +68,7 @@ class PluginRegistry(object):
             
         try:
             plugin.register(self._application)
-            self.addActivePlugin(name)
+            self.addActivePlugin(self.getMetaData(name)["name"]) #Use the name in meta data
             Logger.log('i', 'Loaded plugin %s', name)
             self._plugins[name] = plugin
         except PluginError as e:
