@@ -8,8 +8,7 @@ class OBJReader(MeshReader):
         super(OBJReader, self).__init__()
         self._supported_extension = ".obj"
         
-    def read(self, file_name, storage_device):
-        
+    def read(self, file_name, storage_device):     
         mesh = None
         if(self._supported_extension in file_name):
             vertex_list = []

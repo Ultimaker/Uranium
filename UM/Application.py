@@ -6,6 +6,7 @@ from UM.Resources import Resources
 from UM.Operations.OperationStack import OperationStack
 from UM.Event import CallFunctionEvent
 from UM.Signal import Signal
+from UM.WorkspaceFileHandler import WorkspaceFileHandler
 
 import threading
 
@@ -34,6 +35,7 @@ class Application:
         self._plugin_registry.setApplication(self)
         self._controller = Controller(self)
         self._mesh_file_handler = MeshFileHandler()
+        self._workspace_file_handler = WorkspaceFileHandler()
         self._storage_devices = {}
         self._backend = None
 
@@ -96,6 +98,13 @@ class Application:
     #   \returns MeshFileHandler
     def getMeshFileHandler(self):
         return self._mesh_file_handler
+    
+    ##  Get the workspace file handler of this application.
+    #   The difference between this and the mesh file handler is that the workspace handler accepts a node
+    #   This means that multiple meshes can be saved / loaded in this way. 
+    #   \returns MeshFileHandler
+    def getWorkspaceFileHandler(self):
+        return self._workspace_file_handler
 
     def getOperationStack(self):
         return self._operation_stack
