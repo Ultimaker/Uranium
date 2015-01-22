@@ -266,13 +266,15 @@ UM.MainWindow
         onTriggered: UM.Controller.saveWorkspace();
     }
 
-    Menu {
+    Menu 
+    {
         id: contextMenu;
 
         MenuItem { action: delete_action; }
     }
    
-   FileDialog {
+    FileDialog 
+    {
         id: open_file_dialog
 
         title: "Choose files"

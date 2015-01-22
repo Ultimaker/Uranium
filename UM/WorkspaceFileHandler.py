@@ -33,3 +33,25 @@ class WorkspaceFileHandler(object):
     # \returns True if it was able to create the file, otherwise False
     def write(self, file_name, storage_device, node):
         pass
+    
+    # Get list of all supported filetypes for writing.
+    # \returns List of strings with all supported filetypes.
+    def getSupportedFileTypesWrite(self):
+        supported_types = []
+        for writer in self._mesh_writer:
+            supported_types.append(writer.getSupportedExtension())
+        return supported_types
+    
+    # Get list of all supported filetypes for reading.
+    # \returns List of strings with all supported filetypes.
+    def getSupportedFileTypesRead(self):
+        supported_types = []
+        for reader in self._mesh_readers:
+            supported_types.append(reader.getSupportedExtension())
+        return supported_types
+        
+    def addWriter(self, writer):
+        self._workspace_writers.append(writer)
+        
+    def addReader(self, reader):
+        self._workspace_readers.append(reader)
