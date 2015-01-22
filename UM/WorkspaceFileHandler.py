@@ -31,8 +31,11 @@ class WorkspaceFileHandler(object):
     # \param storage_device The StorageDevice where the file should be written to.
     # \param node
     # \returns True if it was able to create the file, otherwise False
-    def write(self, file_name, storage_device, node):
-        pass
+    def write(self, file_name, storage_device):
+        for writer in self._workspace_writers:
+            if writer.write(file_name,storage_device):
+                return True
+        return False
     
     # Get list of all supported filetypes for writing.
     # \returns List of strings with all supported filetypes.
