@@ -5,6 +5,7 @@ from UM.Logger import Logger
 #   This class is created by Application and handles reading and writing mesh files.
 class MeshFileHandler(object):
     def __init__(self):
+        super().__init__()
         self._mesh_readers = []
         self._mesh_writers = []
     
