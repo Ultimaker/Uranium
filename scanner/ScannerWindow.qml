@@ -43,7 +43,6 @@ UM.MainWindow
                 MenuItem { action: redo_action; }
                 MenuSeparator { }
                 MenuItem { action: delete_action; }
-                MenuItem { action: delete_all_action; }
             }
 
             Menu 
