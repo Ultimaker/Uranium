@@ -32,7 +32,11 @@ class PLYReader(MeshReader):
             mesh = MeshData()
             formatting = b''
             vert_byte_size = 0
-            f = storage_device.openFile(file_name, 'rb')
+            try:
+                f = storage_device.openFile(file_name, 'rb')
+            except FileNotFoundError:
+                Logger.log("w","File %s was not found",file_name)
+                return None
             #line_list = list(f) #Put all lines in a list, usefull because we need to read the header first
             
             # Read header

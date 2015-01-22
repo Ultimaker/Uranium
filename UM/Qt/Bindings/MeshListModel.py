@@ -21,7 +21,13 @@ class MeshListModel(ListModel):
         self.addRoleName(self.VisibilityRole, "visibility")
         self.addRoleName(self.UniqueKeyRole, "key")
         self.addRoleName(self.SelectedRole, "selected")
+        Application.getInstance().getController().getScene().rootChanged.connect(self._rootChanged)
         
+    def _rootChanged(self):
+        print("Root changed")
+        Application.getInstance().getController().getScene().getRoot().childrenChanged.connect(self.updateList)
+        self.updateList(Application.getInstance().getController().getScene().getRoot()) #Manually trigger the update
+    
     def updateList(self, trigger_node):
         self.clear()
         scene_nodes = trigger_node.getAllChildren()

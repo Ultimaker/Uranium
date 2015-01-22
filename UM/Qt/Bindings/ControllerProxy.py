@@ -9,6 +9,7 @@ from UM.Scene.Selection import Selection
 from UM.Operations.RemoveSceneNodesOperation import RemoveSceneNodesOperation
 from UM.Mesh.MeshData import MeshType
 from UM.Scene.PointCloudNode import PointCloudNode
+from UM.LoadWorkspaceJob import LoadWorkspaceJob
 
 class ControllerProxy(QObject):
     def __init__(self, parent = None):
@@ -42,14 +43,21 @@ class ControllerProxy(QObject):
         Selection.clear()
 
     @pyqtSlot()
-    def saveWorkSpace(self):
-        
+    def saveWorkspace(self):
+        self.loadWorkSpace() # DEBUG STUFF
         pass #TODO: Implement workspace saving
 
     @pyqtSlot()
     def loadWorkSpace(self):
+        job = LoadWorkspaceJob("meshlab.mlp")
+        job.finished.connect(self._loadWorkspaceFinished)
+        job.start()
         #TODO: Implement.
         pass
+    
+    def _loadWorkspaceFinished(self,job):
+        node = job.getResult()
+        self._controller.getScene().setRoot(node)
     
     def _loadMeshFinished(self, job):
         mesh = job.getResult()

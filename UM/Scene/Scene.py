@@ -11,14 +11,25 @@ class Scene(SignalEmitter):
         super().__init__() # Call super to make multiple inheritence work.
 
         self._root = SceneNode()
+        self._connectSignalsRoot()
+        self._active_camera = None
+    
+    def _connectSignalsRoot(self):
         self._root.transformationChanged.connect(self.sceneChanged)
         self._root.childrenChanged.connect(self.sceneChanged)
         self._root.meshDataChanged.connect(self.sceneChanged)
-        self._active_camera = None
-        
+    
     ##  Get the root node of the scene.
     def getRoot(self):
         return self._root
+    
+    ##  Change the root node of the scene
+    def setRoot(self, node):
+        self._root = node
+        self._connectSignalsRoot()
+        self.rootChanged.emit()
+        
+    rootChanged = Signal()
 
     ##  Get the camera that should be used for rendering.
     def getActiveCamera(self):
