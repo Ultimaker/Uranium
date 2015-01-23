@@ -147,6 +147,24 @@ UM.MainWindow {
             }
 
             JobList { anchors.left: parent.left; anchors.bottom: parent.bottom; width: parent.width / 10; height: parent.height / 5; }
+
+            ProgressBar {
+                id: progressBar;
+
+                anchors {
+                    left: parent.left;
+                    bottom: parent.bottom;
+                    right: parent.right;
+                }
+
+                minimumValue: 0;
+                maximumValue: 100;
+
+                Connections {
+                    target: UM.Backend;
+                    onProcessingProgress: progressBar.value = amount;
+                }
+            }
         }
     }
 
