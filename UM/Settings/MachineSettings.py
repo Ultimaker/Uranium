@@ -9,7 +9,7 @@ from UM.Signal import Signal, SignalEmitter
 from PyQt5.QtCore import QCoreApplication
 from UM.Logger import Logger
 
-class MachineSettings(object):
+class MachineSettings(SignalEmitter):
     def __init__(self):
         self._categories = []
         self._platformMesh = None

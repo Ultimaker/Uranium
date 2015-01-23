@@ -30,7 +30,7 @@ class ScannerApplication(QtApplication):
         root = self.getController().getScene().getRoot()
         
         try:
-            self.getMachineSettings().loadValuesFromFile(Resources.getPath(Resources.SettingsLocation, 'UltiScantastic.cfg'))
+            self.getMachineSettings().loadValuesFromFile(Resources.getPath(Resources.SettingsLocation, 'settings.cfg'))
         except FileNotFoundError:
             pass
         

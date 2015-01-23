@@ -2,6 +2,7 @@ from PyQt5.QtCore import Qt, QCoreApplication, pyqtSlot
 
 from UM.Qt.ListModel import ListModel
 from UM.Settings.Setting import Setting
+from UM.Resources import Resources
 
 class SettingsModel(ListModel):
     
@@ -100,7 +101,7 @@ class SettingsModel(ListModel):
     @pyqtSlot()
     ##  Save the current setting values to file.
     def saveSettingValues(self):
-        self._machine_settings.saveValuesToFile("settings.ini")
+        self._machine_settings.saveValuesToFile(Resources.getStoragePath(Resources.SettingsLocation, 'settings.cfg'))
     
     @pyqtSlot(str,bool)
     ##  Set the visibility of a setting.

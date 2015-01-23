@@ -53,7 +53,7 @@ class ControllerProxy(QObject):
     def loadWorkSpace(self):
         job = LoadWorkspaceJob("meshlab.mlp")
         job.finished.connect(self._loadWorkspaceFinished)
-        job.start()
+        job.start()     
         #TODO: Implement.
         pass
     
