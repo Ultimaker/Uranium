@@ -14,27 +14,45 @@ class ScannerEngineBackend(Backend):
     def __init__(self):
         super(ScannerEngineBackend,self).__init__()
         
-        self._socket.registerMessageType(1, ultiscantastic_pb2.PointCloudWithNormals)
+        self._socket.registerMessageType(1, ultiscantastic_pb2.PointCloudPointNormal)
         self._socket.registerMessageType(2, ultiscantastic_pb2.StartScan)
         self._socket.registerMessageType(3, ultiscantastic_pb2.ProgressUpdate)
 
-        self._message_handlers[ultiscantastic_pb2.PointCloudWithNormals] = self._onPointCloudWithNormalsMessage
+        self._message_handlers[ultiscantastic_pb2.PointCloudPointNormal] = self._onPointCloudMessage
         self._message_handlers[ultiscantastic_pb2.ProgressUpdate] = self._onProgressUpdateMessage
-        
-        print(" HDHAHHA" ,ultiscantastic_pb2.StartScan.PHASE)
-        
-        message = ultiscantastic_pb2.StartScan()
-        message.type = ultiscantastic_pb2.StartScan.GREY
+
         self.startEngine()
         time.sleep(1)
+        self.startScan()
+        
+    def startScan(self, type = 0):
+        message = ultiscantastic_pb2.StartScan()
+        if type == 0:
+            message.type = ultiscantastic_pb2.StartScan.GREY
+        elif type == 1:
+            message.type = ultiscantastic_pb2.StartScan.PHASE
         self._socket.sendMessage(message)
-        time.sleep(1)
+    
+    def startCalibration(self, type = 0):
+        message = ultiscantastic_pb2.StartCalibration()
+        if type == 0:
+            message.type = ultiscantastic_pb2.StartCalibration.CORNER
+        elif type == 1:
+            message.type = ultiscantastic_pb2.StartCalibration.BOARD
         self._socket.sendMessage(message)
         
     def getEngineCommand(self):
         return [Preferences.getPreference("BackendLocation"), '-p', "49674"]
     
-    def _onPointCloudWithNormalsMessage(self, message):
+    def _onPointCloudMessage(self, message):
+        app = Application.getInstance()
+        recieved_mesh = MeshData()
+        for vert in self._convertBytesToVerticeWithNormalsListPCL(message.data):
+            recieved_mesh.addVertexWithNormal(vert[0],vert[1],vert[2],vert[3],vert[4],vert[5])
+        node = PointCloudNode(app.getController().getScene().getRoot())
+        node.setMeshData(recieved_mesh)
+        operation = AddSceneNodeOperation(node,app.getController().getScene().getRoot())
+        app.getOperationStack().push(operation)
         print("Recieved pointcloud")
     
     def _onProgressUpdateMessage(self,message):
