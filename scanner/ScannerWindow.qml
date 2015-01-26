@@ -128,6 +128,12 @@ UM.MainWindow
                 anchors.top: parent.top;
                 anchors.horizontalCenter: parent.horizontalCenter
             }
+            
+            UM.ExtentionPanel
+            {
+                anchors.bottom:parent.bottom;
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
 
             UM.Panel {
                 anchors.top: parent.top

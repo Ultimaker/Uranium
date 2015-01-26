@@ -3,6 +3,7 @@ module Cura
 Panel 1.0 Panel.qml
 FilePanel 1.0 FilePanel.qml
 ToolPanel 1.0 ToolPanel.qml
+ExtentionPanel 1.0 ExtentionPanel.qml
 DefaultWindow 1.0 DefaultWindow.qml
 JobList 1.0 JobList.qml
 ApplicationMenu 1.0 ApplicationMenu.qml

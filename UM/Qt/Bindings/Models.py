@@ -6,6 +6,7 @@ from . import SettingsModel
 from . import JobsModel
 from . import MeshListModel
 from . import PluginsModel
+from . import ExtentionModel
 
 ##  This class is a workaround for a bug in PyQt.
 #   For some reason, a QAbstractItemModel subclass instantiated from QML
@@ -20,6 +21,7 @@ class Models(QObject):
         self._jobs_model = None
         self._mesh_list_model = None
         self._plugins_model = None
+        self._extention_model = None
 
     @pyqtProperty(ViewModel.ViewModel, constant = True)
     def viewModel(self):
@@ -34,6 +36,13 @@ class Models(QObject):
             self._tool_model = ToolModel.ToolModel()
 
         return self._tool_model
+    
+    @pyqtProperty(ExtentionModel.ExtentionModel, constant = True)
+    def extentionModel(self):
+        if not self._extention_model:
+            self._extention_model = ExtentionModel.ExtentionModel()
+
+        return self._extention_model
     
     @pyqtProperty(SettingsModel.SettingsModel, constant = True)
     def settingsModel(self):
