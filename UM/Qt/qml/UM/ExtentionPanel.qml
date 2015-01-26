@@ -16,7 +16,7 @@ Panel {
 
             model: UM.Models.extentionModel
 
-            delegate: ToolButton 
+            delegate: Button 
             {
                 text: model.name;
                 iconSource: UM.Resources.getIcon(model.icon);
