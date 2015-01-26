@@ -21,7 +21,19 @@ class ScannerEngineBackend(Backend):
         self._message_handlers[ultiscantastic_pb2.PointCloudWithNormals] = self._onPointCloudWithNormalsMessage
         self._message_handlers[ultiscantastic_pb2.ProgressUpdate] = self._onProgressUpdateMessage
         
+        print(" HDHAHHA" ,ultiscantastic_pb2.StartScan.PHASE)
         
+        message = ultiscantastic_pb2.StartScan()
+        message.type = ultiscantastic_pb2.StartScan.GREY
+        self.startEngine()
+        time.sleep(1)
+        self._socket.sendMessage(message)
+        time.sleep(1)
+        self._socket.sendMessage(message)
+        
+    def getEngineCommand(self):
+        return [Preferences.getPreference("BackendLocation"), '-p', "49674"]
+    
     def _onPointCloudWithNormalsMessage(self, message):
         print("Recieved pointcloud")
     

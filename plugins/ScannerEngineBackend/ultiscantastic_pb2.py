@@ -17,8 +17,8 @@ _sym_db = _symbol_database.Default()
 
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='ultiscantastic.proto',
-  package='Scanner',
-  serialized_pb=_b('\n\x14ultiscantastic.proto\x12\x07Scanner\"F\n\x15PointCloudWithNormals\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x10\n\x08vertices\x18\x02 \x01(\x0c\x12\x0f\n\x07normals\x18\x03 \x01(\x0c\"8\n\x18PointCloudWithoutNormals\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x10\n\x08vertices\x18\x02 \x01(\x0c\"2\n\x0eProgressUpdate\x12\x10\n\x08objectId\x18\x01 \x01(\x05\x12\x0e\n\x06\x61mount\x18\x02 \x01(\x05\"F\n\x04Mesh\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x10\n\x08vertices\x18\x02 \x01(\x0c\x12\x0f\n\x07normals\x18\x03 \x01(\x0c\x12\x0f\n\x07indices\x18\x04 \x01(\x0c\"u\n\x10StartCalibration\x12\x37\n\x04type\x18\x01 \x01(\x0e\x32).Scanner.StartCalibration.CalibrationType\"(\n\x0f\x43\x61librationType\x12\n\n\x06\x43ORNER\x10\x00\x12\t\n\x05\x42OARD\x10\x01\"W\n\tStartScan\x12)\n\x04type\x18\x01 \x01(\x0e\x32\x1b.Scanner.StartScan.ScanType\"\x1f\n\x08ScanType\x12\x08\n\x04GREY\x10\x00\x12\t\n\x05PHASE\x10\x01\x62\x06proto3')
+  package='ScannerBuff',
+  serialized_pb=_b('\n\x14ultiscantastic.proto\x12\x0bScannerBuff\"F\n\x15PointCloudWithNormals\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x10\n\x08vertices\x18\x02 \x01(\x0c\x12\x0f\n\x07normals\x18\x03 \x01(\x0c\"8\n\x18PointCloudWithoutNormals\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x10\n\x08vertices\x18\x02 \x01(\x0c\"2\n\x0eProgressUpdate\x12\x10\n\x08objectId\x18\x01 \x01(\x05\x12\x0e\n\x06\x61mount\x18\x02 \x01(\x05\"F\n\x04Mesh\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x10\n\x08vertices\x18\x02 \x01(\x0c\x12\x0f\n\x07normals\x18\x03 \x01(\x0c\x12\x0f\n\x07indices\x18\x04 \x01(\x0c\"y\n\x10StartCalibration\x12;\n\x04type\x18\x01 \x01(\x0e\x32-.ScannerBuff.StartCalibration.CalibrationType\"(\n\x0f\x43\x61librationType\x12\n\n\x06\x43ORNER\x10\x00\x12\t\n\x05\x42OARD\x10\x01\"[\n\tStartScan\x12-\n\x04type\x18\x01 \x01(\x0e\x32\x1f.ScannerBuff.StartScan.ScanType\"\x1f\n\x08ScanType\x12\x08\n\x04GREY\x10\x00\x12\t\n\x05PHASE\x10\x01\x62\x06proto3')
 )
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -26,7 +26,7 @@ _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 _STARTCALIBRATION_CALIBRATIONTYPE = _descriptor.EnumDescriptor(
   name='CalibrationType',
-  full_name='Scanner.StartCalibration.CalibrationType',
+  full_name='ScannerBuff.StartCalibration.CalibrationType',
   filename=None,
   file=DESCRIPTOR,
   values=[
@@ -41,14 +41,14 @@ _STARTCALIBRATION_CALIBRATIONTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=364,
-  serialized_end=404,
+  serialized_start=372,
+  serialized_end=412,
 )
 _sym_db.RegisterEnumDescriptor(_STARTCALIBRATION_CALIBRATIONTYPE)
 
 _STARTSCAN_SCANTYPE = _descriptor.EnumDescriptor(
   name='ScanType',
-  full_name='Scanner.StartScan.ScanType',
+  full_name='ScannerBuff.StartScan.ScanType',
   filename=None,
   file=DESCRIPTOR,
   values=[
@@ -63,35 +63,35 @@ _STARTSCAN_SCANTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=462,
-  serialized_end=493,
+  serialized_start=474,
+  serialized_end=505,
 )
 _sym_db.RegisterEnumDescriptor(_STARTSCAN_SCANTYPE)
 
 
 _POINTCLOUDWITHNORMALS = _descriptor.Descriptor(
   name='PointCloudWithNormals',
-  full_name='Scanner.PointCloudWithNormals',
+  full_name='ScannerBuff.PointCloudWithNormals',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='id', full_name='Scanner.PointCloudWithNormals.id', index=0,
+      name='id', full_name='ScannerBuff.PointCloudWithNormals.id', index=0,
       number=1, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='vertices', full_name='Scanner.PointCloudWithNormals.vertices', index=1,
+      name='vertices', full_name='ScannerBuff.PointCloudWithNormals.vertices', index=1,
       number=2, type=12, cpp_type=9, label=1,
       has_default_value=False, default_value=_b(""),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='normals', full_name='Scanner.PointCloudWithNormals.normals', index=2,
+      name='normals', full_name='ScannerBuff.PointCloudWithNormals.normals', index=2,
       number=3, type=12, cpp_type=9, label=1,
       has_default_value=False, default_value=_b(""),
       message_type=None, enum_type=None, containing_type=None,
@@ -108,27 +108,27 @@ _POINTCLOUDWITHNORMALS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=33,
-  serialized_end=103,
+  serialized_start=37,
+  serialized_end=107,
 )
 
 
 _POINTCLOUDWITHOUTNORMALS = _descriptor.Descriptor(
   name='PointCloudWithoutNormals',
-  full_name='Scanner.PointCloudWithoutNormals',
+  full_name='ScannerBuff.PointCloudWithoutNormals',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='id', full_name='Scanner.PointCloudWithoutNormals.id', index=0,
+      name='id', full_name='ScannerBuff.PointCloudWithoutNormals.id', index=0,
       number=1, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='vertices', full_name='Scanner.PointCloudWithoutNormals.vertices', index=1,
+      name='vertices', full_name='ScannerBuff.PointCloudWithoutNormals.vertices', index=1,
       number=2, type=12, cpp_type=9, label=1,
       has_default_value=False, default_value=_b(""),
       message_type=None, enum_type=None, containing_type=None,
@@ -145,27 +145,27 @@ _POINTCLOUDWITHOUTNORMALS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=105,
-  serialized_end=161,
+  serialized_start=109,
+  serialized_end=165,
 )
 
 
 _PROGRESSUPDATE = _descriptor.Descriptor(
   name='ProgressUpdate',
-  full_name='Scanner.ProgressUpdate',
+  full_name='ScannerBuff.ProgressUpdate',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='objectId', full_name='Scanner.ProgressUpdate.objectId', index=0,
+      name='objectId', full_name='ScannerBuff.ProgressUpdate.objectId', index=0,
       number=1, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='amount', full_name='Scanner.ProgressUpdate.amount', index=1,
+      name='amount', full_name='ScannerBuff.ProgressUpdate.amount', index=1,
       number=2, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -182,41 +182,41 @@ _PROGRESSUPDATE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=163,
-  serialized_end=213,
+  serialized_start=167,
+  serialized_end=217,
 )
 
 
 _MESH = _descriptor.Descriptor(
   name='Mesh',
-  full_name='Scanner.Mesh',
+  full_name='ScannerBuff.Mesh',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='id', full_name='Scanner.Mesh.id', index=0,
+      name='id', full_name='ScannerBuff.Mesh.id', index=0,
       number=1, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='vertices', full_name='Scanner.Mesh.vertices', index=1,
+      name='vertices', full_name='ScannerBuff.Mesh.vertices', index=1,
       number=2, type=12, cpp_type=9, label=1,
       has_default_value=False, default_value=_b(""),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='normals', full_name='Scanner.Mesh.normals', index=2,
+      name='normals', full_name='ScannerBuff.Mesh.normals', index=2,
       number=3, type=12, cpp_type=9, label=1,
       has_default_value=False, default_value=_b(""),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='indices', full_name='Scanner.Mesh.indices', index=3,
+      name='indices', full_name='ScannerBuff.Mesh.indices', index=3,
       number=4, type=12, cpp_type=9, label=1,
       has_default_value=False, default_value=_b(""),
       message_type=None, enum_type=None, containing_type=None,
@@ -233,20 +233,20 @@ _MESH = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=215,
-  serialized_end=285,
+  serialized_start=219,
+  serialized_end=289,
 )
 
 
 _STARTCALIBRATION = _descriptor.Descriptor(
   name='StartCalibration',
-  full_name='Scanner.StartCalibration',
+  full_name='ScannerBuff.StartCalibration',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='type', full_name='Scanner.StartCalibration.type', index=0,
+      name='type', full_name='ScannerBuff.StartCalibration.type', index=0,
       number=1, type=14, cpp_type=8, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -264,20 +264,20 @@ _STARTCALIBRATION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=287,
-  serialized_end=404,
+  serialized_start=291,
+  serialized_end=412,
 )
 
 
 _STARTSCAN = _descriptor.Descriptor(
   name='StartScan',
-  full_name='Scanner.StartScan',
+  full_name='ScannerBuff.StartScan',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='type', full_name='Scanner.StartScan.type', index=0,
+      name='type', full_name='ScannerBuff.StartScan.type', index=0,
       number=1, type=14, cpp_type=8, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -295,8 +295,8 @@ _STARTSCAN = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=406,
-  serialized_end=493,
+  serialized_start=414,
+  serialized_end=505,
 )
 
 _STARTCALIBRATION.fields_by_name['type'].enum_type = _STARTCALIBRATION_CALIBRATIONTYPE
@@ -313,42 +313,42 @@ DESCRIPTOR.message_types_by_name['StartScan'] = _STARTSCAN
 PointCloudWithNormals = _reflection.GeneratedProtocolMessageType('PointCloudWithNormals', (_message.Message,), dict(
   DESCRIPTOR = _POINTCLOUDWITHNORMALS,
   __module__ = 'ultiscantastic_pb2'
-  # @@protoc_insertion_point(class_scope:Scanner.PointCloudWithNormals)
+  # @@protoc_insertion_point(class_scope:ScannerBuff.PointCloudWithNormals)
   ))
 _sym_db.RegisterMessage(PointCloudWithNormals)
 
 PointCloudWithoutNormals = _reflection.GeneratedProtocolMessageType('PointCloudWithoutNormals', (_message.Message,), dict(
   DESCRIPTOR = _POINTCLOUDWITHOUTNORMALS,
   __module__ = 'ultiscantastic_pb2'
-  # @@protoc_insertion_point(class_scope:Scanner.PointCloudWithoutNormals)
+  # @@protoc_insertion_point(class_scope:ScannerBuff.PointCloudWithoutNormals)
   ))
 _sym_db.RegisterMessage(PointCloudWithoutNormals)
 
 ProgressUpdate = _reflection.GeneratedProtocolMessageType('ProgressUpdate', (_message.Message,), dict(
   DESCRIPTOR = _PROGRESSUPDATE,
   __module__ = 'ultiscantastic_pb2'
-  # @@protoc_insertion_point(class_scope:Scanner.ProgressUpdate)
+  # @@protoc_insertion_point(class_scope:ScannerBuff.ProgressUpdate)
   ))
 _sym_db.RegisterMessage(ProgressUpdate)
 
 Mesh = _reflection.GeneratedProtocolMessageType('Mesh', (_message.Message,), dict(
   DESCRIPTOR = _MESH,
   __module__ = 'ultiscantastic_pb2'
-  # @@protoc_insertion_point(class_scope:Scanner.Mesh)
+  # @@protoc_insertion_point(class_scope:ScannerBuff.Mesh)
   ))
 _sym_db.RegisterMessage(Mesh)
 
 StartCalibration = _reflection.GeneratedProtocolMessageType('StartCalibration', (_message.Message,), dict(
   DESCRIPTOR = _STARTCALIBRATION,
   __module__ = 'ultiscantastic_pb2'
-  # @@protoc_insertion_point(class_scope:Scanner.StartCalibration)
+  # @@protoc_insertion_point(class_scope:ScannerBuff.StartCalibration)
   ))
 _sym_db.RegisterMessage(StartCalibration)
 
 StartScan = _reflection.GeneratedProtocolMessageType('StartScan', (_message.Message,), dict(
   DESCRIPTOR = _STARTSCAN,
   __module__ = 'ultiscantastic_pb2'
-  # @@protoc_insertion_point(class_scope:Scanner.StartScan)
+  # @@protoc_insertion_point(class_scope:ScannerBuff.StartScan)
   ))
 _sym_db.RegisterMessage(StartScan)
 
