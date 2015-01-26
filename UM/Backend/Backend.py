@@ -18,13 +18,9 @@ class Backend(SignalEmitter):
 
         self._message_handlers = {}
 
-        self._socket = SignalSocket()
-        self._socket.stateChanged.connect(self._onSocketStateChanged)
-        self._socket.messageReceived.connect(self._onMessageReceived)
-        self._socket.error.connect(self._onSocketError)
-
-        self._socket.listen('127.0.0.1', 0xC20A)
-
+        self._socket = None
+        self._port = 49674
+        self._createSocket()
         self._process = None
 
     processingProgress = Signal()
@@ -77,8 +73,7 @@ class Backend(SignalEmitter):
 
     def _onSocketStateChanged(self, state):
         if state == SignalSocket.ListeningState:
-            #self.startEngine()
-            pass
+            self.startEngine()
         elif state == SignalSocket.ConnectedState:
             print('Socket connected')
 
@@ -92,4 +87,22 @@ class Backend(SignalEmitter):
         self._message_handlers[type(message)](message)
 
     def _onSocketError(self, error):
-        Logger.log('e', error)
+        if error.errno == 98:
+            self._port += 1
+            self._createSocket()
+        else:
+            Logger.log('e', str(error))
+
+    def _createSocket(self):
+        if self._socket:
+            self._socket.stateChanged.disconnect(self._onSocketStateChanged)
+            self._socket.messageReceived.disconnect(self._onMessageReceived)
+            self._socket.error.disconnect(self._onSocketError)
+
+        self._socket = SignalSocket()
+        self._socket.stateChanged.connect(self._onSocketStateChanged)
+        self._socket.messageReceived.connect(self._onMessageReceived)
+        self._socket.error.connect(self._onSocketError)
+
+        self._socket.listen('127.0.0.1', self._port)
+
