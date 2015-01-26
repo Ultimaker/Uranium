@@ -92,4 +92,4 @@ class Backend(SignalEmitter):
         self._message_handlers[type(message)](message)
 
     def _onSocketError(self, error):
-        Logger.log('e', error)
+        Logger.log('e', str(error))

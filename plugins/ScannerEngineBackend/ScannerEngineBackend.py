@@ -22,8 +22,7 @@ class ScannerEngineBackend(Backend):
         self._message_handlers[ultiscantastic_pb2.ProgressUpdate] = self._onProgressUpdateMessage
 
         self.startEngine()
-        time.sleep(1)
-        self.startScan()
+
         
     def startScan(self, type = 0):
         message = ultiscantastic_pb2.StartScan()
