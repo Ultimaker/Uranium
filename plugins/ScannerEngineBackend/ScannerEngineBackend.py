@@ -7,15 +7,26 @@ import time
 from UM.Application import Application
 from UM.Scene.PointCloudNode import PointCloudNode
 
+from . import ultiscantastic_pb2
+
 ## Class that is responsible for listening to the backend.
 class ScannerEngineBackend(Backend):
     def __init__(self):
         super(ScannerEngineBackend,self).__init__()
-        self._socket_thread.sendCommand(1) # Debug stuff
         
-        #Add the 'recieve pointcloud with normals' command with id 3 to the command list
-        self._command_handlers.update({3:self._addPointCloudWithNormals}) 
+        self._socket.registerMessageType(1, ultiscantastic_pb2.PointCloudWithNormals)
+        self._socket.registerMessageType(2, ultiscantastic_pb2.StartScan)
+        self._socket.registerMessageType(3, ultiscantastic_pb2.ProgressUpdate)
+
+        self._message_handlers[ultiscantastic_pb2.PointCloudWithNormals] = self._onPointCloudWithNormalsMessage
+        self._message_handlers[ultiscantastic_pb2.ProgressUpdate] = self._onProgressUpdateMessage
         
+        
+    def _onPointCloudWithNormalsMessage(self, message):
+        print("Recieved pointcloud")
+    
+    def _onProgressUpdateMessage(self,message):
+        print("Progress update message " )
 
     def _addPointCloudWithNormals(self, data):
         app = Application.getInstance()

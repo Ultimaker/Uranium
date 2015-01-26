@@ -53,7 +53,7 @@ class MachineSettings(SignalEmitter):
     
     ##  Save setting values to file
     def saveValuesToFile(self, file_name):
-        config = configparser.ConfigParser()
+        config = configparser.ConfigParser()    
 
         for category in self._categories:
             configData = {}
