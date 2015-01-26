@@ -129,10 +129,34 @@ UM.MainWindow
                 anchors.horizontalCenter: parent.horizontalCenter
             }
             
-            UM.ExtentionPanel
+            UM.Panel 
             {
                 anchors.bottom:parent.bottom;
-                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.horizontalCenter: parent.horizontalCenter;
+                title: ""
+
+                contents: RowLayout 
+                {
+                    height: 50
+                    width: 100
+                    
+                    ToolButton
+                    {
+                        text:"Scan"
+                        iconSource:UM.Resources.getIcon("scan.png")
+                        tooltip:"Shoopdawoop"
+                        onClicked: { UM.ScannerEngineBackend.scan() }
+                    }
+                    
+                    ToolButton
+                    {
+                        text:"Calibrate"
+                        iconSource:UM.Resources.getIcon("default.png")
+                        tooltip:"Calibrate"
+                        onClicked: { UM.ScannerEngineBackend.calibrate() }
+                    }
+                    
+                }
             }
 
             UM.Panel {

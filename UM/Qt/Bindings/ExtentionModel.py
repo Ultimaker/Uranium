@@ -1,4 +1,4 @@
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, pyqtSlot,QCoreApplication
 
 from UM.Application import Application
 
@@ -12,17 +12,24 @@ class ExtentionModel(ListModel):
 
     def __init__(self, parent = None):
         super().__init__(parent)
-
-        self._controller = Application.getInstance().getController()
-       
+        #QCoreApplication.instance().getPluginRegistry().
         self.addRoleName(self.NameRole, 'name')
         self.addRoleName(self.IconRole, 'icon')
         self.addRoleName(self.ToolActiveRole, 'active')
         self.addRoleName(self.DescriptionRole, 'description')
         
         self._onExtentionChanged()
+    
+    @pyqtSlot(str)
+    def buttonClicked(self,name):
+        if name == "Scan":
+            #start scan
+            pass
+        elif name == "Calibrate":
+            #start calibration
+            pass
         
+    
     def _onExtentionChanged(self):
         self.clear()
-        self.appendItem({ 'name': "Calibrate", 'icon': 'default.png', 'active': False, 'description': "Calibrate" })
-        self.appendItem({ 'name': "Scan", 'icon': 'scan.png', 'active': False, 'description': "IMA CHARGIN MA LAZOOOOOR" })
+        
