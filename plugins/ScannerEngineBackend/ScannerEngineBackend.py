@@ -14,16 +14,17 @@ class ScannerEngineBackend(Backend):
     def __init__(self):
         super(ScannerEngineBackend,self).__init__()
         
-        self._socket.registerMessageType(1, ultiscantastic_pb2.PointCloudPointNormal)
-        self._socket.registerMessageType(2, ultiscantastic_pb2.StartScan)
-        self._socket.registerMessageType(3, ultiscantastic_pb2.ProgressUpdate)
+        
 
         self._message_handlers[ultiscantastic_pb2.PointCloudPointNormal] = self._onPointCloudMessage
         self._message_handlers[ultiscantastic_pb2.ProgressUpdate] = self._onProgressUpdateMessage
-
-        self.startEngine()
-
-        
+    
+    def _createSocket(self):
+        super()._createSocket()
+        self._socket.registerMessageType(1, ultiscantastic_pb2.PointCloudPointNormal)
+        self._socket.registerMessageType(2, ultiscantastic_pb2.StartScan)
+        self._socket.registerMessageType(3, ultiscantastic_pb2.ProgressUpdate)
+    
     def startScan(self, type = 0):
         message = ultiscantastic_pb2.StartScan()
         if type == 0:
@@ -41,7 +42,7 @@ class ScannerEngineBackend(Backend):
         self._socket.sendMessage(message)
         
     def getEngineCommand(self):
-        return [Preferences.getPreference("BackendLocation"), '-p', "49674"]
+        return [Preferences.getPreference("BackendLocation"), '-p', str(self._port)]
     
     def _onPointCloudMessage(self, message):
         app = Application.getInstance()
