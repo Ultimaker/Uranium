@@ -6,6 +6,8 @@ import struct
 import time
 from UM.Application import Application
 from UM.Scene.PointCloudNode import PointCloudNode
+from PyQt5.QtGui import QImage
+
 
 from . import ultiscantastic_pb2
 
@@ -18,13 +20,24 @@ class ScannerEngineBackend(Backend):
 
         self._message_handlers[ultiscantastic_pb2.PointCloudPointNormal] = self._onPointCloudMessage
         self._message_handlers[ultiscantastic_pb2.ProgressUpdate] = self._onProgressUpdateMessage
+        self._message_handlers[ultiscantastic_pb2.Image] = self._onImageMessage
+        '''data = b'' 
+        data += bytes( [255] )
+        data += bytes( [0] )
+        data += bytes( [255] )
+        w = 1
+        h = 1
+        image = QImage(data, w, h, QImage.Format_RGB32)
+        image.save("herpaderp.png")'''
     
     def _createSocket(self):
         super()._createSocket()
         self._socket.registerMessageType(1, ultiscantastic_pb2.PointCloudPointNormal)
         self._socket.registerMessageType(2, ultiscantastic_pb2.StartScan)
         self._socket.registerMessageType(3, ultiscantastic_pb2.ProgressUpdate)
-    
+        self._socket.registerMessageType(4, ultiscantastic_pb2.StartCalibration)
+        self._socket.registerMessageType(5, ultiscantastic_pb2.Image)
+        
     def startScan(self, type = 0):
         message = ultiscantastic_pb2.StartScan()
         if type == 0:
@@ -39,6 +52,7 @@ class ScannerEngineBackend(Backend):
             message.type = ultiscantastic_pb2.StartCalibration.CORNER
         elif type == 1:
             message.type = ultiscantastic_pb2.StartCalibration.BOARD
+        print("Sending calibration message")
         self._socket.sendMessage(message)
         
     def getEngineCommand(self):
@@ -54,6 +68,12 @@ class ScannerEngineBackend(Backend):
         operation = AddSceneNodeOperation(node,app.getController().getScene().getRoot())
         app.getOperationStack().push(operation)
         print("Recieved pointcloud")
+    
+    # Handle image sent by engine    
+    def _onImageMessage(self, message):
+        print("recieved image message")
+        image = QImage(message.data, message.width, message.height, QImage.Format_RGB888)
+        image.save("debug.png")
     
     def _onProgressUpdateMessage(self,message):
         print("Progress update message " )
