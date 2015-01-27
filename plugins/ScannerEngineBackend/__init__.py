@@ -9,11 +9,15 @@ def getMetaData():
 def createScannerEngineBackendProxy(engine, scriptEngine):
     return ScannerEngineBackendProxy.ScannerEngineBackendProxy()
 
+def createCameraImageProvider(engine, scriptEngine):
+    return CameraImageProvider.CameraImageProvider()
+
 def register(app):
     Preferences.addPreference("BackendLocation","../UltiScanTastic/Scanner/bin/Debug/Ultiscantastic")
     engine = ScannerEngineBackend.ScannerEngineBackend()
     app.setBackend(engine)
     qmlRegisterSingletonType(ScannerEngineBackendProxy.ScannerEngineBackendProxy, "UM", 1, 0, "ScannerEngineBackend", createScannerEngineBackendProxy)
-    
+
+    #addImageProvider("test",image_provider)
     
    

@@ -13,9 +13,10 @@ from UM.Application import Application
 from UM.Qt.QtGL2Renderer import QtGL2Renderer
 from UM.Qt.Bindings.Bindings import Bindings
 from UM.JobQueue import JobQueue
+from UM.Signal import Signal, SignalEmitter
 
 ##  Application subclass that provides a Qt application object.
-class QtApplication(QApplication, Application):
+class QtApplication(QApplication, Application, SignalEmitter):
     def __init__(self):
         if platform.system() == "Windows":
             # QT needs to be able to find the Qt5 dlls on windows. However, these are installed in site-packages/PyQt5
@@ -50,12 +51,15 @@ class QtApplication(QApplication, Application):
         Bindings.register()
 
         self._engine = QQmlApplicationEngine()
+        self.engineCreatedSignal.emit()
         self._engine.addImportPath(os.path.dirname(__file__) + "/qml")
 
         self.registerObjects(self._engine)
-
+        
         self._engine.load(self._mainQml)
-
+    
+    engineCreatedSignal = Signal()
+    
     def registerObjects(self, engine):
         pass
 

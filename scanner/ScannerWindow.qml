@@ -103,7 +103,13 @@ UM.MainWindow
                 anchors.left: parent.left
                 anchors.verticalCenter: parent.verticalCenter
             }
-
+            
+            Image 
+            {
+                source: UM.ScannerEngineBackend.cameraImage
+                width:250
+                height:250
+            }
             UM.Panel 
             {
                 anchors.top: parent.top

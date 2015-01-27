@@ -4,6 +4,7 @@ from UM.Resources import Resources
 from UM.Math.Vector import Vector
 from UM.Scene.Camera import Camera
 from UM.Math.Matrix import Matrix
+from CameraImageProvider import CameraImageProvider
 
 import os.path
 
@@ -12,7 +13,12 @@ class ScannerApplication(QtApplication):
         super(ScannerApplication, self).__init__()
         self._machine_settings.loadSettingsFromFile(Resources.getPath(Resources.SettingsLocation, "ultiscantastic.json"))
         self.setRequiredPlugins(["ScannerEngineBackend","PLYWriter","PLYReader"])
+        self._camera_image_provider = CameraImageProvider()
+        self.engineCreatedSignal.connect(self._onEngineCreated)
 
+    def _onEngineCreated(self):
+        self._engine.addImageProvider("camera",CameraImageProvider())
+        
     def _loadPlugins(self):
         self._plugin_registry.loadPlugins({ "type": "Logger"})
         self._plugin_registry.loadPlugins({ "type": "StorageDevice" })
@@ -28,6 +34,7 @@ class ScannerApplication(QtApplication):
         self.getController().setSelectionTool("SelectionTool")
         
         root = self.getController().getScene().getRoot()
+        
         
         try:
             self.getMachineSettings().loadValuesFromFile(Resources.getPath(Resources.SettingsLocation, 'settings.cfg'))
@@ -48,6 +55,9 @@ class ScannerApplication(QtApplication):
         
         self.setMainQml(os.path.dirname(__file__) + "/Scanner.qml")
         self.initializeEngine()
+        
+        
+        
         self._plugin_registry.checkRequiredPlugins(self.getRequiredPlugins())
         if self._engine.rootObjects:
             self.exec_()

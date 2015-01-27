@@ -7,20 +7,22 @@ import time
 from UM.Application import Application
 from UM.Scene.PointCloudNode import PointCloudNode
 from PyQt5.QtGui import QImage
+from UM.Signal import Signal, SignalEmitter
 
+import numpy
 
 from . import ultiscantastic_pb2
 
 ## Class that is responsible for listening to the backend.
-class ScannerEngineBackend(Backend):
+class ScannerEngineBackend(Backend, SignalEmitter):
     def __init__(self):
         super(ScannerEngineBackend,self).__init__()
         
-        
-
         self._message_handlers[ultiscantastic_pb2.PointCloudPointNormal] = self._onPointCloudMessage
         self._message_handlers[ultiscantastic_pb2.ProgressUpdate] = self._onProgressUpdateMessage
         self._message_handlers[ultiscantastic_pb2.Image] = self._onImageMessage
+        
+        self._latest_camera_image = QImage(1, 1, QImage.Format_RGB888)
         '''data = b'' 
         data += bytes( [255] )
         data += bytes( [0] )
@@ -29,6 +31,9 @@ class ScannerEngineBackend(Backend):
         h = 1
         image = QImage(data, w, h, QImage.Format_RGB32)
         image.save("herpaderp.png")'''
+    
+    def getLatestCameraImage(self):
+        return self._latest_camera_image
     
     def _createSocket(self):
         super()._createSocket()
@@ -71,9 +76,20 @@ class ScannerEngineBackend(Backend):
     
     # Handle image sent by engine    
     def _onImageMessage(self, message):
-        print("recieved image message")
-        image = QImage(message.data, message.width, message.height, QImage.Format_RGB888)
-        image.save("debug.png")
+        if message.type == ultiscantastic_pb2.Image.RGB:
+            image = QImage(message.data, message.width, message.height, QImage.Format_RGB888)
+            
+        elif message.type == ultiscantastic_pb2.Image.MONO:
+            print("grayscale image")
+            data = numpy.fromstring(message.data,numpy.uint8)
+            resized_data = numpy.resize(data,(message.width,message.height))
+            multi_channel = numpy.dstack((resized_data,resized_data,resized_data))
+            image = QImage(multi_channel.tostring(),message.width,message.height,QImage.Format_RGB888)
+        
+        self.newCameraImage.emit()
+        self._latest_camera_image = image   
+    
+    newCameraImage = Signal()
     
     def _onProgressUpdateMessage(self,message):
         print("Progress update message " )
