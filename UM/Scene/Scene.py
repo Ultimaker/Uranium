@@ -3,6 +3,8 @@ from UM.Scene.Camera import Camera
 from UM.Signal import Signal, SignalEmitter
 from UM.Scene.Iterator.BreadthFirstIterator import BreadthFirstIterator
 
+import threading
+
 ##  Container object for the scene graph.
 #
 #   The main purpose of this class is to provide the root SceneNode.
@@ -13,22 +15,36 @@ class Scene(SignalEmitter):
         self._root = SceneNode()
         self._connectSignalsRoot()
         self._active_camera = None
-    
+
+        self._lock = threading.Lock()
+
     def _connectSignalsRoot(self):
         self._root.transformationChanged.connect(self.sceneChanged)
         self._root.childrenChanged.connect(self.sceneChanged)
         self._root.meshDataChanged.connect(self.sceneChanged)
-    
+
+    ##  Acquire the global scene lock.
+    #
+    #   This will prevent any read or write actions on the scene from other threads,
+    #   assuming those threads also properly acquire the lock. Most notably, this
+    #   prevents the rendering thread from rendering the scene while it is changing.
+    def acquireLock(self):
+        self._lock.acquire()
+
+    ##  Release the global scene lock.
+    def releaseLock(self):
+        self._lock.release()
+
     ##  Get the root node of the scene.
     def getRoot(self):
         return self._root
-    
+
     ##  Change the root node of the scene
     def setRoot(self, node):
         self._root = node
         self._connectSignalsRoot()
         self.rootChanged.emit()
-        
+
     rootChanged = Signal()
 
     ##  Get the camera that should be used for rendering.

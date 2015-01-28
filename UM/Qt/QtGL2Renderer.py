@@ -20,6 +20,8 @@ class QtGL2Renderer(Renderer):
     def __init__(self):
         super().__init__()
 
+        self._scene = Application.getInstance().getController().getScene()
+
         self._vertexBufferCache = {}
         self._indexBufferCache = {}
 
@@ -47,7 +49,6 @@ class QtGL2Renderer(Renderer):
         self._lightPosition = position
 
     def setBackgroundColor(self, color):
-        print('setBackgroundColor')
         self._backgroundColor = color
 
     def setViewportSize(self, width, height):
@@ -99,7 +100,9 @@ class QtGL2Renderer(Renderer):
         self._gl.glDepthMask(self._gl.GL_TRUE)
         self._gl.glEnable(self._gl.GL_CULL_FACE)
 
-        self._camera = Application.getInstance().getController().getScene().getActiveCamera()
+        self._scene.lock()
+
+        self._camera = self._scene.getActiveCamera()
         if not self._camera:
             Logger.log("e", "No active camera set, can not render")
             return
@@ -117,6 +120,8 @@ class QtGL2Renderer(Renderer):
 
         for item in self._overlayQueue:
             self._renderItem(item)
+
+        self._scene.unlock()
 
     def endRendering(self):
         pass
