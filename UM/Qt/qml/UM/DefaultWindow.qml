@@ -158,7 +158,7 @@ UM.MainWindow {
                 }
 
                 minimumValue: 0;
-                maximumValue: 100;
+                maximumValue: 1;
 
                 Connections {
                     target: UM.Backend;
