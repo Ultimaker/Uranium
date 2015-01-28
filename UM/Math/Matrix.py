@@ -235,3 +235,7 @@ class Matrix(object):
         if out is None:
             return data
 
+    def __repr__(self):
+        return "Matrix( {0} )".format(self._data)
+
+
