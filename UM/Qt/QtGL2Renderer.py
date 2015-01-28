@@ -77,6 +77,8 @@ class QtGL2Renderer(Renderer):
         mode = kwargs.get('mode', Renderer.RenderTriangles)
         if mode is Renderer.RenderLines:
             queueItem['mode'] = self._gl.GL_LINES
+        elif mode is Renderer.RenderLineLoop:
+            queueItem['mode'] = self._gl.GL_LINE_LOOP
         elif mode is Renderer.RenderPoints:
             queueItem['mode'] = self._gl.GL_POINTS
         else:

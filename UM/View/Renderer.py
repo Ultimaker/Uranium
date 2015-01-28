@@ -10,6 +10,7 @@ class Renderer():
     RenderLines = 2
     RenderPoints = 3
     RenderWireframe = 4
+    RenderLineLoop = 5
 
     def __init__(self):
         super().__init__()
