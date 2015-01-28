@@ -51,7 +51,11 @@ class CameraTool(Tool):
         if camera.isLocked():
             return
 
+        self._scene.lock()
+
         camera.translate(Vector(event.deltaX / 100.0, event.deltaY / 100.0, 0))
+
+        self._scene.unlock()
 
     #   Zooms the camera in response to a mouse event.
     def _zoomCamera(self, event):
@@ -62,6 +66,8 @@ class CameraTool(Tool):
         if camera.isLocked():
             return
 
+        self._scene.lock()
+
         delta = event.vertical / 10.0
         r = (camera.getGlobalPosition() - self._origin).length() - delta
         if delta > 0:
@@ -70,6 +76,8 @@ class CameraTool(Tool):
         else:
             if r < self._maxZoom:
                 camera.translate(Vector(0.0, 0.0, -delta))
+
+        self._scene.unlock()
 
 
     #   Rotates the camera in response to a mouse event.
@@ -80,6 +88,8 @@ class CameraTool(Tool):
 
         if camera.isLocked():
             return
+
+        self._scene.lock()
 
         dx = x
         dy = y
@@ -94,13 +104,7 @@ class CameraTool(Tool):
         n = diff.multiply(m)
         n += self._origin
 
-        # Limit the vertical rotation by calculating the dot product between the
-        # new vector and the up vector then checking if that is within a certain
-        # threshold. If not, perform the rotation only along the Y axis.
-        #d = n.getNormalized().dot(Vector.Unit_Y)
-        #if d < 0.05 or d > math.pi * 0.3:
-            #m.setByRotationAxis(dx, Vector.Unit_Y)
-            #n = diff.multiply(m)
-
         camera.setPosition(n)
         camera.lookAt(self._origin, Vector(0, 1, 0))
+
+        self._scene.unlock()
