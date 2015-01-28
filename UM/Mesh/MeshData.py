@@ -71,16 +71,16 @@ class MeshData(SignalEmitter):
     ##  Return the list of vertex normals.
     def getNormals(self):
         return self._normals
-    
+
     ##  Return whether this mesh has indices.
     def hasIndices(self):
         return self._indices is not None
-    
+
     ##  Get the array of indices
     #   \return \type{numpy.ndarray}
     def getIndices(self):
         return self._face_indices
-    
+
     ##  Transform the meshdata by given Matrix
     #   \param transformation 4x4 homogenous transformation matrix
     def getTransformed(self, transformation):
@@ -247,7 +247,14 @@ class MeshData(SignalEmitter):
         self.addVertexWithNormal(x0, y0, z0, nx0, ny0, nz0)
         self.addVertexWithNormal(x1, y1, z1, nx1, ny1, nz1)
         self.addVertexWithNormal(x2, y2, z2, nx2, ny2, nz2)
-        
+
+    def addVertices(self, vertices):
+        if self._vertices is None:
+            self._vertices = numpy.zeros((0, 3), dtype=numpy.float32)
+
+        self._vertices = numpy.concatenate((self._vertices[0:self._vertex_count], vertices))
+        self._vertex_count += len(vertices)
+
     ##  Get all vertices of this mesh as a bytearray
     #
     #   \return A bytearray object with 3 floats per vertex.
