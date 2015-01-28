@@ -144,6 +144,8 @@ UM.MainWindow {
                     preferences.visible = true;
                     preferences.setPage(1);
                 }
+
+                onSaveClicked: if(base.saveClicked) base.saveClicked();
             }
 
             JobList { anchors.left: parent.left; anchors.bottom: parent.bottom; width: parent.width / 10; height: parent.height / 5; }
