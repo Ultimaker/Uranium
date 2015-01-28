@@ -105,6 +105,7 @@ class QtGL2Renderer(Renderer):
         self._camera = self._scene.getActiveCamera()
         if not self._camera:
             Logger.log("e", "No active camera set, can not render")
+            self._scene.releaseLock()
             return
 
         for item in self._solidsQueue:
