@@ -51,11 +51,11 @@ class CameraTool(Tool):
         if camera.isLocked():
             return
 
-        self._scene.lock()
+        self._scene.acquireLock()
 
         camera.translate(Vector(event.deltaX / 100.0, event.deltaY / 100.0, 0))
 
-        self._scene.unlock()
+        self._scene.releaseLock()
 
     #   Zooms the camera in response to a mouse event.
     def _zoomCamera(self, event):
@@ -66,7 +66,7 @@ class CameraTool(Tool):
         if camera.isLocked():
             return
 
-        self._scene.lock()
+        self._scene.acquireLock()
 
         delta = event.vertical / 10.0
         r = (camera.getGlobalPosition() - self._origin).length() - delta
@@ -77,7 +77,7 @@ class CameraTool(Tool):
             if r < self._maxZoom:
                 camera.translate(Vector(0.0, 0.0, -delta))
 
-        self._scene.unlock()
+        self._scene.releaseLock()
 
 
     #   Rotates the camera in response to a mouse event.
@@ -89,7 +89,7 @@ class CameraTool(Tool):
         if camera.isLocked():
             return
 
-        self._scene.lock()
+        self._scene.acquireLock()
 
         dx = x
         dy = y
@@ -107,4 +107,4 @@ class CameraTool(Tool):
         camera.setPosition(n)
         camera.lookAt(self._origin, Vector(0, 1, 0))
 
-        self._scene.unlock()
+        self._scene.releaseLock()

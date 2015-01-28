@@ -100,7 +100,7 @@ class QtGL2Renderer(Renderer):
         self._gl.glDepthMask(self._gl.GL_TRUE)
         self._gl.glEnable(self._gl.GL_CULL_FACE)
 
-        self._scene.lock()
+        self._scene.acquireLock()
 
         self._camera = self._scene.getActiveCamera()
         if not self._camera:
@@ -121,7 +121,7 @@ class QtGL2Renderer(Renderer):
         for item in self._overlayQueue:
             self._renderItem(item)
 
-        self._scene.unlock()
+        self._scene.releaseLock()
 
     def endRendering(self):
         pass
