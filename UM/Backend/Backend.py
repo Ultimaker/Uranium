@@ -75,7 +75,7 @@ class Backend(SignalEmitter):
         if state == SignalSocket.ListeningState:
             self.startEngine()
         elif state == SignalSocket.ConnectedState:
-            print('Socket connected')
+            Logger.log('d', "Backend connected on port %s", self._port)
 
     def _onMessageReceived(self):
         message = self._socket.takeNextMessage()
