@@ -28,3 +28,7 @@ class ScannerEngineBackendProxy(QObject):
     #Binding to convert our signal (newCameraImage from the backend) to pyQtSignal
     def _onNewImage(self):
         self.newImage.emit()
+    
+    @pyqtSlot(str)    
+    def calibrationButtonPressed(self, key):
+        print(key)

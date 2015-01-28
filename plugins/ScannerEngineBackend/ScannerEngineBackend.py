@@ -22,6 +22,7 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         self._message_handlers[ultiscantastic_pb2.ProgressUpdate] = self._onProgressUpdateMessage
         self._message_handlers[ultiscantastic_pb2.Image] = self._onImageMessage
         
+        
         self._latest_camera_image = QImage(1, 1, QImage.Format_RGB888)
         '''data = b'' 
         data += bytes( [255] )
@@ -42,6 +43,7 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         self._socket.registerMessageType(3, ultiscantastic_pb2.ProgressUpdate)
         self._socket.registerMessageType(4, ultiscantastic_pb2.StartCalibration)
         self._socket.registerMessageType(5, ultiscantastic_pb2.Image)
+        self._socket.registerMessageType(6, ultiscantastic_pb2.setCalibrationStep)
         
     def startScan(self, type = 0):
         message = ultiscantastic_pb2.StartScan()
@@ -80,7 +82,6 @@ class ScannerEngineBackend(Backend, SignalEmitter):
             image = QImage(message.data, message.width, message.height, QImage.Format_RGB888)
             
         elif message.type == ultiscantastic_pb2.Image.MONO:
-            print("grayscale image")
             data = numpy.fromstring(message.data,numpy.uint8)
             resized_data = numpy.resize(data,(message.width,message.height))
             multi_channel = numpy.dstack((resized_data,resized_data,resized_data))

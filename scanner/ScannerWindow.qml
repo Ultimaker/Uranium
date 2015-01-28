@@ -2,9 +2,9 @@ import QtQuick 2.2
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 import QtQuick.Dialogs 1.1
+import QtQuick.Window 2.1
 
 import UM 1.0 as UM
-
 UM.MainWindow 
 {
     id: base
@@ -104,12 +104,7 @@ UM.MainWindow
                 anchors.verticalCenter: parent.verticalCenter
             }
             
-            Image 
-            {
-                source: UM.ScannerEngineBackend.cameraImage
-                width:250
-                height:250
-            }
+            
             UM.Panel 
             {
                 anchors.top: parent.top
@@ -159,7 +154,10 @@ UM.MainWindow
                         text:"Calibrate"
                         iconSource:UM.Resources.getIcon("default.png")
                         tooltip:"Calibrate"
-                        onClicked: { UM.ScannerEngineBackend.calibrate() }
+                        onClicked: { 
+                            UM.ScannerEngineBackend.calibrate() 
+                            calibrationWindow.visible = true
+                        }
                     }
                     
                 }
@@ -322,5 +320,10 @@ UM.MainWindow
         {
             UM.Controller.addMesh(fileUrl)
         }
+    }
+    
+    CalibrationDialog
+    {    
+        id: calibrationWindow
     }
 }
