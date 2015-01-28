@@ -255,6 +255,13 @@ class MeshData(SignalEmitter):
         self._vertices = numpy.concatenate((self._vertices[0:self._vertex_count], vertices))
         self._vertex_count += len(vertices)
 
+    def addIndices(self, indices):
+        if self._indices is None:
+            self._indices = numpy.zeros(0, dtype=numpy.int32)
+
+        self._indices = numpy.concatenate((self._indices[0:self._face_count], indices))
+        self._face_count += len(indices)
+
     ##  Get all vertices of this mesh as a bytearray
     #
     #   \return A bytearray object with 3 floats per vertex.
