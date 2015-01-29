@@ -1,29 +1,21 @@
 {
+    "name": "UltiScanTastic",
     "platform": "ultiscantastic.obj",
     "required_plugins": 
     [
         "Console Logger", 
         "ScannerBackend"
     ],
-    "machine_settings": 
-    [
-        {
-            "key":"machine_width",
-            "default": 100
-        },
-        {
-            "key":"machine_height",
-            "default": 100
-        }
-    ],
-    "Categories": [
-        {
-            "key": "calibration",
+    "machine_settings": {
+        "machine_width": { "default": 100 },
+        "machine_height": { "default": 100 }
+    },
+    "categories": {
+        "calibration": {
             "label": "Calibration",
             "visible": true,
-            "Settings": [
-                {
-                    "key": "calibration_type",
+            "settings": {
+                "calibration_type": {
                     "label": "Calibration type",
                     "type": "enum",
                     "default": "Board",
@@ -32,8 +24,7 @@
                         "Corner"
                     ]
                 },
-                {
-                    "key": "setup_type",
+                "setup_type": {
                     "label": "Setup",
                     "type": "enum",
                     "default": "Platform",
@@ -42,8 +33,7 @@
                         "Freeform"
                     ]
                 },
-                {
-                    "key": "number_of_calibration_boards",
+                "number_of_calibration_boards": {
                     "label": "num calib boards",
                     "type": "int",
                     "default": 1,
@@ -53,17 +43,15 @@
                         "value": "Board"
                     },
                     "max_value": 250,
-                    "children": [
-                        {
-                            "key": "number_of_calibration_boards_scanner",
+                    "children": {
+                        "number_of_calibration_boards_scanner": {
                             "label": "num calib boards scanner",
                             "type": "int",
                             "default": 1,
                             "min_value": 0,
                             "max_value": 250
                         },
-                        {
-                            "key": "number_of_calibration_boards_projector",
+                        "number_of_calibration_boards_projector": {
                             "label": "num calib boards projector",
                             "type": "int",
                             "default": 1,
@@ -74,32 +62,28 @@
                             "min_value": 0,
                             "max_value": 250
                         }
-                    ]
+                    }
                 }
-            ]
+            }
         },
-        {
-            "key": "meshing",
+        "meshing": {
             "label": "Meshing",
             "visible": true,
-            "Settings": [
-                {
-                    "key": "TestSetting",
+            "settings": {
+                "TestSetting": {
                     "label": "testtest",
                     "type": "int",
                     "default": 210,
                     "min_value": 150,
                     "max_value": 280
                 }
-            ]
+            }
         },
-        {
-            "key": "scanning",
+        "scanning": {
             "label": "Scanning",
             "visible": true,
-            "Settings": [
-                {
-                    "key": "pattern_type",
+            "settings": {
+                "pattern_type": {
                     "label": "Pattern type",
                     "type": "enum",
                     "default": "Grey code",
@@ -108,8 +92,7 @@
                         "Phase shift"
                     ]
                 },
-                {
-                    "key": "num_phase_pattern_shifts",
+                "num_phase_pattern_shifts": {
                     "label": "Pattern shifts",
                     "type": "int",
                     "default": 16,
@@ -120,7 +103,7 @@
                         "value": "Phase shift"
                     }
                 }
-            ]
+            }
         }
-    ]
+    }
 }
