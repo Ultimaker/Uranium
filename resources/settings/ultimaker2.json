@@ -1,179 +1,24 @@
 {
+    "name": "Ultimaker 2",
+    "icon": "icon_ultimaker2.png",
     "platform": "ultimaker2_platform.obj",
-    "Categories": [
-        {
-            "key": "resolution",
-            "label": "Resolution",
-            "visible": true,
-            "Settings": [
-                {
-                    "key": "layer_height",
-                    "label": "Layer Height (mm)",
-                    "type": "float",
-                    "default": 0.1,
-                    "min_value": 0.06,
-                    "max_value": 2.0,
-                    "children": [
-                        {
-                            "key": "initial_layer_height",
-                            "label": "Initial Layer Thickness (mm)",
-                            "type": "float",
-                            "default": 0.3,
-                            "min_value": 0.0,
-                            "max_value": 1.0
-                        }
-                    ]
-                },
-                {
-                    "key": "shell_thickness",
-                    "label": "Shell Thickness (mm)",
-                    "type": "float",
-                    "default": 0.8,
-                    "min_value": 0.0,
-                    "max_value": 5.0,
-                    "children": [
-                        {
-                            "key": "wall_thickness",
-                            "label": "Wall Thickness (mm)",
-                            "default": 0.8,
-                            "min_value": 0.0,
-                            "max_value": 5.0,
-                            "min_value_warning": 0.4,
-                            "max_value_warning": 1.0,
-                            "type": "float"
-                        },
-                        {
-                            "key": "bottomtop_thickness",
-                            "label": "Bottom/Top Thickness (mm)",
-                            "default": 0.8,
-                            "min_value": 0.0,
-                            "max_value": 5.0,
-                            "min_value_warning": 0.4,
-                            "max_value_warning": 1.0,
-                            "type": "float"
-                        }
-                    ]
-                },
-                {
-                    "key": "bottomtop_pattern",
-                    "label": "Bottom/Top Pattern",
-                    "type": "int",
-                    "default": 3,
-                    "min_value": 0,
-                    "max_value": 100
-                }
-            ]
-        },
-        {
-            "key": "material",
-            "label": "Material",
-            "visible": true,
-            "Settings": [
-                {
-                    "key": "print_temperature",
-                    "label": "Printing Temperature (°C)",
-                    "type": "int",
-                    "default": 210,
-                    "min_value": 150,
-                    "max_value": 280
-                },
-                {
-                    "key": "bed_temperature",
-                    "label": "Bed Temperature (°C)",
-                    "type": "int",
-                    "default": 50,
-                    "min_value": 0,
-                    "max_value": 120
-                },
-                {
-                    "key": "material_diameter",
-                    "label": "Diameter (mm)",
-                    "type": "float",
-                    "default": 2.85,
-                    "min_value": 0.5,
-                    "max_value": 5.0
-                }
-            ]
-        },
-        {
-            "key": "support",
-            "label": "Support Material",
-            "visible": true,
-            "Settings": [
-                {
-                    "key": "TestSettingffaaa",
-                    "label": "Test setting!",
-                    "type": "int",
-                    "default": 10,
-                    "min_value": 0,
-                    "max_value": 10,
-                    "children": []
-                }
-            ]
-        },
-        {
-            "key": "speed",
-            "label": "Speed",
-            "visible": true,
-            "Settings": [
-                {
-                    "key": "TestSetting1231231",
-                    "label": "Test setting!",
-                    "type": "int",
-                    "default": 10,
-                    "min_value": 0,
-                    "max_value": 10,
-                    "children": []
-                }
-            ]
-        },
-        {
-            "key": "infill",
-            "label": "Infill",
-            "visible": true,
-            "Settings": [
-                    {
-                        "key": "TestSettingddd1231231",
-                        "label": "Test settdding!",
-                        "type": "int",
-                        "default": 10,
-                        "min_value": 0,
-                        "max_value": 10,
-                        "children": []
-                    }
-                ]
-        },
-        {
-            "key": "platform_adhesion",
-            "label": "Skirt/Brim/Raft",
-            "visible": true,
-            "Settings": [
-                    {
-                        "key": "TestSettingddd1231231",
-                        "label": "Test settdding!",
-                        "type": "int",
-                        "default": 10,
-                        "min_value": 0,
-                        "max_value": 10,
-                        "children": []
-                    }
-                ]
-        },
-        {
-            "key": "cooling",
-            "label": "Fan/Cool",
-            "visible": true,
-            "Settings": [
-                    {
-                        "key": "TestSettingddd1231231",
-                        "label": "Test settdding!",
-                        "type": "int",
-                        "default": 10,
-                        "min_value": 0,
-                        "max_value": 10,
-                        "children": []
-                    }
-                ]
-        }
+
+    "inherits": "fdmprinter.json",
+
+    "machine_settings": [
+        { "key": "machine_width", "default": 230 },
+        { "key": "machine_depth", "default": 225 },
+        { "key": "machine_height", "default": 205 },
+        { "key": "machine_heated_bed", "default": true },
+        { "key": "machine_center_is_zero", "default": false },
+        { "key": "machine_nozzle_size", "default": 0.4 },
+        { "key": "machine_head_shape_min_x", "default": 40 },
+        { "key": "machine_head_shape_min_y", "default": 10 },
+        { "key": "machine_head_shape_max_x", "default": 60 },
+        { "key": "machine_head_shape_max_y", "default": 30 },
+        { "key": "machine_nozzle_gantry_distance", "default": 55 },
+        { "key": "machine_nozzle_offset_x_1", "default": 18.0 },
+        { "key": "machine_nozzle_offset_y_1", "default": 0.0 },
+        { "key": "machine_gcode_flavor", "default": "UltiGCode" },
     ]
 }
