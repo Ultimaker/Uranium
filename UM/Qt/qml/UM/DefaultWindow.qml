@@ -144,6 +144,8 @@ UM.MainWindow {
                     preferences.visible = true;
                     preferences.setPage(1);
                 }
+
+                onSaveClicked: if(base.saveClicked) base.saveClicked();
             }
 
             JobList { anchors.left: parent.left; anchors.bottom: parent.bottom; width: parent.width / 10; height: parent.height / 5; }
@@ -158,7 +160,7 @@ UM.MainWindow {
                 }
 
                 minimumValue: 0;
-                maximumValue: 100;
+                maximumValue: 1;
 
                 Connections {
                     target: UM.Backend;

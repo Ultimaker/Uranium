@@ -15,10 +15,10 @@ Panel
     title: "Settings";
 
     signal settingConfigurationRequested;
+    signal saveClicked;
 
-    contents: ColumnLayout 
+    contents: ColumnLayout
     {
-        
         Layout.preferredWidth: 250
         Layout.preferredHeight: 500
 
@@ -46,11 +46,14 @@ Panel
         {
             Layout.fillWidth: true
             //text: "Save"
-            onClicked: settingsList.model.saveSettingValues()
-            style: ButtonStyle 
-            { 
+            onClicked: {
+                settingsList.model.saveSettingValues()
+                settingsPanel.saveClicked()
+            }
+            style: ButtonStyle
+            {
                 label: Rectangle
-                {  
+                {
                     Layout.fillWidth: true
                     color: "transparent"
                     anchors.centerIn: parent

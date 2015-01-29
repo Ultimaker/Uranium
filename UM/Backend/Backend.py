@@ -69,7 +69,7 @@ class Backend(SignalEmitter):
             su.wShowWindow = subprocess.SW_HIDE
             kwargs['startupinfo'] = su
             kwargs['creationflags'] = 0x00004000 #BELOW_NORMAL_PRIORITY_CLASS
-        return subprocess.Popen(command_list, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, **kwargs)
+        return subprocess.Popen(command_list, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, **kwargs)
 
     def _onSocketStateChanged(self, state):
         if state == SignalSocket.ListeningState:
