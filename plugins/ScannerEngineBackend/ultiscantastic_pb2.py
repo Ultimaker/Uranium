@@ -18,7 +18,7 @@ _sym_db = _symbol_database.Default()
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='ultiscantastic.proto',
   package='ScannerBuff',
-  serialized_pb=_b('\n\x14ultiscantastic.proto\x12\x0bScannerBuff\"F\n\x15PointCloudWithNormals\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x10\n\x08vertices\x18\x02 \x01(\x0c\x12\x0f\n\x07normals\x18\x03 \x01(\x0c\"8\n\x18PointCloudWithoutNormals\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x10\n\x08vertices\x18\x02 \x01(\x0c\"1\n\x15PointCloudPointNormal\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\x0c\"2\n\x0eProgressUpdate\x12\x10\n\x08objectId\x18\x01 \x01(\x05\x12\x0e\n\x06\x61mount\x18\x02 \x01(\x05\"F\n\x04Mesh\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x10\n\x08vertices\x18\x02 \x01(\x0c\x12\x0f\n\x07normals\x18\x03 \x01(\x0c\x12\x0f\n\x07indices\x18\x04 \x01(\x0c\"y\n\x10StartCalibration\x12;\n\x04type\x18\x01 \x01(\x0e\x32-.ScannerBuff.StartCalibration.CalibrationType\"(\n\x0f\x43\x61librationType\x12\n\n\x06\x43ORNER\x10\x00\x12\t\n\x05\x42OARD\x10\x01\"[\n\tStartScan\x12-\n\x04type\x18\x01 \x01(\x0e\x32\x1f.ScannerBuff.StartScan.ScanType\"\x1f\n\x08ScanType\x12\x08\n\x04GREY\x10\x00\x12\t\n\x05PHASE\x10\x01\"\x80\x01\n\x05Image\x12*\n\x04type\x18\x01 \x01(\x0e\x32\x1c.ScannerBuff.Image.ImageType\x12\r\n\x05width\x18\x02 \x01(\x05\x12\x0e\n\x06height\x18\x03 \x01(\x05\x12\x0c\n\x04\x64\x61ta\x18\x04 \x01(\x0c\"\x1e\n\tImageType\x12\x08\n\x04MONO\x10\x00\x12\x07\n\x03RGB\x10\x01\"{\n\x12setCalibrationStep\"e\n\x0f\x43\x61librationStep\x12\t\n\x05\x42OARD\x10\x00\x12\x13\n\x0fPROJECTOR_FOCUS\x10\x01\x12\x10\n\x0c\x43\x41MERA_FOCUS\x10\x02\x12\x13\n\x0f\x43\x41MERA_EXPOSURE\x10\x03\x12\x0b\n\x07\x43OMPUTE\x10\x04\x62\x06proto3')
+  serialized_pb=_b('\n\x14ultiscantastic.proto\x12\x0bScannerBuff\"F\n\x15PointCloudWithNormals\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x10\n\x08vertices\x18\x02 \x01(\x0c\x12\x0f\n\x07normals\x18\x03 \x01(\x0c\"8\n\x18PointCloudWithoutNormals\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x10\n\x08vertices\x18\x02 \x01(\x0c\"1\n\x15PointCloudPointNormal\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\x0c\"2\n\x0eProgressUpdate\x12\x10\n\x08objectId\x18\x01 \x01(\x05\x12\x0e\n\x06\x61mount\x18\x02 \x01(\x05\"F\n\x04Mesh\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x10\n\x08vertices\x18\x02 \x01(\x0c\x12\x0f\n\x07normals\x18\x03 \x01(\x0c\x12\x0f\n\x07indices\x18\x04 \x01(\x0c\"y\n\x10StartCalibration\x12;\n\x04type\x18\x01 \x01(\x0e\x32-.ScannerBuff.StartCalibration.CalibrationType\"(\n\x0f\x43\x61librationType\x12\n\n\x06\x43ORNER\x10\x00\x12\t\n\x05\x42OARD\x10\x01\"[\n\tStartScan\x12-\n\x04type\x18\x01 \x01(\x0e\x32\x1f.ScannerBuff.StartScan.ScanType\"\x1f\n\x08ScanType\x12\x08\n\x04GREY\x10\x00\x12\t\n\x05PHASE\x10\x01\"\x80\x01\n\x05Image\x12*\n\x04type\x18\x01 \x01(\x0e\x32\x1c.ScannerBuff.Image.ImageType\x12\r\n\x05width\x18\x02 \x01(\x05\x12\x0e\n\x06height\x18\x03 \x01(\x05\x12\x0c\n\x04\x64\x61ta\x18\x04 \x01(\x0c\"\x1e\n\tImageType\x12\x08\n\x04MONO\x10\x00\x12\x07\n\x03RGB\x10\x01\"\xba\x01\n\x12setCalibrationStep\x12=\n\x04step\x18\x01 \x01(\x0e\x32/.ScannerBuff.setCalibrationStep.CalibrationStep\"e\n\x0f\x43\x61librationStep\x12\t\n\x05\x42OARD\x10\x00\x12\x13\n\x0fPROJECTOR_FOCUS\x10\x01\x12\x10\n\x0c\x43\x41MERA_FOCUS\x10\x02\x12\x13\n\x0f\x43\x41MERA_EXPOSURE\x10\x03\x12\x0b\n\x07\x43OMPUTE\x10\x04\"\xa5\x01\n\x12\x43\x61librationProblem\x12\x35\n\x04type\x18\x01 \x01(\x0e\x32\'.ScannerBuff.CalibrationProblem.Problem\"X\n\x07Problem\x12\x14\n\x10OBJECT_NOT_FOUND\x10\x00\x12\x16\n\x12PLATFORM_NOT_FOUND\x10\x01\x12\r\n\tNO_CAMERA\x10\x02\x12\x10\n\x0cNO_PROJECTOR\x10\x03\x62\x06proto3')
 )
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -119,10 +119,40 @@ _SETCALIBRATIONSTEP_CALIBRATIONSTEP = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=711,
-  serialized_end=812,
+  serialized_start=775,
+  serialized_end=876,
 )
 _sym_db.RegisterEnumDescriptor(_SETCALIBRATIONSTEP_CALIBRATIONSTEP)
+
+_CALIBRATIONPROBLEM_PROBLEM = _descriptor.EnumDescriptor(
+  name='Problem',
+  full_name='ScannerBuff.CalibrationProblem.Problem',
+  filename=None,
+  file=DESCRIPTOR,
+  values=[
+    _descriptor.EnumValueDescriptor(
+      name='OBJECT_NOT_FOUND', index=0, number=0,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='PLATFORM_NOT_FOUND', index=1, number=1,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='NO_CAMERA', index=2, number=2,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='NO_PROJECTOR', index=3, number=3,
+      options=None,
+      type=None),
+  ],
+  containing_type=None,
+  options=None,
+  serialized_start=956,
+  serialized_end=1044,
+)
+_sym_db.RegisterEnumDescriptor(_CALIBRATIONPROBLEM_PROBLEM)
 
 
 _POINTCLOUDWITHNORMALS = _descriptor.Descriptor(
@@ -452,6 +482,13 @@ _SETCALIBRATIONSTEP = _descriptor.Descriptor(
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
+    _descriptor.FieldDescriptor(
+      name='step', full_name='ScannerBuff.setCalibrationStep.step', index=0,
+      number=1, type=14, cpp_type=8, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
@@ -464,8 +501,39 @@ _SETCALIBRATIONSTEP = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=689,
-  serialized_end=812,
+  serialized_start=690,
+  serialized_end=876,
+)
+
+
+_CALIBRATIONPROBLEM = _descriptor.Descriptor(
+  name='CalibrationProblem',
+  full_name='ScannerBuff.CalibrationProblem',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='type', full_name='ScannerBuff.CalibrationProblem.type', index=0,
+      number=1, type=14, cpp_type=8, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+    _CALIBRATIONPROBLEM_PROBLEM,
+  ],
+  options=None,
+  is_extendable=False,
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=879,
+  serialized_end=1044,
 )
 
 _STARTCALIBRATION.fields_by_name['type'].enum_type = _STARTCALIBRATION_CALIBRATIONTYPE
@@ -474,7 +542,10 @@ _STARTSCAN.fields_by_name['type'].enum_type = _STARTSCAN_SCANTYPE
 _STARTSCAN_SCANTYPE.containing_type = _STARTSCAN
 _IMAGE.fields_by_name['type'].enum_type = _IMAGE_IMAGETYPE
 _IMAGE_IMAGETYPE.containing_type = _IMAGE
+_SETCALIBRATIONSTEP.fields_by_name['step'].enum_type = _SETCALIBRATIONSTEP_CALIBRATIONSTEP
 _SETCALIBRATIONSTEP_CALIBRATIONSTEP.containing_type = _SETCALIBRATIONSTEP
+_CALIBRATIONPROBLEM.fields_by_name['type'].enum_type = _CALIBRATIONPROBLEM_PROBLEM
+_CALIBRATIONPROBLEM_PROBLEM.containing_type = _CALIBRATIONPROBLEM
 DESCRIPTOR.message_types_by_name['PointCloudWithNormals'] = _POINTCLOUDWITHNORMALS
 DESCRIPTOR.message_types_by_name['PointCloudWithoutNormals'] = _POINTCLOUDWITHOUTNORMALS
 DESCRIPTOR.message_types_by_name['PointCloudPointNormal'] = _POINTCLOUDPOINTNORMAL
@@ -484,6 +555,7 @@ DESCRIPTOR.message_types_by_name['StartCalibration'] = _STARTCALIBRATION
 DESCRIPTOR.message_types_by_name['StartScan'] = _STARTSCAN
 DESCRIPTOR.message_types_by_name['Image'] = _IMAGE
 DESCRIPTOR.message_types_by_name['setCalibrationStep'] = _SETCALIBRATIONSTEP
+DESCRIPTOR.message_types_by_name['CalibrationProblem'] = _CALIBRATIONPROBLEM
 
 PointCloudWithNormals = _reflection.GeneratedProtocolMessageType('PointCloudWithNormals', (_message.Message,), dict(
   DESCRIPTOR = _POINTCLOUDWITHNORMALS,
@@ -547,6 +619,13 @@ setCalibrationStep = _reflection.GeneratedProtocolMessageType('setCalibrationSte
   # @@protoc_insertion_point(class_scope:ScannerBuff.setCalibrationStep)
   ))
 _sym_db.RegisterMessage(setCalibrationStep)
+
+CalibrationProblem = _reflection.GeneratedProtocolMessageType('CalibrationProblem', (_message.Message,), dict(
+  DESCRIPTOR = _CALIBRATIONPROBLEM,
+  __module__ = 'ultiscantastic_pb2'
+  # @@protoc_insertion_point(class_scope:ScannerBuff.CalibrationProblem)
+  ))
+_sym_db.RegisterMessage(CalibrationProblem)
 
 
 # @@protoc_insertion_point(module_scope)

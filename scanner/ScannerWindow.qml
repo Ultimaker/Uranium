@@ -154,7 +154,8 @@ UM.MainWindow
                         text:"Calibrate"
                         iconSource:UM.Resources.getIcon("default.png")
                         tooltip:"Calibrate"
-                        onClicked: { 
+                        onClicked: 
+                        { 
                             UM.ScannerEngineBackend.calibrate() 
                             calibrationWindow.visible = true
                         }
@@ -163,7 +164,8 @@ UM.MainWindow
                 }
             }
 
-            UM.Panel {
+            UM.Panel 
+            {
                 anchors.top: parent.top
                 anchors.right: parent.right
 
@@ -325,5 +327,7 @@ UM.MainWindow
     CalibrationDialog
     {    
         id: calibrationWindow
+        width: 500
+        height:500
     }
 }

@@ -21,6 +21,7 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         self._message_handlers[ultiscantastic_pb2.PointCloudPointNormal] = self._onPointCloudMessage
         self._message_handlers[ultiscantastic_pb2.ProgressUpdate] = self._onProgressUpdateMessage
         self._message_handlers[ultiscantastic_pb2.Image] = self._onImageMessage
+        self._message_handlers[ultiscantastic_pb2.CalibrationProblem] = self._onCalibrationProblemMessage
         
         
         self._latest_camera_image = QImage(1, 1, QImage.Format_RGB888)
@@ -33,6 +34,12 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         image = QImage(data, w, h, QImage.Format_RGB32)
         image.save("herpaderp.png")'''
     
+    def _onCalibrationProblemMessage(self, message):
+        if message.type == ultiscantastic_pb2.CalibrationProblem.OBJECT_NOT_FOUND:
+            self.calibrationProblemMessage.emit("Object")
+    
+    calibrationProblemMessage = Signal()
+    
     def getLatestCameraImage(self):
         return self._latest_camera_image
     
@@ -44,6 +51,7 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         self._socket.registerMessageType(4, ultiscantastic_pb2.StartCalibration)
         self._socket.registerMessageType(5, ultiscantastic_pb2.Image)
         self._socket.registerMessageType(6, ultiscantastic_pb2.setCalibrationStep)
+        self._socket.registerMessageType(7, ultiscantastic_pb2.CalibrationProblem)
         
     def startScan(self, type = 0):
         message = ultiscantastic_pb2.StartScan()
@@ -92,8 +100,8 @@ class ScannerEngineBackend(Backend, SignalEmitter):
     
     newCameraImage = Signal()
     
-    def _onProgressUpdateMessage(self,message):
-        print("Progress update message " )
+    def _onProgressUpdateMessage(self, message):
+        self.processingProgress.emit(message.amount)
 
     def _addPointCloudWithNormals(self, data):
         app = Application.getInstance()
@@ -104,6 +112,20 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         node.setMeshData(recieved_mesh)
         operation = AddSceneNodeOperation(node,app.getController().getScene().getRoot())
         app.getOperationStack().push(operation)
+    
+    def setCalibrationStep(self, key):
+        message = ultiscantastic_pb2.setCalibrationStep()
+        if key == "board":
+            message.step = ultiscantastic_pb2.setCalibrationStep.BOARD
+        elif key == "projector_focus":
+            message.step = ultiscantastic_pb2.setCalibrationStep.PROJECTOR_FOCUS
+        elif key == "camera_focus":
+            message.step = ultiscantastic_pb2.setCalibrationStep.CAMERA_FOCUS
+        elif key == "camera_exposure":
+            message.step = ultiscantastic_pb2.setCalibrationStep.CAMERA_EXPOSURE
+        elif key == "calibrate":
+            message.step = ultiscantastic_pb2.setCalibrationStep.COMPUTE
+        self._socket.sendMessage(message)
     
     ## Convert byte array using pcl::pointNormal type
     def _convertBytesToVerticeWithNormalsListPCL(self,data):
