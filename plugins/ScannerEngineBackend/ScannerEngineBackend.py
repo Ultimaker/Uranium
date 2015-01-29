@@ -52,6 +52,7 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         self._socket.registerMessageType(5, ultiscantastic_pb2.Image)
         self._socket.registerMessageType(6, ultiscantastic_pb2.setCalibrationStep)
         self._socket.registerMessageType(7, ultiscantastic_pb2.CalibrationProblem)
+        self._socket.registerMessageType(8, ultiscantastic_pb2.PointCloudWithNormals)
         
     def startScan(self, type = 0):
         message = ultiscantastic_pb2.StartScan()
@@ -61,6 +62,14 @@ class ScannerEngineBackend(Backend, SignalEmitter):
             message.type = ultiscantastic_pb2.StartScan.PHASE
         self._socket.sendMessage(message)
     
+    
+    def sendPointcloud(self, mesh_data):
+        message = ultiscantastic_pb2.PointCloudWithNormals()
+        message.vertices = mesh_data.getVerticesAsByteArray()
+        message.normals = mesh_data.getNormalsAsByteArray()
+        message.id = 0
+        self._socket.sendMessage(message)
+        
     def startCalibration(self, type = 0):
         message = ultiscantastic_pb2.StartCalibration()
         if type == 0:
@@ -82,6 +91,7 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         node.setMeshData(recieved_mesh)
         operation = AddSceneNodeOperation(node,app.getController().getScene().getRoot())
         app.getOperationStack().push(operation)
+        self.sendPointcloud(recieved_mesh) #DEBUG STUFFS
         print("Recieved pointcloud")
     
     # Handle image sent by engine    
