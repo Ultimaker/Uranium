@@ -123,12 +123,16 @@ Panel
                         return "SettingTextField.qml"
                     case "enum":
                         return "SettingComboBox.qml"
+                    case "boolean":
+                        return "SettingCheckBox.qml"
                 }
             }
 
             onLoaded:
             {
-                item.model = settingsList.model;
+                if(model.type == "enum") {
+                    item.model = settingsList.model;
+                }
                 item.key = model.key
                 item.index = parseInt(index);
             }

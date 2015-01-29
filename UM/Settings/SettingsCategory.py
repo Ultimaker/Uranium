@@ -17,11 +17,11 @@ class SettingsCategory(object):
             self._label = data["label"]
         if "visible" in data:
             self._visible = data["visible"]
-        if "Settings" in data:
-            for setting in data["Settings"]:
-                if "key" in setting and "default" in setting and "type" in setting:
-                    temp_setting = Setting(setting["key"],setting["default"],setting["type"])
-                    temp_setting.fillByDict(setting)
+        if "settings" in data:
+            for key, value in data["settings"].items():
+                if "default" in value and "type" in value:
+                    temp_setting = Setting(key, value["default"], value["type"])
+                    temp_setting.fillByDict(value)
                     temp_setting.setCategory(self)
                     temp_setting.setParent(self)
                     self._settings.append(temp_setting)

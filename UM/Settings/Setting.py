@@ -28,9 +28,9 @@ class Setting(SignalEmitter):
         self._active_if_setting = None
         self._active_if_value = None
         self._options = []
-    
+
     valueChanged = Signal()
-    
+
     ##  Triggered when all settings are loaded and the setting has a conditional param
     def activeIfHandler(self):
         setting = QCoreApplication.instance().getMachineSettings().getSettingByKey(self._active_if_setting)
@@ -38,11 +38,11 @@ class Setting(SignalEmitter):
             setting.valueChanged.connect(self.conditionalActiveHandler)
             # Check current value and update active status. (It can happen that the default value is that it's not active)
             self.setActive(str(QCoreApplication.instance().getMachineSettings().getSettingByKey(self._active_if_setting).getValue()) == str(self._active_if_value))
-        
+
     #   Triggered when the setting it's dependant on changes it's value
     def conditionalActiveHandler(self):
         self.setActive(str(QCoreApplication.instance().getMachineSettings().getSettingByKey(self._active_if_setting).getValue()) == str(self._active_if_value))
-    
+
     def isActive(self):
         if self._parent != None:
             if self._parent.isActive() == True:
@@ -50,7 +50,7 @@ class Setting(SignalEmitter):
         else:
             return self._active
         return False    
-    
+
     def setActive(self, active):
         if self._active != active: 
             self._active = active
@@ -58,7 +58,7 @@ class Setting(SignalEmitter):
                 #print("child setActive ", child._key)
                 #child.setActive(True)
             self.activeChanged.emit(self._key)
-    
+
     activeChanged = Signal()
 
     ##  Bind new validator to object based on it's current type
@@ -67,23 +67,20 @@ class Setting(SignalEmitter):
             FloatValidator(self) # Validator sets itself as validator to this setting
         elif self._type == 'int':
             IntValidator(self)
-    
+
     ##  Get the depth of this setting (how many steps is it 'away' from its category)
     def getDepth(self):
         return self._parent.getDepth() + 1
-    
+
     ##  Set values of the setting by providing it with a dict object (as decoded by JSON parser)
     #   \param data Decoded JSON dict
     def fillByDict(self, data):
-        if "key" in data:
-            self._key = data["key"]
-        
         if "default" in data:
             self._default_value = str(data["default"])
-        
+
         if "type" in data:
             self._type = data["type"]
-            
+
         self.bindValidator()
         if "label" in data:
             self.setLabel(data["label"])
@@ -103,7 +100,7 @@ class Setting(SignalEmitter):
             max_value_warning = data["max_value_warning"]
         if  self.getValidator() is not None: #Strings don't have validators as of yet
             self.getValidator().setRange(min_value,max_value,min_value_warning,max_value_warning)
-        
+
         if "active_if" in data:
             if "setting" in data["active_if"] and "value" in data["active_if"]:
                 self._active_if_setting = data["active_if"]["setting"]
@@ -111,51 +108,54 @@ class Setting(SignalEmitter):
                 self._machine_settings = QCoreApplication.instance().getMachineSettings().settingsLoaded.connect(self.activeIfHandler)
         if "options" in data:
             self._options = data["options"]
-    
+
         if "children" in data:
-            for setting in data["children"]:
-                temp_setting = Setting()
-                temp_setting.setParent(self)
-                temp_setting.fillByDict(setting)
-                self._children.append(temp_setting)
-            
+            for key, value in data["children"].items():
+                setting = self.getSettingByKey(key)
+                if not setting:
+                    setting = Setting(key)
+                    setting.setParent(self)
+                    self._children.append(setting)
+
+                setting.fillByDict(value)
+
     ##  Return the values this setting can have (needs to be set if this is setting is an enum!)
     def getOptions(self):
         return self._options
-    
+
     ##  Set the validator of the Setting
     #   \param validator Validator
     def setValidator(self, validator):
         self._validator = validator
-    
+
     ##  Get the validator
     #   \returns Validator
     def getValidator(self):
         return self._validator
-    
+
     ##  Get the category of this setting.
     #   \returns SettingCategory
     def getCategory(self):
         return self._category
-    
+
     ##  Set the category
     #   \params category SettingCategory
     def setCategory(self, category):
         self._category = category
         for child in self._children:
             child.setCategory(category)
-    
+
     ##  Set the parent of this setting. Parents can override the value of the setting if the child setting is not visible.
     #   mostly used for giving a 'global' setting (such as speed), with children being travel speed, infill speed, etc.
     #   \param setting Setting
     def setParent(self, setting):
         self._parent = setting
-    
+
     ##  Get the parent.
     #   \returns Setting
     def getParent(self):
         return self._parent
-    
+
     ##  Add a child to this setting. See setParent for more info.
     #   \param setting Setting
     def addChild(self, setting):
@@ -172,18 +172,18 @@ class Setting(SignalEmitter):
             if ret is not None:
                 return ret
         return None
-    
+
     ##  Set the visibility of this setting. See setParent for more info.
     #   \param visible Bool
     def setVisible(self, visible):
         self._visible = visible
-    
+
     ##  Set the default value of the setting.
     #   \param value
     def setDefaultValue(self, value):
         self._default_value = value
         return self
-   
+
     ##  get the default value of the setting.
     #   \returns default_value
     def getDefaultValue(self):
@@ -210,7 +210,7 @@ class Setting(SignalEmitter):
             if not child.isVisible() and not child.checkAllChildrenVisible():
                 return False
         return True
-    
+
     ##  Set the range of the setting. The validator will give errors or warnings if these are met.
     #   See Validator for more info
     def setRange(self, min_value = None, max_value = None, min_value_warning = None, max_value_warning = None):
@@ -223,7 +223,7 @@ class Setting(SignalEmitter):
         if self._label is None:
             return self._key # Return key so it will always have some sort of display name
         return self._label
-    
+
     ##  Set the label (display name) of setting.
     #   \param label 
     def setLabel(self, label):
@@ -246,12 +246,12 @@ class Setting(SignalEmitter):
     # \returns type
     def getType(self):
         return self._type
-    
+
     ##  Get the effective value of the setting. This can be 'overriden' by a parent function if this function is invisible.
     #   \returns value
     def getValue(self):
         if not self._visible:
-            if self._parent is not None:
+            if self._parent is not None and type(self._parent) is Setting:
                 self._value = self._parent.getValue()
             else:
                 return self._default_value
@@ -264,9 +264,8 @@ class Setting(SignalEmitter):
     def setValue(self, value):
         if self._value != value:
             self._value = value
-            self.valueChanged.emit()
-    
-    
+            self.valueChanged.emit(self)
+
     ##  Validate the value of this setting. 
     #   \returns ResultCodes.succes if there is no validator or if validation is succesfull. Returns warning or error code otherwise.
     def validate(self):

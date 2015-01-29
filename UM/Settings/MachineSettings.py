@@ -2,6 +2,7 @@ import traceback, sys
 import json
 import configparser
 import os.path
+import collections
 
 from UM.Settings.SettingsCategory import SettingsCategory
 from UM.Settings.Setting import Setting
@@ -13,32 +14,50 @@ class MachineSettings(SignalEmitter):
     def __init__(self):
         self._categories = []
         self._platformMesh = None
+        self._name = "Unknown Machine",
+        self._icon = "unknown.png",
         self._machine_settings = []   ## Settings that don't have a category are 'fixed' (eg; they can not be changed by the user, unless they change the json)
-    
+
     ##  Load settings from JSON file. Used to load tree structure & default values etc from file.
-    #   /param file_name String 
+    #   /param file_name String
     def loadSettingsFromFile(self, file_name):
-        json_data = open(file_name)
-        data = json.load(json_data)
-        json_data.close()
+        with open(file_name) as f:
+            data = json.load(f, object_pairs_hook=collections.OrderedDict)
 
         if "platform" in data:
             self._platformMesh = data["platform"]
+
+        if "name" in data:
+            self._name = data["name"]
+
+        if "icon" in data:
+            self._icon = data["icon"]
+
+        if "inherits" in data:
+            inherits_from = MachineSettings()
+            inherits_from.loadSettingsFromFile(os.path.dirname(file_name) + '/' + data['inherits'])
+            self._machine_settings = inherits_from._machine_settings
+            self._categories = inherits_from._categories
+
         if "machine_settings" in data:
-            for setting_dict in data["machine_settings"]:
-                temp_setting = Setting(setting_dict["key"])
-                temp_setting.fillByDict(setting_dict)
-                self.addSetting(temp_setting)
-        
-        if "Categories" in data:
-            for category in data["Categories"]:
-                if "key" in category:
-                    temp_category = SettingsCategory(category["key"])
-                    temp_category.fillByDict(category)
-                    self.addSettingsCategory(temp_category)
+            for key, value in data["machine_settings"].items():
+                setting = self.getSettingByKey(key)
+                if not setting:
+                    setting = Setting(key)
+                    self.addSetting(setting)
+                setting.fillByDict(value)
+
+        if "categories" in data:
+            for key, value in data["categories"].items():
+                category = self.getSettingsCategory(key)
+                if not category:
+                    category = SettingsCategory(key)
+                    self.addSettingsCategory(category)
+                category.fillByDict(value)
+
         self.settingsLoaded.emit() #Emit signal that all settings are loaded (some setting stuff can only be done when all settings are loaded (eg; the conditional stuff)
     settingsLoaded = Signal()
-    
+
     ##  Load values of settings from file. 
     def loadValuesFromFile(self, file_name):
         config = configparser.ConfigParser()
@@ -50,7 +69,7 @@ class MachineSettings(SignalEmitter):
 
                 if setting is not None:
                     setting.setValue(section[key])
-    
+
     ##  Save setting values to file
     def saveValuesToFile(self, file_name):
         config = configparser.ConfigParser()    
@@ -64,11 +83,11 @@ class MachineSettings(SignalEmitter):
 
         with open(file_name, 'w') as f:
             config.write(f)
-        
+
     ##  Add a category of settings
     def addSettingsCategory(self, category):
         self._categories.append(category)
-    
+
     ##  Get setting category by key
     #   \param key Category key to get.
     #   \return category or None if key was not found.
@@ -77,12 +96,12 @@ class MachineSettings(SignalEmitter):
             if category.getKey() == key:
                 return category
         return None
-    
+
     ##  Get all categories.
     #   \returns list of categories
     def getAllCategories(self):
         return self._categories
-    
+
     ##  Get all settings of this machine
     #   \return list of settings
     def getAllSettings(self):
@@ -90,7 +109,7 @@ class MachineSettings(SignalEmitter):
         for category in self._categories:
             all_settings.extend(category.getAllSettings())
         return all_settings
-    
+
     ##  Get setting by key.
     #   \param key Key to select setting by (string)
     #   \return Setting or none if no setting was found.
@@ -104,11 +123,12 @@ class MachineSettings(SignalEmitter):
             if setting is not None:
                 return setting
         return None #No setting found
-   
+
     ##  Add (machine) setting to machine.
     def addSetting(self, setting):
         self._machine_settings.append(setting)
-    
+        setting.valueChanged.connect(self.settingChanged)
+
     ##  Set the value of a setting by key.
     #   \param key Key of setting to change.
     #   \param value value to set.
@@ -116,7 +136,7 @@ class MachineSettings(SignalEmitter):
         setting = self.getSettingByKey(key)
         if setting is not None:
             setting.setValue(value)
-   
+
     ##  Get the value of setting by key.
     #   \param key Key of the setting to get value from
     #   \return value (or none)
@@ -126,8 +146,18 @@ class MachineSettings(SignalEmitter):
             return setting.getValue()
         Logger.log('e', "Could not find setting %s, unable to read the value" % (data_id))
         return None
-    
+
+    settingChanged = Signal()
+
     ##  Get the machine mesh (in most cases platform)
     #   Todo: Might need to rename this to get machine mesh?
     def getPlatformMesh(self):
         return self._platformMesh
+
+    ##  Return the machine name.
+    def getName(self):
+        return self._name
+
+    ##  Returns the machine's icon.
+    def getIcon(self):
+        return self._icon
