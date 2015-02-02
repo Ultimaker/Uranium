@@ -23,7 +23,7 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         self._message_handlers[ultiscantastic_pb2.Image] = self._onImageMessage
         self._message_handlers[ultiscantastic_pb2.CalibrationProblem] = self._onCalibrationProblemMessage
         
-        
+        self._do_once = False
         self._latest_camera_image = QImage(1, 1, QImage.Format_RGB888)
     
     def _onCalibrationProblemMessage(self, message):
@@ -46,6 +46,8 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         self._socket.registerMessageType(7, ultiscantastic_pb2.CalibrationProblem)
         self._socket.registerMessageType(8, ultiscantastic_pb2.PointCloudWithNormals)
         self._socket.registerMessageType(9, ultiscantastic_pb2.RecalculateNormal)
+        self._socket.registerMessageType(10, ultiscantastic_pb2.PoissonModelCreation)
+        self._socket.registerMessageType(11, ultiscantastic_pb2.StatisticalOutlierRemoval)
         
     def startScan(self, type = 0):
         message = ultiscantastic_pb2.StartScan()
@@ -55,35 +57,54 @@ class ScannerEngineBackend(Backend, SignalEmitter):
             message.type = ultiscantastic_pb2.StartScan.PHASE
         self._socket.sendMessage(message)
     
+    def removeOutliers(self, mesh_data):
+        message = ultiscantastic_pb2.StatisticalOutlierRemoval()
+        message.cloud.id = 0
+        message.cloud.vertices = mesh_data.getVerticesAsByteArray()
+        message.cloud.normals = mesh_data.getNormalsAsByteArray()
+        message.number_of_neighbours = 10
+        message.cutoff_deviation = 0.5
+        self._socket.sendMessage(message)
     
     def sendPointcloud(self, mesh_data):
         message = ultiscantastic_pb2.PointCloudWithNormals()
         message.vertices = mesh_data.getVerticesAsByteArray()
         message.normals = mesh_data.getNormalsAsByteArray()
-        message.view_point.x = 0
-        message.view_point.y = 0
-        message.view_point.z = 0
         message.id = 0
         self._socket.sendMessage(message)
     
     def recalculateNormals(self, mesh_data):
         print("Sending recalculate normals message")
         message = ultiscantastic_pb2.RecalculateNormal()
-        #cloud_message = ultiscantastic_pb2.PointCloudWithNormals()
-        #cloud_message.vertices = mesh_data.getVerticesAsByteArray()
-        #cloud_message.normals = mesh_data.getNormalsAsByteArray()
-        #cloud_message.id = 0
         message.cloud.vertices = mesh_data.getVerticesAsByteArray()
         message.cloud.normals = mesh_data.getNormalsAsByteArray()
         message.cloud.id = 0
-        message.cloud.view_point.x = 0
-        message.cloud.view_point.y = 0
-        message.cloud.view_point.z = 0
+        message.view_point.x = 0
+        message.view_point.y = 0
+        message.view_point.z = 0
         message.radius = 2.5
         message.id = 1
-        #message.id = 0
-        #message.number_of_neighbours = 1
         self._socket.sendMessage(message)
+    
+    def poissonModelCreation(self, clouds):
+        message = ultiscantastic_pb2.PoissonModelCreation()
+        message.depth = 8
+        message.num_samples_per_node = 1
+        message.iso_divide = 8;
+        
+        for cloud in clouds:
+            cloud_message = ultiscantastic_pb2.PointCloudWithNormals()
+            cloud_message.vertices = cloud.getVerticesAsByteArray()
+            cloud_message.normals = cloud.getNormalsAsByteArray()
+            cloud_message.id = 0
+            cloud_message.view_point.x = 0
+            cloud_message.view_point.y = 0
+            cloud_message.view_point.z = 0
+            message.clouds.extend([cloud_message])
+        
+        self._socket.sendMessage(message)
+    
+    
     
     def startCalibration(self, type = 0):
         message = ultiscantastic_pb2.StartCalibration()
@@ -108,7 +129,10 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         app.getOperationStack().push(operation)
         print("Recieved pointcloud")
         
-        self.recalculateNormals(recieved_mesh) #DEBUG STUFFS
+        if not self._do_once:
+            self._do_once = True
+        #self.recalculateNormals(recieved_mesh) #DEBUG STUFFS
+            self.removeOutliers(recieved_mesh)
         
     
     # Handle image sent by engine    
