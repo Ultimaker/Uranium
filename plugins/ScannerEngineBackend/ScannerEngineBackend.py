@@ -25,14 +25,6 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         
         
         self._latest_camera_image = QImage(1, 1, QImage.Format_RGB888)
-        '''data = b'' 
-        data += bytes( [255] )
-        data += bytes( [0] )
-        data += bytes( [255] )
-        w = 1
-        h = 1
-        image = QImage(data, w, h, QImage.Format_RGB32)
-        image.save("herpaderp.png")'''
     
     def _onCalibrationProblemMessage(self, message):
         if message.type == ultiscantastic_pb2.CalibrationProblem.OBJECT_NOT_FOUND:
@@ -53,6 +45,7 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         self._socket.registerMessageType(6, ultiscantastic_pb2.setCalibrationStep)
         self._socket.registerMessageType(7, ultiscantastic_pb2.CalibrationProblem)
         self._socket.registerMessageType(8, ultiscantastic_pb2.PointCloudWithNormals)
+        self._socket.registerMessageType(9, ultiscantastic_pb2.RecalculateNormal)
         
     def startScan(self, type = 0):
         message = ultiscantastic_pb2.StartScan()
@@ -67,9 +60,31 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         message = ultiscantastic_pb2.PointCloudWithNormals()
         message.vertices = mesh_data.getVerticesAsByteArray()
         message.normals = mesh_data.getNormalsAsByteArray()
+        message.view_point.x = 0
+        message.view_point.y = 0
+        message.view_point.z = 0
         message.id = 0
         self._socket.sendMessage(message)
-        
+    
+    def recalculateNormals(self, mesh_data):
+        print("Sending recalculate normals message")
+        message = ultiscantastic_pb2.RecalculateNormal()
+        #cloud_message = ultiscantastic_pb2.PointCloudWithNormals()
+        #cloud_message.vertices = mesh_data.getVerticesAsByteArray()
+        #cloud_message.normals = mesh_data.getNormalsAsByteArray()
+        #cloud_message.id = 0
+        message.cloud.vertices = mesh_data.getVerticesAsByteArray()
+        message.cloud.normals = mesh_data.getNormalsAsByteArray()
+        message.cloud.id = 0
+        message.cloud.view_point.x = 0
+        message.cloud.view_point.y = 0
+        message.cloud.view_point.z = 0
+        message.radius = 2.5
+        message.id = 1
+        #message.id = 0
+        #message.number_of_neighbours = 1
+        self._socket.sendMessage(message)
+    
     def startCalibration(self, type = 0):
         message = ultiscantastic_pb2.StartCalibration()
         if type == 0:
@@ -91,8 +106,10 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         node.setMeshData(recieved_mesh)
         operation = AddSceneNodeOperation(node,app.getController().getScene().getRoot())
         app.getOperationStack().push(operation)
-        self.sendPointcloud(recieved_mesh) #DEBUG STUFFS
         print("Recieved pointcloud")
+        
+        self.recalculateNormals(recieved_mesh) #DEBUG STUFFS
+        
     
     # Handle image sent by engine    
     def _onImageMessage(self, message):
