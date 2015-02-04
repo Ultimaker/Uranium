@@ -130,9 +130,7 @@ Panel
 
             onLoaded:
             {
-                if(model.type == "enum") {
-                    item.model = settingsList.model;
-                }
+                item.model = settingsList.model;
                 item.key = model.key
                 item.index = parseInt(index);
             }

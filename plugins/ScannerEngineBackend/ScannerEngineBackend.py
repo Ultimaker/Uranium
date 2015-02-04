@@ -25,6 +25,13 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         
         self._do_once = False
         self._latest_camera_image = QImage(1, 1, QImage.Format_RGB888)
+        
+        self._settings = Application.getInstance().getMachineSettings()
+        self._settings.settingChanged.connect(self._onSettingChanged)
+    
+    def _onSettingChanged(self, setting):
+        print("setting changed ", setting.getKey())
+        self.sendSetting(setting)
     
     def _onCalibrationProblemMessage(self, message):
         if message.type == ultiscantastic_pb2.CalibrationProblem.OBJECT_NOT_FOUND:
@@ -48,6 +55,7 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         self._socket.registerMessageType(9, ultiscantastic_pb2.RecalculateNormal)
         self._socket.registerMessageType(10, ultiscantastic_pb2.PoissonModelCreation)
         self._socket.registerMessageType(11, ultiscantastic_pb2.StatisticalOutlierRemoval)
+        self._socket.registerMessageType(12, ultiscantastic_pb2.Setting)
         
     def startScan(self, type = 0):
         message = ultiscantastic_pb2.StartScan()
@@ -64,6 +72,21 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         message.cloud.normals = mesh_data.getNormalsAsByteArray()
         message.number_of_neighbours = 10
         message.cutoff_deviation = 0.5
+        self._socket.sendMessage(message)
+        
+    def sendSetting(self, setting):
+        message = ultiscantastic_pb2.Setting()
+        message.key = setting.getKey()
+        message.value = str(setting.getValue())
+        type = setting.getType()
+        if type == 'int':
+            message.type = ultiscantastic_pb2.Setting.INT
+        elif type == 'enum':
+            message.type = ultiscantastic_pb2.Setting.STRING
+        elif type == 'string':
+            message.type = ultiscantastic_pb2.Setting.STRING
+        elif type == 'float':
+            message.type = ultiscantastic_pb2.Setting.FLOAT
         self._socket.sendMessage(message)
     
     def sendPointcloud(self, mesh_data):
@@ -131,7 +154,7 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         
         if not self._do_once:
             self._do_once = True
-        #self.recalculateNormals(recieved_mesh) #DEBUG STUFFS
+            self.recalculateNormals(recieved_mesh) #DEBUG STUFFS
             self.removeOutliers(recieved_mesh)
         
     
