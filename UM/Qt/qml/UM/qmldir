@@ -12,3 +12,6 @@ ApplicationMenu 1.0 ApplicationMenu.qml
 SettingsPanel 1.0 Settings/SettingsPanel.qml
 PreferencesDialog 1.0 Preferences/PreferencesDialog.qml
 MeshListPanel 1.0 MeshListPanel.qml
+Toolbar 1.0 Toolbar.qml
+SettingsView 1.0 Settings/SettingsView.qml
+RecolorImage 1.0 RecolorImage.qml
