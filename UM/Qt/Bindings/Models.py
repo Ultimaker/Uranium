@@ -7,6 +7,8 @@ from . import JobsModel
 from . import MeshListModel
 from . import PluginsModel
 from . import ExtentionModel
+from . import MachinesModel
+from . import DirectoryListModel
 
 ##  This class is a workaround for a bug in PyQt.
 #   For some reason, a QAbstractItemModel subclass instantiated from QML
@@ -22,6 +24,8 @@ class Models(QObject):
         self._mesh_list_model = None
         self._plugins_model = None
         self._extention_model = None
+        self._machines_model = None
+        self._directory_list_model = None
 
     @pyqtProperty(ViewModel.ViewModel, constant = True)
     def viewModel(self):
@@ -67,3 +71,15 @@ class Models(QObject):
         if not self._plugins_model:
             self._plugins_model = PluginsModel.PluginsModel()
         return self._plugins_model
+
+    @pyqtProperty(MachinesModel.MachinesModel, constant = True)
+    def machinesModel(self):
+        if not self._machines_model:
+            self._machines_model = MachinesModel.MachinesModel()
+        return self._machines_model
+
+    @pyqtProperty(DirectoryListModel.DirectoryListModel, constant = True)
+    def directoryListModel(self):
+        if not self._directory_list_model:
+            self._directory_list_model = DirectoryListModel.DirectoryListModel()
+        return self._directory_list_model
