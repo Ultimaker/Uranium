@@ -1,13 +1,11 @@
 from . import SelectionTool
 
-toolName = 'SelectionTool'
-
 def getMetaData():
     return {
-        'name': toolName,
+        'name': 'Selection Tool',
         'type': 'Tool',
         'visible': False
     }
 
 def register(app):
-    app.getController().addTool(toolName, SelectionTool.SelectionTool(toolName))
+    app.getController().addTool('SelectionTool', SelectionTool.SelectionTool('Selection'))

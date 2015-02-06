@@ -1,10 +1,9 @@
 from . import TranslateTool
 
-toolName = 'TranslateTool'
-
 def getMetaData():
     return {
-        'name': toolName,
+        'name': 'Translate Tool',
+        'displayName': 'Translate',
         'type': 'Tool',
         'description': 'Translate Object',
         'printer': {
@@ -13,4 +12,4 @@ def getMetaData():
     }
 
 def register(app):
-    app.getController().addTool(toolName, TranslateTool.TranslateTool(toolName))
+    app.getController().addTool('TranslateTool', TranslateTool.TranslateTool('Translate'))
