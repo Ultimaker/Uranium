@@ -1,14 +1,13 @@
 from . import ScaleTool
 
-toolName = 'ScaleTool'
-
 def getMetaData():
     return {
-        'name': toolName,
+        'name': 'Scale Tool',
+        'displayName': 'Scale',
         'type': 'Tool',
         'description': 'Scale Object',
         'icon': 'scale.png'
     }
 
 def register(app):
-    app.getController().addTool(toolName, ScaleTool.ScaleTool(toolName))
+    app.getController().addTool('ScaleTool', ScaleTool.ScaleTool('ScaleTool'))

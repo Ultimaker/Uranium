@@ -2,6 +2,7 @@ from PyQt5.QtCore import Qt, QCoreApplication, pyqtSlot
 
 from UM.Application import Application
 from UM.Qt.ListModel import ListModel
+from UM.Logger import Logger
 
 class PluginsModel(ListModel):
     NameRole = Qt.UserRole + 1
@@ -23,8 +24,17 @@ class PluginsModel(ListModel):
         self.clear() 
         active_plugins = self._plugin_registery.getActivePlugins()
         for plugin in self._plugin_registery.getAllMetaData({}):
-            self.appendItem({"name":plugin["name"],"required":plugin["name"] in self._required_plugins, "enabled":plugin["name"] in active_plugins,"type":plugin["type"]})
-    
+            if not 'name' in plugin:
+                Logger.log('e', 'Plugin is missing a name entry')
+                continue
+
+            self.appendItem({
+                "name": plugin["name"],
+                "required": plugin["name"] in self._required_plugins,
+                "enabled": plugin["name"] in active_plugins,
+                "type": plugin["type"]
+            })
+
     @pyqtSlot(str,bool)
     def setEnabled(self, name, enabled):
         if enabled:
@@ -32,20 +42,21 @@ class PluginsModel(ListModel):
         else:
             self._plugin_registery.removeActivePlugin(name)
         self._update()
-    
+
     @pyqtSlot(str,result=str) 
     def getAboutText(self,name):
         for plugin in self._plugin_registery.getAllMetaData({}):
             if "about" in plugin and plugin["name"] == name:
                 return plugin["about"]
         return "Nope"
+
     @pyqtSlot(str,result=str) 
     def getAuthorText(self,name):
         for plugin in self._plugin_registery.getAllMetaData({}):
             if "author" in plugin and plugin["name"] == name:
                 return plugin["author"]
         return "John Doe"
-    
+
     @pyqtSlot(str,result=str) 
     def getVersionText(self,name):
         for plugin in self._plugin_registery.getAllMetaData({}):

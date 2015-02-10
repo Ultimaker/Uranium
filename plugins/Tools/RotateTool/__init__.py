@@ -1,14 +1,13 @@
 from . import RotateTool
 
-toolName = 'RotateTool'
-
 def getMetaData():
     return {
-        'name': toolName,
+        'name': 'Rotate Tool',
+        'displayName': 'Rotate',
         'type': 'Tool',
         'description': 'Rotate Object',
         'icon': 'rotate.png'
     }
 
 def register(app):
-    app.getController().addTool(toolName, RotateTool.RotateTool(toolName))
+    app.getController().addTool('RotateTool', RotateTool.RotateTool('Rotate'))
