@@ -59,7 +59,16 @@ ButtonStyle
             anchors.left:parent.left;
             anchors.right:parent.right;
             height: 2;
-            color:  down ? "transparent": UM.Theme.toolbarBorderColor;
+            color: down ? "transparent": UM.Theme.toolbarBorderColor;
+        }
+        
+        Rectangle
+        {
+            anchors.top: parent.top;
+            anchors.left:parent.left;
+            anchors.right:parent.right;
+            height: 2;
+            color: down ? UM.Theme.toolbarBorderColor: "transparent";
         }
 
         states: 

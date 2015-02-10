@@ -149,6 +149,22 @@ UM.MainWindow
                     
                 }
             }
+            //Setting / Wizard menu (HARDCODED for wizard stuff)
+            Loader 
+            {
+                
+                anchors.top:toolbar.bottom;
+                anchors.right:parent.right
+                source:switch(UM.ToolbarData.state)
+                {
+                    case 1:
+                        return "WizardSetup1.qml"
+                    case 2:
+                        return "WizardSetup2.qml"
+                    case 3:
+                        return "WizardSetup3.qml"
+                }
+            }
 
 
             /*UM.SettingsPanel 
@@ -298,4 +314,6 @@ UM.MainWindow
         width: 500
         height:500
     }
+    
+    
 }

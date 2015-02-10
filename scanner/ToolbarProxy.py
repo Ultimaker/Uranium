@@ -9,11 +9,9 @@ class ToolbarProxy(QObject):
     
     @pyqtProperty(int,notify=stateChanged)
     def state(self):
-        print("Caught statechanged")
         return self._state
     
     @pyqtSlot(int)
     def setState(self, state):
         self._state = state
-        print("emitting stateChanged")
         self.stateChanged.emit()
