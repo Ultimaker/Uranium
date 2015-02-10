@@ -95,6 +95,17 @@ UM.MainWindow
                     }
                 }
             }
+            
+            Toolbar {
+                id: toolbar;
+
+                anchors {
+                    left: parent.left;
+                    right: parent.right;
+                    top: parent.top;
+                }
+
+            }
 
             UM.MeshListPanel 
             {
@@ -103,32 +114,7 @@ UM.MainWindow
                 anchors.left: parent.left
                 anchors.verticalCenter: parent.verticalCenter
             }
-            
-            
-            UM.Panel 
-            {
-                anchors.top: parent.top
-                anchors.left: parent.left
 
-                contents: RowLayout 
-                {
-                    ToolButton { action: undo_action }
-                    ToolButton { action: redo_action }
-
-                    Item { width: 10; }
-
-                    ToolButton { text: "3D"; onClicked: UM.Scene.setActiveCamera('3d'); }
-                    ToolButton { text: "Left"; onClicked: UM.Scene.setActiveCamera('left'); }
-                    ToolButton { text: "Top"; onClicked: UM.Scene.setActiveCamera('top'); }
-                    ToolButton { text: "Front"; onClicked: UM.Scene.setActiveCamera('front'); }
-                }
-            }
-
-            UM.ToolPanel 
-            {
-                anchors.top: parent.top;
-                anchors.horizontalCenter: parent.horizontalCenter
-            }
             
             UM.Panel 
             {
@@ -164,26 +150,8 @@ UM.MainWindow
                 }
             }
 
-            UM.Panel 
-            {
-                anchors.top: parent.top
-                anchors.right: parent.right
 
-                contents: RowLayout 
-                {
-                    ComboBox 
-                    {
-                        model: UM.Models.viewModel
-
-                        onCurrentIndexChanged: UM.Controller.setActiveView(model.items[currentIndex].text)
-                    }
-
-                    ToolButton { text: "Settings"; onClicked: preferences.visible = true; }
-                    ToolButton { text: "Help"; }
-                }
-            }
-
-            UM.SettingsPanel 
+            /*UM.SettingsPanel 
             {
                 anchors.right: parent.right;
                 anchors.verticalCenter: parent.verticalCenter
@@ -193,7 +161,7 @@ UM.MainWindow
                     preferences.visible = true;
                     preferences.setPage(1);
                 }
-            }
+            }*/
 
             UM.JobList { anchors.left: parent.left; anchors.bottom: parent.bottom; width: parent.width / 10; height: parent.height / 5; }
         }

@@ -5,8 +5,14 @@ from UM.Math.Vector import Vector
 from UM.Scene.Camera import Camera
 from UM.Math.Matrix import Matrix
 from CameraImageProvider import CameraImageProvider
+import ToolbarProxy
+from PyQt5.QtQml import qmlRegisterType, qmlRegisterSingletonType
 
 import os.path
+
+
+def createToolbarProxy(engine, scriptEngine):
+    return ToolbarProxy.ToolbarProxy()
 
 class ScannerApplication(QtApplication):
     def __init__(self):
@@ -15,6 +21,8 @@ class ScannerApplication(QtApplication):
         self.setRequiredPlugins(["ScannerEngineBackend","PLYWriter","PLYReader"])
         self._camera_image_provider = CameraImageProvider()
         self.engineCreatedSignal.connect(self._onEngineCreated)
+        qmlRegisterSingletonType(ToolbarProxy.ToolbarProxy, "UM", 1, 0, "ToolbarData", createToolbarProxy)
+
 
     def _onEngineCreated(self):
         self._engine.addImageProvider("camera",CameraImageProvider())

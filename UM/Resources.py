@@ -36,7 +36,7 @@ class Resources:
         if os.path.isfile(path):
             return path
 
-        raise FileNotFoundError('Could not find resource {0}'.format(os.path.join(*args)))
+        raise FileNotFoundError('Could not find resource: ', *args)
 
 
     ##  Get the path that can be used to write a certain resource file.
