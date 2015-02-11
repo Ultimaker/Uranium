@@ -121,11 +121,35 @@ ButtonStyle
                 anchors
                 {
                     top: parent.bottom
-                    horizontalCenter:parent.horizontalCenter
-                    
+                    horizontalCenter:parent.horizontalCenter  
                 }
                 // Magical code to calculate how many of the circles are filled. 
                 property int filledCircles: (base.state-base.beginState) < 0 ? 0 : base.state - base.beginState > base.numCircles ? base.numCircles: base.state - base.beginState 
+                
+                Repeater {
+                    model: base.numCircles
+                    Rectangle 
+                    {
+                        width: 10;
+                        height: 10;
+                        radius: 5;
+                        color: index < container.filledCircles ? "black":"white";
+                        border.color: "black";
+                    }
+                }
+                
+                /*Repeater 
+                {
+                    model: container.filledCircles; 
+                    Rectangle 
+                    {
+                        width: 10;
+                        height: 10;
+                        radius: 5;
+                        color: "black";
+                        border.color: "black";
+                    }
+                } 
                 Repeater
                 {
                     model: base.numCircles - container.filledCircles; 
@@ -137,21 +161,7 @@ ButtonStyle
                         color: "white";
                         border.color: "black";
                     }
-                }
-                Repeater 
-                {
-                    
-                    model: container.filledCircles; 
-                    Rectangle 
-                    {
-                        width: 10;
-                        height: 10;
-                        radius: 5;
-                        color: "black";
-                        border.color: "black";
-                    }
-                }
-                
+                }*/
             }
         }  
             

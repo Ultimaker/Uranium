@@ -163,6 +163,22 @@ UM.MainWindow
                         return "WizardSetup2.qml"
                     case 3:
                         return "WizardSetup3.qml"
+                    case 4:
+                        return "WizardSetup4.qml"
+                    case 5:
+                        return "WizardSetup5.qml"
+                    case 6:
+                        return "WizardSetup6.qml"
+                    case 7:
+                        return "WizardSetup7.qml"
+                    case 8:
+                        return "WizardSetup8.qml"
+                    case 9:
+                        return "WizardSetup9.qml"
+                    case 10:
+                        return "WizardSetup10.qml"
+                    case 11:
+                        return "WizardSetup11.qml"
                 }
             }
 
