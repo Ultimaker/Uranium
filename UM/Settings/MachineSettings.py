@@ -150,7 +150,6 @@ class MachineSettings(SignalEmitter):
         setting = self.getSettingByKey(key)
         if setting is not None:
             return setting.getValue()
-        Logger.log('e', "Could not find setting %s, unable to read the value" % (data_id))
         return None
 
     settingChanged = Signal()
