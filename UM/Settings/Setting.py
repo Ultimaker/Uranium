@@ -77,7 +77,7 @@ class Setting(SignalEmitter):
     #   \param data Decoded JSON dict
     def fillByDict(self, data):
         if "default" in data:
-            self._default_value = str(data["default"])
+            self._default_value = data["default"]
 
         if "type" in data:
             self._type = data["type"]
