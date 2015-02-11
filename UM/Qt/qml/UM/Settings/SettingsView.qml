@@ -5,6 +5,7 @@ import QtQuick.Window 2.
 import QtQuick.Controls.Styles 1.1
 
 import UM 1.0 as UM
+import ".."
 
 ScrollView
 {
@@ -25,6 +26,8 @@ ScrollView
             height: (model.visibility && !model.collapsed) ? 30 : 0
             Behavior on height { NumberAnimation { } }
 
+            width: ListView.view.width;
+
             source:
             {
                 switch(model.type)
@@ -42,15 +45,18 @@ ScrollView
 
             onLoaded:
             {
+                item.model = ListView.view.model;
                 if(model.type == "enum") {
-                    item.model = settingsList.model;
+                    item.options = model.options;
                 }
                 item.key = model.key
                 item.index = parseInt(index);
             }
 
+            Binding { target: item; property: "name"; value: model.name; }
             Binding { target: item; property: "valid"; value: model.valid; }
             Binding { target: item; property: "value"; value: model.value; }
+            Binding { target: item; property: "unit"; value: model.unit; }
 
             MouseArea
             {
@@ -74,23 +80,18 @@ ScrollView
             style: ButtonStyle
             {
 
-                label: Rectangle
+                label: Item
                 {
-                    Layout.fillWidth: true
-                    color: "transparent"
-                    anchors.centerIn: parent
                     Row
                     {
-                        anchors.centerIn: parent;
-                        width: parent.width;
-                        height: childrenRect.height;
-                        spacing: 4
+                        anchors.fill: parent;
+                        spacing: Theme.defaultMargin;
                         Image
                         {
 
                             source: UM.Resources.getIcon("icon_resolution.png")
                         }
-                        Text
+                        Label
                         {
                             text: section
                             color:"#404040"
@@ -98,13 +99,15 @@ ScrollView
 
                     }
                 }
-                background: Rectangle
+                background: Item
                 {
-                    implicitWidth: 100
-                    implicitHeight: 50
-                    color:"transparent"
+                    implicitWidth: control.width;
+                    implicitHeight: control.height;
                 }
             }
+            width: settingsList.width;
+            height: 40;
+            text: section;
             onClicked: settingsList.model.toggleCollapsedByCategory(section)
         }
     }
