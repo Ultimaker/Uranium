@@ -1,18 +1,28 @@
 {
+    "machine_settings": {
+        "machine_start_gcode": {
+            "default": "G28 ; Home\nG1 Z15.0 F6000 ;move the platform down 15mm\n;Prime the extruder\nG92 E0\nG1 F200 E3\nG92 E0"
+        },
+        "machine_end_gcode": {
+            "default": "M104 S0\nM140 S0\n;Retract the filament\nG92 E1\nG1 E-1 F300\nG28 X0 Y0\nM84"
+        }
+    },
     "categories": {
         "resolution": {
             "label": "Resolution",
             "visible": true,
             "settings": {
                 "layer_height": {
-                    "label": "Layer Height (mm)",
+                    "label": "Layer Height",
+                    "unit": "mm",
                     "type": "float",
                     "default": 0.1,
                     "min_value": 0.06,
                     "max_value": 2.0,
                     "children": {
                         "layer_height_0": {
-                            "label": "Initial Layer Thickness (mm)",
+                            "label": "Initial Layer Thickness",
+                            "unit": "mm",
                             "type": "float",
                             "default": 0.3,
                             "min_value": 0.06,
@@ -22,14 +32,16 @@
                     }
                 },
                 "shell_thickness": {
-                    "label": "Shell Thickness (mm)",
+                    "label": "Shell Thickness",
+                    "unit": "mm",
                     "type": "float",
                     "default": 0.8,
                     "min_value": 0.0,
                     "max_value": 5.0,
                     "children": {
                         "wall_thickness": {
-                            "label": "Wall Thickness (mm)",
+                            "label": "Wall Thickness",
+                            "unit": "mm",
                             "default": 0.8,
                             "min_value": 0.0,
                             "max_value": 5.0,
@@ -46,20 +58,23 @@
                                     "visible": false
                                 },
                                 "wall_line_width": {
-                                    "label": "Wall Line Width (mm)",
+                                    "label": "Wall Line Width",
+                                    "unit": "mm",
                                     "default": 0.4,
                                     "type": "float",
                                     "visible": false,
 
                                     "children": {
                                         "wall_line_width_0": {
-                                            "label": "First Wall Line Width (mm)",
+                                            "label": "First Wall Line Width",
+                                            "unit": "mm",
                                             "default": 0.4,
                                             "type": "float",
                                             "visible": false
                                         },
                                         "wall_line_width_x": {
-                                            "label": "Other Walls Line Width (mm)",
+                                            "label": "Other Walls Line Width",
+                                            "unit": "mm",
                                             "default": 0.4,
                                             "type": "float",
                                             "visible": false
@@ -69,7 +84,8 @@
                             }
                         },
                         "top_bottom_thickness": {
-                            "label": "Bottom/Top Thickness (mm)",
+                            "label": "Bottom/Top Thickness",
+                            "unit": "mm",
                             "default": 0.8,
                             "min_value": 0.0,
                             "max_value": 5.0,
@@ -80,7 +96,8 @@
 
                             "children": {
                                 "top_thickness": {
-                                    "label": "Top Thickness (mm)",
+                                    "label": "Top Thickness",
+                                    "unit": "mm",
                                     "default": 0.8,
                                     "type": "float",
                                     "visible": false,
@@ -95,13 +112,14 @@
                                     }
                                 },
                                 "bottom_thickness": {
-                                    "label": "Bottom Thickness (mm)",
+                                    "label": "Bottom Thickness",
+                                    "unit": "mm",
                                     "default": 0.8,
                                     "type": "float",
                                     "visible": false,
 
                                     "children": {
-                                        "top_layers": {
+                                        "bottom_layers": {
                                             "label": "Bottom Layers",
                                             "default": 4,
                                             "type": "int",
@@ -131,28 +149,32 @@
             "visible": true,
             "settings": {
                 "material_print_temperature": {
-                    "label": "Printing Temperature (°C)",
+                    "label": "Printing Temperature",
+                    "unit": "°C",
                     "type": "float",
                     "default": 220,
                     "min_value": 10,
                     "max_value": 340
                 },
                 "material_bed_temperature": {
-                    "label": "Bed Temperature (°C)",
+                    "label": "Bed Temperature",
+                    "unit": "°C",
                     "type": "float",
                     "default": 70,
                     "min_value": 0,
                     "max_value": 340
                 },
                 "material_diameter": {
-                    "label": "Diameter (mm)",
+                    "label": "Diameter",
+                    "unit": "mm",
                     "type": "float",
                     "default": 2.85,
                     "min_value": 0.4,
                     "max_value": 5.0
                 },
                 "material_flow": {
-                    "label": "Flow (%)",
+                    "label": "Flow",
+                    "unit": "%",
                     "default": 100.0,
                     "type": "float",
                     "min_value": 5.0,
@@ -165,19 +187,22 @@
 
                     "children": {
                         "retraction_speed": {
-                            "label": "Retraction Speed (mm/s)",
+                            "label": "Retraction Speed",
+                            "unit": "mm/s",
                             "type": "float",
                             "default": 40.0,
                             "visible": false
                         },
                         "retraction_amount": {
-                            "label": "Retraction Distance (mm)",
+                            "label": "Retraction Distance",
+                            "unit": "mm",
                             "type": "float",
                             "default": 4.5,
                             "visible": false
                         },
                         "retraction_min_travel": {
-                            "label": "Retraction Minimum Travel (mm)",
+                            "label": "Retraction Minimum Travel",
+                            "unit": "mm",
                             "type": "float",
                             "default": 4.5,
                             "visible": false
@@ -189,13 +214,15 @@
                             "visible": false
                         },
                         "retraction_minimal_extrusion": {
-                            "label": "Minimal Retraction Before Extrusion (mm)",
+                            "label": "Minimal Retraction Before Extrusion",
+                            "unit": "mm",
                             "type": "float",
                             "default": 0.02,
                             "visible": false
                         },
                         "retraction_hop": {
-                            "label": "Z Hop when Retracting (mm)",
+                            "label": "Z Hop when Retracting",
+                            "unit": "mm",
                             "type": "float",
                             "default": 0.0,
                             "visible": false
@@ -204,7 +231,202 @@
                 }
             }
         },
+        "speed": {
+            "label": "Speed",
+            "visible": true,
+            "settings": {
+                "speed_print": {
+                    "label": "Print Speed",
+                    "unit": "mm/s",
+                    "type": "float",
+                    "default": 50.0,
 
+                    "children": {
+                        "speed_infill": {
+                            "label": "Infill Speed",
+                            "unit": "mm/s",
+                            "type": "float",
+                            "default": 50.0,
+                            "visible": false
+                        },
+                        "speed_wall": {
+                            "label": "Shell Speed",
+                            "unit": "mm/s",
+                            "type": "float",
+                            "default": 50.0,
+                            "visible": false,
+
+                            "children": {
+                                "speed_wall_0": {
+                                    "label": "Outer Shell Speed",
+                                    "unit": "mm/s",
+                                    "type": "float",
+                                    "default": 50.0,
+                                    "visible": false
+                                },
+                                "speed_wall_x": {
+                                    "label": "Inner Shell Speed",
+                                    "unit": "mm/s",
+                                    "type": "float",
+                                    "default": 50.0,
+                                    "visible": false
+                                }
+                            }
+                        },
+                        "speed_support": {
+                            "label": "Support Speed",
+                            "unit": "mm/s",
+                            "type": "float",
+                            "default": 50.0,
+                            "visible": false
+                        }
+                    }
+                },
+                "speed_travel": {
+                    "label": "Travel Speed",
+                    "unit": "mm/s",
+                    "type": "float",
+                    "default": 150.0
+                },
+                "speed_layer_0": {
+                    "label": "Bottom Layer Speed",
+                    "unit": "mm/s",
+                    "type": "float",
+                    "default": 15.0,
+                    "visible": false,
+
+                    "children": {
+                        "skirt_speed": {
+                            "label": "Skirt Speed",
+                            "unit": "mm/s",
+                            "type": "float",
+                            "default": 15.0,
+                            "visible": false
+                        }
+                    }
+                },
+                "speed_slowdown_layers": {
+                    "label": "Amount of Slower Layers",
+                    "type": "int",
+                    "default": 4,
+                    "visible": false
+                }
+            }
+        },
+        "infill": {
+            "label": "Infill",
+            "visible": true,
+            "settings": {
+                "fill_sparse_density": {
+                    "label": "Infill Density",
+                    "unit": "%",
+                    "type": "float",
+                    "default": 20.0,
+
+                    "children": {
+                        "fill_pattern": {
+                            "label": "Infill Pattern",
+                            "type": "enum",
+                            "visible": false,
+                            "options": [
+                                "Grid",
+                                "Lines",
+                                "Concentric"
+                            ],
+                            "default": "Grid"
+                        }
+                    }
+                },
+                "fill_overlap": {
+                    "label": "Infill Overlap",
+                    "unit": "%",
+                    "type": "float",
+                    "default": 15.0,
+                    "visible": false
+                },
+                "fill_sparse_thickness": {
+                    "label": "Infill Thickness",
+                    "unit": "mm",
+                    "type": "float",
+                    "default": 0.1,
+                    "visible": false,
+
+                    "children": {
+                        "fill_sparse_combine": {
+                            "label": "Infill Layers",
+                            "type": "int",
+                            "default": 1,
+                            "visible": false
+                        }
+                    }
+                }
+            }
+        },
+        "cooling": {
+            "label": "Fan/Cool",
+            "visible": true,
+            "settings": {
+                "cool_fan_enabled": {
+                    "label": "Enable Cooling Fan",
+                    "type": "boolean",
+                    "default": true,
+
+                    "children": {
+                        "cool_fan_speed": {
+                            "label": "Fan Speed",
+                            "unit": "%",
+                            "type": "float",
+                            "default": 100.0,
+                            "visible": false,
+
+                            "children": {
+                                "cool_fan_speed_min": {
+                                    "label": "Minimum Fan Speed",
+                                    "unit": "%",
+                                    "type": "float",
+                                    "default": 100.0,
+                                    "visible": false
+                                },
+                                "cool_fan_speed_max": {
+                                    "label": "Maximum Fan Speed",
+                                    "unit": "%",
+                                    "type": "float",
+                                    "default": 100.0,
+                                    "visible": false
+                                }
+                            }
+                        }
+                    }
+                },
+                "cool_fan_full_at_height": {
+                    "label": "Fan Full on at Height",
+                    "unit": "mm",
+                    "type": "float",
+                    "default": 0.5,
+                    "visible": false
+                },
+                "cool_min_layer_time": {
+                    "label": "Minimal Layer Time",
+                    "unit": "sec",
+                    "type": "float",
+                    "default": 5.0,
+                    "visible": false
+                },
+                "cool_min_speed": {
+                    "label": "Minimum Speed",
+                    "unit": "mm/s",
+                    "type": "float",
+                    "default": 10.0,
+                    "visible": false
+                },
+                "cool_lift_head": {
+                    "label": "Lift Head",
+                    "type": "boolean",
+                    "default": false,
+                    "visible": false
+                }
+            }
+        },
         "support": {
             "label": "Support Material",
             "visible": true,
@@ -221,27 +443,148 @@
                 }
             }
         },
-        "speed": {
-            "label": "Speed",
-            "visible": true,
-            "settings": { }
-        },
-        "infill": {
-            "label": "Infill",
-            "visible": true,
-            "settings": { }
-        },
         "platform_adhesion": {
             "label": "Skirt/Brim/Raft",
             "visible": true,
             "settings": {
-
+                "adhesion_type": {
+                    "label": "Type",
+                    "type": "enum",
+                    "options": [
+                        "None",
+                        "Brim",
+                        "Raft"
+                    ],
+                    "default": "None"
+                },
+                "skirt_line_count": {
+                    "label": "Skirt Line Count",
+                    "type": "int",
+                    "default": 1,
+                    "active_if": {
+                        "setting": "adhesion_type",
+                        "value": "None"
+                    }
+                },
+                "skirt_gap": {
+                    "label": "Skirt Gap",
+                    "unit": "mm",
+                    "type": "float",
+                    "default": 3.0,
+                    "active_if": {
+                        "setting": "adhesion_type",
+                        "value": "None"
+                    }
+                },
+                "skirt_minimal_length": {
+                    "label": "Skirt Minimum Length",
+                    "unit": "mm",
+                    "type": "float",
+                    "default": 250,
+                    "active_if": {
+                        "setting": "adhesion_type",
+                        "value": "None"
+                    }
+                },
+                "brim_line_count": {
+                    "label": "Brim Line Count",
+                    "type": "int",
+                    "default": 1,
+                    "active_if": {
+                        "setting": "adhesion_type",
+                        "value": "Brim"
+                    }
+                },
+                "raft_margin": {
+                    "label": "Raft Extra Margin",
+                    "unit": "mm",
+                    "type": "float",
+                    "default": 5.0,
+                    "active_if": {
+                        "setting": "adhesion_type",
+                        "value": "Raft"
+                    }
+                },
+                "raft_line_spacing": {
+                    "label": "Raft Line Spacing",
+                    "unit": "mm",
+                    "type": "float",
+                    "default": 5.0,
+                    "active_if": {
+                        "setting": "adhesion_type",
+                        "value": "Raft"
+                    }
+                },
+                "raft_base_thickness": {
+                    "label": "Raft Base Thickness",
+                    "unit": "mm",
+                    "type": "float",
+                    "default": 0.3,
+                    "active_if": {
+                        "setting": "adhesion_type",
+                        "value": "Raft"
+                    }
+                },
+                "raft_base_linewidth": {
+                    "label": "Raft Base Line Width",
+                    "unit": "mm",
+                    "type": "float",
+                    "default": 1.0,
+                    "active_if": {
+                        "setting": "adhesion_type",
+                        "value": "Raft"
+                    }
+                },
+                "raft_base_speed": {
+                    "label": "Raft Base Print Speed",
+                    "unit": "mm/s",
+                    "type": "float",
+                    "default": 15.0,
+                    "active_if": {
+                        "setting": "adhesion_type",
+                        "value": "Raft"
+                    }
+                },
+                "raft_interface_thickness": {
+                    "label": "Raft Interface Thickness",
+                    "unit": "mm",
+                    "type": "float",
+                    "default": 0.27,
+                    "active_if": {
+                        "setting": "adhesion_type",
+                        "value": "Raft"
+                    }
+                },
+                "raft_interface_linewidth": {
+                    "label": "Raft Interface Line Width",
+                    "unit": "mm",
+                    "type": "float",
+                    "default": 0.4,
+                    "active_if": {
+                        "setting": "adhesion_type",
+                        "value": "Raft"
+                    }
+                },
+                "raft_airgap": {
+                    "label": "Raft Air-gap",
+                    "unit": "mm",
+                    "type": "float",
+                    "default": 0.22,
+                    "active_if": {
+                        "setting": "adhesion_type",
+                        "value": "Raft"
+                    }
+                },
+                "raft_surface_layers": {
+                    "label": "Raft Surface Layers",
+                    "type": "int",
+                    "default": 2,
+                    "active_if": {
+                        "setting": "adhesion_type",
+                        "value": "Raft"
+                    }
+                }
             }
-        },
-        "cooling": {
-            "label": "Fan/Cool",
-            "visible": true,
-            "settings": { }
         }
     }
 }
