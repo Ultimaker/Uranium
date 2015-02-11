@@ -24,7 +24,6 @@ Rectangle
         {
             id:placeholder1
             anchors.topMargin:objectsMargin
-            anchors.top: spacer.bottom
             source:"placeholder.png";
         }
         Label

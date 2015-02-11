@@ -46,8 +46,6 @@ Button
                     //right: parent.right;
                 }
             }
-            
-            
         }
     }
 }

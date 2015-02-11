@@ -20,12 +20,11 @@ Rectangle
             id:introText1
             text: "<b>Position calibration board</b> <br> The calibration board needs to be placed in<br> the centre of the camera view. Make sure that <br>sufficient markers are visible. Ensure that<br> ~80% of the image is filled up with the <br>calibration board."
         }
-        Image
+        AnimatedImage
         {
             id:placeholder1
             anchors.topMargin:objectsMargin
-            anchors.top: spacer.bottom
-            source:"placeholder.png";
+            source:"animatedPlaceholder.gif";
         }
         Image
         {

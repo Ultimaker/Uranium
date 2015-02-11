@@ -15,10 +15,12 @@ Rectangle
     {
         anchors.fill: parent;
         anchors.leftMargin:2
-        Label
+        Text
         {
             id:introText
-            text: "<b>Hardware setup</b> <br> Choose a hardware setup. We recommend <br> choosing 'basic setup' if this is your first time <br>using Argus."
+            text: "<b>Hardware setup</b><br>Choose a hardware setup. We recommend choosing 'basic setup' if this is your first time using Argus."
+            wrapMode: Text.Wrap
+            Layout.fillWidth: true
         }
         Rectangle 
         {
