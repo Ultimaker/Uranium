@@ -261,11 +261,18 @@ class Setting(SignalEmitter):
         if not self._visible:
             if self._parent is not None and type(self._parent) is Setting:
                 self._value = self._parent.getValue()
-            else:
-                return self._default_value
+        retval = self._value
         if self._value is None:
-            return self._default_value
-        return self._value
+            retval = self._default_value
+
+        if self._type == 'boolean':
+            retval = bool(retval)
+        elif self._type == 'int':
+            retval = int(retval)
+        elif self._type == 'float':
+            retval = float(retval)
+
+        return retval
 
     ##  Set the value of this setting and emit valueChanged signal
     #   \param value Value to be set.
