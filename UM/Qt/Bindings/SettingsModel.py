@@ -17,6 +17,7 @@ class SettingsModel(ListModel):
     VisibilityRole = Qt.UserRole + 9
     DisabledRole = Qt.UserRole + 10
     OptionsRole = Qt.UserRole + 11
+    UnitRole = Qt.UserRole + 12
     
     def __init__(self, parent = None):
         super().__init__(parent)
@@ -34,6 +35,7 @@ class SettingsModel(ListModel):
         self.addRoleName(self.VisibilityRole,"visibility")
         self.addRoleName(self.DisabledRole,"disabled")
         self.addRoleName(self.OptionsRole,"options")
+        self.addRoleName(self.UnitRole,"unit")
 
     def _updateSettings(self):
         self.clear()
@@ -50,7 +52,8 @@ class SettingsModel(ListModel):
                 "depth": setting.getDepth(),
                 "visibility": (setting.isVisible() and setting.isActive()),
                 "disabled": (setting.checkAllChildrenVisible() or not setting.isActive()),
-                "options": self.createOptionsModel(setting.getOptions())
+                "options": self.createOptionsModel(setting.getOptions()),
+                "unit": setting.getUnit()
             })
             if setting._active_if_setting != None:
                 setting.activeChanged.connect(self.handleActiveChanged)

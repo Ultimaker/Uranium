@@ -28,6 +28,7 @@ class Setting(SignalEmitter):
         self._active_if_setting = None
         self._active_if_value = None
         self._options = []
+        self._unit = ""
 
     valueChanged = Signal()
 
@@ -76,7 +77,7 @@ class Setting(SignalEmitter):
     #   \param data Decoded JSON dict
     def fillByDict(self, data):
         if "default" in data:
-            self._default_value = str(data["default"])
+            self._default_value = data["default"]
 
         if "type" in data:
             self._type = data["type"]
@@ -86,6 +87,10 @@ class Setting(SignalEmitter):
             self.setLabel(data["label"])
         if "visible" in data:
             self.setVisible(data["visible"])
+
+        if 'unit' in data:
+            self._unit = data['unit']
+
         min_value = None
         max_value = None
         min_value_warning = None
@@ -247,17 +252,27 @@ class Setting(SignalEmitter):
     def getType(self):
         return self._type
 
+    def getUnit(self):
+        return self._unit
+
     ##  Get the effective value of the setting. This can be 'overriden' by a parent function if this function is invisible.
     #   \returns value
     def getValue(self):
         if not self._visible:
             if self._parent is not None and type(self._parent) is Setting:
                 self._value = self._parent.getValue()
-            else:
-                return self._default_value
+        retval = self._value
         if self._value is None:
-            return self._default_value
-        return self._value
+            retval = self._default_value
+
+        if self._type == 'boolean':
+            retval = bool(retval)
+        elif self._type == 'int':
+            retval = int(retval)
+        elif self._type == 'float':
+            retval = float(retval)
+
+        return retval
 
     ##  Set the value of this setting and emit valueChanged signal
     #   \param value Value to be set.

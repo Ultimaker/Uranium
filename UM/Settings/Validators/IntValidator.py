@@ -22,7 +22,8 @@ class IntValidator(Validator):
     # \returns message Message providing more detail about warning / error (if any)
     def validate(self):
         try:
-            f = int(eval(self._setting.getValue(), {}, {}))
+            #f = int(eval(self._setting.getValue(), {}, {}))
+            f = self._setting.getValue()
             return self._checkRange(f,self._min_value, self._max_value, self._min_value_warning, self._max_value_warning)
         except (ValueError, SyntaxError, TypeError, NameError):
             return ResultCodes.not_valid_error

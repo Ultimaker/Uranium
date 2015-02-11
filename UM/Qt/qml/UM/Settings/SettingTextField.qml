@@ -3,72 +3,57 @@ import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.1
 
-Rectangle {
-    id: base;
-    
-    property variant model;
-    property int valid;
-    property variant value;
-    property int index;
-    property variant key;
-    width: 180; 
-    color: "transparent"
+import ".." as UM
 
-    /*height: collapsed ? 0 : 40
-    Behavior on height { NumberAnimation { } }
-    
-    opacity: collapsed ? 0 : 1
-    Behavior on opacity { NumberAnimation { } }*/
-    
-    RowLayout 
+SettingItem {
+    id: base;
+
+    control: TextField
     {
-        spacing: 2
-        x: 2
-        
-        Text 
-        { 
-            text: name
-            Layout.preferredWidth: 130
-            Layout.maximumWidth: 150
-        }  
-        
-        TextField
+        anchors.fill: parent;
+        maximumLength: 5;
+
+        text: base.value
+        onEditingFinished: base.model.settingChanged(base.index, base.key, text)
+
+        style: TextFieldStyle
         {
-            Layout.preferredHeight: childrenRect.height
-            Layout.fillWidth: true
-            style: TextFieldStyle 
+            textColor: "black"
+            background: Rectangle
             {
-                textColor: "black"
-                background: Rectangle 
-                {
-                    radius: 3
-                    implicitHeight: 25
-                    border.width: 1
-                    color:  {
-                        switch(base.valid)
-                        {
-                            case 0:
-                                return "red"
-                            case 1:
-                                return "red"
-                            case 2:
-                                return "red"
-                            case 3:
-                                return "yellow"
-                            case 4:
-                                return "yellow"
-                            case 5:
-                                return "green"
-                            
-                            default: 
-                                console.log(base.valid)
-                                return "black" 
-                        }
+                implicitHeight: control.height;
+                implicitWidth: control.width;
+                border.width: 1
+                color:  {
+                    switch(base.valid)
+                    {
+                        case 0:
+                            return "red"
+                        case 1:
+                            return "red"
+                        case 2:
+                            return "red"
+                        case 3:
+                            return "yellow"
+                        case 4:
+                            return "yellow"
+                        case 5:
+                            return "white"
+
+                        default:
+                            console.log(base.valid)
+                            return "black"
                     }
                 }
+
+                Label {
+                    anchors.right: parent.right;
+                    anchors.rightMargin: UM.Theme.defaultMargin
+                    anchors.verticalCenter: parent.verticalCenter;
+                    text: base.unit;
+                    color: "#999";
+                }
             }
-            text: value
-            onEditingFinished: base.model.settingChanged(base.index,base.key,text)
-        }     
+        }
     }
 }
