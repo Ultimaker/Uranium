@@ -28,6 +28,7 @@ class Setting(SignalEmitter):
         self._active_if_setting = None
         self._active_if_value = None
         self._options = []
+        self._unit = ""
 
     valueChanged = Signal()
 
@@ -86,6 +87,10 @@ class Setting(SignalEmitter):
             self.setLabel(data["label"])
         if "visible" in data:
             self.setVisible(data["visible"])
+
+        if 'unit' in data:
+            self._unit = data['unit']
+
         min_value = None
         max_value = None
         min_value_warning = None
@@ -246,6 +251,9 @@ class Setting(SignalEmitter):
     # \returns type
     def getType(self):
         return self._type
+
+    def getUnit(self):
+        return self._unit
 
     ##  Get the effective value of the setting. This can be 'overriden' by a parent function if this function is invisible.
     #   \returns value
