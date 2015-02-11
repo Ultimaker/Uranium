@@ -103,9 +103,15 @@ class MachineSettings(SignalEmitter):
         return self._categories
 
     ##  Get all settings of this machine
+    #   \param kwargs Keyword arguments.
+    #                 Possible values are:
+    #                 * include_machine: boolean, true if machine settings should be included. Default false.
     #   \return list of settings
-    def getAllSettings(self):
+    def getAllSettings(self, **kwargs):
         all_settings = []
+        if kwargs.get('include_machine', False):
+            all_settings.extend(self._machine_settings)
+
         for category in self._categories:
             all_settings.extend(category.getAllSettings())
         return all_settings
