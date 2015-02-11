@@ -40,4 +40,7 @@ QtObject {
 
     property color toolbarButtonBackgroundDisabledColor: primaryColor;
     property color toolbarButtonForegroundDisabledColor: "#ccc";
+
+    property color messageBackgroundColor: Qt.rgba(0.0, 0.0, 0.0, 0.5);
+    property color messageTextColor: "white";
 }

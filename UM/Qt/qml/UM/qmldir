@@ -16,3 +16,4 @@ Toolbar 1.0 Toolbar.qml
 SettingsView 1.0 Settings/SettingsView.qml
 RecolorImage 1.0 RecolorImage.qml
 ToolbarButtonStyle 1.0 ToolbarButtonStyle.qml
+MessageStack 1.0 MessageStack.qml
