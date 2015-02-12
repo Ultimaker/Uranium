@@ -9,6 +9,7 @@ from UM.Signal import Signal
 from UM.WorkspaceFileHandler import WorkspaceFileHandler
 
 import threading
+import argparse
 
 ##  Central object responsible for running the main event loop and creating other central objects.
 #
@@ -46,12 +47,19 @@ class Application:
         self._operation_stack = OperationStack()
 
         self._main_thread = threading.current_thread()
-        
+
+        self._parsed_arguments = None
     
     ##  Function that needs to be overriden by child classes with a list of plugin it needs (see printer application & scanner application)
     def _loadPlugins(self):
         print("zomg")
         pass
+
+    def getArgument(self, name, default = None):
+        if not self._parsed_arguments:
+            self.parseArguments()
+
+        return self._parsed_arguments.get(name, default)
     
     def getApplicationName(self):
         return self._application_name
@@ -159,5 +167,15 @@ class Application:
             Application._instance = cls()
 
         return Application._instance
+
+    def parseArguments(self):
+        parser = argparse.ArgumentParser(prog = self.getApplicationName())
+        parser.add_argument('--version', action='version', version='%(prog)s 1.0')
+        parser.add_argument('--external-backend',
+                            dest='external-backend',
+                            action='store_true', default=False,
+                            help='Use an externally started backend instead of starting it automatically.')
+
+        self._parsed_arguments = vars(parser.parse_args())
 
     _instance = None
