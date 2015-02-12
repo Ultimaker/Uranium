@@ -155,8 +155,10 @@ UM.MainWindow
                 
                 anchors.top:toolbar.bottom;
                 anchors.right:parent.right
-                source:switch(UM.ToolbarData.state)
+                source: switch(UM.ToolbarData.wizardActive ? UM.ToolbarData.state: 0)
                 {
+                    case 0:
+                        return "" //Stetings pane
                     case 1:
                         return "WizardSetup1.qml"
                     case 2:

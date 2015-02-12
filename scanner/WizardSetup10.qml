@@ -50,5 +50,14 @@ Rectangle
             text:"Smooth"
         }
         
+        WizardButton
+        {
+            text:"Scan Extra"
+        }
+        WizardButton
+        {
+            text:"Merge to solid"
+        }
+        
     }
 }

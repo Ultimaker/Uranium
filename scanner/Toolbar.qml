@@ -93,7 +93,7 @@ Rectangle {
                     exclusiveGroup: toolbarTabGroup
                     style: ToolBarButtonStyleScan
                     {
-                        numCircles:2
+                        numCircles:UM.ToolbarData.wizardActive ? 2 : 0 
                         beginState:0
                         state:UM.ToolbarData.state
                     }
@@ -108,8 +108,8 @@ Rectangle {
                     exclusiveGroup: toolbarTabGroup
                     style: ToolBarButtonStyleScan
                     {
-                        beginState:2 
-                        numCircles:4
+                        numCircles:UM.ToolbarData.wizardActive ? 4 : 0 
+                        beginState:2    
                         state:UM.ToolbarData.state
                     }
                     checked: UM.ToolbarData.state > 6 ? false : UM.ToolbarData.state < 3 ? false:true
@@ -124,7 +124,7 @@ Rectangle {
                     exclusiveGroup: toolbarTabGroup
                     style: ToolBarButtonStyleScan
                     {
-                        numCircles:2
+                        numCircles:UM.ToolbarData.wizardActive ? 2 : 0 
                         beginState:6
                         state:UM.ToolbarData.state
                     }
@@ -140,7 +140,7 @@ Rectangle {
                     exclusiveGroup: toolbarTabGroup
                     style: ToolBarButtonStyleScan
                     {
-                        numCircles:1
+                        numCircles:UM.ToolbarData.wizardActive ? 1 : 0 
                         beginState:8
                         state:UM.ToolbarData.state
                     }
@@ -156,7 +156,7 @@ Rectangle {
                     exclusiveGroup: toolbarTabGroup
                     style: ToolBarButtonStyleScan
                     {
-                        numCircles:1
+                        numCircles:UM.ToolbarData.wizardActive ? 1 : 0 
                         beginState:9
                         state:UM.ToolbarData.state
                     }
@@ -171,7 +171,7 @@ Rectangle {
                     exclusiveGroup: toolbarTabGroup
                     style: ToolBarButtonStyleScan
                     {
-                        numCircles:1
+                        numCircles:UM.ToolbarData.wizardActive ? 1 : 0 
                         beginState:10
                         state:UM.ToolbarData.state
                     }
@@ -203,6 +203,7 @@ Rectangle {
                 
                 Switch 
                 {
+                    onCheckedChanged: {UM.ToolbarData.setWizardState(checked)}
                 }
                 ToolButton{
                     iconSource: UM.Resources.getIcon("youmagine.png");

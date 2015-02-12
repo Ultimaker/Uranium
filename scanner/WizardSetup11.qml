@@ -27,15 +27,17 @@ Rectangle
             anchors.topMargin:objectsMargin
             source:"placeholder.png";
         }
-        
-        /*NextButton
+        WizardButton
         {
-            onClicked:
-            {
-                UM.ToolbarData.setState(10);
-            }
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin:10
-        }*/
+            text:"Export to file"
+        }
+        WizardButton
+        {
+            text:"Share on youmagine"
+        }
+        WizardButton
+        {
+            text:"Send to cura"
+        }
     }
 }

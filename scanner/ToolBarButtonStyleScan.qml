@@ -90,13 +90,15 @@ ButtonStyle
             }
         ]
     }
-    label: Item 
+    
+    label: Item
     {
         id:item
-        anchors.fill: parent;
         property bool down: control.pressed || (control.checkable && control.checked);
-        ColumnLayout {  
+        ColumnLayout 
+        {  
             anchors.horizontalCenter:parent.horizontalCenter
+            anchors.fill: parent;
             Label 
             {
                 id: text;
@@ -104,29 +106,31 @@ ButtonStyle
                 {
                     horizontalCenter:parent.horizontalCenter
                     verticalCenter:parent.verticalCenter
+                    //horizontalCenter:parent.horizontalCenter
+                    
+                    //verticalCenter:parent.verticalCenter
                     //right: parent.right;
                 }
                 text: control.text;
                 color: base.foregroundColor;
-
+                height:25
+                width:100
                 font.capitalization: Font.AllUppercase;
                 font.pointSize: UM.Theme.smallTextSize;
                 font.bold: true
                 horizontalAlignment: Text.AlignHCenter;
                 wrapMode: Text.Wrap;
             }
+            
             RowLayout
             {
                 id:container
-                anchors
-                {
-                    top: parent.bottom
-                    horizontalCenter:parent.horizontalCenter  
-                }
+                anchors.horizontalCenter: parent.horizontalCenter
+                x:50
                 // Magical code to calculate how many of the circles are filled. 
                 property int filledCircles: (base.state-base.beginState) < 0 ? 0 : base.state - base.beginState > base.numCircles ? base.numCircles: base.state - base.beginState 
-                
-                Repeater {
+                Repeater 
+                {
                     model: base.numCircles
                     Rectangle 
                     {
@@ -137,31 +141,6 @@ ButtonStyle
                         border.color: "black";
                     }
                 }
-                
-                /*Repeater 
-                {
-                    model: container.filledCircles; 
-                    Rectangle 
-                    {
-                        width: 10;
-                        height: 10;
-                        radius: 5;
-                        color: "black";
-                        border.color: "black";
-                    }
-                } 
-                Repeater
-                {
-                    model: base.numCircles - container.filledCircles; 
-                    Rectangle 
-                    {
-                        width: 10;
-                        height: 10;
-                        radius: 5;
-                        color: "white";
-                        border.color: "black";
-                    }
-                }*/
             }
         }  
             
