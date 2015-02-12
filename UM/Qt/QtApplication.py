@@ -86,6 +86,10 @@ class QtApplication(QApplication, Application, SignalEmitter):
 
         return super().event(event)
 
+    def windowClosed(self):
+        self.getBackend().close()
+        self.quit()
+
 ##  Internal.
 #
 #   Wrapper around a FunctionEvent object to make Qt handle the event properly.
