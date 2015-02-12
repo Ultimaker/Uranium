@@ -10,6 +10,6 @@ SettingItem {
     {
         anchors.fill: parent;
         checked: base.value
-        onCheckedChanged: base.model.settingChanged(base.index, base.key, checked);
+        onCheckedChanged: if(base.model) base.model.settingChanged(base.index, base.key, checked);
     }
 }
