@@ -32,7 +32,11 @@ class Backend(SignalEmitter):
             self._process = self._runEngineProcess(self.getEngineCommand())
         except FileNotFoundError as e:
             Logger.log('e', "Unable to find backend executable")
-    
+
+    def close(self):
+        if self._socket:
+            self._socket.close()
+
     ##  \brief Convert byte array containing 3 floats per vertex
     def convertBytesToVerticeList(self, data):
         result = []
