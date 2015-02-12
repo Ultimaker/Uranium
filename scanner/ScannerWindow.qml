@@ -159,6 +159,8 @@ UM.MainWindow
                 {
                     case -1:
                         return "SettingsPane.qml" //Stetings pane
+                    case 0:
+                        return ""
                     case 1:
                         return "WizardSetup1.qml"
                     case 2:

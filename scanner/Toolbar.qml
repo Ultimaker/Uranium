@@ -211,6 +211,28 @@ Rectangle {
                     anchors.right:youmagineButton.left 
                     anchors.rightMargin:10
                     onCheckedChanged: {UM.ToolbarData.setWizardState(checked)}
+                    style: SwitchStyle
+                    {
+                        handle: Rectangle
+                        {
+                            width: wizardSwitch.width / 2
+                            height:wizardSwitch.height
+                            radius:2
+                            Label 
+                            {
+                                anchors.horizontalCenter:parent.horizontalCenter
+                                anchors.verticalCenter:parent.verticalCenter
+                                text: wizardSwitch.checked ? "ON" : "OFF"
+                            }
+                        }
+                        groove: Rectangle
+                        {
+                            implicitWidth: 50
+                            implicitHeight: 20
+                            color:"black"
+                            
+                        }
+                    }
                 }
                 ToolButton
                 {
