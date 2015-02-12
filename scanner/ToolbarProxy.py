@@ -3,7 +3,7 @@ from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot,pyqtSignal, pyqtProperty
 class ToolbarProxy(QObject):
     def __init__(self, parent = None):
         super().__init__(parent)
-        self._state = 0
+        self._state = 1
         self._use_wizard = False
     
     stateChanged = pyqtSignal()
