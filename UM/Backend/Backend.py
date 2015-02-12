@@ -2,6 +2,7 @@ from UM.Backend.SignalSocket import SignalSocket
 from UM.Preferences import Preferences
 from UM.Logger import Logger
 from UM.Signal import Signal, SignalEmitter
+from UM.Application import Application
 
 import struct
 import subprocess
@@ -77,7 +78,8 @@ class Backend(SignalEmitter):
 
     def _onSocketStateChanged(self, state):
         if state == SignalSocket.ListeningState:
-            self.startEngine()
+            if not Application.getInstance().getArgument('external-backend', False):
+                self.startEngine()
         elif state == SignalSocket.ConnectedState:
             Logger.log('d', "Backend connected on port %s", self._port)
 
