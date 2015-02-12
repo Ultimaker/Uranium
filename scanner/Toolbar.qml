@@ -93,7 +93,7 @@ Rectangle {
                     exclusiveGroup: toolbarTabGroup
                     style: ToolBarButtonStyleScan
                     {
-                        numCircles:UM.ToolbarData.wizardActive ? 2 : 0 
+                        numCircles: 2 
                         beginState:0
                         state:UM.ToolbarData.state
                     }
@@ -108,7 +108,7 @@ Rectangle {
                     exclusiveGroup: toolbarTabGroup
                     style: ToolBarButtonStyleScan
                     {
-                        numCircles:UM.ToolbarData.wizardActive ? 4 : 0 
+                        numCircles: 4 
                         beginState:2    
                         state:UM.ToolbarData.state
                     }
@@ -124,7 +124,7 @@ Rectangle {
                     exclusiveGroup: toolbarTabGroup
                     style: ToolBarButtonStyleScan
                     {
-                        numCircles:UM.ToolbarData.wizardActive ? 2 : 0 
+                        numCircles: 2 
                         beginState:6
                         state:UM.ToolbarData.state
                     }
@@ -140,7 +140,7 @@ Rectangle {
                     exclusiveGroup: toolbarTabGroup
                     style: ToolBarButtonStyleScan
                     {
-                        numCircles:UM.ToolbarData.wizardActive ? 1 : 0 
+                        numCircles: 1 
                         beginState:8
                         state:UM.ToolbarData.state
                     }
@@ -156,7 +156,7 @@ Rectangle {
                     exclusiveGroup: toolbarTabGroup
                     style: ToolBarButtonStyleScan
                     {
-                        numCircles:UM.ToolbarData.wizardActive ? 1 : 0 
+                        numCircles: 1 
                         beginState:9
                         state:UM.ToolbarData.state
                     }
@@ -171,7 +171,7 @@ Rectangle {
                     exclusiveGroup: toolbarTabGroup
                     style: ToolBarButtonStyleScan
                     {
-                        numCircles:UM.ToolbarData.wizardActive ? 1 : 0 
+                        numCircles:1 
                         beginState:10
                         state:UM.ToolbarData.state
                     }
@@ -194,22 +194,37 @@ Rectangle {
                     id: stepCounterLabel
                     width: UM.Theme.panelWidth
                     text: UM.ToolbarData.state + "/11 step" 
+                    visible: UM.ToolbarData.wizardActive
                 }
                 Label 
                 {
+                    id:wizardSwitchText
+                    anchors.right:wizardSwitch.left
+                    anchors.rightMargin:10
                     text: "Wizard"
                     font.bold:true
                 }
                 
                 Switch 
                 {
+                    id:wizardSwitch
+                    anchors.right:youmagineButton.left 
+                    anchors.rightMargin:10
                     onCheckedChanged: {UM.ToolbarData.setWizardState(checked)}
                 }
-                ToolButton{
+                ToolButton
+                {
+                    id:youmagineButton
+                    anchors.right:settingsButton.left
+                    anchors.rightMargin:10
                     iconSource: UM.Resources.getIcon("youmagine.png");
                     tooltip: "Youmagine integration"
                 }
-                ToolButton{
+                ToolButton
+                {
+                    id:settingsButton
+                    anchors.right:parent.right
+                    anchors.rightMargin:10
                     iconSource: UM.Resources.getIcon("settings.png");
                     tooltip: "Settings and preferences"
                 }

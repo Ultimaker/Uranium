@@ -139,6 +139,7 @@ ButtonStyle
                         radius: 5;
                         color: index < container.filledCircles ? "black":"white";
                         border.color: "black";
+                        visible: UM.ToolbarData.wizardActive
                     }
                 }
             }
