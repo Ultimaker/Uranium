@@ -12,6 +12,7 @@ from UM.Logger import Logger
 
 class MachineSettings(SignalEmitter):
     def __init__(self):
+        super().__init__()
         self._categories = []
         self._platformMesh = None
         self._name = "Unknown Machine",

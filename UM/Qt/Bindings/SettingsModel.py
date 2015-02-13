@@ -3,6 +3,7 @@ from PyQt5.QtCore import Qt, QCoreApplication, pyqtSlot
 from UM.Qt.ListModel import ListModel
 from UM.Settings.Setting import Setting
 from UM.Resources import Resources
+from UM.Application import Application
 
 class SettingsModel(ListModel):
     
@@ -21,8 +22,9 @@ class SettingsModel(ListModel):
     
     def __init__(self, parent = None):
         super().__init__(parent)
-        self._machine_settings = QCoreApplication.instance().getMachineSettings()
-        self._updateSettings()
+        self._machine_settings = None
+        Application.getInstance().activeMachineChanged.connect(self._onActiveMachineChanged)
+        self._onActiveMachineChanged()
 
         self.addRoleName(self.NameRole, "name")
         self.addRoleName(self.CategoryRole,"category")
@@ -36,27 +38,6 @@ class SettingsModel(ListModel):
         self.addRoleName(self.DisabledRole,"disabled")
         self.addRoleName(self.OptionsRole,"options")
         self.addRoleName(self.UnitRole,"unit")
-
-    def _updateSettings(self):
-        self.clear()
-        settings = self._machine_settings.getAllSettings()
-        for setting in settings:
-            self.appendItem({
-                "name": setting.getLabel(),
-                "category": setting.getCategory().getLabel(),
-                "collapsed": True,
-                "type": setting.getType(),
-                "value": setting.getValue(),
-                "valid": setting.validate(),
-                "key": setting.getKey(),
-                "depth": setting.getDepth(),
-                "visibility": (setting.isVisible() and setting.isActive()),
-                "disabled": (setting.checkAllChildrenVisible() or not setting.isActive()),
-                "options": self.createOptionsModel(setting.getOptions()),
-                "unit": setting.getUnit()
-            })
-            if setting._active_if_setting != None:
-                setting.activeChanged.connect(self.handleActiveChanged)
 
     ##  Triggred by setting if it has a conditional activation
     def handleActiveChanged(self, key):
@@ -72,13 +53,6 @@ class SettingsModel(ListModel):
                 if index != -1:
                     self.setProperty(index, 'disabled', (child_setting.checkAllChildrenVisible() or not child_setting.isActive()))
                     self.setProperty(index, 'visibility', (child_setting.isVisible() and child_setting.isActive()))
-
-    #   Convenience function that finds the index in a list of dicts based on key value pair
-    def _find(self,lst, key, value):
-        for i, dic in enumerate(lst):
-            if dic[key] == value:
-                return i
-        return -1
 
     @pyqtSlot(str)
     ##  collapse an entire category
@@ -146,3 +120,36 @@ class SettingsModel(ListModel):
                 if setting.checkAllChildrenVisible() or setting.isVisible:
                     return True
         return False
+
+    #   Convenience function that finds the index in a list of dicts based on key value pair
+    def _find(self,lst, key, value):
+        for i, dic in enumerate(lst):
+            if dic[key] == value:
+                return i
+        return -1
+
+    def _onActiveMachineChanged(self):
+        self.clear()
+        if self._machine_settings:
+            for setting in self._machine_settings.getAllSettings():
+                setting.activeChanged.disconnect(self.handleActiveChanged)
+
+        self._machine_settings = Application.getInstance().getActiveMachine()
+
+        if self._machine_settings:
+            for setting in self._machine_settings.getAllSettings():
+                self.appendItem({
+                    "name": setting.getLabel(),
+                    "category": setting.getCategory().getLabel(),
+                    "collapsed": True,
+                    "type": setting.getType(),
+                    "value": setting.getValue(),
+                    "valid": setting.validate(),
+                    "key": setting.getKey(),
+                    "depth": setting.getDepth(),
+                    "visibility": (setting.isVisible() and setting.isActive()),
+                    "disabled": (setting.checkAllChildrenVisible() or not setting.isActive()),
+                    "options": self.createOptionsModel(setting.getOptions()),
+                    "unit": setting.getUnit()
+                })
+                setting.activeChanged.connect(self.handleActiveChanged)

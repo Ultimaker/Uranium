@@ -5,18 +5,20 @@ from UM.Settings.MachineSettings import MachineSettings
 from UM.Resources import Resources
 from UM.Operations.OperationStack import OperationStack
 from UM.Event import CallFunctionEvent
-from UM.Signal import Signal
+from UM.Signal import Signal, SignalEmitter
 from UM.WorkspaceFileHandler import WorkspaceFileHandler
 
 import threading
 import argparse
+import os
+import urllib.parse
 
 ##  Central object responsible for running the main event loop and creating other central objects.
 #
 #   The Application object is a central object for accessing other important objects. It is also
 #   responsible for starting the main event loop. It is passed on to plugins so it can be easily
 #   used to access objects required for those plugins.
-class Application:
+class Application(SignalEmitter):
     ## Init method
     #
     #  \param name The name of the application.
@@ -44,7 +46,8 @@ class Application:
         self._storage_devices = {}
         self._backend = None
 
-        self._machine_settings = MachineSettings()
+        self._machines = []
+        self._active_machine = None
         
         self._required_plugins = [] 
 
@@ -89,8 +92,25 @@ class Application:
 
     ##  Get reference of the machine settings object
     #   \returns machine_settings
-    def getMachineSettings(self):
-        return self._machine_settings
+    def getMachines(self):
+        return self._machines
+
+    def addMachine(self, machine):
+        self._machines.append(machine)
+
+    def removeMachine(self, machine):
+        self._machines.remove(machine)
+
+    machinesChanged = Signal()
+
+    def getActiveMachine(self):
+        return self._active_machine
+
+    def setActiveMachine(self, machine):
+        self._active_machine = machine
+        self.activeMachineChanged.emit()
+
+    activeMachineChanged = Signal()
 
     ##  Get the backend of the application (the program that does the heavy lifting).
     #   \returns Backend

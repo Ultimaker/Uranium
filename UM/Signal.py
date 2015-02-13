@@ -133,6 +133,7 @@ class Signal:
 #   variables for each class variable that is an instance of Signal.
 class SignalEmitter:
     ##  Initialize method.
-    def __init__(self):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         for name, signal in inspect.getmembers(self, lambda i: isinstance(i, Signal)):
             setattr(self, name, Signal(type = signal.getType()))
