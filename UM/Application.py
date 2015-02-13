@@ -48,6 +48,7 @@ class Application(SignalEmitter):
 
         self._machines = []
         self._active_machine = None
+        self.loadMachines()
         
         self._required_plugins = [] 
 
@@ -202,5 +203,17 @@ class Application(SignalEmitter):
                             help='Use an externally started backend instead of starting it automatically.')
 
         self._parsed_arguments = vars(parser.parse_args())
+
+    def loadMachines(self):
+        settingsDir = Resources.getStorageLocation(Resources.SettingsLocation)
+        for entry in os.listdir(settingsDir):
+            settings = MachineSettings()
+            settings.loadValuesFromFile(os.path.join(settingsDir, entry))
+            self._machines.append(settings)
+
+    def saveMachines(self):
+        settingsDir = Resources.getStorageLocation(Resources.SettingsLocation)
+        for machine in self._machines:
+            machine.saveValuesToFile(os.path.join(settingsDir, urllib.parse.quote_plus(machine.getName()) + '.cfg'))
 
     _instance = None

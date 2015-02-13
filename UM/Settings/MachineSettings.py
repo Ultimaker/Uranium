@@ -9,6 +9,7 @@ from UM.Settings.Setting import Setting
 from UM.Signal import Signal, SignalEmitter
 from PyQt5.QtCore import QCoreApplication
 from UM.Logger import Logger
+from UM.Resources import Resources
 
 class MachineSettings(SignalEmitter):
     def __init__(self):
@@ -16,6 +17,8 @@ class MachineSettings(SignalEmitter):
         self._categories = []
         self._platformMesh = None
         self._name = "Unknown Machine",
+        self._type_name = 'Unknown'
+        self._type_id = 'unknown'
         self._icon = "unknown.png",
         self._machine_settings = []   ## Settings that don't have a category are 'fixed' (eg; they can not be changed by the user, unless they change the json)
 
@@ -25,11 +28,14 @@ class MachineSettings(SignalEmitter):
         with open(file_name) as f:
             data = json.load(f, object_pairs_hook=collections.OrderedDict)
 
+        if "id" in data:
+            self._type_id = data["id"]
+
         if "platform" in data:
             self._platformMesh = data["platform"]
 
         if "name" in data:
-            self._name = data["name"]
+            self._type_name = data["name"]
 
         if "icon" in data:
             self._icon = data["icon"]
@@ -52,7 +58,7 @@ class MachineSettings(SignalEmitter):
             for key, value in data["categories"].items():
                 category = self.getSettingsCategory(key)
                 if not category:
-                    category = SettingsCategory(key)
+                    category = SettingsCategory(key, self)
                     self.addSettingsCategory(category)
                 category.fillByDict(value)
 
@@ -64,6 +70,11 @@ class MachineSettings(SignalEmitter):
         config = configparser.ConfigParser()
         config.read(file_name)
 
+        if not self._categories:
+            self.loadSettingsFromFile(Resources.getPath(Resources.SettingsLocation, config['General']['type'] + '.json'))
+
+        self._name = config.get('General', 'name', fallback = 'Unknown Machine')
+
         for name, section in config.items():
             for key in section:
                 setting = self.getSettingByKey(key)
@@ -73,7 +84,11 @@ class MachineSettings(SignalEmitter):
 
     ##  Save setting values to file
     def saveValuesToFile(self, file_name):
-        config = configparser.ConfigParser()    
+        config = configparser.ConfigParser()
+
+        config.add_section('General')
+        config['General']['type'] = self._type_id
+        config['General']['name'] = self._name
 
         for category in self._categories:
             configData = {}
