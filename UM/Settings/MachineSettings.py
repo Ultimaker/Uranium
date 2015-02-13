@@ -62,6 +62,9 @@ class MachineSettings(SignalEmitter):
                     self.addSettingsCategory(category)
                 category.fillByDict(value)
 
+        for setting in self.getAllSettings():
+            setting.valueChanged.connect(self.settingChanged)
+
         self.settingsLoaded.emit() #Emit signal that all settings are loaded (some setting stuff can only be done when all settings are loaded (eg; the conditional stuff)
     settingsLoaded = Signal()
 
