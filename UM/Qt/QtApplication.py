@@ -17,7 +17,7 @@ from UM.Signal import Signal, SignalEmitter
 
 ##  Application subclass that provides a Qt application object.
 class QtApplication(QApplication, Application, SignalEmitter):
-    def __init__(self):
+    def __init__(self, **kwargs):
         if platform.system() == "Windows":
             # QT needs to be able to find the Qt5 dlls on windows. However, these are installed in site-packages/PyQt5
             # Add this path to the environment so the dlls are found. (Normally the PyQt installer adds this path global.
@@ -28,7 +28,7 @@ class QtApplication(QApplication, Application, SignalEmitter):
                 if os.path.isdir(pyqt_path):
                     os.environ['PATH'] = "%s;%s" % (pyqt_path, os.environ['PATH'])
 
-        super().__init__(sys.argv)
+        super().__init__(sys.argv, **kwargs)
 
         self._mainQml = "main.qml"
         self._engine = None

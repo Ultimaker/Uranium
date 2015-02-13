@@ -17,7 +17,10 @@ import argparse
 #   responsible for starting the main event loop. It is passed on to plugins so it can be easily
 #   used to access objects required for those plugins.
 class Application:
-    def __init__(self):
+    ## Init method
+    #
+    #  \param name The name of the application.
+    def __init__(self, name, **kwargs):
         if(Application._instance != None):
             raise ValueError("Duplicate singleton creation")
         # If the constructor is called and there is no instance, set the instance to self. 
@@ -25,10 +28,11 @@ class Application:
         Application._instance = self
 
         Signal._app = self
+        Resources.ApplicationIdentifier = name
 
-        super().__init__() # Call super to make multiple inheritence work.
+        super().__init__(**kwargs) # Call super to make multiple inheritence work.
 
-        self._application_name = "application"
+        self._application_name = name
         self._renderer = None
 
         self._plugin_registry = PluginRegistry()
@@ -49,6 +53,7 @@ class Application:
         self._main_thread = threading.current_thread()
 
         self._parsed_arguments = None
+        self.parseArguments()
     
     ##  Function that needs to be overriden by child classes with a list of plugin it needs (see printer application & scanner application)
     def _loadPlugins(self):
