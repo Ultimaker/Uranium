@@ -18,9 +18,7 @@ import os.path
 
 class PrinterApplication(QtApplication):
     def __init__(self):
-        super().__init__()
-        self.setApplicationName('printer')
-        self._machine_settings.loadSettingsFromFile(Resources.getPath(Resources.SettingsLocation, "ultimaker_original+.json"))
+        super().__init__(name = 'Cura')
         self.setRequiredPlugins(['CuraEngineBackend', 'MeshView', 'LayerView', 'STLReader','SelectionTool','CameraTool'])
         self._physics = None
     
@@ -47,11 +45,6 @@ class PrinterApplication(QtApplication):
         Selection.selectionChanged.connect(self.onSelectionChanged)
 
         self._physics = PlatformPhysics(controller)
-
-        try:
-            self.getMachineSettings().loadValuesFromFile(Resources.getPath(Resources.SettingsLocation, 'ultimaker2.cfg'))
-        except FileNotFoundError:
-            pass
 
         root = controller.getScene().getRoot()
         platform = Platform(root)
@@ -102,7 +95,7 @@ class PrinterApplication(QtApplication):
         if self._engine.rootObjects:
             self.exec_()
 
-        self.getMachineSettings().saveValuesToFile(Resources.getStoragePath(Resources.SettingsLocation, 'ultimaker2.cfg'))
+        self.saveMachines()
 
     def registerObjects(self, engine):
         engine.rootContext().setContextProperty('Printer', self)

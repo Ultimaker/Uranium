@@ -9,6 +9,7 @@ from UM.Signal import Signal, SignalEmitter
 #     Settings have conditions that enable/disable this setting depending on other settings. (Ex: Dual-extrusion)
 class Setting(SignalEmitter):    
     def __init__(self, key = None, default = None, type = None, category = None, label = None):
+        super().__init__()
         self._key = key
         if label is None:
             self._label = key
@@ -24,7 +25,7 @@ class Setting(SignalEmitter):
         self._children = []
         self._category = category
         self._active = True
-        self._machine_settings = QCoreApplication.instance().getMachineSettings()
+        self._machine_settings = category.getParent() if category else None
         self._active_if_setting = None
         self._active_if_value = None
         self._options = []
@@ -34,15 +35,16 @@ class Setting(SignalEmitter):
 
     ##  Triggered when all settings are loaded and the setting has a conditional param
     def activeIfHandler(self):
-        setting = QCoreApplication.instance().getMachineSettings().getSettingByKey(self._active_if_setting)
+        setting = self._machine_settings.getSettingByKey(self._active_if_setting)
         if setting is not None:
             setting.valueChanged.connect(self.conditionalActiveHandler)
+            self.conditionalActiveHandler(setting)
             # Check current value and update active status. (It can happen that the default value is that it's not active)
-            self.setActive(str(QCoreApplication.instance().getMachineSettings().getSettingByKey(self._active_if_setting).getValue()) == str(self._active_if_value))
+            #self.setActive(str(self._machine_settings.getSettingValueByKey(self._active_if_setting)) == str(self._active_if_value))
 
     #   Triggered when the setting it's dependant on changes it's value
     def conditionalActiveHandler(self, setting):
-        self.setActive(str(QCoreApplication.instance().getMachineSettings().getSettingByKey(self._active_if_setting).getValue()) == str(self._active_if_value))
+        self.setActive(str(setting.getValue()) == str(self._active_if_value))
 
     def isActive(self):
         if self._parent != None:
@@ -110,7 +112,8 @@ class Setting(SignalEmitter):
             if "setting" in data["active_if"] and "value" in data["active_if"]:
                 self._active_if_setting = data["active_if"]["setting"]
                 self._active_if_value = data["active_if"]["value"]
-                self._machine_settings = QCoreApplication.instance().getMachineSettings().settingsLoaded.connect(self.activeIfHandler)
+                self._machine_settings.settingsLoaded.connect(self.activeIfHandler)
+
         if "options" in data:
             self._options = data["options"]
 
@@ -119,6 +122,7 @@ class Setting(SignalEmitter):
                 setting = self.getSettingByKey(key)
                 if not setting:
                     setting = Setting(key)
+                    setting.setCategory(self._category)
                     setting.setParent(self)
                     self._children.append(setting)
 
@@ -147,6 +151,7 @@ class Setting(SignalEmitter):
     #   \params category SettingCategory
     def setCategory(self, category):
         self._category = category
+        self._machine_settings = category.getParent() if category else None
         for child in self._children:
             child.setCategory(category)
 

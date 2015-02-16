@@ -2,6 +2,7 @@ from UM.Backend.SignalSocket import SignalSocket
 from UM.Preferences import Preferences
 from UM.Logger import Logger
 from UM.Signal import Signal, SignalEmitter
+from UM.Application import Application
 
 import struct
 import subprocess
@@ -32,7 +33,11 @@ class Backend(SignalEmitter):
             self._process = self._runEngineProcess(self.getEngineCommand())
         except FileNotFoundError as e:
             Logger.log('e', "Unable to find backend executable")
-    
+
+    def close(self):
+        if self._socket:
+            self._socket.close()
+
     ##  \brief Convert byte array containing 3 floats per vertex
     def convertBytesToVerticeList(self, data):
         result = []
@@ -73,7 +78,8 @@ class Backend(SignalEmitter):
 
     def _onSocketStateChanged(self, state):
         if state == SignalSocket.ListeningState:
-            self.startEngine()
+            if not Application.getInstance().getArgument('external-backend', False):
+                self.startEngine()
         elif state == SignalSocket.ConnectedState:
             Logger.log('d', "Backend connected on port %s", self._port)
 

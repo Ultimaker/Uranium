@@ -15,6 +15,8 @@ class Resources:
     MeshesLocation = 4
     ShadersLocation = 5
 
+    ApplicationIdentifier = 'UM'
+
     ##  Get the path to a certain resource file
     #
     #   \param type \type{int} The type of resource to retrieve a path for.
@@ -36,7 +38,7 @@ class Resources:
         if os.path.isfile(path):
             return path
 
-        raise FileNotFoundError('Could not find resource: ', *args)
+        raise FileNotFoundError('Could not find resource {0} in {1}'.format(args, type))
 
 
     ##  Get the path that can be used to write a certain resource file.
@@ -120,16 +122,16 @@ class Resources:
     @classmethod
     def __initializeStoragePaths(cls):
         if platform.system() == 'Windows':
-            cls.__config_storage_path = os.path.expanduser('~/AppData/Local/UM')
+            cls.__config_storage_path = os.path.join(os.path.expanduser('~/AppData/Local/'), cls.ApplicationIdentifier)
         elif platform.system() == 'Darwin':
-            cls.__config_storage_path = os.path.expanduser('~/.UM')
+            cls.__config_storage_path = os.path.expanduser('~/.{0}'.format(cls.ApplicationIdentifier))
         elif platform.system() == 'Linux':
             xdg_config_home = ''
             try:
                 xdg_config_home = os.environ['XDG_CONFIG_HOME']
             except KeyError:
                 xdg_config_home = os.path.expanduser('~/.config')
-            cls.__config_storage_path = os.path.join(xdg_config_home, 'UM')
+            cls.__config_storage_path = os.path.join(xdg_config_home, cls.ApplicationIdentifier)
 
             xdg_data_home = ''
             try:
@@ -137,7 +139,7 @@ class Resources:
             except KeyError:
                 xdg_data_home = os.path.expanduser('~/.local/share')
 
-            cls.__data_storage_path = os.path.join(xdg_data_home, 'UM')
+            cls.__data_storage_path = os.path.join(xdg_data_home, cls.ApplicationIdentifier)
         else:
             cls.__config_storage_path = cls.__relativeToFile('..')
 

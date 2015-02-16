@@ -1,8 +1,9 @@
 from UM.Settings.Setting import Setting
 class SettingsCategory(object):
-    def __init__(self, key, icon = None, order = 0):
+    def __init__(self, key, parent, icon = None, order = 0):
         self._key = key
         self._label = key
+        self._parent = parent
         self._tooltip = ''
         self._icon = icon
         self._order = order
@@ -21,9 +22,9 @@ class SettingsCategory(object):
             for key, value in data["settings"].items():
                 if "default" in value and "type" in value:
                     temp_setting = Setting(key, value["default"], value["type"])
-                    temp_setting.fillByDict(value)
                     temp_setting.setCategory(self)
                     temp_setting.setParent(self)
+                    temp_setting.fillByDict(value)
                     self._settings.append(temp_setting)
 
     def isActive(self):
@@ -59,6 +60,9 @@ class SettingsCategory(object):
 
     def getIcon(self):
         return self._icon
+
+    def getParent(self):
+        return self._parent
 
     def __cmp__(self, other):
         return self._order - other._order

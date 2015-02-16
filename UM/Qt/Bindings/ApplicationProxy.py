@@ -7,6 +7,7 @@ class ApplicationProxy(QObject):
     def __init__(self, parent = None):
         super().__init__(parent)
         self._application = Application.getInstance()
+        self._application.activeMachineChanged.connect(self._onActiveMachineChanged)
 
     @pyqtSlot(str, str)
     def log(self, type, message):
@@ -16,8 +17,13 @@ class ApplicationProxy(QObject):
 
     @pyqtProperty(str, notify=machineChanged)
     def machineName(self):
-        return self._application.getMachineSettings().getName()
+        if self._application.getActiveMachine():
+            return self._application.getActiveMachine().getName()
 
-    @pyqtProperty(str)
-    def machineIcon(self, notify=machineChanged):
-        return self._application.getMachineSettings().getIcon()
+    @pyqtProperty(str, notify=machineChanged)
+    def machineIcon(self):
+        if self._application.getActiveMachine():
+            return self._application.getActiveMachine().getIcon()
+
+    def _onActiveMachineChanged(self):
+        self.machineChanged.emit()

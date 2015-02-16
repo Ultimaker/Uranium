@@ -6,6 +6,7 @@ from UM.Math.Vector import Vector
 from UM.Math.Matrix import Matrix
 from UM.Qt.QtMouseDevice import QtMouseDevice
 from UM.Qt.QtKeyDevice import QtKeyDevice
+from UM.Application import Application
 
 ##  QQuickWindow subclass that provides the main window.
 class MainWindow(QQuickWindow):
@@ -94,6 +95,9 @@ class MainWindow(QQuickWindow):
             camera.setProjectionMatrix(proj)
 
         self._app.getRenderer().setViewportSize(event.size().width(), event.size().height())
+
+    def hideEvent(self, event):
+        Application.getInstance().windowClosed()
 
     def _render(self):
         renderer = self._app.getRenderer()

@@ -5,18 +5,24 @@ from UM.Settings.MachineSettings import MachineSettings
 from UM.Resources import Resources
 from UM.Operations.OperationStack import OperationStack
 from UM.Event import CallFunctionEvent
-from UM.Signal import Signal
+from UM.Signal import Signal, SignalEmitter
 from UM.WorkspaceFileHandler import WorkspaceFileHandler
 
 import threading
+import argparse
+import os
+import urllib.parse
 
 ##  Central object responsible for running the main event loop and creating other central objects.
 #
 #   The Application object is a central object for accessing other important objects. It is also
 #   responsible for starting the main event loop. It is passed on to plugins so it can be easily
 #   used to access objects required for those plugins.
-class Application:
-    def __init__(self):
+class Application(SignalEmitter):
+    ## Init method
+    #
+    #  \param name The name of the application.
+    def __init__(self, name, **kwargs):
         if(Application._instance != None):
             raise ValueError("Duplicate singleton creation")
         # If the constructor is called and there is no instance, set the instance to self. 
@@ -24,10 +30,11 @@ class Application:
         Application._instance = self
 
         Signal._app = self
+        Resources.ApplicationIdentifier = name
 
-        super().__init__() # Call super to make multiple inheritence work.
+        super().__init__(**kwargs) # Call super to make multiple inheritence work.
 
-        self._application_name = "application"
+        self._application_name = name
         self._renderer = None
 
         self._plugin_registry = PluginRegistry()
@@ -39,19 +46,29 @@ class Application:
         self._storage_devices = {}
         self._backend = None
 
-        self._machine_settings = MachineSettings()
+        self._machines = []
+        self._active_machine = None
+        self.loadMachines()
         
         self._required_plugins = [] 
 
         self._operation_stack = OperationStack()
 
         self._main_thread = threading.current_thread()
-        
+
+        self._parsed_arguments = None
+        self.parseArguments()
     
     ##  Function that needs to be overriden by child classes with a list of plugin it needs (see printer application & scanner application)
     def _loadPlugins(self):
         print("zomg")
         pass
+
+    def getArgument(self, name, default = None):
+        if not self._parsed_arguments:
+            self.parseArguments()
+
+        return self._parsed_arguments.get(name, default)
     
     def getApplicationName(self):
         return self._application_name
@@ -76,8 +93,25 @@ class Application:
 
     ##  Get reference of the machine settings object
     #   \returns machine_settings
-    def getMachineSettings(self):
-        return self._machine_settings
+    def getMachines(self):
+        return self._machines
+
+    def addMachine(self, machine):
+        self._machines.append(machine)
+
+    def removeMachine(self, machine):
+        self._machines.remove(machine)
+
+    machinesChanged = Signal()
+
+    def getActiveMachine(self):
+        return self._active_machine
+
+    def setActiveMachine(self, machine):
+        self._active_machine = machine
+        self.activeMachineChanged.emit()
+
+    activeMachineChanged = Signal()
 
     ##  Get the backend of the application (the program that does the heavy lifting).
     #   \returns Backend
@@ -159,5 +193,27 @@ class Application:
             Application._instance = cls()
 
         return Application._instance
+
+    def parseArguments(self):
+        parser = argparse.ArgumentParser(prog = self.getApplicationName())
+        parser.add_argument('--version', action='version', version='%(prog)s 1.0')
+        parser.add_argument('--external-backend',
+                            dest='external-backend',
+                            action='store_true', default=False,
+                            help='Use an externally started backend instead of starting it automatically.')
+
+        self._parsed_arguments = vars(parser.parse_args())
+
+    def loadMachines(self):
+        settingsDir = Resources.getStorageLocation(Resources.SettingsLocation)
+        for entry in os.listdir(settingsDir):
+            settings = MachineSettings()
+            settings.loadValuesFromFile(os.path.join(settingsDir, entry))
+            self._machines.append(settings)
+
+    def saveMachines(self):
+        settingsDir = Resources.getStorageLocation(Resources.SettingsLocation)
+        for machine in self._machines:
+            machine.saveValuesToFile(os.path.join(settingsDir, urllib.parse.quote_plus(machine.getName()) + '.cfg'))
 
     _instance = None
