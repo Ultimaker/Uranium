@@ -18,7 +18,7 @@ _sym_db = _symbol_database.Default()
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='ultiscantastic.proto',
   package='ScannerBuff',
-  serialized_pb=_b('\n\x14ultiscantastic.proto\x12\x0bScannerBuff\"F\n\x15PointCloudWithNormals\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x10\n\x08vertices\x18\x02 \x01(\x0c\x12\x0f\n\x07normals\x18\x03 \x01(\x0c\"`\n\x18PointCloudWithoutNormals\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x10\n\x08vertices\x18\x02 \x01(\x0c\x12&\n\nview_point\x18\x03 \x01(\x0b\x32\x12.ScannerBuff.Vec3f\"Y\n\x15PointCloudPointNormal\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\x0c\x12&\n\nview_point\x18\x03 \x01(\x0b\x32\x12.ScannerBuff.Vec3f\"2\n\x0eProgressUpdate\x12\x10\n\x08objectId\x18\x01 \x01(\x05\x12\x0e\n\x06\x61mount\x18\x02 \x01(\x05\"F\n\x04Mesh\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x10\n\x08vertices\x18\x02 \x01(\x0c\x12\x0f\n\x07normals\x18\x03 \x01(\x0c\x12\x0f\n\x07indices\x18\x04 \x01(\x0c\"y\n\x10StartCalibration\x12;\n\x04type\x18\x01 \x01(\x0e\x32-.ScannerBuff.StartCalibration.CalibrationType\"(\n\x0f\x43\x61librationType\x12\n\n\x06\x43ORNER\x10\x00\x12\t\n\x05\x42OARD\x10\x01\"[\n\tStartScan\x12-\n\x04type\x18\x01 \x01(\x0e\x32\x1f.ScannerBuff.StartScan.ScanType\"\x1f\n\x08ScanType\x12\x08\n\x04GREY\x10\x00\x12\t\n\x05PHASE\x10\x01\"\x80\x01\n\x05Image\x12*\n\x04type\x18\x01 \x01(\x0e\x32\x1c.ScannerBuff.Image.ImageType\x12\r\n\x05width\x18\x02 \x01(\x05\x12\x0e\n\x06height\x18\x03 \x01(\x05\x12\x0c\n\x04\x64\x61ta\x18\x04 \x01(\x0c\"\x1e\n\tImageType\x12\x08\n\x04MONO\x10\x00\x12\x07\n\x03RGB\x10\x01\"\xba\x01\n\x12setCalibrationStep\x12=\n\x04step\x18\x01 \x01(\x0e\x32/.ScannerBuff.setCalibrationStep.CalibrationStep\"e\n\x0f\x43\x61librationStep\x12\t\n\x05\x42OARD\x10\x00\x12\x13\n\x0fPROJECTOR_FOCUS\x10\x01\x12\x10\n\x0c\x43\x41MERA_FOCUS\x10\x02\x12\x13\n\x0f\x43\x41MERA_EXPOSURE\x10\x03\x12\x0b\n\x07\x43OMPUTE\x10\x04\"\xa5\x01\n\x12\x43\x61librationProblem\x12\x35\n\x04type\x18\x01 \x01(\x0e\x32\'.ScannerBuff.CalibrationProblem.Problem\"X\n\x07Problem\x12\x14\n\x10OBJECT_NOT_FOUND\x10\x00\x12\x16\n\x12PLATFORM_NOT_FOUND\x10\x01\x12\r\n\tNO_CAMERA\x10\x02\x12\x10\n\x0cNO_PROJECTOR\x10\x03\"\x8a\x01\n\x11RecalculateNormal\x12\x31\n\x05\x63loud\x18\x01 \x01(\x0b\x32\".ScannerBuff.PointCloudWithNormals\x12\n\n\x02id\x18\x02 \x01(\x05\x12\x0e\n\x06radius\x18\x03 \x01(\x02\x12&\n\nview_point\x18\x04 \x01(\x0b\x32\x12.ScannerBuff.Vec3f\"(\n\x05Vec3f\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\x12\t\n\x01z\x18\x03 \x01(\x02\"\x8b\x01\n\x14PoissonModelCreation\x12\x32\n\x06\x63louds\x18\x01 \x03(\x0b\x32\".ScannerBuff.PointCloudWithNormals\x12\r\n\x05\x64\x65pth\x18\x02 \x01(\x05\x12\x1c\n\x14num_samples_per_node\x18\x03 \x01(\x05\x12\x12\n\niso_divide\x18\x04 \x01(\x05\"\x92\x01\n\x19StatisticalOutlierRemoval\x12\x31\n\x05\x63loud\x18\x01 \x01(\x0b\x32\".ScannerBuff.PointCloudWithNormals\x12\n\n\x02id\x18\x02 \x01(\x05\x12\x1c\n\x14number_of_neighbours\x18\x03 \x01(\x05\x12\x18\n\x10\x63utoff_deviation\x18\x04 \x01(\x02\"\xa4\x01\n\x0cStitchClouds\x12\x31\n\x05\x63loud\x18\x01 \x03(\x0b\x32\".ScannerBuff.PointCloudWithNormals\x12\n\n\x02id\x18\x02 \x01(\x05\x12)\n!rough_icp_correspondance_distance\x18\x03 \x01(\x02\x12*\n\"global_icp_correspondance_distance\x18\x04 \x01(\x02\"\x80\x01\n\x07Setting\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t\x12\'\n\x04type\x18\x03 \x01(\x0e\x32\x19.ScannerBuff.Setting.Type\"0\n\x04Type\x12\x07\n\x03INT\x10\x00\x12\t\n\x05\x46LOAT\x10\x01\x12\x08\n\x04\x42OOL\x10\x02\x12\n\n\x06STRING\x10\x03\x62\x06proto3')
+  serialized_pb=_b('\n\x14ultiscantastic.proto\x12\x0bScannerBuff\"F\n\x15PointCloudWithNormals\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x10\n\x08vertices\x18\x02 \x01(\x0c\x12\x0f\n\x07normals\x18\x03 \x01(\x0c\"`\n\x18PointCloudWithoutNormals\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x10\n\x08vertices\x18\x02 \x01(\x0c\x12&\n\nview_point\x18\x03 \x01(\x0b\x32\x12.ScannerBuff.Vec3f\"Y\n\x15PointCloudPointNormal\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\x0c\x12&\n\nview_point\x18\x03 \x01(\x0b\x32\x12.ScannerBuff.Vec3f\"2\n\x0eProgressUpdate\x12\x10\n\x08objectId\x18\x01 \x01(\x05\x12\x0e\n\x06\x61mount\x18\x02 \x01(\x05\"5\n\x04Mesh\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x10\n\x08vertices\x18\x02 \x01(\x0c\x12\x0f\n\x07indices\x18\x04 \x01(\x0c\"y\n\x10StartCalibration\x12;\n\x04type\x18\x01 \x01(\x0e\x32-.ScannerBuff.StartCalibration.CalibrationType\"(\n\x0f\x43\x61librationType\x12\n\n\x06\x43ORNER\x10\x00\x12\t\n\x05\x42OARD\x10\x01\"[\n\tStartScan\x12-\n\x04type\x18\x01 \x01(\x0e\x32\x1f.ScannerBuff.StartScan.ScanType\"\x1f\n\x08ScanType\x12\x08\n\x04GREY\x10\x00\x12\t\n\x05PHASE\x10\x01\"\x80\x01\n\x05Image\x12*\n\x04type\x18\x01 \x01(\x0e\x32\x1c.ScannerBuff.Image.ImageType\x12\r\n\x05width\x18\x02 \x01(\x05\x12\x0e\n\x06height\x18\x03 \x01(\x05\x12\x0c\n\x04\x64\x61ta\x18\x04 \x01(\x0c\"\x1e\n\tImageType\x12\x08\n\x04MONO\x10\x00\x12\x07\n\x03RGB\x10\x01\"\xba\x01\n\x12setCalibrationStep\x12=\n\x04step\x18\x01 \x01(\x0e\x32/.ScannerBuff.setCalibrationStep.CalibrationStep\"e\n\x0f\x43\x61librationStep\x12\t\n\x05\x42OARD\x10\x00\x12\x13\n\x0fPROJECTOR_FOCUS\x10\x01\x12\x10\n\x0c\x43\x41MERA_FOCUS\x10\x02\x12\x13\n\x0f\x43\x41MERA_EXPOSURE\x10\x03\x12\x0b\n\x07\x43OMPUTE\x10\x04\"\xa5\x01\n\x12\x43\x61librationProblem\x12\x35\n\x04type\x18\x01 \x01(\x0e\x32\'.ScannerBuff.CalibrationProblem.Problem\"X\n\x07Problem\x12\x14\n\x10OBJECT_NOT_FOUND\x10\x00\x12\x16\n\x12PLATFORM_NOT_FOUND\x10\x01\x12\r\n\tNO_CAMERA\x10\x02\x12\x10\n\x0cNO_PROJECTOR\x10\x03\"\x8a\x01\n\x11RecalculateNormal\x12\x31\n\x05\x63loud\x18\x01 \x01(\x0b\x32\".ScannerBuff.PointCloudWithNormals\x12\n\n\x02id\x18\x02 \x01(\x05\x12\x0e\n\x06radius\x18\x03 \x01(\x02\x12&\n\nview_point\x18\x04 \x01(\x0b\x32\x12.ScannerBuff.Vec3f\"(\n\x05Vec3f\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\x12\t\n\x01z\x18\x03 \x01(\x02\"\x8b\x01\n\x14PoissonModelCreation\x12\x32\n\x06\x63louds\x18\x01 \x03(\x0b\x32\".ScannerBuff.PointCloudWithNormals\x12\r\n\x05\x64\x65pth\x18\x02 \x01(\x05\x12\x1c\n\x14num_samples_per_node\x18\x03 \x01(\x05\x12\x12\n\niso_divide\x18\x04 \x01(\x05\"\x92\x01\n\x19StatisticalOutlierRemoval\x12\x31\n\x05\x63loud\x18\x01 \x01(\x0b\x32\".ScannerBuff.PointCloudWithNormals\x12\n\n\x02id\x18\x02 \x01(\x05\x12\x1c\n\x14number_of_neighbours\x18\x03 \x01(\x05\x12\x18\n\x10\x63utoff_deviation\x18\x04 \x01(\x02\"\xa4\x01\n\x0cStitchClouds\x12\x31\n\x05\x63loud\x18\x01 \x03(\x0b\x32\".ScannerBuff.PointCloudWithNormals\x12\n\n\x02id\x18\x02 \x01(\x05\x12)\n!rough_icp_correspondance_distance\x18\x03 \x01(\x02\x12*\n\"global_icp_correspondance_distance\x18\x04 \x01(\x02\"\x80\x01\n\x07Setting\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t\x12\'\n\x04type\x18\x03 \x01(\x0e\x32\x19.ScannerBuff.Setting.Type\"0\n\x04Type\x12\x07\n\x03INT\x10\x00\x12\t\n\x05\x46LOAT\x10\x01\x12\x08\n\x04\x42OOL\x10\x02\x12\n\n\x06STRING\x10\x03\x62\x06proto3')
 )
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -41,8 +41,8 @@ _STARTCALIBRATION_CALIBRATIONTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=503,
-  serialized_end=543,
+  serialized_start=486,
+  serialized_end=526,
 )
 _sym_db.RegisterEnumDescriptor(_STARTCALIBRATION_CALIBRATIONTYPE)
 
@@ -63,8 +63,8 @@ _STARTSCAN_SCANTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=605,
-  serialized_end=636,
+  serialized_start=588,
+  serialized_end=619,
 )
 _sym_db.RegisterEnumDescriptor(_STARTSCAN_SCANTYPE)
 
@@ -85,8 +85,8 @@ _IMAGE_IMAGETYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=737,
-  serialized_end=767,
+  serialized_start=720,
+  serialized_end=750,
 )
 _sym_db.RegisterEnumDescriptor(_IMAGE_IMAGETYPE)
 
@@ -119,8 +119,8 @@ _SETCALIBRATIONSTEP_CALIBRATIONSTEP = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=855,
-  serialized_end=956,
+  serialized_start=838,
+  serialized_end=939,
 )
 _sym_db.RegisterEnumDescriptor(_SETCALIBRATIONSTEP_CALIBRATIONSTEP)
 
@@ -149,8 +149,8 @@ _CALIBRATIONPROBLEM_PROBLEM = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=1036,
-  serialized_end=1124,
+  serialized_start=1019,
+  serialized_end=1107,
 )
 _sym_db.RegisterEnumDescriptor(_CALIBRATIONPROBLEM_PROBLEM)
 
@@ -179,8 +179,8 @@ _SETTING_TYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=1848,
-  serialized_end=1896,
+  serialized_start=1831,
+  serialized_end=1879,
 )
 _sym_db.RegisterEnumDescriptor(_SETTING_TYPE)
 
@@ -376,14 +376,7 @@ _MESH = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='normals', full_name='ScannerBuff.Mesh.normals', index=2,
-      number=3, type=12, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b(""),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='indices', full_name='ScannerBuff.Mesh.indices', index=3,
+      name='indices', full_name='ScannerBuff.Mesh.indices', index=2,
       number=4, type=12, cpp_type=9, label=1,
       has_default_value=False, default_value=_b(""),
       message_type=None, enum_type=None, containing_type=None,
@@ -401,7 +394,7 @@ _MESH = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=350,
-  serialized_end=420,
+  serialized_end=403,
 )
 
 
@@ -431,8 +424,8 @@ _STARTCALIBRATION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=422,
-  serialized_end=543,
+  serialized_start=405,
+  serialized_end=526,
 )
 
 
@@ -462,8 +455,8 @@ _STARTSCAN = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=545,
-  serialized_end=636,
+  serialized_start=528,
+  serialized_end=619,
 )
 
 
@@ -514,8 +507,8 @@ _IMAGE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=639,
-  serialized_end=767,
+  serialized_start=622,
+  serialized_end=750,
 )
 
 
@@ -545,8 +538,8 @@ _SETCALIBRATIONSTEP = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=770,
-  serialized_end=956,
+  serialized_start=753,
+  serialized_end=939,
 )
 
 
@@ -576,8 +569,8 @@ _CALIBRATIONPROBLEM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=959,
-  serialized_end=1124,
+  serialized_start=942,
+  serialized_end=1107,
 )
 
 
@@ -627,8 +620,8 @@ _RECALCULATENORMAL = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1127,
-  serialized_end=1265,
+  serialized_start=1110,
+  serialized_end=1248,
 )
 
 
@@ -671,8 +664,8 @@ _VEC3F = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1267,
-  serialized_end=1307,
+  serialized_start=1250,
+  serialized_end=1290,
 )
 
 
@@ -722,8 +715,8 @@ _POISSONMODELCREATION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1310,
-  serialized_end=1449,
+  serialized_start=1293,
+  serialized_end=1432,
 )
 
 
@@ -773,8 +766,8 @@ _STATISTICALOUTLIERREMOVAL = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1452,
-  serialized_end=1598,
+  serialized_start=1435,
+  serialized_end=1581,
 )
 
 
@@ -824,8 +817,8 @@ _STITCHCLOUDS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1601,
-  serialized_end=1765,
+  serialized_start=1584,
+  serialized_end=1748,
 )
 
 
@@ -869,8 +862,8 @@ _SETTING = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1768,
-  serialized_end=1896,
+  serialized_start=1751,
+  serialized_end=1879,
 )
 
 _POINTCLOUDWITHOUTNORMALS.fields_by_name['view_point'].message_type = _VEC3F

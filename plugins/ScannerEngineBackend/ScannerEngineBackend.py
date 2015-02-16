@@ -6,6 +6,7 @@ import struct
 import time
 from UM.Application import Application
 from UM.Scene.PointCloudNode import PointCloudNode
+from UM.Scene.SceneNode import SceneNode
 from PyQt5.QtGui import QImage
 from UM.Signal import Signal, SignalEmitter
 
@@ -22,6 +23,7 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         self._message_handlers[ultiscantastic_pb2.ProgressUpdate] = self._onProgressUpdateMessage
         self._message_handlers[ultiscantastic_pb2.Image] = self._onImageMessage
         self._message_handlers[ultiscantastic_pb2.CalibrationProblem] = self._onCalibrationProblemMessage
+        self._message_handlers[ultiscantastic_pb2.Mesh] = self._onMeshMessage
         
         self._do_once = False
         self._latest_camera_image = QImage(1, 1, QImage.Format_RGB888)
@@ -56,6 +58,7 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         self._socket.registerMessageType(10, ultiscantastic_pb2.PoissonModelCreation)
         self._socket.registerMessageType(11, ultiscantastic_pb2.StatisticalOutlierRemoval)
         self._socket.registerMessageType(12, ultiscantastic_pb2.Setting)
+        self._socket.registerMessageType(13, ultiscantastic_pb2.Mesh)
         
     def startScan(self, type = 0):
         message = ultiscantastic_pb2.StartScan()
@@ -120,14 +123,9 @@ class ScannerEngineBackend(Backend, SignalEmitter):
             cloud_message.vertices = cloud.getVerticesAsByteArray()
             cloud_message.normals = cloud.getNormalsAsByteArray()
             cloud_message.id = 0
-            cloud_message.view_point.x = 0
-            cloud_message.view_point.y = 0
-            cloud_message.view_point.z = 0
             message.clouds.extend([cloud_message])
         
         self._socket.sendMessage(message)
-    
-    
     
     def startCalibration(self, type = 0):
         message = ultiscantastic_pb2.StartCalibration()
@@ -154,9 +152,24 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         
         if not self._do_once:
             self._do_once = True
-            self.recalculateNormals(recieved_mesh) #DEBUG STUFFS
-            self.removeOutliers(recieved_mesh)
-        
+            #self.recalculateNormals(recieved_mesh) #DEBUG STUFFS
+            #self.removeOutliers(recieved_mesh)
+            self.poissonModelCreation([recieved_mesh])
+    
+    def _onMeshMessage(self,message):
+        print("recieved mesh")
+        app = Application.getInstance()
+        recieved_mesh = MeshData()
+        print(len(message.indices))
+        verts , indices = self._convertBytesToMesh(message.vertices,message.indices)
+        recieved_mesh.addVertices(verts)
+        recieved_mesh.addIndices(indices)
+        #recieved_mesh.calculateNormals() #We didn't get normals, calculate them for sake of visualisation.
+        node = SceneNode(app.getController().getScene().getRoot())
+        node.setMeshData(recieved_mesh)
+        operation = AddSceneNodeOperation(node,app.getController().getScene().getRoot())
+        app.getOperationStack().push(operation)
+            
     
     # Handle image sent by engine    
     def _onImageMessage(self, message):
@@ -201,13 +214,37 @@ class ScannerEngineBackend(Backend, SignalEmitter):
             message.step = ultiscantastic_pb2.setCalibrationStep.COMPUTE
         self._socket.sendMessage(message)
     
+    def _convertBytesToMesh(self, verts_data, indices_data):
+        verts = None
+        indices = None
+        verts = numpy.fromstring(verts_data,dtype=numpy.float32)
+        verts = verts.reshape(-1,4) # Reshape list to pairs of 4 (as they are sent as homogenous data)
+        verts =  verts[:,0:3] # Cut off the homogenous coord.
+        indices = numpy.fromstring(indices_data,dtype=numpy.uint32)
+        indices = indices.reshape(-1,3)
+        #print(indices[0])
+        '''print("indice1" ,indices[0])
+        print("indice1" ,indices[1])
+        print("indice1" ,indices[2])
+        print("indice1" , indices[3])
+        print("indice1" , indices[4])
+        print("indice1" , indices[5])'''
+              
+              
+        #indices = numpy.array(indices,dtype=numpy.int32)
+        #indices = indices.reshape(-1,3) # Reshape list to pairs of 3 points
+        
+        return (verts,indices)
+        
+        
+    
     ## Convert byte array using pcl::pointNormal type
     def _convertBytesToVerticeWithNormalsListPCL(self,data):
         result = []
         derp = struct.unpack('ffffffffffff',data[0:48])
         if not (len(data) % 48):
             if data is not None:
-                for index in range(0,int(len(data) / 48)): #For each 24 bits (12 floats)
+                for index in range(0,int(len(data) / 48)): #For each 48 bits (12 floats)
                     #PCL sends; x,y,z,1.0,n_x,n_y,n_z,0.0,curvatureX,curvatureY,curvatureZ,0)
                     decoded_data = struct.unpack('ffffffffffff',data[index*48:index*48+48])
                     result.append((decoded_data[0],decoded_data[1],decoded_data[2],decoded_data[4],decoded_data[5],decoded_data[6]))

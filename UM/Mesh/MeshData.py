@@ -46,6 +46,9 @@ class MeshData(SignalEmitter):
     def setName(self, name):
         self._name = name
 
+    def getNumFaces(self):
+        return self._face_count
+    
     ##  Get the array of vertices
     def getVertices(self):
         if self._vertices is None:
@@ -251,17 +254,23 @@ class MeshData(SignalEmitter):
     def addVertices(self, vertices):
         if self._vertices is None:
             self._vertices = numpy.zeros((0, 3), dtype=numpy.float32)
-
+        #print(vertices.shape)
         self._vertices = numpy.concatenate((self._vertices[0:self._vertex_count], vertices))
-        self._vertex_count += len(vertices)
+        self._vertex_count  += len(vertices)
+        print(vertices.shape)
+        print(self._vertex_count)
+        #self._vertices = numpy.concatenate((self._vertices[0:self._vertex_count], vertices))
+        #self._vertex_count  += len(vertices)
+        
 
     def addIndices(self, indices):
         if self._indices is None:
-            self._indices = numpy.zeros(0, dtype=numpy.int32)
-
-        self._indices = numpy.concatenate((self._indices[0:self._face_count], indices))
-        self._face_count += len(indices)
-
+            self._indices = indices
+            self._face_count = len(indices)
+        else:
+            self._indices = numpy.concatenate((self._indices[0:self._face_count], indices))
+            self._face_count += len(indices)
+    
     ##  Get all vertices of this mesh as a bytearray
     #
     #   \return A bytearray object with 3 floats per vertex.
@@ -281,29 +290,26 @@ class MeshData(SignalEmitter):
     #   \return A bytearray object with 3 ints per face.
     def getIndicesAsByteArray(self):
         if self._indices is not None:
-            return self._indices[0 : self._face_count].tostring()
+            return self._indices.tostring()
 
     ##  Calculate the normals of this mesh, assuming it was created by using addFace (eg; the verts are connected)    
     def calculateNormals(self):
         # Numpy magic!
         # First, reset the normals
         self._normals = numpy.zeros((self._vertex_count, 3), dtype=numpy.float32)
-
         # Then, take the cross product of each pair of vectors formed from a set of three vertices.
         # The [] operator on a numpy array returns itself a numpy array. The slicing syntax is [begin:end:step],
-        # so in this case we perform the cross over a two arrays. The first array is built from  the difference
+        # so in this case we perform the cross over a two arrays. The first array is built from the difference
         # between every second item in the array starting at two and every third item in the array starting at
         # zero. The second array is built from the difference between every third item in the array starting at
         # two and every third item in the array starting at zero. The cross operation then returns an array of
         # the normals of each set of three vertices.
         n = numpy.cross(self._vertices[1::3] - self._vertices[::3], self._vertices[2::3] - self._vertices[::3])
-
         # We then calculate the length for each normal and perform normalization on the normals.
         l = numpy.linalg.norm(n, axis=1)
         n[:, 0] /= l
         n[:, 1] /= l
         n[:, 2] /= l
-
         # Finally, we store the normals per vertex, with each face normal being repeated three times, once for
         # every vertex.
         self._normals = n.repeat(3, axis=0)
