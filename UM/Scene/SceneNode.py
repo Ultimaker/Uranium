@@ -27,6 +27,7 @@ class SceneNode(SignalEmitter):
         self._aabb = None
         self._aabbJob = None
         self._visible = True
+        self._name = ""
 
         if parent:
             parent.addChild(self)
@@ -35,7 +36,13 @@ class SceneNode(SignalEmitter):
     #   \returns SceneNode if it has a parent and None if it's the root node.
     def getParent(self):
         return self._parent
-
+    
+    def getName(self):
+        return self._name
+    
+    def setName(self, name):
+        self._name = name
+        
     ##  \brief Set the parent of this object
     #   \param scene_node SceneNode that is the parent of this object.
     def setParent(self, scene_node):

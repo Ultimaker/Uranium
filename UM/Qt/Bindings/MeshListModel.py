@@ -34,7 +34,7 @@ class MeshListModel(ListModel):
         #self.appendItem({"name": "test", "visibility": True,"key":id(self), "selected": False})
         for node in scene_nodes:
             if node.getMeshData() is not None:
-                self.appendItem({"name":node.getMeshData().getName(), "visibility": node.isVisible(), "key": (id(node)), "selected": Selection.isSelected(node)})
+                self.appendItem({"name":node.getName(), "visibility": node.isVisible(), "key": (id(node)), "selected": Selection.isSelected(node)})
     
     #def roleNames(self):
     #    return {self.NameRole:'name', self.VisibilityRole:"visibility",self.UniqueKeyRole: "key", self.SelectedRole: "selected"}

@@ -22,9 +22,6 @@ class Camera(SceneNode.SceneNode):
 
         self._viewport = [0.0, 0.0, 0.0, 0.0]
 
-    def getName(self):
-        return self._name
-
     ##  Get the projection matrix of this camera.
     def getProjectionMatrix(self):
         return self._projectionMatrix
