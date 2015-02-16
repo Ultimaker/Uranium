@@ -46,7 +46,7 @@ class MeshData(SignalEmitter):
     def setName(self, name):
         self._name = name
 
-    def getNumFaces(self):
+    def getFaceCount(self):
         return self._face_count
     
     ##  Get the array of vertices
