@@ -9,6 +9,7 @@ from UM.Scene.PointCloudNode import PointCloudNode
 from UM.Scene.SceneNode import SceneNode
 from PyQt5.QtGui import QImage
 from UM.Signal import Signal, SignalEmitter
+from UM.Logger import Logger
 
 import numpy
 
@@ -146,6 +147,8 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         return [Preferences.getPreference("BackendLocation"), '-p', str(self._port)]
     
     def _onPointCloudMessage(self, message):
+        #TODO: For debug purposes this is easier, but it should be moved to a job.
+        Logger.log('d', "Recieved point cloud")
         app = Application.getInstance()
         recieved_mesh = MeshData()
         for vert in self._convertBytesToVerticeWithNormalsListPCL(message.data):
@@ -154,15 +157,13 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         node.setMeshData(recieved_mesh)
         operation = AddSceneNodeOperation(node,app.getController().getScene().getRoot())
         app.getOperationStack().push(operation)
-        print("Recieved pointcloud")
         
         if not self._do_once:
             self._do_once = True
-            #self.recalculateNormals(recieved_mesh) #DEBUG STUFFS
-            #self.removeOutliers(recieved_mesh)
             self.poissonModelCreation([recieved_mesh])
     
     def _onMeshMessage(self,message):
+        Logger.log('d', "Recieved Mesh")
         job = ProcessMeshJob.ProcessMeshJob(message)
         job.start()
             
@@ -186,7 +187,7 @@ class ScannerEngineBackend(Backend, SignalEmitter):
     def _onProgressUpdateMessage(self, message):
         self.processingProgress.emit(message.amount)
 
-    def _addPointCloudWithNormals(self, data):
+    '''def _addPointCloudWithNormals(self, data):
         app = Application.getInstance()
         recieved_mesh = MeshData()
         for vert in self._convertBytesToVerticeWithNormalsListPCL(data):
@@ -194,7 +195,7 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         node = PointCloudNode(app.getController().getScene().getRoot())
         node.setMeshData(recieved_mesh)
         operation = AddSceneNodeOperation(node,app.getController().getScene().getRoot())
-        app.getOperationStack().push(operation)
+        app.getOperationStack().push(operation)'''
     
     def setCalibrationStep(self, key):
         message = ultiscantastic_pb2.setCalibrationStep()
@@ -209,10 +210,6 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         elif key == "calibrate":
             message.step = ultiscantastic_pb2.setCalibrationStep.COMPUTE
         self._socket.sendMessage(message)
-    
-
-        
-        
     
     ## Convert byte array using pcl::pointNormal type
     def _convertBytesToVerticeWithNormalsListPCL(self,data):

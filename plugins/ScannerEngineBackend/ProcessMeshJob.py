@@ -10,22 +10,17 @@ class ProcessMeshJob(Job):
     def __init__(self, message):
         super().__init__(description = 'Processing recieved mesh')
         self._message = message
-        self._scene = Application.getInstance().getController().getScene()
 
     def run(self):
-        pass
-        #print("recieved mesh")
-        app = Application.getInstance()
         recieved_mesh = MeshData()
-        #print(len(message.indices))
         verts , indices = self._convertBytesToMesh(self._message.vertices,self._message.indices)
         recieved_mesh.addVertices(verts)
         recieved_mesh.addIndices(indices)
         recieved_mesh.calculateNormals() #We didn't get normals, calculate them for sake of visualisation.
         node = SceneNode()
         node.setMeshData(recieved_mesh)
-        operation = AddSceneNodeOperation(node,app.getController().getScene().getRoot())
-        app.getOperationStack().push(operation)
+        operation = AddSceneNodeOperation(node,Application.getInstance().getController().getScene().getRoot())
+        Application.getInstance().getOperationStack().push(operation)
     
     def _convertBytesToMesh(self, verts_data, indices_data):
         verts = None
