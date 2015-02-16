@@ -35,10 +35,12 @@ class Signal:
     ##  Signal types.
     #   These indicate the type of signal, that is, how the signal handles calling the connected
     #   slots. Direct connections immediately call the connected slots from the thread calling
-    #   emit(). Queued connections will make sure to only call the connected slots from the
-    #   main application thread.
+    #   emit(). Auto connections will push the call onto the event loop if the current thread is
+    #   not the main thread, but make a direct call if it is. Queued connections will always push
+    #   the call on to the event loop.
     Direct = 1
-    Queued = 2
+    Auto = 2
+    Queued = 3
 
     ##  Initialize the instance.
     #
@@ -49,7 +51,7 @@ class Signal:
         self.__functions = WeakSet()
         self.__methods = WeakKeyDictionary()
         self.__signals = WeakSet()
-        self.__type = kwargs.get('type', Signal.Queued)
+        self.__type = kwargs.get('type', Signal.Auto)
 
     def __call__(self):
         raise NotImplementedError("Call emit() to emit a signal")
@@ -67,6 +69,10 @@ class Signal:
     #   function will be called on the next application event loop tick.
     def emit(self, *args, **kargs):
         if self.__type == Signal.Queued:
+            Signal._app.functionEvent(CallFunctionEvent(self.emit, args, kargs))
+            return
+
+        if self.__type == Signal.Auto:
             if threading.current_thread() is not Signal._app.getMainThread():
                 Signal._app.functionEvent(CallFunctionEvent(self.emit, args, kargs))
                 return
