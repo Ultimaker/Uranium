@@ -9,12 +9,22 @@ class Platform(SceneNode.SceneNode):
         super().__init__(parent)
 
         self._settings = None
+        self._material = None
         Application.getInstance().activeMachineChanged.connect(self._onActiveMachineChanged)
         self._onActiveMachineChanged()
 
     def render(self, renderer):
+        if not self._material:
+            self._material = renderer.createMaterial(
+                Resources.getPath(Resources.ShadersLocation, 'default.vert'),
+                Resources.getPath(Resources.ShadersLocation, 'platform.frag')
+            )
+            self._material.setUniformValue("u_ambientColor", [0.3, 0.3, 0.3, 1.0])
+            self._material.setUniformValue("u_diffuseColor", [0.5, 0.5, 0.5, 1.0])
+            self._material.setUniformValue('u_opacity', 0.9)
+
         if self.getMeshData():
-            renderer.queueMesh(self.getMeshData(), self.getGlobalTransformation())
+            renderer.queueMesh(self.getMeshData(), self.getGlobalTransformation(), material = self._material, transparent = True)
             return True
 
     def _onActiveMachineChanged(self):
