@@ -257,8 +257,6 @@ class MeshData(SignalEmitter):
         #print(vertices.shape)
         self._vertices = numpy.concatenate((self._vertices[0:self._vertex_count], vertices))
         self._vertex_count  += len(vertices)
-        print(vertices.shape)
-        print(self._vertex_count)
         #self._vertices = numpy.concatenate((self._vertices[0:self._vertex_count], vertices))
         #self._vertex_count  += len(vertices)
         
@@ -297,25 +295,31 @@ class MeshData(SignalEmitter):
         # Numpy magic!
         # First, reset the normals
         self._normals = numpy.zeros((self._vertex_count, 3), dtype=numpy.float32)
-        # Then, take the cross product of each pair of vectors formed from a set of three vertices.
-        # The [] operator on a numpy array returns itself a numpy array. The slicing syntax is [begin:end:step],
-        # so in this case we perform the cross over a two arrays. The first array is built from the difference
-        # between every second item in the array starting at two and every third item in the array starting at
-        # zero. The second array is built from the difference between every third item in the array starting at
-        # two and every third item in the array starting at zero. The cross operation then returns an array of
-        # the normals of each set of three vertices.
-        for face in self._indices:
-            print(self._vertices[face[0]])
-            print(self._vertices[face[1]])
-            print(self._vertices[face[2]])
-            break
-            pass
-        n = numpy.cross(self._vertices[1::3] - self._vertices[::3], self._vertices[2::3] - self._vertices[::3])
-        # We then calculate the length for each normal and perform normalization on the normals.
-        l = numpy.linalg.norm(n, axis=1)
-        n[:, 0] /= l
-        n[:, 1] /= l
-        n[:, 2] /= l
-        # Finally, we store the normals per vertex, with each face normal being repeated three times, once for
-        # every vertex.
-        self._normals = n.repeat(3, axis=0)
+
+        if self.hasIndices():
+            for face in self._indices:
+                #print(self._vertices[face[0]])
+                #print(self._vertices[face[1]])
+                #print(self._vertices[face[2]])
+                self._normals[face[0]] = numpy.cross(self._vertices[face[0]] - self._vertices[face[1]], self._vertices[face[0]] - self._vertices[face[2]])
+                length = numpy.linalg.norm(self._normals[face[0]])
+                self._normals[face[0]] /= length
+                self._normals[face[1]] =self._normals[face[0]]
+                self._normals[face[2]] =self._normals[face[0]]
+        else: #Old way of doing it, asuming that each face has 3 unique verts
+            # Then, take the cross product of each pair of vectors formed from a set of three vertices.
+            # The [] operator on a numpy array returns itself a numpy array. The slicing syntax is [begin:end:step],
+            # so in this case we perform the cross over a two arrays. The first array is built from the difference
+            # between every second item in the array starting at two and every third item in the array starting at
+            # zero. The second array is built from the difference between every third item in the array starting at
+            # two and every third item in the array starting at zero. The cross operation then returns an array of
+            # the normals of each set of three vertices.
+            n = numpy.cross(self._vertices[1::3] - self._vertices[::3], self._vertices[2::3] - self._vertices[::3])
+            # We then calculate the length for each normal and perform normalization on the normals.
+            l = numpy.linalg.norm(n, axis=1)
+            n[:, 0] /= l
+            n[:, 1] /= l
+            n[:, 2] /= l
+            # Finally, we store the normals per vertex, with each face normal being repeated three times, once for
+            # every vertex.
+            self._normals = n.repeat(3, axis=0)

@@ -169,7 +169,7 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         verts , indices = self._convertBytesToMesh(message.vertices,message.indices)
         recieved_mesh.addVertices(verts)
         recieved_mesh.addIndices(indices)
-        #recieved_mesh.calculateNormals() #We didn't get normals, calculate them for sake of visualisation.
+        recieved_mesh.calculateNormals() #We didn't get normals, calculate them for sake of visualisation.
         node = SceneNode(app.getController().getScene().getRoot())
         node.setMeshData(recieved_mesh)
         operation = AddSceneNodeOperation(node,app.getController().getScene().getRoot())
