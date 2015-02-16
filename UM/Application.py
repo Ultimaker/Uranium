@@ -31,6 +31,7 @@ class Application(SignalEmitter):
 
         Signal._app = self
         Resources.ApplicationIdentifier = name
+        self._main_thread = threading.current_thread()
 
         super().__init__(**kwargs) # Call super to make multiple inheritence work.
 
@@ -53,8 +54,6 @@ class Application(SignalEmitter):
         self._required_plugins = [] 
 
         self._operation_stack = OperationStack()
-
-        self._main_thread = threading.current_thread()
 
         self._parsed_arguments = None
         self.parseArguments()
