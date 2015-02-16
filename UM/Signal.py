@@ -49,7 +49,7 @@ class Signal:
         self.__functions = WeakSet()
         self.__methods = WeakKeyDictionary()
         self.__signals = WeakSet()
-        self.__type = kwargs.get('type', Signal.Direct)
+        self.__type = kwargs.get('type', Signal.Queued)
 
     def __call__(self):
         raise NotImplementedError("Call emit() to emit a signal")

@@ -13,6 +13,7 @@ from UM.Signal import Signal, SignalEmitter
 import numpy
 
 from . import ultiscantastic_pb2
+from . import ProcessMeshJob
 
 ## Class that is responsible for listening to the backend.
 class ScannerEngineBackend(Backend, SignalEmitter):
@@ -162,18 +163,8 @@ class ScannerEngineBackend(Backend, SignalEmitter):
             self.poissonModelCreation([recieved_mesh])
     
     def _onMeshMessage(self,message):
-        print("recieved mesh")
-        app = Application.getInstance()
-        recieved_mesh = MeshData()
-        print(len(message.indices))
-        verts , indices = self._convertBytesToMesh(message.vertices,message.indices)
-        recieved_mesh.addVertices(verts)
-        recieved_mesh.addIndices(indices)
-        recieved_mesh.calculateNormals() #We didn't get normals, calculate them for sake of visualisation.
-        node = SceneNode(app.getController().getScene().getRoot())
-        node.setMeshData(recieved_mesh)
-        operation = AddSceneNodeOperation(node,app.getController().getScene().getRoot())
-        app.getOperationStack().push(operation)
+        job = ProcessMeshJob.ProcessMeshJob(message)
+        job.start()
             
     
     # Handle image sent by engine    
@@ -219,27 +210,7 @@ class ScannerEngineBackend(Backend, SignalEmitter):
             message.step = ultiscantastic_pb2.setCalibrationStep.COMPUTE
         self._socket.sendMessage(message)
     
-    def _convertBytesToMesh(self, verts_data, indices_data):
-        verts = None
-        indices = None
-        verts = numpy.fromstring(verts_data,dtype=numpy.float32)
-        verts = verts.reshape(-1,4) # Reshape list to pairs of 4 (as they are sent as homogenous data)
-        verts =  verts[:,0:3] # Cut off the homogenous coord.
-        indices = numpy.fromstring(indices_data,dtype=numpy.uint32)
-        indices = indices.reshape(-1,3)
-        #print(indices[0])
-        '''print("indice1" ,indices[0])
-        print("indice1" ,indices[1])
-        print("indice1" ,indices[2])
-        print("indice1" , indices[3])
-        print("indice1" , indices[4])
-        print("indice1" , indices[5])'''
-              
-              
-        #indices = numpy.array(indices,dtype=numpy.int32)
-        #indices = indices.reshape(-1,3) # Reshape list to pairs of 3 points
-        
-        return (verts,indices)
+
         
         
     
