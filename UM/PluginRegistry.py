@@ -72,9 +72,9 @@ class PluginRegistry(object):
             Logger.log('i', 'Loaded plugin %s', name)
             self._plugins[name] = plugin
         except PluginError as e:
-            Logger.log('e', e)
+            Logger.log('e', str(e))
         except AttributeError as e:
-            Logger.log('e', e)
+            Logger.log('e', str(e))
     
     ##  Load all plugins matching a certain set of metadata
     #   \param metaData \type{dict} The metaData that needs to be matched.

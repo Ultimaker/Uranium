@@ -19,7 +19,8 @@ class JobsModel(ListModel):
         jobQueue.jobFinished.connect(self._onJobFinished)
 
         backend = Application.getInstance().getBackend()
-        backend.processingProgress.connect(self._onProcessingProgress)
+        if backend:
+            backend.processingProgress.connect(self._onProcessingProgress)
 
         self._watchedJobIndices = {}
         self.addRoleName(self.IdRole, 'id')

@@ -7,6 +7,7 @@ from UM.Math.Matrix import Matrix
 from CameraImageProvider import CameraImageProvider
 import ToolbarProxy
 from PyQt5.QtQml import qmlRegisterType, qmlRegisterSingletonType
+from UM.Settings.MachineSettings import MachineSettings
 
 import os.path
 
@@ -16,8 +17,12 @@ def createToolbarProxy(engine, scriptEngine):
 
 class ScannerApplication(QtApplication):
     def __init__(self):
-        super(ScannerApplication, self).__init__()
-        self._machine_settings.loadSettingsFromFile(Resources.getPath(Resources.SettingsLocation, "ultiscantastic.json"))
+        super().__init__(name = 'ScanTastic')
+        #self._machine_settings.loadSettingsFromFile(Resources.getPath(Resources.SettingsLocation, "ultiscantastic.json"))
+        settings = MachineSettings()
+        settings.loadSettingsFromFile(Resources.getPath(Resources.SettingsLocation, "ultiscantastic.json"))
+        self._machines.append(settings)
+        self.setActiveMachine(self.getMachines()[0])
         self.setRequiredPlugins(["ScannerEngineBackend","PLYWriter","PLYReader"])
         self._camera_image_provider = CameraImageProvider()
         self.engineCreatedSignal.connect(self._onEngineCreated)
@@ -44,10 +49,10 @@ class ScannerApplication(QtApplication):
         root = self.getController().getScene().getRoot()
         
         
-        try:
-            self.getMachineSettings().loadValuesFromFile(Resources.getPath(Resources.SettingsLocation, 'settings.cfg'))
-        except FileNotFoundError:
-            pass
+        #try:
+        #    self.getMachineSettings().loadValuesFromFile(Resources.getPath(Resources.SettingsLocation, 'settings.cfg'))
+        #except FileNotFoundError:
+        #    pass
         
         self.getRenderer().setLightPosition(Vector(0, 150, 150))
         

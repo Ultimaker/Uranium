@@ -304,6 +304,12 @@ class MeshData(SignalEmitter):
         # zero. The second array is built from the difference between every third item in the array starting at
         # two and every third item in the array starting at zero. The cross operation then returns an array of
         # the normals of each set of three vertices.
+        for face in self._indices:
+            print(self._vertices[face[0]])
+            print(self._vertices[face[1]])
+            print(self._vertices[face[2]])
+            break
+            pass
         n = numpy.cross(self._vertices[1::3] - self._vertices[::3], self._vertices[2::3] - self._vertices[::3])
         # We then calculate the length for each normal and perform normalization on the normals.
         l = numpy.linalg.norm(n, axis=1)

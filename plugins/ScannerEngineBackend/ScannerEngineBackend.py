@@ -27,9 +27,14 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         
         self._do_once = False
         self._latest_camera_image = QImage(1, 1, QImage.Format_RGB888)
-        
-        self._settings = Application.getInstance().getMachineSettings()
-        self._settings.settingChanged.connect(self._onSettingChanged)
+        self._settings = None
+        Application.getInstance().activeMachineChanged.connect(self._onActiveMachineChanged)
+        self._onActiveMachineChanged()
+    
+    def _onActiveMachineChanged(self):
+        self._settings = Application.getInstance().getActiveMachine()
+        if self._settings:
+            self._settings.settingChanged.connect(self._onSettingChanged)
     
     def _onSettingChanged(self, setting):
         print("setting changed ", setting.getKey())

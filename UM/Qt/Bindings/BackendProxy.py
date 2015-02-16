@@ -6,7 +6,8 @@ class BackendProxy(QObject):
     def __init__(self, parent = None):
         super().__init__(parent)
         self._backend = Application.getInstance().getBackend()
-        self._backend.processingProgress.connect(self._onProcessingProgress)
+        if self._backend:
+            self._backend.processingProgress.connect(self._onProcessingProgress)
 
     processingProgress = pyqtSignal(float, arguments = ['amount'])
 
