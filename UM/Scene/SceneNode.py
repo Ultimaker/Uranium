@@ -42,12 +42,18 @@ class SceneNode(SignalEmitter):
     
     def setName(self, name):
         self._name = name
-        
+    
+    ##  How many nodes is this node removed from the root
+    def getDepth(self):
+        if self._parent is None: return 0
+        return self._parent.getDepth() + 1
+    
     ##  \brief Set the parent of this object
     #   \param scene_node SceneNode that is the parent of this object.
     def setParent(self, scene_node):
         if self._parent:
             self._parent.removeChild(self)
+        self._parent = scene_node
 
         if scene_node:
             scene_node.addChild(self)
@@ -129,6 +135,9 @@ class SceneNode(SignalEmitter):
     #   \returns List of children
     def getChildren(self):
         return self._children
+    
+    def hasChildren(self):
+        return True if len(self._children) else False
 
     ##  \brief Get list of all children (including it's children children children etc.)
     #   \returns list ALl children in this 'tree'

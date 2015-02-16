@@ -33,6 +33,7 @@ Panel {
         Rectangle 
         {
             color: model.selected ?"#2EB5E7": "#EBEBEB" 
+            
             width:200
             height:25
             MouseArea
@@ -59,6 +60,7 @@ Panel {
 
             RowLayout 
             {
+                x: (model.depth - 1) * 25
                 CheckBox 
                 {
                     checked: model.visibility

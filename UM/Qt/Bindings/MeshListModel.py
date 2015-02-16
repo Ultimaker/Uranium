@@ -12,6 +12,7 @@ class MeshListModel(ListModel):
     VisibilityRole = Qt.UserRole + 2
     UniqueKeyRole = Qt.UserRole + 3
     SelectedRole = Qt.UserRole + 4
+    DepthRole = Qt.UserRole + 5
     
     def __init__(self, parent = None):
         super().__init__(parent)
@@ -21,10 +22,10 @@ class MeshListModel(ListModel):
         self.addRoleName(self.VisibilityRole, "visibility")
         self.addRoleName(self.UniqueKeyRole, "key")
         self.addRoleName(self.SelectedRole, "selected")
+        self.addRoleName(self.DepthRole, "depth")
         Application.getInstance().getController().getScene().rootChanged.connect(self._rootChanged)
         
     def _rootChanged(self):
-        print("Root changed")
         Application.getInstance().getController().getScene().getRoot().childrenChanged.connect(self.updateList)
         self.updateList(Application.getInstance().getController().getScene().getRoot()) #Manually trigger the update
     
@@ -33,8 +34,8 @@ class MeshListModel(ListModel):
         scene_nodes = trigger_node.getAllChildren()
         #self.appendItem({"name": "test", "visibility": True,"key":id(self), "selected": False})
         for node in scene_nodes:
-            if node.getMeshData() is not None:
-                self.appendItem({"name":node.getName(), "visibility": node.isVisible(), "key": (id(node)), "selected": Selection.isSelected(node)})
+            if node.getMeshData() is not None or node.hasChildren():
+                self.appendItem({"name":node.getName(), "visibility": node.isVisible(), "key": (id(node)), "selected": Selection.isSelected(node),"depth": node.getDepth()})
     
     #def roleNames(self):
     #    return {self.NameRole:'name', self.VisibilityRole:"visibility",self.UniqueKeyRole: "key", self.SelectedRole: "selected"}
