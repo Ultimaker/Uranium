@@ -200,6 +200,13 @@ UM.MainWindow
             }*/
 
             UM.JobList { anchors.left: parent.left; anchors.bottom: parent.bottom; width: parent.width / 10; height: parent.height / 5; }
+        
+            Image 
+            { 
+                source:UM.Resources.getIcon("poweredbyultimakersmall.png")
+                anchors.bottom: parent.bottom;
+                anchors.left:parent.left;
+            } 
         }
     }
 
