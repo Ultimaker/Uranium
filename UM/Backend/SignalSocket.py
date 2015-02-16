@@ -11,11 +11,11 @@ class SignalSocket(Arcus.Socket, SignalEmitter):
         self.setMessageReceivedCallback(self._onMessageReceived)
         self.setErrorCallback(self._onError)
 
-    stateChanged = Signal(type = Signal.Queued)
+    stateChanged = Signal()
 
-    messageReceived = Signal(type = Signal.Queued)
+    messageReceived = Signal()
 
-    error = Signal(type = Signal.Queued)
+    error = Signal()
 
     def _onStateChanged(self, state):
         self.stateChanged.emit(state)
