@@ -23,7 +23,7 @@ class SceneNode(SignalEmitter):
         self._transformation = Matrix()
         self._parent = parent
         self._locked = False
-        self._selectionMask = 0
+        self._selection_mask = 0
         self._aabb = None
         self._aabbJob = None
         self._visible = True
@@ -259,10 +259,10 @@ class SceneNode(SignalEmitter):
 
     # TODO: This can probably be simplified to an enabled property or similar. Maybe combine with locked?
     def getSelectionMask(self):
-        return self._selectionMask
+        return self._selection_mask
 
     def setSelectionMask(self, mask):
-        self._selectionMask = mask
+        self._selection_mask = mask
 
     ##  private:
 
