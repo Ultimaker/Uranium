@@ -91,6 +91,19 @@ class MeshListModel(ListModel):
                 op.push()
                 break
 
-    
+    @pyqtSlot()
+    def removeSelected(self):
+        keys_to_be_removed = []
+        nodes_to_be_removed = []
+        for item in self.items:
+            if item["selected"]:
+                keys_to_be_removed.append(item["key"])
+        for node in Application.getInstance().getController().getScene().getRoot().getAllChildren():
+            if id(node) in keys_to_be_removed:
+                nodes_to_be_removed.append(node)
+        
+        if len(nodes_to_be_removed):
+            op = RemoveSceneNodesOperation(nodes_to_be_removed)
+            op.push()
     
     

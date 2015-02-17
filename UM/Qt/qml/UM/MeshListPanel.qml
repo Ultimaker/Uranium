@@ -23,6 +23,47 @@ Panel {
             delegate: meshDelegate      
             model: UM.Models.meshListModel
         }
+        
+        Item
+        {
+            Layout.fillWidth: true
+            height: 50
+            Rectangle 
+            {
+                color:"black"
+                width:parent.width
+                height:2
+            }
+            RowLayout
+            {
+                anchors.fill:parent
+                Label 
+                {
+                    text:"0 layers of scans"
+                }
+                Button
+                {
+                    iconSource: UM.Resources.getIcon("open.png")
+                    style:ButtonStyle{ background:Item{}}
+                }
+                
+                Button
+                {
+                    iconSource: UM.Resources.getIcon("icon_search.png")
+                    style:ButtonStyle{background:Item{}}
+                }
+                
+                Button
+                {
+                    iconSource: UM.Resources.getIcon("icon_trash_bin.png")
+                    style:ButtonStyle{background:Item{}}
+                    onClicked:
+                    {
+                        meshList.model.removeSelected()
+                    }
+                }
+            }
+        }
 
     }
     Component 
@@ -99,10 +140,13 @@ Panel {
                     checkedImage: UM.Resources.getIcon("icon_selected_open.png")
                     uncheckedImage:UM.Resources.getIcon("icon_selected_closed.png")
                     anchors.right:parent.right
+                    onClicked: meshList.model.setSelected(model.key)
                 }
             }
         }
     }
+    
+
     
     FileDialog {
         id: fileDialog
