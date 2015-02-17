@@ -77,10 +77,10 @@ class Job(SignalEmitter):
     ##  Emitted when the job has finished processing.
     #
     #   \param job The finished job.
-    finished = Signal(type = Signal.Queued)
+    finished = Signal()
 
     ##  Emitted when the job processing has progressed.
     #
     #   \param job The job reporting progress.
     #   \param amount \type{int} The amount of progress made, from 0 to 100.
-    progress = Signal(type = Signal.Queued)
+    progress = Signal()

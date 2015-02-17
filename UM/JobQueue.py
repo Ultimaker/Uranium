@@ -59,12 +59,12 @@ class JobQueue(SignalEmitter):
     ##  Emitted whenever a job starts processing.
     #
     #   \param job The job that has started processing.
-    jobStarted = Signal(type = Signal.Queued)
+    jobStarted = Signal()
 
     ##  Emitted whenever a job has finished processing.
     #
     #   \param job The job that has finished processing.
-    jobFinished = Signal(type = Signal.Queued)
+    jobFinished = Signal()
 
     ## protected:
 
