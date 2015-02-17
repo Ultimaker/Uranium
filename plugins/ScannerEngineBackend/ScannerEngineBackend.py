@@ -153,9 +153,11 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         recieved_mesh = MeshData()
         for vert in self._convertBytesToVerticeWithNormalsListPCL(message.data):
             recieved_mesh.addVertexWithNormal(vert[0],vert[1],vert[2],vert[3],vert[4],vert[5])
-        node = PointCloudNode(app.getController().getScene().getRoot())
+        group_node = SceneNode()
+        group_node.setName("ScanGroup (yay!)")
+        node = PointCloudNode(group_node)
         node.setMeshData(recieved_mesh)
-        operation = AddSceneNodeOperation(node,app.getController().getScene().getRoot())
+        operation = AddSceneNodeOperation(group_node,app.getController().getScene().getRoot())
         app.getOperationStack().push(operation)
         
         if not self._do_once:

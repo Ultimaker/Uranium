@@ -28,14 +28,15 @@ Panel {
     Component 
     {
         id: meshDelegate
-       
-                
         Rectangle 
         {
-            color: model.selected ?"#2EB5E7": "#EBEBEB" 
+            color: model.depth == 1 ?"#FFFFFF": "#EBEBEB" 
+            width:meshList.width
+            Behavior on opacity { NumberAnimation { } }
+            opacity:model.collapsed ? 0:1
             
-            width:200
-            height:25
+            Behavior on height {NumberAnimation{}}
+            height:model.collapsed ? 0:25
             MouseArea
             {
                 anchors.fill: parent;
@@ -57,24 +58,49 @@ Panel {
                 MenuItem { text: "Save"; onTriggered: {fileDialog.key = model.key;
                                                         fileDialog.open();} }
             }
-
+            
             RowLayout 
             {
-                x: (model.depth - 1) * 25
-                CheckBox 
+                anchors.fill: parent
+                //Layout.fillWidth:true
+                
+                ToggleButton
+                { 
+                    onClicked:meshList.model.setVisibility(model.key,checked)
+                    checkedImage:  UM.Resources.getIcon("icon_visibility.png")
+                    uncheckedImage: UM.Resources.getIcon("icon_visibility_crossed.png")
+                    width:22
+                }
+ 
+                ToggleButton
                 {
-                    checked: model.visibility
-                    implicitWidth: 25
-                    onClicked: meshList.model.setVisibility(model.key, checked)
+                    id:collapseButton
+                    checkedImage: UM.Resources.getIcon("icon_collapse_up.png")
+                    uncheckedImage:UM.Resources.getIcon("icon_collapse_down.png")
+                    visible: model.depth == 1 ? true: false
+                    onClicked:meshList.model.setCollapsed(model.key)
                 }
                 Text 
                 {
                     text:model.name
+                    width:50
                 }
-                
+
+                ToggleButton
+                {
+                    id: lockButton
+                    checkedImage: UM.Resources.getIcon("icon_lock_open.png")
+                    uncheckedImage: UM.Resources.getIcon("icon_lock_closed.png")   
+                    anchors.right:selectIcon.left
+                } 
+                ToggleButton
+                {
+                    id:selectIcon
+                    checkedImage: UM.Resources.getIcon("icon_selected_open.png")
+                    uncheckedImage:UM.Resources.getIcon("icon_selected_closed.png")
+                    anchors.right:parent.right
+                }
             }
-            
-            
         }
     }
     
