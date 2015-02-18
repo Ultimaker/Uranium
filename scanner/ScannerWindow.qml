@@ -10,7 +10,7 @@ UM.MainWindow
     id: base
     visible: true
 
-    width: 1024
+    width: 1280
     height: 768
 
     Item 
@@ -110,7 +110,7 @@ UM.MainWindow
             UM.MeshListPanel 
             {
                 id: mesh_list_panel;
- 
+                anchors.topMargin:20
                 anchors.left: parent.left
                 anchors.top:toolbar.bottom
             }
@@ -207,6 +207,60 @@ UM.MainWindow
                 anchors.bottom: parent.bottom;
                 anchors.left:parent.left;
             } 
+            
+            Rectangle 
+            {
+                id: firstTimeStartup
+                width: 750
+                height: parent.height / 2
+                anchors.horizontalCenter:parent.horizontalCenter
+                anchors.topMargin: 20
+                anchors.top:toolbar.bottom
+                RowLayout
+                {
+                    anchors.fill: parent;
+                    ColumnLayout 
+                    {
+                        Image
+                        {
+                            source:"placeholder.png"
+                        }
+                        WizardButton
+                        {
+                            text:"Start wizard"
+                            onClicked:
+                            {
+                                UM.ToolbarData.setWizardState(true);
+                                firstTimeStartup.visible = false
+                            }
+                        }
+                    }
+                    Text
+                    {
+                        id:introText
+                        text: "<b>First time startup</b><br>Omg zomg wtf bbq! Proin eu felis ante. Curabitur blandit nibh eget feugiat aliquam. Duis neque erat, vehicula at tempus id, lobortis vitae turpis. Maecenas venenatis diam a ornare consectetur. Aenean ac nibh id orci dignissim sollicitudin id ac odio. Sed sem erat, hendrerit eu congue sit amet, euismod eget mi. Aliquam erat volutpat. "
+                        wrapMode: Text.Wrap
+                        Layout.fillWidth: true
+                    }
+                    ColumnLayout
+                    {
+                        Image
+                        {
+                            source:"placeholder.png"
+                            
+                        }
+                        WizardButton
+                        {
+                            text:"Start advanced"
+                            onClicked:
+                            {
+                                UM.ToolbarData.setWizardState(false);
+                                firstTimeStartup.visible = false
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -341,6 +395,8 @@ UM.MainWindow
         width: 500
         height:500
     }
+    
+    
     
     
 }
