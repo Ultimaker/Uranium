@@ -24,9 +24,8 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         self._message_handlers[ultiscantastic_pb2.PointCloudPointNormal] = self._onPointCloudMessage
         self._message_handlers[ultiscantastic_pb2.ProgressUpdate] = self._onProgressUpdateMessage
         self._message_handlers[ultiscantastic_pb2.Image] = self._onImageMessage
-        self._message_handlers[ultiscantastic_pb2.CalibrationProblem] = self._onCalibrationProblemMessage
+        self._message_handlers[ultiscantastic_pb2.CalibrationStatusMessage] = self._onCalibrationStatusMessage
         self._message_handlers[ultiscantastic_pb2.Mesh] = self._onMeshMessage
-        
         self._do_once = False
         self._latest_camera_image = QImage(1, 1, QImage.Format_RGB888)
         self._settings = None
@@ -42,11 +41,11 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         print("setting changed ", setting.getKey())
         self.sendSetting(setting)
     
-    def _onCalibrationProblemMessage(self, message):
+    def _onCalibrationStatusMessage(self, message):
         if message.type == ultiscantastic_pb2.CalibrationProblem.OBJECT_NOT_FOUND:
-            self.calibrationProblemMessage.emit("Object")
+            self.calibrationStatusMessage.emit("Object")
     
-    calibrationProblemMessage = Signal()
+    calibrationStatusMessage = Signal()
     
     def getLatestCameraImage(self):
         return self._latest_camera_image
@@ -59,7 +58,7 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         self._socket.registerMessageType(4, ultiscantastic_pb2.StartCalibration)
         self._socket.registerMessageType(5, ultiscantastic_pb2.Image)
         self._socket.registerMessageType(6, ultiscantastic_pb2.setCalibrationStep)
-        self._socket.registerMessageType(7, ultiscantastic_pb2.CalibrationProblem)
+        self._socket.registerMessageType(7, ultiscantastic_pb2.CalibrationStatusMessage)
         self._socket.registerMessageType(8, ultiscantastic_pb2.PointCloudWithNormals)
         self._socket.registerMessageType(9, ultiscantastic_pb2.RecalculateNormal)
         self._socket.registerMessageType(10, ultiscantastic_pb2.PoissonModelCreation)

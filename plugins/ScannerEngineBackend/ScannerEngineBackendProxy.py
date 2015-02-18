@@ -8,11 +8,11 @@ class ScannerEngineBackendProxy(QObject):
         super().__init__(parent)
         self._backend = Application.getInstance().getBackend()
         self._backend.newCameraImage.connect(self._onNewImage)
-        self._backend.calibrationProblemMessage.connect(self._onCalibrationProblem)
+        self._backend.calibrationStatusMessage.connect(self._onCalibrationStatusMessage)
         self._id = 0;
         self._backend.processingProgress.connect(self._onProcessingProgress)
         self._warning_string = ""
-        self._resetProblemMessageTimer = None
+        self._resetStatusMessageTimer = None
 
     processingProgress = pyqtSignal(float, arguments = ['amount'])
 
@@ -27,9 +27,9 @@ class ScannerEngineBackendProxy(QObject):
         temp = "image://camera/" + str(self._id)
         return QUrl(temp,QUrl.TolerantMode)
 
-    newCalibrationProblemText = pyqtSignal()
+    newCalibrationStatusText = pyqtSignal()
     
-    @pyqtProperty(str, notify=newCalibrationProblemText)
+    @pyqtProperty(str, notify=newCalibrationStatusText)
     def warningText(self):
         return self._warning_string
     
@@ -45,21 +45,21 @@ class ScannerEngineBackendProxy(QObject):
     def _onNewImage(self):
         self.newImage.emit()
     
-    def _onCalibrationProblem(self, str):
+    def _onCalibrationStatusMessage(self, str):
         self._warning_string = str
-        if not self._resetProblemMessageTimer:
-            self._resetProblemMessageTimer = threading.Timer(3, self._onResetProblemTimerFinished)
-            self._resetProblemMessageTimer.start()
-        if self._resetProblemMessageTimer: #Stop timer and create a new one.
-            self._resetProblemMessageTimer.cancel()
-            self._resetProblemMessageTimer = threading.Timer(3, self._onResetProblemTimerFinished) 
-            self._resetProblemMessageTimer.start()
-        self.newCalibrationProblemText.emit()
+        if not self._resetStatusMessageTimer:
+            self._resetStatusMessageTimer = threading.Timer(3, self._onResetStatsTimerFinished)
+            self._resetStatusMessageTimer.start()
+        if self._resetStatusMessageTimer: #Stop timer and create a new one.
+            self._resetStatusMessageTimer.cancel()
+            self._resetStatusMessageTimer = threading.Timer(3, self._onResetStatsTimerFinished) 
+            self._resetStatusMessageTimer.start()
+        self.newCalibrationStatusText.emit()
     
-    def _onResetProblemTimerFinished(self):
+    def _onResetStatsTimerFinished(self):
         self._warning_string = ""
-        self._resetProblemMessageTimer = None
-        self.newCalibrationProblemText.emit()
+        self._resetStatusMessageTimer = None
+        self.newCalibrationStatusText.emit()
     
     @pyqtSlot(int)
     def setCalibrationStep(self, step_number):
