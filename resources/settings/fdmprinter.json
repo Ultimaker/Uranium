@@ -55,7 +55,8 @@
                                     "label": "Wall Line Count",
                                     "default": 2,
                                     "type": "int",
-                                    "visible": false
+                                    "visible": false,
+                                    "inherit_function": "max(1, (int(parent_value / (machine_nozzle_size - 0.0001) + 1) if (parent_value / max(1, int(parent_value / (machine_nozzle_size - 0.0001))) > machine_nozzle_size) * 1.5 else int(parent_value / (machine_nozzle_size - 0.0001))))"
                                 },
                                 "wall_line_width": {
                                     "label": "Wall Line Width",
@@ -63,6 +64,7 @@
                                     "default": 0.4,
                                     "type": "float",
                                     "visible": false,
+                                    "inherit_function": "max(machine_nozzle_size, (parent_value / (int(parent_value / (machine_nozzle_size - 0.0001) + 1))) if (parent_value / (int(parent_value / (machine_nozzle_size - 0.0001))) > machine_nozzle_size * 1.5) else (parent_value / int(parent_value / (machine_nozzle_size - 0.0001))))",
 
                                     "children": {
                                         "wall_line_width_0": {
@@ -107,7 +109,8 @@
                                             "label": "Top Layers",
                                             "default": 4,
                                             "type": "int",
-                                            "visible": false
+                                            "visible": false,
+                                            "inherit_function": "math.ceil(parent_value / layer_height)"
                                         }
                                     }
                                 },
@@ -123,7 +126,8 @@
                                             "label": "Bottom Layers",
                                             "default": 4,
                                             "type": "int",
-                                            "visible": false
+                                            "visible": false,
+                                            "inherit_function": "math.ceil(parent_value / layer_height)"
                                         }
                                     }
                                 }
@@ -191,41 +195,47 @@
                             "unit": "mm/s",
                             "type": "float",
                             "default": 40.0,
-                            "visible": false
+                            "visible": false,
+                            "inherit": false
                         },
                         "retraction_amount": {
                             "label": "Retraction Distance",
                             "unit": "mm",
                             "type": "float",
                             "default": 4.5,
-                            "visible": false
+                            "visible": false,
+                            "inherit": false
                         },
                         "retraction_min_travel": {
                             "label": "Retraction Minimum Travel",
                             "unit": "mm",
                             "type": "float",
                             "default": 4.5,
-                            "visible": false
+                            "visible": false,
+                            "inherit": false
                         },
                         "retraction_combing": {
                             "label": "Enable Combing",
                             "type": "boolean",
                             "default": true,
-                            "visible": false
+                            "visible": false,
+                            "inherit": false
                         },
                         "retraction_minimal_extrusion": {
                             "label": "Minimal Retraction Before Extrusion",
                             "unit": "mm",
                             "type": "float",
                             "default": 0.02,
-                            "visible": false
+                            "visible": false,
+                            "inherit": false
                         },
                         "retraction_hop": {
                             "label": "Z Hop when Retracting",
                             "unit": "mm",
                             "type": "float",
                             "default": 0.0,
-                            "visible": false
+                            "visible": false,
+                            "inherit": false
                         }
                     }
                 }
@@ -333,7 +343,8 @@
                                 "Lines",
                                 "Concentric"
                             ],
-                            "default": "Grid"
+                            "default": "Grid",
+                            "inherit_function": "'Lines' if parent_value > 25 else 'Grid'"
                         }
                     }
                 },
@@ -356,7 +367,8 @@
                             "label": "Infill Layers",
                             "type": "int",
                             "default": 1,
-                            "visible": false
+                            "visible": false,
+                            "inherit_function": "math.floor((parent_value + 0.001) / layer_height)"
                         }
                     }
                 }
@@ -378,6 +390,7 @@
                             "type": "float",
                             "default": 100.0,
                             "visible": false,
+                            "inherit_function": "100.0 if parent_value else 0.0",
 
                             "children": {
                                 "cool_fan_speed_min": {
@@ -403,7 +416,17 @@
                     "unit": "mm",
                     "type": "float",
                     "default": 0.5,
-                    "visible": false
+                    "visible": false,
+
+                    "children": {
+                        "cool_fan_full_layer": {
+                            "label": "Fan Full on at Layer",
+                            "type": "int",
+                            "default": 4,
+                            "visible": false,
+                            "inherit_function": "int((parent_value - layer_height_0 + 0.001) / layer_height)"
+                        }
+                    }
                 },
                 "cool_min_layer_time": {
                     "label": "Minimal Layer Time",
