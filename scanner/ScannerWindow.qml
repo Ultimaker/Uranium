@@ -112,7 +112,7 @@ UM.MainWindow
                 id: mesh_list_panel;
  
                 anchors.left: parent.left
-                anchors.verticalCenter: parent.verticalCenter
+                anchors.top:toolbar.bottom
             }
 
             

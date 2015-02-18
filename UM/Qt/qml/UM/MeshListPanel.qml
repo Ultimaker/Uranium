@@ -6,65 +6,115 @@ import QtQuick.Controls.Styles 1.1
 
 import UM 1.0 as UM
 
-Panel {
-    title: "Layers"
-    contents: ColumnLayout 
+Rectangle {
+    id:meshListPanel
+    width:200
+    height:500
+    border.width:1
+    border.color:"black"
+    Rectangle
     {
-        Layout.preferredWidth: 200
-        Layout.preferredHeight: 400
-
-        ListView
+        id: dragHandle
+        width: parent.width
+        height: 16
+        color: "white"
+        radius: 0
+        border.width: 1
+        border.color: "#000000"
+        anchors.top: parent.bottom
+        Image
         {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            id:meshList
-            //headerVisible: false
-            //TableViewColumn{ role: "name" ; title: "Name" ; width: 200 }
-            delegate: meshDelegate      
-            model: UM.Models.meshListModel
+            source:UM.Resources.getIcon("expand_small.png")
+            anchors.horizontalCenter:parent.horizontalCenter
         }
-        
-        Item
+        MouseArea 
         {
-            Layout.fillWidth: true
-            height: 50
-            Rectangle 
+            id: mouseAreaDragHandle
+    
+            property int oldMouseY
+    
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            width: parent.width
+            height: parent.height
+            hoverEnabled: true
+    
+            onPressed: 
             {
-                color:"black"
-                width:parent.width
-                height:2
+                oldMouseY = mouseY
             }
-            RowLayout
+    
+            onPositionChanged: 
             {
-                anchors.fill:parent
-                Label 
+                if (pressed) 
                 {
-                    text:"0 layers of scans"
+                    meshListPanel.height = meshListPanel.height + (mouseY - oldMouseY)
+                    meshListPanel.height = meshListPanel.height > 250 ? meshListPanel.height : 250
                 }
-                Button
+            }
+        }
+    }
+    
+    Item
+    {
+        id:mainContent
+        anchors.fill:parent
+        ColumnLayout 
+        {
+            anchors.fill:parent
+            Layout.preferredHeight:400
+            ListView
+            {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                id:meshList
+                //headerVisible: false
+                //TableViewColumn{ role: "name" ; title: "Name" ; width: 200 }
+                delegate: meshDelegate      
+                model: UM.Models.meshListModel
+            }
+            
+            Item
+            {
+                Layout.fillWidth: true
+                height: 50
+                Rectangle 
                 {
-                    iconSource: UM.Resources.getIcon("open.png")
-                    style:ButtonStyle{ background:Item{}}
+                    color:"black"
+                    width:parent.width
+                    height:2
                 }
-                
-                Button
+                RowLayout
                 {
-                    iconSource: UM.Resources.getIcon("icon_search.png")
-                    style:ButtonStyle{background:Item{}}
-                }
-                
-                Button
-                {
-                    iconSource: UM.Resources.getIcon("icon_trash_bin.png")
-                    style:ButtonStyle{background:Item{}}
-                    onClicked:
+                    anchors.fill:parent
+                    Label 
                     {
-                        meshList.model.removeSelected()
+                        text:"0 layers of scans"
+                    }
+                    Button
+                    {
+                        iconSource: UM.Resources.getIcon("open.png")
+                        style:ButtonStyle{ background:Item{}}
+                    }
+                    
+                    Button
+                    {
+                        iconSource: UM.Resources.getIcon("icon_search.png")
+                        style:ButtonStyle{background:Item{}}
+                    }
+                    
+                    Button
+                    {
+                        iconSource: UM.Resources.getIcon("icon_trash_bin.png")
+                        style:ButtonStyle{background:Item{}}
+                        onClicked:
+                        {
+                            meshList.model.removeSelected()
+                        }
                     }
                 }
             }
         }
-
     }
     Component 
     {
