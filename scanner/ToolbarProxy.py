@@ -15,8 +15,9 @@ class ToolbarProxy(QObject):
     
     @pyqtSlot(bool)
     def setWizardState(self, state):
-        self._use_wizard = state
-        self.wizardStateChanged.emit()
+        if state != self._use_wizard:
+            self._use_wizard = state
+            self.wizardStateChanged.emit()
     
     @pyqtProperty(int,notify = stateChanged)
     def state(self):

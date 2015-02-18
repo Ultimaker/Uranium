@@ -255,6 +255,7 @@ UM.MainWindow
                             onClicked:
                             {
                                 UM.ToolbarData.setWizardState(false);
+
                                 firstTimeStartup.visible = false
                             }
                         }

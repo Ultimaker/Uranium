@@ -210,6 +210,7 @@ Rectangle {
                     id:wizardSwitch
                     anchors.right:youmagineButton.left 
                     anchors.rightMargin:10
+                    checked:UM.ToolbarData.wizardActive
                     onCheckedChanged: {UM.ToolbarData.setWizardState(checked)}
                     style: SwitchStyle
                     {
