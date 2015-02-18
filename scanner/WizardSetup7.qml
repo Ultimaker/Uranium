@@ -27,7 +27,30 @@ Rectangle
             anchors.topMargin:objectsMargin
             source:"placeholder.png";
         }
-        
+        ProgressBar 
+        {
+            id: progressBar;
+
+            minimumValue: 0;
+            maximumValue: 100;
+
+            Connections 
+            {
+                target: UM.Backend;
+                onProcessingProgress: progressBar.value = amount;
+            }
+        }
+        Label
+        {
+            id:warning_label
+            text:switch(UM.ScannerEngineBackend.warningText)
+            {
+                case "Object":
+                    return "Unable to locate calibration object";
+                case "":
+                    return "";
+            }
+        }
         NextButton
         {
             onClicked:

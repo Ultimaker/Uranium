@@ -1,6 +1,7 @@
 from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot,pyqtSignal, pyqtProperty,QUrl
 
 from UM.Application import Application
+import threading
 
 class ScannerEngineBackendProxy(QObject):
     def __init__(self, parent = None):
@@ -11,6 +12,7 @@ class ScannerEngineBackendProxy(QObject):
         self._id = 0;
         self._backend.processingProgress.connect(self._onProcessingProgress)
         self._warning_string = ""
+        self._resetProblemMessageTimer = None
 
     processingProgress = pyqtSignal(float, arguments = ['amount'])
 
@@ -29,7 +31,6 @@ class ScannerEngineBackendProxy(QObject):
     
     @pyqtProperty(str, notify=newCalibrationProblemText)
     def warningText(self):
-        print("new warning")
         return self._warning_string
     
     @pyqtSlot()
@@ -45,8 +46,19 @@ class ScannerEngineBackendProxy(QObject):
         self.newImage.emit()
     
     def _onCalibrationProblem(self, str):
-        
         self._warning_string = str
+        if not self._resetProblemMessageTimer:
+            self._resetProblemMessageTimer = threading.Timer(3, self._onResetProblemTimerFinished)
+            self._resetProblemMessageTimer.start()
+        if self._resetProblemMessageTimer: #Stop timer and create a new one.
+            self._resetProblemMessageTimer.cancel()
+            self._resetProblemMessageTimer = threading.Timer(3, self._onResetProblemTimerFinished) 
+            self._resetProblemMessageTimer.start()
+        self.newCalibrationProblemText.emit()
+    
+    def _onResetProblemTimerFinished(self):
+        self._warning_string = ""
+        self._resetProblemMessageTimer = None
         self.newCalibrationProblemText.emit()
     
     @pyqtSlot(int)
