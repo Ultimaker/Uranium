@@ -40,6 +40,8 @@ class QtApplication(QApplication, Application, SignalEmitter):
         self._loadPlugins()
         self._plugin_registry.checkRequiredPlugins(self.getRequiredPlugins())
 
+        self.loadMachines()
+
     def run(self):
         pass
 
