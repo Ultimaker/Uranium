@@ -44,7 +44,7 @@ class ScannerApplication(QtApplication):
     def run(self):
         self.getController().setActiveView('MeshView')
         self.getController().setCameraTool("CameraTool")
-        self.getController().setSelectionTool("SelectionTool")
+        #self.getController().setSelectionTool("SelectionTool")
         
         root = self.getController().getScene().getRoot()
         

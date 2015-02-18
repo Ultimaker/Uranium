@@ -31,13 +31,11 @@ class MeshListModel(ListModel):
         
     def _rootChanged(self):
         self._scene.getRoot().childrenChanged.connect(self.updateList)
-        self.updateList(self._scene.getRoot()) #Manually trigger the update
+        self.updateList(self._scene.getRoot()) # Manually trigger the update
     
     def updateList(self, trigger_node):
         self.clear()
-        #scene_nodes = trigger_node.getAllChildren()
-        #self.appendItem({"name": "test", "visibility": True,"key":id(self), "selected": False})
-        
+
         for group_node in self._scene.getRoot().getChildren():
             for node in DepthFirstIterator(group_node):
                 if node.getMeshData() is not None or node.hasChildren():
@@ -46,9 +44,6 @@ class MeshListModel(ListModel):
                         parent_key =  (id(group_node))
                     self.appendItem({"name":node.getName(), "visibility": node.isVisible(), "key": (id(node)), "selected": Selection.isSelected(node),"depth": node.getDepth(),"collapsed": False,"parent_key": parent_key})
         
-    #def roleNames(self):
-    #    return {self.NameRole:'name', self.VisibilityRole:"visibility",self.UniqueKeyRole: "key", self.SelectedRole: "selected"}
-    
     # set the visibility of a node (by key)
     @pyqtSlot("long",bool)
     def setVisibility(self, key, visibility):
@@ -59,15 +54,34 @@ class MeshListModel(ListModel):
     #Set a single item to selected, by key
     @pyqtSlot("long")
     def setSelected(self, key):
-        Selection.clear()
         for index in range(0,len(self.items)):
             if self.items[index]["key"] == key:
-                self.setProperty(index,"selected", True)
                 for node in Application.getInstance().getController().getScene().getRoot().getAllChildren():
                     if id(node) == key:
-                        Selection.add(node)
-            else:
-                self.setProperty(index,"selected", False)
+                        if node not in Selection.getAllSelectedObjects(): #Group node already selected
+                            Selection.add(node)
+                            self.setProperty(index,"selected", True)
+                        else:
+                            Selection.remove(node)
+                            print("removing node")
+                            self.setProperty(index,"selected", False)
+        
+        #Check all group nodes to see if all their children are selected (if so, they also need to be selected!)
+        for index in range(0,len(self.items)):
+            if self.items[index]["depth"] == 1:
+                for node in Application.getInstance().getController().getScene().getRoot().getAllChildren():
+                    if node.hasChildren():
+                        if id(node) == self.items[index]["key"] and id(node) != key: 
+                            for child_node in node.getChildren():
+                                print("Child node")
+                                if not Selection.isSelected(child_node):
+                                    break #At least one of its children is not selected, dont change state
+                            #All children are selected (ergo it is also selected!)
+                            self.setProperty(index,"selected", True)
+                            Selection.add(node)
+        #Force update                  
+        self.updateList(Application.getInstance().getController().getScene().getRoot())
+    
     @pyqtSlot(str)
     def setCollapsed(self,key):
         for index in range(0, len(self.items)):

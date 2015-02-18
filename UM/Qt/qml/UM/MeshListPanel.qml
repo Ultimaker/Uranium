@@ -137,9 +137,10 @@ Panel {
                 ToggleButton
                 {
                     id:selectIcon
-                    checkedImage: UM.Resources.getIcon("icon_selected_open.png")
-                    uncheckedImage:UM.Resources.getIcon("icon_selected_closed.png")
+                    checkedImage: UM.Resources.getIcon("icon_selected_closed.png")
+                    uncheckedImage:UM.Resources.getIcon("icon_selected_open.png")
                     anchors.right:parent.right
+                    checked: model.selected
                     onClicked: meshList.model.setSelected(model.key)
                 }
             }

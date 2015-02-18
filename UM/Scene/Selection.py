@@ -31,6 +31,7 @@ class Selection:
 
     @classmethod
     def clear(cls):
+        print("Clearing selection")
         cls.__selection.clear()
         cls.selectionChanged.emit()
 
