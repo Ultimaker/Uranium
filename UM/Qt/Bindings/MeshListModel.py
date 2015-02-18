@@ -15,6 +15,7 @@ class MeshListModel(ListModel):
     SelectedRole = Qt.UserRole + 4
     DepthRole = Qt.UserRole + 5
     CollapsedRole = Qt.UserRole+6
+    HasChildrenRole = Qt.UserRole+7
     
     def __init__(self, parent = None):
         super().__init__(parent)
@@ -27,6 +28,7 @@ class MeshListModel(ListModel):
         self.addRoleName(self.SelectedRole, "selected")
         self.addRoleName(self.DepthRole, "depth")
         self.addRoleName(self.CollapsedRole,"collapsed")
+        self.addRoleName(self.HasChildrenRole,"has_children")
         self._scene.rootChanged.connect(self._rootChanged)
         
     def _rootChanged(self):
@@ -42,7 +44,7 @@ class MeshListModel(ListModel):
                     parent_key = 0
                     if group_node is not node:
                         parent_key =  (id(group_node))
-                    self.appendItem({"name":node.getName(), "visibility": node.isVisible(), "key": (id(node)), "selected": Selection.isSelected(node),"depth": node.getDepth(),"collapsed": False,"parent_key": parent_key})
+                    self.appendItem({"name":node.getName(), "visibility": node.isVisible(), "key": (id(node)), "selected": Selection.isSelected(node),"depth": node.getDepth(),"collapsed": False,"parent_key": parent_key, "has_children":node.hasChildren()})
         
     # set the visibility of a node (by key)
     @pyqtSlot("long",bool)

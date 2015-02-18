@@ -168,7 +168,7 @@ Rectangle {
                     id:collapseButton
                     checkedImage: UM.Resources.getIcon("icon_collapse_up.png")
                     uncheckedImage:UM.Resources.getIcon("icon_collapse_down.png")
-                    visible: model.depth == 1 ? true: false
+                    visible: model.depth != 1 ? false: model.has_children ? true:false
                     onClicked:meshList.model.setCollapsed(model.key)
                 }
                 Text 
