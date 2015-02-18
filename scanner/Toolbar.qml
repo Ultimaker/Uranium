@@ -108,11 +108,11 @@ Rectangle {
                     exclusiveGroup: toolbarTabGroup
                     style: ToolBarButtonStyleScan
                     {
-                        numCircles: 4 
+                        numCircles: 5 
                         beginState:2    
                         state:UM.ToolbarData.state
                     }
-                    checked: UM.ToolbarData.state > 6 ? false : UM.ToolbarData.state < 3 ? false:true
+                    checked: UM.ToolbarData.state > 7 ? false : UM.ToolbarData.state < 3 ? false:true
                     onClicked: {UM.ToolbarData.setState(3)}
                 }
                 
@@ -125,11 +125,11 @@ Rectangle {
                     style: ToolBarButtonStyleScan
                     {
                         numCircles: 2 
-                        beginState:6
+                        beginState:7
                         state:UM.ToolbarData.state
                     }
-                    checked: UM.ToolbarData.state > 8 ? false : UM.ToolbarData.state < 7 ? false:true
-                    onClicked: {UM.ToolbarData.setState(7)}
+                    checked: UM.ToolbarData.state > 9 ? false : UM.ToolbarData.state < 8 ? false:true
+                    onClicked: {UM.ToolbarData.setState(8)}
                 }
                 Button 
                 {
@@ -141,11 +141,11 @@ Rectangle {
                     style: ToolBarButtonStyleScan
                     {
                         numCircles: 1 
-                        beginState:8
+                        beginState:9
                         state:UM.ToolbarData.state
                     }
-                    checked: UM.ToolbarData.state == 9 ? true: false
-                    onClicked: {UM.ToolbarData.setState(9)}
+                    checked: UM.ToolbarData.state == 10 ? true: false
+                    onClicked: {UM.ToolbarData.setState(10)}
                 }
                 
                 Button 

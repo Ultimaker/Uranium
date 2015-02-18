@@ -15,12 +15,10 @@ Rectangle
     {
         anchors.fill: parent;
         anchors.leftMargin:2
-        Text
+        Label
         {
-            id:introText
-            text: "<b>Object Characteristics</b><br>Choose an object setting that best matches the object that you're about to scan.."
-            wrapMode: Text.Wrap
-            Layout.fillWidth: true
+            id:introText1
+            text: "<b>Calibrating!</b>"
         }
         
         Image
@@ -28,28 +26,6 @@ Rectangle
             id:placeholder1
             anchors.topMargin:objectsMargin
             source:"placeholder.png";
-        }
-        
-        ExclusiveGroup { id: objectType }
-        ColumnLayout
-        {
-            id: objectTypeSelection
-            RadioButton 
-            {
-                text: "Simple / smooth"
-                checked: true
-                exclusiveGroup: objectType
-            }
-            RadioButton 
-            {
-                text: "Detailed"
-                exclusiveGroup: objectType
-            }
-            RadioButton 
-            {
-                text: "Dificult object"
-                exclusiveGroup: objectType
-            }
         }
         
         NextButton

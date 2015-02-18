@@ -3,7 +3,6 @@ import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.1
 
-
 import UM 1.0 as UM
 Rectangle 
 {
@@ -19,45 +18,26 @@ Rectangle
         Label
         {
             id:introText1
-            text: "<b>Edit object</b> <br> Stitch the clouds."
+            text: "<b>Export / share / print</b>"
         }
         
         Image
         {
             id:placeholder1
+            anchors.topMargin:objectsMargin
             source:"placeholder.png";
         }
-        Label
-        {
-           
-            text: "Make sure you select two layers at a time."
-        }
-        Label
-        {
-            text:"<b>Suface Finish</b>"
-        }
-        
-        Rectangle 
-        {
-            id:spacer
-            width: 246
-            color:"black"
-            height: 2
-        }
-        
-        CheckBox
-        {
-            text:"Smooth"
-        }
-        
         WizardButton
         {
-            text:"Scan Extra"
+            text:"Export to file"
         }
         WizardButton
         {
-            text:"Merge to solid"
+            text:"Share on youmagine"
         }
-        
+        WizardButton
+        {
+            text:"Send to cura"
+        }
     }
 }

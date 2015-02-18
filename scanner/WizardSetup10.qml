@@ -3,7 +3,6 @@ import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.1
 
-
 import UM 1.0 as UM
 Rectangle 
 {
@@ -19,45 +18,24 @@ Rectangle
         Label
         {
             id:introText1
-            text: "<b>Edit object</b> <br> Stitch the clouds."
+            text: "<b>Scan object</b> <br> You're now scanning."
         }
         
         Image
         {
             id:placeholder1
+            anchors.topMargin:objectsMargin
             source:"placeholder.png";
         }
-        Label
-        {
-           
-            text: "Make sure you select two layers at a time."
-        }
-        Label
-        {
-            text:"<b>Suface Finish</b>"
-        }
         
-        Rectangle 
+        NextButton
         {
-            id:spacer
-            width: 246
-            color:"black"
-            height: 2
+            onClicked:
+            {
+                UM.ToolbarData.setState(11);
+            }
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin:10
         }
-        
-        CheckBox
-        {
-            text:"Smooth"
-        }
-        
-        WizardButton
-        {
-            text:"Scan Extra"
-        }
-        WizardButton
-        {
-            text:"Merge to solid"
-        }
-        
     }
 }

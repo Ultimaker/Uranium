@@ -1,4 +1,5 @@
 from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot,pyqtSignal, pyqtProperty
+from UM.Application import Application
 
 class ToolbarProxy(QObject):
     def __init__(self, parent = None):
@@ -27,3 +28,6 @@ class ToolbarProxy(QObject):
     def setState(self, state):
         self._state = state
         self.stateChanged.emit()
+        backend = Application.getInstance().getBackend()
+        if backend:
+            backend.setProcessStep(state)

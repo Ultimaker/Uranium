@@ -47,7 +47,7 @@ class JobsModel(ListModel):
 
     def _onProcessingProgress(self, progress):
         if not self.ProcessingJob in self._watchedJobIndices:
-            self.appendItem({ 'id': self.ProcessingJob, 'description': 'Slicing...', 'progress': 0 })
+            self.appendItem({ 'id': self.ProcessingJob, 'description': 'Processing...', 'progress': 0 })
             self._watchedJobIndices[self.ProcessingJob] = self.rowCount() - 1
 
         self.setProperty(self._watchedJobIndices[self.ProcessingJob], 'progress', round(progress * 100))

@@ -11,10 +11,10 @@ Button
     id:base
     property bool active:true;
     property variant key;
-    onClicked :
-    {
-        UM.ScannerEngineBackend.calibrationButtonPressed(key)
-    }
+    //onClicked :
+    //{
+    //    UM.ScannerEngineBackend.calibrationButtonPressed(key)
+    //}
     
     style: ButtonStyle 
     { 

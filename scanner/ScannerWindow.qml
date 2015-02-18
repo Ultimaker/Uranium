@@ -262,6 +262,18 @@ UM.MainWindow
                     }
                 }
             }
+            Image
+            {
+                width:500
+                height:500
+                id:cameraImage
+                anchors.horizontalCenter: parent.horizontalCenter;
+                anchors.verticalCenter:parent.verticalCenter;
+                source: UM.ScannerEngineBackend.cameraImage
+                //visible: UM.ToolbarData.state < 1 ? false : UM.ToolbarData.state > 5 ? false:true 
+                visible: UM.ToolbarData.state < 3 ? false :UM.ToolbarData.state > 7 ? false:true 
+                Component.onCompleted:{console.log(UM.ToolbarData.state)}
+            }
         }
     }
 

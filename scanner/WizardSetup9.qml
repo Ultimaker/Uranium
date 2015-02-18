@@ -15,10 +15,12 @@ Rectangle
     {
         anchors.fill: parent;
         anchors.leftMargin:2
-        Label
+        Text
         {
-            id:introText1
-            text: "<b>Scan object</b> <br> You're now scanning."
+            id:introText
+            text: "<b>Object Shade</b><br>Choose an object setting that best matches the object that you're about to scan.."
+            wrapMode: Text.Wrap
+            Layout.fillWidth: true
         }
         
         Image
@@ -26,6 +28,28 @@ Rectangle
             id:placeholder1
             anchors.topMargin:objectsMargin
             source:"placeholder.png";
+        }
+        
+        ExclusiveGroup { id: objectShadeType }
+        ColumnLayout
+        {
+            id: objectTypeSelection
+            RadioButton 
+            {
+                text: "Light"
+                checked: true
+                exclusiveGroup: objectShadeType
+            }
+            RadioButton 
+            {
+                text: "Medium"
+                exclusiveGroup: objectShadeType
+            }
+            RadioButton 
+            {
+                text: "Dark"
+                exclusiveGroup: objectShadeType
+            }
         }
         
         NextButton

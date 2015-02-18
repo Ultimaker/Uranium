@@ -199,18 +199,21 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         operation = AddSceneNodeOperation(node,app.getController().getScene().getRoot())
         app.getOperationStack().push(operation)'''
     
-    def setCalibrationStep(self, key):
+    # Set the step of the process (scanning, calibration, etc)
+    def setProcessStep(self, step):
         message = ultiscantastic_pb2.setCalibrationStep()
-        if key == "board":
+        if step == 3:
             message.step = ultiscantastic_pb2.setCalibrationStep.BOARD
-        elif key == "projector_focus":
+        elif step == 4:
             message.step = ultiscantastic_pb2.setCalibrationStep.PROJECTOR_FOCUS
-        elif key == "camera_focus":
+        elif step == 5:
             message.step = ultiscantastic_pb2.setCalibrationStep.CAMERA_FOCUS
-        elif key == "camera_exposure":
+        elif step == 6:
             message.step = ultiscantastic_pb2.setCalibrationStep.CAMERA_EXPOSURE
-        elif key == "calibrate":
+        elif step == 7:
             message.step = ultiscantastic_pb2.setCalibrationStep.COMPUTE
+        else:
+            return #Dont send anything!
         self._socket.sendMessage(message)
     
     ## Convert byte array using pcl::pointNormal type

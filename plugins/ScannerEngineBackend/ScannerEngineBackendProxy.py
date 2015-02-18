@@ -49,6 +49,11 @@ class ScannerEngineBackendProxy(QObject):
         self._warning_string = str
         self.newCalibrationProblemText.emit()
     
-    @pyqtSlot(str)    
-    def calibrationButtonPressed(self, key):
-        self._backend.setCalibrationStep(key);
+    @pyqtSlot(int)
+    def setCalibrationStep(self, step_number):
+        self._backend.setCalibrationStep(step_number)
+        pass
+    
+    #@pyqtSlot(str)    
+    #def calibrationButtonPressed(self, key):
+    #    self._backend.setCalibrationStep(key);
