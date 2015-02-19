@@ -454,15 +454,70 @@
             "label": "Support Material",
             "visible": true,
             "settings": {
-                "support_type": {
-                    "label": "Type",
+                "support_enable": {
+                    "label": "Enable Support",
+                    "description": "Enable exterior support material. This will build up structures below the model to prevent the model from sacking.",
+                    "type": "boolean",
+                    "default": false,
+
+                    "children": {
+                        "support_type": {
+                            "label": "Type",
+                            "description": "The type of support structure.\nGrid is very strong and can come off in 1 piece, however, sometimes it is too strong.\nLines are single walled lines that break off one at a time. Which is more work to remove, but as it is less strong it does work better on tricky prints.",
+                            "type": "enum",
+                            "options": [
+                                "None",
+                                "Touching Buildplate",
+                                "Everywhere"
+                            ],
+                            "default": "None",
+                            "visible": false,
+                            "inherit_function": "'Touching Buildplate' if parent_value else 'None'"
+                        }
+                    }
+                },
+                "support_angle": {
+                    "label": "Overhang Angle",
+                    "description": "The minimal angle that overhangs need to have to get support. With 0 degree being horizontal and 90 degree being vertical.",
+                    "unit": "°",
+                    "type": "float",
+                    "default": 60.0,
+                    "visible": false
+                },
+                "support_fill_rate": {
+                    "label": "Fill Amount",
+                    "description": "Amount of infill structure in the support material, less material gives weaker support which is easier to remove. 15% seems to be a good average.",
+                    "unit": "%",
+                    "type": "float",
+                    "default": 15,
+                    "visible": false
+                },
+                "support_xy_distance": {
+                    "label": "X/Y Distance",
+                    "description": "Distance of the support material from the print, in the X/Y directions.\n0.7mm gives a nice distance from the print so the support does not stick to the print.",
+                    "unit": "mm",
+                    "type": "float",
+                    "default": 0.7,
+                    "visible": false
+                },
+                "support_z_distance": {
+                    "label": "Z Distance",
+                    "description": "Distance from the top/bottom of the support to the print. A small gap here makes it easier to remove the support but makes the print a bit uglier.\n0.15mm gives a good seperation of the support material.",
+                    "unit": "mm",
+                    "type": "float",
+                    "default": 0.15,
+                    "visible": false
+                },
+                "support_pattern": {
+                    "label": "Support Material Pattern",
+                    "description": "Cura supports 2 distinct types of support material. First is a grid based support material which is quite solid and can be removed as 1 piece.\nThe other is a line based support material which has to be pealed of line for line.",
                     "type": "enum",
                     "options": [
-                        "None",
-                        "Touching Buildplate",
-                        "Everywhere"
+                        "Grid",
+                        "Lines"
                     ],
-                    "default": "None"
+                    "default": "Grid",
+                    "visible": false
                 }
             }
         },
@@ -606,6 +661,19 @@
                         "setting": "adhesion_type",
                         "value": "Raft"
                     }
+                }
+            }
+        },
+        "blackmagic": {
+            "label": "Black Magic",
+            "visible": false,
+            "settings": {
+                "magic_spiralize": {
+                    "label": "Spiralize the Outer Contour",
+                    "description": "Spiralize is smoothing out the Z move of the outer edge. This will create a steady Z increase over the whole print. This feature turns a solid object into a single walled print with a solid bottom.\nThis feature used to be called Joris in older versions.",
+                    "type": "boolean",
+                    "default": false,
+                    "visible": false
                 }
             }
         }
