@@ -24,7 +24,7 @@ class LongTestJob(Job):
 
 class JobQueueApplication(Application):
     def __init__(self):
-        super().__init__()
+        super().__init__('test')
 
     def postEvent(self, event):
         pass
