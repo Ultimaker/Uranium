@@ -1,0 +1,25 @@
+#! /bin/bash
+
+scriptdir=$(dirname $0)
+
+extract() {
+    basedir=$1
+    dest=$2
+    file=$3
+
+    python $scriptdir/createjsoncontext.py $file $basedir > json.$$.tmp
+    msguniq --to-code=UTF-8 -o json.$$ json.$$.tmp
+    if test -f json.$$; then
+        destfile="$dest/$(basename $file).pot"
+        mv json.$$ $destfile
+    fi
+    rm -f json.$$ json.$$.tmp 
+}
+
+dir=$1; shift
+basedir=$1; shift
+dest=$1; shift
+
+for file in $(find "$dir" -name *.json | grep -v 'tests'); do
+    extract $basedir $dest $file
+done
