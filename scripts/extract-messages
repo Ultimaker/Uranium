@@ -3,20 +3,25 @@
 scriptdir=$(dirname $0)
 basedir=$1
 
+mkdir -p $basedir/resources/i18n
 $scriptdir/extract-tr-strings $(find $basedir/UM -name \*.qml) -o $basedir/resources/i18n/uranium.pot
 $scriptdir/extract-tr-strings $(find $basedir/printer -name \*.qml) -o $basedir/resources/i18n/printer.pot
 $scriptdir/extract-tr-strings $(find $basedir/scanner -name \*.qml) -o $basedir/resources/i18n/scanner.pot
 $scriptdir/extract-json $basedir $basedir/resources/settings/ $basedir/resources/i18n
-
 $scriptdir/extract-python $basedir/plugins/ $basedir/resources/i18n/plugins.pot
+msgconv --to-code=UTF-8 $basedir/resources/i18n/plugins.pot -o $basedir/resources/i18n/plugins.pot
 
 for pot in $basedir/resources/i18n/*.pot; do
     filename=$(basename $pot)
 
-    po=$basedir/resources/i18n/en/${filename/.pot/.po}
+    dir=$basedir/resources/i18n/en
+    mkdir -p $dir
+    po=$dir/${filename/.pot/.po}
     msginit --no-translator -l en -i $pot -o $po
 
-    po=$basedir/resources/i18n/x-test/${filename/.pot/.po}
+    dir=$basedir/resources/i18n/x-test
+    mkdir -p $dir
+    po=$dir/${filename/.pot/.po}
     msginit --no-translator -l x-test -i $pot -o $po
     msgfilter --keep-header -i $po -o $po sed -e "s/.*/xx&xx/"
 done
