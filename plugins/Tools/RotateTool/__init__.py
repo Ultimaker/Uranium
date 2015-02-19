@@ -1,11 +1,13 @@
 from . import RotateTool
 
+from UM.i18n import i18nc
+
 def getMetaData():
     return {
         'name': 'Rotate Tool',
-        'displayName': 'Rotate',
+        'displayName': i18nc('Rotate tool toolbar button name', 'Rotate'),
         'type': 'Tool',
-        'description': 'Rotate Object',
+        'description': i18nc('Rotate tool tooltip', 'Rotate Object'),
         'icon': 'rotate.png'
     }
 
