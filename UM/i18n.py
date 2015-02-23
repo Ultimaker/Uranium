@@ -49,3 +49,5 @@ class i18nCatalog:
             return self.__translation.gettext("{0}\x04{1}".format(context, text))
 
         return text
+
+    #TODO: Add support for plural formats
