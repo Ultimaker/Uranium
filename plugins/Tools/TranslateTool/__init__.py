@@ -6,7 +6,7 @@ def getMetaData():
         'displayName': 'Translate',
         'type': 'Tool',
         'description': 'Translate Object',
-        'Cura': {
+        'cura': {
             'visible': False
         }
     }
