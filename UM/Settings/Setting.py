@@ -3,6 +3,14 @@ from UM.Settings.Validators.FloatValidator import FloatValidator
 from UM.Settings.Validators.ResultCodes import ResultCodes
 from PyQt5.QtCore import QCoreApplication
 from UM.Signal import Signal, SignalEmitter
+from UM.Logger import Logger
+
+import math
+import ast
+
+##  Raised when an inheritance function tries to use a blacklisted method.
+class IllegalMethodError(Exception):
+    pass
 
 ##    A setting object contains a (single) configuration setting.
 #     Settings have validators that check if the value is valid, but do not prevent invalid values!
@@ -30,6 +38,8 @@ class Setting(SignalEmitter):
         self._active_if_value = None
         self._options = []
         self._unit = ""
+        self._inherit = True
+        self._inheritFunction = None
 
     valueChanged = Signal()
 
@@ -92,6 +102,20 @@ class Setting(SignalEmitter):
 
         if 'unit' in data:
             self._unit = data['unit']
+
+        self._inherit = data.get('inherit', True)
+
+        if 'inherit_function' in data:
+            try:
+                tree = ast.parse(data['inherit_function'], 'eval')
+                names = _SettingExpressionVisitor().visit(tree)
+                code = compile(data['inherit_function'], self._key, 'eval')
+            except (SyntaxError, TypeError) as e:
+                Logger.log('e', "Parse error in inherit function for setting {0}: {1}".format(self._key, str(e)))
+            except IllegalMethodError as e:
+                Logger.log('e', "Use of illegal method {0} in inherit function for setting {1}".format(str(e), self._key))
+            else:
+                self._inheritFunction = self._createInheritFunction(code, names)
 
         min_value = None
         max_value = None
@@ -264,8 +288,12 @@ class Setting(SignalEmitter):
     #   \returns value
     def getValue(self):
         if not self._visible:
-            if self._parent is not None and type(self._parent) is Setting:
-                self._value = self._parent.getValue()
+            if self._inherit and self._parent and type(self._parent) is Setting:
+                if self._inheritFunction:
+                    self._value = self._inheritFunction(self._parent, self._machine_settings)
+                else:
+                    self._value = self._parent.getValue()
+
         retval = self._value
         if self._value is None:
             retval = self._default_value
@@ -306,3 +334,49 @@ class Setting(SignalEmitter):
 
     def __repr__(self):
         return '<Setting: %s>' % (self._key)
+
+## private:
+
+    # Create a function that will run \param code, making the names in \param names available as local variables
+    def _createInheritFunction(self, code, names):
+        def inherit(parent, settings, c = code, n = names):
+            locals = {
+                'parent_value': parent.getValue(),
+                'settings': settings
+            }
+
+            for name in names:
+                locals[name] = settings.getSettingValueByKey(name)
+
+            return eval(c, globals(), locals)
+
+        return inherit
+
+# Private AST visitor class used to look up names in the inheritance functions.
+class _SettingExpressionVisitor(ast.NodeVisitor):
+    def __init__(self):
+        super().__init__()
+        self.names = []
+
+    def visit(self, node):
+        super().visit(node)
+        return self.names
+
+    def visit_Name(self, node):
+        if node.id in self._blacklist:
+            raise IllegalMethodError(node.id)
+
+        if node.id not in self._knownNames and node.id not in __builtins__:
+            self.names.append(node.id)
+
+    _knownNames = [
+        'parent_value',
+        'math'
+    ]
+
+    _blacklist = [
+        'sys',
+        'os',
+        'import',
+        '__import__'
+    ]

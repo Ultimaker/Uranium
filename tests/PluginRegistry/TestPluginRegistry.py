@@ -8,6 +8,9 @@ from UM.PluginRegistry import PluginRegistry
 from UM.PluginError import PluginNotFoundError
 
 class TestApplication(Application):
+    def __init__(self):
+        super().__init__('test')
+
     def registerTestPlugin(self, name):
         self._test_plugin = name
         
@@ -17,7 +20,7 @@ class TestApplication(Application):
 class TestPluginRegistry(unittest.TestCase):
     # Called before the first testfunction is executed
     def setUp(self):
-        self._app = TestApplication()
+        self._app = TestApplication.getInstance()
 
     # Called after the last testfunction was executed
     def tearDown(self):

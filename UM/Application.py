@@ -49,7 +49,6 @@ class Application(SignalEmitter):
 
         self._machines = []
         self._active_machine = None
-        self.loadMachines()
         
         self._required_plugins = [] 
 
