@@ -35,7 +35,7 @@ pottxt = ""
 
 def appendMessage(file, setting, field, value):
     global pottxt
-    pottxt += '#. {0} {1}\n#: {2}\nmsgctxt "{2}|{0} {1}"\nmsgid "{3}"\nmsgstr ""\n\n'.format(setting, field, file, value.replace('\n', '\\n'))
+    pottxt += '#: {0}\nmsgctxt "{1} {2}"\nmsgid "{3}"\nmsgstr ""\n\n'.format(file, setting, field, value.replace('\n', '\\n'))
 
 def processSettings(file, settings):
     for name, value in settings.items():
