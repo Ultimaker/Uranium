@@ -69,8 +69,16 @@ ScrollView
             {
                 id: contextMenu;
 
-                MenuItem { text: "Hide this setting"; onTriggered: settingsList.model.setVisibility(model.key, false); }
-                MenuItem { text: "Configure setting visiblity..."; onTriggered: settingsPanel.settingConfigurationRequested(); }
+                MenuItem {
+                    //: Settings context menu action
+                    text: qsTr("Hide this setting");
+                    onTriggered: settingsList.model.setVisibility(model.key, false);
+                }
+                MenuItem {
+                    //: Settings context menu action
+                    text: qsTr("Configure setting visiblity...");
+                    onTriggered: settingsPanel.settingConfigurationRequested();
+                }
             }
 
         }

@@ -7,7 +7,8 @@ import UM 1.0 as UM
 import "../Preferences"
 
 PreferencesPage {
-    title: "Machine Settings"
+    //: Machine configuration page title.
+    title: qsTr("Machine");
 
     contents: ScrollView 
     {

@@ -3,5 +3,6 @@ import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 
 PreferencesPage {
-    title: "General";
+    //: General configuration page title
+    title: qsTr("General");
 }

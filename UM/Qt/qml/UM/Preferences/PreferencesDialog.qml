@@ -6,7 +6,8 @@ import QtQuick.Window 2.1
 import ".."
 
 Window {
-    title: "Preferences"
+    //: Preferences dialog title
+    title: qsTr("Preferences")
     flags: Qt.Dialog
 
     width: 640;
@@ -41,9 +42,12 @@ Window {
     ListModel {
         id: configPagesModel;
 
-        ListElement { name: "General"; page: "GeneralPage.qml"; }
-        ListElement { name: "Machine Settings"; page: "../Settings/SettingsConfigurationPage.qml"; }
-        ListElement { name: "Plugins"; page: "PluginsPage.qml"; }
+        //: General configuration page title
+        ListElement { name: QT_TR_NOOP("General"); page: "GeneralPage.qml"; }
+        //: Machine configuration page title
+        ListElement { name: QT_TR_NOOP("Machine"); page: "../Settings/SettingsConfigurationPage.qml"; }
+        //: Plugins configuration page title
+        ListElement { name: QT_TR_NOOP("Plugins"); page: "PluginsPage.qml"; }
     }
 
     function setPage(index) {
