@@ -3,6 +3,8 @@ from PyQt5.QtCore import QObject, pyqtSlot, pyqtProperty, pyqtSignal
 from UM.Application import Application
 from UM.Logger import Logger
 
+import platform
+
 class ApplicationProxy(QObject):
     def __init__(self, parent = None):
         super().__init__(parent)
@@ -24,6 +26,17 @@ class ApplicationProxy(QObject):
     def machineIcon(self):
         if self._application.getActiveMachine():
             return self._application.getActiveMachine().getIcon()
+
+    @pyqtProperty(str, constant=True)
+    def platform(self):
+        if platform.system() == "Windows":
+            return "windows"
+        elif platform.system() == "Darwin":
+            return "osx"
+        elif platform.system() == "Linux":
+            return "linux"
+        else:
+            return "other"
 
     def _onActiveMachineChanged(self):
         self.machineChanged.emit()
