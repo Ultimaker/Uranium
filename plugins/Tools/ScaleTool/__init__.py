@@ -1,13 +1,15 @@
 from . import ScaleTool
 
-from UM.i18n import i18nc
+from UM.i18n import i18nCatalog
+
+i18n_catalog = i18nCatalog('plugins')
 
 def getMetaData():
     return {
         'name': 'Scale Tool',
-        'displayName': i18nc('Scale tool toolbar button', 'Scale'),
+        'displayName': i18n_catalog.i18nc('Scale tool toolbar button', 'Scale'),
         'type': 'Tool',
-        'description': i18nc('Scale tooltip', 'Scale Object'),
+        'description': i18n_catalog.i18nc('Scale tooltip', 'Scale Object'),
         'icon': 'scale.png'
     }
 
