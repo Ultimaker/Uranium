@@ -1,7 +1,8 @@
 from UM.Settings.Setting import Setting
 class SettingsCategory(object):
-    def __init__(self, key, parent, icon = None, order = 0):
+    def __init__(self, key, catalog, parent, icon = None, order = 0):
         self._key = key
+        self._i18n_catalog = catalog
         self._label = key
         self._parent = parent
         self._tooltip = ''
@@ -15,13 +16,13 @@ class SettingsCategory(object):
     #   \param data Decoded JSON dict
     def fillByDict(self, data):
         if "label" in data:
-            self._label = data["label"]
+            self._label = self._i18n_catalog.i18nc("{0} label".format(self._key), data["label"])
         if "visible" in data:
             self._visible = data["visible"]
         if "settings" in data:
             for key, value in data["settings"].items():
                 if "default" in value and "type" in value:
-                    temp_setting = Setting(key, value["default"], value["type"])
+                    temp_setting = Setting(key, self._i18n_catalog, default = value["default"], type = value["type"])
                     temp_setting.setCategory(self)
                     temp_setting.setParent(self)
                     temp_setting.fillByDict(value)
