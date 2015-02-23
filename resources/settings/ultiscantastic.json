@@ -1,15 +1,17 @@
 {
-    "id": "ultiscantastic",
     "name": "UltiScanTastic",
     "platform": "ultiscantastic.obj",
-    "required_plugins": 
-    [
-        "Console Logger", 
+    "required_plugins": [
+        "Console Logger",
         "ScannerBackend"
     ],
     "machine_settings": {
-        "machine_width": { "default": 100 },
-        "machine_height": { "default": 100 }
+        "machine_width": {
+            "default": 100
+        },
+        "machine_height": {
+            "default": 100
+        }
     },
     "categories": {
         "calibration": {
@@ -71,12 +73,15 @@
             "label": "Meshing",
             "visible": true,
             "settings": {
-                "TestSetting": {
-                    "label": "testtest",
+                "poisson_solver_depth": {
+                    "label": "Poisson solver depth",
                     "type": "int",
-                    "default": 210,
-                    "min_value": 150,
-                    "max_value": 280
+                    "default": 8
+                },
+                "poisson_num_samples_per_node": {
+                    "label": "Poisson number of samples per node",
+                    "type": "int",
+                    "default": 1
                 }
             }
         },
@@ -93,7 +98,7 @@
                         "Phase shift"
                     ]
                 },
-                "num_phase_pattern_shifts": {
+                "number_of_phase_pattern_shifts": {
                     "label": "Pattern shifts",
                     "type": "int",
                     "default": 16,
@@ -103,6 +108,70 @@
                         "setting": "pattern_type",
                         "value": "Phase shift"
                     }
+                },
+                "reconstruct_m": {
+                    "type": "int",
+                    "default": 35
+                },
+                "reconstruct_b": {
+                    "type": "double",
+                    "default": 0.5
+                },
+                "number_of_scans_per_rotation": {
+                    "label": "Scans per rotation",
+                    "type": "int",
+                    "default": 12
+                },
+                "bit_depth_patterns_scan": {
+                    "label": "Bit depth grey pattern",
+                    "type": "int",
+                    "default": 10,
+                    "active_if": {
+                        "setting": "pattern_type",
+                        "value": "Grey code"
+                    }
+                }
+            }
+        },
+        "hardware": {
+            "label": "Hardware settings",
+            "visible": false,
+            "settings": {
+                "camera_width": {
+                    "label": "Camera width",
+                    "type": "int",
+                    "default": 1280,
+                    "visible": false
+                },
+                "camera_height": {
+                    "label": "Camera height",
+                    "type": "int",
+                    "default": 720,
+                    "visible": false
+                },
+                "projector_width": {
+                    "label": "projector width",
+                    "type": "int",
+                    "default": 1280,
+                    "visible": false
+                },
+                "projector_height": {
+                    "label": "projector height",
+                    "type": "int",
+                    "default": 1024,
+                    "visible": false
+                },
+                "projection_delay": {
+                    "label": "Delay between projections",
+                    "type": "int",
+                    "default": 250,
+                    "visible": false
+                },
+                "steps_per_full_rotation_platform": {
+                    "label": "Steps per rotation platform",
+                    "type": "int",
+                    "default": 9700,
+                    "visible": false
                 }
             }
         }

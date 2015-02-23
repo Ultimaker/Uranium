@@ -128,7 +128,7 @@ Rectangle {
                         beginState:7
                         state:UM.ToolbarData.state
                     }
-                    checked: UM.ToolbarData.state > 9 ? false : UM.ToolbarData.state < 8 ? false:true
+                    checked: UM.ToolbarData.state == 9 ? true : UM.ToolbarData.state == 8 ? true:false
                     onClicked: {UM.ToolbarData.setState(8)}
                 }
                 Button 
@@ -157,11 +157,11 @@ Rectangle {
                     style: ToolBarButtonStyleScan
                     {
                         numCircles: 1 
-                        beginState:9
+                        beginState:10
                         state:UM.ToolbarData.state
                     }
-                    checked: UM.ToolbarData.state == 10 ? true:false
-                    onClicked: {UM.ToolbarData.setState(10)}
+                    checked: UM.ToolbarData.state == 11 ? true:false
+                    onClicked: {UM.ToolbarData.setState(11)}
                 }
                 Button 
                 {
@@ -172,11 +172,11 @@ Rectangle {
                     style: ToolBarButtonStyleScan
                     {
                         numCircles:1 
-                        beginState:10
+                        beginState:11
                         state:UM.ToolbarData.state
                     }
-                    checked: UM.ToolbarData.state == 11 ? true:false
-                    onClicked: {UM.ToolbarData.setState(11)}
+                    checked: UM.ToolbarData.state == 12 ? true:false
+                    onClicked: {UM.ToolbarData.setState(12)}
                 }
             }
         }

@@ -24,7 +24,7 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         self._message_handlers[ultiscantastic_pb2.PointCloudPointNormal] = self._onPointCloudMessage
         self._message_handlers[ultiscantastic_pb2.ProgressUpdate] = self._onProgressUpdateMessage
         self._message_handlers[ultiscantastic_pb2.Image] = self._onImageMessage
-        self._message_handlers[ultiscantastic_pb2.CalibrationStatusMessage] = self._onCalibrationStatusMessage
+        self._message_handlers[ultiscantastic_pb2.StatusMessage] = self._onStatusMessage
         self._message_handlers[ultiscantastic_pb2.Mesh] = self._onMeshMessage
         self._do_once = False
         self._latest_camera_image = QImage(1, 1, QImage.Format_RGB888)
@@ -41,11 +41,11 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         print("setting changed ", setting.getKey())
         self.sendSetting(setting)
     
-    def _onCalibrationStatusMessage(self, message):
-        if message.type == ultiscantastic_pb2.CalibrationProblem.OBJECT_NOT_FOUND:
-            self.calibrationStatusMessage.emit("Object")
+    def _onStatusMessage(self, message):
+        if message.status == ultiscantastic_pb2.StatusMessage.OBJECT_NOT_FOUND:
+            self.StatusMessage.emit("Object")
     
-    calibrationStatusMessage = Signal()
+    StatusMessage = Signal()
     
     def getLatestCameraImage(self):
         return self._latest_camera_image
@@ -58,7 +58,7 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         self._socket.registerMessageType(4, ultiscantastic_pb2.StartCalibration)
         self._socket.registerMessageType(5, ultiscantastic_pb2.Image)
         self._socket.registerMessageType(6, ultiscantastic_pb2.setCalibrationStep)
-        self._socket.registerMessageType(7, ultiscantastic_pb2.CalibrationStatusMessage)
+        self._socket.registerMessageType(7, ultiscantastic_pb2.StatusMessage)
         self._socket.registerMessageType(8, ultiscantastic_pb2.PointCloudWithNormals)
         self._socket.registerMessageType(9, ultiscantastic_pb2.RecalculateNormal)
         self._socket.registerMessageType(10, ultiscantastic_pb2.PoissonModelCreation)
@@ -67,6 +67,7 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         self._socket.registerMessageType(13, ultiscantastic_pb2.Mesh)
         
     def startScan(self, type = 0):
+        print("starting scan")
         message = ultiscantastic_pb2.StartScan()
         if type == 0:
             message.type = ultiscantastic_pb2.StartScan.GREY
@@ -199,20 +200,26 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         app.getOperationStack().push(operation)'''
     
     # Set the step of the process (scanning, calibration, etc)
-    def setProcessStep(self, step):
-        message = ultiscantastic_pb2.setCalibrationStep()
-        if step == 3:
-            message.step = ultiscantastic_pb2.setCalibrationStep.BOARD
-        elif step == 4:
-            message.step = ultiscantastic_pb2.setCalibrationStep.PROJECTOR_FOCUS
-        elif step == 5:
-            message.step = ultiscantastic_pb2.setCalibrationStep.CAMERA_FOCUS
-        elif step == 6:
-            message.step = ultiscantastic_pb2.setCalibrationStep.CAMERA_EXPOSURE
-        elif step == 7:
-            message.step = ultiscantastic_pb2.setCalibrationStep.COMPUTE
+    def setProcessStep(self, step): 
+        if step >=3 and step <= 7:
+            message = ultiscantastic_pb2.setCalibrationStep()
+            if step == 3:
+                message.step = ultiscantastic_pb2.setCalibrationStep.BOARD
+            elif step == 4:
+                message.step = ultiscantastic_pb2.setCalibrationStep.PROJECTOR_FOCUS
+            elif step == 5:
+                message.step = ultiscantastic_pb2.setCalibrationStep.CAMERA_FOCUS
+            elif step == 6:
+                message.step = ultiscantastic_pb2.setCalibrationStep.CAMERA_EXPOSURE
+            elif step == 7:
+                message.step = ultiscantastic_pb2.setCalibrationStep.COMPUTE
         else:
-            return #Dont send anything!
+            if step == 10:
+                self.startScan()
+                return
+            else:
+                return
+
         self._socket.sendMessage(message)
     
     ## Convert byte array using pcl::pointNormal type

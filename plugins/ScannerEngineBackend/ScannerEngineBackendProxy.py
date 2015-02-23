@@ -8,7 +8,7 @@ class ScannerEngineBackendProxy(QObject):
         super().__init__(parent)
         self._backend = Application.getInstance().getBackend()
         self._backend.newCameraImage.connect(self._onNewImage)
-        self._backend.calibrationStatusMessage.connect(self._onCalibrationStatusMessage)
+        self._backend.StatusMessage.connect(self._onStatusMessage)
         self._id = 0;
         self._backend.processingProgress.connect(self._onProcessingProgress)
         self._warning_string = ""
@@ -27,9 +27,9 @@ class ScannerEngineBackendProxy(QObject):
         temp = "image://camera/" + str(self._id)
         return QUrl(temp,QUrl.TolerantMode)
 
-    newCalibrationStatusText = pyqtSignal()
+    newStatusText = pyqtSignal()
     
-    @pyqtProperty(str, notify=newCalibrationStatusText)
+    @pyqtProperty(str, notify=newStatusText)
     def warningText(self):
         return self._warning_string
     
@@ -45,7 +45,7 @@ class ScannerEngineBackendProxy(QObject):
     def _onNewImage(self):
         self.newImage.emit()
     
-    def _onCalibrationStatusMessage(self, str):
+    def _onStatusMessage(self, str):
         self._warning_string = str
         if not self._resetStatusMessageTimer:
             self._resetStatusMessageTimer = threading.Timer(3, self._onResetStatsTimerFinished)
@@ -54,12 +54,12 @@ class ScannerEngineBackendProxy(QObject):
             self._resetStatusMessageTimer.cancel()
             self._resetStatusMessageTimer = threading.Timer(3, self._onResetStatsTimerFinished) 
             self._resetStatusMessageTimer.start()
-        self.newCalibrationStatusText.emit()
+        self.newStatusText.emit()
     
     def _onResetStatsTimerFinished(self):
         self._warning_string = ""
         self._resetStatusMessageTimer = None
-        self.newCalibrationStatusText.emit()
+        self.newStatusText.emit()
     
     @pyqtSlot(int)
     def setCalibrationStep(self, step_number):
