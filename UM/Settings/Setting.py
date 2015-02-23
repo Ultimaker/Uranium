@@ -16,28 +16,28 @@ class IllegalMethodError(Exception):
 #     Settings have validators that check if the value is valid, but do not prevent invalid values!
 #     Settings have conditions that enable/disable this setting depending on other settings. (Ex: Dual-extrusion)
 class Setting(SignalEmitter):    
-    def __init__(self, key = None, default = None, type = None, category = None, label = None):
+    def __init__(self, key, catalog, **kwargs):
         super().__init__()
         self._key = key
-        if label is None:
-            self._label = key
-        self._tooltip = ''
-        self._default_value = str(default)
-        self._value = None
-        self._type = type
-        self._visible = True
+        self._i18n_catalog = catalog
+        self._label = kwargs.get('label', key)
+        self._description = kwargs.get('description', "")
+        self._default_value = kwargs.get('default', None)
+        self._value = kwargs.get('value', None)
+        self._type = kwargs.get('type', 'string')
+        self._visible = kwargs.get('visible', True)
         self._validator = None
         self._conditions = []
         self._parent = None
         self._hide_if_all_children_visible = True
         self._children = []
-        self._category = category
+        self._category = kwargs.get('category', None)
         self._active = True
-        self._machine_settings = category.getParent() if category else None
+        self._machine_settings = self._category.getParent() if self._category else None
         self._active_if_setting = None
         self._active_if_value = None
-        self._options = []
-        self._unit = ""
+        self._options = kwargs.get('options', [])
+        self._unit = kwargs.get('unit', "")
         self._inherit = True
         self._inheritFunction = None
 
@@ -95,10 +95,18 @@ class Setting(SignalEmitter):
             self._type = data["type"]
 
         self.bindValidator()
+
         if "label" in data:
-            self.setLabel(data["label"])
+            self._label = self._i18n_catalog.i18nc("{0} label".format(self._key), data["label"])
+
+        if "description" in data:
+            self._description = self._i18n_catalog.i18nc("{0} description".format(self._key), data["description"])
+
         if "visible" in data:
             self.setVisible(data["visible"])
+
+        if "always_visible" in data:
+            self._hide_if_all_children_visible = not data['always_visible']
 
         if 'unit' in data:
             self._unit = data['unit']
@@ -145,7 +153,7 @@ class Setting(SignalEmitter):
             for key, value in data["children"].items():
                 setting = self.getSettingByKey(key)
                 if not setting:
-                    setting = Setting(key)
+                    setting = Setting(key, self._i18n_catalog)
                     setting.setCategory(self._category)
                     setting.setParent(self)
                     self._children.append(setting)
@@ -250,12 +258,13 @@ class Setting(SignalEmitter):
     def setRange(self, min_value = None, max_value = None, min_value_warning = None, max_value_warning = None):
         if(self._validator is None):
             return
-        validator.setRange(min_value, max_value, min_value_warning, max_value_warning)
+        self._validator.setRange(min_value, max_value, min_value_warning, max_value_warning)
 
     ##  Get the display name of the setting
     def getLabel(self):
         if self._label is None:
             return self._key # Return key so it will always have some sort of display name
+
         return self._label
 
     ##  Set the label (display name) of setting.
@@ -263,14 +272,11 @@ class Setting(SignalEmitter):
     def setLabel(self, label):
         self._label = label
 
-    ##  Get the tooltip (if any) from the setting
-    def getTooltip(self):
-        return self._tooltip
-    
-    ##  Set the tooltip of this setting
-    #   \param tooltip
-    def setTooltip(self, tooltip):
-        self._tooltip = tooltip
+    ##  Get the description of this setting.
+    #
+    #   This will return a string with a description of this setting, if provided by the setting file.
+    def getDescription(self):
+        return self._i18n_catalog.i18n(self._description)
 
     ##  Get the identifier of the setting
     def getKey(self):

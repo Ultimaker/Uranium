@@ -6,44 +6,68 @@ import QtQuick.Window 2.1
 import ".."
 
 Window {
-    title: "Preferences"
+    id: base;
+
+    //: Preferences dialog title
+    title: qsTr("Preferences")
     flags: Qt.Dialog
 
     width: 640;
     height: 480;
 
-    RowLayout {
+    ColumnLayout {
         anchors.fill: parent;
-
-        Column {
+        RowLayout {
+            Layout.fillWidth: true;
             Layout.fillHeight: true;
 
-            Repeater {
-                model: configPagesModel;
-                delegate: Button {
-                    width: 100
-                    height: 100
-                    text: model.name;
-                    onClicked: configPage.source = model.page;
+            Column {
+                Layout.fillHeight: true;
+
+                Repeater {
+                    model: configPagesModel;
+                    delegate: Button {
+                        width: 100
+                        height: 100
+                        text: qsTr(model.name);
+                        onClicked: configPage.source = model.page;
+                    }
                 }
+            }
+
+            Loader {
+                id: configPage;
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+
+                source: configPagesModel.get(0).page;
             }
         }
 
-        Loader {
-            id: configPage;
-            Layout.fillWidth: true
-            Layout.fillHeight: true
+        Item {
+            height: childrenRect.height;
+            Layout.fillWidth: true;
 
-            source: configPagesModel.get(0).page;
+            Button {
+                //: Close preferences dialog
+                text: qsTr("Close");
+
+                anchors.right: parent.right;
+
+                onClicked: base.visible = false;
+            }
         }
     }
 
     ListModel {
         id: configPagesModel;
 
-        ListElement { name: "General"; page: "GeneralPage.qml"; }
-        ListElement { name: "Machine Settings"; page: "../Settings/SettingsConfigurationPage.qml"; }
-        ListElement { name: "Plugins"; page: "PluginsPage.qml"; }
+        //: General configuration page title
+        ListElement { name: QT_TR_NOOP("General"); page: "GeneralPage.qml"; }
+        //: Machine configuration page title
+        ListElement { name: QT_TR_NOOP("Machine"); page: "../Settings/SettingsConfigurationPage.qml"; }
+        //: Plugins configuration page title
+        ListElement { name: QT_TR_NOOP("Plugins"); page: "PluginsPage.qml"; }
     }
 
     function setPage(index) {

@@ -23,19 +23,21 @@ arising out of or in connection with the use or performance of
 this software.
 """
 
+# This script generates a POT file from a JSON settings file. It
+# has been adapted from createjsoncontext.py of KDE's translation
+# scripts. It extracts the "label" and "description" values of
+# the JSON file using the structure as used by Uranium settings files.
+
 import sys, os, json, time, os.path
 
 debugoutput = False #set True to print debug output in scripty's logs
-
-translationfields=['label', 'description'] # = Name + Comment in desktop files
-# GenericName translation apparently unused?
 
 basedir = sys.argv[-1]
 pottxt = ""
 
 def appendMessage(file, setting, field, value):
     global pottxt
-    pottxt += '#. {0} {1}\n#: {2}\nmsgctxt "{2}|{0} {1}"\nmsgid "{3}"\nmsgstr ""\n\n'.format(setting, field, file, value.replace('\n', '\\n'))
+    pottxt += '#: {0}\nmsgctxt "{1} {2}"\nmsgid "{3}"\nmsgstr ""\n\n'.format(file, setting, field, value.replace('\n', '\\n'))
 
 def processSettings(file, settings):
     for name, value in settings.items():
@@ -84,7 +86,8 @@ else:
                     if 'settings' in value:
                         processSettings(jsonfilename.replace(basedir,''), value['settings'])
             except Exception as e:
-                print(e)
+                if debugoutput:
+                    print(e)
 
     if pottxt!="":
         print(potheader() + pottxt)

@@ -6,7 +6,8 @@ import QtQuick.Controls.Styles 1.1
 import UM 1.0 as UM
 
 PreferencesPage {
-    title: "Plugins"
+    //: Plugins configuration page
+    title: qsTr("Plugins");
     contents: ScrollView 
     {
         anchors.fill: parent;
@@ -71,9 +72,13 @@ PreferencesPage {
         property variant author_text: "John doe"
         property variant plugin_name: ""
         property variant version_text: ""
-        title: "About " + plugin_name
+
+        //: About dialog with info about plugin %1
+        title: qsTr("About %1").arg(plugin_name)
+
         width: 150
         height:150
+
         ColumnLayout
         {
             Text 
@@ -93,6 +98,10 @@ PreferencesPage {
             Text
             {
                 text: about_window.version_text
+            }
+            //: Close about plugin dialog
+            Button {
+                text: qsTr("Close");
             }
         }
     }

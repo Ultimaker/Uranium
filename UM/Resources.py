@@ -14,6 +14,7 @@ class Resources:
     PreferencesLocation = 3
     MeshesLocation = 4
     ShadersLocation = 5
+    i18nLocation = 6
 
     ApplicationIdentifier = 'UM'
 
@@ -69,6 +70,8 @@ class Resources:
             return cls.__relativeToFile("..", "resources", "meshes")
         elif type == cls.ShadersLocation:
             return cls.__relativeToFile("..", "resources", "shaders")
+        elif type == cls.i18nLocation:
+            return cls.__relativeToFile("..", "resources", "i18n")
         else:
             raise UnknownLocationError("Unknonw location {0}".format(cls.type))
 
@@ -87,7 +90,7 @@ class Resources:
         if type == cls.PreferencesLocation:
             path = cls.__config_storage_path
         elif type == cls.SettingsLocation:
-            path = os.path.join(cls.__data_storage_path, 'Settings')
+            path = os.path.join(cls.__data_storage_path, 'settings')
         else:
             raise UnsupportedStorageLocationError('No known location to store type {0}'.format(type))
 

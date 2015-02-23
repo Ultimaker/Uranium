@@ -10,6 +10,7 @@ from UM.Signal import Signal, SignalEmitter
 from PyQt5.QtCore import QCoreApplication
 from UM.Logger import Logger
 from UM.Resources import Resources
+from UM.i18n import i18nCatalog
 
 class MachineSettings(SignalEmitter):
     def __init__(self):
@@ -21,12 +22,15 @@ class MachineSettings(SignalEmitter):
         self._type_id = 'unknown'
         self._icon = "unknown.png",
         self._machine_settings = []   ## Settings that don't have a category are 'fixed' (eg; they can not be changed by the user, unless they change the json)
+        self._i18n_catalog = None
 
     ##  Load settings from JSON file. Used to load tree structure & default values etc from file.
     #   /param file_name String
     def loadSettingsFromFile(self, file_name):
-        with open(file_name) as f:
+        with open(file_name, 'rt', -1, 'utf-8') as f:
             data = json.load(f, object_pairs_hook=collections.OrderedDict)
+
+        self._i18n_catalog = i18nCatalog(os.path.basename(file_name))
 
         if "id" in data:
             self._type_id = data["id"]
@@ -50,7 +54,7 @@ class MachineSettings(SignalEmitter):
             for key, value in data["machine_settings"].items():
                 setting = self.getSettingByKey(key)
                 if not setting:
-                    setting = Setting(key)
+                    setting = Setting(key, self._i18n_catalog)
                     self.addSetting(setting)
                 setting.fillByDict(value)
 
@@ -58,7 +62,7 @@ class MachineSettings(SignalEmitter):
             for key, value in data["categories"].items():
                 category = self.getSettingsCategory(key)
                 if not category:
-                    category = SettingsCategory(key, self)
+                    category = SettingsCategory(key, self._i18n_catalog, self)
                     self.addSettingsCategory(category)
                 category.fillByDict(value)
 

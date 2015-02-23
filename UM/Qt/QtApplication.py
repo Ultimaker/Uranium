@@ -4,7 +4,7 @@ import site
 import signal
 import platform
 
-from PyQt5.QtCore import QObject, QCoreApplication, QEvent, pyqtSlot
+from PyQt5.QtCore import QObject, QCoreApplication, QEvent, pyqtSlot, QLocale, QTranslator
 from PyQt5.QtQml import QQmlApplicationEngine, qmlRegisterType, qmlRegisterSingletonType
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtGui import QGuiApplication
@@ -14,6 +14,8 @@ from UM.Qt.QtGL2Renderer import QtGL2Renderer
 from UM.Qt.Bindings.Bindings import Bindings
 from UM.JobQueue import JobQueue
 from UM.Signal import Signal, SignalEmitter
+from UM.Resources import Resources
+from UM.Logger import Logger
 
 ##  Application subclass that provides a Qt application object.
 class QtApplication(QApplication, Application, SignalEmitter):
@@ -41,6 +43,11 @@ class QtApplication(QApplication, Application, SignalEmitter):
         self._plugin_registry.checkRequiredPlugins(self.getRequiredPlugins())
 
         self.loadMachines()
+
+        self._translators = {}
+
+        self.loadQtTranslation('uranium_qt')
+        self.loadQtTranslation(self.getApplicationName() + '_qt')
 
     def run(self):
         pass
@@ -91,6 +98,81 @@ class QtApplication(QApplication, Application, SignalEmitter):
     def windowClosed(self):
         self.getBackend().close()
         self.quit()
+
+    ##  Load a Qt translation catalog.
+    #
+    #   This method will locate, load and install a Qt message catalog that can be used
+    #   by Qt's translation system, like qsTr() in QML files.
+    #
+    #   \param file The file name to load, without extension. It will be searched for in
+    #               the i18nLocation Resources directory. If it can not be found a warning
+    #               will be logged but no error will be thrown.
+    #   \param language The language to load translations for. This can be any valid language code
+    #                   or 'default' in which case the language is looked up based on system locale.
+    #                   If the specified language can not be found, this method will fall back to
+    #                   loading the english translations file.
+    #
+    #   \note When `language` is `default`, the language to load can be changed with the
+    #         environment variable "LANGUAGE".
+    def loadQtTranslation(self, file, language = 'default'):
+        #TODO Add support for specifying a language from preferences
+        path = None
+        if language == 'default':
+            # If we have a language set in the environment, try and use that.
+            lang = os.getenv('LANGUAGE')
+            if lang:
+                try:
+                    path = Resources.getPath(Resources.i18nLocation, lang, 'LC_MESSAGES', file + '.qm')
+                except FileNotFoundError:
+                    path = None
+
+            # If looking up the language from the enviroment fails, try and use Qt's system locale instead.
+            if not path:
+                locale = QLocale.system()
+
+                # First, try and find a directory for any of the provided languages
+                for lang in locale.uiLanguages():
+                    try:
+                        path = Resources.getPath(Resources.i18nLocation, lang, "LC_MESSAGES", file + '.qm')
+                        language = lang
+                    except FileNotFoundError:
+                        pass
+                    else:
+                        break
+
+                # If that fails, see if we can extract a language "class" from the
+                # preferred language. This will turn "en-GB" into "en" for example.
+                if not path:
+                    lang = locale.uiLanguages()[0]
+                    lang = lang[0:lang.find('-')]
+                    try:
+                        path = Resources.getPath(Resources.i18nLocation, lang, "LC_MESSAGES", file + '.qm')
+                        language = lang
+                    except FileNotFoundError:
+                        pass
+        else:
+            path = Resources.getPath(Resources.i18nLocation, language, "LC_MESSAGES", file + '.qm')
+
+        # If all else fails, fall back to english.
+        if not path:
+            Logger.log('w', "Could not find any translations matching {0} for file {1}, falling back to english".format(language, file))
+            try:
+                path = Resources.getPath(Resources.i18nLocation, 'en', 'LC_MESSAGES', file + '.qm')
+            except FileNotFoundError:
+                Logger.log('e', "Could not find English translations for file {0}".format(file))
+                return
+
+        translator = QTranslator()
+        if not translator.load(path):
+            Logger.log('e', "Unable to load translations %s", file)
+            return
+
+        # Store a reference to the translator.
+        # This prevents the translator from being destroyed before Qt has a chance to use it.
+        self._translators[file] = translator
+
+        # Finally, install the translator so Qt can use it.
+        self.installTranslator(translator)
 
 ##  Internal.
 #
