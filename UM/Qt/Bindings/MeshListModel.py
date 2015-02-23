@@ -30,6 +30,7 @@ class MeshListModel(ListModel):
         self.addRoleName(self.CollapsedRole,"collapsed")
         self.addRoleName(self.HasChildrenRole,"has_children")
         self._scene.rootChanged.connect(self._rootChanged)
+        self._collapsed_nodes = []
         
     def _rootChanged(self):
         self._scene.getRoot().childrenChanged.connect(self.updateList)
@@ -44,7 +45,7 @@ class MeshListModel(ListModel):
                     parent_key = 0
                     if group_node is not node:
                         parent_key =  (id(group_node))
-                    self.appendItem({"name":node.getName(), "visibility": node.isVisible(), "key": (id(node)), "selected": Selection.isSelected(node),"depth": node.getDepth(),"collapsed": False,"parent_key": parent_key, "has_children":node.hasChildren()})
+                    self.appendItem({"name":node.getName(), "visibility": node.isVisible(), "key": (id(node)), "selected": Selection.isSelected(node),"depth": node.getDepth(),"collapsed": node in self._collapsed_nodes,"parent_key": parent_key, "has_children":node.hasChildren()})
         
     # set the visibility of a node (by key)
     @pyqtSlot("long",bool)
@@ -90,6 +91,12 @@ class MeshListModel(ListModel):
             item = self.items[index]
             if int(item["parent_key"]) == int(key):  
                 self.setProperty(index, 'collapsed', not item['collapsed'])
+                for node in Application.getInstance().getController().getScene().getRoot().getAllChildren():
+                    if int(item["key"]) == id(node):
+                        if node not in self._collapsed_nodes:
+                            self._collapsed_nodes.append(node)
+                        else:
+                            self._collapsed_nodes.remove(node)
     
     @pyqtSlot("long",QUrl)
     def saveMesh(self,key,file_url):
