@@ -22,6 +22,7 @@ for pot in $basedir/resources/i18n/*.pot; do
     dir=$basedir/resources/i18n/x-test
     mkdir -p $dir
     po=$dir/${filename/.pot/.po}
-    msginit --no-translator -l x-test -i $pot -o $po
+    msginit --no-translator -l en -i $pot -o $po
     msgfilter --keep-header -i $po -o $po sed -e "s/.*/xx&xx/"
+    msgfilter -i $po -o $po sed -e "s/Language: en/Language: x-test/"
 done
