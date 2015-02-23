@@ -99,6 +99,21 @@ class QtApplication(QApplication, Application, SignalEmitter):
         self.getBackend().close()
         self.quit()
 
+    ##  Load a Qt translation catalog.
+    #
+    #   This method will locate, load and install a Qt message catalog that can be used
+    #   by Qt's translation system, like qsTr() in QML files.
+    #
+    #   \param file The file name to load, without extension. It will be searched for in
+    #               the i18nLocation Resources directory. If it can not be found a warning
+    #               will be logged but no error will be thrown.
+    #   \param language The language to load translations for. This can be any valid language code
+    #                   or 'default' in which case the language is looked up based on system locale.
+    #                   If the specified language can not be found, this method will fall back to
+    #                   loading the english translations file.
+    #
+    #   \note When `language` is `default`, the language to load can be changed with the
+    #         environment variable "LANGUAGE".
     def loadQtTranslation(self, file, language = 'default'):
         #TODO Add support for specifying a language from preferences
         path = None

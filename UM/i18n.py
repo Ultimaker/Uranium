@@ -3,7 +3,25 @@ from UM.Resources import Resources
 import gettext
 import os
 
+##  Wraps a gettext translation catalog for simplified use.
+#
+#   This class wraps a gettext translation catalog to simplify its use.
+#   It will load the translation catalog from Resources' i18nLocation
+#   and allows specifying which language to load.
+#
+#   To use this class, create an instance of it with the name of the catalog
+#   to load. Then call `i18n` or `i18nc` on the instance to perform a look
+#   up in the catalog.
 class i18nCatalog:
+    ##  Constructor.
+    #
+    #   \param name The name of the catalog to load.
+    #   \param language The language to load. Valid values are language codes or
+    #   'default'. When 'default' is specified, the language to load will be
+    #   determined based on the system's language settings.
+    #
+    #   \note When `language` is `default`, the language to load can be overridden
+    #   using the "LANGUAGE" environment variable.
     def __init__(self, name, language = 'default'):
         languages = []
         if language == 'default':
@@ -22,12 +40,6 @@ class i18nCatalog:
             self.__translation = gettext.translation(name, Resources.getLocation(Resources.i18nLocation), languages=languages)
         except FileNotFoundError:
             self.__translation = None
-
-    def getInfo(self):
-        if not self.__translation:
-            return {}
-
-        return self.__translation.info()
 
     ##  Mark a string as translatable
     #
