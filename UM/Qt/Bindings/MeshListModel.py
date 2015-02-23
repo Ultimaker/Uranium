@@ -66,7 +66,6 @@ class MeshListModel(ListModel):
                             self.setProperty(index,"selected", True)
                         else:
                             Selection.remove(node)
-                            print("removing node")
                             self.setProperty(index,"selected", False)
         
         #Check all group nodes to see if all their children are selected (if so, they also need to be selected!)
@@ -76,7 +75,6 @@ class MeshListModel(ListModel):
                     if node.hasChildren():
                         if id(node) == self.items[index]["key"] and id(node) != key: 
                             for child_node in node.getChildren():
-                                print("Child node")
                                 if not Selection.isSelected(child_node):
                                     break #At least one of its children is not selected, dont change state
                             #All children are selected (ergo it is also selected!)
