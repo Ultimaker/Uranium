@@ -33,9 +33,17 @@ include(${CMAKE_SOURCE_DIR}/scripts/ECMPoQmTools.cmake)
 
 if(GETTEXT_FOUND)
     file(MAKE_DIRECTORY i18n)
+    # translations target will convert .po files into .mo and .qm as needed.
+    # The files are checked for a _qt suffix and if it is found, converted to
+    # qm, otherwise they are converted to .po.
     add_custom_target(translations)
+    # copy-translations can be used to copy the built translation files from the
+    # build directory to the source resources directory. This is mostly a convenience
+    # during development, normally you want to simply use the install target to install
+    # the files along side the rest of the application.
     add_custom_target(copy-translations)
 
+    #TODO: Properly install the built files. This should be done after we move the applications out of the Uranium repo.
     set(languages
         en
         x-test
@@ -55,7 +63,7 @@ if(GETTEXT_FOUND)
         file(GLOB qm_files ${CMAKE_BINARY_DIR}/${lang}/*.qm)
         file(GLOB mo_files ${CMAKE_BINARY_DIR}/${lang}/*.mo)
         foreach(file ${qm_files} ${mo_files})
-            add_custom_command(TARGET copy-translations POST_BUILD COMMAND cp ARGS ${file} ${CMAKE_SOURCE_DIR}/resources/i18n/${lang}/LC_MESSAGES)
+            add_custom_command(TARGET copy-translations POST_BUILD COMMAND cp ARGS ${file} ${CMAKE_SOURCE_DIR}/resources/i18n/${lang}/LC_MESSAGES COMMENT "Copying ${file}...")
         endforeach()
     endforeach()
 endif()
