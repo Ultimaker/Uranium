@@ -36,9 +36,13 @@ class QtApplication(QApplication, Application, SignalEmitter):
         self._engine = None
         self._renderer = None
 
-        self._splash = QSplashScreen(QPixmap(Resources.getPath(Resources.ImagesLocation, "splash.png")))
-        self._splash.show()
-        self.processEvents()
+        try:
+            self._splash = QSplashScreen(QPixmap(Resources.getPath(Resources.ImagesLocation, self.getApplicationName() + ".png")))
+        except FileNotFoundError:
+            self._splash = None
+        else:
+            self._splash.show()
+            self.processEvents()
 
         signal.signal(signal.SIGINT, signal.SIG_DFL)
         # This is done here as a lot of plugins require a correct gl context. If you want to change the framework,
@@ -185,13 +189,15 @@ class QtApplication(QApplication, Application, SignalEmitter):
 
     ##  Display text on the splash screen.
     def showSplashMessage(self, message):
-        self._splash.showMessage(message , Qt.AlignHCenter | Qt.AlignBottom)
-        self.processEvents()
+        if self._splash:
+            self._splash.showMessage(message , Qt.AlignHCenter | Qt.AlignBottom)
+            self.processEvents()
 
     ##  Close the splash screen after the application has started.
     def closeSplash(self):
-        self._splash.close()
-        self._splash = None
+        if self._splash:
+            self._splash.close()
+            self._splash = None
 
 ##  Internal.
 #
