@@ -8,7 +8,7 @@ class Logger:
     ##  Get all loggers
     #   \returns List of Loggers
     @classmethod
-    def getLoggers(self):
+    def getLoggers(cls):
         return cls.__loggers
 
     ##  Send a message of certain type to all loggers to be handled.
