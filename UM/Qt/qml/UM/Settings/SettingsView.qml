@@ -9,7 +9,11 @@ import ".."
 
 ScrollView
 {
+    id: base;
+
     property alias listHeight: settingsList.contentHeight;
+
+    signal showDescription(string text, real x, real y);
 
     ListView
     {
@@ -61,8 +65,18 @@ ScrollView
             MouseArea
             {
                 anchors.fill: parent;
-                acceptedButtons: Qt.RightButton;
-                onClicked: contextMenu.popup();
+                acceptedButtons: Qt.LeftButton | Qt.RightButton;
+                onClicked: {
+                    if(mouse.button == Qt.LeftButton)
+                    {
+                        var position = mapToItem(null, 0, height / 2);
+                        base.showDescription(model.description, position.x, position.y);
+                    }
+                    else
+                    {
+                        contextMenu.popup();
+                    }
+                }
             }
 
             Menu
@@ -80,7 +94,6 @@ ScrollView
                     onTriggered: settingsPanel.settingConfigurationRequested();
                 }
             }
-
         }
 
         section.delegate: Button
