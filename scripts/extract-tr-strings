@@ -1,4 +1,11 @@
 #!/bin/sh
+#
+# This script extracts strings from a set of files using Qt's translation system.
+# It then converts the extracted .ts file in a .po file that can be used with
+# tools that expect Gettext's po file format.
+#
+# This script was adapted from extract-tr-strings from KDE's translation scripts.
+# extract-tr-strings is Copyright 2014 Aurélien Gateau <agateau@kde.org>
 set -e
 
 OLD_PWD=$PWD
