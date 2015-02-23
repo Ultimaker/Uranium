@@ -3,7 +3,7 @@ from . import SceneNode
 from UM.View.Renderer import Renderer
 
 class PointCloudNode(SceneNode.SceneNode):
-    def __init__(self, parent):
+    def __init__(self, parent = None):
         super().__init__(parent)
         self._name = "Pointcloud"
 

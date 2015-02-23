@@ -26,7 +26,6 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         self._message_handlers[ultiscantastic_pb2.Image] = self._onImageMessage
         self._message_handlers[ultiscantastic_pb2.StatusMessage] = self._onStatusMessage
         self._message_handlers[ultiscantastic_pb2.Mesh] = self._onMeshMessage
-        self._do_once = False
         self._latest_camera_image = QImage(1, 1, QImage.Format_RGB888)
         self._settings = None
         Application.getInstance().activeMachineChanged.connect(self._onActiveMachineChanged)
@@ -69,17 +68,26 @@ class ScannerEngineBackend(Backend, SignalEmitter):
     def startScan(self, type = 0):
         print("starting scan")
         message = ultiscantastic_pb2.StartScan()
+        group_node = SceneNode()
+        name = "Scan" 
         if type == 0:
             message.type = ultiscantastic_pb2.StartScan.GREY
+            name += " grey"
         elif type == 1:
             message.type = ultiscantastic_pb2.StartScan.PHASE
+            name += " phase"
+        print("added group:" , id(group_node))
+        message.id = id(group_node)
+        group_node.setName(name)
+        operation = AddSceneNodeOperation(group_node,Application.getInstance().getController().getScene().getRoot())
+        Application.getInstance().getOperationStack().push(operation)
         self._socket.sendMessage(message)
     
-    def removeOutliers(self, mesh_data):
+    def removeOutliers(self, node):
         message = ultiscantastic_pb2.StatisticalOutlierRemoval()
-        message.cloud.id = 0
-        message.cloud.vertices = mesh_data.getVerticesAsByteArray()
-        message.cloud.normals = mesh_data.getNormalsAsByteArray()
+        message.cloud.id = id(node)
+        message.cloud.vertices = node.getMeshData().getVerticesAsByteArray()
+        message.cloud.normals = node.getMeshData().getNormalsAsByteArray()
         message.number_of_neighbours = 10
         message.cutoff_deviation = 0.5
         self._socket.sendMessage(message)
@@ -99,24 +107,24 @@ class ScannerEngineBackend(Backend, SignalEmitter):
             message.type = ultiscantastic_pb2.Setting.FLOAT
         self._socket.sendMessage(message)
     
-    def sendPointcloud(self, mesh_data):
+    def sendPointcloud(self, node):
         message = ultiscantastic_pb2.PointCloudWithNormals()
-        message.vertices = mesh_data.getVerticesAsByteArray()
-        message.normals = mesh_data.getNormalsAsByteArray()
-        message.id = 0
+        message.vertices = node.getMeshData().getVerticesAsByteArray()
+        message.normals = node.getMeshData().getNormalsAsByteArray()
+        message.id = id(node)
         self._socket.sendMessage(message)
     
-    def recalculateNormals(self, mesh_data):
+    def recalculateNormals(self, node):
         print("Sending recalculate normals message")
         message = ultiscantastic_pb2.RecalculateNormal()
-        message.cloud.vertices = mesh_data.getVerticesAsByteArray()
-        message.cloud.normals = mesh_data.getNormalsAsByteArray()
-        message.cloud.id = 0
+        message.cloud.vertices = node.getMeshData().getVerticesAsByteArray()
+        message.cloud.normals = node.getMeshData().getNormalsAsByteArray()
+        message.cloud.id = id(node)
         message.view_point.x = 0
         message.view_point.y = 0
         message.view_point.z = 0
         message.radius = 2.5
-        message.id = 1
+        message.id = id(node)
         self._socket.sendMessage(message)
     
     def poissonModelCreation(self, clouds):
@@ -153,16 +161,26 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         recieved_mesh = MeshData()
         for vert in self._convertBytesToVerticeWithNormalsListPCL(message.data):
             recieved_mesh.addVertexWithNormal(vert[0],vert[1],vert[2],vert[3],vert[4],vert[5])
-        group_node = SceneNode()
-        group_node.setName("ScanGroup (yay!)")
-        node = PointCloudNode(group_node)
-        node.setMeshData(recieved_mesh)
-        operation = AddSceneNodeOperation(group_node,app.getController().getScene().getRoot())
-        app.getOperationStack().push(operation)
+        for node in Application.getInstance().getController().getScene().getRoot().getAllChildren():
+            if int(message.id) == int(id(node)): #found the node where this scan needs to be added to.
+                pointcloud_node = PointCloudNode()
+                pointcloud_node.setMeshData(recieved_mesh)
+                pointcloud_node.setName(node.getName() + " "+ str(len(node.getChildren())))
+                pointcloud_node.setParent(node) 
+                return
         
-        if not self._do_once:
-            self._do_once = True
-            self.poissonModelCreation([recieved_mesh])
+        print("Unable to find group node with id", message.id)
+        #node = PointCloudNode(group_node)
+        #node.setMeshData(recieved_mesh)
+        #node.setName(group_node.getName() + " - scan")
+        #operation = AddSceneNodeOperation(group_node,app.getController().getScene().getRoot())
+        #app.getOperationStack().push(operation)
+        
+        #if not self._do_once:
+        #    self._do_once = True
+        #    self.poissonModelCreation([recieved_mesh])
+    
+       
     
     def _onMeshMessage(self,message):
         Logger.log('d', "Recieved Mesh")

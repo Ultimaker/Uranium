@@ -63,23 +63,25 @@ class MeshListModel(ListModel):
                     if id(node) == key:
                         if node not in Selection.getAllSelectedObjects(): #Group node already selected
                             Selection.add(node)
-                            self.setProperty(index,"selected", True)
                         else:
                             Selection.remove(node)
-                            self.setProperty(index,"selected", False)
-        
+                           
+        all_children_selected = True
         #Check all group nodes to see if all their children are selected (if so, they also need to be selected!)
         for index in range(0,len(self.items)):
             if self.items[index]["depth"] == 1:
                 for node in Application.getInstance().getController().getScene().getRoot().getAllChildren():
                     if node.hasChildren():
                         if id(node) == self.items[index]["key"] and id(node) != key: 
-                            for child_node in node.getChildren():
+                            for index, child_node in enumerate(node.getChildren()):
+                                print(index)
                                 if not Selection.isSelected(child_node):
-                                    break #At least one of its children is not selected, dont change state
+                                    all_children_selected = False #At least one of its children is not selected, dont change state
+                                    break 
                             #All children are selected (ergo it is also selected!)
-                            self.setProperty(index,"selected", True)
-                            Selection.add(node)
+                            #self.setProperty(index,"selected", True)
+                            if all_children_selected:
+                                Selection.add(node)
         #Force update                  
         self.updateList(Application.getInstance().getController().getScene().getRoot())
     
