@@ -38,13 +38,12 @@ class MeshListModel(ListModel):
     
     def updateList(self, trigger_node):
         self.clear()
-
         for group_node in self._scene.getRoot().getChildren():
             for node in DepthFirstIterator(group_node):
                 if node.getMeshData() is not None or node.hasChildren():
                     parent_key = 0
                     if group_node is not node:
-                        parent_key =  (id(group_node))
+                        parent_key =  id(group_node)
                     self.appendItem({"name":node.getName(), "visibility": node.isVisible(), "key": (id(node)), "selected": Selection.isSelected(node),"depth": node.getDepth(),"collapsed": node in self._collapsed_nodes,"parent_key": parent_key, "has_children":node.hasChildren()})
         
     # set the visibility of a node (by key)
@@ -103,7 +102,7 @@ class MeshListModel(ListModel):
         for node in Application.getInstance().getController().getScene().getRoot().getAllChildren():
             if id(node) == key:
                 Application.getInstance().getMeshFileHandler().write(file_url.toLocalFile(),Application.getInstance().getStorageDevice('local'),node.getMeshData())
-        print("saving ",key)
+
 
     #Remove mesh by key (triggered by context menu)
     @pyqtSlot("long")

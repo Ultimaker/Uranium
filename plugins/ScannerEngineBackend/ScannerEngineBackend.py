@@ -161,7 +161,7 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         recieved_mesh = MeshData()
         for vert in self._convertBytesToVerticeWithNormalsListPCL(message.data):
             recieved_mesh.addVertexWithNormal(vert[0],vert[1],vert[2],vert[3],vert[4],vert[5])
-        if message.inplace:    
+        if not message.inplace:    
             pointcloud_node = PointCloudNode()
             pointcloud_node.setMeshData(recieved_mesh)    
             for node in Application.getInstance().getController().getScene().getRoot().getAllChildren():
@@ -174,6 +174,7 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         else:
             for node in Application.getInstance().getController().getScene().getRoot().getAllChildren():
                 if int(message.id) == int(id(node)): #found the node where this scan needs to be added to.
+                    print("found node, adding")
                     node.setMeshData(recieved_mesh) #Overide the mesh data
         #node = PointCloudNode(group_node)
         #node.setMeshData(recieved_mesh)
