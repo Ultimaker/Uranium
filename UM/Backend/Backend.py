@@ -96,6 +96,10 @@ class Backend(SignalEmitter):
         if error.errno == 98:
             self._port += 1
             self._createSocket()
+        elif error.errno == 104 or error.errno == 32:
+            Logger.log('i', "Backend crashed or closed. Restarting...")
+            self._createSocket()
+            self.startEngine()
         else:
             Logger.log('e', str(error))
 
