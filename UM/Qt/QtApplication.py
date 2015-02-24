@@ -4,10 +4,10 @@ import site
 import signal
 import platform
 
-from PyQt5.QtCore import QObject, QCoreApplication, QEvent, pyqtSlot, QLocale, QTranslator
+from PyQt5.QtCore import Qt, QObject, QCoreApplication, QEvent, pyqtSlot, QLocale, QTranslator
 from PyQt5.QtQml import QQmlApplicationEngine, qmlRegisterType, qmlRegisterSingletonType
-from PyQt5.QtWidgets import QApplication
-from PyQt5.QtGui import QGuiApplication
+from PyQt5.QtWidgets import QApplication, QSplashScreen
+from PyQt5.QtGui import QGuiApplication, QPixmap
 
 from UM.Application import Application
 from UM.Qt.QtGL2Renderer import QtGL2Renderer
@@ -36,15 +36,28 @@ class QtApplication(QApplication, Application, SignalEmitter):
         self._engine = None
         self._renderer = None
 
+        try:
+            self._splash = QSplashScreen(QPixmap(Resources.getPath(Resources.ImagesLocation, self.getApplicationName() + ".png")))
+        except FileNotFoundError:
+            self._splash = None
+        else:
+            self._splash.show()
+            self.processEvents()
+
         signal.signal(signal.SIGINT, signal.SIG_DFL)
         # This is done here as a lot of plugins require a correct gl context. If you want to change the framework,
         # these checks need to be done in your <framework>Application.py class __init__().
+
+        self.showSplashMessage('Loading plugins...')
         self._loadPlugins()
         self._plugin_registry.checkRequiredPlugins(self.getRequiredPlugins())
 
+        self.showSplashMessage('Loading machines...')
         self.loadMachines()
 
         self._translators = {}
+
+        self.showSplashMessage('Loading translations...')
 
         self.loadQtTranslation('uranium_qt')
         self.loadQtTranslation(self.getApplicationName() + '_qt')
@@ -173,6 +186,18 @@ class QtApplication(QApplication, Application, SignalEmitter):
 
         # Finally, install the translator so Qt can use it.
         self.installTranslator(translator)
+
+    ##  Display text on the splash screen.
+    def showSplashMessage(self, message):
+        if self._splash:
+            self._splash.showMessage(message , Qt.AlignHCenter | Qt.AlignBottom)
+            self.processEvents()
+
+    ##  Close the splash screen after the application has started.
+    def closeSplash(self):
+        if self._splash:
+            self._splash.close()
+            self._splash = None
 
 ##  Internal.
 #

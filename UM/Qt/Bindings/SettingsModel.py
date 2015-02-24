@@ -19,6 +19,7 @@ class SettingsModel(ListModel):
     DisabledRole = Qt.UserRole + 10
     OptionsRole = Qt.UserRole + 11
     UnitRole = Qt.UserRole + 12
+    DescriptionRole = Qt.UserRole + 13
     
     def __init__(self, parent = None):
         super().__init__(parent)
@@ -38,6 +39,7 @@ class SettingsModel(ListModel):
         self.addRoleName(self.DisabledRole,"disabled")
         self.addRoleName(self.OptionsRole,"options")
         self.addRoleName(self.UnitRole,"unit")
+        self.addRoleName(self.DescriptionRole, "description")
 
     ##  Triggred by setting if it has a conditional activation
     def handleActiveChanged(self, key):
@@ -141,6 +143,7 @@ class SettingsModel(ListModel):
             for setting in self._machine_settings.getAllSettings():
                 self.appendItem({
                     "name": setting.getLabel(),
+                    "description": setting.getDescription(),
                     "category": setting.getCategory().getLabel(),
                     "collapsed": True,
                     "type": setting.getType(),

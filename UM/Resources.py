@@ -15,6 +15,7 @@ class Resources:
     MeshesLocation = 4
     ShadersLocation = 5
     i18nLocation = 6
+    ImagesLocation = 7
 
     ApplicationIdentifier = 'UM'
 
@@ -72,6 +73,8 @@ class Resources:
             return cls.__relativeToFile("..", "resources", "shaders")
         elif type == cls.i18nLocation:
             return cls.__relativeToFile("..", "resources", "i18n")
+        elif type == cls.ImagesLocation:
+            return cls.__relativeToFile("..", "resources", "images")
         else:
             raise UnknownLocationError("Unknonw location {0}".format(cls.type))
 
