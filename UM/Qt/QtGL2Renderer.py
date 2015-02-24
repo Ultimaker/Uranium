@@ -39,9 +39,7 @@ class QtGL2Renderer(Renderer):
 
         self._selection_buffer = None
         self._selection_map = {}
-
-        self._mouseX = 0.0
-        self._mouseY = 0.0
+        self._selection_image = None
 
         self._camera = None
 
@@ -155,6 +153,7 @@ class QtGL2Renderer(Renderer):
 
         self._gl.glDepthMask(self._gl.GL_FALSE)
         self._gl.glEnable(self._gl.GL_BLEND)
+        self._gl.glBlendFunc(self._gl.GL_SRC_ALPHA, self._gl.GL_ONE_MINUS_SRC_ALPHA)
 
         for item in self._transparentQueue:
             self._renderItem(item)
