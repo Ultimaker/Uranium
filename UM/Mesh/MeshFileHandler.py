@@ -43,7 +43,7 @@ class MeshFileHandler(object):
     # \returns List of strings with all supported filetypes.
     def getSupportedFileTypesWrite(self):
         supported_types = []
-        for writer in self._mesh_writer:
+        for writer in self._mesh_writers:
             supported_types.append(writer.getSupportedExtension())
         return supported_types
     
