@@ -15,6 +15,7 @@ SettingItem {
 
         text: base.value
         onEditingFinished: base.model.settingChanged(base.index, base.key, text)
+        validator: DoubleValidator { }
 
         style: TextFieldStyle
         {
