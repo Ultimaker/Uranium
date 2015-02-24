@@ -289,5 +289,4 @@ class QtGL2Renderer(Renderer):
         g = (obj_id & 0x00ff0000) >> 16
         b = (obj_id & 0x0000ff00) >> 8
         a = (obj_id & 0x000000ff) >> 0
-        print(node.getName(), r, g, b, a)
         return (r, g, b, a)
