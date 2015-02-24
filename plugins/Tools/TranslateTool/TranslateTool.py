@@ -42,14 +42,14 @@ class TranslateTool(Tool):
 
     def event(self, event):
         if event.type == Event.ToolActivateEvent:
-            if Selection.getCount() > 0:
+            if Selection.hasSelection():
                 #TODO: Support multiple selection
                 self._handle.setParent(self.getController().getScene().getRoot())
                 self._handle.setPosition(Selection.getSelectedObject(0).getGlobalPosition())
 
         if event.type == Event.MousePressEvent:
             #TODO: Support selection of multiple objects
-            if Selection.getCount() > 0:
+            if Selection.hasSelection():
                 obj = Selection.getSelectedObject(0)
                 ray = self.getController().getScene().getActiveCamera().getRay(event.x, event.y)
                 if obj.getBoundingBox().intersectsRay(ray):
@@ -59,8 +59,6 @@ class TranslateTool(Tool):
                     target = self._dragPlane.intersectsRay(ray)
                     if target:
                         self._target = ray.getPointAlongRay(target)
-
-                    self.beginOperation.emit()
 
                     return True
                 else:
@@ -93,7 +91,6 @@ class TranslateTool(Tool):
         if event.type == Event.MouseReleaseEvent:
             self._object = None
             self._target = None
-            self.endOperation.emit()
 
         if event.type == Event.ToolDeactivateEvent:
             self._handle.setParent(None)

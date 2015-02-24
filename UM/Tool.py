@@ -24,6 +24,3 @@ class Tool(SignalEmitter):
 
     def setController(self, controller):
         self._controller = controller
-
-    beginOperation = Signal()
-    endOperation = Signal()
