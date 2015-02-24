@@ -525,6 +525,17 @@
                         }
                     }
                 },
+                "support_pattern": {
+                    "label": "Support Material Pattern",
+                    "description": "Cura supports 2 distinct types of support material. First is a grid based support material which is quite solid and can be removed as 1 piece.\nThe other is a line based support material which has to be pealed of line for line.",
+                    "type": "enum",
+                    "options": [
+                        "Grid",
+                        "Lines"
+                    ],
+                    "default": "Lines",
+                    "visible": false
+                },
                 "support_angle": {
                     "label": "Overhang Angle",
                     "description": "The minimal angle that overhangs need to have to get support. With 0 degree being horizontal and 90 degree being vertical.",
@@ -555,17 +566,41 @@
                     "unit": "mm",
                     "type": "float",
                     "default": 0.15,
+                    "visible": false,
+                    
+                    "children": {
+                        "support_top_distance": {
+                            "label": "Top Distance",
+                            "description": "Distance from the top of the support to the print.",
+                            "unit": "mm",
+                            "default": 0.15,
+                            "type": "float",
+                            "visible": false
+                        },
+                        "support_bottom_distance": {
+                            "label": "Bottom Distance",
+                            "description": "Distance from the print to the bottom of the support.",
+                            "unit": "mm",
+                            "default": 0.15,
+                            "type": "float",
+                            "visible": false
+                        }
+                    }
+                },
+                "support_join_distance": {
+                    "label": "Join Distance",
+                    "description": "Maximal distance between support blocks, in the X/Y directions, such that the blocks will merge into a single block.",
+                    "unit": "mm",
+                    "type": "float",
+                    "default": 0.7,
                     "visible": false
                 },
-                "support_pattern": {
-                    "label": "Support Material Pattern",
-                    "description": "Cura supports 2 distinct types of support material. First is a grid based support material which is quite solid and can be removed as 1 piece.\nThe other is a line based support material which has to be pealed of line for line.",
-                    "type": "enum",
-                    "options": [
-                        "Grid",
-                        "Lines"
-                    ],
-                    "default": "Grid",
+                "support_bridge_back": {
+                    "label": "Support Bridge",
+                    "description": "The amount of area between the layer and the overhang which will generate support. Small values can result in many disconnected suport structures, while large values can cause the support to stick to the print too much.",
+                    "unit": "%",
+                    "type": "int",
+                    "default": 100,
                     "visible": false
                 }
             }
