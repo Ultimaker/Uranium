@@ -67,7 +67,8 @@ class ControllerProxy(QObject):
             node = PointCloudNode(self._controller.getScene().getRoot())
         else: 
             node = SceneNode(self._controller.getScene().getRoot())
-        node.setSelectionMask(1)
+
+        node.setSelectable(True)
         node.setMeshData(mesh)
 
         op = AddSceneNodeOperation(node, self._controller.getScene().getRoot())
