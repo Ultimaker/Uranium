@@ -115,40 +115,6 @@ UM.MainWindow
                 anchors.top:toolbar.bottom
             }
 
-            
-            UM.Panel 
-            {
-                anchors.bottom:parent.bottom;
-                anchors.horizontalCenter: parent.horizontalCenter;
-                title: ""
-
-                contents: RowLayout 
-                {
-                    height: 50
-                    width: 100
-                    
-                    ToolButton
-                    {
-                        text:"Scan"
-                        iconSource:UM.Resources.getIcon("scan.png")
-                        tooltip:"Shoopdawoop"
-                        onClicked: { UM.ScannerEngineBackend.scan() }
-                    }
-                    
-                    ToolButton
-                    {
-                        text:"Calibrate"
-                        iconSource:UM.Resources.getIcon("default.png")
-                        tooltip:"Calibrate"
-                        onClicked: 
-                        { 
-                            UM.ScannerEngineBackend.calibrate() 
-                            calibrationWindow.visible = true
-                        }
-                    }
-                    
-                }
-            }
             //Setting / Wizard menu (HARDCODED for wizard stuff)
             Loader 
             {
@@ -207,6 +173,22 @@ UM.MainWindow
                 anchors.bottom: parent.bottom;
                 anchors.left:parent.left;
             } 
+            
+            ProgressBar 
+            {
+                id: progressBar;
+                anchors.bottom:parent.bottom
+                anchors.horizontalCenter:parent.horizontalCenter
+                minimumValue: 0;
+                maximumValue: 100;
+                visible: (!UM.ToolbarData.wizardActive && UM.ToolbarData.state == 3 || UM.ToolbarData.state == 10)
+
+                Connections 
+                {
+                    target: UM.Backend;
+                    onProcessingProgress: progressBar.value = amount;
+                }
+            }
             
             Rectangle 
             {
@@ -401,15 +383,9 @@ UM.MainWindow
             UM.Controller.addMesh(fileUrl)
         }
     }
-    
-    CalibrationDialog
-    {    
-        id: calibrationWindow
-        width: 500
-        height:500
-    }
+
     
     
     
-    
+
 }
