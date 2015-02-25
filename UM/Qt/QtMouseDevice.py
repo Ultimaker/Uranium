@@ -27,7 +27,7 @@ class QtMouseDevice(InputDevice):
             self.event.emit(e)
         elif event.type() == QEvent.MouseButtonRelease:
             ex, ey = self._normalizeCoordinates(event.x(), event.y())
-            e = MouseEvent(MouseEvent.MouseReleaseEvent, ex, ey, self._x, self._y, self._qtButtonsToButtonList(event.buttons()))
+            e = MouseEvent(MouseEvent.MouseReleaseEvent, ex, ey, self._x, self._y, self._qtButtonsToButtonList(event.button()))
             self._x = ex
             self._y = ey
             self.event.emit(e)
