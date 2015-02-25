@@ -227,7 +227,7 @@ class QtGL2Renderer(Renderer):
                                    )
 
         self._outline_material = self.createMaterial(
-                                      Resources.getPath(Resources.ShadersLocation, 'basic.vert'),
+                                      Resources.getPath(Resources.ShadersLocation, 'outline.vert'),
                                        Resources.getPath(Resources.ShadersLocation, 'outline.frag')
                                  )
 
