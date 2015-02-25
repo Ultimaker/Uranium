@@ -4,41 +4,30 @@ import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.1
 
 import UM 1.0 as UM
-Rectangle 
+WizardPane
 {
-    id:base
-    width: 250
-    height: 500
-    color:"white"
-    property int objectsMargin:10
-    ColumnLayout
+    contents: ColumnLayout
     {
-        anchors.fill: parent;
-        anchors.leftMargin:2
-        Label
+        anchors.fill: parent
+        Text
         {
-            id:introText1
             text: "<b>Focus Camera</b>"
+            wrapMode: Text.Wrap
+            Layout.maximumWidth:parent.width
         }
         
         Image
         {
-            id:placeholder1
-            anchors.topMargin:objectsMargin
+            Layout.maximumWidth:parent.width
             source:"placeholder.png";
         }
-        
-        
-
-        
-        NextButton
+ 
+    }
+    buttons: NextButton
+    {
+        onClicked:
         {
-            onClicked:
-            {
-                UM.ToolbarData.setState(6);
-            }
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin:10
+            UM.ToolbarData.setState(6);
         }
     }
 }

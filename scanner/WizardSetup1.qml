@@ -4,38 +4,29 @@ import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.1
 
 import UM 1.0 as UM
-Rectangle 
+WizardPane
 {
-    id:base
-    width: 250
-    height: 500
-    color:"white"
-    property int objectsMargin:10
-    ColumnLayout
+    contents: ColumnLayout
     {
-        anchors.fill: parent;
-        anchors.leftMargin:2
+        anchors.fill: parent
         Text
         {
             id:introText
             text: "<b>Hardware setup</b><br>Choose a hardware setup. We recommend choosing 'basic setup' if this is your first time using Argus."
             wrapMode: Text.Wrap
-            Layout.fillWidth: true
+            Layout.maximumWidth:parent.width
         }
         Rectangle 
         {
-            id:spacer
-            width: 246
+            id:spacers
+            width:parent.width
             color:"black"
             height: 2
-            anchors.topMargin:objectsMargin
-            anchors.top:introText.bottom
         }
         Image
         {
             id:scanImage
-            anchors.topMargin:objectsMargin
-            anchors.top: spacer.bottom
+            Layout.maximumWidth:parent.width
             source:"placeholder.png";
         }
         
@@ -43,8 +34,7 @@ Rectangle
         ColumnLayout
         {
             id: setupSelection
-            anchors.top: scanImage.bottom
-            anchors.topMargin:objectsMargin
+
             RadioButton 
             {
                 text: "Basic setup"
@@ -64,22 +54,16 @@ Rectangle
         }
         Rectangle 
         {
-            id:spacer2
-            width: 246
+            width: parent.width
             color:"black"
             height: 2
-            anchors.topMargin:objectsMargin
-            anchors.top:setupSelection.bottom
         }
-        
-        NextButton
+    }
+    buttons:NextButton
+    {
+        onClicked:
         {
-            onClicked:
-            {
-                UM.ToolbarData.setState(2);
-            }
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin:10
+            UM.ToolbarData.setState(2);
         }
     }
 }

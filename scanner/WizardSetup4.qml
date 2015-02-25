@@ -4,46 +4,37 @@ import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.1
 
 import UM 1.0 as UM
-Rectangle 
+WizardPane
 {
-    id:base
-    width: 250
-    height: 500
-    color:"white"
-    property int objectsMargin:10
-    ColumnLayout
+    contents: ColumnLayout
     {
-        anchors.fill: parent;
-        anchors.leftMargin:2
-        Label
+        anchors.fill: parent
+        Text
         {
             id:introText1
-            text: "<b>Focus Beamer</b> <br> Move the focus slide of the projector so that<br> the image is sharply projected on the <br>calibration board. "
+            text: "<b>Focus Beamer</b> <br> Move the focus slide of the projector so that the image is sharply projected on the calibration board. "
+            Layout.maximumWidth:parent.width
+            wrapMode: Text.Wrap
         }
         
         Image
         {
             id:placeholder1
-            anchors.topMargin:objectsMargin
             source:"placeholder.png";
+            anchors.horizontalCenter:parent.horizontalCenter
         }
         
-        Label 
+        Text 
         {
-            text: "When image is in foucs like the image above, <br>you can continue to the next step."
-            
+            text: "When image is in foucs like the image above, you can continue to the next step."
+            Layout.maximumWidth:parent.width
         }
-        
-
-        
-        NextButton
+    }
+    buttons:NextButton
+    {
+        onClicked:
         {
-            onClicked:
-            {
-                UM.ToolbarData.setState(5);
-            }
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin:10
+            UM.ToolbarData.setState(5);
         }
     }
 }

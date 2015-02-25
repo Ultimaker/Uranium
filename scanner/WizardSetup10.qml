@@ -4,17 +4,11 @@ import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.1
 
 import UM 1.0 as UM
-Rectangle 
+WizardPane
 {
-    id:base
-    width: 250
-    height: 500
-    color:"white"
-    property int objectsMargin:10
-    ColumnLayout
+    contents: ColumnLayout
     {
-        anchors.fill: parent;
-        anchors.leftMargin:2
+        anchors.fill: parent
         Label
         {
             id:introText1
@@ -23,19 +17,15 @@ Rectangle
         
         Image
         {
-            id:placeholder1
-            anchors.topMargin:objectsMargin
+            Layout.maximumWidth:parent.width
             source:"placeholder.png";
         }
-        
-        NextButton
+    }
+    buttons:NextButton
+    {
+        onClicked:
         {
-            onClicked:
-            {
-                UM.ToolbarData.setState(11);
-            }
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin:10
+            UM.ToolbarData.setState(11);
         }
     }
 }

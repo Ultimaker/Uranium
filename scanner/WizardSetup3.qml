@@ -2,47 +2,34 @@ import QtQuick 2.1
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.1
-
 import UM 1.0 as UM
-Rectangle 
+WizardPane
 {
-    id:base
-    width: 250
-    height: 500
-    color:"white"
-    property int objectsMargin:10
-    ColumnLayout
+    contents: ColumnLayout
     {
-        anchors.fill: parent;
-        anchors.leftMargin:2
-        Label
+        anchors.fill: parent
+        Text
         {
-            id:introText1
-            text: "<b>Position calibration board</b> <br> The calibration board needs to be placed in<br> the centre of the camera view. Make sure that <br>sufficient markers are visible. Ensure that<br> ~80% of the image is filled up with the <br>calibration board."
+            text: "<b>Position calibration board</b> <br> The calibration board needs to be placed in the centre of the camera view. Make sure that sufficient markers are visible. Ensure that ~80% of the image is filled up with the calibration board."
+            wrapMode: Text.Wrap
+            Layout.maximumWidth:parent.width
         }
         AnimatedImage
         {
-            id:placeholder1
-            anchors.topMargin:objectsMargin
+            Layout.maximumWidth:parent.width
             source:"animatedPlaceholder.gif";
         }
         Image
         {
-            id:placeholder2
-
+            Layout.maximumWidth:parent.width
             source:"placeholder.png";
         }
-        
-
-        
-        NextButton
+    }
+    buttons: NextButton
+    {
+        onClicked:
         {
-            onClicked:
-            {
-                UM.ToolbarData.setState(4);
-            }
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin:10
+            UM.ToolbarData.setState(4);
         }
     }
 }

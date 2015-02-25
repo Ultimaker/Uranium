@@ -152,6 +152,8 @@ UM.MainWindow
                         return "WizardSetup10.qml"
                     case 11:
                         return "WizardSetup11.qml"
+                    case 12:
+                        return "WizardSetup12.qml"
                 }
             }
 

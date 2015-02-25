@@ -5,51 +5,51 @@ import QtQuick.Controls.Styles 1.1
 
 
 import UM 1.0 as UM
-Rectangle 
+WizardPane
 {
-    id:base
-    width: 250
-    height: 500
-    color:"white"
-    property int objectsMargin:10
-    ColumnLayout
+    contents: ColumnLayout
     {
-        anchors.fill: parent;
-        anchors.leftMargin:2
-        Label
+        anchors.fill: parent
+        Text
         {
-            id:introText1
             text: "<b>Edit object</b> <br> Stitch the clouds."
+            wrapMode: Text.Wrap
+            Layout.maximumWidth:parent.width
         }
         
         Image
         {
-            id:placeholder1
+            Layout.maximumWidth:parent.width
             source:"placeholder.png";
         }
-        Label
+        Text
         {
            
             text: "Make sure you select two layers at a time."
+            wrapMode: Text.Wrap
+            Layout.maximumWidth:parent.width
         }
-        Label
+        Text
         {
             text:"<b>Suface Finish</b>"
+            wrapMode: Text.Wrap
+            Layout.maximumWidth:parent.width
         }
         
         Rectangle 
         {
-            id:spacer
-            width: 246
+            width:parent.width
             color:"black"
             height: 2
         }
-        
         CheckBox
         {
             text:"Smooth"
         }
-        
+    }
+    buttons:ColumnLayout
+    {    
+
         WizardButton
         {
             text:"Scan Extra"
@@ -58,6 +58,5 @@ Rectangle
         {
             text:"Merge to solid"
         }
-        
     }
 }

@@ -14,7 +14,7 @@ Button
     {
         background: Item 
         {
-            implicitWidth: 225;
+            implicitWidth: 240;
             implicitHeight:25;
             Rectangle 
             {
@@ -37,7 +37,6 @@ Button
                     left:parent.left
                     leftMargin:10
                     verticalCenter:parent.verticalCenter
-                    //right: parent.right;
                 }
             }
         }
