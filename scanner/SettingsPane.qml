@@ -12,7 +12,7 @@ UM.Panel
 {
     id: settingsPanel
     color:"white"
-
+    border.width:1
     signal settingConfigurationRequested;
 
     contents: ColumnLayout
