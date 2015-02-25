@@ -45,10 +45,7 @@ class CameraTool(Tool):
     #   Moves the camera in response to a mouse event.
     def _moveCamera(self, event):
         camera = self._scene.getActiveCamera()
-        if not camera:
-            return
-
-        if camera.isLocked():
+        if not camera or not camera.isEnabled():
             return
 
         self._scene.acquireLock()
@@ -60,10 +57,7 @@ class CameraTool(Tool):
     #   Zooms the camera in response to a mouse event.
     def _zoomCamera(self, event):
         camera = self._scene.getActiveCamera()
-        if not camera:
-            return
-
-        if camera.isLocked():
+        if not camera or not camera.isEnabled():
             return
 
         self._scene.acquireLock()
@@ -83,10 +77,7 @@ class CameraTool(Tool):
     #   Rotates the camera in response to a mouse event.
     def _rotateCamera(self, x, y):
         camera = self._scene.getActiveCamera()
-        if not camera:
-            return
-
-        if camera.isLocked():
+        if not camera or not camera.isEnabled():
             return
 
         self._scene.acquireLock()

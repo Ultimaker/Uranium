@@ -22,8 +22,8 @@ class SceneNode(SignalEmitter):
         self._mesh_data = None
         self._transformation = Matrix()
         self._parent = parent
-        self._locked = False
-        self._selection_mask = 0
+        self._enabled = True
+        self._selectable = False
         self._aabb = None
         self._aabbJob = None
         self._visible = True
@@ -71,7 +71,6 @@ class SceneNode(SignalEmitter):
     
     def setVisibility(self,visible):
         self._visible = visible
-
 
     ##  \brief Get the (original) mesh data from the scene node/object. 
     #   \returns MeshData
@@ -122,7 +121,6 @@ class SceneNode(SignalEmitter):
         child.parentChanged.emit(self)
 
         self.childrenChanged.emit(self)
-        pass
 
     ##  \brief Removes all children and its children's children.
     def removeAllChildren(self):
@@ -138,7 +136,7 @@ class SceneNode(SignalEmitter):
         return self._children
     
     def hasChildren(self):
-        return True if len(self._children) else False
+        return True if self._children else False
 
     ##  \brief Get list of all children (including it's children children children etc.)
     #   \returns list ALl children in this 'tree'
@@ -156,7 +154,7 @@ class SceneNode(SignalEmitter):
     ##  \brief Computes and returns the transformation from origin to local space
     #   \returns 4x4 transformation matrix
     def getGlobalTransformation(self):
-        if(self._parent is None):
+        if self._parent is None:
             return self._transformation
         else:
             global_transformation = deepcopy(self._transformation)
@@ -171,7 +169,7 @@ class SceneNode(SignalEmitter):
     ##  \brief Sets the local transformation with respect to its parent. (from parent to local)
     #   \param transformation 4x4 (homogenous) matrix
     def setLocalTransformation(self, transformation):
-        if self._locked:
+        if not self._enabled:
             return
 
         self._transformation = transformation
@@ -179,7 +177,7 @@ class SceneNode(SignalEmitter):
 
     ##  \brief Rotate the scene object (and thus its children) by given amount
     def rotate(self, rotation):
-        if self._locked:
+        if not self._enabled:
             return
 
         rotMatrix = Matrix()
@@ -188,7 +186,7 @@ class SceneNode(SignalEmitter):
         self._transformChanged()
 
     def rotateByAngleAxis(self, angle, axis):
-        if self._locked:
+        if not self._enabled:
             return
 
         self._transformation.rotateByAxis(math.radians(angle), axis)
@@ -202,7 +200,7 @@ class SceneNode(SignalEmitter):
     ##  Translate the scene object (and thus its children) by given amount.
     #   \param translation Vector(x,y,z).
     def translate(self, translation):
-        if self._locked:
+        if not self._enabled:
             return
 
         self._transformation.translate(translation)
@@ -210,7 +208,7 @@ class SceneNode(SignalEmitter):
 
     ##  Set
     def setPosition(self, position):
-        if self._locked:
+        if not self._enabled:
             return
 
         self._transformation.setByTranslation(position)
@@ -246,15 +244,27 @@ class SceneNode(SignalEmitter):
     def render(self, renderer):
         return False
 
-    ##  Get whether this SceneNode is locked, that is, its transformation relative to its parent should not change.
-    def isLocked(self):
-        return self._locked
+    ##  Get whether this SceneNode is enabled, that is, it can be modified in any way.
+    def isEnabled(self):
+        return self._enabled
 
-    ##  Set whether this SceneNode is locked.
-    #   \param lock True if this object should be locked, False if not.
-    #   \sa isLocked
-    def setLocked(self, lock):
-        self._locked = lock
+    ##  Set whether this SceneNode is enabled.
+    #   \param enable True if this object should be enabled, False if not.
+    #   \sa isEnabled
+    def setEnabled(self, enable):
+        self._enabled = enable
+
+    ##  Get whether this SceneNode can be selected.
+    #
+    #   \note This will return false if isEnabled() returns false.
+    def isSelectable(self):
+        return self._enabled and self._selectable
+
+    ##  Set whether this SceneNode can be selected.
+    #
+    #   \param select True if this SceneNode should be selectable, False if not.
+    def setSelectable(self, select):
+        self._selectable = select
 
     ##  Get the bounding box of this node and its children.
     #
@@ -273,13 +283,6 @@ class SceneNode(SignalEmitter):
             self._resetAABB()
 
         return AxisAlignedBox()
-
-    # TODO: This can probably be simplified to an enabled property or similar. Maybe combine with locked?
-    def getSelectionMask(self):
-        return self._selection_mask
-
-    def setSelectionMask(self, mask):
-        self._selection_mask = mask
 
     ##  private:
 

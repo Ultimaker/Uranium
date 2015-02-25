@@ -11,6 +11,8 @@ from UM.Mesh.MeshData import MeshType
 from UM.Scene.PointCloudNode import PointCloudNode
 from UM.LoadWorkspaceJob import LoadWorkspaceJob
 
+import os.path
+
 class ControllerProxy(QObject):
     def __init__(self, parent = None):
         super().__init__(parent)
@@ -67,8 +69,10 @@ class ControllerProxy(QObject):
             node = PointCloudNode(self._controller.getScene().getRoot())
         else: 
             node = SceneNode(self._controller.getScene().getRoot())
-        node.setSelectionMask(1)
+
+        node.setSelectable(True)
         node.setMeshData(mesh)
+        node.setName(os.path.basename(job.getFileName()))
 
         op = AddSceneNodeOperation(node, self._controller.getScene().getRoot())
         op.push()

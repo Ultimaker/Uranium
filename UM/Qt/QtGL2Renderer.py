@@ -1,4 +1,4 @@
-from PyQt5.QtGui import QColor, QOpenGLBuffer, QOpenGLContext, QOpenGLVersionProfile, QSurfaceFormat
+from PyQt5.QtGui import QColor, QOpenGLBuffer, QOpenGLContext, QOpenGLFramebufferObject, QSurfaceFormat, QOpenGLVersionProfile, QImage
 
 from UM.Application import Application
 from UM.View.Renderer import Renderer
@@ -6,6 +6,7 @@ from UM.Math.Vector import Vector
 from UM.Math.Matrix import Matrix
 from UM.Resources import Resources
 from UM.Logger import Logger
+from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator
 
 from . import QtGL2Material
 
@@ -36,6 +37,10 @@ class QtGL2Renderer(Renderer):
         self._transparentQueue = []
         self._overlayQueue = []
 
+        self._selection_buffer = None
+        self._selection_map = {}
+        self._selection_image = None
+
         self._camera = None
 
     def createMaterial(self, vert, frag):
@@ -44,6 +49,12 @@ class QtGL2Renderer(Renderer):
         mat.loadFragmentShader(frag)
         mat.build()
         return mat
+
+    def getSelectionImage(self):
+        return self._selection_image
+
+    def getSelectionMap(self):
+        return self._selection_map
 
     def setLightPosition(self, position):
         self._lightPosition = position
@@ -108,11 +119,41 @@ class QtGL2Renderer(Renderer):
             self._scene.releaseLock()
             return
 
+        # Render the selection image
+        selectable_nodes = []
+        for node in DepthFirstIterator(self._scene.getRoot()):
+            if node.isSelectable() and node.getMeshData():
+                selectable_nodes.append(node)
+
+        if selectable_nodes:
+            #TODO: Use a limited area around the mouse rather than a full viewport for rendering
+            if self._selection_buffer.width() < self._viewportWidth or self._selection_buffer.height() < self._viewportHeight:
+                self._selection_buffer = QOpenGLFramebufferObject(self._viewportWidth, self._viewportHeight)
+
+            self._selection_buffer.bind()
+            self._gl.glClearColor(0.0, 0.0, 0.0, 0.0)
+            self._gl.glClear(self._gl.GL_COLOR_BUFFER_BIT | self._gl.GL_DEPTH_BUFFER_BIT)
+            self._gl.glDisable(self._gl.GL_BLEND)
+            self._selection_map.clear()
+            for node in selectable_nodes:
+                color = self._getObjectColor(node)
+                self._selection_map[color] = node
+                self._selection_material.setUniformValue('u_color', [color[0] / 255.0, color[1] / 255.0, color[2] / 255.0, color[3] / 255.0])
+                self._renderItem({
+                    'mesh': node.getMeshData(),
+                    'transform': node.getGlobalTransformation(),
+                    'material': self._selection_material,
+                    'mode': self._gl.GL_TRIANGLES
+                })
+            self._selection_buffer.release()
+            self._selection_image = self._selection_buffer.toImage()
+
         for item in self._solidsQueue:
             self._renderItem(item)
 
         self._gl.glDepthMask(self._gl.GL_FALSE)
         self._gl.glEnable(self._gl.GL_BLEND)
+        self._gl.glBlendFunc(self._gl.GL_SRC_ALPHA, self._gl.GL_ONE_MINUS_SRC_ALPHA)
 
         for item in self._transparentQueue:
             self._renderItem(item)
@@ -133,15 +174,21 @@ class QtGL2Renderer(Renderer):
         self._gl = QOpenGLContext.currentContext().versionFunctions(profile)
         self._gl.initializeOpenGLFunctions()
 
-        self._defaultMaterial = QtGL2Material.QtGL2Material(self)
-        self._defaultMaterial.loadVertexShader(Resources.getPath(Resources.ShadersLocation, 'default.vert'))
-        self._defaultMaterial.loadFragmentShader(Resources.getPath(Resources.ShadersLocation, 'default.frag'))
-        self._defaultMaterial.build()
+        self._defaultMaterial = self.createMaterial(
+                                     Resources.getPath(Resources.ShadersLocation, 'default.vert'),
+                                     Resources.getPath(Resources.ShadersLocation, 'default.frag')
+                                )
 
         self._defaultMaterial.setUniformValue("u_ambientColor", [0.3, 0.3, 0.3, 1.0])
         self._defaultMaterial.setUniformValue("u_diffuseColor", [0.5, 0.5, 0.5, 1.0])
         self._defaultMaterial.setUniformValue("u_specularColor", [1.0, 1.0, 1.0, 1.0])
         self._defaultMaterial.setUniformValue("u_shininess", 50.0)
+
+        self._selection_buffer = QOpenGLFramebufferObject(128, 128)
+        self._selection_material = self.createMaterial(
+                                        Resources.getPath(Resources.ShadersLocation, 'basic.vert'),
+                                        Resources.getPath(Resources.ShadersLocation, 'color.frag')
+                                   )
 
         self._initialized = True
 
@@ -235,3 +282,10 @@ class QtGL2Renderer(Renderer):
         setattr(mesh, indexBufferProperty, buffer)
         return buffer
 
+    def _getObjectColor(self, node):
+        obj_id = id(node)
+        r = (obj_id & 0xff000000) >> 24
+        g = (obj_id & 0x00ff0000) >> 16
+        b = (obj_id & 0x0000ff00) >> 8
+        a = (obj_id & 0x000000ff) >> 0
+        return (r, g, b, a)

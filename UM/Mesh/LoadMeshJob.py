@@ -13,5 +13,8 @@ class LoadMeshJob(Job):
         self._handler = Application.getInstance().getMeshFileHandler()
         self._device = Application.getInstance().getStorageDevice('local')
 
+    def getFileName(self):
+        return self._filename
+
     def run(self):
         self.setResult(self._handler.read(self._filename, self._device))
