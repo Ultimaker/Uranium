@@ -1,4 +1,4 @@
-from PyQt5.QtGui import QColor, QOpenGLBuffer, QOpenGLContext, QOpenGLFramebufferObject, QSurfaceFormat, QOpenGLVersionProfile, QImage
+from PyQt5.QtGui import QColor, QOpenGLBuffer, QOpenGLContext, QOpenGLFramebufferObject, QOpenGLFramebufferObjectFormat, QSurfaceFormat, QOpenGLVersionProfile, QImage
 
 from UM.Application import Application
 from UM.View.Renderer import Renderer
@@ -49,6 +49,11 @@ class QtGL2Renderer(Renderer):
         mat.loadFragmentShader(frag)
         mat.build()
         return mat
+
+    def createFrameBuffer(self, width, height):
+        buffer_format = QOpenGLFramebufferObjectFormat()
+        buffer_format.setAttachment(QOpenGLFramebufferObject.Depth)
+        return QOpenGLFramebufferObject(width, height, buffer_format)
 
     def getSelectionImage(self):
         return self._selection_image
@@ -128,7 +133,7 @@ class QtGL2Renderer(Renderer):
         if selectable_nodes:
             #TODO: Use a limited area around the mouse rather than a full viewport for rendering
             if self._selection_buffer.width() < self._viewportWidth or self._selection_buffer.height() < self._viewportHeight:
-                self._selection_buffer = QOpenGLFramebufferObject(self._viewportWidth, self._viewportHeight)
+                self._selection_buffer = self.createFrameBuffer(self._viewportWidth, self._viewportHeight)
 
             self._selection_buffer.bind()
             self._gl.glClearColor(0.0, 0.0, 0.0, 0.0)
@@ -184,7 +189,7 @@ class QtGL2Renderer(Renderer):
         self._defaultMaterial.setUniformValue("u_specularColor", [1.0, 1.0, 1.0, 1.0])
         self._defaultMaterial.setUniformValue("u_shininess", 50.0)
 
-        self._selection_buffer = QOpenGLFramebufferObject(128, 128)
+        self._selection_buffer = self.createFrameBuffer(128, 128)
         self._selection_material = self.createMaterial(
                                         Resources.getPath(Resources.ShadersLocation, 'basic.vert'),
                                         Resources.getPath(Resources.ShadersLocation, 'color.frag')
