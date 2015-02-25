@@ -82,8 +82,8 @@ class CameraTool(Tool):
 
         self._scene.acquireLock()
 
-        dx = math.radians(x * 360.0)
-        dy = math.radians(y * 360.0)
+        dx = math.radians(x * 180.0)
+        dy = math.radians(y * 180.0)
 
         diff = camera.getGlobalPosition() - self._origin
         r = diff.length()
