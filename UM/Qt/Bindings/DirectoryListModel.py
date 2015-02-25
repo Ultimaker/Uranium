@@ -5,6 +5,7 @@ from PyQt5.QtCore import Qt, pyqtProperty, pyqtSignal, QUrl
 
 import os
 import os.path
+import platform
 
 class DirectoryListModel(ListModel):
     NameRole = Qt.UserRole + 1
@@ -26,7 +27,10 @@ class DirectoryListModel(ListModel):
     def setDirectory(self, path):
         if path != self._directory:
             if path.startswith('file://'):
-                path = path[7:]
+                if platform.system() == "Windows" and path.startswith('file:///'):
+                    path = path[8:]
+                else:
+                    path = path[7:]
             self._directory = os.path.dirname(path)
 
             self.clear()
