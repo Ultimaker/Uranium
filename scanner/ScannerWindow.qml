@@ -267,6 +267,9 @@ UM.MainWindow
             }
         }
     }
+    AnimatedImage:{
+        source:"inProgress.gif"
+    }
 
     UM.PreferencesDialog { id: preferences }
 
