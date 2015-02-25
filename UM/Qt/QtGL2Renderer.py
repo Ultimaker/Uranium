@@ -273,7 +273,7 @@ class QtGL2Renderer(Renderer):
         if mesh.hasNormals():
             material.enableAttribute("a_normal", Vector, mesh.getVertexCount() * 3 * 4)
 
-        if wireframe:
+        if wireframe and hasattr(self._gl, 'glPolygonMode'):
             self._gl.glPolygonMode(self._gl.GL_FRONT_AND_BACK, self._gl.GL_LINE)
 
         if mesh.hasIndices():
@@ -281,7 +281,7 @@ class QtGL2Renderer(Renderer):
         else:
             self._gl.glDrawArrays(mode, 0, mesh.getVertexCount())
 
-        if wireframe:
+        if wireframe and hasattr(self._gl, 'glPolygonMode'):
             self._gl.glPolygonMode(self._gl.GL_FRONT_AND_BACK, self._gl.GL_FILL)
 
         material.disableAttribute("a_vertex")
