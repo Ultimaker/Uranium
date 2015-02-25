@@ -19,5 +19,5 @@ class ToolHandle(SceneNode.SceneNode):
             )
             self._material.setUniformValue('u_color', [1.0, 0.0, 0.0, 1.0])
 
-        renderer.queueMesh(self.getMeshData(), self.getGlobalTransformation(), mode = Renderer.RenderLines, overlay = True, material = self._material)
+        renderer.queueNode(self, mode = Renderer.RenderLines, overlay = True, material = self._material)
         return True
