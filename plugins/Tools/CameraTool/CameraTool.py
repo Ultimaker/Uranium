@@ -13,10 +13,9 @@ class CameraTool(Tool):
 
         self._yaw = 0
         self._pitch = 0
-        self._zoom = 5.0
         self._origin = Vector(0, 0, 0)
         self._minZoom = 10.0
-        self._maxZoom = 300.0
+        self._maxZoom = 500.0
 
     def setZoomRange(self, min, max):
         self._minZoom = min
@@ -62,8 +61,9 @@ class CameraTool(Tool):
 
         self._scene.acquireLock()
 
-        delta = event.vertical / 10.0
-        r = (camera.getGlobalPosition() - self._origin).length() - delta
+        r = (camera.getGlobalPosition() - self._origin).length()
+        delta = r * (event.vertical / 128 / 10.0)
+        r -= delta
         if delta > 0:
             if r > self._minZoom:
                 camera.translate(Vector(0.0, 0.0, -delta))
@@ -82,8 +82,8 @@ class CameraTool(Tool):
 
         self._scene.acquireLock()
 
-        dx = x
-        dy = y
+        dx = math.radians(x * 360.0)
+        dy = math.radians(y * 360.0)
 
         diff = camera.getGlobalPosition() - self._origin
         r = diff.length()

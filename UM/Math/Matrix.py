@@ -184,13 +184,13 @@ class Matrix(object):
     def setPerspective(self, fovy, aspect, near, far):
         self.setToIdentity()
 
-        f = math.cos(math.radians(fovy) / 2) / math.sin(math.radians(fovy) / 2)
+        f = 2. / math.tan(math.radians(fovy) / 2.)
 
         self._data[0, 0] = f / aspect
         self._data[1, 1] = f
-        self._data[2, 2] = (far + near)/(near - far)
-        self._data[2, 3] = -1
-        self._data[3, 2] = (2 * far * near)/(near - far)
+        self._data[2, 2] = (far + near) / (near - far)
+        self._data[2, 3] = -1.
+        self._data[3, 2] = (2. * far * near) / (near - far)
 
     def _unit_vector(self, data, axis=None, out=None):
         """Return ndarray normalized by length, i.e. Euclidean norm, along axis.
