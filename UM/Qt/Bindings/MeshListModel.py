@@ -19,6 +19,7 @@ class MeshListModel(ListModel):
     
     def __init__(self, parent = None):
         super().__init__(parent)
+        self._collapsed_nodes = []
         self._scene = Application.getInstance().getController().getScene()
         self.updateList(self._scene.getRoot())
         self._scene.getRoot().childrenChanged.connect(self.updateList)
@@ -30,7 +31,7 @@ class MeshListModel(ListModel):
         self.addRoleName(self.CollapsedRole,"collapsed")
         self.addRoleName(self.HasChildrenRole,"has_children")
         self._scene.rootChanged.connect(self._rootChanged)
-        self._collapsed_nodes = []
+        
         
     def _rootChanged(self):
         self._scene.getRoot().childrenChanged.connect(self.updateList)
@@ -53,6 +54,14 @@ class MeshListModel(ListModel):
             if id(node) == key:
                 node.setVisibility(visibility)
     
+    @pyqtSlot("long",str)
+    def setName(self, key, name):
+        for index in range(0,len(self.items)):
+            if self.items[index]["key"] == key:
+                for node in Application.getInstance().getController().getScene().getRoot().getAllChildren():
+                    if id(node) == key:
+                        node.setName(name)
+    
     #Set a single item to selected, by key
     @pyqtSlot("long")
     def setSelected(self, key):
@@ -73,7 +82,6 @@ class MeshListModel(ListModel):
                     if node.hasChildren():
                         if id(node) == self.items[index]["key"] and id(node) != key: 
                             for index, child_node in enumerate(node.getChildren()):
-                                print(index)
                                 if not Selection.isSelected(child_node):
                                     all_children_selected = False #At least one of its children is not selected, dont change state
                                     break 

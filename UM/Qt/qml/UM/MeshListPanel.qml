@@ -131,12 +131,6 @@ Rectangle {
             MouseArea
             {
                 anchors.fill: parent;
-                acceptedButtons: Qt.LeftButton 
-                onClicked: meshList.model.setSelected(model.key)
-            }
-            MouseArea
-            {
-                anchors.fill: parent;
                 acceptedButtons: Qt.RightButton;
                 onClicked: contextMenu.popup();
             }
@@ -171,10 +165,32 @@ Rectangle {
                     visible: model.depth != 1 ? false: model.has_children ? true:false
                     onClicked:meshList.model.setCollapsed(model.key)
                 }
-                Text 
+                TextField
                 {
+                    property bool editingName: false
                     text:model.name
                     width:50
+                    onEditingFinished:{editingName = false; meshList.model.setName(model.key,text)}
+                    id: nameTextField
+                    readOnly:!nameTextField.editingName
+                    
+                    style: TextFieldStyle
+                    {
+                        background: Rectangle 
+                        {
+                            color: nameTextField.editingName ?  "white":"transparent"
+                            radius:2
+                            border.color:nameTextField.editingName ?"black": "transparent"
+                        }
+                    }
+                    MouseArea
+                    {
+                        anchors.fill: parent;
+                        anchors.horizontalCenter: parent.horizontalCenter; 
+                        anchors.verticalCenter: parent.verticalCenter
+                        onClicked: {nameTextField.editingName = true; console.log("Starting edit")}
+                        enabled:!nameTextField.editingName
+                    }
                 }
 
                 ToggleButton

@@ -28,8 +28,9 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         self._message_handlers[ultiscantastic_pb2.Mesh] = self._onMeshMessage
         self._latest_camera_image = QImage(1, 1, QImage.Format_RGB888)
         self._settings = None
-        Application.getInstance().activeMachineChanged.connect(self._onActiveMachineChanged)
+
         self._onActiveMachineChanged()
+        
     
     def _onActiveMachineChanged(self):
         self._settings = Application.getInstance().getActiveMachine()
@@ -37,7 +38,6 @@ class ScannerEngineBackend(Backend, SignalEmitter):
             self._settings.settingChanged.connect(self._onSettingChanged)
     
     def _onSettingChanged(self, setting):
-        print("setting changed ", setting.getKey())
         self.sendSetting(setting)
     
     def _onStatusMessage(self, message):
@@ -66,7 +66,6 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         self._socket.registerMessageType(13, ultiscantastic_pb2.Mesh)
         
     def startScan(self, type = 0):
-        print("starting scan")
         message = ultiscantastic_pb2.StartScan()
         group_node = SceneNode()
         name = "Scan" 
@@ -76,7 +75,7 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         elif type == 1:
             message.type = ultiscantastic_pb2.StartScan.PHASE
             name += " phase"
-        print("added group:" , id(group_node))
+       
         message.id = id(group_node)
         group_node.setName(name)
         operation = AddSceneNodeOperation(group_node,Application.getInstance().getController().getScene().getRoot())
@@ -115,7 +114,6 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         self._socket.sendMessage(message)
     
     def recalculateNormals(self, node):
-        print("Sending recalculate normals message")
         message = ultiscantastic_pb2.RecalculateNormal()
         message.cloud.vertices = node.getMeshData().getVerticesAsByteArray()
         message.cloud.normals = node.getMeshData().getNormalsAsByteArray()
@@ -148,7 +146,6 @@ class ScannerEngineBackend(Backend, SignalEmitter):
             message.type = ultiscantastic_pb2.StartCalibration.CORNER
         elif type == 1:
             message.type = ultiscantastic_pb2.StartCalibration.BOARD
-        print("Sending calibration message")
         self._socket.sendMessage(message)
         
     def getEngineCommand(self):
@@ -170,11 +167,9 @@ class ScannerEngineBackend(Backend, SignalEmitter):
                     pointcloud_node.setParent(node) 
                     return
             pointcloud_node.setParent(Application.getInstance().getController().getScene().getRoot()) #Group is deleted?
-            print("Unable to find group node with id", message.id)
         else:
             for node in Application.getInstance().getController().getScene().getRoot().getAllChildren():
                 if int(message.id) == int(id(node)): #found the node where this scan needs to be added to.
-                    print("found node, adding")
                     node.setMeshData(recieved_mesh) #Overide the mesh data
         #node = PointCloudNode(group_node)
         #node.setMeshData(recieved_mesh)
