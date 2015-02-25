@@ -110,7 +110,8 @@ UM.MainWindow
             UM.MeshListPanel 
             {
                 id: mesh_list_panel;
-                anchors.topMargin:20
+                anchors.topMargin:5
+                anchors.leftMargin:5
                 anchors.left: parent.left
                 anchors.top:toolbar.bottom
             }
@@ -120,6 +121,8 @@ UM.MainWindow
             {
                 
                 anchors.top:toolbar.bottom;
+                anchors.topMargin:5;
+                anchors.rightMargin:5;
                 anchors.right:parent.right
                 source: switch(UM.ToolbarData.wizardActive ? UM.ToolbarData.state: -1)
                 {
@@ -196,11 +199,15 @@ UM.MainWindow
                 width: 750
                 height: parent.height / 2
                 anchors.horizontalCenter:parent.horizontalCenter
-                anchors.topMargin: 20
+                anchors.topMargin: 5
                 anchors.top:toolbar.bottom
+                border.width:1
                 RowLayout
                 {
-                    anchors.fill: parent;
+                    //anchors.fill: parent;
+                    width: parent.width -2
+                    height:parent.height 
+                    anchors.horizontalCenter:parent.horizontalCenter
                     ColumnLayout 
                     {
                         Image
@@ -246,8 +253,8 @@ UM.MainWindow
             }
             Image
             {
-                width:500
-                height:500
+                width:640
+                height:360
                 id:cameraImage
                 anchors.horizontalCenter: parent.horizontalCenter;
                 anchors.verticalCenter:parent.verticalCenter;

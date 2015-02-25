@@ -11,7 +11,7 @@ import ".."
 UM.Panel 
 {
     id: settingsPanel
-    color:"#ebebeb"
+    color:"white"
 
     signal settingConfigurationRequested;
 
@@ -23,7 +23,7 @@ UM.Panel
         UM.SettingsView 
         {
             Layout.fillWidth: true
-            Layout.fillHeight: true    
+            Layout.fillHeight: true
         }
     }
 }

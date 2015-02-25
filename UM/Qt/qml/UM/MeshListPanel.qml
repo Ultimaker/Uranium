@@ -8,7 +8,7 @@ import UM 1.0 as UM
 
 Rectangle {
     id:meshListPanel
-    width:200
+    width:250
     height:500
     border.width:1
     border.color:"black"
@@ -65,11 +65,9 @@ Rectangle {
             Layout.preferredHeight:400
             ListView
             {
-                Layout.fillWidth: true
+                width:parent.width - meshListPanel.border.width * 2
                 Layout.fillHeight: true
                 id:meshList
-                //headerVisible: false
-                //TableViewColumn{ role: "name" ; title: "Name" ; width: 200 }
                 delegate: meshDelegate      
                 model: UM.Models.meshListModel
             }
@@ -86,7 +84,9 @@ Rectangle {
                 }
                 RowLayout
                 {
-                    anchors.fill:parent
+                    width:parent.width - meshListPanel.border.width * 4
+                    height:parent.height - meshListPanel.border.width * 2
+                    anchors.horizontalCenter:parent.horizontalCenter
                     Label 
                     {
                         text:"0 layers of scans"
@@ -122,7 +122,7 @@ Rectangle {
         Rectangle 
         {
             color: model.depth == 1 ?"#FFFFFF": "#EBEBEB" 
-            width:meshList.width
+            width:meshList.width -2
             Behavior on opacity { NumberAnimation { } }
             opacity:model.collapsed ? 0:1
             
