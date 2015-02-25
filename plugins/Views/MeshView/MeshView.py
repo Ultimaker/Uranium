@@ -22,7 +22,7 @@ class MeshView(View):
         for node in DepthFirstIterator(scene.getRoot()):
             if not node.render(renderer):
                 if node.getMeshData() and node.isVisible():
-                    renderer.queueMesh(node.getMeshData(), node.getGlobalTransformation(), material = self._material)
+                    renderer.queueNode(node, material = self._material)
 
     def endRendering(self):
         pass

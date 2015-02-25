@@ -13,7 +13,7 @@ class WireframeView(View):
         for node in DepthFirstIterator(scene.getRoot()):
             if not node.render(renderer):
                 if node.getMeshData():
-                    renderer.queueMesh(node.getMeshData(), node.getGlobalTransformation(), mode = Renderer.RenderWireframe)
+                    renderer.queueNode(node, mode = Renderer.RenderWireframe)
 
     def endRendering(self):
         pass

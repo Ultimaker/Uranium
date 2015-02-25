@@ -81,8 +81,11 @@ class QtGL2Renderer(Renderer):
         self._transparentQueue.clear()
         self._overlayQueue.clear()
 
-    def queueMesh(self, mesh, transform, **kwargs):
-        queueItem = { 'transform': transform, 'mesh': mesh }
+    def queueNode(self, node, **kwargs):
+        queueItem = { 'node': node }
+
+        if 'mesh' in kwargs:
+            queueItem['mesh'] = kwargs['mesh']
 
         queueItem['material'] = kwargs.get('material', self._defaultMaterial)
 
@@ -105,7 +108,7 @@ class QtGL2Renderer(Renderer):
         else:
             self._solidsQueue.append(queueItem)
 
-    def renderQueuedMeshes(self):
+    def renderQueuedNodes(self):
         self._gl.glEnable(self._gl.GL_DEPTH_TEST)
         self._gl.glDepthFunc(self._gl.GL_LESS)
         self._gl.glDepthMask(self._gl.GL_TRUE)
@@ -140,8 +143,7 @@ class QtGL2Renderer(Renderer):
                 self._selection_map[color] = node
                 self._selection_material.setUniformValue('u_color', [color[0] / 255.0, color[1] / 255.0, color[2] / 255.0, color[3] / 255.0])
                 self._renderItem({
-                    'mesh': node.getMeshData(),
-                    'transform': node.getGlobalTransformation(),
+                    'node': node,
                     'material': self._selection_material,
                     'mode': self._gl.GL_TRIANGLES
                 })
@@ -193,8 +195,9 @@ class QtGL2Renderer(Renderer):
         self._initialized = True
 
     def _renderItem(self, item):
-        mesh = item['mesh']
-        transform = item['transform']
+        node = item['node']
+        mesh = item.get('mesh', node.getMeshData())
+        transform = node.getGlobalTransformation()
         material = item['material']
         mode = item['mode']
         wireframe = item.get('wireframe', False)

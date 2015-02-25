@@ -24,7 +24,7 @@ class Platform(SceneNode.SceneNode):
             self._material.setUniformValue('u_opacity', 0.9)
 
         if self.getMeshData():
-            renderer.queueMesh(self.getMeshData(), self.getGlobalTransformation(), material = self._material, transparent = True)
+            renderer.queueNode(self, material = self._material, transparent = True)
             return True
 
     def _onActiveMachineChanged(self):
