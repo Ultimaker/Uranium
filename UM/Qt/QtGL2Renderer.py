@@ -7,6 +7,7 @@ from UM.Math.Matrix import Matrix
 from UM.Resources import Resources
 from UM.Logger import Logger
 from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator
+from UM.Scene.Selection import Selection
 
 from . import QtGL2Material
 
@@ -150,9 +151,37 @@ class QtGL2Renderer(Renderer):
             self._selection_buffer.release()
             self._selection_image = self._selection_buffer.toImage()
 
-        for item in self._solidsQueue:
-            self._renderItem(item)
+        self._gl.glEnable(self._gl.GL_STENCIL_TEST)
+        self._gl.glStencilMask(0xff)
+        self._gl.glClearStencil(0)
+        self._gl.glClear(self._gl.GL_STENCIL_BUFFER_BIT)
+        self._gl.glStencilFunc(self._gl.GL_ALWAYS, 0xff, 0xff)
+        self._gl.glStencilOp(self._gl.GL_REPLACE, self._gl.GL_REPLACE, self._gl.GL_REPLACE)
+        self._gl.glStencilMask(0)
 
+        for item in self._solidsQueue:
+            if Selection.isSelected(item['node']):
+                self._gl.glStencilMask(0xff)
+                self._renderItem(item)
+                self._gl.glStencilMask(0)
+            else:
+                self._renderItem(item)
+
+        self._gl.glStencilMask(0)
+        self._gl.glStencilFunc(self._gl.GL_EQUAL, 0, 0xff)
+        self._gl.glLineWidth(5)
+        for node in Selection.getAllSelectedObjects():
+            if node.getMeshData():
+                self._renderItem({
+                    'node': node,
+                    'material': self._outline_material,
+                    'mode': self._gl.GL_TRIANGLES,
+                    'wireframe': True
+                })
+
+        self._gl.glLineWidth(1)
+
+        self._gl.glDisable(self._gl.GL_STENCIL_TEST)
         self._gl.glDepthMask(self._gl.GL_FALSE)
         self._gl.glEnable(self._gl.GL_BLEND)
         self._gl.glBlendFunc(self._gl.GL_SRC_ALPHA, self._gl.GL_ONE_MINUS_SRC_ALPHA)
@@ -191,6 +220,11 @@ class QtGL2Renderer(Renderer):
                                         Resources.getPath(Resources.ShadersLocation, 'basic.vert'),
                                         Resources.getPath(Resources.ShadersLocation, 'color.frag')
                                    )
+
+        self._outline_material = self.createMaterial(
+                                      Resources.getPath(Resources.ShadersLocation, 'basic.vert'),
+                                       Resources.getPath(Resources.ShadersLocation, 'outline.frag')
+                                 )
 
         self._initialized = True
 
