@@ -96,9 +96,12 @@ class Application(SignalEmitter):
 
     def addMachine(self, machine):
         self._machines.append(machine)
+        self.machinesChanged.emit()
+        return len(self._machines) - 1
 
     def removeMachine(self, machine):
         self._machines.remove(machine)
+        self.machinesChanged.emit()
 
     machinesChanged = Signal()
 
