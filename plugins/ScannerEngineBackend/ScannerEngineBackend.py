@@ -28,8 +28,8 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         self._message_handlers[ultiscantastic_pb2.Mesh] = self._onMeshMessage
         self._latest_camera_image = QImage(1, 1, QImage.Format_RGB888)
         self._settings = None
-
-        self._onActiveMachineChanged()
+        Application.getInstance().activeMachineChanged.connect(self._onActiveMachineChanged)
+        #self._onActiveMachineChanged()
         
     processStarted = Signal()
     def _onActiveMachineChanged(self):
