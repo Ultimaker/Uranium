@@ -102,6 +102,7 @@ PreferencesPage {
             //: Close about plugin dialog
             Button {
                 text: qsTr("Close");
+                onClicked: about_window.visible = false;
             }
         }
     }
