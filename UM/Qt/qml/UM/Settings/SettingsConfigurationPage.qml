@@ -10,16 +10,43 @@ PreferencesPage {
     //: Machine configuration page title.
     title: qsTr("Machine");
 
-    contents: ScrollView 
-    {
+    contents: ColumnLayout {
         anchors.fill: parent;
-        ListView 
-        {
-            delegate: settingDelegate
-            model: UM.Models.settingsModel
+        RowLayout {
+            Label { text: qsTr("Active Machine:"); }
+            ComboBox {
+                id: machineCombo;
+                Layout.fillWidth: true;
+                model: UM.Models.machinesModel;
+                textRole: "name";
+                onCurrentIndexChanged: {
+                    if(currentIndex != -1)
+                        UM.Models.machinesModel.setActive(currentIndex);
+                }
 
-            section.property: "category"
-            section.delegate: Label { text: section }
+                Connections {
+                    id: machineChange
+                    target: UM.Application
+                    onMachineChanged: machineCombo.currentIndex = machineCombo.find(UM.Application.machineName);
+                }
+
+                Component.onCompleted: machineCombo.currentIndex = machineCombo.find(UM.Application.machineName);
+            }
+            Button { text: qsTr("Remove"); }
+        }
+        ScrollView
+        {
+            Layout.fillWidth: true;
+            Layout.fillHeight: true;
+
+            ListView
+            {
+                delegate: settingDelegate
+                model: UM.Models.settingsModel
+
+                section.property: "category"
+                section.delegate: Label { text: section }
+            }
         }
     }
 
