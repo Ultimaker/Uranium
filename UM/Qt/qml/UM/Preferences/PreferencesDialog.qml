@@ -15,46 +15,52 @@ Window {
     width: 640;
     height: 480;
 
-    ColumnLayout {
+    Rectangle {
         anchors.fill: parent;
-        RowLayout {
-            Layout.fillWidth: true;
-            Layout.fillHeight: true;
+        color: palette.window;
 
-            Column {
+        ColumnLayout {
+            anchors.fill: parent;
+
+            RowLayout {
+                Layout.fillWidth: true;
                 Layout.fillHeight: true;
 
-                Repeater {
-                    model: configPagesModel;
-                    delegate: Button {
-                        width: 100
-                        height: 100
-                        text: qsTr(model.name);
-                        onClicked: configPage.source = model.page;
+                Column {
+                    Layout.fillHeight: true;
+
+                    Repeater {
+                        model: configPagesModel;
+                        delegate: Button {
+                            width: 100
+                            height: 100
+                            text: qsTr(model.name);
+                            onClicked: configPage.source = model.page;
+                        }
                     }
+                }
+
+                Loader {
+                    id: configPage;
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+
+                    source: configPagesModel.get(0).page;
                 }
             }
 
-            Loader {
-                id: configPage;
-                Layout.fillWidth: true
-                Layout.fillHeight: true
+            Item {
+                height: childrenRect.height;
+                Layout.fillWidth: true;
 
-                source: configPagesModel.get(0).page;
-            }
-        }
+                Button {
+                    //: Close preferences dialog
+                    text: qsTr("Close");
 
-        Item {
-            height: childrenRect.height;
-            Layout.fillWidth: true;
+                    anchors.right: parent.right;
 
-            Button {
-                //: Close preferences dialog
-                text: qsTr("Close");
-
-                anchors.right: parent.right;
-
-                onClicked: base.visible = false;
+                    onClicked: base.visible = false;
+                }
             }
         }
     }
@@ -73,4 +79,6 @@ Window {
     function setPage(index) {
         configPage.source = configPagesModel.get(index).page;
     }
+
+    SystemPalette { id: palette; colorGroup: SystemPalette.Active }
 }

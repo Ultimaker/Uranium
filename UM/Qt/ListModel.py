@@ -29,6 +29,11 @@ class ListModel(QAbstractListModel):
             return QVariant()
         return self._items[index.row()][self._role_names[role]]
 
+    ##  Get an item from the list
+    @pyqtSlot(int, result='QVariantMap')
+    def getItem(self, index):
+        return self._items[index]
+
     ##  The list of items in this model.
     @pyqtProperty('QVariantList')
     def items(self):
@@ -72,3 +77,10 @@ class ListModel(QAbstractListModel):
     #   \param fun The callable to use for determining the sort key.
     def sort(self, fun):
         self._items.sort(key = fun)
+
+    def find(self, key, value):
+        for i in range(len(self._items)):
+            if key in self._items[i]:
+                if self._items[i][key] == value:
+                    return i
+        return False

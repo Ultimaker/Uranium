@@ -26,6 +26,7 @@ class MachinesModel(ListModel):
         self.clear()
         for machine in Application.getInstance().getMachines():
             self.appendItem({ 'id': id(machine), 'name': machine.getName(), 'active': Application.getInstance().getActiveMachine() == machine })
+        self.sort(lambda e: e['name'])
 
     def _onActiveMachineChanged(self):
         activeMachine = Application.getInstance().getActiveMachine()

@@ -9,6 +9,7 @@ from . import PluginsModel
 from . import ExtentionModel
 from . import MachinesModel
 from . import DirectoryListModel
+from . import AvailableMachinesModel
 
 ##  This class is a workaround for a bug in PyQt.
 #   For some reason, a QAbstractItemModel subclass instantiated from QML
@@ -26,6 +27,7 @@ class Models(QObject):
         self._extention_model = None
         self._machines_model = None
         self._directory_list_model = None
+        self._available_machines_model = None
 
     @pyqtProperty(ViewModel.ViewModel, constant = True)
     def viewModel(self):
@@ -83,3 +85,9 @@ class Models(QObject):
         if not self._directory_list_model:
             self._directory_list_model = DirectoryListModel.DirectoryListModel()
         return self._directory_list_model
+
+    @pyqtProperty(AvailableMachinesModel.AvailableMachinesModel, constant = True)
+    def availableMachinesModel(self):
+        if not self._available_machines_model:
+            self._available_machines_model = AvailableMachinesModel.AvailableMachinesModel()
+        return self._available_machines_model

@@ -1,10 +1,10 @@
 {
-    "id": "ultimaker_original_plus",
-    "name": "Ultimaker Original Plus",
+    "id": "ultimaker_original",
+    "name": "Ultimaker Original",
     "icon": "icon_ultimaker.png",
     "platform": "ultimaker_plus_platform.stl",
 
-    "inherits": "ultimaker_original.json",
+    "inherits": "fdmprinter.json",
 
     "machine_settings": {
         "machine_width": { "default": 205 },

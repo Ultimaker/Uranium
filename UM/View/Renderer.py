@@ -25,21 +25,21 @@ class Renderer():
     def beginRendering(self):
         raise NotImplementedError()
 
-    ##  Queue a mesh to be rendered.
+    ##  Queue a node to be rendered.
     #
-    #   \param mesh The mesh to queue for rendering.
-    #   \param transform The transformation matrix to apply to the mesh.
+    #   \param node The node to queue for rendering.
     #   \param kwargs Keyword arguments.
     #                 Possible keywords:
+    #                 - mesh: A different mesh from the node's MeshData to use for rendering.
     #                 - material: The material to use to render. By default this is a standard grey lighted material.
     #                 - mode: The mode to render in. By default this is Renderer.RenderTriangles.
     #                 - transparent: Should this mesh be rendered with transparency. Boolean value, default False.
     #                 - overlay: Should this mesh be rendered on top of everything else. Boolean value, default False.
-    def queueMesh(self, transform, mesh, **kwargs):
+    def queueNode(self, node, **kwargs):
         raise NotImplementedError()
 
     ##  Render all queued meshes, in an order specified by the renderer.
-    def renderQueuedMeshes(self):
+    def renderQueuedNodes(self):
         raise NotImplementedError()
 
     ##  Finish rendering, finalize and clear state.

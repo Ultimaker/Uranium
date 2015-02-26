@@ -1,4 +1,4 @@
-from UM.Event import Event
+from UM.Event import MouseEvent
 from UM.Tool import Tool
 from UM.Application import Application
 from UM.Scene.BoxRenderer import BoxRenderer
@@ -25,7 +25,7 @@ class SelectionTool(Tool):
 
 
     def event(self, event):
-        if event.type == Event.MouseReleaseEvent:
+        if event.type == MouseEvent.MouseReleaseEvent and MouseEvent.LeftButton in event.buttons:
             Selection.clear()
             if self._selection_mode == self.PixelSelectionMode:
                 self._pixelSelection(event)

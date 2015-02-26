@@ -1,4 +1,4 @@
-from PyQt5.QtGui import QColor, QOpenGLBuffer, QOpenGLContext, QOpenGLFramebufferObject, QSurfaceFormat, QOpenGLVersionProfile, QImage
+from PyQt5.QtGui import QColor, QOpenGLBuffer, QOpenGLContext, QOpenGLFramebufferObject, QOpenGLFramebufferObjectFormat, QSurfaceFormat, QOpenGLVersionProfile, QImage
 
 from UM.Application import Application
 from UM.View.Renderer import Renderer
@@ -7,6 +7,7 @@ from UM.Math.Matrix import Matrix
 from UM.Resources import Resources
 from UM.Logger import Logger
 from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator
+from UM.Scene.Selection import Selection
 
 from . import QtGL2Material
 
@@ -50,6 +51,11 @@ class QtGL2Renderer(Renderer):
         mat.build()
         return mat
 
+    def createFrameBuffer(self, width, height):
+        buffer_format = QOpenGLFramebufferObjectFormat()
+        buffer_format.setAttachment(QOpenGLFramebufferObject.Depth)
+        return QOpenGLFramebufferObject(width, height, buffer_format)
+
     def getSelectionImage(self):
         return self._selection_image
 
@@ -81,8 +87,11 @@ class QtGL2Renderer(Renderer):
         self._transparentQueue.clear()
         self._overlayQueue.clear()
 
-    def queueMesh(self, mesh, transform, **kwargs):
-        queueItem = { 'transform': transform, 'mesh': mesh }
+    def queueNode(self, node, **kwargs):
+        queueItem = { 'node': node }
+
+        if 'mesh' in kwargs:
+            queueItem['mesh'] = kwargs['mesh']
 
         queueItem['material'] = kwargs.get('material', self._defaultMaterial)
 
@@ -105,11 +114,11 @@ class QtGL2Renderer(Renderer):
         else:
             self._solidsQueue.append(queueItem)
 
-    def renderQueuedMeshes(self):
+    def renderQueuedNodes(self):
         self._gl.glEnable(self._gl.GL_DEPTH_TEST)
         self._gl.glDepthFunc(self._gl.GL_LESS)
         self._gl.glDepthMask(self._gl.GL_TRUE)
-        self._gl.glEnable(self._gl.GL_CULL_FACE)
+        self._gl.glDisable(self._gl.GL_CULL_FACE)
 
         self._scene.acquireLock()
 
@@ -128,7 +137,7 @@ class QtGL2Renderer(Renderer):
         if selectable_nodes:
             #TODO: Use a limited area around the mouse rather than a full viewport for rendering
             if self._selection_buffer.width() < self._viewportWidth or self._selection_buffer.height() < self._viewportHeight:
-                self._selection_buffer = QOpenGLFramebufferObject(self._viewportWidth, self._viewportHeight)
+                self._selection_buffer = self.createFrameBuffer(self._viewportWidth, self._viewportHeight)
 
             self._selection_buffer.bind()
             self._gl.glClearColor(0.0, 0.0, 0.0, 0.0)
@@ -140,19 +149,47 @@ class QtGL2Renderer(Renderer):
                 self._selection_map[color] = node
                 self._selection_material.setUniformValue('u_color', [color[0] / 255.0, color[1] / 255.0, color[2] / 255.0, color[3] / 255.0])
                 self._renderItem({
-                    'mesh': node.getMeshData(),
-                    'transform': node.getGlobalTransformation(),
+                    'node': node,
                     'material': self._selection_material,
                     'mode': self._gl.GL_TRIANGLES
                 })
             self._selection_buffer.release()
             self._selection_image = self._selection_buffer.toImage()
 
-        for item in self._solidsQueue:
-            self._renderItem(item)
+        self._gl.glEnable(self._gl.GL_STENCIL_TEST)
+        self._gl.glStencilMask(0xff)
+        self._gl.glClearStencil(0)
+        self._gl.glClear(self._gl.GL_STENCIL_BUFFER_BIT)
+        self._gl.glStencilFunc(self._gl.GL_ALWAYS, 0xff, 0xff)
+        self._gl.glStencilOp(self._gl.GL_REPLACE, self._gl.GL_REPLACE, self._gl.GL_REPLACE)
+        self._gl.glStencilMask(0)
 
+        for item in self._solidsQueue:
+            if Selection.isSelected(item['node']):
+                self._gl.glStencilMask(0xff)
+                self._renderItem(item)
+                self._gl.glStencilMask(0)
+            else:
+                self._renderItem(item)
+
+        self._gl.glStencilMask(0)
+        self._gl.glStencilFunc(self._gl.GL_EQUAL, 0, 0xff)
+        self._gl.glLineWidth(5)
+        for node in Selection.getAllSelectedObjects():
+            if node.getMeshData():
+                self._renderItem({
+                    'node': node,
+                    'material': self._outline_material,
+                    'mode': self._gl.GL_TRIANGLES,
+                    'wireframe': True
+                })
+
+        self._gl.glLineWidth(1)
+
+        self._gl.glDisable(self._gl.GL_STENCIL_TEST)
         self._gl.glDepthMask(self._gl.GL_FALSE)
         self._gl.glEnable(self._gl.GL_BLEND)
+        self._gl.glEnable(self._gl.GL_CULL_FACE)
         self._gl.glBlendFunc(self._gl.GL_SRC_ALPHA, self._gl.GL_ONE_MINUS_SRC_ALPHA)
 
         for item in self._transparentQueue:
@@ -184,17 +221,23 @@ class QtGL2Renderer(Renderer):
         self._defaultMaterial.setUniformValue("u_specularColor", [1.0, 1.0, 1.0, 1.0])
         self._defaultMaterial.setUniformValue("u_shininess", 50.0)
 
-        self._selection_buffer = QOpenGLFramebufferObject(128, 128)
+        self._selection_buffer = self.createFrameBuffer(128, 128)
         self._selection_material = self.createMaterial(
                                         Resources.getPath(Resources.ShadersLocation, 'basic.vert'),
                                         Resources.getPath(Resources.ShadersLocation, 'color.frag')
                                    )
 
+        self._outline_material = self.createMaterial(
+                                      Resources.getPath(Resources.ShadersLocation, 'outline.vert'),
+                                       Resources.getPath(Resources.ShadersLocation, 'outline.frag')
+                                 )
+
         self._initialized = True
 
     def _renderItem(self, item):
-        mesh = item['mesh']
-        transform = item['transform']
+        node = item['node']
+        mesh = item.get('mesh', node.getMeshData())
+        transform = node.getGlobalTransformation()
         material = item['material']
         mode = item['mode']
         wireframe = item.get('wireframe', False)
@@ -231,7 +274,7 @@ class QtGL2Renderer(Renderer):
         if mesh.hasNormals():
             material.enableAttribute("a_normal", Vector, mesh.getVertexCount() * 3 * 4)
 
-        if wireframe:
+        if wireframe and hasattr(self._gl, 'glPolygonMode'):
             self._gl.glPolygonMode(self._gl.GL_FRONT_AND_BACK, self._gl.GL_LINE)
 
         if mesh.hasIndices():
@@ -239,7 +282,7 @@ class QtGL2Renderer(Renderer):
         else:
             self._gl.glDrawArrays(mode, 0, mesh.getVertexCount())
 
-        if wireframe:
+        if wireframe and hasattr(self._gl, 'glPolygonMode'):
             self._gl.glPolygonMode(self._gl.GL_FRONT_AND_BACK, self._gl.GL_FILL)
 
         material.disableAttribute("a_vertex")
