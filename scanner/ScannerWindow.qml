@@ -267,8 +267,12 @@ UM.MainWindow
             }
         }
     }
-    AnimatedImage:{
+    AnimatedImage
+    {
         source:"inProgress.gif"
+        anchors.horizontalCenter:parent.horizontalCenter
+        anchors.verticalCenter:parent.verticalCenter
+        visible:UM.ScannerEngineBackend.processing
     }
 
     UM.PreferencesDialog { id: preferences }

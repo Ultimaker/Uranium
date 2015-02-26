@@ -11,15 +11,33 @@ class ScannerEngineBackendProxy(QObject):
         self._backend.StatusMessage.connect(self._onStatusMessage)
         self._id = 0;
         self._backend.processingProgress.connect(self._onProcessingProgress)
+        self._backend.processStarted.connect(self._onProcessStarted)
         self._warning_string = ""
         self._resetStatusMessageTimer = None
+        self._is_processing = False
 
     processingProgress = pyqtSignal(float, arguments = ['amount'])
+    isProcessingChanged = pyqtSignal()
 
+    def _onProcessStarted(self):
+        self._is_processing = True
+        self.isProcessingChanged.emit()
+    
     def _onProcessingProgress(self, amount):
+        print("progresss")
+        if amount == 0 and not self._is_processing:
+            self._is_processing = True
+            self.isProcessingChanged.emit()
+        if amount == 100 and self._is_processing:
+            self._is_processing = False
+            self.isProcessingChanged.emit()
         self.processingProgress.emit(amount)
     
     newImage = pyqtSignal()
+    
+    @pyqtProperty(bool, notify=isProcessingChanged)
+    def processing(self):
+        return self._is_processing
     
     @pyqtProperty(QUrl, notify=newImage)
     def cameraImage(self):

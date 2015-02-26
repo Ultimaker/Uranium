@@ -31,7 +31,7 @@ class ScannerEngineBackend(Backend, SignalEmitter):
 
         self._onActiveMachineChanged()
         
-    
+    processStarted = Signal()
     def _onActiveMachineChanged(self):
         self._settings = Application.getInstance().getActiveMachine()
         if self._settings:
@@ -66,6 +66,7 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         self._socket.registerMessageType(13, ultiscantastic_pb2.Mesh)
         
     def startScan(self, type = 0):
+        self.processStarted.emit()
         message = ultiscantastic_pb2.StartScan()
         group_node = SceneNode()
         name = "Scan" 
@@ -141,6 +142,7 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         self._socket.sendMessage(message)
     
     def startCalibration(self, type = 0):
+        self.processStarted.emit()
         message = ultiscantastic_pb2.StartCalibration()
         if type == 0:
             message.type = ultiscantastic_pb2.StartCalibration.CORNER
