@@ -43,6 +43,10 @@ class ScannerEngineBackend(Backend, SignalEmitter):
     def _onStatusMessage(self, message):
         if message.status == ultiscantastic_pb2.StatusMessage.OBJECT_NOT_FOUND:
             self.StatusMessage.emit("Object")
+        if message.status == ultiscantastic_pb2.StatusMessage.PROCESSING:
+            self.StatusMessage.emit("Processing")
+        if message.status == ultiscantastic_pb2.StatusMessage.CAPTURING:
+            self.StatusMessage.emit("Capturing")
     
     StatusMessage = Signal()
     

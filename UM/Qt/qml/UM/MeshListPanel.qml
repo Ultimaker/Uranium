@@ -65,8 +65,13 @@ Rectangle {
             Layout.preferredHeight:400
             ListView
             {
-                width:parent.width - meshListPanel.border.width * 2
+                //width:parent.width - meshListPanel.border.width * 4
+                anchors.left:parent.left
+                anchors.leftMargin:1
+                anchors.top:parent.top
+                anchors.topMargin:1
                 Layout.fillHeight: true
+                Layout.fillWidth: true
                 id:meshList
                 delegate: meshDelegate      
                 model: UM.Models.meshListModel
@@ -121,6 +126,7 @@ Rectangle {
         id: meshDelegate
         Rectangle 
         {
+            id:background
             color: model.depth == 1 ?"#FFFFFF": "#EBEBEB" 
             width:meshList.width -2
             Behavior on opacity { NumberAnimation { } }
@@ -146,7 +152,10 @@ Rectangle {
             
             RowLayout 
             {
-                anchors.fill: parent
+                //meshList.width
+                //Layout.minimumWidth:background.width
+                //Layout.maximumWidth:background.width
+                anchors.fill:parent
                 //Layout.fillWidth:true
                 
                 ToggleButton
@@ -169,7 +178,9 @@ Rectangle {
                 {
                     property bool editingName: false
                     text:model.name
-                    width:50
+                    Layout.maximumWidth: 100
+                    Layout.minimumWidth:100
+                    anchors.horizontalCenter:parent.horizontalCenter
                     onEditingFinished:{editingName = false; meshList.model.setName(model.key,text)}
                     id: nameTextField
                     readOnly:!nameTextField.editingName
@@ -181,6 +192,7 @@ Rectangle {
                             color: nameTextField.editingName ?  "white":"transparent"
                             radius:2
                             border.color:nameTextField.editingName ?"black": "transparent"
+                            anchors.fill:parent
                         }
                     }
                     MouseArea

@@ -24,7 +24,6 @@ class ScannerEngineBackendProxy(QObject):
         self.isProcessingChanged.emit()
     
     def _onProcessingProgress(self, amount):
-        print("progresss")
         if amount == 0 and not self._is_processing:
             self._is_processing = True
             self.isProcessingChanged.emit()
@@ -65,13 +64,13 @@ class ScannerEngineBackendProxy(QObject):
     
     def _onStatusMessage(self, str):
         self._warning_string = str
-        if not self._resetStatusMessageTimer:
+        '''if not self._resetStatusMessageTimer:
             self._resetStatusMessageTimer = threading.Timer(3, self._onResetStatsTimerFinished)
             self._resetStatusMessageTimer.start()
         if self._resetStatusMessageTimer: #Stop timer and create a new one.
             self._resetStatusMessageTimer.cancel()
             self._resetStatusMessageTimer = threading.Timer(3, self._onResetStatsTimerFinished) 
-            self._resetStatusMessageTimer.start()
+            self._resetStatusMessageTimer.start()'''
         self.newStatusText.emit()
     
     def _onResetStatsTimerFinished(self):

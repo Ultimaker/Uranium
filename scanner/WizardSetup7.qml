@@ -43,8 +43,13 @@ WizardPane
                     return "Unable to locate calibration object";
                 case "":
                     return "";
+                case "Processing":
+                    return "Processing data";
+                case "Capturing":
+                    return "Capturing data";
             }
             wrapMode: Text.Wrap
+            Layout.preferredWidth:parent.width
             Layout.maximumWidth:parent.width
         }
     }
