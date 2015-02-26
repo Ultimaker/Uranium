@@ -22,6 +22,12 @@ class MachinesModel(ListModel):
         app = Application.getInstance()
         app.setActiveMachine(app.getMachines()[index])
 
+    @pyqtSlot(int)
+    def removeMachine(self, index):
+        app = Application.getInstance()
+        app.removeMachine(app.getMachines()[index])
+        app.setActiveMachine(app.getMachines()[0])
+
     def _onMachinesChanged(self):
         self.clear()
         for machine in Application.getInstance().getMachines():

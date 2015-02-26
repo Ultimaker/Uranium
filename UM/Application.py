@@ -102,6 +102,14 @@ class Application(SignalEmitter):
 
     def removeMachine(self, machine):
         self._machines.remove(machine)
+
+        try:
+            path = Resources.getStoragePath(Resources.SettingsLocation, urllib.parse.quote_plus(machine.getName()) + '.cfg')
+        except FileNotFoundError:
+            pass
+        else:
+            os.remove(path)
+
         self.machinesChanged.emit()
 
     machinesChanged = Signal()
