@@ -12,7 +12,7 @@ class ScannerEngineBackendProxy(QObject):
         self._id = 0;
         self._backend.processingProgress.connect(self._onProcessingProgress)
         self._backend.processStarted.connect(self._onProcessStarted)
-        self._warning_string = ""
+        self._status_string = ""
         self._resetStatusMessageTimer = None
         self._is_processing = False
 
@@ -47,8 +47,8 @@ class ScannerEngineBackendProxy(QObject):
     newStatusText = pyqtSignal()
     
     @pyqtProperty(str, notify=newStatusText)
-    def warningText(self):
-        return self._warning_string
+    def statusText(self):
+        return self._status_string
     
     @pyqtSlot()
     def scan(self):
@@ -63,7 +63,7 @@ class ScannerEngineBackendProxy(QObject):
         self.newImage.emit()
     
     def _onStatusMessage(self, str):
-        self._warning_string = str
+        self._status_string = str
         '''if not self._resetStatusMessageTimer:
             self._resetStatusMessageTimer = threading.Timer(3, self._onResetStatsTimerFinished)
             self._resetStatusMessageTimer.start()

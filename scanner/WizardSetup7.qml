@@ -36,8 +36,8 @@ WizardPane
         }
         Text
         {
-            id:warning_label
-            text:switch(UM.ScannerEngineBackend.warningText)
+            id:status_label
+            text:switch(UM.ScannerEngineBackend.statusText)
             {
                 case "Object":
                     return "Unable to locate calibration object";
