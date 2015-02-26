@@ -186,6 +186,12 @@ class MachineSettings(SignalEmitter):
     def getName(self):
         return self._name
 
+    ##  Set the machine name
+    #
+    #   \param name The name of the machine.
+    def setName(self, name):
+        self._name = name
+
     ##  Returns the machine's icon.
     def getIcon(self):
         return self._icon
