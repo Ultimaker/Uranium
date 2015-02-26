@@ -1,6 +1,11 @@
 {
     "name": "UltiScanTastic",
     "platform": "ultiscantastic.obj",
+
+    "cura": {
+        "visible": false
+    },
+
     "required_plugins": [
         "Console Logger",
         "ScannerBackend"
