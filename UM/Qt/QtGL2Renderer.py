@@ -118,7 +118,7 @@ class QtGL2Renderer(Renderer):
         self._gl.glEnable(self._gl.GL_DEPTH_TEST)
         self._gl.glDepthFunc(self._gl.GL_LESS)
         self._gl.glDepthMask(self._gl.GL_TRUE)
-        self._gl.glEnable(self._gl.GL_CULL_FACE)
+        self._gl.glDisable(self._gl.GL_CULL_FACE)
 
         self._scene.acquireLock()
 
@@ -189,6 +189,7 @@ class QtGL2Renderer(Renderer):
         self._gl.glDisable(self._gl.GL_STENCIL_TEST)
         self._gl.glDepthMask(self._gl.GL_FALSE)
         self._gl.glEnable(self._gl.GL_BLEND)
+        self._gl.glEnable(self._gl.GL_CULL_FACE)
         self._gl.glBlendFunc(self._gl.GL_SRC_ALPHA, self._gl.GL_ONE_MINUS_SRC_ALPHA)
 
         for item in self._transparentQueue:
