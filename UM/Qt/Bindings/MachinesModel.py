@@ -22,11 +22,16 @@ class MachinesModel(ListModel):
         app = Application.getInstance()
         app.setActiveMachine(app.getMachines()[index])
 
+    @pyqtSlot(int)
+    def removeMachine(self, index):
+        app = Application.getInstance()
+        app.removeMachine(app.getMachines()[index])
+        app.setActiveMachine(app.getMachines()[0])
+
     def _onMachinesChanged(self):
         self.clear()
         for machine in Application.getInstance().getMachines():
             self.appendItem({ 'id': id(machine), 'name': machine.getName(), 'active': Application.getInstance().getActiveMachine() == machine })
-        self.sort(lambda e: e['name'])
 
     def _onActiveMachineChanged(self):
         activeMachine = Application.getInstance().getActiveMachine()

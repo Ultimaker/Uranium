@@ -27,6 +27,9 @@ class CameraTool(Tool):
         self._scene.getActiveCamera().translate(translation)
         self._rotateCamera(0.0, 0.0)
 
+    def getOrigin(self):
+        return self._origin
+
     def event(self, event):
         if type(event) is MouseEvent:
             if MouseEvent.RightButton in event.buttons:

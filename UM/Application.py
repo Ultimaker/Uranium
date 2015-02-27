@@ -96,11 +96,20 @@ class Application(SignalEmitter):
 
     def addMachine(self, machine):
         self._machines.append(machine)
+        self._machines.sort(key = lambda k: k.getName())
         self.machinesChanged.emit()
         return len(self._machines) - 1
 
     def removeMachine(self, machine):
         self._machines.remove(machine)
+
+        try:
+            path = Resources.getStoragePath(Resources.SettingsLocation, urllib.parse.quote_plus(machine.getName()) + '.cfg')
+        except FileNotFoundError:
+            pass
+        else:
+            os.remove(path)
+
         self.machinesChanged.emit()
 
     machinesChanged = Signal()
@@ -211,6 +220,7 @@ class Application(SignalEmitter):
             settings = MachineSettings()
             settings.loadValuesFromFile(os.path.join(settingsDir, entry))
             self._machines.append(settings)
+        self._machines.sort(key = lambda k: k.getName())
 
     def saveMachines(self):
         settingsDir = Resources.getStorageLocation(Resources.SettingsLocation)

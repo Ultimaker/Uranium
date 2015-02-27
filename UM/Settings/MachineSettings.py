@@ -82,12 +82,23 @@ class MachineSettings(SignalEmitter):
 
         self._name = config.get('General', 'name', fallback = 'Unknown Machine')
 
+        visibility = config.get('General', 'visibility', fallback = None)
+        if visibility:
+            values = visibility.split(',')
+            for setting in self.getAllSettings():
+                if setting.getKey() in values:
+                    setting.setVisible(True)
+                else:
+                    setting.setVisible(False)
+
         for name, section in config.items():
             for key in section:
                 setting = self.getSettingByKey(key)
-
                 if setting is not None:
                     setting.setValue(section[key])
+
+                    if not setting.isVisible():
+                        setting.setVisible(True)
 
     ##  Save setting values to file
     def saveValuesToFile(self, file_name):
@@ -96,6 +107,7 @@ class MachineSettings(SignalEmitter):
         config.add_section('General')
         config['General']['type'] = self._type_id
         config['General']['name'] = self._name
+        config['General']['visibility'] = self._getVisibleSettings()
 
         for category in self._categories:
             configData = {}
@@ -195,3 +207,12 @@ class MachineSettings(SignalEmitter):
     ##  Returns the machine's icon.
     def getIcon(self):
         return self._icon
+
+    def _getVisibleSettings(self):
+        visible = []
+        settings = self.getAllSettings()
+        for setting in settings:
+            if setting.isVisible():
+                visible.append(setting.getKey())
+
+        return ','.join(visible)
