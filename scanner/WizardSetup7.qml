@@ -21,23 +21,11 @@ WizardPane
             Layout.maximumWidth:parent.width
             source:"placeholder.png";
         }
-        ProgressBar 
-        {
-            id: progressBar;
-
-            minimumValue: 0;
-            maximumValue: 100;
-            Layout.maximumWidth:parent.width
-            Connections 
-            {
-                target: UM.Backend;
-                onProcessingProgress: progressBar.value = amount;
-            }
-        }
+        
         Text
         {
             id:status_label
-            text:switch(UM.ScannerEngineBackend.statusText)
+            text:switch(prog.visible ? UM.ScannerEngineBackend.statusText : "")
             {
                 case "Object":
                     return "Unable to locate calibration object";
@@ -51,13 +39,48 @@ WizardPane
             wrapMode: Text.Wrap
             Layout.preferredWidth:parent.width
             Layout.maximumWidth:parent.width
+            
         }
     }
-    buttons: NextButton
+    buttons: Item
     {
-        onClicked:
+        Layout.fillWidth:true
+        Layout.preferredHeight: 25;
+        
+        NextButton
         {
-            UM.ToolbarData.setState(8);
+            id:nextButton
+            onClicked:
+            {
+                UM.ToolbarData.setState(8);
+            }
+            visible:false
+        }
+
+        ProgressBar 
+        {
+            id: prog;
+
+            minimumValue: 0;
+            maximumValue: 100;
+            Layout.maximumWidth:parent.width
+            Layout.preferredWidth:200
+            Layout.preferredHeight:25
+            Layout.minimumWidth:200
+            Layout.minimumHeight:25
+            width: 200
+            height: 25
+            
+            Connections 
+            {
+                target: UM.Backend;
+                onProcessingProgress: 
+                { 
+                    nextButton.visible = amount != 100 ? false : true;
+                    prog.visible = amount != 100 ? true : false;
+                    prog.value = amount;
+                }
+            }
         }
     }
 }

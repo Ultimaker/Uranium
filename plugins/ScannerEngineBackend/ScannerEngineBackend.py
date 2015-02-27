@@ -212,6 +212,7 @@ class ScannerEngineBackend(Backend, SignalEmitter):
     newCameraImage = Signal()
     
     def _onProgressUpdateMessage(self, message):
+        #print('amount', message.amount)
         self.processingProgress.emit(message.amount)
 
     '''def _addPointCloudWithNormals(self, data):

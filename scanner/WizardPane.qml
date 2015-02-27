@@ -37,6 +37,6 @@ Rectangle
         anchors.bottomMargin: base.objectsMargin 
         anchors.left:parent.left
         anchors.leftMargin: base.objectsMargin 
-        Layout.fillWidth:true
+        width: base.width - objectsMargin * 2
     }
 }
