@@ -9,7 +9,6 @@ Button
     id:base
     property string checkedImage
     property string uncheckedImage
-    checked: model.visibility
     checkable:true
     style:ButtonStyle
     {

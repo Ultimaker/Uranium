@@ -96,7 +96,7 @@ class MeshListModel(ListModel):
     def setCollapsed(self,key):
         for index in range(0, len(self.items)):
             item = self.items[index]
-            if int(item["parent_key"]) == int(key):  
+            if int(item["parent_key"]) == int(key) or int(item["key"]) == int(key):  
                 self.setProperty(index, 'collapsed', not item['collapsed'])
                 for node in Application.getInstance().getController().getScene().getRoot().getAllChildren():
                     if int(item["key"]) == id(node):

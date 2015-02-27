@@ -130,10 +130,10 @@ Rectangle {
             color: model.depth == 1 ?"#FFFFFF": "#EBEBEB" 
             width:meshList.width -2
             Behavior on opacity { NumberAnimation { } }
-            opacity:model.collapsed ? 0:1
+            opacity: model.has_children? 1: model.collapsed ? 0:1
             
             Behavior on height {NumberAnimation{}}
-            height:model.collapsed ? 0:25
+            height:model.has_children ? 25: model.collapsed? 0:25
             MouseArea
             {
                 anchors.fill: parent;
@@ -152,17 +152,15 @@ Rectangle {
             
             RowLayout 
             {
-                //meshList.width
-                //Layout.minimumWidth:background.width
-                //Layout.maximumWidth:background.width
                 anchors.fill:parent
-                //Layout.fillWidth:true
                 
                 ToggleButton
                 { 
+                    id:visibilityButton
                     onClicked:meshList.model.setVisibility(model.key,checked)
                     checkedImage:  UM.Resources.getIcon("icon_visibility.png")
                     uncheckedImage: UM.Resources.getIcon("icon_visibility_crossed.png")
+                    checked:model.visibility
                     width:22
                 }
  
@@ -172,6 +170,7 @@ Rectangle {
                     checkedImage: UM.Resources.getIcon("icon_collapse_up.png")
                     uncheckedImage:UM.Resources.getIcon("icon_collapse_down.png")
                     visible: model.depth != 1 ? false: model.has_children ? true:false
+                    checked:model.collapsed
                     onClicked:meshList.model.setCollapsed(model.key)
                 }
                 TextField
