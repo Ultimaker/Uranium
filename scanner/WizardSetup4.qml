@@ -19,7 +19,7 @@ WizardPane
         
         Image
         {
-            id:placeholder1
+            Layout.maximumWidth:parent.width
             source:"placeholder.png";
             anchors.horizontalCenter:parent.horizontalCenter
         }

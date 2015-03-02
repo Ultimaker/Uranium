@@ -11,8 +11,7 @@ WizardPane
         anchors.fill: parent
         Text
         {
-            id:introText1
-            text: "<b>Camera Exposure</b>"
+            text: "<b>Camera Exposure</b> <br> Rotate the exposure ring of the camera so that barely any red pixels are visible on the calibration object."
             wrapMode: Text.Wrap
             Layout.maximumWidth:parent.width
         }

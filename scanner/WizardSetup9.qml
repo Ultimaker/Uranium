@@ -12,7 +12,7 @@ WizardPane
         Text
         {
             id:introText
-            text: "<b>Object Characteristics</b><br>Choose an object setting that best matches the object that you're about to scan.."
+            text: "<b>Object Characteristics</b><br>Choose an object setting that best matches the object that you're about to scan. "
             wrapMode: Text.Wrap
             Layout.maximumWidth:parent.width
         }

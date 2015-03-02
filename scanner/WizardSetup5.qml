@@ -11,7 +11,7 @@ WizardPane
         anchors.fill: parent
         Text
         {
-            text: "<b>Focus Camera</b>"
+            text: "<b>Focus Camera</b> <br> Rotate the focus ring of the camera until the image is sharp."
             wrapMode: Text.Wrap
             Layout.maximumWidth:parent.width
         }

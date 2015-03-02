@@ -11,7 +11,7 @@ WizardPane
         anchors.fill: parent
         Text
         {
-            text: "<b>Calibrating Scanner</b> The scanner is now being calibrated. This might take a few moments." 
+            text: "<b>Calibrating Scanner</b><br> The scanner is now being calibrated. This might take a few moments." 
             wrapMode: Text.Wrap
             Layout.maximumWidth:parent.width
         }
@@ -24,11 +24,10 @@ WizardPane
         
         Text
         {
-            id:status_label
             text:switch(prog.visible ? UM.ScannerEngineBackend.statusText : "")
             {
                 case "Object":
-                    return "Unable to locate calibration object";
+                    return "<b>WARNING</b> Unable to locate calibration object";
                 case "":
                     return "";
                 case "Processing":
@@ -64,11 +63,11 @@ WizardPane
             minimumValue: 0;
             maximumValue: 100;
             Layout.maximumWidth:parent.width
-            Layout.preferredWidth:200
+            Layout.preferredWidth:230
             Layout.preferredHeight:25
-            Layout.minimumWidth:200
+            Layout.minimumWidth:230
             Layout.minimumHeight:25
-            width: 200
+            width: 230
             height: 25
             
             Connections 

@@ -12,27 +12,13 @@ WizardPane
         Label
         {
             id:introText1
-            text: "<b>Scan object</b> <br> You're now scanning."
+            text: "<b>Scan object</b> <br> The is scan is now being performed. "
         }
         
         Image
         {
             Layout.maximumWidth:parent.width
             source:"placeholder.png";
-        }
-        
-        ProgressBar 
-        {
-            id: progressBar;
-
-            minimumValue: 0;
-            maximumValue: 100;
-            Layout.maximumWidth:parent.width
-            Connections 
-            {
-                target: UM.Backend;
-                onProcessingProgress: progressBar.value = amount;
-            }
         }
         
         Text
@@ -75,11 +61,11 @@ WizardPane
             minimumValue: 0;
             maximumValue: 100;
             Layout.maximumWidth:parent.width
-            Layout.preferredWidth:200
+            Layout.preferredWidth:230
             Layout.preferredHeight:25
-            Layout.minimumWidth:200
+            Layout.minimumWidth:230
             Layout.minimumHeight:25
-            width: 200
+            width: 230
             height: 25
             
             Connections 
