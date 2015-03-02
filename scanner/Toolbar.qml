@@ -88,9 +88,6 @@ Rectangle {
                 anchors.horizontalCenter:parent.horizontalCenter
                 Layout.preferredWidth:500
                 spacing:5
-                //move: Transition {
-                //    NumberAnimation { properties: "x,y"; }
-                //}
                 Button 
                 {
                     id: setupButton
