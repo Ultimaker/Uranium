@@ -28,6 +28,7 @@ WizardPane
         {
             text: "When image is in foucs like the image above, you can continue to the next step."
             Layout.maximumWidth:parent.width
+            wrapMode: Text.Wrap
         }
     }
     buttons:NextButton
