@@ -226,8 +226,8 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         app.getOperationStack().push(operation)'''
     
     # Set the step of the process (scanning, calibration, etc)
-    def setProcessStep(self, step): 
-        if step >=3 and step <= 7:
+    def setProcessStep(self, step):
+        if step >= 3 and step <= 7:
             message = ultiscantastic_pb2.setCalibrationStep()
             if step == 3:
                 message.step = ultiscantastic_pb2.setCalibrationStep.BOARD
@@ -245,7 +245,8 @@ class ScannerEngineBackend(Backend, SignalEmitter):
                 return
             else:
                 return
-
+        message = ultiscantastic_pb2.setCalibrationStep()
+        message.step = ultiscantastic_pb2.setCalibrationStep.PLATFORM
         self._socket.sendMessage(message)
     
     ## Convert byte array using pcl::pointNormal type

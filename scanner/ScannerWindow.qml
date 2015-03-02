@@ -179,7 +179,7 @@ UM.MainWindow
                 anchors.left:parent.left;
             } 
             
-            ProgressBar 
+            /*ProgressBar 
             {
                 id: progressBar;
                 anchors.bottom:parent.bottom
@@ -193,7 +193,7 @@ UM.MainWindow
                     target: UM.Backend;
                     onProcessingProgress: progressBar.value = amount;
                 }
-            }
+            }*/
             
             Rectangle 
             {
@@ -207,7 +207,7 @@ UM.MainWindow
                 RowLayout
                 {
                     //anchors.fill: parent;
-                    width: parent.width -2
+                    width: parent.width - 2
                     height:parent.height 
                     anchors.horizontalCenter:parent.horizontalCenter
                     ColumnLayout 
@@ -259,7 +259,8 @@ UM.MainWindow
                 height:360
                 id:cameraImage
                 anchors.horizontalCenter: parent.horizontalCenter;
-                anchors.verticalCenter:parent.verticalCenter;
+                anchors.top: toolbar.bottom
+                anchors.topMargin:5
                 source: UM.ScannerEngineBackend.cameraImage
                 //visible: UM.ToolbarData.state < 1 ? false : UM.ToolbarData.state > 5 ? false:true 
                 visible: UM.ToolbarData.state < 3 ? false :UM.ToolbarData.state > 7 ? false:true 
@@ -267,13 +268,13 @@ UM.MainWindow
             }
         }
     }
-    AnimatedImage
+    /*AnimatedImage
     {
         source:"inProgress.gif"
         anchors.horizontalCenter:parent.horizontalCenter
-        anchors.verticalCenter:parent.verticalCenter
+        anchors.bottom:parent.bottom
         visible:UM.ScannerEngineBackend.processing
-    }
+    }*/
 
     UM.PreferencesDialog { id: preferences }
 

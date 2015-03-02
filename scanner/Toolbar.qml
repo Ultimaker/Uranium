@@ -83,8 +83,14 @@ Rectangle {
             anchors.top:parent.top
             width:500
             ExclusiveGroup {id:toolbarTabGroup}
-            RowLayout
+            Row
             {
+                anchors.horizontalCenter:parent.horizontalCenter
+                Layout.preferredWidth:500
+                spacing:5
+                //move: Transition {
+                //    NumberAnimation { properties: "x,y"; }
+                //}
                 Button 
                 {
                     id: setupButton
@@ -99,7 +105,13 @@ Rectangle {
                     }
                     checked: UM.ToolbarData.state > 1 ? false : UM.ToolbarData.state < 2 ? false:true
                     onClicked: {UM.ToolbarData.setState(1)}
+                    Behavior on opacity { NumberAnimation { } }
+                    Behavior on width {NumberAnimation{}}
+                    width: UM.ToolbarData.wizardActive ? 75: 0
+                    opacity: UM.ToolbarData.wizardActive ? 1 : 0
+                    
                 }
+                
                 Button 
                 {
                     id: calibrateButton
@@ -130,11 +142,15 @@ Rectangle {
                     }
                     checked: UM.ToolbarData.state == 9 ? true : UM.ToolbarData.state == 8 ? true:false
                     onClicked: {UM.ToolbarData.setState(8)}
+                    Behavior on opacity { NumberAnimation { } }
+                    Behavior on width {NumberAnimation{}}
+                    width: UM.ToolbarData.wizardActive ? 75: 0
+                    opacity: UM.ToolbarData.wizardActive ? 1 : 0
                 }
                 Button 
                 {
                     id: scanningButton
-                    text: qsTr("Scanning ")
+                    text: qsTr("Scan ")
                     checkable: true
 
                     exclusiveGroup: toolbarTabGroup
