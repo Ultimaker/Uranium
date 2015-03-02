@@ -16,7 +16,6 @@ SettingItem {
         currentIndex:0
         style: ComboBoxStyle {}
         width:base.width > 0 ? base.width:50
-        Component.onCompleted:{console.log("combobo",width, " " , base.width)}
         onCurrentIndexChanged:
         {
             if(base.key != undefined)

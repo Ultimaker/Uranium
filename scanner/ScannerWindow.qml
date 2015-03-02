@@ -206,6 +206,7 @@ UM.MainWindow
                 anchors.topMargin: 5
                 anchors.top:toolbar.bottom
                 border.width:1
+                visible: (!UM.ScannerEngineBackend.processing && UM.ToolbarData.state == 1 && !UM.ToolbarData.wizardActive) //Anything changes, user pressed a button so hide the wizard
                 RowLayout
                 {
                     //anchors.fill: parent;
@@ -224,7 +225,7 @@ UM.MainWindow
                             onClicked:
                             {
                                 UM.ToolbarData.setWizardState(true);
-                                firstTimeStartup.visible = false
+                                firstTimeStartup.visible = false;
                             }
                         }
                     }
@@ -248,7 +249,6 @@ UM.MainWindow
                             onClicked:
                             {
                                 UM.ToolbarData.setWizardState(false);
-
                                 firstTimeStartup.visible = false
                             }
                         }
