@@ -3,18 +3,16 @@ import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.1
 
-
 import UM 1.0 as UM
 WizardPane
 {
     contents: ColumnLayout
     {
         anchors.fill: parent
-        Text
+        Label
         {
-            text: "<b>Edit object</b> <br> Stitch the clouds."
-            wrapMode: Text.Wrap
-            Layout.maximumWidth:parent.width
+            id:introText1
+            text: "<b>Scan object</b> <br> You're now scanning."
         }
         
         Image
@@ -22,41 +20,78 @@ WizardPane
             Layout.maximumWidth:parent.width
             source:"placeholder.png";
         }
-        Text
+        
+        ProgressBar 
         {
-           
-            text: "Make sure you select two layers at a time."
-            wrapMode: Text.Wrap
+            id: progressBar;
+
+            minimumValue: 0;
+            maximumValue: 100;
             Layout.maximumWidth:parent.width
+            Connections 
+            {
+                target: UM.Backend;
+                onProcessingProgress: progressBar.value = amount;
+            }
         }
+        
         Text
         {
-            text:"<b>Suface Finish</b>"
+            id:status_label
+            text:switch(prog.visible ? UM.ScannerEngineBackend.statusText : "")
+            {
+                case "":
+                    return "";
+                case "Processing":
+                    return "Processing data";
+                case "Capturing":
+                    return "Capturing data";
+            }
             wrapMode: Text.Wrap
+            Layout.preferredWidth:parent.width
             Layout.maximumWidth:parent.width
         }
         
-        Rectangle 
-        {
-            width:parent.width
-            color:"black"
-            height: 2
-        }
-        CheckBox
-        {
-            text:"Smooth"
-        }
     }
-    buttons:ColumnLayout
-    {    
-
-        WizardButton
+    buttons:Item
+    {
+        Layout.fillWidth:true
+        Layout.preferredHeight: 25;
+        
+        NextButton
         {
-            text:"Scan Extra"
+            id:nextButton
+            onClicked:
+            {
+                UM.ToolbarData.setState(12);
+            }
+            visible:false
         }
-        WizardButton
+
+        ProgressBar 
         {
-            text:"Merge to solid"
+            id: prog;
+
+            minimumValue: 0;
+            maximumValue: 100;
+            Layout.maximumWidth:parent.width
+            Layout.preferredWidth:200
+            Layout.preferredHeight:25
+            Layout.minimumWidth:200
+            Layout.minimumHeight:25
+            width: 200
+            height: 25
+            
+            Connections 
+            {
+                target: UM.Backend;
+                onProcessingProgress: 
+                {
+                    nextButton.visible = amount != 100 ? false : true;
+                    prog.visible = amount != 100 ? true : false;
+                    prog.value = amount;
+                }
+            }
         }
     }
 }

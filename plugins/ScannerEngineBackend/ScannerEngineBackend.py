@@ -229,9 +229,7 @@ class ScannerEngineBackend(Backend, SignalEmitter):
     def setProcessStep(self, step):
         if step >= 3 and step <= 7:
             message = ultiscantastic_pb2.setCalibrationStep()
-            if step == 3:
-                message.step = ultiscantastic_pb2.setCalibrationStep.BOARD
-            elif step == 4:
+            if step == 4:
                 message.step = ultiscantastic_pb2.setCalibrationStep.PROJECTOR_FOCUS
             elif step == 5:
                 message.step = ultiscantastic_pb2.setCalibrationStep.CAMERA_FOCUS
@@ -239,15 +237,22 @@ class ScannerEngineBackend(Backend, SignalEmitter):
                 message.step = ultiscantastic_pb2.setCalibrationStep.CAMERA_EXPOSURE
             elif step == 7:
                 message.step = ultiscantastic_pb2.setCalibrationStep.COMPUTE
+            self._socket.sendMessage(message)
         else:
-            if step == 10:
+            if step == 11:
                 self.startScan()
+                return
+            elif step == 8:
+                message = ultiscantastic_pb2.setCalibrationStep()
+                message.step = ultiscantastic_pb2.setCalibrationStep.PLATFORM
+                self._socket.sendMessage(message)
                 return
             else:
                 return
-        message = ultiscantastic_pb2.setCalibrationStep()
-        message.step = ultiscantastic_pb2.setCalibrationStep.PLATFORM
-        self._socket.sendMessage(message)
+
+        #message = ultiscantastic_pb2.setCalibrationStep()
+        #message.step = ultiscantastic_pb2.setCalibrationStep.PLATFORM
+        
     
     ## Convert byte array using pcl::pointNormal type
     def _convertBytesToVerticeWithNormalsListPCL(self,data):

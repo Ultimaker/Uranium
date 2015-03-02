@@ -9,10 +9,12 @@ WizardPane
     contents: ColumnLayout
     {
         anchors.fill: parent
-        Label
+        Text
         {
-            id:introText1
-            text: "<b>Scan object</b> <br> You're now scanning."
+            id:introText
+            text: "<b>Object Shade</b><br>Choose an object setting that best matches the object that you're about to scan.."
+            wrapMode: Text.Wrap
+            Layout.fillWidth: true
         }
         
         Image
@@ -21,77 +23,33 @@ WizardPane
             source:"placeholder.png";
         }
         
-        ProgressBar 
+        ExclusiveGroup { id: objectShadeType }
+        ColumnLayout
         {
-            id: progressBar;
-
-            minimumValue: 0;
-            maximumValue: 100;
-            Layout.maximumWidth:parent.width
-            Connections 
+            id: objectTypeSelection
+            RadioButton 
             {
-                target: UM.Backend;
-                onProcessingProgress: progressBar.value = amount;
+                text: "Light"
+                checked: true
+                exclusiveGroup: objectShadeType
+            }
+            RadioButton 
+            {
+                text: "Medium"
+                exclusiveGroup: objectShadeType
+            }
+            RadioButton 
+            {
+                text: "Dark"
+                exclusiveGroup: objectShadeType
             }
         }
-        
-        Text
-        {
-            id:status_label
-            text:switch(prog.visible ? UM.ScannerEngineBackend.statusText : "")
-            {
-                case "":
-                    return "";
-                case "Processing":
-                    return "Processing data";
-                case "Capturing":
-                    return "Capturing data";
-            }
-            wrapMode: Text.Wrap
-            Layout.preferredWidth:parent.width
-            Layout.maximumWidth:parent.width
-        }
-        
-    }
-    buttons:Item
+    }    
+    buttons:NextButton
     {
-        Layout.fillWidth:true
-        Layout.preferredHeight: 25;
-        
-        NextButton
+        onClicked:
         {
-            id:nextButton
-            onClicked:
-            {
-                UM.ToolbarData.setState(11);
-            }
-            visible:false
-        }
-
-        ProgressBar 
-        {
-            id: prog;
-
-            minimumValue: 0;
-            maximumValue: 100;
-            Layout.maximumWidth:parent.width
-            Layout.preferredWidth:200
-            Layout.preferredHeight:25
-            Layout.minimumWidth:200
-            Layout.minimumHeight:25
-            width: 200
-            height: 25
-            
-            Connections 
-            {
-                target: UM.Backend;
-                onProcessingProgress: 
-                {
-                    nextButton.visible = amount != 100 ? false : true;
-                    prog.visible = amount != 100 ? true : false;
-                    prog.value = amount;
-                }
-            }
+            UM.ToolbarData.setState(11);
         }
     }
 }

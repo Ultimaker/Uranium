@@ -154,6 +154,8 @@ UM.MainWindow
                         return "WizardSetup11.qml"
                     case 12:
                         return "WizardSetup12.qml"
+                    case 13:
+                        return "WizardSetup13.qml"
                 }
             }
 
@@ -262,8 +264,7 @@ UM.MainWindow
                 anchors.top: toolbar.bottom
                 anchors.topMargin:5
                 source: UM.ScannerEngineBackend.cameraImage
-                //visible: UM.ToolbarData.state < 1 ? false : UM.ToolbarData.state > 5 ? false:true 
-                visible: UM.ToolbarData.state < 3 ? false :UM.ToolbarData.state > 7 ? false:true 
+                visible: UM.ToolbarData.state < 4 ? false :UM.ToolbarData.state > 8 ? false:true 
                 Component.onCompleted:{console.log(UM.ToolbarData.state)}
             }
         }

@@ -96,11 +96,11 @@ Rectangle {
                     exclusiveGroup: toolbarTabGroup
                     style: ToolBarButtonStyleScan
                     {
-                        numCircles: 2 
+                        numCircles: 3 
                         beginState:0
                         state:UM.ToolbarData.state
                     }
-                    checked: UM.ToolbarData.state > 1 ? false : UM.ToolbarData.state < 2 ? false:true
+                    checked: UM.ToolbarData.state > 1 ? false : UM.ToolbarData.state < 3 ? false:true
                     onClicked: {UM.ToolbarData.setState(1)}
                     Behavior on opacity { NumberAnimation { } }
                     Behavior on width {NumberAnimation{}}
@@ -118,11 +118,11 @@ Rectangle {
                     style: ToolBarButtonStyleScan
                     {
                         numCircles: 5 
-                        beginState:2    
+                        beginState:3    
                         state:UM.ToolbarData.state
                     }
-                    checked: UM.ToolbarData.state > 7 ? false : UM.ToolbarData.state < 3 ? false:true
-                    onClicked: {UM.ToolbarData.setState(3)}
+                    checked: UM.ToolbarData.state > 8 ? false : UM.ToolbarData.state < 4 ? false:true
+                    onClicked: {UM.ToolbarData.setState(4)}
                 }
                 
                 Button 
@@ -134,11 +134,11 @@ Rectangle {
                     style: ToolBarButtonStyleScan
                     {
                         numCircles: 2 
-                        beginState:7
+                        beginState:8
                         state:UM.ToolbarData.state
                     }
-                    checked: UM.ToolbarData.state == 9 ? true : UM.ToolbarData.state == 8 ? true:false
-                    onClicked: {UM.ToolbarData.setState(8)}
+                    checked: UM.ToolbarData.state == 10 ? true : UM.ToolbarData.state == 9 ? true:false
+                    onClicked: {UM.ToolbarData.setState(9)}
                     Behavior on opacity { NumberAnimation { } }
                     Behavior on width {NumberAnimation{}}
                     width: UM.ToolbarData.wizardActive ? 75: 0
@@ -154,11 +154,11 @@ Rectangle {
                     style: ToolBarButtonStyleScan
                     {
                         numCircles: 1 
-                        beginState:9
+                        beginState:10
                         state:UM.ToolbarData.state
                     }
-                    checked: UM.ToolbarData.state == 10 ? true: false
-                    onClicked: {UM.ToolbarData.setState(10)}
+                    checked: UM.ToolbarData.state == 11 ? true: false
+                    onClicked: {UM.ToolbarData.setState(11)}
                 }
                 
                 Button 
@@ -170,11 +170,11 @@ Rectangle {
                     style: ToolBarButtonStyleScan
                     {
                         numCircles: 1 
-                        beginState:10
+                        beginState:11
                         state:UM.ToolbarData.state
                     }
-                    checked: UM.ToolbarData.state == 11 ? true:false
-                    onClicked: {UM.ToolbarData.setState(11)}
+                    checked: UM.ToolbarData.state == 12 ? true:false
+                    onClicked: {UM.ToolbarData.setState(12)}
                 }
                 Button 
                 {

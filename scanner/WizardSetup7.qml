@@ -11,7 +11,7 @@ WizardPane
         anchors.fill: parent
         Text
         {
-            text: "<b>Calibrating!</b>"
+            text: "<b>Calibrating Scanner</b> The scanner is now being calibrated. This might take a few moments." 
             wrapMode: Text.Wrap
             Layout.maximumWidth:parent.width
         }
