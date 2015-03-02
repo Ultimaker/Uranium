@@ -2,10 +2,9 @@
     "name": "UltiScanTastic",
     "platform": "ultiscantastic.obj",
 
-    "cura": {
-        "visible": false
+    "cura" : {
+	"visible":false
     },
-
     "required_plugins": [
         "Console Logger",
         "ScannerBackend"
@@ -41,10 +40,50 @@
                         "Freeform"
                     ]
                 },
-                "number_of_calibration_boards": {
-                    "label": "num calib boards",
+                "calib_board_width": {
+                    "label": "Board width",
                     "type": "int",
-                    "default": 1,
+                    "default": 4
+                },
+                "calib_board_height": {
+                    "label": "Board height",
+                    "type": "int",
+                    "default": 11
+                },
+                "physical_object_size_calibration_board": {
+                    "label": "Marker distance",
+                    "type": "int",
+                    "default": 125,
+		    "visible":false
+                },
+                "calibration_rotation_angle": {
+                    "label": "Calibration rotation angle",
+                    "type": "double",
+                    "default": 85,
+                    "children": {
+                        "projector_calibration_rotation_angle": {
+                            "label": "projector_calibration_rotation_angle",
+                            "type": "double",
+                            "default": 85,
+                            "visible": false
+                        },
+                        "platform_calibration_rotation_angle": {
+                            "label": "projector_calibration_rotation_angle",
+                            "type": "double",
+                            "default": 85,
+                            "visible": false
+                        }
+                    }
+                },
+                "calibration_match_window_size": {
+                    "label": "Window match size",
+                    "type": "int",
+                    "default": 25
+                },
+                "number_of_calibration_boards": {
+                    "label": "Object orientations",
+                    "type": "int",
+                    "default": 10,
                     "min_value": 0,
                     "active_if": {
                         "setting": "calibration_type",
@@ -53,16 +92,16 @@
                     "max_value": 250,
                     "children": {
                         "number_of_calibration_boards_scanner": {
-                            "label": "num calib boards scanner",
+                            "label": "Object orientations scanner",
                             "type": "int",
-                            "default": 1,
+                            "default": 10,
                             "min_value": 0,
                             "max_value": 250
                         },
-                        "number_of_calibration_boards_projector": {
-                            "label": "num calib boards projector",
+                        "number_of_calibration_boards_platform": {
+                            "label": "Object orientations platform",
                             "type": "int",
-                            "default": 1,
+                            "default": 10,
                             "active_if": {
                                 "setting": "setup_type",
                                 "value": "Platform"
@@ -114,13 +153,13 @@
                         "value": "Phase shift"
                     }
                 },
-                "reconstruct_m": {
+                "reconstruction_m": {
                     "type": "int",
                     "default": 35
                 },
-                "reconstruct_b": {
+                "reconstruction_b": {
                     "type": "double",
-                    "default": 0.5
+                    "default": 0.4
                 },
                 "number_of_scans_per_rotation": {
                     "label": "Scans per rotation",
@@ -135,6 +174,31 @@
                         "setting": "pattern_type",
                         "value": "Grey code"
                     }
+                },
+		"sor_neighbours":{
+                    "type": "int",
+                    "default": 50,
+                    "label": "Statistical outlier removal neighbours"
+                },
+		"sor_std":{
+                    "type": "double",
+                    "default": 1,
+                    "label": "sor std"
+                },
+                "scan_min_distance": {
+                    "type": "int",
+                    "default": 0,
+                    "label": "Minium scan distance"
+                },
+                "scan_max_distance": {
+                    "type": "int",
+                    "default": 0,
+                    "label": "Maximum scan distance"
+                },
+                "normal_estimation_radius": {
+                    "type": "double",
+                    "default": 25,
+                    "label": "Normal estimation radius"
                 }
             }
         },
@@ -163,7 +227,7 @@
                 "projector_height": {
                     "label": "projector height",
                     "type": "int",
-                    "default": 1024,
+                    "default": 720,
                     "visible": false
                 },
                 "projection_delay": {
@@ -176,6 +240,12 @@
                     "label": "Steps per rotation platform",
                     "type": "int",
                     "default": 9700,
+                    "visible": false
+                },
+                "capture_debug_state": {
+                    "label": "capture debug ",
+                    "type": "int",
+                    "default": 0,
                     "visible": false
                 }
             }

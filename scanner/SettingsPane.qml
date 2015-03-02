@@ -19,11 +19,9 @@ UM.Panel
     {
         Layout.preferredWidth: 250
         Layout.preferredHeight: 500
-
         UM.SettingsView 
         {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
+            anchors.fill:parent
         }
     }
 }
