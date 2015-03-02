@@ -137,9 +137,11 @@ ButtonStyle
                         width: 10;
                         height: 10;
                         radius: 5;
+                        Behavior on color { ColorAnimation{}}
                         color: index < container.filledCircles ? "black":"white";
                         border.color: "black";
-                        visible: UM.ToolbarData.wizardActive
+                        Behavior on opacity { NumberAnimation { } }
+                        opacity: UM.ToolbarData.wizardActive? 1:0
                     }
                 }
             }
