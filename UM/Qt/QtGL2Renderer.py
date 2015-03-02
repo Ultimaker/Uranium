@@ -8,6 +8,7 @@ from UM.Resources import Resources
 from UM.Logger import Logger
 from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator
 from UM.Scene.Selection import Selection
+from UM.Scene.PointCloudNode import PointCloudNode
 
 from . import QtGL2Material
 
@@ -176,7 +177,7 @@ class QtGL2Renderer(Renderer):
         self._gl.glStencilFunc(self._gl.GL_EQUAL, 0, 0xff)
         self._gl.glLineWidth(5)
         for node in Selection.getAllSelectedObjects():
-            if node.getMeshData():
+            if node.getMeshData() and type(node) is not PointCloudNode:
                 self._renderItem({
                     'node': node,
                     'material': self._outline_material,

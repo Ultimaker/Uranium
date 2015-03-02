@@ -185,11 +185,11 @@ Rectangle {
                     style: ToolBarButtonStyleScan
                     {
                         numCircles:1 
-                        beginState:11
+                        beginState:12
                         state:UM.ToolbarData.state
                     }
-                    checked: UM.ToolbarData.state == 12 ? true:false
-                    onClicked: {UM.ToolbarData.setState(12)}
+                    checked: UM.ToolbarData.state == 13 ? true:false
+                    onClicked: {UM.ToolbarData.setState(13)}
                 }
             }
         }
@@ -206,7 +206,7 @@ Rectangle {
                 {
                     id: stepCounterLabel
                     width: UM.Theme.panelWidth
-                    text: UM.ToolbarData.state + "/11 step" 
+                    text: UM.ToolbarData.state + "/13 step" 
                     visible: UM.ToolbarData.wizardActive
                 }
                 Label 
