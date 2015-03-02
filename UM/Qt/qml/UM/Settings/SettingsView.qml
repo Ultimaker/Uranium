@@ -40,6 +40,8 @@ ScrollView
                         return "SettingTextField.qml"
                     case "float":
                         return "SettingTextField.qml"
+                    case "double":
+                        return "SettingTextField.qml"
                     case "enum":
                         return "SettingComboBox.qml"
                     case "boolean":
