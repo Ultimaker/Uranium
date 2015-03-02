@@ -264,7 +264,7 @@ UM.MainWindow
                 anchors.top: toolbar.bottom
                 anchors.topMargin:5
                 source: UM.ScannerEngineBackend.cameraImage
-                visible: UM.ToolbarData.state < 4 ? false :UM.ToolbarData.state > 8 ? false:true 
+                visible: (UM.ToolbarData.state < 4 ? false :UM.ToolbarData.state > 8 ? false:true  && UM.ScannerEngineBackend.processing)
                 Component.onCompleted:{console.log(UM.ToolbarData.state)}
             }
         }
