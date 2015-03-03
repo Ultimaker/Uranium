@@ -1,4 +1,5 @@
 from UM.Logger import Logger
+from UM.PluginRegistry import PluginRegistry
 
 ##  Central class for reading and writing meshes.
 #
@@ -8,6 +9,9 @@ class MeshFileHandler(object):
         super().__init__()
         self._mesh_readers = []
         self._mesh_writers = []
+
+        PluginRegistry.addType('mesh_writer', self.addWriter)
+        PluginRegistry.addType('mesh_reader', self.addReader)
     
     # Try to read the mesh_data from a file. Based on the extension in the file a correct meshreader is selected.
     # \param file_name The name of the mesh to load.

@@ -7,6 +7,7 @@ from UM.Operations.OperationStack import OperationStack
 from UM.Event import CallFunctionEvent
 from UM.Signal import Signal, SignalEmitter
 from UM.WorkspaceFileHandler import WorkspaceFileHandler
+from UM.Logger import Logger
 
 import threading
 import argparse
@@ -37,6 +38,11 @@ class Application(SignalEmitter):
 
         self._application_name = name
         self._renderer = None
+
+        PluginRegistry.addType('storage_device', self.addStorageDevice)
+        PluginRegistry.addType('backend', self.setBackend)
+        PluginRegistry.addType('logger', Logger.addLogger)
+        PluginRegistry.addType('extension', self.addExtension)
 
         self._controller = Controller(self)
         self._mesh_file_handler = MeshFileHandler()

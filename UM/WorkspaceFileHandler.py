@@ -1,4 +1,5 @@
 from UM.Logger import Logger
+from UM.PluginRegistry import PluginRegistry
 
 ##  Central class for reading and writing the workspace to file
 #
@@ -8,6 +9,9 @@ class WorkspaceFileHandler(object):
         super().__init__()
         self._workspace_readers = []
         self._workspace_writers = []
+
+        PluginRegistry.addType('workspace_reader', self.addReader)
+        PluginRegistry.addType('workspace_writer', self.addWriter)
         
     # Try to read the workspace data from a file. Based on the extension in the file a correct workspace reader is selected.
     # \param file_name The name of the workspace file to load.
