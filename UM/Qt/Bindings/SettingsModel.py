@@ -117,11 +117,11 @@ class SettingsModel(ListModel):
     #   \param key key of the category to check
     #   \return bool 
     def checkVisibilityCategory(self,key):
-        category = self._machine_settings.getSettingsCategory(key)
-        if category is not None:
-            for setting in category.getAllSettings():
-                if setting.checkAllChildrenVisible() or setting.isVisible:
-                    return True
+        for category in self._machine_settings.getAllCategories():    
+            if category.getLabel() == key:
+                for setting in category.getAllSettings():
+                    if setting.checkAllChildrenVisible() or setting.isVisible():
+                        return True
         return False
 
     #   Convenience function that finds the index in a list of dicts based on key value pair

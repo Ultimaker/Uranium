@@ -100,6 +100,7 @@ ScrollView
 
         section.delegate: Button
         {
+            id:categoryButton
             style: ButtonStyle
             {
 
@@ -129,9 +130,24 @@ ScrollView
                 }
             }
             width: settingsList.width;
-            height: 40;
-            text: section;
-            onClicked: settingsList.model.toggleCollapsedByCategory(section)
+            Behavior on height {NumberAnimation{}}
+            Behavior on opacity {NumberAnimation{}}
+            height: settingsList.model.checkVisibilityCategory(section) ? 40:0;
+            opacity: settingsList.model.checkVisibilityCategory(section) ? 1:0;
+            
+            
+            onClicked: 
+            { 
+                settingsList.model.toggleCollapsedByCategory(section);
+            }
+            Connections 
+            {
+                target: settingsList.model;
+                onDataChanged: {
+                    categoryButton.opacity = settingsList.model.checkVisibilityCategory(section) ? 1:0;
+                    categoryButton.height = settingsList.model.checkVisibilityCategory(section) ? 40:0;
+                }
+            }
         }
     }
 }
