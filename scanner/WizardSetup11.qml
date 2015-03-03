@@ -9,15 +9,17 @@ WizardPane
     contents: ColumnLayout
     {
         anchors.fill: parent
-        Label
+        Text
         {
-            id:introText1
-            text: "<b>Scan object</b> <br> The is scan is now being performed. "
+            id:introText
+            text: "<b>Scan object</b> <br> The progress bar indicates how far the scan is in the process. Once the next step button apears, it is completed"
+            Layout.maximumWidth:paneWidth
+            wrapMode: Text.Wrap
         }
         
         Image
         {
-            Layout.maximumWidth:parent.width
+           Layout.maximumWidth:paneWidth
             source:"placeholder.png";
         }
         
@@ -34,8 +36,8 @@ WizardPane
                     return "Capturing data";
             }
             wrapMode: Text.Wrap
-            Layout.preferredWidth:parent.width
-            Layout.maximumWidth:parent.width
+            Layout.preferredWidth:introText.width
+            
         }
         
     }

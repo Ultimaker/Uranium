@@ -5,10 +5,12 @@ Rectangle
 {
     property alias contents: contentItem.children
     property alias buttons: buttonItem.children
+    property alias paneWidth: base.contentWidth
     property int objectsMargin:5
+    property int contentWidth : base.width -  2 * objectsMargin
     id:base
     width: 250
-    height: 675
+    height: 625
     color:"white"
     border.width:1
     MouseArea 

@@ -8,20 +8,20 @@ WizardPane
 {
     contents: ColumnLayout
     {
-        anchors.fill: parent
+        //anchors.fill: parent
+        
         Text
         {
             id:introText
             text: "<b>Focus Beamer</b> <br> Move the focus slide of the projector so that the image is sharply projected on the calibration board. "
-            Layout.maximumWidth:parent.width
-            Layout.minimumWidth:parent.width
+            Layout.maximumWidth:paneWidth
             
             wrapMode: Text.Wrap
         }
         
         Image
         {
-            Layout.maximumWidth:parent.width
+            Layout.maximumWidth:paneWidth
             source:"placeholder.png";
             //anchors.horizontalCenter:parent.horizontalCenter
         }
@@ -29,7 +29,8 @@ WizardPane
         Text 
         {
             text: "When image is in foucs like the image above, you can continue to the next step."
-            Layout.preferredWidth:introText.width       
+            //Layout.maximumWidth:introText.Layout.maxiumWidth
+            Layout.maximumWidth:paneWidth
             wrapMode: Text.Wrap
         }
     }

@@ -11,9 +11,9 @@ WizardPane
         anchors.fill: parent
         Text
         {
-            text: "<b>Calibrating Scanner</b><br> The scanner is now being calibrated. This might take a few moments." 
+            text: "<b>Calibrating Scanner</b><br> The progress bar indicates how far the calibration is in the process. Once the next step button apears, it is completed." 
             wrapMode: Text.Wrap
-            Layout.maximumWidth:parent.width
+            Layout.maximumWidth:paneWidth
         }
         
         Image
