@@ -1,7 +1,17 @@
 #Shoopdawoop
 from . import OBJReader
+
 def getMetaData():
-    return { "name": "OBJReader", "type": "MeshHandler"  }
+    return {
+        'type': 'mesh_reader',
+        'plugin': {
+            "name": "OBJ Reader",
+        },
+        'mesh_reader': {
+            'extension': 'obj',
+            'description': 'LightWave OBJ File'
+        }
+    }
 
 def register(app):
     return OBJReader.OBJReader()

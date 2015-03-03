@@ -1,6 +1,11 @@
 from . import STLWriter
 def getMetaData():
-    return { "name": "STLWriter", "type": "MeshHandler"  }
+    return {
+        'type': 'mesh_writer',
+        'plugin': {
+            "name": "STL Writer"
+        }
+    }
 
 def register(app):
     return STLWriter.STLWriter()

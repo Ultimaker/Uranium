@@ -2,12 +2,18 @@ from . import TranslateTool
 
 def getMetaData():
     return {
-        'name': 'Translate Tool',
-        'displayName': 'Translate',
-        'type': 'Tool',
-        'description': 'Translate Object',
+        'type': 'tool',
+        'plugin': {
+            'name': 'Translate Tool'
+        },
+        'tool': {
+            'name': 'Translate',
+            'description': 'Translate Object'
+        },
         'cura': {
-            'visible': False
+            'tool': {
+                'visible': False
+            }
         }
     }
 

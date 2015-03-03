@@ -1,7 +1,13 @@
 #Shoopdawoop
 from . import PCDReader
+
 def getMetaData():
-    return { "name": "PCDReader", "type": "MeshHandler"  }
+    return {
+        'type': 'mesh_reader',
+        'plugin': {
+            "name": "PCD Reader"
+        }
+    }
 
 def register(app):
     return PCDReader.PCDReader()

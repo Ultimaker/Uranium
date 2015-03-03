@@ -6,11 +6,15 @@ i18n_catalog = i18nCatalog('plugins')
 
 def getMetaData():
     return {
-        'name': 'Rotate Tool',
-        'displayName': i18n_catalog.i18nc('Rotate tool toolbar button name', 'Rotate'),
-        'type': 'Tool',
-        'description': i18n_catalog.i18nc('Rotate tool tooltip', 'Rotate Object'),
-        'icon': 'rotate.png'
+        'type': 'tool',
+        'plugin': {
+            'name': 'Rotate Tool',
+        },
+        'tool': {
+            'name': i18n_catalog.i18nc('Rotate tool toolbar button name', 'Rotate'),
+            'description': i18n_catalog.i18nc('Rotate tool description', 'Rotate Object'),
+            'icon': 'rotate.png'
+        }
     }
 
 def register(app):

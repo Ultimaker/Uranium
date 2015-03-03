@@ -2,9 +2,13 @@ from . import SelectionTool
 
 def getMetaData():
     return {
-        'name': 'Selection Tool',
-        'type': 'Tool',
-        'visible': False
+        'type': 'tool',
+        'plugin': {
+            'name': 'Selection Tool'
+        },
+        'tool': {
+            'visible': False
+        }
     }
 
 def register(app):
