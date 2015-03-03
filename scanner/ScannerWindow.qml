@@ -179,6 +179,8 @@ UM.MainWindow
                 source:UM.Resources.getIcon("poweredbyultimakersmall.png")
                 anchors.bottom: parent.bottom;
                 anchors.right:parent.right;
+                anchors.rightMargin:2
+                anchors.bottomMargin:2
             } 
             
             /*ProgressBar 
