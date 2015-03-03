@@ -11,9 +11,11 @@ WizardPane
         anchors.fill: parent
         Text
         {
-            id:introText1
+            id:introText
             text: "<b>Focus Beamer</b> <br> Move the focus slide of the projector so that the image is sharply projected on the calibration board. "
             Layout.maximumWidth:parent.width
+            Layout.minimumWidth:parent.width
+            
             wrapMode: Text.Wrap
         }
         
@@ -27,7 +29,7 @@ WizardPane
         Text 
         {
             text: "When image is in foucs like the image above, you can continue to the next step."
-            Layout.maximumWidth:parent.width
+            Layout.preferredWidth:introText.width       
             wrapMode: Text.Wrap
         }
     }

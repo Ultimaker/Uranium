@@ -49,6 +49,7 @@ Rectangle {
                 anchors.fill: parent;
                 Image 
                 { 
+                    id:logo
                     anchors.centerIn: parent;
                     source: UM.Resources.getIcon("scantastic_logo.png");
                 }

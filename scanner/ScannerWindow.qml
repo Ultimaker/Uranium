@@ -201,7 +201,7 @@ UM.MainWindow
             {
                 id: firstTimeStartup
                 width: 750
-                height: (!UM.ScannerEngineBackend.processing && UM.ToolbarData.state == 1 && !UM.ToolbarData.wizardActive) ? parent.height / 2 :0
+                height: (!UM.ScannerEngineBackend.processing && UM.ToolbarData.state == 1 && !UM.ToolbarData.wizardActive) ? 250:0
                 anchors.horizontalCenter:parent.horizontalCenter
                 anchors.topMargin: 5
                 anchors.top:toolbar.bottom
@@ -213,11 +213,12 @@ UM.MainWindow
                 RowLayout
                 {
                     //anchors.fill: parent;
-                    width: parent.width - 2
+                    width: parent.width - 2 - 20
                     height:parent.height 
                     anchors.horizontalCenter:parent.horizontalCenter
                     ColumnLayout 
                     {
+                        
                         Image
                         {
                             source:"placeholder.png"
@@ -236,7 +237,7 @@ UM.MainWindow
                     Text
                     {
                         id:introText
-                        text: "<b>First time startup</b><br>Omg zomg wtf bbq! Proin eu felis ante. Curabitur blandit nibh eget feugiat aliquam. Duis neque erat, vehicula at tempus id, lobortis vitae turpis. Maecenas venenatis diam a ornare consectetur. Aenean ac nibh id orci dignissim sollicitudin id ac odio. Sed sem erat, hendrerit eu congue sit amet, euismod eget mi. Aliquam erat volutpat. "
+                        text: "<b><h1>First time startup</h1></b><br>  Before starting your scan, please select if you want to use the (simple) wizard more or the advanced mode.  "
                         wrapMode: Text.Wrap
                         Layout.fillWidth: true
                     }
