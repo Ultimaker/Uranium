@@ -44,21 +44,33 @@ class MeshFileHandler(object):
         return False
     
     # Get list of all supported filetypes for writing.
-    # \returns List of strings with all supported filetypes.
+    # \returns Dict of extension, description with all supported filetypes.
     def getSupportedFileTypesWrite(self):
-        supported_types = []
-        for writer in self._mesh_writers:
-            supported_types.append(writer.getSupportedExtension())
+        supported_types = {}
+        meta_data = PluginRegistry.getInstance().getAllMetaData(filter = {'type': 'mesh_writer'}, active_only = True)
+        for entry in meta_data:
+            if 'mesh_writer' in meta_data:
+                ext = entry['mesh_writer'].get('extension', None)
+                description = entry['mesh_writer'].get('description', ext)
+                if ext:
+                    supported_types[ext] = description
+
         return supported_types
     
     # Get list of all supported filetypes for reading.
     # \returns List of strings with all supported filetypes.
     def getSupportedFileTypesRead(self):
-        supported_types = []
-        for reader in self._mesh_readers:
-            supported_types.append(reader.getSupportedExtension())
+        supported_types = {}
+        meta_data = PluginRegistry.getInstance().getAllMetaData(filter = {'type': 'mesh_reader'}, active_only = True)
+        for entry in meta_data:
+            if 'mesh_reader' in entry:
+                ext = entry['mesh_reader'].get('extension', None)
+                description = entry['mesh_reader'].get('description', ext)
+                if ext:
+                    supported_types[ext] = description
+
         return supported_types
-        
+
     def addWriter(self, writer):
         self._mesh_writers.append(writer)
         
