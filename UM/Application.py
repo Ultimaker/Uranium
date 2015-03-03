@@ -60,6 +60,7 @@ class Application(SignalEmitter):
         self._plugin_registry = PluginRegistry.getInstance()
         self._plugin_registry.addPluginLocation("plugins")
         self._plugin_registry.setApplication(self)
+
         self._parsed_arguments = None
         self.parseArguments()
     
@@ -171,8 +172,8 @@ class Application(SignalEmitter):
     ##  Add a StorageDevice
     #   \param name The name to use to identify the device.
     #   \param device The device to add.
-    def addStorageDevice(self, name, device):
-        self._storage_devices[name] = device
+    def addStorageDevice(self, device):
+        self._storage_devices[device.getPluginId()] = device
 
     ##  Remove a StorageDevice
     #   \param name The name of the StorageDevice to remove.
@@ -232,5 +233,8 @@ class Application(SignalEmitter):
         settingsDir = Resources.getStorageLocation(Resources.SettingsLocation)
         for machine in self._machines:
             machine.saveValuesToFile(os.path.join(settingsDir, urllib.parse.quote_plus(machine.getName()) + '.cfg'))
+
+    def addExtension(self, extension):
+        pass
 
     _instance = None

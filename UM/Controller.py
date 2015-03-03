@@ -88,7 +88,8 @@ class Controller(SignalEmitter):
     ##  Add an input device (eg; mouse, keyboard, etc) by name if it's not already addded.
     #   \param name Unique identifier of device (usually the plugin name)
     #   \param view The input device to be added
-    def addInputDevice(self, name, device):
+    def addInputDevice(self, device):
+        name = device.getPluginId()
         if(name not in self._input_devices):
             self._input_devices[name] = device
             device.event.connect(self.event)
@@ -130,7 +131,8 @@ class Controller(SignalEmitter):
     #   \param name Unique identifier of tool (usually the plugin name)
     #   \param tool Tool to be added
     #   \return Tool if name was found, None otherwise.    
-    def addTool(self, name, tool):
+    def addTool(self, tool):
+        name = tool.getPluginId()
         if(name not in self._tools):
             self._tools[name] = tool
             tool.setController(self)

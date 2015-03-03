@@ -19,11 +19,13 @@ class MainWindow(QQuickWindow):
         self.beforeRendering.connect(self._render, type=Qt.DirectConnection)
 
         self._mouseDevice = QtMouseDevice(self)
+        self._mouseDevice.setPluginId('qt_mouse')
         self._keyDevice = QtKeyDevice()
+        self._keyDevice.setPluginId('qt_key')
 
         self._app = QCoreApplication.instance()
-        self._app.getController().addInputDevice("Mouse", self._mouseDevice)
-        self._app.getController().addInputDevice("Keyboard", self._keyDevice)
+        self._app.getController().addInputDevice(self._mouseDevice)
+        self._app.getController().addInputDevice(self._keyDevice)
         self._app.getController().getScene().sceneChanged.connect(self._onSceneChanged)
 
     def getBackgroundColor(self):

@@ -35,4 +35,4 @@ class Platform(SceneNode.SceneNode):
         self._settings = app.getActiveMachine()
         if self._settings:
             mesh = self._settings.getPlatformMesh()
-            self.setMeshData(app.getMeshFileHandler().read(Resources.getPath(Resources.MeshesLocation, mesh), app.getStorageDevice("local")))
+            self.setMeshData(app.getMeshFileHandler().read(Resources.getPath(Resources.MeshesLocation, mesh), app.getStorageDevice('LocalFileStorage')))
