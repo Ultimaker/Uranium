@@ -130,6 +130,13 @@ class PluginRegistry(object):
     def setApplication(self, app):
         self._application = app
     
+    ##  Get the singleton instance of this class.
+    @classmethod
+    def getInstance(self):
+        if not self._instance:
+            self._instance = PluginRegistry()
+        return self._instance
+
     ## private:
 
     #   Populate the list of metadata
@@ -223,3 +230,4 @@ class PluginRegistry(object):
             if dictionary[key] != subset[key]:
                 return False
         return True
+    _instance = None

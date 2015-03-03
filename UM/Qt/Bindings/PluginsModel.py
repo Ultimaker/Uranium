@@ -12,7 +12,7 @@ class PluginsModel(ListModel):
     
     def __init__(self, parent = None):
         super().__init__(parent)
-        self._plugin_registery = QCoreApplication.instance().getPluginRegistry()
+        self._plugin_registery = PluginRegistry.getInstance()
         self._required_plugins = QCoreApplication.instance().getRequiredPlugins()
         self.addRoleName(self.NameRole, "name")
         self.addRoleName(self.RequiredRole, "required")
