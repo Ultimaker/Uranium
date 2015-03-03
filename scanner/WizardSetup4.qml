@@ -21,7 +21,7 @@ WizardPane
         {
             Layout.maximumWidth:parent.width
             source:"placeholder.png";
-            anchors.horizontalCenter:parent.horizontalCenter
+            //anchors.horizontalCenter:parent.horizontalCenter
         }
         
         Text 

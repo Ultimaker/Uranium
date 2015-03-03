@@ -206,7 +206,9 @@ UM.MainWindow
                 anchors.topMargin: 5
                 anchors.top:toolbar.bottom
                 border.width:1
-                visible: (!UM.ScannerEngineBackend.processing && UM.ToolbarData.state == 1 && !UM.ToolbarData.wizardActive) //Anything changes, user pressed a button so hide the wizard
+                //visible: (!UM.ScannerEngineBackend.processing && UM.ToolbarData.state == 1 && !UM.ToolbarData.wizardActive) //Anything changes, user pressed a button so hide the wizard
+                opacity: (!UM.ScannerEngineBackend.processing && UM.ToolbarData.state == 1 && !UM.ToolbarData.wizardActive) ? 1:0
+                Behavior on opacity { NumberAnimation { } }
                 RowLayout
                 {
                     //anchors.fill: parent;
@@ -261,15 +263,16 @@ UM.MainWindow
                 height:360
                 id:cameraImage
                 anchors.horizontalCenter: parent.horizontalCenter;
-                anchors.top: toolbar.bottom
+                y: 205
                 anchors.topMargin:5
                 source: UM.ScannerEngineBackend.cameraImage
-                visible: (UM.ToolbarData.state < 4 ? false :UM.ToolbarData.state > 8 ? false:true  && UM.ScannerEngineBackend.processing)
-                Component.onCompleted:{console.log(UM.ToolbarData.state)}
+                Behavior on opacity { NumberAnimation{}}
+                opacity: (UM.ToolbarData.state < 4 ? false :UM.ToolbarData.state > 8 ? false:true  && UM.ScannerEngineBackend.processing) ? 1:0
+                rotation: -90
             }
         }
     }
-    /*AnimatedImage
+    /*AnimatedImages
     {
         source:"inProgress.gif"
         anchors.horizontalCenter:parent.horizontalCenter
