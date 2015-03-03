@@ -99,15 +99,23 @@ class PluginRegistry(object):
         return self._meta_data[id]
 
     ##  Get a list of all metadata matching a certain subset of metaData
-    #   \param metaData \type{dict} The subset of metadata that should be matched.
+    #   \param kwargs Keyword arguments.
+    #                 Possible keywords:
+    #                 - filter: \type{dict} The subset of metadata that should be matched.
+    #                 - active_only: Boolean, True when only active plugin metadata should be returned.
     #   \sa getMetaData
-    def getAllMetaData(self, meta_data):
-        
+    def getAllMetaData(self, **kwargs):
+        filter = kwargs.get('filter', {})
+        active_only = kwargs.get('active_only', False)
+
         plugins = self._findAllPlugins()
         return_values = []
-            if self._subsetInDict(plugin_data, meta_data):
         for id in plugins:
+            if active_only and not id in self._active_plugins:
+                continue
+
             plugin_data = self.getMetaData(id)
+            if self._subsetInDict(plugin_data, filter):
                 return_values.append(plugin_data)
 
         return return_values
