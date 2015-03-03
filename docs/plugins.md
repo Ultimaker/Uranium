@@ -18,6 +18,12 @@ provide the overridden values of metadata values as elements in a dictionary.
 The dictionary object that will be returned by `getMetaData()`   will have the
 relevant values replaced with the application specific values.
 
+Plugin About Data
+-----------------
+Each plugin can provide meta data about the actual plugin. This should be
+provided by a dictionary assigned to the key 'plugin' in the plugin's meta data.
+The currently supported keys are 'name', 'author', 'description' and 'version'.
+
 Plugin Types
 ------------
 
