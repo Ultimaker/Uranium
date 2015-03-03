@@ -10,4 +10,4 @@ def getMetaData():
     }
 
 def register(app):
-    app.getController().addTool(toolName, CameraTool.CameraTool(toolName))
+    return CameraTool.CameraTool()

@@ -8,4 +8,4 @@ def getMetaData():
             "version":"1.0" }
 
 def register(app):
-    app.getWorkspaceFileHandler().addReader(MLPReader.MLPReader())
+    return MLPReader.MLPReader()

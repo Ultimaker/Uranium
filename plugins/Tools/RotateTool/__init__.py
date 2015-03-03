@@ -14,4 +14,4 @@ def getMetaData():
     }
 
 def register(app):
-    app.getController().addTool('RotateTool', RotateTool.RotateTool('Rotate'))
+    return RotateTool.RotateTool()

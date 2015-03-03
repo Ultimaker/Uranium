@@ -6,13 +6,8 @@ from UM.PluginObject import PluginObject
 class Tool(PluginObject, SignalEmitter):
     def __init__(self):
         super().__init__() # Call super to make multiple inheritence work.
-        self._name = name
         self._renderer = None
         self._controller = None
-
-    ##  Get the name of this tool.
-    def getName(self):
-        return self._name
 
     ##  Handle an event.
     #   \param event \type{Event} The event to handle.

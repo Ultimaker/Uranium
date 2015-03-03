@@ -12,4 +12,4 @@ def getMetaData():
     }
 
 def register(app):
-    app.getController().addTool('TranslateTool', TranslateTool.TranslateTool('Translate'))
+    return TranslateTool.TranslateTool()

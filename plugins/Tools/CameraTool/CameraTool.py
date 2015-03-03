@@ -7,8 +7,8 @@ from UM.Application import Application
 import math
 
 class CameraTool(Tool):
-    def __init__(self, name):
-        super().__init__(name)
+    def __init__(self):
+        super().__init__()
         self._scene = Application.getInstance().getController().getScene()
 
         self._yaw = 0

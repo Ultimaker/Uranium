@@ -5,4 +5,4 @@ def getMetaData():
     return { "name": "PLYWriter", "type": "MeshHandler"  }
 
 def register(app):
-    app.getMeshFileHandler().addWriter(PLYWriter.PLYWriter())
+    return PLYWriter.PLYWriter()

@@ -3,4 +3,4 @@ def getMetaData():
     return { "name": "STLReader", "type": "MeshHandler"  }
 
 def register(app):
-    app.getMeshFileHandler().addReader(STLReader.STLReader())
+    return STLReader.STLReader()

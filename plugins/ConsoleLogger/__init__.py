@@ -7,4 +7,4 @@ def getMetaData():
     return { "name": "Console Logger", "type": "Logger" }
 
 def register(app):
-    Logger.addLogger(ConsoleLogger.ConsoleLogger())
+    return ConsoleLogger.ConsoleLogger()

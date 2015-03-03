@@ -4,4 +4,4 @@ def getMetaData():
     return { "name": "PLYReader", "type": "MeshHandler"  }
 
 def register(app):
-    app.getMeshFileHandler().addReader(PLYReader.PLYReader())
+    return PLYReader.PLYReader()

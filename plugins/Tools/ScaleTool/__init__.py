@@ -14,4 +14,4 @@ def getMetaData():
     }
 
 def register(app):
-    app.getController().addTool('ScaleTool', ScaleTool.ScaleTool('ScaleTool'))
+    return ScaleTool.ScaleTool()

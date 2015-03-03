@@ -8,4 +8,4 @@ def getMetaData():
     }
 
 def register(app):
-    app.getController().addTool('SelectionTool', SelectionTool.SelectionTool('Selection'))
+    return SelectionTool.SelectionTool()

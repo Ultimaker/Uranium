@@ -4,4 +4,4 @@ def getMetaData():
     return { "name": "PCDWriter", "type": "MeshHandler"  }
 
 def register(app):
-    app.getMeshFileHandler().addWriter(PCDWriter.PCDWriter())
+    return PCDWriter.PCDWriter()

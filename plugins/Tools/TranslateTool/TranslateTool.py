@@ -13,8 +13,8 @@ from UM.Scene.Selection import Selection
 from . import TranslateToolHandle
 
 class TranslateTool(Tool):
-    def __init__(self, name):
-        super().__init__(name)
+    def __init__(self):
+        super().__init__()
         self._handle = TranslateToolHandle.TranslateToolHandle()
 
         self._object = None
