@@ -21,10 +21,16 @@ relevant values replaced with the application specific values.
 Plugin Types
 ------------
 
-- MeshHandler
-- Logger
-- StorageDevice
-- Tool
-- View
-- Extension
-- Backend
+Plugin types are registered using the `addType()` method of PluginRegistry.
+
+The following plugin types are registered by objects in the Uranium framework:
+
+- mesh_writer
+- mesh_reader
+- logger
+- storage_device
+- tool
+- view
+- extension
+- backend
+- input_device

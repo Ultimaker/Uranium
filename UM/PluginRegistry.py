@@ -136,7 +136,33 @@ class PluginRegistry(object):
     #   \param app \type{Application} The application object to use
     def setApplication(self, app):
         self._application = app
-    
+
+    ##  Add a new plugin type.
+    #
+    #   This function is used to add new plugin types. Plugin types are simple
+    #   string identifiers that match a certain plugin to a registration function.
+    #
+    #   The callable `register_function` is responsible for handling the object.
+    #   Usually it will add the object to a list of objects in the relevant class.
+    #   For example, the plugin type 'tool' has Controller::addTool as register
+    #   function.
+    #
+    #   `register_function` will be called every time a plugin of `type` is loaded.
+    #
+    #   \param type \type{string} The name of the plugin type to add.
+    #   \param register_function \type{callable} A callable that takes an object as parameter.
+    @classmethod
+    def addType(cls, type, register_function):
+        cls._type_register_map[type] = register_function
+
+    ##  Remove a plugin type.
+    #
+    #   \param type \type{string} The plugin type to remove.
+    @classmethod
+    def removeType(cls, type):
+        if type in cls._type_register_map:
+            del cls._type_register_map[type]
+
     ##  Get the singleton instance of this class.
     @classmethod
     def getInstance(self):
@@ -245,5 +271,7 @@ class PluginRegistry(object):
             if dictionary[key] != subset[key]:
                 return False
         return True
+
+    _type_register_map = {}
     _instance = None
 
