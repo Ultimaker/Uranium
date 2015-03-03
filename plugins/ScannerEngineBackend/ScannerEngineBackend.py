@@ -26,7 +26,8 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         self._message_handlers[ultiscantastic_pb2.Image] = self._onImageMessage
         self._message_handlers[ultiscantastic_pb2.StatusMessage] = self._onStatusMessage
         self._message_handlers[ultiscantastic_pb2.Mesh] = self._onMeshMessage
-        self._latest_camera_image = QImage(1, 1, QImage.Format_RGB888)
+        self._latest_camera_image = QImage(640, 360, QImage.Format_RGB888)
+        self._latest_camera_image.fill(0) # Fill image with ones (if you don't, you get trippy random colors)
         self._settings = None
         Application.getInstance().activeMachineChanged.connect(self._onActiveMachineChanged)
         #self._onActiveMachineChanged()
