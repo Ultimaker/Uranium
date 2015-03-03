@@ -3,6 +3,7 @@ from PyQt5.QtCore import Qt
 from UM.Application import Application
 
 from UM.Qt.ListModel import ListModel
+from UM.PluginRegistry import PluginRegistry
 
 class ToolModel(ListModel):
     IdRole = Qt.UserRole + 1
@@ -30,7 +31,7 @@ class ToolModel(ListModel):
 
         tools = self._controller.getAllTools()
         for name in tools:
-            toolMetaData = Application.getInstance().getPluginRegistry().getMetaData(name)
+            toolMetaData = PluginRegistry.getInstance().getMetaData(name).get('tool', {})
 
             # Skip tools that are marked as not visible
             if 'visible' in toolMetaData and not toolMetaData['visible']:
@@ -42,7 +43,7 @@ class ToolModel(ListModel):
 
             self.appendItem({
                 'id': name,
-                'name': toolMetaData.get('displayName', name),
+                'name': toolMetaData.get('name', name),
                 'icon': iconName,
                 'active': False,
                 'description': description
