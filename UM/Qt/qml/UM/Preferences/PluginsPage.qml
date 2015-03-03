@@ -36,30 +36,19 @@ PreferencesPage {
                 onClicked: plugin_list.model.setEnabled(model.name, checked)
                 enabled: !model.required 
             }
-            Button 
+            ToolButton
             {
-                style: ButtonStyle 
-                {
-                    background: Rectangle 
-                    {
-                        implicitWidth: 25
-                        implicitHeight: 25
-                        color:"transparent"
-                    }
-                    
-                }
+                style: ButtonStyle { }
+
+                iconSource: UM.Resources.getIcon("icon_info.png")
+
                 onClicked:
                 {
-                    about_window.about_text = plugin_list.model.getAboutText(model.name)
-                    about_window.author_text = plugin_list.model.getAuthorText(model.name)
+                    about_window.about_text = model.description
+                    about_window.author_text = model.author
                     about_window.plugin_name = model.name
-                    about_window.version_text = plugin_list.model.getVersionText(model.name)
+                    about_window.version_text = model.version
                     about_window.visibility = 1
-                }
-                Image
-                {
-                    id:info_icon
-                    source: UM.Resources.getIcon("icon_info.png")
                 }
             }
         }
