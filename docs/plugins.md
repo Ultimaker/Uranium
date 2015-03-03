@@ -10,6 +10,13 @@ Registration happens by the PluginRegistry based on plugin type. The
 `getMetaData()` function should return a dictionary object containing metadata
 for the plugin.
 
+Application-specific overrides
+------------------------------
+The plugin metadata system allows overriding values based on the current
+application. To use this, include a key with the application name in it, then
+provide the overridden values of metadata values as elements in a dictionary.
+The dictionary object that will be returned by `getMetaData()`   will have the
+relevant values replaced with the application specific values.
 
 Plugin Types
 ------------

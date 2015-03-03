@@ -36,11 +36,6 @@ class ToolModel(ListModel):
             if 'visible' in toolMetaData and not toolMetaData['visible']:
                 continue
 
-            # Skip tools that are marked as not visible for this application
-            appName = Application.getInstance().getApplicationName()
-            if appName in toolMetaData and 'visible' in toolMetaData[appName] and not toolMetaData[appName]['visible']:
-                continue
-
             # Optional metadata elements
             description = toolMetaData['description'] if 'description' in toolMetaData else ''
             iconName = toolMetaData['icon'] if 'icon' in toolMetaData else 'default.png'

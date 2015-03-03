@@ -165,6 +165,11 @@ class PluginRegistry(object):
 
         meta_data['id'] = id
 
+        # Application-specific overrides
+        appname = self._application.getApplicationName()
+        if appname in meta_data:
+            meta_data.update(meta_data[appname])
+            del meta_data[appname]
 
         self._meta_data[id] = meta_data
         return True
