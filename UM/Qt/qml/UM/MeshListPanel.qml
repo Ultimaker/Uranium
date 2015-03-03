@@ -49,7 +49,7 @@ Rectangle {
                 if (pressed) 
                 {
                     meshListPanel.height = meshListPanel.height + (mouseY - oldMouseY)
-                    meshListPanel.height = meshListPanel.height > 250 ? meshListPanel.height : 250
+                    meshListPanel.height = meshListPanel.height > 250 ? (meshListPanel.height < 625 ? meshListPanel.height: 625) : 250
                 }
             }
         }

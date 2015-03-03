@@ -262,14 +262,17 @@ UM.MainWindow
             }
             Image
             {
-                width:640
-                height:360
+                //width:640
+                height:(UM.ToolbarData.state < 4 ? false :UM.ToolbarData.state > 8 ? false:true  && UM.ScannerEngineBackend.processing) ? 360:0
+                width: (UM.ToolbarData.state < 4 ? false :UM.ToolbarData.state > 8 ? false:true  && UM.ScannerEngineBackend.processing) ? 640:0
                 id:cameraImage
                 anchors.horizontalCenter: parent.horizontalCenter;
                 y: 205
                 anchors.topMargin:5
                 source: UM.ScannerEngineBackend.cameraImage
                 Behavior on opacity { NumberAnimation{}}
+                Behavior on height {NumberAnimation{}}
+                Behavior on width {NumberAnimation{}}
                 opacity: (UM.ToolbarData.state < 4 ? false :UM.ToolbarData.state > 8 ? false:true  && UM.ScannerEngineBackend.processing) ? 1:0
                 rotation: -90
             }
