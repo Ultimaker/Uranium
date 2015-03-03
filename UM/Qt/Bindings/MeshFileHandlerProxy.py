@@ -10,19 +10,23 @@ class MeshFileHandlerProxy(QObject):
 
     @pyqtProperty("QStringList", constant=True)
     def supportedReadFileTypes(self):
-        fileTypes = []
-        fileTypes.append("All Supported Files (*{0})(*{0})".format(' *'.join(self._mesh_handler.getSupportedFileTypesRead())))
+        file_types = []
+        all_types = []
 
-        for ext in self._mesh_handler.getSupportedFileTypesRead():
-            fileTypes.append("{0} file (*.{0})(*.{0})".format(ext[1:]))
+        for ext, desc in self._mesh_handler.getSupportedFileTypesRead().items():
+            file_types.append("{0} (*.{1})(*.{1})".format(desc, ext))
+            all_types.append("*.{0}".format(ext))
 
-        fileTypes.append("All Files (*.*)(*)")
+        file_types.sort()
+        file_types.insert(0, "All Supported Types ({0})({0})".format(" ".join(all_types)))
+        file_types.append("All Files (*.*)(*)")
 
-        return fileTypes
+        return file_types
 
     @pyqtProperty("QStringList", constant=True)
     def supportedWriteFileTypes(self):
-        return self._mesh_handler.getSupportedFileTypesWrite()
+        #TODO: Implement
+        return []
 
-def createMeshFileHandlerProxy(engine, scriptEngine):
+def createMeshFileHandlerProxy(engine, script_engine):
     return MeshFileHandlerProxy()
