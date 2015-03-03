@@ -201,7 +201,7 @@ UM.MainWindow
             {
                 id: firstTimeStartup
                 width: 750
-                height: parent.height / 2
+                height: (!UM.ScannerEngineBackend.processing && UM.ToolbarData.state == 1 && !UM.ToolbarData.wizardActive) ? parent.height / 2 :0
                 anchors.horizontalCenter:parent.horizontalCenter
                 anchors.topMargin: 5
                 anchors.top:toolbar.bottom
@@ -209,6 +209,7 @@ UM.MainWindow
                 //visible: (!UM.ScannerEngineBackend.processing && UM.ToolbarData.state == 1 && !UM.ToolbarData.wizardActive) //Anything changes, user pressed a button so hide the wizard
                 opacity: (!UM.ScannerEngineBackend.processing && UM.ToolbarData.state == 1 && !UM.ToolbarData.wizardActive) ? 1:0
                 Behavior on opacity { NumberAnimation { } }
+                Behavior on height {NumberAnimation {}}
                 RowLayout
                 {
                     //anchors.fill: parent;
@@ -227,7 +228,8 @@ UM.MainWindow
                             onClicked:
                             {
                                 UM.ToolbarData.setWizardState(true);
-                                firstTimeStartup.visible = false;
+                                firstTimeStartup.opacity = 0;
+                                firstTimeStartup.height = 0;
                             }
                         }
                     }
@@ -251,7 +253,8 @@ UM.MainWindow
                             onClicked:
                             {
                                 UM.ToolbarData.setWizardState(false);
-                                firstTimeStartup.visible = false
+                                firstTimeStartup.opacity = 0;
+                                firstTimeStartup.height = 0;
                             }
                         }
                     }
