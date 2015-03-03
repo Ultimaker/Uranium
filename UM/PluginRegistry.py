@@ -66,8 +66,21 @@ class PluginRegistry(object):
         if id not in self._meta_data:
             self._populateMetaData(id)
 
+        plugin_type = self._meta_data[id]['type']
         try:
-            plugin.register(self._application)
+            to_register = plugin.register(self._application)
+            if not to_register:
+                Logger.log('e', 'Plugin %s did not return any objects to register', id)
+                return
+
+            if type(to_register) is list:
+                for obj in to_register:
+                    obj.setPluginId(id)
+                    self._type_register_map[plugin_type](obj)
+            else:
+                to_register.setPluginId(id)
+                self._type_register_map[plugin_type](to_register)
+
             self._plugins[id] = plugin
             self.addActivePlugin(id)
             Logger.log('i', 'Loaded plugin %s', id)
@@ -75,7 +88,9 @@ class PluginRegistry(object):
             Logger.log('e', str(e))
         except AttributeError as e:
             Logger.log('e', str(e))
-    
+        except KeyError as e:
+            Logger.log('e', 'Unknown plugin type: %s', str(e))
+
     ##  Load all plugins matching a certain set of metadata
     #   \param metaData \type{dict} The metaData that needs to be matched.
     #   \sa loadPlugin
