@@ -1,9 +1,10 @@
 from UM.Signal import Signal, SignalEmitter
+from UM.PluginObject import PluginObject
 
 ##  Abstract base class for tools that manipulate the scene.
 #
-class Tool(SignalEmitter):
-    def __init__(self, name):
+class Tool(PluginObject, SignalEmitter):
+    def __init__(self):
         super().__init__() # Call super to make multiple inheritence work.
         self._name = name
         self._renderer = None

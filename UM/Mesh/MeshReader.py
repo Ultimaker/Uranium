@@ -1,5 +1,7 @@
-class MeshReader(object):
+from UM.PluginObject import PluginObject
+class MeshReader(PluginObject):
     def __init__(self):
+        super().__init__()
         self._supported_extension = ""
     
     # Tries to read the file from specified file_name, returns None if it's uncessfull or unable to read.

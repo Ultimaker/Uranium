@@ -1,3 +1,4 @@
+from UM.PluginObject import PluginObject
 class Logger:
     ##  Add a logger to the list.
     #   \param logger Logger
@@ -24,7 +25,7 @@ class Logger:
     __loggers = []
 
 ##  Abstract base class for log output classes.
-class LogOutput():
+class LogOutput(PluginObject):
     def __init__(self):
         super().__init__() # Call super to make multiple inheritence work.
         self._name = type(self).__name__ # Set name of the logger to it's class name
