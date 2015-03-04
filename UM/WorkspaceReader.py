@@ -1,4 +1,5 @@
-class WorkspaceReader(object):
+from UM.PluginObject import PluginObject
+class WorkspaceReader(PluginObject):
     def __init__(self):
         super().__init__()
         self._supported_extension = ""
