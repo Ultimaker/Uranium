@@ -58,7 +58,12 @@ class i18nCatalog:
     #   \return The translated text or the untranslated text if it was not found in this catalog.
     def i18nc(self, context, text):
         if self.__translation:
-            return self.__translation.gettext("{0}\x04{1}".format(context, text))
+            message_with_context = "{0}\x04{1}".format(context, text)
+            translated = self.__translation.gettext(message_with_context)
+            if translated == message_with_context:
+                return text
+            else:
+                return translated
 
         return text
 

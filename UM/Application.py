@@ -7,6 +7,7 @@ from UM.Operations.OperationStack import OperationStack
 from UM.Event import CallFunctionEvent
 from UM.Signal import Signal, SignalEmitter
 from UM.WorkspaceFileHandler import WorkspaceFileHandler
+from UM.Logger import Logger
 
 import threading
 import argparse
@@ -38,9 +39,11 @@ class Application(SignalEmitter):
         self._application_name = name
         self._renderer = None
 
-        self._plugin_registry = PluginRegistry()
-        self._plugin_registry.addPluginLocation("plugins")
-        self._plugin_registry.setApplication(self)
+        PluginRegistry.addType('storage_device', self.addStorageDevice)
+        PluginRegistry.addType('backend', self.setBackend)
+        PluginRegistry.addType('logger', Logger.addLogger)
+        PluginRegistry.addType('extension', self.addExtension)
+
         self._controller = Controller(self)
         self._mesh_file_handler = MeshFileHandler()
         self._workspace_file_handler = WorkspaceFileHandler()
@@ -53,6 +56,10 @@ class Application(SignalEmitter):
         self._required_plugins = [] 
 
         self._operation_stack = OperationStack()
+
+        self._plugin_registry = PluginRegistry.getInstance()
+        self._plugin_registry.addPluginLocation("plugins")
+        self._plugin_registry.setApplication(self)
 
         self._parsed_arguments = None
         self.parseArguments()
@@ -165,8 +172,8 @@ class Application(SignalEmitter):
     ##  Add a StorageDevice
     #   \param name The name to use to identify the device.
     #   \param device The device to add.
-    def addStorageDevice(self, name, device):
-        self._storage_devices[name] = device
+    def addStorageDevice(self, device):
+        self._storage_devices[device.getPluginId()] = device
 
     ##  Remove a StorageDevice
     #   \param name The name of the StorageDevice to remove.
@@ -226,5 +233,8 @@ class Application(SignalEmitter):
         settingsDir = Resources.getStorageLocation(Resources.SettingsLocation)
         for machine in self._machines:
             machine.saveValuesToFile(os.path.join(settingsDir, urllib.parse.quote_plus(machine.getName()) + '.cfg'))
+
+    def addExtension(self, extension):
+        pass
 
     _instance = None

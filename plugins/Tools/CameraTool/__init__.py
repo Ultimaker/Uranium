@@ -1,13 +1,15 @@
 from . import CameraTool
 
-toolName = 'CameraTool'
-
 def getMetaData():
     return {
-        'name': toolName,
-        'type': 'Tool',
-        'visible': False
+        'type': 'tool',
+        'plugin': {
+            'name': 'Camera Tool'
+        },
+        'tool': {
+            'visible': False
+        }
     }
 
 def register(app):
-    app.getController().addTool(toolName, CameraTool.CameraTool(toolName))
+    return CameraTool.CameraTool()

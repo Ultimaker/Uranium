@@ -13,7 +13,7 @@ from PlatformPhysics import PlatformPhysics
 from BuildVolume import BuildVolume
 from CameraAnimation import CameraAnimation
 
-from PyQt5.QtCore import pyqtSlot, QUrl, Qt, pyqtSignal
+from PyQt5.QtCore import pyqtSlot, QUrl, Qt, pyqtSignal, pyqtProperty
 from PyQt5.QtGui import QColor
 
 import os.path
@@ -21,17 +21,27 @@ import os.path
 class PrinterApplication(QtApplication):
     def __init__(self):
         super().__init__(name = 'cura')
-        self.setRequiredPlugins(['CuraEngineBackend', 'MeshView', 'LayerView', 'STLReader','SelectionTool','CameraTool'])
+        self.setRequiredPlugins([
+            'CuraEngineBackend',
+            'MeshView',
+            'LayerView',
+            'STLReader',
+            'SelectionTool',
+            'CameraTool',
+            'GCodeWriter',
+            'LocalFileStorage'
+        ])
         self._physics = None
         self._volume = None
         self.activeMachineChanged.connect(self._onActiveMachineChanged)
     
     def _loadPlugins(self):
-        self._plugin_registry.loadPlugins({ "type": "Logger"})
-        self._plugin_registry.loadPlugins({ "type": "StorageDevice" })
-        self._plugin_registry.loadPlugins({ "type": "View" })
-        self._plugin_registry.loadPlugins({ "type": "MeshHandler" })
-        self._plugin_registry.loadPlugins({ "type": "Tool" })
+        self._plugin_registry.loadPlugins({ "type": "logger"})
+        self._plugin_registry.loadPlugins({ "type": "storage_device" })
+        self._plugin_registry.loadPlugins({ "type": "view" })
+        self._plugin_registry.loadPlugins({ "type": "mesh_reader" })
+        self._plugin_registry.loadPlugins({ "type": "mesh_writer" })
+        self._plugin_registry.loadPlugins({ "type": "tool" })
 
         self._plugin_registry.loadPlugin('CuraEngineBackend')
     
@@ -75,6 +85,8 @@ class PrinterApplication(QtApplication):
         self.setMainQml(os.path.dirname(__file__) + "/Printer.qml")
         self.initializeEngine()
 
+        self.getStorageDevice('LocalFileStorage').removableDrivesChanged.connect(self._removableDrivesChanged)
+
         #TODO: Add support for active machine preference
         if self.getMachines():
             self.setActiveMachine(self.getMachines()[0])
@@ -103,16 +115,6 @@ class PrinterApplication(QtApplication):
             if self.getController().getActiveTool():
                 self.getController().setActiveTool(None)
 
-    @pyqtSlot(QUrl)
-    def saveGCode(self, file):
-        try:
-            gcode = self.getController().getScene().gcode
-        except AttributeError:
-            return
-
-        with open(file.toLocalFile(), 'w') as f:
-            f.write(gcode)
-
     requestAddPrinter = pyqtSignal()
 
     def _onActiveMachineChanged(self):
@@ -122,3 +124,13 @@ class PrinterApplication(QtApplication):
             self._volume.setHeight(machine.getSettingValueByKey('machine_height'))
             self._volume.setDepth(machine.getSettingValueByKey('machine_depth'))
             self._volume.rebuild()
+
+    removableDrivesChanged = pyqtSignal()
+
+    @pyqtProperty("QStringList", notify = removableDrivesChanged)
+    def removableDrives(self):
+        return list(self.getStorageDevice('LocalFileStorage').getRemovableDrives().keys())
+
+    def _removableDrivesChanged(self):
+        print(self.getStorageDevice('LocalFileStorage').getRemovableDrives())
+        self.removableDrivesChanged.emit()

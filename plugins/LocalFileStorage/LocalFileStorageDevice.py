@@ -1,13 +1,16 @@
 from UM.StorageDevice import StorageDevice
+from UM.Signal import Signal, SignalEmitter
 
 import platform
 import os
 
-class LocalFileStorageDevice(StorageDevice):
+class LocalFileStorageDevice(StorageDevice, SignalEmitter):
     def __init__(self):
-        super(LocalFileStorageDevice, self).__init__()
+        super().__init__()
         self._drives = []
         self._removableDrives = self._createRemovableDrives()
+        self._removableDrives.drivesChanged.connect(self._onDrivesChanged)
+        self._drives = {}
 
     def openFile(self, file_name, mode):
         return open(file_name, mode)
@@ -19,13 +22,10 @@ class LocalFileStorageDevice(StorageDevice):
         if self._removableDrives:
             self._removableDrives.ejectDrive(name)
 
-    def hasRemovableDrives(self):
-        if self._removableDrives:
-            return self._removableDrives.hasDrives()
-
     def getRemovableDrives(self):
-        if self._removableDrives:
-            return self._removableDrives.getDrives()
+        return self._drives
+
+    removableDrivesChanged = Signal()
 
     def _createRemovableDrives(self):
         if platform.system() == "Windows":
@@ -40,3 +40,16 @@ class LocalFileStorageDevice(StorageDevice):
         else:
             print("Unsupported system " + platform.system() + ", no removable device hotplugging support available.")
             return None
+
+    def _onDrivesChanged(self, newDrives):
+        if len(newDrives) == len(self._drives):
+            for key, value in newDrives.items():
+                if key not in self._drives:
+                    break
+                if self._drives[key] != value:
+                    break
+            else:
+                return #No changes in the list of drives, so do nothing.
+
+        self._drives = newDrives
+        self.removableDrivesChanged.emit()

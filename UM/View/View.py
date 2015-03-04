@@ -1,7 +1,8 @@
+from UM.PluginObject import PluginObject
 ## Abstract base class for view objects.
-class View(object):
+class View(PluginObject):
     def __init__(self):
-        super(View, self).__init__()
+        super().__init__()
         self._renderer = None
         self._controller = None
 

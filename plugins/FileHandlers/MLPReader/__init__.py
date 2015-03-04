@@ -1,11 +1,16 @@
 #Shoopdawoop
 from . import MLPReader
+
 def getMetaData():
-    return {"name": "MLPReader", 
-            "type": "WorkspaceHandler", 
+    return {
+        'type': 'workspace_reader',
+        'plugin': {
+            'name': "MLPReader",
             "author": "Jaime van Kessel & Arjen Hiemstra" ,
-            "about":"Save workspace to meshlab project file",
-            "version":"1.0" }
+            "description": "Save workspace to meshlab project file",
+            "version":"1.0"
+        }
+    }
 
 def register(app):
-    app.getWorkspaceFileHandler().addReader(MLPReader.MLPReader())
+    return MLPReader.MLPReader()

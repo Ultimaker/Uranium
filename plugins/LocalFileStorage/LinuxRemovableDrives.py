@@ -1,5 +1,6 @@
-import threading
+from UM.Signal import Signal, SignalEmitter
 
+import threading
 import glob
 import time
 import os
@@ -10,13 +11,12 @@ import subprocess
 #   TODO: This code uses the most basic interfaces for handling this.
 #         We should instead use UDisks2 to handle mount/unmount and hotplugging events.
 
+class LinuxRemovableDrives(threading.Thread, SignalEmitter):
+    def __init__(self):
+        super(LinuxRemovableDrives, self).__init__()
+        self.setDaemon(True)
+        self.start()
 
-class LinuxRemovableDrivesThread(threading.Thread):
-    def __init__(self, drives):
-        super(LinuxRemovableDrivesThread, self).__init__()
-        self.daemon = True
-        self._driveManager = drives
-        
     def run(self):
         while True:
             drives = {}
@@ -32,32 +32,13 @@ class LinuxRemovableDrivesThread(threading.Thread):
                 if os.path.ismount(volume):
                     drives[os.path.basename(volume)] = volume
 
-            self._driveManager.setDrives(drives)
-            time.sleep(5)
+            self.drivesChanged.emit(drives)
+            time.sleep(1)
 
-class LinuxRemovableDrives(object):
-    def __init__(self):
-        super(LinuxRemovableDrives, self).__init__()
-        self._thread = LinuxRemovableDrivesThread(self)
-        self._thread.start()
-        self._drives = {}
-
-    def setDrives(self, drives):
-        self._drives = drives
-
-    def hasDrives(self):
-        return len(self._drives) > 0
-
-    def getDrives(self):
-        return self._drives
+    drivesChanged = Signal()
 
     def ejectDrive(self, drive):
-        try:
-            mount = self._drives[drive]
-        except KeyError:
-            return
-
-        p = subprocess.Popen(["umount", mount], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p = subprocess.Popen(["umount", drive], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         output = p.communicate()
 
         if p.wait():

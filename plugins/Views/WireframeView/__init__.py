@@ -1,6 +1,14 @@
 from . import WireframeView
 def getMetaData():
-    return { "name": "WireframeView", "type": "View"  }
+    return {
+        'type': 'view',
+        'plugin': {
+            "name": "Wireframe View"
+        },
+        'view': {
+            'name': 'Wireframe'
+        }
+    }
 
 def register(app):
-    app.getController().addView("WireframeView", WireframeView.WireframeView())
+    return WireframeView.WireframeView()

@@ -1,7 +1,12 @@
 #Shoopdawoop
 from . import PLYReader
 def getMetaData():
-    return { "name": "PLYReader", "type": "MeshHandler"  }
+    return {
+        'type': 'mesh_reader',
+        'plugin': {
+            "name": "PLY Reader"
+        }
+    }
 
 def register(app):
-    app.getMeshFileHandler().addReader(PLYReader.PLYReader())
+    return PLYReader.PLYReader()

@@ -1,7 +1,8 @@
 from UM.Signal import Signal, SignalEmitter
+from UM.PluginObject import PluginObject
 
 ##  Abstract base class for all input devices
-class InputDevice(SignalEmitter):
+class InputDevice(PluginObject, SignalEmitter):
     def __init__(self):
         super().__init__()
 

@@ -12,8 +12,8 @@ class SelectionTool(Tool):
     PixelSelectionMode = 1
     BoundingBoxSelectionMode = 2
 
-    def __init__(self, name):
-        super().__init__(name)
+    def __init__(self):
+        super().__init__()
 
         self._scene = Application.getInstance().getController().getScene()
         self._renderer = Application.getInstance().getRenderer()

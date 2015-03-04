@@ -1,9 +1,10 @@
+from UM.PluginObject import PluginObject
 
 ## Encapsulates a number of different ways of storing file data.
 #
-class StorageDevice(object):
+class StorageDevice(PluginObject):
     def __init__(self):
-        super(StorageDevice, self).__init__() # Call super to make multiple inheritence work.
+        super().__init__()
     
     ## Open a file so it can be read from or written to.
     #  \param file_name \type{string} The name of the file to open. Can be ignored by subclasses if not applicable.

@@ -4,8 +4,8 @@ from UM.Event import Event
 from . import ScaleToolHandle
 
 class ScaleTool(Tool):
-    def __init__(self, name):
-        super().__init__(name)
+    def __init__(self):
+        super().__init__()
         self._handle = ScaleToolHandle.ScaleToolHandle()
 
     def event(self, event):
@@ -14,6 +14,3 @@ class ScaleTool(Tool):
 
         if event.type == Event.ToolDeactivateEvent:
             self._handle.setParent(None)
-
-    def getIconName(self):
-        return 'scale.png'
