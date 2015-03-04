@@ -25,7 +25,7 @@ WizardPane
         Text
         {
            
-            text: "Make sure you select two layers at a time."
+            text: "Select a group of clouds (clouds from a single scan rotation) to be correctly aligned. The merge to solid will align them and return a mesh."
             wrapMode: Text.Wrap
             Layout.maximumWidth:parent.width
         }
@@ -53,6 +53,10 @@ WizardPane
         WizardButton
         {
             text:"Scan Extra"
+            onClicked:
+            {
+                UM.ToolbarData.setState(11);
+            }
         }
         WizardButton
         {

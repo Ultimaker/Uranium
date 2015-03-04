@@ -11,15 +11,14 @@ WizardPane
         anchors.fill: parent
         Text
         {
-            id:introText
-            text: "<b>Merge object</b> <br> The progress bar indicates how far the scan is in the process."
-            Layout.maximumWidth:paneWidth
+            text: "<b>Calibrating Platform</b> The progress bar indicates how far the platform calibration is in the process. Once the next step button apears, it is completed "
             wrapMode: Text.Wrap
+            Layout.maximumWidth:parent.width
         }
         
         Image
         {
-           Layout.maximumWidth:paneWidth
+            Layout.maximumWidth:parent.width
             source:"placeholder.png";
         }
         
@@ -28,6 +27,8 @@ WizardPane
             id:status_label
             text:switch(prog.visible ? UM.ScannerEngineBackend.statusText : "")
             {
+                case "Object":
+                    return "<b>WARNING</b> Unable to locate calibration object";
                 case "":
                     return "";
                 case "Processing":
@@ -36,12 +37,12 @@ WizardPane
                     return "Capturing data";
             }
             wrapMode: Text.Wrap
-            Layout.preferredWidth:introText.width
+            Layout.preferredWidth:parent.width
+            Layout.maximumWidth:parent.width
             
         }
-        
     }
-    buttons:Item
+    buttons: Item
     {
         Layout.fillWidth:true
         Layout.preferredHeight: 25;
@@ -51,7 +52,7 @@ WizardPane
             id:nextButton
             onClicked:
             {
-                //UM.ToolbarData.setState(12);
+                UM.ToolbarData.setState(9);
             }
             visible:false
         }
@@ -74,7 +75,7 @@ WizardPane
             {
                 target: UM.Backend;
                 onProcessingProgress: 
-                {
+                { 
                     nextButton.visible = amount != 100 ? false : true;
                     prog.visible = amount != 100 ? true : false;
                     prog.value = amount;
