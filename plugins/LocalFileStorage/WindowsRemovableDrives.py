@@ -1,3 +1,5 @@
+from UM.Signal import Signal, SignalEmitter
+
 import threading
 import string
 
@@ -8,12 +10,13 @@ import os
 import subprocess
 
 ## Removable drive support for windows
-
-class WindowsRemovableDriveThread(threading.Thread):
-    def __init__(self, drives):
+class WindowsRemovableDrives(threading.Thread, SignalEmitter):
+    def __init__(self):
         super().__init__()
         self.daemon = True
-        self._driveManager = drives
+        self.start()
+        
+    drivesChanged = Signal()
         
     def run(self):
         while True:
@@ -42,25 +45,8 @@ class WindowsRemovableDriveThread(threading.Thread):
                     drives['%s (%s:)' % (volume_name, letter)] = letter + ':/'
                 bitmask >>= 1
                 
-            self._driveManager.setDrives(drives)
+            self.drivesChanged.emit(drives)
             time.sleep(5)
-
-
-class WindowsRemovableDrives(object):
-    def __init__(self):
-        super(WindowsRemovableDrives, self).__init__()
-        self._thread = WindowsRemovableDriveThread(self)
-        self._thread.start()
-        self._drives = {}
-
-    def setDrives(self, drives):
-        self._drives = drives
-
-    def hasDrives(self):
-        return len(self._drives) > 0
-
-    def getDrives(self):
-        return self._drives
 
     def ejectDrive(self, drive):
         try:
