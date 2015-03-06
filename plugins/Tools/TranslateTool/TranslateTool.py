@@ -9,12 +9,16 @@ from UM.Operations.TranslateOperation import TranslateOperation
 from UM.Application import Application
 
 from UM.Scene.Selection import Selection
+from UM.Scene.ToolHandle import ToolHandle
 
 from . import TranslateToolHandle
 
 class TranslateTool(Tool):
     def __init__(self):
         super().__init__()
+
+        self._renderer = Application.getInstance().getRenderer()
+
         self._handle = TranslateToolHandle.TranslateToolHandle()
 
         self._object = None
@@ -65,6 +69,12 @@ class TranslateTool(Tool):
                     return False
 
         if event.type == Event.MouseMoveEvent:
+            axis = self._renderer.getIdAtCoordinate(event.x, event.y, 5)
+            if axis and ToolHandle.isAxis(axis):
+                self._handle.setActiveAxis(axis)
+            else:
+                self._handle.setActiveAxis(None)
+
             #TODO: Make this more generic instead of assuming movement on a certain plane
             if self._object:
                 ray = self.getController().getScene().getActiveCamera().getRay(event.x, event.y)
@@ -94,6 +104,3 @@ class TranslateTool(Tool):
 
         if event.type == Event.ToolDeactivateEvent:
             self._handle.setParent(None)
-
-    def getIconName(self):
-        return 'scale.png'
