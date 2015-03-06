@@ -197,6 +197,14 @@ class SceneNode(SignalEmitter):
         self._transformation.scaleByFactor(scale)
         self._transformChanged()
 
+    def setScale(self, scale):
+        currentTransform = self._transformation.getData()
+        currentTransform[0, 0] = scale
+        currentTransform[1, 1] = scale
+        currentTransform[2, 2] = scale
+        self._transformation = Matrix(currentTransform)
+        self._transformChanged()
+
     ##  Translate the scene object (and thus its children) by given amount.
     #   \param translation Vector(x,y,z).
     def translate(self, translation):
