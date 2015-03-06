@@ -9,6 +9,7 @@ from UM.Logger import Logger
 from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator
 from UM.Scene.Selection import Selection
 from UM.Scene.PointCloudNode import PointCloudNode
+from UM.Math.Color import Color
 
 from . import QtGL2Material
 
@@ -149,6 +150,7 @@ class QtGL2Renderer(Renderer):
                 color = self._getObjectColor(node)
                 self._selection_map[color] = node
                 self._selection_material.setUniformValue('u_color', [color[0] / 255.0, color[1] / 255.0, color[2] / 255.0, color[3] / 255.0])
+                self._selection_material.setUniformValue('u_color', color)
                 self._renderItem({
                     'node': node,
                     'material': self._selection_material,
@@ -217,9 +219,9 @@ class QtGL2Renderer(Renderer):
                                      Resources.getPath(Resources.ShadersLocation, 'default.frag')
                                 )
 
-        self._defaultMaterial.setUniformValue("u_ambientColor", [0.3, 0.3, 0.3, 1.0])
-        self._defaultMaterial.setUniformValue("u_diffuseColor", [0.5, 0.5, 0.5, 1.0])
-        self._defaultMaterial.setUniformValue("u_specularColor", [1.0, 1.0, 1.0, 1.0])
+        self._defaultMaterial.setUniformValue("u_ambientColor", Color(0.3, 0.3, 0.3, 1.0))
+        self._defaultMaterial.setUniformValue("u_diffuseColor", Color(0.5, 0.5, 0.5, 1.0))
+        self._defaultMaterial.setUniformValue("u_specularColor", Color(1.0, 1.0, 1.0, 1.0))
         self._defaultMaterial.setUniformValue("u_shininess", 50.0)
 
         self._selection_buffer = self.createFrameBuffer(128, 128)
@@ -332,4 +334,4 @@ class QtGL2Renderer(Renderer):
         g = (obj_id & 0x00ff0000) >> 16
         b = (obj_id & 0x0000ff00) >> 8
         a = (obj_id & 0x000000ff) >> 0
-        return (r, g, b, a)
+        return Color(r, g, b, a)
