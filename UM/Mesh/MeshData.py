@@ -140,7 +140,7 @@ class MeshData(SignalEmitter):
     #   \param z z coordinate of vertex.
     def addVertex(self,x,y,z):
         if self._vertices is None:
-            self.reserveVertexCount(10)
+            self._vertices = numpy.zeros((10, 3), dtype=numpy.float32)
 
         if len(self._vertices) == self._vertex_count:
             self._vertices.resize((self._vertex_count * 2, 3))
@@ -159,9 +159,9 @@ class MeshData(SignalEmitter):
     #   \param nz z part of normal.
     def addVertexWithNormal(self,x,y,z,nx,ny,nz):
         if self._vertices is None:
-            self.reserveVertexCount(10)
-            if self._normals is None: #Specific case, reserve vert count does not reservere size for normals
-                self._normals = numpy.zeros((10, 3), dtype=numpy.float32)
+            self._vertices = numpy.zeros((10, 3), dtype=numpy.float32)
+        if self._normals is None: #Specific case, reserve vert count does not reservere size for normals
+            self._normals = numpy.zeros((10, 3), dtype=numpy.float32)
 
         if len(self._vertices) == self._vertex_count:
             self._vertices.resize((self._vertex_count * 2, 3))
