@@ -19,7 +19,6 @@ class ScaleTool(Tool):
 
         if event.type == Event.MouseMoveEvent:
             axis = self._renderer.getIdAtCoordinate(event.x, event.y)
-            print(axis)
             if axis and ToolHandle.isAxis(axis):
                 self._handle.setActiveAxis(axis)
             else:
