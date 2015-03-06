@@ -26,6 +26,7 @@ class MeshData(SignalEmitter):
         self._vertices = kwargs.get('vertices', None)
         self._normals = kwargs.get('normals', None)
         self._indices = kwargs.get('indices', None)
+        self._colors = kwargs.get('colors', None)
         self._vertex_count = len(self._vertices) if self._vertices is not None else 0
         self._face_count = len(self._indices) if self._indices is not None else 0
         self._type = MeshType.faces
@@ -76,6 +77,9 @@ class MeshData(SignalEmitter):
     #   \return \type{numpy.ndarray}
     def getIndices(self):
         return self._face_indices
+
+    def hasColors(self):
+        return self._colors is not None
 
     ##  Transform the meshdata by given Matrix
     #   \param transformation 4x4 homogenous transformation matrix
@@ -140,7 +144,7 @@ class MeshData(SignalEmitter):
     #   \param z z coordinate of vertex.
     def addVertex(self,x,y,z):
         if self._vertices is None:
-            self.reserveVertexCount(10)
+            self._vertices = numpy.zeros((10, 3), dtype=numpy.float32)
 
         if len(self._vertices) == self._vertex_count:
             self._vertices.resize((self._vertex_count * 2, 3))
@@ -159,9 +163,9 @@ class MeshData(SignalEmitter):
     #   \param nz z part of normal.
     def addVertexWithNormal(self,x,y,z,nx,ny,nz):
         if self._vertices is None:
-            self.reserveVertexCount(10)
-            if self._normals is None: #Specific case, reserve vert count does not reservere size for normals
-                self._normals = numpy.zeros((10, 3), dtype=numpy.float32)
+            self._vertices = numpy.zeros((10, 3), dtype=numpy.float32)
+        if self._normals is None: #Specific case, reserve vert count does not reservere size for normals
+            self._normals = numpy.zeros((10, 3), dtype=numpy.float32)
 
         if len(self._vertices) == self._vertex_count:
             self._vertices.resize((self._vertex_count * 2, 3))
@@ -244,15 +248,25 @@ class MeshData(SignalEmitter):
         self.addVertexWithNormal(x1, y1, z1, nx1, ny1, nz1)
         self.addVertexWithNormal(x2, y2, z2, nx2, ny2, nz2)
 
+    def setVertexColor(self, index, color):
+        if self._colors is None:
+            self._colors = numpy.zeros((10, 4), dtype=numpy.float32)
+
+        if len(self._colors < len(self._vertices)):
+            self._colors.resize((len(self._vertices), 4))
+
+        self._colors[index, 0] = color.r
+        self._colors[index, 1] = color.g
+        self._colors[index, 2] = color.b
+        self._colors[index, 3] = color.a
+
     def addVertices(self, vertices):
         if self._vertices is None:
-            self._vertices = numpy.zeros((0, 3), dtype=numpy.float32)
-        #print(vertices.shape)
-        self._vertices = numpy.concatenate((self._vertices[0:self._vertex_count], vertices))
-        self._vertex_count  += len(vertices)
-        #self._vertices = numpy.concatenate((self._vertices[0:self._vertex_count], vertices))
-        #self._vertex_count  += len(vertices)
-        
+            self._vertices = vertices
+            self._vertex_count = len(vertices)
+        else:
+            self._vertices = numpy.concatenate((self._vertices[0:self._vertex_count], vertices))
+            self._vertex_count  += len(vertices)
 
     def addIndices(self, indices):
         if self._indices is None:
@@ -261,6 +275,15 @@ class MeshData(SignalEmitter):
         else:
             self._indices = numpy.concatenate((self._indices[0:self._face_count], indices))
             self._face_count += len(indices)
+
+    def addColors(self, colors):
+        if self._colors is None:
+            self._colors = colors
+        else:
+            self._colors = numpy.concatenate((self._colors[0:self._vertex_count], colors))
+
+    def setColors(self, colors):
+        self._colors = colors
     
     ##  Get all vertices of this mesh as a bytearray
     #
@@ -282,6 +305,10 @@ class MeshData(SignalEmitter):
     def getIndicesAsByteArray(self):
         if self._indices is not None:
             return self._indices.tostring()
+
+    def getColorsAsByteArray(self):
+        if self._colors is not None:
+            return self._colors[0 : self._vertex_count].tostring()
 
     ##  Calculate the normals of this mesh, assuming it was created by using addFace (eg; the verts are connected)    
     def calculateNormals(self):
