@@ -185,6 +185,32 @@ class QtGL2Renderer(Renderer):
                     'material': self._selection_material,
                     'mode': self._gl.GL_TRIANGLES
                 })
+
+            tool = self._controller.getActiveTool()
+            if tool:
+                toolHandle = tool.getHandle()
+                if toolHandle:
+                    self._selection_map.update(toolHandle.getSelectionMap())
+                    self._gl.glDisable(self._gl.GL_DEPTH_TEST)
+                    if toolHandle.getLineMesh():
+                        self._gl.glLineWidth(5)
+                        self._renderItem({
+                            'node': toolHandle,
+                            'mesh': toolHandle.getLineMesh(),
+                            'material': self._handle_material,
+                            'mode': self._gl.GL_LINES
+                        })
+                        self._gl.glLineWidth(1)
+
+                    if toolHandle.getSolidMesh():
+                        self._renderItem({
+                            'node': toolHandle,
+                            'mesh': toolHandle.getSolidMesh(),
+                            'material': self._handle_material,
+                            'mode': self._gl.GL_TRIANGLES
+                        })
+                    self._gl.glEnable(self._gl.GL_DEPTH_TEST)
+
             self._selection_buffer.release()
             self._selection_image = self._selection_buffer.toImage()
 
@@ -228,6 +254,7 @@ class QtGL2Renderer(Renderer):
             self._renderItem(item)
 
         self._gl.glDisable(self._gl.GL_DEPTH_TEST)
+        self._gl.glDisable(self._gl.GL_CULL_FACE)
 
         for item in self._overlayQueue:
             self._renderItem(item)
@@ -258,6 +285,11 @@ class QtGL2Renderer(Renderer):
                                         Resources.getPath(Resources.ShadersLocation, 'basic.vert'),
                                         Resources.getPath(Resources.ShadersLocation, 'color.frag')
                                    )
+
+        self._handle_material = self.createMaterial(
+                                     Resources.getPath(Resources.ShadersLocation, 'basic.vert'),
+                                     Resources.getPath(Resources.ShadersLocation, 'vertexcolor.frag')
+                                )
 
         self._outline_material = self.createMaterial(
                                       Resources.getPath(Resources.ShadersLocation, 'outline.vert'),
