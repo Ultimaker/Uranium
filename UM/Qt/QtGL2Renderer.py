@@ -24,7 +24,8 @@ class QtGL2Renderer(Renderer):
     def __init__(self):
         super().__init__()
 
-        self._scene = Application.getInstance().getController().getScene()
+        self._controller = Application.getInstance().getController()
+        self._scene = self._controller.getScene()
 
         self._vertexBufferCache = {}
         self._indexBufferCache = {}
@@ -58,12 +59,6 @@ class QtGL2Renderer(Renderer):
         buffer_format.setAttachment(QOpenGLFramebufferObject.Depth)
         return QOpenGLFramebufferObject(width, height, buffer_format)
 
-    def getSelectionImage(self):
-        return self._selection_image
-
-    def getSelectionMap(self):
-        return self._selection_map
-
     def setLightPosition(self, position):
         self._lightPosition = position
 
@@ -73,6 +68,41 @@ class QtGL2Renderer(Renderer):
     def setViewportSize(self, width, height):
         self._viewportWidth = width
         self._viewportHeight = height
+
+    def getIdAtCoordinate(self, x, y, sample_radius = 1):
+        if not self._selection_image:
+            return None
+
+        px = (0.5 + x / 2.0) * self._viewportWidth
+        py = (0.5 + y / 2.0) * self._viewportHeight
+
+        samples = []
+        if sample_radius == 1:
+            pixel = self._selection_image.pixel(px, py)
+            samples.append(Color.fromARGB(pixel))
+        else:
+            for sx in range(-sample_radius, sample_radius):
+                if px + sx < 0 or px + sx > self._selection_image.width():
+                    continue
+                for sy in range(-sample_radius, sample_radius):
+                    if py + sy < 0 or py + sy > self._selection_image.height():
+                        continue
+
+                    pixel = self._selection_image.pixel(px + sx, py + sy)
+                    samples.append(Color.fromARGB(pixel))
+
+        idCount = {}
+        for sample in samples:
+            if sample in self._selection_map:
+                if not self._selection_map[sample] in idCount:
+                    idCount[self._selection_map[sample]] = 1
+                else:
+                    idCount[self._selection_map[sample]] += 1
+
+        if len(idCount) > 0:
+            return max(idCount)
+        else:
+            return None
 
     def beginRendering(self):
         if not self._initialized:
@@ -148,8 +178,7 @@ class QtGL2Renderer(Renderer):
             self._selection_map.clear()
             for node in selectable_nodes:
                 color = self._getObjectColor(node)
-                self._selection_map[color] = node
-                self._selection_material.setUniformValue('u_color', [color[0] / 255.0, color[1] / 255.0, color[2] / 255.0, color[3] / 255.0])
+                self._selection_map[color] = id(node)
                 self._selection_material.setUniformValue('u_color', color)
                 self._renderItem({
                     'node': node,

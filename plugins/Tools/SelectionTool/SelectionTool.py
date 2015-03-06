@@ -23,10 +23,8 @@ class SelectionTool(Tool):
     def setSelectionMode(self, mode):
         self._selection_mode = mode
 
-
     def event(self, event):
         if event.type == MouseEvent.MouseReleaseEvent and MouseEvent.LeftButton in event.buttons:
-            Selection.clear()
             if self._selection_mode == self.PixelSelectionMode:
                 self._pixelSelection(event)
             else:
@@ -48,20 +46,21 @@ class SelectionTool(Tool):
             intersections.sort(key=lambda k: k[1])
 
             node = intersections[0][0]
-            Selection.add(node)
+            if not Selection.isSelected(node):
+                Selection.clear()
+                Selection.add(node)
+        else:
+            Selection.clear()
 
     def _pixelSelection(self, event):
-        selection_image = self._renderer.getSelectionImage()
+        pixel_id = self._renderer.getIdAtCoordinate(event.x, event.y)
 
-        if not selection_image:
+        if not pixel_id:
+            Selection.clear()
             return
 
-        pixel = selection_image.pixel((0.5 + event.x / 2) * selection_image.width(), (0.5 + event.y / 2) * selection_image.height())
-        a = (pixel & 0xff000000) >> 24
-        r = (pixel & 0x00ff0000) >> 16
-        g = (pixel & 0x0000ff00) >> 8
-        b = (pixel & 0x000000ff) >> 0
-
-        node = self._renderer.getSelectionMap().get((r, g, b, a), None)
-        if node:
-            Selection.add(node)
+        for node in BreadthFirstIterator(self._scene.getRoot()):
+            if id(node) == pixel_id:
+                if not Selection.isSelected(node):
+                    Selection.clear()
+                    Selection.add(node)
