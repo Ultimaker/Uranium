@@ -272,10 +272,12 @@ class QtGL2Renderer(Renderer):
                 indexBuffer = self._createIndexBuffer(mesh)
             indexBuffer.bind()
 
-        material.enableAttribute("a_vertex", Vector, 0)
+        material.enableAttribute("a_vertex", 'vector3f', 0)
+        offset = mesh.getVertexCount() * 3 * 4
 
         if mesh.hasNormals():
-            material.enableAttribute("a_normal", Vector, mesh.getVertexCount() * 3 * 4)
+            material.enableAttribute("a_normal", 'vector3f', offset)
+            offset += mesh.getVertexCount() * 3 * 4
 
         if wireframe and hasattr(self._gl, 'glPolygonMode'):
             self._gl.glPolygonMode(self._gl.GL_FRONT_AND_BACK, self._gl.GL_LINE)

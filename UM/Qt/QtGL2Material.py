@@ -71,12 +71,16 @@ class QtGL2Material(Material):
         if attribute == -1:
             return
 
-        if type is int:
+        if type is 'int':
             self._shader_program.setAttributeBuffer(attribute, self._gl.GL_INT, offset, 1, stride)
-        elif type is float:
+        elif type is 'float':
             self._shader_program.setAttributeBuffer(attribute, self._gl.GL_FLOAT, offset, 1, stride)
-        elif type is Vector:
+        elif type is 'vector2f':
+            self._shader_program.setAttributeBuffer(attribute, self._gl.GL_FLOAT, offset, 2, stride)
+        elif type is 'vector3f':
             self._shader_program.setAttributeBuffer(attribute, self._gl.GL_FLOAT, offset, 3, stride)
+        elif type is 'vector4f':
+            self._shader_program.setAttributeBuffer(attribute, self._gl.GL_FLOAT, offset, 4, stride)
 
         self._shader_program.enableAttributeArray(attribute)
 
