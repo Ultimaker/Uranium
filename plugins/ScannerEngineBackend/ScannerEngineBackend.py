@@ -89,27 +89,26 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         Application.getInstance().getOperationStack().push(operation)
         self._socket.sendMessage(message)
     
-    
+    ## Send a set of nodes (that contain point clouds) to the engine so they can be stitched.
     def stitchClouds(self, nodes):
         message = ultiscantastic_pb2.StitchClouds()
         for node in nodes:
-            if node.getMeshdata() != None and type(node) is PointCloudNode:
+            if node.getMeshData() != None and type(node) is PointCloudNode:
                 cloud_message = ultiscantastic_pb2.PointCloudWithNormals()
                 cloud_message.vertices = node.getMeshData().getVerticesAsByteArray()
                 cloud_message.normals = node.getMeshData().getNormalsAsByteArray()
                 cloud_message.id = id(node)
                 message.clouds.extend([cloud_message])
         self._socket.sendMessage(message)
-        
+    
+    ## Send a node (that contains a cloud) to the engine so the outliers can be removed.
     def removeOutliers(self, node):
         message = ultiscantastic_pb2.StatisticalOutlierRemoval()
         message.cloud.id = id(node)
         message.cloud.vertices = node.getMeshData().getVerticesAsByteArray()
         message.cloud.normals = node.getMeshData().getNormalsAsByteArray()
-        message.number_of_neighbours = 10
-        message.cutoff_deviation = 0.5
         self._socket.sendMessage(message)
-        
+    ## Send a key value pair of the setting to the engine.    
     def sendSetting(self, setting):
         message = ultiscantastic_pb2.Setting()
         message.key = setting.getKey()
@@ -132,6 +131,7 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         message.id = id(node)
         self._socket.sendMessage(message)
     
+    ## Recalculate the normals of the pointcloud. TODO; viewpoint
     def recalculateNormals(self, node):
         message = ultiscantastic_pb2.RecalculateNormal()
         message.cloud.vertices = node.getMeshData().getVerticesAsByteArray()
@@ -144,6 +144,7 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         message.id = id(node)
         self._socket.sendMessage(message)
     
+    ## Create a model from the pointclouds using poisson solver.
     def poissonModelCreation(self, clouds):
         print(clouds)
         message = ultiscantastic_pb2.PoissonModelCreation()
@@ -190,6 +191,7 @@ class ScannerEngineBackend(Backend, SignalEmitter):
             pointcloud_node.setParent(Application.getInstance().getController().getScene().getRoot()) #Group is deleted?
         else:
             for node in Application.getInstance().getController().getScene().getRoot().getAllChildren():
+                Logger.log('d' , "In place pointcloud recieved! %s" , message.id) 
                 if int(message.id) == int(id(node)): #found the node where this scan needs to be added to.
                     node.setMeshData(recieved_mesh) #Overide the mesh data
         #node = PointCloudNode(group_node)
@@ -263,7 +265,9 @@ class ScannerEngineBackend(Backend, SignalEmitter):
                 message.step = ultiscantastic_pb2.setCalibrationStep.PLATFORM
                 self._socket.sendMessage(message)
                 return
-            elif step == 13:    
+            elif step == 13:
+                self.stitchClouds(Selection.getAllSelectedObjects())
+            elif step == 14:
                 selected_nodes = Selection.getAllSelectedObjects()
                 
                 self.poissonModelCreation([node.getMeshData() for node in selected_nodes if node.getMeshData() is not None])

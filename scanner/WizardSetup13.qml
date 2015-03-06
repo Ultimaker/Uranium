@@ -51,7 +51,7 @@ WizardPane
             id:nextButton
             onClicked:
             {
-                //UM.ToolbarData.setState(12);
+                UM.ToolbarData.setState(14);
             }
             visible:false
         }
