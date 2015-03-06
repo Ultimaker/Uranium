@@ -172,7 +172,7 @@ class QtApplication(QApplication, Application, SignalEmitter):
             try:
                 path = Resources.getPath(Resources.i18nLocation, 'en', 'LC_MESSAGES', file + '.qm')
             except FileNotFoundError:
-                Logger.log('e', "Could not find English translations for file {0}".format(file))
+                Logger.log('w', "Could not find English translations for file {0}. Switching to developer english.".format(file))
                 return
 
         translator = QTranslator()
