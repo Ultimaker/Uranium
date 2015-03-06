@@ -158,6 +158,8 @@ UM.MainWindow
                         return "WizardSetup13.qml"
                     case 14:
                         return "WizardSetup14.qml"
+                    case 15:
+                        return "WizardSetup15.qml"
                 }
             }
 

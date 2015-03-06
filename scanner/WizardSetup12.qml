@@ -58,9 +58,13 @@ WizardPane
                 UM.ToolbarData.setState(11);
             }
         }
-        WizardButton
+        NextButton
         {
-            text:"Merge to solid"
+            text:"Align scans"
+            onClicked:
+            {
+                UM.ToolbarData.setState(13);
+            }
         }
     }
 }
