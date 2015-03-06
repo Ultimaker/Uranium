@@ -279,6 +279,10 @@ class QtGL2Renderer(Renderer):
             material.enableAttribute("a_normal", 'vector3f', offset)
             offset += mesh.getVertexCount() * 3 * 4
 
+        if mesh.hasColors():
+            material.enableAttribute("a_color", 'vector4f', offset)
+            offset += mesh.getVertexCount() * 4 * 4
+
         if wireframe and hasattr(self._gl, 'glPolygonMode'):
             self._gl.glPolygonMode(self._gl.GL_FRONT_AND_BACK, self._gl.GL_LINE)
 
@@ -303,16 +307,31 @@ class QtGL2Renderer(Renderer):
         buffer = QOpenGLBuffer(QOpenGLBuffer.VertexBuffer)
         buffer.create()
         buffer.bind()
+
+        bufferSize = mesh.getVertexCount() * 3 * 4 # Vertex count * number of components * sizeof(float32)
+        if mesh.hasNormals():
+            bufferSize += mesh.getVertexCount() * 3 * 4 # Vertex count * number of components * sizeof(float32)
+        if mesh.hasColors():
+            bufferSize += mesh.getVertexCount() * 4 * 4 # Vertex count * number of components * sizeof(float32)
+
+        buffer.allocate(bufferSize)
+
+        offset = 0
         vertices = mesh.getVerticesAsByteArray()
+        buffer.write(0, vertices, len(vertices))
+
+        offset += len(vertices)
 
         if mesh.hasNormals():
             normals = mesh.getNormalsAsByteArray()
-            ##Number of vertices * number of components (3 for vertex, 3 for normal) * size of 32-bit float (4)
-            buffer.allocate(mesh.getVertexCount() * 6 * 4)
-            buffer.write(0, vertices, len(vertices))
-            buffer.write(len(vertices), normals, len(normals))
-        else:
-            buffer.allocate(vertices, mesh.getVertexCount() * 3 * 4)
+            buffer.write(offset, normals, len(normals))
+            offset += len(normals)
+
+        if mesh.hasColors():
+            colors = mesh.getColorsAsByteArray()
+            buffer.write(offset, colors, len(colors))
+            offset += len(colors)
+
         buffer.release()
 
         setattr(mesh, vertexBufferProperty, buffer)
