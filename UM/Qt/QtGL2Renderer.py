@@ -177,7 +177,7 @@ class QtGL2Renderer(Renderer):
 
         self._gl.glStencilMask(0)
         self._gl.glStencilFunc(self._gl.GL_EQUAL, 0, 0xff)
-        self._gl.glLineWidth(5)
+        self._gl.glLineWidth(2)
         for node in Selection.getAllSelectedObjects():
             if node.getMeshData() and type(node) is not PointCloudNode:
                 self._renderItem({
