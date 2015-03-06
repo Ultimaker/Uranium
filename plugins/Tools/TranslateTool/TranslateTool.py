@@ -32,6 +32,11 @@ class TranslateTool(Tool):
         self._min_z = float('-inf')
         self._max_z = float('inf')
 
+        self._enabled_axis = [ToolHandle.XAxis, ToolHandle.YAxis, ToolHandle.ZAxis]
+
+    def setEnabledAxis(self, axis):
+        self._enabled_axis = axis
+
     def setXRange(self, min, max):
         self._min_x = min
         self._max_x = max
@@ -70,7 +75,7 @@ class TranslateTool(Tool):
 
         if event.type == Event.MouseMoveEvent:
             axis = self._renderer.getIdAtCoordinate(event.x, event.y, 5)
-            if axis and ToolHandle.isAxis(axis):
+            if axis and axis in self._enabled_axis:
                 self._handle.setActiveAxis(axis)
             else:
                 self._handle.setActiveAxis(None)
