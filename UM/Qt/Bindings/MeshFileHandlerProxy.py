@@ -69,17 +69,20 @@ class MeshFileHandlerProxy(QObject):
 
     def _readMeshFinished(self, job):
         mesh = job.getResult()
-        if mesh.getType() is MeshType.pointcloud:  #Depending on the type we need a different node (as pointclouds are rendered differently)
-            node = PointCloudNode()
+        if mesh != None:
+            if mesh.getType() is MeshType.pointcloud:  #Depending on the type we need a different node (as pointclouds are rendered differently)
+                node = PointCloudNode()
+            else:
+                node = SceneNode()
+
+            node.setSelectable(True)
+            node.setMeshData(mesh)
+            node.setName(os.path.basename(job.getFileName()))
+
+            op = AddSceneNodeOperation(node, self._scene.getRoot())
+            op.push()
         else:
-            node = SceneNode()
-
-        node.setSelectable(True)
-        node.setMeshData(mesh)
-        node.setName(os.path.basename(job.getFileName()))
-
-        op = AddSceneNodeOperation(node, self._scene.getRoot())
-        op.push()
+            print("No mesh :(")
 
 def createMeshFileHandlerProxy(engine, script_engine):
     return MeshFileHandlerProxy()

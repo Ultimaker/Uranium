@@ -89,7 +89,7 @@ class CameraTool(Tool):
         dy = math.radians(y * 180.0)
 
         diff = camera.getGlobalPosition() - self._origin
-        r = diff.length()
+        #r = diff.length()
 
         m = Matrix()
         m.setByRotationAxis(dx, Vector.Unit_Y)

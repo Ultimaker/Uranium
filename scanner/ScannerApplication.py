@@ -45,9 +45,10 @@ class ScannerApplication(QtApplication):
     
     def run(self):
         self.getController().setActiveView('MeshView')
-        self.getController().setCameraTool("FlyCameraTool")
+        self.getController().setCameraTool("CameraTool")
         #self.getController().setSelectionTool("SelectionTool")
-        
+        #self.getController().getA
+   
         root = self.getController().getScene().getRoot()
         
         
@@ -67,6 +68,7 @@ class ScannerApplication(QtApplication):
         camera.lookAt(Vector(0, 0, 0), Vector(0, 1, 0))
         
         self.getController().getScene().setActiveCamera('3d')
+        self.getController().getTool("CameraTool").setOrigin(Vector(400,-1000,5000)) #TODO hardcoded
         
         self.setMainQml(os.path.dirname(__file__) + "/Scanner.qml")
         self.initializeEngine()

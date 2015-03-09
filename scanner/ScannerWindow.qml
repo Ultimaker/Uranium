@@ -411,10 +411,11 @@ UM.MainWindow
         modality: Qt.NonModal
         //TODO: Support multiple file selection, workaround bug in KDE file dialog
         //selectMultiple: true
-
+        nameFilters: UM.MeshFileHandler.supportedReadFileTypes;
         onAccepted: 
         {
-            UM.Controller.addMesh(fileUrl)
+            UM.MeshFileHandler.readLocalFile(fileUrl)
+            //files.setDirectory(fileUrl)
         }
     }
 
