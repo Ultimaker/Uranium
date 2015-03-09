@@ -65,10 +65,11 @@ class ScannerApplication(QtApplication):
         proj.setPerspective(45, 640/480, 1, 500)
         camera.setProjectionMatrix(proj)
         camera.setPerspective(True)
-        camera.lookAt(Vector(0, 0, 0), Vector(0, 1, 0))
+        camera.lookAt(Vector(400,-1000,5000), Vector(0, 1, 0))
         
         self.getController().getScene().setActiveCamera('3d')
         self.getController().getTool("CameraTool").setOrigin(Vector(400,-1000,5000)) #TODO hardcoded
+        self.getController().getTool("CameraTool").setZoomRange(3500,10000)
         
         self.setMainQml(os.path.dirname(__file__) + "/Scanner.qml")
         self.initializeEngine()
