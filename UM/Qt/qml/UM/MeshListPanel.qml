@@ -237,7 +237,7 @@ Rectangle {
 
         onAccepted: 
         {
-            meshList.model.saveMesh(key,fileUrl)
+            UM.MeshFileHandler.writeLocalFile(fileUrl);
         }
     }
 }
