@@ -175,7 +175,7 @@ class Vector(object):
         return v
 
     def __itruediv__(self, other):
-        if type(other) is float:
+        if type(other) is float or type(other) is int:
             self._data /= other
             return self
         else:
