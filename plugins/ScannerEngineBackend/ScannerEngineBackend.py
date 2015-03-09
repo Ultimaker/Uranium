@@ -146,7 +146,6 @@ class ScannerEngineBackend(Backend, SignalEmitter):
     
     ## Create a model from the pointclouds using poisson solver.
     def poissonModelCreation(self, clouds):
-        print(clouds)
         message = ultiscantastic_pb2.PoissonModelCreation()
         message.depth = 8
         message.num_samples_per_node = 1
@@ -180,7 +179,6 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         recieved_mesh = MeshData()
         for vert in self._convertBytesToVerticeWithNormalsListPCL(message.data):
             recieved_mesh.addVertexWithNormal(vert[0],vert[1],vert[2],vert[3],vert[4],vert[5])
-        print(recieved_mesh.getVertexCount())
         if not message.inplace:    
             pointcloud_node = PointCloudNode()
             pointcloud_node.setMeshData(recieved_mesh)    

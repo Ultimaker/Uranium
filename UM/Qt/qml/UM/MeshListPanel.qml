@@ -237,7 +237,7 @@ Rectangle {
 
         onAccepted: 
         {
-            UM.MeshFileHandler.writeLocalFile(fileUrl);
+            UM.MeshFileHandler.writeLocalFile(key);
         }
     }
 }

@@ -76,7 +76,7 @@ class MeshData(SignalEmitter):
     ##  Get the array of indices
     #   \return \type{numpy.ndarray}
     def getIndices(self):
-        return self._face_indices
+        return self._indices
 
     def hasColors(self):
         return self._colors is not None

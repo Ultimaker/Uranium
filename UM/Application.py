@@ -66,7 +66,6 @@ class Application(SignalEmitter):
     
     ##  Function that needs to be overriden by child classes with a list of plugin it needs (see printer application & scanner application)
     def _loadPlugins(self):
-        print("zomg")
         pass
 
     def getArgument(self, name, default = None):

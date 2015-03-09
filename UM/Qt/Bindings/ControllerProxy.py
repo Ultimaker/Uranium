@@ -35,7 +35,6 @@ class ControllerProxy(QObject):
     @pyqtSlot()
     def saveWorkspace(self):
         #self.loadWorkSpace() # DEBUG STUFF
-        print("fhfhfhfh")
         Application.getInstance().getWorkspaceFileHandler().write("derp.mlp",Application.getInstance().getStorageDevice('local'))
         pass #TODO: Implement workspace saving
 
