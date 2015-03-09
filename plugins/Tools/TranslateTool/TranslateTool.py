@@ -61,7 +61,7 @@ class TranslateTool(Tool):
                 self._handle.setPosition(Selection.getSelectedObject(0).getGlobalPosition())
 
         if event.type == Event.MousePressEvent:
-            id = self._renderer.getIdAtCoordinate(event.x, event.y)
+            id = self._renderer.getIdAtCoordinate(event.x, event.y, 5)
             if not id:
                 return
 
