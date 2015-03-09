@@ -5,6 +5,7 @@ from UM.Mesh.MeshData import MeshData
 from UM.Resources import Resources
 from UM.Application import Application
 from UM.Math.Color import Color
+from UM.Math.Vector import Vector
 
 class ToolHandle(SceneNode.SceneNode):
     NoAxis = 1
@@ -57,7 +58,8 @@ class ToolHandle(SceneNode.SceneNode):
         camera_position = self._scene.getActiveCamera().getGlobalPosition()
         dist = (camera_position - self.getGlobalPosition()).length()
 
-        self.setScale(dist / 200)
+        scale = dist / 200
+        self.setScale(Vector(scale, scale, scale))
 
         if self._line_mesh:
             renderer.queueNode(self, mesh = self._line_mesh, mode = Renderer.RenderLines, overlay = True, material = self._material)
