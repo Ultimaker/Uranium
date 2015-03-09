@@ -81,6 +81,8 @@ class ToolHandle(SceneNode.SceneNode):
         else:
             self._material.setUniformValue('u_activeColor', self.DisabledColor)
 
+        self._scene.sceneChanged.emit(self)
+
     @classmethod
     def isAxis(cls, value):
         return value in cls._axisColorMap

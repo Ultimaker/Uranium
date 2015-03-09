@@ -198,6 +198,9 @@ class SceneNode(SignalEmitter):
         self._transformChanged()
 
     def setScale(self, scale):
+        if scale == self.getScale():
+            return
+
         currentTransform = self._transformation.getData()
         currentTransform[0, 0] = scale.x
         currentTransform[1, 1] = scale.y
