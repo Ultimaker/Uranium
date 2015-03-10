@@ -11,6 +11,6 @@ void main()
     }
     else
     {
-        gl_FragColor = u_disabledColor;
+        gl_FragColor = v_color * 0.5;
     }
 }
