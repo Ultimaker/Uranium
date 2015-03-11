@@ -2,6 +2,8 @@ import QtQuick 2.1
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 
+import UM 1.0 as UM
+
 PreferencesPage {
     //: General configuration page title
     title: qsTr("General");
@@ -11,7 +13,22 @@ PreferencesPage {
 
         //: Language selection label
         Label { text: qsTr("Language"); }
-        ComboBox { model: ['English', 'x-test'] }
+        ComboBox {
+            model: ListModel {
+                ListElement { text: 'English'; code: 'en' }
+                ListElement { text: 'x-test'; code: 'x-test' }
+            }
+
+            currentIndex: {
+                var code = UM.Preferences.getValue('general/language')
+                for(i in model.count) {
+                    if(model.get(i).code == code) {
+                        return i;
+                    }
+                }
+            }
+            onCurrentIndexChanged: UM.Preferences.setValue('general/language', model.get(currentIndex).code)
+        }
 
         Label {
             Layout.columnSpan: 2;
