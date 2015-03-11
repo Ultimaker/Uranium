@@ -8,6 +8,7 @@ from CameraImageProvider import CameraImageProvider
 import ToolbarProxy
 from PyQt5.QtQml import qmlRegisterType, qmlRegisterSingletonType
 from UM.Settings.MachineSettings import MachineSettings
+from UM.Scene.ToolHandle import ToolHandle
 
 import os.path
 
@@ -27,7 +28,16 @@ class ScannerApplication(QtApplication):
         self._camera_image_provider = CameraImageProvider()
         self.engineCreatedSignal.connect(self._onEngineCreated)
         qmlRegisterSingletonType(ToolbarProxy.ToolbarProxy, "UM", 1, 0, "ToolbarData", createToolbarProxy)
-
+        self._cloud_node_list = []
+    
+    def addCloudNode(self, cloud_node):
+        self._cloud_node_list.append(cloud_node)
+    
+    def getCloudNodeList(self):
+        return self.cloud_node_list
+    
+    def getCloudNodeIndex(self,cloud_node):
+        return self._cloud_node_list.index(cloud_node)
 
     def _onEngineCreated(self):
         self._engine.addImageProvider("camera",CameraImageProvider())
@@ -48,10 +58,10 @@ class ScannerApplication(QtApplication):
         self.getController().setCameraTool("CameraTool")
         #self.getController().setSelectionTool("SelectionTool")
         #self.getController().getA
-   
+    
         root = self.getController().getScene().getRoot()
         
-        
+        self.getController().setSelectionTool("SelectionTool")
         #try:
         #    self.getMachineSettings().loadValuesFromFile(Resources.getPath(Resources.SettingsLocation, 'settings.cfg'))
         #except FileNotFoundError:

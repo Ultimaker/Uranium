@@ -93,8 +93,6 @@ class MeshListModel(ListModel):
                                 if not Selection.isSelected(child_node):
                                     all_children_selected = False #At least one of its children is not selected, dont change state
                                     break 
-                            #All children are selected (ergo it is also selected!)
-                            #self.setProperty(index,"selected", True)
                             if all_children_selected:
                                 Selection.add(node)
                             else:

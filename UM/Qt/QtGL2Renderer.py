@@ -70,6 +70,7 @@ class QtGL2Renderer(Renderer):
         self._viewportHeight = height
 
     def getIdAtCoordinate(self, x, y, sample_radius = 1):
+        print("getting ID")
         if not self._selection_image:
             return None
 
@@ -213,6 +214,7 @@ class QtGL2Renderer(Renderer):
 
             self._selection_buffer.release()
             self._selection_image = self._selection_buffer.toImage()
+            #self._selection_image.save("test.png")
 
         self._gl.glEnable(self._gl.GL_STENCIL_TEST)
         self._gl.glStencilMask(0xff)
@@ -234,7 +236,7 @@ class QtGL2Renderer(Renderer):
         self._gl.glStencilFunc(self._gl.GL_EQUAL, 0, 0xff)
         self._gl.glLineWidth(2)
         for node in Selection.getAllSelectedObjects():
-            if node.getMeshData() and type(node) is not PointCloudNode:
+            if node.getMeshData():# and type(node) is not PointCloudNode:
                 self._renderItem({
                     'node': node,
                     'material': self._outline_material,
