@@ -27,91 +27,32 @@ class TranslateToolHandle(ToolHandle):
 
         mb = MeshBuilder()
 
-        # Y Axis
-        mb.addFace(
-            Vector(-1, 20, 1),
-            Vector(1, 20, 1),
-            Vector(0, 24, 0),
+        mb.addPyramid(
+            width = 2,
+            height = 4,
+            depth = 2,
+            center = Vector(0, 20, 0),
             color = ToolHandle.YAxisColor
         )
 
-        mb.addFace(
-            Vector(1, 20, 1),
-            Vector(1, 20, -1),
-            Vector(0, 24, 0),
-            color = ToolHandle.YAxisColor
+        mb.addPyramid(
+            width = 2,
+            height = 4,
+            depth = 2,
+            center = Vector(20, 0, 0),
+            color = ToolHandle.XAxisColor,
+            axis = Vector.Unit_Z,
+            angle = 90
         )
 
-        mb.addFace(
-            Vector(1, 20, -1),
-            Vector(-1, 20, -1),
-            Vector(0, 24, 0),
-            color = ToolHandle.YAxisColor
-        )
-
-        mb.addFace(
-            Vector(-1, 20, -1),
-            Vector(-1, 20, 1),
-            Vector(0, 24, 0),
-            color = ToolHandle.YAxisColor
-        )
-
-        # X Axis
-        mb.addFace(
-            Vector(20, -1, 1),
-            Vector(20, 1, 1),
-            Vector(24, 0, 0),
-            color = ToolHandle.XAxisColor
-        )
-
-        mb.addFace(
-            Vector(20, 1, 1),
-            Vector(20, 1, -1),
-            Vector(24, 0, 0),
-            color = ToolHandle.XAxisColor
-        )
-
-        mb.addFace(
-            Vector(20, 1, -1),
-            Vector(20, -1, -1),
-            Vector(24, 0, 0),
-            color = ToolHandle.XAxisColor
-        )
-
-        mb.addFace(
-            Vector(20, -1, -1),
-            Vector(20, -1, 1),
-            Vector(24, 0, 0),
-            color = ToolHandle.XAxisColor
-        )
-
-        # Z Axis
-        mb.addFace(
-            Vector(-1, 1, 20),
-            Vector(1, 1, 20),
-            Vector(0, 0, 24),
-            color = ToolHandle.ZAxisColor
-        )
-
-        mb.addFace(
-            Vector(1, 1, 20),
-            Vector(1, -1, 20),
-            Vector(0, 0, 24),
-            color = ToolHandle.ZAxisColor
-        )
-
-        mb.addFace(
-            Vector(1, -1, 20),
-            Vector(-1, -1, 20),
-            Vector(0, 0, 24),
-            color = ToolHandle.ZAxisColor
-        )
-
-        mb.addFace(
-            Vector(-1, -1, 20),
-            Vector(-1, 1, 20),
-            Vector(0, 0, 24),
-            color = ToolHandle.ZAxisColor
+        mb.addPyramid(
+            width = 2,
+            height = 4,
+            depth = 2,
+            center = Vector(0, 0, 20),
+            color = ToolHandle.ZAxisColor,
+            axis = Vector.Unit_X,
+            angle = -90
         )
 
         self.setSolidMesh(mb.getData())
