@@ -21,16 +21,9 @@ class RotateOperation(Operation.Operation):
         if other._node != self._node:
             return False
 
-        if self._timestamp - other._timestamp > self._mergeWindow:
-            return False
-
         op = RotateOperation(self._node, self._axis, self._angle)
         op._old_transform = other._old_transform
         return op
 
     def __repr__(self):
-        return "TranslateOperation(node = {0}, translation={1})".format(self._node, self._translation)
-
-    ## private:
-
-    _mergeWindow = 0.5 #If the time between this operation and a different operation is less than this they can be merged.
+        return "RotateOperation(node = {0}, axis={1}, angle={2})".format(self._node, self._axis, self._angle)
