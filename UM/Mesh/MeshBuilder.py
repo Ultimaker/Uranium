@@ -120,3 +120,48 @@ class MeshBuilder:
                 self._mesh_data.setVertexColor(self._mesh_data.getVertexCount() - 2, color)
                 self._mesh_data.setVertexColor(self._mesh_data.getVertexCount() - 1, color)
 
+    def addPyramid(self, **kwargs):
+        width = kwargs['width']
+        height = kwargs['height']
+        depth = kwargs['depth']
+
+        angle = math.radians(kwargs.get('angle', 0))
+        axis = kwargs.get('axis', Vector.Unit_Y)
+
+        center = kwargs.get('center', Vector(0, 0, 0))
+
+        minW = -width / 2
+        maxW = width / 2
+        minD = -depth / 2
+        maxD = depth / 2
+
+        start = self._mesh_data.getVertexCount()
+
+        matrix = Matrix()
+        matrix.setByRotationAxis(angle, axis)
+        verts = numpy.asarray([
+            [minW, 0, maxD],
+            [maxW, 0, maxD],
+            [minW, 0, minD],
+            [maxW, 0, minD],
+            [0, height, 0]
+        ], dtype=numpy.float32)
+        verts = verts.dot(matrix.getData()[0:3,0:3])
+        verts[:] += center.getData()
+        self._mesh_data.addVertices(verts)
+
+        indices = numpy.asarray([
+            [start, start + 1, start + 4],
+            [start + 1, start + 3, start + 4],
+            [start + 3, start + 2, start + 4],
+            [start + 2, start, start + 4],
+            [start, start + 3, start + 1],
+            [start, start + 2, start + 3]
+        ], dtype=numpy.int32)
+        self._mesh_data.addIndices(indices)
+
+        color = kwargs.get('color', None)
+        if color:
+            vertex_count = self._mesh_data.getVertexCount()
+            for i in range(1, 6):
+                self._mesh_data.setVertexColor(vertex_count - i, color)
