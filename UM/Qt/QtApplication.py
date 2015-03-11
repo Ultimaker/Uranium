@@ -16,6 +16,7 @@ from UM.JobQueue import JobQueue
 from UM.Signal import Signal, SignalEmitter
 from UM.Resources import Resources
 from UM.Logger import Logger
+from UM.Preferences import Preferences
 
 ##  Application subclass that provides a Qt application object.
 class QtApplication(QApplication, Application, SignalEmitter):
@@ -54,6 +55,13 @@ class QtApplication(QApplication, Application, SignalEmitter):
 
         self.showSplashMessage('Loading machines...')
         self.loadMachines()
+
+        self.showSplashMessage('Loading preferences...')
+        try:
+            file = Resources.getPath(Resources.PreferencesLocation, self.getApplicationName() + '.cfg')
+            Preferences.getInstance().readFromFile(file)
+        except FileNotFoundError:
+            pass
 
         self._translators = {}
 
@@ -111,6 +119,8 @@ class QtApplication(QApplication, Application, SignalEmitter):
     def windowClosed(self):
         self.getBackend().close()
         self.quit()
+        self.saveMachines()
+        Preferences.getInstance().writeToFile(Resources.getStoragePath(Resources.PreferencesLocation, self.getApplicationName() + '.cfg'))
 
     ##  Load a Qt translation catalog.
     #
