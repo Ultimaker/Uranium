@@ -8,6 +8,8 @@ class Preferences(SignalEmitter):
     def __init__(self):
         super().__init__()
 
+        self._file = None
+        self._parser = None
         self._preferences = {}
     
     def addPreference(self, key, default_value):
@@ -16,13 +18,7 @@ class Preferences(SignalEmitter):
             Logger.log('w', 'Preference %s already exists', key)
             return
 
-        group = 'general'
-        key = key
-
-        if '/' in key:
-            parts = key.split('/')
-            group = parts[0]
-            key = parts[1]
+        group, key = self._splitKey(key)
 
         if group not in self._preferences:
             self._preferences[group] = {}
@@ -30,6 +26,7 @@ class Preferences(SignalEmitter):
         self._preferences[group][key] = _Preference(key, default_value)
 
     def setValue(self, key, value):
+        print('set value', key, value)
         preference = self._findPreference(key)
 
         if preference:
@@ -52,30 +49,42 @@ class Preferences(SignalEmitter):
             self.preferenceChanged.emit(key)
 
     def readFromFile(self, file):
-        parser = configparser.ConfigParser()
-        parser.read(file)
+        self._loadFile(file)
 
-        if parser['general']['version'] != 1:
-            os.remove(file)
-            return
+        for group, group_entries in self._parser.items():
+            if group == 'DEFAULT':
+                continue
 
-        for group, group_entries in parser:
             if not group in self._preferences:
                 Logger.log('w', "Unknown preference group %s", group)
                 continue
 
-            for key, value in group_entries:
+            for key, value in group_entries.items():
                 if not key in self._preferences[group]:
                     Logger.log('w', "Unknown preference %s", key)
                     continue
 
+                print('setting', group, key, 'to', value)
                 self._preferences[group][key].setValue(value)
+
+    def readPreferenceFromFile(self, key, file):
+        preference = self._findPreference(key)
+        if not preference:
+            return
+
+        self._loadFile(file)
+        group, key = self._splitKey(key)
+
+        if group in self._parser:
+            if key in self._parser[group]:
+                preference.setValue(self._parser[group][key])
 
     def writeToFile(self, file):
         parser = configparser.ConfigParser()
         for group, group_entries in self._preferences.items():
             parser[group] = {}
             for key, pref in group_entries.items():
+                print(group, key, pref.getValue(), pref.getDefault())
                 if pref.getValue() != pref.getDefault():
                     parser[group][key] = pref.getValue()
 
@@ -93,7 +102,7 @@ class Preferences(SignalEmitter):
 
         return cls._instance
 
-    def _findPreference(self, key):
+    def _splitKey(self, key):
         group = 'general'
         key = key
 
@@ -102,11 +111,30 @@ class Preferences(SignalEmitter):
             group = parts[0]
             key = parts[1]
 
+        return (group, key)
+
+    def _findPreference(self, key):
+        group, key = self._splitKey(key)
+
         if group in self._preferences:
             if key in self._preferences[group]:
                 return self._preferences[group][key]
 
         return None
+
+    def _loadFile(self, file):
+        if self._file and self._file == file:
+            return self._parser
+
+        self._parser = configparser.ConfigParser()
+        self._parser.read(file)
+
+        if self._parser['general']['version'] != "1":
+            Logger.log('w', "Old config file found, ignoring")
+            self._parser = None
+            return
+
+        del self._parser['general']['version']
 
     _instance = None
 
