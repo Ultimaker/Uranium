@@ -1,11 +1,14 @@
 from . import Operation
 
 class ScaleOperation(Operation.Operation):
-    def __init__(self, node, scale):
+    def __init__(self, node, scale, **kwargs):
         super().__init__()
         self._node = node
         self._old_scale = node.getScale()
-        self._new_scale = self._old_scale + scale
+        if kwargs.get('set_scale', False):
+            self._new_scale = scale
+        else:
+            self._new_scale = self._old_scale + scale
 
     def undo(self):
         self._node.setScale(self._old_scale)
