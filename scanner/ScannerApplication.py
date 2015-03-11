@@ -38,7 +38,10 @@ class ScannerApplication(QtApplication):
     
     def getCloudNodeIndex(self,cloud_node):
         return self._cloud_node_list.index(cloud_node)
-
+    
+    def getCloudNodeByIndex(self, index):
+        return self._cloud_node_list[index]
+    
     def _onEngineCreated(self):
         self._engine.addImageProvider("camera",CameraImageProvider())
         
@@ -61,7 +64,7 @@ class ScannerApplication(QtApplication):
     
         root = self.getController().getScene().getRoot()
         
-        self.getController().setSelectionTool("SelectionTool")
+        self.getController().setSelectionTool("VertexSelectionTool")
         #try:
         #    self.getMachineSettings().loadValuesFromFile(Resources.getPath(Resources.SettingsLocation, 'settings.cfg'))
         #except FileNotFoundError:

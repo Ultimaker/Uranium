@@ -69,8 +69,14 @@ class QtGL2Renderer(Renderer):
         self._viewportWidth = width
         self._viewportHeight = height
 
+    def getSelectionColorAtCoordinate(self,x,y):
+        if not self._selection_image:
+            return None
+        px = (0.5 + x / 2.0) * self._viewportWidth
+        py = (0.5 + y / 2.0) * self._viewportHeight
+        return Color.fromARGB(self._selection_image.pixel(px,py))
+
     def getIdAtCoordinate(self, x, y, sample_radius = 1):
-        print("getting ID")
         if not self._selection_image:
             return None
 
@@ -99,7 +105,6 @@ class QtGL2Renderer(Renderer):
                     idCount[self._selection_map[sample]] = 1
                 else:
                     idCount[self._selection_map[sample]] += 1
-
         if len(idCount) > 0:
             return max(idCount)
         else:
@@ -166,7 +171,6 @@ class QtGL2Renderer(Renderer):
         for node in DepthFirstIterator(self._scene.getRoot()):
             if node.isSelectable() and node.getMeshData():
                 selectable_nodes.append(node)
-        print(selectable_nodes)
         if selectable_nodes:
             #TODO: Use a limited area around the mouse rather than a full viewport for rendering
             if self._selection_buffer.width() < self._viewportWidth or self._selection_buffer.height() < self._viewportHeight:
@@ -241,7 +245,7 @@ class QtGL2Renderer(Renderer):
         self._gl.glStencilFunc(self._gl.GL_EQUAL, 0, 0xff)
         self._gl.glLineWidth(2)
         for node in Selection.getAllSelectedObjects():
-            if node.getMeshData():# and type(node) is not PointCloudNode:
+            if node.getMeshData() and type(node) is not PointCloudNode:
                 self._renderItem({
                     'node': node,
                     'material': self._outline_material,
@@ -397,7 +401,6 @@ class QtGL2Renderer(Renderer):
 
         if mesh.hasColors():
             colors = mesh.getColorsAsByteArray()
-            print(colors)
             buffer.write(offset, colors, len(colors))
             offset += len(colors)
 
