@@ -166,7 +166,7 @@ class QtGL2Renderer(Renderer):
         for node in DepthFirstIterator(self._scene.getRoot()):
             if node.isSelectable() and node.getMeshData():
                 selectable_nodes.append(node)
-
+        print(selectable_nodes)
         if selectable_nodes:
             #TODO: Use a limited area around the mouse rather than a full viewport for rendering
             if self._selection_buffer.width() < self._viewportWidth or self._selection_buffer.height() < self._viewportHeight:
@@ -178,15 +178,21 @@ class QtGL2Renderer(Renderer):
             self._gl.glDisable(self._gl.GL_BLEND)
             self._selection_map.clear()
             for node in selectable_nodes:
-                color = self._getObjectColor(node)
-                self._selection_map[color] = id(node)
-                self._selection_material.setUniformValue('u_color', color)
-                self._renderItem({
-                    'node': node,
-                    'material': self._selection_material,
-                    'mode': self._gl.GL_TRIANGLES
-                })
-
+                if type(node) is PointCloudNode:
+                    self._renderItem({
+                        'node': node,
+                        'material': self._handle_material,
+                        'mode': self._gl.GL_POINTS
+                    })
+                else :
+                    color = self._getObjectColor(node)
+                    self._selection_map[color] = id(node)
+                    self._selection_material.setUniformValue('u_color', color)
+                    self._renderItem({
+                        'node': node,
+                        'material': self._selection_material,
+                        'mode': self._gl.GL_TRIANGLES
+                    })
             tool = self._controller.getActiveTool()
             if tool:
                 toolHandle = tool.getHandle()
@@ -214,7 +220,6 @@ class QtGL2Renderer(Renderer):
 
             self._selection_buffer.release()
             self._selection_image = self._selection_buffer.toImage()
-            #self._selection_image.save("test.png")
 
         self._gl.glEnable(self._gl.GL_STENCIL_TEST)
         self._gl.glStencilMask(0xff)
@@ -392,6 +397,7 @@ class QtGL2Renderer(Renderer):
 
         if mesh.hasColors():
             colors = mesh.getColorsAsByteArray()
+            print(colors)
             buffer.write(offset, colors, len(colors))
             offset += len(colors)
 

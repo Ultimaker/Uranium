@@ -24,11 +24,15 @@ class PointCloudNode(SceneNode.SceneNode):
         # Create a unique color for each vert. First 3 uint 8  represent index in this cloud, final uint8 gives cloud ID.
         vertice_indices = numpy.arange(mesh_data.getVertexCount(), dtype = numpy.int32)
         cloud_indices = numpy.empty(mesh_data.getVertexCount(),dtype = numpy.int32)
-        cloud_indices.fill(id)
+        cloud_indices.fill(255 - id)
         cloud_indices  = numpy.left_shift(cloud_indices,24) # shift 24 bits.
         combined_clouds = numpy.add(cloud_indices,vertice_indices)
         data = numpy.fromstring(combined_clouds.tostring(),numpy.uint8)
+    
+        
         colors  = numpy.resize(data,(mesh_data.getVertexCount() , 4))
+        colors = colors.astype(numpy.float32)
+        colors /= 255
         self._mesh_data.setColors(colors)
         self._resetAABB()
         self.meshDataChanged.emit(self)
