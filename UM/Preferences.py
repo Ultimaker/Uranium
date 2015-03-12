@@ -26,7 +26,6 @@ class Preferences(SignalEmitter):
         self._preferences[group][key] = _Preference(key, default_value)
 
     def setValue(self, key, value):
-        print('set value', key, value)
         preference = self._findPreference(key)
 
         if preference:
@@ -64,7 +63,6 @@ class Preferences(SignalEmitter):
                     Logger.log('w', "Unknown preference %s", key)
                     continue
 
-                print('setting', group, key, 'to', value)
                 self._preferences[group][key].setValue(value)
 
     def readPreferenceFromFile(self, key, file):
@@ -84,7 +82,6 @@ class Preferences(SignalEmitter):
         for group, group_entries in self._preferences.items():
             parser[group] = {}
             for key, pref in group_entries.items():
-                print(group, key, pref.getValue(), pref.getDefault())
                 if pref.getValue() != pref.getDefault():
                     parser[group][key] = pref.getValue()
 
