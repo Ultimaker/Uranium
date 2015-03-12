@@ -359,7 +359,10 @@ class QtGL2Renderer(Renderer):
             self._gl.glPolygonMode(self._gl.GL_FRONT_AND_BACK, self._gl.GL_LINE)
 
         if mesh.hasIndices():
-            self._gl.glDrawElements(mode, mesh.getFaceCount() * 3 , self._gl.GL_UNSIGNED_INT, None)
+            if mode == self._gl.GL_TRIANGLES:
+                self._gl.glDrawElements(mode, mesh.getFaceCount() * 3 , self._gl.GL_UNSIGNED_INT, None)
+            else:
+                self._gl.glDrawElements(mode, mesh.getFaceCount(), self._gl.GL_UNSIGNED_INT, None)
         else:
             self._gl.glDrawArrays(mode, 0, mesh.getVertexCount())
 
