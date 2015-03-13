@@ -34,7 +34,7 @@ class ScannerApplication(QtApplication):
         self._cloud_node_list.append(cloud_node)
     
     def getCloudNodeList(self):
-        return self.cloud_node_list
+        return self._cloud_node_list
     
     def getCloudNodeIndex(self,cloud_node):
         return self._cloud_node_list.index(cloud_node)

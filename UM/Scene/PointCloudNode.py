@@ -3,6 +3,7 @@ from UM.View.Renderer import Renderer
 from UM.Application import Application
 from UM.Resources import Resources
 from UM.Math.Color import Color
+from UM.ColorGenerator import ColorGenerator
 import numpy
 class PointCloudNode(SceneNode.SceneNode):
     def __init__(self, parent = None):
@@ -14,12 +15,12 @@ class PointCloudNode(SceneNode.SceneNode):
 
     def render(self, renderer):
         self._material = renderer.createMaterial(Resources.getPath(Resources.ShadersLocation, 'default.vert'), Resources.getPath(Resources.ShadersLocation, 'default.frag'))
-
+        cloud_color = ColorGenerator().createColor(Application.getInstance().getCloudNodeIndex(self))
+        
         self._material.setUniformValue("u_ambientColor", Color(0.3, 0.3, 0.3, 1.0))
-        self._material.setUniformValue("u_diffuseColor", Color(1.0, 0.79, 0.14, 1.0))
+        self._material.setUniformValue("u_diffuseColor", Color(cloud_color[0], cloud_color[1], cloud_color[2], 1.0))
         self._material.setUniformValue("u_specularColor", Color(1.0, 1.0, 1.0, 1.0))
         self._material.setUniformValue("u_shininess", 50.0)
-        self._material.setUniformValue("u_overhangAngle", -9001)
         if self.getMeshData() and self.isVisible():
             renderer.queueNode(self, mode = Renderer.RenderPoints, material = self._material)
             return True
