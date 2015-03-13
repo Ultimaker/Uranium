@@ -26,7 +26,8 @@ class Backend(PluginObject, SignalEmitter):
         self._process = None
 
     processingProgress = Signal()
-    
+    backendConnected = Signal()
+
     ##   \brief Start the backend / engine.
     #   Runs the engine, this is only called when the socket is fully opend & ready to accept connections
     def startEngine(self):
@@ -83,6 +84,7 @@ class Backend(PluginObject, SignalEmitter):
                 self.startEngine()
         elif state == SignalSocket.ConnectedState:
             Logger.log('d', "Backend connected on port %s", self._port)
+            self.backendConnected.emit()
 
     def _onMessageReceived(self):
         message = self._socket.takeNextMessage()
@@ -100,7 +102,6 @@ class Backend(PluginObject, SignalEmitter):
         elif error.errno == 104 or error.errno == 32:
             Logger.log('i', "Backend crashed or closed. Restarting...")
             self._createSocket()
-            self.startEngine()
         else:
             Logger.log('e', str(error))
 
