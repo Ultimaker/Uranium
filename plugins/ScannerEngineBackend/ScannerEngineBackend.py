@@ -170,7 +170,7 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         self._socket.sendMessage(message)
         
     def getEngineCommand(self):
-        return [Preferences.getPreference("BackendLocation"), '-p', str(self._port)]
+        return [Preferences.getInstance().getValue("backend/location"), '--connect', "127.0.0.1:{0}".format(self._port)]
     
     def _onPointCloudMessage(self, message):
         #TODO: For debug purposes this is easier, but it should be moved to a job.

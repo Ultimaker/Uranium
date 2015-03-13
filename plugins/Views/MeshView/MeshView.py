@@ -26,7 +26,8 @@ class MeshView(View):
 
         if Application.getInstance().getActiveMachine():
             angle = Application.getInstance().getActiveMachine().getSettingValueByKey('support_angle')
-            self._material.setUniformValue('u_overhangAngle', math.cos(math.radians(90 - angle)))
+            if angle != None:
+                self._material.setUniformValue('u_overhangAngle', math.cos(math.radians(90 - angle)))
 
         for node in DepthFirstIterator(scene.getRoot()):
             if not node.render(renderer):

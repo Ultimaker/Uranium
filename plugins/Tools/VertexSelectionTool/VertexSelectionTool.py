@@ -30,7 +30,6 @@ class VertexSelectionTool(Tool):
                     targeted_node = Application.getInstance().getCloudNodeByIndex(index)
                     #Pixel colors are encoded in (r,g,b) with r being least significant and b being most.
                     pixel_index = int(pixel_color.r *255) + (int(pixel_color.g * 255) << 8) + (int(pixel_color.b * 255) << 16)
-                    print("pixel index", pixel_index)
                     temp = targeted_node.getMeshData().getVertex(pixel_index)
                     self._selected_point_coordinates = Vector(temp[0],temp[1],temp[2])
                     self._handle.setParent(self.getController().getScene().getRoot())
