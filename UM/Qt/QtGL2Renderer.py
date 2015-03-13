@@ -41,6 +41,7 @@ class QtGL2Renderer(Renderer):
         self._transparentQueue = []
         self._overlayQueue = []
 
+        self._render_selection = True
         self._selection_buffer = None
         self._selection_map = {}
         self._selection_image = None
@@ -110,6 +111,9 @@ class QtGL2Renderer(Renderer):
         else:
             return None
 
+    def setRenderSelection(self, render):
+        self._render_selection = render
+
     def beginRendering(self):
         if not self._initialized:
             self._initialize()
@@ -124,6 +128,8 @@ class QtGL2Renderer(Renderer):
         self._solidsQueue.clear()
         self._transparentQueue.clear()
         self._overlayQueue.clear()
+
+        self._render_selection = True
 
     def queueNode(self, node, **kwargs):
         queueItem = { 'node': node }
@@ -241,19 +247,20 @@ class QtGL2Renderer(Renderer):
             else:
                 self._renderItem(item)
 
-        self._gl.glStencilMask(0)
-        self._gl.glStencilFunc(self._gl.GL_EQUAL, 0, 0xff)
-        self._gl.glLineWidth(2)
-        for node in Selection.getAllSelectedObjects():
-            if node.getMeshData() and type(node) is not PointCloudNode:
-                self._renderItem({
-                    'node': node,
-                    'material': self._outline_material,
-                    'mode': self._gl.GL_TRIANGLES,
-                    'wireframe': True
-                })
+        if self._render_selection:
+            self._gl.glStencilMask(0)
+            self._gl.glStencilFunc(self._gl.GL_EQUAL, 0, 0xff)
+            self._gl.glLineWidth(2)
+            for node in Selection.getAllSelectedObjects():
+                if node.getMeshData() and type(node) is not PointCloudNode:
+                    self._renderItem({
+                        'node': node,
+                        'material': self._outline_material,
+                        'mode': self._gl.GL_TRIANGLES,
+                        'wireframe': True
+                    })
 
-        self._gl.glLineWidth(1)
+            self._gl.glLineWidth(1)
 
         self._gl.glDisable(self._gl.GL_STENCIL_TEST)
         self._gl.glDepthMask(self._gl.GL_FALSE)
