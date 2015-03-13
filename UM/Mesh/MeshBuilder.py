@@ -13,7 +13,18 @@ class MeshBuilder:
         return self._mesh_data
 
     def addFace(self, v0, v1, v2, **kwargs):
-        self._mesh_data.addFace(v0.x, v0.y, v0.z, v1.x, v1.y, v1.z, v2.x, v2.y, v2.z)
+        normal = kwargs.get('normal', None)
+        if normal:
+            self._mesh_data.addFaceWithNormals(
+                                v0.x, v0.y, v0.z,
+                                normal.x, normal.y, normal.z,
+                                v1.x, v1.y, v1.z,
+                                normal.x, normal.y, normal.z,
+                                v2.x, v2.y, v2.z,
+                                normal.x, normal.y, normal.z
+                            )
+        else:
+            self._mesh_data.addFace(v0.x, v0.y, v0.z, v1.x, v1.y, v1.z, v2.x, v2.y, v2.z)
 
         color = kwargs.get('color', None)
         if color:
@@ -22,17 +33,13 @@ class MeshBuilder:
             self._mesh_data.setVertexColor(self._mesh_data.getVertexCount() - 1, color)
 
     def addQuad(self, v0, v1, v2, v3, **kwargs):
-        self._mesh_data.addFace(
-            v0.x, v0.y, v0.z,
-            v2.x, v2.y, v2.z,
-            v1.x, v1.y, v1.z,
-            color = kwargs.get('color')
+        self.addFace(v0, v2, v1,
+            color = kwargs.get('color'),
+            normal = kwargs.get('normal')
         )
-        self._mesh_data.addFace(
-            v0.x, v0.y, v0.z,
-            v3.x, v3.y, v3.z,
-            v2.x, v2.y, v2.z,
-            color = kwargs.get('color')
+        self.addFace(v0, v3, v2,
+            color = kwargs.get('color'),
+            normal = kwargs.get('normal')
         )
 
     def addCube(self, **kwargs):
