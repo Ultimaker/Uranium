@@ -20,7 +20,7 @@ from . import ProcessMeshJob
 class ScannerEngineBackend(Backend, SignalEmitter):
     def __init__(self):
         super(ScannerEngineBackend,self).__init__()
-        
+        Preferences.getInstance().addPreference("backend/location","../UltiScanTastic/Scanner/bin/Debug/Ultiscantastic")
         self._message_handlers[ultiscantastic_pb2.PointCloudPointNormal] = self._onPointCloudMessage
         self._message_handlers[ultiscantastic_pb2.ProgressUpdate] = self._onProgressUpdateMessage
         self._message_handlers[ultiscantastic_pb2.Image] = self._onImageMessage
