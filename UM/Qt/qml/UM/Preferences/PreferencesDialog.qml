@@ -80,8 +80,8 @@ Window {
         configPage.source = configPagesModel.get(index).page;
     }
 
-    function addPage(name, page) {
-        configPagesModel.append({ 'name': name, 'page': page });
+    function insertPage(index, name, page) {
+        configPagesModel.insert(index, { 'name': name, 'page': page });
     }
 
     SystemPalette { id: palette; colorGroup: SystemPalette.Active }
