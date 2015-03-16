@@ -86,14 +86,17 @@ class QtGL2Renderer(Renderer):
 
         samples = []
         if sample_radius == 1:
+            if px < 0 or px > (self._selection_image.width() - 1) or py < 0 or py > (self._selection_image.height() - 1):
+                return None
+
             pixel = self._selection_image.pixel(px, py)
             samples.append(Color.fromARGB(pixel))
         else:
             for sx in range(-sample_radius, sample_radius):
-                if px + sx < 0 or px + sx > self._selection_image.width():
+                if px + sx < 0 or px + sx > (self._selection_image.width() - 1):
                     continue
                 for sy in range(-sample_radius, sample_radius):
-                    if py + sy < 0 or py + sy > self._selection_image.height():
+                    if py + sy < 0 or py + sy > (self._selection_image.height() - 1):
                         continue
 
                     pixel = self._selection_image.pixel(px + sx, py + sy)
@@ -362,6 +365,10 @@ class QtGL2Renderer(Renderer):
             material.enableAttribute("a_color", 'vector4f', offset)
             offset += mesh.getVertexCount() * 4 * 4
 
+        if mesh.hasUVCoordinates():
+            material.enableAttribute("a_uvs", 'vector2f', offset)
+            offset += mesh.getVertexCount() * 2 * 4
+
         if wireframe and hasattr(self._gl, 'glPolygonMode'):
             self._gl.glPolygonMode(self._gl.GL_FRONT_AND_BACK, self._gl.GL_LINE)
 
@@ -378,6 +385,8 @@ class QtGL2Renderer(Renderer):
 
         material.disableAttribute("a_vertex")
         material.disableAttribute("a_normal")
+        material.disableAttribute("a_color")
+        material.disableAttribute("a_uvs")
         vertexBuffer.release()
 
         if mesh.hasIndices():
@@ -413,6 +422,11 @@ class QtGL2Renderer(Renderer):
             colors = mesh.getColorsAsByteArray()
             buffer.write(offset, colors, len(colors))
             offset += len(colors)
+
+        if mesh.hasUVCoordinates():
+            uvs = mesh.getUVCoordinatesAsByteArray()
+            buffer.write(offset, uvs, len(uvs))
+            offset += len(uvs)
 
         buffer.release()
 

@@ -180,6 +180,7 @@ UM.MainWindow {
                 height: 40;
 
                 onSaveRequested: actions.save.trigger();
+                onSaveToSDRequested: Printer.saveToSD()
             }
 
             UM.MessageStack {
@@ -196,7 +197,13 @@ UM.MainWindow {
         }
     }
 
-    UM.PreferencesDialog { id: preferences }
+    UM.PreferencesDialog {
+        id: preferences
+
+        Component.onCompleted: {
+            insertPage(1, qsTr('View'), Qt.resolvedUrl('./ViewPage.qml'));
+        }
+    }
 
     PrinterActions {
         id: actions;

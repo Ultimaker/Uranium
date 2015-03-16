@@ -30,6 +30,7 @@ class ToolHandle(SceneNode.SceneNode):
         self._material = None
 
         self._previous_dist = None
+        self._active_axis = None
 
     def getLineMesh(self):
         return self._line_mesh
@@ -76,11 +77,13 @@ class ToolHandle(SceneNode.SceneNode):
         }
 
     def setActiveAxis(self, axis):
+        if axis == self._active_axis:
+            return
         if axis:
             self._material.setUniformValue('u_activeColor', self._axisColorMap[axis])
         else:
             self._material.setUniformValue('u_activeColor', self.DisabledColor)
-
+        self._active_axis = axis
         self._scene.sceneChanged.emit(self)
 
     @classmethod

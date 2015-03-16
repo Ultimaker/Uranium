@@ -27,6 +27,7 @@ class MeshData(SignalEmitter):
         self._normals = kwargs.get('normals', None)
         self._indices = kwargs.get('indices', None)
         self._colors = kwargs.get('colors', None)
+        self._uvs = kwargs.get('uvs', None)
         self._vertex_count = len(self._vertices) if self._vertices is not None else 0
         self._face_count = len(self._indices) if self._indices is not None else 0
         self._type = MeshType.faces
@@ -80,6 +81,9 @@ class MeshData(SignalEmitter):
 
     def hasColors(self):
         return self._colors is not None
+
+    def hasUVCoordinates(self):
+        return self._uvs is not None
 
     ##  Transform the meshdata by given Matrix
     #   \param transformation 4x4 homogenous transformation matrix
@@ -252,13 +256,23 @@ class MeshData(SignalEmitter):
         if self._colors is None:
             self._colors = numpy.zeros((10, 4), dtype=numpy.float32)
 
-        if len(self._colors < len(self._vertices)):
+        if len(self._colors) < len(self._vertices):
             self._colors.resize((len(self._vertices), 4))
 
         self._colors[index, 0] = color.r
         self._colors[index, 1] = color.g
         self._colors[index, 2] = color.b
         self._colors[index, 3] = color.a
+
+    def setVertexUVCoordinates(self, index, u, v):
+        if self._uvs is None:
+            self._uvs = numpy.zeros((10, 2), dtype=numpy.float32)
+
+        if len(self._uvs) < len(self._vertices):
+            self._uvs.resize((len(self._vertices), 2))
+
+        self._uvs[index, 0] = u
+        self._uvs[index, 1] = v
 
     def addVertices(self, vertices):
         if self._vertices is None:
@@ -310,6 +324,10 @@ class MeshData(SignalEmitter):
     def getColorsAsByteArray(self):
         if self._colors is not None:
             return self._colors[0 : self._vertex_count].tostring()
+
+    def getUVCoordinatesAsByteArray(self):
+        if self._uvs is not None:
+            return self._uvs[0 : self._vertex_count].tostring()
 
     ##  Calculate the normals of this mesh, assuming it was created by using addFace (eg; the verts are connected)    
     def calculateNormals(self):
