@@ -61,7 +61,7 @@ class MeshFileHandlerProxy(QObject):
 
         app = Application.getInstance()
         for node in DepthFirstIterator(self._scene.getRoot()):
-            if not node.getMeshData():
+            if (type(node) is not SceneNode and type(node) is not PointCloudNode) or not node.getMeshData():
                 continue
 
             job = WriteMeshJob(file.toLocalFile(), node.getMeshData())
