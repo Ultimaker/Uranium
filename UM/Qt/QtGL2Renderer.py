@@ -86,14 +86,17 @@ class QtGL2Renderer(Renderer):
 
         samples = []
         if sample_radius == 1:
+            if px < 0 or px > (self._selection_image.width() - 1) or py < 0 or py > (self._selection_image.height() - 1):
+                return None
+
             pixel = self._selection_image.pixel(px, py)
             samples.append(Color.fromARGB(pixel))
         else:
             for sx in range(-sample_radius, sample_radius):
-                if px + sx < 0 or px + sx > self._selection_image.width():
+                if px + sx < 0 or px + sx > (self._selection_image.width() - 1):
                     continue
                 for sy in range(-sample_radius, sample_radius):
-                    if py + sy < 0 or py + sy > self._selection_image.height():
+                    if py + sy < 0 or py + sy > (self._selection_image.height() - 1):
                         continue
 
                     pixel = self._selection_image.pixel(px + sx, py + sy)
