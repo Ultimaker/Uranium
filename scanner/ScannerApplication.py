@@ -64,7 +64,7 @@ class ScannerApplication(QtApplication):
     
         root = self.getController().getScene().getRoot()
         
-        self.getController().setSelectionTool("VertexSelectionTool")
+        self.getController().setSelectionTool("VertexEraseTool")
         #try:
         #    self.getMachineSettings().loadValuesFromFile(Resources.getPath(Resources.SettingsLocation, 'settings.cfg'))
         #except FileNotFoundError:

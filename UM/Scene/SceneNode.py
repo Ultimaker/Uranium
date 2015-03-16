@@ -154,6 +154,7 @@ class SceneNode(SignalEmitter):
     ##  \brief Computes and returns the transformation from origin to local space
     #   \returns 4x4 transformation matrix
     def getGlobalTransformation(self):
+
         if self._parent is None:
             return self._transformation
         else:
