@@ -83,7 +83,7 @@ class Preferences(SignalEmitter):
             parser[group] = {}
             for key, pref in group_entries.items():
                 if pref.getValue() != pref.getDefault():
-                    parser[group][key] = pref.getValue()
+                    parser[group][key] = str(pref.getValue())
 
         parser['general']['version'] = '1'
 

@@ -102,6 +102,9 @@ class Backend(PluginObject, SignalEmitter):
         elif error.errno == 104 or error.errno == 32:
             Logger.log('i', "Backend crashed or closed. Restarting...")
             self._createSocket()
+        elif error.winerror == 154:
+            Logger.log('i', "Backend crashed or closed. Restarting...")
+            self._createSocket()
         else:
             Logger.log('e', str(error))
 

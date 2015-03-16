@@ -3,12 +3,17 @@ from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator
 from UM.Resources import Resources
 from UM.Application import Application
 from UM.Math.Color import Color
+from UM.Preferences import Preferences
 
 import math
 
 class MeshView(View):
     def __init__(self):
         super().__init__()
+
+        Preferences.getInstance().addPreference('view/show_overhang', False)
+        Preferences.getInstance().preferenceChanged.connect(self._onPreferenceChanged)
+
         self._material = None
 
     def beginRendering(self):
@@ -16,7 +21,10 @@ class MeshView(View):
         renderer = self.getRenderer()
 
         if not self._material:
-            self._material = renderer.createMaterial(Resources.getPath(Resources.ShadersLocation, 'default.vert'), Resources.getPath(Resources.ShadersLocation, 'default.frag'))
+            if Preferences.getInstance().getValue('view/show_overhang'):
+                self._material = renderer.createMaterial(Resources.getPath(Resources.ShadersLocation, 'default.vert'), Resources.getPath(Resources.ShadersLocation, 'overhang.frag'))
+            else:
+                self._material = renderer.createMaterial(Resources.getPath(Resources.ShadersLocation, 'default.vert'), Resources.getPath(Resources.ShadersLocation, 'default.frag'))
 
             self._material.setUniformValue("u_ambientColor", Color(0.3, 0.3, 0.3, 1.0))
             self._material.setUniformValue("u_diffuseColor", Color(1.0, 0.79, 0.14, 1.0))
@@ -36,3 +44,7 @@ class MeshView(View):
 
     def endRendering(self):
         pass
+
+    def _onPreferenceChanged(self, preference):
+        if preference == 'view/show_overhang':
+            self._material = None

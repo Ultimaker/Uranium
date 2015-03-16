@@ -11,16 +11,21 @@ class PointCloudNode(SceneNode.SceneNode):
         self._name = "Pointcloud"
         self._selectable = True
         Application.getInstance().addCloudNode(self)
-        
-
-    def render(self, renderer):
+        self._material = None
+   
+   ##   \brief Create new material. 
+   #    This uses the 'global' index of the cloud to create a color. The color is selected from a list of 64 colors.
+    def createMaterial(self,renderer):
         self._material = renderer.createMaterial(Resources.getPath(Resources.ShadersLocation, 'default.vert'), Resources.getPath(Resources.ShadersLocation, 'default.frag'))
-        cloud_color = ColorGenerator().createColor(Application.getInstance().getCloudNodeIndex(self))
-        
         self._material.setUniformValue("u_ambientColor", Color(0.3, 0.3, 0.3, 1.0))
+        cloud_color = ColorGenerator().createColor(Application.getInstance().getCloudNodeIndex(self))
         self._material.setUniformValue("u_diffuseColor", Color(cloud_color[0], cloud_color[1], cloud_color[2], 1.0))
         self._material.setUniformValue("u_specularColor", Color(1.0, 1.0, 1.0, 1.0))
         self._material.setUniformValue("u_shininess", 50.0)
+    
+    def render(self, renderer):
+        if not self._material:
+            self.createMaterial(renderer)
         if self.getMeshData() and self.isVisible():
             renderer.queueNode(self, mode = Renderer.RenderPoints, material = self._material)
             return True
