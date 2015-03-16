@@ -306,7 +306,7 @@
                                 },
                                 "speed_wall_x": {
                                     "label": "Inner Shell Speed",
-                                    "description": "Speed at which inner shells are printed. Printing the inner shell faster then the outer shell will reduce printing time. It is good to set this somewhere in between the outer shell speed and the infill/printing speed.",
+                                    "description": "Speed at which all inner shells are printed. Printing the inner shells faster then the outer shell will reduce printing time. It is good to set this somewhere in between the outer shell speed and the infill speed.",
                                     "unit": "mm/s",
                                     "type": "float",
                                     "default": 50.0,
@@ -320,7 +320,8 @@
                             "unit": "mm/s",
                             "type": "float",
                             "default": 50.0,
-                            "visible": false
+                            "visible": false,
+                            "inherit_function": "speed_wall_0"
                         }
                     }
                 },
@@ -379,7 +380,8 @@
                             "options": [
                                 "Grid",
                                 "Lines",
-                                "Concentric"
+                                "Concentric",
+                                "ZigZag"
                             ],
                             "default": "Grid",
                             "inherit_function": "'Lines' if parent_value > 25 else 'Grid'"
@@ -501,41 +503,31 @@
             }
         },
         "support": {
-            "label": "Support Material",
+            "label": "Support Structure",
             "visible": true,
             "settings": {
                 "support_enable": {
                     "label": "Enable Support",
-                    "description": "Enable exterior support material. This will build up structures below the model to prevent the model from sacking.",
+                    "description": "Enable exterior support structures. This will build up supporting structures below the model to prevent the model from sacking or printing in mid air.",
                     "type": "boolean",
-                    "default": false,
-
-                    "children": {
-                        "support_type": {
-                            "label": "Type",
-                            "description": "The type of support structure.\nGrid is very strong and can come off in 1 piece, however, sometimes it is too strong.\nLines are single walled lines that break off one at a time. Which is more work to remove, but as it is less strong it does work better on tricky prints.",
-                            "type": "enum",
-                            "options": [
-                                "None",
-                                "Touching Buildplate",
-                                "Everywhere"
-                            ],
-                            "default": "None",
-                            "visible": false,
-                            "inherit_function": "'Touching Buildplate' if parent_value else 'None'"
-                        }
-                    }
+                    "default": true
                 },
-                "support_pattern": {
-                    "label": "Support Material Pattern",
-                    "description": "Cura supports 2 distinct types of support material. First is a grid based support material which is quite solid and can be removed as 1 piece.\nThe other is a line based support material which has to be pealed of line for line.",
+                "support_type": {
+                    "label": "Type",
+                    "description": "Where we want support structures. We can restrict the suport structures such that they won't sit on the model, which can cause scarring.",
                     "type": "enum",
                     "options": [
-                        "Grid",
-                        "Lines"
+                        "None",
+                        "Touching Buildplate",
+                        "Everywhere"
                     ],
-                    "default": "Lines",
-                    "visible": false
+                    "default": "Touching Buildplate",
+                    "visible": true,
+                    "inherit_function": "'Everywhere' if support_enable else 'None'",
+                    "active_if": {
+                        "setting": "support_enable",
+                        "value": true
+                    }
                 },
                 "support_angle": {
                     "label": "Overhang Angle",
@@ -543,31 +535,35 @@
                     "unit": "°",
                     "type": "float",
                     "default": 60.0,
-                    "visible": false
-                },
-                "support_fill_rate": {
-                    "label": "Fill Amount",
-                    "description": "Amount of infill structure in the support material, less material gives weaker support which is easier to remove. 15% seems to be a good average.",
-                    "unit": "%",
-                    "type": "float",
-                    "default": 15,
-                    "visible": false
+                    "visible": false,
+                    "active_if": {
+                        "setting": "support_enable",
+                        "value": true
+                    }
                 },
                 "support_xy_distance": {
                     "label": "X/Y Distance",
-                    "description": "Distance of the support material from the print, in the X/Y directions.\n0.7mm gives a nice distance from the print so the support does not stick to the print.",
+                    "description": "Distance of the support structure from the print, in the X/Y directions.\n0.7mm gives a nice distance from the print so the support does not stick to the print.",
                     "unit": "mm",
                     "type": "float",
                     "default": 0.7,
-                    "visible": false
+                    "visible": false,
+                    "active_if": {
+                        "setting": "support_enable",
+                        "value": true
+                    }
                 },
                 "support_z_distance": {
                     "label": "Z Distance",
-                    "description": "Distance from the top/bottom of the support to the print. A small gap here makes it easier to remove the support but makes the print a bit uglier.\n0.15mm gives a good seperation of the support material.",
+                    "description": "Distance from the top/bottom of the support to the print. A small gap here makes it easier to remove the support but makes the print a bit uglier.\n0.15mm gives a good seperation of the support structure.",
                     "unit": "mm",
                     "type": "float",
                     "default": 0.15,
                     "visible": false,
+                    "active_if": {
+                        "setting": "support_enable",
+                        "value": true
+                    },
                     
                     "children": {
                         "support_top_distance": {
@@ -596,13 +592,95 @@
                     "default": 0.7,
                     "visible": false
                 },
-                "support_bridge_back": {
-                    "label": "Support Bridge",
-                    "description": "The amount of area between the layer and the overhang which will generate support. Small values can result in many disconnected suport structures, while large values can cause the support to stick to the print too much.",
-                    "unit": "%",
-                    "type": "int",
-                    "default": 100,
+                "support_area_smoothing": {
+                    "label": "Area Smoothing",
+                    "description": "Maximal distance in the X/Y directions of a line segment which is to be smoothed out. Ragged lines are introduced by the join distance and support bridge, which cause the machine to resonate. Smoothing the support areas won't cause them to break with the constraints, except it might change the overhang.",
+                    "unit": "mm",
+                    "type": "float",
+                    "default": 0.6,
                     "visible": false
+                },
+                "support_use_towers": {
+                    "label": "Use towers.",
+                    "description": "Use specialized towers to support tiny overhang areas. These towers have a larger diameter than the region they support. Near the overhang the towers' diameter decreases, forming a roof.",
+                    "type": "boolean",
+                    "default": true,
+                    "visible": true
+                },
+                "support_minimal_diameter": {
+                    "label": "Minimal Diameter",
+                    "description": "Maximal diameter in the X/Y directions of a small area which is to be supported by a specialized support tower. ",
+                    "unit": "mm",
+                    "type": "float",
+                    "default": 1.0,
+                    "visible": false,
+                    "active_if": {
+                        "setting": "support_use_towers",
+                        "value": true
+                    }
+                },
+                "support_tower_diameter": {
+                    "label": "Tower Diameter",
+                    "description": "The diameter of a special tower. ",
+                    "unit": "mm",
+                    "type": "float",
+                    "default": 1.0,
+                    "visible": false,
+                    "active_if": {
+                        "setting": "support_use_towers",
+                        "value": true
+                    }
+                },
+                "support_tower_roof_angle": {
+                    "label": "Tower Roof Angle",
+                    "description": "The angle of the rooftop of a tower. Larger angles mean more pointy towers. ",
+                    "unit": "°",
+                    "type": "int",
+                    "default": 65,
+                    "visible": false,
+                    "active_if": {
+                        "setting": "support_use_towers",
+                        "value": true
+                    }
+                },
+                "support_pattern": {
+                    "label": "Pattern",
+                    "description": "Cura supports 3 distinct types of support structure. First is a grid based support structure which is quite solid and can be removed as 1 piece.\nThe second is a line based support structure which has to be pealed of line for line.\nThe third is a structure in between the other two; it consists of lines which are connected in an accordeon fashion.",
+                    "type": "enum",
+                    "options": [
+                        "Grid",
+                        "Lines",
+                        "ZigZag"
+                    ],
+                    "default": "Lines",
+                    "visible": true,
+                    "active_if": {
+                        "setting": "support_enable",
+                        "value": true
+                    }
+                },
+                "support_connect_zigzags": {
+                    "label": "Connect ZigZags",
+                    "description": "Connect the ZigZags. Makes them harder to remove, but prevents stringing of disconnected zigzags.",
+                    "type": "boolean",
+                    "default": true,
+                    "visible": false,
+                    "active_if": {
+                        "setting": "support_pattern",
+                        "value": "ZigZag"
+                    }
+                },
+                "support_fill_rate": {
+                    "label": "Fill Amount",
+                    "description": "Amount of infill structure in the support, less infill gives weaker support which is easier to remove. 15% seems to be a good average.",
+                    "unit": "%",
+                    "type": "float",
+                    "default": 15,
+                    "visible": false,
+                    "active_if": {
+                        "setting": "support_enable",
+                        "value": true
+                    }
                 }
             }
         },
@@ -778,3 +856,5 @@
         }
     }
 }
+
+
