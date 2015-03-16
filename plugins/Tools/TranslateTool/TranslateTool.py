@@ -9,17 +9,25 @@ from UM.Operations.TranslateOperation import TranslateOperation
 from UM.Application import Application
 
 from UM.Scene.Selection import Selection
+from UM.Scene.ToolHandle import ToolHandle
 
 from . import TranslateToolHandle
 
 class TranslateTool(Tool):
     def __init__(self):
         super().__init__()
+
+        self._renderer = Application.getInstance().getRenderer()
+
         self._handle = TranslateToolHandle.TranslateToolHandle()
 
         self._object = None
-        self._dragPlane = Plane(Vector.Unit_Y, 0.0)
         self._target = None
+        self._drag = False
+        self._locked_axis = None
+
+        self._previous_x = None
+        self._previous_y = None
 
         self._min_x = float('-inf')
         self._max_x = float('inf')
@@ -27,6 +35,11 @@ class TranslateTool(Tool):
         self._max_y = float('inf')
         self._min_z = float('-inf')
         self._max_z = float('inf')
+
+        self._enabled_axis = [ToolHandle.XAxis, ToolHandle.YAxis, ToolHandle.ZAxis]
+
+    def setEnabledAxis(self, axis):
+        self._enabled_axis = axis
 
     def setXRange(self, min, max):
         self._min_x = min
@@ -48,52 +61,77 @@ class TranslateTool(Tool):
                 self._handle.setPosition(Selection.getSelectedObject(0).getGlobalPosition())
 
         if event.type == Event.MousePressEvent:
-            #TODO: Support selection of multiple objects
-            if Selection.hasSelection():
-                obj = Selection.getSelectedObject(0)
-                ray = self.getController().getScene().getActiveCamera().getRay(event.x, event.y)
-                if obj.getBoundingBox().intersectsRay(ray):
-                    self._object = obj
-                    self._handle.setPosition(self._object.getGlobalPosition())
+            id = self._renderer.getIdAtCoordinate(event.x, event.y, 5)
+            if not id:
+                return
 
-                    target = self._dragPlane.intersectsRay(ray)
-                    if target:
-                        self._target = ray.getPointAlongRay(target)
+            if id in self._enabled_axis:
+                self._locked_axis = id
 
-                    return True
-                else:
-                    return False
+            self._drag = True
 
         if event.type == Event.MouseMoveEvent:
-            #TODO: Make this more generic instead of assuming movement on a certain plane
-            if self._object:
-                ray = self.getController().getScene().getActiveCamera().getRay(event.x, event.y)
+            id = self._renderer.getIdAtCoordinate(event.x, event.y, 5)
+            if not self._locked_axis:
+                if not id:
+                    self._handle.setActiveAxis(None)
 
-                newTarget = self._dragPlane.intersectsRay(ray)
-                if newTarget:
-                    n = ray.getPointAlongRay(newTarget)
-                    if self._target:
-                        t = n - self._target
+                if id in self._enabled_axis:
+                    self._handle.setActiveAxis(id)
 
-                        #TODO: Use resulting world position instead of translation amount for clamping
-                        t.setX(Float.clamp(t.x, self._min_x, self._max_x))
-                        t.setY(Float.clamp(t.y, self._min_y, self._max_y))
-                        t.setZ(Float.clamp(t.z, self._min_z, self._max_z))
+            if not self._drag:
+                return False
 
-                        op = TranslateOperation(self._object, t)
+            camera = self.getController().getScene().getActiveCamera()
+
+            plane = None
+            if self._locked_axis == ToolHandle.XAxis:
+                plane = Plane(Vector(0, 0, 1), 0)
+            elif self._locked_axis == ToolHandle.YAxis:
+                plane = Plane(Vector(0, 0, 1), 0)
+            elif self._locked_axis == ToolHandle.ZAxis:
+                plane = Plane(Vector(0, 1, 0), 0)
+
+            if not plane:
+                plane = Plane(Vector(0, 1, 0), 0)
+
+            ray = camera.getRay(event.x, event.y)
+
+            newTarget = plane.intersectsRay(ray)
+            if newTarget:
+                n = ray.getPointAlongRay(newTarget)
+                if self._target:
+                    diff = n - self._target
+
+                    if self._locked_axis == ToolHandle.XAxis:
+                        diff.setY(0)
+                        diff.setZ(0)
+                    elif self._locked_axis == ToolHandle.YAxis:
+                        diff.setX(0)
+                        diff.setZ(0)
+                    elif self._locked_axis == ToolHandle.ZAxis:
+                        diff.setX(0)
+                        diff.setY(0)
+
+                    position = Vector()
+                    for node in Selection.getAllSelectedObjects():
+                        op = TranslateOperation(node, diff)
                         Application.getInstance().getOperationStack().push(op)
 
-                        self._handle.setPosition(self._object.getGlobalPosition())
+                        position += node.getGlobalPosition()
 
-                    self._target = n
-                return True
+                    self._handle.setPosition(position / Selection.getCount())
+
+                self._target = n
+            return True
 
         if event.type == Event.MouseReleaseEvent:
-            self._object = None
             self._target = None
+            self._drag = False
+            self._locked_axis = None
+            return True
 
         if event.type == Event.ToolDeactivateEvent:
             self._handle.setParent(None)
 
-    def getIconName(self):
-        return 'scale.png'
+        return False

@@ -156,6 +156,10 @@ UM.MainWindow
                         return "WizardSetup12.qml"
                     case 13:
                         return "WizardSetup13.qml"
+                    case 14:
+                        return "WizardSetup14.qml"
+                    case 15:
+                        return "WizardSetup15.qml"
                 }
             }
 
@@ -407,10 +411,11 @@ UM.MainWindow
         modality: Qt.NonModal
         //TODO: Support multiple file selection, workaround bug in KDE file dialog
         //selectMultiple: true
-
+        nameFilters: UM.MeshFileHandler.supportedReadFileTypes;
         onAccepted: 
         {
-            UM.Controller.addMesh(fileUrl)
+            UM.MeshFileHandler.readLocalFile(fileUrl)
+            //files.setDirectory(fileUrl)
         }
     }
 

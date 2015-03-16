@@ -1,4 +1,5 @@
 from UM.Resources import Resources
+from UM.Preferences import Preferences
 
 import gettext
 import os
@@ -25,7 +26,7 @@ class i18nCatalog:
     def __init__(self, name, language = 'default'):
         languages = []
         if language == 'default':
-            preflang = None #TODO: Read from preferences
+            preflang = Preferences.getInstance().getValue('general/language')
 
             if not preflang:
                 envlang = os.getenv('LANGUAGE')

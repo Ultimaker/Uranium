@@ -9,6 +9,7 @@ from UM.Logger import Logger
 from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator
 from UM.Scene.Selection import Selection
 from UM.Scene.PointCloudNode import PointCloudNode
+from UM.Math.Color import Color
 
 from . import QtGL2Material
 
@@ -23,7 +24,8 @@ class QtGL2Renderer(Renderer):
     def __init__(self):
         super().__init__()
 
-        self._scene = Application.getInstance().getController().getScene()
+        self._controller = Application.getInstance().getController()
+        self._scene = self._controller.getScene()
 
         self._vertexBufferCache = {}
         self._indexBufferCache = {}
@@ -39,6 +41,7 @@ class QtGL2Renderer(Renderer):
         self._transparentQueue = []
         self._overlayQueue = []
 
+        self._render_selection = True
         self._selection_buffer = None
         self._selection_map = {}
         self._selection_image = None
@@ -57,12 +60,6 @@ class QtGL2Renderer(Renderer):
         buffer_format.setAttachment(QOpenGLFramebufferObject.Depth)
         return QOpenGLFramebufferObject(width, height, buffer_format)
 
-    def getSelectionImage(self):
-        return self._selection_image
-
-    def getSelectionMap(self):
-        return self._selection_map
-
     def setLightPosition(self, position):
         self._lightPosition = position
 
@@ -72,6 +69,53 @@ class QtGL2Renderer(Renderer):
     def setViewportSize(self, width, height):
         self._viewportWidth = width
         self._viewportHeight = height
+
+    def getSelectionColorAtCoordinate(self,x,y):
+        if not self._selection_image:
+            return None
+        px = (0.5 + x / 2.0) * self._viewportWidth
+        py = (0.5 + y / 2.0) * self._viewportHeight
+        return Color.fromARGB(self._selection_image.pixel(px,py))
+
+    def getIdAtCoordinate(self, x, y, sample_radius = 1):
+        if not self._selection_image:
+            return None
+
+        px = (0.5 + x / 2.0) * self._viewportWidth
+        py = (0.5 + y / 2.0) * self._viewportHeight
+
+        samples = []
+        if sample_radius == 1:
+            if px < 0 or px > (self._selection_image.width() - 1) or py < 0 or py > (self._selection_image.height() - 1):
+                return None
+
+            pixel = self._selection_image.pixel(px, py)
+            samples.append(Color.fromARGB(pixel))
+        else:
+            for sx in range(-sample_radius, sample_radius):
+                if px + sx < 0 or px + sx > (self._selection_image.width() - 1):
+                    continue
+                for sy in range(-sample_radius, sample_radius):
+                    if py + sy < 0 or py + sy > (self._selection_image.height() - 1):
+                        continue
+
+                    pixel = self._selection_image.pixel(px + sx, py + sy)
+                    samples.append(Color.fromARGB(pixel))
+
+        idCount = {}
+        for sample in samples:
+            if sample in self._selection_map:
+                if not self._selection_map[sample] in idCount:
+                    idCount[self._selection_map[sample]] = 1
+                else:
+                    idCount[self._selection_map[sample]] += 1
+        if len(idCount) > 0:
+            return max(idCount)
+        else:
+            return None
+
+    def setRenderSelection(self, render):
+        self._render_selection = render
 
     def beginRendering(self):
         if not self._initialized:
@@ -87,6 +131,8 @@ class QtGL2Renderer(Renderer):
         self._solidsQueue.clear()
         self._transparentQueue.clear()
         self._overlayQueue.clear()
+
+        self._render_selection = True
 
     def queueNode(self, node, **kwargs):
         queueItem = { 'node': node }
@@ -134,7 +180,6 @@ class QtGL2Renderer(Renderer):
         for node in DepthFirstIterator(self._scene.getRoot()):
             if node.isSelectable() and node.getMeshData():
                 selectable_nodes.append(node)
-
         if selectable_nodes:
             #TODO: Use a limited area around the mouse rather than a full viewport for rendering
             if self._selection_buffer.width() < self._viewportWidth or self._selection_buffer.height() < self._viewportHeight:
@@ -146,14 +191,46 @@ class QtGL2Renderer(Renderer):
             self._gl.glDisable(self._gl.GL_BLEND)
             self._selection_map.clear()
             for node in selectable_nodes:
-                color = self._getObjectColor(node)
-                self._selection_map[color] = node
-                self._selection_material.setUniformValue('u_color', [color[0] / 255.0, color[1] / 255.0, color[2] / 255.0, color[3] / 255.0])
-                self._renderItem({
-                    'node': node,
-                    'material': self._selection_material,
-                    'mode': self._gl.GL_TRIANGLES
-                })
+                if type(node) is PointCloudNode:
+                    self._renderItem({
+                        'node': node,
+                        'material': self._handle_material,
+                        'mode': self._gl.GL_POINTS
+                    })
+                else :
+                    color = self._getObjectColor(node)
+                    self._selection_map[color] = id(node)
+                    self._selection_material.setUniformValue('u_color', color)
+                    self._renderItem({
+                        'node': node,
+                        'material': self._selection_material,
+                        'mode': self._gl.GL_TRIANGLES
+                    })
+            tool = self._controller.getActiveTool()
+            if tool:
+                toolHandle = tool.getHandle()
+                if toolHandle:
+                    self._selection_map.update(toolHandle.getSelectionMap())
+                    self._gl.glDisable(self._gl.GL_DEPTH_TEST)
+                    if toolHandle.getLineMesh():
+                        self._gl.glLineWidth(5)
+                        self._renderItem({
+                            'node': toolHandle,
+                            'mesh': toolHandle.getLineMesh(),
+                            'material': self._handle_material,
+                            'mode': self._gl.GL_LINES
+                        })
+                        self._gl.glLineWidth(1)
+
+                    if toolHandle.getSolidMesh():
+                        self._renderItem({
+                            'node': toolHandle,
+                            'mesh': toolHandle.getSolidMesh(),
+                            'material': self._handle_material,
+                            'mode': self._gl.GL_TRIANGLES
+                        })
+                    self._gl.glEnable(self._gl.GL_DEPTH_TEST)
+
             self._selection_buffer.release()
             self._selection_image = self._selection_buffer.toImage()
 
@@ -173,19 +250,20 @@ class QtGL2Renderer(Renderer):
             else:
                 self._renderItem(item)
 
-        self._gl.glStencilMask(0)
-        self._gl.glStencilFunc(self._gl.GL_EQUAL, 0, 0xff)
-        self._gl.glLineWidth(5)
-        for node in Selection.getAllSelectedObjects():
-            if node.getMeshData() and type(node) is not PointCloudNode:
-                self._renderItem({
-                    'node': node,
-                    'material': self._outline_material,
-                    'mode': self._gl.GL_TRIANGLES,
-                    'wireframe': True
-                })
+        if self._render_selection:
+            self._gl.glStencilMask(0)
+            self._gl.glStencilFunc(self._gl.GL_EQUAL, 0, 0xff)
+            self._gl.glLineWidth(2)
+            for node in Selection.getAllSelectedObjects():
+                if node.getMeshData() and type(node) is not PointCloudNode:
+                    self._renderItem({
+                        'node': node,
+                        'material': self._outline_material,
+                        'mode': self._gl.GL_TRIANGLES,
+                        'wireframe': True
+                    })
 
-        self._gl.glLineWidth(1)
+            self._gl.glLineWidth(1)
 
         self._gl.glDisable(self._gl.GL_STENCIL_TEST)
         self._gl.glDepthMask(self._gl.GL_FALSE)
@@ -197,6 +275,7 @@ class QtGL2Renderer(Renderer):
             self._renderItem(item)
 
         self._gl.glDisable(self._gl.GL_DEPTH_TEST)
+        self._gl.glDisable(self._gl.GL_CULL_FACE)
 
         for item in self._overlayQueue:
             self._renderItem(item)
@@ -217,9 +296,9 @@ class QtGL2Renderer(Renderer):
                                      Resources.getPath(Resources.ShadersLocation, 'default.frag')
                                 )
 
-        self._defaultMaterial.setUniformValue("u_ambientColor", [0.3, 0.3, 0.3, 1.0])
-        self._defaultMaterial.setUniformValue("u_diffuseColor", [0.5, 0.5, 0.5, 1.0])
-        self._defaultMaterial.setUniformValue("u_specularColor", [1.0, 1.0, 1.0, 1.0])
+        self._defaultMaterial.setUniformValue("u_ambientColor", Color(0.3, 0.3, 0.3, 1.0))
+        self._defaultMaterial.setUniformValue("u_diffuseColor", Color(0.5, 0.5, 0.5, 1.0))
+        self._defaultMaterial.setUniformValue("u_specularColor", Color(1.0, 1.0, 1.0, 1.0))
         self._defaultMaterial.setUniformValue("u_shininess", 50.0)
 
         self._selection_buffer = self.createFrameBuffer(128, 128)
@@ -227,6 +306,11 @@ class QtGL2Renderer(Renderer):
                                         Resources.getPath(Resources.ShadersLocation, 'basic.vert'),
                                         Resources.getPath(Resources.ShadersLocation, 'color.frag')
                                    )
+
+        self._handle_material = self.createMaterial(
+                                     Resources.getPath(Resources.ShadersLocation, 'basic.vert'),
+                                     Resources.getPath(Resources.ShadersLocation, 'vertexcolor.frag')
+                                )
 
         self._outline_material = self.createMaterial(
                                       Resources.getPath(Resources.ShadersLocation, 'outline.vert'),
@@ -270,16 +354,25 @@ class QtGL2Renderer(Renderer):
                 indexBuffer = self._createIndexBuffer(mesh)
             indexBuffer.bind()
 
-        material.enableAttribute("a_vertex", Vector, 0)
+        material.enableAttribute("a_vertex", 'vector3f', 0)
+        offset = mesh.getVertexCount() * 3 * 4
 
         if mesh.hasNormals():
-            material.enableAttribute("a_normal", Vector, mesh.getVertexCount() * 3 * 4)
+            material.enableAttribute("a_normal", 'vector3f', offset)
+            offset += mesh.getVertexCount() * 3 * 4
+
+        if mesh.hasColors():
+            material.enableAttribute("a_color", 'vector4f', offset)
+            offset += mesh.getVertexCount() * 4 * 4
 
         if wireframe and hasattr(self._gl, 'glPolygonMode'):
             self._gl.glPolygonMode(self._gl.GL_FRONT_AND_BACK, self._gl.GL_LINE)
 
         if mesh.hasIndices():
-            self._gl.glDrawElements(mode, mesh.getFaceCount() * 3 , self._gl.GL_UNSIGNED_INT, None)
+            if mode == self._gl.GL_TRIANGLES:
+                self._gl.glDrawElements(mode, mesh.getFaceCount() * 3 , self._gl.GL_UNSIGNED_INT, None)
+            else:
+                self._gl.glDrawElements(mode, mesh.getFaceCount(), self._gl.GL_UNSIGNED_INT, None)
         else:
             self._gl.glDrawArrays(mode, 0, mesh.getVertexCount())
 
@@ -299,16 +392,31 @@ class QtGL2Renderer(Renderer):
         buffer = QOpenGLBuffer(QOpenGLBuffer.VertexBuffer)
         buffer.create()
         buffer.bind()
+
+        bufferSize = mesh.getVertexCount() * 3 * 4 # Vertex count * number of components * sizeof(float32)
+        if mesh.hasNormals():
+            bufferSize += mesh.getVertexCount() * 3 * 4 # Vertex count * number of components * sizeof(float32)
+        if mesh.hasColors():
+            bufferSize += mesh.getVertexCount() * 4 * 4 # Vertex count * number of components * sizeof(float32)
+
+        buffer.allocate(bufferSize)
+
+        offset = 0
         vertices = mesh.getVerticesAsByteArray()
+        buffer.write(0, vertices, len(vertices))
+
+        offset += len(vertices)
 
         if mesh.hasNormals():
             normals = mesh.getNormalsAsByteArray()
-            ##Number of vertices * number of components (3 for vertex, 3 for normal) * size of 32-bit float (4)
-            buffer.allocate(mesh.getVertexCount() * 6 * 4)
-            buffer.write(0, vertices, len(vertices))
-            buffer.write(len(vertices), normals, len(normals))
-        else:
-            buffer.allocate(vertices, mesh.getVertexCount() * 3 * 4)
+            buffer.write(offset, normals, len(normals))
+            offset += len(normals)
+
+        if mesh.hasColors():
+            colors = mesh.getColorsAsByteArray()
+            buffer.write(offset, colors, len(colors))
+            offset += len(colors)
+
         buffer.release()
 
         setattr(mesh, vertexBufferProperty, buffer)
@@ -332,4 +440,4 @@ class QtGL2Renderer(Renderer):
         g = (obj_id & 0x00ff0000) >> 16
         b = (obj_id & 0x0000ff00) >> 8
         a = (obj_id & 0x000000ff) >> 0
-        return (r, g, b, a)
+        return Color(r, g, b, a)

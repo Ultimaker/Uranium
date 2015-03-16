@@ -8,6 +8,7 @@ from UM.Event import CallFunctionEvent
 from UM.Signal import Signal, SignalEmitter
 from UM.WorkspaceFileHandler import WorkspaceFileHandler
 from UM.Logger import Logger
+from UM.Preferences import Preferences
 
 import threading
 import argparse
@@ -44,6 +45,14 @@ class Application(SignalEmitter):
         PluginRegistry.addType('logger', Logger.addLogger)
         PluginRegistry.addType('extension', self.addExtension)
 
+        preferences = Preferences.getInstance()
+        preferences.addPreference('general/language', 'en')
+        try:
+            file = Resources.getPath(Resources.PreferencesLocation, self._application_name + '.cfg')
+            preferences.readPreferenceFromFile('general/language', file)
+        except FileNotFoundError:
+            pass
+
         self._controller = Controller(self)
         self._mesh_file_handler = MeshFileHandler()
         self._workspace_file_handler = WorkspaceFileHandler()
@@ -66,7 +75,6 @@ class Application(SignalEmitter):
     
     ##  Function that needs to be overriden by child classes with a list of plugin it needs (see printer application & scanner application)
     def _loadPlugins(self):
-        print("zomg")
         pass
 
     def getArgument(self, name, default = None):

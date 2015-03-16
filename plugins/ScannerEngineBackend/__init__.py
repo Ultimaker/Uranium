@@ -21,7 +21,6 @@ def createCameraImageProvider(engine, scriptEngine):
     return CameraImageProvider.CameraImageProvider()
 
 def register(app):
-    Preferences.addPreference("BackendLocation","../UltiScanTastic/Scanner/bin/Debug/Ultiscantastic")
     qmlRegisterSingletonType(ScannerEngineBackendProxy.ScannerEngineBackendProxy, "UM", 1, 0, "ScannerEngineBackend", createScannerEngineBackendProxy)
     return ScannerEngineBackend.ScannerEngineBackend()
 

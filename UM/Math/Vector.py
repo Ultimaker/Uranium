@@ -116,7 +116,7 @@ class Vector(object):
         return Vector(d[0], d[1], d[2])
 
     def __eq__(self, other):
-        return self._data.all() == other._data.all()
+        return self._data[0] == other._data[0] and self._data[1] == other._data[1] and self._data[2] == other._data[2]
 
     def __add__(self, other):
         v = Vector(data = self._data)
@@ -175,7 +175,7 @@ class Vector(object):
         return v
 
     def __itruediv__(self, other):
-        if type(other) is float:
+        if type(other) is float or type(other) is int:
             self._data /= other
             return self
         else:

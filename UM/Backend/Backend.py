@@ -7,6 +7,7 @@ from UM.PluginObject import PluginObject
 
 import struct
 import subprocess
+import threading
 from time import sleep
 
 
@@ -24,20 +25,32 @@ class Backend(PluginObject, SignalEmitter):
         self._port = 49674
         self._createSocket()
         self._process = None
+        self._backend_log = []
 
     processingProgress = Signal()
-    
+    backendConnected = Signal()
+
     ##   \brief Start the backend / engine.
     #   Runs the engine, this is only called when the socket is fully opend & ready to accept connections
     def startEngine(self):
         try:
+            self._backend_log = []
             self._process = self._runEngineProcess(self.getEngineCommand())
+            t = threading.Thread(target=self._storeOutputToLogThread, args=(self._process.stdout,))
+            t.daemon = True
+            t.start()
+            t = threading.Thread(target=self._storeOutputToLogThread, args=(self._process.stderr,))
+            t.daemon = True
+            t.start()
         except FileNotFoundError as e:
             Logger.log('e', "Unable to find backend executable")
 
     def close(self):
         if self._socket:
             self._socket.close()
+
+    def getLog(self):
+        return self._backend_log
 
     ##  \brief Convert byte array containing 3 floats per vertex
     def convertBytesToVerticeList(self, data):
@@ -75,7 +88,14 @@ class Backend(PluginObject, SignalEmitter):
             su.wShowWindow = subprocess.SW_HIDE
             kwargs['startupinfo'] = su
             kwargs['creationflags'] = 0x00004000 #BELOW_NORMAL_PRIORITY_CLASS
-        return subprocess.Popen(command_list, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, **kwargs)
+        return subprocess.Popen(command_list, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.PIPE, **kwargs)
+
+    def _storeOutputToLogThread(self, handle):
+        while True:
+            line = handle.readline()
+            if line == '':
+                break
+            self._backend_log.append(line)
 
     def _onSocketStateChanged(self, state):
         if state == SignalSocket.ListeningState:
@@ -83,6 +103,7 @@ class Backend(PluginObject, SignalEmitter):
                 self.startEngine()
         elif state == SignalSocket.ConnectedState:
             Logger.log('d', "Backend connected on port %s", self._port)
+            self.backendConnected.emit()
 
     def _onMessageReceived(self):
         message = self._socket.takeNextMessage()
@@ -100,7 +121,9 @@ class Backend(PluginObject, SignalEmitter):
         elif error.errno == 104 or error.errno == 32:
             Logger.log('i', "Backend crashed or closed. Restarting...")
             self._createSocket()
-            self.startEngine()
+        elif error.winerror == 154:
+            Logger.log('i', "Backend crashed or closed. Restarting...")
+            self._createSocket()
         else:
             Logger.log('e', str(error))
 

@@ -1,10 +1,6 @@
 {
     "name": "UltiScanTastic",
     "platform": "ultiscantastic.obj",
-
-    "cura" : {
-	"visible":false
-    },
     "required_plugins": [
         "Console Logger",
         "ScannerBackend"
@@ -41,20 +37,19 @@
                     ]
                 },
                 "calib_board_width": {
-                    "label": "Board width",
+                    "label": "Calibration board width",
                     "type": "int",
                     "default": 4
                 },
                 "calib_board_height": {
-                    "label": "Board height",
+                    "label": "calibration board height",
                     "type": "int",
                     "default": 11
                 },
                 "physical_object_size_calibration_board": {
-                    "label": "Marker distance",
+                    "label": "physical_object_size_calibration_board",
                     "type": "int",
-                    "default": 125,
-		    "visible":false
+                    "default": 125
                 },
                 "calibration_rotation_angle": {
                     "label": "Calibration rotation angle",
@@ -81,7 +76,7 @@
                     "default": 25
                 },
                 "number_of_calibration_boards": {
-                    "label": "Object orientations",
+                    "label": "num calib boards",
                     "type": "int",
                     "default": 10,
                     "min_value": 0,
@@ -92,14 +87,14 @@
                     "max_value": 250,
                     "children": {
                         "number_of_calibration_boards_scanner": {
-                            "label": "Object orientations scanner",
+                            "label": "num calib boards scanner",
                             "type": "int",
                             "default": 10,
                             "min_value": 0,
                             "max_value": 250
                         },
                         "number_of_calibration_boards_platform": {
-                            "label": "Object orientations platform",
+                            "label": "num calib boards platform",
                             "type": "int",
                             "default": 10,
                             "active_if": {
@@ -110,6 +105,22 @@
                             "max_value": 250
                         }
                     }
+                }
+            }
+        },
+        "stitching": {
+            "label": "Stitching",
+            "visible": true,
+            "settings": {
+                "icp_correspondance_distance": {
+                    "label": "Correspondence distance",
+                    "type": "double",
+                    "default": 5
+                },
+                "global_correspondance_distance": {
+                    "label": "Correspondence distance",
+                    "type": "double",
+                    "default": 5
                 }
             }
         },
@@ -155,7 +166,7 @@
                 },
                 "reconstruction_m": {
                     "type": "int",
-                    "default": 35
+                    "default": 50
                 },
                 "reconstruction_b": {
                     "type": "double",
@@ -175,14 +186,14 @@
                         "value": "Grey code"
                     }
                 },
-		"sor_neighbours":{
+                "sor_neighbours": {
                     "type": "int",
-                    "default": 50,
+                    "default": 75,
                     "label": "Statistical outlier removal neighbours"
                 },
-		"sor_std":{
+                "sor_std": {
                     "type": "double",
-                    "default": 1,
+                    "default": 0.4,
                     "label": "sor std"
                 },
                 "scan_min_distance": {

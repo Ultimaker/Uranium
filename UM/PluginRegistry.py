@@ -84,12 +84,12 @@ class PluginRegistry(object):
             self._plugins[id] = plugin
             self.addActivePlugin(id)
             Logger.log('i', 'Loaded plugin %s', id)
-        except PluginError as e:
-            Logger.log('e', str(e))
-        except AttributeError as e:
-            Logger.log('e', str(e))
         except KeyError as e:
+            Logger.log('e', 'Error loading plugin %s:', id)
             Logger.log('e', 'Unknown plugin type: %s', str(e))
+        except Exception as e:
+            Logger.log('e', 'Error loading plugin %s:', id)
+            Logger.log('e', str(e))
 
     ##  Load all plugins matching a certain set of metadata
     #   \param metaData \type{dict} The metaData that needs to be matched.

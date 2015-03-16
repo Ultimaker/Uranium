@@ -20,8 +20,8 @@ class Platform(SceneNode.SceneNode):
                 Resources.getPath(Resources.ShadersLocation, 'platform.frag')
             )
             self._material.setUniformValue("u_ambientColor", [0.3, 0.3, 0.3, 1.0])
-            self._material.setUniformValue("u_diffuseColor", [0.5, 0.5, 0.5, 1.0])
-            self._material.setUniformValue('u_opacity', 0.9)
+            self._material.setUniformValue("u_diffuseColor", [1.0, 1.0, 1.0, 1.0])
+            self._material.setUniformValue('u_opacity', 0.5)
 
         if self.getMeshData():
             renderer.queueNode(self, material = self._material, transparent = True)

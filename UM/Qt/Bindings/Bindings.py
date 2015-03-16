@@ -14,6 +14,7 @@ from UM.Qt.Bindings.ResourcesProxy import ResourcesProxy
 from . import OperationStackProxy
 from . import JobsModel
 from . import MeshFileHandlerProxy
+from . import PreferencesProxy
 
 class Bindings:
     @classmethod
@@ -61,3 +62,4 @@ class Bindings:
         qmlRegisterSingletonType(ResourcesProxy, "UM", 1, 0, "Resources", Bindings.createResourcesProxy)
         qmlRegisterSingletonType(OperationStackProxy.OperationStackProxy, 'UM', 1, 0, 'OperationStack', Bindings.createOperationStackProxy)
         qmlRegisterSingletonType(MeshFileHandlerProxy.MeshFileHandlerProxy, 'UM', 1, 0, 'MeshFileHandler', MeshFileHandlerProxy.createMeshFileHandlerProxy)
+        qmlRegisterSingletonType(PreferencesProxy.PreferencesProxy, 'UM', 1, 0, 'Preferences', PreferencesProxy.createPreferencesProxy)

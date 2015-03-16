@@ -19,9 +19,13 @@ Installing Qt
 - sudo apt-get install qtdeclarative5-dialogs-plugin
 - sudo apt-get install qtdeclarative5-qtquick2-plugin qtdeclarative5-controls-plugin qtdeclarative5-quicklayouts-plugin
 
+Installing PluggableCura dependencies on Windows
+-------------
+- Install and build SIP according to the instructions on http://pyqt.sourceforge.net/Docs/sip4/installation.html
+- Install the PyQt5 package from http://www.riverbankcomputing.com/software/pyqt/download5
 
 Run
 ---
 1. navigate to PluggableCura
 2. execute
-PYTHONPATH=.../libArcus/python:. python3 printer/printer.py # that is, we include libArcus and the current directy in the searchpath
+PYTHONPATH=../libArcus/python:. python3 printer/printer.py # that is, we include libArcus and the current directy in the searchpath

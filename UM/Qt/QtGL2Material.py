@@ -1,9 +1,10 @@
-from PyQt5.QtGui import QOpenGLShader, QOpenGLShaderProgram, QVector2D, QVector3D, QVector4D, QMatrix4x4
+from PyQt5.QtGui import QOpenGLShader, QOpenGLShaderProgram, QVector2D, QVector3D, QVector4D, QMatrix4x4, QColor
 from UM.View.Material import Material
 from UM.Logger import Logger
 
 from UM.Math.Vector import Vector
 from UM.Math.Matrix import Matrix
+from UM.Math.Color import Color
 
 class QtGL2Material(Material):
     def __init__(self, renderer):
@@ -70,12 +71,16 @@ class QtGL2Material(Material):
         if attribute == -1:
             return
 
-        if type is int:
+        if type is 'int':
             self._shader_program.setAttributeBuffer(attribute, self._gl.GL_INT, offset, 1, stride)
-        elif type is float:
+        elif type is 'float':
             self._shader_program.setAttributeBuffer(attribute, self._gl.GL_FLOAT, offset, 1, stride)
-        elif type is Vector:
+        elif type is 'vector2f':
+            self._shader_program.setAttributeBuffer(attribute, self._gl.GL_FLOAT, offset, 2, stride)
+        elif type is 'vector3f':
             self._shader_program.setAttributeBuffer(attribute, self._gl.GL_FLOAT, offset, 3, stride)
+        elif type is 'vector4f':
+            self._shader_program.setAttributeBuffer(attribute, self._gl.GL_FLOAT, offset, 4, stride)
 
         self._shader_program.enableAttributeArray(attribute)
 
@@ -120,6 +125,8 @@ class QtGL2Material(Material):
             self._shader_program.setUniformValue(uniform, QVector3D(value.x, value.y, value.z))
         elif type(value) is Matrix:
             self._shader_program.setUniformValue(uniform, self._matrixToQMatrix4x4(value))
+        elif type(value) is Color:
+            self._shader_program.setUniformValue(uniform, QColor(value.r * 255, value.g * 255, value.b * 255, value.a * 255))
         elif type(value) is list and len(value) is 2:
             self._shader_program.setUniformValue(uniform, QVector2D(value[0], value[1]))
         elif type(value) is list and len(value) is 3:

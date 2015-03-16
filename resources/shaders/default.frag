@@ -19,7 +19,7 @@ void main()
     highp vec3 lightDir = normalize(u_lightPosition - v_vertex);
 
     /* Diffuse Component */
-    highp float NdotL = clamp(dot(normal, lightDir), 0.0, 1.0);
+    highp float NdotL = clamp(abs(dot(normal, lightDir)), 0.0, 1.0);
     finalColor += (NdotL * u_diffuseColor);
 
     /* Specular Component */
@@ -29,6 +29,6 @@ void main()
     highp float NdotR = clamp(dot(viewVector, reflectedLight), 0.0, 1.0);
     finalColor += pow(NdotR, u_shininess) * u_specularColor;
 
-    finalColor.a = 1.0;
     gl_FragColor = finalColor;
+    gl_FragColor.a = 1.0;
 }

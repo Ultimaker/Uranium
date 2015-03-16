@@ -69,10 +69,18 @@ class MeshListModel(ListModel):
             if self.items[index]["key"] == key:
                 for node in Application.getInstance().getController().getScene().getRoot().getAllChildren():
                     if id(node) == key:
-                        if node not in Selection.getAllSelectedObjects(): #Group node already selected
+                        if node not in Selection.getAllSelectedObjects(): #node already selected
                             Selection.add(node)
+                            if self.items[index]["depth"] == 1: #Its a group node
+                                for child_node in node.getChildren(): 
+                                    if child_node not in Selection.getAllSelectedObjects(): #Set all children to parent state (if they arent already)
+                                        Selection.add(child_node) 
                         else:
                             Selection.remove(node)
+                            if self.items[index]["depth"] == 1: #Its a group
+                                for child_node in node.getChildren():
+                                    if child_node in Selection.getAllSelectedObjects():
+                                        Selection.remove(child_node)    
                            
         all_children_selected = True
         #Check all group nodes to see if all their children are selected (if so, they also need to be selected!)
@@ -85,10 +93,10 @@ class MeshListModel(ListModel):
                                 if not Selection.isSelected(child_node):
                                     all_children_selected = False #At least one of its children is not selected, dont change state
                                     break 
-                            #All children are selected (ergo it is also selected!)
-                            #self.setProperty(index,"selected", True)
                             if all_children_selected:
                                 Selection.add(node)
+                            else:
+                                Selection.remove(node)
         #Force update                  
         self.updateList(Application.getInstance().getController().getScene().getRoot())
     
