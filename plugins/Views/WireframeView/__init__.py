@@ -6,7 +6,8 @@ def getMetaData():
             "name": "Wireframe View"
         },
         'view': {
-            'name': 'Wireframe'
+            'name': 'Wireframe',
+            'visible': False
         }
     }
 
