@@ -4,6 +4,10 @@ def getMetaData():
         'type': 'mesh_writer',
         'plugin': {
             "name": "STL Writer"
+        },
+        'mesh_writer': {
+            'extension': 'stl',
+            'description': 'STL File'
         }
     }
 
