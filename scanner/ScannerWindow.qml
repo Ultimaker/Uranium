@@ -237,6 +237,7 @@ UM.MainWindow
                                 UM.ToolbarData.setWizardState(true);
                                 firstTimeStartup.opacity = 0;
                                 firstTimeStartup.height = 0;
+                                
                             }
                         }
                     }
@@ -257,11 +258,13 @@ UM.MainWindow
                         WizardButton
                         {
                             text:"Start advanced"
+                            
                             onClicked:
                             {
                                 UM.ToolbarData.setWizardState(false);
                                 firstTimeStartup.opacity = 0;
                                 firstTimeStartup.height = 0;
+                                console.log("clicked")
                             }
                         }
                     }
