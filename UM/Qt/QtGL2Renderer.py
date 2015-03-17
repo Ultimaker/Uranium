@@ -404,6 +404,8 @@ class QtGL2Renderer(Renderer):
             bufferSize += mesh.getVertexCount() * 3 * 4 # Vertex count * number of components * sizeof(float32)
         if mesh.hasColors():
             bufferSize += mesh.getVertexCount() * 4 * 4 # Vertex count * number of components * sizeof(float32)
+        if mesh.hasUVCoordinates():
+            bufferSize += mesh.getVertexCount() * 2 * 4 # Vertex count * number of components * sizeof(float32)
 
         buffer.allocate(bufferSize)
 
