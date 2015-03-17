@@ -70,6 +70,17 @@ class Scene(SignalEmitter):
     #   \param object The object that triggered the change.
     sceneChanged = Signal()
 
+    ##  Find an object by id.
+    #
+    #   \param object_id The id of the object to search for, as returned by the python id() method.
+    #
+    #   \return The object if found, or None if not.
+    def findObject(self, object_id):
+        for node in BreadthFirstIterator(self._root):
+            if id(node) == object_id:
+                return node
+        return None
+
     ## private:
     def _findCamera(self, name):
         for node in BreadthFirstIterator(self._root):
