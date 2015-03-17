@@ -6,6 +6,8 @@ from UM.Signal import Signal, SignalEmitter
 import numpy
 import numpy.linalg
 from enum import Enum
+vertexBufferProperty = '__qtgl2_vertex_buffer'
+indexBufferProperty = '__qtgl2_index_buffer'
 
 
 class MeshType(Enum):
@@ -31,6 +33,16 @@ class MeshData(SignalEmitter):
         self._vertex_count = len(self._vertices) if self._vertices is not None else 0
         self._face_count = len(self._indices) if self._indices is not None else 0
         self._type = MeshType.faces
+        self.dataChanged.connect(self._resetVertexBuffer)
+    
+    dataChanged = Signal()
+    
+    
+    def _resetVertexBuffer(self):
+        try:
+            delattr(self, vertexBufferProperty)
+        except:
+            pass
     
     ##  Set the type of the mesh 
     #   \param mesh_type MeshType enum 
@@ -61,7 +73,25 @@ class MeshData(SignalEmitter):
             return self._vertices[index]
         except IndexError:
             return None
-
+    
+    #   Remove vertex by index or list of indices
+    #   \param index Either a single index or a list of indices to be removed.
+    def removeVertex(self, index):
+        print("deleting", index)
+        try: 
+            #print("deleting ", index)
+            #print( self._vertices) 
+            self._vertices = numpy.delete(self._vertices, index,0)
+            if self.hasNormals():
+               self._normals = numpy.delete(self._normals,index,0)
+            #print( self._vertices)    
+            self._vertex_count = len(self._vertices)
+        except IndexError:
+            print(" failed")
+            pass
+        print("after " ,len(self._vertices))
+        self.dataChanged.emit()
+        
     ##  Return whether this mesh has vertex normals.
     def hasNormals(self):
         return self._normals is not None

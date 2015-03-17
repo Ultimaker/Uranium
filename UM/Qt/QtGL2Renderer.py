@@ -70,6 +70,23 @@ class QtGL2Renderer(Renderer):
         self._viewportWidth = width
         self._viewportHeight = height
 
+    def getSelectionColorAtCoorindateRadius(self,x,y,radius):
+        if not self._selection_image:
+            return None
+        px = (0.5 + x / 2.0) * self._viewportWidth
+        py = (0.5 + y / 2.0) * self._viewportHeight
+        samples = []
+        for sx in range(-radius, radius):
+            if px + sx < 0 or px + sx > (self._selection_image.width() - 1):
+                continue
+            for sy in range(-radius, radius):
+                if py + sy < 0 or py + sy > (self._selection_image.height() - 1):
+                    continue
+
+                pixel = self._selection_image.pixel(px + sx, py + sy)
+                samples.append(Color.fromARGB(pixel))
+        return samples
+
     def getSelectionColorAtCoordinate(self,x,y):
         if not self._selection_image:
             return None
