@@ -77,7 +77,6 @@ class MeshData(SignalEmitter):
     #   Remove vertex by index or list of indices
     #   \param index Either a single index or a list of indices to be removed.
     def removeVertex(self, index):
-        print("deleting", index)
         try: 
             #print("deleting ", index)
             #print( self._vertices) 
@@ -87,9 +86,7 @@ class MeshData(SignalEmitter):
             #print( self._vertices)    
             self._vertex_count = len(self._vertices)
         except IndexError:
-            print(" failed")
             pass
-        print("after " ,len(self._vertices))
         self.dataChanged.emit()
         
     ##  Return whether this mesh has vertex normals.

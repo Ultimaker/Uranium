@@ -85,6 +85,9 @@ class QtGL2Renderer(Renderer):
 
                 pixel = self._selection_image.pixel(px + sx, py + sy)
                 samples.append(Color.fromARGB(pixel))
+                
+                
+        self._selection_image = None #HACK: Deletes the selection image, so a new set will only be selected if the image is rerendered.
         return samples
 
     def getSelectionColorAtCoordinate(self,x,y):
@@ -208,7 +211,7 @@ class QtGL2Renderer(Renderer):
             self._gl.glDisable(self._gl.GL_BLEND)
             self._selection_map.clear()
             for node in selectable_nodes:
-                if type(node) is PointCloudNode:
+                if type(node) is PointCloudNode: #Pointcloud node sets vertex color (to be used for point precise selection)
                     self._renderItem({
                         'node': node,
                         'material': self._handle_material,
