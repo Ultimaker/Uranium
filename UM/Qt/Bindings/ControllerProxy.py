@@ -1,4 +1,4 @@
-from PyQt5.QtCore import QObject, QCoreApplication, pyqtSlot, QUrl
+from PyQt5.QtCore import QObject, QCoreApplication, pyqtSlot, QUrl, pyqtSignal
 
 from UM.Application import Application
 from UM.Scene.SceneNode import SceneNode
@@ -14,6 +14,8 @@ class ControllerProxy(QObject):
     def __init__(self, parent = None):
         super().__init__(parent)
         self._controller = Application.getInstance().getController()
+        self._controller.contextMenuRequested.connect(self._onContextMenuRequested)
+        self._renderer = Application.getInstance().getRenderer()
 
     @pyqtSlot(str)
     def setActiveView(self, view):
@@ -49,3 +51,13 @@ class ControllerProxy(QObject):
     def _loadWorkspaceFinished(self,job):
         node = job.getResult()
         self._controller.getScene().setRoot(node)
+
+    contextMenuRequested = pyqtSignal('quint64', arguments=['id'])
+
+    def _onContextMenuRequested(self, x, y):
+        id = self._renderer.getIdAtCoordinate(x, y)
+
+        if id:
+            self.contextMenuRequested.emit(id)
+        else:
+            self.contextMenuRequested.emit(0)
