@@ -180,12 +180,13 @@ class Controller(SignalEmitter):
         if self._camera_tool and self._camera_tool.event(event):
             return
 
+        if self._selection_tool and self._selection_tool.event(event):
+            return
+
         # If we are not doing camera control, pass the event to the active tool.
         if self._active_tool and self._active_tool.event(event):
             return
 
-        if self._selection_tool:
-            self._selection_tool.event(event)
 
     ##  Set the tool used for handling camera controls
     def setCameraTool(self, tool):
