@@ -5,7 +5,8 @@ from UM.Scene.SceneNode import SceneNode
 from UM.Scene.BoxRenderer import BoxRenderer
 from UM.Operations.AddSceneNodeOperation import AddSceneNodeOperation
 from UM.Scene.Selection import Selection
-from UM.Operations.RemoveSceneNodesOperation import RemoveSceneNodesOperation
+from UM.Operations.RemoveSceneNodeOperation import RemoveSceneNodeOperation
+from UM.Operations.GroupedOperation import GroupedOperation
 from UM.LoadWorkspaceJob import LoadWorkspaceJob
 
 import os.path
@@ -30,7 +31,9 @@ class ControllerProxy(QObject):
         if not Selection.hasSelection():
             return
 
-        op = RemoveSceneNodesOperation(Selection.getAllSelectedObjects())
+        op = GroupedOperation()
+        for node in Selection.getAllSelectedObjects():
+            op.addOperation(RemoveSceneNodeOperation(node))
         op.push()
         Selection.clear()
 
