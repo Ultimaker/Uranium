@@ -9,7 +9,7 @@ def getMetaData():
         },
         'mesh_reader': {
             'extension': 'obj',
-            'description': 'LightWave OBJ File'
+            'description': 'Wavefront OBJ File'
         }
     }
 

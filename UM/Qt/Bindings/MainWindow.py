@@ -89,9 +89,10 @@ class MainWindow(QQuickWindow):
         w = event.size().width() / 2
         h = event.size().height() / 2
         for camera in self._app.getController().getScene().getAllCameras():
+            camera.setViewportSize(w,h)
             proj = Matrix()
             if camera.isPerspective():
-                proj.setPerspective(45, w/h, 1, 500)
+                proj.setPerspective(30, w/h, 1, 500)
             else:
                 proj.setOrtho(-w, w, -h, h, -500, 500)
             camera.setProjectionMatrix(proj)

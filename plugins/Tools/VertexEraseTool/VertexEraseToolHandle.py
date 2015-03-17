@@ -4,7 +4,7 @@ from UM.Mesh.MeshData import MeshData
 from UM.Mesh.MeshBuilder import MeshBuilder
 from UM.Math.Vector import Vector
 
-class VertexSelectionToolHandle(ToolHandle):
+class VertexEraseToolHandle(ToolHandle):
     def __init__(self, parent = None):
         super().__init__(parent)
 
@@ -14,14 +14,12 @@ class VertexSelectionToolHandle(ToolHandle):
 
         #self.setPointMesh(lines)
         mb = MeshBuilder()
-        mb.addCube(
-            width = 1,
-            height = 1,
-            depth = 1,
-            center = Vector(0, 0, 0),
-            color = ToolHandle.XAxisColor
+        mb.addArc(
+            radius = 2,
+            axis = Vector.Unit_Z,
+            color = ToolHandle.YAxisColor
         )
-      
+            
 
         self.setLineMesh(mb.getData())
     

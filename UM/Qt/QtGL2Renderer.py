@@ -365,6 +365,10 @@ class QtGL2Renderer(Renderer):
             material.enableAttribute("a_color", 'vector4f', offset)
             offset += mesh.getVertexCount() * 4 * 4
 
+        if mesh.hasUVCoordinates():
+            material.enableAttribute("a_uvs", 'vector2f', offset)
+            offset += mesh.getVertexCount() * 2 * 4
+
         if wireframe and hasattr(self._gl, 'glPolygonMode'):
             self._gl.glPolygonMode(self._gl.GL_FRONT_AND_BACK, self._gl.GL_LINE)
 
@@ -381,6 +385,8 @@ class QtGL2Renderer(Renderer):
 
         material.disableAttribute("a_vertex")
         material.disableAttribute("a_normal")
+        material.disableAttribute("a_color")
+        material.disableAttribute("a_uvs")
         vertexBuffer.release()
 
         if mesh.hasIndices():
@@ -416,6 +422,11 @@ class QtGL2Renderer(Renderer):
             colors = mesh.getColorsAsByteArray()
             buffer.write(offset, colors, len(colors))
             offset += len(colors)
+
+        if mesh.hasUVCoordinates():
+            uvs = mesh.getUVCoordinatesAsByteArray()
+            buffer.write(offset, uvs, len(uvs))
+            offset += len(uvs)
 
         buffer.release()
 
