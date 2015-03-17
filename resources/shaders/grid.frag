@@ -7,6 +7,8 @@ varying highp vec2 v_uvs;
 
 void main()
 {
-//     gl_FragColor = v_color;
-    gl_FragColor = vec4(v_uvs.x, v_uvs.y, 0.0, 1.0);
+	if (mod(floor(v_uvs.x / 10.0) - floor(v_uvs.y / 10.0), 2.0) < 1.0)
+		gl_FragColor = u_gridColor0;
+	else
+		gl_FragColor = u_gridColor1;
 }
