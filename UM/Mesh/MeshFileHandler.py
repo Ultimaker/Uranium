@@ -22,6 +22,7 @@ class MeshFileHandler(object):
             for reader in self._mesh_readers:
                 result = reader.read(file_name, storage_device)
                 if(result is not None):
+                    result.setFileName(file_name)
                     return result
 
         except OSError as e:
