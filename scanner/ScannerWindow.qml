@@ -232,6 +232,7 @@ UM.MainWindow
                         WizardButton
                         {
                             text:"Start wizard"
+                            visible: firstTimeStartup.opacity
                             onClicked:
                             {
                                 UM.ToolbarData.setWizardState(true);
@@ -258,13 +259,12 @@ UM.MainWindow
                         WizardButton
                         {
                             text:"Start advanced"
-                            
+                            visible: firstTimeStartup.opacity
                             onClicked:
                             {
                                 UM.ToolbarData.setWizardState(false);
                                 firstTimeStartup.opacity = 0;
                                 firstTimeStartup.height = 0;
-                                console.log("clicked")
                             }
                         }
                     }
