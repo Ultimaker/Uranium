@@ -3,7 +3,7 @@ from PyQt5.QtCore import Qt, QCoreApplication, pyqtSlot,QUrl
 from UM.Qt.ListModel import ListModel
 from UM.Application import Application
 from UM.Scene.Selection import Selection
-from UM.Operations.RemoveSceneNodesOperation import RemoveSceneNodesOperation
+from UM.Operations.RemoveSceneNodeOperation import RemoveSceneNodeOperation
 from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator
 
 import threading
@@ -125,7 +125,7 @@ class MeshListModel(ListModel):
     def removeMesh(self, key):
         for node in Application.getInstance().getController().getScene().getRoot().getAllChildren():
             if id(node) == key:
-                op = RemoveSceneNodesOperation([node])
+                op = RemoveSceneNodeOperation(node)
                 op.push()
                 break
 

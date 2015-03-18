@@ -33,6 +33,7 @@ class MeshData(SignalEmitter):
         self._vertex_count = len(self._vertices) if self._vertices is not None else 0
         self._face_count = len(self._indices) if self._indices is not None else 0
         self._type = MeshType.faces
+		self._file_name = None
         self.dataChanged.connect(self._resetVertexBuffer)
     
     dataChanged = Signal()
@@ -111,6 +112,12 @@ class MeshData(SignalEmitter):
 
     def hasUVCoordinates(self):
         return self._uvs is not None
+
+    def getFileName(self):
+        return self._file_name
+
+    def setFileName(self, file_name):
+        self._file_name = file_name
 
     ##  Transform the meshdata by given Matrix
     #   \param transformation 4x4 homogenous transformation matrix

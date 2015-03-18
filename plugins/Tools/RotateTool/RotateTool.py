@@ -1,5 +1,5 @@
 from UM.Tool import Tool
-from UM.Event import Event
+from UM.Event import Event, MouseEvent
 from UM.Application import Application
 from UM.Scene.ToolHandle import ToolHandle
 from UM.Scene.Selection import Selection
@@ -27,6 +27,9 @@ class RotateTool(Tool):
             self._handle.setPosition(Selection.getSelectedObject(0).getGlobalPosition())
 
         if event.type == Event.MousePressEvent:
+            if not MouseEvent.LeftButton in event.buttons:
+                return False
+
             id = self._renderer.getIdAtCoordinate(event.x, event.y)
             if not id:
                 return
@@ -86,10 +89,11 @@ class RotateTool(Tool):
             return True
 
         if event.type == Event.MouseReleaseEvent:
-            self._target = None
-            self._drag = False
-            self._locked_axis = None
-            return True
+            if self._drag:
+                self._target = None
+                self._drag = False
+                self._locked_axis = None
+                return True
 
         if event.type == Event.ToolDeactivateEvent:
             self._handle.setParent(None)

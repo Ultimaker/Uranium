@@ -168,7 +168,7 @@ class SceneNode(SignalEmitter):
     ##  \brief Returns the local transformation with respect to its parent. (from parent to local)
     #   \retuns transformation 4x4 (homogenous) matrix
     def getLocalTransformation(self):
-        return self._transformation
+        return copy(self._transformation)
 
     ##  \brief Sets the local transformation with respect to its parent. (from parent to local)
     #   \param transformation 4x4 (homogenous) matrix
