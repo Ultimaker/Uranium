@@ -87,7 +87,10 @@ class SceneNode(SignalEmitter):
     ##  \brief Set the mesh of this node/object
     #   \param mesh_data MeshData object
     def setMeshData(self, mesh_data):
+        if self._mesh_data:
+            self._mesh_data.dataChanged.disconnect(self.meshDataChanged)
         self._mesh_data = mesh_data
+        self._mesh_data.dataChanged.connect(self.meshDataChanged)
         self._resetAABB()
         self.meshDataChanged.emit(self)
 
