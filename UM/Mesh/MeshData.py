@@ -33,7 +33,7 @@ class MeshData(SignalEmitter):
         self._vertex_count = len(self._vertices) if self._vertices is not None else 0
         self._face_count = len(self._indices) if self._indices is not None else 0
         self._type = MeshType.faces
-		self._file_name = None
+        self._file_name = None
         self.dataChanged.connect(self._resetVertexBuffer)
     
     dataChanged = Signal()

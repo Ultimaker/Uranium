@@ -39,7 +39,7 @@ class VertexEraseTool(Tool):
             self._handle.setPosition(Vector(fov_tan * event.x * (0.5 * camera.getViewportWidth()) , fov_tan * -event.y * (0.5 * camera.getViewportHeight()),-10))
             
             if self._pressed:
-                pixel_colors = self._renderer.getSelectionColorAtCoorindateRadius(event.x,event.y,10)
+                pixel_colors = self._renderer.getSelectionColorAtCoorindateRadius(event.x,event.y,15)
                 if pixel_colors:
                     for pixel_color in pixel_colors:
                         if pixel_color.a:
