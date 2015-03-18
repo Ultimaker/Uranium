@@ -75,17 +75,20 @@ class QtGL2Renderer(Renderer):
             return None
         px = (0.5 + x / 2.0) * self._viewportWidth
         py = (0.5 + y / 2.0) * self._viewportHeight
+        squared_radius = radius * radius
         samples = []
         for sx in range(-radius, radius):
+            squared_sx = sx*sx
             if px + sx < 0 or px + sx > (self._selection_image.width() - 1):
                 continue
             for sy in range(-radius, radius):
+                squared_sy = sy * sy
                 if py + sy < 0 or py + sy > (self._selection_image.height() - 1):
                     continue
+                if squared_sx + squared_sy < squared_radius:
+                    pixel = self._selection_image.pixel(px + sx, py + sy)
+                    samples.append(Color.fromARGB(pixel))
 
-                pixel = self._selection_image.pixel(px + sx, py + sy)
-                samples.append(Color.fromARGB(pixel))
-                
                 
         self._selection_image = None #HACK: Deletes the selection image, so a new set will only be selected if the image is rerendered.
         return samples
