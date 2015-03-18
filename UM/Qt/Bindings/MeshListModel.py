@@ -5,7 +5,7 @@ from UM.Application import Application
 from UM.Scene.Selection import Selection
 from UM.Operations.RemoveSceneNodeOperation import RemoveSceneNodeOperation
 from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator
-
+from UM.Scene.Camera import Camera
 import threading
 
 class MeshListModel(ListModel):
@@ -41,7 +41,7 @@ class MeshListModel(ListModel):
         self.clear()
         for group_node in self._scene.getRoot().getChildren():
             for node in DepthFirstIterator(group_node):
-                if node.getMeshData() is not None or node.hasChildren():
+                if node.getMeshData() is not None or node.hasChildren() and type(node) is not Camera:
                     parent_key = 0
                     if group_node is not node:
                         parent_key =  id(group_node)
