@@ -55,7 +55,8 @@ class VertexEraseTool(Tool):
             self._scene.acquireLock()
             for entry in self._coud_index_dict:
                 Application.getInstance().getCloudNodeByIndex(entry).getMeshData().removeVertex(self._coud_index_dict[entry])
-            self._scene.releaseLock()        
+            self._scene.releaseLock()
+            self._renderer.resetSelectionImage() #Deletes the selection image, so a new set will only be selected if the image is rerendered.
                     #print()
                 #print(pixel_dict)
         

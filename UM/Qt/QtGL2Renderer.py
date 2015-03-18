@@ -70,6 +70,9 @@ class QtGL2Renderer(Renderer):
         self._viewportWidth = width
         self._viewportHeight = height
 
+    def resetSelectionImage(self):
+        self._selection_image = None
+        
     def getSelectionColorAtCoorindateRadius(self,x,y,radius):
         if not self._selection_image:
             return None
@@ -88,9 +91,6 @@ class QtGL2Renderer(Renderer):
                 if squared_sx + squared_sy < squared_radius:
                     pixel = self._selection_image.pixel(px + sx, py + sy)
                     samples.append(Color.fromARGB(pixel))
-
-                
-        self._selection_image = None #HACK: Deletes the selection image, so a new set will only be selected if the image is rerendered.
         return samples
 
     def getSelectionColorAtCoordinate(self,x,y):
