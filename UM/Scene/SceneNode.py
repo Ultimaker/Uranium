@@ -232,7 +232,7 @@ class SceneNode(SignalEmitter):
         if not self._enabled:
             return
 
-        self._transformation.setByTranslation(position)
+        self._transformation.setTranslation(position)
         self._transformChanged()
 
     def getPosition(self):
