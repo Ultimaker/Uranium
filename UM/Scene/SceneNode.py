@@ -162,9 +162,9 @@ class SceneNode(SignalEmitter):
     def getGlobalTransformation(self):
 
         if self._parent is None:
-            return self._transformation
+            return copy(self._transformation)
         else:
-            global_transformation = deepcopy(self._transformation)
+            global_transformation = copy(self._transformation)
             global_transformation.preMultiply(self._parent.getGlobalTransformation())
             return global_transformation
 
