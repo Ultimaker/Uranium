@@ -1,6 +1,9 @@
 from UM.Event import MouseEvent
 from UM.Tool import Tool
 from UM.Math.Vector import Vector
+from UM.Math.Matrix import Matrix
+from UM.Math.Ray import Ray
+from UM.Math.Plane import Plane
 from UM.Event import Event
 from UM.Application import Application
 from UM.Scene.BoxRenderer import BoxRenderer
@@ -9,6 +12,7 @@ from UM.Scene.Selection import Selection
 from UM.Scene.Iterator.BreadthFirstIterator import BreadthFirstIterator
 from . import VertexEraseToolHandle
 import math
+import numpy
 
 from PyQt5.QtGui import qAlpha, qRed, qGreen, qBlue
 
@@ -34,10 +38,31 @@ class VertexEraseTool(Tool):
             self._coud_index_dict = {}
             camera = self.getController().getScene().getActiveCamera()
             self._handle.setParent(camera)
+            
+            ## Ray castin from camera. Not using camera function as we need it in local space, not global.
             field_of_view = camera.getViewportWidth() / camera.getViewportHeight()
             fov_tan = math.tan(math.radians(field_of_view) / 2.)
-            self._handle.setPosition(Vector(fov_tan * event.x * (0.5 * camera.getViewportWidth()) , fov_tan * -event.y * (0.5 * camera.getViewportHeight()),-10))
             
+            invp = numpy.linalg.inv(camera.getProjectionMatrix().getData().copy())
+            invv = Matrix().getData()
+
+            near = numpy.array([event.x, -event.y, -1.0, 1.0], dtype=numpy.float32)
+            near = numpy.dot(invp, near)
+            near = numpy.dot(invv, near)
+            near = near[0:3] / near[3]
+
+            far = numpy.array([event.x, -event.y, 1.0, 1.0], dtype = numpy.float32)
+            far = numpy.dot(invp, far)
+            far = numpy.dot(invv, far)
+            far = far[0:3] / far[3]
+
+            dir = far - near
+            dir /= numpy.linalg.norm(dir)   
+            #Plane on which the circle lies.
+            plane = Plane(Vector(0, 0, 1),100)
+            ray = Ray(Vector(0,0,0), Vector(dir[0],dir[1],dir[2]))
+            intersection_distance = plane.intersectsRay(ray) #Intersect
+            self._handle.setPosition(ray.getPointAlongRay(intersection_distance).flip()) #Use (flipped) intersection.
             if self._pressed:
                 pixel_colors = self._renderer.getSelectionColorAtCoorindateRadius(event.x,event.y,15)
                 if pixel_colors:
