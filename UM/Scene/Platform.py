@@ -41,5 +41,4 @@ class Platform(SceneNode.SceneNode):
             self._texture = self._settings.getPlatformTexture()
 
             if self._material and self._texture:
-                print(self._texture)
                 self._material.setUniformTexture('u_texture', Resources.getPath(Resources.ImagesLocation, self._texture))
