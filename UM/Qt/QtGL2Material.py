@@ -68,10 +68,9 @@ class QtGL2Material(Material):
 
         index = self._uniform_indices[name]
 
-        if not index in self._textures:
-            texture = QOpenGLTexture(QImage(file).mirrored())
-            texture.setMinMagFilters(QOpenGLTexture.Linear, QOpenGLTexture.Linear)
-            self._textures[index] = texture
+        texture = QOpenGLTexture(QImage(file).mirrored())
+        texture.setMinMagFilters(QOpenGLTexture.Linear, QOpenGLTexture.Linear)
+        self._textures[index] = texture
 
         self._uniform_values[index] = 1
 
