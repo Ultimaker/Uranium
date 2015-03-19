@@ -2,7 +2,7 @@
     "id": "ultimaker2go",
     "name": "Ultimaker 2 Go",
     "icon": "icon_ultimaker2.png",
-    "platform": "ultimaker2go_platform.stl",
+    "platform": "ultimaker2go_platform.obj",
     "platform_texture": "Ultimaker2backplate.png",
 
     "inherits": "ultimaker2.json",
