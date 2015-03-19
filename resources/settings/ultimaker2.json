@@ -22,6 +22,13 @@
         "machine_nozzle_gantry_distance": { "default": 55 },
         "machine_nozzle_offset_x_1": { "default": 18.0 },
         "machine_nozzle_offset_y_1": { "default": 0.0 },
-        "machine_gcode_flavor": { "default": "UltiGCode" }
+        "machine_gcode_flavor": { "default": "UltiGCode" },
+        "machine_disallowed_areas": { "default": [
+            [[-115.0,  112.5], [ -82.0,  112.5], [ -84.0,  104.5], [-115.0,  104.5]],
+            [[ 115.0,  112.5], [ 115.0,  104.5], [ 110.0,  104.5], [ 108.0,  112.5]],
+            [[-115.0, -112.5], [-115.0, -104.5], [ -84.0, -104.5], [ -82.0, -112.5]],
+            [[ 115.0, -112.5], [ 108.0, -112.5], [ 110.0, -104.5], [ 115.0, -104.5]]
+        ]},
+        "machine_platform_offset": { "default": [9.0, 0.0, 0.0] }
     }
 }
