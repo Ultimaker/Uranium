@@ -8,7 +8,8 @@ def getMetaData():
         },
         'tool': {
             'name': 'Mirror',
-            'description': 'Mirror Object'
+            'description': 'Mirror Object',
+            'icon': 'mirror.png'
         },
     }
 

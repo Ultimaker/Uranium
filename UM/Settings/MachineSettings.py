@@ -17,6 +17,7 @@ class MachineSettings(SignalEmitter):
         super().__init__()
         self._categories = []
         self._platformMesh = None
+        self._platform_texture = None
         self._name = "Unknown Machine",
         self._type_name = 'Unknown'
         self._type_id = 'unknown'
@@ -37,6 +38,9 @@ class MachineSettings(SignalEmitter):
 
         if "platform" in data:
             self._platformMesh = data["platform"]
+
+        if "platform_texture" in data:
+            self._platform_texture = data["platform_texture"]
 
         if "name" in data:
             self._type_name = data["name"]
@@ -193,6 +197,9 @@ class MachineSettings(SignalEmitter):
     #   Todo: Might need to rename this to get machine mesh?
     def getPlatformMesh(self):
         return self._platformMesh
+
+    def getPlatformTexture(self):
+        return self._platform_texture
 
     ##  Return the machine name.
     def getName(self):
