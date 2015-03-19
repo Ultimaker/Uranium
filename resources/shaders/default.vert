@@ -5,10 +5,12 @@ uniform highp mat4 u_normalMatrix;
 
 attribute highp vec4 a_vertex;
 attribute highp vec4 a_normal;
+attribute highp vec2 a_uvs;
 
 varying highp vec3 v_vertex;
 varying highp vec3 v_normal;
 varying highp vec3 v_viewVector;
+varying highp vec2 v_uvs;
 
 void main()
 {
@@ -17,4 +19,6 @@ void main()
 
     v_vertex = (u_modelMatrix * a_vertex).xyz;
     v_normal = (u_normalMatrix * normalize(a_normal)).xyz;
+
+    v_uvs = a_uvs;
 }
