@@ -104,6 +104,7 @@ class SceneNode(SignalEmitter):
         if scene_node not in self._children:
             scene_node.transformationChanged.connect(self.transformationChanged)
             scene_node.childrenChanged.connect(self.childrenChanged)
+            scene_node.meshDataChanged.connect(self.meshDataChanged)
             self._children.append(scene_node)
             self._aabb = None
             self.childrenChanged.emit(self)
@@ -120,6 +121,7 @@ class SceneNode(SignalEmitter):
 
         child.transformationChanged.disconnect(self.transformationChanged)
         child.childrenChanged.disconnect(self.childrenChanged)
+        child.meshDataChanged.disconnect(self.meshDataChanged)
         self._children.remove(child)
         child._parent = None
         child.parentChanged.emit(self)
