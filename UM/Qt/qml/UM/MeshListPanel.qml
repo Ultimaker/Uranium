@@ -189,6 +189,7 @@ Rectangle {
                     id: nameTextField
                     //readOnly:!nameTextField.editingName && activeFocus
                     horizontalAlignment:TextInput.AlignLeft
+                    Component.onCompleted:{ nameTextField.cursorPosition = 0 } //Hack to ensure that beginning of name is always visible
                     style: TextFieldStyle
                     {
                         background: Rectangle 
@@ -204,7 +205,7 @@ Rectangle {
                         anchors.fill: parent;
                         anchors.horizontalCenter: parent.horizontalCenter; 
                         anchors.verticalCenter: parent.verticalCenter
-                        onClicked: {nameTextField.editingName = true; nameTextField.cursorPosition = 0;}
+                        onClicked: {nameTextField.editingName = true;}
                         enabled:!nameTextField.editingName
                     }
                 }
