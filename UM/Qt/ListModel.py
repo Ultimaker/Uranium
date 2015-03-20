@@ -83,4 +83,4 @@ class ListModel(QAbstractListModel):
             if key in self._items[i]:
                 if self._items[i][key] == value:
                     return i
-        return False
+        return None

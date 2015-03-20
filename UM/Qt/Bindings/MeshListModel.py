@@ -47,7 +47,7 @@ class MeshListModel(ListModel):
                         parent_key =  id(group_node)
                     index = self.find("key",(id(node)))
                     data = {"name":node.getName(), "visibility": node.isVisible(), "key": (id(node)), "selected": Selection.isSelected(node),"depth": node.getDepth(),"collapsed": node in self._collapsed_nodes,"parent_key": parent_key, "has_children":node.hasChildren()}
-                    if index is not False:
+                    if index is not None:
                         self._items[index] = data
                     else:
                         self.appendItem(data)

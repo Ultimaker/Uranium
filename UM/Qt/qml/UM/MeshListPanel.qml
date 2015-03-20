@@ -187,7 +187,7 @@ Rectangle {
                     //anchors.horizontalCenter:parent.horizontalCenter
                     onEditingFinished:{editingName = false; meshList.model.setName(model.key,text)}
                     id: nameTextField
-                    //readOnly:!nameTextField.editingName && activeFocus
+                    readOnly:!nameTextField.editingName && activeFocus
                     horizontalAlignment:TextInput.AlignLeft
                     Component.onCompleted:{ nameTextField.cursorPosition = 0 } //Hack to ensure that beginning of name is always visible
                     style: TextFieldStyle
