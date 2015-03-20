@@ -199,7 +199,7 @@ Rectangle {
                         anchors.fill: parent;
                         anchors.horizontalCenter: parent.horizontalCenter; 
                         anchors.verticalCenter: parent.verticalCenter
-                        onClicked: {nameTextField.editingName = true; console.log("Starting edit")}
+                        onClicked: {nameTextField.editingName = true;}
                         enabled:!nameTextField.editingName
                     }
                 }
@@ -237,7 +237,7 @@ Rectangle {
 
         onAccepted: 
         {
-            UM.MeshFileHandler.writeLocalFile(key);
+            meshList.model.saveMesh(key,fileUrl);
         }
     }
 }

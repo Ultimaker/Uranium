@@ -117,7 +117,7 @@ class MeshListModel(ListModel):
     def saveMesh(self,key,file_url):
         for node in Application.getInstance().getController().getScene().getRoot().getAllChildren():
             if id(node) == key:
-                Application.getInstance().getMeshFileHandler().write(file_url.toLocalFile(),Application.getInstance().getStorageDevice('local'),node.getMeshData())
+                Application.getInstance().getMeshFileHandler().write(file_url.toLocalFile(),Application.getInstance().getStorageDevice('LocalFileStorage'),node.getMeshData())
 
 
     #Remove mesh by key (triggered by context menu)
