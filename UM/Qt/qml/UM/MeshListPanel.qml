@@ -204,7 +204,7 @@ Rectangle {
                         anchors.fill: parent;
                         anchors.horizontalCenter: parent.horizontalCenter; 
                         anchors.verticalCenter: parent.verticalCenter
-                        onClicked: {nameTextField.editingName = true;}
+                        onClicked: {nameTextField.editingName = true; nameTextField.cursorPosition = 0;}
                         enabled:!nameTextField.editingName
                     }
                 }
