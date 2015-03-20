@@ -38,14 +38,19 @@ class MeshListModel(ListModel):
         self.updateList(self._scene.getRoot()) # Manually trigger the update
     
     def updateList(self, trigger_node):
-        self.clear()
+        #self.clear()
         for group_node in self._scene.getRoot().getChildren():
             for node in DepthFirstIterator(group_node):
                 if node.getMeshData() is not None or node.hasChildren() and type(node) is not Camera:
                     parent_key = 0
                     if group_node is not node:
                         parent_key =  id(group_node)
-                    self.appendItem({"name":node.getName(), "visibility": node.isVisible(), "key": (id(node)), "selected": Selection.isSelected(node),"depth": node.getDepth(),"collapsed": node in self._collapsed_nodes,"parent_key": parent_key, "has_children":node.hasChildren()})
+                    index = self.find("key",(id(node)))
+                    data = {"name":node.getName(), "visibility": node.isVisible(), "key": (id(node)), "selected": Selection.isSelected(node),"depth": node.getDepth(),"collapsed": node in self._collapsed_nodes,"parent_key": parent_key, "has_children":node.hasChildren()}
+                    if index is not False:
+                        self._items[index] = data
+                    else:
+                        self.appendItem(data)
         
     # set the visibility of a node (by key)
     @pyqtSlot("long",bool)
