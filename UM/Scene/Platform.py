@@ -10,6 +10,7 @@ class Platform(SceneNode.SceneNode):
 
         self._settings = None
         self._material = None
+        self._texture = None
         Application.getInstance().activeMachineChanged.connect(self._onActiveMachineChanged)
         self._onActiveMachineChanged()
 
