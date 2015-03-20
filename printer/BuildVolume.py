@@ -20,10 +20,12 @@ class BuildVolume(SceneNode):
         self._depth = 0
 
         self._material = None
-        self._line_mesh = None
 
         self._grid_mesh = None
         self._grid_material = None
+
+        self._disallowed_areas = []
+        self._disallowed_area_mesh = None
 
     def setWidth(self, width):
         self._width = width
@@ -34,10 +36,11 @@ class BuildVolume(SceneNode):
     def setDepth(self, depth):
         self._depth = depth
 
+    def setDisallowedAreas(self, areas):
+        self._disallowed_areas = areas
+
     def render(self, renderer):
         if not self.getMeshData():
-            return True
-        if self._line_mesh is None:
             return True
 
         if not self._material:
@@ -52,9 +55,10 @@ class BuildVolume(SceneNode):
             self._grid_material.setUniformValue('u_gridColor0', Color(255, 255, 255, 255))
             self._grid_material.setUniformValue('u_gridColor1', Color(140, 170, 240, 255))
 
-        #renderer.queueNode(self, material = self._material, transparent = True)
+        renderer.queueNode(self, material = self._material, mode = Renderer.RenderLines)
         renderer.queueNode(self, mesh = self._grid_mesh, material = self._grid_material)
-        renderer.queueNode(self, mesh = self._line_mesh, mode = Renderer.RenderLines, material = self._material)
+        if self._disallowed_area_mesh:
+            renderer.queueNode(self, mesh = self._disallowed_area_mesh, material = self._material)
         return True
 
     def rebuild(self):
@@ -68,85 +72,22 @@ class BuildVolume(SceneNode):
         minD = -self._depth / 2
         maxD = self._depth / 2
 
-        md = MeshData()
-        md.addVertex(minW, minH, minD)
-        md.addVertex(maxW, minH, minD)
-        md.addVertex(minW, minH, minD)
-        md.addVertex(minW, maxH, minD)
-        md.addVertex(minW, maxH, minD)
-        md.addVertex(maxW, maxH, minD)
-        md.addVertex(maxW, minH, minD)
-        md.addVertex(maxW, maxH, minD)
-
-        md.addVertex(minW, minH, maxD)
-        md.addVertex(maxW, minH, maxD)
-        md.addVertex(minW, minH, maxD)
-        md.addVertex(minW, maxH, maxD)
-        md.addVertex(minW, maxH, maxD)
-        md.addVertex(maxW, maxH, maxD)
-        md.addVertex(maxW, minH, maxD)
-        md.addVertex(maxW, maxH, maxD)
-
-        md.addVertex(minW, minH, minD)
-        md.addVertex(minW, minH, maxD)
-        md.addVertex(maxW, minH, minD)
-        md.addVertex(maxW, minH, maxD)
-        md.addVertex(minW, maxH, minD)
-        md.addVertex(minW, maxH, maxD)
-        md.addVertex(maxW, maxH, minD)
-        md.addVertex(maxW, maxH, maxD)
-
-        for n in range(0, md.getVertexCount()):
-            md.setVertexColor(n, BuildVolume.VolumeOutlineColor)
-
-        self._line_mesh = md
-
         mb = MeshBuilder()
 
-        mb.addQuad(
-            Vector(minW, minH, maxD),
-            Vector(maxW, minH, maxD),
-            Vector(maxW, maxH, maxD),
-            Vector(minW, maxH, maxD),
-            color = Color(0.2, 0.67, 0.9, 0.25),
-            normal = Vector(0, 0, -1)
-        )
+        mb.addLine(Vector(minW, minH, minD), Vector(maxW, minH, minD), color = self.VolumeOutlineColor)
+        mb.addLine(Vector(minW, minH, minD), Vector(minW, maxH, minD), color = self.VolumeOutlineColor)
+        mb.addLine(Vector(minW, maxH, minD), Vector(maxW, maxH, minD), color = self.VolumeOutlineColor)
+        mb.addLine(Vector(maxW, minH, minD), Vector(maxW, maxH, minD), color = self.VolumeOutlineColor)
 
-        mb.addQuad(
-            Vector(maxW, minH, maxD),
-            Vector(maxW, minH, minD),
-            Vector(maxW, maxH, minD),
-            Vector(maxW, maxH, maxD),
-            color = Color(0.2, 0.67, 0.9, 0.38),
-            normal = Vector(1, 0, 0)
-        )
+        mb.addLine(Vector(minW, minH, maxD), Vector(maxW, minH, maxD), color = self.VolumeOutlineColor)
+        mb.addLine(Vector(minW, minH, maxD), Vector(minW, maxH, maxD), color = self.VolumeOutlineColor)
+        mb.addLine(Vector(minW, maxH, maxD), Vector(maxW, maxH, maxD), color = self.VolumeOutlineColor)
+        mb.addLine(Vector(maxW, minH, maxD), Vector(maxW, maxH, maxD), color = self.VolumeOutlineColor)
 
-        mb.addQuad(
-            Vector(minW, minH, minD),
-            Vector(minW, maxH, minD),
-            Vector(maxW, maxH, minD),
-            Vector(maxW, minH, minD),
-            color = Color(0.2, 0.67, 0.9, 0.25),
-            normal = Vector(0, 0, 1)
-        )
-
-        mb.addQuad(
-            Vector(minW, minH, maxD),
-            Vector(minW, maxH, maxD),
-            Vector(minW, maxH, minD),
-            Vector(minW, minH, minD),
-            color = Color(0.2, 0.67, 0.9, 0.38),
-            normal = Vector(-1, 0, 0)
-        )
-
-        mb.addQuad(
-            Vector(minW, maxH, maxD),
-            Vector(maxW, maxH, maxD),
-            Vector(maxW, maxH, minD),
-            Vector(minW, maxH, minD),
-            color = Color(0.2, 0.67, 0.9, 0.5),
-            normal = Vector(0, -1, 0)
-        )
+        mb.addLine(Vector(minW, minH, minD), Vector(minW, minH, maxD), color = self.VolumeOutlineColor)
+        mb.addLine(Vector(maxW, minH, minD), Vector(maxW, minH, maxD), color = self.VolumeOutlineColor)
+        mb.addLine(Vector(minW, maxH, minD), Vector(minW, maxH, maxD), color = self.VolumeOutlineColor)
+        mb.addLine(Vector(maxW, maxH, minD), Vector(maxW, maxH, maxD), color = self.VolumeOutlineColor)
 
         self.setMeshData(mb.getData())
 
@@ -161,3 +102,18 @@ class BuildVolume(SceneNode):
         for n in range(0, 6):
             v = self._grid_mesh.getVertex(n)
             self._grid_mesh.setVertexUVCoordinates(n, v[0], v[2])
+
+        if self._disallowed_areas:
+            mb = MeshBuilder()
+            for area in self._disallowed_areas:
+                mb.addQuad(
+                    area[0],
+                    area[1],
+                    area[2],
+                    area[3],
+                    color = Color(0.8, 0.8, 0.8, 1.0)
+                )
+
+            self._disallowed_area_mesh = mb.getData()
+        else:
+            self._disallowed_area_mesh = None

@@ -12,6 +12,15 @@ class MeshBuilder:
     def getData(self):
         return self._mesh_data
 
+    def addLine(self, v0, v1, **kwargs):
+        self._mesh_data.addVertex(v0.x, v0.y, v0.z)
+        self._mesh_data.addVertex(v1.x, v1.y, v1.z)
+
+        color = kwargs.get('color', None)
+        if color:
+            self._mesh_data.setVertexColor(self._mesh_data.getVertexCount() - 2, color)
+            self._mesh_data.setVertexColor(self._mesh_data.getVertexCount() - 1, color)
+
     def addFace(self, v0, v1, v2, **kwargs):
         normal = kwargs.get('normal', None)
         if normal:

@@ -15,7 +15,7 @@ class CameraTool(Tool):
         self._pitch = 0
         self._origin = Vector(0, 0, 0)
         self._minZoom = 10.0
-        self._maxZoom = 500.0
+        self._maxZoom = 1000.0
 
         self._rotate = False
         self._move = False
