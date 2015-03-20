@@ -87,6 +87,9 @@ Rectangle {
                     width:parent.width
                     height:2
                 }
+                Rectangle{
+                    anchors.fill:parent
+                    border.width:1
                 RowLayout
                 {
                     width:parent.width - meshListPanel.border.width * 4
@@ -117,6 +120,7 @@ Rectangle {
                             meshList.model.removeSelected()
                         }
                     }
+                }
                 }
             }
         }
