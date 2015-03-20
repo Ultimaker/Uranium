@@ -182,13 +182,13 @@ Rectangle {
                 {
                     property bool editingName: false
                     text:model.name
-                    Layout.maximumWidth: 100
-                    Layout.minimumWidth:100
-                    anchors.horizontalCenter:parent.horizontalCenter
+                    Layout.maximumWidth: 160
+                    Layout.minimumWidth: 160
+                    //anchors.horizontalCenter:parent.horizontalCenter
                     onEditingFinished:{editingName = false; meshList.model.setName(model.key,text)}
                     id: nameTextField
-                    readOnly:!nameTextField.editingName
-                    
+                    //readOnly:!nameTextField.editingName && activeFocus
+                    horizontalAlignment:TextInput.AlignLeft
                     style: TextFieldStyle
                     {
                         background: Rectangle 
