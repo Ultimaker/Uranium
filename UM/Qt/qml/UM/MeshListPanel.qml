@@ -87,40 +87,41 @@ Rectangle {
                     width:parent.width
                     height:2
                 }
-                Rectangle{
+                Rectangle
+                {
                     anchors.fill:parent
                     border.width:1
-                RowLayout
-                {
-                    width:parent.width - meshListPanel.border.width * 4
-                    height:parent.height - meshListPanel.border.width * 2
-                    anchors.horizontalCenter:parent.horizontalCenter
-                    Label 
+                    RowLayout
                     {
-                        text:"0 layers of scans"
-                    }
-                    Button
-                    {
-                        iconSource: UM.Resources.getIcon("open.png")
-                        style:ButtonStyle{ background:Item{}}
-                    }
-                    
-                    Button
-                    {
-                        iconSource: UM.Resources.getIcon("icon_search.png")
-                        style:ButtonStyle{background:Item{}}
-                    }
-                    
-                    Button
-                    {
-                        iconSource: UM.Resources.getIcon("icon_trash_bin.png")
-                        style:ButtonStyle{background:Item{}}
-                        onClicked:
+                        width:parent.width - meshListPanel.border.width * 4
+                        height:parent.height - meshListPanel.border.width * 2
+                        anchors.horizontalCenter:parent.horizontalCenter
+                        Label 
                         {
-                            meshList.model.removeSelected()
+                            text:"0 layers of scans"
+                        }
+                        Button
+                        {
+                            iconSource: UM.Resources.getIcon("open.png")
+                            style:ButtonStyle{ background:Item{}}
+                        }
+                        
+                        Button
+                        {
+                            iconSource: UM.Resources.getIcon("icon_search.png")
+                            style:ButtonStyle{background:Item{}}
+                        }
+                        
+                        Button
+                        {
+                            iconSource: UM.Resources.getIcon("icon_trash_bin.png")
+                            style:ButtonStyle{background:Item{}}
+                            onClicked:
+                            {
+                                meshList.model.removeSelected()
+                            }
                         }
                     }
-                }
                 }
             }
         }
