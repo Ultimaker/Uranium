@@ -25,7 +25,7 @@ void main()
 
     finalColor.a = u_opacity;
 
-    vec4 texture = texture2D(u_texture, v_uvs);
+    lowp vec4 texture = texture2D(u_texture, v_uvs);
     finalColor = mix(finalColor, texture, texture.a);
 
     gl_FragColor = finalColor;
