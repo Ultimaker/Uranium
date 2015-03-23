@@ -187,9 +187,7 @@ class SceneNode(SignalEmitter):
         if not self._enabled:
             return
 
-        rotMatrix = Matrix()
-        rotMatrix.setByQuaternion(rotation)
-        self._transformation.multiply(rotMatrix)
+        self._transformation.multiply(rotation.toMatrix())
         self._transformChanged()
 
     def rotateByAngleAxis(self, angle, axis):
