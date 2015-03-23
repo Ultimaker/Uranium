@@ -98,5 +98,27 @@ class TestQuaternion(unittest.TestCase):
         self.assertTrue(Float.fuzzyCompare(m1.at(3, 2), m2.at(3, 2), 1e-6))
         self.assertTrue(Float.fuzzyCompare(m1.at(3, 3), m2.at(3, 3), 1e-6))
 
+    def test_slerp(self):
+        q1 = Quaternion()
+        q1.setByAngleAxis(0, Vector.Unit_Z)
+
+        q2 = Quaternion()
+        q2.setByAngleAxis(math.pi / 2, Vector.Unit_Z)
+
+        c = Quaternion(0.0, 0.0, 0.0, 1.0)
+        self.assertEqual(c, Quaternion.slerp(q1, q2, 0.0))
+
+        c = Quaternion(0.0, 0.0, 0.19509033858776093, 0.9807853102684021)
+        self.assertEqual(c, Quaternion.slerp(q1, q2, 0.25))
+
+        c = Quaternion(0.0, 0.0, 0.38268348574638367, 0.9238795638084412)
+        self.assertEqual(c, Quaternion.slerp(q1, q2, 0.5))
+
+        c = Quaternion(0.0, 0.0, 0.5555703043937683, 0.8314696550369263)
+        self.assertEqual(c, Quaternion.slerp(q1, q2, 0.75))
+
+        c = Quaternion(0.0, 0.0, 0.7071068286895752, 0.7071068286895752)
+        self.assertEqual(c, Quaternion.slerp(q1, q2, 1.0))
+
 if __name__ == "__main__":
     unittest.main()
