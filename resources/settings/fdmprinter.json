@@ -862,36 +862,41 @@
                 "wireframe_printspeed": {
                     "label": "Printing speed",
                     "description": "Speed at which the nozzle moves when extruding material.",
-                    "type": "",
-                    "default": false,
+                    "unit": "mm/s",
+                    "type": "float",
+                    "default": 5.0,
                     "visible": false,
                     "children": {
                         "wireframe_printspeed_bottom": {
                             "label": "Bottom printing speed",
                             "description": "Speed of printing the first layer, which is the only layer touching the bluidplatform.",
-                            "type": "",
-                            "default": false,
+                            "unit": "mm/s",
+                            "type": "float",
+                            "default": 5.0,
                             "visible": false
                         },
                         "wireframe_printspeed_up": {
                             "label": "Upward printing speed",
                             "description": "Speed of printing a line upward 'in thin air'.",
-                            "type": "",
-                            "default": false,
+                            "unit": "mm/s",
+                            "type": "float",
+                            "default": 5.0,
                             "visible": false
                         },
                         "wireframe_printspeed_down": {
                             "label": "Downward printing speed",
                             "description": "Speed of printing a line diagonally downward.",
-                            "type": "",
-                            "default": false,
+                            "unit": "mm/s",
+                            "type": "float",
+                            "default": 5.0,
                             "visible": false
                         },
                         "wireframe_printspeed_flat": {
                             "label": "Horizontal printing speed",
-                            "description": "Speed ",
-                            "type": "",
-                            "default": false,
+                            "description": "Speed of printing the horizontal contours of the object.",
+                            "unit": "mm/s",
+                            "type": "float",
+                            "default": 5.0,
                             "visible": false
                         }
                     }
@@ -899,21 +904,21 @@
                 "wireframe_flow": {
                     "label": "Flow",
                     "description": "Flow compensation: the amount of material extruded is multiplied by this value.",
-                    "type": "",
+                    "type": "boolean",
                     "default": false,
                     "visible": false,
                     "children": {
                         "wireframe_flow_connection": {
                             "label": "Connection flow",
                             "description": "Flow compensation when going up or down.",
-                            "type": "",
+                            "type": "boolean",
                             "default": false,
                             "visible": false
                         },
                         "wireframe_flow_flat": {
                             "label": "Flat flow",
                             "description": "Flow compensation when printing flat lines.",
-                            "type": "",
+                            "type": "boolean",
                             "default": false,
                             "visible": false
                         }
@@ -922,49 +927,49 @@
                 "wireframe_top_delay": {
                     "label": "Top delay",
                     "description": "Delay time after an upward move, so that the upward line can harden.",
-                    "type": "",
+                    "type": "boolean",
                     "default": false,
                     "visible": false
                 },
                 "wireframe_bottom_delay": {
                     "label": "Bottom delay",
                     "description": "Delay time after a downward move.",
-                    "type": "",
+                    "type": "boolean",
                     "default": false,
                     "visible": false
                 },
                 "wireframe_flat_delay": {
                     "label": "Flat delay",
                     "description": "Delay time between two horizontal segments. Introducing such a delay can cause better adhesion to previous layers at the connection points, while too large delay times cause sagging.",
-                    "type": "",
+                    "type": "boolean",
                     "default": false,
                     "visible": false
                 },
                 "wireframe_up_half_speed": {
                     "label": "Ease upward",
                     "description": "Distance of an upward move which is extruded with half speed.\nThis can cause better adhesion to previous layers, while not heating the material in those layers too much.",
-                    "type": "",
+                    "type": "boolean",
                     "default": false,
                     "visible": false
                 },
                 "wireframe_top_jump": {
                     "label": "Knot size",
                     "description": "Creates a small knot at the top of an upward line, so that the consecutive horizontal layer has a better chance to connect to it.",
-                    "type": "",
+                    "type": "boolean",
                     "default": false,
                     "visible": false
                 },
                 "wireframe_fall_down": {
                     "label": "Fall down",
                     "description": "Distance with which the material falls down after an upward extrusion. This distance is compensated for.",
-                    "type": "",
+                    "type": "boolean",
                     "default": false,
                     "visible": false
                 },
                 "wireframe_drag_along": {
                     "label": "Drag along",
                     "description": "Distance with which the material of an upward extrusion is dragged along with the diagonally downward extrusion. This distance is compensated for.",
-                    "type": "",
+                    "type": "boolean",
                     "default": false,
                     "visible": false
                 },
@@ -983,49 +988,49 @@
                 "wireframe_straight_before_down": {
                     "label": "Straighten downward lines",
                     "description": "Percentage of a diagonally downward line which is covered by a horizontal line piece. This can prevent sagging of the top most point of upward lines.",
-                    "type": "",
+                    "type": "boolean",
                     "default": false,
                     "visible": false
                 },
                 "wireframe_roof_fall_down": {
                     "label": "Roof fall down",
                     "description": "The distance which horizontal roof lines printed 'in thin air' fall down when being printed. This distance is compensated for.",
-                    "type": "",
+                    "type": "boolean",
                     "default": false,
                     "visible": false
                 },
                 "wireframe_roof_drag_along": {
                     "label": "Roof drag along",
                     "description": "The distance of the end piece of an inward line which gets dragged along when going back to the outer outline of the roof. This distance is compensated for.",
-                    "type": "",
+                    "type": "boolean",
                     "default": false,
                     "visible": false
                 },
                 "wireframe_roof_outer_delay": {
                     "label": "Roof outer delay",
                     "description": "Time spent at the outer perimeters of hole which is to become a roof. Larger times can ensure a better connection.",
-                    "type": "",
+                    "type": "boolean",
                     "default": false,
                     "visible": false
                 },
                 "wireframe_height": {
                     "label": "Connection height.",
                     "description": "The height of the upward and diagonally downward lines between two horizontal parts.",
-                    "type": "",
+                    "type": "boolean",
                     "default": false,
                     "visible": false
                 },
                 "wireframe_roof_inset": {
                     "label": "Roof inset distance",
                     "description": "The distance covered when making a connection from a roof outline inward.",
-                    "type": "",
+                    "type": "boolean",
                     "default": false,
                     "visible": false
                 },
                 "wireframe_nozzle_clearance": {
                     "label": "Nozzle clearance",
                     "description": "Distance between the nozzle and horizontally downward lines. Larger clearance results in diagonally downward lines with a less steep angle, which in turn results in less upward connections with the next layer.",
-                    "type": "",
+                    "type": "boolean",
                     "default": false,
                     "visible": false
                 }
