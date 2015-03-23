@@ -227,6 +227,14 @@ class SceneNode(SignalEmitter):
         self._transformation.translate(translation)
         self._transformChanged()
 
+    def translateGlobal(self, translation):
+        if not self._enabled:
+            return
+
+        global_translate = translation.multiply(self.getGlobalTransformation())
+        self._transformation.translate(global_translate)
+        self._transformChanged()
+
     ##  Set
     def setPosition(self, position):
         if not self._enabled:

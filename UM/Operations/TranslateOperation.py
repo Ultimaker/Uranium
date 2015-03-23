@@ -7,10 +7,10 @@ class TranslateOperation(Operation.Operation):
         self._translation = translation
 
     def undo(self):
-        self._node.translate(-self._translation)
+        self._node.translateGlobal(-self._translation)
 
     def redo(self):
-        self._node.translate(self._translation)
+        self._node.translateGlobal(self._translation)
 
     def mergeWith(self, other):
         if type(other) is not TranslateOperation:
