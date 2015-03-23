@@ -5,7 +5,11 @@ def getMetaData():
     return {
         'type': 'mesh_writer',
         'plugin': {
-            "name": "PLY Writer"
+            "name": "PLY Writer",
+        },
+        'mesh_reader': {
+            'extension': 'ply',
+            'description': 'PLY File'
         }
     }
 

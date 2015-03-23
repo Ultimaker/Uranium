@@ -3,9 +3,9 @@ from PyQt5.QtCore import Qt, QCoreApplication, pyqtSlot,QUrl
 from UM.Qt.ListModel import ListModel
 from UM.Application import Application
 from UM.Scene.Selection import Selection
-from UM.Operations.RemoveSceneNodesOperation import RemoveSceneNodesOperation
+from UM.Operations.RemoveSceneNodeOperation import RemoveSceneNodeOperation
 from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator
-
+from UM.Scene.Camera import Camera
 import threading
 
 class MeshListModel(ListModel):
@@ -38,14 +38,19 @@ class MeshListModel(ListModel):
         self.updateList(self._scene.getRoot()) # Manually trigger the update
     
     def updateList(self, trigger_node):
-        self.clear()
+        #self.clear()
         for group_node in self._scene.getRoot().getChildren():
             for node in DepthFirstIterator(group_node):
-                if node.getMeshData() is not None or node.hasChildren():
+                if node.getMeshData() is not None or node.hasChildren() and type(node) is not Camera:
                     parent_key = 0
                     if group_node is not node:
                         parent_key =  id(group_node)
-                    self.appendItem({"name":node.getName(), "visibility": node.isVisible(), "key": (id(node)), "selected": Selection.isSelected(node),"depth": node.getDepth(),"collapsed": node in self._collapsed_nodes,"parent_key": parent_key, "has_children":node.hasChildren()})
+                    index = self.find("key",(id(node)))
+                    data = {"name":node.getName(), "visibility": node.isVisible(), "key": (id(node)), "selected": Selection.isSelected(node),"depth": node.getDepth(),"collapsed": node in self._collapsed_nodes,"parent_key": parent_key, "has_children":node.hasChildren()}
+                    if index is not False:
+                        self._items[index] = data
+                    else:
+                        self.appendItem(data)
         
     # set the visibility of a node (by key)
     @pyqtSlot("long",bool)
@@ -117,7 +122,7 @@ class MeshListModel(ListModel):
     def saveMesh(self,key,file_url):
         for node in Application.getInstance().getController().getScene().getRoot().getAllChildren():
             if id(node) == key:
-                Application.getInstance().getMeshFileHandler().write(file_url.toLocalFile(),Application.getInstance().getStorageDevice('local'),node.getMeshData())
+                Application.getInstance().getMeshFileHandler().write(file_url.toLocalFile(),Application.getInstance().getStorageDevice('LocalFileStorage'),node.getMeshData())
 
 
     #Remove mesh by key (triggered by context menu)
@@ -125,7 +130,7 @@ class MeshListModel(ListModel):
     def removeMesh(self, key):
         for node in Application.getInstance().getController().getScene().getRoot().getAllChildren():
             if id(node) == key:
-                op = RemoveSceneNodesOperation([node])
+                op = RemoveSceneNodeOperation(node)
                 op.push()
                 break
 

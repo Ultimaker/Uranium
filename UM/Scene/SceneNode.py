@@ -87,7 +87,11 @@ class SceneNode(SignalEmitter):
     ##  \brief Set the mesh of this node/object
     #   \param mesh_data MeshData object
     def setMeshData(self, mesh_data):
+        if self._mesh_data:
+            self._mesh_data.dataChanged.disconnect(self.meshDataChanged)
         self._mesh_data = mesh_data
+        if self._mesh_data is not None:
+            self._mesh_data.dataChanged.connect(self.meshDataChanged)
         self._resetAABB()
         self.meshDataChanged.emit(self)
 
@@ -154,6 +158,7 @@ class SceneNode(SignalEmitter):
     ##  \brief Computes and returns the transformation from origin to local space
     #   \returns 4x4 transformation matrix
     def getGlobalTransformation(self):
+
         if self._parent is None:
             return self._transformation
         else:
@@ -164,7 +169,7 @@ class SceneNode(SignalEmitter):
     ##  \brief Returns the local transformation with respect to its parent. (from parent to local)
     #   \retuns transformation 4x4 (homogenous) matrix
     def getLocalTransformation(self):
-        return self._transformation
+        return copy(self._transformation)
 
     ##  \brief Sets the local transformation with respect to its parent. (from parent to local)
     #   \param transformation 4x4 (homogenous) matrix

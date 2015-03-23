@@ -1,5 +1,5 @@
 from UM.Tool import Tool
-from UM.Event import Event
+from UM.Event import Event, MouseEvent
 
 from UM.Math.Plane import Plane
 from UM.Math.Vector import Vector
@@ -61,9 +61,12 @@ class TranslateTool(Tool):
                 self._handle.setPosition(Selection.getSelectedObject(0).getGlobalPosition())
 
         if event.type == Event.MousePressEvent:
+            if not MouseEvent.LeftButton in event.buttons:
+                return False
+
             id = self._renderer.getIdAtCoordinate(event.x, event.y, 5)
             if not id:
-                return
+                return False
 
             if id in self._enabled_axis:
                 self._locked_axis = id
@@ -126,10 +129,11 @@ class TranslateTool(Tool):
             return True
 
         if event.type == Event.MouseReleaseEvent:
-            self._target = None
-            self._drag = False
-            self._locked_axis = None
-            return True
+            if self._drag:
+                self._target = None
+                self._drag = False
+                self._locked_axis = None
+                return True
 
         if event.type == Event.ToolDeactivateEvent:
             self._handle.setParent(None)

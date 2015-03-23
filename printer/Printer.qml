@@ -220,6 +220,32 @@ UM.MainWindow {
 
         deleteSelection.onTriggered: UM.Controller.removeSelection();
 
+        deleteObject.onTriggered: {
+            if(objectContextMenu.id != 0) {
+                Printer.deleteObject(objectContextMenu.id);
+                objectContextMenu.id = 0;
+            }
+        }
+
+        multiplyObject.onTriggered: {
+            if(objectContextMenu.id != 0) {
+                Printer.multiplyObject(objectContextMenu.id, 1);
+                objectContextMenu.id = 0;
+            }
+        }
+
+        centerObject.onTriggered: {
+            if(objectContextMenu.id != 0) {
+                Printer.centerObject(objectContextMenu.id);
+                objectContextMenu.id = 0;
+            }
+        }
+
+        deleteAll.onTriggered: Printer.deleteAll()
+        resetAllTranslation.onTriggered: Printer.resetAllTranslation()
+        resetAll.onTriggered: Printer.resetAll()
+        reloadAll.onTriggered: Printer.reloadAll()
+
         addMachine.onTriggered: addMachine.visible = true;
 
         preferences.onTriggered: preferences.visible = true;
@@ -227,9 +253,40 @@ UM.MainWindow {
     }
 
     Menu {
+        id: objectContextMenu;
+
+        property variant id: -1;
+
+        MenuItem { action: actions.centerObject; }
+        MenuItem { action: actions.deleteObject; }
+        MenuItem { action: actions.multiplyObject; }
+        MenuItem { action: actions.splitObject; }
+        MenuSeparator { }
+        MenuItem { action: actions.deleteAll; }
+        MenuItem { action: actions.reloadAll; }
+        MenuItem { action: actions.resetAllTranslation; }
+        MenuItem { action: actions.resetAll; }
+    }
+
+    Menu {
         id: contextMenu;
 
-        MenuItem { action: actions.deleteSelection; }
+        MenuItem { action: actions.deleteAll; }
+        MenuItem { action: actions.reloadAll; }
+        MenuItem { action: actions.resetAllTranslation; }
+        MenuItem { action: actions.resetAll; }
+    }
+
+    Connections {
+        target: UM.Controller
+        onContextMenuRequested: {
+            if(id == 0) {
+                contextMenu.popup();
+            } else {
+                objectContextMenu.id = id;
+                objectContextMenu.popup();
+            }
+        }
     }
 
     FileDialog {

@@ -3,9 +3,11 @@ uniform mediump vec4 u_diffuseColor;
 uniform highp vec3 u_lightPosition;
 uniform highp vec3 u_viewPosition;
 uniform mediump float u_opacity;
+uniform sampler2D u_texture;
 
 varying highp vec3 v_vertex;
 varying highp vec3 v_normal;
+varying highp vec2 v_uvs;
 
 void main()
 {
@@ -22,5 +24,9 @@ void main()
     finalColor += (NdotL * u_diffuseColor);
 
     finalColor.a = u_opacity;
+
+    lowp vec4 texture = texture2D(u_texture, v_uvs);
+    finalColor = mix(finalColor, texture, texture.a);
+
     gl_FragColor = finalColor;
 }

@@ -19,13 +19,28 @@ class Camera(SceneNode.SceneNode):
         self._projectionMatrix.setOrtho(-5, 5, 5, -5, -100, 100)
         self._perspective = False
         #self._projectionMatrix.setPerspective(45, 1, 0, 5)
-
-        self._viewport = [0.0, 0.0, 0.0, 0.0]
+        self._viewport_width = 0
+        self._viewport_height = 0
 
     ##  Get the projection matrix of this camera.
     def getProjectionMatrix(self):
         return self._projectionMatrix
-
+    
+    def getViewportWidth(self):
+        return self._viewport_width
+    
+    def setViewportWidth(self, width):
+        self._viewport_width = width
+    
+    def setViewPortHeight(self,height):
+        self._viewport_height = height
+        
+    def setViewportSize(self,width,height):
+        self._viewport_width = width
+        self._viewport_height = height
+    
+    def getViewportHeight(self):
+        return self._viewport_height
     ##  Set the projection matrix of this camera.
     #   \param matrix The projection matrix to use for this camera.
     def setProjectionMatrix(self, matrix):

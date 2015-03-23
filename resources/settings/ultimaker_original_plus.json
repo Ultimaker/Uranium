@@ -2,7 +2,8 @@
     "id": "ultimaker_original_plus",
     "name": "Ultimaker Original Plus",
     "icon": "icon_ultimaker.png",
-    "platform": "ultimaker2_platform.stl",
+    "platform": "ultimaker2_platform.obj",
+    "platform_texture": "UltimakerPlusbackplate.png",
 
     "inherits": "ultimaker_original.json",
 

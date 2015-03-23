@@ -87,34 +87,39 @@ Rectangle {
                     width:parent.width
                     height:2
                 }
-                RowLayout
+                Rectangle
                 {
-                    width:parent.width - meshListPanel.border.width * 4
-                    height:parent.height - meshListPanel.border.width * 2
-                    anchors.horizontalCenter:parent.horizontalCenter
-                    Label 
+                    anchors.fill:parent
+                    border.width:1
+                    RowLayout
                     {
-                        text:"0 layers of scans"
-                    }
-                    Button
-                    {
-                        iconSource: UM.Resources.getIcon("open.png")
-                        style:ButtonStyle{ background:Item{}}
-                    }
-                    
-                    Button
-                    {
-                        iconSource: UM.Resources.getIcon("icon_search.png")
-                        style:ButtonStyle{background:Item{}}
-                    }
-                    
-                    Button
-                    {
-                        iconSource: UM.Resources.getIcon("icon_trash_bin.png")
-                        style:ButtonStyle{background:Item{}}
-                        onClicked:
+                        width:parent.width - meshListPanel.border.width * 4
+                        height:parent.height - meshListPanel.border.width * 2
+                        anchors.horizontalCenter:parent.horizontalCenter
+                        Label 
                         {
-                            meshList.model.removeSelected()
+                            text:"0 layers of scans"
+                        }
+                        Button
+                        {
+                            iconSource: UM.Resources.getIcon("open.png")
+                            style:ButtonStyle{ background:Item{}}
+                        }
+                        
+                        Button
+                        {
+                            iconSource: UM.Resources.getIcon("icon_search.png")
+                            style:ButtonStyle{background:Item{}}
+                        }
+                        
+                        Button
+                        {
+                            iconSource: UM.Resources.getIcon("icon_trash_bin.png")
+                            style:ButtonStyle{background:Item{}}
+                            onClicked:
+                            {
+                                meshList.model.removeSelected()
+                            }
                         }
                     }
                 }
@@ -177,13 +182,14 @@ Rectangle {
                 {
                     property bool editingName: false
                     text:model.name
-                    Layout.maximumWidth: 100
-                    Layout.minimumWidth:100
-                    anchors.horizontalCenter:parent.horizontalCenter
+                    Layout.maximumWidth: 160
+                    Layout.minimumWidth: 160
+                    //anchors.horizontalCenter:parent.horizontalCenter
                     onEditingFinished:{editingName = false; meshList.model.setName(model.key,text)}
                     id: nameTextField
-                    readOnly:!nameTextField.editingName
-                    
+                    //readOnly:!nameTextField.editingName && activeFocus
+                    horizontalAlignment:TextInput.AlignLeft
+                    Component.onCompleted:{ nameTextField.cursorPosition = 0 } //Hack to ensure that beginning of name is always visible
                     style: TextFieldStyle
                     {
                         background: Rectangle 
@@ -199,7 +205,7 @@ Rectangle {
                         anchors.fill: parent;
                         anchors.horizontalCenter: parent.horizontalCenter; 
                         anchors.verticalCenter: parent.verticalCenter
-                        onClicked: {nameTextField.editingName = true; console.log("Starting edit")}
+                        onClicked: {nameTextField.editingName = true;}
                         enabled:!nameTextField.editingName
                     }
                 }
@@ -237,7 +243,7 @@ Rectangle {
 
         onAccepted: 
         {
-            UM.MeshFileHandler.writeLocalFile(key);
+            meshList.model.saveMesh(key,fileUrl);
         }
     }
 }

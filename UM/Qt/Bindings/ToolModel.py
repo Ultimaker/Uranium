@@ -38,8 +38,8 @@ class ToolModel(ListModel):
                 continue
 
             # Optional metadata elements
-            description = toolMetaData['description'] if 'description' in toolMetaData else ''
-            iconName = toolMetaData['icon'] if 'icon' in toolMetaData else 'default.png'
+            description = toolMetaData.get('description', '')
+            iconName = toolMetaData.get('icon', 'default.png')
 
             self.appendItem({
                 'id': name,

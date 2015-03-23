@@ -1,4 +1,4 @@
-from PyQt5.QtGui import QOpenGLShader, QOpenGLShaderProgram, QVector2D, QVector3D, QVector4D, QMatrix4x4, QColor
+from PyQt5.QtGui import QOpenGLShader, QOpenGLShaderProgram, QVector2D, QVector3D, QVector4D, QMatrix4x4, QColor, QImage, QOpenGLTexture
 from UM.View.Material import Material
 from UM.Logger import Logger
 
@@ -17,6 +17,7 @@ class QtGL2Material(Material):
         self._attribute_indices = {}
         self._uniform_values = {}
         self._bound = False
+        self._textures = {}
 
     def loadVertexShader(self, file):
         if not self._shader_program:
@@ -57,6 +58,26 @@ class QtGL2Material(Material):
 
         if self._bound:
             self._setUniformValueDirect(uniform, value)
+
+    def setUniformTexture(self, name, file):
+        if not self._shader_program:
+            return
+
+        if not name in self._uniform_indices:
+            self._uniform_indices[name] = self._shader_program.uniformLocation(name)
+
+        index = self._uniform_indices[name]
+
+        texture = QOpenGLTexture(QImage(file).mirrored())
+        texture.setMinMagFilters(QOpenGLTexture.Linear, QOpenGLTexture.Linear)
+        self._textures[index] = texture
+
+        self._uniform_values[index] = 1
+
+        if self._bound:
+            texture = self._textures[index]
+            texture.bind()
+            self._setUniformValueDirect(index, texture.textureId())
 
     def enableAttribute(self, name, type, offset, stride = 0):
         if not self._shader_program:
@@ -105,11 +126,19 @@ class QtGL2Material(Material):
         self._shader_program.bind()
 
         for uniform in self._uniform_values:
-            self._setUniformValueDirect(uniform, self._uniform_values[uniform])
+            if uniform in self._textures:
+                texture = self._textures[uniform]
+                texture.bind()
+                self._setUniformValueDirect(uniform, 0)
+            else:
+                self._setUniformValueDirect(uniform, self._uniform_values[uniform])
 
     def release(self):
         if not self._shader_program or not self._bound:
             return
+
+        for texture in self._textures.values():
+            texture.release()
 
         self._bound = False
         self._shader_program.release()

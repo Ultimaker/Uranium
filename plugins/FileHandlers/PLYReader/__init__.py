@@ -4,7 +4,11 @@ def getMetaData():
     return {
         'type': 'mesh_reader',
         'plugin': {
-            "name": "PLY Reader"
+            "name": "PLY Reader",
+        },
+        'mesh_reader': {
+            'extension': 'ply',
+            'description': 'PLY File'
         }
     }
 

@@ -31,6 +31,12 @@ class Vector(object):
     def setData(self, x = 0,y = 0,z = 0):
         self._data = numpy.array([x,y,z],dtype=numpy.float32)
     
+    def flip(self):
+        self._data[0] = -1 * self._data[0]
+        self._data[1] = -1 * self._data[1]
+        self._data[2] = -1 * self._data[2]
+        return self
+    
     ##  Get numpy array with the data
     #   \returns numpy array of length 3 holding xyz data.
     def getData(self):
@@ -167,6 +173,7 @@ class Vector(object):
             self._data *= other
             return self
         else:
+            print(t)
             raise NotImplementedError()
 
     def __truediv__(self, other):

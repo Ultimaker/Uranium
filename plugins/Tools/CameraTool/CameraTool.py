@@ -15,7 +15,15 @@ class CameraTool(Tool):
         self._pitch = 0
         self._origin = Vector(0, 0, 0)
         self._minZoom = 10.0
-        self._maxZoom = 500.0
+        self._maxZoom = 1000.0
+
+        self._rotate = False
+        self._move = False
+        self._dragged = False
+
+        self._start_drag = None
+
+        self._drag_distance = 0.05
 
     def setZoomRange(self, min, max):
         self._minZoom = min
@@ -31,12 +39,36 @@ class CameraTool(Tool):
         return self._origin
 
     def event(self, event):
-        if type(event) is MouseEvent:
+        if event.type is Event.MousePressEvent:
             if MouseEvent.RightButton in event.buttons:
-                self._rotateCamera(event.deltaX, event.deltaY)
+                self._rotate = True
+                self._start_drag = (event.x, event.y)
                 return True
             elif MouseEvent.MiddleButton in event.buttons:
-                self._moveCamera(event)
+                self._move = True
+                self._start_drag = (event.x, event.y)
+                return True
+        elif event.type is Event.MouseMoveEvent:
+            if self._rotate or self._move:
+                diff = (event.x - self._start_drag[0], event.y - self._start_drag[1])
+                length_squared = diff[0] * diff[0] + diff[1] * diff[1]
+
+                if length_squared > (self._drag_distance * self._drag_distance):
+                    if self._rotate:
+                        self._rotateCamera(event.deltaX, event.deltaY)
+                        self._dragged = True
+                        return True
+                    elif self._move:
+                        self._moveCamera(event)
+                        self._dragged = True
+                        return True
+        elif event.type is Event.MouseReleaseEvent:
+            if self._rotate or self._move:
+                self._rotate = False
+                self._move = False
+                self._start_drag = None
+            if self._dragged:
+                self._dragged = False
                 return True
         elif event.type is Event.MouseWheelEvent:
             self._zoomCamera(event)
