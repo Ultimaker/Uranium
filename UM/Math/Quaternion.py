@@ -18,9 +18,9 @@ from UM.Math.Matrix import Matrix
 class Quaternion(object):
     EPS = numpy.finfo(float).eps * 4.0
 
-    def __init__(self):
+    def __init__(self, x=0.0, y=0.0, z=0.0, w=1.0):
         # Components are stored as XYZW
-        self._data = numpy.array([0, 0, 0, 1], dtype=numpy.float32)
+        self._data = numpy.array([x, y, z, w], dtype=numpy.float32)
 
     def getData(self):
         return self._data
@@ -50,10 +50,10 @@ class Quaternion(object):
         halfAngle = angle / 2.0
         self._data[3] = math.cos(halfAngle)
         self._data[0:3] = a * math.sin(halfAngle)
-        self._data /= numpy.linalg.norm(self._data)
+        self.normalize()
 
     def __mul__(self, other):
-        result = copy.copy(self)
+        result = copy.deepcopy(self)
         result *= other
         return result
 
@@ -69,15 +69,44 @@ class Quaternion(object):
             self._data[1] = v.y
             self._data[2] = v.z
             self._data[3] = w
-
-            self._data /= numpy.linalg.norm(self._data)
-
-            return self
+        elif type(other) is float or type(other) is int:
+            self._data *= other
         else:
             raise NotImplementedError()
 
+        return self
+
+    def __add__(self, other):
+        result = copy.deepcopy(self)
+        result += other
+        return result
+
+    def __iadd__(self, other):
+        if type(other) is Quaternion:
+            self._data[0] += other._data[0]
+            self._data[1] += other._data[1]
+            self._data[2] += other._data[2]
+            self._data[3] += other._data[3]
+        else:
+            raise NotImplementedError()
+
+        return self
+
+    def __truediv__(self, other):
+        result = copy.deepcopy(self)
+        result /= other
+        return result
+
+    def __itruediv__(self, other):
+        if type(other) is float or type(other) is int:
+            self._data /= other
+        else:
+            raise NotImplementedError()
+
+        return self
+
     def __eq__(self, other):
-        return Float.fuzzyCompare(self.x, other.x, 1e-7) and Float.fuzzyCompare(self.y, other.y, 1e-7) and Float.fuzzyCompare(self.z, other.z, 1e-7) and Float.fuzzyCompare(self.w, other.w, 1e-7)
+        return Float.fuzzyCompare(self.x, other.x, 1e-6) and Float.fuzzyCompare(self.y, other.y, 1e-6) and Float.fuzzyCompare(self.z, other.z, 1e-6) and Float.fuzzyCompare(self.w, other.w, 1e-6)
 
     def getInverse(self):
         result = copy(self)
@@ -97,8 +126,14 @@ class Quaternion(object):
                        pMult * vector.y + vMult * self.y + crossMult * (self.z * vector.x - self.x * vector.z),
                        pMult * vector.z + vMult * self.z + crossMult * (self.x * vector.y - self.y * vector.x) )
 
+    def dot(self, other):
+        return numpy.dot(self._data, other._data)
+
     def length(self):
         return numpy.linalg.norm(self._data)
+
+    def normalize(self):
+        self._data /= numpy.linalg.norm(self._data)
 
     ## Set quaternion by providing a homogenous (4x4) rotation matrix.
     # \param matrix 4x4 Matrix object
@@ -184,6 +219,16 @@ class Quaternion(object):
         m[3,3] = 1.0
 
         return Matrix(m)
+
+    @staticmethod
+    def slerp(start, end, amount):
+        if Float.fuzzyCompare(amount, 0.0):
+            return start
+        elif Float.fuzzyCompare(amount, 1.0):
+            return end
+
+        rho = math.acos(start.dot(end))
+        return (start * math.sin((1 - amount) * rho) + end * math.sin(amount * rho)) / math.sin(rho)
 
     def __repr__(self):
         return "Quaternion(x={0}, y={1}, z={2}, w={3})".format(self.x, self.y, self.z, self.w)
