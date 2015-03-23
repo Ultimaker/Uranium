@@ -1,39 +1,105 @@
 import numpy
+import numpy.linalg
 import math
+import copy
 
-##  Quaternion class based on numpy arrays.
+from UM.Math.Vector import Vector
+from UM.Math.Float import Float
+from UM.Math.Matrix import Matrix
+
+##  Unit Quaternion class based on numpy arrays.
 #
-#   This class represents a quaternion that can be used for rotations.
+#   This class represents a Unit quaternion that can be used for rotations.
+#
+#   \note The operations that modify this quaternion will ensure the length
+#         of the quaternion remains 1. This is done to make this class simpler
+#         to use.
+#
 class Quaternion(object):
     EPS = numpy.finfo(float).eps * 4.0
 
     def __init__(self):
-        self._data = numpy.zeros((4, ), dtype=numpy.float32)
-    
-    ## Set quaternion by providing rotation about an axis.
-    # \example q.setByAxis(0.123,[1,0,0])
-    def setByAxis(self,angle, axis):
-        a = axis.getData()
-        q = numpy.array([0.0, a[0], a[1], a[2]], dtype=numpy.float32)
-        qlen = self._vector_norm(q)
-        if qlen > self.EPS:
-            q *= math.sin(angle/2.0) / qlen
-        q[0] = math.cos(angle/2.0)
-        self._data = q
-        
+        # Components are stored as XYZW
+        self._data = numpy.array([0, 0, 0, 1], dtype=numpy.float32)
+
     def getData(self):
         return self._data
-    
-    ## Multiply this quaternion with another quaternion.
-    # \param quaterion The quaternion to multiply with.
-    def multiply(self, quaternion):
-        w0, x0, y0, z0 = quaternion.getData()
-        w1, x1, y1, z1 = self._data
-        self._data = numpy.array([-x1*x0 - y1*y0 - z1*z0 + w1*w0,
-                         x1*w0 + y1*z0 - z1*y0 + w1*x0,
-                        -x1*z0 + y1*w0 + z1*x0 + w1*y0,
-                         x1*y0 - y1*x0 + z1*w0 + w1*z0], dtype=numpy.float32)
-    
+
+    @property
+    def x(self):
+        return self._data[0]
+
+    @property
+    def y(self):
+        return self._data[1]
+
+    @property
+    def z(self):
+        return self._data[2]
+
+    @property
+    def w(self):
+        return self._data[3]
+
+    ##  Set quaternion by providing rotation about an axis.
+    #
+    #   \param angle \type{float} Angle in radians
+    #   \param axis \type{Vector} Axis of rotation
+    def setByAngleAxis(self, angle, axis):
+        a = axis.getNormalized().getData()
+        halfAngle = angle / 2.0
+        self._data[3] = math.cos(halfAngle)
+        self._data[0:3] = a * math.sin(halfAngle)
+        self._data /= numpy.linalg.norm(self._data)
+
+    def __mul__(self, other):
+        result = copy.copy(self)
+        result *= other
+        return result
+
+    def __imul__(self, other):
+        if type(other) is Quaternion:
+            v1 = Vector(other.x, other.y, other.z)
+            v2 = Vector(self.x, self.y, self.z)
+
+            w = other.w * self.w - v1.dot(v2)
+            v = v2 * other.w + v1 * self.w + v2.cross(v1)
+
+            self._data[0] = v.x
+            self._data[1] = v.y
+            self._data[2] = v.z
+            self._data[3] = w
+
+            self._data /= numpy.linalg.norm(self._data)
+
+            return self
+        else:
+            raise NotImplementedError()
+
+    def __eq__(self, other):
+        return Float.fuzzyCompare(self.x, other.x, 1e-7) and Float.fuzzyCompare(self.y, other.y, 1e-7) and Float.fuzzyCompare(self.z, other.z, 1e-7) and Float.fuzzyCompare(self.w, other.w, 1e-7)
+
+    def getInverse(self):
+        result = copy(self)
+        result.invert()
+        return result
+
+    def invert(self):
+        self._data[0:3] = -self._data[0:3]
+        return self
+
+    def rotate(self, vector):
+        vMult = 2.0 * (self.x * vector.x + self.y * vector.y + self.z * vector.z)
+        crossMult = 2.0 * self.w
+        pMult = crossMult * self.w - 1.0
+
+        return Vector( pMult * vector.x + vMult * self.x + crossMult * (self.y * vector.z - self.z * vector.y),
+                       pMult * vector.y + vMult * self.y + crossMult * (self.z * vector.x - self.x * vector.z),
+                       pMult * vector.z + vMult * self.z + crossMult * (self.x * vector.y - self.y * vector.x) )
+
+    def length(self):
+        return numpy.linalg.norm(self._data)
+
     ## Set quaternion by providing a homogenous (4x4) rotation matrix.
     # \param matrix 4x4 Matrix object
     # \param is_precise
@@ -82,17 +148,42 @@ class Quaternion(object):
             numpy.negative(q, q)
         self._data = q
 
+    def toMatrix(self):
+        m = numpy.zeros((4, 4), dtype=numpy.float32)
 
-    def _vector_norm(self, data, axis = None, out = None):
-        data = numpy.array(data, dtype=numpy.float32, copy=True)
-        if out is None:
-            if data.ndim == 1:
-                return math.sqrt(numpy.dot(data, data))
-            data *= data
-            out = numpy.atleast_1d(numpy.sum(data, axis=axis))
-            numpy.sqrt(out, out)
-            return out
-        else:
-            data *= data
-            numpy.sum(data, axis=axis, out=out)
-            numpy.sqrt(out, out)
+        s = 2.0 / (self.x ** 2 + self.y ** 2 + self.z ** 2 + self.w ** 2)
+
+        xs = s * self.x
+        ys = s * self.y
+        zs = s * self.z
+
+        wx = self.w * xs
+        wy = self.w * ys
+        wz = self.w * zs
+
+        xx = self.x * xs
+        xy = self.x * ys
+        xz = self.x * zs
+
+        yy = self.y * ys
+        yz = self.y * zs
+        zz = self.z * zs
+
+        m[0,0] = 1.0 - (yy + zz)
+        m[0,1] = xy - wz
+        m[0,2] = xz + wy
+
+        m[1,0] = xy + wz
+        m[1,1] = 1.0 - (xx + zz)
+        m[1,2] = yz - wx
+
+        m[2,0] = xz - wy
+        m[2,1] = yz + wx
+        m[2,2] = 1.0 - (xx + yy)
+
+        m[3,3] = 1.0
+
+        return Matrix(m)
+
+    def __repr__(self):
+        return "Quaternion(x={0}, y={1}, z={2}, w={3})".format(self.x, self.y, self.z, self.w)

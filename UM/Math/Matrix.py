@@ -1,17 +1,17 @@
 import numpy
 import math
 
-from UM.Math.Quaternion import Quaternion
-
-
 ## This class is a 4x4 homogenous matrix wrapper arround numpy.
 #
 # Heavily based (in most cases a straight copy with some refactoring) on the excellent
 # 'library' Transformations.py created by Christoph Gohlke.
 class Matrix(object):
-    def __init__(self, data = numpy.identity(4,dtype=numpy.float32)):
-        self._data = data
-    
+    def __init__(self, data = None):
+        if data is None:
+            self._data = numpy.identity(4,dtype=numpy.float32)
+        else:
+            self._data = numpy.array(data, copy=True)
+
     def at(self, x, y):
         if(x >= 4 or y >= 4 or x < 0 or y < 0):
             raise IndexError
@@ -34,26 +34,26 @@ class Matrix(object):
         self._data[index, 1] = value[1]
         self._data[index, 2] = value[2]
         self._data[index, 3] = value[3]
-    
+
     def multiply(self, matrix):
         self._data = numpy.dot(self._data, matrix.getData())
-    
+
     def preMultiply(self, matrix):
         self._data = numpy.dot(matrix.getData(),self._data)
-        
+
     ##  Get raw data.
     #   \returns 4x4 numpy array
     def getData(self):
         return self._data.astype(numpy.float32)
-    
+
     ##  Create a 4x4 identity matrix. This overwrites any existing data.
     def setToIdentity(self):
         self._data = numpy.identity(4,dtype=numpy.float32)
-        
+
     ##  Invert the matrix
     def invert(self):
         self._data = numpy.linalg.inv(self._data)
-    
+
     ##  Return a inverted copy of the matrix.
     #   \returns The invertex matrix.
     def getInverse(self):
@@ -63,14 +63,14 @@ class Matrix(object):
     def getTransposed(self):
         m = Matrix(numpy.transpose(self._data))
         return m
-    
+
     ##  Translate the matrix based on Vector.
     #   \param direction The vector by which the matrix needs to be translated.
     def translate(self, direction):
         translation_matrix = Matrix()
         translation_matrix.setByTranslation(direction)
         self.multiply(translation_matrix)
-    
+
     ##  Set the matrix by translation vector. This overwrites any existing data.
     #   \param direction The vector by which the (unit) matrix needs to be translated.
     def setByTranslation(self, direction):
@@ -79,8 +79,8 @@ class Matrix(object):
         self._data = M
 
     def setTranslation(self, translation):
-        self._data[:3, 3] = translation.getData()[:3]
-    
+        self._data[:3, 3] = translation.getData()
+
     ##  Rotate the matrix based on rotation axis
     #   \param angle The angle by which matrix needs to be rotated.
     #   \param direction Axis by which the matrix needs to be rotated about.
@@ -89,7 +89,7 @@ class Matrix(object):
         rotation_matrix = Matrix()
         rotation_matrix.setByRotationAxis(angle, direction, point)
         self.multiply(rotation_matrix)
-    
+
     ##  Set the matrix based on rotation axis. This overwrites any existing data.
     #   \param angle The angle by which matrix needs to be rotated in radians.
     #   \param direction Axis by which the matrix needs to be rotated about.
@@ -112,7 +112,7 @@ class Matrix(object):
             point = numpy.array(point[:3], dtype=numpy.float32, copy=False)
             M[:3, 3] = point - numpy.dot(R, point)
         self._data = M
-    
+
     ##  Scale the matrix by factor wrt origin & direction.
     #   \param factor The factor by which to scale
     #   \param origin From where does the scaling need to be done
@@ -121,7 +121,7 @@ class Matrix(object):
         scale_matrix = Matrix()
         scale_matrix.setByScaleFactor(factor, origin, direction)
         self.multiply(scale_matrix)
-    
+
     ##  Set the matrix by scale by factor wrt origin & direction. This overwrites any existing data
     #   \param factor The factor by which to scale
     #   \param origin From where does the scaling need to be done
@@ -142,23 +142,6 @@ class Matrix(object):
             if origin is not None:
                 M[:3, 3] = (factor * numpy.dot(origin[:3], direction_data)) * direction_data
         self._data = M
-    
-    ##  Set the matrix by proving a quaternion. This overwrites any existing data
-    #   \param quaternion The quaternion used to set the matrix data.
-    def setByQuaternion(self, quaternion):
-        q = numpy.array(quaternion.getData(), dtype=numpy.float32, copy=True)
-        n = numpy.dot(q, q)
-        if n < Quaternion.EPS:
-            return numpy.identity(4)
-        q *= math.sqrt(2.0 / n)
-        q = numpy.outer(q, q)
-        self._data =  numpy.array([
-            [1.0-q[2, 2]-q[3, 3],     q[1, 2]-q[3, 0],     q[1, 3]+q[2, 0], 0.0],
-            [    q[1, 2]+q[3, 0], 1.0-q[1, 1]-q[3, 3],     q[2, 3]-q[1, 0], 0.0],
-            [    q[1, 3]-q[2, 0],     q[2, 3]+q[1, 0], 1.0-q[1, 1]-q[2, 2], 0.0],
-            [                0.0,                 0.0,                 0.0, 1.0]],
-            dtype=numpy.float32)
-
 
     ##  Set the matrix to an orthographic projection. This overwrites any existing data.
     #   \param left The left edge of the projection

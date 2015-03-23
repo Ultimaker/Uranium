@@ -104,6 +104,7 @@ class SceneNode(SignalEmitter):
         if scene_node not in self._children:
             scene_node.transformationChanged.connect(self.transformationChanged)
             scene_node.childrenChanged.connect(self.childrenChanged)
+            scene_node.meshDataChanged.connect(self.meshDataChanged)
             self._children.append(scene_node)
             self._aabb = None
             self.childrenChanged.emit(self)
@@ -120,6 +121,7 @@ class SceneNode(SignalEmitter):
 
         child.transformationChanged.disconnect(self.transformationChanged)
         child.childrenChanged.disconnect(self.childrenChanged)
+        child.meshDataChanged.disconnect(self.meshDataChanged)
         self._children.remove(child)
         child._parent = None
         child.parentChanged.emit(self)
@@ -160,9 +162,9 @@ class SceneNode(SignalEmitter):
     def getGlobalTransformation(self):
 
         if self._parent is None:
-            return self._transformation
+            return copy(self._transformation)
         else:
-            global_transformation = deepcopy(self._transformation)
+            global_transformation = copy(self._transformation)
             global_transformation.preMultiply(self._parent.getGlobalTransformation())
             return global_transformation
 
@@ -230,7 +232,7 @@ class SceneNode(SignalEmitter):
         if not self._enabled:
             return
 
-        self._transformation.setByTranslation(position)
+        self._transformation.setTranslation(position)
         self._transformChanged()
 
     def getPosition(self):
