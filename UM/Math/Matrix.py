@@ -1,9 +1,6 @@
 import numpy
 import math
 
-from UM.Math.Quaternion import Quaternion
-
-
 ## This class is a 4x4 homogenous matrix wrapper arround numpy.
 #
 # Heavily based (in most cases a straight copy with some refactoring) on the excellent
@@ -145,23 +142,6 @@ class Matrix(object):
             if origin is not None:
                 M[:3, 3] = (factor * numpy.dot(origin[:3], direction_data)) * direction_data
         self._data = M
-
-    ##  Set the matrix by proving a quaternion. This overwrites any existing data
-    #   \param quaternion The quaternion used to set the matrix data.
-    def setByQuaternion(self, quaternion):
-        q = numpy.array(quaternion.getData(), dtype=numpy.float32, copy=True)
-        n = numpy.dot(q, q)
-        if n < Quaternion.EPS:
-            return numpy.identity(4)
-        q *= math.sqrt(2.0 / n)
-        q = numpy.outer(q, q)
-        self._data =  numpy.array([
-            [1.0-q[2, 2]-q[3, 3],     q[1, 2]-q[3, 0],     q[1, 3]+q[2, 0], 0.0],
-            [    q[1, 2]+q[3, 0], 1.0-q[1, 1]-q[3, 3],     q[2, 3]-q[1, 0], 0.0],
-            [    q[1, 3]-q[2, 0],     q[2, 3]+q[1, 0], 1.0-q[1, 1]-q[2, 2], 0.0],
-            [                0.0,                 0.0,                 0.0, 1.0]],
-            dtype=numpy.float32)
-
 
     ##  Set the matrix to an orthographic projection. This overwrites any existing data.
     #   \param left The left edge of the projection
