@@ -198,9 +198,6 @@ class Vector(object):
     def __neg__(self):
         return Vector(data = -self._data)
 
-    def __pos__(self):
-        return Vector(data = +self._data)
-
     def __repr__(self):
         return "Vector({0}, {1}, {2})".format(self._data[0], self._data[1], self._data[2])
 

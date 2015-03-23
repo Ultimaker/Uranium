@@ -42,9 +42,5 @@ class TestVector(unittest.TestCase):
         self.assertEqual(Vector(0, -1, 0), -v)
         self.assertEqual(Vector(0, 1, 0), v) # - should have no side effects
 
-        v = -v
-        self.assertEqual(Vector(0, 1, 0), +v)
-        self.assertEqual(Vector(0, -1, 0), v) # + also should not have any side effects
-
 if __name__ == "__main__":
     unittest.main()
