@@ -73,6 +73,9 @@ ButtonStyle {
             height: Theme.toolbarIconHeight;
             source: control.iconSource
 
+            sourceSize.width: Theme.toolbarIconWidth
+            sourceSize.height: Theme.toolbarIconHeight
+
             color: base.foregroundColor;
         }
         Label {
