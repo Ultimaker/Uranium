@@ -196,7 +196,7 @@
                 },
                 "material_flow": {
                     "label": "Flow",
-                    "description": "Flow compensation, the amount of material extruded is multiplied by this value",
+                    "description": "Flow compensation, the amount of material extruded is multiplied by this value.",
                     "unit": "%",
                     "default": 100.0,
                     "type": "float",
@@ -849,6 +849,134 @@
                     "label": "Spiralize the Outer Contour",
                     "description": "Spiralize is smoothing out the Z move of the outer edge. This will create a steady Z increase over the whole print. This feature turns a solid object into a single walled print with a solid bottom.\nThis feature used to be called Joris in older versions.",
                     "type": "boolean",
+                    "default": false,
+                    "visible": false
+                },
+                "wireframe": {
+                    "label": "Wireframe Printing",
+                    "description": "Print only the outside surface with a sparse webbed structure, printing 'in thin air'.",
+                    "type": "boolean",
+                    "default": false,
+                    "visible": false
+                },
+                "wireframe_printspeed": {
+                    "label": "Printing speed",
+                    "description": "Speed at which the nozzle moves when extruding material.",
+                    "type": "",
+                    "default": false,
+                    "visible": false,
+                    "children": {
+                        "wireframe_printspeed_bottom": {
+                            "label": "Bottom printing speed",
+                            "description": "Speed of printing the first layer, which is the only layer touching the bluidplatform.",
+                            "type": "",
+                            "default": false,
+                            "visible": false
+                        },
+                        "wireframe_printspeed_up": {
+                            "label": "Upward printing speed",
+                            "description": "Speed of printing a line upward 'in thin air'.",
+                            "type": "",
+                            "default": false,
+                            "visible": false
+                        },
+                        "wireframe_printspeed_down": {
+                            "label": "Downward printing speed",
+                            "description": "Speed of printing a line diagonally downward.",
+                            "type": "",
+                            "default": false,
+                            "visible": false
+                        },
+                        "wireframe_printspeed_flat": {
+                            "label": "Horizontal printing speed",
+                            "description": "Speed ",
+                            "type": "",
+                            "default": false,
+                            "visible": false
+                        }
+                    }
+                },
+                "wireframe_flow": {
+                    "label": "Flow",
+                    "description": "",
+                    "type": "",
+                    "default": false,
+                    "visible": false
+                },
+                "wireframe_": {
+                    "label": "",
+                    "description": "",
+                    "type": "",
+                    "default": false,
+                    "visible": false
+                },
+                "wireframe_": {
+                    "label": "",
+                    "description": "",
+                    "type": "",
+                    "default": false,
+                    "visible": false
+                },
+                "wireframe_": {
+                    "label": "",
+                    "description": "",
+                    "type": "",
+                    "default": false,
+                    "visible": false
+                },
+                "wireframe_": {
+                    "label": "",
+                    "description": "",
+                    "type": "",
+                    "default": false,
+                    "visible": false
+                },
+                "wireframe_": {
+                    "label": "",
+                    "description": "",
+                    "type": "",
+                    "default": false,
+                    "visible": false
+                },
+                "wireframe_": {
+                    "label": "",
+                    "description": "",
+                    "type": "",
+                    "default": false,
+                    "visible": false
+                },
+                "wireframe_": {
+                    "label": "",
+                    "description": "",
+                    "type": "",
+                    "default": false,
+                    "visible": false
+                },
+                "wireframe_": {
+                    "label": "",
+                    "description": "",
+                    "type": "",
+                    "default": false,
+                    "visible": false
+                },
+                "wireframe_": {
+                    "label": "",
+                    "description": "",
+                    "type": "",
+                    "default": false,
+                    "visible": false
+                },
+                "wireframe_": {
+                    "label": "",
+                    "description": "",
+                    "type": "",
+                    "default": false,
+                    "visible": false
+                },
+                "wireframe_": {
+                    "label": "",
+                    "description": "",
+                    "type": "",
                     "default": false,
                     "visible": false
                 }
