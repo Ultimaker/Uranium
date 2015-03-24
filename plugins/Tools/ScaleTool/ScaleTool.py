@@ -79,15 +79,18 @@ class ScaleTool(Tool):
                     if abs(dist) < self._step_size:
                         return
 
-                    scale = Vector()
-                    if self._locked_axis == ToolHandle.XAxis:
-                        scale.setX((diff.x / abs(diff.x)) * dist)
-                    elif self._locked_axis == ToolHandle.YAxis:
-                        scale.setY((diff.y / abs(diff.y)) * dist)
-                    elif self._locked_axis == ToolHandle.ZAxis:
-                        scale.setZ((diff.z / abs(diff.z)) * dist)
-                    else:
-                        scale.setData(dist, dist, dist)
+                    scale = Vector(dist, dist, dist)
+
+                    scale *= (diff.x / abs(diff.x))
+
+                    #if self._locked_axis == ToolHandle.XAxis:
+                        #scale.setX((diff.x / abs(diff.x)) * dist)
+                    #elif self._locked_axis == ToolHandle.YAxis:
+                        #scale.setY((diff.y / abs(diff.y)) * dist)
+                    #elif self._locked_axis == ToolHandle.ZAxis:
+                        #scale.setZ((diff.z / abs(diff.z)) * dist)
+                    #else:
+                        #scale.setData(dist, dist, dist)
 
                     for node in Selection.getAllSelectedObjects():
                         op = ScaleOperation(node, scale)
