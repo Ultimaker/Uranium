@@ -225,7 +225,7 @@ class SceneNode(SignalEmitter):
         self._transformChanged()
 
     def getScale(self):
-        return Vector(self._transformation.at(0, 0), self._transformation.at(1, 1), self._transformation.at(2, 2))
+        return self._transformation.getScale()
 
     ##  Translate the scene object (and thus its children) by given amount.
     #   \param translation Vector(x,y,z).

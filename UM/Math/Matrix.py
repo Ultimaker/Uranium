@@ -1,6 +1,10 @@
 import numpy
 import math
 
+from UM.Math.Vector import Vector
+
+numpy.seterr(divide='ignore')
+
 ## This class is a 4x4 homogenous matrix wrapper arround numpy.
 #
 # Heavily based (in most cases a straight copy with some refactoring) on the excellent
@@ -144,6 +148,13 @@ class Matrix(object):
             if origin is not None:
                 M[:3, 3] = (factor * numpy.dot(origin[:3], direction_data)) * direction_data
         self._data = M
+
+    def getScale(self):
+        x = numpy.linalg.norm(self._data[0,0:3])
+        y = numpy.linalg.norm(self._data[1,0:3])
+        z = numpy.linalg.norm(self._data[2,0:3])
+
+        return Vector(x, y, z)
 
     ##  Set the matrix to an orthographic projection. This overwrites any existing data.
     #   \param left The left edge of the projection
