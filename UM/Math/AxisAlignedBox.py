@@ -1,4 +1,5 @@
 from UM.Math.Vector import Vector
+from UM.Math.Float import Float
 
 import numpy
 
@@ -108,7 +109,9 @@ class AxisAlignedBox:
         self._ensureMinMax()
 
     def isValid(self):
-        return (self._min.x != self._max.x and self._min.y != self._max.y and self._min.z != self._max.z)
+        return not(Float.fuzzyCompare(self._min.x, self._max.x) or
+                   Float.fuzzyCompare(self._min.y, self._max.y) or
+                   Float.fuzzyCompare(self._min.z, self._max.z))
 
     def intersectsRay(self, ray):
         inv = ray.inverseDirection
