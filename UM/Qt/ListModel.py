@@ -78,6 +78,10 @@ class ListModel(QAbstractListModel):
     def sort(self, fun):
         self._items.sort(key = fun)
 
+    ##  Find a entry by key value pair
+    #   \param key
+    #   \param value
+    #   \return index of setting if found, None otherwise
     def find(self, key, value):
         for i in range(len(self._items)):
             if key in self._items[i]:

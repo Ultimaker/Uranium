@@ -49,13 +49,20 @@ class QtGL2Renderer(Renderer):
         self._camera = None
     
     ##  Create a new material
+    #   \param vert
+    #   \param frag
+    #   \return material
     def createMaterial(self, vert, frag):
         mat = QtGL2Material.QtGL2Material(self)
         mat.loadVertexShader(vert)
         mat.loadFragmentShader(frag)
         mat.build()
         return mat
-
+    
+    ##  Create frame buffer with given width/height
+    #   \param width Width of buffer
+    #   \param height Height of buffer
+    #   \return Created frame buffer
     def createFrameBuffer(self, width, height):
         buffer_format = QOpenGLFramebufferObjectFormat()
         buffer_format.setAttachment(QOpenGLFramebufferObject.Depth)
@@ -158,7 +165,8 @@ class QtGL2Renderer(Renderer):
             return max(idCount)
         else:
             return None
-
+    
+    ##  Render selection is used to 'highlight' the selected objects
     def setRenderSelection(self, render):
         self._render_selection = render
 
@@ -178,7 +186,8 @@ class QtGL2Renderer(Renderer):
         self._overlay_queue.clear()
 
         self._render_selection = True
-
+   
+    ##  Put a node in the render queue
     def queueNode(self, node, **kwargs):
         queue_item = { 'node': node }
 
@@ -205,7 +214,8 @@ class QtGL2Renderer(Renderer):
             self._overlay_queue.append(queue_item)
         else:
             self._solids_queue.append(queue_item)
-
+    
+    ##  Render all nodes in the queue
     def renderQueuedNodes(self):
         self._gl.glEnable(self._gl.GL_DEPTH_TEST)
         self._gl.glDepthFunc(self._gl.GL_LESS)
@@ -491,7 +501,10 @@ class QtGL2Renderer(Renderer):
 
         setattr(mesh, indexBufferProperty, buffer)
         return buffer
-
+    
+    ##  Create object color based on ID of node.
+    #   \param node Node to get color for
+    #   \return Color
     def _getObjectColor(self, node):
         obj_id = id(node)
         r = (obj_id & 0xff000000) >> 24

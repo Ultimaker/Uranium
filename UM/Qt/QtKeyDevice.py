@@ -4,6 +4,7 @@ from PyQt5.QtGui import QKeyEvent
 from UM.InputDevice import InputDevice
 from UM.Event import KeyEvent
 
+##    In between class that converts QT key events to Uranium events.
 class QtKeyDevice(InputDevice):
     def __init__(self):
         super().__init__()

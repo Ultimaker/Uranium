@@ -38,6 +38,7 @@ class MeshListModel(ListModel):
         self.updateList(self._scene.getRoot()) # Manually trigger the update
     
     def updateList(self, trigger_node):
+        
         #self.clear()
         for group_node in self._scene.getRoot().getChildren():
             for node in DepthFirstIterator(group_node):
@@ -48,7 +49,8 @@ class MeshListModel(ListModel):
                     index = self.find("key",(id(node)))
                     data = {"name":node.getName(), "visibility": node.isVisible(), "key": (id(node)), "selected": Selection.isSelected(node),"depth": node.getDepth(),"collapsed": node in self._collapsed_nodes,"parent_key": parent_key, "has_children":node.hasChildren()}
                     if index is not None:
-                        self._items[index] = data
+                        self.removeItem(index)
+                        self.insertItem(index,data)
                     else:
                         self.appendItem(data)
         
