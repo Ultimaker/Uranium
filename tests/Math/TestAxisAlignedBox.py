@@ -18,16 +18,19 @@ class TestAxisAlignedBox(unittest.TestCase):
 
         self.assertEqual(Vector(0.0, 0.0, 0.0), box.minimum)
         self.assertEqual(Vector(0.0, 0.0, 0.0), box.maximum)
+        self.assertFalse(box.isValid())
 
         box = AxisAlignedBox(minimum = Vector(), maximum = Vector(10.0, 10.0, 10.0))
 
         self.assertEqual(Vector(0.0, 0.0, 0.0), box.minimum)
         self.assertEqual(Vector(10.0, 10.0, 10.0), box.maximum)
+        self.assertTrue(box.isValid())
 
         box = AxisAlignedBox(10.0, 10.0, 10.0)
 
         self.assertEqual(Vector(-5.0, -5.0, -5.0), box.minimum)
         self.assertEqual(Vector(5.0, 5.0, 5.0), box.maximum)
+        self.assertTrue(box.isValid())
 
         self.assertEqual(-5.0, box.left)
         self.assertEqual(-5.0, box.bottom)
@@ -43,38 +46,47 @@ class TestAxisAlignedBox(unittest.TestCase):
         box.setLeft(-5.0)
         self.assertEqual(-5.0, box.left)
         self.assertEqual(0.0, box.right)
+        self.assertFalse(box.isValid())
 
         box.setBottom(-5.0)
         self.assertEqual(-5.0, box.bottom)
         self.assertEqual(0.0, box.top)
+        self.assertFalse(box.isValid())
 
         box.setBack(-5.0)
         self.assertEqual(-5.0, box.back)
         self.assertEqual(0.0, box.front)
+        self.assertTrue(box.isValid())
 
         box.setRight(5.0)
         self.assertEqual(-5.0, box.left)
         self.assertEqual(5.0, box.right)
+        self.assertTrue(box.isValid())
 
         box.setTop(5.0)
         self.assertEqual(-5.0, box.bottom)
         self.assertEqual(5.0, box.top)
+        self.assertTrue(box.isValid())
 
         box.setFront(5.0)
         self.assertEqual(-5.0, box.back)
         self.assertEqual(5.0, box.front)
+        self.assertTrue(box.isValid())
 
         box.setRight(-10.0)
         self.assertEqual(-10.0, box.left)
         self.assertEqual(-5.0, box.right)
+        self.assertTrue(box.isValid())
 
         box.setTop(-10.0)
         self.assertEqual(-10.0, box.bottom)
         self.assertEqual(-5.0, box.top)
+        self.assertTrue(box.isValid())
 
         box.setFront(-10.0)
         self.assertEqual(-10.0, box.back)
         self.assertEqual(-5.0, box.front)
+        self.assertTrue(box.isValid())
 
     def test_Add(self):
         box1 = AxisAlignedBox(minimum = Vector(-10.0, -10.0, -10.0), maximum = Vector(0.0, 0.0, 0.0))
@@ -84,6 +96,7 @@ class TestAxisAlignedBox(unittest.TestCase):
 
         self.assertEqual(Vector(-10.0, -10.0, -10.0), joined.minimum)
         self.assertEqual(Vector(10.0, 10.0, 10.0), joined.maximum)
+        self.assertTrue(joined.isValid())
 
     def test_Intersect(self):
         box = AxisAlignedBox(10.0, 10.0, 10.0)
