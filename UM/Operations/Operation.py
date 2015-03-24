@@ -7,6 +7,7 @@ class Operation:
     def __init__(self):
         super().__init__()
         self._timestamp = time.time()
+        self._always_merge = False
 
     ##  Undo the operation.
     #
