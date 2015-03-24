@@ -25,4 +25,4 @@ class RotateOperation(Operation.Operation):
         return op
 
     def __repr__(self):
-        return "RotateOperation(node = {0}, axis={1}, angle={2})".format(self._node, self._axis, self._angle)
+        return "RotateOperation(node = {0}, rotation={1})".format(self._node, self._rotation)
