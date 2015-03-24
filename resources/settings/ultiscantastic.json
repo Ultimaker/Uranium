@@ -13,6 +13,9 @@
             "default": 100
         }
     },
+    "cura": {
+        "visible": false
+    },
     "categories": {
         "calibration": {
             "label": "Calibration",

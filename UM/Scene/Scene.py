@@ -13,6 +13,7 @@ class Scene(SignalEmitter):
         super().__init__() # Call super to make multiple inheritence work.
 
         self._root = SceneNode()
+        self._root.setEnabled(False)
         self._connectSignalsRoot()
         self._active_camera = None
 

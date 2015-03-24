@@ -1,0 +1,36 @@
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Qt-Contexts: true\n"
+
+#: ../scanner/Toolbar.qml:95
+msgctxt "Toolbar|"
+msgid "Setup"
+msgstr ""
+
+#: ../scanner/Toolbar.qml:116
+msgctxt "Toolbar|"
+msgid "Calibrate"
+msgstr ""
+
+#: ../scanner/Toolbar.qml:132
+msgctxt "Toolbar|"
+msgid "Object"
+msgstr ""
+
+#: ../scanner/Toolbar.qml:151
+msgctxt "Toolbar|"
+msgid "Scan "
+msgstr ""
+
+#: ../scanner/Toolbar.qml:168
+msgctxt "Toolbar|"
+msgid "Edit "
+msgstr ""
+
+#: ../scanner/Toolbar.qml:183
+msgctxt "Toolbar|"
+msgid "Export "
+msgstr ""

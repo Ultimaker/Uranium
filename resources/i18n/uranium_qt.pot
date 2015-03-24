@@ -1,0 +1,112 @@
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Qt-Contexts: true\n"
+
+#. General configuration page title
+#: ../UM/Qt/qml/UM/Preferences/GeneralPage.qml:9
+msgctxt "GeneralPage|"
+msgid "General"
+msgstr ""
+
+#. Language selection label
+#: ../UM/Qt/qml/UM/Preferences/GeneralPage.qml:15
+msgctxt "GeneralPage|"
+msgid "Language"
+msgstr ""
+
+#. Language change warning
+#: ../UM/Qt/qml/UM/Preferences/GeneralPage.qml:36
+msgctxt "GeneralPage|"
+msgid ""
+"You will need to restart the application for language changes to have effect."
+msgstr ""
+
+#. Plugins configuration page
+#: ../UM/Qt/qml/UM/Preferences/PluginsPage.qml:10
+msgctxt "PluginsPage|"
+msgid "Plugins"
+msgstr ""
+
+#. About dialog with info about plugin %1
+#: ../UM/Qt/qml/UM/Preferences/PluginsPage.qml:66
+#, qt-format
+msgctxt "PluginsPage|"
+msgid "About %1"
+msgstr ""
+
+#. Close about plugin dialog
+#: ../UM/Qt/qml/UM/Preferences/PluginsPage.qml:93
+msgctxt "PluginsPage|"
+msgid "Close"
+msgstr ""
+
+#. Preferences dialog title
+#: ../UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:12
+msgctxt "PreferencesDialog|"
+msgid "Preferences"
+msgstr ""
+
+#. Close preferences dialog
+#: ../UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:58
+msgctxt "PreferencesDialog|"
+msgid "Close"
+msgstr ""
+
+#. General configuration page title
+#: ../UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:72
+msgctxt "PreferencesDialog|"
+msgid "General"
+msgstr ""
+
+#. Machine configuration page title
+#: ../UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:74
+msgctxt "PreferencesDialog|"
+msgid "Machine"
+msgstr ""
+
+#. Plugins configuration page title
+#: ../UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:76
+msgctxt "PreferencesDialog|"
+msgid "Plugins"
+msgstr ""
+
+#. Machine configuration page title.
+#: ../UM/Qt/qml/UM/Settings/SettingsConfigurationPage.qml:12
+msgctxt "SettingsConfigurationPage|"
+msgid "Machine"
+msgstr ""
+
+#: ../UM/Qt/qml/UM/Settings/SettingsConfigurationPage.qml:17
+msgctxt "SettingsConfigurationPage|"
+msgid "Active Machine:"
+msgstr ""
+
+#: ../UM/Qt/qml/UM/Settings/SettingsConfigurationPage.qml:36
+msgctxt "SettingsConfigurationPage|"
+msgid "Remove"
+msgstr ""
+
+#: ../UM/Qt/qml/UM/Settings/SettingsConfigurationPage.qml:71
+msgctxt "SettingsConfigurationPage|"
+msgid "Confirm Machine Deletion"
+msgstr ""
+
+#: ../UM/Qt/qml/UM/Settings/SettingsConfigurationPage.qml:72
+msgctxt "SettingsConfigurationPage|"
+msgid "Are you sure you wish to remove the machine?"
+msgstr ""
+
+#. Settings context menu action
+#: ../UM/Qt/qml/UM/Settings/SettingsView.qml:93
+msgctxt "SettingsView|"
+msgid "Hide this setting"
+msgstr ""
+
+#. Settings context menu action
+#: ../UM/Qt/qml/UM/Settings/SettingsView.qml:98
+msgctxt "SettingsView|"
+msgid "Configure setting visiblity..."
+msgstr ""

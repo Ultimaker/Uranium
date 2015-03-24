@@ -133,7 +133,7 @@ class CuraEngineBackend(Backend):
         for object in objects:
             center += object.getPosition()
 
-            meshData = object.getMeshData()
+            meshData = object.getMeshData().getTransformed(object.getGlobalTransformation())
 
             obj = msg.objects.add()
             obj.id = id(object)
@@ -174,6 +174,108 @@ class CuraEngineBackend(Backend):
         self._changeTimer = None
 
     def _sendSettings(self):
+        self._sendSettings_neith() if self._settings.getSettingValueByKey('wireframe') else self._sendSettings_normal()
+        
+    def _sendSettings_neith(self):
+        extruder = 0
+        
+        settings = {
+            'neith': 1,
+            'extruderNr': extruder,
+            'printTemperature': int(self._settings.getSettingValueByKey('material_print_temperature')),
+            'bedTemperature': int(self._settings.getSettingValueByKey('material_bed_temperature') * 100),
+            'filamentDiameter': int(self._settings.getSettingValueByKey('material_diameter') * 1000),
+            'retractionAmount': int(self._settings.getSettingValueByKey('retraction_amount') * 1000),
+            'retractionAmountPrime': int(0 * 1000),
+            # 'retractionAmountExtruderSwitch': int(fbk('') * 1000),
+            'retractionSpeed': int(self._settings.getSettingValueByKey('retraction_speed')),
+            'retractionPrimeSpeed': int(self._settings.getSettingValueByKey('retraction_speed')),
+            'retractionMinimalDistance': int(self._settings.getSettingValueByKey('retraction_min_travel') * 1000),
+            'retractionZHop': int(self._settings.getSettingValueByKey('retraction_hop') * 1000),
+
+            'moveSpeed': int(self._settings.getSettingValueByKey('speed_travel')),
+
+            'fanSpeedMin': self._settings.getSettingValueByKey('cool_fan_speed_min'),
+            'fanSpeedMax': self._settings.getSettingValueByKey('cool_fan_speed_max'),
+
+            # ================================
+            #    wireframe printing options
+            # ================================
+            'wireframeConnectionHeight': int(self._settings.getSettingValueByKey('wireframe_height')*1000),
+            'wireframeNozzleClearance': int(self._settings.getSettingValueByKey('wireframe_nozzle_clearance')*1000),
+            
+            'machineNozzleTipOuterDiameter': int(self._settings.getSettingValueByKey('machine_nozzle_tip_outer_diameter')*1000),
+            'machineNozzleHeadDistance': int(self._settings.getSettingValueByKey('machine_nozzle_head_distance')*1000),
+            'machineNozzleExpansionAngle': int(self._settings.getSettingValueByKey('machine_nozzle_expansion_angle')),
+            
+            'wireframePrintspeedBottom': self._settings.getSettingValueByKey('wireframe_printspeed_bottom'),
+            'wireframePrintspeedUp': self._settings.getSettingValueByKey('wireframe_printspeed_up'),
+            'wireframePrintspeedDown': self._settings.getSettingValueByKey('wireframe_printspeed_down'),
+            'wireframePrintspeedFlat': self._settings.getSettingValueByKey('wireframe_printspeed_flat'),
+            
+            'wireframeFlowConnection': int(self._settings.getSettingValueByKey('wireframe_flow_connection')),
+            'wireframeFlowFlat': int(self._settings.getSettingValueByKey('wireframe_flow_flat')),
+            
+            'wireframeTopDelay': int(self._settings.getSettingValueByKey('wireframe_top_delay')*100),
+            'wireframeBottomDelay': int(self._settings.getSettingValueByKey('wireframe_bottom_delay')*100),
+            'wireframeFlatDelay': int(self._settings.getSettingValueByKey('wireframe_flat_delay')*100),
+            
+            'wireframeUpDistHalfSpeed': int(self._settings.getSettingValueByKey('wireframe_up_half_speed')*1000),
+            'wireframeTopJump': int(self._settings.getSettingValueByKey('wireframe_top_jump')*1000),
+            
+            'wireframeFallDown': int(self._settings.getSettingValueByKey('wireframe_fall_down')*1000),
+            'wireframeDragAlong': int(self._settings.getSettingValueByKey('wireframe_drag_along')*1000),
+            
+            'wireframeStraightBeforeDown': int(self._settings.getSettingValueByKey('wireframe_straight_before_down')),
+            
+            
+            'wireframeRoofFallDown': int(self._settings.getSettingValueByKey('wireframe_roof_fall_down')*1000),
+            'wireframeRoofDragAlong': int(self._settings.getSettingValueByKey('wireframe_roof_drag_along')*1000),
+            'wireframeRoofOuterDelay': int(self._settings.getSettingValueByKey('wireframe_roof_outer_delay')*100),
+            'wireframeRoofInset': int(self._settings.getSettingValueByKey('wireframe_roof_inset')*1000),
+            
+            
+        }
+        
+        wireFrameStrategy = self._settings.getSettingValueByKey('wireframe_strategy')
+        if wireFrameStrategy == 'Compensate':
+            settings['wireframeStrategy'] = 0
+        if wireFrameStrategy == 'Knot':
+            settings['wireframeStrategy'] = 1
+        if wireFrameStrategy == 'Retract':
+            settings['wireframeStrategy'] = 2
+        
+        gcodeFlavor = self._settings.getSettingValueByKey('machine_gcode_flavor')
+        if gcodeFlavor == 'UltiGCode':
+            settings['gcodeFlavor'] = 1
+        elif gcodeFlavor == 'Makerbot':
+            settings['gcodeFlavor'] = 2
+        elif gcodeFlavor == 'BFB':
+            settings['gcodeFlavor'] = 3
+        elif gcodeFlavor == 'Mach3':
+            settings['gcodeFlavor'] = 4
+        elif gcodeFlavor == 'Volumetric':
+            settings['gcodeFlavor'] = 5
+        else:
+            settings['gcodeFlavor'] = 0
+
+        settings['startCode'] = self._settings.getSettingValueByKey('machine_start_gcode')
+        settings['endCode'] = self._settings.getSettingValueByKey('machine_end_gcode')
+
+        #for n in range(1, self._machine.getMaxNozzles()):
+        n = 1
+        settings['extruderOffset1.X'] = int(self._settings.getSettingValueByKey('machine_nozzle_offset_x_1') * 1000)
+        settings['extruderOffset1.Y'] = int(self._settings.getSettingValueByKey('machine_nozzle_offset_y_1') * 1000)
+
+        msg = Cura_pb2.SettingList()
+        for key, value in settings.items():
+            s = msg.settings.add()
+            s.name = key
+            s.value = str(value).encode('utf-8')
+
+        self._socket.sendMessage(msg)
+
+    def _sendSettings_normal(self):
         extruder = 0
 
         settings = {
@@ -181,6 +283,7 @@ class CuraEngineBackend(Backend):
             'layerThickness': int(self._settings.getSettingValueByKey('layer_height') * 1000),
             'initialLayerThickness': int(self._settings.getSettingValueByKey('layer_height_0') * 1000),
             'printTemperature': int(self._settings.getSettingValueByKey('material_print_temperature')),
+            'bedTemperature': int(self._settings.getSettingValueByKey('material_bed_temperature') * 100),
             'filamentDiameter': int(self._settings.getSettingValueByKey('material_diameter') * 1000),
             'filamentFlow': int(self._settings.getSettingValueByKey('material_flow')),
             'layer0extrusionWidth': int(self._settings.getSettingValueByKey('wall_line_width_0') * 1000),
@@ -228,17 +331,19 @@ class CuraEngineBackend(Backend):
 
         }
 
-        if self._settings.getSettingValueByKey('top_bottom_pattern') == 'lines':
+        if self._settings.getSettingValueByKey('top_bottom_pattern') == 'Lines':
             settings['skinPattern'] = 'SKIN_LINES'
-        elif self._settings.getSettingValueByKey('top_bottom_pattern') == 'concentric':
+        elif self._settings.getSettingValueByKey('top_bottom_pattern') == 'Concentric':
             settings['skinPattern'] = 'SKIN_CONCENTRIC'
 
         if self._settings.getSettingValueByKey('fill_pattern') == 'Grid':
             settings['infillPattern'] = 'INFILL_GRID'
         elif self._settings.getSettingValueByKey('fill_pattern') == 'Lines':
             settings['infillPattern'] = 'INFILL_LINES'
-        elif self._settings.getSettingValueByKey('fill_pattern') == 'concentric':
+        elif self._settings.getSettingValueByKey('fill_pattern') == 'Concentric':
             settings['infillPattern'] = 'INFILL_CONCENTRIC'
+        elif self._settings.getSettingValueByKey('fill_pattern') == 'ZigZag':
+            settings['infillPattern'] = 'INFILL_ZIGZAG'
 
         adhesion_type = self._settings.getSettingValueByKey('adhesion_type')
         if adhesion_type == 'Raft':
@@ -267,22 +372,27 @@ class CuraEngineBackend(Backend):
             settings['supportType'] = ''
             settings['supportAngle'] = -1
         else:
-            settings['areaSupportPolyGenerator'] = 1
             settings['supportType'] = 'LINES'
             settings['supportAngle'] = self._settings.getSettingValueByKey('support_angle')
-            settings['supportEverywhere'] = 1 if self._settings.getSettingValueByKey('support_type') == 'Everywhere' else 0
+            settings['supportOnBuildplateOnly'] = 1 if self._settings.getSettingValueByKey('support_type') == 'Touching Buildplate' else 0
             settings['supportLineDistance'] = int(100 * self._settings.getSettingValueByKey('wall_line_width_x') * 1000 / self._settings.getSettingValueByKey('support_fill_rate'))
             settings['supportXYDistance'] = int(self._settings.getSettingValueByKey('support_xy_distance') * 1000)
             settings['supportZDistance'] = int(self._settings.getSettingValueByKey('support_z_distance') * 1000)
             settings['supportZDistanceBottom'] = int(self._settings.getSettingValueByKey('support_top_distance') * 1000)
             settings['supportZDistanceTop'] = int(self._settings.getSettingValueByKey('support_bottom_distance') * 1000)
             settings['supportJoinDistance'] = int(self._settings.getSettingValueByKey('support_join_distance') * 1000)
-            settings['supportBridgeBack'] = int(self._settings.getSettingValueByKey('support_bridge_back'))
+            settings['supportAreaSmoothing'] = int(self._settings.getSettingValueByKey('support_area_smoothing') * 1000)
+            settings['supportMinimalAreaSqrt'] = int(self._settings.getSettingValueByKey('support_minimal_diameter') * 1000) if self._settings.getSettingValueByKey('support_use_towers') else 0
+            settings['supportTowerDiameter'] = int(self._settings.getSettingValueByKey('support_tower_diameter') * 1000)
+            settings['supportTowerRoofAngle'] = int(self._settings.getSettingValueByKey('support_tower_roof_angle'))
+            settings['supportConnectZigZags'] = 1 if self._settings.getSettingValueByKey('support_connect_zigzags') else 0 
             settings['supportExtruder'] = -1
             if self._settings.getSettingValueByKey('support_pattern') == 'Grid':
                 settings['supportType'] = 'GRID'
             elif self._settings.getSettingValueByKey('support_pattern') == 'Lines':
                 settings['supportType'] = 'LINES'
+            elif self._settings.getSettingValueByKey('support_pattern') == 'ZigZag':
+                settings['supportType'] = 'ZIGZAG'
 
         settings['sparseInfillLineDistance'] = -1
         if self._settings.getSettingValueByKey('fill_sparse_density') >= 100:

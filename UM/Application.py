@@ -204,7 +204,7 @@ class Application(SignalEmitter):
     #
     #   This takes a CallFunctionEvent object and puts it into the actual event loop.
     def functionEvent(self, event):
-        raise NotImplementedError("postEvent must be implemented by subclasses.")
+        raise NotImplementedError("functionEvent must be implemented by subclasses.")
 
     ##  Get the application's main thread.
     def getMainThread(self):

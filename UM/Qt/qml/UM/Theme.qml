@@ -26,8 +26,8 @@ QtObject {
     property real toolbarBorderSize: 2;
     property real toolbarSpacing: 20;
 
-    property real toolbarIconWidth: 32;
-    property real toolbarIconHeight: 32;
+    property real toolbarIconWidth: 30;
+    property real toolbarIconHeight: 30;
 
     property real toolbarButtonWidth: toolbarHeight * 1.25;
     property real toolbarButtonHeight: toolbarHeight;

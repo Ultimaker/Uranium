@@ -20,6 +20,9 @@ class ScaleTool(Tool):
         self._drag = False
         self._target = None
 
+        self._lock_steps = True
+        self._step_size = 0.1
+
     def event(self, event):
         if event.type == Event.ToolActivateEvent:
             self._handle.setParent(self.getController().getScene().getRoot())
@@ -71,7 +74,10 @@ class ScaleTool(Tool):
                 n = (handlePos - ray.getPointAlongRay(newTarget))
                 if self._target:
                     diff = n - self._target
-                    dist = diff.length() / 10
+                    dist = -round(diff.length()) / 100
+
+                    if abs(dist) < self._step_size:
+                        return
 
                     scale = Vector()
                     if self._locked_axis == ToolHandle.XAxis:

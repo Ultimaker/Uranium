@@ -1,0 +1,58 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-03-23 13:14+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: /home/ahiemstra/Projects/Ultimaker/PluggableCura/plugins/FileHandlers/GCodeWriter/__init__.py:14
+msgctxt "GCode Writer Plugin Description"
+msgid "Writes GCode to a file"
+msgstr ""
+
+#: /home/ahiemstra/Projects/Ultimaker/PluggableCura/plugins/FileHandlers/GCodeWriter/__init__.py:19
+msgctxt "GCode Writer File Description"
+msgid "GCode File"
+msgstr ""
+
+#: /home/ahiemstra/Projects/Ultimaker/PluggableCura/plugins/Tools/RotateTool/__init__.py:14
+msgctxt "Rotate tool toolbar button name"
+msgid "Rotate"
+msgstr ""
+
+#: /home/ahiemstra/Projects/Ultimaker/PluggableCura/plugins/Tools/RotateTool/__init__.py:15
+msgctxt "Rotate tool description"
+msgid "Rotate Object"
+msgstr ""
+
+#: /home/ahiemstra/Projects/Ultimaker/PluggableCura/plugins/Tools/ScaleTool/__init__.py:14
+msgctxt "Scale tool toolbar button"
+msgid "Scale"
+msgstr ""
+
+#: /home/ahiemstra/Projects/Ultimaker/PluggableCura/plugins/Tools/ScaleTool/__init__.py:15
+msgctxt "Scale tool description"
+msgid "Scale Object"
+msgstr ""
+
+#: /home/ahiemstra/Projects/Ultimaker/PluggableCura/plugins/Tools/VertexEraseTool/__init__.py:14
+msgctxt "Erase tool toolbar button"
+msgid "Erase"
+msgstr ""
+
+#: /home/ahiemstra/Projects/Ultimaker/PluggableCura/plugins/Tools/VertexEraseTool/__init__.py:15
+msgctxt "erase tool description"
+msgid "Remove points"
+msgstr ""

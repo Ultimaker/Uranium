@@ -6,10 +6,14 @@ from UM.Scene.Selection import Selection
 
 from UM.Math.Plane import Plane
 from UM.Math.Vector import Vector
+from UM.Math.Quaternion import Quaternion
+from UM.Math.Float import Float
 
 from UM.Operations.RotateOperation import RotateOperation
 
 from . import RotateToolHandle
+
+import math
 
 class RotateTool(Tool):
     def __init__(self):
@@ -20,6 +24,17 @@ class RotateTool(Tool):
         self._locked_axis = None
         self._drag = False
         self._target = None
+
+        self._step_size = 0.25
+
+        self._x_rotate_step = Quaternion()
+        self._x_rotate_step.setByAngleAxis(math.radians(15), Vector.Unit_X)
+
+        self._y_rotate_step = Quaternion()
+        self._y_rotate_step.setByAngleAxis(math.radians(15), Vector.Unit_Y)
+
+        self._z_rotate_step = Quaternion()
+        self._z_rotate_step.setByAngleAxis(math.radians(15), Vector.Unit_Z)
 
     def event(self, event):
         if event.type == Event.ToolActivateEvent:
@@ -69,20 +84,23 @@ class RotateTool(Tool):
                 if self._target:
                     diff = n - self._target
 
-                    rotation = diff.length()
-                    axis = None
+                    rotation = diff.length() / 100
+                    if rotation < self._step_size:
+                        return
+
+                    newRotation = None
                     if self._locked_axis == ToolHandle.XAxis:
-                        axis = Vector.Unit_X
-                        rotation = (diff.x / abs(diff.x)) * rotation
+                        direction = diff.x / abs(diff.x)
+                        newRotation = self._x_rotate_step if direction < 0 else self._x_rotate_step.getInverse()
                     elif self._locked_axis == ToolHandle.YAxis:
-                        axis = Vector.Unit_Y
-                        rotation = (diff.y / abs(diff.y)) * rotation
+                        direction = diff.y / abs(diff.y)
+                        newRotation = self._y_rotate_step if direction > 0 else self._y_rotate_step.getInverse()
                     elif self._locked_axis == ToolHandle.ZAxis:
-                        axis = Vector.Unit_Z
-                        rotation = (diff.z / abs(diff.z)) * rotation
+                        direction = diff.z / abs(diff.z)
+                        newRotation = self._z_rotate_step if direction > 0 else self._z_rotate_step.getInverse()
 
                     for node in Selection.getAllSelectedObjects():
-                        op = RotateOperation(node, axis, rotation)
+                        op = RotateOperation(node, newRotation)
                         Application.getInstance().getOperationStack().push(op)
 
                 self._target = n

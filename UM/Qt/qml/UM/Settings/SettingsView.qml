@@ -46,6 +46,8 @@ ScrollView
                         return "SettingComboBox.qml"
                     case "boolean":
                         return "SettingCheckBox.qml"
+                    default:
+                        return "SettingUnknown.qml"
                 }
             }
 

@@ -5,6 +5,7 @@ Item {
 
     property alias source: img.source;
     property alias color: shader.color;
+    property alias sourceSize: img.sourceSize;
 
     Image {
         id: img;

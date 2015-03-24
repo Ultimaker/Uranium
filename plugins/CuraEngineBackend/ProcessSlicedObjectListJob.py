@@ -25,7 +25,12 @@ class ProcessSlicedObjectListJob(Job):
         layerHeight = Application.getInstance().getActiveMachine().getSettingValueByKey('layer_height')
 
         for object in self._message.objects:
-            mesh = objectIdMap[object.id].getMeshData()
+            try:
+                node = objectIdMap[object.id]
+            except KeyError:
+                continue
+
+            mesh = node.getMeshData()
 
             layerData = LayerData.LayerData()
             for layer in object.layers:
@@ -40,4 +45,3 @@ class ProcessSlicedObjectListJob(Job):
                     layerData.addPolygon(layer.id, polygon.type, points)
 
             mesh.layerData = layerData
-            objectIdMap[object.id].meshDataChanged.emit()
