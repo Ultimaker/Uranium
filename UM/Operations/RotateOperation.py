@@ -11,7 +11,7 @@ class RotateOperation(Operation.Operation):
         self._node.setLocalTransformation(self._old_transform)
 
     def redo(self):
-        self._node.rotate(self._rotation)
+        self._node.rotateGlobal(self._rotation)
 
     def mergeWith(self, other):
         if type(other) is not RotateOperation:

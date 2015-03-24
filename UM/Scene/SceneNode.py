@@ -190,6 +190,17 @@ class SceneNode(SignalEmitter):
         self._transformation.multiply(rotation.toMatrix())
         self._transformChanged()
 
+    def rotateGlobal(self, rotation):
+        if not self._enabled:
+            return
+
+        m = rotation.toMatrix()
+        world = self.getGlobalTransformation()
+        world.setTranslation(Vector(0.0, 0.0, 0.0))
+        self._transformation = self._transformation.multiply(world.getInverse().multiply(m.multiply(world)))
+
+        self._transformChanged()
+
     def rotateByAngleAxis(self, angle, axis):
         if not self._enabled:
             return
