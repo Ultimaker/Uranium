@@ -37,9 +37,11 @@ class Matrix(object):
 
     def multiply(self, matrix):
         self._data = numpy.dot(self._data, matrix.getData())
+        return self
 
     def preMultiply(self, matrix):
         self._data = numpy.dot(matrix.getData(),self._data)
+        return self
 
     ##  Get raw data.
     #   \returns 4x4 numpy array
