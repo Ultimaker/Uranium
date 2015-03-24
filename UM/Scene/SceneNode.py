@@ -241,6 +241,15 @@ class SceneNode(SignalEmitter):
             return
 
         global_translate = translation.multiply(self.getGlobalTransformation())
+        scale = self.getScale()
+        global_translate.setX(global_translate.x / scale.x)
+        global_translate.setY(global_translate.y / scale.y)
+        global_translate.setZ(global_translate.z / scale.z)
+
+        global_translate.setX(global_translate.x / scale.x)
+        global_translate.setY(global_translate.y / scale.y)
+        global_translate.setZ(global_translate.z / scale.z)
+
         self._transformation.translate(global_translate)
         self._transformChanged()
 
