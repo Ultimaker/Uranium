@@ -8,24 +8,24 @@ ButtonStyle {
     id: base;
     property bool down: control.pressed || (control.checkable && control.checked);
 
-    property color backgroundColor: Theme.toolbarButtonBackgroundColor;
-    property color foregroundColor: Theme.toolbarButtonForegroundColor;
+    property color backgroundColor: Styles.toolbarButtonBackgroundColor;
+    property color foregroundColor: Styles.toolbarButtonForegroundColor;
 
-    property color backgroundHighlightColor: Theme.toolbarButtonBackgroundHighlightColor;
-    property color foregroundHighlightColor: Theme.toolbarButtonForegroundHighlightColor;
+    property color backgroundHighlightColor: Styles.toolbarButtonBackgroundHighlightColor;
+    property color foregroundHighlightColor: Styles.toolbarButtonForegroundHighlightColor;
 
-    property color backgroundDisabledColor: Theme.toolbarButtonBackgroundDisabledColor;
-    property color foregroundDisabledColor: Theme.toolbarButtonForegroundDisabledColor;
+    property color backgroundDisabledColor: Styles.toolbarButtonBackgroundDisabledColor;
+    property color foregroundDisabledColor: Styles.toolbarButtonForegroundDisabledColor;
 
     background: Item {
-        implicitWidth: control.width > 0 ? control.width : Theme.toolbarButtonWidth;
-        implicitHeight: control.height > 0 ? control.height : Theme.toolbarButtonHeight;
+        implicitWidth: control.width > 0 ? control.width : Styles.toolbarButtonWidth;
+        implicitHeight: control.height > 0 ? control.height : Styles.toolbarButtonHeight;
 
         Rectangle {
             id: backgroundItem;
 
             anchors.fill: parent;
-            anchors.bottomMargin: Theme.toolbarBorderSize;
+            anchors.bottomMargin: Styles.toolbarBorderSize;
             color: base.backgroundColor;
         }
 
@@ -34,7 +34,7 @@ ButtonStyle {
             anchors.top: parent.top;
             anchors.bottom: parent.bottom;
             width: 1;
-            color: Theme.borderColor;
+            color: Styles.borderColor;
         }
 
         Rectangle {
@@ -42,7 +42,7 @@ ButtonStyle {
             anchors.top: parent.top;
             anchors.bottom: parent.bottom;
             width: 1;
-            color: Theme.borderColor;
+            color: Styles.borderColor;
         }
 
         states: [
@@ -69,12 +69,12 @@ ButtonStyle {
             anchors.top: parent.top;
             anchors.topMargin: 2;
             anchors.horizontalCenter: parent.horizontalCenter;
-            width: Theme.toolbarIconWidth;
-            height: Theme.toolbarIconHeight;
+            width: Styles.toolbarIconWidth;
+            height: Styles.toolbarIconHeight;
             source: control.iconSource
 
-            sourceSize.width: Theme.toolbarIconWidth
-            sourceSize.height: Theme.toolbarIconHeight
+            sourceSize.width: Styles.toolbarIconWidth
+            sourceSize.height: Styles.toolbarIconHeight
 
             color: base.foregroundColor;
         }
@@ -90,7 +90,7 @@ ButtonStyle {
             color: base.foregroundColor;
 
             font.capitalization: Font.AllUppercase;
-            font.pointSize: Theme.tinyTextSize;
+            font.pointSize: Styles.tinyTextSize;
             horizontalAlignment: Text.AlignHCenter;
             wrapMode: Text.Wrap;
         }

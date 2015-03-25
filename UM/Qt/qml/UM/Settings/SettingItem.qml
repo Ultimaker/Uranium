@@ -22,7 +22,7 @@ Item {
     RowLayout
     {
         anchors.fill: parent;
-        spacing: UM.Theme.defaultMargin;
+        spacing: UM.Styles.defaultMargin;
 
         Label
         {
@@ -32,7 +32,7 @@ Item {
             Layout.fillWidth: true;
             horizontalAlignment: Text.AlignRight;
             fontSizeMode: Text.HorizontalFit;
-            minimumPointSize: UM.Theme.smallTextSize;
+            minimumPointSize: UM.Styles.smallTextSize;
             elide: Text.ElideRight;
         }
 

@@ -49,7 +49,7 @@ SettingItem {
 
                 Label {
                     anchors.right: parent.right;
-                    anchors.rightMargin: UM.Theme.defaultMargin
+                    anchors.rightMargin: UM.Styles.defaultMargin
                     anchors.verticalCenter: parent.verticalCenter;
                     text: base.unit;
                     color: "#999";

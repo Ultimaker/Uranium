@@ -30,7 +30,7 @@ Button
                 id: text;
                 text:base.text
                 color:base.foregroundColor
-                font.pointSize: UM.Theme.smallTextSize;
+                font.pointSize: UM.Styles.smallTextSize;
                 font.bold:true
                 anchors 
                 {

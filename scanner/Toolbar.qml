@@ -10,8 +10,8 @@ import "."
 Rectangle {
     id: base;
 
-    color: UM.Theme.primaryColor;
-    height: UM.Theme.toolbarHeight;
+    color: UM.Styles.primaryColor;
+    height: UM.Styles.toolbarHeight;
 
     property Action undo;
     property Action redo;
@@ -27,8 +27,8 @@ Rectangle {
             right: parent.right;
         }
 
-        height: UM.Theme.toolbarBorderSize;
-        color: UM.Theme.toolbarBorderColor;
+        height: UM.Styles.toolbarBorderSize;
+        color: UM.Styles.toolbarBorderColor;
     }
 
     RowLayout 
@@ -66,11 +66,11 @@ Rectangle {
                 Label 
                 {
                     text: "SCAN";
-                    font.pointSize: UM.Theme.largeTextSize;
+                    font.pointSize: UM.Styles.largeTextSize;
                     font.capitalization: Font.AllUppercase;
                     font.bold: true
                     color: "white"
-                    width: UM.Theme.panelWidth /2;
+                    width: UM.Styles.panelWidth /2;
                     anchors.left:spacer1.right
                     anchors.leftMargin:25
                     
@@ -206,7 +206,7 @@ Rectangle {
                 Label
                 {
                     id: stepCounterLabel
-                    width: UM.Theme.panelWidth
+                    width: UM.Styles.panelWidth
                     text: UM.ToolbarData.state + "/13 step" 
                     visible: UM.ToolbarData.wizardActive
                 }
@@ -267,7 +267,7 @@ Rectangle {
                 }
             }
         }
-        Item { width: UM.Theme.windowRightMargin; }
+        Item { width: UM.Styles.windowRightMargin; }
         
     }
 }

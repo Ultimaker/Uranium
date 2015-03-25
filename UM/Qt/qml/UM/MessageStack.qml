@@ -14,14 +14,14 @@ ListView {
     delegate: Rectangle {
         width: ListView.view.width;
         height: 50;
-        radius: Theme.defaultMargin;
-        color: Theme.messageBackgroundColor;
+        radius: Styles.defaultMargin;
+        color: Styles.messageBackgroundColor;
 
         ColumnLayout {
             anchors.fill: parent;
-            anchors.margins: Theme.defaultMargin;
+            anchors.margins: Styles.defaultMargin;
 
-            Label { text: model.description; color: Theme.messageTextColor; Layout.fillWidth: true;  }
+            Label { text: model.description; color: Styles.messageTextColor; Layout.fillWidth: true;  }
 
             ProgressBar { minimumValue: 0; maximumValue: 100; value: model.progress; Layout.fillWidth: true; }
         }

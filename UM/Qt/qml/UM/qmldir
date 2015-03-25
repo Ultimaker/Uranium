@@ -1,6 +1,6 @@
 module Cura
 
-singleton Theme 1.0 Theme.qml
+singleton Styles 1.0 Styles.qml
 
 Panel 1.0 Panel.qml
 FilePanel 1.0 FilePanel.qml

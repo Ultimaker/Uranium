@@ -111,7 +111,7 @@ ScrollView
                     Row
                     {
                         anchors.fill: parent;
-                        spacing: Theme.defaultMargin;
+                        spacing: Styles.defaultMargin;
                         Image
                         {
 

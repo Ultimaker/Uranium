@@ -10,8 +10,8 @@ import "."
 Rectangle {
     id: base;
 
-    color: Theme.primaryColor;
-    height: Theme.toolbarHeight;
+    color: Styles.primaryColor;
+    height: Styles.toolbarHeight;
 
     default property alias content: contentLayout.children;
 
@@ -22,8 +22,8 @@ Rectangle {
             right: parent.right;
         }
 
-        height: Theme.toolbarBorderSize;
-        color: Theme.toolbarBorderColor;
+        height: Styles.toolbarBorderSize;
+        color: Styles.toolbarBorderColor;
     }
 
     RowLayout {

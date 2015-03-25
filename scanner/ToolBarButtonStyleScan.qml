@@ -10,14 +10,14 @@ ButtonStyle
     id: base;
     property bool down: control.pressed || (control.checkable && control.checked);
 
-    property color backgroundColor: UM.Theme.toolbarButtonBackgroundColor;
-    property color foregroundColor: UM.Theme.toolbarButtonForegroundColor;
+    property color backgroundColor: UM.Styles.toolbarButtonBackgroundColor;
+    property color foregroundColor: UM.Styles.toolbarButtonForegroundColor;
 
-    property color backgroundHighlightColor: UM.Theme.toolbarButtonBackgroundHighlightColor;
-    property color foregroundHighlightColor: UM.Theme.toolbarButtonForegroundHighlightColor;
+    property color backgroundHighlightColor: UM.Styles.toolbarButtonBackgroundHighlightColor;
+    property color foregroundHighlightColor: UM.Styles.toolbarButtonForegroundHighlightColor;
 
-    property color backgroundDisabledColor: UM.Theme.toolbarButtonBackgroundDisabledColor;
-    property color foregroundDisabledColor: UM.Theme.toolbarButtonForegroundDisabledColor;
+    property color backgroundDisabledColor: UM.Styles.toolbarButtonBackgroundDisabledColor;
+    property color foregroundDisabledColor: UM.Styles.toolbarButtonForegroundDisabledColor;
     
     property int numCircles:0
     property int beginState:0
@@ -25,8 +25,8 @@ ButtonStyle
     
     background: Item 
     {
-        implicitWidth: control.width > 0 ? control.width : UM.Theme.toolbarButtonWidth;
-        implicitHeight: control.height > 0 ? control.height : UM.Theme.toolbarButtonHeight;
+        implicitWidth: control.width > 0 ? control.width : UM.Styles.toolbarButtonWidth;
+        implicitHeight: control.height > 0 ? control.height : UM.Styles.toolbarButtonHeight;
 
         Rectangle 
         {
@@ -42,7 +42,7 @@ ButtonStyle
             anchors.top: parent.top;
             anchors.bottom: parent.bottom;
             width: 2;
-            color: down ? UM.Theme.toolbarBorderColor: "transparent";
+            color: down ? UM.Styles.toolbarBorderColor: "transparent";
         }
 
         Rectangle 
@@ -51,7 +51,7 @@ ButtonStyle
             anchors.top: parent.top;
             anchors.bottom: parent.bottom;
             width: 2;
-            color: down ? UM.Theme.toolbarBorderColor: "transparent";
+            color: down ? UM.Styles.toolbarBorderColor: "transparent";
         }
         Rectangle
         {
@@ -59,7 +59,7 @@ ButtonStyle
             anchors.left:parent.left;
             anchors.right:parent.right;
             height: 2;
-            color: down ? "transparent": UM.Theme.toolbarBorderColor;
+            color: down ? "transparent": UM.Styles.toolbarBorderColor;
         }
         
         Rectangle
@@ -68,7 +68,7 @@ ButtonStyle
             anchors.left:parent.left;
             anchors.right:parent.right;
             height: 2;
-            color: down ? UM.Theme.toolbarBorderColor: "transparent";
+            color: down ? UM.Styles.toolbarBorderColor: "transparent";
         }
 
         states: 
@@ -116,7 +116,7 @@ ButtonStyle
                 height:25
                 width:100
                 font.capitalization: Font.AllUppercase;
-                font.pointSize: UM.Theme.smallTextSize;
+                font.pointSize: UM.Styles.smallTextSize;
                 font.bold: true
                 horizontalAlignment: Text.AlignHCenter;
                 wrapMode: Text.Wrap;
