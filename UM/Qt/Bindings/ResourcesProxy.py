@@ -1,18 +1,21 @@
-from PyQt5.QtCore import QObject, pyqtSlot, QUrl
+from PyQt5.QtCore import QObject, pyqtSlot, QUrl, Q_ENUMS
 
 from UM.Resources import Resources
 
 class ResourcesProxy(QObject):
-    ResourcesLocation = Resources.ResourcesLocation
-    SettingsLocation = Resources.SettingsLocation
-    PreferencesLocation = Resources.PreferencesLocation
+    class Location:
+        ResourcesLocation = Resources.ResourcesLocation
+        SettingsLocation = Resources.SettingsLocation
+        PreferencesLocation = Resources.PreferencesLocation
+        ThemesLocation = Resources.ThemesLocation
+    Q_ENUMS(Location)
 
     def __init__(self, parent = None):
         super().__init__(parent)
 
-    @pyqtSlot(int, result=QUrl)
-    def getPath(self, type):
-        return QUrl.fromLocalFile(Resources.getPath(type))
+    @pyqtSlot(int, str, result=QUrl)
+    def getPath(self, type, name):
+        return QUrl.fromLocalFile(Resources.getPath(type, name))
 
     @pyqtSlot(str, result=QUrl)
     def getIcon(self, name):
