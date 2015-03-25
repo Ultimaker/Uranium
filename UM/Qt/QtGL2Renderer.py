@@ -14,6 +14,7 @@ from UM.Math.Color import Color
 from . import QtGL2Material
 
 import numpy
+import copy
 from ctypes import c_void_p
 
 vertexBufferProperty = '__qtgl2_vertex_buffer'
@@ -384,13 +385,15 @@ class QtGL2Renderer(Renderer):
 
         material.bind()
         material.setUniformValue("u_projectionMatrix", self._camera.getProjectionMatrix(), cache = False)
-        material.setUniformValue("u_viewMatrix", self._camera.getGlobalTransformation().getInverse(), cache = False)
-        material.setUniformValue("u_viewPosition", self._camera.getGlobalPosition(), cache = False)
+
+        camera_transform = self._camera.getGlobalTransformation()
+        material.setUniformValue("u_viewMatrix", camera_transform.getInverse(), cache = False)
+        material.setUniformValue("u_viewPosition", camera_transform.getTranslation(), cache = False)
         material.setUniformValue("u_modelMatrix", transform, cache = False)
-        material.setUniformValue("u_lightPosition", self._camera.getGlobalPosition(), cache = False)
+        material.setUniformValue("u_lightPosition", camera_transform.getTranslation(), cache = False)
 
         if mesh.hasNormals():
-            normal_matrix = transform
+            normal_matrix = copy.deepcopy(transform)
             normal_matrix.setRow(3, [0, 0, 0, 1])
             normal_matrix.setColumn(3, [0, 0, 0, 1])
             normal_matrix = normal_matrix.getInverse().getTransposed()

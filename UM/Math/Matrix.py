@@ -87,6 +87,9 @@ class Matrix(object):
     def setTranslation(self, translation):
         self._data[:3, 3] = translation.getData()
 
+    def getTranslation(self):
+        return Vector(data = self._data[:3, 3])
+
     ##  Rotate the matrix based on rotation axis
     #   \param angle The angle by which matrix needs to be rotated.
     #   \param direction Axis by which the matrix needs to be rotated about.
