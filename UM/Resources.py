@@ -16,6 +16,7 @@ class Resources:
     ShadersLocation = 5
     i18nLocation = 6
     ImagesLocation = 7
+    ThemesLocation = 8
 
     ApplicationIdentifier = 'UM'
 
@@ -31,13 +32,13 @@ class Resources:
     def getPath(cls, type, *args):
         try:
             path = os.path.join(cls.getStorageLocation(type), *args)
-            if os.path.isfile(path):
+            if os.path.exists(path):
                 return path
         except UnsupportedStorageLocationError:
             pass
 
         path = os.path.join(cls.getLocation(type), *args)
-        if os.path.isfile(path):
+        if os.path.exists(path):
             return path
 
         raise FileNotFoundError('Could not find resource {0} in {1}'.format(args, type))
@@ -75,8 +76,10 @@ class Resources:
             return cls.__relativeToFile("..", "resources", "i18n")
         elif type == cls.ImagesLocation:
             return cls.__relativeToFile("..", "resources", "images")
+        elif type == cls.ThemesLocation:
+            return cls.__relativeToFile("..", "resources", "themes")
         else:
-            raise UnknownLocationError("Unknonw location {0}".format(cls.type))
+            raise UnknownLocationError("Unknown location {0}".format(type))
 
     ##  Return a path where a certain resource type can be stored.
     #
