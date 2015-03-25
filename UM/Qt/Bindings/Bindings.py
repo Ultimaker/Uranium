@@ -15,6 +15,7 @@ from . import OperationStackProxy
 from . import JobsModel
 from . import MeshFileHandlerProxy
 from . import PreferencesProxy
+from . import Theme
 
 class Bindings:
     @classmethod
@@ -63,3 +64,4 @@ class Bindings:
         qmlRegisterSingletonType(OperationStackProxy.OperationStackProxy, 'UM', 1, 0, 'OperationStack', Bindings.createOperationStackProxy)
         qmlRegisterSingletonType(MeshFileHandlerProxy.MeshFileHandlerProxy, 'UM', 1, 0, 'MeshFileHandler', MeshFileHandlerProxy.createMeshFileHandlerProxy)
         qmlRegisterSingletonType(PreferencesProxy.PreferencesProxy, 'UM', 1, 0, 'Preferences', PreferencesProxy.createPreferencesProxy)
+        qmlRegisterSingletonType(Theme.Theme, 'UM', 1, 0, 'Theme', Theme.createTheme)
