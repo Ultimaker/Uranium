@@ -89,6 +89,10 @@ class Theme(QObject):
             c = QQmlComponent(self._engine, styles)
             self._styles = c.create()
 
+            if c.isError():
+                for error in c.errors():
+                    Logger.log('e', error.toString())
+
         for icon in os.listdir(os.path.join(self._path, 'icons')):
             name = os.path.splitext(icon)[0]
             self._icons[name] = os.path.join(self._path, 'icons', icon)
