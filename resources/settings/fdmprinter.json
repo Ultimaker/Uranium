@@ -12,6 +12,7 @@
         "resolution": {
             "label": "Resolution",
             "visible": true,
+            "icon": "category_quality",
             "settings": {
                 "layer_height": {
                     "label": "Layer Height",
@@ -166,6 +167,7 @@
         "material": {
             "label": "Material",
             "visible": true,
+            "icon": "category_material",
             "settings": {
                 "material_print_temperature": {
                     "label": "Printing Temperature",
@@ -270,6 +272,7 @@
         "speed": {
             "label": "Speed",
             "visible": true,
+            "icon": "category_speed",
             "settings": {
                 "speed_print": {
                     "label": "Print Speed",
@@ -363,6 +366,7 @@
         "infill": {
             "label": "Infill",
             "visible": true,
+            "icon": "category_infill",
             "settings": {
                 "fill_sparse_density": {
                     "label": "Infill Density",
@@ -420,6 +424,7 @@
         "cooling": {
             "label": "Fan/Cool",
             "visible": true,
+            "icon": "category_cool",
             "settings": {
                 "cool_fan_enabled": {
                     "label": "Enable Cooling Fan",
@@ -505,6 +510,7 @@
         "support": {
             "label": "Support Structure",
             "visible": true,
+            "icon": "category_support",
             "settings": {
                 "support_enable": {
                     "label": "Enable Support",
@@ -687,6 +693,7 @@
         "platform_adhesion": {
             "label": "Skirt/Brim/Raft",
             "visible": true,
+            "icon": "category_adhesion",
             "settings": {
                 "adhesion_type": {
                     "label": "Type",
@@ -844,6 +851,7 @@
         "blackmagic": {
             "label": "Black Magic",
             "visible": false,
+            "icon": "category_fixes",
             "settings": {
                 "magic_spiralize": {
                     "label": "Spiralize the Outer Contour",

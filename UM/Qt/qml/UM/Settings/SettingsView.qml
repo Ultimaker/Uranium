@@ -13,7 +13,39 @@ ScrollView
 
     property alias listHeight: settingsList.contentHeight;
 
+    property alias spacing: settingsList.spacing;
+    property alias model: settingsList.model;
+
     signal showDescription(string text, real x, real y);
+
+    property Component categoryStyle: Component {
+        ButtonStyle {
+            label: Item
+            {
+                Row
+                {
+                    anchors.fill: parent;
+                    spacing: Styles.defaultMargin;
+                    Image
+                    {
+
+                        source: UM.Resources.getIcon("icon_resolution.png")
+                    }
+                    Label
+                    {
+                        text: control.text
+                        color:"#404040"
+                    }
+
+                }
+            }
+            background: Item
+            {
+                implicitWidth: control.width;
+                implicitHeight: control.height;
+            }
+        }
+    }
 
     ListView
     {
@@ -26,9 +58,10 @@ ScrollView
         delegate: Loader
         {
             opacity: (model.visibility && !model.collapsed) ? 1 : 0
-            Behavior on opacity { NumberAnimation { } }
+            Behavior on opacity { NumberAnimation { duration: 100; } }
             height: (model.visibility && !model.collapsed) ? 30 : 0
-            Behavior on height { NumberAnimation { } }
+            Behavior on height { NumberAnimation { duration: 100; } }
+            visible: opacity > 0;
 
             width: ListView.view.width;
 
@@ -103,40 +136,18 @@ ScrollView
         section.delegate: Button
         {
             id:categoryButton
-            style: ButtonStyle
-            {
-
-                label: Item
-                {
-                    Row
-                    {
-                        anchors.fill: parent;
-                        spacing: Styles.defaultMargin;
-                        Image
-                        {
-
-                            source: UM.Resources.getIcon("icon_resolution.png")
-                        }
-                        Label
-                        {
-                            text: section
-                            color:"#404040"
-                        }
-
-                    }
-                }
-                background: Item
-                {
-                    implicitWidth: control.width;
-                    implicitHeight: control.height;
-                }
-            }
+            style: base.categoryStyle;
             width: settingsList.width;
-            Behavior on height {NumberAnimation{}}
-            Behavior on opacity {NumberAnimation{}}
-            height: settingsList.model.checkVisibilityCategory(section) ? 40:0;
+            Behavior on height { NumberAnimation { } }
+            Behavior on opacity { NumberAnimation { } }
+
+            height: settingsList.model.checkVisibilityCategory(section) ? UM.Theme.sizes.section.height : 0;
             opacity: settingsList.model.checkVisibilityCategory(section) ? 1:0;
             
+            checkable: true;
+            checked: !settingsList.model.checkVisibilityCategory(section)
+            text: section;
+            iconSource: UM.Theme.icons[settingsList.model.categoryIcon(section)];
             
             onClicked: 
             { 
@@ -146,8 +157,8 @@ ScrollView
             {
                 target: settingsList.model;
                 onDataChanged: {
-                    categoryButton.opacity = settingsList.model.checkVisibilityCategory(section) ? 1:0;
-                    categoryButton.height = settingsList.model.checkVisibilityCategory(section) ? 40:0;
+                    categoryButton.opacity = settingsList.model.checkVisibilityCategory(section) ? 1 : 0;
+                    categoryButton.height = settingsList.model.checkVisibilityCategory(section) ? UM.Theme.sizes.section.height : 0;
                 }
             }
         }
