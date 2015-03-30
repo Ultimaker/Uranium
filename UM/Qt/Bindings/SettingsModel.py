@@ -117,12 +117,20 @@ class SettingsModel(ListModel):
     #   \param key key of the category to check
     #   \return bool 
     def checkVisibilityCategory(self,key):
-        for category in self._machine_settings.getAllCategories():    
-            if category.getLabel() == key:
+        for category in self._machine_settings.getAllCategories():
+            if category.getLabel() == key and category.isVisible():
                 for setting in category.getAllSettings():
                     if setting.checkAllChildrenVisible() or setting.isVisible():
                         return True
         return False
+
+    @pyqtSlot(str, result=str)
+    def categoryIcon(self, name):
+        for category in self._machine_settings.getAllCategories():
+            if category.getLabel() == name:
+                return category.getIcon()
+
+        return "category_unknown"
 
     #   Convenience function that finds the index in a list of dicts based on key value pair
     def _find(self,lst, key, value):

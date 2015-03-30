@@ -6,7 +6,7 @@ class SettingsCategory(object):
         self._label = key
         self._parent = parent
         self._tooltip = ''
-        self._icon = icon
+        self._icon = icon if icon else "category_unknown"
         self._order = order
         self._visible = True
         self._settings = []
@@ -19,6 +19,8 @@ class SettingsCategory(object):
             self._label = self._i18n_catalog.i18nc("{0} label".format(self._key), data["label"])
         if "visible" in data:
             self._visible = data["visible"]
+        if "icon" in data:
+            self._icon = data["icon"]
         if "settings" in data:
             for key, value in data["settings"].items():
                 if "default" in value and "type" in value:
