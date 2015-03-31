@@ -108,13 +108,17 @@ class Signal:
     ##  Disconnect from this signal.
     #   \param connector The signal or slot to disconnect.
     def disconnect(self, connector):
-        if connector in self.__signals:
-            self.__signals.remove(connector)
-        elif inspect.ismethod(connector) and connector.__self__ in self.__methods:
-            self.__methods[connector.__self__].remove(connector.__func__)
-        else:
-            if connector in self.__functions:
-                self.__functions.remove(connector)
+        try:
+            if connector in self.__signals:
+                self.__signals.remove(connector)
+            elif inspect.ismethod(connector) and connector.__self__ in self.__methods:
+                self.__methods[connector.__self__].remove(connector.__func__)
+            else:
+                if connector in self.__functions:
+                    self.__functions.remove(connector)
+
+        except KeyError: #Ignore errors when connector is not connected to this signal.
+            pass
 
     ##  Disconnect all connected slots.
     def disconnectAll(self):
