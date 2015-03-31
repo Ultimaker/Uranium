@@ -59,30 +59,11 @@ ScrollView
         {
             opacity: (model.visibility && !model.collapsed) ? 1 : 0
             Behavior on opacity { NumberAnimation { duration: 100; } }
-            height: (model.visibility && !model.collapsed) ? 30 : 0
+            height: (model.visibility && !model.collapsed) ? UM.Theme.sizes.section.height : 0
             Behavior on height { NumberAnimation { duration: 100; } }
             visible: opacity > 0;
 
-            width: ListView.view.width;
-
-            source:
-            {
-                switch(model.type)
-                {
-                    case "int":
-                        return "SettingTextField.qml"
-                    case "float":
-                        return "SettingTextField.qml"
-                    case "double":
-                        return "SettingTextField.qml"
-                    case "enum":
-                        return "SettingComboBox.qml"
-                    case "boolean":
-                        return "SettingCheckBox.qml"
-                    default:
-                        return "SettingUnknown.qml"
-                }
-            }
+            width: UM.Theme.sizes.panel.width;
 
             onLoaded:
             {

@@ -19,3 +19,5 @@ ToolbarButtonStyle 1.0 ToolbarButtonStyle.qml
 MessageStack 1.0 MessageStack.qml
 Panel 1.0 Panel.qml
 PreferencesPage 1.0 Preferences/PreferencesPage.qml
+SettingItem 1.0 Settings/SettingItem.qml
+SettingItemStyle 1.0 Settings/SettingItemStyle.qml

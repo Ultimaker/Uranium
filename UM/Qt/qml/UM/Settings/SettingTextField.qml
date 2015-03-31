@@ -5,55 +5,60 @@ import QtQuick.Controls.Styles 1.1
 
 import ".." as UM
 
-SettingItem {
+TextField {
     id: base;
 
-    control: TextField
+    signal valueChanged(string value);
+
+    text: value; //From parent loader
+    validator: DoubleValidator { }
+
+    maximumLength: 5;
+
+    onEditingFinished: if (text != value) valueChanged(text);
+
+    style: TextFieldStyle
     {
-        anchors.fill: parent;
-        maximumLength: 5;
-
-        text: base.value
-        onEditingFinished: base.model.settingChanged(base.index, base.key, text)
-        validator: DoubleValidator { }
-
-        style: TextFieldStyle
+        textColor: itemStyle.controlTextColor;
+        font: itemStyle.controlFont;
+        background: Rectangle
         {
-            textColor: "black"
-            background: Rectangle
-            {
-                implicitHeight: control.height;
-                implicitWidth: control.width;
-                border.width: 1
-                color:  {
-                    switch(base.valid)
-                    {
-                        case 0:
-                            return "red"
-                        case 1:
-                            return "red"
-                        case 2:
-                            return "red"
-                        case 3:
-                            return "yellow"
-                        case 4:
-                            return "yellow"
-                        case 5:
-                            return "white"
+            implicitHeight: control.height;
+            implicitWidth: control.width;
 
-                        default:
-                            console.log(base.valid)
-                            return "black"
-                    }
-                }
+            border.width: itemStyle.controlBorderWidth;
+            border.color: itemStyle.controlBorderColor;
 
-                Label {
-                    anchors.right: parent.right;
-                    anchors.rightMargin: UM.Styles.defaultMargin
-                    anchors.verticalCenter: parent.verticalCenter;
-                    text: base.unit;
-                    color: "#999";
+            color: {
+                switch(valid) //From parent loader
+                {
+                    case 0:
+                        return itemStyle.validationErrorColor;
+                    case 1:
+                        return itemStyle.validationErrorColor;
+                    case 2:
+                        return itemStyle.validationErrorColor;
+                    case 3:
+                        return itemStyle.validationWarningColor;
+                    case 4:
+                        return itemStyle.validationWarningColor;
+                    case 5:
+                        return itemStyle.validationOkColor;
+
+                    default:
+                        console.log(base.valid)
+                        return "black"
                 }
+            }
+
+            Label {
+                anchors.right: parent.right;
+                anchors.rightMargin: itemStyle.unitRightMargin;
+                anchors.verticalCenter: parent.verticalCenter;
+
+                text: unit; //From parent loader
+                color: itemStyle.unitColor; //From parent loader
+                font: itemStyle.unitFont;
             }
         }
     }
