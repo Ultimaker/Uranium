@@ -156,6 +156,7 @@ class Setting(SignalEmitter):
                     setting = Setting(key, self._i18n_catalog)
                     setting.setCategory(self._category)
                     setting.setParent(self)
+                    setting.visibleChanged.connect(self.visibleChanged)
                     self._children.append(setting)
 
                 setting.fillByDict(value)
@@ -215,11 +216,6 @@ class Setting(SignalEmitter):
                 return ret
         return None
 
-    ##  Set the visibility of this setting. See setParent for more info.
-    #   \param visible Bool
-    def setVisible(self, visible):
-        self._visible = visible
-
     ##  Set the default value of the setting.
     #   \param value
     def setDefaultValue(self, value):
@@ -230,6 +226,13 @@ class Setting(SignalEmitter):
     #   \returns default_value
     def getDefaultValue(self):
         return self._default_value
+
+    ##  Set the visibility of this setting. See setParent for more info.
+    #   \param visible Bool
+    def setVisible(self, visible):
+        if visible != self._visible:
+            self._visible = visible
+            self.visibleChanged.emit(self)
 
     ##  Check if the setting is visible. It can be that the setting visible is true, 
     #   but it still should be invisible as all it's children are visible (at this point this setting is overiden by its children 
@@ -242,6 +245,8 @@ class Setting(SignalEmitter):
         if self._hide_if_all_children_visible and self.checkAllChildrenVisible():
             return False
         return True
+
+    visibleChanged = Signal()
 
     ##  Check if all children are visible.
     #   \returns bool True if all children are visible. False otherwise
