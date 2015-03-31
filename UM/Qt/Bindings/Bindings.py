@@ -17,6 +17,7 @@ from . import MeshFileHandlerProxy
 from . import PreferencesProxy
 from . import Theme
 from . import AngledCornerRectangle
+from . import SettingCategoriesModel
 
 class Bindings:
     @classmethod
@@ -54,6 +55,7 @@ class Bindings:
         #qmlRegisterType(FileModel, "UM", 1, 0, "FileModel")
         qmlRegisterType(ToolModel, "UM", 1, 0, "ToolModel")
         qmlRegisterType(JobsModel.JobsModel, "UM", 1, 0, "JobsModel")
+        qmlRegisterType(SettingCategoriesModel.SettingCategoriesModel, "UM", 1, 0, "SettingCategoriesModel")
         qmlRegisterType(AngledCornerRectangle.AngledCornerRectangle, "UM", 1, 0, "AngledCornerRectangle")
 
         # Singleton proxy objects
