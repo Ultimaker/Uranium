@@ -1,5 +1,7 @@
 from UM.Settings.Setting import Setting
-class SettingsCategory(object):
+from UM.Signal import Signal, SignalEmitter
+
+class SettingsCategory(SignalEmitter):
     def __init__(self, key, catalog, parent, icon = None, order = 0):
         self._key = key
         self._i18n_catalog = catalog
@@ -9,6 +11,7 @@ class SettingsCategory(object):
         self._icon = icon if icon else "category_unknown"
         self._order = order
         self._visible = True
+        self._children_visible = False
         self._settings = []
         self._depth = 0 #Depth of category is 0 by definition (used for display purposes)
         
@@ -28,7 +31,10 @@ class SettingsCategory(object):
                     temp_setting.setCategory(self)
                     temp_setting.setParent(self)
                     temp_setting.fillByDict(value)
+                    temp_setting.visibleChanged.connect(self._onSettingVisibleChanged)
                     self._settings.append(temp_setting)
+
+        self._onSettingVisibleChanged(None)
 
     def isActive(self):
         return True
@@ -40,10 +46,17 @@ class SettingsCategory(object):
         return self._depth
     
     def setVisible(self, visible):
-        self._visible = visible
+        if visible != self._visible:
+            self._visible = visible
+            self.visibleChanged.emit()
 
     def isVisible(self):
-        return self._visible
+        if self._visible:
+            return self._children_visible
+
+        return False
+
+    visibleChanged = Signal()
 
     def addSetting(self, setting):
         self._settings.append(setting)
@@ -82,3 +95,13 @@ class SettingsCategory(object):
 
     def __repr__(self):
         return '<SettingCategory: %s %d>' % (self._key, self._order)
+
+    def _onSettingVisibleChanged(self, setting):
+        for setting in self.getAllSettings():
+            if setting.isVisible():
+                self._children_visible = True
+                break
+        else:
+            self._children_visible = False
+
+        self.visibleChanged.emit(self)
