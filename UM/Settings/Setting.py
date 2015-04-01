@@ -49,12 +49,14 @@ class Setting(SignalEmitter):
         if setting is not None:
             setting.valueChanged.connect(self.conditionalActiveHandler)
             self.conditionalActiveHandler(setting)
+        else:
+            Logger.log('w', "Unknown active_if setting %s", self._active_if_setting)
             # Check current value and update active status. (It can happen that the default value is that it's not active)
             #self.setActive(str(self._machine_settings.getSettingValueByKey(self._active_if_setting)) == str(self._active_if_value))
 
     #   Triggered when the setting it's dependant on changes it's value
     def conditionalActiveHandler(self, setting):
-        self.setActive(str(setting.getValue()) == str(self._active_if_value))
+        self.setActive(setting.getValue() == self._active_if_value)
 
     def isActive(self):
         if self._parent != None:
