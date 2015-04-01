@@ -22,6 +22,7 @@
                     "default": 0.1,
                     "min_value": 0.06,
                     "max_value": 2.0,
+                    "always_visible": true,
                     "children": {
                         "layer_height_0": {
                             "label": "Initial Layer Thickness",
@@ -850,7 +851,7 @@
         },
         "blackmagic": {
             "label": "Black Magic",
-            "visible": false,
+            "visible": true,
             "icon": "category_fixes",
             "settings": {
                 "magic_spiralize": {
