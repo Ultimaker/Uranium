@@ -14,6 +14,7 @@ class SettingsFromCategoryModel(ListModel):
     OptionsRole = Qt.UserRole + 6
     UnitRole = Qt.UserRole + 7
     DescriptionRole = Qt.UserRole + 8
+    VisibleRole = Qt.UserRole + 9
     
     def __init__(self, category, parent = None):
         super().__init__(parent)
@@ -28,23 +29,9 @@ class SettingsFromCategoryModel(ListModel):
         self.addRoleName(self.OptionsRole,"options")
         self.addRoleName(self.UnitRole,"unit")
         self.addRoleName(self.DescriptionRole, "description")
+        self.addRoleName(self.VisibleRole, "visible")
 
-    ##  Triggred by setting if it has a conditional activation
-    #def handleActiveChanged(self, key):
-        #temp_setting = self._machine_settings.getSettingByKey(key)
-        #if temp_setting is not None:
-            #index = self._find(self.items,"key",temp_setting.getKey())
-            #if index != -1:
-                #self.setProperty(index, 'disabled', (temp_setting.checkAllChildrenVisible() or not temp_setting.isActive()))
-                #self.setProperty(index, 'visibility', (temp_setting.isVisible() and temp_setting.isActive()))
-
-            #for child_setting in temp_setting.getAllChildren():
-                #index = self._find(self.items,"key",child_setting.getKey())
-                #if index != -1:
-                    #self.setProperty(index, 'disabled', (child_setting.checkAllChildrenVisible() or not child_setting.isActive()))
-                    #self.setProperty(index, 'visibility', (child_setting.isVisible() and child_setting.isActive()))
-
-    @pyqtSlot(int, str, str)
+    @pyqtSlot(int, str, "QVariant")
     ##  Notification that setting has changed.  
     def setSettingValue(self, index, key, value):
         if self._category.getSettingByKey(key) is not None:
@@ -66,45 +53,30 @@ class SettingsFromCategoryModel(ListModel):
         model = ListModel()
         model.addRoleName(self.NameRole,"text")
         for option in options:
-            model.appendItem({"text":str(option)})
-        return model    
-
-    @pyqtSlot(str,bool)
-    ##  Set the visibility of a setting.
-    #   Note that this might or might not effect the disabled property aswel!
-    #   \param key Key of the setting that is affected
-    #   \param visibility Visibility of the setting.
-    def setVisibility(self, key, visibility):
-        setting = self._machine_settings.getSettingByKey(key)
-        if setting is not None:
-            setting.setVisible(visibility)
-
-        for index in range(0,len(self.items)):
-            temp_setting = self._machine_settings.getSettingByKey(self.items[index]["key"])
-            if temp_setting is not None:
-                self.setProperty(index, 'disabled', temp_setting.checkAllChildrenVisible())
-                self.setProperty(index, 'visibility', temp_setting.isVisible())
-                self.setProperty(index, 'value', temp_setting.getValue())
-
-    #   Convenience function that finds the index in a list of dicts based on key value pair
-    def _find(self,lst, key, value):
-        for i, dic in enumerate(lst):
-            if dic[key] == value:
-                return i
-        return -1
+            model.appendItem({"text": str(option)})
+        return model
 
     def _updateSettings(self):
         for setting in self._category.getAllSettings():
-            if setting.isVisible() and setting.isActive():
-                self.appendItem({
-                    "name": setting.getLabel(),
-                    "description": setting.getDescription(),
-                    "type": setting.getType(),
-                    "value": setting.getValue(),
-                    "valid": setting.validate(),
-                    "key": setting.getKey(),
-                    "options": self.createOptionsModel(setting.getOptions()),
-                    "unit": setting.getUnit()
-                })
-            #setting.visibleChanged.connect(self._onSettingVisibleChanged)
-                #setting.activeChanged.connect(self.handleActiveChanged)
+            self.appendItem({
+                "name": setting.getLabel(),
+                "description": setting.getDescription(),
+                "type": setting.getType(),
+                "value": setting.getValue(),
+                "valid": setting.validate(),
+                "key": setting.getKey(),
+                "options": self.createOptionsModel(setting.getOptions()),
+                "unit": setting.getUnit(),
+                "visible": (setting.isVisible() and setting.isActive())
+            })
+            setting.visibleChanged.connect(self._onSettingChanged)
+            setting.activeChanged.connect(self._onSettingChanged)
+            setting.valueChanged.connect(self._onSettingChanged)
+
+    def _onSettingChanged(self, setting):
+        if setting is not None:
+            index = self.find("key", setting.getKey())
+            if index != -1:
+                self.setProperty(index, 'visible', (setting.isVisible() and setting.isActive()))
+                self.setProperty(index, 'value', setting.getValue())
+                self.setProperty(index, 'valid', setting.validate())
