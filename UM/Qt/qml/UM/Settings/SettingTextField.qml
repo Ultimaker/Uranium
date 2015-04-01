@@ -51,6 +51,13 @@ TextField {
                 }
             }
 
+            Rectangle {
+                anchors.fill: parent;
+                anchors.margins: itemStyle.controlBorderWidth;
+                color: itemStyle.controlHighlightColor;
+                opacity: !control.hovered ? 0 : valid == 5 ? 1.0 : 0.35;
+            }
+
             Label {
                 anchors.right: parent.right;
                 anchors.rightMargin: itemStyle.unitRightMargin;
