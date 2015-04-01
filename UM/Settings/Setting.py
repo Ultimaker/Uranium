@@ -72,7 +72,7 @@ class Setting(SignalEmitter):
             #for child in self._children:
                 #print("child setActive ", child._key)
                 #child.setActive(True)
-            self.activeChanged.emit(self._key)
+            self.activeChanged.emit(self)
 
     activeChanged = Signal()
 
@@ -303,20 +303,13 @@ class Setting(SignalEmitter):
         if not self._visible:
             if self._inherit and self._parent and type(self._parent) is Setting:
                 if self._inheritFunction:
-                    self._value = self._inheritFunction(self._parent, self._machine_settings)
+                    self.setValue(self._inheritFunction(self._parent, self._machine_settings))
                 else:
-                    self._value = self._parent.getValue()
+                    self.setValue(self._parent.getValue())
 
         retval = self._value
         if self._value is None:
             retval = self._default_value
-
-        if self._type == 'boolean':
-            retval = bool(retval)
-        elif self._type == 'int':
-            retval = int(retval)
-        elif self._type == 'float':
-            retval = float(retval)
 
         return retval
 
@@ -324,7 +317,15 @@ class Setting(SignalEmitter):
     #   \param value Value to be set.
     def setValue(self, value):
         if self._value != value:
-            self._value = value
+            # Strings and enums are stored as strings, do not try to parse them.
+            # In addition, if we get a non-string type, also do not try to parse it.
+            if type(value) is str and self._type != 'string' and self._type != 'enum':
+                try:
+                    self._value = ast.literal_eval(value)
+                except SyntaxError:
+                    self._value = value
+            else:
+                self._value = value
             self.valueChanged.emit(self)
 
     ##  Validate the value of this setting. 
