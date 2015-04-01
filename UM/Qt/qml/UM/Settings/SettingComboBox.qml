@@ -20,11 +20,22 @@ ComboBox
 
         return -1;
     }
+
     style: ComboBoxStyle {
         background: Rectangle {
             color: control.hovered ? itemStyle.controlHighlightColor : itemStyle.controlColor;
             border.width: itemStyle.controlBorderWidth;
             border.color: itemStyle.controlBorderColor;
+
+            Label {
+                anchors.right: parent.right;
+                anchors.rightMargin: 5;
+                anchors.verticalCenter: parent.verticalCenter;
+
+                color: itemStyle.controlBorderColor;
+
+                text: "▼";
+            }
         }
     }
 
