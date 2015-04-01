@@ -156,7 +156,7 @@ class Setting(SignalEmitter):
                     setting = Setting(key, self._i18n_catalog)
                     setting.setCategory(self._category)
                     setting.setParent(self)
-                    setting.visibleChanged.connect(self.visibleChanged)
+                    setting.visibleChanged.connect(self._onChildVisibileChanged)
                     self._children.append(setting)
 
                 setting.fillByDict(value)
@@ -347,6 +347,9 @@ class Setting(SignalEmitter):
         return '<Setting: %s>' % (self._key)
 
 ## private:
+    def _onChildVisibileChanged(self, setting):
+        self.visibleChanged.emit(setting)
+        self.visibleChanged.emit(self)
 
     # Create a function that will run \param code, making the names in \param names available as local variables
     def _createInheritFunction(self, code, names):
