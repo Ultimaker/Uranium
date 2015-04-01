@@ -32,7 +32,7 @@ Item {
         anchors.right: controlContainer.left;
         anchors.rightMargin: base.style.spacing;
 
-        height: parent.height;
+        height: base.style.fixedHeight > 0 ? base.style.fixedHeight : parent.height;
 
         horizontalAlignment: Text.AlignRight;
         verticalAlignment: Text.AlignVCenter;
@@ -68,12 +68,7 @@ Item {
         anchors.rightMargin: base.style.controlRightMargin;
 
         width: base.style.controlWidth;
-        height: parent.height;
-
-        property variant value: base.value;
-        property string unit: base.unit;
-        property int valid: base.valid;
-        property variant options: base.options;
+        height: base.style.fixedHeight > 0 ? base.style.fixedHeight : parent.height;
 
         property variant itemStyle: base.style;
 

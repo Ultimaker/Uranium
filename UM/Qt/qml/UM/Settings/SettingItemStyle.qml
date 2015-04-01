@@ -6,6 +6,8 @@ QtObject {
 
     property real spacing: 10;
 
+    property real fixedHeight: 0;
+
     property real controlWidth: 100;
     property real controlRightMargin: 10;
     property real controlBorderWidth: 1;
