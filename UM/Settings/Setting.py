@@ -303,7 +303,12 @@ class Setting(SignalEmitter):
         if not self._visible:
             if self._inherit and self._parent and type(self._parent) is Setting:
                 if self._inheritFunction:
-                    self.setValue(self._inheritFunction(self._parent, self._machine_settings))
+                    try:
+                        inherit_value = self._inheritFunction(self._parent, self._machine_settings)
+                    except Exception as e:
+                        Logger.log('e', "An error occurred in inherit function for {0}: {1}".format(self._key, str(e)))
+                    else:
+                        self.setValue(inherit_value)
                 else:
                     self.setValue(self._parent.getValue())
 
