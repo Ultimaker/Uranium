@@ -101,9 +101,6 @@ class MachineSettings(SignalEmitter):
                 if setting is not None:
                     setting.setValue(section[key])
 
-                    if not setting.isVisible():
-                        setting.setVisible(True)
-
     ##  Save setting values to file
     def saveValuesToFile(self, file_name):
         config = configparser.ConfigParser()
@@ -116,7 +113,7 @@ class MachineSettings(SignalEmitter):
         for category in self._categories:
             configData = {}
             for setting in category.getAllSettings():
-                if setting.isVisible():
+                if setting.isVisible() and setting.isActive():
                     configData[setting.getKey()] = setting.getValue()
             config[category.getKey()] = configData
 
