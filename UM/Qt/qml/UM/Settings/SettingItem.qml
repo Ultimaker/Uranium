@@ -19,9 +19,10 @@ Item {
     property int index;
     property variant key;
 
-    signal clicked(variant event);
     signal contextMenuRequested();
     signal itemValueChanged(variant value);
+    signal showTooltip(variant position);
+    signal hideTooltip();
 
     property variant style: SettingItemStyle { }
 
@@ -45,9 +46,13 @@ Item {
         font: base.style.labelFont;
 
         MouseArea {
+            id: mouse;
+
             anchors.fill: parent;
 
             acceptedButtons: Qt.LeftButton | Qt.RightButton;
+
+            hoverEnabled: true;
 
             onClicked: {
                 if(mouse.button == Qt.LeftButton)
@@ -58,6 +63,23 @@ Item {
                 {
                     base.contextMenuRequested();
                 }
+            }
+
+            onEntered: {
+                hoverTimer.start();
+            }
+
+            onExited: {
+                hoverTimer.stop();
+                base.hideTooltip();
+            }
+
+            Timer {
+                id: hoverTimer;
+                interval: 500;
+                repeat: false;
+
+                onTriggered: base.showTooltip({ x: mouse.mouseX, y: mouse.mouseY });
             }
         }
     }
