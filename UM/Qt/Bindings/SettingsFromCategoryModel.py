@@ -34,17 +34,16 @@ class SettingsFromCategoryModel(ListModel):
     @pyqtSlot(int, str, "QVariant")
     ##  Notification that setting has changed.  
     def setSettingValue(self, index, key, value):
-        if self._category.getSettingByKey(key) is not None:
-            self._category.getSettingByKey(key).setValue(value)
-        self.setProperty(index,'valid', self.isValid(key))
+        setting = self._category.getSettingByKey(key)
+        if setting:
+            setting.setValue(value)
+            self.setProperty(index, 'valid', setting.validate())
 
-    @pyqtSlot(str,result=int)
-    ##  Check if the entered value of the setting is valid (warning/error)
-    #   \returns error key.
-    def isValid(self,key):
-        if self._category.getSettingByKey(key) is not None:
-            return self._category.getSettingByKey(key).validate()
-        return 5
+    @pyqtSlot(str)
+    def hideSetting(self, key):
+        setting = self._category.getSettingByKey(key)
+        if setting:
+            setting.setVisible(False);
 
     ##  Create model for combo box (used by enum type setting) 
     #   \param options List of strings
