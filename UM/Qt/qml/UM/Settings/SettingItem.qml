@@ -9,6 +9,7 @@ Item {
     id: base;
 
     property string name;
+    property string description;
     property variant value;
     property string unit;
     property int valid;
