@@ -26,13 +26,31 @@ ComboBox
             color: control.hovered ? itemStyle.controlHighlightColor : itemStyle.controlColor;
             border.width: itemStyle.controlBorderWidth;
             border.color: itemStyle.controlBorderColor;
+        }
+        label: Item {
+            Label {
+                anchors.left: parent.left;
+                anchors.leftMargin: itemStyle.controlBorderWidth * 2;
+                anchors.right: downArrow.left;
+                anchors.rightMargin: itemStyle.controlBorderWidth;
+                anchors.verticalCenter: parent.verticalCenter;
+
+                text: control.currentText;
+                font: itemStyle.controlFont;
+
+                elide: Text.ElideRight;
+                verticalAlignment: Text.AlignVCenter;
+            }
 
             Label {
+                id: downArrow;
+
                 anchors.right: parent.right;
-                anchors.rightMargin: 5;
+                anchors.rightMargin: itemStyle.controlBorderWidth * 2;
                 anchors.verticalCenter: parent.verticalCenter;
 
                 color: itemStyle.controlBorderColor;
+                font: itemStyle.controlFont;
 
                 text: "▼";
             }
