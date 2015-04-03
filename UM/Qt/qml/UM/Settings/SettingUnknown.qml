@@ -5,12 +5,11 @@ import QtQuick.Controls.Styles 1.1
 
 import ".." as UM
 
-SettingItem {
-    id: base;
+Label {
+    signal valueChanged(string value);
 
-    control: Label
-    {
-        anchors.verticalCenter: parent.verticalCenter;
-        text: base.value + " " + base.unit;
-    }
+    property variant value;
+    property string unit;
+
+    text: value + " " + unit;
 }

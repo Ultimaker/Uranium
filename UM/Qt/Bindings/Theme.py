@@ -95,7 +95,7 @@ class Theme(QObject):
 
         for icon in os.listdir(os.path.join(self._path, 'icons')):
             name = os.path.splitext(icon)[0]
-            self._icons[name] = os.path.join(self._path, 'icons', icon)
+            self._icons[name] = QUrl.fromLocalFile(os.path.join(self._path, 'icons', icon))
 
         Logger.log('d', 'Loaded theme %s', self._path)
         self.themeLoaded.emit()

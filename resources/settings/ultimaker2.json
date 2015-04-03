@@ -34,5 +34,11 @@
         "machine_nozzle_tip_outer_diameter": { "default": 1.0 },
         "machine_nozzle_head_distance": { "default": 3.0 },
         "machine_nozzle_expansion_angle": { "default": 45 }
+    },
+
+    "categories": {
+        "material": {
+            "visible": false
+        }
     }
 }

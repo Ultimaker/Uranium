@@ -49,12 +49,14 @@ class Setting(SignalEmitter):
         if setting is not None:
             setting.valueChanged.connect(self.conditionalActiveHandler)
             self.conditionalActiveHandler(setting)
+        else:
+            Logger.log('w', "Unknown active_if setting %s", self._active_if_setting)
             # Check current value and update active status. (It can happen that the default value is that it's not active)
             #self.setActive(str(self._machine_settings.getSettingValueByKey(self._active_if_setting)) == str(self._active_if_value))
 
     #   Triggered when the setting it's dependant on changes it's value
     def conditionalActiveHandler(self, setting):
-        self.setActive(str(setting.getValue()) == str(self._active_if_value))
+        self.setActive(setting.getValue() == self._active_if_value)
 
     def isActive(self):
         if self._parent != None:
@@ -70,7 +72,7 @@ class Setting(SignalEmitter):
             #for child in self._children:
                 #print("child setActive ", child._key)
                 #child.setActive(True)
-            self.activeChanged.emit(self._key)
+            self.activeChanged.emit(self)
 
     activeChanged = Signal()
 
@@ -156,6 +158,7 @@ class Setting(SignalEmitter):
                     setting = Setting(key, self._i18n_catalog)
                     setting.setCategory(self._category)
                     setting.setParent(self)
+                    setting.visibleChanged.connect(self._onChildVisibileChanged)
                     self._children.append(setting)
 
                 setting.fillByDict(value)
@@ -215,11 +218,6 @@ class Setting(SignalEmitter):
                 return ret
         return None
 
-    ##  Set the visibility of this setting. See setParent for more info.
-    #   \param visible Bool
-    def setVisible(self, visible):
-        self._visible = visible
-
     ##  Set the default value of the setting.
     #   \param value
     def setDefaultValue(self, value):
@@ -230,6 +228,13 @@ class Setting(SignalEmitter):
     #   \returns default_value
     def getDefaultValue(self):
         return self._default_value
+
+    ##  Set the visibility of this setting. See setParent for more info.
+    #   \param visible Bool
+    def setVisible(self, visible):
+        if visible != self._visible:
+            self._visible = visible
+            self.visibleChanged.emit(self)
 
     ##  Check if the setting is visible. It can be that the setting visible is true, 
     #   but it still should be invisible as all it's children are visible (at this point this setting is overiden by its children 
@@ -242,6 +247,8 @@ class Setting(SignalEmitter):
         if self._hide_if_all_children_visible and self.checkAllChildrenVisible():
             return False
         return True
+
+    visibleChanged = Signal()
 
     ##  Check if all children are visible.
     #   \returns bool True if all children are visible. False otherwise
@@ -296,20 +303,18 @@ class Setting(SignalEmitter):
         if not self._visible:
             if self._inherit and self._parent and type(self._parent) is Setting:
                 if self._inheritFunction:
-                    self._value = self._inheritFunction(self._parent, self._machine_settings)
+                    try:
+                        inherit_value = self._inheritFunction(self._parent, self._machine_settings)
+                    except Exception as e:
+                        Logger.log('e', "An error occurred in inherit function for {0}: {1}".format(self._key, str(e)))
+                    else:
+                        self.setValue(inherit_value)
                 else:
-                    self._value = self._parent.getValue()
+                    self.setValue(self._parent.getValue())
 
         retval = self._value
         if self._value is None:
             retval = self._default_value
-
-        if self._type == 'boolean':
-            retval = bool(retval)
-        elif self._type == 'int':
-            retval = int(retval)
-        elif self._type == 'float':
-            retval = float(retval)
 
         return retval
 
@@ -317,7 +322,15 @@ class Setting(SignalEmitter):
     #   \param value Value to be set.
     def setValue(self, value):
         if self._value != value:
-            self._value = value
+            # Strings and enums are stored as strings, do not try to parse them.
+            # In addition, if we get a non-string type, also do not try to parse it.
+            if type(value) is str and self._type != 'string' and self._type != 'enum':
+                try:
+                    self._value = ast.literal_eval(value)
+                except SyntaxError:
+                    self._value = value
+            else:
+                self._value = value
             self.valueChanged.emit(self)
 
     ##  Validate the value of this setting. 
@@ -342,6 +355,9 @@ class Setting(SignalEmitter):
         return '<Setting: %s>' % (self._key)
 
 ## private:
+    def _onChildVisibileChanged(self, setting):
+        self.visibleChanged.emit(setting)
+        self.visibleChanged.emit(self)
 
     # Create a function that will run \param code, making the names in \param names available as local variables
     def _createInheritFunction(self, code, names):

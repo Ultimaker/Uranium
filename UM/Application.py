@@ -133,6 +133,9 @@ class Application(SignalEmitter):
         return self._active_machine
 
     def setActiveMachine(self, machine):
+        if machine == self._active_machine:
+            return
+
         self._active_machine = machine
         self.activeMachineChanged.emit()
 

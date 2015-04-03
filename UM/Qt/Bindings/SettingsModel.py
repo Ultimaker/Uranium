@@ -42,15 +42,14 @@ class SettingsModel(ListModel):
         self.addRoleName(self.DescriptionRole, "description")
 
     ##  Triggred by setting if it has a conditional activation
-    def handleActiveChanged(self, key):
-        temp_setting = self._machine_settings.getSettingByKey(key)
-        if temp_setting is not None:
-            index = self._find(self.items,"key",temp_setting.getKey())
+    def handleActiveChanged(self, setting):
+        if setting is not None:
+            index = self._find(self.items,"key", setting.getKey())
             if index != -1:
-                self.setProperty(index, 'disabled', (temp_setting.checkAllChildrenVisible() or not temp_setting.isActive())) 
-                self.setProperty(index, 'visibility', (temp_setting.isVisible() and temp_setting.isActive()))
+                self.setProperty(index, 'disabled', (setting.checkAllChildrenVisible() or not setting.isActive()))
+                self.setProperty(index, 'visibility', (setting.isVisible() and setting.isActive()))
 
-            for child_setting in temp_setting.getAllChildren():
+            for child_setting in setting.getAllChildren():
                 index = self._find(self.items,"key",child_setting.getKey())
                 if index != -1:
                     self.setProperty(index, 'disabled', (child_setting.checkAllChildrenVisible() or not child_setting.isActive()))

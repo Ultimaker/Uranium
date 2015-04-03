@@ -3,13 +3,33 @@ import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.1
 
-SettingItem {
-    id: base;
+CheckBox
+{
+    signal valueChanged(bool value);
 
-    control: CheckBox
-    {
-        anchors.fill: parent;
-        checked: base.value
-        onCheckedChanged: if(base.model) base.model.settingChanged(base.index, base.key, checked);
+    checked: value //From parent loader
+    onCheckedChanged: valueChanged(checked);
+
+    style: CheckBoxStyle {
+        background: Item { }
+        indicator: Rectangle {
+            implicitWidth:  control.height;
+            implicitHeight: control.height;
+
+            color: control.hovered ? itemStyle.controlHighlightColor : itemStyle.controlColor;
+            border.width: itemStyle.controlBorderWidth;
+            border.color: itemStyle.controlBorderColor;
+
+            Label {
+                anchors.centerIn: parent;
+                color: itemStyle.controlTextColor;
+                font: itemStyle.controlFont;
+
+                text: "✓";
+
+                opacity: control.checked ? 1 : 0;
+                Behavior on opacity { NumberAnimation { duration: 100; } }
+            }
+        }
     }
 }
