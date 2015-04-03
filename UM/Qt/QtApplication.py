@@ -64,7 +64,7 @@ class QtApplication(QApplication, Application, SignalEmitter):
 
     def setMainQml(self, base_path, qml_file):
         if hasattr(sys, 'frozen'):
-            self._mainQml = os.path.join(os.path.basename(sys.executable), qml_file)
+            self._mainQml = os.path.join(os.path.dirname(sys.executable), qml_file)
         else:
             self._mainQml = os.path.join(base_path, qml_file)
 
@@ -75,7 +75,7 @@ class QtApplication(QApplication, Application, SignalEmitter):
         self._engine = QQmlApplicationEngine()
         self.engineCreatedSignal.emit()
         if hasattr(sys, 'frozen'):
-            self._engine.addImportPath(os.path.join(os.path.basename(sys.executable), 'qml'))
+            self._engine.addImportPath(os.path.join(os.path.dirname(sys.executable), 'qml'))
         else:
             self._engine.addImportPath(os.path.join(os.path.dirname(__file__), 'qml'))
 
