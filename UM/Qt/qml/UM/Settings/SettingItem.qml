@@ -50,21 +50,11 @@ Item {
 
             anchors.fill: parent;
 
-            acceptedButtons: Qt.LeftButton | Qt.RightButton;
-
+            acceptedButtons: Qt.RightButton;
             hoverEnabled: true;
 
-            onClicked: {
-                if(mouse.button == Qt.LeftButton)
-                {
-                    base.clicked(mouse)
-                }
-                else
-                {
-                    base.contextMenuRequested();
-                }
-            }
-
+            onClicked: base.contextMenuRequested();
+            
             onEntered: {
                 hoverTimer.start();
             }
