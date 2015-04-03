@@ -1,6 +1,5 @@
 import sys
 import os
-import site
 import signal
 import platform
 
@@ -21,16 +20,6 @@ from UM.Preferences import Preferences
 ##  Application subclass that provides a Qt application object.
 class QtApplication(QApplication, Application, SignalEmitter):
     def __init__(self, **kwargs):
-        if platform.system() == "Windows":
-            # QT needs to be able to find the Qt5 dlls on windows. However, these are installed in site-packages/PyQt5
-            # Add this path to the environment so the dlls are found. (Normally the PyQt installer adds this path global.
-            # However, we do not want to set system global paths from our applications)
-            # This needs to be done before the QtApplication is initialized.
-            for site_package_path in site.getsitepackages():
-                pyqt_path = os.path.join(site_package_path, 'PyQt5')
-                if os.path.isdir(pyqt_path):
-                    os.environ['PATH'] = "%s;%s" % (pyqt_path, os.environ['PATH'])
-
         super().__init__(sys.argv, **kwargs)
 
         self._mainQml = "main.qml"
@@ -73,8 +62,11 @@ class QtApplication(QApplication, Application, SignalEmitter):
     def run(self):
         pass
 
-    def setMainQml(self, file):
-        self._mainQml = file
+    def setMainQml(self, base_path, qml_file):
+        if hasattr(sys, 'frozen'):
+            self._mainQml = os.path.join(os.path.basename(sys.executable), qml_file)
+        else:
+            self._mainQml = os.path.join(base_path, qml_file)
 
     def initializeEngine(self):
         # TODO: Document native/qml import trickery
@@ -82,7 +74,10 @@ class QtApplication(QApplication, Application, SignalEmitter):
 
         self._engine = QQmlApplicationEngine()
         self.engineCreatedSignal.emit()
-        self._engine.addImportPath(os.path.dirname(__file__) + "/qml")
+        if hasattr(sys, 'frozen'):
+            self._engine.addImportPath(os.path.join(os.path.basename(sys.executable), 'qml'))
+        else:
+            self._engine.addImportPath(os.path.join(os.path.dirname(__file__), 'qml'))
 
         self.registerObjects(self._engine)
         
