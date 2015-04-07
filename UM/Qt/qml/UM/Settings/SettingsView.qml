@@ -63,8 +63,7 @@ ScrollView
             Behavior on height { NumberAnimation { duration: 100; } }
             visible: opacity > 0;
 
-            width: UM.Theme.sizes.panel.width;
-
+            width: UM.Theme.sizes.panel.width; 
             onLoaded:
             {
                 item.model = ListView.view.model;
