@@ -4,7 +4,7 @@ from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator
 
 import os.path
 
-##  A Job subclass that performs mesh loading.
+##  A Job subclass that performs mesh writing.
 #
 #   The result of this Job is a MeshData object.
 class WriteMeshJob(Job):
