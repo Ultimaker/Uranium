@@ -59,12 +59,13 @@ class Setting(SignalEmitter):
         self.setActive(setting.getValue() == self._active_if_value)
 
     def isActive(self):
-        if self._parent != None:
-            if self._parent.isActive() == True:
-                return self._active
-        else:
-            return self._active
-        return False    
+        return self._active
+        #if self._parent != None:
+        #   if self._parent.isActive() == True:
+        #        return self._active
+        #else:
+        #    return self._active
+        #return False    
 
     def setActive(self, active):
         if self._active != active: 

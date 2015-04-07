@@ -874,7 +874,7 @@
                     "unit": "mm/s",
                     "type": "float",
                     "default": 5.0,
-                    "visible": true,
+                    "visible": false,
                     "active_if": {
                         "setting": "wireframe",
                         "value": true
