@@ -28,7 +28,6 @@ from PyQt5.QtGui import QColor
 import os.path
 import numpy
 numpy.seterr(all='ignore')
-import copy
 
 class PrinterApplication(QtApplication):
     def __init__(self):
@@ -46,6 +45,7 @@ class PrinterApplication(QtApplication):
         self._physics = None
         self._volume = None
         self._platform = None
+        self._output_source = 'local_file'
         self.activeMachineChanged.connect(self._onActiveMachineChanged)
     
     def _loadPlugins(self):
@@ -95,7 +95,7 @@ class PrinterApplication(QtApplication):
 
         self.showSplashMessage('Loading interface...')
 
-        self.setMainQml(os.path.dirname(__file__) + "/qml/Printer.qml")
+        self.setMainQml(os.path.dirname(__file__), "qml/Printer.qml")
         self.initializeEngine()
 
         self.getStorageDevice('LocalFileStorage').removableDrivesChanged.connect(self._removableDrivesChanged)
@@ -257,6 +257,24 @@ class PrinterApplication(QtApplication):
                 self._platform.setPosition(Vector(0.0, 0.0, 0.0))
 
     removableDrivesChanged = pyqtSignal()
+
+    outputDeviceChanged = pyqtSignal()
+    @pyqtProperty(str, notify = outputDeviceChanged)
+    def outputDevice(self):
+        return self._output_source
+
+    @pyqtProperty(str, notify = outputDeviceChanged)
+    def outputDeviceIcon(self):
+        if self._output_source == 'local_file':
+            return 'save'
+        elif self._output_source == 'sdcard':
+            return 'save_sd'
+        elif self._output_source == 'usb':
+            return 'print_usb'
+
+    @pyqtSlot()
+    def writeToOutputDevice(self):
+        pass
 
     @pyqtProperty("QStringList", notify = removableDrivesChanged)
     def removableDrives(self):

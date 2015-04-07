@@ -1,6 +1,7 @@
 import os
 import os.path
 import platform
+import sys
 
 class UnknownLocationError(Exception):
     pass
@@ -63,21 +64,21 @@ class Resources:
     @classmethod
     def getLocation(cls, type):
         if type == cls.ResourcesLocation:
-            return cls.__relativeToFile("..", "resources")
+            return cls.__relativeToAppBase("resources")
         elif type == cls.SettingsLocation:
-            return cls.__relativeToFile("..", "resources", "settings")
+            return cls.__relativeToAppBase("resources", "settings")
         elif type == cls.PreferencesLocation:
-            return cls.__relativeToFile("..", "resources", "preferences")
+            return cls.__relativeToAppBase("resources", "preferences")
         elif type == cls.MeshesLocation:
-            return cls.__relativeToFile("..", "resources", "meshes")
+            return cls.__relativeToAppBase("resources", "meshes")
         elif type == cls.ShadersLocation:
-            return cls.__relativeToFile("..", "resources", "shaders")
+            return cls.__relativeToAppBase("resources", "shaders")
         elif type == cls.i18nLocation:
-            return cls.__relativeToFile("..", "resources", "i18n")
+            return cls.__relativeToAppBase("resources", "i18n")
         elif type == cls.ImagesLocation:
-            return cls.__relativeToFile("..", "resources", "images")
+            return cls.__relativeToAppBase("resources", "images")
         elif type == cls.ThemesLocation:
-            return cls.__relativeToFile("..", "resources", "themes")
+            return cls.__relativeToAppBase("resources", "themes")
         else:
             raise UnknownLocationError("Unknown location {0}".format(type))
 
@@ -125,8 +126,10 @@ class Resources:
 
     # Return a path relative to this file.
     @classmethod
-    def __relativeToFile(cls, *args):
-        return os.path.join(os.path.abspath(os.path.dirname(__file__)), *args)
+    def __relativeToAppBase(cls, *args):
+        if hasattr(sys, "frozen"):
+            return os.path.join(os.path.dirname(sys.executable), *args)
+        return os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', *args)
 
     @classmethod
     def __initializeStoragePaths(cls):
@@ -150,7 +153,7 @@ class Resources:
 
             cls.__data_storage_path = os.path.join(xdg_data_home, cls.ApplicationIdentifier)
         else:
-            cls.__config_storage_path = cls.__relativeToFile('..')
+            cls.__config_storage_path = cls.__relativeToAppBase('')
 
         if not cls.__data_storage_path:
             cls.__data_storage_path = cls.__config_storage_path

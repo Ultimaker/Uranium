@@ -1,5 +1,5 @@
 from PyQt5.QtCore import QObject, pyqtSlot, pyqtProperty, pyqtSignal, QCoreApplication, QUrl, QSizeF
-from PyQt5.QtGui import QColor, QFont, QFontMetrics
+from PyQt5.QtGui import QColor, QFont, QFontMetrics, QFontDatabase, QFontInfo
 from PyQt5.QtQml import QQmlComponent
 
 import json
@@ -64,11 +64,18 @@ class Theme(QObject):
                 c = QColor(color[0], color[1], color[2], color[3])
                 self._colors[name] = c
 
+        fontsdir = os.path.join(self._path, "fonts")
+        if os.path.isdir(fontsdir):
+            for file in os.listdir(fontsdir):
+                if "ttf" in file:
+                    QFontDatabase.addApplicationFont(os.path.join(fontsdir, file))
+
         if 'fonts' in data:
             for name, font in data['fonts'].items():
                 f = QFont()
 
                 f.setFamily(font.get('family', QCoreApplication.instance().font().family()))
+                f.setStyleName(font.get('style', 'Regular'))
                 f.setBold(font.get('bold', False))
                 f.setItalic(font.get('italic', False))
                 f.setPixelSize(int(font.get('size', 1) * self._em_height))
@@ -93,9 +100,17 @@ class Theme(QObject):
                 for error in c.errors():
                     Logger.log('e', error.toString())
 
-        for icon in os.listdir(os.path.join(self._path, 'icons')):
-            name = os.path.splitext(icon)[0]
-            self._icons[name] = QUrl.fromLocalFile(os.path.join(self._path, 'icons', icon))
+        iconsdir = os.path.join(self._path, 'icons')
+        if os.path.isdir(iconsdir):
+            for icon in os.listdir(iconsdir):
+                name = os.path.splitext(icon)[0]
+                self._icons[name] = QUrl.fromLocalFile(os.path.join(iconsdir, icon))
+
+        imagesdir = os.path.join(self._path, 'images')
+        if os.path.isdir(imagesdir):
+            for image in os.listdir(imagesdir):
+                name = os.path.splitext(image)[0]
+                self._images[name] = QUrl.fromLocalFile(os.path.join(imagesdir, image))
 
         Logger.log('d', 'Loaded theme %s', self._path)
         self.themeLoaded.emit()

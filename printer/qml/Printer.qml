@@ -91,7 +91,9 @@ UM.MainWindow {
                 //: Help menu
                 title: qsTr("&Help");
 
-                MenuItem { action: actions.help; }
+                MenuItem { action: actions.documentation; }
+                MenuItem { action: actions.reportBug; }
+                MenuSeparator { }
                 MenuItem { action: actions.about; }
             }
         }
@@ -130,6 +132,7 @@ UM.MainWindow {
 
                 addMachineAction: actions.addMachine;
                 configureMachinesAction: actions.configureMachines;
+                saveAction: actions.save;
             }
 
             UM.MessageStack {
@@ -157,6 +160,21 @@ UM.MainWindow {
                 }
 
                 action: actions.open;
+            }
+
+            Image {
+                anchors {
+                    verticalCenter: openFileButton.verticalCenter;
+                    left: openFileButton.right;
+                    leftMargin: UM.Theme.sizes.window_margin.width;
+                }
+
+                source: UM.Theme.images.logo;
+                width: UM.Theme.sizes.logo.width;
+                height: UM.Theme.sizes.logo.height;
+
+                sourceSize.width: width;
+                sourceSize.height: height;
             }
 
             PrinterButton {
@@ -254,6 +272,9 @@ UM.MainWindow {
 
         preferences.onTriggered: preferences.visible = true;
         configureMachines.onTriggered: { preferences.visible = true; preferences.setPage(2); }
+
+        documentation.onTriggered: Qt.openUrlExternally("https://ultimaker.com/en/support");
+        reportBug.onTriggered: Qt.openUrlExternally("https://github.com/Ultimaker/PluggableCura/issues");
     }
 
     Menu {
@@ -307,7 +328,6 @@ UM.MainWindow {
         onAccepted:
         {
             UM.MeshFileHandler.readLocalFile(fileUrl)
-            files.setDirectory(fileUrl)
         }
     }
 

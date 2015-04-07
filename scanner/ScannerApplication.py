@@ -84,7 +84,7 @@ class ScannerApplication(QtApplication):
         self.getController().getTool("CameraTool").setOrigin(Vector(400,-1000,5000)) #TODO hardcoded
         self.getController().getTool("CameraTool").setZoomRange(3500,10000)
         
-        self.setMainQml(os.path.dirname(__file__) + "/Scanner.qml")
+        self.setMainQml(os.path.dirname(__file__), "Scanner.qml")
         self.initializeEngine()
         
         
