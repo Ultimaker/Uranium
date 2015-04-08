@@ -52,22 +52,6 @@ class Camera(SceneNode.SceneNode):
     def setPerspective(self, pers):
         self._perspective = pers
 
-    def lookAt(self, center, up):
-        eye = self.getPosition()
-        f = (center - eye).normalize()
-        up.normalize()
-        s = f.cross(up).normalize()
-        u = s.cross(f).normalize()
-
-        m = Matrix(numpy.array([
-            [ s.x,  u.x, -f.x, eye.x],
-            [ s.y,  u.y, -f.y, eye.y],
-            [ s.z,  u.z, -f.z, eye.z],
-            [ 0.0,  0.0,  0.0,   1.0]],
-            dtype=numpy.float32))
-
-        self.setLocalTransformation(m)
-
     ##  Get a ray from the camera into the world.
     #
     #   This will create a ray from the camera's origin, passing through (x, y)
