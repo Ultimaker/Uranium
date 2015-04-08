@@ -320,12 +320,12 @@ class SceneNode(SignalEmitter):
         s = f.cross(up).normalize()
         u = s.cross(f).normalize()
 
-        m = Matrix(numpy.array([
+        m = Matrix([
             [ s.x,  u.x,  -f.x, 0.0],
             [ s.y,  u.y,  -f.y, 0.0],
             [ s.z,  u.z,  -f.z, 0.0],
-            [ 0.0,  0.0,  0.0,  1.0]],
-            dtype=numpy.float32))
+            [ 0.0,  0.0,  0.0,  1.0]
+        ])
 
         if self._parent:
             self._orientation = self._parent._getDerivedOrientation() * Quaternion.fromMatrix(m)

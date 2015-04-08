@@ -14,7 +14,7 @@ class Matrix(object):
         if data is None:
             self._data = numpy.identity(4,dtype=numpy.float32)
         else:
-            self._data = numpy.array(data, copy=True)
+            self._data = numpy.array(data, copy=True, dtype=numpy.float32)
 
     def at(self, x, y):
         if(x >= 4 or y >= 4 or x < 0 or y < 0):
