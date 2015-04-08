@@ -1,5 +1,6 @@
 from UM.Math.Matrix import Matrix
 from UM.Math.Vector import Vector
+from UM.Math.Quaternion import Quaternion
 from UM.Math.AxisAlignedBox import AxisAlignedBox
 from UM.Signal import Signal, SignalEmitter
 from UM.Job import Job
@@ -15,12 +16,31 @@ import math
 #
 #   \todo Add unit testing
 class SceneNode(SignalEmitter):
+    class TransformSpace:
+        Local = 1
+        Parent = 2
+        World = 3
+
     def __init__(self, parent = None):
         super().__init__() # Call super to make multiple inheritence work.
 
         self._children = []
         self._mesh_data = None
-        self._transformation = Matrix()
+
+        self._position = Vector()
+        self._scale = Vector(1.0, 1.0, 1.0)
+        self._orientation = Quaternion()
+
+        self._transformation = None
+        self._world_transformation = None
+
+        self._derived_position = None
+        self._derived_orientation = None
+        self._derived_scale = None
+
+        self._inherit_orientation = True
+        self._inherit_scale = True
+
         self._parent = parent
         self._enabled = True
         self._selectable = False
@@ -157,128 +177,133 @@ class SceneNode(SignalEmitter):
     #   \param object The object that triggered the change.
     childrenChanged = Signal()
 
-    ##  \brief Computes and returns the transformation from origin to local space
+    ##  \brief Computes and returns the transformation from world to local space.
     #   \returns 4x4 transformation matrix
-    def getGlobalTransformation(self):
+    def getWorldTransformation(self):
+        if self._world_transformation is None:
+            self._updateTransformation()
 
-        if self._parent is None:
-            return copy(self._transformation)
-        else:
-            global_transformation = copy(self._transformation)
-            global_transformation.preMultiply(self._parent.getGlobalTransformation())
-            return global_transformation
+        return deepcopy(self._world_transformation)
 
     ##  \brief Returns the local transformation with respect to its parent. (from parent to local)
     #   \retuns transformation 4x4 (homogenous) matrix
     def getLocalTransformation(self):
-        return copy(self._transformation)
+        if self._transformation is None:
+            self._updateTransformation()
 
-    ##  \brief Sets the local transformation with respect to its parent. (from parent to local)
-    #   \param transformation 4x4 (homogenous) matrix
-    def setLocalTransformation(self, transformation):
-        if not self._enabled:
-            return
+        return deepcopy(self._transformation)
 
-        self._transformation = transformation
-        self._transformChanged()
+    ##  Get the local orientation value.
+    def getOrientation(self):
+        return deepcopy(self._orientation)
+
 
     ##  \brief Rotate the scene object (and thus its children) by given amount
-    def rotate(self, rotation):
+    #
+    #   \param rotation \type{Quaternion} A quaternion indicating the amount of rotation.
+    #   \param transform_space The space relative to which to rotate. Can be any one of the constants in SceneNode::TransformSpace.
+    def rotate(self, rotation, transform_space = TransformSpace.Local):
         if not self._enabled:
             return
 
-        self._transformation.multiply(rotation.toMatrix())
+        if transform_space == SceneNode.TransformSpace.Local:
+            self._orientation = self._orientation * rotation
+        elif transform_space == SceneNode.TransformSpace.Parent:
+            self._orientation = rotation * self._orientation
+        elif transform_space == SceneNode.TransformSpace.World:
+            self._orientation = self._orientation * self._getDerivedOrientation().getInverse() * rotation * self._getDerivedOrientation()
+        else:
+            raise ValueError("Unknown transform space {0}".format(transform_space))
+
         self._transformChanged()
 
-    def rotateGlobal(self, rotation):
-        if not self._enabled:
+    ##  Set the local orientation of this scene node.
+    #
+    #   \param orientation \type{Quaternion} The new orientation of this scene node.
+    def setOrientation(self, orientation):
+        if not self._enabled or orientation == self._orientation:
             return
 
-        m = rotation.toMatrix()
-        world = self.getGlobalTransformation()
-        world.setTranslation(Vector(0.0, 0.0, 0.0))
-        self._transformation = self._transformation.multiply(world.getInverse().multiply(m.multiply(world)))
-
+        self._orientation = orientation
         self._transformChanged()
 
-    def rotateByAngleAxis(self, angle, axis):
-        if not self._enabled:
-            return
-
-        self._transformation.rotateByAxis(math.radians(angle), axis)
-        self._transformChanged()
+    ##  Get the local scaling value.
+    def getScale(self):
+        return deepcopy(self._scale)
 
     ##  Scale the scene object (and thus its children) by given amount
-    def scale(self, scale):
-        self._transformation.scaleByFactor(scale)
-        self._transformChanged()
-
-    def setScale(self, scale):
-        if scale == self.getScale():
+    #
+    #   \param scale \type{Vector} A Vector with three scale values
+    #   \param transform_space The space relative to which to scale. Can be any one of the constants in SceneNode::TransformSpace.
+    def scale(self, scale, transform_space = TransformSpace.Local):
+        if not self._enabled:
             return
 
-        currentTransform = self._transformation.getData()
-        currentTransform[0, 0] = scale.x
-        currentTransform[1, 1] = scale.y
-        currentTransform[2, 2] = scale.z
-        self._transformation = Matrix(currentTransform)
+        if transform_space == SceneNode.TransformSpace.Local:
+            self._scale += scale
+        elif transform_space == SceneNode.TransformSpace.Parent:
+            raise NotImplementedError()
+        elif transform_space == SceneNode.TransformSpace.World:
+            raise NotImplementedError()
+        else:
+            raise ValueError("Unknown transform space {0}".format(transform_space))
+
         self._transformChanged()
 
-    def getScale(self):
-        return self._transformation.getScale()
+    ##  Set the local scale value.
+    #
+    #   \param scale \type{Vector} The new scale value of the scene node.
+    def setScale(self, scale):
+        if not self._enabled or scale == self._scale:
+            return
+
+        self._scale = scale
+        self._transformChanged()
+
+    ##  Get the local position.
+    def getPosition(self):
+        return deepcopy(self._position)
+
+    ##  Get the position of this scene node relative to the world.
+    def getWorldPosition(self):
+        if not self._derived_position:
+            self._updateTransformation()
+
+        return self._derived_position
 
     ##  Translate the scene object (and thus its children) by given amount.
-    #   \param translation Vector(x,y,z).
-    def translate(self, translation):
+    #
+    #   \param translation \type{Vector} The amount to translate by.
+    #   \param transform_space The space relative to which to translate. Can be any one of the constants in SceneNode::TransformSpace.
+    def translate(self, translation, transform_space = TransformSpace.Local):
         if not self._enabled:
             return
 
-        self._transformation.translate(translation)
+        if transform_space == SceneNode.TransformSpace.Local:
+            self._position += self._orientation.rotate(translation)
+        elif transform_space == SceneNode.TransformSpace.Parent:
+            self._position += translation
+        elif transform_space == SceneNode.TransformSpace.World:
+            if self._parent:
+                self._position += (self._parent._getDerivedOrientation().getInverse().rotate(translation)) / self._parent._getDerivedScale();
+            else:
+                self._position += translation
+
         self._transformChanged()
 
-    def translateGlobal(self, translation):
-        if not self._enabled:
-            return
-
-        global_translate = translation.multiply(self.getGlobalTransformation())
-        scale = self.getScale()
-        global_translate.setX(global_translate.x / scale.x)
-        global_translate.setY(global_translate.y / scale.y)
-        global_translate.setZ(global_translate.z / scale.z)
-
-        global_translate.setX(global_translate.x / scale.x)
-        global_translate.setY(global_translate.y / scale.y)
-        global_translate.setZ(global_translate.z / scale.z)
-
-        self._transformation.translate(global_translate)
-        self._transformChanged()
-
-    ##  Set
+    ##  Set the local position value.
+    #
+    #   \param position The new position value of the SceneNode.
     def setPosition(self, position):
-        if not self._enabled:
+        if not self._enabled or position == self._position:
             return
 
-        self._transformation.setTranslation(position)
+        self._position = position
         self._transformChanged()
-
-    def getPosition(self):
-        pos = self._transformation.getData()
-        return Vector(pos[0,3], pos[1,3], pos[2,3])
-
-    def getGlobalPosition(self):
-        pos = self.getGlobalTransformation().getData()
-        return Vector(float(pos[0,3]), pos[1,3], pos[2,3])
 
     ##  Signal. Emitted whenever the transformation of this object or any child object changes.
     #   \param object The object that caused the change.
     transformationChanged = Signal()
-    
-    ##  Check if this node is at the bottom of the tree (and thus a leaf node).
-    #   \returns True if its a leaf object, false otherwise.
-    def isLeafNode(self):
-        if len(self._children) == 0:
-            return True
-        return False
 
     ##  Can be overridden by child nodes if they need to perform special rendering.
     #   If you need to handle rendering in a special way, for example for tool handles,
@@ -332,10 +357,58 @@ class SceneNode(SignalEmitter):
         return AxisAlignedBox()
 
     ##  private:
+    def _getDerivedPosition(self):
+        if not self._derived_position:
+            self._updateTransformation()
+
+        return self._derived_position
+
+    def _getDerivedOrientation(self):
+        if not self._derived_orientation:
+            self._updateTransformation()
+
+        return self._derived_orientation
+
+    def _getDerivedScale(self):
+        if not self._derived_scale:
+            self._updateTransformation()
+
+        return self._derived_scale
 
     def _transformChanged(self):
         self._resetAABB()
+        self._transformation = None
+        self._global_transformation = None
+        self._derived_position = None
+        self._derived_orientation = None
+        self._derived_scale = None
         self.transformationChanged.emit(self)
+
+    def _updateTransformation(self):
+        self._transformation = Matrix.fromPositionOrientationScale(self._position, self._orientation, self._scale)
+
+        if self._parent:
+            parent_orientation = self._parent._getDerivedOrientation()
+            if self._inherit_orientation:
+                self._derived_orientation = parent_orientation * self._orientation
+            else:
+                self._derived_orientation = self._orientation
+
+            parent_scale = self._parent._getDerivedScale()
+            if self._inherit_scale:
+                self._derived_scale = parent_scale.scale(self._scale)
+            else:
+                self._derived_scale = self._scale
+
+            self._derived_position = parent_orientation.rotate(parent_scale.scale(self._position))
+            self._derived_position += self._parent._getDerivedPosition()
+
+            self._world_transformation = Matrix.fromPositionOrientationScale(self._derived_position, self._derived_orientation, self._derived_scale)
+        else:
+            self._derived_position = self._position
+            self._derived_orientation = self._orientation
+            self._derived_scale = self._scale
+            self._world_transformation = self._transformation
 
     def _resetAABB(self):
         self._aabb = None
@@ -356,7 +429,7 @@ class _CalculateAABBJob(Job):
     def run(self):
         aabb = None
         if self._node._mesh_data:
-            aabb = self._node._mesh_data.getExtents(self._node.getGlobalTransformation())
+            aabb = self._node._mesh_data.getExtents(self._node.getWorldTransformation())
         else:
             aabb = AxisAlignedBox()
 
