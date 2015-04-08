@@ -121,6 +121,12 @@ class Vector(object):
 
         return Vector(d[0], d[1], d[2])
 
+    ##  Scale a vector by another vector.
+    #
+    #   This will do a component-wise multiply of the two vectors.
+    def scale(self, other):
+        return Vector(self.x * other.x, self.y * other.y, self.z * other.z)
+
     def __eq__(self, other):
         return self._data[0] == other._data[0] and self._data[1] == other._data[1] and self._data[2] == other._data[2]
 
