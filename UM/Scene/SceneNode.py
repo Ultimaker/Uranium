@@ -270,7 +270,7 @@ class SceneNode(SignalEmitter):
         if not self._derived_position:
             self._updateTransformation()
 
-        return self._derived_position
+        return deepcopy(self._derived_position)
 
     ##  Translate the scene object (and thus its children) by given amount.
     #
@@ -286,7 +286,7 @@ class SceneNode(SignalEmitter):
             self._position += translation
         elif transform_space == SceneNode.TransformSpace.World:
             if self._parent:
-                self._position += (self._parent._getDerivedOrientation().getInverse().rotate(translation)) / self._parent._getDerivedScale();
+                self._position += (1.0 / self._parent._getDerivedScale()).scale(self._parent._getDerivedOrientation().getInverse().rotate(translation))
             else:
                 self._position += translation
 
