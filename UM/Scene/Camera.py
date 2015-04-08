@@ -65,7 +65,7 @@ class Camera(SceneNode.SceneNode):
     #   \note The near-plane coordinates should be in normalized form, that is within (-1, 1).
     def getRay(self, x, y):
         invp = numpy.linalg.inv(self._projectionMatrix.getData().copy())
-        invv = self.getGlobalTransformation().getData()
+        invv = self.getWorldTransformation().getData()
 
         near = numpy.array([x, -y, -1.0, 1.0], dtype=numpy.float32)
         near = numpy.dot(invp, near)
@@ -80,4 +80,4 @@ class Camera(SceneNode.SceneNode):
         dir = far - near
         dir /= numpy.linalg.norm(dir)
 
-        return Ray(self.getGlobalPosition(), Vector(-dir[0], -dir[1], -dir[2]))
+        return Ray(self.getWorldPosition(), Vector(-dir[0], -dir[1], -dir[2]))

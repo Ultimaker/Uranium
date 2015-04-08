@@ -378,19 +378,17 @@ class QtGL2Renderer(Renderer):
     def _renderItem(self, item):
         node = item['node']
         mesh = item.get('mesh', node.getMeshData())
-        transform = node.getGlobalTransformation()
+        transform = node.getWorldTransformation()
         material = item['material']
         mode = item['mode']
         wireframe = item.get('wireframe', False)
 
         material.bind()
         material.setUniformValue("u_projectionMatrix", self._camera.getProjectionMatrix(), cache = False)
-
-        camera_transform = self._camera.getGlobalTransformation()
-        material.setUniformValue("u_viewMatrix", camera_transform.getInverse(), cache = False)
-        material.setUniformValue("u_viewPosition", camera_transform.getTranslation(), cache = False)
+        material.setUniformValue("u_viewMatrix", self._camera.getWorldTransformation().getInverse(), cache = False)
+        material.setUniformValue("u_viewPosition", self._camera.getWorldPosition(), cache = False)
         material.setUniformValue("u_modelMatrix", transform, cache = False)
-        material.setUniformValue("u_lightPosition", camera_transform.getTranslation(), cache = False)
+        material.setUniformValue("u_lightPosition", self._camera.getWorldPosition(), cache = False)
 
         if mesh.hasNormals():
             normal_matrix = copy.deepcopy(transform)
