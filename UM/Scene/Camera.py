@@ -18,9 +18,10 @@ class Camera(SceneNode.SceneNode):
         self._projectionMatrix = Matrix()
         self._projectionMatrix.setOrtho(-5, 5, 5, -5, -100, 100)
         self._perspective = False
-        #self._projectionMatrix.setPerspective(45, 1, 0, 5)
         self._viewport_width = 0
         self._viewport_height = 0
+
+        self._calculate_aabb = False
 
     ##  Get the projection matrix of this camera.
     def getProjectionMatrix(self):
@@ -52,22 +53,6 @@ class Camera(SceneNode.SceneNode):
     def setPerspective(self, pers):
         self._perspective = pers
 
-    def lookAt(self, center, up):
-        eye = self.getPosition()
-        f = (center - eye).normalize()
-        up.normalize()
-        s = f.cross(up).normalize()
-        u = s.cross(f).normalize()
-
-        m = Matrix(numpy.array([
-            [ s.x,  u.x, -f.x, eye.x],
-            [ s.y,  u.y, -f.y, eye.y],
-            [ s.z,  u.z, -f.z, eye.z],
-            [ 0.0,  0.0,  0.0,   1.0]],
-            dtype=numpy.float32))
-
-        self.setLocalTransformation(m)
-
     ##  Get a ray from the camera into the world.
     #
     #   This will create a ray from the camera's origin, passing through (x, y)
@@ -81,7 +66,7 @@ class Camera(SceneNode.SceneNode):
     #   \note The near-plane coordinates should be in normalized form, that is within (-1, 1).
     def getRay(self, x, y):
         invp = numpy.linalg.inv(self._projectionMatrix.getData().copy())
-        invv = self.getGlobalTransformation().getData()
+        invv = self.getWorldTransformation().getData()
 
         near = numpy.array([x, -y, -1.0, 1.0], dtype=numpy.float32)
         near = numpy.dot(invp, near)
@@ -96,4 +81,4 @@ class Camera(SceneNode.SceneNode):
         dir = far - near
         dir /= numpy.linalg.norm(dir)
 
-        return Ray(self.getGlobalPosition(), Vector(-dir[0], -dir[1], -dir[2]))
+        return Ray(self.getWorldPosition(), Vector(-dir[0], -dir[1], -dir[2]))

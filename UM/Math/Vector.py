@@ -121,6 +121,12 @@ class Vector(object):
 
         return Vector(d[0], d[1], d[2])
 
+    ##  Scale a vector by another vector.
+    #
+    #   This will do a component-wise multiply of the two vectors.
+    def scale(self, other):
+        return Vector(self.x * other.x, self.y * other.y, self.z * other.z)
+
     def __eq__(self, other):
         return self._data[0] == other._data[0] and self._data[1] == other._data[1] and self._data[2] == other._data[2]
 
@@ -163,7 +169,7 @@ class Vector(object):
         return self
 
     def __mul__(self, other):
-        v = Vector(data = self._data)
+        v = deepcopy(self)
         v *= other
         return v
 
@@ -173,8 +179,12 @@ class Vector(object):
             self._data *= other
             return self
         else:
-            print(t)
             raise NotImplementedError()
+
+    def __rmul__(self, other):
+        v = deepcopy(self)
+        v *= other
+        return v
 
     def __truediv__(self, other):
         v = Vector(data = self._data)

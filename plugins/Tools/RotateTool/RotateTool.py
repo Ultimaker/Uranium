@@ -39,7 +39,7 @@ class RotateTool(Tool):
     def event(self, event):
         if event.type == Event.ToolActivateEvent:
             self._handle.setParent(self.getController().getScene().getRoot())
-            self._handle.setPosition(Selection.getSelectedObject(0).getGlobalPosition())
+            self._handle.setPosition(Selection.getSelectedObject(0).getWorldPosition())
 
         if event.type == Event.MousePressEvent:
             if not MouseEvent.LeftButton in event.buttons:
@@ -67,7 +67,7 @@ class RotateTool(Tool):
 
             camera = self.getController().getScene().getActiveCamera()
 
-            handlePos = self._handle.getGlobalPosition()
+            handlePos = self._handle.getWorldPosition()
             plane = None
             if self._locked_axis == ToolHandle.XAxis:
                 plane = Plane(Vector(0, 0, 1), handlePos.z)

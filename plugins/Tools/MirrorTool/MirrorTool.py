@@ -28,7 +28,7 @@ class MirrorTool(Tool):
             if Selection.hasSelection():
                 #TODO: Support multiple selection
                 self._handle.setParent(self.getController().getScene().getRoot())
-                self._handle.setPosition(Selection.getSelectedObject(0).getGlobalPosition())
+                self._handle.setPosition(Selection.getSelectedObject(0).getWorldPosition())
 
         if event.type == Event.MousePressEvent:
             if not MouseEvent.LeftButton in event.buttons:
