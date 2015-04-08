@@ -198,7 +198,7 @@ class PluginRegistry(object):
         try:
             meta_data = plugin.getMetaData()
         except AttributeError as e:
-            print(e)
+            Logger.log('e', 'An error occured getting metadata from plugin %s: %s', id, str(e))
             raise InvalidMetaDataError(id)
 
         if not meta_data or not "type" in meta_data:
