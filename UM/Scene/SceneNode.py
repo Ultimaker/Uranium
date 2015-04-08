@@ -305,6 +305,33 @@ class SceneNode(SignalEmitter):
     #   \param object The object that caused the change.
     transformationChanged = Signal()
 
+    ##  Rotate this scene node in such a way that it is looking at target.
+    #
+    #   \param target \type{Vector} The target to look at.
+    #   \param up \type{Vector} The vector to consider up. Defaults to Vector.Unit_Y, i.e. (0, 1, 0).
+    def lookAt(self, target, up = Vector.Unit_Y):
+        if not self._enabled:
+            return
+
+        eye = self.getWorldPosition()
+        f = (target - eye).normalize()
+        up.normalize()
+        s = f.cross(up).normalize()
+        u = s.cross(f).normalize()
+
+        m = Matrix(numpy.array([
+            [ s.x,  u.x,  -f.x, 0.0],
+            [ s.y,  u.y,  -f.y, 0.0],
+            [ s.z,  u.z,  -f.z, 0.0],
+            [ 0.0,  0.0,  0.0,  1.0]],
+            dtype=numpy.float32))
+
+        if self._parent:
+            self._orientation = self._parent._getDerivedOrientation() * Quaternion.fromMatrix(m)
+        else:
+            self._orientation = Quaternion.fromMatrix(m)
+        self._transformChanged()
+
     ##  Can be overridden by child nodes if they need to perform special rendering.
     #   If you need to handle rendering in a special way, for example for tool handles,
     #   you can override this method and render the node. Return True to prevent the
