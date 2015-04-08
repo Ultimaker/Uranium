@@ -29,3 +29,7 @@ Run
 1. navigate to PluggableCura
 2. execute
 PYTHONPATH=../libArcus/python:. python3 printer/printer.py # that is, we include libArcus and the current directy in the searchpath
+
+Alternatively:
+1. Run the backend manually with the option --connect 127.0.0.1:49674
+2. Run the frontend with option --external-backend
