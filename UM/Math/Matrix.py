@@ -245,4 +245,18 @@ class Matrix(object):
     def __repr__(self):
         return "Matrix( {0} )".format(self._data)
 
+    @staticmethod
+    def fromPositionOrientationScale(position, orientation, scale):
+        s = numpy.identity(4, dtype=numpy.float32)
+        s[0, 0] = scale.x
+        s[1, 1] = scale.y
+        s[2, 2] = scale.z
 
+        r = orientation.toMatrix().getData()
+
+        t = numpy.identity(4, dtype=numpy.float32)
+        t[0, 3] = position.x
+        t[1, 3] = position.y
+        t[2, 3] = position.z
+
+        return Matrix(data = numpy.dot(numpy.dot(t, r), s))
