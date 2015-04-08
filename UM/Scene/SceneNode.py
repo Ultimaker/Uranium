@@ -102,7 +102,7 @@ class SceneNode(SignalEmitter):
     #   \returns MeshData    
     def getMeshDataTransformed(self):
         transformed_mesh = deepcopy(self._mesh_data)
-        transformed_mesh.transform(self.getGlobalTransformation())
+        transformed_mesh.transform(self.getWorldTransformation())
         return transformed_mesh
 
     ##  \brief Set the mesh of this node/object
