@@ -18,9 +18,10 @@ class Camera(SceneNode.SceneNode):
         self._projectionMatrix = Matrix()
         self._projectionMatrix.setOrtho(-5, 5, 5, -5, -100, 100)
         self._perspective = False
-        #self._projectionMatrix.setPerspective(45, 1, 0, 5)
         self._viewport_width = 0
         self._viewport_height = 0
+
+        self._calculate_aabb = False
 
     ##  Get the projection matrix of this camera.
     def getProjectionMatrix(self):

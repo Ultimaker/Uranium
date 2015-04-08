@@ -44,6 +44,7 @@ class SceneNode(SignalEmitter):
         self._parent = parent
         self._enabled = True
         self._selectable = False
+        self._calculate_aabb = True
         self._aabb = None
         self._aabbJob = None
         self._visible = True
@@ -438,6 +439,9 @@ class SceneNode(SignalEmitter):
             self._world_transformation = self._transformation
 
     def _resetAABB(self):
+        if not self._calculate_aabb:
+            return
+
         self._aabb = None
 
         if self._aabbJob:
