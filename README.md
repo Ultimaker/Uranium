@@ -24,6 +24,12 @@ Installing PluggableCura dependencies on Windows
 - Install and build SIP according to the instructions on http://pyqt.sourceforge.net/Docs/sip4/installation.html
 - Install the PyQt5 package from http://www.riverbankcomputing.com/software/pyqt/download5
 
+Configuring PluggableCura
+-----------
+In /.config/cura/cura.cfg, make sure it says:
+    [backend]
+    location = /path/to/CuraEngine_executable
+
 Run
 ---
 1. navigate to PluggableCura
