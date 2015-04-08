@@ -95,14 +95,12 @@ class Backend(PluginObject, SignalEmitter):
             line = handle.readline()
             if line == b'':
                 break
-            print(line.strip())
             self._backend_log.append(line)
 
     def _onSocketStateChanged(self, state):
         if state == SignalSocket.ListeningState:
             if not Application.getInstance().getArgument('external-backend', False):
-                #self.startEngine()
-                pass
+                self.startEngine()
         elif state == SignalSocket.ConnectedState:
             Logger.log('d', "Backend connected on port %s", self._port)
             self.backendConnected.emit()
