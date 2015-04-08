@@ -169,7 +169,7 @@ class Vector(object):
         return self
 
     def __mul__(self, other):
-        v = Vector(data = self._data)
+        v = deepcopy(self)
         v *= other
         return v
 
@@ -179,8 +179,12 @@ class Vector(object):
             self._data *= other
             return self
         else:
-            print(t)
             raise NotImplementedError()
+
+    def __rmul__(self, other):
+        v = deepcopy(self)
+        v *= other
+        return v
 
     def __truediv__(self, other):
         v = Vector(data = self._data)
