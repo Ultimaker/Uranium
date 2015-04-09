@@ -126,8 +126,9 @@ class SceneNode(SignalEmitter):
             scene_node.transformationChanged.connect(self.transformationChanged)
             scene_node.childrenChanged.connect(self.childrenChanged)
             scene_node.meshDataChanged.connect(self.meshDataChanged)
+
             self._children.append(scene_node)
-            self._aabb = None
+            self._resetAABB()
             self.childrenChanged.emit(self)
 
             if not scene_node._parent is self:
@@ -143,6 +144,7 @@ class SceneNode(SignalEmitter):
         child.transformationChanged.disconnect(self.transformationChanged)
         child.childrenChanged.disconnect(self.childrenChanged)
         child.meshDataChanged.disconnect(self.meshDataChanged)
+
         self._children.remove(child)
         child._parent = None
         child.parentChanged.emit(self)
@@ -406,11 +408,15 @@ class SceneNode(SignalEmitter):
     def _transformChanged(self):
         self._resetAABB()
         self._transformation = None
-        self._global_transformation = None
+        self._world_transformation = None
         self._derived_position = None
         self._derived_orientation = None
         self._derived_scale = None
+
         self.transformationChanged.emit(self)
+
+        for child in self._children:
+            child._transformChanged()
 
     def _updateTransformation(self):
         self._transformation = Matrix.fromPositionOrientationScale(self._position, self._orientation, self._scale)
