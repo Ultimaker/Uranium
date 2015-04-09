@@ -43,7 +43,7 @@ class Backend(PluginObject, SignalEmitter):
             t.daemon = True
             t.start()
         except FileNotFoundError as e:
-            Logger.log('e', "Unable to find backend executable")
+            Logger.log('e', "Unable to find backend executable: %s" % (self.getEngineCommand()[0]))
 
     def close(self):
         if self._socket:
@@ -77,7 +77,7 @@ class Backend(PluginObject, SignalEmitter):
             return None
 
     def getEngineCommand(self):
-        return [Preferences.getPreference("BackendLocation"), '--port', str(self._socket_thread.getPort())]
+        return [Preferences.getInstance().getValue("backend/location"), '--port', str(self._socket_thread.getPort())]
 
     ## \brief Start the (external) backend process.
     def _runEngineProcess(self, command_list):
