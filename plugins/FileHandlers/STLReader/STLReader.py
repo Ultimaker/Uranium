@@ -16,21 +16,18 @@ class STLReader(MeshReader):
     ## Decide if we need to use ascii or binary in order to read file
     def read(self, file_name, storage_device):
         mesh = None
-        if(self._supported_extension in file_name):
+        extension = os.path.splitext(file_name)[1]
+        if extension.lower() == self._supported_extension:
             mesh = MeshData()
-            success = False
-            f = storage_device.openFile(file_name, 'rt')
-            try:
-                if f.read(5).lower() == 'solid':
-                    self._loadAscii(mesh, f)
-                    success = True
-            except UnicodeDecodeError:
-                pass
-
-            if not success:
+            f = storage_device.openFile(file_name, 'rb')
+            if not self._loadBinary(mesh, f):
                 storage_device.closeFile(f)
-                f = storage_device.openFile(file_name, 'rb')
-                self._loadBinary(mesh, f)
+                f = storage_device.openFile(file_name, 'rt')
+                try:
+                    self._loadAscii(mesh, f)
+                except UnicodeDecodeError:
+                    pass
+                storage_device.closeFile(f)
 
             storage_device.closeFile(f)
 
@@ -86,7 +83,18 @@ class STLReader(MeshReader):
         f.read(80) #Skip the header
         
         num_faces = struct.unpack('<I', f.read(4))[0]
+        # On ascii files, the num_faces will be big, due to 4 ascii bytes being seen as an unsigned int.
+        if num_faces < 1 or num_faces > 1000000000:
+            return False
+        f.seek(0, os.SEEK_END)
+        file_size = f.tell()
+        f.seek(84, os.SEEK_SET)
+        if file_size < num_faces * 50 + 84:
+            return False
+
         mesh.reserveFaceCount(num_faces)
         for idx in range(0, num_faces):
             data = struct.unpack(b'<ffffffffffffH', f.read(50))
             mesh.addFace(data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10], data[11])
+
+        return True

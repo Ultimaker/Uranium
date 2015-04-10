@@ -1,6 +1,8 @@
 from UM.Mesh.MeshReader import MeshReader
 from UM.Mesh.MeshData import MeshData
 
+import os
+
 class PCDReader(MeshReader):
     def __init__(self):
         super(PCDReader, self).__init__()
@@ -8,7 +10,8 @@ class PCDReader(MeshReader):
 
     def read(self, file_name, storage_device):
         mesh = None
-        if(self._supported_extension in file_name):
+        extension = os.path.splitext(file_name)[1]
+        if extension.lower() == self._supported_extension:
             mesh = MeshData()
             header_read = False
             has_normals = False

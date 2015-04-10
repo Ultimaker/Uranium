@@ -1,6 +1,7 @@
 from UM.Mesh.MeshWriter import MeshWriter
 import time
 import struct
+import os
 
 class STLWriter(MeshWriter):
     def __init__(self):
@@ -13,7 +14,8 @@ class STLWriter(MeshWriter):
     #   \param storage_device Device to write to.
     #   \param mesh_data MeshData to write.
     def write(self, file_name, storage_device, mesh_data):
-        if(self._supported_extension in file_name and mesh_data is not None and storage_device is not None):
+        extension = os.path.splitext(file_name)[1]
+        if extension.lower() == self._supported_extension and mesh_data is not None and storage_device is not None:
             f = storage_device.openFile(file_name, 'wb')
             f.write(bytes(("Uranium STLWriter " + time.strftime('%a %d %b %Y %H:%M:%S')).ljust(80, '\000'),"utf-8"))
             if mesh_data.getIndices() is not None:

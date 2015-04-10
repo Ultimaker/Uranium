@@ -1,6 +1,7 @@
 from UM.Mesh.MeshWriter import MeshWriter
 import time
 import struct
+import os
 
 class PLYWriter(MeshWriter):
     def __init__(self):
@@ -8,7 +9,8 @@ class PLYWriter(MeshWriter):
         self._supported_extension = ".ply"
         
     def write(self, file_name, storage_device, mesh_data):
-        if(self._supported_extension in file_name):
+        extension = os.path.splitext(file_name)[1]
+        if extension.lower() == self._supported_extension:
             f = storage_device.openFile(file_name, 'wb')
             num_verts = mesh_data.getVertexCount() - 1
             #bytes("PLUGGABLE UNICORN BINARY STL EXPORT. " + time.strftime('%a %d %b %Y %H:%M:%S') + "\n","utf-8")
