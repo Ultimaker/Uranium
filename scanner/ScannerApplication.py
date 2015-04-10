@@ -47,7 +47,7 @@ class ScannerApplication(QtApplication):
         
     def _loadPlugins(self):
         self._plugin_registry.loadPlugins({ "type": "logger"})
-        self._plugin_registry.loadPlugins({ "type": "storage_device" })
+        #self._plugin_registry.loadPlugins({ "type": "storage_device" })
         self._plugin_registry.loadPlugins({ "type": "view" })
         self._plugin_registry.loadPlugins({ "type": "mesh_reader" })
         self._plugin_registry.loadPlugins({ "type": "mesh_writer" })
