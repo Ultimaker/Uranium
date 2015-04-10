@@ -18,6 +18,7 @@ Installing Qt
 - sudo apt-get install qtdeclarative5-window-plugin
 - sudo apt-get install qtdeclarative5-dialogs-plugin
 - sudo apt-get install qtdeclarative5-qtquick2-plugin qtdeclarative5-controls-plugin qtdeclarative5-quicklayouts-plugin
+- sudo apt-get install libqt5svg5
 
 Installing PluggableCura dependencies on Windows
 -------------
