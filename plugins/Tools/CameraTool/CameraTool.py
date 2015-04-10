@@ -96,7 +96,7 @@ class CameraTool(Tool):
 
         self._scene.acquireLock()
 
-        r = (camera.getGlobalPosition() - self._origin).length()
+        r = (camera.getWorldPosition() - self._origin).length()
         delta = r * (event.vertical / 128 / 10.0)
         r -= delta
         if delta > 0:
@@ -120,8 +120,7 @@ class CameraTool(Tool):
         dx = math.radians(x * 180.0)
         dy = math.radians(y * 180.0)
 
-        diff = camera.getGlobalPosition() - self._origin
-        #r = diff.length()
+        diff = camera.getPosition() - self._origin
 
         m = Matrix()
         m.setByRotationAxis(dx, Vector.Unit_Y)
@@ -131,6 +130,6 @@ class CameraTool(Tool):
         n += self._origin
 
         camera.setPosition(n)
-        camera.lookAt(self._origin, Vector(0, 1, 0))
+        camera.lookAt(self._origin)
 
         self._scene.releaseLock()

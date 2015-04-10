@@ -3,7 +3,7 @@ import os
 import signal
 import platform
 
-from PyQt5.QtCore import Qt, QObject, QCoreApplication, QEvent, pyqtSlot, QLocale, QTranslator
+from PyQt5.QtCore import Qt, QObject, QCoreApplication, QEvent, pyqtSlot, QLocale, QTranslator, QLibraryInfo
 from PyQt5.QtQml import QQmlApplicationEngine, qmlRegisterType, qmlRegisterSingletonType
 from PyQt5.QtWidgets import QApplication, QSplashScreen
 from PyQt5.QtGui import QGuiApplication, QPixmap
@@ -20,6 +20,10 @@ from UM.Preferences import Preferences
 ##  Application subclass that provides a Qt application object.
 class QtApplication(QApplication, Application, SignalEmitter):
     def __init__(self, **kwargs):
+        if hasattr(sys, 'frozen') and sys.platform == 'win32':
+            plugin_path = os.path.join(os.path.dirname(os.path.abspath(sys.executable)), 'PyQt5', 'plugins')
+            Logger.log('i', 'Adding QT5 plugin path: %s' % (plugin_path))
+            QCoreApplication.addLibraryPath(plugin_path)
         super().__init__(sys.argv, **kwargs)
 
         self._mainQml = "main.qml"

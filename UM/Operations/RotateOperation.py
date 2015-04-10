@@ -1,17 +1,19 @@
+from UM.Scene.SceneNode import SceneNode
+
 from . import Operation
 
 class RotateOperation(Operation.Operation):
     def __init__(self, node, rotation):
         super().__init__()
         self._node = node
-        self._old_transform = node.getLocalTransformation()
+        self._old_orientation = node.getOrientation()
         self._rotation = rotation
 
     def undo(self):
-        self._node.setLocalTransformation(self._old_transform)
+        self._node.setOrientation(self._old_orientation)
 
     def redo(self):
-        self._node.rotateGlobal(self._rotation)
+        self._node.rotate(self._rotation, SceneNode.TransformSpace.World)
 
     def mergeWith(self, other):
         if type(other) is not RotateOperation:
@@ -21,7 +23,7 @@ class RotateOperation(Operation.Operation):
             return False
 
         op = RotateOperation(self._node, self._rotation)
-        op._old_transform = other._old_transform
+        op._old_orientation = other._old_orientation
         return op
 
     def __repr__(self):

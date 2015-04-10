@@ -56,8 +56,8 @@ class ToolHandle(SceneNode.SceneNode):
             self._material.setUniformValue('u_disabledColor', self.DisabledColor)
             self._material.setUniformValue('u_activeColor', self.DisabledColor)
 
-        camera_position = self._scene.getActiveCamera().getGlobalPosition()
-        dist = (camera_position - self.getGlobalPosition()).length()
+        camera_position = self._scene.getActiveCamera().getWorldPosition()
+        dist = (camera_position - self.getWorldPosition()).length()
 
         scale = dist / 200
         self.setScale(Vector(scale, scale, scale))

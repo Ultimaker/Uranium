@@ -10,8 +10,8 @@ from . import Cura_pb2
 from . import ProcessSlicedObjectListJob
 from . import ProcessGCodeJob
 
-import threading
-import struct
+import os
+import sys
 import numpy
 
 from PyQt5.QtCore import QTimer
@@ -20,7 +20,14 @@ class CuraEngineBackend(Backend):
     def __init__(self):
         super().__init__()
 
-        Preferences.getInstance().addPreference('backend/location', '../PinkUnicornEngine/CuraEngine')
+        # Find out where the engine is located, and how it is called. This depends on how Cura is packaged and which OS we are running on.
+        default_engine_location = '../PinkUnicornEngine/CuraEngine'
+        if hasattr(sys, 'frozen'):
+            default_engine_location = os.path.join(os.path.dirname(os.path.abspath(sys.executable)), 'CuraEngine')
+        if sys.platform == 'win32':
+            default_engine_location += '.exe'
+        default_engine_location = os.path.abspath(default_engine_location)
+        Preferences.getInstance().addPreference('backend/location', default_engine_location)
 
         self._scene = Application.getInstance().getController().getScene()
         self._scene.sceneChanged.connect(self._onSceneChanged)
@@ -36,7 +43,7 @@ class CuraEngineBackend(Backend):
 
         self._message_handlers[Cura_pb2.SlicedObjectList] = self._onSlicedObjectListMessage
         self._message_handlers[Cura_pb2.Progress] = self._onProgressMessage
-        self._message_handlers[Cura_pb2.GCode] = self._onGCodeMessage
+        self._message_handlers[Cura_pb2.GCodeLayer] = self._onGCodeLayerMessage
         self._message_handlers[Cura_pb2.ObjectPrintTime] = self._onObjectPrintTimeMessage
 
         self._center = None
@@ -78,8 +85,8 @@ class CuraEngineBackend(Backend):
             self._slicing = False
         self.processingProgress.emit(message.amount)
 
-    def _onGCodeMessage(self, message):
-        job = ProcessGCodeJob.ProcessGCodeJob(message)
+    def _onGCodeLayerMessage(self, message):
+        job = ProcessGCodeJob.ProcessGCodeLayerJob(message)
         job.start()
 
     def _onObjectPrintTimeMessage(self, message):
@@ -91,7 +98,7 @@ class CuraEngineBackend(Backend):
         self._socket.registerMessageType(1, Cura_pb2.ObjectList)
         self._socket.registerMessageType(2, Cura_pb2.SlicedObjectList)
         self._socket.registerMessageType(3, Cura_pb2.Progress)
-        self._socket.registerMessageType(4, Cura_pb2.GCode)
+        self._socket.registerMessageType(4, Cura_pb2.GCodeLayer)
         self._socket.registerMessageType(5, Cura_pb2.ObjectPrintTime)
         self._socket.registerMessageType(6, Cura_pb2.SettingList)
 
@@ -105,7 +112,11 @@ class CuraEngineBackend(Backend):
         if self._slicing:
             self._slicing = False
             self._restart = True
-            self._process.terminate()
+            if self._process is not None:
+                try:
+                    self._process.terminate()
+                except: # terminating a process that is already terminating causes an exception, silently ignore this.
+                    pass
             return
 
         objects = []
@@ -122,6 +133,10 @@ class CuraEngineBackend(Backend):
         self._sendSettings()
 
         self._scene.acquireLock()
+        # Set the gcode as an empty list. This will be filled with strings by GCodeLayer messages.
+        # This is done so the gcode can be fragmented in memory and does not need a continues memory space.
+        # (AKA. This prevents MemoryErrors)
+        setattr(self._scene, 'gcode_list', [])
 
         msg = Cura_pb2.ObjectList()
 
@@ -130,7 +145,7 @@ class CuraEngineBackend(Backend):
         for object in objects:
             center += object.getPosition()
 
-            meshData = object.getMeshData().getTransformed(object.getGlobalTransformation())
+            meshData = object.getMeshData().getTransformed(object.getWorldTransformation())
 
             obj = msg.objects.add()
             obj.id = id(object)

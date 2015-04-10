@@ -14,7 +14,7 @@ class Matrix(object):
         if data is None:
             self._data = numpy.identity(4,dtype=numpy.float32)
         else:
-            self._data = numpy.array(data, copy=True)
+            self._data = numpy.array(data, copy=True, dtype=numpy.float32)
 
     def at(self, x, y):
         if(x >= 4 or y >= 4 or x < 0 or y < 0):
@@ -28,7 +28,11 @@ class Matrix(object):
         self._data[0, index] = value[0]
         self._data[1, index] = value[1]
         self._data[2, index] = value[2]
-        self._data[3, index] = value[3]
+
+        if len(value) > 3:
+            self._data[3, index] = value[3]
+        else:
+            self._data[3, index] = 0
 
     def setColumn(self, index, value):
         if index < 0 or index > 3:
@@ -37,7 +41,11 @@ class Matrix(object):
         self._data[index, 0] = value[0]
         self._data[index, 1] = value[1]
         self._data[index, 2] = value[2]
-        self._data[index, 3] = value[3]
+
+        if len(value) > 3:
+            self._data[index, 3] = value[3]
+        else:
+            self._data[index, 3] = 0
 
     def multiply(self, matrix):
         self._data = numpy.dot(self._data, matrix.getData())
@@ -237,4 +245,18 @@ class Matrix(object):
     def __repr__(self):
         return "Matrix( {0} )".format(self._data)
 
+    @staticmethod
+    def fromPositionOrientationScale(position, orientation, scale):
+        s = numpy.identity(4, dtype=numpy.float32)
+        s[0, 0] = scale.x
+        s[1, 1] = scale.y
+        s[2, 2] = scale.z
 
+        r = orientation.toMatrix().getData()
+
+        t = numpy.identity(4, dtype=numpy.float32)
+        t[0, 3] = position.x
+        t[1, 3] = position.y
+        t[2, 3] = position.z
+
+        return Matrix(data = numpy.dot(numpy.dot(t, r), s))

@@ -70,9 +70,6 @@ class Setting(SignalEmitter):
     def setActive(self, active):
         if self._active != active: 
             self._active = active
-            #for child in self._children:
-                #print("child setActive ", child._key)
-                #child.setActive(True)
             self.activeChanged.emit(self)
 
     activeChanged = Signal()

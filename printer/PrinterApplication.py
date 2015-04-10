@@ -89,12 +89,12 @@ class PrinterApplication(QtApplication):
         self._volume = BuildVolume(root)
 
         self.getRenderer().setLightPosition(Vector(0, 150, 0))
-        self.getRenderer().setBackgroundColor(QColor(246, 246, 246))
+        self.getRenderer().setBackgroundColor(QColor(245, 245, 245))
 
         camera = Camera('3d', root)
-        camera.translate(Vector(-150, 150, 300))
+        camera.setPosition(Vector(-150, 150, 300))
         camera.setPerspective(True)
-        camera.lookAt(Vector(0, 0, 0), Vector(0, 1, 0))
+        camera.lookAt(Vector(0, 0, 0))
 
         self._camera_animation = CameraAnimation()
         self._camera_animation.setCameraTool(self.getController().getTool('CameraTool'))
@@ -129,7 +129,7 @@ class PrinterApplication(QtApplication):
                 self.getController().setActiveTool('TranslateTool')
 
             self._camera_animation.setStart(self.getController().getTool('CameraTool').getOrigin())
-            self._camera_animation.setTarget(Selection.getSelectedObject(0).getGlobalPosition())
+            self._camera_animation.setTarget(Selection.getSelectedObject(0).getWorldPosition())
             self._camera_animation.start()
         else:
             if self.getController().getActiveTool():
@@ -250,10 +250,10 @@ class PrinterApplication(QtApplication):
 
                 for area in disallowed_areas:
                     polygon = []
-                    polygon.append(Vector(area[0][0], 0.1, area[0][1]))
-                    polygon.append(Vector(area[1][0], 0.1, area[1][1]))
-                    polygon.append(Vector(area[2][0], 0.1, area[2][1]))
-                    polygon.append(Vector(area[3][0], 0.1, area[3][1]))
+                    polygon.append(Vector(area[0][0], 0.2, area[0][1]))
+                    polygon.append(Vector(area[1][0], 0.2, area[1][1]))
+                    polygon.append(Vector(area[2][0], 0.2, area[2][1]))
+                    polygon.append(Vector(area[3][0], 0.2, area[3][1]))
                     areas.append(polygon)
             self._volume.setDisallowedAreas(areas)
 

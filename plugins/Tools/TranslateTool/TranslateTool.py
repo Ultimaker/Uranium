@@ -58,7 +58,7 @@ class TranslateTool(Tool):
             if Selection.hasSelection():
                 #TODO: Support multiple selection
                 self._handle.setParent(self.getController().getScene().getRoot())
-                self._handle.setPosition(Selection.getSelectedObject(0).getGlobalPosition())
+                self._handle.setPosition(Selection.getSelectedObject(0).getWorldPosition())
 
         if event.type == Event.MousePressEvent:
             if not MouseEvent.LeftButton in event.buttons:
@@ -121,7 +121,7 @@ class TranslateTool(Tool):
                         op = TranslateOperation(node, diff)
                         Application.getInstance().getOperationStack().push(op)
 
-                        position += node.getGlobalPosition()
+                        position += node.getWorldPosition()
 
                     self._handle.setPosition(position / Selection.getCount())
 

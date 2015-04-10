@@ -139,49 +139,39 @@ class Quaternion(object):
     # \param matrix 4x4 Matrix object
     # \param is_precise
     def setByMatrix(self, matrix, is_precise = False):
-        M = numpy.array(matrix.getData(), dtype=numpy.float32, copy=False)[:4, :4]
-        if is_precise:
-            q = numpy.empty((4, ))
-            t = numpy.trace(M)
-            if t > M[3, 3]:
-                q[0] = t
-                q[3] = M[1, 0] - M[0, 1]
-                q[2] = M[0, 2] - M[2, 0]
-                q[1] = M[2, 1] - M[1, 2]
-            else:
-                i, j, k = 1, 2, 3
-                if M[1, 1] > M[0, 0]:
-                    i, j, k = 2, 3, 1
-                if M[2, 2] > M[i, i]:
-                    i, j, k = 3, 1, 2
-                t = M[i, i] - (M[j, j] + M[k, k]) + M[3, 3]
-                q[i] = t
-                q[j] = M[i, j] + M[j, i]
-                q[k] = M[k, i] + M[i, k]
-                q[3] = M[k, j] - M[j, k]
-            q *= 0.5 / math.sqrt(t * M[3, 3])
+        trace = matrix.at(0, 0) + matrix.at(1, 1) + matrix.at(2, 2)
+        if trace > 0.0:
+            self._data[0] = matrix.at(2, 1) - matrix.at(1, 2)
+            self._data[1] = matrix.at(0, 2) - matrix.at(2, 0)
+            self._data[2] = matrix.at(1, 0) - matrix.at(0, 1)
+            self._data[3] = trace + 1
         else:
-            m00 = M[0, 0]
-            m01 = M[0, 1]
-            m02 = M[0, 2]
-            m10 = M[1, 0]
-            m11 = M[1, 1]
-            m12 = M[1, 2]
-            m20 = M[2, 0]
-            m21 = M[2, 1]
-            m22 = M[2, 2]
-            # symmetric matrix K
-            K = numpy.array([[m00-m11-m22, 0.0,         0.0,         0.0],
-                            [m01+m10,     m11-m00-m22, 0.0,         0.0],
-                            [m02+m20,     m12+m21,     m22-m00-m11, 0.0],
-                            [m21-m12,     m02-m20,     m10-m01,     m00+m11+m22]], dtype=numpy.float32)
-            K /= 3.0
-            # quaternion is eigenvector of K that corresponds to largest eigenvalue
-            w, V = numpy.linalg.eigh(K)
-            q = V[[3, 0, 1, 2], numpy.argmax(w)]
-        if q[0] < 0.0:
-            numpy.negative(q, q)
-        self._data = q
+            i = 0
+            if matrix.at(1, 1) > matrix.at(0, 0):
+                i = 1
+
+            if matrix.at(2, 2) > matrix.at(i, i):
+                i = 2
+
+            # Yes, this is repeated code. Writing it out however makes the code way
+            # more readable than any magical index shifting.
+            if i == 0:
+                self._data[0] = matrix.at(0, 0) - matrix.at(1, 1) - matrix.at(2, 2) + 1.0
+                self._data[1] = matrix.at(0, 1) + matrix.at(1, 0)
+                self._data[2] = matrix.at(0, 2) + matrix.at(2, 0)
+                self._data[3] = matrix.at(2, 1) - matrix.at(1, 2)
+            elif i == 1:
+                self._data[0] = matrix.at(0, 1) + matrix.at(1, 0)
+                self._data[1] = matrix.at(1, 1) - matrix.at(0, 0) - matrix.at(2, 2) + 1.0
+                self._data[2] = matrix.at(1, 2) + matrix.at(2, 1)
+                self._data[3] = matrix.at(0, 2) - matrix.at(2, 0)
+            else:
+                self._data[0] = matrix.at(0, 2) + matrix.at(2, 0)
+                self._data[1] = matrix.at(2, 1) + matrix.at(1, 2)
+                self._data[1] = matrix.at(2, 2) - matrix.at(0, 0) - matrix.at(1, 1) + 1.0
+                self._data[3] = matrix.at(1, 0) - matrix.at(0, 1)
+
+        self.normalize()
 
     def toMatrix(self):
         m = numpy.zeros((4, 4), dtype=numpy.float32)
@@ -229,6 +219,50 @@ class Quaternion(object):
 
         rho = math.acos(start.dot(end))
         return (start * math.sin((1 - amount) * rho) + end * math.sin(amount * rho)) / math.sin(rho)
+
+    ##  Returns a quaternion representing the rotation from vector 1 to vector 2.
+    #
+    #   \param v1 \type{Vector} The vector to rotate from.
+    #   \param v2 \type{Vector} The vector to rotate to.
+    @staticmethod
+    def rotationTo(v1, v2):
+        d = v1.dot(v2)
+
+        if d >= 1.0:
+            return Quaternion() # Vectors are equal, no rotation needed.
+
+        q = None
+        if Float.fuzzyCompare(d, -1.0, 1e-6):
+            print('180deg turn')
+            axis = Vector.Unit_X.cross(v1)
+
+            if Float.fuzzyCompare(axis.length(), 0.0):
+                axis = Vector.Unit_Y.cross(v1)
+
+            axis.normalize()
+            q = Quaternion()
+            q.setByAngleAxis(math.pi, axis)
+        else:
+            s = math.sqrt((1.0 + d) * 2.0)
+            invs = 1.0 / s
+
+            c = v1.cross(v2)
+
+            q = Quaternion(
+                c.x * invs,
+                c.y * invs,
+                c.z * invs,
+                s * 0.5
+            )
+            q.normalize()
+
+        return q
+
+    @staticmethod
+    def fromMatrix(matrix):
+        q = Quaternion()
+        q.setByMatrix(matrix)
+        return q
 
     def __repr__(self):
         return "Quaternion(x={0}, y={1}, z={2}, w={3})".format(self.x, self.y, self.z, self.w)
