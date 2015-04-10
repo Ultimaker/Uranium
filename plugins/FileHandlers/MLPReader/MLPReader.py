@@ -7,13 +7,16 @@ from UM.Application import Application
 from UM.Mesh.MeshData import MeshType
 from UM.Math.Matrix import Matrix
 
+import os
+
 class MLPReader(WorkspaceReader):
     def __init__(self):
         super().__init__()
         self._supported_extension = ".mlp"
     
     def read(self, file_name, storage_device): 
-        if(self._supported_extension in file_name):
+        extension = os.path.splitext(file_name)[1]
+        if extension.lower() == self._supported_extension:
             loaded_workspace = SceneNode()
             mesh_handler = Application.getInstance().getMeshFileHandler()
             f = storage_device.openFile(file_name, 'rt')

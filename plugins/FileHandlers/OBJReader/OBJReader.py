@@ -10,7 +10,8 @@ class OBJReader(MeshReader):
         
     def read(self, file_name, storage_device):     
         mesh = None
-        if(self._supported_extension in file_name):
+        extension = os.path.splitext(file_name)[1]
+        if extension.lower() == self._supported_extension:
             vertex_list = []
             normal_list = []
             uv_list = []
