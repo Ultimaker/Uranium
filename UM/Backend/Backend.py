@@ -36,6 +36,7 @@ class Backend(PluginObject, SignalEmitter):
         try:
             self._backend_log = []
             self._process = self._runEngineProcess(self.getEngineCommand())
+            Logger.log('i', 'Started engine process: %s' % (self.getEngineCommand()[0]))
             t = threading.Thread(target=self._storeOutputToLogThread, args=(self._process.stdout,))
             t.daemon = True
             t.start()

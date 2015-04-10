@@ -83,6 +83,7 @@ class STLReader(MeshReader):
         f.read(80) #Skip the header
         
         num_faces = struct.unpack('<I', f.read(4))[0]
+        # On ascii files, the num_faces will be big, due to 4 ascii bytes being seen as an unsigned int.
         if num_faces < 1 or num_faces > 1000000000:
             return False
         f.seek(0, os.SEEK_END)
