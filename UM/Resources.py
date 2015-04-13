@@ -18,6 +18,7 @@ class Resources:
     i18nLocation = 6
     ImagesLocation = 7
     ThemesLocation = 8
+    FirmwareLocation = 9
 
     ApplicationIdentifier = 'UM'
 
@@ -79,6 +80,8 @@ class Resources:
             return cls.__relativeToAppBase("resources", "images")
         elif type == cls.ThemesLocation:
             return cls.__relativeToAppBase("resources", "themes")
+        elif type == cls.FirmwareLocation:
+            return cls.__relativeToAppBase("resources", "firmware")
         else:
             raise UnknownLocationError("Unknown location {0}".format(type))
 
