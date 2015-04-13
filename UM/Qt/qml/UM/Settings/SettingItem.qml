@@ -23,7 +23,35 @@ Item {
     signal itemValueChanged(variant value);
     signal showTooltip(variant position);
     signal hideTooltip();
+    MouseArea 
+    {
+        id: mouse;
+        z:9001
 
+        anchors.fill: parent;
+
+        acceptedButtons: Qt.RightButton;
+        hoverEnabled: true;
+
+        onClicked: base.contextMenuRequested();
+        
+        onEntered: {
+            hoverTimer.start();
+        }
+
+        onExited: {
+            hoverTimer.stop();
+            base.hideTooltip();
+        }
+
+        Timer {
+            id: hoverTimer;
+            interval: 500;
+            repeat: false;
+
+            onTriggered: base.showTooltip({ x: mouse.mouseX, y: mouse.mouseY });
+        }
+    }
     property variant style: SettingItemStyle { }
 
     Label
@@ -45,33 +73,7 @@ Item {
         color: base.style.labelColor;
         font: base.style.labelFont;
 
-        MouseArea {
-            id: mouse;
-
-            anchors.fill: parent;
-
-            acceptedButtons: Qt.RightButton;
-            hoverEnabled: true;
-
-            onClicked: base.contextMenuRequested();
-            
-            onEntered: {
-                hoverTimer.start();
-            }
-
-            onExited: {
-                hoverTimer.stop();
-                base.hideTooltip();
-            }
-
-            Timer {
-                id: hoverTimer;
-                interval: 500;
-                repeat: false;
-
-                onTriggered: base.showTooltip({ x: mouse.mouseX, y: mouse.mouseY });
-            }
-        }
+        
     }
 
     Loader {
@@ -103,6 +105,8 @@ Item {
                     return "SettingUnknown.qml"
             }
         }
+        
+        
 
         Connections {
             target: controlContainer.item;
