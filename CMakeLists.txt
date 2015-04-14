@@ -8,7 +8,7 @@ find_package(PythonInterp REQUIRED)
 add_custom_target(tests)
 file(GLOB test_files tests/*/Test*.py)
 foreach(file ${test_files})
-    add_custom_command(TARGET tests POST_BUILD COMMAND "PYTHONPATH=${CMAKE_SOURCE_DIR}" ${PYTHON_EXECUTABLE} ARGS ${file})
+    add_custom_command(TARGET tests POST_BUILD COMMAND "PYTHONPATH=${CMAKE_SOURCE_DIR}" ${PYTHON_EXECUTABLE} ARGS ${file} COMMENT "Running test ${file}")
 endforeach()
 
 # Benchmarks
