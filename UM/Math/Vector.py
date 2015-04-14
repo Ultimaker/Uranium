@@ -8,6 +8,8 @@ import math
 
 from copy import deepcopy
 
+from UM.Math.Float import Float
+
 ##  Simple 3D-vector class based on numpy arrays.
 #
 #   This class represents a 3-dimensional vector.
@@ -128,7 +130,7 @@ class Vector(object):
         return Vector(self.x * other.x, self.y * other.y, self.z * other.z)
 
     def __eq__(self, other):
-        return self._data[0] == other._data[0] and self._data[1] == other._data[1] and self._data[2] == other._data[2]
+        return Float.fuzzyCompare(self.x, other.x, 1e-6) and Float.fuzzyCompare(self.y, other.y, 1e-6) and Float.fuzzyCompare(self.z, other.z, 1e-6)
 
     def __add__(self, other):
         v = Vector(data = self._data)
