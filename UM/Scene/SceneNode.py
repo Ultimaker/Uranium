@@ -243,7 +243,7 @@ class SceneNode(SignalEmitter):
             return
 
         if transform_space == SceneNode.TransformSpace.Local:
-            self._scale += scale
+            self._scale = self._scale.scale(scale)
         elif transform_space == SceneNode.TransformSpace.Parent:
             raise NotImplementedError()
         elif transform_space == SceneNode.TransformSpace.World:
