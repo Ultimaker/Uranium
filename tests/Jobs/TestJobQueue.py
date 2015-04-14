@@ -84,7 +84,7 @@ class TestJobQueue(unittest.TestCase):
         self.assertEqual(job.isFinished(), False)
         self.assertEqual(job.getResult(), None)
 
-        time.sleep(0.5)
+        time.sleep(1)
 
         self.assertEqual(job.isFinished(), True)
         self.assertEqual(job.getResult(), 'LongTestJob')
