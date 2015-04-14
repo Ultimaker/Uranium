@@ -68,14 +68,17 @@ class Signal:
     #   the call will be posted as an event to the application main thread, which means the
     #   function will be called on the next application event loop tick.
     def emit(self, *args, **kargs):
-        if self.__type == Signal.Queued:
-            Signal._app.functionEvent(CallFunctionEvent(self.emit, args, kargs))
-            return
-
-        if self.__type == Signal.Auto:
-            if threading.current_thread() is not Signal._app.getMainThread():
+        try:
+            if self.__type == Signal.Queued:
                 Signal._app.functionEvent(CallFunctionEvent(self.emit, args, kargs))
                 return
+
+            if self.__type == Signal.Auto:
+                if threading.current_thread() is not Signal._app.getMainThread():
+                    Signal._app.functionEvent(CallFunctionEvent(self.emit, args, kargs))
+                    return
+        except AttributeError: # If Signal._app is not set
+            return
 
         # Call handler functions
         for func in self.__functions:
