@@ -116,11 +116,14 @@ class Backend(PluginObject, SignalEmitter):
         self._message_handlers[type(message)](message)
 
     def _onSocketError(self, error):
-        if error.errno == 98:
+        if error.errno == 98:# Socked in use error
             self._port += 1
             self._createSocket()
         elif error.errno == 104 or error.errno == 32:
             Logger.log('i', "Backend crashed or closed. Restarting...")
+            self._createSocket()
+        elif error.winerror == 10048:# Socked in use error
+            self._port += 1
             self._createSocket()
         elif error.winerror == 10054:
             Logger.log('i', "Backend crashed or closed. Restarting...")
