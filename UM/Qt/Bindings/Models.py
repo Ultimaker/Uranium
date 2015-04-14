@@ -6,7 +6,7 @@ from . import SettingsModel
 from . import JobsModel
 from . import MeshListModel
 from . import PluginsModel
-from . import ExtentionModel
+from . import ExtensionModel
 from . import MachinesModel
 from . import DirectoryListModel
 from . import AvailableMachinesModel
@@ -25,7 +25,7 @@ class Models(QObject):
         self._jobs_model = None
         self._mesh_list_model = None
         self._plugins_model = None
-        self._extention_model = None
+        self._extension_model = None
         self._machines_model = None
         self._directory_list_model = None
         self._available_machines_model = None
@@ -45,12 +45,12 @@ class Models(QObject):
 
         return self._tool_model
     
-    @pyqtProperty(ExtentionModel.ExtentionModel, constant = True)
-    def extentionModel(self):
-        if not self._extention_model:
-            self._extention_model = ExtentionModel.ExtentionModel()
+    @pyqtProperty(ExtensionModel.ExtensionModel, constant = True)
+    def extensionModel(self):
+        if not self._extension_model:
+            self._extension_model = ExtensionModel.ExtensionModel()
 
-        return self._extention_model
+        return self._extension_model
     
     @pyqtProperty(SettingsModel.SettingsModel, constant = True)
     def settingsModel(self):

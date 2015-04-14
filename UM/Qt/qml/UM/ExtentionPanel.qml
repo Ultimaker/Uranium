@@ -14,7 +14,7 @@ Panel {
         Repeater {
             id: repeat
 
-            model: UM.Models.extentionModel
+            model: UM.Models.extensionModel
 
             delegate: ToolButton 
             {

@@ -57,6 +57,7 @@ class Application(SignalEmitter):
         self._mesh_file_handler = MeshFileHandler()
         self._workspace_file_handler = WorkspaceFileHandler()
         self._storage_devices = {}
+        self._extensions = []
         self._backend = None
 
         self._machines = []
@@ -181,7 +182,6 @@ class Application(SignalEmitter):
             return None
 
     ##  Add a StorageDevice
-    #   \param name The name to use to identify the device.
     #   \param device The device to add.
     def addStorageDevice(self, device):
         self._storage_devices[device.getPluginId()] = device
@@ -246,6 +246,9 @@ class Application(SignalEmitter):
             machine.saveValuesToFile(os.path.join(settingsDir, urllib.parse.quote_plus(machine.getName()) + '.cfg'))
 
     def addExtension(self, extension):
-        pass
-
+        self._extensions.append(extension)
+    
+    def getExtensions(self):
+        return self._extensions
+    
     _instance = None
