@@ -264,5 +264,11 @@ class Quaternion(object):
         q.setByMatrix(matrix)
         return q
 
+    @staticmethod
+    def fromAngleAxis(angle, axis):
+        q = Quaternion()
+        q.setByAngleAxis(angle, axis)
+        return q
+
     def __repr__(self):
         return "Quaternion(x={0}, y={1}, z={2}, w={3})".format(self.x, self.y, self.z, self.w)
