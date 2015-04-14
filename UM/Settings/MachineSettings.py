@@ -120,6 +120,12 @@ class MachineSettings(SignalEmitter):
         with open(file_name, 'w') as f:
             config.write(f)
 
+
+    def getTypeName(self):
+        return self._type_name
+    
+    def getTypeID(self):
+        return self._type_id
     ##  Add a category of settings
     def addSettingsCategory(self, category):
         self._categories.append(category)
