@@ -40,4 +40,27 @@ class Selection:
 
     selectionChanged = Signal()
 
+    @classmethod
+    def getAveragePosition(cls):
+        if not cls.__selection:
+            return Vector(0, 0, 0)
+
+        if len(cls.__selection) == 1:
+            node = cls.__selection[0]
+            if node.getBoundingBox() and node.getBoundingBox().isValid():
+                return node.getBoundingBox().center
+            else:
+                return node.getWorldPosition()
+
+        pos = Vector()
+        for node in cls.__selection:
+            if node.getBoundingBox() and node.getBoundingBox().isValid():
+                pos += node.getBoundingBox().center
+            else:
+                pos += node.getWorldPosition()
+
+        pos /= len(cls.__selection)
+
+        return pos
+
     __selection = []
