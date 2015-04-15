@@ -43,7 +43,7 @@ class Controller(SignalEmitter):
     #   \param view The view to be added
     def addView(self, view):
         name = view.getPluginId()
-        if(name not in self._views):
+        if name not in self._views:
             self._views[name] = view
             view.setController(self)
             view.setRenderer(self._application.getRenderer())
@@ -193,9 +193,11 @@ class Controller(SignalEmitter):
     contextMenuRequested = Signal()
 
     ##  Set the tool used for handling camera controls
+    #   Camera tool is the first tool to recieve events
     def setCameraTool(self, tool):
         self._camera_tool = self.getTool(tool)
 
     ##  Set the tool used for performing selections
+    #   Selection tool recieves its events after camera tool and active tool
     def setSelectionTool(self, tool):
         self._selection_tool = self.getTool(tool)

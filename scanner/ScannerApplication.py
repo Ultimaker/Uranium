@@ -47,24 +47,26 @@ class ScannerApplication(QtApplication):
         
     def _loadPlugins(self):
         self._plugin_registry.loadPlugins({ "type": "logger"})
-        #self._plugin_registry.loadPlugins({ "type": "storage_device" })
+        self._plugin_registry.loadPlugins({ "type": "storage_device" })
         self._plugin_registry.loadPlugins({ "type": "view" })
         self._plugin_registry.loadPlugins({ "type": "mesh_reader" })
         self._plugin_registry.loadPlugins({ "type": "mesh_writer" })
         self._plugin_registry.loadPlugins({ "type": "workspace_reader"})
         self._plugin_registry.loadPlugins({ "type": "workspace_writer"})
         self._plugin_registry.loadPlugins({ "type": "tool" })
+        
         self._plugin_registry.loadPlugin("ScannerEngineBackend")
     
     def run(self):
         self.getController().setActiveView('MeshView')
         self.getController().setCameraTool("CameraTool")
-        #self.getController().setSelectionTool("SelectionTool")
+        self.getController().setActiveTool("PointCloudAlignment")
+        self.getController().setSelectionTool("SelectionTool")
         #self.getController().getA
     
         root = self.getController().getScene().getRoot()
         
-        self.getController().setSelectionTool("VertexEraseTool")
+        #self.getController().setSelectionTool("VertexEraseTool")
         #try:
         #    self.getMachineSettings().loadValuesFromFile(Resources.getPath(Resources.SettingsLocation, 'settings.cfg'))
         #except FileNotFoundError:
