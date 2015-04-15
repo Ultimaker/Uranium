@@ -108,6 +108,11 @@ class Quaternion(object):
     def __eq__(self, other):
         return Float.fuzzyCompare(self.x, other.x, 1e-6) and Float.fuzzyCompare(self.y, other.y, 1e-6) and Float.fuzzyCompare(self.z, other.z, 1e-6) and Float.fuzzyCompare(self.w, other.w, 1e-6)
 
+    def __neg__(self):
+        q = copy.deepcopy(self)
+        q._data = -q._data
+        return q
+
     def getInverse(self):
         result = copy.deepcopy(self)
         result.invert()
