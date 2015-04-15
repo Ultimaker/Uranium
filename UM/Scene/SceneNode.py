@@ -348,7 +348,10 @@ class SceneNode(SignalEmitter):
 
     ##  Get whether this SceneNode is enabled, that is, it can be modified in any way.
     def isEnabled(self):
-        return self._enabled
+        if self._parent != None and self._enabled:
+            return self._parent.isEnabled()
+        else:
+            return self._enabled
 
     ##  Set whether this SceneNode is enabled.
     #   \param enable True if this object should be enabled, False if not.
