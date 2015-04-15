@@ -1,4 +1,5 @@
 from UM.Signal import Signal
+from UM.Math.Vector import Vector
 
 class Selection:
     @classmethod
