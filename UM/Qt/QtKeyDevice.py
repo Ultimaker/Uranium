@@ -18,4 +18,23 @@ class QtKeyDevice(InputDevice):
             self.event.emit(e)
 
     def _qtKeyToUMKey(self, key):
+        if key == Qt.Key_Shift:
+            return KeyEvent.ShiftKey
+        elif key == Qt.Key_Control:
+            return KeyEvent.ControlKey
+        elif key == Qt.Key_Alt:
+            return KeyEvent.AltKey
+        elif key == Qt.Key_Meta:
+            return KeyEvent.MetaKey
+        elif key == Qt.Key_Enter or key == Qt.Key_Return:
+            return KeyEvent.EnterKey
+        elif key == Qt.Key_Up:
+            return KeyEvent.UpKey
+        elif key == Qt.Key_Down:
+            return KeyEvent.DownKey
+        elif key == Qt.Key_Left:
+            return KeyEvent.LeftKey
+        elif key == Qt.Key_Right:
+            return KeyEvent.RightKey
+
         return key
