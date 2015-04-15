@@ -27,6 +27,7 @@ class ToolHandle(SceneNode.SceneNode):
 
         self._solid_mesh = None
         self._line_mesh = None
+        self._selection_mesh = None
         self._material = None
 
         self._previous_dist = None
@@ -43,6 +44,12 @@ class ToolHandle(SceneNode.SceneNode):
 
     def setSolidMesh(self, mesh):
         self._solid_mesh = mesh
+
+    def getSelectionMesh(self):
+        return self._selection_mesh
+
+    def setSelectionMesh(self, mesh):
+        self._selection_mesh = mesh
 
     def getMaterial(self):
         return self._material
@@ -77,8 +84,9 @@ class ToolHandle(SceneNode.SceneNode):
         }
 
     def setActiveAxis(self, axis):
-        if axis == self._active_axis:
+        if axis == self._active_axis or not self._material:
             return
+
         if axis:
             self._material.setUniformValue('u_activeColor', self._axisColorMap[axis])
         else:
