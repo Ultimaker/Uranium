@@ -265,26 +265,15 @@ class QtGL2Renderer(Renderer):
             tool = self._controller.getActiveTool()
             if tool:
                 tool_handle = tool.getHandle()
-                if tool_handle:
+                if tool_handle and tool_handle.getSelectionMesh():
                     self._selection_map.update(tool_handle.getSelectionMap())
                     self._gl.glDisable(self._gl.GL_DEPTH_TEST)
-                    if tool_handle.getLineMesh():
-                        self._gl.glLineWidth(5)
-                        self._renderItem({
-                            'node': tool_handle,
-                            'mesh': tool_handle.getLineMesh(),
-                            'material': self._handle_material,
-                            'mode': self._gl.GL_LINES
-                        })
-                        self._gl.glLineWidth(1)
-
-                    if tool_handle.getSolidMesh():
-                        self._renderItem({
-                            'node': tool_handle,
-                            'mesh': tool_handle.getSolidMesh(),
-                            'material': self._handle_material,
-                            'mode': self._gl.GL_TRIANGLES
-                        })
+                    self._renderItem({
+                        'node': tool_handle,
+                        'mesh': tool_handle.getSelectionMesh(),
+                        'material': self._handle_material,
+                        'mode': self._gl.GL_TRIANGLES
+                    })
                     self._gl.glEnable(self._gl.GL_DEPTH_TEST)
 
             self._selection_buffer.release()
