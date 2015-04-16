@@ -56,3 +56,59 @@ class TranslateToolHandle(ToolHandle):
         )
 
         self.setSolidMesh(mb.getData())
+
+        mb = MeshBuilder()
+
+        mb.addCube(
+            width = 4,
+            height = 20,
+            depth = 4,
+            center = Vector(0, 10, 0),
+            color = ToolHandle.YAxisColor
+        )
+
+        mb.addPyramid(
+            width = 4,
+            height = 8,
+            depth = 4,
+            center = Vector(0, 20, 0),
+            color = ToolHandle.YAxisColor
+        )
+
+        mb.addCube(
+            width = 20,
+            height = 4,
+            depth = 4,
+            center = Vector(10, 0, 0),
+            color = ToolHandle.XAxisColor
+        )
+
+        mb.addPyramid(
+            width = 4,
+            height = 8,
+            depth = 4,
+            center = Vector(20, 0, 0),
+            color = ToolHandle.XAxisColor,
+            axis = Vector.Unit_Z,
+            angle = 90
+        )
+
+        mb.addCube(
+            width = 4,
+            height = 4,
+            depth = 20,
+            center = Vector(0, 0, 10),
+            color = ToolHandle.ZAxisColor
+        )
+
+        mb.addPyramid(
+            width = 4,
+            height = 8,
+            depth = 4,
+            center = Vector(0, 0, 20),
+            color = ToolHandle.ZAxisColor,
+            axis = Vector.Unit_X,
+            angle = -90
+        )
+
+        self.setSelectionMesh(mb.getData())
