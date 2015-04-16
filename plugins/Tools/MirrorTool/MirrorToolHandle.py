@@ -69,3 +69,4 @@ class MirrorToolHandle(ToolHandle):
         )
 
         self.setSolidMesh(mb.getData())
+        self.setSelectionMesh(mb.getData())

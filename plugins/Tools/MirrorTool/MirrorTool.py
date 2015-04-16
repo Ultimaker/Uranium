@@ -6,6 +6,7 @@ from UM.Math.Vector import Vector
 from UM.Math.Float import Float
 
 from UM.Operations.ScaleOperation import ScaleOperation
+from UM.Operations.GroupedOperation import GroupedOperation
 from UM.Application import Application
 
 from UM.Scene.Selection import Selection
@@ -18,17 +19,10 @@ class MirrorTool(Tool):
         super().__init__()
 
         self._renderer = Application.getInstance().getRenderer()
-
         self._handle = MirrorToolHandle.MirrorToolHandle()
 
-        self._locked_axis = None
-
     def event(self, event):
-        if event.type == Event.ToolActivateEvent:
-            if Selection.hasSelection():
-                #TODO: Support multiple selection
-                self._handle.setParent(self.getController().getScene().getRoot())
-                self._handle.setPosition(Selection.getSelectedObject(0).getWorldPosition())
+        super().event(event)
 
         if event.type == Event.MousePressEvent:
             if not MouseEvent.LeftButton in event.buttons:
@@ -39,38 +33,40 @@ class MirrorTool(Tool):
                 return False
 
             if ToolHandle.isAxis(id):
-                self._locked_axis = id
+                self.setLockedAxis(id)
                 return True
 
-        if event.type == Event.MouseMoveEvent:
-            id = self._renderer.getIdAtCoordinate(event.x, event.y)
-            if not self._locked_axis:
-                if not id:
-                    self._handle.setActiveAxis(None)
-
-                if ToolHandle.isAxis(id):
-                    self._handle.setActiveAxis(id)
-
-            return False
-
         if event.type == Event.MouseReleaseEvent:
-            if self._locked_axis:
-                for node in Selection.getAllSelectedObjects():
+            if self.getLockedAxis():
+                op = None
+                if Selection.getCount() == 1:
+                    node = Selection.getSelectedObject(0)
                     scale = node.getScale()
-                    if self._locked_axis == ToolHandle.XAxis:
+                    if self.getLockedAxis() == ToolHandle.XAxis:
                         scale.setX(-scale.x)
-                    elif self._locked_axis == ToolHandle.YAxis:
+                    elif self.getLockedAxis() == ToolHandle.YAxis:
                         scale.setY(-scale.y)
-                    elif self._locked_axis == ToolHandle.ZAxis:
+                    elif self.getLockedAxis() == ToolHandle.ZAxis:
                         scale.setZ(-scale.z)
 
                     op = ScaleOperation(node, scale, set_scale = True)
-                    Application.getInstance().getOperationStack().push(op)
+                else:
+                    op = GroupedOperation()
 
-                self._locked_axis = None
+                    for node in Selection.getAllSelectedObjects():
+                        scale = node.getScale()
+                        if self.getLockedAxis() == ToolHandle.XAxis:
+                            scale.setX(-scale.x)
+                        elif self.getLockedAxis() == ToolHandle.YAxis:
+                            scale.setY(-scale.y)
+                        elif self.getLockedAxis() == ToolHandle.ZAxis:
+                            scale.setZ(-scale.z)
+
+                        op.addOperation(ScaleOperation(node, scale, set_scale = True))
+
+                op.push()
+
+                self.setLockedAxis(None)
                 return True
-
-        if event.type == Event.ToolDeactivateEvent:
-            self._handle.setParent(None)
 
         return False
