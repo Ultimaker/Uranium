@@ -54,3 +54,47 @@ class Tool(PluginObject, SignalEmitter):
 
     def setHandle(self, handle):
         self._handle = handle
+
+    def getLockedAxis(self):
+        return self._locked_axis
+
+    def setLockedAxis(self, axis):
+        self._locked_axis = axis
+
+        if self._handle:
+            self._handle.setActiveAxis(axis)
+
+    def getDragPlane(self):
+        return self._drag_plane
+
+    def setDragPlane(self, plane):
+        self._drag_plane = plane
+
+    def setDragStart(self, x, y):
+        self._drag_start = self.getDragPosition(x, y)
+
+    def getDragPosition(self, x, y):
+        if not self._drag_plane:
+            return None
+
+        ray = self._controller.getScene().getActiveCamera().getRay(x, y)
+
+        target = self._drag_plane.intersectsRay(ray)
+        if target:
+            return ray.getPointAlongRay(target)
+
+        return None
+
+    def getDragVector(self, x, y):
+        if not self._drag_plane:
+            return None
+
+        if not self._drag_start:
+            return None
+
+        drag_end = self.getDragPosition(x, y)
+        if drag_end:
+            return drag_end - self._drag_start
+
+        return None
+
