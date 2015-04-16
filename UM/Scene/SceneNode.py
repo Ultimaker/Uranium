@@ -218,6 +218,7 @@ class SceneNode(SignalEmitter):
         else:
             raise ValueError("Unknown transform space {0}".format(transform_space))
 
+        self._orientation.normalize()
         self._transformChanged()
 
     ##  Set the local orientation of this scene node.
@@ -228,6 +229,7 @@ class SceneNode(SignalEmitter):
             return
 
         self._orientation = orientation
+        self._orientation.normalize()
         self._transformChanged()
 
     ##  Get the local scaling value.
