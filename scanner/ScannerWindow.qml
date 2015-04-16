@@ -12,6 +12,8 @@ UM.MainWindow
 
     width: 1280
     height: 768
+    
+    title: qsTr("Argus");
 
     Item 
     {
@@ -25,7 +27,7 @@ UM.MainWindow
 
             Menu 
             {
-                title: '&File';
+                title: qsTr('&File');
 
                 MenuItem { action: load_file_action; }
                 MenuItem { action: save_file_action; }
@@ -37,7 +39,7 @@ UM.MainWindow
 
             Menu 
             {
-                title: '&Edit';
+                title: qsTr('&Edit');
 
                 MenuItem { action: undo_action; }
                 MenuItem { action: redo_action; }
@@ -47,7 +49,7 @@ UM.MainWindow
 
             Menu 
             {
-                title: "&Machine";
+                title: qsTr("&Machine");
 
                 MenuSeparator { }
                 MenuItem{text: "UltiScanTastic"; enabled: false;}
@@ -55,7 +57,7 @@ UM.MainWindow
 
             Menu 
             {
-                title: '&Settings';
+                title: qsTr('&Settings');
 
                 MenuItem { action: preferences_action; }
                 MenuItem { action: plugin_action; }
@@ -64,7 +66,7 @@ UM.MainWindow
 
             Menu 
             {
-                title: '&Help';
+                title: qsTr('&Help');
 
                 MenuItem { action: helpAction; enabled: false; }
                 MenuItem { action: aboutAction; enabled: false; }
@@ -73,7 +75,7 @@ UM.MainWindow
 
         Item 
         {
-            id: contentItem;
+            id: content_item;
 
             y: menu.height
             width: parent.width;
@@ -85,7 +87,8 @@ UM.MainWindow
             {
                 anchors.fill: parent
 
-                onDropped: {
+                onDropped: 
+                {
                     if(drop.urls.length > 0) 
                     {
                         for(var i in drop.urls) 
@@ -96,10 +99,12 @@ UM.MainWindow
                 }
             }
             
-            Toolbar {
+            Toolbar 
+            {
                 id: toolbar;
 
-                anchors {
+                anchors 
+                {
                     left: parent.left;
                     right: parent.right;
                     top: parent.top;
@@ -117,7 +122,7 @@ UM.MainWindow
             }
 
             //Setting / Wizard menu (HARDCODED for wizard stuff)
-            Loader 
+            /*Loader 
             {
                 
                 anchors.top:toolbar.bottom;
@@ -161,21 +166,26 @@ UM.MainWindow
                     case 15:
                         return "WizardSetup15.qml"
                 }
-            }
-
-
-            /*UM.SettingsPanel 
-            {
-                anchors.right: parent.right;
-                anchors.verticalCenter: parent.verticalCenter
-
-                onSettingConfigurationRequested: 
-                {
-                    preferences.visible = true;
-                    preferences.setPage(1);
-                }
             }*/
 
+
+            UM.Sidebar 
+            {
+                id: sidebar;
+
+                anchors {
+                    top: parent.top;
+                    bottom: parent.bottom;
+                    right: parent.right;
+                    rightMargin: UM.Theme.sizes.window_margin.width;
+                }
+
+                width: UM.Theme.sizes.panel.width;
+
+                addMachineAction: actions.addMachine;
+                configureMachinesAction: actions.configureMachines;
+                saveAction: actions.save;
+            }
             UM.JobList { anchors.left: parent.left; anchors.bottom: parent.bottom; width: parent.width / 10; height: parent.height / 5; }
         
             Image 
@@ -422,7 +432,7 @@ UM.MainWindow
         }
     }
 
-    
+    Component.onCompleted: UM.Theme.load(UM.Resources.getPath(UM.Resources.ThemesLocation, "argus"))
     
     
 
