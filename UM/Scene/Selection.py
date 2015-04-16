@@ -41,6 +41,7 @@ class Selection:
 
     selectionChanged = Signal()
 
+    ##  Calculate the average position of the selection.
     @classmethod
     def getAveragePosition(cls):
         if not cls.__selection:
@@ -63,5 +64,33 @@ class Selection:
         pos /= len(cls.__selection)
 
         return pos
+
+    ##  Apply an operation to the entire selection
+    #
+    #   This will create and push an operation onto the operation stack. Dependent
+    #   on whether there is one item selected or multiple it will be just the
+    #   operation or a grouped operation containing the operation for each selected
+    #   node.
+    #
+    #   \param operation \type{Class} The operation to create and push. It should take a SceneNode as first positional parameter.
+    #   \param args The additional positional arguments passed along to the operation constructor.
+    #   \param kwargs The additional keyword arguements that will be passed along to the operation constructor.
+    @classmethod
+    def applyOperation(cls, operation, *args, **kwargs):
+        if not cls.__selection:
+            return
+
+        op = None
+
+        if len(cls.__selection) == 1:
+            node = cls.__selection[0]
+            op = operation(node, *args, **kwargs)
+        else:
+            op = GroupedOperation()
+
+            for node in Selection.getAllSelectedObjects():
+                op.addOperation(operation(node, *args, **kwargs))
+
+        op.push()
 
     __selection = []
