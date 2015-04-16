@@ -70,6 +70,9 @@ class Tool(PluginObject, SignalEmitter):
     def setDragPlane(self, plane):
         self._drag_plane = plane
 
+    def getDragStart(self):
+        return self._drag_start
+
     def setDragStart(self, x, y):
         self._drag_start = self.getDragPosition(x, y)
 
