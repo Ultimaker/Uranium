@@ -18,13 +18,18 @@ def getMetaData():
         },
         'tool': 
         {
-            'name': 'PointCloudAlignmentTool'
+            'name': 'PointCloudAlignmentTool',
+        },
+        'cura': {
+            'tool': {
+                'visible': False
+            }
         }
     }
 
 def register(app):
     #TODO: Once multiple plugin types are supported, this needs to be removed.
     view = PointCloudAlignView.PointCloudAlignView()
-    view.setPluginId("PointCloudAlign")
+    view.setPluginId("PointCloudAlignment")
     Application.getInstance().getController().addView(view)
     return PointCloudAlignTool.PointCloudAlignTool()
