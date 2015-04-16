@@ -1,5 +1,5 @@
 from UM.Tool import Tool
-from UM.Event import Event, MouseEvent
+from UM.Event import Event, MouseEvent, KeyEvent
 from UM.Application import Application
 from UM.Scene.ToolHandle import ToolHandle
 from UM.Scene.Selection import Selection
@@ -10,6 +10,7 @@ from UM.Math.Quaternion import Quaternion
 from UM.Math.Float import Float
 
 from UM.Operations.RotateOperation import RotateOperation
+from UM.Operations.GroupedOperation import GroupedOperation
 
 from . import RotateToolHandle
 
@@ -21,25 +22,17 @@ class RotateTool(Tool):
         self._renderer = Application.getInstance().getRenderer()
         self._handle = RotateToolHandle.RotateToolHandle()
 
-        self._locked_axis = None
-        self._drag = False
-        self._target = None
-
-        self._step_size = 0.25
-
-        self._x_rotate_step = Quaternion()
-        self._x_rotate_step.setByAngleAxis(math.radians(15), Vector.Unit_X)
-
-        self._y_rotate_step = Quaternion()
-        self._y_rotate_step.setByAngleAxis(math.radians(15), Vector.Unit_Y)
-
-        self._z_rotate_step = Quaternion()
-        self._z_rotate_step.setByAngleAxis(math.radians(15), Vector.Unit_Z)
+        self._lock_steps = True
+        self._step_size = 0.08
 
     def event(self, event):
-        if event.type == Event.ToolActivateEvent:
-            self._handle.setParent(self.getController().getScene().getRoot())
-            self._handle.setPosition(Selection.getSelectedObject(0).getWorldPosition())
+        super().event(event)
+
+        if event.type == Event.KeyPressEvent and event.key == KeyEvent.ShiftKey:
+            self._lock_steps = False
+
+        if event.type == Event.KeyReleaseEvent and event.key == KeyEvent.ShiftKey:
+            self._lock_steps = True
 
         if event.type == Event.MousePressEvent:
             if not MouseEvent.LeftButton in event.buttons:
@@ -50,68 +43,50 @@ class RotateTool(Tool):
                 return
 
             if ToolHandle.isAxis(id):
-                self._locked_axis = id
-                self._drag = True
+                self.setLockedAxis(id)
+                handle_position = self._handle.getWorldPosition()
+
+                if id == ToolHandle.XAxis:
+                    self.setDragPlane(Plane(Vector(1, 0, 0), handle_position.x))
+                elif id == ToolHandle.YAxis:
+                    self.setDragPlane(Plane(Vector(0, 1, 0), handle_position.y))
+                elif self._locked_axis == ToolHandle.ZAxis:
+                    self.setDragPlane(Plane(Vector(0, 0, 1), handle_position.z))
+
+                self.setDragStart(event.x, event.y)
 
         if event.type == Event.MouseMoveEvent:
-            id = self._renderer.getIdAtCoordinate(event.x, event.y)
-            if not self._locked_axis:
-                if not id:
-                    self._handle.setActiveAxis(None)
-
-                if ToolHandle.isAxis(id):
-                    self._handle.setActiveAxis(id)
-
-            if not self._drag:
+            if not self.getDragPlane():
                 return False
 
-            camera = self.getController().getScene().getActiveCamera()
+            handle_position = self._handle.getWorldPosition()
+            drag_start = (self.getDragStart() - handle_position).normalize()
+            drag_position = self.getDragPosition(event.x, event.y)
+            if not drag_position:
+                return
+            drag_end = (drag_position - handle_position).normalize()
 
-            handlePos = self._handle.getWorldPosition()
-            plane = None
-            if self._locked_axis == ToolHandle.XAxis:
-                plane = Plane(Vector(0, 0, 1), handlePos.z)
-            elif self._locked_axis == ToolHandle.YAxis:
-                plane = Plane(Vector(0, 0, 1), handlePos.z)
-            elif self._locked_axis == ToolHandle.ZAxis:
-                plane = Plane(Vector(0, 1, 0), handlePos.y)
+            angle = math.acos(drag_start.dot(drag_end))
 
-            ray = camera.getRay(event.x, event.y)
+            rotation = None
+            if self.getLockedAxis() == ToolHandle.XAxis:
+                direction = 1 if Vector.Unit_X.dot(drag_start.cross(drag_end)) > 0 else -1
+                rotation = Quaternion.fromAngleAxis(direction * angle, Vector.Unit_X)
+            elif self.getLockedAxis() == ToolHandle.YAxis:
+                direction = 1 if Vector.Unit_Y.dot(drag_start.cross(drag_end)) > 0 else -1
+                rotation = Quaternion.fromAngleAxis(direction * angle, Vector.Unit_Y)
+            elif self.getLockedAxis() == ToolHandle.ZAxis:
+                direction = 1 if Vector.Unit_Z.dot(drag_start.cross(drag_end)) > 0 else -1
+                rotation = Quaternion.fromAngleAxis(direction * angle, Vector.Unit_Z)
 
-            newTarget = plane.intersectsRay(ray)
-            if newTarget:
-                n = (handlePos - ray.getPointAlongRay(newTarget))
-                if self._target:
-                    diff = n - self._target
+            Selection.applyOperation(RotateOperation, rotation)
 
-                    rotation = diff.length() / 100
-                    if rotation < self._step_size:
-                        return
-
-                    newRotation = None
-                    if self._locked_axis == ToolHandle.XAxis:
-                        direction = diff.x / abs(diff.x)
-                        newRotation = self._x_rotate_step if direction < 0 else self._x_rotate_step.getInverse()
-                    elif self._locked_axis == ToolHandle.YAxis:
-                        direction = diff.y / abs(diff.y)
-                        newRotation = self._y_rotate_step if direction > 0 else self._y_rotate_step.getInverse()
-                    elif self._locked_axis == ToolHandle.ZAxis:
-                        direction = diff.z / abs(diff.z)
-                        newRotation = self._z_rotate_step if direction > 0 else self._z_rotate_step.getInverse()
-
-                    for node in Selection.getAllSelectedObjects():
-                        op = RotateOperation(node, newRotation)
-                        Application.getInstance().getOperationStack().push(op)
-
-                self._target = n
-            return True
+            self.setDragStart(event.x, event.y)
+            self.updateHandlePosition()
 
         if event.type == Event.MouseReleaseEvent:
-            if self._drag:
-                self._target = None
-                self._drag = False
-                self._locked_axis = None
+            if self.getDragPlane():
+                self.setDragPlane(None)
+                self.setLockedAxis(None)
                 return True
 
-        if event.type == Event.ToolDeactivateEvent:
-            self._handle.setParent(None)
