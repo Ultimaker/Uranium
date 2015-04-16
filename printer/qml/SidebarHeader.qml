@@ -43,7 +43,7 @@ Column {
                     model: ListModel {
                         id: modeModel;
                         ListElement { text: QT_TR_NOOP("Simple"); file: "SidebarSimple.qml" }
-                        ListElement { text: QT_TR_NOOP("Advanced"); file: "SidebarAdvanced.qml" }
+                        ListElement { text: QT_TR_NOOP("Advanced"); file: "../../UM/Qt/qml/UM/SettingView.qml" }
                     }
 
                     MenuItem {
@@ -68,7 +68,7 @@ Column {
         }
 
         Label {
-            text: qsTr("Printer:");
+            text: qsTr("Machine:");
 
             font: UM.Theme.fonts.sidebar_header;
             color: UM.Theme.colors.text_inactive;
@@ -107,12 +107,12 @@ Column {
         }
     }
 
-    SidebarCategoryHeader {
+    UM.SidebarCategoryHeader {
         width: parent.width;
         height: UM.Theme.sizes.section.height;
 
         iconSource: UM.Theme.icons.printsetup;
-        text: qsTr("Print Setup");
+        text: qsTr("Setup");
         enabled: false;
 
         color: UM.Theme.colors.primary;

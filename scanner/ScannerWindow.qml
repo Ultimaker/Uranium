@@ -169,7 +169,7 @@ UM.MainWindow
             }*/
 
 
-            UM.Sidebar 
+            /*UM.Sidebar 
             {
                 id: sidebar;
 
@@ -185,7 +185,7 @@ UM.MainWindow
                 addMachineAction: actions.addMachine;
                 configureMachinesAction: actions.configureMachines;
                 saveAction: actions.save;
-            }
+            }*/
             UM.JobList { anchors.left: parent.left; anchors.bottom: parent.bottom; width: parent.width / 10; height: parent.height / 5; }
         
             Image 
