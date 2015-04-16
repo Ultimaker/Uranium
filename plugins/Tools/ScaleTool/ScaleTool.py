@@ -17,12 +17,8 @@ class ScaleTool(Tool):
         self._renderer = Application.getInstance().getRenderer()
         self._handle = ScaleToolHandle.ScaleToolHandle()
 
-        #self._locked_axis = None
-        #self._drag = False
-        #self._target = None
-
         self._lock_steps = True
-        self._step_size = 0.1
+        self._step_size = 0.05
 
         self._non_uniform_scale = False
         self._drag_length = 0
@@ -53,14 +49,16 @@ class ScaleTool(Tool):
             if ToolHandle.isAxis(id):
                 self.setLockedAxis(id)
 
+            handle_position = self._handle.getWorldPosition()
+
             if id == ToolHandle.XAxis:
-                self.setDragPlane(Plane(Vector(0, 0, 1), 0))
+                self.setDragPlane(Plane(Vector(0, 0, 1), handle_position.z))
             elif id == ToolHandle.YAxis:
-                self.setDragPlane(Plane(Vector(0, 0, 1), 0))
+                self.setDragPlane(Plane(Vector(0, 0, 1), handle_position.z))
             elif id == ToolHandle.ZAxis:
-                self.setDragPlane(Plane(Vector(0, 1, 0), 0))
+                self.setDragPlane(Plane(Vector(0, 1, 0), handle_position.y))
             else:
-                self.setDragPlane(Plane(Vector(0, 1, 0), 0))
+                self.setDragPlane(Plane(Vector(0, 1, 0), handle_position.y))
 
             self.setDragStart(event.x, event.y)
 
