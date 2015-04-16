@@ -116,25 +116,88 @@ class MeshBuilder:
         color = kwargs.get('color', None)
 
         if axis == Vector.Unit_Y:
-            start = axis.cross(Vector.Unit_X) * radius
+            start = axis.cross(Vector.Unit_X).normalize() * radius
         else:
-            start = axis.cross(Vector.Unit_Y) * radius
+            start = axis.cross(Vector.Unit_Y).normalize() * radius
 
         angle_increment = max_angle / sections
         angle = 0
 
-        point = start
+        point = start + center
         m = Matrix()
         while angle <= max_angle:
             self._mesh_data.addVertex(point.x, point.y, point.z)
             angle += angle_increment
             m.setByRotationAxis(angle, axis)
-            point = start.multiply(m)
+            point = start.multiply(m) + center
             self._mesh_data.addVertex(point.x, point.y, point.z)
 
             if color:
                 self._mesh_data.setVertexColor(self._mesh_data.getVertexCount() - 2, color)
                 self._mesh_data.setVertexColor(self._mesh_data.getVertexCount() - 1, color)
+
+    def addDonut(self, **kwargs):
+        inner_radius = kwargs['inner_radius']
+        outer_radius = kwargs['outer_radius']
+        width = kwargs['width']
+
+        center = kwargs.get('center', Vector(0, 0, 0))
+        sections = kwargs.get('sections', 32)
+        color = kwargs.get('color', None)
+
+        angle = kwargs.get('angle', 0)
+        axis = kwargs.get('axis', Vector.Unit_Y)
+
+        vertices = []
+        indices = []
+        colors = []
+
+        start = self._mesh_data.getVertexCount()
+
+        for i in range(sections):
+            v1 = start + i * 3
+            v2 = v1 + 1
+            v3 = v1 + 2
+            v4 = v1 + 3
+            v5 = v1 + 4
+            v6 = v1 + 5
+
+            if i+1 >= sections: # connect the end to the start
+                v4 = start
+                v5 = start + 1
+                v6 = start + 2
+
+            theta = i * math.pi / (sections / 2)
+            c = math.cos(theta)
+            s = math.sin(theta)
+
+            vertices.append( [inner_radius * c, inner_radius * s, 0] )
+            vertices.append( [outer_radius * c, outer_radius * s, width] )
+            vertices.append( [outer_radius * c, outer_radius * s, -width] )
+
+            indices.append( [v1, v4, v5] )
+            indices.append( [v2, v1, v5] )
+
+            indices.append( [v2, v5, v6] )
+            indices.append( [v3, v2, v6] )
+
+            indices.append( [v3, v6, v4] )
+            indices.append( [v1, v3, v4] )
+
+            if color:
+                colors.append( [color.r, color.g, color.b, color.a] )
+                colors.append( [color.r, color.g, color.b, color.a] )
+                colors.append( [color.r, color.g, color.b, color.a] )
+
+        matrix = Matrix()
+        matrix.setByRotationAxis(angle, axis)
+        vertices = numpy.asarray(vertices, dtype = numpy.float32)
+        vertices = vertices.dot(matrix.getData()[0:3,0:3])
+        vertices[:] += center.getData()
+        self._mesh_data.addVertices(vertices)
+
+        self._mesh_data.addIndices(numpy.asarray(indices, dtype = numpy.int32))
+        self._mesh_data.addColors(numpy.asarray(colors, dtype = numpy.float32))
 
     def addPyramid(self, **kwargs):
         width = kwargs['width']

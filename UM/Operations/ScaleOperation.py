@@ -5,16 +5,17 @@ class ScaleOperation(Operation.Operation):
         super().__init__()
         self._node = node
         self._old_scale = node.getScale()
-        if kwargs.get('set_scale', False):
-            self._new_scale = scale
-        else:
-            self._new_scale = self._old_scale + scale
+        self._set_scale = kwargs.get('set_scale', False)
+        self._scale = scale
 
     def undo(self):
         self._node.setScale(self._old_scale)
 
     def redo(self):
-        self._node.setScale(self._new_scale)
+        if self._set_scale:
+            self._node.setScale(self._scale)
+        else:
+            self._node.scale(self._scale)
 
     def mergeWith(self, other):
         if type(other) is not ScaleOperation:
@@ -23,7 +24,10 @@ class ScaleOperation(Operation.Operation):
         if other._node != self._node:
             return False
 
-        op = ScaleOperation(self._node, self._new_scale)
+        if other._set_scale and not self._set_scale:
+            return False
+
+        op = ScaleOperation(self._node, self._scale)
         op._old_scale = other._old_scale
         return op
 

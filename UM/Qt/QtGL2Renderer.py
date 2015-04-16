@@ -129,44 +129,19 @@ class QtGL2Renderer(Renderer):
     ##  Get object ID at coordinate. 
     #   \param x from -1 to 1
     #   \param y from -1 to 1
-    #   \param sample_radius, sample area to use.
-    def getIdAtCoordinate(self, x, y, sample_radius = 1):
+    def getIdAtCoordinate(self, x, y):
         if not self._selection_image:
             return None
 
         px = (0.5 + x / 2.0) * self._viewport_width
         py = (0.5 + y / 2.0) * self._viewport_height
 
-        samples = []
-        if sample_radius == 1:
-            if px < 0 or px > (self._selection_image.width() - 1) or py < 0 or py > (self._selection_image.height() - 1):
-                return None
-
-            pixel = self._selection_image.pixel(px, py)
-            samples.append(Color.fromARGB(pixel))
-        else:
-            for sx in range(-sample_radius, sample_radius):
-                if px + sx < 0 or px + sx > (self._selection_image.width() - 1):
-                    continue
-                for sy in range(-sample_radius, sample_radius):
-                    if py + sy < 0 or py + sy > (self._selection_image.height() - 1):
-                        continue
-
-                    pixel = self._selection_image.pixel(px + sx, py + sy)
-                    samples.append(Color.fromARGB(pixel))
-
-        idCount = {}
-        for sample in samples:
-            if sample in self._selection_map:
-                if not self._selection_map[sample] in idCount:
-                    idCount[self._selection_map[sample]] = 1
-                else:
-                    idCount[self._selection_map[sample]] += 1
-        if len(idCount) > 0:
-            return max(idCount)
-        else:
+        if px < 0 or px > (self._selection_image.width() - 1) or py < 0 or py > (self._selection_image.height() - 1):
             return None
-    
+
+        pixel = self._selection_image.pixel(px, py)
+        return self._selection_map.get(Color.fromARGB(pixel), None)
+
     ##  Render selection is used to 'highlight' the selected objects
     def setRenderSelection(self, render):
         self._render_selection = render
@@ -265,26 +240,15 @@ class QtGL2Renderer(Renderer):
             tool = self._controller.getActiveTool()
             if tool:
                 tool_handle = tool.getHandle()
-                if tool_handle:
+                if tool_handle and tool_handle.getSelectionMesh():
                     self._selection_map.update(tool_handle.getSelectionMap())
                     self._gl.glDisable(self._gl.GL_DEPTH_TEST)
-                    if tool_handle.getLineMesh():
-                        self._gl.glLineWidth(5)
-                        self._renderItem({
-                            'node': tool_handle,
-                            'mesh': tool_handle.getLineMesh(),
-                            'material': self._handle_material,
-                            'mode': self._gl.GL_LINES
-                        })
-                        self._gl.glLineWidth(1)
-
-                    if tool_handle.getSolidMesh():
-                        self._renderItem({
-                            'node': tool_handle,
-                            'mesh': tool_handle.getSolidMesh(),
-                            'material': self._handle_material,
-                            'mode': self._gl.GL_TRIANGLES
-                        })
+                    self._renderItem({
+                        'node': tool_handle,
+                        'mesh': tool_handle.getSelectionMesh(),
+                        'material': self._handle_material,
+                        'mode': self._gl.GL_TRIANGLES
+                    })
                     self._gl.glEnable(self._gl.GL_DEPTH_TEST)
 
             self._selection_buffer.release()

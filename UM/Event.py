@@ -105,6 +105,18 @@ class WheelEvent(Event):
 
 ##  Key Event class.
 class KeyEvent(Event):
+    ShiftKey = 1
+    ControlKey = 2
+    AltKey = 3
+    MetaKey = 4
+    SpaceKey = 5
+    EnterKey = 6
+    UpKey = 7
+    DownKey = 8
+    LeftKey = 9
+    RightKey = 10
+    EscapeKey = 11
+
     def __init__(self, type, key):
         super().__init__(type)
         self._key = key
