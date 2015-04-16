@@ -23,7 +23,7 @@ class RotateTool(Tool):
         self._handle = RotateToolHandle.RotateToolHandle()
 
         self._lock_steps = True
-        self._step_size = 0.08
+        self._step_size = math.radians(15)
 
     def event(self, event):
         super().event(event)
@@ -67,6 +67,8 @@ class RotateTool(Tool):
             drag_end = (drag_position - handle_position).normalize()
 
             angle = math.acos(drag_start.dot(drag_end))
+            if angle < self._step_size:
+                return
 
             rotation = None
             if self.getLockedAxis() == ToolHandle.XAxis:
