@@ -129,44 +129,19 @@ class QtGL2Renderer(Renderer):
     ##  Get object ID at coordinate. 
     #   \param x from -1 to 1
     #   \param y from -1 to 1
-    #   \param sample_radius, sample area to use.
-    def getIdAtCoordinate(self, x, y, sample_radius = 1):
+    def getIdAtCoordinate(self, x, y):
         if not self._selection_image:
             return None
 
         px = (0.5 + x / 2.0) * self._viewport_width
         py = (0.5 + y / 2.0) * self._viewport_height
 
-        samples = []
-        if sample_radius == 1:
-            if px < 0 or px > (self._selection_image.width() - 1) or py < 0 or py > (self._selection_image.height() - 1):
-                return None
-
-            pixel = self._selection_image.pixel(px, py)
-            samples.append(Color.fromARGB(pixel))
-        else:
-            for sx in range(-sample_radius, sample_radius):
-                if px + sx < 0 or px + sx > (self._selection_image.width() - 1):
-                    continue
-                for sy in range(-sample_radius, sample_radius):
-                    if py + sy < 0 or py + sy > (self._selection_image.height() - 1):
-                        continue
-
-                    pixel = self._selection_image.pixel(px + sx, py + sy)
-                    samples.append(Color.fromARGB(pixel))
-
-        idCount = {}
-        for sample in samples:
-            if sample in self._selection_map:
-                if not self._selection_map[sample] in idCount:
-                    idCount[self._selection_map[sample]] = 1
-                else:
-                    idCount[self._selection_map[sample]] += 1
-        if len(idCount) > 0:
-            return max(idCount)
-        else:
+        if px < 0 or px > (self._selection_image.width() - 1) or py < 0 or py > (self._selection_image.height() - 1):
             return None
-    
+
+        pixel = self._selection_image.pixel(px, py)
+        return self._selection_map.get(Color.fromARGB(pixel), None)
+
     ##  Render selection is used to 'highlight' the selected objects
     def setRenderSelection(self, render):
         self._render_selection = render
