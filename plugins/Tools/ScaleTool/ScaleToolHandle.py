@@ -59,3 +59,63 @@ class ScaleToolHandle(ToolHandle):
         )
 
         self.setSolidMesh(mb.getData())
+
+        mb = MeshBuilder()
+
+        mb.addCube(
+            width = 4,
+            height = 20,
+            depth = 4,
+            center = Vector(0, 10, 0),
+            color = ToolHandle.YAxisColor
+        )
+
+        mb.addCube(
+            width = 4,
+            height = 4,
+            depth = 4,
+            center = Vector(0, 20, 0),
+            color = ToolHandle.YAxisColor
+        )
+
+        mb.addCube(
+            width = 20,
+            height = 4,
+            depth = 4,
+            center = Vector(10, 0, 0),
+            color = ToolHandle.XAxisColor
+        )
+
+        mb.addCube(
+            width = 4,
+            height = 4,
+            depth = 4,
+            center = Vector(20, 0, 0),
+            color = ToolHandle.XAxisColor
+        )
+
+        mb.addCube(
+            width = 4,
+            height = 4,
+            depth = 20,
+            center = Vector(0, 0, 10),
+            color = ToolHandle.ZAxisColor
+        )
+
+        mb.addCube(
+            width = 4,
+            height = 4,
+            depth = 4,
+            center = Vector(0, 0, 20),
+            color = ToolHandle.ZAxisColor
+        )
+
+        mb.addCube(
+            width = 8,
+            height = 8,
+            depth = 8,
+            center = Vector(0, 0, 0),
+            color = ToolHandle.AllAxisColor
+        )
+
+        self.setSelectionMesh(mb.getData())
