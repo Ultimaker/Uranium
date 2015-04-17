@@ -318,6 +318,14 @@
                                 }
                             }
                         },
+                        "speed_topbottom": {
+                            "label": "Top/Bottom Speed",
+                            "description": "Speed at which top/bottom parts are printed. Printing the top/bottom faster can greatly reduce printing time, but this can negatively affect print quality.",
+                            "unit": "mm/s",
+                            "type": "float",
+                            "default": 50.0,
+                            "visible": false
+                        },
                         "speed_support": {
                             "label": "Support Speed",
                             "description": "The speed at which exterior support is printed. Printing exterior supports at higher speeds can greatly improve printing time. And the surface quality of exterior support is usually not important, so higher speeds can be used.",
