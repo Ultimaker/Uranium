@@ -11,6 +11,9 @@ ScrollView {
     style: UM.Theme.styles.scrollview;
 
     property Action configureSettings;
+    signal showTooltip(Item item, point location, string text);
+    signal hideTooltip();
+    
 
     Column {
         id: contents
@@ -98,9 +101,10 @@ ScrollView {
 
                             onShowTooltip: {
                                 position = { x: UM.Theme.sizes.default_margin.width, y: item.height }
-                                sidebar.showTooltip(item, position, model.description);
+                                base.showTooltip(item,position,model.description)
+                                //sidebar.showTooltip(item, position, model.description);
                             }
-                            onHideTooltip: sidebar.hideTooltip();
+                            onHideTooltip: base.hideTooltip()
 
                             Menu {
                                 id: contextMenu;

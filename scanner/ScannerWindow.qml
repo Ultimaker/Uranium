@@ -169,23 +169,20 @@ UM.MainWindow
             }*/
 
 
-            /*UM.Sidebar 
+            UM.SettingView
             {
                 id: sidebar;
 
                 anchors {
-                    top: parent.top;
+                    top: toolbar.bottom
+                    topMargin:5
                     bottom: parent.bottom;
                     right: parent.right;
                     rightMargin: UM.Theme.sizes.window_margin.width;
                 }
 
                 width: UM.Theme.sizes.panel.width;
-
-                addMachineAction: actions.addMachine;
-                configureMachinesAction: actions.configureMachines;
-                saveAction: actions.save;
-            }*/
+            }
             UM.JobList { anchors.left: parent.left; anchors.bottom: parent.bottom; width: parent.width / 10; height: parent.height / 5; }
         
             Image 
