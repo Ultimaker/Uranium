@@ -48,6 +48,16 @@ UM.AngledCornerRectangle {
 
             addMachineAction: base.addMachineAction;
             configureMachinesAction: base.configureMachinesAction;
+            modesModel: modesListModel;
+
+            currentModeIndex: {
+                var index = parseInt(UM.Preferences.getValue('cura/active_mode'))
+                if(index) {
+                    return index;
+                }
+                return 0;
+            }
+            onCurrentModeIndexChanged: UM.Preferences.setValue('cura/active_mode', currentModeIndex);
         }
 
         Loader {
@@ -56,7 +66,7 @@ UM.AngledCornerRectangle {
             Layout.fillWidth: true;
             Layout.fillHeight: true;
 
-            source: header.currentModeFile;
+            source: modesListModel.get(header.currentModeIndex).file;
 
             property Item sidebar: base;
 
@@ -85,5 +95,11 @@ UM.AngledCornerRectangle {
     
     SidebarTooltip {
         id: tooltip;
+    }
+
+    ListModel {
+        id: modesListModel;
+        ListElement { text: QT_TR_NOOP("Simple"); file: "SidebarSimple.qml" }
+        ListElement { text: QT_TR_NOOP("Advanced"); file: "SidebarAdvanced.qml" }
     }
 }

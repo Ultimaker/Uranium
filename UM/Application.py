@@ -48,8 +48,7 @@ class Application(SignalEmitter):
         preferences = Preferences.getInstance()
         preferences.addPreference('general/language', 'en')
         try:
-            file = Resources.getPath(Resources.PreferencesLocation, self._application_name + '.cfg')
-            preferences.readPreferenceFromFile('general/language', file)
+            preferences.readFromFile(Resources.getPath(Resources.PreferencesLocation, self._application_name + '.cfg'))
         except FileNotFoundError:
             pass
 
