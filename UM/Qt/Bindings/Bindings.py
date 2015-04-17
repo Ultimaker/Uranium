@@ -18,6 +18,7 @@ from . import PreferencesProxy
 from . import Theme
 from . import AngledCornerRectangle
 from . import SettingCategoriesModel
+from . import ActiveToolProxy
 
 class Bindings:
     @classmethod
@@ -69,3 +70,4 @@ class Bindings:
         qmlRegisterSingletonType(MeshFileHandlerProxy.MeshFileHandlerProxy, 'UM', 1, 0, 'MeshFileHandler', MeshFileHandlerProxy.createMeshFileHandlerProxy)
         qmlRegisterSingletonType(PreferencesProxy.PreferencesProxy, 'UM', 1, 0, 'Preferences', PreferencesProxy.createPreferencesProxy)
         qmlRegisterSingletonType(Theme.Theme, 'UM', 1, 0, 'Theme', Theme.createTheme)
+        qmlRegisterSingletonType(ActiveToolProxy.ActiveToolProxy, 'UM', 1, 0, 'ActiveTool', ActiveToolProxy.createActiveToolProxy)
