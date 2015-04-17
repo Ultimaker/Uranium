@@ -10,7 +10,7 @@
     },
     "categories": {
         "resolution": {
-            "label": "Resolution",
+            "label": "Quality",
             "visible": true,
             "icon": "category_quality",
             "settings": {
@@ -431,7 +431,7 @@
             }
         },
         "cooling": {
-            "label": "Fan/Cool",
+            "label": "Cooling",
             "visible": true,
             "icon": "category_cool",
             "settings": {
@@ -517,7 +517,7 @@
             }
         },
         "support": {
-            "label": "Support Structure",
+            "label": "Support",
             "visible": true,
             "icon": "category_support",
             "settings": {
@@ -700,7 +700,7 @@
             }
         },
         "platform_adhesion": {
-            "label": "Skirt/Brim/Raft",
+            "label": "Platform Adhesion",
             "visible": true,
             "icon": "category_adhesion",
             "settings": {
@@ -858,7 +858,7 @@
             }
         },
         "blackmagic": {
-            "label": "Black Magic",
+            "label": "Fixes",
             "visible": true,
             "icon": "category_fixes",
             "settings": {
