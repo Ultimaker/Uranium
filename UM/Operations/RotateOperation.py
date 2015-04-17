@@ -22,7 +22,7 @@ class RotateOperation(Operation.Operation):
         if other._node != self._node:
             return False
 
-        op = RotateOperation(self._node, self._rotation)
+        op = RotateOperation(self._node, other._rotation * self._rotation)
         op._old_orientation = other._old_orientation
         return op
 
