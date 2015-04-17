@@ -15,11 +15,10 @@ class Preferences(SignalEmitter):
     def addPreference(self, key, default_value):
         preference = self._findPreference(key)
         if preference:
-            Logger.log('w', 'Preference %s already exists', key)
+            preference.setDefault(default_value)
             return
 
         group, key = self._splitKey(key)
-
         if group not in self._preferences:
             self._preferences[group] = {}
 
@@ -55,27 +54,13 @@ class Preferences(SignalEmitter):
                 continue
 
             if not group in self._preferences:
-                Logger.log('w', "Unknown preference group %s", group)
-                continue
+                self._preferences[group] = {}
 
             for key, value in group_entries.items():
                 if not key in self._preferences[group]:
-                    Logger.log('w', "Unknown preference %s", key)
-                    continue
+                    self._preferences[group][key] = _Preference(key)
 
                 self._preferences[group][key].setValue(value)
-
-    def readPreferenceFromFile(self, key, file):
-        preference = self._findPreference(key)
-        if not preference:
-            return
-
-        self._loadFile(file)
-        group, key = self._splitKey(key)
-
-        if group in self._parser:
-            if key in self._parser[group]:
-                preference.setValue(self._parser[group][key])
 
     def writeToFile(self, file):
         parser = configparser.ConfigParser()
@@ -136,7 +121,7 @@ class Preferences(SignalEmitter):
     _instance = None
 
 class _Preference:
-    def __init__(self, name, default, value = None):
+    def __init__(self, name, default = None, value = None):
         self._name = name
         self._default = default
         self._value = default if value == None else value
@@ -149,6 +134,9 @@ class _Preference:
 
     def getDefault(self):
         return self._default
+
+    def setDefault(self, default):
+        self._default = default
 
     def setValue(self, value):
         self._value = value
