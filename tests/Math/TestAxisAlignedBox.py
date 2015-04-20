@@ -98,7 +98,7 @@ class TestAxisAlignedBox(unittest.TestCase):
         self.assertEqual(Vector(10.0, 10.0, 10.0), joined.maximum)
         self.assertTrue(joined.isValid())
 
-    def test_Intersect(self):
+    def test_IntersectsRay(self):
         box = AxisAlignedBox(10.0, 10.0, 10.0)
 
         ray = Ray(Vector(-10.0, 0.0, 0.0), Vector(1.0, 0.0, 0.0))
@@ -152,6 +152,33 @@ class TestAxisAlignedBox(unittest.TestCase):
         self.assertNotEqual(False, result)
         self.assertEqual(10.0, result[0])
         self.assertEqual(15.0, result[1])
+
+    def test_IntersectsBox(self):
+        box1 = AxisAlignedBox(minimum = Vector(5.0, 5.0, 5.0), maximum = Vector(10.0, 10.0, 10.0))
+
+        box2 = AxisAlignedBox(minimum = Vector(-10.0, -10.0, -10.0), maximum = Vector(-5.0, -5.0, -5.0))
+        self.assertEqual(box1.intersectsBox(box2), AxisAlignedBox.IntersectionResult.NoIntersection)
+
+        box2 = AxisAlignedBox(minimum = Vector(-10.0, 0.0, -10.0), maximum = Vector(-5.0, 10.0, -5.0))
+        self.assertEqual(box1.intersectsBox(box2), AxisAlignedBox.IntersectionResult.NoIntersection)
+
+        box2 = AxisAlignedBox(minimum = Vector(0.0, -10.0, -10.0), maximum = Vector(10.0, -5.0, -5.0))
+        self.assertEqual(box1.intersectsBox(box2), AxisAlignedBox.IntersectionResult.NoIntersection)
+
+        box2 = AxisAlignedBox(minimum = Vector(-10.0, -10.0, 0.0), maximum = Vector(-5.0, -5.0, 10.0))
+        self.assertEqual(box1.intersectsBox(box2), AxisAlignedBox.IntersectionResult.NoIntersection)
+
+        box2 = AxisAlignedBox(minimum = Vector(0.0, 0.0, 0.0), maximum = Vector(7.5, 7.5, 7.5))
+        self.assertEqual(box1.intersectsBox(box2), AxisAlignedBox.IntersectionResult.PartialIntersection)
+
+        box2 = AxisAlignedBox(minimum = Vector(5.0, 0.0, 5.0), maximum = Vector(10.0, 7.5, 10.0))
+        self.assertEqual(box1.intersectsBox(box2), AxisAlignedBox.IntersectionResult.PartialIntersection)
+
+        box2 = AxisAlignedBox(minimum = Vector(6.0, 6.0, 6.0), maximum = Vector(9.0, 9.0, 9.0))
+        self.assertEqual(box1.intersectsBox(box2), AxisAlignedBox.IntersectionResult.FullIntersection)
+
+        box2 = AxisAlignedBox(minimum = Vector(5.0, 5.0, 5.0), maximum = Vector(10.0, 10.0, 10.0))
+        self.assertEqual(box1.intersectsBox(box2), AxisAlignedBox.IntersectionResult.FullIntersection)
 
 if __name__ == "__main__":
     unittest.main()
