@@ -51,10 +51,8 @@ class VisibleMessagesModel(ListModel):
     
     @pyqtSlot("long", str)    
     def actionTriggered(self, message_id, action_name):
-        print(message_id , " ", action_name)
         for message in Application.getInstance().getVisibleMessages():
-            if id(message) == message_id:
-                print("Emitting message")
+            if id(message) == message_id: 
                 message.actionTriggered.emit(action_name)
                 break
     

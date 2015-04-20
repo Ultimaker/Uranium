@@ -14,9 +14,15 @@ class UpdateChecker(Extension):
     def __init__(self):
         super().__init__()
         self.addMenuItem(i18n_catalog.i18n("Check new version"), self.checkNewVersion)
+        self._url = None
         self.checkNewVersion()
         
-        
+    
+    def actionTriggered(self, action):
+        if str(action) == "Download":
+            if self._url is not None: 
+                webbrowser.open(self._url)
+ 
     def checkNewVersion(self):
         print("Checking new version")
         
@@ -39,9 +45,10 @@ class UpdateChecker(Extension):
                         if platform.system() == os: #TODO: add architecture check
                             newest_version= [int(value["major"]), int(value['minor']), int(value['revision'])]
                             if local_version < newest_version:
-                                print("Added new version message")
                                 message = Message("A new version is available!")
-                                message.addAction("test", "nope", "HERP DERP")
+                                message.addAction("Download", "nope", "HERP DERP")
+                                self._url = value["url"]
+                                message.actionTriggered.connect(self.actionTriggered)
                                 message.show()
                                 #TODO: open dialog
                                 pass
