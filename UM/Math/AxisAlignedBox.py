@@ -4,6 +4,11 @@ from UM.Math.Float import Float
 import numpy
 
 class AxisAlignedBox:
+    class IntersectionResult:
+        NoIntersection = 1
+        PartialIntersection = 2
+        FullIntersection = 3
+
     def __init__(self, *args, **kwargs):
         super().__init__()
 
@@ -27,6 +32,42 @@ class AxisAlignedBox:
             self._max = kwargs['maximum']
 
         self._ensureMinMax()
+
+    def __add__(self, other):
+        b = AxisAlignedBox()
+        b += self
+        b += other
+        return b
+
+    def __iadd__(self, other):
+        if not other.isValid():
+            return self
+
+        newMin = Vector()
+        newMin.setX(min(self._min.x, other.left))
+        newMin.setY(min(self._min.y, other.bottom))
+        newMin.setZ(min(self._min.z, other.back))
+
+        newMax = Vector()
+        newMax.setX(max(self._max.x, other.right))
+        newMax.setY(max(self._max.y, other.top))
+        newMax.setZ(max(self._max.z, other.front))
+
+        self._min = newMin
+        self._max = newMax
+
+        return self
+
+    #def __sub__(self, other):
+        #b = AxisAlignedBox()
+        #b += self
+        #b -= other
+        #return b
+
+    #def __isub__(self, other):
+        #self._dimensions -= other._dimensions
+        #self._center = self._dimensions / 2.0
+        #return self
 
     @property
     def width(self):
@@ -135,6 +176,25 @@ class AxisAlignedBox:
         else:
             return False
 
+    ##  Check to see if this box intersects another box.
+    #
+    #   \param box \type{AxisAlignedBox} The box to check for intersection.
+    #   \return \type{IntersectionResult} NoIntersection when no intersection occurs, PartialIntersection when partially intersected, FullIntersection when box is fully contained inside this box.
+    def intersectsBox(self, box):
+        if self._min.x > box._max.x or box._min.x > self._max.x:
+            return self.IntersectionResult.NoIntersection
+
+        if self._min.y > box._max.y or box._min.y > self._max.y:
+            return self.IntersectionResult.NoIntersection
+
+        if self._min.z > box._max.z or box._min.z > self._max.z:
+            return self.IntersectionResult.NoIntersection
+
+        if box._min >= self._min and box._max <= self._max:
+            return self.IntersectionResult.FullIntersection
+
+        return self.IntersectionResult.PartialIntersection
+
     ##  private:
 
     #   Ensure min contains the minimum values and max contains the maximum values
@@ -153,42 +213,6 @@ class AxisAlignedBox:
             z = self._min.z
             self._min.setZ(self._max.z)
             self._max.setZ(z)
-
-    def __add__(self, other):
-        b = AxisAlignedBox()
-        b += self
-        b += other
-        return b
-
-    def __iadd__(self, other):
-        if not other.isValid():
-            return self
-
-        newMin = Vector()
-        newMin.setX(min(self._min.x, other.left))
-        newMin.setY(min(self._min.y, other.bottom))
-        newMin.setZ(min(self._min.z, other.back))
-
-        newMax = Vector()
-        newMax.setX(max(self._max.x, other.right))
-        newMax.setY(max(self._max.y, other.top))
-        newMax.setZ(max(self._max.z, other.front))
-
-        self._min = newMin
-        self._max = newMax
-
-        return self
-
-    #def __sub__(self, other):
-        #b = AxisAlignedBox()
-        #b += self
-        #b -= other
-        #return b
-
-    #def __isub__(self, other):
-        #self._dimensions -= other._dimensions
-        #self._center = self._dimensions / 2.0
-        #return self
 
     def __repr__(self):
         return "AxisAlignedBox(min = {0}, max = {1})".format(self._min, self._max)
