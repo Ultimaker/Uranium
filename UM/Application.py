@@ -24,13 +24,15 @@ class Application(SignalEmitter):
     ## Init method
     #
     #  \param name The name of the application.
-    def __init__(self, name, **kwargs):
+    def __init__(self, name, version,  **kwargs):
         if(Application._instance != None):
             raise ValueError("Duplicate singleton creation")
         # If the constructor is called and there is no instance, set the instance to self. 
         # This is done because we can't make constructor private
         Application._instance = self
-
+        
+        self._version = version
+        
         Signal._app = self
         Resources.ApplicationIdentifier = name
         self._main_thread = threading.current_thread()
@@ -72,6 +74,10 @@ class Application(SignalEmitter):
 
         self._parsed_arguments = None
         self.parseArguments()
+    
+    
+    def getVersion(self):
+        return self._version
     
     ##  Function that needs to be overriden by child classes with a list of plugin it needs (see printer application & scanner application)
     def _loadPlugins(self):
