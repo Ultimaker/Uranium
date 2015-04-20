@@ -74,10 +74,47 @@ class Application(SignalEmitter):
 
         self._parsed_arguments = None
         self.parseArguments()
-    
+        self._visible_messages = []
+        
+        self._message_lock = threading.Lock()
     
     def getVersion(self):
         return self._version
+    
+    ##  Add a message to the visible message list so it will be displayed.
+    #   This should only be called by message object itself. 
+    #   To show a message, simply create it and call its .show() function.
+    def showMessage(self, message):
+        with self._message_lock:
+            if message not in self._visible_messages:
+                self._visible_messages.append(message)
+                self.visibleMessageAdded.emit(message)
+    
+    visibleMessageAdded = Signal()
+    
+    ##  Remove a message from the visible message list so it will no longer be displayed.
+    #   This should only be called by message object itself. 
+    #   in principle, this should only be called by the message itself (hide)
+    def hideMessage(self, message):
+        with self._message_lock:
+            if message in self._visible_messages:
+                self._visible_messages.remove(message)
+                self.visibleMessageRemoved.emit(message)
+    
+    def hideMessageById(self, message_id):
+        found_message = None
+        with self._message_lock:
+            for message in self._visible_messages:
+                if id(message) == message_id:
+                    found_message = message
+        if found_message is not None:
+            self.hideMessage(found_message)
+            
+    visibleMessageRemoved = Signal()            
+
+    def getVisibleMessages(self):
+        with self._message_lock:
+            return self._visible_messages
     
     ##  Function that needs to be overriden by child classes with a list of plugin it needs (see printer application & scanner application)
     def _loadPlugins(self):

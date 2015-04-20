@@ -11,6 +11,7 @@ from . import MachinesModel
 from . import DirectoryListModel
 from . import AvailableMachinesModel
 from . import SettingCategoriesModel
+from . import VisibleMessagesModel
 
 ##  This class is a workaround for a bug in PyQt.
 #   For some reason, a QAbstractItemModel subclass instantiated from QML
@@ -30,6 +31,7 @@ class Models(QObject):
         self._directory_list_model = None
         self._available_machines_model = None
         self._setting_categories_model = None
+        self._visible_messages_model = None
 
     @pyqtProperty(ViewModel.ViewModel, constant = True)
     def viewModel(self):
@@ -37,7 +39,14 @@ class Models(QObject):
             self._view_model = ViewModel.ViewModel()
 
         return self._view_model
+    
+    @pyqtProperty(VisibleMessagesModel.VisibleMessagesModel, constant = True)
+    def visibleMessagesModel(self):
+        if not self._visible_messages_model:
+            self._visible_messages_model = VisibleMessagesModel.VisibleMessagesModel()
 
+        return self._visible_messages_model
+    
     @pyqtProperty(ToolModel.ToolModel, constant = True)
     def toolModel(self):
         if not self._tool_model:

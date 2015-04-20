@@ -6,6 +6,7 @@ from UM.Application import Application
 import json
 import codecs
 import webbrowser
+from UM.Message import Message
         
 i18n_catalog = i18nCatalog('plugins')
 
@@ -38,6 +39,8 @@ class UpdateChecker(Extension):
                         if platform.system() == os: #TODO: add architecture check
                             newest_version= [int(value["major"]), int(value['minor']), int(value['revision'])]
                             if local_version < newest_version:
+                                print("Added new version message")
+                                Message("A new version is available!").show()
                                 #TODO: open dialog
                                 pass
                                 #webbrowser.open(value["url"])

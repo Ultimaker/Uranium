@@ -9,21 +9,27 @@ ListView {
     boundsBehavior: ListView.StopAtBounds;
     verticalLayoutDirection: ListView.BottomToTop;
 
-    model: UM.Models.jobsModel;
+    model: UM.Models.visibleMessagesModel;
 
-    delegate: Rectangle {
+    delegate: Rectangle 
+    {
         width: ListView.view.width;
         height: 50;
         radius: Styles.defaultMargin;
         color: Styles.messageBackgroundColor;
 
-        ColumnLayout {
+        ColumnLayout 
+        {
             anchors.fill: parent;
             anchors.margins: Styles.defaultMargin;
 
-            Label { text: model.description; color: Styles.messageTextColor; Layout.fillWidth: true;  }
-
-            ProgressBar { minimumValue: 0; maximumValue: 100; value: model.progress; Layout.fillWidth: true; }
+            Label { text: model.text; color: Styles.messageTextColor; Layout.fillWidth: true; }
+            Button
+            {
+                onClicked:UM.Models.visibleMessagesModel.hideMessage(model.id)
+                text: "b-gone"
+            }
+            //ProgressBar { minimumValue: 0; maximumValue: 100; value: model.progress; Layout.fillWidth: true; }
         }
     }
 
