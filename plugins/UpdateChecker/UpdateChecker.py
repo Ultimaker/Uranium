@@ -40,7 +40,9 @@ class UpdateChecker(Extension):
                             newest_version= [int(value["major"]), int(value['minor']), int(value['revision'])]
                             if local_version < newest_version:
                                 print("Added new version message")
-                                Message("A new version is available!").show()
+                                message = Message("A new version is available!")
+                                message.addAction("test", "nope", "HERP DERP")
+                                message.show()
                                 #TODO: open dialog
                                 pass
                                 #webbrowser.open(value["url"])

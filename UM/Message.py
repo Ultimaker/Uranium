@@ -1,5 +1,6 @@
 from UM.Application import Application
 from PyQt5.QtCore import QTimer
+from UM.Signal import Signal
 
 ## Class for displaying messages in the application. 
 class Message():
@@ -15,6 +16,9 @@ class Message():
         self._lifetime_timer.setInterval(lifetime * 1000)
         self._lifetime_timer.setSingleShot(True)
         self._lifetime_timer.timeout.connect(self.hide)
+        self._actions = []
+    
+    actionTriggered = Signal()
     
     def show(self):
         if not self._visible:
@@ -22,6 +26,12 @@ class Message():
             self._visible = True
             self._application.showMessage(self)
             
+    def addAction(self, name, icon, description):
+        self._actions.append({"name":name, "icon":icon, "description": description})  
+    
+    def getActions(self):
+        return self._actions
+    
     def setText(self, text):
         self._text = text
         

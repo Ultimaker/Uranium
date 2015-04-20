@@ -101,6 +101,7 @@ class Application(SignalEmitter):
                 self._visible_messages.remove(message)
                 self.visibleMessageRemoved.emit(message)
     
+    ##  Hide message by ID (as provided by built-in id function)
     def hideMessageById(self, message_id):
         found_message = None
         with self._message_lock:
@@ -112,6 +113,7 @@ class Application(SignalEmitter):
             
     visibleMessageRemoved = Signal()            
 
+    ##  Get list of all visible messages
     def getVisibleMessages(self):
         with self._message_lock:
             return self._visible_messages
