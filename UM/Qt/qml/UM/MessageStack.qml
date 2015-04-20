@@ -28,6 +28,15 @@ ListView {
             {
                 onClicked:UM.Models.visibleMessagesModel.hideMessage(model.id)
                 text: "b-gone"
+                ProgressBar 
+                { 
+                    minimumValue: 0;
+                    maximumValue: model.maximumValue; 
+                    value: model.progress;
+                    Layout.fillWidth: true;
+                    visible: model.maximumValue != 0 ? true: false
+                    
+                }
             }
             //ProgressBar { minimumValue: 0; maximumValue: 100; value: model.progress; Layout.fillWidth: true; }
         }
