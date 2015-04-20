@@ -41,7 +41,6 @@ class Message():
         return self._progress
     
     def hide(self):
-        print("hiding")
         if self._visible:
             self._lifetime_timer.stop()
             self._visible = False

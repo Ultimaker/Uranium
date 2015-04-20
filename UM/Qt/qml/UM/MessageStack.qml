@@ -34,7 +34,7 @@ ListView {
                     maximumValue: model.maximumValue; 
                     value: model.progress;
                     Layout.fillWidth: true;
-                    visible: model.maximumValue != 0 ? true: false
+                    visible: model.max_progress != 0 ? true: false
                     
                 }
             }
