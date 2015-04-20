@@ -352,7 +352,7 @@ class QtGL2Renderer(Renderer):
         material.setUniformValue("u_viewMatrix", self._camera.getWorldTransformation().getInverse(), cache = False)
         material.setUniformValue("u_viewPosition", self._camera.getWorldPosition(), cache = False)
         material.setUniformValue("u_modelMatrix", transform, cache = False)
-        material.setUniformValue("u_lightPosition", self._camera.getWorldPosition(), cache = False)
+        material.setUniformValue("u_lightPosition", self._camera.getWorldPosition() + Vector(0, 50, 0), cache = False)
 
         if mesh.hasNormals():
             normal_matrix = copy.deepcopy(transform)
