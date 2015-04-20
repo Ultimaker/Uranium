@@ -11,6 +11,7 @@ from UM.Math.Float import Float
 
 from UM.Operations.RotateOperation import RotateOperation
 from UM.Operations.GroupedOperation import GroupedOperation
+from UM.Operations.SetTransformOperation import SetTransformOperation
 
 from . import RotateToolHandle
 
@@ -92,3 +93,6 @@ class RotateTool(Tool):
                 self.setLockedAxis(None)
                 return True
 
+
+    def resetRotation(self):
+        Selection.applyOperation(SetTransformOperation, None, Quaternion(), None)

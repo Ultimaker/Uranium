@@ -23,10 +23,10 @@ Item {
     signal itemValueChanged(variant value);
     signal showTooltip(variant position);
     signal hideTooltip();
+
     MouseArea 
     {
         id: mouse;
-        z:9001
 
         anchors.fill: parent;
 
@@ -34,12 +34,16 @@ Item {
         hoverEnabled: true;
 
         onClicked: base.contextMenuRequested();
-        
+
         onEntered: {
             hoverTimer.start();
         }
 
         onExited: {
+            if(controlContainer.item && controlContainer.item.hovered) {
+                return;
+            }
+
             hoverTimer.stop();
             base.hideTooltip();
         }
@@ -72,8 +76,6 @@ Item {
 
         color: base.style.labelColor;
         font: base.style.labelFont;
-
-        
     }
 
     Loader {
@@ -105,13 +107,21 @@ Item {
                     return "SettingUnknown.qml"
             }
         }
-        
-        
 
         Connections {
             target: controlContainer.item;
             onValueChanged: {
                 base.itemValueChanged(value);
+            }
+            onHoveredChanged: {
+                if(controlContainer.item.hovered) {
+                    hoverTimer.start();
+                } else {
+                    if(!mouse.containsMouse) {
+                        hoverTimer.stop();
+                        base.hideTooltip();
+                    }
+                }
             }
         }
     }

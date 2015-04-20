@@ -13,7 +13,8 @@ def getMetaData():
         'tool': {
             'name': i18n_catalog.i18nc('Rotate tool toolbar button name', 'Rotate'),
             'description': i18n_catalog.i18nc('Rotate tool description', 'Rotate Object'),
-            'icon': 'rotate'
+            'icon': 'rotate',
+            'tool_panel': 'RotateTool.qml'
         }
     }
 

@@ -13,7 +13,6 @@ ScrollView {
     property Action configureSettings;
     signal showTooltip(Item item, point location, string text);
     signal hideTooltip();
-    
 
     Column {
         id: contents
@@ -100,9 +99,8 @@ ScrollView {
                             onContextMenuRequested: contextMenu.popup();
 
                             onShowTooltip: {
-                                position = { x: UM.Theme.sizes.default_margin.width, y: item.height }
-                                base.showTooltip(item,position,model.description)
-                                //sidebar.showTooltip(item, position, model.description);
+                                position = Qt.point(UM.Theme.sizes.default_margin.width, item.height);
+                                base.showTooltip(item, position, model.description)
                             }
                             onHideTooltip: base.hideTooltip()
 
