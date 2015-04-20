@@ -90,7 +90,7 @@ class SceneNode(SignalEmitter):
         else:
             return self._visible
     
-    def setVisibility(self,visible):
+    def setVisible(self, visible):
         self._visible = visible
 
     ##  \brief Get the (original) mesh data from the scene node/object. 
