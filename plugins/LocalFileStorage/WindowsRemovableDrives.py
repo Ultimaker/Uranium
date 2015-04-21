@@ -21,13 +21,13 @@ class WindowsRemovableDrives(threading.Thread, SignalEmitter):
     def run(self):
         while True:
             drives = {}
-            
+
             bitmask = windll.kernel32.GetLogicalDrives()
             # Check possible drive letters, from A to Z
             # Note: using ascii_uppercase because we do not want this to change with locale!
             for letter in string.ascii_uppercase:
                 # Do we really want to skip A and B?
-                if letter != 'A' and letter != 'B' and bitmask & 1 and windll.kernel32.GetDriveTypeA(letter + ':/') == 2:
+                if letter != 'A' and letter != 'B' and bitmask & 1 and windll.kernel32.GetDriveTypeA(bytes((letter + ':/'),'ascii')) == 2:
                     volume_name = ''
                     name_buffer = ctypes.create_unicode_buffer(1024)
                     if windll.kernel32.GetVolumeInformationW(ctypes.c_wchar_p(letter + ':/'), name_buffer, ctypes.sizeof(name_buffer), None, None, None, None, 0) == 0:
@@ -37,14 +37,14 @@ class WindowsRemovableDrives(threading.Thread, SignalEmitter):
 
                     # Check for the free space. Some card readers show up as a drive with 0 space free when there is no card inserted.
                     freeBytes = ctypes.c_longlong(0)
-                    if windll.kernel32.GetDiskFreeSpaceExA(letter + ':/', ctypes.byref(freeBytes), None, None) == 0:
+                    if windll.kernel32.GetDiskFreeSpaceExA(bytes((letter + ':/'),'ascii'), ctypes.byref(freeBytes), None, None) == 0:
                         continue
                     if freeBytes.value < 1:
                         continue
                     
                     drives['%s (%s:)' % (volume_name, letter)] = letter + ':/'
                 bitmask >>= 1
-                
+
             self.drivesChanged.emit(drives)
             time.sleep(5)
 
