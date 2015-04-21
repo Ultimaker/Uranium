@@ -122,11 +122,14 @@ class MeshData(SignalEmitter):
     ##  Transform the meshdata by given Matrix
     #   \param transformation 4x4 homogenous transformation matrix
     def getTransformed(self, transformation):
-        data = numpy.pad(self._vertices.copy(), ((0,0), (0,1)), 'constant', constant_values=(0.0, 1.0))
-        data = data.dot(transformation.getData())
-        data += transformation.getData()[:,3]
-        data = data[:,0:3]
-        return MeshData(vertices = data, indices = self._indices.copy())
+        if self._vertices is not None:
+            data = numpy.pad(self._vertices.copy(), ((0,0), (0,1)), 'constant', constant_values=(0.0, 1.0))
+            data = data.dot(transformation.getData())
+            data += transformation.getData()[:,3]
+            data = data[:,0:3]
+            return MeshData(vertices = data, indices = self._indices.copy())
+        else:
+            return MeshData(vertices = self._vertices)
 
     ##  Get the extents of this mesh.
     #

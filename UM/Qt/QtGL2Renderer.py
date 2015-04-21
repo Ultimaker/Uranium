@@ -431,9 +431,9 @@ class QtGL2Renderer(Renderer):
 
         offset = 0
         vertices = mesh.getVerticesAsByteArray()
-        buffer.write(0, vertices, len(vertices))
-
-        offset += len(vertices)
+        if vertices is not None:
+            buffer.write(0, vertices, len(vertices))
+            offset += len(vertices)
 
         if mesh.hasNormals():
             normals = mesh.getNormalsAsByteArray()
