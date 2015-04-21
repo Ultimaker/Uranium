@@ -39,7 +39,12 @@ class AvailableMachinesModel(ListModel):
 
         for file in os.listdir(dir):
             data = None
-            with open(os.path.join(dir, file), 'rt', -1, 'utf-8') as f:
+            path = os.path.join(dir, file)
+
+            if os.path.isdir(path):
+                continue
+
+            with open(path, 'rt', -1, 'utf-8') as f:
                 try:
                     data = json.load(f)
                 except ValueError as e:
