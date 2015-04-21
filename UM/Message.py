@@ -46,6 +46,9 @@ class Message():
     
     def setProgress(self, progress):
         self._progress = progress
+        self.progressChanged.emit()
+        
+    progressChanged = Signal()
         
     def getProgress(self):
         return self._progress
