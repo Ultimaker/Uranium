@@ -27,6 +27,7 @@ class WindowsRemovableDrives(threading.Thread, SignalEmitter):
             # Note: using ascii_uppercase because we do not want this to change with locale!
             for letter in string.ascii_uppercase:
                 # Do we really want to skip A and B?
+                # GetDriveTypeA explicitly wants a byte array of type ascii. It will accept a string, but this wont work
                 if letter != 'A' and letter != 'B' and bitmask & 1 and windll.kernel32.GetDriveTypeA(bytes((letter + ':/'),'ascii')) == 2:
                     volume_name = ''
                     name_buffer = ctypes.create_unicode_buffer(1024)
