@@ -26,7 +26,7 @@ class MachineSettings(SignalEmitter):
         self._i18n_catalog = None
 
     ##  Load settings from JSON file. Used to load tree structure & default values etc from file.
-    #   /param file_name String
+    #   \param file_name String
     def loadSettingsFromFile(self, file_name):
         with open(file_name, 'rt', -1, 'utf-8') as f:
             data = json.load(f, object_pairs_hook=collections.OrderedDict)
