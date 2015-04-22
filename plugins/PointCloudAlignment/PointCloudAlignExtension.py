@@ -30,9 +30,11 @@ class PointCloudAlignExtension(QObject, Extension):
     @pyqtSlot(int,int)
     def startAlignProcess(self, index1, index2):
         self._select_clouds_view.hide()
+        Application.getInstance().getController().setActiveTool("PointCloudAlignment")
+        Application.getInstance().getController().getActiveTool().setAlignmentNodes(self._selectable_nodes[index1],self._selectable_nodes[index2])
         #node1 = self._selectable_nodes[index1]
-        print(self._selectable_nodes[index1])
-        print(self._selectable_nodes[index2])
+        #print(self._selectable_nodes[index1])
+        #print(self._selectable_nodes[index2])
     
     @pyqtProperty(QObject, notify = cloudListChanged)
     def cloudList(self):

@@ -7,8 +7,18 @@ class PointCloudAlignTool(Tool):
         self._previous_view = ""
         self._renderer = Application.getInstance().getRenderer()
         # Were aligning two cloud sets with eachother by slecting points that are the same
+        self._node_1 = None
+        self._node_2 = None
         self._vert_list_1 = []
         self._vert_list_2 = []
+        self._active_node_nr = 1
+        
+    def setAlignmentNodes(self, node1, node2):
+        self._active_node_nr = 1
+        self._node_1 = node1
+        self._node_2 = node2
+        self._node_2.setEnabled(False)
+        Application.getInstance().getController().getScene().sceneChanged.emit(self)
         
     def event(self, event):
         if event.type == Event.ToolActivateEvent:
@@ -29,4 +39,13 @@ class PointCloudAlignTool(Tool):
                     targeted_node = Application.getInstance().getCloudNodeByIndex(index)
                     pixel_index = int(pixel_color.r * 255) + (int(pixel_color.g * 255) << 8) + (int(pixel_color.b * 255) << 16)
                     temp = targeted_node.getMeshData().getVertex(pixel_index)
+                    if self._active_node_nr == 1:
+                        self._active_node_nr = 2
+                        self._node_1.setEnabled(False)
+                        self._node_2.setEnabled(True)
+                    else:
+                        self._active_node_nr = 1
+                        self._node_1.setEnabled(True)
+                        self._node_2.setEnabled(False)
+                    Application.getInstance().getController().getScene().sceneChanged.emit(self)
                     print(temp)
