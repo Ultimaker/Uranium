@@ -66,21 +66,28 @@ class PluginRegistry(object):
         if id not in self._meta_data:
             self._populateMetaData(id)
 
-        plugin_type = self._meta_data[id]['type']
+        #plugin_type = self._meta_data[id]['type']
         try:
             to_register = plugin.register(self._application)
+           # print( "plugin dict: ", to_register)
             if not to_register:
                 Logger.log('e', 'Plugin %s did not return any objects to register', id)
                 return
-
-            if type(to_register) is list:
-                for obj in to_register:
-                    obj.setPluginId(id)
-                    self._type_register_map[plugin_type](obj)
-            else:
-                to_register.setPluginId(id)
-                self._type_register_map[plugin_type](to_register)
-
+            for plugin_type, plugin_object in to_register.items():
+                #print("Registering " , plugin_type, ' ' , plugin_object)
+                #print("id: ", id)
+                plugin_object.setPluginId(id)
+                try:
+                    self._type_register_map[plugin_type](plugin_object)
+                except Exception as e:
+                    print(e)
+            #if type(to_register) is list:
+            #    for obj in to_register:
+            #        obj.setPluginId(id)
+            #        self._type_register_map[plugin_typse](obj)
+            #else:
+            #    to_register.setPluginId(id)
+            #    self._type_register_map[plugin_type](to_register)
             self._plugins[id] = plugin
             self.addActivePlugin(id)
             Logger.log('i', 'Loaded plugin %s', id)

@@ -13,4 +13,4 @@ def getMetaData():
     }
 
 def register(app):
-    return PLYReader.PLYReader()
+    return {"mesh_reader":PLYReader.PLYReader()}

@@ -15,4 +15,4 @@ def getMetaData():
     }
         
 def register(app):
-    return UpdateChecker.UpdateChecker()
+    return {"extension":UpdateChecker.UpdateChecker()}

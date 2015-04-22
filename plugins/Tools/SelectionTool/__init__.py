@@ -12,4 +12,4 @@ def getMetaData():
     }
 
 def register(app):
-    return SelectionTool.SelectionTool()
+    return {"tool":SelectionTool.SelectionTool()}

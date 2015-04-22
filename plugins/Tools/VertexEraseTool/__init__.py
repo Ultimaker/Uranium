@@ -22,4 +22,4 @@ def getMetaData():
     }
 
 def register(app):
-    return VertexEraseTool.VertexEraseTool()
+    return {"tool":VertexEraseTool.VertexEraseTool()}

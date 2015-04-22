@@ -13,4 +13,4 @@ def getMetaData():
     }
 
 def register(app):
-    return MLPReader.MLPReader()
+    return {"workspace_reader":MLPReader.MLPReader()}

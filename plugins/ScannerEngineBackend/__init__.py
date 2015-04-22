@@ -22,7 +22,7 @@ def createCameraImageProvider(engine, scriptEngine):
 
 def register(app):
     qmlRegisterSingletonType(ScannerEngineBackendProxy.ScannerEngineBackendProxy, "UM", 1, 0, "ScannerEngineBackend", createScannerEngineBackendProxy)
-    return ScannerEngineBackend.ScannerEngineBackend()
+    return {"backend":ScannerEngineBackend.ScannerEngineBackend()}
 
     #addImageProvider("test",image_provider)
     

@@ -14,4 +14,4 @@ def getMetaData():
     }
 
 def register(app):
-    return PLYWriter.PLYWriter()
+    return {"mesh_writer":PLYWriter.PLYWriter()}

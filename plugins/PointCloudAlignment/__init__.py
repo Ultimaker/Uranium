@@ -1,5 +1,6 @@
 from . import PointCloudAlignTool
 from . import PointCloudAlignView
+from . import PointCloudAlignExtension
 from UM.Application import Application
 def getMetaData():
     return {
@@ -29,7 +30,13 @@ def getMetaData():
 
 def register(app):
     #TODO: Once multiple plugin types are supported, this needs to be removed.
-    view = PointCloudAlignView.PointCloudAlignView()
-    view.setPluginId("PointCloudAlignment")
-    Application.getInstance().getController().addView(view)
-    return PointCloudAlignTool.PointCloudAlignTool()
+    
+    #extension.setPluginId("PointCloudAlignment")
+    #view = 
+    #view.setPluginId("PointCloudAlignment")     
+    #Application.getInstance().getController().addView(view)
+    plugin_dict = {}
+    plugin_dict["view"] = PointCloudAlignView.PointCloudAlignView()
+    plugin_dict["extension"] = PointCloudAlignExtension.PointCloudAlignExtension()
+    plugin_dict["tool"] = PointCloudAlignTool.PointCloudAlignTool()
+    return plugin_dict

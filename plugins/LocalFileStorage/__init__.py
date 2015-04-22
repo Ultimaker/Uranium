@@ -12,5 +12,5 @@ def getMetaData():
     }
 
 def register(app):
-    return LocalFileStorageDevice.LocalFileStorageDevice()
+    return {"storage_device":LocalFileStorageDevice.LocalFileStorageDevice()}
 

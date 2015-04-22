@@ -10,4 +10,4 @@ def getMetaData():
     }
 
 def register(app):
-    return OBJWriter.OBJWriter()
+    return {"mesh_writer": OBJWriter.OBJWriter()}

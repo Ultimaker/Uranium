@@ -9,4 +9,4 @@ def getMetaData():
     }
 
 def register(app):
-    return PCDWriter.PCDWriter()
+    return {"mesh_writer":PCDWriter.PCDWriter()}

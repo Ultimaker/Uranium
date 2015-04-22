@@ -10,4 +10,4 @@ def getMetaData():
     }
 
 def register(app):
-    return PCDReader.PCDReader()
+    return {"mesh_reader":PCDReader.PCDReader()}

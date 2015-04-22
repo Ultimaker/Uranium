@@ -11,4 +11,4 @@ def getMetaData():
     }
 
 def register(app):
-    return VertexSelectionTool.VertexSelectionTool()
+    return {"tool":VertexSelectionTool.VertexSelectionTool()}

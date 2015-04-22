@@ -14,4 +14,4 @@ def getMetaData():
     }
 
 def register(app):
-    return MirrorTool.MirrorTool()
+    return {"tool":MirrorTool.MirrorTool()}

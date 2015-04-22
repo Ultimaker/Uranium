@@ -19,4 +19,4 @@ def getMetaData():
     }
 
 def register(app):
-    return RotateTool.RotateTool()
+    return {"tool":RotateTool.RotateTool()}

@@ -10,4 +10,4 @@ def getMetaData():
     }
 
 def register(app):
-    return ConsoleLogger.ConsoleLogger()
+    return {"logger":ConsoleLogger.ConsoleLogger()}

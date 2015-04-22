@@ -12,4 +12,4 @@ def getMetaData():
     }
 
 def register(app):
-    return WireframeView.WireframeView()
+    return {"view": WireframeView.WireframeView()}

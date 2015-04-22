@@ -11,4 +11,4 @@ def getMetaData():
     }
 
 def register(app):
-    return MeshView.MeshView()
+    return {"view":MeshView.MeshView()}

@@ -13,4 +13,4 @@ def getMetaData():
     }
 
 def register(app):
-    return MLPWriter.MLPWriter()
+    return {"workspace_writer":MLPWriter.MLPWriter()}

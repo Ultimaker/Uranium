@@ -12,4 +12,4 @@ def getMetaData():
     }
 
 def register(app):
-    return FileLogger.FileLogger('{0}.log'.format(app.getApplicationName()))
+    return {"logger":FileLogger.FileLogger('{0}.log'.format(app.getApplicationName()))}

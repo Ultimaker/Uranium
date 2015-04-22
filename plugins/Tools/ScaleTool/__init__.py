@@ -18,4 +18,4 @@ def getMetaData():
     }
 
 def register(app):
-    return ScaleTool.ScaleTool()
+    return {"tool":ScaleTool.ScaleTool()}

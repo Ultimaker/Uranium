@@ -12,4 +12,4 @@ def getMetaData():
     }
 
 def register(app):
-    return CameraTool.CameraTool()
+    return {"tool":CameraTool.CameraTool()}

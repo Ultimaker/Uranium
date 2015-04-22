@@ -12,4 +12,4 @@ def getMetaData():
     }
 
 def register(app):
-    return STLWriter.STLWriter()
+    return {"mesh_writer":STLWriter.STLWriter()}
