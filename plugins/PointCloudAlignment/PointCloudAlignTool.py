@@ -16,7 +16,7 @@ class PointCloudAlignTool(Tool):
             self._vert_list_2 = []
             #Activate the right view
             self._previous_view = Application.getInstance().getController().getActiveView().getPluginId()
-            Application.getInstance().getController().setActiveView("PointCloudAlign")
+            Application.getInstance().getController().setActiveView("PointCloudAlignment")
             
         if event.type == Event.ToolDeactivateEvent:
             Application.getInstance().getController().setActiveView(self._previous_view)
