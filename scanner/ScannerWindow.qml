@@ -54,6 +54,38 @@ UM.MainWindow
                 MenuSeparator { }
                 MenuItem{text: "UltiScanTastic"; enabled: false;}
             }
+            Menu {
+                id:extension_menu
+                //: Extensions menu
+                title: qsTr("E&xtensions");
+
+                Instantiator 
+                {
+                    model: UM.Models.extensionModel
+                    id: blub
+                    
+                    Menu
+                    {
+                        title: model.name;
+                        id: sub_menu
+                        Instantiator
+                        {
+                            model: actions
+                            MenuItem 
+                            {
+                                text:model.text
+                                onTriggered: UM.Models.extensionModel.subMenuTriggered(name,model.text)
+                            }
+                            onObjectAdded: sub_menu.insertItem(index, object)
+                            onObjectRemoved: sub_menu.removeItem(object)
+                            
+                        }
+       
+                    }
+                    onObjectAdded: extension_menu.insertItem(index, object)
+                    onObjectRemoved: extension_menu.removeItem(object)
+                }
+            }
 
             Menu 
             {
