@@ -18,7 +18,7 @@ def createToolbarProxy(engine, scriptEngine):
 
 class ScannerApplication(QtApplication):
     def __init__(self):
-        super().__init__(name = 'ScanTastic')
+        super().__init__(name = 'ScanTastic',version = "14.2.1")
         #self._machine_settings.loadSettingsFromFile(Resources.getPath(Resources.SettingsLocation, "ultiscantastic.json"))
         settings = MachineSettings()
         settings.loadSettingsFromFile(Resources.getPath(Resources.SettingsLocation, "ultiscantastic.json"))
