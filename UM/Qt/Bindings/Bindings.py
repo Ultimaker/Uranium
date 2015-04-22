@@ -1,4 +1,6 @@
-from PyQt5.QtQml import qmlRegisterType, qmlRegisterSingletonType
+from PyQt5.QtQml import qmlRegisterType, qmlRegisterSingletonType, qmlRegisterUncreatableType
+
+from UM.Qt.Duration import Duration, DurationFormat
 
 from UM.Qt.Bindings.MainWindow import MainWindow
 
@@ -11,6 +13,7 @@ from UM.Qt.Bindings.BackendProxy import BackendProxy
 from UM.Qt.Bindings.SceneProxy import SceneProxy
 from UM.Qt.Bindings.Models import Models
 from UM.Qt.Bindings.ResourcesProxy import ResourcesProxy
+
 from . import OperationStackProxy
 from . import JobsModel
 from . import MeshFileHandlerProxy
@@ -71,3 +74,6 @@ class Bindings:
         qmlRegisterSingletonType(PreferencesProxy.PreferencesProxy, 'UM', 1, 0, 'Preferences', PreferencesProxy.createPreferencesProxy)
         qmlRegisterSingletonType(Theme.Theme, 'UM', 1, 0, 'Theme', Theme.createTheme)
         qmlRegisterSingletonType(ActiveToolProxy.ActiveToolProxy, 'UM', 1, 0, 'ActiveTool', ActiveToolProxy.createActiveToolProxy)
+
+        qmlRegisterUncreatableType(Duration, 'UM', 1, 0, 'Duration', '')
+        qmlRegisterUncreatableType(DurationFormat, 'UM', 1, 0, 'DurationFormat', '')
