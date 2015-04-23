@@ -46,6 +46,7 @@ class PointCloudAlignTool(Tool):
                     pixel_index = int(pixel_color.r * 255) + (int(pixel_color.g * 255) << 8) + (int(pixel_color.b * 255) << 16)
                     selected_vertex = targeted_node.getMeshData().getVertex(pixel_index)
                     self._handle.addSelectedPoint1(selected_vertex)
+                    #self._handle.setPosition(Vector(selected_vertex[0],selected_vertex[1],selected_vertex[2]))
                     self._handle.setPosition(Vector(0,0,0))
                     if self._active_node_nr == 1:
                         self._vert_list_1.append(selected_vertex)

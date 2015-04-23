@@ -32,6 +32,7 @@ class ToolHandle(SceneNode.SceneNode):
 
         self._previous_dist = None
         self._active_axis = None
+        self._auto_scale = True
 
     def getLineMesh(self):
         return self._line_mesh
@@ -65,12 +66,12 @@ class ToolHandle(SceneNode.SceneNode):
             )
             self._material.setUniformValue('u_disabledColor', self.DisabledColor)
             self._material.setUniformValue('u_activeColor', self.DisabledColor)
-
-        camera_position = self._scene.getActiveCamera().getWorldPosition()
-        dist = (camera_position - self.getWorldPosition()).length()
-
-        scale = dist / 200
-        self.setScale(Vector(scale, scale, scale))
+        
+        if self._auto_scale:
+            camera_position = self._scene.getActiveCamera().getWorldPosition()
+            dist = (camera_position - self.getWorldPosition()).length()
+            scale = dist / 200
+            self.setScale(Vector(scale, scale, scale))
 
         if self._line_mesh:
             renderer.queueNode(self, mesh = self._line_mesh, mode = Renderer.RenderLines, overlay = True, material = self._material)
