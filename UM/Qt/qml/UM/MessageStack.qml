@@ -20,7 +20,7 @@ ListView {
         color: Styles.messageBackgroundColor;
         id: message
         property variant actions: model.actions;
-        property variant id: model.id
+        property variant model_id: model.id
         ColumnLayout 
         {
             anchors.fill: parent;
@@ -41,7 +41,7 @@ ListView {
                     delegate:Button 
                     {
                         text: model.name
-                        onClicked:UM.Models.visibleMessagesModel.actionTriggered(message.id, model.name)
+                        onClicked:UM.Models.visibleMessagesModel.actionTriggered(message.model_id, model.name)
                     }
                 }
                 Button
