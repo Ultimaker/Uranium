@@ -35,9 +35,15 @@ class MeshData(SignalEmitter):
         self._type = MeshType.faces
         self._file_name = None
         self.dataChanged.connect(self._resetVertexBuffer)
+        self.dataChanged.connect(self._resetIndexBuffer)
     
     dataChanged = Signal()
     
+    def _resetIndexBuffer(self):
+        try:
+            delattr(self, indexBufferProperty)
+        except:
+            pass
     
     def _resetVertexBuffer(self):
         try:

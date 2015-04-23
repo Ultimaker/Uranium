@@ -38,18 +38,21 @@ class ToolHandle(SceneNode.SceneNode):
 
     def setLineMesh(self, mesh):
         self._line_mesh = mesh
-
+        self.meshDataChanged.emit(self)
+        
     def getSolidMesh(self):
         return self._solid_mesh
 
     def setSolidMesh(self, mesh):
         self._solid_mesh = mesh
+        self.meshDataChanged.emit(self)
 
     def getSelectionMesh(self):
         return self._selection_mesh
 
     def setSelectionMesh(self, mesh):
         self._selection_mesh = mesh
+        self.meshDataChanged.emit(self)
 
     def getMaterial(self):
         return self._material

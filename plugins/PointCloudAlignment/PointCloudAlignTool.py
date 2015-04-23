@@ -1,6 +1,8 @@
 from UM.Tool import Tool
 from UM.Event import Event, MouseEvent
 from UM.Application import Application
+from . import PointCloudAlignToolHandle
+from UM.Math.Vector import Vector
 class PointCloudAlignTool(Tool):
     def __init__(self):
         super().__init__()
@@ -12,6 +14,7 @@ class PointCloudAlignTool(Tool):
         self._vert_list_1 = []
         self._vert_list_2 = []
         self._active_node_nr = 1
+        self._handle = PointCloudAlignToolHandle.PointCloudAlignToolHandle()
         
     def setAlignmentNodes(self, node1, node2):
         self._active_node_nr = 1
@@ -21,12 +24,15 @@ class PointCloudAlignTool(Tool):
         Application.getInstance().getController().getScene().sceneChanged.emit(self)
         
     def event(self, event):
+        
+        
         if event.type == Event.ToolActivateEvent:
             self._vert_list_1 = []
             self._vert_list_2 = []
             #Activate the right view
             self._previous_view = Application.getInstance().getController().getActiveView().getPluginId()
             Application.getInstance().getController().setActiveView("PointCloudAlignment")
+            self._handle.setParent(Application.getInstance().getController().getScene().getRoot())
             
         if event.type == Event.ToolDeactivateEvent:
             Application.getInstance().getController().setActiveView(self._previous_view)
@@ -38,14 +44,18 @@ class PointCloudAlignTool(Tool):
                     index  = int(255 - pixel_color.a * 255)
                     targeted_node = Application.getInstance().getCloudNodeByIndex(index)
                     pixel_index = int(pixel_color.r * 255) + (int(pixel_color.g * 255) << 8) + (int(pixel_color.b * 255) << 16)
-                    temp = targeted_node.getMeshData().getVertex(pixel_index)
+                    selected_vertex = targeted_node.getMeshData().getVertex(pixel_index)
+                    self._handle.addSelectedPoint1(selected_vertex)
+                    self._handle.setPosition(Vector(0,0,0))
                     if self._active_node_nr == 1:
+                        self._vert_list_1.append(selected_vertex)
                         self._active_node_nr = 2
                         self._node_1.setEnabled(False)
                         self._node_2.setEnabled(True)
                     else:
+                        self._vert_list_2.append(selected_vertex)
                         self._active_node_nr = 1
                         self._node_1.setEnabled(True)
                         self._node_2.setEnabled(False)
                     Application.getInstance().getController().getScene().sceneChanged.emit(self)
-                    print(temp)
+                    print(selected_vertex)
