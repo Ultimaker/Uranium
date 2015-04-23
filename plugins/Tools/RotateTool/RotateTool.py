@@ -93,6 +93,17 @@ class RotateTool(Tool):
                 self.setLockedAxis(None)
                 return True
 
+    def getRotationSnap(self):
+        return self._snap_rotation
+
+    def setRotationSnap(self, snap):
+        self._snap_rotation = snap
+
+    def getRotationSnapAngle(self):
+        return self._snap_angle
+
+    def setRotationSnapAngle(self, angle):
+        self._snap_angle = angle
 
     def resetRotation(self):
         Selection.applyOperation(SetTransformOperation, None, Quaternion(), None)
