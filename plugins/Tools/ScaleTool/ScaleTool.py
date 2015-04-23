@@ -74,7 +74,7 @@ class ScaleTool(Tool):
                 if self._drag_length > 0:
                     drag_change = (drag_length - self._drag_length) / 100
 
-                    if self._lock_steps and abs(drag_change) < self._step_size:
+                    if self._snap_scale and abs(drag_change) < self._snap_amount:
                         return False
 
                     scale = Vector(1.0, 1.0, 1.0)
