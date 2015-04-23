@@ -19,7 +19,7 @@ Rectangle
 
                 return -1;
             }
-            onCurrentIndexChanged: { console.log(currentText)}
+            //onCurrentIndexChanged: { console.log(currentText)}
         }
         ComboBox
         {
@@ -34,7 +34,7 @@ Rectangle
 
                 return -1;
             }
-            onCurrentIndexChanged: { console.log(currentText)}
+            //onCurrentIndexChanged: { console.log(currentText)}
         }
         Button 
         {

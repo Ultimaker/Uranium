@@ -6,7 +6,28 @@
         },
         "machine_end_gcode": {
             "default": "M104 S0\nM140 S0\n;Retract the filament\nG92 E1\nG1 E-1 F300\nG28 X0 Y0\nM84"
-        }
+        },
+        "machine_width": { "default": 100 },
+        "machine_depth": { "default": 100 },
+        "machine_height": { "default": 100 },
+        "machine_heated_bed": { "default": false },
+
+        "machine_center_is_zero": { "default": false },
+        "machine_nozzle_size": { "default": 0.4 },
+        "machine_head_shape_min_x": { "default": 40 },
+        "machine_head_shape_min_y": { "default": 10 },
+        "machine_head_shape_max_x": { "default": 60 },
+        "machine_head_shape_max_y": { "default": 30 },
+        "machine_nozzle_gantry_distance": { "default": 55 },
+        "machine_nozzle_offset_x_1": { "default": 0.0 },
+        "machine_nozzle_offset_y_1": { "default": 0.0 },
+        "machine_gcode_flavor": { "default": "RepRap" },
+        "machine_disallowed_areas": { "default": []},
+        "machine_platform_offset": { "default": [0.0, 0.0, 0.0] },
+        
+        "machine_nozzle_tip_outer_diameter": { "default": 1.0 },
+        "machine_nozzle_head_distance": { "default": 3.0 },
+        "machine_nozzle_expansion_angle": { "default": 45 }
     },
     "categories": {
         "resolution": {
@@ -91,6 +112,38 @@
                                             "default": 0.4,
                                             "type": "float",
                                             "visible": false
+                                        },
+                                        "skirt_line_width": {
+                                            "label": "Skirt line width",
+                                            "description": "Width of a single skirt line.",
+                                            "unit": "mm",
+                                            "default": 0.4,
+                                            "type": "float",
+                                            "visible": false
+                                        },
+                                        "skin_line_width": {
+                                            "label": "Top/bottom line width",
+                                            "description": "Width of a single top/bottom printed line. Which are used to fill up the top/bottom areas of a print.",
+                                            "unit": "mm",
+                                            "default": 0.4,
+                                            "type": "float",
+                                            "visible": false
+                                        },
+                                        "infill_line_width": {
+                                            "label": "Infill line width",
+                                            "description": "Width of the inner infill printed lines.",
+                                            "unit": "mm",
+                                            "default": 0.4,
+                                            "type": "float",
+                                            "visible": false
+                                        },
+                                        "support_line_width": {
+                                            "label": "Support line width",
+                                            "description": "Width of the printed support structures lines.",
+                                            "unit": "mm",
+                                            "default": 0.4,
+                                            "type": "float",
+                                            "visible": false
                                         }
                                     }
                                 }
@@ -151,6 +204,13 @@
                         }
                     }
                 },
+                "wall_overlap_avoid_enabled": {
+                    "label": "Avoid Overlapping Walls",
+                    "description": "Remove parts of a wall which share an overlap which would result in overextrusion in some places. These overlaps occur in thin pieces in a model and sharp corners.",
+                    "type": "boolean",
+                    "default": true,
+                    "visible": false
+                },
                 "top_bottom_pattern": {
                     "label": "Bottom/Top Pattern",
                     "description": "Pattern of the top/bottom solid fill. This normally is done with lines to get the best possible finish, but in some cases a concentric fill gives a nicer end result.",
@@ -160,6 +220,25 @@
                         "Concentric"
                     ],
                     "default": "Lines",
+                    "visible": false
+                },
+                "skin_outline_count": {
+                    "label": "Skin Perimeter Line Count",
+                    "description": "Number of lines around skin regions. Using one or two skin perimeter lines can greatly improve on roofs which would start in the middle of infill cells.",
+                    "default": 0,
+                    "type": "int",
+                    "visible": false,
+                    "active_if": {
+                        "setting": "top_bottom_pattern",
+                        "value": "Lines"
+                    }
+                },
+                "xy_offset": {
+                    "label": "Horizontal expansion",
+                    "description": "Amount of offset applied all polygons in each layer. Positive values can compensate for too big holes; negative values can compensate for too small holes.",  
+                    "unit": "mm",
+                    "type": "float",
+                    "default": 0.0,
                     "visible": false
                 }
             }
@@ -218,9 +297,28 @@
                             "description": "The speed at which the filament is retracted. A higher retraction speed works better, but a very high retraction speed can lead to filament grinding.",
                             "unit": "mm/s",
                             "type": "float",
-                            "default": 40.0,
+                            "default": 25.0,
                             "visible": false,
-                            "inherit": false
+                            "inherit": false,
+                            
+                            "children": {
+                                "retraction_retract_speed": {
+                                    "label": "Retraction Retract Speed",
+                                    "description": "The speed at which the filament is retracted. A higher retraction speed works better, but a very high retraction speed can lead to filament grinding.",
+                                    "unit": "mm/s",
+                                    "type": "float",
+                                    "default": 25.0,
+                                    "visible": false
+                                },
+                                "retraction_prime_speed": {
+                                    "label": "Retraction Prime Speed",
+                                    "description": "The speed at which the filament is pushed back after retraction.",
+                                    "unit": "mm/s",
+                                    "type": "float",
+                                    "default": 25.0,
+                                    "visible": false
+                                }
+                            }
                         },
                         "retraction_amount": {
                             "label": "Retraction Distance",
@@ -249,7 +347,7 @@
                             "inherit": false
                         },
                         "retraction_minimal_extrusion": {
-                            "label": "Minimal Retraction Before Extrusion",
+                            "label": "Minimal Extrusion Before Retraction",
                             "description": "The minimum amount of extrusion that needs to happen between retractions.  If a retraction should happen before this minimum is reached, it will be ignored. This avoids retracting repeatedly on the same piece of filament as that can flatten the filament and cause grinding issues.",
                             "unit": "mm",
                             "type": "float",
@@ -398,7 +496,16 @@
                             ],
                             "default": "Grid",
                             "inherit_function": "'Lines' if parent_value > 25 else 'Grid'"
-                        }
+                        },
+						"infill_line_distance": {
+							"label": "Line distance",
+							"description": "Distance between the printed infill lines.",
+							"unit": "mm",
+							"type": "float",
+							"default": 2.0,
+							"visible": false,
+							"inherit_function": "(infill_line_width * 100) / parent_value"
+						}
                     }
                 },
                 "fill_overlap": {
@@ -499,6 +606,14 @@
                     "default": 5.0,
                     "visible": false
                 },
+                "cool_min_layer_time_fan_speed_max": {
+                    "label": "Minimal Layer Time Full Fan Speed",
+                    "description": "The minimum time spent in a layer which will cause the fan to be at minmum speed. The fan speed increases linearly from maximal fan speed for layers taking minimal layer time to minimal fan speed for layers taking the time specified here.",
+                    "unit": "sec",
+                    "type": "float",
+                    "default": 10.0,
+                    "visible": false
+                },
                 "cool_min_speed": {
                     "label": "Minimum Speed",
                     "description": "The minimum layer time can cause the print to slow down so much it starts to droop. The minimum feedrate protects against this. Even if a print gets slowed down it will never be slower than this minimum speed.",
@@ -528,8 +643,8 @@
                     "default": true
                 },
                 "support_type": {
-                    "label": "Type",
-                    "description": "Where we want support structures. We can restrict the support structures such that they won't sit on the model, which can cause scarring.",
+                    "label": "Placement",
+                    "description": "Where to place support structures. The placement can be restricted such that the support structures won't rest on the model, which could otherwise cause scarring.",
                     "type": "enum",
                     "options": [
                         "None",
@@ -597,6 +712,18 @@
                             "type": "float",
                             "visible": false
                         }
+                    }
+                },
+                "support_bottom_stair_step_height": {
+                    "label": "Stair Step Height",
+                    "description": "The height of the steps of the stair-like bottom of support resting on the model. Small steps can cause the support to be hard to remove from the top of the model.",
+                    "unit": "mm",
+                    "type": "float",
+                    "default": 0.5,
+                    "visible": false,
+                    "active_if": {
+                        "setting": "support_type",
+                        "value": "Everywhere"
                     }
                 },
                 "support_join_distance": {
@@ -695,7 +822,23 @@
                     "active_if": {
                         "setting": "support_enable",
                         "value": true
-                    }
+                    },
+					
+					"children": {
+						"support_line_distance": {
+							"label": "Line distance",
+							"description": "Distance between the printed support lines.",
+							"unit": "mm",
+							"type": "float",
+							"default": 2.66,
+							"visible": false,
+							"active_if": {
+								"setting": "support_enable",
+								"value": true
+							},
+							"inherit_function": "(support_line_width * 100) / parent_value"
+						}
+					}
                 }
             }
         },
@@ -869,7 +1012,7 @@
                     "default": false,
                     "visible": false
                 },
-                "wireframe": {
+                "wireframe_enabled": {
                     "label": "Wireframe Printing",
                     "description": "Print only the outside surface with a sparse webbed structure, printing 'in thin air'. This is realized by horizontally printing the contours of the model at given Z intervals which are connected via upward and diagonally downward lines.",
                     "type": "boolean",

@@ -8,7 +8,7 @@ class OBJReader(MeshReader):
         super(OBJReader, self).__init__()
         self._supported_extension = ".obj"
         
-    def read(self, file_name, storage_device):     
+    def read(self, file_name, storage_device):
         mesh = None
         extension = os.path.splitext(file_name)[1]
         if extension.lower() == self._supported_extension:
@@ -24,9 +24,9 @@ class OBJReader(MeshReader):
                 if len(parts) < 1:
                     continue
                 if parts[0] == 'v':
-                    vertex_list.append([float(parts[1]), float(parts[2]), float(parts[3])])
+                    vertex_list.append([float(parts[1]), float(parts[3]), -float(parts[2])])
                 if parts[0] == 'vn':
-                    normal_list.append([float(parts[1]), float(parts[2]), float(parts[3])])
+                    normal_list.append([float(parts[1]), float(parts[3]), -float(parts[2])])
                 if parts[0] == 'vt':
                     uv_list.append([float(parts[1]), float(parts[2])])
                 if parts[0] == 'f':

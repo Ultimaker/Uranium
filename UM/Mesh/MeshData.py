@@ -3,6 +3,7 @@ from UM.Math.Vector import Vector
 from UM.Math.AxisAlignedBox import AxisAlignedBox
 from UM.Signal import Signal, SignalEmitter
 
+import copy
 import numpy
 import numpy.linalg
 from enum import Enum
@@ -35,9 +36,15 @@ class MeshData(SignalEmitter):
         self._type = MeshType.faces
         self._file_name = None
         self.dataChanged.connect(self._resetVertexBuffer)
+        self.dataChanged.connect(self._resetIndexBuffer)
     
     dataChanged = Signal()
     
+    def _resetIndexBuffer(self):
+        try:
+            delattr(self, indexBufferProperty)
+        except:
+            pass
     
     def _resetVertexBuffer(self):
         try:
@@ -123,11 +130,14 @@ class MeshData(SignalEmitter):
     #   \param transformation 4x4 homogenous transformation matrix
     def getTransformed(self, transformation):
         if self._vertices is not None:
-            data = numpy.pad(self._vertices.copy(), ((0,0), (0,1)), 'constant', constant_values=(0.0, 1.0))
+            data = numpy.pad(self._vertices.copy(), ((0,0), (0,1)), 'constant', constant_values=(0.0, 0.0))
             data = data.dot(transformation.getData())
             data += transformation.getData()[:,3]
             data = data[:,0:3]
-            return MeshData(vertices = data, indices = self._indices.copy())
+
+            mesh = copy.deepcopy(self)
+            mesh._vertices = data
+            return mesh
         else:
             return MeshData(vertices = self._vertices)
 
@@ -142,7 +152,7 @@ class MeshData(SignalEmitter):
 
         if matrix is not None:
             data = data.dot(matrix.getData())
-        data += matrix.getData()[:,3]
+            data += matrix.getData()[:,3]
 
         min = data.min(axis=0)
         max = data.max(axis=0)

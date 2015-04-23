@@ -32,24 +32,28 @@ class ToolHandle(SceneNode.SceneNode):
 
         self._previous_dist = None
         self._active_axis = None
+        self._auto_scale = True
 
     def getLineMesh(self):
         return self._line_mesh
 
     def setLineMesh(self, mesh):
         self._line_mesh = mesh
-
+        self.meshDataChanged.emit(self)
+        
     def getSolidMesh(self):
         return self._solid_mesh
 
     def setSolidMesh(self, mesh):
         self._solid_mesh = mesh
+        self.meshDataChanged.emit(self)
 
     def getSelectionMesh(self):
         return self._selection_mesh
 
     def setSelectionMesh(self, mesh):
         self._selection_mesh = mesh
+        self.meshDataChanged.emit(self)
 
     def getMaterial(self):
         return self._material
@@ -62,12 +66,12 @@ class ToolHandle(SceneNode.SceneNode):
             )
             self._material.setUniformValue('u_disabledColor', self.DisabledColor)
             self._material.setUniformValue('u_activeColor', self.DisabledColor)
-
-        camera_position = self._scene.getActiveCamera().getWorldPosition()
-        dist = (camera_position - self.getWorldPosition()).length()
-
-        scale = dist / 200
-        self.setScale(Vector(scale, scale, scale))
+        
+        if self._auto_scale:
+            camera_position = self._scene.getActiveCamera().getWorldPosition()
+            dist = (camera_position - self.getWorldPosition()).length()
+            scale = dist / 200
+            self.setScale(Vector(scale, scale, scale))
 
         if self._line_mesh:
             renderer.queueNode(self, mesh = self._line_mesh, mode = Renderer.RenderLines, overlay = True, material = self._material)
