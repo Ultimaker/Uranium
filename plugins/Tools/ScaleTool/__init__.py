@@ -13,7 +13,8 @@ def getMetaData():
         'tool': {
             'name': i18n_catalog.i18nc('Scale tool toolbar button', 'Scale'),
             'description': i18n_catalog.i18nc('Scale tool description', 'Scale Object'),
-            'icon': 'scale'
+            'icon': 'scale',
+            'tool_panel': 'ScaleTool.qml'
         }
     }
 
