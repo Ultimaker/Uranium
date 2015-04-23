@@ -40,6 +40,33 @@ class ActiveToolProxy(QObject):
         if action:
             action()
 
+    @pyqtSlot(str, result = 'QVariant')
+    def getProperty(self, property):
+        if not self._active_tool:
+            return None
+
+        property_getter = getattr(self._active_tool, 'get' + property)
+        if property_getter:
+            return property_getter()
+
+        if hasattr(self._active_tool, property):
+            return getattr(self._active_tool, property)
+
+        return None
+
+
+    @pyqtSlot(str, 'QVariant')
+    def setProperty(self, property, value):
+        if not self._active_tool:
+            return
+
+        option_setter = getattr(self._active_tool, 'set' + property)
+        if option_setter:
+            option_setter(value)
+
+        if hasattr(self._active_tool, property):
+            setattr(self._active_tool, property, value)
+
     def _onActiveToolChanged(self):
         self._active_tool = Application.getInstance().getController().getActiveTool()
         self.activeToolChanged.emit()
