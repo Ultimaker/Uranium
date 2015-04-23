@@ -80,6 +80,8 @@ class MeshFileHandlerProxy(QObject):
 
             op = AddSceneNodeOperation(node, self._scene.getRoot())
             op.push()
+
+            self._scene.sceneChanged.emit(node)
         else:
             print("No mesh :(")
 
