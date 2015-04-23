@@ -8,6 +8,7 @@ from UM.Math.Vector import Vector
 
 from UM.Operations.ScaleOperation import ScaleOperation
 from UM.Operations.GroupedOperation import GroupedOperation
+from UM.Operations.SetTransformOperation import SetTransformOperation
 
 from . import ScaleToolHandle
 
@@ -17,10 +18,10 @@ class ScaleTool(Tool):
         self._renderer = Application.getInstance().getRenderer()
         self._handle = ScaleToolHandle.ScaleToolHandle()
 
-        self._lock_steps = True
-        self._step_size = 0.05
-
+        self._snap_scale = True
+        self._snap_amount = 0.05
         self._non_uniform_scale = False
+
         self._drag_length = 0
 
     def event(self, event):
@@ -102,3 +103,18 @@ class ScaleTool(Tool):
                 self.setLockedAxis(None)
                 self._drag_length = 0
                 return True
+
+    def resetScale(self):
+        Selection.applyOperation(SetTransformOperation, None, None, Vector(1.0, 1.0, 1.0))
+
+    def getNonUniformScale(self):
+        return self._non_uniform_scale
+
+    def setNonUniformScale(self, scale):
+        self._non_uniform_scale = scale
+
+    def getScaleSnap(self):
+        return self._snap_scale
+
+    def setScaleSnap(self, snap):
+        self._snap_scale = snap
