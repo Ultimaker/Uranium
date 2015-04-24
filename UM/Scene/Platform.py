@@ -14,6 +14,8 @@ class Platform(SceneNode.SceneNode):
         Application.getInstance().activeMachineChanged.connect(self._onActiveMachineChanged)
         self._onActiveMachineChanged()
 
+        self.setCalculateBoundingBox(False)
+
     def render(self, renderer):
         if not self._material:
             self._material = renderer.createMaterial(

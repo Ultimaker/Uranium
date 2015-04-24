@@ -21,9 +21,11 @@ Item {
     CheckBox {
         anchors.left: resetRotationButton.right;
         anchors.leftMargin: UM.Theme.sizes.default_margin.width;
-        anchors.top: resetRotationButton.top;
+        anchors.bottom: parent.bottom;
 
         text: qsTr("Snap Rotation");
+
+        style: UM.Theme.styles.checkbox;
 
         checked: UM.ActiveTool.getProperty('RotationSnap');
         onClicked: UM.ActiveTool.setProperty('RotationSnap', checked);

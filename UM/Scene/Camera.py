@@ -21,7 +21,7 @@ class Camera(SceneNode.SceneNode):
         self._viewport_width = 0
         self._viewport_height = 0
 
-        self._calculate_aabb = False
+        self.setCalculateBoundingBox(False)
 
     ##  Get the projection matrix of this camera.
     def getProjectionMatrix(self):
