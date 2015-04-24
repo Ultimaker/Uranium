@@ -23,17 +23,17 @@ class RotateTool(Tool):
         self._renderer = Application.getInstance().getRenderer()
         self._handle = RotateToolHandle.RotateToolHandle()
 
-        self._lock_steps = True
-        self._step_size = math.radians(15)
+        self._snap_rotation = True
+        self._snap_angle = math.radians(15)
 
     def event(self, event):
         super().event(event)
 
         if event.type == Event.KeyPressEvent and event.key == KeyEvent.ShiftKey:
-            self._lock_steps = False
+            self._snap_rotation = (not self._snap_rotation)
 
         if event.type == Event.KeyReleaseEvent and event.key == KeyEvent.ShiftKey:
-            self._lock_steps = True
+            self._snap_rotation = (not self._snap_rotation)
 
         if event.type == Event.MousePressEvent:
             if not MouseEvent.LeftButton in event.buttons:
@@ -68,7 +68,7 @@ class RotateTool(Tool):
             drag_end = (drag_position - handle_position).normalize()
 
             angle = math.acos(drag_start.dot(drag_end))
-            if angle < self._step_size:
+            if self._snap_rotation and angle < self._snap_angle:
                 return
 
             rotation = None
@@ -93,6 +93,17 @@ class RotateTool(Tool):
                 self.setLockedAxis(None)
                 return True
 
+    def getRotationSnap(self):
+        return self._snap_rotation
+
+    def setRotationSnap(self, snap):
+        self._snap_rotation = snap
+
+    def getRotationSnapAngle(self):
+        return self._snap_angle
+
+    def setRotationSnapAngle(self, angle):
+        self._snap_angle = angle
 
     def resetRotation(self):
         Selection.applyOperation(SetTransformOperation, None, Quaternion(), None)

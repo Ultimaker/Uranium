@@ -31,10 +31,7 @@ class STLReader(MeshReader):
 
             storage_device.closeFile(f)
 
-            # Correct for the fact that most STL files are saved with Z as up axis.
-            transform = Matrix()
-            transform.rotateByAxis(math.pi / 2, Vector.Unit_X)
-            mesh = mesh.getTransformed(transform)
+            print(mesh.getVertices())
 
             mesh.calculateNormals()
 
@@ -63,15 +60,9 @@ class STLReader(MeshReader):
                     vertex += 1
                     if vertex == 3:
                         mesh.addFace(
-                            float(face[0][0]),
-                            float(face[0][1]),
-                            float(face[0][2]),
-                            float(face[1][0]),
-                            float(face[1][1]),
-                            float(face[1][2]),
-                            float(face[2][0]),
-                            float(face[2][1]),
-                            float(face[2][2])
+                            float(face[0][0]), float(face[0][2]), -float(face[0][1]),
+                            float(face[1][0]), float(face[1][2]), -float(face[1][1]),
+                            float(face[2][0]), float(face[2][2]), -float(face[2][1])
                         )
                         vertex = 0
 
@@ -95,6 +86,10 @@ class STLReader(MeshReader):
         mesh.reserveFaceCount(num_faces)
         for idx in range(0, num_faces):
             data = struct.unpack(b'<ffffffffffffH', f.read(50))
-            mesh.addFace(data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10], data[11])
+            mesh.addFace(
+                data[3], data[5], -data[4],
+                data[6], data[8], -data[7],
+                data[9], data[11], -data[10]
+        )
 
         return True

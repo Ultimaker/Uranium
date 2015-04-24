@@ -1,6 +1,8 @@
 from UM.Logger import Logger
 from UM.PluginRegistry import PluginRegistry
 
+from UM.Math.Matrix import Matrix
+
 ##  Central class for reading and writing meshes.
 #
 #   This class is created by Application and handles reading and writing mesh files.
@@ -16,12 +18,22 @@ class MeshFileHandler(object):
     # Try to read the mesh_data from a file. Based on the extension in the file a correct meshreader is selected.
     # \param file_name The name of the mesh to load.
     # \param storage_device The StorageDevice where the mesh can be found.
+    # \param kwargs Keyword arguments.
+    #               Possible values are:
+    #               - Center: True if the model should be centered around (0,0,0), False if it should be loaded as-is. Defaults to True.
     # \returns MeshData if it was able to read the file, None otherwise.
-    def read(self, file_name, storage_device):
+    def read(self, file_name, storage_device, **kwargs):
         try:
             for reader in self._mesh_readers:
                 result = reader.read(file_name, storage_device)
                 if(result is not None):
+                    if kwargs.get('center', True):
+                        # Center the mesh
+                        extents = result.getExtents()
+                        m = Matrix()
+                        m.setByTranslation(-extents.center)
+                        result = result.getTransformed(m)
+
                     result.setFileName(file_name)
                     return result
 

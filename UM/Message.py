@@ -27,7 +27,7 @@ class Message():
             self._application.showMessage(self)
             
     def addAction(self, name, icon, description):
-        self._actions.append({"name":name, "icon":icon, "description": description})  
+        self._actions.append({"name": name, "icon": icon, "description": description})
     
     def getActions(self):
         return self._actions
