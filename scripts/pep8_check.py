@@ -1,26 +1,56 @@
 import pep8
 import re
+import os
 
 CLASS_NAME_MATCH = re.compile(r'^_*[A-Z][a-zA-Z0-9]*_*$')
 FUNCTION_NAME_MATCH = re.compile(r'^_*[a-z][a-zA-Z0-9]*_*$')
+MEMBER_NAME_MATCH = re.compile(r'^[a-z_][a-z0-9_]*$')
+VARIABLE_NAME_MATCH = re.compile(r'^[a-z][a-z0-9_]*$')
 
 
 # Check the logical line to see if there is a class or function definition. When there is, check if this definition matches
 # The coding style set at Ultimaker.
 def checkNames(logical_line, tokens):
     idx = 0
-    while tokens[idx].type in [5]:
+    while tokens[idx].type in [5, 6]:
         idx += 1
     if tokens[idx].string == 'def':
         idx += 1
         if not FUNCTION_NAME_MATCH.match(tokens[idx].string):
-            print(logical_line)
             yield tokens[idx].start[1], "U101 Function name not properly formatted with lower camel case"
-    if tokens[idx].string == 'class':
         idx += 1
-        if not CLASS_NAME_MATCH.match(tokens[idx].string):
-            print(logical_line)
-            yield tokens[idx].start[1], "U102 Class name not properly formatted with upper camel case"
+        if tokens[idx].string != '(':
+            yield tokens[idx].start[1], "U901 Parsing error"
+            return
+        idx += 1
+        if tokens[idx].string != ')':
+            while True:
+                if tokens[idx].string == "*":
+                    idx += 1
+                if tokens[idx].string == "**":
+                    idx += 1
+                if not VARIABLE_NAME_MATCH.match(tokens[idx].string):
+                    yield tokens[idx].start[1], "U201 Function parameter not in lower_case_underscore_format"
+                idx += 1
+                if tokens[idx].string == '=':
+                    while tokens[idx].string not in [',', ')']:
+                        idx += 1
+                if tokens[idx].string == ')':
+                    break
+                if tokens[idx].string != ',':
+                    yield tokens[idx].start[1], "U902 Parsing error: %s: %s" % (tokens[idx].string, logical_line)
+                    return
+                idx += 1
+    elif tokens[idx].string == 'class':
+        idx += 1
+        if not CLASS_NAME_MATCH.match(tokens[idx].string) and tokens[idx].string != 'i18nCatalog':
+            yield tokens[idx].start[1], "U103 Class name not properly formatted with upper camel case"
+    elif len(tokens) > idx + 3 and tokens[idx].string == 'self' and tokens[idx + 1].string == '.' and tokens[idx + 3].string == '=':
+        if not MEMBER_NAME_MATCH.match(tokens[idx + 2].string):
+            yield tokens[idx + 2].start[1], "U202 Member name not in lower_case_underscore_format"
+    # elif len(tokens) > idx + 2 and tokens[idx + 1].string == '=':
+    #     if not VARIABLE_NAME_MATCH.match(tokens[idx].string):
+    #         yield tokens[idx].start[1], "U203 Variable name not in lower_case_underscore_format"
 
 
 def blankLines(logical_line, blank_lines, indent_level, line_number, blank_before, previous_logical):
@@ -31,7 +61,7 @@ def blankLines(logical_line, blank_lines, indent_level, line_number, blank_befor
             yield 0, "U302 expected 2 blank lines, found 0"
 
 
-def main():
+def main(path='.'):
     pep8.register_check(checkNames)
     pep8.register_check(blankLines)
 
@@ -40,8 +70,6 @@ def main():
     ignore.append('E226')  # Ignore too many leading # in comment block.
 
     critical = []
-    critical.append('U101')  # Function name does not match the coding standard.
-    critical.append('U102')  # Class name does not match the coding style.
     critical.append('E301')  # expected 1 blank line, found 0
     critical.append('U302')  # expected 2 blank lines, found 0
     critical.append('E304')  # blank lines found after function decorator
@@ -49,11 +77,18 @@ def main():
     critical.append('E402')  # module level import not at top of file
     critical.append('E713')  # test for membership should be ‘not in’
     critical.append('W191')  # indentation contains tabs
+    critical.append('U9')    # Parsing errors (error in this script, or error in code that we're trying to parse)
+    critical.append('U')     # All Ultimaker specific stuff.
 
     pep8style = pep8.StyleGuide(quiet=False, select=critical, ignore=ignore)
-    result = pep8style.check_files(['.'])
+    for path, _, filenames in os.walk(path):
+        for filename in filenames:
+            if filename.endswith('.py') and '_pb2.py' not in filename:
+                pep8style.paths.append(os.path.join(path, filename))
+    result = pep8style.check_files()
     print('----------------------------------')
     result.print_statistics()
+    print('Total: %d' % (result.get_count()))
 
 if __name__ == "__main__":
     main()

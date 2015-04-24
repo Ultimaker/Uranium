@@ -15,7 +15,7 @@ from time import sleep
 #       It makes use of the Socket class from libArcus for the actual communication bits.
 #       The message_handler dict should be filled with message class, function pairs.
 class Backend(PluginObject, SignalEmitter):
-    def __init__(self,):
+    def __init__(self):
         super().__init__() # Call super to make multiple inheritence work.
         self._supported_commands = {}
 

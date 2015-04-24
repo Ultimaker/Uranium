@@ -75,7 +75,7 @@ class Vector(object):
         self._data[2] = value
     
     ##  Get the angle from this vector to another
-    def angleToVector(self, vector,):
+    def angleToVector(self, vector):
         v0 = numpy.array(self._data, dtype=numpy.float32, copy=False)
         v1 = numpy.array(vector.getData(), dtype = numpy.float32, copy=False)
         dot = numpy.sum(v0 * v1)
