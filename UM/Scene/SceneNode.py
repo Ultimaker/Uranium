@@ -381,12 +381,7 @@ class SceneNode(SignalEmitter):
         if self._aabb:
             return self._aabb
 
-        if self._aabbJob:
-            if self._aabbJob.isFinished():
-                self._aabb = self._aabbJob.getResult()
-                self._aabbJob = None
-                return self._aabb
-        else:
+        if not self._aabbJob:
             self._resetAABB()
 
         return AxisAlignedBox()
@@ -484,4 +479,5 @@ class _CalculateAABBJob(Job):
         for child in self._node._children:
             aabb += child.getBoundingBox()
 
-        self.setResult(aabb)
+        self._node._aabb = aabb
+        self._node._aabbJob = None
