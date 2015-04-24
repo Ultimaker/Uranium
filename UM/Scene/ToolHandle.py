@@ -34,6 +34,8 @@ class ToolHandle(SceneNode.SceneNode):
         self._active_axis = None
         self._auto_scale = True
 
+        self.setCalculateBoundingBox(False)
+
     def getLineMesh(self):
         return self._line_mesh
 

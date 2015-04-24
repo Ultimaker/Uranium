@@ -391,6 +391,12 @@ class SceneNode(SignalEmitter):
 
         return AxisAlignedBox()
 
+    ##  Set whether or not to calculate the bounding box for this node.
+    #
+    #   \param calculate True if the bounding box should be calculated, False if not.
+    def setCalculateBoundingBox(self, calculate):
+        self._calculate_aabb = calculate
+
     ##  private:
     def _getDerivedPosition(self):
         if not self._derived_position:
