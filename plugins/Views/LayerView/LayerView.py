@@ -3,6 +3,7 @@ from UM.View.Renderer import Renderer
 from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator
 from UM.Resources import Resources
 
+
 ## View used to display g-code paths.
 class LayerView(View):
     def __init__(self):

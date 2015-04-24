@@ -1,5 +1,5 @@
-#Shoopdawoop
 from . import PCDReader
+
 
 def getMetaData():
     return {
@@ -8,6 +8,7 @@ def getMetaData():
             "name": "PCD Reader"
         }
     }
+
 
 def register(app):
     return {"mesh_reader":PCDReader.PCDReader()}

@@ -36,7 +36,7 @@ class RotateTool(Tool):
             self._snap_rotation = (not self._snap_rotation)
 
         if event.type == Event.MousePressEvent:
-            if not MouseEvent.LeftButton in event.buttons:
+            if MouseEvent.LeftButton not in event.buttons:
                 return False
 
             id = self._renderer.getIdAtCoordinate(event.x, event.y)

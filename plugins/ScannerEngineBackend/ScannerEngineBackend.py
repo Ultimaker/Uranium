@@ -16,6 +16,7 @@ import numpy
 from . import ultiscantastic_pb2
 from . import ProcessMeshJob
 
+
 ## Class that is responsible for listening to the backend.
 class ScannerEngineBackend(Backend, SignalEmitter):
     def __init__(self):
@@ -33,6 +34,7 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         #self._onActiveMachineChanged()
         
     processStarted = Signal()
+
     def _onActiveMachineChanged(self):
         self._settings = Application.getInstance().getActiveMachine()
         if self._settings:
@@ -108,6 +110,7 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         message.cloud.vertices = node.getMeshData().getVerticesAsByteArray()
         message.cloud.normals = node.getMeshData().getNormalsAsByteArray()
         self._socket.sendMessage(message)
+
     ## Send a key value pair of the setting to the engine.    
     def sendSetting(self, setting):
         message = ultiscantastic_pb2.Setting()
@@ -149,7 +152,7 @@ class ScannerEngineBackend(Backend, SignalEmitter):
         message = ultiscantastic_pb2.PoissonModelCreation()
         message.depth = 8
         message.num_samples_per_node = 1
-        message.iso_divide = 8;
+        message.iso_divide = 8
        
         for cloud in clouds:
             cloud_message = ultiscantastic_pb2.PointCloudWithNormals()

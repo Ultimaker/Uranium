@@ -1,5 +1,6 @@
 from . import LayerView
 
+
 def getMetaData():
     return {
         'type': 'view',
@@ -11,6 +12,7 @@ def getMetaData():
             'view_panel': 'LayerView.qml'
         }
     }
+
 
 def register(app):
     return {"view":LayerView.LayerView()}

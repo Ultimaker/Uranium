@@ -1,4 +1,6 @@
 from . import VertexSelectionTool
+
+
 def getMetaData():
     return {
         'type': 'tool',
@@ -11,4 +13,4 @@ def getMetaData():
     }
 
 def register(app):
-    return {"tool":VertexSelectionTool.VertexSelectionTool()}
+    return {"tool": VertexSelectionTool.VertexSelectionTool()}

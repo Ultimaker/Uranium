@@ -19,6 +19,7 @@ from UM.i18n import i18nCatalog
 
 i18n_catalog = i18nCatalog('plugins')
 
+
 class USBPrinterManager(QObject, SignalEmitter, Extension):
     def __init__(self, parent = None):
         super().__init__(parent)
@@ -267,7 +268,7 @@ class USBPrinterManager(QObject, SignalEmitter, Extension):
         
         if base_list:
             base_list = base_list + glob.glob('/dev/ttyUSB*') + glob.glob('/dev/ttyACM*') + glob.glob("/dev/cu.usb*")
-            base_list = filter(lambda s: not 'Bluetooth' in s, base_list) # Filter because mac sometimes puts them in the list
+            base_list = filter(lambda s: 'Bluetooth' not in s, base_list) # Filter because mac sometimes puts them in the list
         else:
             base_list = base_list + glob.glob('/dev/ttyUSB*') + glob.glob('/dev/ttyACM*') + glob.glob("/dev/cu.*") + glob.glob("/dev/tty.usb*") + glob.glob("/dev/rfcomm*") + glob.glob('/dev/serial/by-id/*')
         return base_list

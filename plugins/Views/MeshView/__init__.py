@@ -1,4 +1,6 @@
 from . import MeshView
+
+
 def getMetaData():
     return {
         'type': 'view',
@@ -9,6 +11,7 @@ def getMetaData():
             'name': 'Solid'
         }
     }
+
 
 def register(app):
     return {"view":MeshView.MeshView()}
