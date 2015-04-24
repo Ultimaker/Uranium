@@ -21,12 +21,14 @@ import urllib.parse
 #   responsible for starting the main event loop. It is passed on to plugins so it can be easily
 #   used to access objects required for those plugins.
 class Application(SignalEmitter):
-    ## Init method
+    ##  Init method
     #
-    #  \param name The name of the application.
+    #   \param name \type{string} The name of the application.
+    #   \param version \type{string} Version, formatted as major.minor.rev
     def __init__(self, name, version,  **kwargs):
         if(Application._instance != None):
             raise ValueError("Duplicate singleton creation")
+        
         # If the constructor is called and there is no instance, set the instance to self. 
         # This is done because we can't make constructor private
         Application._instance = self
@@ -78,12 +80,15 @@ class Application(SignalEmitter):
         
         self._message_lock = threading.Lock()
     
+    ##  Get the version of the application  
+    #   \returns version \type{string} 
     def getVersion(self):
         return self._version
     
     ##  Add a message to the visible message list so it will be displayed.
     #   This should only be called by message object itself. 
     #   To show a message, simply create it and call its .show() function.
+    #   \param message \type{Message} message object 
     def showMessage(self, message):
         with self._message_lock:
             if message not in self._visible_messages:
@@ -95,6 +100,7 @@ class Application(SignalEmitter):
     ##  Remove a message from the visible message list so it will no longer be displayed.
     #   This should only be called by message object itself. 
     #   in principle, this should only be called by the message itself (hide)
+    #   \param message \type{Message} message object 
     def hideMessage(self, message):
         with self._message_lock:
             if message in self._visible_messages:
@@ -102,6 +108,7 @@ class Application(SignalEmitter):
                 self.visibleMessageRemoved.emit(message)
     
     ##  Hide message by ID (as provided by built-in id function)
+    #   \param message_id \type{long}
     def hideMessageById(self, message_id):
         found_message = None
         with self._message_lock:
@@ -114,11 +121,12 @@ class Application(SignalEmitter):
     visibleMessageRemoved = Signal()            
 
     ##  Get list of all visible messages
+    #   \returns visible_messages \type{list}
     def getVisibleMessages(self):
         with self._message_lock:
             return self._visible_messages
     
-    ##  Function that needs to be overriden by child classes with a list of plugin it needs (see printer application & scanner application)
+    ##  Function that needs to be overriden by child classes with a list of plugin it needs.
     def _loadPlugins(self):
         pass
 
@@ -128,38 +136,49 @@ class Application(SignalEmitter):
 
         return self._parsed_arguments.get(name, default)
     
+    ##  Get name of the application.
+    #   \returns application_name \type{string}
     def getApplicationName(self):
         return self._application_name
-
-    def setApplicationName(self, name):
-        self._application_name = name
+    
+    ##  Set name of the application.
+    #   \param application_name \type{string}
+    def setApplicationName(self, application_name):
+        self._application_name = application_name
         
     ##  Application has a list of plugins that it *must* have. If it does not have these, it cannot function.
     #   These plugins can not be disabled in any way.
+    #   \returns required_plugins \type{list}
     def getRequiredPlugins(self):
         return self._required_plugins
     
     ##  Set the plugins that the application *must* have in order to function.
-    #   \param plugin_names List of strings with the names of the required plugins
+    #   \param plugin_names \type{list} List of strings with the names of the required plugins
     def setRequiredPlugins(self, plugin_names):
         self._required_plugins = plugin_names
 
     ##  Set the backend of the application (the program that does the heavy lifting).
-    #   \param backend Backend
+    #   \param backend \type{Backend}
     def setBackend(self, backend):
         self._backend = backend
 
-    ##  Get reference of the machine settings object
-    #   \returns machine_settings
+    ##  Get a list of all machines.
+    #   \returns machines \type{list}
     def getMachines(self):
         return self._machines
-
+    
+    ##  Add a machine to the list.
+    #   The list is sorted by name
+    #   \param machine \type{MachineSettings}
+    #   \returns index \type{int}
     def addMachine(self, machine):
         self._machines.append(machine)
         self._machines.sort(key = lambda k: k.getName())
         self.machinesChanged.emit()
         return len(self._machines) - 1
-
+    
+    ##  Remove a machine from the list.
+    #   \param machine \type{MachineSettings}
     def removeMachine(self, machine):
         self._machines.remove(machine)
 
@@ -173,10 +192,14 @@ class Application(SignalEmitter):
         self.machinesChanged.emit()
 
     machinesChanged = Signal()
-
+    
+    ##  Get the currently active machine
+    #   \returns active_machine \type{MachineSettings}
     def getActiveMachine(self):
         return self._active_machine
-
+    
+    ##  Set the currently active machine
+    #   \param active_machine \type{MachineSettings}
     def setActiveMachine(self, machine):
         if machine == self._active_machine:
             return
@@ -187,22 +210,22 @@ class Application(SignalEmitter):
     activeMachineChanged = Signal()
 
     ##  Get the backend of the application (the program that does the heavy lifting).
-    #   \returns Backend
+    #   \returns Backend \type{Backend}
     def getBackend(self):
         return self._backend
 
     ##  Get the PluginRegistry of this application.
-    #   \returns PluginRegistry
+    #   \returns PluginRegistry \type{PluginRegistry}
     def getPluginRegistry(self):
         return self._plugin_registry
 
     ##  Get the Controller of this application.
-    #   \returns Controller
+    #   \returns Controller \type{Controller}
     def getController(self):
         return self._controller
 
     ##  Get the MeshFileHandler of this application.
-    #   \returns MeshFileHandler
+    #   \returns MeshFileHandler \type{MeshFileHandler}
     def getMeshFileHandler(self):
         return self._mesh_file_handler
     
@@ -217,7 +240,7 @@ class Application(SignalEmitter):
         return self._operation_stack
 
     ##  Get a StorageDevice object by name
-    #   \param name The name of the StorageDevice to get.
+    #   \param name \type{string} The name of the StorageDevice to get.
     #   \return The named StorageDevice or None if not found.
     def getStorageDevice(self, name):
         try:
@@ -226,12 +249,12 @@ class Application(SignalEmitter):
             return None
 
     ##  Add a StorageDevice
-    #   \param device The device to add.
+    #   \param device \type{StorageDevice} The device to be added.
     def addStorageDevice(self, device):
         self._storage_devices[device.getPluginId()] = device
 
     ##  Remove a StorageDevice
-    #   \param name The name of the StorageDevice to remove.
+    #   \param name \type{string} The name of the StorageDevice to be removed.
     def removeStorageDevice(self, name):
         try:
             del self._storage_devices[name]
@@ -240,16 +263,19 @@ class Application(SignalEmitter):
 
     ##  Run the main eventloop.
     #   This method should be reimplemented by subclasses to start the main event loop.
+    #   \exception NotImplementedError
     def run(self):
         raise NotImplementedError("Run must be implemented by application")
 
     ##  Return an application-specific Renderer object.
+    #   \exception NotImplementedError
     def getRenderer(self):
         raise NotImplementedError("getRenderer must be implemented by subclasses.")
 
     ##  Post a function event onto the event loop.
     #
     #   This takes a CallFunctionEvent object and puts it into the actual event loop.
+    #   \exception NotImplementedError
     def functionEvent(self, event):
         raise NotImplementedError("functionEvent must be implemented by subclasses.")
 
@@ -277,17 +303,17 @@ class Application(SignalEmitter):
         self._parsed_arguments = vars(parser.parse_args())
 
     def loadMachines(self):
-        settingsDir = Resources.getStorageLocation(Resources.SettingsLocation)
-        for entry in os.listdir(settingsDir):
+        settings_directory = Resources.getStorageLocation(Resources.SettingsLocation)
+        for entry in os.listdir(settings_directory):
             settings = MachineSettings()
-            settings.loadValuesFromFile(os.path.join(settingsDir, entry))
+            settings.loadValuesFromFile(os.path.join(settings_directory, entry))
             self._machines.append(settings)
         self._machines.sort(key = lambda k: k.getName())
 
     def saveMachines(self):
-        settingsDir = Resources.getStorageLocation(Resources.SettingsLocation)
+        settings_directory = Resources.getStorageLocation(Resources.SettingsLocation)
         for machine in self._machines:
-            machine.saveValuesToFile(os.path.join(settingsDir, urllib.parse.quote_plus(machine.getName()) + '.cfg'))
+            machine.saveValuesToFile(os.path.join(settings_directory, urllib.parse.quote_plus(machine.getName()) + '.cfg'))
 
     def addExtension(self, extension):
         self._extensions.append(extension)
