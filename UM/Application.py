@@ -89,6 +89,7 @@ class Application(SignalEmitter):
     #   This should only be called by message object itself. 
     #   To show a message, simply create it and call its .show() function.
     #   \param message \type{Message} message object 
+    #   \sa Message::show()
     def showMessage(self, message):
         with self._message_lock:
             if message not in self._visible_messages:
@@ -101,6 +102,7 @@ class Application(SignalEmitter):
     #   This should only be called by message object itself. 
     #   in principle, this should only be called by the message itself (hide)
     #   \param message \type{Message} message object 
+    #   \sa Message::hide()
     def hideMessage(self, message):
         with self._message_lock:
             if message in self._visible_messages:

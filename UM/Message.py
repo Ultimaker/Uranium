@@ -3,6 +3,7 @@ from PyQt5.QtCore import QTimer
 from UM.Signal import Signal
 
 ## Class for displaying messages in the application. 
+#
 class Message():
     def __init__(self, text = "", lifetime = 10):
         super().__init__()
@@ -20,6 +21,7 @@ class Message():
     
     actionTriggered = Signal()
     
+    ##  Show the message (if not already visible)
     def show(self):
         if not self._visible:
             self._lifetime_timer.start()

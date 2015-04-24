@@ -177,7 +177,11 @@ class Controller(SignalEmitter):
     def getScene(self):
         return self._scene
 
-    ## Process an event
+    ##  Process an event
+    #   \param event \type{Event} event to be handle.
+    #   The event is first passed to the camera tool, then active tool and finally selection tool.
+    #   If none of these events handle it (when they return something that does not evaluate to true)
+    #   a context menu signal is emitted.
     def event(self, event):
         # First, try to perform camera control
         if self._camera_tool and self._camera_tool.event(event):

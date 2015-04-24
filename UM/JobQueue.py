@@ -7,6 +7,7 @@ import threading
 #
 #   The JobQueue class manages a queue of Job objects and a set of threads that
 #   can take things from this queue to process them.
+#   \sa Job
 class JobQueue(SignalEmitter):
     ##  Initialize.
     #
@@ -39,7 +40,7 @@ class JobQueue(SignalEmitter):
 
     ##  Add a Job to the queue.
     #
-    #   \param job the Job to add.
+    #   \param job \type{Job} The Job to add.
     def add(self, job):
         with self._jobs_lock:
             self._jobs.append(job)
@@ -47,7 +48,7 @@ class JobQueue(SignalEmitter):
 
     ##  Remove a waiting Job from the queue.
     #
-    #   \param job The Job to remove.
+    #   \param job \type{Job} The Job to remove.
     #
     #   \note If a job has already begun processing it is already removed from the queue
     #   and thus can no longer be cancelled.
@@ -58,12 +59,12 @@ class JobQueue(SignalEmitter):
 
     ##  Emitted whenever a job starts processing.
     #
-    #   \param job The job that has started processing.
+    #   \param job \type{Job} The job that has started processing.
     jobStarted = Signal()
 
     ##  Emitted whenever a job has finished processing.
     #
-    #   \param job The job that has finished processing.
+    #   \param job \type{Job} The job that has finished processing.
     jobFinished = Signal()
 
     ## protected:
@@ -112,7 +113,3 @@ class _Worker(threading.Thread):
             job._finished = True
             job.finished.emit(job)
             self._queue.jobFinished.emit(job)
-
-
-
-
