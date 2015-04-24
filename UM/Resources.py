@@ -117,7 +117,7 @@ class Resources:
     #   \param name \type{string} The name of the icon.
     #   \return \type{string} The location of the icon.
     #
-    #   \todo Move this to Theme once we implement that.
+    #   \todo Move this to Theme.
     @classmethod
     def getIcon(cls, name):
         try:

@@ -1,21 +1,21 @@
 from UM.PluginObject import PluginObject
 class Logger:
     ##  Add a logger to the list.
-    #   \param logger Logger
+    #   \param logger \type{Logger}
     @classmethod
     def addLogger(cls, logger):
         cls.__loggers.append(logger)
 
     ##  Get all loggers
-    #   \returns List of Loggers
+    #   \returns \type{list} List of Loggers
     @classmethod
     def getLoggers(cls):
         return cls.__loggers
 
     ##  Send a message of certain type to all loggers to be handled.
-    #   \param log_type 'e' (error) , 'i'(info), 'd'(debug) or 'w'(warning)
-    #   \param message String containing message to be logged
-    #   \param message List of variables to be added to the message
+    #   \param log_type \type{string} Values must be; 'e' (error) , 'i'(info), 'd'(debug) or 'w'(warning).
+    #   \param message \type{string} containing message to be logged
+    #   \param message \type{list} List of variables to be added to the message.
     @classmethod
     def log(cls, log_type, message, *args):
         for logger in cls.__loggers:
@@ -41,5 +41,6 @@ class LogOutput(PluginObject):
     #
     #   \param log_type \type{string} A value describing the type of message.
     #   \param message \type{string} The message to log.
+    #   \exception NotImplementedError
     def log(self, log_type, message):
         raise NotImplementedError('Logger was not correctly implemented')

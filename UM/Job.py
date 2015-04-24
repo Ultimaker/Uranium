@@ -27,11 +27,13 @@ class Job(SignalEmitter):
     def getDescription(self):
         return self._description
 
-    ##  Should this job be shown in the UI?
+    ##  Should this job be shown in the UI
+    #   \return \type{bool}
     def isVisible(self):
         return self._visible
 
     ##  Perform the actual task of this job. Should be reimplemented by subclasses.
+    #   \exception NotImplementedError
     def run(self):
         raise NotImplementedError()
 
@@ -64,23 +66,23 @@ class Job(SignalEmitter):
 
     ##  Check whether the job is currently running.
     #
-    #   \return True if run() has been called, False if not.
+    #   \return \type{bool}
     def isRunning(self):
         return self._running
 
     ##  Check whether the job has finished processing.
     #
-    #   \return True if the job has finished, False if not.
+    #   \return \type{bool}
     def isFinished(self):
         return self._finished
 
     ##  Emitted when the job has finished processing.
     #
-    #   \param job The finished job.
+    #   \param job \type{Job} The finished job.
     finished = Signal()
 
     ##  Emitted when the job processing has progressed.
     #
-    #   \param job The job reporting progress.
+    #   \param job \type{Job} The job reporting progress.
     #   \param amount \type{int} The amount of progress made, from 0 to 100.
     progress = Signal()

@@ -30,14 +30,17 @@ from weakref import WeakSet, WeakKeyDictionary
 #   emitting signals will get confused. To help with this, see the SignalEmitter class.
 #
 #   Based on http://code.activestate.com/recipes/577980-improved-signalsslots-implementation-in-python/
-#
+#   \sa SignalEmitter
+
 class Signal:
     ##  Signal types.
-    #   These indicate the type of signal, that is, how the signal handles calling the connected
-    #   slots. Direct connections immediately call the connected slots from the thread calling
-    #   emit(). Auto connections will push the call onto the event loop if the current thread is
-    #   not the main thread, but make a direct call if it is. Queued connections will always push
-    #   the call on to the event loop.
+    #   These indicate the type of a signal, that is, how the signal handles calling the connected
+    #   slots. 
+    #   - Direct connections immediately call the connected slots from the thread that called emit(). 
+    #   - Auto connections will push the call onto the event loop if the current thread is
+    #     not the main thread, but make a direct call if it is. 
+    #   - Queued connections will always push
+    #     the call on to the event loop.
     Direct = 1
     Auto = 2
     Queued = 3
@@ -52,14 +55,17 @@ class Signal:
         self.__methods = WeakKeyDictionary()
         self.__signals = WeakSet()
         self.__type = kwargs.get('type', Signal.Auto)
-
+    
+    ##  \exception NotImplementedError
     def __call__(self):
         raise NotImplementedError("Call emit() to emit a signal")
-
+    
+    ##  Get type of the signal
+    #   \return \type{int} Direct(1), Auto(2) or Queued(3)
     def getType(self):
         return self.__type
 
-    ##  Emit the signal, indirectly calling all connected slots.
+    ##  Emit the signal which indirectly calls all of the connected slots.
     #
     #   \param args The positional arguments to pass along.
     #   \param kargs The keyword arguments to pass along.
@@ -94,7 +100,7 @@ class Signal:
             signal.emit(*args, **kargs)
 
     ##  Connect to this signal.
-    #   \param connector The signal or slot to connect.
+    #   \param connector The signal or slot (function) to connect.
     def connect(self, connector):
         if type(connector) == Signal:
             if connector == self:
@@ -109,7 +115,7 @@ class Signal:
             self.__functions.add(connector)
 
     ##  Disconnect from this signal.
-    #   \param connector The signal or slot to disconnect.
+    #   \param connector The signal or slot (function) to disconnect.
     def disconnect(self, connector):
         try:
             if connector in self.__signals:
@@ -138,12 +144,13 @@ class Signal:
 ##  Convenience class to simplify signal creation.
 #
 #   This class is a Convenience class to simplify signal creation. Since signals
-#   need to be instance variables, normally you would need to create all singals
+#   need to be instance variables, normally you would need to create all signals
 #   in the class' `__init__` method. However, this makes them rather awkward to
-#   document. This class instead makes it possible to declare them as class variables
-#   and properly document them. During the call to `__init__()`, this class will
-#   then search through all the properties of the instance and create instance
-#   variables for each class variable that is an instance of Signal.
+#   document. This class instead makes it possible to declare them as class variables,
+#   which makes documenting them near the function they are used possible. 
+#   During the call to `__init__()`, this class will then search through all the 
+#   properties of the instance and create instance variables for each class variable 
+#   that is an instance of Signal.
 class SignalEmitter:
     ##  Initialize method.
     def __init__(self, **kwargs):

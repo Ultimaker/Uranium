@@ -22,6 +22,7 @@ from . import Theme
 from . import AngledCornerRectangle
 from . import SettingCategoriesModel
 from . import ActiveToolProxy
+from . import ActiveViewProxy
 
 class Bindings:
     @classmethod
@@ -74,6 +75,7 @@ class Bindings:
         qmlRegisterSingletonType(PreferencesProxy.PreferencesProxy, 'UM', 1, 0, 'Preferences', PreferencesProxy.createPreferencesProxy)
         qmlRegisterSingletonType(Theme.Theme, 'UM', 1, 0, 'Theme', Theme.createTheme)
         qmlRegisterSingletonType(ActiveToolProxy.ActiveToolProxy, 'UM', 1, 0, 'ActiveTool', ActiveToolProxy.createActiveToolProxy)
+        qmlRegisterSingletonType(ActiveViewProxy.ActiveViewProxy, 'UM', 1, 0, 'ActiveView', ActiveViewProxy.createActiveViewProxy)
 
         qmlRegisterUncreatableType(Duration, 'UM', 1, 0, 'Duration', '')
         qmlRegisterUncreatableType(DurationFormat, 'UM', 1, 0, 'DurationFormat', '')

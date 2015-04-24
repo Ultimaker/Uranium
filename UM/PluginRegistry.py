@@ -23,7 +23,7 @@ class PluginRegistry(object):
         self._active_plugins = []
 
     ##  Check if all required plugins are loaded.
-    #   \param required_plugins List of ids of plugins that ''must'' be activated.
+    #   \param required_plugins \type{list} List of ids of plugins that ''must'' be activated.
     def checkRequiredPlugins(self, required_plugins):
         plugins = self._findAllPlugins()
         for id in required_plugins:
@@ -38,14 +38,14 @@ class PluginRegistry(object):
 
     ##  Remove plugin from the list of active plugins.
     #
-    #   \param id The id of the plugin to remove.
+    #   \param id \type{string} The id of the plugin to remove.
     def removeActivePlugin(self, id):
         if id in self._active_plugins:
             self._active_plugins.remove(id)
 
     ##  Add a plugin to the list of active plugins.
     #
-    #   \param id The id of the plugin to add.
+    #   \param id \type{string} The id of the plugin to add.
     def addActivePlugin(self, id):
         if id not in self._active_plugins:
             self._active_plugins.append(id)
@@ -65,29 +65,19 @@ class PluginRegistry(object):
 
         if id not in self._meta_data:
             self._populateMetaData(id)
-
-        #plugin_type = self._meta_data[id]['type']
+            
         try:
             to_register = plugin.register(self._application)
-           # print( "plugin dict: ", to_register)
             if not to_register:
                 Logger.log('e', 'Plugin %s did not return any objects to register', id)
                 return
             for plugin_type, plugin_object in to_register.items():
-                #print("Registering " , plugin_type, ' ' , plugin_object)
-                #print("id: ", id)
                 plugin_object.setPluginId(id)
                 try:
                     self._type_register_map[plugin_type](plugin_object)
                 except Exception as e:
-                    print(e)
-            #if type(to_register) is list:
-            #    for obj in to_register:
-            #        obj.setPluginId(id)
-            #        self._type_register_map[plugin_typse](obj)
-            #else:
-            #    to_register.setPluginId(id)
-            #    self._type_register_map[plugin_type](to_register)
+                    Logger.log('e' , 'Unable to add plugin %s' %e)
+             
             self._plugins[id] = plugin
             self.addActivePlugin(id)
             Logger.log('i', 'Loaded plugin %s', id)
@@ -200,15 +190,16 @@ class PluginRegistry(object):
             del cls._type_register_map[type]
 
     ##  Get the singleton instance of this class.
+    ##  \return instance \type{PluginRegistry}  
     @classmethod
     def getInstance(self):
         if not self._instance:
             self._instance = PluginRegistry()
         return self._instance
 
-    ## private:
-
+    ##  private:
     #   Populate the list of metadata
+    #   \param id \type{string} 
     def _populateMetaData(self, id):
         plugin = self._findPlugin(id)
         if not plugin:
@@ -222,7 +213,7 @@ class PluginRegistry(object):
             Logger.log('e', 'An error occured getting metadata from plugin %s: %s', id, str(e))
             raise InvalidMetaDataError(id)
 
-        if not meta_data or not "type" in meta_data:
+        if not meta_data:
             raise InvalidMetaDataError(id)
 
         meta_data['id'] = id
@@ -236,9 +227,9 @@ class PluginRegistry(object):
         self._meta_data[id] = meta_data
         return True
 
-    #   Try to find a module implementing a plugin
-    #   \param name The name of the plugin to find
-    #   \returns module if it was found None otherwise
+    ##   Try to find a module implementing a plugin
+    #   \param id \type{string} The name of the plugin to find
+    #   \returns module \type{module} if it was found None otherwise
     def _findPlugin(self, id):
         location = None
         for folder in self._plugin_locations:
@@ -282,7 +273,7 @@ class PluginRegistry(object):
         return ids
 
     #   Try to find a directory we can use to load a plugin from
-    #   \param id The id of the plugin to locate
+    #   \param id \type{string} The id of the plugin to locate
     #   \param folder The base folder to look into
     def _locatePlugin(self, id, folder):
         for file in os.listdir(folder):
@@ -298,8 +289,8 @@ class PluginRegistry(object):
         return False
 
     #   Check if a certain dictionary contains a certain subset of key/value pairs
-    #   \param dictionary The dictionary to search
-    #   \param subset The subset to search for
+    #   \param dictionary \type{dict} The dictionary to search
+    #   \param subset \type{dict} The subset to search for
     def _subsetInDict(self, dictionary, subset):
         for key in subset:
             if key not in dictionary:

@@ -2,13 +2,14 @@ from UM.Signal import Signal, SignalEmitter
 from UM.PluginObject import PluginObject
 from UM.Event import Event
 from UM.Scene.Selection import Selection
+import UM.Application # Circular dependency blah
 
 ##  Abstract base class for tools that manipulate the scene.
 #
 class Tool(PluginObject, SignalEmitter):
     def __init__(self):
         super().__init__() # Call super to make multiple inheritence work.
-        self._controller = None
+        self._controller = UM.Application.Application.getInstance().getController() # Circular dependency blah
         self._handle = None
         self._locked_axis = None
         self._drag_plane = None
@@ -38,20 +39,24 @@ class Tool(PluginObject, SignalEmitter):
             self._handle.setParent(None)
 
         return False
-
+    
+    ##  Update the position of the ToolHandle
+    #   \sa ToolHandle
     def updateHandlePosition(self):
         if Selection.hasSelection():
             self._handle.setPosition(Selection.getAveragePosition())
-
+    
+    ##  Convenience function 
     def getController(self):
         return self._controller
-
-    def setController(self, controller):
-        self._controller = controller
-
+    
+    ##  Get the associated handle 
+    #   \return \type{ToolHandle}
     def getHandle(self):
         return self._handle
-
+    
+    ##  set the associated handle 
+    #   \param \type{ToolHandle}
     def setHandle(self, handle):
         self._handle = handle
 

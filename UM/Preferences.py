@@ -4,6 +4,8 @@ from UM.Logger import Logger
 import os
 import configparser
 
+##      Preferences are application based settings that are saved for future use. 
+#       Typical preferences would be window size, standard machine, etc.
 class Preferences(SignalEmitter):
     def __init__(self):
         super().__init__()

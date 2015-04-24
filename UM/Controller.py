@@ -11,9 +11,12 @@ from UM.PluginRegistry import PluginRegistry
 
 import math
 
-## Glue glass that holds the scene, (active) view(s), (active) tool(s) and possible user inputs.
+##      Glue class that holds the scene, (active) view(s), (active) tool(s) and possible user inputs.
 #
-#  The different types of views / tools / inputs are defined by plugins.
+#       The different types of views / tools / inputs are defined by plugins.
+#       \sa View
+#       \sa Tool
+#       \sa Scene
 class Controller(SignalEmitter):
     def __init__(self, application):
         super().__init__() # Call super to make multiple inheritence work.
@@ -34,13 +37,13 @@ class Controller(SignalEmitter):
         PluginRegistry.addType('input_device', self.addInputDevice)
 
     ##  Get the application.
-    #   \returns Application
+    #   \returns Application \type {Application}
     def getApplication(self):
         return self._application
 
     ##  Add a view by name if it's not already added.
-    #   \param name Unique identifier of view (usually the plugin name)
-    #   \param view The view to be added
+    #   \param name \type{string} Unique identifier of view (usually the plugin name)
+    #   \param view \type{View} The view to be added
     def addView(self, view):
         name = view.getPluginId()
         if name not in self._views:
@@ -52,8 +55,8 @@ class Controller(SignalEmitter):
             Logger.log('w', '%s was already added to view list. Unable to add it again.',name)
 
     ##  Request view by name. Returns None if no view is found.
-    #   \param name Unique identifier of view (usually the plugin name)
-    #   \return View if name was found, none otherwise.
+    #   \param name \type{string} Unique identifier of view (usually the plugin name)
+    #   \return View \type{View} if name was found, none otherwise.
     def getView(self, name):
         try:
             return self._views[name]
@@ -62,16 +65,17 @@ class Controller(SignalEmitter):
             return None
 
     ##  Return all views.
+    #   \return views \type{list}
     def getAllViews(self):
         return self._views
 
-    ## Request active view. Returns None if there is no active view
-    #  \return Tool if an view is active, None otherwise.
+    ##  Request active view. Returns None if there is no active view
+    #   \return view \type{View} if an view is active, None otherwise.
     def getActiveView(self):
         return self._active_view
 
     ##  Set the currently active view.
-    #   \parma name The name of the view to set as active
+    #   \param name \type{string} The name of the view to set as active
     def setActiveView(self, name):
         try:
             self._active_view = self._views[name]
@@ -85,52 +89,50 @@ class Controller(SignalEmitter):
     ##  Emitted when the active view changes.
     activeViewChanged = Signal()
         
-    ##  Add an input device (eg; mouse, keyboard, etc) by name if it's not already addded.
-    #   \param name Unique identifier of device (usually the plugin name)
-    #   \param view The input device to be added
+    ##  Add an input device (eg; mouse, keyboard, etc) if it's not already addded.
+    #   \param device The input device to be added
     def addInputDevice(self, device):
         name = device.getPluginId()
         if(name not in self._input_devices):
             self._input_devices[name] = device
             device.event.connect(self.event)
         else:
-            Logger.log('w', '%s was already added to input device list. Unable to add it again.', name)
+            Logger.log('w', '%s was already added to input device list. Unable to add it again.' % name)
 
     ##  Request input device by name. Returns None if no device is found.
-    #   \param name Unique identifier of input device (usually the plugin name)
-    #   \return input device if name was found, none otherwise.
+    #   \param name \type{string} Unique identifier of input device (usually the plugin name)
+    #   \return input \type{InputDevice} device if name was found, none otherwise.
     def getInputDevice(self, name):
         try:
             return self._input_devices[name]
-        except KeyError: #No such tool
+        except KeyError: #No such device
             Logger.log('e', "Unable to find %s in input devices",name)
             return None
 
     ##  Remove an input device from the list of input devices.
     #   Does nothing if the input device is not in the list.
-    #   \param name The name of the device to remove.
+    #   \param name \type{string} The name of the device to remove.
     def removeInputDevice(self, name):
         if name in self._input_devices:
             self._input_devices[name].event.disconnect(self.event)
             del self._input_devices[name]
 
     ##  Request tool by name. Returns None if no view is found.
-    #   \param name Unique identifier of tool (usually the plugin name)
-    #   \return tool if name was found, none otherwise.
+    #   \param name \type{string} Unique identifier of tool (usually the plugin name)
+    #   \return tool \type{Tool} if name was found, none otherwise.
     def getTool(self, name):
         try:
             return self._tools[name]
         except KeyError: #No such tool
             Logger.log('e', "Unable to find %s in tools",name)
             return None
-
+    ##  Get all tools
+    #   \return tools \type{list}
     def getAllTools(self):
         return self._tools
 
-    ##  Add an Tool (transform object, translate object) by name if it's not already addded.
-    #   \param name Unique identifier of tool (usually the plugin name)
-    #   \param tool Tool to be added
-    #   \return Tool if name was found, None otherwise.    
+    ##  Add a Tool (transform object, translate object) if its not already added.
+    #   \param tool \type{Tool} Tool to be added  
     def addTool(self, tool):
         name = tool.getPluginId()
         if(name not in self._tools):
@@ -140,13 +142,13 @@ class Controller(SignalEmitter):
         else: 
             Logger.log('w', '%s was already added to tool list. Unable to add it again.', name)
 
-    ## Request active tool. Returns None if there is no active tool
-    #  \return Tool if an tool is active, None otherwise.
+    ##  Request active tool. Returns None if there is no active tool
+    #   \return Tool \type{Tool} if an tool is active, None otherwise.
     def getActiveTool(self):
         return self._active_tool
 
     ##  Set the current active tool.
-    #   \param name The name of the tool to set as active.
+    #   \param name \type{string} The name of the tool to set as active.
     def setActiveTool(self, name):
         try:
             if self._active_tool:
@@ -170,11 +172,16 @@ class Controller(SignalEmitter):
     ##  Emitted when the active tool changes.
     activeToolChanged = Signal()
 
-    ##  Return the scene
+    ##  Get the scene
+    #   \return scene \type{Scene}
     def getScene(self):
         return self._scene
 
-    ## Process an event
+    ##  Process an event
+    #   \param event \type{Event} event to be handle.
+    #   The event is first passed to the camera tool, then active tool and finally selection tool.
+    #   If none of these events handle it (when they return something that does not evaluate to true)
+    #   a context menu signal is emitted.
     def event(self, event):
         # First, try to perform camera control
         if self._camera_tool and self._camera_tool.event(event):
@@ -192,12 +199,18 @@ class Controller(SignalEmitter):
 
     contextMenuRequested = Signal()
 
-    ##  Set the tool used for handling camera controls
-    #   Camera tool is the first tool to recieve events
+    ##  Set the tool used for handling camera controls.
+    #   Camera tool is the first tool to recieve events.
+    #   \param tool \type{Tool}
+    #   \sa setSelectionTool
+    #   \sa setActiveTool
     def setCameraTool(self, tool):
         self._camera_tool = self.getTool(tool)
 
-    ##  Set the tool used for performing selections
-    #   Selection tool recieves its events after camera tool and active tool
+    ##  Set the tool used for performing selections.
+    #   Selection tool recieves its events after camera tool and active tool.
+    #   \param tool \type{Tool}
+    #   \sa setCameraTool
+    #   \sa setActiveTool
     def setSelectionTool(self, tool):
         self._selection_tool = self.getTool(tool)
