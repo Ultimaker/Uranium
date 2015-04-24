@@ -1,4 +1,5 @@
 from . import STLWriter
+
 def getMetaData():
     return {
         'type': 'mesh_writer',

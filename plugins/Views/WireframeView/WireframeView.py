@@ -2,6 +2,7 @@ from UM.View.View import View
 from UM.View.Renderer import Renderer
 from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator
 
+
 class WireframeView(View):
     def __init__(self):
         super().__init__()

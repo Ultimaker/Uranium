@@ -1,4 +1,5 @@
 from . import STLReader
+
 def getMetaData():
     return {
         'type': 'mesh_reader',

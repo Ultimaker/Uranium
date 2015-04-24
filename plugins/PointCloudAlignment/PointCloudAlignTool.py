@@ -3,6 +3,8 @@ from UM.Event import Event, MouseEvent
 from UM.Application import Application
 from . import PointCloudAlignToolHandle
 from UM.Math.Vector import Vector
+
+
 class PointCloudAlignTool(Tool):
     def __init__(self):
         super().__init__()
@@ -24,8 +26,6 @@ class PointCloudAlignTool(Tool):
         Application.getInstance().getController().getScene().sceneChanged.emit(self)
         
     def event(self, event):
-        
-        
         if event.type == Event.ToolActivateEvent:
             self._vert_list_1 = []
             self._vert_list_2 = []

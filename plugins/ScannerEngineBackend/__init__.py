@@ -3,6 +3,7 @@ from UM.Preferences import Preferences
 from PyQt5.QtQml import qmlRegisterType, qmlRegisterSingletonType
 from . import ScannerEngineBackendProxy
 
+
 def getMetaData():
     return {
         'type': 'backend',

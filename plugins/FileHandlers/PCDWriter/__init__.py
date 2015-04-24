@@ -1,5 +1,5 @@
-#Shoopdawoop
 from . import PCDWriter
+
 def getMetaData():
     return {
         'type': 'mesh_writer',

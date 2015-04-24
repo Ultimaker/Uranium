@@ -1,4 +1,6 @@
 from . import WireframeView
+
+
 def getMetaData():
     return {
         'type': 'view',
@@ -10,6 +12,7 @@ def getMetaData():
             'visible': False
         }
     }
+
 
 def register(app):
     return {"view": WireframeView.WireframeView()}

@@ -25,7 +25,7 @@ class MirrorTool(Tool):
         super().event(event)
 
         if event.type == Event.MousePressEvent:
-            if not MouseEvent.LeftButton in event.buttons:
+            if MouseEvent.LeftButton not in event.buttons:
                 return False
 
             id = self._renderer.getIdAtCoordinate(event.x, event.y)
@@ -49,7 +49,7 @@ class MirrorTool(Tool):
                     elif self.getLockedAxis() == ToolHandle.ZAxis:
                         scale.setZ(-scale.z)
 
-                    op = ScaleOperation(node, scale, set_scale = True)
+                    op = ScaleOperation(node, scale, set_scale=True)
                 else:
                     op = GroupedOperation()
 

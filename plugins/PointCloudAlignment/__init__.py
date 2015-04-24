@@ -1,7 +1,8 @@
 from . import PointCloudAlignTool
 from . import PointCloudAlignView
 from . import PointCloudAlignExtension
-from UM.Application import Application
+
+
 def getMetaData():
     return {
         'type': 'tool',
