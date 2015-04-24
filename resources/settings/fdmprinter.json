@@ -1027,7 +1027,7 @@
                     "default": 5.0,
                     "visible": false,
                     "active_if": {
-                        "setting": "wireframe",
+                        "setting": "wireframe_enabled",
                         "value": true
                     },
                     "children": {
@@ -1077,7 +1077,7 @@
                     "type": "float",
                     "visible": false,
                     "active_if": {
-                        "setting": "wireframe",
+                        "setting": "wireframe_enabled",
                         "value": true
                     },
                     "children": {
@@ -1107,7 +1107,7 @@
                     "default": 0.0,
                     "visible": false,
                     "active_if": {
-                        "setting": "wireframe",
+                        "setting": "wireframe_enabled",
                         "value": true
                     }
                 },
@@ -1119,7 +1119,7 @@
                     "default": 0.0,
                     "visible": false,
                     "active_if": {
-                        "setting": "wireframe",
+                        "setting": "wireframe_enabled",
                         "value": true
                     }
                 },
@@ -1131,7 +1131,7 @@
                     "default": 0.1,
                     "visible": false,
                     "active_if": {
-                        "setting": "wireframe",
+                        "setting": "wireframe_enabled",
                         "value": true
                     }
                 },
@@ -1151,7 +1151,7 @@
                     "default": 0.6,
                     "visible": false,
                     "active_if": {
-                        "setting": "wireframe",
+                        "setting": "wireframe_enabled",
                         "value": true
                     }
                 },
@@ -1163,7 +1163,7 @@
                     "default": 0.5,
                     "visible": false,
                     "active_if": {
-                        "setting": "wireframe",
+                        "setting": "wireframe_enabled",
                         "value": true
                     }
                 },
@@ -1175,7 +1175,7 @@
                     "default": 0.6,
                     "visible": false,
                     "active_if": {
-                        "setting": "wireframe",
+                        "setting": "wireframe_enabled",
                         "value": true
                     }
                 },
@@ -1191,7 +1191,7 @@
                     "default": "Compensate",
                     "visible": false,
                     "active_if": {
-                        "setting": "wireframe",
+                        "setting": "wireframe_enabled",
                         "value": true
                     }
                 },
@@ -1203,7 +1203,7 @@
                     "default": 20.0,
                     "visible": false,
                     "active_if": {
-                        "setting": "wireframe",
+                        "setting": "wireframe_enabled",
                         "value": true
                     }
                 },
@@ -1215,7 +1215,7 @@
                     "default": 2.0,
                     "visible": false,
                     "active_if": {
-                        "setting": "wireframe",
+                        "setting": "wireframe_enabled",
                         "value": true
                     }
                 },
@@ -1227,7 +1227,7 @@
                     "default": 0.8,
                     "visible": false,
                     "active_if": {
-                        "setting": "wireframe",
+                        "setting": "wireframe_enabled",
                         "value": true
                     }
                 },
@@ -1240,7 +1240,7 @@
                     "default": 0.2,
                     "visible": false,
                     "active_if": {
-                        "setting": "wireframe",
+                        "setting": "wireframe_enabled",
                         "value": true
                     }
                 },
@@ -1252,7 +1252,7 @@
                     "default": 3.0,
                     "visible": false,
                     "active_if": {
-                        "setting": "wireframe",
+                        "setting": "wireframe_enabled",
                         "value": true
                     }
                 },
@@ -1264,7 +1264,7 @@
                     "default": 3.0,
                     "visible": false,
                     "active_if": {
-                        "setting": "wireframe",
+                        "setting": "wireframe_enabled",
                         "value": true
                     },
                     "inherit_function": "wireframe_height"
@@ -1277,7 +1277,7 @@
                     "default": 1.0,
                     "visible": false,
                     "active_if": {
-                        "setting": "wireframe",
+                        "setting": "wireframe_enabled",
                         "value": true
                     }
                 }
