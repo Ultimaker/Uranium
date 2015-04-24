@@ -1,4 +1,4 @@
-from PyQt5.QtCore import pyqtSlot, pyqtProperty, pyqtSignal, QObject
+from PyQt5.QtCore import pyqtSlot, pyqtProperty, pyqtSignal, QObject, QVariant
 
 from UM.Application import Application
 from UM.PluginRegistry import PluginRegistry
@@ -26,14 +26,14 @@ class ActiveViewProxy(QObject):
 
         return os.path.join(PluginRegistry.getInstance().getPluginPath(self._active_view.getPluginId()), panel_file)
     
-    @pyqtSlot(str)
-    def triggerAction(self, action):
+    @pyqtSlot(str, QVariant)
+    def triggerAction(self, action,data):
         if not self._active_view:
             return
 
         action = getattr(self._active_view, action)
         if action:
-            action()
+            action(data)
     
     @pyqtProperty(bool, notify = activeViewChanged)
     def valid(self):
