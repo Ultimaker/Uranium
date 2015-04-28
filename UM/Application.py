@@ -79,6 +79,18 @@ class Application(SignalEmitter):
         self._visible_messages = []
         
         self._message_lock = threading.Lock()
+        self.showMessageSignal.connect(self.showMessage)
+        self.hideMessageSignal.connect(self.hideMessage)
+    
+    showMessageSignal = Signal()
+    
+    hideMessageSignal = Signal()
+    
+    def hideMessage(self, message):
+        raise NotImplementedError
+    
+    def showMessage(self, message):
+        raise NotImplementedError
     
     ##  Get the version of the application  
     #   \returns version \type{string} 
@@ -90,11 +102,11 @@ class Application(SignalEmitter):
     #   To show a message, simply create it and call its .show() function.
     #   \param message \type{Message} message object 
     #   \sa Message::show()
-    def showMessage(self, message):
-        with self._message_lock:
-            if message not in self._visible_messages:
-                self._visible_messages.append(message)
-                self.visibleMessageAdded.emit(message)
+    #def showMessage(self, message):
+    #    with self._message_lock:
+    #        if message not in self._visible_messages:
+    #            self._visible_messages.append(message)
+    #            self.visibleMessageAdded.emit(message)
     
     visibleMessageAdded = Signal()
     
@@ -103,11 +115,11 @@ class Application(SignalEmitter):
     #   in principle, this should only be called by the message itself (hide)
     #   \param message \type{Message} message object 
     #   \sa Message::hide()
-    def hideMessage(self, message):
-        with self._message_lock:
-            if message in self._visible_messages:
-                self._visible_messages.remove(message)
-                self.visibleMessageRemoved.emit(message)
+    #def hideMessage(self, message):
+    #    with self._message_lock:
+    #        if message in self._visible_messages:
+    #            self._visible_messages.remove(message)
+    #            self.visibleMessageRemoved.emit(message)
     
     ##  Hide message by ID (as provided by built-in id function)
     #   \param message_id \type{long}
@@ -118,7 +130,7 @@ class Application(SignalEmitter):
                 if id(message) == message_id:
                     found_message = message
         if found_message is not None:
-            self.hideMessage(found_message)
+            self.hideMessageSignal.emit(found_message)
             
     visibleMessageRemoved = Signal()            
 

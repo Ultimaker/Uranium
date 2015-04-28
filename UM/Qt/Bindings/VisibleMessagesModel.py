@@ -20,7 +20,7 @@ class VisibleMessagesModel(ListModel):
         self.addRoleName(self.ProgressRole, "progress")
         self.addRoleName(self.IDRole, "id")
         self.addRoleName(self.ActionsRole, "actions")
-        #self._populateMessageList()
+        self._populateMessageList()
     
     def _populateMessageList(self):
         for message in Application.getInstance().getVisibleMessages():

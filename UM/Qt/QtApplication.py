@@ -7,6 +7,7 @@ from PyQt5.QtCore import Qt, QObject, QCoreApplication, QEvent, pyqtSlot, QLocal
 from PyQt5.QtQml import QQmlApplicationEngine, qmlRegisterType, qmlRegisterSingletonType
 from PyQt5.QtWidgets import QApplication, QSplashScreen
 from PyQt5.QtGui import QGuiApplication, QPixmap
+from PyQt5.QtCore import QTimer
 
 from UM.Application import Application
 from UM.Qt.QtGL2Renderer import QtGL2Renderer
@@ -64,6 +65,21 @@ class QtApplication(QApplication, Application, SignalEmitter):
         self.loadQtTranslation(self.getApplicationName() + '_qt')
 
     def run(self):
+        pass
+    
+    def hideMessage(self, message):
+        with self._message_lock:
+            if message in self._visible_messages:
+                self._visible_messages.remove(message)
+                self.visibleMessageRemoved.emit(message)
+    
+    def showMessage(self, message):
+        with self._message_lock:
+            if message not in self._visible_messages:
+                self._visible_messages.append(message)
+                message.setTimer(QTimer())
+                self.visibleMessageAdded.emit(message)
+    
         pass
 
     def setMainQml(self, base_path, qml_file):
