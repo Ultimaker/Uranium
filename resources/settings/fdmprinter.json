@@ -24,7 +24,7 @@
         "machine_gcode_flavor": { "default": "RepRap" },
         "machine_disallowed_areas": { "default": []},
         "machine_platform_offset": { "default": [0.0, 0.0, 0.0] },
-        
+
         "machine_nozzle_tip_outer_diameter": { "default": 1.0 },
         "machine_nozzle_head_distance": { "default": 3.0 },
         "machine_nozzle_expansion_angle": { "default": 45 }
@@ -497,15 +497,15 @@
                             "default": "Grid",
                             "inherit_function": "'Lines' if parent_value > 25 else 'Grid'"
                         },
-						"infill_line_distance": {
-							"label": "Line distance",
-							"description": "Distance between the printed infill lines.",
-							"unit": "mm",
-							"type": "float",
-							"default": 2.0,
-							"visible": false,
-							"inherit_function": "(infill_line_width * 100) / parent_value"
-						}
+                        "infill_line_distance": {
+                            "label": "Line distance",
+                            "description": "Distance between the printed infill lines.",
+                            "unit": "mm",
+                            "type": "float",
+                            "default": 2.0,
+                            "visible": false,
+                            "inherit_function": "(infill_line_width * 100) / parent_value"
+                        }
                     }
                 },
                 "fill_overlap": {
@@ -694,7 +694,6 @@
                         "setting": "support_enable",
                         "value": true
                     },
-                    
                     "children": {
                         "support_top_distance": {
                             "label": "Top Distance",
@@ -823,22 +822,22 @@
                         "setting": "support_enable",
                         "value": true
                     },
-					
-					"children": {
-						"support_line_distance": {
-							"label": "Line distance",
-							"description": "Distance between the printed support lines.",
-							"unit": "mm",
-							"type": "float",
-							"default": 2.66,
-							"visible": false,
-							"active_if": {
-								"setting": "support_enable",
-								"value": true
-							},
-							"inherit_function": "(support_line_width * 100) / parent_value"
-						}
-					}
+
+                    "children": {
+                        "support_line_distance": {
+                            "label": "Line distance",
+                            "description": "Distance between the printed support lines.",
+                            "unit": "mm",
+                            "type": "float",
+                            "default": 2.66,
+                            "visible": false,
+                            "active_if": {
+                                "setting": "support_enable",
+                                "value": true
+                            },
+                            "inherit_function": "(support_line_width * 100) / parent_value"
+                        }
+                    }
                 }
             }
         },
