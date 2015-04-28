@@ -1,6 +1,7 @@
 from UM.Job import Job
 from UM.Application import Application
 from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator
+from UM.Message import Message
 
 import os.path
 
@@ -20,3 +21,5 @@ class WriteMeshJob(Job):
 
     def run(self):
         self.setResult(self._handler.write(self._filename, self._device, self._mesh))
+        result_message = Message("Wrote mesh to %s" % self._filename)
+        result_message.show()
