@@ -184,6 +184,9 @@ class QtGL2Renderer(Renderer):
 
         queue_item['wireframe'] = (mode == Renderer.RenderWireframe)
 
+        if kwargs.get('end', None):
+            queue_item['range'] = [kwargs.get('start', 0), kwargs.get('end')]
+
         if kwargs.get('transparent', False):
             self._transparent_queue.append(queue_item)
         elif kwargs.get('overlay', False):
@@ -346,6 +349,7 @@ class QtGL2Renderer(Renderer):
         material = item['material']
         mode = item['mode']
         wireframe = item.get('wireframe', False)
+        range = item.get('range', None)
 
         material.bind()
         material.setUniformValue("u_projectionMatrix", self._camera.getProjectionMatrix(), cache = False)
@@ -393,10 +397,16 @@ class QtGL2Renderer(Renderer):
             self._gl.glPolygonMode(self._gl.GL_FRONT_AND_BACK, self._gl.GL_LINE)
 
         if mesh.hasIndices():
-            if mode == self._gl.GL_TRIANGLES:
-                self._gl.glDrawElements(mode, mesh.getFaceCount() * 3 , self._gl.GL_UNSIGNED_INT, None)
+            if range is None:
+                if mode == self._gl.GL_TRIANGLES:
+                    self._gl.glDrawElements(mode, mesh.getFaceCount() * 3 , self._gl.GL_UNSIGNED_INT, None)
+                else:
+                    self._gl.glDrawElements(mode, mesh.getFaceCount(), self._gl.GL_UNSIGNED_INT, None)
             else:
-                self._gl.glDrawElements(mode, mesh.getFaceCount(), self._gl.GL_UNSIGNED_INT, None)
+                if mode == self._gl.GL_TRIANGLES:
+                    self._gl.glDrawRangeElements(mode, range[0], range[1], range[1] - range[0], self._gl.GL_UNSIGNED_INT, None)
+                else:
+                    self._gl.glDrawRangeElements(mode, range[0], range[1], range[1] - range[0], self._gl.GL_UNSIGNED_INT, None)
         else:
             self._gl.glDrawArrays(mode, 0, mesh.getVertexCount())
 
