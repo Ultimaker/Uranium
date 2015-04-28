@@ -48,7 +48,7 @@ class Controller(SignalEmitter):
         name = view.getPluginId()
         if name not in self._views:
             self._views[name] = view
-            view.setController(self)
+            #view.setController(self)
             view.setRenderer(self._application.getRenderer())
             self.viewsChanged.emit()
         else:
@@ -138,7 +138,7 @@ class Controller(SignalEmitter):
         name = tool.getPluginId()
         if(name not in self._tools):
             self._tools[name] = tool
-            tool.setController(self)
+            #tool.setController(self)
             self.toolsChanged.emit()
         else: 
             Logger.log('w', '%s was already added to tool list. Unable to add it again.', name)

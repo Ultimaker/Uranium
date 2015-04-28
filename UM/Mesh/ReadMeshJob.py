@@ -1,5 +1,6 @@
 from UM.Job import Job
 from UM.Application import Application
+from UM.Message import Message
 
 import os.path
 
@@ -18,3 +19,6 @@ class ReadMeshJob(Job):
 
     def run(self):
         self.setResult(self._handler.read(self._filename, self._device))
+        result_message = Message("Loaded %s" %self._filename)
+        result_message.show()
+        

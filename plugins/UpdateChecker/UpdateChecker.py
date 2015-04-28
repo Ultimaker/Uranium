@@ -61,6 +61,7 @@ class UpdateChecker(Extension):
                                 self._url = value["url"]
                                 message.actionTriggered.connect(self.actionTriggered)
                                 message.show()
+                                break
                     else:
                         Logger.log('e', "Could not find version information or download url for update.")
             else:
