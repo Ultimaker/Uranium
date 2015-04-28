@@ -1,4 +1,6 @@
 from UM.PluginObject import PluginObject
+
+
 class WorkspaceWriter(PluginObject):
     def __init__(self):
         self._supported_extension = ''

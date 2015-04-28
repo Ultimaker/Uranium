@@ -28,7 +28,11 @@ this software.
 # scripts. It extracts the "label" and "description" values of
 # the JSON file using the structure as used by Uranium settings files.
 
-import sys, os, json, time, os.path
+import sys
+import os
+import json
+import time
+import os.path
 
 debugoutput = False #set True to print debug output in scripty's logs
 
@@ -75,7 +79,7 @@ else:
             error = False
             try:
                 jsondatadict = json.load(data_file)
-                if not 'categories' in jsondatadict:
+                if 'categories' not in jsondatadict:
                     continue
 
                 for name, value in jsondatadict['categories'].items():

@@ -4,7 +4,7 @@ from UM.Math.Vector import Vector
 class Selection:
     @classmethod
     def add(cls, object):
-        if not object in cls.__selection:
+        if object not in cls.__selection:
             cls.__selection.append(object)
             cls.selectionChanged.emit()
 

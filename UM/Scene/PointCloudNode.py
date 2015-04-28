@@ -5,6 +5,8 @@ from UM.Resources import Resources
 from UM.Math.Color import Color
 from UM.ColorGenerator import ColorGenerator
 import numpy
+
+
 class PointCloudNode(SceneNode.SceneNode):
     def __init__(self, parent = None):
         super().__init__(parent)

@@ -1,3 +1,5 @@
+
+
 ##  An RGBA color value.
 #
 #   This class represents an RGBA color value, in the range of 0.0 to 1.0.

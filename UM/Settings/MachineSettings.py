@@ -1,4 +1,5 @@
-import traceback, sys
+import traceback
+import sys
 import json
 import configparser
 import os.path
@@ -126,6 +127,7 @@ class MachineSettings(SignalEmitter):
     
     def getTypeID(self):
         return self._type_id
+    
     ##  Add a category of settings
     def addSettingsCategory(self, category):
         self._categories.append(category)

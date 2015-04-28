@@ -42,6 +42,7 @@ class Camera(SceneNode.SceneNode):
     
     def getViewportHeight(self):
         return self._viewport_height
+    
     ##  Set the projection matrix of this camera.
     #   \param matrix The projection matrix to use for this camera.
     def setProjectionMatrix(self, matrix):

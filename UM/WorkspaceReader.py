@@ -1,4 +1,6 @@
 from UM.PluginObject import PluginObject
+
+
 class WorkspaceReader(PluginObject):
     def __init__(self):
         super().__init__()

@@ -126,6 +126,7 @@ class Controller(SignalEmitter):
         except KeyError: #No such tool
             Logger.log('e', "Unable to find %s in tools",name)
             return None
+    
     ##  Get all tools
     #   \return tools \type{list}
     def getAllTools(self):

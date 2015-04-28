@@ -137,7 +137,7 @@ class PluginRegistry(object):
         plugins = self._findAllPlugins()
         return_values = []
         for id in plugins:
-            if active_only and not id in self._active_plugins:
+            if active_only and id not in self._active_plugins:
                 continue
 
             plugin_data = self.getMetaData(id)

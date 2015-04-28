@@ -1,3 +1,5 @@
+
+
 ##  Base class for objects that can be provided by a plugin.
 #
 #   This class should be inherited by any class that can be provided

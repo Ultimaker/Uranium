@@ -55,11 +55,11 @@ class Preferences(SignalEmitter):
             if group == 'DEFAULT':
                 continue
 
-            if not group in self._preferences:
+            if group not in self._preferences:
                 self._preferences[group] = {}
 
             for key, value in group_entries.items():
-                if not key in self._preferences[group]:
+                if key not in self._preferences[group]:
                     self._preferences[group][key] = _Preference(key)
 
                 self._preferences[group][key].setValue(value)
