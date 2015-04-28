@@ -46,7 +46,7 @@ class SceneNode(SignalEmitter):
         self._selectable = False
         self._calculate_aabb = True
         self._aabb = None
-        self._aabbJob = None
+        self._aabb_job = None
         self._visible = True
         self._name = ""
 
@@ -381,7 +381,7 @@ class SceneNode(SignalEmitter):
         if self._aabb:
             return self._aabb
 
-        if not self._aabbJob:
+        if not self._aabb_job:
             self._resetAABB()
 
         return AxisAlignedBox()
@@ -456,11 +456,11 @@ class SceneNode(SignalEmitter):
 
         self._aabb = None
 
-        if self._aabbJob:
-            self._aabbJob.cancel()
+        if self._aabb_job:
+            self._aabb_job.cancel()
 
-        self._aabbJob = _CalculateAABBJob(self)
-        self._aabbJob.start()
+        self._aabb_job = _CalculateAABBJob(self)
+        self._aabb_job.start()
 
 ##  Internal
 #   Calculates the AABB of a node and its children.
@@ -480,4 +480,4 @@ class _CalculateAABBJob(Job):
             aabb += child.getBoundingBox()
 
         self._node._aabb = aabb
-        self._node._aabbJob = None
+        self._node._aabb_job = None

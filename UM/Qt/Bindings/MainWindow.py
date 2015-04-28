@@ -14,19 +14,19 @@ class MainWindow(QQuickWindow):
     def __init__(self, parent = None):
         super(MainWindow, self).__init__(parent)
 
-        self._backgroundColor = QColor(204, 204, 204, 255)
+        self._background_color = QColor(204, 204, 204, 255)
 
         self.setClearBeforeRendering(False)
         self.beforeRendering.connect(self._render, type=Qt.DirectConnection)
 
-        self._mouseDevice = QtMouseDevice(self)
-        self._mouseDevice.setPluginId('qt_mouse')
-        self._keyDevice = QtKeyDevice()
-        self._keyDevice.setPluginId('qt_key')
+        self._mouse_device = QtMouseDevice(self)
+        self._mouse_device.setPluginId('qt_mouse')
+        self._key_device = QtKeyDevice()
+        self._key_device.setPluginId('qt_key')
 
         self._app = QCoreApplication.instance()
-        self._app.getController().addInputDevice(self._mouseDevice)
-        self._app.getController().addInputDevice(self._keyDevice)
+        self._app.getController().addInputDevice(self._mouse_device)
+        self._app.getController().addInputDevice(self._key_device)
         self._app.getController().getScene().sceneChanged.connect(self._onSceneChanged)
         self._preferences = Preferences.getInstance()
 
@@ -36,10 +36,10 @@ class MainWindow(QQuickWindow):
         self.setHeight(int(self._preferences.getValue('general/window_height')))
     
     def getBackgroundColor(self):
-        return self._backgroundColor
+        return self._background_color
 
     def setBackgroundColor(self, color):
-        self._backgroundColor = color
+        self._background_color = color
         self._app.getRenderer().setBackgroundColor(color)
 
     backgroundColor = pyqtProperty(QColor, fget=getBackgroundColor, fset=setBackgroundColor)
@@ -53,42 +53,42 @@ class MainWindow(QQuickWindow):
         if event.isAccepted():
             return
 
-        self._mouseDevice.handleEvent(event)
+        self._mouse_device.handleEvent(event)
 
     def mouseMoveEvent(self, event):
         super().mouseMoveEvent(event)
         if event.isAccepted():
             return
 
-        self._mouseDevice.handleEvent(event)
+        self._mouse_device.handleEvent(event)
 
     def mouseReleaseEvent(self, event):
         super().mouseReleaseEvent(event)
         if event.isAccepted():
             return
 
-        self._mouseDevice.handleEvent(event)
+        self._mouse_device.handleEvent(event)
 
     def keyPressEvent(self, event):
         super().keyPressEvent(event)
         if event.isAccepted():
             return
 
-        self._keyDevice.handleEvent(event)
+        self._key_device.handleEvent(event)
 
     def keyReleaseEvent(self, event):
         super().keyReleaseEvent(event)
         if event.isAccepted():
             return
 
-        self._keyDevice.handleEvent(event)
+        self._key_device.handleEvent(event)
 
     def wheelEvent(self, event):
         super().wheelEvent(event)
         if event.isAccepted():
             return
 
-        self._mouseDevice.handleEvent(event)
+        self._mouse_device.handleEvent(event)
 
     def resizeEvent(self, event):
         super().resizeEvent(event)

@@ -114,7 +114,7 @@ class Matrix(object):
     def setByRotationAxis(self, angle, direction, point = None):
         sina = math.sin(angle)
         cosa = math.cos(angle)
-        direction_data = self._unit_vector(direction.getData())
+        direction_data = self._unitVector(direction.getData())
         # rotation matrix around unit vector
         R = numpy.diag([cosa, cosa, cosa])
         R += numpy.outer(direction_data, direction_data) * (1.0 - cosa)
@@ -199,7 +199,7 @@ class Matrix(object):
         self._data[2, 3] = -1.
         self._data[3, 2] = (2. * far * near) / (near - far)
 
-    def _unit_vector(self, data, axis=None, out=None):
+    def _unitVector(self, data, axis=None, out=None):
         """Return ndarray normalized by length, i.e. Euclidean norm, along axis.
 
         >>> v0 = numpy.random.random(3)

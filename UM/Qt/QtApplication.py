@@ -27,7 +27,7 @@ class QtApplication(QApplication, Application, SignalEmitter):
             QCoreApplication.addLibraryPath(plugin_path)
         super().__init__(sys.argv, **kwargs)
 
-        self._mainQml = "main.qml"
+        self._main_qml = "main.qml"
         self._engine = None
         self._renderer = None
 
@@ -84,9 +84,9 @@ class QtApplication(QApplication, Application, SignalEmitter):
 
     def setMainQml(self, base_path, qml_file):
         if hasattr(sys, 'frozen'):
-            self._mainQml = os.path.join(os.path.dirname(sys.executable), qml_file)
+            self._main_qml = os.path.join(os.path.dirname(sys.executable), qml_file)
         else:
-            self._mainQml = os.path.join(base_path, qml_file)
+            self._main_qml = os.path.join(base_path, qml_file)
 
     def initializeEngine(self):
         # TODO: Document native/qml import trickery
@@ -101,7 +101,7 @@ class QtApplication(QApplication, Application, SignalEmitter):
 
         self.registerObjects(self._engine)
         
-        self._engine.load(self._mainQml)
+        self._engine.load(self._main_qml)
     
     engineCreatedSignal = Signal()
     

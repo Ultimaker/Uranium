@@ -26,31 +26,31 @@ from . import ActiveViewProxy
 
 class Bindings:
     @classmethod
-    def createControllerProxy(self, engine, scriptEngine):
+    def createControllerProxy(self, engine, script_engine):
         return ControllerProxy()
 
     @classmethod
-    def createApplicationProxy(self, engine, scriptEngine):
+    def createApplicationProxy(self, engine, script_engine):
         return ApplicationProxy()
 
     @classmethod
-    def createBackendProxy(self, engine, scriptEngine):
+    def createBackendProxy(self, engine, script_engine):
         return BackendProxy()
 
     @classmethod
-    def createSceneProxy(self, engine, scriptEngine):
+    def createSceneProxy(self, engine, script_engine):
         return SceneProxy()
 
     @classmethod
-    def createModels(self, engine, scriptEngine):
+    def createModels(self, engine, script_engine):
         return Models()
 
     @classmethod
-    def createResourcesProxy(cls, engine, scriptEngine):
+    def createResourcesProxy(cls, engine, script_engine):
         return ResourcesProxy()
 
     @classmethod
-    def createOperationStackProxy(cls, engine, scriptEngine):
+    def createOperationStackProxy(cls, engine, script_engine):
         return OperationStackProxy.OperationStackProxy()
 
     @classmethod

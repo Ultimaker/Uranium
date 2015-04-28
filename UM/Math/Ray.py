@@ -4,7 +4,7 @@ class Ray:
     def __init__(self, origin = Vector(), direction = Vector()):
         self._origin = origin
         self._direction = direction
-        self._invDirection = 1.0 / direction
+        self._inverse_direction = 1.0 / direction
 
     @property
     def origin(self):
@@ -16,7 +16,7 @@ class Ray:
 
     @property
     def inverseDirection(self):
-        return self._invDirection
+        return self._inverse_direction
 
     def getPointAlongRay(self, distance):
         return self._origin + (self._direction * distance)

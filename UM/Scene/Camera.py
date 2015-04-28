@@ -15,8 +15,8 @@ class Camera(SceneNode.SceneNode):
     def __init__(self, name, parent = None):
         super().__init__(parent)
         self._name = name
-        self._projectionMatrix = Matrix()
-        self._projectionMatrix.setOrtho(-5, 5, 5, -5, -100, 100)
+        self._projection_matrix = Matrix()
+        self._projection_matrix.setOrtho(-5, 5, 5, -5, -100, 100)
         self._perspective = False
         self._viewport_width = 0
         self._viewport_height = 0
@@ -25,7 +25,7 @@ class Camera(SceneNode.SceneNode):
 
     ##  Get the projection matrix of this camera.
     def getProjectionMatrix(self):
-        return self._projectionMatrix
+        return self._projection_matrix
     
     def getViewportWidth(self):
         return self._viewport_width
@@ -46,7 +46,7 @@ class Camera(SceneNode.SceneNode):
     ##  Set the projection matrix of this camera.
     #   \param matrix The projection matrix to use for this camera.
     def setProjectionMatrix(self, matrix):
-        self._projectionMatrix = matrix
+        self._projection_matrix = matrix
 
     def isPerspective(self):
         return self._perspective
@@ -66,7 +66,7 @@ class Camera(SceneNode.SceneNode):
     #
     #   \note The near-plane coordinates should be in normalized form, that is within (-1, 1).
     def getRay(self, x, y):
-        invp = numpy.linalg.inv(self._projectionMatrix.getData().copy())
+        invp = numpy.linalg.inv(self._projection_matrix.getData().copy())
         invv = self.getWorldTransformation().getData()
 
         near = numpy.array([x, -y, -1.0, 1.0], dtype=numpy.float32)

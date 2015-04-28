@@ -39,7 +39,7 @@ class AngledCornerRectangle(QQuickItem):
     def color(self):
         return self._color
 
-    def updatePaintNode(self, paintNode, updateData):
+    def updatePaintNode(self, paint_node, update_data):
         self._node = QSGGeometryNode()
 
         self._geometry = QSGGeometry(QSGGeometry.defaultAttributes_Point2D(), 6, 12)

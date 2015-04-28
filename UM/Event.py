@@ -37,15 +37,15 @@ class MouseEvent(Event):
     #   \param type The type of event. \sa Event
     #   \param x The X coordinate of the event.
     #   \param y The Y coordinate of the event.
-    #   \param lastX The X coordinate of the previous mouse event. Can be None. It is used to calculate deltaX.
-    #   \param lastY The Y coordinate of the previous mouse event. Cam be None. It is used to calculate deltaY.
+    #   \param last_x The X coordinate of the previous mouse event. Can be None. It is used to calculate deltaX.
+    #   \param last_y The Y coordinate of the previous mouse event. Cam be None. It is used to calculate deltaY.
     #   \param buttons The buttons that are associated with this event.
-    def __init__(self, type, x = 0, y = 0, lastX = None, lastY = None, buttons = []):
+    def __init__(self, type, x = 0, y = 0, last_x = None, last_y = None, buttons = []):
         super().__init__(type)
         self._x = x
         self._y = y
-        self._lastX = lastX
-        self._lastY = lastY
+        self._last_x = last_x
+        self._last_y = last_y
         self._buttons = buttons
 
     ##  The X coordinate of the event.
@@ -61,26 +61,26 @@ class MouseEvent(Event):
     ##  The X coordinate of the previous event.
     @property
     def lastX(self):
-        return self._lastX
+        return self._last_x
 
     ##  The Y coordiante of the previous event.
     @property
     def lastY(self):
-        return self._lastY
+        return self._last_y
 
     ##  The change in X position between this event and the previous event.
     @property
     def deltaX(self):
         if self._lastX != None:
-            return self._x - self._lastX
+            return self._x - self._last_x
 
         return 0
 
     ##  The change in Y position between this event and the previous event.
     @property
     def deltaY(self):
-        if self._lastY != None:
-            return self._y - self._lastY
+        if self._last_y != None:
+            return self._y - self._last_y
 
         return 0
 

@@ -17,7 +17,7 @@ class MachineSettings(SignalEmitter):
     def __init__(self):
         super().__init__()
         self._categories = []
-        self._platformMesh = None
+        self._platform_mesh = None
         self._platform_texture = None
         self._name = "Unknown Machine",
         self._type_name = 'Unknown'
@@ -38,7 +38,7 @@ class MachineSettings(SignalEmitter):
             self._type_id = data["id"]
 
         if "platform" in data:
-            self._platformMesh = data["platform"]
+            self._platform_mesh = data["platform"]
 
         if "platform_texture" in data:
             self._platform_texture = data["platform_texture"]

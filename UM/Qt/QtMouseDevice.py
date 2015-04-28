@@ -36,14 +36,14 @@ class QtMouseDevice(InputDevice):
             e = WheelEvent(delta.x(), delta.y())
             self.event.emit(e)
 
-    def _qtButtonsToButtonList(self, qtButtons):
+    def _qtButtonsToButtonList(self, qt_buttons):
         buttons = []
 
-        if qtButtons & Qt.LeftButton:
+        if qt_buttons & Qt.LeftButton:
             buttons.append(MouseEvent.LeftButton)
-        if qtButtons & Qt.RightButton:
+        if qt_buttons & Qt.RightButton:
             buttons.append(MouseEvent.RightButton)
-        if qtButtons & Qt.MiddleButton:
+        if qt_buttons & Qt.MiddleButton:
             buttons.append(MouseEvent.MiddleButton)
 
         return buttons
