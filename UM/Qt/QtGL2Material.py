@@ -46,7 +46,7 @@ class QtGL2Material(Material):
         if 'cache' in kwargs:
             cache = kwargs['cache']
 
-        if not name in self._uniform_indices:
+        if name not in self._uniform_indices:
             self._uniform_indices[name] = self._shader_program.uniformLocation(name)
 
         uniform = self._uniform_indices[name]
@@ -63,7 +63,7 @@ class QtGL2Material(Material):
         if not self._shader_program:
             return
 
-        if not name in self._uniform_indices:
+        if name not in self._uniform_indices:
             self._uniform_indices[name] = self._shader_program.uniformLocation(name)
 
         index = self._uniform_indices[name]
@@ -85,7 +85,7 @@ class QtGL2Material(Material):
 
         self.bind()
 
-        if not name in self._attribute_indices:
+        if name not in self._attribute_indices:
             self._attribute_indices[name] = self._shader_program.attributeLocation(name)
 
         attribute = self._attribute_indices[name]
@@ -110,7 +110,7 @@ class QtGL2Material(Material):
         if not self._shader_program:
             return
 
-        if not name in self._attribute_indices:
+        if name not in self._attribute_indices:
             return
 
         self._shader_program.disableAttributeArray(self._attribute_indices[name])

@@ -31,7 +31,7 @@ class PluginsModel(ListModel):
         self.clear() 
         active_plugins = self._plugin_registery.getActivePlugins()
         for plugin in self._plugin_registery.getAllMetaData():
-            if not 'plugin' in plugin:
+            if 'plugin' not in plugin:
                 Logger.log('e', 'Plugin is missing a plugin metadata entry')
                 continue
 

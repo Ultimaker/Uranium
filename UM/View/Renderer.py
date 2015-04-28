@@ -1,3 +1,5 @@
+
+
 ##  Abstract base class for different rendering implementations.
 #
 #   The renderer is used to perform rendering of objects. It abstracts away any

@@ -1,4 +1,6 @@
 from UM.PluginObject import PluginObject
+
+
 ## Abstract base class for view objects.
 class View(PluginObject):
     def __init__(self):

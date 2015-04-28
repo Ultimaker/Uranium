@@ -342,6 +342,7 @@ class MeshData(SignalEmitter):
             self._colors = colors
         else:
             self._colors = numpy.concatenate((self._colors[0:self._vertex_count], colors))
+    
     ## 
     # /param colors is a vertexCount by 4 numpy array with floats in range of 0 to 1.
     def setColors(self, colors):

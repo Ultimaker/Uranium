@@ -11,6 +11,7 @@ class BackendProxy(QObject):
             self._backend.processingProgress.connect(self._onProcessingProgress)
 
     processingProgress = pyqtSignal(float, arguments = ['amount'])
+    
     @pyqtProperty(float, notify = processingProgress)
     def progress(self):
         return self._progress
