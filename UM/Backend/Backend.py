@@ -48,7 +48,9 @@ class Backend(PluginObject, SignalEmitter):
     def close(self):
         if self._socket:
             self._socket.close()
-
+    
+    ##  Get the logging messages of the backend connection.
+    #   \returns  
     def getLog(self):
         return self._backend_log
 
@@ -75,11 +77,12 @@ class Backend(PluginObject, SignalEmitter):
         else:
             Logger.log('e', "Data length was incorrect for requested type")
             return None
-
+    
+    ##  Get the command used to start the backend executable 
     def getEngineCommand(self):
         return [Preferences.getInstance().getValue("backend/location"), '--port', str(self._socket_thread.getPort())]
 
-    ## \brief Start the (external) backend process.
+    ##  Start the (external) backend process.
     def _runEngineProcess(self, command_list):
         kwargs = {}
         if subprocess.mswindows:
@@ -97,6 +100,7 @@ class Backend(PluginObject, SignalEmitter):
                 break
             self._backend_log.append(line)
 
+    ##  Private socket state changed handler.
     def _onSocketStateChanged(self, state):
         if state == SignalSocket.ListeningState:
             if not Application.getInstance().getArgument('external-backend', False):
@@ -104,7 +108,8 @@ class Backend(PluginObject, SignalEmitter):
         elif state == SignalSocket.ConnectedState:
             Logger.log('d', "Backend connected on port %s", self._port)
             self.backendConnected.emit()
-
+    
+    ##  Private message handler
     def _onMessageReceived(self):
         message = self._socket.takeNextMessage()
 
@@ -113,7 +118,8 @@ class Backend(PluginObject, SignalEmitter):
             return
 
         self._message_handlers[type(message)](message)
-
+    
+    ##  Private socket error handler   
     def _onSocketError(self, error):
         if error.errno == 98:# Socked in use error
             self._port += 1
@@ -129,7 +135,8 @@ class Backend(PluginObject, SignalEmitter):
             self._createSocket()
         else:
             Logger.log('e', str(error))
-
+    
+    ##  Creates a socket and attaches listeners.
     def _createSocket(self):
         if self._socket:
             self._socket.stateChanged.disconnect(self._onSocketStateChanged)

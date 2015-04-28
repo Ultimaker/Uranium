@@ -1,6 +1,7 @@
 from UM.Math.Vector import Vector
 from UM.Math.Float import Float
 
+##      Plane representation using normal and distance.
 class Plane:
     def __init__(self, normal = Vector(), distance = 0.0):
         super().__init__()

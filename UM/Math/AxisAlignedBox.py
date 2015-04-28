@@ -3,6 +3,7 @@ from UM.Math.Float import Float
 
 import numpy
 
+## Axis alligned bounding box. 
 class AxisAlignedBox:
     class IntersectionResult:
         NoIntersection = 1
@@ -149,11 +150,17 @@ class AxisAlignedBox:
         self._max = m
         self._ensureMinMax()
 
+    ##  Check if the bounding box is valid.
+    #   Uses fuzzycompare to validate.
+    #   \sa Float::fuzzyCompare()
     def isValid(self):
         return not(Float.fuzzyCompare(self._min.x, self._max.x) or
                    Float.fuzzyCompare(self._min.y, self._max.y) or
                    Float.fuzzyCompare(self._min.z, self._max.z))
 
+    ##  Intersect the bounding box with a ray 
+    #   \param ray \type{Ray}
+    #   \sa Ray
     def intersectsRay(self, ray):
         inv = ray.inverseDirection
 

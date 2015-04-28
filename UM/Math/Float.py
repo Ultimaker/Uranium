@@ -1,4 +1,3 @@
-
 ##  Class containing helper functions for dealing with IEEE-754 floating point numbers.
 #
 #
