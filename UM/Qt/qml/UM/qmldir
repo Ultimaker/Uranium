@@ -23,3 +23,4 @@ SettingItem 1.0 Settings/SettingItem.qml
 SettingItemStyle 1.0 Settings/SettingItemStyle.qml
 SettingView 1.0 SettingView.qml
 SidebarCategoryHeader 1.0 SidebarCategoryHeader.qml
+Dialog 1.0 Dialog.qml
