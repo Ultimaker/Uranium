@@ -10,7 +10,6 @@ import subprocess
 import threading
 from time import sleep
 
-
 ##      Base class for any backend communication (seperate piece of software).
 #       It makes use of the Socket class from libArcus for the actual communication bits.
 #       The message_handler dict should be filled with message class, function pairs.
