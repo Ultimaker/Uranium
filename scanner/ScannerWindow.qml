@@ -152,6 +152,26 @@ UM.MainWindow
                 anchors.left: parent.left
                 anchors.top:toolbar.bottom
             }
+             UM.MessageStack {
+                anchors.bottom: parent.bottom;
+                anchors.horizontalCenter: parent.horizontalCenter;
+                width: parent.width * 0.333;
+                height: 250;
+            }
+            
+           
+            /*Loader {
+                id: panel
+
+                anchors.left: parent.left;
+                anchors.right: parent.right;
+                anchors.bottom: buttons.top;
+                anchors.bottomMargin: UM.Theme.sizes.default_margin.height;
+
+                height: childrenRect.height;
+
+                source: UM.ActiveTool.valid ? UM.ActiveTool.activeToolPanel : "";
+            }*/
 
             //Setting / Wizard menu (HARDCODED for wizard stuff)
             /*Loader 
@@ -215,6 +235,26 @@ UM.MainWindow
 
                 width: UM.Theme.sizes.panel.width;
             }
+            
+            Loader 
+            {
+                id: view_panel
+
+                //anchors.left: parent.left;
+                //anchors.right: parent.right;
+                //anchors.bottom: parent.bottom
+                anchors.top: toolbar.bottom
+                anchors.topMargin: UM.Theme.sizes.default_margin.height;
+                anchors.right: sidebar.left;
+                anchors.rightMargin: UM.Theme.sizes.window_margin.width;
+                //anchors.bottom: buttons.top;
+                //anchors.bottomMargin: UM.Theme.sizes.default_margin.height;
+
+                height: childrenRect.height;
+
+                source: UM.ActiveView.valid ? UM.ActiveView.activeViewPanel : "";
+            }
+            
             UM.JobList { anchors.left: parent.left; anchors.bottom: parent.bottom; width: parent.width / 10; height: parent.height / 5; }
         
             Image 

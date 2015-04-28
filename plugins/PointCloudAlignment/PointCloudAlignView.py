@@ -41,5 +41,8 @@ class PointCloudAlignView(View):
             else:
                 node.render(renderer)
 
+    def test(self):
+        print("test hit")
+
     def endRendering(self):
         pass

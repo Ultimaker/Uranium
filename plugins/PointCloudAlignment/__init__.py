@@ -16,6 +16,7 @@ def getMetaData():
         'view': 
         {
             'name': 'PointCloudAlignmentView',
+            'view_panel': 'PointCloudAlignView.qml',
             'visible': False
         },
         'tool': 

@@ -27,7 +27,7 @@ class ActiveViewProxy(QObject):
         return os.path.join(PluginRegistry.getInstance().getPluginPath(self._active_view.getPluginId()), panel_file)
     
     @pyqtSlot(str, QVariant)
-    def triggerAction(self, action,data):
+    def triggerAction(self, action, data):
         if not self._active_view:
             return
 
