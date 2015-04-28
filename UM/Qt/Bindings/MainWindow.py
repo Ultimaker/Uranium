@@ -7,6 +7,7 @@ from UM.Math.Matrix import Matrix
 from UM.Qt.QtMouseDevice import QtMouseDevice
 from UM.Qt.QtKeyDevice import QtKeyDevice
 from UM.Application import Application
+from UM.Preferences import Preferences
 
 ##  QQuickWindow subclass that provides the main window.
 class MainWindow(QQuickWindow):
@@ -27,7 +28,13 @@ class MainWindow(QQuickWindow):
         self._app.getController().addInputDevice(self._mouseDevice)
         self._app.getController().addInputDevice(self._keyDevice)
         self._app.getController().getScene().sceneChanged.connect(self._onSceneChanged)
+        self._preferences = Preferences.getInstance()
 
+        self._preferences.addPreference('general/window_height', 1280)
+        self._preferences.addPreference('general/window_width', 720)
+        self.setWidth(int(self._preferences.getValue('general/window_width')))
+        self.setHeight(int(self._preferences.getValue('general/window_height')))
+    
     def getBackgroundColor(self):
         return self._backgroundColor
 
@@ -96,7 +103,8 @@ class MainWindow(QQuickWindow):
             else:
                 proj.setOrtho(-w, w, -h, h, -500, 500)
             camera.setProjectionMatrix(proj)
-
+        self._preferences.setValue('general/window_width', event.size().width())
+        self._preferences.setValue('general/window_height', event.size().height())
         self._app.getRenderer().setViewportSize(event.size().width(), event.size().height())
 
     def hideEvent(self, event):
