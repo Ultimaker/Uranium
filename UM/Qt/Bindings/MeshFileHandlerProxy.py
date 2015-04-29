@@ -1,4 +1,5 @@
 from PyQt5.QtCore import QObject, pyqtSlot, pyqtProperty, pyqtSignal, QUrl
+from PyQt5.QtGui import QDesktopServices
 
 from UM.Application import Application
 from UM.Logger import Logger
@@ -9,6 +10,7 @@ from UM.Mesh.MeshData import MeshType
 from UM.Mesh.ReadMeshJob import ReadMeshJob
 from UM.Mesh.WriteMeshJob import WriteMeshJob
 from UM.Operations.AddSceneNodeOperation import AddSceneNodeOperation
+from UM.Message import Message
 
 import os.path
 
@@ -65,6 +67,7 @@ class MeshFileHandlerProxy(QObject):
 
             job = WriteMeshJob(file.toLocalFile(), node.getMeshData())
             job.start()
+            job.finished.connect(self._onWriteJobFinished)
 
     def _readMeshFinished(self, job):
         mesh = job.getResult()
@@ -84,6 +87,17 @@ class MeshFileHandlerProxy(QObject):
             self._scene.sceneChanged.emit(node)
         else:
             print("No mesh :(")
+
+    def _onWriteJobFinished(self, job):
+        message = Message("Saved to {0}".format(job.getFileName()))
+        message.addAction("Open Folder", "open", "Open the folder containing the saved file")
+        message._file = job.getFileName()
+        message.actionTriggered.connect(self._onMessageActionTriggered)
+        message.show()
+
+    def _onMessageActionTriggered(self, message, action):
+        if action == "Open Folder":
+            QDesktopServices.openUrl(QUrl.fromLocalFile(os.path.dirname(message._file)))
 
 def createMeshFileHandlerProxy(engine, script_engine):
     return MeshFileHandlerProxy()
