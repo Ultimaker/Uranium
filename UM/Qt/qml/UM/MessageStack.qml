@@ -64,18 +64,22 @@ ListView {
         }
     }
 
-    add: Transition {
-        ParallelAnimation {
+    add: Transition 
+    {
+        ParallelAnimation 
+        {
             NumberAnimation { property: 'y'; duration: 200; }
             NumberAnimation { property: 'opacity'; from: 0; to: 1; duration: 200; }
         }
     }
 
-    displaced: Transition {
+    displaced: Transition
+    {
         NumberAnimation { property: 'y'; duration: 200; }
     }
 
-    remove: Transition {
+    remove: Transition 
+    {
         NumberAnimation { property: 'opacity'; to: 0; duration: 200; }
     }
 }
