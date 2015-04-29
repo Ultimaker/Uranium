@@ -17,7 +17,8 @@ Window {
 
     default property alias contents: contentItem.children;
 
-    property alias buttons: buttonRow.children;
+    property alias leftButtons: leftButtonRow.children;
+    property alias rightButtons: rightButtonRow.children;
 
     Rectangle {
         anchors.fill: parent;
@@ -51,7 +52,11 @@ Window {
             }
             height: childrenRect.height;
 
+            Row { id: leftButtonRow; }
+
             Item { Layout.fillWidth: true; }
+
+            Row { id: rightButtonRow; }
         }
     }
 
