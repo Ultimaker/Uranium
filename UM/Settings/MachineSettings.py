@@ -201,7 +201,7 @@ class MachineSettings(SignalEmitter):
     ##  Get the machine mesh (in most cases platform)
     #   Todo: Might need to rename this to get machine mesh?
     def getPlatformMesh(self):
-        return self._platformMesh
+        return self._platform_mesh
 
     def getPlatformTexture(self):
         return self._platform_texture
