@@ -1,5 +1,6 @@
 import QtQuick 2.2
 import QtQuick.Controls 1.1
+import QtQuick.Controls.Styles 1.1
 import QtQuick.Layouts 1.1
 
 import UM 1.0 as UM
@@ -10,67 +11,114 @@ ListView {
     verticalLayoutDirection: ListView.BottomToTop;
 
     model: UM.Models.visibleMessagesModel;
-  
 
-    delegate: Rectangle 
+    delegate: UM.AngledCornerRectangle
     {
-        width: ListView.view.width;
-        height: 50;
-        radius: Styles.defaultMargin;
-        color: Styles.messageBackgroundColor;
+        width: UM.Theme.sizes.message.width
+        height: UM.Theme.sizes.message.height;
+        cornerSize: UM.Theme.sizes.default_margin.width;
+
+        anchors.horizontalCenter: parent.horizontalCenter;
+
+        color: UM.Theme.colors.message
+
         id: message
         property variant actions: model.actions;
         property variant model_id: model.id
-        ColumnLayout 
+
+        Label
         {
-            anchors.fill: parent;
-            anchors.margins: Styles.defaultMargin;
-            Label 
-            { 
-                text: model.text; 
-                color: Styles.messageTextColor; 
-                Layout.fillWidth: true; 
-               
-            } 
-            RowLayout
+            anchors {
+                left: parent.left;
+                leftMargin: UM.Theme.sizes.default_margin.width;
+
+                top: model._max_progress != 0 ? parent.top : undefined;
+                topMargin: UM.Theme.sizes.default_margin.width;
+
+                right: actionButtons.left;
+                rightMargin: UM.Theme.sizes.default_margin.width;
+
+                verticalCenter: model._max_progress != 0 ? undefined : parent.verticalCenter;
+            }
+
+            text: model.text;
+            color: UM.Theme.colors.message_text;
+            font: UM.Theme.fonts.default;
+            wrapMode: Text.Wrap;
+        }
+
+        ToolButton
+        {
+            id: closeButton;
+
+            anchors {
+                right: parent.right;
+                top: parent.top;
+            }
+
+            width: UM.Theme.sizes.message_close.width;
+            height: UM.Theme.sizes.message_close.height;
+
+            text: "x"
+            onClicked: UM.Models.visibleMessagesModel.hideMessage(model.id)
+
+            style: ButtonStyle {
+                background: Rectangle {
+                    color: control.hovered ? UM.Theme.colors.primary : "transparent";
+                }
+            }
+        }
+
+        ColumnLayout
+        {
+            id: actionButtons;
+
+            anchors {
+                right: parent.right;
+                rightMargin: UM.Theme.sizes.default_margin.width;
+                top: closeButton.bottom;
+                topMargin: UM.Theme.sizes.default_margin.height / 2;
+                bottom: parent.bottom;
+            }
+
+            Repeater
             {
-                Layout.preferredHeight: 50
-                Repeater 
+                model: message.actions
+                delegate: ToolButton
                 {
-                    model: message.actions
-                    delegate:Button 
-                    {
-                        text: model.name
-                        onClicked:UM.Models.visibleMessagesModel.actionTriggered(message.model_id, model.name)
+                    text: model.name
+
+                    style: ButtonStyle {
+                        background: Rectangle {
+                            color: control.hovered ? UM.Theme.colors.primary_hover : UM.Theme.colors.primary;
+                        }
+                        label: Label {
+                            text: control.text;
+                            color: UM.Theme.colors.primary_text;
+                        }
                     }
-                }
-                Button
-                {
-                    onClicked:UM.Models.visibleMessagesModel.hideMessage(model.id)
-                    text: "hide"
+
+                    onClicked:UM.Models.visibleMessagesModel.actionTriggered(message.model_id, model.name)
                 }
             }
-            ProgressBar 
-            { 
-                minimumValue: 0;
-                maximumValue: model.max_progress; 
-                value: model.progress;
-                Layout.fillWidth: true;
-                visible: model.max_progress != 0 ? true: false
-                
+
+            Item {
+                Layout.fillHeight: true;
             }
-            
-            //ProgressBar { minimumValue: 0; maximumValue: 100; value: model.progress; Layout.fillWidth: true; }
+        }
+
+        ProgressBar
+        {
+            minimumValue: 0;
+            maximumValue: model.max_progress;
+            value: model.progress;
+            Layout.fillWidth: true;
+            visible: model.max_progress != 0 ? true: false
         }
     }
 
-    add: Transition 
-    {
-        ParallelAnimation 
-        {
-            NumberAnimation { property: 'y'; duration: 200; }
-            NumberAnimation { property: 'opacity'; from: 0; to: 1; duration: 200; }
-        }
+    add: Transition {
+        NumberAnimation { property: 'opacity'; from: 0; to: 1; duration: 200; }
     }
 
     displaced: Transition
