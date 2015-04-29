@@ -255,6 +255,19 @@ UM.MainWindow
                 source: UM.ActiveView.valid ? UM.ActiveView.activeViewPanel : "";
             }
             
+            Loader 
+            {
+                id: tool_panel
+
+                anchors.right: parent.right;
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: UM.Theme.sizes.default_margin.height;
+
+                height: childrenRect.height;
+
+                source: UM.ActiveTool.valid ? UM.ActiveTool.activeToolPanel : "";
+            }
+            
             UM.JobList { anchors.left: parent.left; anchors.bottom: parent.bottom; width: parent.width / 10; height: parent.height / 5; }
         
             Image 

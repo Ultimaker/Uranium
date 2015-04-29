@@ -25,15 +25,15 @@ class JobsModel(ListModel):
         if job.isVisible():
             self.appendItem({ 'id': id(job), 'description': job.getDescription(), 'progress': -1 })
             job.progress.connect(self._onJobProgress)
-            self._watchedJobIndices[job] = self.rowCount() - 1
+            self._watched_job_indices[job] = self.rowCount() - 1
 
     def _onJobProgress(self, job, progress):
         if job in self._watched_job_indices:
-            self.setProperty(self._watchedJobIndices[job], 'progress', progress)
+            self.setProperty(self._watched_job_indices[job], 'progress', progress)
 
     def _onJobFinished(self, job):
         if job in self._watched_job_indices:
-            self.removeItem(self._watchedJobIndices[job])
+            self.removeItem(self._watched_job_indices[job])
             job.progress.disconnect(self._onJobProgress)
-            del self._watchedJobIndices[job]
+            del self._watched_job_indices[job]
 

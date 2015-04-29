@@ -22,6 +22,7 @@ def getMetaData():
         'tool': 
         {
             'name': 'PointCloudAlignmentTool',
+            'tool_panel': 'PointCloudAlignTool.qml'
         },
         'cura': {
             'tool': {

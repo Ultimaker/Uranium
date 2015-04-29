@@ -71,7 +71,7 @@ class MouseEvent(Event):
     ##  The change in X position between this event and the previous event.
     @property
     def deltaX(self):
-        if self._lastX != None:
+        if self._last_x != None:
             return self._x - self._last_x
 
         return 0
