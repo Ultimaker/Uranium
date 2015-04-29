@@ -18,7 +18,9 @@ class ReadMeshJob(Job):
         return self._filename
 
     def run(self):
+        loading_message = Message("Loading {0}".format(self._filename))
+        loading_message.show()
         self.setResult(self._handler.read(self._filename, self._device))
-        result_message = Message("Loaded %s" %self._filename)
+        loading_message.hide()
+        result_message = Message("Loaded {0}".format(self._filename))
         result_message.show()
-        
