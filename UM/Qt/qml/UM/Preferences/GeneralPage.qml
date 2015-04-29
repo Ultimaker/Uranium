@@ -8,6 +8,10 @@ PreferencesPage {
     //: General configuration page title
     title: qsTr("General");
 
+    function reset() {
+        UM.Preferences.resetPreference('general/language')
+    }
+
     GridLayout {
         columns: 2;
 
