@@ -9,6 +9,7 @@ from UM.Math.Vector import Vector
 from UM.Operations.ScaleOperation import ScaleOperation
 from UM.Operations.GroupedOperation import GroupedOperation
 from UM.Operations.SetTransformOperation import SetTransformOperation
+from UM.Operations.ScaleToBoundsOperation import ScaleToBoundsOperation
 
 from . import ScaleToolHandle
 
@@ -23,6 +24,8 @@ class ScaleTool(Tool):
         self._non_uniform_scale = False
 
         self._drag_length = 0
+
+        self._maximum_bounds = None
 
     def event(self, event):
         super().event(event)
@@ -107,6 +110,10 @@ class ScaleTool(Tool):
     def resetScale(self):
         Selection.applyOperation(SetTransformOperation, None, None, Vector(1.0, 1.0, 1.0))
 
+    def scaleToMax(self):
+        if self._maximum_bounds:
+            Selection.applyOperation(ScaleToBoundsOperation, self._maximum_bounds)
+
     def getNonUniformScale(self):
         return self._non_uniform_scale
 
@@ -118,3 +125,6 @@ class ScaleTool(Tool):
 
     def setScaleSnap(self, snap):
         self._snap_scale = snap
+
+    def setMaximumBounds(self, bounds):
+        self._maximum_bounds = bounds

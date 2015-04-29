@@ -29,6 +29,8 @@ Item {
         anchors.bottomMargin: UM.Theme.sizes.default_margin.height;
 
         style: UM.Theme.styles.tool_button;
+
+        onClicked: UM.ActiveTool.triggerAction('scaleToMax')
     }
 
     CheckBox {
