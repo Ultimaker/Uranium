@@ -26,7 +26,7 @@ class UpdateChecker(Extension):
         thread.start()
     
     ##  Callback for the message that is spawned when there is a new version.  
-    def actionTriggered(self, action):
+    def actionTriggered(self, message, action):
         if action == "Download":
             if self._url is not None: 
                 webbrowser.open(self._url)

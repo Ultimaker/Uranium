@@ -53,7 +53,7 @@ class VisibleMessagesModel(ListModel):
     def actionTriggered(self, message_id, action_name):
         for message in Application.getInstance().getVisibleMessages():
             if id(message) == message_id: 
-                message.actionTriggered.emit(action_name)
+                message.actionTriggered.emit(message, action_name)
                 break
     
     def removeMessage(self, message):
