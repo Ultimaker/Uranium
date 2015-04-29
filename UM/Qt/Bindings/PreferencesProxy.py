@@ -16,8 +16,8 @@ class PreferencesProxy(QObject):
         self._preferences.setValue(key, value)
 
     @pyqtSlot(str)
-    def resetValue(self, key):
-        self._preferences.resetValue(key)
+    def resetPreference(self, key):
+        self._preferences.resetPreference(key)
 
 def createPreferencesProxy(engine, script_engine):
     return PreferencesProxy()
