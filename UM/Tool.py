@@ -15,6 +15,8 @@ class Tool(PluginObject, SignalEmitter):
         self._drag_plane = None
         self._drag_start = None
 
+    propertyChanged = Signal()
+
     ##  Handle an event.
     #   \param event \type{Event} The event to handle.
     #   \sa Event

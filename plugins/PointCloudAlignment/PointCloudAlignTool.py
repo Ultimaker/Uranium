@@ -24,7 +24,15 @@ class PointCloudAlignTool(Tool):
         self._node_2 = node2
         self._node_2.setEnabled(False)
         Application.getInstance().getController().getScene().sceneChanged.emit(self)
-        
+    
+    def getSitchEnabled(self):
+        if len(self._vert_list_2) > 2 and len(self._vert_list_2) == len(self._vert_list_1):
+            return True
+        return False
+    
+    def stitchClouds(self):
+        pass
+    
     def event(self, event):
         if event.type == Event.ToolActivateEvent:
             self._vert_list_1 = []
@@ -60,4 +68,5 @@ class PointCloudAlignTool(Tool):
                         self._active_node_nr = 1
                         self._node_1.setEnabled(True)
                         self._node_2.setEnabled(False)
+                    self.propertyChanged.emit()
                     Application.getInstance().getController().getScene().sceneChanged.emit(self)

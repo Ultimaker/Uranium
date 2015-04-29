@@ -259,16 +259,16 @@ UM.MainWindow
             {
                 id: tool_panel
 
-                anchors.right: parent.right;
+                anchors.left: parent.left;
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: UM.Theme.sizes.default_margin.height;
-
+                anchors.leftMargin: UM.Theme.sizes.default_margin.width;
                 height: childrenRect.height;
 
                 source: UM.ActiveTool.valid ? UM.ActiveTool.activeToolPanel : "";
             }
             
-            UM.JobList { anchors.left: parent.left; anchors.bottom: parent.bottom; width: parent.width / 10; height: parent.height / 5; }
+            //UM.JobList { anchors.left: parent.left; anchors.bottom: parent.bottom; width: parent.width / 10; height: parent.height / 5; }
         
             Image 
             { 

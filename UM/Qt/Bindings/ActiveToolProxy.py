@@ -14,6 +14,7 @@ class ActiveToolProxy(QObject):
         self._onActiveToolChanged()
 
     activeToolChanged = pyqtSignal()
+    propertyChanged = pyqtSignal()
 
     @pyqtProperty(bool, notify = activeToolChanged)
     def valid(self):
@@ -67,8 +68,13 @@ class ActiveToolProxy(QObject):
         if hasattr(self._active_tool, property):
             setattr(self._active_tool, property, value)
 
+    def _onPropertyChanged(self):
+        self.propertyChanged.emit()
+
     def _onActiveToolChanged(self):
         self._active_tool = Application.getInstance().getController().getActiveTool()
+        if self._active_tool is not None:
+            self._active_tool.propertyChanged.connect(self._onPropertyChanged)
         self.activeToolChanged.emit()
 
 def createActiveToolProxy(engine, script_engine):
