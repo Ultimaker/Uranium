@@ -31,8 +31,6 @@ class STLReader(MeshReader):
 
             storage_device.closeFile(f)
 
-            print(mesh.getVertices())
-
             mesh.calculateNormals()
 
             Logger.log("d", "Loaded a mesh with %s vertices", mesh.getVertexCount())
