@@ -1,88 +1,79 @@
 import QtQuick 2.1
 import QtQuick.Controls 1.1
+import QtQuick.Controls.Styles 1.1
 import QtQuick.Layouts 1.1
 import QtQuick.Window 2.1
 
 import ".."
 
-Window {
+import UM 1.0 as UM
+
+Dialog {
     id: base;
 
     //: Preferences dialog title
     title: qsTr("Preferences")
-    flags: Qt.Dialog
 
-    width: 640;
-    height: 480;
-
-    Rectangle {
+    RowLayout {
         anchors.fill: parent;
-        color: palette.window;
 
-        ColumnLayout {
-            anchors.fill: parent;
+        TableView {
+            id: pagesList;
 
-            RowLayout {
-                Layout.fillWidth: true;
-                Layout.fillHeight: true;
+            Layout.fillHeight: true;
+            Layout.preferredWidth: Screen.pixelDensity * 30;
 
-                Column {
-                    Layout.fillHeight: true;
+            alternatingRowColors: false;
+            headerVisible: false;
 
-                    Repeater {
-                        model: configPagesModel;
-                        delegate: Button {
-                            width: 100
-                            height: 100
-                            text: qsTr(model.name);
-                            onClicked: configPage.source = model.page;
-                        }
-                    }
-                }
+            model: ListModel {
+                id: configPagesModel;
 
-                Loader {
-                    id: configPage;
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-
-                    source: configPagesModel.get(0).page;
-                }
+                //: General configuration page title
+                ListElement { name: QT_TR_NOOP("General"); page: "GeneralPage.qml"; }
+                //: Machine configuration page title
+                ListElement { name: QT_TR_NOOP("Machine"); page: "../Settings/SettingsConfigurationPage.qml"; }
+                //: Plugins configuration page title
+                ListElement { name: QT_TR_NOOP("Plugins"); page: "PluginsPage.qml"; }
             }
 
-            Item {
-                height: childrenRect.height;
-                Layout.fillWidth: true;
+            TableViewColumn { role: "name" }
 
-                Button {
-                    //: Close preferences dialog
-                    text: qsTr("Close");
+            onActivated: configPage.source = configPagesModel.get(row).page;
 
-                    anchors.right: parent.right;
+            Component.onCompleted: pagesList.selection.select(0);
+        }
 
-                    onClicked: base.visible = false;
-                }
-            }
+        Loader {
+            id: configPage;
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+
+            source: configPagesModel.get(0).page;
         }
     }
 
-    ListModel {
-        id: configPagesModel;
+    leftButtons: Button {
+        //: Reset preferences to default
+        text: qsTr("Defaults");
 
-        //: General configuration page title
-        ListElement { name: QT_TR_NOOP("General"); page: "GeneralPage.qml"; }
-        //: Machine configuration page title
-        ListElement { name: QT_TR_NOOP("Machine"); page: "../Settings/SettingsConfigurationPage.qml"; }
-        //: Plugins configuration page title
-        ListElement { name: QT_TR_NOOP("Plugins"); page: "PluginsPage.qml"; }
+        onClicked: configPage.item.reset();
+    }
+
+    rightButtons: Button {
+        //: Close preferences dialog
+        text: qsTr("Close");
+
+        onClicked: base.visible = false;
     }
 
     function setPage(index) {
         configPage.source = configPagesModel.get(index).page;
+        pagesList.selection.clear();
+        pagesList.selection.select(index);
     }
 
-    function insertPage(index, name, page) {
-        configPagesModel.insert(index, { 'name': name, 'page': page });
+    function insertPage(index, name, icon, page) {
+        configPagesModel.insert(index, { 'name': name, 'icon': icon, 'page': page });
     }
-
-    SystemPalette { id: palette; colorGroup: SystemPalette.Active }
 }
