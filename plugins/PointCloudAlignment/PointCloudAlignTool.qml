@@ -3,8 +3,7 @@ import QtQuick.Controls 1.2
 
 import UM 1.0 as UM
 
-Item 
-{
+Item {
     Button 
     {
         text: " OMG ZOMG TEST TIEM" 

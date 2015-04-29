@@ -49,7 +49,7 @@ class VisibleMessagesModel(ListModel):
     def hideMessage(self, message_id):
         Application.getInstance().hideMessageById(message_id)
     
-    @pyqtSlot("long", str)    
+    @pyqtSlot("long", str)
     def actionTriggered(self, message_id, action_name):
         for message in Application.getInstance().getVisibleMessages():
             if id(message) == message_id: 
@@ -61,3 +61,4 @@ class VisibleMessagesModel(ListModel):
         for index in range(0,len(self.items)):
             if self.items[index]["id"] == message_id:
                 self.removeItem(index)
+                break
