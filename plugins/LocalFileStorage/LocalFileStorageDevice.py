@@ -4,6 +4,7 @@ from UM.Logger import Logger
 
 import platform
 import os
+import copy
 
 class LocalFileStorageDevice(StorageDevice, SignalEmitter):
     def __init__(self):
@@ -20,11 +21,11 @@ class LocalFileStorageDevice(StorageDevice, SignalEmitter):
         file.close()
 
     def ejectRemovableDrive(self, name):
-        if self._removableDrives:
-            self._removableDrives.ejectDrive(name)
+        if self._removableDrives and name in self._drives:
+            self._removableDrives.ejectDrive(name, self._drives[name])
 
     def getRemovableDrives(self):
-        return self._drives
+        return copy.deepcopy(self._drives)
 
     removableDrivesChanged = Signal()
 
