@@ -282,7 +282,7 @@ class PluginRegistry(object):
         for file in os.listdir(folder):
             filepath = os.path.join(folder, file)
             if os.path.isdir(filepath):
-                if file == id:
+                if file == id and os.path.exists(os.path.join(filepath, '__init__.py')):
                     return folder
                 else:
                     filepath = self._locatePlugin(id, filepath)
