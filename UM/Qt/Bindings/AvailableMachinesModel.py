@@ -35,32 +35,36 @@ class AvailableMachinesModel(ListModel):
         app.setActiveMachine(app.getMachines()[index])
 
     def _updateModel(self):
-        dir = Resources.getLocation(Resources.SettingsLocation)
+        dirs = Resources.getLocation(Resources.SettingsLocation)
 
-        for file in os.listdir(dir):
-            data = None
-            path = os.path.join(dir, file)
-
-            if os.path.isdir(path):
+        for dir in dirs:
+            if not os.path.isdir(dir):
                 continue
 
-            with open(path, 'rt', -1, 'utf-8') as f:
-                try:
-                    data = json.load(f)
-                except ValueError as e:
-                    Logger.log('e', "Error when loading file {0}: {1}".format(file, e))
+            for file in os.listdir(dir):
+                data = None
+                path = os.path.join(dir, file)
+
+                if os.path.isdir(path):
                     continue
 
-            # Ignore any file that is explicitly marked as non-visible
-            if not data.get('visible', True):
-                continue
+                with open(path, 'rt', -1, 'utf-8') as f:
+                    try:
+                        data = json.load(f)
+                    except ValueError as e:
+                        Logger.log('e', "Error when loading file {0}: {1}".format(file, e))
+                        continue
 
-            # Ignore any file that is marked as non-visible for the current application.
-            appname = Application.getInstance().getApplicationName()
-            if appname in data:
-                if not data[appname].get('visible', True):
+                # Ignore any file that is explicitly marked as non-visible
+                if not data.get('visible', True):
                     continue
 
-            self.appendItem({ 'name': data['name'], 'type': file })
+                # Ignore any file that is marked as non-visible for the current application.
+                appname = Application.getInstance().getApplicationName()
+                if appname in data:
+                    if not data[appname].get('visible', True):
+                        continue
 
-            self.sort(lambda e: e['name'])
+                self.appendItem({ 'name': data['name'], 'type': file })
+
+                self.sort(lambda e: e['name'])
