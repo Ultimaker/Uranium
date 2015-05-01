@@ -47,7 +47,7 @@ class STLReader(MeshReader):
                 if 'vertex' in line:
                     num_verts += 1
 
-        mesh.reserveVertexCount(num_verts)
+        mesh.reserveFaceCount(num_verts / 3)
         f.seek(0, os.SEEK_SET)
         vertex = 0
         face = [None, None, None]

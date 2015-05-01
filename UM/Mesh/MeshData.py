@@ -112,7 +112,7 @@ class MeshData(SignalEmitter):
     ##  Get the array of indices
     #   \return \type{numpy.ndarray}
     def getIndices(self):
-        return self._indices
+        return self._indices[0:self._face_count]
 
     def hasColors(self):
         return self._colors is not None
@@ -367,7 +367,7 @@ class MeshData(SignalEmitter):
     #   \return A bytearray object with 3 ints per face.
     def getIndicesAsByteArray(self):
         if self._indices is not None:
-            return self._indices.tostring()
+            return self._indices[0:self._face_count].tostring()
 
     def getColorsAsByteArray(self):
         if self._colors is not None:
@@ -384,15 +384,15 @@ class MeshData(SignalEmitter):
         self._normals = numpy.zeros((self._vertex_count, 3), dtype=numpy.float32)
 
         if self.hasIndices():
-            for face in self._indices:
+            for face in self._indices[0:self._face_count]:
                 #print(self._vertices[face[0]])
                 #print(self._vertices[face[1]])
                 #print(self._vertices[face[2]])
                 self._normals[face[0]] = numpy.cross(self._vertices[face[0]] - self._vertices[face[1]], self._vertices[face[0]] - self._vertices[face[2]])
                 length = numpy.linalg.norm(self._normals[face[0]])
                 self._normals[face[0]] /= length
-                self._normals[face[1]] =self._normals[face[0]]
-                self._normals[face[2]] =self._normals[face[0]]
+                self._normals[face[1]] = self._normals[face[0]]
+                self._normals[face[2]] = self._normals[face[0]]
         else: #Old way of doing it, asuming that each face has 3 unique verts
             # Then, take the cross product of each pair of vectors formed from a set of three vertices.
             # The [] operator on a numpy array returns itself a numpy array. The slicing syntax is [begin:end:step],
