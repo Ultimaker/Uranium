@@ -37,9 +37,11 @@ class i18nCatalog:
         else:
             languages.append(language)
 
-        try:
-            self.__translation = gettext.translation(name, Resources.getLocation(Resources.i18nLocation), languages=languages)
-        except FileNotFoundError:
+        for path in Resources.getLocation(Resources.i18nLocation):
+            if gettext.find(name, path, languages = languages):
+                self.__translation = gettext.translation(name, path, languages=languages)
+                break
+        else:
             self.__translation = None
 
     ##  Mark a string as translatable
