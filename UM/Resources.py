@@ -39,9 +39,9 @@ class Resources:
         except UnsupportedStorageLocationError:
             pass
 
-        path = os.path.join(cls.getLocation(type), *args)
-        if os.path.exists(path):
-            return path
+        paths = cls.__find(type, *args)
+        if paths:
+            return paths[0]
 
         raise FileNotFoundError('Could not find resource {0} in {1}'.format(args, type))
 
@@ -56,34 +56,23 @@ class Resources:
     def getStoragePath(cls, type, *args):
         return os.path.join(cls.getStorageLocation(type), *args)
 
-    ##  Return a path for a certain resource location.
+    ##  Return a list of paths for a certain resource location.
     #
     #   \param type \type{int} The type of resource to retrieve.
-    #   \return \type{string} An absolute path where the resource type can be found.
+    #   \return \type{list} A list of absolute paths where the resource type can be found.
     #
     #   \exception UnknownLocationError Raised when type is an unknown value.
     @classmethod
     def getLocation(cls, type):
-        if type == cls.ResourcesLocation:
-            return cls.__relativeToAppBase("resources")
-        elif type == cls.SettingsLocation:
-            return cls.__relativeToAppBase("resources", "settings")
-        elif type == cls.PreferencesLocation:
-            return cls.__relativeToAppBase("resources", "preferences")
-        elif type == cls.MeshesLocation:
-            return cls.__relativeToAppBase("resources", "meshes")
-        elif type == cls.ShadersLocation:
-            return cls.__relativeToAppBase("resources", "shaders")
-        elif type == cls.i18nLocation:
-            return cls.__relativeToAppBase("resources", "i18n")
-        elif type == cls.ImagesLocation:
-            return cls.__relativeToAppBase("resources", "images")
-        elif type == cls.ThemesLocation:
-            return cls.__relativeToAppBase("resources", "themes")
-        elif type == cls.FirmwareLocation:
-            return cls.__relativeToAppBase("resources", "firmware")
-        else:
+        suffix = cls.__getLocationSuffix(type)
+        if not suffix:
             raise UnknownLocationError("Unknown location {0}".format(type))
+
+        locations = []
+        for path in cls.__paths:
+            locations.append(os.path.join(path, *suffix))
+
+        return locations
 
     ##  Return a path where a certain resource type can be stored.
     #
@@ -112,27 +101,51 @@ class Resources:
 
         return path
 
-    ##  Return the location of an icon by name.
-    #
-    #   \param name \type{string} The name of the icon.
-    #   \return \type{string} The location of the icon.
-    #
-    #   \todo Move this to Theme.
+    ##  Add a path relative to which resources can be found.
     @classmethod
-    def getIcon(cls, name):
-        try:
-            return cls.getPath(cls.ResourcesLocation, 'icons', name)
-        except FileNotFoundError:
-            return os.path.join(cls.getPath(cls.ResourcesLocation), 'icons', 'default.png')
+    def addResourcePath(cls, path):
+        if os.path.isdir(path) and not path in cls.__paths:
+            cls.__paths.append(path)
 
     ## private:
 
-    # Return a path relative to this file.
+    # Returns a list of paths where args was found.
     @classmethod
-    def __relativeToAppBase(cls, *args):
-        if hasattr(sys, "frozen"):
-            return os.path.join(os.path.dirname(sys.executable), *args)
-        return os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', *args)
+    def __find(cls, type, *args):
+        suffix = cls.__getLocationSuffix(type)
+        if not suffix:
+            return None
+
+        files = []
+        for path in cls.__paths:
+            file_path = os.path.join(path, *suffix)
+            file_path = os.path.join(file_path, *args)
+            if os.path.exists(file_path):
+                files.append(file_path)
+        return files
+
+    @classmethod
+    def __getLocationSuffix(cls, type):
+        if type == cls.ResourcesLocation:
+            return ["resources"]
+        elif type == cls.SettingsLocation:
+            return ["resources", "settings"]
+        elif type == cls.PreferencesLocation:
+            return ["resources", "preferences"]
+        elif type == cls.MeshesLocation:
+            return ["resources", "meshes"]
+        elif type == cls.ShadersLocation:
+            return ["resources", "shaders"]
+        elif type == cls.i18nLocation:
+            return ["resources", "i18n"]
+        elif type == cls.ImagesLocation:
+            return ["resources", "images"]
+        elif type == cls.ThemesLocation:
+            return ["resources", "themes"]
+        elif type == cls.FirmwareLocation:
+            return ["resources", "firmware"]
+        else:
+            return None
 
     @classmethod
     def __initializeStoragePaths(cls):
@@ -163,4 +176,4 @@ class Resources:
 
     __config_storage_path = None
     __data_storage_path = None
-
+    __paths = []
