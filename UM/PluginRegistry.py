@@ -234,6 +234,8 @@ class PluginRegistry(object):
         location = None
         for folder in self._plugin_locations:
             location = self._locatePlugin(id, folder)
+            if location:
+                break
 
         if not location:
             return None
@@ -270,6 +272,7 @@ class PluginRegistry(object):
                         ids.append(file)
                     else:
                         ids += self._findAllPlugins([ filepath ])
+
         return ids
 
     #   Try to find a directory we can use to load a plugin from
@@ -286,7 +289,7 @@ class PluginRegistry(object):
                     if filepath:
                         return filepath
 
-        return False
+        return None
 
     #   Check if a certain dictionary contains a certain subset of key/value pairs
     #   \param dictionary \type{dict} The dictionary to search
