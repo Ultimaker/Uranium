@@ -14,6 +14,7 @@ import threading
 import argparse
 import os
 import urllib.parse
+import sys
 
 ##  Central object responsible for running the main event loop and creating other central objects.
 #
@@ -32,16 +33,22 @@ class Application(SignalEmitter):
         # If the constructor is called and there is no instance, set the instance to self. 
         # This is done because we can't make constructor private
         Application._instance = self
-        
+
+        self._application_name = name
         self._version = version
         
         Signal._app = self
         Resources.ApplicationIdentifier = name
+
+        if hasattr(sys, "frozen"):
+            Resources.addResourcePath(os.path.dirname(sys.executable))
+        else:
+            Resources.addResourcePath(os.path.join(os.path.abspath(os.path.dirname(__file__)), '..'))
+
         self._main_thread = threading.current_thread()
 
         super().__init__(**kwargs) # Call super to make multiple inheritence work.
 
-        self._application_name = name
         self._renderer = None
 
         PluginRegistry.addType('storage_device', self.addStorageDevice)
@@ -71,7 +78,12 @@ class Application(SignalEmitter):
         self._operation_stack = OperationStack()
 
         self._plugin_registry = PluginRegistry.getInstance()
-        self._plugin_registry.addPluginLocation("plugins")
+
+        if hasattr(sys, "frozen"):
+            self._plugin_registry.addPluginLocation(os.path.join(os.path.dirname(sys.executable), "plugins"))
+        else:
+            self._plugin_registry.addPluginLocation(os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', 'plugins'))
+
         self._plugin_registry.setApplication(self)
 
         self._parsed_arguments = None
