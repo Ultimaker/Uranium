@@ -19,6 +19,7 @@ class Resources:
     ImagesLocation = 7
     ThemesLocation = 8
     FirmwareLocation = 9
+    QmlFilesLocation = 10
 
     ApplicationIdentifier = 'UM'
 
@@ -144,6 +145,8 @@ class Resources:
             return ["resources", "themes"]
         elif type == cls.FirmwareLocation:
             return ["resources", "firmware"]
+        elif type == cls.QmlFilesLocation:
+            return ["resources", "qml"]
         else:
             return None
 
