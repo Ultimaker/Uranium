@@ -82,11 +82,8 @@ class QtApplication(QApplication, Application, SignalEmitter):
     
         pass
 
-    def setMainQml(self, base_path, qml_file):
-        if hasattr(sys, 'frozen'):
-            self._main_qml = os.path.join(os.path.dirname(sys.executable), qml_file)
-        else:
-            self._main_qml = os.path.join(base_path, qml_file)
+    def setMainQml(self, path):
+        self._main_qml = path
 
     def initializeEngine(self):
         # TODO: Document native/qml import trickery
