@@ -8,6 +8,7 @@ class ResourcesProxy(QObject):
         SettingsLocation = Resources.SettingsLocation
         PreferencesLocation = Resources.PreferencesLocation
         ThemesLocation = Resources.ThemesLocation
+        ImagesLocation = Resources.ImagesLocation
     Q_ENUMS(Location)
 
     def __init__(self, parent = None):
@@ -16,7 +17,3 @@ class ResourcesProxy(QObject):
     @pyqtSlot(int, str, result=QUrl)
     def getPath(self, type, name):
         return QUrl.fromLocalFile(Resources.getPath(type, name))
-
-    @pyqtSlot(str, result=QUrl)
-    def getIcon(self, name):
-        return QUrl.fromLocalFile(Resources.getIcon(name))

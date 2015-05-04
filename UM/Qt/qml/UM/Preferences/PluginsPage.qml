@@ -40,7 +40,7 @@ PreferencesPage {
             {
                 style: ButtonStyle { }
 
-                iconSource: UM.Resources.getIcon("icon_info.png")
+                iconSource: UM.Resources.getPath(UM.Resources.ImagesLocation, "icon_info.png")
 
                 onClicked:
                 {
