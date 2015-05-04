@@ -115,14 +115,20 @@ class PluginRegistry(object):
     #   \param id \type{string} The ID of the plugin.
     #   \return \type{string} The absolute path to the plugin or an empty string if the plugin could not be found.
     def getPluginPath(self, id):
-        location = None
-        for folder in self._plugin_locations:
-            location = self._locatePlugin(id, folder)
+        plugin = None
+        if id in self._plugins:
+            plugin = self._plugins[id]
+        else:
+            plugin = self._findPlugin(id)
 
-        if location:
-            return os.path.abspath(os.path.join(location, id))
+        if not plugin:
+            return None
 
-        return ''
+        path = os.path.dirname(self._plugins[id].__file__)
+        if os.path.isdir(path):
+            return path
+
+        return None
 
     ##  Get a list of all metadata matching a certain subset of metaData
     #   \param kwargs Keyword arguments.
