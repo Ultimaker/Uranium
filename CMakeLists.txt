@@ -25,14 +25,13 @@ if(${DOXYGEN_FOUND})
 endif()
 
 # Extract Strings
-add_custom_target(extract-messages ${CMAKE_SOURCE_DIR}/scripts/extract-messages ${CMAKE_SOURCE_DIR})
+add_custom_target(extract-messages ${CMAKE_SOURCE_DIR}/scripts/extract-messages ${CMAKE_SOURCE_DIR} uranium)
 
 # Build Translations
 find_package(Gettext)
 include(${CMAKE_SOURCE_DIR}/scripts/ECMPoQmTools.cmake)
 
 if(GETTEXT_FOUND)
-    file(MAKE_DIRECTORY i18n)
     # translations target will convert .po files into .mo and .qm as needed.
     # The files are checked for a _qt suffix and if it is found, converted to
     # qm, otherwise they are converted to .po.
@@ -51,7 +50,7 @@ if(GETTEXT_FOUND)
     foreach(lang ${languages})
         file(GLOB po_files resources/i18n/${lang}/*.po)
         foreach(file ${po_files})
-            string(REGEX MATCH "_qt\\.po$" match "${file}")
+            string(REGEX MATCH "qt\\.po$" match "${file}")
             if(match)
                 ecm_process_po_files_as_qm(${lang} PO_FILES ${file})
             else()

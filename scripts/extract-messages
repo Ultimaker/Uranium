@@ -2,6 +2,7 @@
 
 scriptdir=$(dirname $0)
 basedir=$1
+catalogname=$2
 
 # This script processes the source files using several other scripts to extract strings.
 # The strings are extracted to $basedir/resources/i18n/ and then post processed. After that
@@ -12,12 +13,10 @@ basedir=$1
 # extract strings from JSON files and extract-python to extract strings from Python files.
 #
 mkdir -p $basedir/resources/i18n
-$scriptdir/extract-tr-strings $(find $basedir/UM -name \*.qml) -o $basedir/resources/i18n/uranium_qt.pot
-$scriptdir/extract-tr-strings $(find $basedir/printer -name \*.qml) -o $basedir/resources/i18n/cura_qt.pot
-$scriptdir/extract-tr-strings $(find $basedir/scanner -name \*.qml) -o $basedir/resources/i18n/scanner_qt.pot
+$scriptdir/extract-tr-strings $(find $basedir -name \*.qml) -o "$basedir/resources/i18n/${catalogname}_qt.pot"
 $scriptdir/extract-json $basedir/resources/settings/ $basedir/resources/i18n
-$scriptdir/extract-python $basedir/plugins/ $basedir/resources/i18n/plugins.pot
-msgconv --to-code=UTF-8 $basedir/resources/i18n/plugins.pot -o $basedir/resources/i18n/plugins.pot
+$scriptdir/extract-python $basedir $basedir/resources/i18n/$catalogname.pot
+msgconv --to-code=UTF-8 $basedir/resources/i18n/$catalogname.pot -o $basedir/resources/i18n/$catalogname.pot
 
 for pot in $basedir/resources/i18n/*.pot; do
     filename=$(basename $pot)
