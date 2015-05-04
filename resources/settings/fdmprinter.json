@@ -653,7 +653,6 @@
                     ],
                     "default": "Touching Buildplate",
                     "visible": true,
-                    "inherit_function": "'Everywhere' if support_enable else 'None'",
                     "active_if": {
                         "setting": "support_enable",
                         "value": true
@@ -701,7 +700,11 @@
                             "unit": "mm",
                             "default": 0.15,
                             "type": "float",
-                            "visible": false
+                            "visible": false,
+                            "active_if": {
+                                "setting": "support_enable",
+                                "value": true
+                            }
                         },
                         "support_bottom_distance": {
                             "label": "Bottom Distance",
@@ -709,7 +712,11 @@
                             "unit": "mm",
                             "default": 0.15,
                             "type": "float",
-                            "visible": false
+                            "visible": false,
+                            "active_if": {
+                                "setting": "support_enable",
+                                "value": true
+                            }
                         }
                     }
                 },
@@ -731,7 +738,11 @@
                     "unit": "mm",
                     "type": "float",
                     "default": 0.7,
-                    "visible": false
+                    "visible": false,
+                    "active_if": {
+                        "setting": "support_enable",
+                        "value": true
+                    }
                 },
                 "support_area_smoothing": {
                     "label": "Area Smoothing",
@@ -739,14 +750,22 @@
                     "unit": "mm",
                     "type": "float",
                     "default": 0.6,
-                    "visible": false
+                    "visible": false,
+                    "active_if": {
+                        "setting": "support_enable",
+                        "value": true
+                    }
                 },
                 "support_use_towers": {
                     "label": "Use towers.",
                     "description": "Use specialized towers to support tiny overhang areas. These towers have a larger diameter than the region they support. Near the overhang the towers' diameter decreases, forming a roof.",
                     "type": "boolean",
                     "default": true,
-                    "visible": true
+                    "visible": true,
+                    "active_if": {
+                        "setting": "support_enable",
+                        "value": true
+                    }
                 },
                 "support_minimal_diameter": {
                     "label": "Minimal Diameter",
