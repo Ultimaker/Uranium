@@ -10,7 +10,7 @@ import webbrowser
 from threading import Thread
 from UM.Message import Message
         
-i18n_catalog = i18nCatalog('plugins')
+i18n_catalog = i18nCatalog("uranium")
 
 ## This extention checks for new versions of the application based on the application name and the version number.
 #  The plugin is currently only usuable for applications maintained by Ultimaker. But it should be relatively easy
@@ -18,7 +18,7 @@ i18n_catalog = i18nCatalog('plugins')
 class UpdateChecker(Extension):
     def __init__(self):
         super().__init__()
-        self.addMenuItem(i18n_catalog.i18n("Check new version"), self.checkNewVersion)
+        self.addMenuItem(i18n_catalog.i18n("Check for Updates"), self.checkNewVersion)
         self._url = None
         
         thread = Thread(target = self.checkNewVersion)
@@ -27,7 +27,7 @@ class UpdateChecker(Extension):
     
     ##  Callback for the message that is spawned when there is a new version.  
     def actionTriggered(self, message, action):
-        if action == "Download":
+        if action == "download":
             if self._url is not None: 
                 webbrowser.open(self._url)
     
@@ -57,7 +57,7 @@ class UpdateChecker(Extension):
                             if local_version < newest_version:
                                 Logger.log('i', "Found a new version of the software. Spawning message")
                                 message = Message(i18n_catalog.i18n("A new version is available!"))
-                                message.addAction("Download", "[no_icon]", "[no_description]")
+                                message.addAction("download", "Download", "[no_icon]", "[no_description]")
                                 self._url = value["url"]
                                 message.actionTriggered.connect(self.actionTriggered)
                                 message.show()

@@ -90,14 +90,14 @@ class MeshFileHandlerProxy(QObject):
             self._scene.sceneChanged.emit(node)
 
     def _onWriteJobFinished(self, job):
-        message = Message("Saved to {0}".format(job.getFileName()))
-        message.addAction("Open Folder", "open", "Open the folder containing the saved file")
+        message = Message(i18n_catalog.i18nc("Save file completed messsage. {0} is file name", "Saved to {0}".format(job.getFileName())))
+        message.addAction("open_folder", i18n_catalog.i18nc("Open Folder message action", "Open Folder"), "open", i18n_catalog.i18n("Open the folder containing the saved file"))
         message._file = job.getFileName()
         message.actionTriggered.connect(self._onMessageActionTriggered)
         message.show()
 
     def _onMessageActionTriggered(self, message, action):
-        if action == "Open Folder":
+        if action == "open_folder":
             QDesktopServices.openUrl(QUrl.fromLocalFile(os.path.dirname(message._file)))
 
 def createMeshFileHandlerProxy(engine, script_engine):

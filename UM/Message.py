@@ -33,10 +33,9 @@ class Message():
         self._lifetime_timer.setSingleShot(True)
         self._lifetime_timer.timeout.connect(self.hide)
         self._lifetime_timer.start()
-   
-    
-    def addAction(self, name, icon, description):
-        self._actions.append({"name": name, "icon": icon, "description": description})
+
+    def addAction(self, action_id, name, icon, description):
+        self._actions.append({"id": action_id, "name": name, "icon": icon, "description": description})
     
     def getActions(self):
         return self._actions
