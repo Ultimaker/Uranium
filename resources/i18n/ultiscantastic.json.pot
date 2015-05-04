@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: json files\n"
 "Report-Msgid-Bugs-To: http://bugs.kde.org\n"
-"POT-Creation-Date: 2015-03-23 13:14+0000\n"
+"POT-Creation-Date: 2015-05-04 17:21+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <kde-i18n-doc@kde.org>\n"
@@ -17,16 +17,6 @@ msgid "Hardware settings"
 msgstr ""
 
 #: ultiscantastic.json
-msgctxt "camera_height label"
-msgid "Camera height"
-msgstr ""
-
-#: ultiscantastic.json
-msgctxt "camera_width label"
-msgid "Camera width"
-msgstr ""
-
-#: ultiscantastic.json
 msgctxt "steps_per_full_rotation_platform label"
 msgid "Steps per rotation platform"
 msgstr ""
@@ -34,6 +24,16 @@ msgstr ""
 #: ultiscantastic.json
 msgctxt "projector_height label"
 msgid "projector height"
+msgstr ""
+
+#: ultiscantastic.json
+msgctxt "camera_height label"
+msgid "Camera height"
+msgstr ""
+
+#: ultiscantastic.json
+msgctxt "capture_debug_state label"
+msgid "capture debug "
 msgstr ""
 
 #: ultiscantastic.json
@@ -47,23 +47,8 @@ msgid "projector width"
 msgstr ""
 
 #: ultiscantastic.json
-msgctxt "capture_debug_state label"
-msgid "capture debug "
-msgstr ""
-
-#: ultiscantastic.json
-msgctxt "meshing label"
-msgid "Meshing"
-msgstr ""
-
-#: ultiscantastic.json
-msgctxt "poisson_solver_depth label"
-msgid "Poisson solver depth"
-msgstr ""
-
-#: ultiscantastic.json
-msgctxt "poisson_num_samples_per_node label"
-msgid "Poisson number of samples per node"
+msgctxt "camera_width label"
+msgid "Camera width"
 msgstr ""
 
 #: ultiscantastic.json
@@ -72,8 +57,8 @@ msgid "Scanning"
 msgstr ""
 
 #: ultiscantastic.json
-msgctxt "bit_depth_patterns_scan label"
-msgid "Bit depth grey pattern"
+msgctxt "normal_estimation_radius label"
+msgid "Normal estimation radius"
 msgstr ""
 
 #: ultiscantastic.json
@@ -82,11 +67,36 @@ msgid "Scans per rotation"
 msgstr ""
 
 #: ultiscantastic.json
+msgctxt "sor_neighbours label"
+msgid "Statistical outlier removal neighbours"
+msgstr ""
+
+#: ultiscantastic.json
+msgctxt "scan_max_distance label"
+msgid "Maximum scan distance"
+msgstr ""
+
+#: ultiscantastic.json
+msgctxt "bit_depth_patterns_scan label"
+msgid "Bit depth grey pattern"
+msgstr ""
+
+#: ultiscantastic.json
 msgctxt "pattern_type label"
 msgid "Pattern type"
 msgstr ""
 
 #: ultiscantastic.json
+msgctxt "number_of_phase_pattern_shifts label"
+msgid "Pattern shifts"
+msgstr ""
+
+#: ultiscantastic.json
 msgctxt "sor_std label"
 msgid "sor std"
+msgstr ""
+
+#: ultiscantastic.json
+msgctxt "scan_min_distance label"
+msgid "Minium scan distance"
 msgstr ""

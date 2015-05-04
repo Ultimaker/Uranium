@@ -12,65 +12,167 @@ msgid "General"
 msgstr ""
 
 #. Language selection label
-#: ../UM/Qt/qml/UM/Preferences/GeneralPage.qml:15
+#: ../UM/Qt/qml/UM/Preferences/GeneralPage.qml:19
 msgctxt "GeneralPage|"
 msgid "Language"
 msgstr ""
 
+#. English language combo box option
+#: ../UM/Qt/qml/UM/Preferences/GeneralPage.qml:23
+msgctxt "GeneralPage|"
+msgid "English"
+msgstr ""
+
+#. German language combo box option
+#: ../UM/Qt/qml/UM/Preferences/GeneralPage.qml:25
+msgctxt "GeneralPage|"
+msgid "German"
+msgstr ""
+
+#. French language combo box option
+#: ../UM/Qt/qml/UM/Preferences/GeneralPage.qml:27
+msgctxt "GeneralPage|"
+msgid "French"
+msgstr ""
+
+#. Spanish language combo box option
+#: ../UM/Qt/qml/UM/Preferences/GeneralPage.qml:29
+msgctxt "GeneralPage|"
+msgid "Spanish"
+msgstr ""
+
 #. Language change warning
-#: ../UM/Qt/qml/UM/Preferences/GeneralPage.qml:36
+#: ../UM/Qt/qml/UM/Preferences/GeneralPage.qml:46
 msgctxt "GeneralPage|"
 msgid ""
 "You will need to restart the application for language changes to have effect."
 msgstr ""
 
 #. Plugins configuration page
-#: ../UM/Qt/qml/UM/Preferences/PluginsPage.qml:10
+#: ../UM/Qt/qml/UM/Preferences/PluginsPage.qml:12
 msgctxt "PluginsPage|"
 msgid "Plugins"
 msgstr ""
 
+#. Default description for plugin
+#: ../UM/Qt/qml/UM/Preferences/PluginsPage.qml:64
+msgctxt "PluginsPage|"
+msgid "No text available"
+msgstr ""
+
 #. About dialog with info about plugin %1
-#: ../UM/Qt/qml/UM/Preferences/PluginsPage.qml:66
+#: ../UM/Qt/qml/UM/Preferences/PluginsPage.qml:71
 #, qt-format
 msgctxt "PluginsPage|"
 msgid "About %1"
 msgstr ""
 
-#. Close about plugin dialog
-#: ../UM/Qt/qml/UM/Preferences/PluginsPage.qml:93
+#. Close "about plugin" dialog button
+#: ../UM/Qt/qml/UM/Preferences/PluginsPage.qml:97
 msgctxt "PluginsPage|"
 msgid "Close"
 msgstr ""
 
 #. Preferences dialog title
-#: ../UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:12
+#: ../UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:15
 msgctxt "PreferencesDialog|"
 msgid "Preferences"
 msgstr ""
 
-#. Close preferences dialog
-#: ../UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:58
-msgctxt "PreferencesDialog|"
-msgid "Close"
-msgstr ""
-
 #. General configuration page title
-#: ../UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:72
+#: ../UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:33
 msgctxt "PreferencesDialog|"
 msgid "General"
 msgstr ""
 
 #. Machine configuration page title
-#: ../UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:74
+#: ../UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:35
 msgctxt "PreferencesDialog|"
 msgid "Machine"
 msgstr ""
 
 #. Plugins configuration page title
-#: ../UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:76
+#: ../UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:37
 msgctxt "PreferencesDialog|"
 msgid "Plugins"
+msgstr ""
+
+#. Reset preferences to default
+#: ../UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:58
+msgctxt "PreferencesDialog|"
+msgid "Defaults"
+msgstr ""
+
+#. Close preferences dialog
+#: ../UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:65
+msgctxt "PreferencesDialog|"
+msgid "Close"
+msgstr ""
+
+#. Reset Rotation tool button
+#: ../plugins/Tools/RotateTool/RotateTool.qml:13
+msgctxt "RotateTool|"
+msgid "Reset"
+msgstr ""
+
+#. Reset Rotation tool button tooltip
+#: ../plugins/Tools/RotateTool/RotateTool.qml:16
+msgctxt "RotateTool|"
+msgid "Reset the rotation of the current selection."
+msgstr ""
+
+#. Snap Rotation checkbox
+#: ../plugins/Tools/RotateTool/RotateTool.qml:29
+msgctxt "RotateTool|"
+msgid "Snap Rotation"
+msgstr ""
+
+#. Reset scale tool button
+#: ../plugins/Tools/ScaleTool/ScaleTool.qml:13
+msgctxt "ScaleTool|"
+msgid "Reset"
+msgstr ""
+
+#. Reset scale tool button tooltip
+#: ../plugins/Tools/ScaleTool/ScaleTool.qml:16
+msgctxt "ScaleTool|"
+msgid "Reset the scaling of the current selection."
+msgstr ""
+
+#. Scale to max tool button
+#: ../plugins/Tools/ScaleTool/ScaleTool.qml:27
+msgctxt "ScaleTool|"
+msgid "Scale to Max"
+msgstr ""
+
+#. Scale to max tool button tooltip
+#: ../plugins/Tools/ScaleTool/ScaleTool.qml:30
+msgctxt "ScaleTool|"
+msgid "Scale to maximum size"
+msgstr ""
+
+#. Snap Scaling checkbox
+#: ../plugins/Tools/ScaleTool/ScaleTool.qml:48
+msgctxt "ScaleTool|"
+msgid "Snap Scaling"
+msgstr ""
+
+#. Uniform scaling checkbox
+#: ../plugins/Tools/ScaleTool/ScaleTool.qml:62
+msgctxt "ScaleTool|"
+msgid "Uniform Scaling"
+msgstr ""
+
+#. Settings context menu action
+#: ../UM/Qt/qml/UM/Settings/SettingView.qml:112
+msgctxt "SettingView|"
+msgid "Hide this setting"
+msgstr ""
+
+#. Settings context menu action
+#: ../UM/Qt/qml/UM/Settings/SettingView.qml:117
+msgctxt "SettingView|"
+msgid "Configure setting visiblity..."
 msgstr ""
 
 #. Machine configuration page title.
@@ -79,34 +181,26 @@ msgctxt "SettingsConfigurationPage|"
 msgid "Machine"
 msgstr ""
 
-#: ../UM/Qt/qml/UM/Settings/SettingsConfigurationPage.qml:17
+#. Active machine combo box label
+#: ../UM/Qt/qml/UM/Settings/SettingsConfigurationPage.qml:18
 msgctxt "SettingsConfigurationPage|"
 msgid "Active Machine:"
 msgstr ""
 
-#: ../UM/Qt/qml/UM/Settings/SettingsConfigurationPage.qml:36
+#. Remove active machine button
+#: ../UM/Qt/qml/UM/Settings/SettingsConfigurationPage.qml:38
 msgctxt "SettingsConfigurationPage|"
 msgid "Remove"
 msgstr ""
 
-#: ../UM/Qt/qml/UM/Settings/SettingsConfigurationPage.qml:71
+#. Remove machine confirmation dialog title
+#: ../UM/Qt/qml/UM/Settings/SettingsConfigurationPage.qml:74
 msgctxt "SettingsConfigurationPage|"
 msgid "Confirm Machine Deletion"
 msgstr ""
 
-#: ../UM/Qt/qml/UM/Settings/SettingsConfigurationPage.qml:72
+#. Remove machine confirmation dialog text
+#: ../UM/Qt/qml/UM/Settings/SettingsConfigurationPage.qml:76
 msgctxt "SettingsConfigurationPage|"
 msgid "Are you sure you wish to remove the machine?"
-msgstr ""
-
-#. Settings context menu action
-#: ../UM/Qt/qml/UM/Settings/SettingsView.qml:93
-msgctxt "SettingsView|"
-msgid "Hide this setting"
-msgstr ""
-
-#. Settings context menu action
-#: ../UM/Qt/qml/UM/Settings/SettingsView.qml:98
-msgctxt "SettingsView|"
-msgid "Configure setting visiblity..."
 msgstr ""
