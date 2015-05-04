@@ -14,6 +14,7 @@ PreferencesPage {
     contents: ColumnLayout {
         anchors.fill: parent;
         RowLayout {
+            //: Active machine combo box label
             Label { text: qsTr("Active Machine:"); }
             ComboBox {
                 id: machineCombo;
@@ -33,6 +34,7 @@ PreferencesPage {
 
                 Component.onCompleted: machineCombo.currentIndex = machineCombo.find(UM.Application.machineName);
             }
+            //: Remove active machine button
             Button { text: qsTr("Remove"); onClicked: confirmRemoveDialog.open(); }
         }
         ScrollView
@@ -68,7 +70,9 @@ PreferencesPage {
         id: confirmRemoveDialog;
 
         icon: StandardIcon.Question;
+        //: Remove machine confirmation dialog title
         title: qsTr("Confirm Machine Deletion");
+        //: Remove machine confirmation dialog text
         text: qsTr("Are you sure you wish to remove the machine?");
         standardButtons: StandardButton.Yes | StandardButton.No;
 

@@ -19,8 +19,14 @@ PreferencesPage {
         Label { text: qsTr("Language"); }
         ComboBox {
             model: ListModel {
-                ListElement { text: 'English'; code: 'en' }
-                ListElement { text: 'x-test'; code: 'x-test' }
+                //: English language combo box option
+                ListElement { text: QT_TR_NOOP("English"); code: "en" }
+                //: German language combo box option
+                ListElement { text: QT_TR_NOOP("German"); code: "de" }
+                //: French language combo box option
+                ListElement { text: QT_TR_NOOP("French"); code: "fr" }
+                //: Spanish language combo box option
+                ListElement { text: QT_TR_NOOP("Spanish"); code: "es" }
             }
 
             currentIndex: {
