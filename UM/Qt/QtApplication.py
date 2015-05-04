@@ -18,6 +18,16 @@ from UM.Resources import Resources
 from UM.Logger import Logger
 from UM.Preferences import Preferences
 
+# Raised when we try to use an unsupported version of a dependency.
+class UnsupportedVersionError(Exception):
+    pass
+
+# Check PyQt version, we only support 5.4 or higher.
+from PyQt5.QtCore import PYQT_VERSION_STR
+major, minor, patch = PYQT_VERSION_STR.split('.')
+if int(major) < 5 or int(minor) < 4:
+    raise UnsupportedVersionError("This application requires at least PyQt 5.4.0")
+
 ##  Application subclass that provides a Qt application object.
 class QtApplication(QApplication, Application, SignalEmitter):
     def __init__(self, **kwargs):
