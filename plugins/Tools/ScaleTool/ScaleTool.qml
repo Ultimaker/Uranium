@@ -9,8 +9,10 @@ Item {
 
         anchors.bottom: parent.bottom;
 
+        //: Reset scale tool button
         text: qsTr('Reset')
         iconSource: UM.Theme.icons.scale_reset;
+        //: Reset scale tool button tooltip
         tooltip: qsTr("Reset the scaling of the current selection.");
 
         style: UM.Theme.styles.tool_button;
@@ -21,8 +23,10 @@ Item {
     Button {
         id: scaleToMaxButotn
 
+        //: Scale to max tool button
         text: qsTr('Scale to Max');
         iconSource: UM.Theme.icons.scale_max;
+        //: Scale to max tool button tooltip
         tooltip: qsTr('Scale to maximum size');
 
         anchors.bottom: resetScaleButton.top;
@@ -40,6 +44,7 @@ Item {
         anchors.leftMargin: UM.Theme.sizes.default_margin.width;
         anchors.bottom: parent.bottom;
 
+        //: Snap Scaling checkbox
         text: qsTr("Snap Scaling");
 
         style: UM.Theme.styles.checkbox;
@@ -53,6 +58,7 @@ Item {
         anchors.leftMargin: UM.Theme.sizes.default_margin.width;
         anchors.top: resetScaleButton.top;
 
+        //: Uniform scaling checkbox
         text: qsTr("Uniform Scaling");
 
         style: UM.Theme.styles.checkbox;

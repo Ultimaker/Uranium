@@ -9,8 +9,10 @@ Item {
 
         anchors.bottom: parent.bottom;
 
+        //: Reset Rotation tool button
         text: qsTr('Reset')
         iconSource: UM.Theme.icons.rotate_reset;
+        //: Reset Rotation tool button tooltip
         tooltip: qsTr("Reset the rotation of the current selection.");
 
         style: UM.Theme.styles.tool_button;
@@ -23,6 +25,7 @@ Item {
         anchors.leftMargin: UM.Theme.sizes.default_margin.width;
         anchors.bottom: parent.bottom;
 
+        //: Snap Rotation checkbox
         text: qsTr("Snap Rotation");
 
         style: UM.Theme.styles.checkbox;

@@ -1,16 +1,19 @@
 from . import LocalFileStorageDevice
 
+from UM.i18n import i18nCatalog
+i18n_catalog = i18nCatalog("uranium")
+
 def getMetaData():
     return {
-        'type': 'storage_device',
-        'plugin': {
-            'name': 'Local File Storage',
-            'author': 'Arjen Hiemstra',
-            'version': '1.0',
-            'description': 'Provides access to local files.'
+        "type": "storage_device",
+        "plugin": {
+            "name": i18n_catalog.i18nc("Local File Storage plugin name", "Local File Storage"),
+            "author": "Ultimaker",
+            "version": "1.0",
+            "description": i18n_catalog.i18nc("Local File Storage plugin description", "Provides access to local files.")
         }
     }
 
 def register(app):
-    return {"storage_device":LocalFileStorageDevice.LocalFileStorageDevice()}
+    return { "storage_device": LocalFileStorageDevice.LocalFileStorageDevice() }
 

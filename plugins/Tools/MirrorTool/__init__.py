@@ -1,17 +1,23 @@
 from . import MirrorTool
 
+from UM.i18n import i18nCatalog
+i18n_catalog = i18nCatalog("uranium")
+
 def getMetaData():
     return {
-        'type': 'tool',
-        'plugin': {
-            'name': 'Mirror Tool'
+        "type": "tool",
+        "plugin": {
+            "name": "Mirror Tool",
+            "author": "Ultimaker",
+            "version": "1.0",
+            "description": i18n_catalog.i18nc("Mirror Tool plugin description", "Provides the Mirror tool.")
         },
-        'tool': {
-            'name': 'Mirror',
-            'description': 'Mirror Object',
-            'icon': 'mirror'
+        "tool": {
+            "name": i18n_catalog.i18nc("Mirror Tool name", "Mirror"),
+            "description": i18n_catalog.i18nc("Mirror Tool description", "Mirror Object"),
+            "icon": "mirror"
         },
     }
 
 def register(app):
-    return {"tool":MirrorTool.MirrorTool()}
+    return { "tool": MirrorTool.MirrorTool() }

@@ -1,21 +1,27 @@
 from . import TranslateTool
 
+from UM.i18n import i18nCatalog
+i18n_catalog = i18nCatalog("uranium")
+
 def getMetaData():
     return {
-        'type': 'tool',
-        'plugin': {
-            'name': 'Translate Tool'
+        "type": "tool",
+        "plugin": {
+            "name": "Translate Tool",
+            "author": "Ultimaker",
+            "version": "1.0",
+            "description": i18n_catalog.i18nc("Translate Tool plugin description", "Provides the Translate tool.")
         },
-        'tool': {
-            'name': 'Translate',
-            'description': 'Translate Object'
+        "tool": {
+            "name": i18n_catalog.i18nc("Translate Tool name", "Translate"),
+            "description": i18n_catalog.i18nc("Translate Tool description", "Translate Object")
         },
-        'cura': {
-            'tool': {
-                'visible': False
+        "cura": {
+            "tool": {
+                "visible": False
             }
         }
     }
 
 def register(app):
-    return {"tool":TranslateTool.TranslateTool()}
+    return { "tool": TranslateTool.TranslateTool() }
