@@ -21,7 +21,7 @@ Dialog {
             id: pagesList;
 
             Layout.fillHeight: true;
-            Layout.preferredWidth: Screen.pixelDensity * 30;
+            Layout.preferredWidth: Screen.devicePixelRatio * 100;
 
             alternatingRowColors: false;
             headerVisible: false;

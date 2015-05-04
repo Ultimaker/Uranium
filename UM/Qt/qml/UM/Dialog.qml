@@ -10,10 +10,10 @@ Window {
     modality: Qt.WindowModal;
     flags: Qt.Dialog;
 
-    width: 640;
-    height: 480;
+    width: Screen.devicePixelRatio * 640;
+    height: Screen.devicePixelRatio * 480;
 
-    property int margin: Screen.pixelDensity * 2;
+    property int margin: Screen.devicePixelRatio * 8;
 
     default property alias contents: contentItem.children;
 
