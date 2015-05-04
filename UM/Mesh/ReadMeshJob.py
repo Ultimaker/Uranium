@@ -2,6 +2,9 @@ from UM.Job import Job
 from UM.Application import Application
 from UM.Message import Message
 
+from UM.i18n import i18nCatalog
+i18n_catalog = i18nCatalog("uranium")
+
 import os.path
 
 ##  A Job subclass that performs mesh loading.
@@ -18,9 +21,9 @@ class ReadMeshJob(Job):
         return self._filename
 
     def run(self):
-        loading_message = Message("Loading {0}".format(self._filename))
+        loading_message = Message(i18n_catalog.i18nc("Loading mesh message, {0} is file name", "Loading {0}".format(self._filename)))
         loading_message.show()
         self.setResult(self._handler.read(self._filename, self._device))
         loading_message.hide()
-        result_message = Message("Loaded {0}".format(self._filename))
+        result_message = Message(i18n_catalog.i18nc("Finished loading mesh message, {0} is file name", "Loaded {0}".format(self._filename)))
         result_message.show()

@@ -14,6 +14,9 @@ from UM.Message import Message
 
 import os.path
 
+from UM.i18n import i18nCatalog
+i18n_catalog = i18nCatalog("uranium")
+
 class MeshFileHandlerProxy(QObject):
     def __init__(self, parent = None):
         super().__init__(parent)
@@ -26,12 +29,12 @@ class MeshFileHandlerProxy(QObject):
         all_types = []
 
         for ext, desc in self._mesh_handler.getSupportedFileTypesRead().items():
-            file_types.append("{0} (*.{1})(*.{1})".format(desc, ext))
+            file_types.append("{0} (*.{1})".format(desc, ext))
             all_types.append("*.{0}".format(ext))
 
         file_types.sort()
-        file_types.insert(0, "All Supported Types ({0})({0})".format(" ".join(all_types)))
-        file_types.append("All Files (*.*)(*)")
+        file_types.insert(0, i18n_catalog.i18nc("Open file dialog type option", "All Supported Types ({0})".format(" ".join(all_types))))
+        file_types.append(i18n_catalog.i18nc("Open file dialog type option", "All Files (*)"))
 
         return file_types
 
@@ -85,8 +88,6 @@ class MeshFileHandlerProxy(QObject):
             op.push()
 
             self._scene.sceneChanged.emit(node)
-        else:
-            print("No mesh :(")
 
     def _onWriteJobFinished(self, job):
         message = Message("Saved to {0}".format(job.getFileName()))
