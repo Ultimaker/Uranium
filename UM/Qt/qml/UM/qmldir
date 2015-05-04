@@ -1,26 +1,14 @@
-module Cura
+module Uranium
 
-singleton Styles 1.0 Styles.qml
-
-Panel 1.0 Panel.qml
-FilePanel 1.0 FilePanel.qml
-ToolPanel 1.0 ToolPanel.qml
-ExtentionPanel 1.0 ExtentionPanel.qml
-DefaultWindow 1.0 DefaultWindow.qml
-JobList 1.0 JobList.qml
 ApplicationMenu 1.0 ApplicationMenu.qml
-SettingsPanel 1.0 Settings/SettingsPanel.qml
-PreferencesDialog 1.0 Preferences/PreferencesDialog.qml
-MeshListPanel 1.0 MeshListPanel.qml
-Toolbar 1.0 Toolbar.qml
-SettingsView 1.0 Settings/SettingsView.qml
 RecolorImage 1.0 RecolorImage.qml
-ToolbarButtonStyle 1.0 ToolbarButtonStyle.qml
 MessageStack 1.0 MessageStack.qml
-Panel 1.0 Panel.qml
+Dialog 1.0 Dialog.qml
+
+PreferencesDialog 1.0 Preferences/PreferencesDialog.qml
 PreferencesPage 1.0 Preferences/PreferencesPage.qml
+
 SettingItem 1.0 Settings/SettingItem.qml
 SettingItemStyle 1.0 Settings/SettingItemStyle.qml
-SettingView 1.0 SettingView.qml
-SidebarCategoryHeader 1.0 SidebarCategoryHeader.qml
-Dialog 1.0 Dialog.qml
+SettingView 1.0 Settings/SettingView.qml
+SidebarCategoryHeader 1.0 Settings/SidebarCategoryHeader.qml
