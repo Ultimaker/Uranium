@@ -26,14 +26,13 @@ class i18nCatalog:
     def __init__(self, name, language = 'default'):
         languages = []
         if language == 'default':
-            preflang = Preferences.getInstance().getValue('general/language')
-
-            if not preflang:
-                envlang = os.getenv('LANGUAGE')
-                if envlang:
-                    languages.append(envlang)
+            envlang = os.getenv('LANGUAGE')
+            if envlang:
+                languages.append(envlang)
             else:
-                languages.append(preflang)
+                preflang = Preferences.getInstance().getValue('general/language')
+                if preflang:
+                    languages.append(preflang)
         else:
             languages.append(language)
 
