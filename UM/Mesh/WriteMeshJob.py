@@ -10,7 +10,7 @@ import os.path
 #   The result of this Job is a MeshData object.
 class WriteMeshJob(Job):
     def __init__(self, filename, mesh):
-        super().__init__(description = "Saving to file {0}".format(os.path.basename(filename)), visible = True)
+        super().__init__()
         self._filename = filename
         self._handler = Application.getInstance().getMeshFileHandler()
         self._device = Application.getInstance().getStorageDevice('LocalFileStorage')
