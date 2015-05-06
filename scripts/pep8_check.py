@@ -65,7 +65,7 @@ def checkStrings(logical_line, tokens):
 def blankLines(logical_line, blank_lines, indent_level, line_number, blank_before, previous_logical):
     if line_number < 3 and not previous_logical:
         return  # Don't expect blank lines before the first line
-    if logical_line.startswith(("def ", "class ", "@")):
+    if logical_line.startswith(("def ", "class ", "@")) and not previous_logical.startswith("@"):
         if not indent_level and blank_before < 1:
             yield 0, "U302 expected 2 blank lines, found 0"
 
