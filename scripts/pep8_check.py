@@ -2,6 +2,7 @@ import pep8
 import re
 import os
 import sys
+import token as token_type
 
 CLASS_NAME_MATCH = re.compile(r'^_*[A-Z][a-zA-Z0-9]*_*$')
 FUNCTION_NAME_MATCH = re.compile(r'^(_*|test_)[a-z][a-zA-Z0-9]*_*$')
@@ -13,7 +14,7 @@ VARIABLE_NAME_MATCH = re.compile(r'^[a-z][a-z0-9_]*$')
 # The coding style set at Ultimaker.
 def checkNames(logical_line, tokens):
     idx = 0
-    while tokens[idx].type in [5, 6]:
+    while tokens[idx].type in [token_type.INDENT, token_type.DEDENT]:
         idx += 1
     if tokens[idx].string == "def":
         idx += 1
@@ -57,7 +58,7 @@ def checkNames(logical_line, tokens):
 # Check the string definitions in the line. All strings should be double quotes.
 def checkStrings(logical_line, tokens):
     for token in tokens:
-        if token.type == 3:
+        if token.type == token_type.STRING:
             if token.string.startswith("'"):
                 yield token.start, "U110 Strings should use double quotes, not single quotes."
 
