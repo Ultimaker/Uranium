@@ -2,10 +2,10 @@ from UM.Job import Job
 from UM.Application import Application
 from UM.Message import Message
 
+import os.path
+
 from UM.i18n import i18nCatalog
 i18n_catalog = i18nCatalog("uranium")
-
-import os.path
 
 ##  A Job subclass that performs mesh loading.
 #

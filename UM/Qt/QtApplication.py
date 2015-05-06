@@ -3,7 +3,7 @@ import os
 import signal
 import platform
 
-from PyQt5.QtCore import Qt, QObject, QCoreApplication, QEvent, pyqtSlot, QLocale, QTranslator, QLibraryInfo
+from PyQt5.QtCore import Qt, QObject, QCoreApplication, QEvent, pyqtSlot, QLocale, QTranslator, QLibraryInfo, PYQT_VERSION_STR
 from PyQt5.QtQml import QQmlApplicationEngine, qmlRegisterType, qmlRegisterSingletonType
 from PyQt5.QtWidgets import QApplication, QSplashScreen
 from PyQt5.QtGui import QGuiApplication, QPixmap
@@ -23,7 +23,6 @@ class UnsupportedVersionError(Exception):
     pass
 
 # Check PyQt version, we only support 5.4 or higher.
-from PyQt5.QtCore import PYQT_VERSION_STR
 major, minor, patch = PYQT_VERSION_STR.split(".")
 if int(major) < 5 or int(minor) < 4:
     raise UnsupportedVersionError("This application requires at least PyQt 5.4.0")
