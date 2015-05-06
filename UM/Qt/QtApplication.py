@@ -17,6 +17,7 @@ from UM.Signal import Signal, SignalEmitter
 from UM.Resources import Resources
 from UM.Logger import Logger
 from UM.Preferences import Preferences
+from UM.i18n import i18nCatalog
 
 # Raised when we try to use an unsupported version of a dependency.
 class UnsupportedVersionError(Exception):
@@ -52,14 +53,16 @@ class QtApplication(QApplication, Application, SignalEmitter):
         # This is done here as a lot of plugins require a correct gl context. If you want to change the framework,
         # these checks need to be done in your <framework>Application.py class __init__().
 
-        self.showSplashMessage("Loading plugins...")
+        i18n_catalog = i18nCatalog("uranium")
+
+        self.showSplashMessage(i18n_catalog.i18nc("Splash screen message", "Loading plugins..."))
         self._loadPlugins()
         self._plugin_registry.checkRequiredPlugins(self.getRequiredPlugins())
 
-        self.showSplashMessage("Loading machines...")
+        self.showSplashMessage(i18n_catalog.i18nc("Splash screen message", "Loading machines..."))
         self.loadMachines()
 
-        self.showSplashMessage("Loading preferences...")
+        self.showSplashMessage(i18n_catalog.i18nc("Splash screen message", "Loading preferences..."))
         try:
             file = Resources.getPath(Resources.PreferencesLocation, self.getApplicationName() + ".cfg")
             Preferences.getInstance().readFromFile(file)
@@ -68,7 +71,7 @@ class QtApplication(QApplication, Application, SignalEmitter):
 
         self._translators = {}
 
-        self.showSplashMessage("Loading translations...")
+        self.showSplashMessage(i18n_catalog.i18nc("Splash screen message", "Loading translations..."))
 
         self.loadQtTranslation("uranium_qt")
         self.loadQtTranslation(self.getApplicationName() + "_qt")
