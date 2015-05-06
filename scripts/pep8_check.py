@@ -4,7 +4,7 @@ import os
 import sys
 
 CLASS_NAME_MATCH = re.compile(r'^_*[A-Z][a-zA-Z0-9]*_*$')
-FUNCTION_NAME_MATCH = re.compile(r'^_*[a-z][a-zA-Z0-9]*_*$')
+FUNCTION_NAME_MATCH = re.compile(r'^(_*|test_)[a-z][a-zA-Z0-9]*_*$')
 MEMBER_NAME_MATCH = re.compile(r'^[a-z_][a-z0-9_]*$')
 VARIABLE_NAME_MATCH = re.compile(r'^[a-z][a-z0-9_]*$')
 
