@@ -14,8 +14,8 @@ class CameraTool(Tool):
         self._yaw = 0
         self._pitch = 0
         self._origin = Vector(0, 0, 0)
-        self._minZoom = 10.0
-        self._maxZoom = 1000.0
+        self._min_zoom = 10.0
+        self._max_zoom = 1000.0
 
         self._rotate = False
         self._move = False
@@ -26,8 +26,8 @@ class CameraTool(Tool):
         self._drag_distance = 0.05
 
     def setZoomRange(self, min, max):
-        self._minZoom = min
-        self._maxZoom = max
+        self._min_zoom = min
+        self._max_zoom = max
 
     def setOrigin(self, origin):
         translation = origin - self._origin
@@ -100,10 +100,10 @@ class CameraTool(Tool):
         delta = r * (event.vertical / 128 / 10.0)
         r -= delta
         if delta > 0:
-            if r > self._minZoom:
+            if r > self._min_zoom:
                 camera.translate(Vector(0.0, 0.0, -delta))
         else:
-            if r < self._maxZoom:
+            if r < self._max_zoom:
                 camera.translate(Vector(0.0, 0.0, -delta))
 
         self._scene.releaseLock()

@@ -132,7 +132,7 @@ class QtApplication(QApplication, Application, SignalEmitter):
     #   Handle Qt events
     def event(self, event):
         if event.type() == _QtFunctionEvent.QtFunctionEvent:
-            event.functionEvent.call()
+            event._function_event.call()
             return True
 
         return super().event(event)
@@ -238,5 +238,5 @@ class _QtFunctionEvent(QEvent):
 
     def __init__(self, fevent):
         super().__init__(self.QtFunctionEvent)
-        self.functionEvent = fevent
+        self._function_event = fevent
 

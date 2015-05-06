@@ -39,7 +39,7 @@ class Setting(SignalEmitter):
         self._options = kwargs.get("options", [])
         self._unit = kwargs.get("unit", "")
         self._inherit = True
-        self._inheritFunction = None
+        self._inherit_function = None
 
     valueChanged = Signal()
 
@@ -123,7 +123,7 @@ class Setting(SignalEmitter):
             except IllegalMethodError as e:
                 Logger.log("e", "Use of illegal method {0} in inherit function for setting {1}".format(str(e), self._key))
             else:
-                self._inheritFunction = self._createInheritFunction(code, names)
+                self._inherit_function = self._createInheritFunction(code, names)
 
         min_value = None
         max_value = None
@@ -300,9 +300,9 @@ class Setting(SignalEmitter):
     def getValue(self):
         if not self._visible:
             if self._inherit and self._parent and type(self._parent) is Setting:
-                if self._inheritFunction:
+                if self._inherit_function:
                     try:
-                        inherit_value = self._inheritFunction(self._parent, self._machine_settings)
+                        inherit_value = self._inherit_function(self._parent, self._machine_settings)
                     except Exception as e:
                         Logger.log("e", "An error occurred in inherit function for {0}: {1}".format(self._key, str(e)))
                     else:
