@@ -49,7 +49,7 @@ class UpdateChecker(Extension):
             try:
                 local_version = list(map(int, Application.getInstance().getVersion().split(".")))
             except ValueError:
-                local_version = [0, 0, 0]
+                local_version = [999, 999, 999]
             
             if application_name in data:
                 for key, value in data[application_name].items():
