@@ -4,6 +4,7 @@
 import QtQuick 2.1
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
+import QtQuick.Window 2.1
 import QtQuick.Controls.Styles 1.1
 
 import UM 1.0 as UM
@@ -31,6 +32,7 @@ PreferencesPage {
         id: pluginDelegate
         RowLayout 
         {
+            width: ListView.view.width;
             CheckBox
             {
                 text: model.name;
@@ -41,11 +43,9 @@ PreferencesPage {
                 onClicked: plugin_list.model.setEnabled(model.name, checked)
                 enabled: !model.required 
             }
-            ToolButton
+            Button
             {
-                style: ButtonStyle { }
-
-                iconSource: UM.Resources.getPath(UM.Resources.ImagesLocation, "icon_info.png")
+                iconName: "help-about";
 
                 onClicked:
                 {
@@ -73,21 +73,37 @@ PreferencesPage {
         //: About dialog with info about plugin %1
         title: qsTr("About %1").arg(plugin_name)
 
-        ColumnLayout
+        width: Screen.devicePixelRatio * 320;
+        height: Screen.devicePixelRatio * 240;
+
+        GridLayout
         {
             anchors.fill: parent;
-            Text 
+            columns: 2;
+            Label
             {
+                Layout.columnSpan: 2;
                 text: about_window.plugin_name
-                font.pointSize: 20
+                font.pointSize: 18
             }
-            Text 
+            Label
             {
+                Layout.columnSpan: 2;
                 text: about_window.about_text
             }
-            Text 
+            Label
+            {
+                //: About plugin dialog author label
+                text: qsTr("Author:");
+            }
+            Label
             {
                 text: about_window.author_text
+            }
+            Label
+            {
+                //: About plugin dialog version label
+                text: qsTr("Version:");
             }
             Text
             {
