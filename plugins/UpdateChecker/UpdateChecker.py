@@ -42,6 +42,7 @@ class UpdateChecker(Extension):
             latest_version_file = urllib.request.urlopen("http://software.ultimaker.com/latest.json")
         except Exception as e:
             Logger.log("e", "Failed to check for new version. %s" %e)
+            return
 
         try:
             reader = codecs.getreader("utf-8")
@@ -49,8 +50,9 @@ class UpdateChecker(Extension):
             try:
                 local_version = list(map(int, Application.getInstance().getVersion().split(".")))
             except ValueError:
-                local_version = [999, 999, 999]
-            
+                Logger.log("w", "Could not determine application version from string %s, not checking for updates", Application.getInstance().getVersion())
+                return
+
             if application_name in data:
                 for key, value in data[application_name].items():
                     if "major" in value and "minor" in value and "revision" in value and "url" in value:
