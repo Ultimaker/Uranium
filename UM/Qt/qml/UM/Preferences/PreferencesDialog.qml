@@ -31,16 +31,12 @@ Dialog {
             TableViewColumn { role: "name" }
 
             onActivated: configPage.source = configPagesModel.get(row).page;
-
-            Component.onCompleted: pagesList.selection.select(0);
         }
 
         Loader {
             id: configPage;
             Layout.fillWidth: true
             Layout.fillHeight: true
-
-            source: configPagesModel.get(0).page;
         }
     }
 
@@ -77,5 +73,8 @@ Dialog {
         insertPage(1, qsTr("Machine"), "", "../Settings/SettingsConfigurationPage.qml");
         //: Plugins configuration page title
         insertPage(2, qsTr("Plugins"), "", "PluginsPage.qml");
+
+        pagesList.selection.select(0);
+        configPage.source = configPagesModel.get(0).page;
     }
 }
