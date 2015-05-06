@@ -26,16 +26,7 @@ Dialog {
             alternatingRowColors: false;
             headerVisible: false;
 
-            model: ListModel {
-                id: configPagesModel;
-
-                //: General configuration page title
-                ListElement { name: QT_TR_NOOP("General"); page: "GeneralPage.qml"; }
-                //: Machine configuration page title
-                ListElement { name: QT_TR_NOOP("Machine"); page: "../Settings/SettingsConfigurationPage.qml"; }
-                //: Plugins configuration page title
-                ListElement { name: QT_TR_NOOP("Plugins"); page: "PluginsPage.qml"; }
-            }
+            model: ListModel { id: configPagesModel; }
 
             TableViewColumn { role: "name" }
 
@@ -75,5 +66,16 @@ Dialog {
 
     function insertPage(index, name, icon, page) {
         configPagesModel.insert(index, { "name": name, "icon": icon, "page": page });
+    }
+
+    Component.onCompleted: {
+        //This uses insertPage here because ListModel is stupid and does not allow using qsTr() on elements.
+
+        //: General configuration page title
+        insertPage(0, qsTr("General"), "", "GeneralPage.qml");
+        //: Machine configuration page title
+        insertPage(1, qsTr("Machine"), "", "../Settings/SettingsConfigurationPage.qml");
+        //: Plugins configuration page title
+        insertPage(2, qsTr("Plugins"), "", "PluginsPage.qml");
     }
 }
