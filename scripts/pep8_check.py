@@ -90,7 +90,7 @@ def main(paths=["."]):
     critical.append("U9")    # Parsing errors (error in this script, or error in code that we're trying to parse)
     critical.append("U")     # All Ultimaker specific stuff.
 
-    pep8style = pep8.StyleGuide(quiet=False, select=critical, ignore=ignore)
+    pep8style = pep8.StyleGuide(quiet=False, select=critical, ignore=ignore, show_source=True)
     for path in paths:
         if path.endswith(".py") and "_pb2.py" not in path:
             pep8style.paths.append(path)
