@@ -9,7 +9,7 @@ from UM.PluginError import PluginNotFoundError
 
 class TestApplication(Application):
     def __init__(self):
-        super().__init__("test")
+        super().__init__("test", "1.0")
 
     def registerTestPlugin(self, name):
         self._test_plugin = name
