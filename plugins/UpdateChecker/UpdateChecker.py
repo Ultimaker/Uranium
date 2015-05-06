@@ -45,8 +45,11 @@ class UpdateChecker(Extension):
 
         try:
             reader = codecs.getreader("utf-8")
-            data = json.load(reader(latest_version_file)) 
-            local_version = list(map(int, Application.getInstance().getVersion().split(".")))
+            data = json.load(reader(latest_version_file))
+            try:
+                local_version = list(map(int, Application.getInstance().getVersion().split(".")))
+            except ValueError:
+                local_version = [0, 0, 0]
             
             if application_name in data:
                 for key, value in data[application_name].items():
