@@ -1,3 +1,6 @@
+# Copyright (c) 2015 Ultimaker B.V.
+# Uranium is released under the terms of the AGPLv3 or higher.
+
 from UM.Backend.SignalSocket import SignalSocket
 from UM.Preferences import Preferences
 from UM.Logger import Logger

@@ -1,3 +1,6 @@
+# Copyright (c) 2015 Ultimaker B.V.
+# Uranium is released under the terms of the AGPLv3 or higher.
+
 
 
 ##      Very simple class filled with a bunch of colors that are chose thusly that they are easily distinguisable for humans. 

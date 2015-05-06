@@ -1,8 +1,8 @@
-#   Author:  Thiago Marcos P. Santos
-#   Author:  Christopher S. Case
-#   Author:  David H. Bronke
-#   Author:  Arjen Hiemstra
-#   License: MIT
+# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) Thiago Marcos P. Santos
+# Copyright (c) Christopher S. Case
+# Copyright (c) David H. Bronke
+# Uranium is released under the terms of the AGPLv3 or higher.
 
 from UM.Event import CallFunctionEvent
 
@@ -29,7 +29,7 @@ from weakref import WeakSet, WeakKeyDictionary
 #   \warning It is imperative that the signals are created as instance variables, otherwise
 #   emitting signals will get confused. To help with this, see the SignalEmitter class.
 #
-#   Based on http://code.activestate.com/recipes/577980-improved-signalsslots-implementation-in-python/
+#   Loosely based on http://code.activestate.com/recipes/577980-improved-signalsslots-implementation-in-python/
 #   \sa SignalEmitter
 
 class Signal:

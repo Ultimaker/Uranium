@@ -1,3 +1,7 @@
+# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2013 David Braam
+# Uranium is released under the terms of the AGPLv3 or higher.
+
 import threading
 
 import subprocess

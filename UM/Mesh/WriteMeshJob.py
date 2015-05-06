@@ -1,3 +1,6 @@
+# Copyright (c) 2015 Ultimaker B.V.
+# Uranium is released under the terms of the AGPLv3 or higher.
+
 from UM.Job import Job
 from UM.Application import Application
 from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator
