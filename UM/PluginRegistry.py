@@ -28,7 +28,7 @@ class PluginRegistry(object):
         plugins = self._findAllPlugins()
         for id in required_plugins:
             if id not in plugins:
-                Logger.log('e', "Plugin %s is required, but not added or loaded", id)
+                Logger.log("e", "Plugin %s is required, but not added or loaded", id)
                 return False
         return True
 
@@ -56,7 +56,7 @@ class PluginRegistry(object):
     def loadPlugin(self, id):
         if id in self._plugins:
             # Already loaded, do not load again
-            Logger.log('w', 'Plugin %s was already loaded', id)
+            Logger.log("w", "Plugin %s was already loaded", id)
             return
 
         plugin = self._findPlugin(id)
@@ -69,24 +69,24 @@ class PluginRegistry(object):
         try:
             to_register = plugin.register(self._application)
             if not to_register:
-                Logger.log('e', 'Plugin %s did not return any objects to register', id)
+                Logger.log("e", "Plugin %s did not return any objects to register", id)
                 return
             for plugin_type, plugin_object in to_register.items():
                 plugin_object.setPluginId(id)
                 try:
                     self._type_register_map[plugin_type](plugin_object)
                 except Exception as e:
-                    Logger.log('e' , 'Unable to add plugin %s' %e)
+                    Logger.log("e" , "Unable to add plugin %s" %e)
              
             self._plugins[id] = plugin
             self.addActivePlugin(id)
-            Logger.log('i', 'Loaded plugin %s', id)
+            Logger.log("i", "Loaded plugin %s", id)
         except KeyError as e:
-            Logger.log('e', 'Error loading plugin %s:', id)
-            Logger.log('e', 'Unknown plugin type: %s', str(e))
+            Logger.log("e", "Error loading plugin %s:", id)
+            Logger.log("e", "Unknown plugin type: %s", str(e))
         except Exception as e:
-            Logger.log('e', 'Error loading plugin %s:', id)
-            Logger.log('e', str(e))
+            Logger.log("e", "Error loading plugin %s:", id)
+            Logger.log("e", str(e))
 
     ##  Load all plugins matching a certain set of metadata
     #   \param metaData \type{dict} The metaData that needs to be matched.
@@ -137,8 +137,8 @@ class PluginRegistry(object):
     #                 - active_only: Boolean, True when only active plugin metadata should be returned.
     #   \sa getMetaData
     def getAllMetaData(self, **kwargs):
-        filter = kwargs.get('filter', {})
-        active_only = kwargs.get('active_only', False)
+        filter = kwargs.get("filter", {})
+        active_only = kwargs.get("active_only", False)
 
         plugins = self._findAllPlugins()
         return_values = []
@@ -209,20 +209,20 @@ class PluginRegistry(object):
     def _populateMetaData(self, id):
         plugin = self._findPlugin(id)
         if not plugin:
-            Logger.log('e', 'Could not find plugin %s', id)
+            Logger.log("e", "Could not find plugin %s", id)
             return False
 
         meta_data = None
         try:
             meta_data = plugin.getMetaData()
         except AttributeError as e:
-            Logger.log('e', 'An error occured getting metadata from plugin %s: %s', id, str(e))
+            Logger.log("e", "An error occured getting metadata from plugin %s: %s", id, str(e))
             raise InvalidMetaDataError(id)
 
         if not meta_data:
             raise InvalidMetaDataError(id)
 
-        meta_data['id'] = id
+        meta_data["id"] = id
 
         # Application-specific overrides
         appname = self._application.getApplicationName()
@@ -249,13 +249,13 @@ class PluginRegistry(object):
         try:
             file, path, desc = imp.find_module(id, [ location ])
         except ImportError as e:
-            Logger.log('e', "Import error when importing %s: %s", id, str(e))
+            Logger.log("e", "Import error when importing %s: %s", id, str(e))
             return False
 
         try:
             module = imp.load_module(id, file, path, desc)
         except ImportError as e:
-            Logger.log('e', "Import error loading module %s: %s", id, str(e))
+            Logger.log("e", "Import error loading module %s: %s", id, str(e))
             return False
         finally:
             if file:
@@ -274,7 +274,7 @@ class PluginRegistry(object):
             for file in os.listdir(folder):
                 filepath = os.path.join(folder, file)
                 if os.path.isdir(filepath):
-                    if os.path.isfile(os.path.join(filepath, '__init__.py')):
+                    if os.path.isfile(os.path.join(filepath, "__init__.py")):
                         ids.append(file)
                     else:
                         ids += self._findAllPlugins([ filepath ])
@@ -288,7 +288,7 @@ class PluginRegistry(object):
         for file in os.listdir(folder):
             filepath = os.path.join(folder, file)
             if os.path.isdir(filepath):
-                if file == id and os.path.exists(os.path.join(filepath, '__init__.py')):
+                if file == id and os.path.exists(os.path.join(filepath, "__init__.py")):
                     return folder
                 else:
                     filepath = self._locatePlugin(id, filepath)

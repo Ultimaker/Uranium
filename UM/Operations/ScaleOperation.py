@@ -5,7 +5,7 @@ class ScaleOperation(Operation.Operation):
         super().__init__()
         self._node = node
         self._old_scale = node.getScale()
-        self._set_scale = kwargs.get('set_scale', False)
+        self._set_scale = kwargs.get("set_scale", False)
         self._scale = scale
 
     def undo(self):

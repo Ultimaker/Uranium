@@ -63,11 +63,11 @@ class ToolHandle(SceneNode.SceneNode):
     def render(self, renderer):
         if not self._material:
             self._material = renderer.createMaterial(
-                Resources.getPath(Resources.ShadersLocation, 'toolhandle.vert'),
-                Resources.getPath(Resources.ShadersLocation, 'toolhandle.frag')
+                Resources.getPath(Resources.ShadersLocation, "toolhandle.vert"),
+                Resources.getPath(Resources.ShadersLocation, "toolhandle.frag")
             )
-            self._material.setUniformValue('u_disabledColor', self.DisabledColor)
-            self._material.setUniformValue('u_activeColor', self.DisabledColor)
+            self._material.setUniformValue("u_disabledColor", self.DisabledColor)
+            self._material.setUniformValue("u_activeColor", self.DisabledColor)
         
         if self._auto_scale:
             camera_position = self._scene.getActiveCamera().getWorldPosition()
@@ -94,9 +94,9 @@ class ToolHandle(SceneNode.SceneNode):
             return
 
         if axis:
-            self._material.setUniformValue('u_activeColor', self._axisColorMap[axis])
+            self._material.setUniformValue("u_activeColor", self._axisColorMap[axis])
         else:
-            self._material.setUniformValue('u_activeColor', self.DisabledColor)
+            self._material.setUniformValue("u_activeColor", self.DisabledColor)
         self._active_axis = axis
         self._scene.sceneChanged.emit(self)
 

@@ -43,7 +43,7 @@ class Application(SignalEmitter):
         if hasattr(sys, "frozen"):
             Resources.addResourcePath(os.path.dirname(sys.executable))
         else:
-            Resources.addResourcePath(os.path.join(os.path.abspath(os.path.dirname(__file__)), '..'))
+            Resources.addResourcePath(os.path.join(os.path.abspath(os.path.dirname(__file__)), ".."))
 
         self._main_thread = threading.current_thread()
 
@@ -51,15 +51,15 @@ class Application(SignalEmitter):
 
         self._renderer = None
 
-        PluginRegistry.addType('storage_device', self.addStorageDevice)
-        PluginRegistry.addType('backend', self.setBackend)
-        PluginRegistry.addType('logger', Logger.addLogger)
-        PluginRegistry.addType('extension', self.addExtension)
+        PluginRegistry.addType("storage_device", self.addStorageDevice)
+        PluginRegistry.addType("backend", self.setBackend)
+        PluginRegistry.addType("logger", Logger.addLogger)
+        PluginRegistry.addType("extension", self.addExtension)
 
         preferences = Preferences.getInstance()
-        preferences.addPreference('general/language', 'en')
+        preferences.addPreference("general/language", "en")
         try:
-            preferences.readFromFile(Resources.getPath(Resources.PreferencesLocation, self._application_name + '.cfg'))
+            preferences.readFromFile(Resources.getPath(Resources.PreferencesLocation, self._application_name + ".cfg"))
         except FileNotFoundError:
             pass
 
@@ -82,7 +82,7 @@ class Application(SignalEmitter):
         if hasattr(sys, "frozen"):
             self._plugin_registry.addPluginLocation(os.path.join(os.path.dirname(sys.executable), "plugins"))
         else:
-            self._plugin_registry.addPluginLocation(os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', 'plugins'))
+            self._plugin_registry.addPluginLocation(os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "plugins"))
 
         self._plugin_registry.setApplication(self)
 
@@ -209,7 +209,7 @@ class Application(SignalEmitter):
         self._machines.remove(machine)
 
         try:
-            path = Resources.getStoragePath(Resources.SettingsLocation, urllib.parse.quote_plus(machine.getName()) + '.cfg')
+            path = Resources.getStoragePath(Resources.SettingsLocation, urllib.parse.quote_plus(machine.getName()) + ".cfg")
         except FileNotFoundError:
             pass
         else:
@@ -305,7 +305,7 @@ class Application(SignalEmitter):
     def functionEvent(self, event):
         raise NotImplementedError("functionEvent must be implemented by subclasses.")
 
-    ##  Get the application's main thread.
+    ##  Get the application"s main thread.
     def getMainThread(self):
         return self._main_thread
 
@@ -320,11 +320,11 @@ class Application(SignalEmitter):
 
     def parseArguments(self):
         parser = argparse.ArgumentParser(prog = self.getApplicationName())
-        parser.add_argument('--version', action='version', version='%(prog)s 1.0')
-        parser.add_argument('--external-backend',
-                            dest='external-backend',
-                            action='store_true', default=False,
-                            help='Use an externally started backend instead of starting it automatically.')
+        parser.add_argument("--version", action="version", version="%(prog)s 1.0")
+        parser.add_argument("--external-backend",
+                            dest="external-backend",
+                            action="store_true", default=False,
+                            help="Use an externally started backend instead of starting it automatically.")
 
         self._parsed_arguments = vars(parser.parse_args())
 
@@ -339,7 +339,7 @@ class Application(SignalEmitter):
     def saveMachines(self):
         settings_directory = Resources.getStorageLocation(Resources.SettingsLocation)
         for machine in self._machines:
-            machine.saveValuesToFile(os.path.join(settings_directory, urllib.parse.quote_plus(machine.getName()) + '.cfg'))
+            machine.saveValuesToFile(os.path.join(settings_directory, urllib.parse.quote_plus(machine.getName()) + ".cfg"))
 
     def addExtension(self, extension):
         self._extensions.append(extension)

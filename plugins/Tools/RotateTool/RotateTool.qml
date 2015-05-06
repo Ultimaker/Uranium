@@ -10,14 +10,14 @@ Item {
         anchors.bottom: parent.bottom;
 
         //: Reset Rotation tool button
-        text: qsTr('Reset')
+        text: qsTr("Reset")
         iconSource: UM.Theme.icons.rotate_reset;
         //: Reset Rotation tool button tooltip
         tooltip: qsTr("Reset the rotation of the current selection.");
 
         style: UM.Theme.styles.tool_button;
 
-        onClicked: UM.ActiveTool.triggerAction('resetRotation');
+        onClicked: UM.ActiveTool.triggerAction("resetRotation");
     }
 
     CheckBox {
@@ -30,7 +30,7 @@ Item {
 
         style: UM.Theme.styles.checkbox;
 
-        checked: UM.ActiveTool.getProperty('RotationSnap');
-        onClicked: UM.ActiveTool.setProperty('RotationSnap', checked);
+        checked: UM.ActiveTool.getProperty("RotationSnap");
+        onClicked: UM.ActiveTool.setProperty("RotationSnap", checked);
     }
 }

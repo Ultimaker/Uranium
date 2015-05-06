@@ -15,7 +15,7 @@ class MeshView(View):
     def __init__(self):
         super().__init__()
 
-        Preferences.getInstance().addPreference('view/show_overhang', False)
+        Preferences.getInstance().addPreference("view/show_overhang", False)
         Preferences.getInstance().preferenceChanged.connect(self._onPreferenceChanged)
 
         self._enabled_material = None
@@ -26,40 +26,40 @@ class MeshView(View):
         renderer = self.getRenderer()
 
         if not self._enabled_material:
-            if Preferences.getInstance().getValue('view/show_overhang'):
-                self._enabled_material = renderer.createMaterial(Resources.getPath(Resources.ShadersLocation, 'default.vert'), Resources.getPath(Resources.ShadersLocation, 'overhang.frag'))
+            if Preferences.getInstance().getValue("view/show_overhang"):
+                self._enabled_material = renderer.createMaterial(Resources.getPath(Resources.ShadersLocation, "default.vert"), Resources.getPath(Resources.ShadersLocation, "overhang.frag"))
             else:
-                self._enabled_material = renderer.createMaterial(Resources.getPath(Resources.ShadersLocation, 'default.vert'), Resources.getPath(Resources.ShadersLocation, 'default.frag'))
+                self._enabled_material = renderer.createMaterial(Resources.getPath(Resources.ShadersLocation, "default.vert"), Resources.getPath(Resources.ShadersLocation, "default.frag"))
 
             self._enabled_material.setUniformValue("u_ambientColor", Color(0.3, 0.3, 0.3, 1.0))
             self._enabled_material.setUniformValue("u_diffuseColor", self.EnabledColor)
             self._enabled_material.setUniformValue("u_specularColor", Color(1.0, 1.0, 1.0, 1.0))
-            self._enabled_material.setUniformValue('u_overhangColor', Color(1.0, 0.0, 0.0, 1.0))
+            self._enabled_material.setUniformValue("u_overhangColor", Color(1.0, 0.0, 0.0, 1.0))
             self._enabled_material.setUniformValue("u_shininess", 50.0)
 
         if not self._disabled_material:
-            self._disabled_material = renderer.createMaterial(Resources.getPath(Resources.ShadersLocation, 'default.vert'), Resources.getPath(Resources.ShadersLocation, 'default.frag'))
+            self._disabled_material = renderer.createMaterial(Resources.getPath(Resources.ShadersLocation, "default.vert"), Resources.getPath(Resources.ShadersLocation, "default.frag"))
             self._disabled_material.setUniformValue("u_ambientColor", Color(0.3, 0.3, 0.3, 1.0))
             self._disabled_material.setUniformValue("u_diffuseColor", self.DisabledColor)
             self._disabled_material.setUniformValue("u_specularColor", Color(1.0, 1.0, 1.0, 1.0))
-            self._disabled_material.setUniformValue('u_overhangColor', Color(1.0, 0.0, 0.0, 1.0))
+            self._disabled_material.setUniformValue("u_overhangColor", Color(1.0, 0.0, 0.0, 1.0))
             self._disabled_material.setUniformValue("u_shininess", 50.0)
 
         if Application.getInstance().getActiveMachine():
             machine = Application.getInstance().getActiveMachine()
 
-            if machine.getSettingValueByKey('support_enable'):
-                angle = machine.getSettingValueByKey('support_angle')
+            if machine.getSettingValueByKey("support_enable"):
+                angle = machine.getSettingValueByKey("support_angle")
                 if angle != None:
-                    self._enabled_material.setUniformValue('u_overhangAngle', math.cos(math.radians(90 - angle)))
+                    self._enabled_material.setUniformValue("u_overhangAngle", math.cos(math.radians(90 - angle)))
             else:
-                self._enabled_material.setUniformValue('u_overhangAngle', math.cos(math.radians(0)))
+                self._enabled_material.setUniformValue("u_overhangAngle", math.cos(math.radians(0)))
 
         for node in DepthFirstIterator(scene.getRoot()):
             if not node.render(renderer):
                 if node.getMeshData() and node.isVisible():
                     # TODO: Find a better way to handle this
-                    if hasattr(node, '_outside_buildarea'):
+                    if hasattr(node, "_outside_buildarea"):
                         if node._outside_buildarea:
                             renderer.queueNode(node, material = self._disabled_material)
                         else:
@@ -71,5 +71,5 @@ class MeshView(View):
         pass
 
     def _onPreferenceChanged(self, preference):
-        if preference == 'view/show_overhang': ## Todo: This a printer only setting. Should be removed from Uranium.
+        if preference == "view/show_overhang": ## Todo: This a printer only setting. Should be removed from Uranium.
             self._enabled_material = None

@@ -20,24 +20,24 @@ class Setting(SignalEmitter):
         super().__init__()
         self._key = key
         self._i18n_catalog = catalog
-        self._label = kwargs.get('label', key)
-        self._description = kwargs.get('description', "")
-        self._default_value = kwargs.get('default', None)
-        self._value = kwargs.get('value', None)
-        self._type = kwargs.get('type', 'string')
-        self._visible = kwargs.get('visible', True)
+        self._label = kwargs.get("label", key)
+        self._description = kwargs.get("description", "")
+        self._default_value = kwargs.get("default", None)
+        self._value = kwargs.get("value", None)
+        self._type = kwargs.get("type", "string")
+        self._visible = kwargs.get("visible", True)
         self._validator = None
         self._conditions = []
         self._parent = None
         self._hide_if_all_children_visible = True
         self._children = []
-        self._category = kwargs.get('category', None)
+        self._category = kwargs.get("category", None)
         self._active = True
         self._machine_settings = self._category.getParent() if self._category else None
         self._active_if_setting = None
         self._active_if_value = None
-        self._options = kwargs.get('options', [])
-        self._unit = kwargs.get('unit', "")
+        self._options = kwargs.get("options", [])
+        self._unit = kwargs.get("unit", "")
         self._inherit = True
         self._inheritFunction = None
 
@@ -50,7 +50,7 @@ class Setting(SignalEmitter):
             setting.valueChanged.connect(self.conditionalActiveHandler)
             self.conditionalActiveHandler(setting)
         else:
-            Logger.log('w', "Unknown active_if setting %s", self._active_if_setting)
+            Logger.log("w", "Unknown active_if setting %s", self._active_if_setting)
             # Check current value and update active status. (It can happen that the default value is that it's not active)
             #self.setActive(str(self._machine_settings.getSettingValueByKey(self._active_if_setting)) == str(self._active_if_value))
 
@@ -76,9 +76,9 @@ class Setting(SignalEmitter):
 
     ##  Bind new validator to object based on it's current type
     def bindValidator(self):
-        if self._type == 'float':
+        if self._type == "float":
             FloatValidator(self) # Validator sets itself as validator to this setting
-        elif self._type == 'int':
+        elif self._type == "int":
             IntValidator(self)
 
     ##  Get the depth of this setting (how many steps is it 'away' from its category)
@@ -106,22 +106,22 @@ class Setting(SignalEmitter):
             self.setVisible(data["visible"])
 
         if "always_visible" in data:
-            self._hide_if_all_children_visible = not data['always_visible']
+            self._hide_if_all_children_visible = not data["always_visible"]
 
-        if 'unit' in data:
-            self._unit = data['unit']
+        if "unit" in data:
+            self._unit = data["unit"]
 
-        self._inherit = data.get('inherit', True)
+        self._inherit = data.get("inherit", True)
 
-        if 'inherit_function' in data:
+        if "inherit_function" in data:
             try:
-                tree = ast.parse(data['inherit_function'], 'eval')
+                tree = ast.parse(data["inherit_function"], "eval")
                 names = _SettingExpressionVisitor().visit(tree)
-                code = compile(data['inherit_function'], self._key, 'eval')
+                code = compile(data["inherit_function"], self._key, "eval")
             except (SyntaxError, TypeError) as e:
-                Logger.log('e', "Parse error in inherit function for setting {0}: {1}".format(self._key, str(e)))
+                Logger.log("e", "Parse error in inherit function for setting {0}: {1}".format(self._key, str(e)))
             except IllegalMethodError as e:
-                Logger.log('e', "Use of illegal method {0} in inherit function for setting {1}".format(str(e), self._key))
+                Logger.log("e", "Use of illegal method {0} in inherit function for setting {1}".format(str(e), self._key))
             else:
                 self._inheritFunction = self._createInheritFunction(code, names)
 
@@ -137,7 +137,7 @@ class Setting(SignalEmitter):
             min_value_warning = data["min_value_warning"]
         if "max_value_warning" in data:
             max_value_warning = data["max_value_warning"]
-        if  self.getValidator() is not None: #Strings don't have validators as of yet
+        if  self.getValidator() is not None: #Strings don"t have validators as of yet
             self.getValidator().setRange(min_value,max_value,min_value_warning,max_value_warning)
 
         if "active_if" in data:
@@ -304,7 +304,7 @@ class Setting(SignalEmitter):
                     try:
                         inherit_value = self._inheritFunction(self._parent, self._machine_settings)
                     except Exception as e:
-                        Logger.log('e', "An error occurred in inherit function for {0}: {1}".format(self._key, str(e)))
+                        Logger.log("e", "An error occurred in inherit function for {0}: {1}".format(self._key, str(e)))
                     else:
                         self.setValue(inherit_value)
                 else:
@@ -322,7 +322,7 @@ class Setting(SignalEmitter):
         if self._value != value:
             # Strings and enums are stored as strings, do not try to parse them.
             # In addition, if we get a non-string type, also do not try to parse it.
-            if type(value) is str and self._type != 'string' and self._type != 'enum':
+            if type(value) is str and self._type != "string" and self._type != "enum":
                 try:
                     self._value = ast.literal_eval(value)
                 except SyntaxError:
@@ -350,7 +350,7 @@ class Setting(SignalEmitter):
         return self._children
 
     def __repr__(self):
-        return '<Setting: %s>' % (self._key)
+        return "<Setting: %s>" % (self._key)
 
 ## private:
     def _onChildVisibileChanged(self, setting):
@@ -361,8 +361,8 @@ class Setting(SignalEmitter):
     def _createInheritFunction(self, code, names):
         def inherit(parent, settings, c = code, n = names):
             locals = {
-                'parent_value': parent.getValue(),
-                'settings': settings
+                "parent_value": parent.getValue(),
+                "settings": settings
             }
 
             for name in names:
@@ -390,13 +390,13 @@ class _SettingExpressionVisitor(ast.NodeVisitor):
             self.names.append(node.id)
 
     _knownNames = [
-        'parent_value',
-        'math'
+        "parent_value",
+        "math"
     ]
 
     _blacklist = [
-        'sys',
-        'os',
-        'import',
-        '__import__'
+        "sys",
+        "os",
+        "import",
+        "__import__"
     ]

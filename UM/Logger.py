@@ -45,4 +45,4 @@ class LogOutput(PluginObject):
     #   \param message \type{string} The message to log.
     #   \exception NotImplementedError
     def log(self, log_type, message):
-        raise NotImplementedError('Logger was not correctly implemented')
+        raise NotImplementedError("Logger was not correctly implemented")

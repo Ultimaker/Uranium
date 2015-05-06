@@ -16,9 +16,9 @@ class PointCloudNode(SceneNode.SceneNode):
         self._material = None
    
     ##   \brief Create new material. 
-    #    This uses the 'global' index of the cloud to create a color. The color is selected from a list of 64 colors.
+    #    This uses the "global" index of the cloud to create a color. The color is selected from a list of 64 colors.
     def createMaterial(self,renderer):
-        self._material = renderer.createMaterial(Resources.getPath(Resources.ShadersLocation, 'default.vert'), Resources.getPath(Resources.ShadersLocation, 'default.frag'))
+        self._material = renderer.createMaterial(Resources.getPath(Resources.ShadersLocation, "default.vert"), Resources.getPath(Resources.ShadersLocation, "default.frag"))
         self._material.setUniformValue("u_ambientColor", Color(0.3, 0.3, 0.3, 1.0))
         cloud_color = ColorGenerator().getColor(Application.getInstance().getCloudNodeIndex(self))
         self._material.setUniformValue("u_diffuseColor", Color(cloud_color[0], cloud_color[1], cloud_color[2], 1.0))

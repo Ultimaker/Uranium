@@ -17,19 +17,19 @@ class JobsModel(ListModel):
         jobQueue.jobFinished.connect(self._onJobFinished)
 
         self._watched_job_indices = {}
-        self.addRoleName(self.IdRole, 'id')
-        self.addRoleName(self.DescriptionRole, 'description')
-        self.addRoleName(self.ProgressRole, 'progress')
+        self.addRoleName(self.IdRole, "id")
+        self.addRoleName(self.DescriptionRole, "description")
+        self.addRoleName(self.ProgressRole, "progress")
 
     def _onJobStarted(self, job):
         if job.isVisible():
-            self.appendItem({ 'id': id(job), 'description': job.getDescription(), 'progress': -1 })
+            self.appendItem({ "id": id(job), "description": job.getDescription(), "progress": -1 })
             job.progress.connect(self._onJobProgress)
             self._watched_job_indices[job] = self.rowCount() - 1
 
     def _onJobProgress(self, job, progress):
         if job in self._watched_job_indices:
-            self.setProperty(self._watched_job_indices[job], 'progress', progress)
+            self.setProperty(self._watched_job_indices[job], "progress", progress)
 
     def _onJobFinished(self, job):
         if job in self._watched_job_indices:

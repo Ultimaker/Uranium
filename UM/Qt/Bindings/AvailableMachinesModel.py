@@ -24,7 +24,7 @@ class AvailableMachinesModel(ListModel):
 
     @pyqtSlot(int, str)
     def createMachine(self, index, name):
-        type = self.getItem(index)['type']
+        type = self.getItem(index)["type"]
 
         machine = MachineSettings()
         machine.loadSettingsFromFile(Resources.getPath(Resources.SettingsLocation, type))
@@ -48,23 +48,23 @@ class AvailableMachinesModel(ListModel):
                 if os.path.isdir(path):
                     continue
 
-                with open(path, 'rt', -1, 'utf-8') as f:
+                with open(path, "rt", -1, "utf-8") as f:
                     try:
                         data = json.load(f)
                     except ValueError as e:
-                        Logger.log('e', "Error when loading file {0}: {1}".format(file, e))
+                        Logger.log("e", "Error when loading file {0}: {1}".format(file, e))
                         continue
 
                 # Ignore any file that is explicitly marked as non-visible
-                if not data.get('visible', True):
+                if not data.get("visible", True):
                     continue
 
                 # Ignore any file that is marked as non-visible for the current application.
                 appname = Application.getInstance().getApplicationName()
                 if appname in data:
-                    if not data[appname].get('visible', True):
+                    if not data[appname].get("visible", True):
                         continue
 
-                self.appendItem({ 'name': data['name'], 'type': file })
+                self.appendItem({ "name": data["name"], "type": file })
 
-                self.sort(lambda e: e['name'])
+                self.sort(lambda e: e["name"])

@@ -30,12 +30,12 @@ class ListModel(QAbstractListModel):
         return self._items[index.row()][self._role_names[role]]
 
     ##  Get an item from the list
-    @pyqtSlot(int, result='QVariantMap')
+    @pyqtSlot(int, result="QVariantMap")
     def getItem(self, index):
         return self._items[index]
 
     ##  The list of items in this model.
-    @pyqtProperty('QVariantList')
+    @pyqtProperty("QVariantList")
     def items(self):
         return self._items
 

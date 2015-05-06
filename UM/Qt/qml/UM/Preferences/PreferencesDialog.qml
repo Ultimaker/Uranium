@@ -74,6 +74,6 @@ Dialog {
     }
 
     function insertPage(index, name, icon, page) {
-        configPagesModel.insert(index, { 'name': name, 'icon': icon, 'page': page });
+        configPagesModel.insert(index, { "name": name, "icon": icon, "page": page });
     }
 }

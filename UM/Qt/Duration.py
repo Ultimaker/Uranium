@@ -80,7 +80,7 @@ class Duration(QObject):
 
     ##  Get a string representation of this object that can be used to display in interfaces.
     #
-    #   This is not called toString() primarily because that conflicts with JavaScript's toString()
+    #   This is not called toString() primarily because that conflicts with JavaScript"s toString()
     @pyqtSlot(int, result = str)
     def getDisplayString(self, format = DurationFormat.Format.Short):
         if format == DurationFormat.Format.Short:
@@ -96,5 +96,5 @@ class Duration(QObject):
             else:
                 return i18n_catalog.i18nc("Minutes only duration format, {0} is minutes", "{0} minutes".format(self._minutes))
 
-        return ''
+        return ""
 

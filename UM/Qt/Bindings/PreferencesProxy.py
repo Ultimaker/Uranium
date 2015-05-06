@@ -7,11 +7,11 @@ class PreferencesProxy(QObject):
         super().__init__(parent)
         self._preferences = Preferences.getInstance()
 
-    @pyqtSlot(str, result = 'QVariant')
+    @pyqtSlot(str, result = "QVariant")
     def getValue(self, key):
         return self._preferences.getValue(key)
 
-    @pyqtSlot(str, 'QVariant')
+    @pyqtSlot(str, "QVariant")
     def setValue(self, key, value):
         self._preferences.setValue(key, value)
 

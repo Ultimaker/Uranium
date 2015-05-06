@@ -8,7 +8,7 @@ class MLPWriter(WorkspaceWriter):
     
     def write(self, file_name, storage_device):
         '''if(self._supported_extension in file_name):
-            f = storage_device.openFile(file_name, 'wb')
+            f = storage_device.openFile(file_name, "wb")
             mesh_lab_project = ET.Element("MeshLabProject")
             mesh_group = ET.SubElement(mesh_lab_project,"MeshGroup")
             mesh = ET.SubElement(mesh_group, "MLMesh", {"label":"test","filename":"test.ply"})

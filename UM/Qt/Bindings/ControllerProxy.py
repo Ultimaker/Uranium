@@ -40,7 +40,7 @@ class ControllerProxy(QObject):
     @pyqtSlot()
     def saveWorkspace(self):
         #self.loadWorkSpace() # DEBUG STUFF
-        Application.getInstance().getWorkspaceFileHandler().write("derp.mlp",Application.getInstance().getStorageDevice('local'))
+        Application.getInstance().getWorkspaceFileHandler().write("derp.mlp",Application.getInstance().getStorageDevice("local"))
         pass #TODO: Implement workspace saving
 
     @pyqtSlot()
@@ -55,7 +55,7 @@ class ControllerProxy(QObject):
         node = job.getResult()
         self._controller.getScene().setRoot(node)
 
-    contextMenuRequested = pyqtSignal('quint64', arguments=['objectId'])
+    contextMenuRequested = pyqtSignal("quint64", arguments=["objectId"])
 
     def _onContextMenuRequested(self, x, y):
         id = self._renderer.getIdAtCoordinate(x, y)

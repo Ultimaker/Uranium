@@ -12,7 +12,7 @@ class TestJob(Job):
         super().__init__()
 
     def run(self):
-        self.setResult('TestJob')
+        self.setResult("TestJob")
 
 class LongTestJob(Job):
     def __init__(self):
@@ -20,11 +20,11 @@ class LongTestJob(Job):
 
     def run(self):
         time.sleep(1.5)
-        self.setResult('LongTestJob')
+        self.setResult("LongTestJob")
 
 class JobQueueApplication(Application):
     def __init__(self):
-        super().__init__('test')
+        super().__init__("test")
 
     def functionEvent(self, event):
         pass
@@ -61,7 +61,7 @@ class TestJobQueue(unittest.TestCase):
         time.sleep(0.1)
 
         self.assertEqual(job.isFinished(), True)
-        self.assertEqual(job.getResult(), 'TestJob')
+        self.assertEqual(job.getResult(), "TestJob")
 
         job1 = TestJob()
         job2 = TestJob()
@@ -72,9 +72,9 @@ class TestJobQueue(unittest.TestCase):
         time.sleep(0.1)
 
         self.assertEqual(job1.isFinished(), True)
-        self.assertEqual(job1.getResult(), 'TestJob')
+        self.assertEqual(job1.getResult(), "TestJob")
         self.assertEqual(job2.isFinished(), True)
-        self.assertEqual(job2.getResult(), 'TestJob')
+        self.assertEqual(job2.getResult(), "TestJob")
 
         job = LongTestJob()
         job.start()
@@ -87,7 +87,7 @@ class TestJobQueue(unittest.TestCase):
         time.sleep(1)
 
         self.assertEqual(job.isFinished(), True)
-        self.assertEqual(job.getResult(), 'LongTestJob')
+        self.assertEqual(job.getResult(), "LongTestJob")
 
         jobs = []
         for i in range(10):
@@ -98,7 +98,7 @@ class TestJobQueue(unittest.TestCase):
         time.sleep(0.5)
         for job in jobs:
             self.assertEqual(job.isFinished(), True)
-            self.assertEqual(job.getResult(), 'TestJob')
+            self.assertEqual(job.getResult(), "TestJob")
 
     def test_Remove(self):
         pass

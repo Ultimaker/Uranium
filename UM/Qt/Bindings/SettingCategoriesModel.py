@@ -46,6 +46,6 @@ class SettingCategoriesModel(ListModel):
 
     def _onCategoryVisibleChanged(self, category):
         for index in range(len(self.items)):
-            if self.getItem(index)['id'] == category.getKey():
+            if self.getItem(index)["id"] == category.getKey():
                 self.setProperty(index, "visible", category.isVisible())
 

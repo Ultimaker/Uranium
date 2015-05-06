@@ -28,11 +28,11 @@ class VisibleMessagesModel(ListModel):
     
     def addMessage(self, message):
         self.appendItem({
-                'text': message.getText(),
-                'progress': message.getProgress(),
-                'max_progress': message.getMaxProgress(),
-                'id': id(message),
-                'actions':self.createActionsModel(message.getActions())
+                "text": message.getText(),
+                "progress": message.getProgress(),
+                "max_progress": message.getMaxProgress(),
+                "id": id(message),
+                "actions":self.createActionsModel(message.getActions())
             })
     
     def createActionsModel(self, actions):

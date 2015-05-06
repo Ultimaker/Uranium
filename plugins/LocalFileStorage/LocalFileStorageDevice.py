@@ -40,7 +40,7 @@ class LocalFileStorageDevice(StorageDevice, SignalEmitter):
             from . import LinuxRemovableDrives
             return LinuxRemovableDrives.LinuxRemovableDrives()
         else:
-            Logger.log('e', "Unsupported system %s, no removable device hotplugging support available.", platform.system())
+            Logger.log("e", "Unsupported system %s, no removable device hotplugging support available.", platform.system())
             return None
 
     def _onDrivesChanged(self, newDrives):

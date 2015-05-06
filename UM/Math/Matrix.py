@@ -3,7 +3,7 @@ import math
 
 from UM.Math.Vector import Vector
 
-numpy.seterr(divide='ignore')
+numpy.seterr(divide="ignore")
 
 ## This class is a 4x4 homogenous matrix wrapper arround numpy.
 #

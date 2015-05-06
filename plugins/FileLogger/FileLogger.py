@@ -13,25 +13,25 @@ class FileLogger(LogOutput):
     def setFileName(self, file_name):
         if(".log" in file_name):
             file_handler = logging.FileHandler(file_name)
-            format_handler = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+            format_handler = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
             file_handler.setFormatter(format_handler)
             self._logger.addHandler(file_handler)
         else:
             pass #TODO, add handling
     
     ##  Log message to file. 
-    #   \param log_type 'e' (error) , 'i'(info), 'd'(debug) or 'w'(warning)
+    #   \param log_type "e" (error) , "i"(info), "d"(debug) or "w"(warning)
     #   \param message String containing message to be logged
     def log(self, log_type, message):
-        if(log_type == 'w'): # Warning
+        if(log_type == "w"): # Warning
             self._logger.warning(message)
-        elif(log_type == 'i'): # Info
+        elif(log_type == "i"): # Info
             self._logger.info(message)
-        elif(log_type == 'e'): # Error
+        elif(log_type == "e"): # Error
             self._logger.error(message)
-        elif(log_type == 'd'):
+        elif(log_type == "d"):
             self._logger.debug(message)
-        elif(log_type == 'c'):
+        elif(log_type == "c"):
             self._logger.critical(message)
         else:
             print("Unable to log")

@@ -10,7 +10,7 @@ class BackendProxy(QObject):
         if self._backend:
             self._backend.processingProgress.connect(self._onProcessingProgress)
 
-    processingProgress = pyqtSignal(float, arguments = ['amount'])
+    processingProgress = pyqtSignal(float, arguments = ["amount"])
     
     @pyqtProperty(float, notify = processingProgress)
     def progress(self):

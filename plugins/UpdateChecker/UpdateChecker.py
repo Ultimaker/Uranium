@@ -36,26 +36,26 @@ class UpdateChecker(Extension):
     #   allow the user to download it.
     def checkNewVersion(self):
         application_name = Application.getInstance().getApplicationName()
-        Logger.log('i', "Checking for new version of %s" % application_name)
+        Logger.log("i", "Checking for new version of %s" % application_name)
 
         try:
             latest_version_file = urllib.request.urlopen("http://software.ultimaker.com/latest.json")
         except Exception as e:
-            Logger.log('e', "Failed to check for new version. %s" %e)
+            Logger.log("e", "Failed to check for new version. %s" %e)
 
         try:
             reader = codecs.getreader("utf-8")
             data = json.load(reader(latest_version_file)) 
-            local_version = list(map(int, Application.getInstance().getVersion().split('.')))
+            local_version = list(map(int, Application.getInstance().getVersion().split(".")))
             
             if application_name in data:
                 for key, value in data[application_name].items():
                     if "major" in value and "minor" in value and "revision" in value and "url" in value:
                         os = key
                         if platform.system() == os: #TODO: add architecture check
-                            newest_version = [int(value["major"]), int(value['minor']), int(value['revision'])]
+                            newest_version = [int(value["major"]), int(value["minor"]), int(value["revision"])]
                             if local_version < newest_version:
-                                Logger.log('i', "Found a new version of the software. Spawning message")
+                                Logger.log("i", "Found a new version of the software. Spawning message")
                                 message = Message(i18n_catalog.i18n("A new version is available!"))
                                 message.addAction("download", "Download", "[no_icon]", "[no_description]")
                                 self._url = value["url"]
@@ -63,8 +63,8 @@ class UpdateChecker(Extension):
                                 message.show()
                                 break
                     else:
-                        Logger.log('e', "Could not find version information or download url for update.")
+                        Logger.log("e", "Could not find version information or download url for update.")
             else:
-                Logger.log('e', "Did not find any version information for %s." % application_name)
+                Logger.log("e", "Did not find any version information for %s." % application_name)
         except Exception as e:
-            Logger.log('e', "Exception in update checker: %s" % (e))
+            Logger.log("e", "Exception in update checker: %s" % (e))

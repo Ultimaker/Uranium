@@ -31,23 +31,23 @@ class PluginsModel(ListModel):
         self.clear() 
         active_plugins = self._plugin_registery.getActivePlugins()
         for plugin in self._plugin_registery.getAllMetaData():
-            if 'plugin' not in plugin:
-                Logger.log('e', 'Plugin is missing a plugin metadata entry')
+            if "plugin" not in plugin:
+                Logger.log("e", "Plugin is missing a plugin metadata entry")
                 continue
 
-            aboutData = plugin['plugin']
+            aboutData = plugin["plugin"]
             self.appendItem({
-                'required': plugin['id'] in self._required_plugins,
-                'enabled': plugin['id'] in active_plugins,
-                'type': plugin["type"],
+                "required": plugin["id"] in self._required_plugins,
+                "enabled": plugin["id"] in active_plugins,
+                "type": plugin["type"],
 
-                'name': aboutData.get('name', plugin['id']),
-                'description': aboutData.get('description', ''),
-                'author': aboutData.get('author', 'John Doe'),
-                'version': aboutData.get('version', 'Unknown')
+                "name": aboutData.get("name", plugin["id"]),
+                "description": aboutData.get("description", ""),
+                "author": aboutData.get("author", "John Doe"),
+                "version": aboutData.get("version", "Unknown")
             })
 
-            self.sort(lambda k: k['type'])
+            self.sort(lambda k: k["type"])
 
     @pyqtSlot(str,bool)
     def setEnabled(self, name, enabled):

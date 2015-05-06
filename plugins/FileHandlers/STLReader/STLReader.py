@@ -19,10 +19,10 @@ class STLReader(MeshReader):
         extension = os.path.splitext(file_name)[1]
         if extension.lower() == self._supported_extension:
             mesh = MeshData()
-            f = storage_device.openFile(file_name, 'rb')
+            f = storage_device.openFile(file_name, "rb")
             if not self._loadBinary(mesh, f):
                 storage_device.closeFile(f)
-                f = storage_device.openFile(file_name, 'rt')
+                f = storage_device.openFile(file_name, "rt")
                 try:
                     self._loadAscii(mesh, f)
                 except UnicodeDecodeError:
@@ -43,8 +43,8 @@ class STLReader(MeshReader):
     def _loadAscii(self, mesh, f):
         num_verts = 0
         for lines in f:
-            for line in lines.split('\r'):
-                if 'vertex' in line:
+            for line in lines.split("\r"):
+                if "vertex" in line:
                     num_verts += 1
 
         mesh.reserveFaceCount(num_verts / 3)
@@ -52,8 +52,8 @@ class STLReader(MeshReader):
         vertex = 0
         face = [None, None, None]
         for lines in f:
-            for line in lines.split('\r'):
-                if 'vertex' in line:
+            for line in lines.split("\r"):
+                if "vertex" in line:
                     face[vertex] = line.split()[1:]
                     vertex += 1
                     if vertex == 3:
@@ -71,7 +71,7 @@ class STLReader(MeshReader):
     def _loadBinary(self, mesh, f):
         f.read(80) #Skip the header
         
-        num_faces = struct.unpack('<I', f.read(4))[0]
+        num_faces = struct.unpack("<I", f.read(4))[0]
         # On ascii files, the num_faces will be big, due to 4 ascii bytes being seen as an unsigned int.
         if num_faces < 1 or num_faces > 1000000000:
             return False
@@ -83,7 +83,7 @@ class STLReader(MeshReader):
 
         mesh.reserveFaceCount(num_faces)
         for idx in range(0, num_faces):
-            data = struct.unpack(b'<ffffffffffffH', f.read(50))
+            data = struct.unpack(b"<ffffffffffffH", f.read(50))
             mesh.addFace(
                 data[3], data[5], -data[4],
                 data[6], data[8], -data[7],

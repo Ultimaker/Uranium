@@ -13,7 +13,7 @@ class WriteMeshJob(Job):
         super().__init__()
         self._filename = filename
         self._handler = Application.getInstance().getMeshFileHandler()
-        self._device = Application.getInstance().getStorageDevice('LocalFileStorage')
+        self._device = Application.getInstance().getStorageDevice("LocalFileStorage")
         self._mesh = mesh
 
     def getFileName(self):

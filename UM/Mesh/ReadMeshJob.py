@@ -15,7 +15,7 @@ class ReadMeshJob(Job):
         super().__init__()
         self._filename = filename
         self._handler = Application.getInstance().getMeshFileHandler()
-        self._device = Application.getInstance().getStorageDevice('LocalFileStorage')
+        self._device = Application.getInstance().getStorageDevice("LocalFileStorage")
 
     def getFileName(self):
         return self._filename

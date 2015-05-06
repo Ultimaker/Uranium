@@ -32,16 +32,16 @@ class Controller(SignalEmitter):
         self._camera_tool = None
         self._selection_tool = None
 
-        PluginRegistry.addType('view', self.addView)
-        PluginRegistry.addType('tool', self.addTool)
-        PluginRegistry.addType('input_device', self.addInputDevice)
+        PluginRegistry.addType("view", self.addView)
+        PluginRegistry.addType("tool", self.addTool)
+        PluginRegistry.addType("input_device", self.addInputDevice)
 
     ##  Get the application.
     #   \returns Application \type {Application}
     def getApplication(self):
         return self._application
 
-    ##  Add a view by name if it's not already added.
+    ##  Add a view by name if it"s not already added.
     #   \param name \type{string} Unique identifier of view (usually the plugin name)
     #   \param view \type{View} The view to be added
     def addView(self, view):
@@ -52,7 +52,7 @@ class Controller(SignalEmitter):
             view.setRenderer(self._application.getRenderer())
             self.viewsChanged.emit()
         else:
-            Logger.log('w', '%s was already added to view list. Unable to add it again.',name)
+            Logger.log("w", "%s was already added to view list. Unable to add it again.",name)
 
     ##  Request view by name. Returns None if no view is found.
     #   \param name \type{string} Unique identifier of view (usually the plugin name)
@@ -61,7 +61,7 @@ class Controller(SignalEmitter):
         try:
             return self._views[name]
         except KeyError: #No such view  
-            Logger.log('e', "Unable to find %s in view list",name)
+            Logger.log("e", "Unable to find %s in view list",name)
             return None
 
     ##  Return all views.
@@ -81,7 +81,7 @@ class Controller(SignalEmitter):
             self._active_view = self._views[name]
             self.activeViewChanged.emit()
         except KeyError:
-            Logger.log('e', "No view named %s found", name)
+            Logger.log("e", "No view named %s found", name)
 
     ##  Emitted when the list of views changes.
     viewsChanged = Signal()
@@ -97,7 +97,7 @@ class Controller(SignalEmitter):
             self._input_devices[name] = device
             device.event.connect(self.event)
         else:
-            Logger.log('w', '%s was already added to input device list. Unable to add it again.' % name)
+            Logger.log("w", "%s was already added to input device list. Unable to add it again." % name)
 
     ##  Request input device by name. Returns None if no device is found.
     #   \param name \type{string} Unique identifier of input device (usually the plugin name)
@@ -106,7 +106,7 @@ class Controller(SignalEmitter):
         try:
             return self._input_devices[name]
         except KeyError: #No such device
-            Logger.log('e', "Unable to find %s in input devices",name)
+            Logger.log("e", "Unable to find %s in input devices",name)
             return None
 
     ##  Remove an input device from the list of input devices.
@@ -124,7 +124,7 @@ class Controller(SignalEmitter):
         try:
             return self._tools[name]
         except KeyError: #No such tool
-            Logger.log('e', "Unable to find %s in tools",name)
+            Logger.log("e", "Unable to find %s in tools",name)
             return None
     
     ##  Get all tools
@@ -140,7 +140,7 @@ class Controller(SignalEmitter):
             self._tools[name] = tool
             self.toolsChanged.emit()
         else: 
-            Logger.log('w', '%s was already added to tool list. Unable to add it again.', name)
+            Logger.log("w", "%s was already added to tool list. Unable to add it again.", name)
 
     ##  Request active tool. Returns None if there is no active tool
     #   \return Tool \type{Tool} if an tool is active, None otherwise.
@@ -164,7 +164,7 @@ class Controller(SignalEmitter):
 
             self.activeToolChanged.emit()
         except KeyError:
-            Logger.log('e', 'No tool named %s found.', name)
+            Logger.log("e", "No tool named %s found.", name)
 
     ##  Emitted when the list of tools changes.
     toolsChanged = Signal()

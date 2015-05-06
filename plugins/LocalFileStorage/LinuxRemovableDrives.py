@@ -21,15 +21,15 @@ class LinuxRemovableDrives(threading.Thread, SignalEmitter):
     def run(self):
         while True:
             drives = {}
-            for volume in glob.glob('/media/*'):
+            for volume in glob.glob("/media/*"):
                 if os.path.ismount(volume):
                     drives[os.path.basename(volume)] = volume
-                elif volume == '/media/'+os.getenv('USER'):
-                    for volume in glob.glob('/media/'+os.getenv('USER')+'/*'):
+                elif volume == "/media/"+os.getenv("USER"):
+                    for volume in glob.glob("/media/"+os.getenv("USER")+"/*"):
                         if os.path.ismount(volume):
                             drives[os.path.basename(volume)] =  volume
 
-            for volume in glob.glob('/run/media/' + os.getenv('USER') + '/*'):
+            for volume in glob.glob("/run/media/" + os.getenv("USER") + "/*"):
                 if os.path.ismount(volume):
                     drives[os.path.basename(volume)] = volume
 

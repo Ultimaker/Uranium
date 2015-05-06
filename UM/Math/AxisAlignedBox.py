@@ -26,11 +26,11 @@ class AxisAlignedBox:
             self.setBack(-args[2] / 2)
             self.setFront(args[2] / 2)
 
-        if 'minimum' in kwargs:
-            self._min = kwargs['minimum']
+        if "minimum" in kwargs:
+            self._min = kwargs["minimum"]
 
-        if 'maximum' in kwargs:
-            self._max = kwargs['maximum']
+        if "maximum" in kwargs:
+            self._max = kwargs["maximum"]
 
         self._ensureMinMax()
 

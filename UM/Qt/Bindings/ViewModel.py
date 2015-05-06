@@ -17,29 +17,29 @@ class ViewModel(ListModel):
         self._controller.viewsChanged.connect(self._onViewsChanged)
         self._onViewsChanged()
 
-        self.addRoleName(self.IdRole, 'id')
-        self.addRoleName(self.NameRole, 'name')
-        self.addRoleName(self.ActiveRole, 'active')
-        self.addRoleName(self.DescriptionRole, 'description')
-        self.addRoleName(self.IconRole, 'icon')
+        self.addRoleName(self.IdRole, "id")
+        self.addRoleName(self.NameRole, "name")
+        self.addRoleName(self.ActiveRole, "active")
+        self.addRoleName(self.DescriptionRole, "description")
+        self.addRoleName(self.IconRole, "icon")
 
     def _onViewsChanged(self):
         self.clear()
         views = self._controller.getAllViews()
 
         for id in views:
-            viewMetaData = PluginRegistry.getInstance().getMetaData(id).get('view', {})
+            viewMetaData = PluginRegistry.getInstance().getMetaData(id).get("view", {})
 
             # Skip view modes that are marked as not visible
-            if 'visible' in viewMetaData and not viewMetaData['visible']:
+            if "visible" in viewMetaData and not viewMetaData["visible"]:
                 continue
 
             # Metadata elements
-            name = viewMetaData.get('name', id)
-            description = viewMetaData.get('description', '')
-            iconName = viewMetaData.get('icon', '')
+            name = viewMetaData.get("name", id)
+            description = viewMetaData.get("description", "")
+            iconName = viewMetaData.get("icon", "")
 
             currentView = self._controller.getActiveView()
-            self.appendItem({ 'id': id, 'name': name, 'active': id == currentView.getPluginId(), 'description': description, 'icon': iconName })
+            self.appendItem({ "id": id, "name": name, "active": id == currentView.getPluginId(), "description": description, "icon": iconName })
 
-        self.sort(lambda t: t['name'])
+        self.sort(lambda t: t["name"])

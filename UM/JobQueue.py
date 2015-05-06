@@ -13,13 +13,13 @@ class JobQueue(SignalEmitter):
     #
     #   \param thread_count The amount of threads to use. Can be a positive integer or 'auto'.
     #                       When 'auto', the number of threads is based on the number of cpus on the machine.
-    def __init__(self, thread_count = 'auto'):
+    def __init__(self, thread_count = "auto"):
         if JobQueue._instance is None:
             JobQueue._instance = self
         else:
-            raise RuntimeError('Attempted to create multiple instances of JobQueue')
+            raise RuntimeError("Attempted to create multiple instances of JobQueue")
 
-        if thread_count == 'auto':
+        if thread_count == "auto":
             try:
                 thread_count = multiprocessing.cpu_count()
             except NotImplementedError:

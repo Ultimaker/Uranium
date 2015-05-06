@@ -16,13 +16,13 @@ class MeshBuilder:
         self._mesh_data.addVertex(v0.x, v0.y, v0.z)
         self._mesh_data.addVertex(v1.x, v1.y, v1.z)
 
-        color = kwargs.get('color', None)
+        color = kwargs.get("color", None)
         if color:
             self._mesh_data.setVertexColor(self._mesh_data.getVertexCount() - 2, color)
             self._mesh_data.setVertexColor(self._mesh_data.getVertexCount() - 1, color)
 
     def addFace(self, v0, v1, v2, **kwargs):
-        normal = kwargs.get('normal', None)
+        normal = kwargs.get("normal", None)
         if normal:
             self._mesh_data.addFaceWithNormals(
                                 v0.x, v0.y, v0.z,
@@ -35,7 +35,7 @@ class MeshBuilder:
         else:
             self._mesh_data.addFace(v0.x, v0.y, v0.z, v1.x, v1.y, v1.z, v2.x, v2.y, v2.z)
 
-        color = kwargs.get('color', None)
+        color = kwargs.get("color", None)
         if color:
             self._mesh_data.setVertexColor(self._mesh_data.getVertexCount() - 3, color)
             self._mesh_data.setVertexColor(self._mesh_data.getVertexCount() - 2, color)
@@ -43,20 +43,20 @@ class MeshBuilder:
 
     def addQuad(self, v0, v1, v2, v3, **kwargs):
         self.addFace(v0, v2, v1,
-            color = kwargs.get('color'),
-            normal = kwargs.get('normal')
+            color = kwargs.get("color"),
+            normal = kwargs.get("normal")
         )
         self.addFace(v0, v3, v2,
-            color = kwargs.get('color'),
-            normal = kwargs.get('normal')
+            color = kwargs.get("color"),
+            normal = kwargs.get("normal")
         )
 
     def addCube(self, **kwargs):
-        width = kwargs['width']
-        height = kwargs['height']
-        depth = kwargs['depth']
+        width = kwargs["width"]
+        height = kwargs["height"]
+        depth = kwargs["depth"]
 
-        center = kwargs.get('center', Vector(0, 0, 0))
+        center = kwargs.get("center", Vector(0, 0, 0))
 
         minW = -width / 2 + center.x
         maxW = width / 2 + center.x
@@ -100,20 +100,20 @@ class MeshBuilder:
         ], dtype=numpy.int32)
         self._mesh_data.addIndices(indices)
 
-        color = kwargs.get('color', None)
+        color = kwargs.get("color", None)
         if color:
             vertex_count = self._mesh_data.getVertexCount()
             for i in range(1, 9):
                 self._mesh_data.setVertexColor(vertex_count - i, color)
 
     def addArc(self, **kwargs):
-        radius = kwargs['radius']
-        axis = kwargs['axis']
+        radius = kwargs["radius"]
+        axis = kwargs["axis"]
 
-        max_angle = kwargs.get('angle', math.pi * 2)
-        center = kwargs.get('center', Vector(0, 0, 0))
-        sections = kwargs.get('sections', 32)
-        color = kwargs.get('color', None)
+        max_angle = kwargs.get("angle", math.pi * 2)
+        center = kwargs.get("center", Vector(0, 0, 0))
+        sections = kwargs.get("sections", 32)
+        color = kwargs.get("color", None)
 
         if axis == Vector.Unit_Y:
             start = axis.cross(Vector.Unit_X).normalize() * radius
@@ -137,16 +137,16 @@ class MeshBuilder:
                 self._mesh_data.setVertexColor(self._mesh_data.getVertexCount() - 1, color)
 
     def addDonut(self, **kwargs):
-        inner_radius = kwargs['inner_radius']
-        outer_radius = kwargs['outer_radius']
-        width = kwargs['width']
+        inner_radius = kwargs["inner_radius"]
+        outer_radius = kwargs["outer_radius"]
+        width = kwargs["width"]
 
-        center = kwargs.get('center', Vector(0, 0, 0))
-        sections = kwargs.get('sections', 32)
-        color = kwargs.get('color', None)
+        center = kwargs.get("center", Vector(0, 0, 0))
+        sections = kwargs.get("sections", 32)
+        color = kwargs.get("color", None)
 
-        angle = kwargs.get('angle', 0)
-        axis = kwargs.get('axis', Vector.Unit_Y)
+        angle = kwargs.get("angle", 0)
+        axis = kwargs.get("axis", Vector.Unit_Y)
 
         vertices = []
         indices = []
@@ -200,14 +200,14 @@ class MeshBuilder:
         self._mesh_data.addColors(numpy.asarray(colors, dtype = numpy.float32))
 
     def addPyramid(self, **kwargs):
-        width = kwargs['width']
-        height = kwargs['height']
-        depth = kwargs['depth']
+        width = kwargs["width"]
+        height = kwargs["height"]
+        depth = kwargs["depth"]
 
-        angle = math.radians(kwargs.get('angle', 0))
-        axis = kwargs.get('axis', Vector.Unit_Y)
+        angle = math.radians(kwargs.get("angle", 0))
+        axis = kwargs.get("axis", Vector.Unit_Y)
 
-        center = kwargs.get('center', Vector(0, 0, 0))
+        center = kwargs.get("center", Vector(0, 0, 0))
 
         minW = -width / 2
         maxW = width / 2
@@ -239,7 +239,7 @@ class MeshBuilder:
         ], dtype=numpy.int32)
         self._mesh_data.addIndices(indices)
 
-        color = kwargs.get('color', None)
+        color = kwargs.get("color", None)
         if color:
             vertex_count = self._mesh_data.getVertexCount()
             for i in range(1, 6):

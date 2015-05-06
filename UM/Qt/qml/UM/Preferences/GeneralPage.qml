@@ -9,7 +9,7 @@ PreferencesPage {
     title: qsTr("General");
 
     function reset() {
-        UM.Preferences.resetPreference('general/language')
+        UM.Preferences.resetPreference("general/language")
     }
 
     GridLayout {
@@ -30,14 +30,14 @@ PreferencesPage {
             }
 
             currentIndex: {
-                var code = UM.Preferences.getValue('general/language')
+                var code = UM.Preferences.getValue("general/language")
                 for(i in model.count) {
                     if(model.get(i).code == code) {
                         return i;
                     }
                 }
             }
-            onCurrentIndexChanged: UM.Preferences.setValue('general/language', model.get(currentIndex).code)
+            onCurrentIndexChanged: UM.Preferences.setValue("general/language", model.get(currentIndex).code)
         }
 
         Label {

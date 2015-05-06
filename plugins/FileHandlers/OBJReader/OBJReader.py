@@ -18,19 +18,19 @@ class OBJReader(MeshReader):
             face_list = []
 
             mesh = MeshData()
-            f = storage_device.openFile(file_name, 'rt')
+            f = storage_device.openFile(file_name, "rt")
             for line in f:
                 parts = line.split()
                 if len(parts) < 1:
                     continue
-                if parts[0] == 'v':
+                if parts[0] == "v":
                     vertex_list.append([float(parts[1]), float(parts[3]), -float(parts[2])])
-                if parts[0] == 'vn':
+                if parts[0] == "vn":
                     normal_list.append([float(parts[1]), float(parts[3]), -float(parts[2])])
-                if parts[0] == 'vt':
+                if parts[0] == "vt":
                     uv_list.append([float(parts[1]), float(parts[2])])
-                if parts[0] == 'f':
-                    parts = [i for i in map(lambda p: p.split('/'), parts)]
+                if parts[0] == "f":
+                    parts = [i for i in map(lambda p: p.split("/"), parts)]
                     for idx in range(1, len(parts)-2):
                         data = [int(parts[1][0]), int(parts[idx+1][0]), int(parts[idx+2][0])]
                         if len(parts[1]) > 2:

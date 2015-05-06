@@ -5,7 +5,7 @@ from copy import deepcopy
 from UM.Math.Float import Float
 
 # Disable divide-by-zero warnings so that 1.0 / (1.0, 0.0, 0.0) returns (1.0, Inf, Inf) without complaining
-numpy.seterr(divide='ignore')
+numpy.seterr(divide="ignore")
 
 ##  Simple 3D-vector class based on numpy arrays.
 #
@@ -18,8 +18,8 @@ class Vector(object):
     def __init__(self, *args, **kwargs):
         if len(args) == 3:
             self._data = numpy.array([args[0], args[1], args[2]],dtype=numpy.float32)
-        elif 'data' in kwargs:
-            self._data = kwargs['data'].copy()
+        elif "data" in kwargs:
+            self._data = kwargs["data"].copy()
         else:
             self._data = numpy.zeros(3, dtype=numpy.float32)
     

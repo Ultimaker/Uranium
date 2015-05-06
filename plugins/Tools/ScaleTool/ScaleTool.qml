@@ -10,31 +10,31 @@ Item {
         anchors.bottom: parent.bottom;
 
         //: Reset scale tool button
-        text: qsTr('Reset')
+        text: qsTr("Reset")
         iconSource: UM.Theme.icons.scale_reset;
         //: Reset scale tool button tooltip
         tooltip: qsTr("Reset the scaling of the current selection.");
 
         style: UM.Theme.styles.tool_button;
 
-        onClicked: UM.ActiveTool.triggerAction('resetScale');
+        onClicked: UM.ActiveTool.triggerAction("resetScale");
     }
 
     Button {
         id: scaleToMaxButotn
 
         //: Scale to max tool button
-        text: qsTr('Scale to Max');
+        text: qsTr("Scale to Max");
         iconSource: UM.Theme.icons.scale_max;
         //: Scale to max tool button tooltip
-        tooltip: qsTr('Scale to maximum size');
+        tooltip: qsTr("Scale to maximum size");
 
         anchors.bottom: resetScaleButton.top;
         anchors.bottomMargin: UM.Theme.sizes.default_margin.height;
 
         style: UM.Theme.styles.tool_button;
 
-        onClicked: UM.ActiveTool.triggerAction('scaleToMax')
+        onClicked: UM.ActiveTool.triggerAction("scaleToMax")
     }
 
     CheckBox {
@@ -49,8 +49,8 @@ Item {
 
         style: UM.Theme.styles.checkbox;
 
-        checked: UM.ActiveTool.getProperty('ScaleSnap');
-        onClicked: UM.ActiveTool.setProperty('ScaleSnap', checked);
+        checked: UM.ActiveTool.getProperty("ScaleSnap");
+        onClicked: UM.ActiveTool.setProperty("ScaleSnap", checked);
     }
 
     CheckBox {
@@ -63,8 +63,8 @@ Item {
 
         style: UM.Theme.styles.checkbox;
 
-        checked: !UM.ActiveTool.getProperty('NonUniformScale');
-        onClicked: UM.ActiveTool.setProperty('NonUniformScale', !checked);
+        checked: !UM.ActiveTool.getProperty("NonUniformScale");
+        onClicked: UM.ActiveTool.setProperty("NonUniformScale", !checked);
     }
 }
 

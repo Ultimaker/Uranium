@@ -46,14 +46,14 @@ class SettingsModel(ListModel):
         if setting is not None:
             index = self._find(self.items,"key", setting.getKey())
             if index != -1:
-                self.setProperty(index, 'disabled', (setting.checkAllChildrenVisible() or not setting.isActive()))
-                self.setProperty(index, 'visibility', (setting.isVisible() and setting.isActive()))
+                self.setProperty(index, "disabled", (setting.checkAllChildrenVisible() or not setting.isActive()))
+                self.setProperty(index, "visibility", (setting.isVisible() and setting.isActive()))
 
             for child_setting in setting.getAllChildren():
                 index = self._find(self.items,"key",child_setting.getKey())
                 if index != -1:
-                    self.setProperty(index, 'disabled', (child_setting.checkAllChildrenVisible() or not child_setting.isActive()))
-                    self.setProperty(index, 'visibility', (child_setting.isVisible() and child_setting.isActive()))
+                    self.setProperty(index, "disabled", (child_setting.checkAllChildrenVisible() or not child_setting.isActive()))
+                    self.setProperty(index, "visibility", (child_setting.isVisible() and child_setting.isActive()))
 
     @pyqtSlot(str)
     ##  collapse an entire category
@@ -61,14 +61,14 @@ class SettingsModel(ListModel):
         for index in range(0, len(self.items)):
             item = self.items[index]
             if item["category"] == category_key:
-                self.setProperty(index, 'collapsed', not item['collapsed'])
+                self.setProperty(index, "collapsed", not item["collapsed"])
 
     @pyqtSlot(int, str, str)
     ##  Notification that setting has changed.  
     def settingChanged(self, index, key, value):
         if self._machine_settings.getSettingByKey(key) is not None:
             self._machine_settings.getSettingByKey(key).setValue(value)
-        self.setProperty(index,'valid', self.isValid(key))
+        self.setProperty(index,"valid", self.isValid(key))
 
     @pyqtSlot(str,result=int)
     ##  Check if the entered value of the setting is valid (warning/error)
@@ -91,7 +91,7 @@ class SettingsModel(ListModel):
     @pyqtSlot()
     ##  Save the current setting values to file.
     def saveSettingValues(self):
-        self._machine_settings.saveValuesToFile(Resources.getStoragePath(Resources.SettingsLocation, 'settings.cfg'))
+        self._machine_settings.saveValuesToFile(Resources.getStoragePath(Resources.SettingsLocation, "settings.cfg"))
 
     @pyqtSlot(str,bool)
     ##  Set the visibility of a setting.
@@ -106,9 +106,9 @@ class SettingsModel(ListModel):
         for index in range(0,len(self.items)):
             temp_setting = self._machine_settings.getSettingByKey(self.items[index]["key"])
             if temp_setting is not None:
-                self.setProperty(index, 'disabled', temp_setting.checkAllChildrenVisible())
-                self.setProperty(index, 'visibility', temp_setting.isVisible())
-                self.setProperty(index, 'value', temp_setting.getValue())
+                self.setProperty(index, "disabled", temp_setting.checkAllChildrenVisible())
+                self.setProperty(index, "visibility", temp_setting.isVisible())
+                self.setProperty(index, "value", temp_setting.getValue())
 
     @pyqtSlot(str,result=bool)
     ##  Check the visibility of an category.

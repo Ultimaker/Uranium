@@ -7,7 +7,7 @@ class SettingsCategory(SignalEmitter):
         self._i18n_catalog = catalog
         self._label = key
         self._parent = parent
-        self._tooltip = ''
+        self._tooltip = ""
         self._icon = icon if icon else "category_unknown"
         self._order = order
         self._visible = True
@@ -94,7 +94,7 @@ class SettingsCategory(SignalEmitter):
         return self._settings
 
     def __repr__(self):
-        return '<SettingCategory: %s %d>' % (self._key, self._order)
+        return "<SettingCategory: %s %d>" % (self._key, self._order)
 
     def _onSettingVisibleChanged(self, setting):
         for setting in self.getAllSettings():

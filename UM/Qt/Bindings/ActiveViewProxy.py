@@ -20,7 +20,7 @@ class ActiveViewProxy(QObject):
             return ""
 
         try:
-            panel_file = PluginRegistry.getInstance().getMetaData(self._active_view.getPluginId())['view']['view_panel']
+            panel_file = PluginRegistry.getInstance().getMetaData(self._active_view.getPluginId())["view"]["view_panel"]
         except KeyError:
             return ""
 

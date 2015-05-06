@@ -18,7 +18,7 @@ Item {
         anchors.fill: parent;
 
         property variant src: img;
-        property color color: '#fff';
+        property color color: "#fff";
 
         vertexShader: "
             uniform highp mat4 qt_Matrix;

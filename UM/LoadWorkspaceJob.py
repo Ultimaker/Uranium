@@ -11,7 +11,7 @@ class LoadWorkspaceJob(Job):
         super().__init__()
         self._filename = filename
         self._handler = Application.getInstance().getWorkspaceFileHandler()
-        self._device = Application.getInstance().getStorageDevice('local')
+        self._device = Application.getInstance().getStorageDevice("local")
 
     def run(self):
         self.setResult(self._handler.read(self._filename, self._device))

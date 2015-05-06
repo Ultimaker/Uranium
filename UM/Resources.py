@@ -21,7 +21,7 @@ class Resources:
     FirmwareLocation = 9
     QmlFilesLocation = 10
 
-    ApplicationIdentifier = 'UM'
+    ApplicationIdentifier = "UM"
 
     ##  Get the path to a certain resource file
     #
@@ -44,7 +44,7 @@ class Resources:
         if paths:
             return paths[0]
 
-        raise FileNotFoundError('Could not find resource {0} in {1}'.format(args, type))
+        raise FileNotFoundError("Could not find resource {0} in {1}".format(args, type))
 
 
     ##  Get the path that can be used to write a certain resource file.
@@ -90,9 +90,9 @@ class Resources:
         if type == cls.PreferencesLocation:
             path = cls.__config_storage_path
         elif type == cls.SettingsLocation:
-            path = os.path.join(cls.__data_storage_path, 'settings')
+            path = os.path.join(cls.__data_storage_path, "settings")
         else:
-            raise UnsupportedStorageLocationError('No known location to store type {0}'.format(type))
+            raise UnsupportedStorageLocationError("No known location to store type {0}".format(type))
 
         # Ensure the directory we want to write to exists
         try:
@@ -152,27 +152,27 @@ class Resources:
 
     @classmethod
     def __initializeStoragePaths(cls):
-        if platform.system() == 'Windows':
-            cls.__config_storage_path = os.path.join(os.path.expanduser('~/AppData/Local/'), cls.ApplicationIdentifier)
-        elif platform.system() == 'Darwin':
-            cls.__config_storage_path = os.path.expanduser('~/.{0}'.format(cls.ApplicationIdentifier))
-        elif platform.system() == 'Linux':
-            xdg_config_home = ''
+        if platform.system() == "Windows":
+            cls.__config_storage_path = os.path.join(os.path.expanduser("~/AppData/Local/"), cls.ApplicationIdentifier)
+        elif platform.system() == "Darwin":
+            cls.__config_storage_path = os.path.expanduser("~/.{0}".format(cls.ApplicationIdentifier))
+        elif platform.system() == "Linux":
+            xdg_config_home = ""
             try:
-                xdg_config_home = os.environ['XDG_CONFIG_HOME']
+                xdg_config_home = os.environ["XDG_CONFIG_HOME"]
             except KeyError:
-                xdg_config_home = os.path.expanduser('~/.config')
+                xdg_config_home = os.path.expanduser("~/.config")
             cls.__config_storage_path = os.path.join(xdg_config_home, cls.ApplicationIdentifier)
 
-            xdg_data_home = ''
+            xdg_data_home = ""
             try:
-                xdg_data_home = os.environ['XDG_DATA_HOME']
+                xdg_data_home = os.environ["XDG_DATA_HOME"]
             except KeyError:
-                xdg_data_home = os.path.expanduser('~/.local/share')
+                xdg_data_home = os.path.expanduser("~/.local/share")
 
             cls.__data_storage_path = os.path.join(xdg_data_home, cls.ApplicationIdentifier)
         else:
-            cls.__config_storage_path = cls.__relativeToAppBase('')
+            cls.__config_storage_path = cls.__relativeToAppBase("")
 
         if not cls.__data_storage_path:
             cls.__data_storage_path = cls.__config_storage_path

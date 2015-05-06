@@ -5,9 +5,9 @@ from UM.Settings.MachineSettings import MachineSettings
 class SettingTest(unittest.TestCase):
     def setUp(self):
         # Called before the first testfunction is executed
-        self._setting = Setting('TestSetting',10,'int')
+        self._setting = Setting("TestSetting",10,"int")
         self._machine_settings = MachineSettings()
-        category = SettingsCategory('TestCategory')
+        category = SettingsCategory("TestCategory")
         #category.addSetting(self._setting)
         self._machine_settings.addSettingsCategory(category)
         self._machine_settings.loadSettingsFromFile("tests/Settings/SettingData.json")
@@ -18,8 +18,8 @@ class SettingTest(unittest.TestCase):
         pass
 
     def test_GetSettingByKey(self):
-        self.assertEqual(self._machine_settings.getSettingByKey('TestSetting').getType(), self._setting.getType())
-        self.assertEqual(self._machine_settings.getSettingByKey('TestSetting').getDefaultValue(), self._setting.getDefaultValue())
+        self.assertEqual(self._machine_settings.getSettingByKey("TestSetting").getType(), self._setting.getType())
+        self.assertEqual(self._machine_settings.getSettingByKey("TestSetting").getDefaultValue(), self._setting.getDefaultValue())
         pass
 
     def test_Category(self):

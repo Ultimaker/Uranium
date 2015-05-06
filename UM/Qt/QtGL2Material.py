@@ -33,7 +33,7 @@ class QtGL2Material(Material):
 
     def build(self):
         if not self._shader_program:
-            Logger.log('e', 'No shader sources loaded')
+            Logger.log("e", "No shader sources loaded")
             return
 
         self._shader_program.link()
@@ -43,8 +43,8 @@ class QtGL2Material(Material):
             return
 
         cache = True
-        if 'cache' in kwargs:
-            cache = kwargs['cache']
+        if "cache" in kwargs:
+            cache = kwargs["cache"]
 
         if name not in self._uniform_indices:
             self._uniform_indices[name] = self._shader_program.uniformLocation(name)
@@ -92,15 +92,15 @@ class QtGL2Material(Material):
         if attribute == -1:
             return
 
-        if type is 'int':
+        if type is "int":
             self._shader_program.setAttributeBuffer(attribute, self._gl.GL_INT, offset, 1, stride)
-        elif type is 'float':
+        elif type is "float":
             self._shader_program.setAttributeBuffer(attribute, self._gl.GL_FLOAT, offset, 1, stride)
-        elif type is 'vector2f':
+        elif type is "vector2f":
             self._shader_program.setAttributeBuffer(attribute, self._gl.GL_FLOAT, offset, 2, stride)
-        elif type is 'vector3f':
+        elif type is "vector3f":
             self._shader_program.setAttributeBuffer(attribute, self._gl.GL_FLOAT, offset, 3, stride)
-        elif type is 'vector4f':
+        elif type is "vector4f":
             self._shader_program.setAttributeBuffer(attribute, self._gl.GL_FLOAT, offset, 4, stride)
 
         self._shader_program.enableAttributeArray(attribute)

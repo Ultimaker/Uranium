@@ -7,8 +7,8 @@ import copy
 import numpy
 import numpy.linalg
 from enum import Enum
-vertexBufferProperty = '__qtgl2_vertex_buffer'
-indexBufferProperty = '__qtgl2_index_buffer'
+vertexBufferProperty = "__qtgl2_vertex_buffer"
+indexBufferProperty = "__qtgl2_index_buffer"
 
 
 class MeshType(Enum):
@@ -26,11 +26,11 @@ class MeshType(Enum):
 #   faces and the three columns being the indices that refer to the individual vertices.
 class MeshData(SignalEmitter):
     def __init__(self, **kwargs):
-        self._vertices = kwargs.get('vertices', None)
-        self._normals = kwargs.get('normals', None)
-        self._indices = kwargs.get('indices', None)
-        self._colors = kwargs.get('colors', None)
-        self._uvs = kwargs.get('uvs', None)
+        self._vertices = kwargs.get("vertices", None)
+        self._normals = kwargs.get("normals", None)
+        self._indices = kwargs.get("indices", None)
+        self._colors = kwargs.get("colors", None)
+        self._uvs = kwargs.get("uvs", None)
         self._vertex_count = len(self._vertices) if self._vertices is not None else 0
         self._face_count = len(self._indices) if self._indices is not None else 0
         self._type = MeshType.faces
@@ -130,7 +130,7 @@ class MeshData(SignalEmitter):
     #   \param transformation 4x4 homogenous transformation matrix
     def getTransformed(self, transformation):
         if self._vertices is not None:
-            data = numpy.pad(self._vertices.copy(), ((0,0), (0,1)), 'constant', constant_values=(0.0, 0.0))
+            data = numpy.pad(self._vertices.copy(), ((0,0), (0,1)), "constant", constant_values=(0.0, 0.0))
             data = data.dot(transformation.getData())
             data += transformation.getData()[:,3]
             data = data[:,0:3]
@@ -148,7 +148,7 @@ class MeshData(SignalEmitter):
         if self._vertices is None:
             return AxisAlignedBox()
 
-        data = numpy.pad(self._vertices.copy(), ((0,0), (0,1)), 'constant', constant_values=(0.0, 1.0))
+        data = numpy.pad(self._vertices.copy(), ((0,0), (0,1)), "constant", constant_values=(0.0, 1.0))
 
         if matrix is not None:
             data = data.dot(matrix.getData())

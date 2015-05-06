@@ -238,7 +238,6 @@ class Quaternion(object):
 
         q = None
         if Float.fuzzyCompare(d, -1.0, 1e-6):
-            print('180deg turn')
             axis = Vector.Unit_X.cross(v1)
 
             if Float.fuzzyCompare(axis.length(), 0.0):

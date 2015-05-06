@@ -10,8 +10,8 @@ class MachinesModel(ListModel):
     def __init__(self):
         super().__init__()
 
-        self.addRoleName(self.NameRole, 'name')
-        self.addRoleName(self.ActiveRole, 'active')
+        self.addRoleName(self.NameRole, "name")
+        self.addRoleName(self.ActiveRole, "active")
 
         Application.getInstance().machinesChanged.connect(self._onMachinesChanged)
         Application.getInstance().activeMachineChanged.connect(self._onActiveMachineChanged)
@@ -31,10 +31,10 @@ class MachinesModel(ListModel):
     def _onMachinesChanged(self):
         self.clear()
         for machine in Application.getInstance().getMachines():
-            self.appendItem({ 'id': id(machine), 'name': machine.getName(), 'active': Application.getInstance().getActiveMachine() == machine })
+            self.appendItem({ "id": id(machine), "name": machine.getName(), "active": Application.getInstance().getActiveMachine() == machine })
 
     def _onActiveMachineChanged(self):
         activeMachine = Application.getInstance().getActiveMachine()
         for index in range(len(self.items)):
-            self.setProperty(index, 'active', id(activeMachine) == self.items[index]['id'])
+            self.setProperty(index, "active", id(activeMachine) == self.items[index]["id"])
 

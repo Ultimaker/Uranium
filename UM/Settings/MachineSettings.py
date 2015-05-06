@@ -20,8 +20,8 @@ class MachineSettings(SignalEmitter):
         self._platform_mesh = None
         self._platform_texture = None
         self._name = "Unknown Machine",
-        self._type_name = 'Unknown'
-        self._type_id = 'unknown'
+        self._type_name = "Unknown"
+        self._type_id = "unknown"
         self._icon = "unknown.png",
         self._machine_settings = []   ## Settings that don't have a category are 'fixed' (eg; they can not be changed by the user, unless they change the json)
         self._i18n_catalog = None
@@ -29,7 +29,7 @@ class MachineSettings(SignalEmitter):
     ##  Load settings from JSON file. Used to load tree structure & default values etc from file.
     #   \param file_name String
     def loadSettingsFromFile(self, file_name):
-        with open(file_name, 'rt', -1, 'utf-8') as f:
+        with open(file_name, "rt", -1, "utf-8") as f:
             data = json.load(f, object_pairs_hook=collections.OrderedDict)
 
         self._i18n_catalog = i18nCatalog(os.path.basename(file_name))
@@ -51,7 +51,7 @@ class MachineSettings(SignalEmitter):
 
         if "inherits" in data:
             inherits_from = MachineSettings()
-            inherits_from.loadSettingsFromFile(os.path.dirname(file_name) + '/' + data['inherits'])
+            inherits_from.loadSettingsFromFile(os.path.dirname(file_name) + "/" + data["inherits"])
             self._machine_settings = inherits_from._machine_settings
             self._categories = inherits_from._categories
 
@@ -83,13 +83,13 @@ class MachineSettings(SignalEmitter):
         config.read(file_name)
 
         if not self._categories:
-            self.loadSettingsFromFile(Resources.getPath(Resources.SettingsLocation, config['General']['type'] + '.json'))
+            self.loadSettingsFromFile(Resources.getPath(Resources.SettingsLocation, config["General"]["type"] + ".json"))
 
-        self._name = config.get('General', 'name', fallback = 'Unknown Machine')
+        self._name = config.get("General", "name", fallback = "Unknown Machine")
 
-        visibility = config.get('General', 'visibility', fallback = None)
+        visibility = config.get("General", "visibility", fallback = None)
         if visibility:
-            values = visibility.split(',')
+            values = visibility.split(",")
             for setting in self.getAllSettings():
                 if setting.getKey() in values:
                     setting.setVisible(True)
@@ -106,10 +106,10 @@ class MachineSettings(SignalEmitter):
     def saveValuesToFile(self, file_name):
         config = configparser.ConfigParser()
 
-        config.add_section('General')
-        config['General']['type'] = self._type_id
-        config['General']['name'] = self._name
-        config['General']['visibility'] = self._getVisibleSettings()
+        config.add_section("General")
+        config["General"]["type"] = self._type_id
+        config["General"]["name"] = self._name
+        config["General"]["visibility"] = self._getVisibleSettings()
 
         for category in self._categories:
             configData = {}
@@ -118,7 +118,7 @@ class MachineSettings(SignalEmitter):
                     configData[setting.getKey()] = setting.getValue()
             config[category.getKey()] = configData
 
-        with open(file_name, 'w') as f:
+        with open(file_name, "w") as f:
             config.write(f)
 
 
@@ -153,7 +153,7 @@ class MachineSettings(SignalEmitter):
     #   \return list of settings
     def getAllSettings(self, **kwargs):
         all_settings = []
-        if kwargs.get('include_machine', False):
+        if kwargs.get("include_machine", False):
             all_settings.extend(self._machine_settings)
 
         for category in self._categories:
@@ -216,7 +216,7 @@ class MachineSettings(SignalEmitter):
     def setName(self, name):
         self._name = name
 
-    ##  Returns the machine's icon.
+    ##  Returns the machine"s icon.
     def getIcon(self):
         return self._icon
 
@@ -227,4 +227,4 @@ class MachineSettings(SignalEmitter):
             if setting.isVisible():
                 visible.append(setting.getKey())
 
-        return ','.join(visible)
+        return ",".join(visible)

@@ -20,8 +20,8 @@ class Job(SignalEmitter):
         self._running = False
         self._finished = False
         self._result = None
-        self._description = kwargs.get('description', '')
-        self._visible = kwargs.get('visible', False)
+        self._description = kwargs.get("description", "")
+        self._visible = kwargs.get("visible", False)
 
     ##  Get the description for this job.
     def getDescription(self):

@@ -37,7 +37,7 @@ class SettingsFromCategoryModel(ListModel):
         setting = self._category.getSettingByKey(key)
         if setting:
             setting.setValue(value)
-            self.setProperty(index, 'valid', setting.validate())
+            self.setProperty(index, "valid", setting.validate())
 
     @pyqtSlot(str)
     def hideSetting(self, key):
@@ -76,6 +76,6 @@ class SettingsFromCategoryModel(ListModel):
         if setting is not None:
             index = self.find("key", setting.getKey())
             if index != -1:
-                self.setProperty(index, 'visible', (setting.isVisible() and setting.isActive()))
-                self.setProperty(index, 'value', setting.getValue())
-                self.setProperty(index, 'valid', setting.validate())
+                self.setProperty(index, "visible", (setting.isVisible() and setting.isActive()))
+                self.setProperty(index, "value", setting.getValue())
+                self.setProperty(index, "valid", setting.validate())

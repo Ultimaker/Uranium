@@ -19,13 +19,13 @@ class MLPReader(WorkspaceReader):
         if extension.lower() == self._supported_extension:
             loaded_workspace = SceneNode()
             mesh_handler = Application.getInstance().getMeshFileHandler()
-            f = storage_device.openFile(file_name, 'rt')
+            f = storage_device.openFile(file_name, "rt")
             
             tree = ET.parse(f)
             root = tree.getroot()
             if root.tag == "MeshLabProject":
                 for group in root.findall("MeshGroup"):
-                    for mesh in group.findall('MLMesh'): 
+                    for mesh in group.findall("MLMesh"): 
                         mesh_data = mesh_handler.read(mesh.get("filename"),Application.getInstance().getStorageDevice("local"))
                         mesh_data.setName(mesh.get("label"))
                         if mesh_data.getType() is MeshType.pointcloud:
@@ -41,7 +41,7 @@ class MLPReader(WorkspaceReader):
                         mesh_node.setMeshData(mesh_data)
                 return loaded_workspace
             else:
-                Logger.log('e', "Unable to load file. It seems to be formated wrong.")
+                Logger.log("e", "Unable to load file. It seems to be formated wrong.")
                 return None
         else:
             return None # Can't do anything with provided extention

@@ -14,8 +14,8 @@ class DirectoryListModel(ListModel):
     def __init__(self):
         super().__init__()
 
-        self.addRoleName(self.NameRole, 'name')
-        self.addRoleName(self.UrlRole, 'url')
+        self.addRoleName(self.NameRole, "name")
+        self.addRoleName(self.UrlRole, "url")
 
         self._directory = None
 
@@ -26,8 +26,8 @@ class DirectoryListModel(ListModel):
 
     def setDirectory(self, path):
         if path != self._directory:
-            if path.startswith('file://'):
-                if platform.system() == "Windows" and path.startswith('file:///'):
+            if path.startswith("file://"):
+                if platform.system() == "Windows" and path.startswith("file:///"):
                     path = path[8:]
                 else:
                     path = path[7:]
@@ -37,8 +37,8 @@ class DirectoryListModel(ListModel):
             extensions = Application.getInstance().getMeshFileHandler().getSupportedFileTypesRead()
             for entry in os.listdir(self._directory):
                 if os.path.splitext(entry)[1] in extensions:
-                    self.appendItem({ 'name': os.path.basename(entry), 'url': QUrl.fromLocalFile(os.path.join(self._directory, entry)) })
+                    self.appendItem({ "name": os.path.basename(entry), "url": QUrl.fromLocalFile(os.path.join(self._directory, entry)) })
 
-        self.sort(lambda e: e['name'])
+        self.sort(lambda e: e["name"])
 
     directory = pyqtProperty(str, fget = getDirectory, fset = setDirectory, notify = directoryChanged)

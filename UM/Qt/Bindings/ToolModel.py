@@ -20,42 +20,42 @@ class ToolModel(ListModel):
         self._controller.activeToolChanged.connect(self._onActiveToolChanged)
         self._onToolsChanged()
 
-        self.addRoleName(self.IdRole, 'id')
-        self.addRoleName(self.NameRole, 'name')
-        self.addRoleName(self.IconRole, 'icon')
-        self.addRoleName(self.ToolActiveRole, 'active')
-        self.addRoleName(self.DescriptionRole, 'description')
+        self.addRoleName(self.IdRole, "id")
+        self.addRoleName(self.NameRole, "name")
+        self.addRoleName(self.IconRole, "icon")
+        self.addRoleName(self.ToolActiveRole, "active")
+        self.addRoleName(self.DescriptionRole, "description")
 
     def _onToolsChanged(self):
         self.clear()
 
         tools = self._controller.getAllTools()
         for name in tools:
-            toolMetaData = PluginRegistry.getInstance().getMetaData(name).get('tool', {})
+            toolMetaData = PluginRegistry.getInstance().getMetaData(name).get("tool", {})
 
             # Skip tools that are marked as not visible
-            if 'visible' in toolMetaData and not toolMetaData['visible']:
+            if "visible" in toolMetaData and not toolMetaData["visible"]:
                 continue
 
             # Optional metadata elements
-            description = toolMetaData.get('description', '')
-            iconName = toolMetaData.get('icon', 'default.png')
+            description = toolMetaData.get("description", "")
+            iconName = toolMetaData.get("icon", "default.png")
 
             self.appendItem({
-                'id': name,
-                'name': toolMetaData.get('name', name),
-                'icon': iconName,
-                'active': False,
-                'description': description
+                "id": name,
+                "name": toolMetaData.get("name", name),
+                "icon": iconName,
+                "active": False,
+                "description": description
             })
 
-        self.sort(lambda t: t['name'])
+        self.sort(lambda t: t["name"])
 
     def _onActiveToolChanged(self):
         activeTool = self._controller.getActiveTool()
 
         for index, value in enumerate(self.items):
-            if self._controller.getTool(value['id']) == activeTool:
-                self.setProperty(index, 'active', True)
+            if self._controller.getTool(value["id"]) == activeTool:
+                self.setProperty(index, "active", True)
             else:
-                self.setProperty(index, 'active', False)
+                self.setProperty(index, "active", False)

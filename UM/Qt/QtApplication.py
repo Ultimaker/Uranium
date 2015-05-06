@@ -24,16 +24,16 @@ class UnsupportedVersionError(Exception):
 
 # Check PyQt version, we only support 5.4 or higher.
 from PyQt5.QtCore import PYQT_VERSION_STR
-major, minor, patch = PYQT_VERSION_STR.split('.')
+major, minor, patch = PYQT_VERSION_STR.split(".")
 if int(major) < 5 or int(minor) < 4:
     raise UnsupportedVersionError("This application requires at least PyQt 5.4.0")
 
 ##  Application subclass that provides a Qt application object.
 class QtApplication(QApplication, Application, SignalEmitter):
     def __init__(self, **kwargs):
-        if hasattr(sys, 'frozen') and sys.platform == 'win32':
-            plugin_path = os.path.join(os.path.dirname(os.path.abspath(sys.executable)), 'PyQt5', 'plugins')
-            Logger.log('i', 'Adding QT5 plugin path: %s' % (plugin_path))
+        if hasattr(sys, "frozen") and sys.platform == "win32":
+            plugin_path = os.path.join(os.path.dirname(os.path.abspath(sys.executable)), "PyQt5", "plugins")
+            Logger.log("i", "Adding QT5 plugin path: %s" % (plugin_path))
             QCoreApplication.addLibraryPath(plugin_path)
         super().__init__(sys.argv, **kwargs)
 
@@ -53,26 +53,26 @@ class QtApplication(QApplication, Application, SignalEmitter):
         # This is done here as a lot of plugins require a correct gl context. If you want to change the framework,
         # these checks need to be done in your <framework>Application.py class __init__().
 
-        self.showSplashMessage('Loading plugins...')
+        self.showSplashMessage("Loading plugins...")
         self._loadPlugins()
         self._plugin_registry.checkRequiredPlugins(self.getRequiredPlugins())
 
-        self.showSplashMessage('Loading machines...')
+        self.showSplashMessage("Loading machines...")
         self.loadMachines()
 
-        self.showSplashMessage('Loading preferences...')
+        self.showSplashMessage("Loading preferences...")
         try:
-            file = Resources.getPath(Resources.PreferencesLocation, self.getApplicationName() + '.cfg')
+            file = Resources.getPath(Resources.PreferencesLocation, self.getApplicationName() + ".cfg")
             Preferences.getInstance().readFromFile(file)
         except FileNotFoundError:
             pass
 
         self._translators = {}
 
-        self.showSplashMessage('Loading translations...')
+        self.showSplashMessage("Loading translations...")
 
-        self.loadQtTranslation('uranium_qt')
-        self.loadQtTranslation(self.getApplicationName() + '_qt')
+        self.loadQtTranslation("uranium_qt")
+        self.loadQtTranslation(self.getApplicationName() + "_qt")
 
     def run(self):
         pass
@@ -101,10 +101,10 @@ class QtApplication(QApplication, Application, SignalEmitter):
 
         self._engine = QQmlApplicationEngine()
         self.engineCreatedSignal.emit()
-        if hasattr(sys, 'frozen'):
-            self._engine.addImportPath(os.path.join(os.path.dirname(sys.executable), 'qml'))
+        if hasattr(sys, "frozen"):
+            self._engine.addImportPath(os.path.join(os.path.dirname(sys.executable), "qml"))
         else:
-            self._engine.addImportPath(os.path.join(os.path.dirname(__file__), 'qml'))
+            self._engine.addImportPath(os.path.join(os.path.dirname(__file__), "qml"))
 
         self.registerObjects(self._engine)
         
@@ -142,7 +142,7 @@ class QtApplication(QApplication, Application, SignalEmitter):
         self.getBackend().close()
         self.quit()
         self.saveMachines()
-        Preferences.getInstance().writeToFile(Resources.getStoragePath(Resources.PreferencesLocation, self.getApplicationName() + '.cfg'))
+        Preferences.getInstance().writeToFile(Resources.getStoragePath(Resources.PreferencesLocation, self.getApplicationName() + ".cfg"))
 
     ##  Load a Qt translation catalog.
     #
@@ -159,15 +159,15 @@ class QtApplication(QApplication, Application, SignalEmitter):
     #
     #   \note When `language` is `default`, the language to load can be changed with the
     #         environment variable "LANGUAGE".
-    def loadQtTranslation(self, file, language = 'default'):
+    def loadQtTranslation(self, file, language = "default"):
         #TODO Add support for specifying a language from preferences
         path = None
-        if language == 'default':
+        if language == "default":
             # If we have a language set in the environment, try and use that.
-            lang = os.getenv('LANGUAGE')
+            lang = os.getenv("LANGUAGE")
             if lang:
                 try:
-                    path = Resources.getPath(Resources.i18nLocation, lang, 'LC_MESSAGES', file + '.qm')
+                    path = Resources.getPath(Resources.i18nLocation, lang, "LC_MESSAGES", file + ".qm")
                 except FileNotFoundError:
                     path = None
 
@@ -178,7 +178,7 @@ class QtApplication(QApplication, Application, SignalEmitter):
                 # First, try and find a directory for any of the provided languages
                 for lang in locale.uiLanguages():
                     try:
-                        path = Resources.getPath(Resources.i18nLocation, lang, "LC_MESSAGES", file + '.qm')
+                        path = Resources.getPath(Resources.i18nLocation, lang, "LC_MESSAGES", file + ".qm")
                         language = lang
                     except FileNotFoundError:
                         pass
@@ -189,27 +189,27 @@ class QtApplication(QApplication, Application, SignalEmitter):
                 # preferred language. This will turn "en-GB" into "en" for example.
                 if not path:
                     lang = locale.uiLanguages()[0]
-                    lang = lang[0:lang.find('-')]
+                    lang = lang[0:lang.find("-")]
                     try:
-                        path = Resources.getPath(Resources.i18nLocation, lang, "LC_MESSAGES", file + '.qm')
+                        path = Resources.getPath(Resources.i18nLocation, lang, "LC_MESSAGES", file + ".qm")
                         language = lang
                     except FileNotFoundError:
                         pass
         else:
-            path = Resources.getPath(Resources.i18nLocation, language, "LC_MESSAGES", file + '.qm')
+            path = Resources.getPath(Resources.i18nLocation, language, "LC_MESSAGES", file + ".qm")
 
         # If all else fails, fall back to english.
         if not path:
-            Logger.log('w', "Could not find any translations matching {0} for file {1}, falling back to english".format(language, file))
+            Logger.log("w", "Could not find any translations matching {0} for file {1}, falling back to english".format(language, file))
             try:
-                path = Resources.getPath(Resources.i18nLocation, 'en', 'LC_MESSAGES', file + '.qm')
+                path = Resources.getPath(Resources.i18nLocation, "en", "LC_MESSAGES", file + ".qm")
             except FileNotFoundError:
-                Logger.log('w', "Could not find English translations for file {0}. Switching to developer english.".format(file))
+                Logger.log("w", "Could not find English translations for file {0}. Switching to developer english.".format(file))
                 return
 
         translator = QTranslator()
         if not translator.load(path):
-            Logger.log('e', "Unable to load translations %s", file)
+            Logger.log("e", "Unable to load translations %s", file)
             return
 
         # Store a reference to the translator.

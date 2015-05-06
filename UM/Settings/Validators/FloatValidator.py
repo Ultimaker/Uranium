@@ -21,7 +21,7 @@ class FloatValidator(Validator):
     # \returns message Message providing more detail about warning / error (if any)
     def validate(self):
         try:
-            #f = float(eval(self._setting.getValue().replace(',','.'), {}, {}))
+            #f = float(eval(self._setting.getValue().replace(",","."), {}, {}))
             f = self._setting.getValue()
             return self._checkRange(f,self._min_value, self._max_value, self._min_value_warning, self._max_value_warning)
         except (ValueError, SyntaxError, TypeError, NameError):

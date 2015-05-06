@@ -52,7 +52,7 @@ class Preferences(SignalEmitter):
         self._loadFile(file)
 
         for group, group_entries in self._parser.items():
-            if group == 'DEFAULT':
+            if group == "DEFAULT":
                 continue
 
             if group not in self._preferences:
@@ -72,9 +72,9 @@ class Preferences(SignalEmitter):
                 if pref.getValue() != pref.getDefault():
                     parser[group][key] = str(pref.getValue())
 
-        parser['general']['version'] = '1'
+        parser["general"]["version"] = "1"
 
-        with open(file, 'wt') as f:
+        with open(file, "wt") as f:
             parser.write(f)
 
     preferenceChanged = Signal()
@@ -87,11 +87,11 @@ class Preferences(SignalEmitter):
         return cls._instance
 
     def _splitKey(self, key):
-        group = 'general'
+        group = "general"
         key = key
 
-        if '/' in key:
-            parts = key.split('/')
+        if "/" in key:
+            parts = key.split("/")
             group = parts[0]
             key = parts[1]
 
@@ -113,12 +113,12 @@ class Preferences(SignalEmitter):
         self._parser = configparser.ConfigParser()
         self._parser.read(file)
 
-        if self._parser['general']['version'] != "1":
-            Logger.log('w', "Old config file found, ignoring")
+        if self._parser["general"]["version"] != "1":
+            Logger.log("w", "Old config file found, ignoring")
             self._parser = None
             return
 
-        del self._parser['general']['version']
+        del self._parser["general"]["version"]
 
     _instance = None
 

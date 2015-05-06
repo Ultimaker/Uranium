@@ -26,7 +26,7 @@ class ActiveToolProxy(QObject):
             return ""
 
         try:
-            panel_file = PluginRegistry.getInstance().getMetaData(self._active_tool.getPluginId())['tool']['tool_panel']
+            panel_file = PluginRegistry.getInstance().getMetaData(self._active_tool.getPluginId())["tool"]["tool_panel"]
         except KeyError:
             return ""
 
@@ -41,12 +41,12 @@ class ActiveToolProxy(QObject):
         if action:
             action()
 
-    @pyqtSlot(str, result = 'QVariant')
+    @pyqtSlot(str, result = "QVariant")
     def getProperty(self, property):
         if not self._active_tool:
             return None
 
-        property_getter = getattr(self._active_tool, 'get' + property)
+        property_getter = getattr(self._active_tool, "get" + property)
         if property_getter:
             return property_getter()
 
@@ -56,12 +56,12 @@ class ActiveToolProxy(QObject):
         return None
 
 
-    @pyqtSlot(str, 'QVariant')
+    @pyqtSlot(str, "QVariant")
     def setProperty(self, property, value):
         if not self._active_tool:
             return
 
-        option_setter = getattr(self._active_tool, 'set' + property)
+        option_setter = getattr(self._active_tool, "set" + property)
         if option_setter:
             option_setter(value)
 

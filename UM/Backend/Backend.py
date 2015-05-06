@@ -35,7 +35,7 @@ class Backend(PluginObject, SignalEmitter):
         try:
             self._backend_log = []
             self._process = self._runEngineProcess(self.getEngineCommand())
-            Logger.log('i', 'Started engine process: %s' % (self.getEngineCommand()[0]))
+            Logger.log("i", "Started engine process: %s" % (self.getEngineCommand()[0]))
             t = threading.Thread(target=self._storeOutputToLogThread, args=(self._process.stdout,))
             t.daemon = True
             t.start()
@@ -43,7 +43,7 @@ class Backend(PluginObject, SignalEmitter):
             t.daemon = True
             t.start()
         except FileNotFoundError as e:
-            Logger.log('e', "Unable to find backend executable: %s" % (self.getEngineCommand()[0]))
+            Logger.log("e", "Unable to find backend executable: %s" % (self.getEngineCommand()[0]))
 
     def close(self):
         if self._socket:
@@ -60,10 +60,10 @@ class Backend(PluginObject, SignalEmitter):
         if not (len(data) % 12):
             if data is not None:
                 for index in range(0,int(len(data)/12)): #For each 12 bits (3 floats)
-                    result.append(struct.unpack('fff',data[index*12:index*12+12]))
+                    result.append(struct.unpack("fff",data[index*12:index*12+12]))
                 return result
         else:
-            Logger.log('e', "Data length was incorrect for requested type")
+            Logger.log("e", "Data length was incorrect for requested type")
             return None
     
     ##  \brief Convert byte array containing 6 floats per vertex
@@ -72,15 +72,15 @@ class Backend(PluginObject, SignalEmitter):
         if not (len(data) % 24):
             if data is not None:
                 for index in range(0,int(len(data)/24)): #For each 24 bits (6 floats)
-                    result.append(struct.unpack('ffffff',data[index*24:index*24+24]))
+                    result.append(struct.unpack("ffffff",data[index*24:index*24+24]))
                 return result
         else:
-            Logger.log('e', "Data length was incorrect for requested type")
+            Logger.log("e", "Data length was incorrect for requested type")
             return None
     
     ##  Get the command used to start the backend executable 
     def getEngineCommand(self):
-        return [Preferences.getInstance().getValue("backend/location"), '--port', str(self._socket_thread.getPort())]
+        return [Preferences.getInstance().getValue("backend/location"), "--port", str(self._socket_thread.getPort())]
 
     ##  Start the (external) backend process.
     def _runEngineProcess(self, command_list):
@@ -89,24 +89,24 @@ class Backend(PluginObject, SignalEmitter):
             su = subprocess.STARTUPINFO()
             su.dwFlags |= subprocess.STARTF_USESHOWWINDOW
             su.wShowWindow = subprocess.SW_HIDE
-            kwargs['startupinfo'] = su
-            kwargs['creationflags'] = 0x00004000 #BELOW_NORMAL_PRIORITY_CLASS
+            kwargs["startupinfo"] = su
+            kwargs["creationflags"] = 0x00004000 #BELOW_NORMAL_PRIORITY_CLASS
         return subprocess.Popen(command_list, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.PIPE, **kwargs)
 
     def _storeOutputToLogThread(self, handle):
         while True:
             line = handle.readline()
-            if line == b'':
+            if line == b"":
                 break
             self._backend_log.append(line)
 
     ##  Private socket state changed handler.
     def _onSocketStateChanged(self, state):
         if state == SignalSocket.ListeningState:
-            if not Application.getInstance().getArgument('external-backend', False):
+            if not Application.getInstance().getArgument("external-backend", False):
                 self.startEngine()
         elif state == SignalSocket.ConnectedState:
-            Logger.log('d', "Backend connected on port %s", self._port)
+            Logger.log("d", "Backend connected on port %s", self._port)
             self.backendConnected.emit()
     
     ##  Private message handler
@@ -114,7 +114,7 @@ class Backend(PluginObject, SignalEmitter):
         message = self._socket.takeNextMessage()
 
         if type(message) not in self._message_handlers:
-            Logger.log('e', "No handler defined for message of type %s", type(message))
+            Logger.log("e", "No handler defined for message of type %s", type(message))
             return
 
         self._message_handlers[type(message)](message)
@@ -125,16 +125,16 @@ class Backend(PluginObject, SignalEmitter):
             self._port += 1
             self._createSocket()
         elif error.errno == 104 or error.errno == 32:
-            Logger.log('i', "Backend crashed or closed. Restarting...")
+            Logger.log("i", "Backend crashed or closed. Restarting...")
             self._createSocket()
         elif error.winerror == 10048:# Socked in use error
             self._port += 1
             self._createSocket()
         elif error.winerror == 10054:
-            Logger.log('i', "Backend crashed or closed. Restarting...")
+            Logger.log("i", "Backend crashed or closed. Restarting...")
             self._createSocket()
         else:
-            Logger.log('e', str(error))
+            Logger.log("e", str(error))
     
     ##  Creates a socket and attaches listeners.
     def _createSocket(self):
@@ -148,5 +148,5 @@ class Backend(PluginObject, SignalEmitter):
         self._socket.messageReceived.connect(self._onMessageReceived)
         self._socket.error.connect(self._onSocketError)
 
-        self._socket.listen('127.0.0.1', self._port)
+        self._socket.listen("127.0.0.1", self._port)
 

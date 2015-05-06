@@ -12,8 +12,8 @@ class MeshFileHandler(object):
         self._mesh_readers = []
         self._mesh_writers = []
 
-        PluginRegistry.addType('mesh_writer', self.addWriter)
-        PluginRegistry.addType('mesh_reader', self.addReader)
+        PluginRegistry.addType("mesh_writer", self.addWriter)
+        PluginRegistry.addType("mesh_reader", self.addReader)
     
     # Try to read the mesh_data from a file. Based on the extension in the file a correct meshreader is selected.
     # \param file_name The name of the mesh to load.
@@ -27,7 +27,7 @@ class MeshFileHandler(object):
             for reader in self._mesh_readers:
                 result = reader.read(file_name, storage_device)
                 if(result is not None):
-                    if kwargs.get('center', True):
+                    if kwargs.get("center", True):
                         # Center the mesh
                         extents = result.getExtents()
                         m = Matrix()
@@ -60,11 +60,11 @@ class MeshFileHandler(object):
     # \returns Dict of extension, description with all supported filetypes.
     def getSupportedFileTypesWrite(self):
         supported_types = {}
-        meta_data = PluginRegistry.getInstance().getAllMetaData(filter = {'type': 'mesh_writer'}, active_only = True)
+        meta_data = PluginRegistry.getInstance().getAllMetaData(filter = {"type": "mesh_writer"}, active_only = True)
         for entry in meta_data:
-            if 'mesh_writer' in entry:
-                ext = entry['mesh_writer'].get('extension', None)
-                description = entry['mesh_writer'].get('description', ext)
+            if "mesh_writer" in entry:
+                ext = entry["mesh_writer"].get("extension", None)
+                description = entry["mesh_writer"].get("description", ext)
                 if ext:
                     supported_types[ext] = description
         return supported_types
@@ -73,11 +73,11 @@ class MeshFileHandler(object):
     # \returns List of strings with all supported filetypes.
     def getSupportedFileTypesRead(self):
         supported_types = {}
-        meta_data = PluginRegistry.getInstance().getAllMetaData(filter = {'type': 'mesh_reader'}, active_only = True)
+        meta_data = PluginRegistry.getInstance().getAllMetaData(filter = {"type": "mesh_reader"}, active_only = True)
         for entry in meta_data:
-            if 'mesh_reader' in entry:
-                ext = entry['mesh_reader'].get('extension', None)
-                description = entry['mesh_reader'].get('description', ext)
+            if "mesh_reader" in entry:
+                ext = entry["mesh_reader"].get("extension", None)
+                description = entry["mesh_reader"].get("description", ext)
                 if ext:
                     supported_types[ext] = description
 

@@ -10,9 +10,9 @@ class ExtensionModel(ListModel):
     
     def __init__(self, parent = None):
         super().__init__(parent)
-        self.addRoleName(self.NameRole, 'name')
-        self.addRoleName(self.ActionsRole, 'actions')
-        self.addRoleName(self.ExtensionRole, 'extension')
+        self.addRoleName(self.NameRole, "name")
+        self.addRoleName(self.ActionsRole, "actions")
+        self.addRoleName(self.ExtensionRole, "extension")
         self._updateExtentionList()
         
         #print(self._items)
@@ -23,7 +23,7 @@ class ExtensionModel(ListModel):
             meta_data =  Application.getInstance().getPluginRegistry().getMetaData(extension.getPluginId())
             
             if "plugin" in meta_data:
-                self.appendItem({'name': meta_data["plugin"].get('name', None), 'actions':self.createActionsModel(extension.getMenuItemList()),'extension':extension})
+                self.appendItem({"name": meta_data["plugin"].get("name", None), "actions":self.createActionsModel(extension.getMenuItemList()),"extension":extension})
 
     def createActionsModel(self, options):
         model = ListModel()
@@ -36,4 +36,4 @@ class ExtensionModel(ListModel):
     def subMenuTriggered(self,extention_name, option_name):
         for item in self._items:
             if extention_name == item["name"]:
-                item['extension'].activateMenuItem(option_name)
+                item["extension"].activateMenuItem(option_name)

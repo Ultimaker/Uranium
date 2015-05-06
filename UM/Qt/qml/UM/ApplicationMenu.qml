@@ -12,7 +12,7 @@ Rectangle {
     property QtObject window;
     Binding {
         target: menu.__contentItem;
-        property: 'width';
+        property: "width";
         value: window.width;
         when: !menu.__isNative;
     }

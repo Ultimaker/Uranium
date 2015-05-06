@@ -17,7 +17,7 @@ class Validator(object):
     
     ## Do the validation.
     def validate(self):
-        raise NotImplementedError('Validator was not correctly implemented')
+        raise NotImplementedError("Validator was not correctly implemented")
     
     ## Check if provided value is within range. 
     # \param value The value to be checked

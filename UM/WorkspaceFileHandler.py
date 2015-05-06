@@ -10,8 +10,8 @@ class WorkspaceFileHandler(object):
         self._workspace_readers = []
         self._workspace_writers = []
 
-        PluginRegistry.addType('workspace_reader', self.addReader)
-        PluginRegistry.addType('workspace_writer', self.addWriter)
+        PluginRegistry.addType("workspace_reader", self.addReader)
+        PluginRegistry.addType("workspace_writer", self.addWriter)
         
     # Try to read the workspace data from a file. Based on the extension in the file a correct workspace reader is selected.
     # \param file_name The name of the workspace file to load.

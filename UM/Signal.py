@@ -17,7 +17,7 @@ from weakref import WeakSet, WeakKeyDictionary
 #   Whenever the signal is called, it will proceed to call the connected slots.
 #
 #   To create a signal, create an instance variable of type Signal. Other objects can then
-#   use that variable's `connect()` method to connect methods, callables or signals to the
+#   use that variable"s `connect()` method to connect methods, callables or signals to the
 #   signal. To emit the signal, call `emit()` on the signal. Arguments can be passed along
 #   to the signal, but slots will be required to handle them. When connecting signals to
 #   other signals, the connected signal will be emitted whenever the signal is emitted.
@@ -54,7 +54,7 @@ class Signal:
         self.__functions = WeakSet()
         self.__methods = WeakKeyDictionary()
         self.__signals = WeakSet()
-        self.__type = kwargs.get('type', Signal.Auto)
+        self.__type = kwargs.get("type", Signal.Auto)
     
     ##  \exception NotImplementedError
     def __call__(self):
@@ -145,7 +145,7 @@ class Signal:
 #
 #   This class is a Convenience class to simplify signal creation. Since signals
 #   need to be instance variables, normally you would need to create all signals
-#   in the class' `__init__` method. However, this makes them rather awkward to
+#   in the class" `__init__` method. However, this makes them rather awkward to
 #   document. This class instead makes it possible to declare them as class variables,
 #   which makes documenting them near the function they are used possible. 
 #   During the call to `__init__()`, this class will then search through all the 

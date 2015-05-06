@@ -18,19 +18,19 @@ class i18nCatalog:
     #
     #   \param name The name of the catalog to load.
     #   \param language The language to load. Valid values are language codes or
-    #   'default'. When 'default' is specified, the language to load will be
-    #   determined based on the system's language settings.
+    #   "default". When "default" is specified, the language to load will be
+    #   determined based on the system"s language settings.
     #
     #   \note When `language` is `default`, the language to load can be overridden
     #   using the "LANGUAGE" environment variable.
-    def __init__(self, name, language = 'default'):
+    def __init__(self, name, language = "default"):
         languages = []
-        if language == 'default':
-            envlang = os.getenv('LANGUAGE')
+        if language == "default":
+            envlang = os.getenv("LANGUAGE")
             if envlang:
                 languages.append(envlang)
             else:
-                preflang = Preferences.getInstance().getValue('general/language')
+                preflang = Preferences.getInstance().getValue("general/language")
                 if preflang:
                     languages.append(preflang)
         else:
