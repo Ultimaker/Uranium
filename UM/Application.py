@@ -86,10 +86,10 @@ class Application(SignalEmitter):
 
         self._plugin_registry.setApplication(self)
 
-        self._parsed_arguments = None
-        self.parseArguments()
+        self._parsed_command_line = None
+        self.parseCommandLine()
+
         self._visible_messages = []
-        
         self._message_lock = threading.Lock()
         self.showMessageSignal.connect(self.showMessage)
         self.hideMessageSignal.connect(self.hideMessage)
@@ -156,11 +156,11 @@ class Application(SignalEmitter):
     def _loadPlugins(self):
         pass
 
-    def getArgument(self, name, default = None):
-        if not self._parsed_arguments:
-            self.parseArguments()
+    def getCommandLineOption(self, name, default = None):
+        if not self._parsed_command_line:
+            self.parseCommandLine()
 
-        return self._parsed_arguments.get(name, default)
+        return self._parsed_command_line.get(name, default)
     
     ##  Get name of the application.
     #   \returns application_name \type{string}
@@ -318,15 +318,23 @@ class Application(SignalEmitter):
 
         return Application._instance
 
-    def parseArguments(self):
+    def parseCommandLine(self):
         parser = argparse.ArgumentParser(prog = self.getApplicationName())
-        parser.add_argument("--version", action="version", version="%(prog)s 1.0")
+        parser.add_argument("--version", action="version", version="%(prog)s {0}".format(self.getVersion()))
         parser.add_argument("--external-backend",
                             dest="external-backend",
                             action="store_true", default=False,
                             help="Use an externally started backend instead of starting it automatically.")
 
-        self._parsed_arguments = vars(parser.parse_args())
+        self.addCommandLineOptions(parser)
+
+        self._parsed_command_line = vars(parser.parse_args())
+
+    ##  Can be overridden to add additional command line options to the parser.
+    #
+    #   \param parser \type{argparse.ArgumentParser} The parser that will parse the command line.
+    def addCommandLineOptions(self, parser):
+        pass
 
     def loadMachines(self):
         settings_directory = Resources.getStorageLocation(Resources.SettingsLocation)
@@ -343,8 +351,8 @@ class Application(SignalEmitter):
 
     def addExtension(self, extension):
         self._extensions.append(extension)
-    
+
     def getExtensions(self):
         return self._extensions
-    
+
     _instance = None
