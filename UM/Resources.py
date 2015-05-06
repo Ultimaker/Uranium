@@ -105,7 +105,7 @@ class Resources:
     ##  Add a path relative to which resources can be found.
     @classmethod
     def addResourcePath(cls, path):
-        if os.path.isdir(path) and not path in cls.__paths:
+        if os.path.isdir(path) and path not in cls.__paths:
             cls.__paths.append(path)
 
     ## private:
