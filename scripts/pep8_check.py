@@ -59,7 +59,7 @@ def checkNames(logical_line, tokens):
 def checkStrings(logical_line, tokens):
     for token in tokens:
         if token.type == token_type.STRING:
-            if token.string.startswith("'"):
+            if token.string.startswith("'") and not token.string.startswith("'''"): # ''' indicates multiline comment so should be ignored.
                 yield token.start, "U110 Strings should use double quotes, not single quotes."
 
 def blankLines(logical_line, blank_lines, indent_level, line_number, blank_before, previous_logical):
