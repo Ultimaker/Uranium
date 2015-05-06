@@ -13,7 +13,7 @@ class TestAxisAlignedBox(unittest.TestCase):
         # Called after the last testfunction was executed
         pass
 
-    def test_Create(self):
+    def test_create(self):
         box = AxisAlignedBox()
 
         self.assertEqual(Vector(0.0, 0.0, 0.0), box.minimum)
@@ -40,7 +40,7 @@ class TestAxisAlignedBox(unittest.TestCase):
         self.assertEqual(5.0, box.top)
         self.assertEqual(5.0, box.front)
 
-    def test_Set(self):
+    def test_set(self):
         box = AxisAlignedBox()
 
         box.setLeft(-5.0)
@@ -88,7 +88,7 @@ class TestAxisAlignedBox(unittest.TestCase):
         self.assertEqual(-5.0, box.front)
         self.assertTrue(box.isValid())
 
-    def test_Add(self):
+    def test_add(self):
         box1 = AxisAlignedBox(minimum = Vector(-10.0, -10.0, -10.0), maximum = Vector(0.0, 0.0, 0.0))
         box2 = AxisAlignedBox(minimum = Vector(0.0, 0.0, 0.0), maximum = Vector(10.0, 10.0, 10.0))
 
@@ -98,7 +98,7 @@ class TestAxisAlignedBox(unittest.TestCase):
         self.assertEqual(Vector(10.0, 10.0, 10.0), joined.maximum)
         self.assertTrue(joined.isValid())
 
-    def test_IntersectsRay(self):
+    def test_intersectsRay(self):
         box = AxisAlignedBox(10.0, 10.0, 10.0)
 
         ray = Ray(Vector(-10.0, 0.0, 0.0), Vector(1.0, 0.0, 0.0))
@@ -153,7 +153,7 @@ class TestAxisAlignedBox(unittest.TestCase):
         self.assertEqual(10.0, result[0])
         self.assertEqual(15.0, result[1])
 
-    def test_IntersectsBox(self):
+    def test_intersectsBox(self):
         box1 = AxisAlignedBox(minimum = Vector(5.0, 5.0, 5.0), maximum = Vector(10.0, 10.0, 10.0))
 
         box2 = AxisAlignedBox(minimum = Vector(-10.0, -10.0, -10.0), maximum = Vector(-5.0, -5.0, -5.0))

@@ -16,7 +16,7 @@ class TestQuaternion(unittest.TestCase):
         # Called after the last testfunction was executed
         pass
 
-    def test_Create(self):
+    def test_create(self):
         q = Quaternion()
 
         self.assertEqual(q.x, 0.0)
@@ -24,7 +24,7 @@ class TestQuaternion(unittest.TestCase):
         self.assertEqual(q.z, 0.0)
         self.assertEqual(q.w, 1.0)
 
-    def test_SetByAxis(self):
+    def test_setByAxis(self):
         q = Quaternion()
 
         q.setByAngleAxis(math.pi / 2, Vector.Unit_Z)
@@ -34,10 +34,10 @@ class TestQuaternion(unittest.TestCase):
         self.assertTrue(Float.fuzzyCompare(q.z, math.sqrt(2.0) / 2.0, 1e-6))
         self.assertTrue(Float.fuzzyCompare(q.w, math.sqrt(2.0) / 2.0, 1e-6))
 
-    def test_SetByMatrix(self):
+    def test_setByMatrix(self):
         pass
 
-    def test_Multiply(self):
+    def test_multiply(self):
         q1 = Quaternion()
         q1.setByAngleAxis(math.pi / 2, Vector.Unit_Z)
 
@@ -50,7 +50,7 @@ class TestQuaternion(unittest.TestCase):
         q4.setByAngleAxis(math.pi, Vector.Unit_Z)
         self.assertEqual(q3, q4)
 
-    def test_Invert(self):
+    def test_invert(self):
         q1 = Quaternion()
         q1.setByAngleAxis(math.pi, Vector.Unit_Z)
 
@@ -61,7 +61,7 @@ class TestQuaternion(unittest.TestCase):
 
         self.assertEqual(q1, q2)
 
-    def test_RotateVector(self):
+    def test_rotateVector(self):
         q1 = Quaternion()
         q1.setByAngleAxis(math.pi / 2, Vector.Unit_Z)
 

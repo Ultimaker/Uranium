@@ -13,7 +13,7 @@ class TestPlane(unittest.TestCase):
         # Called after the last testfunction was executed
         pass
 
-    def test_Create(self):
+    def test_create(self):
         p = Plane()
         self.assertEqual(Vector(), p.normal)
         self.assertEqual(0.0, p.distance)
@@ -22,7 +22,7 @@ class TestPlane(unittest.TestCase):
         self.assertEqual(Vector.Unit_Y, p.normal)
         self.assertEqual(1.0, p.distance)
 
-    def test_Intersects(self):
+    def test_intersects(self):
         p = Plane(Vector.Unit_Y, 0.0)
 
         r = Ray(Vector(0, 10, 0), -Vector.Unit_Y)

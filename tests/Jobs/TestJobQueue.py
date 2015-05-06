@@ -38,7 +38,7 @@ class TestJobQueue(unittest.TestCase):
         # Called after the last testfunction was executed
         pass
 
-    def test_Create(self):
+    def test_create(self):
         JobQueue._instance = None
         jq = JobQueue()
 
@@ -50,7 +50,7 @@ class TestJobQueue(unittest.TestCase):
         jq = JobQueue(4)
         self.assertEqual(len(jq._threads), 4)
 
-    def test_Add(self):
+    def test_add(self):
         jq = JobQueue.getInstance()
 
         job = TestJob()
@@ -100,7 +100,7 @@ class TestJobQueue(unittest.TestCase):
             self.assertEqual(job.isFinished(), True)
             self.assertEqual(job.getResult(), "TestJob")
 
-    def test_Remove(self):
+    def test_remove(self):
         pass
 
 if __name__ == "__main__":

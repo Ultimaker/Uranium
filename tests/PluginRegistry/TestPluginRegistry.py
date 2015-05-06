@@ -26,32 +26,32 @@ class TestPluginRegistry(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test_MetaData(self):
+    def test_metaData(self):
         registry = self._createRegistry()
         
         metaData = registry.getMetaData("TestPlugin")
         self.assertEqual("TestPlugin", metaData["name"])
         self.assertEqual("test", metaData["type"])
 
-    def test_Load(self):
+    def test_load(self):
         registry = self._createRegistry()
         
         registry.loadPlugin("TestPlugin")
         self.assertEqual("TestPlugin", self._app.getTestPlugin())
     
-    def test_LoadNested(self):
+    def test_loadNested(self):
         registry = self._createRegistry()
         
         registry.loadPlugin("TestPlugin2")
         self.assertEqual("TestPlugin2", self._app.getTestPlugin())
         
-    def test_FindAllPlugins(self):
+    def test_findAllPlugins(self):
         registry = self._createRegistry()
         
         names = registry._findAllPlugins()
         self.assertEqual(["TestPlugin", "TestPlugin2"], names)
         
-    def test_PluginNotFound(self):
+    def test_pluginNotFound(self):
         registry = self._createRegistry()
         
         self.assertRaises(PluginNotFoundError, registry.loadPlugin, "NoSuchPlugin")

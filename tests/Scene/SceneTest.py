@@ -25,7 +25,7 @@ class SceneTest(unittest.TestCase):
         # Called after the last testfunction was executed
         pass
 
-    def test_CheckWorldTransformation(self):
+    def test_checkWorldTransformation(self):
         numpy.testing.assert_array_almost_equal(self._scene_object2.getWorldTransformation().getData(), numpy.array([[0.5,0,0,5],[0,0.5,0,5],[0,0,0.5,5],[0,0,0,1]]))
 
 if __name__ == "__main__":
