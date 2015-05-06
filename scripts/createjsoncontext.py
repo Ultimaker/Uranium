@@ -41,27 +41,27 @@ pottxt = ""
 
 def appendMessage(file, setting, field, value):
     global pottxt
-    pottxt += '#: {0}\nmsgctxt "{1} {2}"\nmsgid "{3}"\nmsgstr ""\n\n'.format(file, setting, field, value.replace('\n', '\\n'))
+    pottxt += "#: {0}\nmsgctxt \"{1} {2}\"\nmsgid \"{3}\"\nmsgstr \"\"\n\n".format(file, setting, field, value.replace("\n", "\\n"))
 
 def processSettings(file, settings):
     for name, value in settings.items():
-        appendMessage(file, name, 'label', value['label'])
-        if 'description' in value:
-            appendMessage(file, name, 'description', value['description'])
+        appendMessage(file, name, "label", value["label"])
+        if "description" in value:
+            appendMessage(file, name, "description", value["description"])
 
-        if 'children' in value:
-            processSettings(file, value['children'])
+        if "children" in value:
+            processSettings(file, value["children"])
 
 def potheader():
     headertxt =  "#, fuzzy\n"
     headertxt += "msgid \"\"\n"
     headertxt += "msgstr \"\"\n"
-    headertxt += "\"Project-Id-Version: json files\\n\"\n"
-    headertxt += "\"Report-Msgid-Bugs-To: http://bugs.kde.org\\n\"\n"
+    headertxt += "\"Project-Id-Version: Uranium json setting files\\n\"\n"
+    headertxt += "\"Report-Msgid-Bugs-To: http://github.com/ultimaker/uranium\\n\"\n"
     headertxt += "\"POT-Creation-Date: %s+0000\\n\"\n" %time.strftime("%Y-%m-%d %H:%M")
     headertxt += "\"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\\n\"\n"
     headertxt += "\"Last-Translator: FULL NAME <EMAIL@ADDRESS>\\n\"\n"
-    headertxt += "\"Language-Team: LANGUAGE <kde-i18n-doc@kde.org>\\n\"\n"
+    headertxt += "\"Language-Team: LANGUAGE\\n\"\n"
     headertxt += "\"MIME-Version: 1.0\\n\"\n"
     headertxt += "\"Content-Type: text/plain; charset=UTF-8\\n\"\n"
     headertxt += "\"Content-Transfer-Encoding: 8bit\\n\"\n"
@@ -69,26 +69,26 @@ def potheader():
     return headertxt
 
 if len(sys.argv) < 3:
-    print('wrong number of args: %s' %sys.argv)
-    print('\nUsage: python %s jsonfilenamelist basedir' %os.path.basename(sys.argv[0]))
+    print("wrong number of args: %s" %sys.argv)
+    print("\nUsage: python %s jsonfilenamelist basedir" %os.path.basename(sys.argv[0]))
 else:
     jsonfilenamelist = sys.argv[1:-1]
 
     for jsonfilename in jsonfilenamelist:
-        with open(jsonfilename, 'r') as data_file:
+        with open(jsonfilename, "r") as data_file:
             error = False
             try:
                 jsondatadict = json.load(data_file)
-                if 'categories' not in jsondatadict:
+                if "categories" not in jsondatadict:
                     continue
 
-                for name, value in jsondatadict['categories'].items():
-                    appendMessage(jsonfilename.replace(basedir,''), name, 'label', value['label'])
-                    if 'description' in value:
-                        appendMessage(jsonfilename.replace(basedir,''), name, 'description', value['description'])
+                for name, value in jsondatadict["categories"].items():
+                    appendMessage(jsonfilename.replace(basedir,""), name, "label", value["label"])
+                    if "description" in value:
+                        appendMessage(jsonfilename.replace(basedir,""), name, "description", value["description"])
 
-                    if 'settings' in value:
-                        processSettings(jsonfilename.replace(basedir,''), value['settings'])
+                    if "settings" in value:
+                        processSettings(jsonfilename.replace(basedir,""), value["settings"])
             except Exception as e:
                 if debugoutput:
                     print(e)
