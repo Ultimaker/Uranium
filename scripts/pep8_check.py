@@ -9,23 +9,32 @@ import token as token_type
 
 CLASS_NAME_MATCH = re.compile(r'^_*[A-Z][a-zA-Z0-9]*_*$')
 FUNCTION_NAME_MATCH = re.compile(r'^(_*|test_)[a-z][a-zA-Z0-9]*_*$')
+PUBLIC_MEMBER_NAME_MATCH = re.compile(r'^[A-Z][a-zA-Z0-9]*_*$')
 MEMBER_NAME_MATCH = re.compile(r'^[a-z_][a-z0-9_]*$')
 VARIABLE_NAME_MATCH = re.compile(r'^[a-z][a-z0-9_]*$')
 
+indent_stack = []
 
 # Check the logical line to see if there is a class or function definition. When there is, check if this definition matches
 # The coding style set at Ultimaker.
-def checkNames(logical_line, tokens):
+def checkNames(logical_line, tokens, indent_level):
+    global indent_stack
+    if logical_line != '':
+        while indent_stack and indent_stack[-1][0] >= indent_level:
+            indent_stack.pop()
+        if not indent_stack or indent_stack[-1][0] < indent_level:
+            indent_stack.append((indent_level, logical_line))
+
     idx = 0
     while tokens[idx].type in [token_type.INDENT, token_type.DEDENT]:
         idx += 1
     if tokens[idx].string == "def":
         idx += 1
         if not FUNCTION_NAME_MATCH.match(tokens[idx].string):
-            yield tokens[idx].start[1], "U101 Function name not properly formatted with lower camel case"
+            yield tokens[idx].start, "U101 Function name not properly formatted with lower camel case"
         idx += 1
         if tokens[idx].string != "(":
-            yield tokens[idx].start[1], "U901 Parsing error"
+            yield tokens[idx].start, "U901 Parsing error"
             return
         idx += 1
         if tokens[idx].string != ")":
@@ -35,7 +44,7 @@ def checkNames(logical_line, tokens):
                 if tokens[idx].string == "**":
                     idx += 1
                 if not VARIABLE_NAME_MATCH.match(tokens[idx].string):
-                    yield tokens[idx].start[1], "U201 Function parameter not in lower_case_underscore_format"
+                    yield tokens[idx].start, "U201 Function parameter not in lower_case_underscore_format"
                 idx += 1
                 if tokens[idx].string == "=":
                     while tokens[idx].string not in [",", ")"]:
@@ -43,19 +52,32 @@ def checkNames(logical_line, tokens):
                 if tokens[idx].string == ")":
                     break
                 if tokens[idx].string != ",":
-                    yield tokens[idx].start[1], "U902 Parsing error: %s: %s" % (tokens[idx].string, logical_line)
+                    yield tokens[idx].start, "U902 Parsing error: %s: %s" % (tokens[idx].string, logical_line)
                     return
                 idx += 1
     elif tokens[idx].string == "class":
         idx += 1
         if not CLASS_NAME_MATCH.match(tokens[idx].string) and tokens[idx].string != "i18nCatalog":
-            yield tokens[idx].start[1], "U103 Class name not properly formatted with upper camel case"
+            yield tokens[idx].start, "U103 Class name not properly formatted with upper camel case"
     elif len(tokens) > idx + 3 and tokens[idx].string == "self" and tokens[idx + 1].string == "." and tokens[idx + 3].string == "=":
         if not MEMBER_NAME_MATCH.match(tokens[idx + 2].string):
-            yield tokens[idx + 2].start[1], "U202 Member name not in lower_case_underscore_format"
-    # elif len(tokens) > idx + 2 and tokens[idx + 1].string == "=":
-    #     if not VARIABLE_NAME_MATCH.match(tokens[idx].string):
-    #         yield tokens[idx].start[1], "U203 Variable name not in lower_case_underscore_format"
+            yield tokens[idx + 2].start, "U202 Member name not in lower_case_underscore_format"
+    elif len(tokens) > idx + 2 and tokens[idx + 1].string == "=":
+        if len(indent_stack) > 1 and indent_stack[-2][1].startswith('class '):
+            # definition is a class member
+            if tokens[idx].string.startswith('_'):
+                # class member is a private, match the member name style.
+                if not MEMBER_NAME_MATCH.match(tokens[idx].string):
+                    yield tokens[idx].start, "U202 Member name not in lower_case_underscore_format"
+            else:
+                # TODO, the conding standard for this is not defined yet. And there are a few variations used in the code.
+                # if not PUBLIC_MEMBER_NAME_MATCH.match(tokens[idx].string):
+                #     yield tokens[idx].start, "U102 Public member name not in UpperCamelCase format"
+                pass
+        else:
+            # definition is a variable
+            if not VARIABLE_NAME_MATCH.match(tokens[idx].string):
+                yield tokens[idx].start, "U203 Variable name not in lower_case_underscore_format"
 
 
 # Check the string definitions in the line. All strings should be double quotes.
