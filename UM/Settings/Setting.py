@@ -385,7 +385,7 @@ class _SettingExpressionVisitor(ast.NodeVisitor):
         super().visit(node)
         return self.names
 
-    def visit_Name(self, node):
+    def visit_Name(self, node): # [CodeStyle: ast.NodeVisitor requires this function name]
         if node.id in self._blacklist:
             raise IllegalMethodError(node.id)
 

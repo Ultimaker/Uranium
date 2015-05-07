@@ -17,13 +17,17 @@ indent_stack = []
 
 # Check the logical line to see if there is a class or function definition. When there is, check if this definition matches
 # The coding style set at Ultimaker.
-def checkNames(logical_line, tokens, indent_level):
+def checkNames(logical_line, physical_line, tokens, indent_level):
     global indent_stack
     if logical_line != '':
         while indent_stack and indent_stack[-1][0] >= indent_level:
             indent_stack.pop()
         if not indent_stack or indent_stack[-1][0] < indent_level:
             indent_stack.append((indent_level, logical_line))
+
+    # Allow for violations in the coding style in rare cases.
+    if "# [CodeStyle: " in physical_line:
+        return
 
     idx = 0
     while tokens[idx].type in [token_type.INDENT, token_type.DEDENT]:
@@ -57,7 +61,7 @@ def checkNames(logical_line, tokens, indent_level):
                 idx += 1
     elif tokens[idx].string == "class":
         idx += 1
-        if not CLASS_NAME_MATCH.match(tokens[idx].string) and tokens[idx].string != "i18nCatalog":
+        if not CLASS_NAME_MATCH.match(tokens[idx].string):
             yield tokens[idx].start, "U103 Class name not properly formatted with upper camel case"
     elif len(tokens) > idx + 3 and tokens[idx].string == "self" and tokens[idx + 1].string == "." and tokens[idx + 3].string == "=":
         if not MEMBER_NAME_MATCH.match(tokens[idx + 2].string):

@@ -16,7 +16,7 @@ import os
 #   To use this class, create an instance of it with the name of the catalog
 #   to load. Then call `i18n` or `i18nc` on the instance to perform a look
 #   up in the catalog.
-class i18nCatalog:
+class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start with a upper case. But i18n is lower case by convention.]
     ##  Constructor.
     #
     #   \param name The name of the catalog to load.
