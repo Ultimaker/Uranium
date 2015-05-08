@@ -30,6 +30,12 @@ PreferencesPage {
                 ListElement { text: QT_TR_NOOP("French"); code: "fr" }
                 //: Spanish language combo box option
                 ListElement { text: QT_TR_NOOP("Spanish"); code: "es" }
+                //: Italian language combo box option
+                ListElement { text: QT_TR_NOOP("Italian"); code: "it" }
+                //: Finnish language combo box option
+                ListElement { text: QT_TR_NOOP("Finnish"); code: "fi" }
+                //: Russian language combo box option
+                ListElement { text: QT_TR_NOOP("Russian"); code: "ru" }
             }
 
             currentIndex: {

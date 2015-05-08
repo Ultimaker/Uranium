@@ -41,8 +41,26 @@ msgctxt "GeneralPage|"
 msgid "Spanish"
 msgstr ""
 
+#. Italian language combo box option
+#: ../UM/Qt/qml/UM/Preferences/GeneralPage.qml:34
+msgctxt "GeneralPage|"
+msgid "Italian"
+msgstr ""
+
+#. Finnish language combo box option
+#: ../UM/Qt/qml/UM/Preferences/GeneralPage.qml:36
+msgctxt "GeneralPage|"
+msgid "Finnish"
+msgstr ""
+
+#. Russian language combo box option
+#: ../UM/Qt/qml/UM/Preferences/GeneralPage.qml:38
+msgctxt "GeneralPage|"
+msgid "Russian"
+msgstr ""
+
 #. Language change warning
-#: ../UM/Qt/qml/UM/Preferences/GeneralPage.qml:49
+#: ../UM/Qt/qml/UM/Preferences/GeneralPage.qml:55
 msgctxt "GeneralPage|"
 msgid ""
 "You will need to restart the application for language changes to have effect."
