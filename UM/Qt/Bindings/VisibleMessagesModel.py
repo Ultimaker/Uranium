@@ -40,6 +40,7 @@ class VisibleMessagesModel(ListModel):
     
     def createActionsModel(self, actions):
         model = ListModel()
+        model.addRoleName(self.IDRole, "action_id")
         model.addRoleName(self.TextRole,"name")
         model.addRoleName(self.IconRole, "icon")
         model.addRoleName(self.DescriptionRole, "description")
@@ -53,10 +54,10 @@ class VisibleMessagesModel(ListModel):
         Application.getInstance().hideMessageById(message_id)
     
     @pyqtSlot("long", str)
-    def actionTriggered(self, message_id, action_name):
+    def actionTriggered(self, message_id, action_id):
         for message in Application.getInstance().getVisibleMessages():
             if id(message) == message_id: 
-                message.actionTriggered.emit(message, action_name)
+                message.actionTriggered.emit(message, action_id)
                 break
     
     def removeMessage(self, message):

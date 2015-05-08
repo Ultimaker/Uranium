@@ -38,7 +38,7 @@ class Message():
         self._lifetime_timer.start()
 
     def addAction(self, action_id, name, icon, description):
-        self._actions.append({"id": action_id, "name": name, "icon": icon, "description": description})
+        self._actions.append({"action_id": action_id, "name": name, "icon": icon, "description": description})
     
     def getActions(self):
         return self._actions
@@ -54,16 +54,16 @@ class Message():
     
     def getMaxProgress(self):
         return self._max_progress
-    
+
     def setProgress(self, progress):
         self._progress = progress
         self.progressChanged.emit()
-        
+
     progressChanged = Signal()
-        
+
     def getProgress(self):
         return self._progress
-    
+
     def hide(self):
         if self._visible:
             self._visible = False

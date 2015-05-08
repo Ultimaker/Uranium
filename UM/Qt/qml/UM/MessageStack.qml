@@ -101,7 +101,7 @@ ListView {
                         }
                     }
 
-                    onClicked:UM.Models.visibleMessagesModel.actionTriggered(message.model_id, model.name)
+                    onClicked:UM.Models.visibleMessagesModel.actionTriggered(message.model_id, model.action_id)
                 }
             }
 
