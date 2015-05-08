@@ -33,6 +33,7 @@ import os
 import json
 import time
 import os.path
+import collections
 
 debugoutput = False #set True to print debug output in scripty's logs
 
@@ -78,7 +79,7 @@ else:
         with open(jsonfilename, "r") as data_file:
             error = False
             try:
-                jsondatadict = json.load(data_file)
+                jsondatadict = json.load(data_file, object_pairs_hook=collections.OrderedDict)
                 if "categories" not in jsondatadict:
                     continue
 
