@@ -134,7 +134,7 @@ class MeshData(SignalEmitter):
     def getTransformed(self, transformation):
         if self._vertices is not None:
             data = numpy.pad(self._vertices.copy(), ((0,0), (0,1)), "constant", constant_values=(0.0, 0.0))
-            data = data.dot(transformation.getData())
+            data = data.dot(transformation.getTransposed().getData())
             data += transformation.getData()[:,3]
             data = data[:,0:3]
 
@@ -154,8 +154,10 @@ class MeshData(SignalEmitter):
         data = numpy.pad(self._vertices.copy(), ((0,0), (0,1)), "constant", constant_values=(0.0, 1.0))
 
         if matrix is not None:
-            data = data.dot(matrix.getData())
-            data += matrix.getData()[:,3]
+            transposed = matrix.getTransposed().getData()
+            data = data.dot(transposed)
+            data += transposed[:,3]
+            data = data[:,0:3]
 
         min = data.min(axis=0)
         max = data.max(axis=0)
