@@ -15,6 +15,8 @@ ListView {
 
     model: UM.Models.visibleMessagesModel;
 
+    interactive: false;
+
     delegate: UM.AngledCornerRectangle
     {
         width: UM.Theme.sizes.message.width
