@@ -62,7 +62,7 @@ class MeshListModel(ListModel):
     def setVisibility(self, key, visibility):
         for node in self._scene.getRoot().getAllChildren():
             if id(node) == key:
-                node.setVisibile(visibility)
+                node.setVisible(visibility)
     
     @pyqtSlot("long",str)
     def setName(self, key, name):
