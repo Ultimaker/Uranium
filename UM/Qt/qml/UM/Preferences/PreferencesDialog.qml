@@ -33,7 +33,7 @@ Dialog {
 
             TableViewColumn { role: "name" }
 
-            onActivated: configPage.source = configPagesModel.get(row).page;
+            onClicked: configPage.source = configPagesModel.get(row).page;
         }
 
         Loader {
