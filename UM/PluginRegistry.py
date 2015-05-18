@@ -291,6 +291,9 @@ class PluginRegistry(object):
     #   \param id \type{string} The id of the plugin to locate
     #   \param folder The base folder to look into
     def _locatePlugin(self, id, folder):
+        if not os.path.isdir(folder):
+            return None
+
         for file in os.listdir(folder):
             filepath = os.path.join(folder, file)
             if os.path.isdir(filepath):
