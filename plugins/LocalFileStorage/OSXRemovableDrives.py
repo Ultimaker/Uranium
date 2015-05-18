@@ -7,6 +7,8 @@ import threading
 import subprocess
 import time
 import os
+
+from UM.Signal import Signal, SignalEmitter
     
 try:
     from xml.etree import cElementTree as ElementTree
@@ -15,11 +17,13 @@ except:
 
 ## Support for removable devices on Mac OSX
 
-class OSXRemovableDriveThread(threading.Thread):
-    def __init__(self, drives):
-        super(OSXRemovableDriveThread, self).__init__()
+class OSXRemovableDrives(threading.Thread, SignalEmitter):
+    def __init__(self):
+        super().__init__()
         self.daemon = True
-        self._driveManager = drives
+        self.start()
+
+    drivesChanged = Signal()
 
     def run(self):
         while True:
@@ -51,8 +55,25 @@ class OSXRemovableDriveThread(threading.Thread):
                                         volume = vol["mount_point"]
                                         drives[os.path.basename(volume)] = volume
 
-            self._driveManager.setDrives(drives)
+            self.drivesChanged.emit(drives)
             time.sleep(5)
+
+    def ejectDrive(self, drive):
+        #TODO: Check if this needs drive name or mount point
+        try:
+            mount = self._drives[drive]
+        except KeyError:
+            return
+
+        p = subprocess.Popen(["diskutil", "eject", mount], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        output = p.communicate()
+
+        if p.wait():
+            print(output[0])
+            print(output[1])
+            return False
+        else:
+            return True
 
     def _parseStupidPListXML(self, e):
         if e.tag == "plist":
@@ -89,36 +110,3 @@ class OSXRemovableDriveThread(threading.Thread):
             for v in t:
                 ret += self._findInTree(v, n)
         return ret
-
-class OSXRemovableDrives(object):
-    def __init__(self):
-        super(OSXRemovableDrives, self).__init__()
-        self._thread = OSXRemovableDriveThread(self)
-        self._thread.start()
-        self._drives = {}
-
-    def setDrives(self, drives):
-        self._drives = drives
-
-    def getDrives(self):
-        return self._drives
-
-    def hasDrives(self):
-        return len(self._drives) > 0
-
-    def ejectDrive(self, drive):
-        #TODO: Check if this needs drive name or mount point
-        try:
-            mount = self._drives[drive]
-        except KeyError:
-            return
-
-        p = subprocess.Popen(["diskutil", "eject", mount], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        output = p.communicate()
-
-        if p.wait():
-            print(output[0])
-            print(output[1])
-            return False
-        else:
-            return True
