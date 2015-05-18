@@ -11,6 +11,7 @@ from UM.PluginObject import PluginObject
 import struct
 import subprocess
 import threading
+import platform
 from time import sleep
 
 ##      Base class for any backend communication (seperate piece of software).
@@ -130,12 +131,13 @@ class Backend(PluginObject, SignalEmitter):
         elif error.errno == 104 or error.errno == 32:
             Logger.log("i", "Backend crashed or closed. Restarting...")
             self._createSocket()
-        elif error.winerror == 10048:# Socked in use error
-            self._port += 1
-            self._createSocket()
-        elif error.winerror == 10054:
-            Logger.log("i", "Backend crashed or closed. Restarting...")
-            self._createSocket()
+        elif platform.system() == "Windows":
+            if error.winerror == 10048:# Socked in use error
+                self._port += 1
+                self._createSocket()
+            elif error.winerror == 10054:
+                Logger.log("i", "Backend crashed or closed. Restarting...")
+                self._createSocket()
         else:
             Logger.log("e", str(error))
     
