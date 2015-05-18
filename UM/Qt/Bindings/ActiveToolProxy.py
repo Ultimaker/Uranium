@@ -1,7 +1,7 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-from PyQt5.QtCore import pyqtSlot, pyqtProperty, pyqtSignal, QObject
+from PyQt5.QtCore import pyqtSlot, pyqtProperty, pyqtSignal, QObject, QUrl
 
 from UM.Application import Application
 from UM.PluginRegistry import PluginRegistry
@@ -23,17 +23,17 @@ class ActiveToolProxy(QObject):
     def valid(self):
         return self._active_tool != None
 
-    @pyqtProperty(str, notify = activeToolChanged)
+    @pyqtProperty(QUrl, notify = activeToolChanged)
     def activeToolPanel(self):
         if not self._active_tool:
-            return ""
+            return QUrl()
 
         try:
             panel_file = PluginRegistry.getInstance().getMetaData(self._active_tool.getPluginId())["tool"]["tool_panel"]
         except KeyError:
-            return ""
+            return QUrl()
 
-        return os.path.join(PluginRegistry.getInstance().getPluginPath(self._active_tool.getPluginId()), panel_file)
+        return QUrl.fromLocalFile(os.path.join(PluginRegistry.getInstance().getPluginPath(self._active_tool.getPluginId()), panel_file))
 
     @pyqtSlot(str)
     def triggerAction(self, action):
