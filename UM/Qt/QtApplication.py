@@ -38,6 +38,8 @@ class QtApplication(QApplication, Application, SignalEmitter):
             plugin_path = os.path.join(os.path.dirname(os.path.abspath(sys.executable)), "PyQt5", "plugins")
             Logger.log("i", "Adding QT5 plugin path: %s" % (plugin_path))
             QCoreApplication.addLibraryPath(plugin_path)
+
+        os.environ["QSG_RENDER_LOOP"] = "basic"
         super().__init__(sys.argv, **kwargs)
 
         self._main_qml = "main.qml"
