@@ -274,6 +274,9 @@ class PluginRegistry(object):
             paths = self._plugin_locations
 
         for folder in paths:
+            if not os.path.isdir(folder):
+                continue
+
             for file in os.listdir(folder):
                 filepath = os.path.join(folder, file)
                 if os.path.isdir(filepath):
