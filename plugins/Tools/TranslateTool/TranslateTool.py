@@ -30,6 +30,7 @@ class TranslateTool(Tool):
 
     def setEnabledAxis(self, axis):
         self._enabled_axis = axis
+        self._handle.setEnabledAxis(axis)
 
     def event(self, event):
         super().event(event)
@@ -50,6 +51,8 @@ class TranslateTool(Tool):
 
             if id in self._enabled_axis:
                 self.setLockedAxis(id)
+            elif self._handle.isAxis(id):
+                return False
 
             if id == ToolHandle.XAxis:
                 self.setDragPlane(Plane(Vector(0, 0, 1), 0))
