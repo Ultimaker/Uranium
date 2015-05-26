@@ -128,7 +128,7 @@ class Backend(PluginObject, SignalEmitter):
         if error.errno == 98:# Socked in use error
             self._port += 1
             self._createSocket()
-        elif error.errno == 104 or error.errno == 32:
+        elif error.errno == 104 or error.errno == 32 or error.errno == 54:
             Logger.log("i", "Backend crashed or closed. Restarting...")
             self._createSocket()
         elif platform.system() == "Windows":

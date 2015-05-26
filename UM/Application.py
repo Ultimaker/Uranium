@@ -45,6 +45,8 @@ class Application(SignalEmitter):
 
         Resources.addResourcePath(os.path.dirname(sys.executable))
         Resources.addResourcePath(os.path.join(Application.getInstallPrefix(), "share", "uranium"))
+        Resources.addResourcePath(os.path.join(Application.getInstallPrefix(), "Resources", "uranium"))
+        Resources.addResourcePath(os.path.join(Application.getInstallPrefix(), "Resources", self.getApplicationName()))
         if not hasattr(sys, "frozen"):
             Resources.addResourcePath(os.path.join(os.path.abspath(os.path.dirname(__file__)), ".."))
 
@@ -84,6 +86,8 @@ class Application(SignalEmitter):
 
         self._plugin_registry.addPluginLocation(os.path.join(Application.getInstallPrefix(), "lib", "uranium"))
         self._plugin_registry.addPluginLocation(os.path.join(os.path.dirname(sys.executable), "plugins"))
+        self._plugin_registry.addPluginLocation(os.path.join(Application.getInstallPrefix(), "Resources", "uranium", "plugins"))
+        self._plugin_registry.addPluginLocation(os.path.join(Application.getInstallPrefix(), "Resources", self.getApplicationName(), "plugins"))
         # Locally installed plugins
         self._plugin_registry.addPluginLocation(os.path.join(Resources.getStoragePath(Resources.ResourcesLocation), "plugins"))
         if not hasattr(sys, "frozen"):

@@ -34,10 +34,12 @@ if int(major) < 5 or int(minor) < 4:
 ##  Application subclass that provides a Qt application object.
 class QtApplication(QApplication, Application, SignalEmitter):
     def __init__(self, **kwargs):
-        if hasattr(sys, "frozen") and sys.platform == "win32":
+        if sys.platform == "win32":
             plugin_path = os.path.join(os.path.dirname(os.path.abspath(sys.executable)), "PyQt5", "plugins")
-            Logger.log("i", "Adding QT5 plugin path: %s" % (plugin_path))
-            QCoreApplication.addLibraryPath(plugin_path)
+        elif sys.platform == "darwin":
+            plugin_path = os.path.join(Application.getInstallPrefix(), "Resources", "plugins")
+        Logger.log("i", "Adding QT5 plugin path: %s" % (plugin_path))
+        QCoreApplication.addLibraryPath(plugin_path)	
 
         os.environ["QSG_RENDER_LOOP"] = "basic"
         super().__init__(sys.argv, **kwargs)
@@ -108,9 +110,10 @@ class QtApplication(QApplication, Application, SignalEmitter):
 
         self._engine = QQmlApplicationEngine()
         self.engineCreatedSignal.emit()
-        if hasattr(sys, "frozen"):
-            self._engine.addImportPath(os.path.join(os.path.dirname(sys.executable), "qml"))
-        else:
+        
+        self._engine.addImportPath(os.path.join(os.path.dirname(sys.executable), "qml"))
+        self._engine.addImportPath(os.path.join(Application.getInstallPrefix(), "Resources", "qml"))
+        if not hasattr(sys, "frozen"):
             self._engine.addImportPath(os.path.join(os.path.dirname(__file__), "qml"))
 
         self.registerObjects(self._engine)
