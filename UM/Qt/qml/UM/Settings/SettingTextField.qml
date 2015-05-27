@@ -14,7 +14,7 @@ TextField {
     signal valueChanged(string value);
 
     text: value; //From parent loader
-    validator: DoubleValidator { }
+    validator: RegExpValidator { regExp: /[0-9.-]+/ }
 
     maximumLength: 5;
 
