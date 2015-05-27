@@ -43,9 +43,11 @@ class Application(SignalEmitter):
         Signal._app = self
         Resources.ApplicationIdentifier = name
 
-        if hasattr(sys, "frozen"):
-            Resources.addResourcePath(os.path.dirname(sys.executable))
-        else:
+        Resources.addResourcePath(os.path.dirname(sys.executable))
+        Resources.addResourcePath(os.path.join(Application.getInstallPrefix(), "share", "uranium"))
+        Resources.addResourcePath(os.path.join(Application.getInstallPrefix(), "Resources", "uranium"))
+        Resources.addResourcePath(os.path.join(Application.getInstallPrefix(), "Resources", self.getApplicationName()))
+        if not hasattr(sys, "frozen"):
             Resources.addResourcePath(os.path.join(os.path.abspath(os.path.dirname(__file__)), ".."))
 
         self._main_thread = threading.current_thread()
@@ -82,9 +84,13 @@ class Application(SignalEmitter):
 
         self._plugin_registry = PluginRegistry.getInstance()
 
-        if hasattr(sys, "frozen"):
-            self._plugin_registry.addPluginLocation(os.path.join(os.path.dirname(sys.executable), "plugins"))
-        else:
+        self._plugin_registry.addPluginLocation(os.path.join(Application.getInstallPrefix(), "lib", "uranium"))
+        self._plugin_registry.addPluginLocation(os.path.join(os.path.dirname(sys.executable), "plugins"))
+        self._plugin_registry.addPluginLocation(os.path.join(Application.getInstallPrefix(), "Resources", "uranium", "plugins"))
+        self._plugin_registry.addPluginLocation(os.path.join(Application.getInstallPrefix(), "Resources", self.getApplicationName(), "plugins"))
+        # Locally installed plugins
+        self._plugin_registry.addPluginLocation(os.path.join(Resources.getStoragePath(Resources.ResourcesLocation), "plugins"))
+        if not hasattr(sys, "frozen"):
             self._plugin_registry.addPluginLocation(os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "plugins"))
 
         self._plugin_registry.setApplication(self)
@@ -357,5 +363,9 @@ class Application(SignalEmitter):
 
     def getExtensions(self):
         return self._extensions
+
+    @staticmethod
+    def getInstallPrefix():
+        return os.path.abspath(os.path.join(os.path.dirname(sys.executable), ".."))
 
     _instance = None

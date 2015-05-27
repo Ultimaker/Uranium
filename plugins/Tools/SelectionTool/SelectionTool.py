@@ -27,11 +27,13 @@ class SelectionTool(Tool):
         self._selection_mode = mode
 
     def event(self, event):
-        if event.type == MouseEvent.MouseReleaseEvent and MouseEvent.LeftButton in event.buttons:
+        if event.type == MouseEvent.MousePressEvent and MouseEvent.LeftButton in event.buttons:
             if self._selection_mode == self.PixelSelectionMode:
                 self._pixelSelection(event)
             else:
                 self._boundingBoxSelection(event)
+
+        return False
 
     def _boundingBoxSelection(self, event):
         root = self._scene.getRoot()
