@@ -16,9 +16,7 @@ TextField {
     text: value; //From parent loader
     validator: RegExpValidator { regExp: /[0-9.-]+/ }
 
-    maximumLength: 5;
-
-    onEditingFinished: if (text != value) valueChanged(text);
+    onTextChanged: if (text != value) valueChanged(text);
 
     style: TextFieldStyle
     {
