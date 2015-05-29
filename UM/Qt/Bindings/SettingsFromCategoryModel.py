@@ -7,8 +7,9 @@ from UM.Qt.ListModel import ListModel
 from UM.Settings.Setting import Setting
 from UM.Resources import Resources
 from UM.Application import Application
+from UM.Signal import Signal, SignalEmitter
 
-class SettingsFromCategoryModel(ListModel):
+class SettingsFromCategoryModel(ListModel, SignalEmitter):
     NameRole = Qt.UserRole + 1
     TypeRole = Qt.UserRole + 2
     ValueRole = Qt.UserRole + 3
@@ -76,9 +77,13 @@ class SettingsFromCategoryModel(ListModel):
             setting.valueChanged.connect(self._onSettingChanged)
 
     def _onSettingChanged(self, setting):
+        self.settingChanged.emit()
         if setting is not None:
             index = self.find("key", setting.getKey())
             if index != -1:
                 self.setProperty(index, "visible", (setting.isVisible() and setting.isActive()))
                 self.setProperty(index, "value", setting.getValue())
                 self.setProperty(index, "valid", setting.validate())
+                
+                
+    settingChanged = Signal() # Convenience signal; emitted when one of the settings of the category changes.
