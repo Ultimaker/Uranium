@@ -11,107 +11,129 @@ class TranslateToolHandle(ToolHandle):
     def __init__(self, parent = None):
         super().__init__(parent)
 
-        lines = MeshData()
-        lines.addVertex(0, 0, 0)
-        lines.addVertex(0, 20, 0)
-        lines.addVertex(0, 0, 0)
-        lines.addVertex(20, 0, 0)
-        lines.addVertex(0, 0, 0)
-        lines.addVertex(0, 0, 20)
+        self._enabled_axis = [self.XAxis, self.YAxis, self.ZAxis]
 
-        lines.setVertexColor(0, ToolHandle.YAxisColor)
-        lines.setVertexColor(1, ToolHandle.YAxisColor)
-        lines.setVertexColor(2, ToolHandle.XAxisColor)
-        lines.setVertexColor(3, ToolHandle.XAxisColor)
-        lines.setVertexColor(4, ToolHandle.ZAxisColor)
-        lines.setVertexColor(5, ToolHandle.ZAxisColor)
+    def setEnabledAxis(self, axis):
+        self._enabled_axis = axis
+        self._rebuild()
+
+    def _rebuild(self):
+        lines = MeshData()
+
+        offset = 0
+        if self.YAxis in self._enabled_axis:
+            lines.addVertex(0, 0, 0)
+            lines.addVertex(0, 20, 0)
+            lines.setVertexColor(offset, ToolHandle.YAxisColor)
+            lines.setVertexColor(offset + 1, ToolHandle.YAxisColor)
+            offset += 2
+
+        if self.XAxis in self._enabled_axis:
+            lines.addVertex(0, 0, 0)
+            lines.addVertex(20, 0, 0)
+            lines.setVertexColor(offset, ToolHandle.XAxisColor)
+            lines.setVertexColor(offset + 1, ToolHandle.XAxisColor)
+            offset += 2
+
+        if self.ZAxis in self._enabled_axis:
+            lines.addVertex(0, 0, 0)
+            lines.addVertex(0, 0, 20)
+            lines.setVertexColor(offset, ToolHandle.ZAxisColor)
+            lines.setVertexColor(offset + 1, ToolHandle.ZAxisColor)
+            offset += 2
 
         self.setLineMesh(lines)
 
         mb = MeshBuilder()
 
-        mb.addPyramid(
-            width = 2,
-            height = 4,
-            depth = 2,
-            center = Vector(0, 20, 0),
-            color = ToolHandle.YAxisColor
-        )
+        if self.YAxis in self._enabled_axis:
+            mb.addPyramid(
+                width = 2,
+                height = 4,
+                depth = 2,
+                center = Vector(0, 20, 0),
+                color = ToolHandle.YAxisColor
+            )
 
-        mb.addPyramid(
-            width = 2,
-            height = 4,
-            depth = 2,
-            center = Vector(20, 0, 0),
-            color = ToolHandle.XAxisColor,
-            axis = Vector.Unit_Z,
-            angle = 90
-        )
+        if self.XAxis in self._enabled_axis:
+            mb.addPyramid(
+                width = 2,
+                height = 4,
+                depth = 2,
+                center = Vector(20, 0, 0),
+                color = ToolHandle.XAxisColor,
+                axis = Vector.Unit_Z,
+                angle = 90
+            )
 
-        mb.addPyramid(
-            width = 2,
-            height = 4,
-            depth = 2,
-            center = Vector(0, 0, 20),
-            color = ToolHandle.ZAxisColor,
-            axis = Vector.Unit_X,
-            angle = -90
-        )
+        if self.ZAxis in self._enabled_axis:
+            mb.addPyramid(
+                width = 2,
+                height = 4,
+                depth = 2,
+                center = Vector(0, 0, 20),
+                color = ToolHandle.ZAxisColor,
+                axis = Vector.Unit_X,
+                angle = -90
+            )
 
         self.setSolidMesh(mb.getData())
 
         mb = MeshBuilder()
 
-        mb.addCube(
-            width = 4,
-            height = 20,
-            depth = 4,
-            center = Vector(0, 10, 0),
-            color = ToolHandle.YAxisColor
-        )
+        if self.YAxis in self._enabled_axis:
+            mb.addCube(
+                width = 4,
+                height = 20,
+                depth = 4,
+                center = Vector(0, 10, 0),
+                color = ToolHandle.YAxisColor
+            )
 
-        mb.addPyramid(
-            width = 4,
-            height = 8,
-            depth = 4,
-            center = Vector(0, 20, 0),
-            color = ToolHandle.YAxisColor
-        )
+            mb.addPyramid(
+                width = 4,
+                height = 8,
+                depth = 4,
+                center = Vector(0, 20, 0),
+                color = ToolHandle.YAxisColor
+            )
 
-        mb.addCube(
-            width = 20,
-            height = 4,
-            depth = 4,
-            center = Vector(10, 0, 0),
-            color = ToolHandle.XAxisColor
-        )
+        if self.XAxis in self._enabled_axis:
+            mb.addCube(
+                width = 20,
+                height = 4,
+                depth = 4,
+                center = Vector(10, 0, 0),
+                color = ToolHandle.XAxisColor
+            )
 
-        mb.addPyramid(
-            width = 4,
-            height = 8,
-            depth = 4,
-            center = Vector(20, 0, 0),
-            color = ToolHandle.XAxisColor,
-            axis = Vector.Unit_Z,
-            angle = 90
-        )
+            mb.addPyramid(
+                width = 4,
+                height = 8,
+                depth = 4,
+                center = Vector(20, 0, 0),
+                color = ToolHandle.XAxisColor,
+                axis = Vector.Unit_Z,
+                angle = 90
+            )
 
-        mb.addCube(
-            width = 4,
-            height = 4,
-            depth = 20,
-            center = Vector(0, 0, 10),
-            color = ToolHandle.ZAxisColor
-        )
+        if self.ZAxis in self._enabled_axis:
+            mb.addCube(
+                width = 4,
+                height = 4,
+                depth = 20,
+                center = Vector(0, 0, 10),
+                color = ToolHandle.ZAxisColor
+            )
 
-        mb.addPyramid(
-            width = 4,
-            height = 8,
-            depth = 4,
-            center = Vector(0, 0, 20),
-            color = ToolHandle.ZAxisColor,
-            axis = Vector.Unit_X,
-            angle = -90
-        )
+            mb.addPyramid(
+                width = 4,
+                height = 8,
+                depth = 4,
+                center = Vector(0, 0, 20),
+                color = ToolHandle.ZAxisColor,
+                axis = Vector.Unit_X,
+                angle = -90
+            )
 
         self.setSelectionMesh(mb.getData())

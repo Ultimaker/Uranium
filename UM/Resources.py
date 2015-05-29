@@ -94,6 +94,8 @@ class Resources:
             path = cls.__config_storage_path
         elif type == cls.SettingsLocation:
             path = os.path.join(cls.__data_storage_path, "settings")
+        elif type == cls.ResourcesLocation:
+            path = cls.__data_storage_path
         else:
             raise UnsupportedStorageLocationError("No known location to store type {0}".format(type))
 

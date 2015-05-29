@@ -2,7 +2,7 @@ project(uranium)
 
 cmake_minimum_required(VERSION 2.8.12)
 
-find_package(PythonInterp REQUIRED)
+find_package(PythonInterp 3.4.0 REQUIRED)
 
 # Tests
 add_custom_target(tests)
