@@ -36,10 +36,14 @@ class QtApplication(QApplication, Application, SignalEmitter):
     def __init__(self, **kwargs):
         if sys.platform == "win32":
             plugin_path = os.path.join(os.path.dirname(os.path.abspath(sys.executable)), "PyQt5", "plugins")
+            Logger.log("i", "Adding QT5 plugin path: %s" % (plugin_path))
+            QCoreApplication.addLibraryPath(plugin_path)    
         elif sys.platform == "darwin":
             plugin_path = os.path.join(Application.getInstallPrefix(), "Resources", "plugins")
-        Logger.log("i", "Adding QT5 plugin path: %s" % (plugin_path))
-        QCoreApplication.addLibraryPath(plugin_path)	
+            Logger.log("i", "Adding QT5 plugin path: %s" % (plugin_path))
+            QCoreApplication.addLibraryPath(plugin_path)    
+        
+        
 
         os.environ["QSG_RENDER_LOOP"] = "basic"
         super().__init__(sys.argv, **kwargs)
