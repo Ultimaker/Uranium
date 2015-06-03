@@ -33,8 +33,9 @@ class MainWindow(QQuickWindow):
         self._app.getController().getScene().sceneChanged.connect(self._onSceneChanged)
         self._preferences = Preferences.getInstance()
 
-        self._preferences.addPreference("general/window_height", 1280)
-        self._preferences.addPreference("general/window_width", 720)
+        self._preferences.addPreference("general/window_width", 1280)
+        self._preferences.addPreference("general/window_height", 720)
+
         self.setWidth(int(self._preferences.getValue("general/window_width")))
         self.setHeight(int(self._preferences.getValue("general/window_height")))
     
@@ -99,7 +100,7 @@ class MainWindow(QQuickWindow):
         w = event.size().width() / 2
         h = event.size().height() / 2
         for camera in self._app.getController().getScene().getAllCameras():
-            camera.setViewportSize(w,h)
+            camera.setViewportSize(w, h)
             proj = Matrix()
             if camera.isPerspective():
                 proj.setPerspective(30, w/h, 1, 500)
