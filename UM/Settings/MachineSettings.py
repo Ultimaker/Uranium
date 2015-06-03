@@ -10,6 +10,7 @@ import collections
 
 from UM.Settings.SettingsCategory import SettingsCategory
 from UM.Settings.Setting import Setting
+from UM.Settings.Validators.ResultCodes import ResultCodes
 from UM.Signal import Signal, SignalEmitter
 from PyQt5.QtCore import QCoreApplication
 from UM.Logger import Logger
@@ -222,6 +223,26 @@ class MachineSettings(SignalEmitter):
     ##  Returns the machine"s icon.
     def getIcon(self):
         return self._icon
+
+    ##  Return whether there is any setting that is in an "Error" state.
+    def hasErrorValue(self):
+        settings = self.getAllSettings()
+        for setting in settings:
+            result = setting.validate()
+            if result == ResultCodes.max_value_error or result == ResultCodes.min_value_error:
+                return True
+
+        return False
+
+    ##  Return whether there is any setting that is in a "Warning" state.
+    def hasWarningValue(self):
+        settings = self.getAllSettings()
+        for setting in settings:
+            result = setting.validate()
+            if result == ResultCodes.max_value_warning or result == ResultCodes.min_value_warning:
+                return True
+
+        return False
 
     def _getVisibleSettings(self):
         visible = []
