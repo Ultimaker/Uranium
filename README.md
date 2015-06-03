@@ -12,3 +12,7 @@ Dependencies
 - Numpy
 - Arcus
 
+Documentation
+-----------
+
+API documentation is available at http://software.ultimaker.com/uranium/ .
