@@ -87,7 +87,10 @@ class CameraTool(Tool):
 
         self._scene.acquireLock()
 
-        camera.translate(Vector(event.deltaX / 100.0, event.deltaY / 100.0, 0))
+        camera_position = camera.getWorldPosition()
+        camera.translate(Vector(-event.deltaX * 100, event.deltaY * 100, 0))
+        translation = camera.getWorldPosition() - camera_position
+        self._origin += translation
 
         self._scene.releaseLock()
 
