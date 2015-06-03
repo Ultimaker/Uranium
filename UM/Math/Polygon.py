@@ -51,9 +51,9 @@ class Polygon:
             aMin, aMax = self.project(normal)
             bMin, bMax = other.project(normal)
             if aMin > bMax:
-                return False
+                return None
             if bMin > aMax:
-                return False
+                return None
             size = min(aMax, bMax) - max(aMin, bMin)
             if size < retSize:
                 ret = normal * (size + 0.1)
@@ -70,9 +70,9 @@ class Polygon:
             aMin, aMax = self.project(normal)
             bMin, bMax = other.project(normal)
             if aMin > bMax:
-                return False
+                return None
             if bMin > aMax:
-                return False
+                return None
             size = min(aMax, bMax) - max(aMin, bMin)
             if size < retSize:
                 ret = normal * -(size + 0.1)
