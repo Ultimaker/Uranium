@@ -96,20 +96,20 @@ class MainWindow(QQuickWindow):
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
-
-        w = event.size().width() / 2
-        h = event.size().height() / 2
+        
+        w = event.size().width() * self.devicePixelRatio()
+        h = event.size().height() * self.devicePixelRatio()
         for camera in self._app.getController().getScene().getAllCameras():
             camera.setViewportSize(w, h)
             proj = Matrix()
             if camera.isPerspective():
                 proj.setPerspective(30, w/h, 1, 500)
             else:
-                proj.setOrtho(-w, w, -h, h, -500, 500)
+                proj.setOrtho(-w / 2, w / 2, -h / 2, h / 2, -500, 500)
             camera.setProjectionMatrix(proj)
         self._preferences.setValue("general/window_width", event.size().width())
         self._preferences.setValue("general/window_height", event.size().height())
-        self._app.getRenderer().setViewportSize(event.size().width(), event.size().height())
+        self._app.getRenderer().setViewportSize(w, h)
 
     def hideEvent(self, event):
         Application.getInstance().windowClosed()
