@@ -128,9 +128,13 @@ class CameraTool(Tool):
 
         diff = camera.getPosition() - self._origin
 
+        diff_flat = Vector(diff.x, 0.0, diff.z).getNormalized()
+        new_angle = math.acos(diff_flat.dot(diff.getNormalized())) + dy
+
         m = Matrix()
         m.setByRotationAxis(dx, Vector.Unit_Y)
-        m.rotateByAxis(dy, Vector.Unit_Y.cross(diff).normalize())
+        if new_angle < (math.pi / 2 - 0.01):
+            m.rotateByAxis(dy, Vector.Unit_Y.cross(diff).normalize())
 
         n = diff.multiply(m)
         n += self._origin
