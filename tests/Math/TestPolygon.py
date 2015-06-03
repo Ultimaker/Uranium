@@ -38,73 +38,67 @@ class TestPolygon(unittest.TestCase):
 
     def test_intersectsPolygon(self):
         p1 = Polygon(numpy.array([
-            [0.0, 0.0],
-            [1.0, 0.0],
-            [1.0, 1.0],
-            [0.0, 1.0]
-        ], numpy.float32))
-
-        p2 = Polygon(numpy.array([
-            [0.5, 0.5],
-            [1.5, 0.5],
-            [1.5, 1.5],
-            [0.5, 1.5]
-        ], numpy.float32))
-        result = p1.intersectsPolygon(p2)
-        print(result)
-
-        p2 = Polygon(numpy.array([
-            [2.5, 2.5],
-            [3.5, 2.5],
-            [3.5, 3.5],
-            [2.5, 3.5]
-        ], numpy.float32))
-        result = p1.intersectsPolygon(p2)
-        print(result)
-
-        p1 = Polygon(numpy.array([
-            [0, 0],
-            [10, 0],
+            [ 0,  0],
+            [10,  0],
             [10, 10],
-            [0, 10]
+            [ 0, 10]
         ], numpy.float32))
 
         p2 = Polygon(numpy.array([
-            [5, 5],
-            [15, 5],
-            [15, 15],
-            [5, 15]
+            [ 5, 0],
+            [15, 0],
+            [15, 10],
+            [ 5, 10]
         ], numpy.float32))
-        result = p1.intersectsPolygon(p2)
-        print(result)
+        self.verifyIntersection(p1, p2, (-5.0, 0.0))
 
         p2 = Polygon(numpy.array([
-            [5, 5],
-            [5, 15],
-            [-10, 15],
-            [-10, 5]
+            [-5, 0],
+            [ 5, 0],
+            [ 5, 10],
+            [-5, 10]
         ], numpy.float32))
-        result = p1.intersectsPolygon(p2)
-        print(result)
+        self.verifyIntersection(p1, p2, (5.0, 0.0))
 
         p2 = Polygon(numpy.array([
-            [2.5, 7.5],
-            [7.5, 7.5],
-            [7.5, 15.0],
-            [2.5, 15.0]
-        ]))
-        result = p1.intersectsPolygon(p2)
-        print(result)
+            [ 0, 5],
+            [10, 5],
+            [10, 15],
+            [ 0, 15]
+        ], numpy.float32))
+        self.verifyIntersection(p1, p2, (0.0, -5.0))
 
         p2 = Polygon(numpy.array([
-            [2.5, 7.5],
-            [-2.5, 7.5],
-            [-2.5, -5.0],
-            [2.5, -5.0]
-        ]))
-        result = p1.intersectsPolygon(p2)
-        print(result)
+            [ 0,-5],
+            [10,-5],
+            [10, 5],
+            [ 0, 5]
+        ], numpy.float32))
+        self.verifyIntersection(p1, p2, (0.0, 5.0))
 
+        p2 = Polygon(numpy.array([
+            [ 5, 5],
+            [15,-5],
+            [30, 5],
+            [15,15]
+        ], numpy.float32))
+        self.verifyIntersection(p1, p2, (-5.0, 0.0))
+
+        p2 = Polygon(numpy.array([
+            [15, 0],
+            [25, 0],
+            [25, 10],
+            [15, 10]
+        ], numpy.float32))
+        self.verifyIntersection(p1, p2, None)
+
+    def verifyIntersection(self, p1, p2, required_result):
+        for n in range(0, 4):
+            for m in range(0, 4):
+                result = p1.intersectsPolygon(p2)
+                self.assertEqual(result, required_result)
+                p2 = Polygon(numpy.concatenate((p2.getPoints()[1:], p2.getPoints()[0:1])))
+            p1 = Polygon(numpy.concatenate((p1.getPoints()[1:], p1.getPoints()[0:1])))
 
 if __name__ == "__main__":
     unittest.main()

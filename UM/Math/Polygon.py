@@ -56,7 +56,10 @@ class Polygon:
                 return None
             size = min(aMax, bMax) - max(aMin, bMin)
             if size < retSize:
-                ret = normal * (size + 0.1)
+                if aMin < bMin:
+                    ret = normal * -size
+                else:
+                    ret = normal * size
                 retSize = size
 
         for n in range(0, len(other._points)):
@@ -75,7 +78,10 @@ class Polygon:
                 return None
             size = min(aMax, bMax) - max(aMin, bMin)
             if size < retSize:
-                ret = normal * -(size + 0.1)
+                if aMin < bMin:
+                    ret = normal * -size
+                else:
+                    ret = normal * size
                 retSize = size
 
         if ret is not None:
