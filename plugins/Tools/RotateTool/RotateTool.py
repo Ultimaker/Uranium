@@ -71,8 +71,10 @@ class RotateTool(Tool):
             drag_end = (drag_position - handle_position).normalize()
 
             angle = math.acos(drag_start.dot(drag_end))
-            if self._snap_rotation and angle < self._snap_angle:
-                return
+            if self._snap_rotation:
+                angle = int(angle / self._snap_angle) * self._snap_angle
+                if angle == 0:
+                    return
 
             rotation = None
             if self.getLockedAxis() == ToolHandle.XAxis:
