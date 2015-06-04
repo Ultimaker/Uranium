@@ -27,7 +27,7 @@ class UnsupportedVersionError(Exception):
     pass
 
 # Check PyQt version, we only support 5.4 or higher.
-major, minor, patch = PYQT_VERSION_STR.split(".")
+major, minor = PYQT_VERSION_STR.split(".")[0:2]
 if int(major) < 5 or int(minor) < 4:
     raise UnsupportedVersionError("This application requires at least PyQt 5.4.0")
 
