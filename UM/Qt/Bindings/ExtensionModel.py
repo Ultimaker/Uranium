@@ -26,7 +26,10 @@ class ExtensionModel(ListModel):
             meta_data =  Application.getInstance().getPluginRegistry().getMetaData(extension.getPluginId())
             
             if "plugin" in meta_data:
-                self.appendItem({"name": meta_data["plugin"].get("name", None), "actions":self.createActionsModel(extension.getMenuItemList()),"extension":extension})
+                menu_name = extension.getMenuName()
+                if not menu_name:
+                    menu_name = meta_data["plugin"].get("name", None)
+                self.appendItem({"name": menu_name, "actions":self.createActionsModel(extension.getMenuItemList()),"extension":extension})
 
     def createActionsModel(self, options):
         model = ListModel()

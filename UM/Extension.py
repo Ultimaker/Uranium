@@ -11,12 +11,21 @@ class Extension(PluginObject):
     def __init__(self):
         super().__init__()
         self._menu_function_dict = {}
-    
+        self._menu_name = None
+        
     ##  Add an item to the submenu of the extention
     #   \param name \type{string}
     #   \param function \type{function}
     def addMenuItem(self, name, function):
         self._menu_function_dict[name] = function
+    
+    ##  Set name of the menu where all menu items are placed in
+    #   \param name \type{string}
+    def setMenuName(self, name):
+        self._menu_name = name
+        
+    def getMenuName(self):
+        return self._menu_name
     
     ##  Call function associated with option 
     #   \param name \type{string}
