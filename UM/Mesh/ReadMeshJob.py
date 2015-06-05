@@ -24,7 +24,7 @@ class ReadMeshJob(Job):
         return self._filename
 
     def run(self):
-        loading_message = Message(i18n_catalog.i18nc("Loading mesh message, {0} is file name", "Loading {0}".format(self._filename)))
+        loading_message = Message(i18n_catalog.i18nc("Loading mesh message, {0} is file name", "Loading {0}".format(self._filename)), lifetime = 0)
         loading_message.show()
         self.setResult(self._handler.read(self._filename, self._device))
         loading_message.hide()
