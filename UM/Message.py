@@ -7,7 +7,7 @@ from UM.Signal import Signal
 ## Class for displaying messages in the application. 
 #
 class Message():
-    def __init__(self, text = "", lifetime = 10):
+    def __init__(self, text = "", lifetime = 10, dismissable = True):
         super().__init__()
         self._application = Application.getInstance()
         self._visible = False
@@ -16,10 +16,7 @@ class Message():
         self._max_progress = 0
         self._lifetime = lifetime 
         self._lifetime_timer = None
-       # self._lifetime_timer = QTimer()
-        #self._lifetime_timer.setInterval(lifetime * 1000)
-        #self._lifetime_timer.setSingleShot(True)
-        #self._lifetime_timer.timeout.connect(self.hide)
+        self._dismissable = dismissable # Can the message be closed by user?
         self._actions = []
     
     actionTriggered = Signal()
@@ -29,6 +26,10 @@ class Message():
         if not self._visible:
             self._visible = True
             self._application.showMessageSignal.emit(self)
+    
+    ##  Can the message be closed by user?
+    def isDismissable(self):
+        return self._dismissable
     
     ##  Set the lifetime timer of the message.
     #   This is used by the QT application once the message is shown.

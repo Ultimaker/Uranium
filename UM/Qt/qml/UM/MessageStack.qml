@@ -66,7 +66,8 @@ ListView {
 
             text: "x"
             onClicked: UM.Models.visibleMessagesModel.hideMessage(model.id)
-
+            visible: model.dismissable
+            enabled: model.dismissable
             style: ButtonStyle {
                 background: Rectangle {
                     color: control.hovered ? UM.Theme.colors.primary : "transparent";
