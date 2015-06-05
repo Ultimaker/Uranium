@@ -187,6 +187,8 @@ class QtGL2Renderer(Renderer):
 
         queue_item["wireframe"] = (mode == Renderer.RenderWireframe)
 
+        queue_item["force_single_sided"] = kwargs.get("force_single_sided", False)
+
         if kwargs.get("end", None):
             queue_item["range"] = [kwargs.get("start", 0), kwargs.get("end")]
 
@@ -354,6 +356,10 @@ class QtGL2Renderer(Renderer):
         wireframe = item.get("wireframe", False)
         range = item.get("range", None)
 
+        culling_enabled = self._gl.glIsEnabled(self._gl.GL_CULL_FACE)
+        if item.get("force_single_sided") and not culling_enabled:
+            self._gl.glEnable(self._gl.GL_CULL_FACE)
+
         material.bind()
         material.setUniformValue("u_projectionMatrix", self._camera.getProjectionMatrix(), cache = False)
         material.setUniformValue("u_viewMatrix", self._camera.getWorldTransformation().getInverse(), cache = False)
@@ -426,6 +432,9 @@ class QtGL2Renderer(Renderer):
             index_buffer.release()
 
         material.release()
+
+        if item.get("force_single_sided") and not culling_enabled:
+            self._gl.glDisable(self._gl.GL_CULL_FACE)
 
     def _createVertexBuffer(self, mesh):
         buffer = QOpenGLBuffer(QOpenGLBuffer.VertexBuffer)

@@ -87,7 +87,10 @@ class CameraTool(Tool):
 
         self._scene.acquireLock()
 
-        camera.translate(Vector(event.deltaX / 100.0, event.deltaY / 100.0, 0))
+        camera_position = camera.getWorldPosition()
+        camera.translate(Vector(-event.deltaX * 100, event.deltaY * 100, 0))
+        translation = camera.getWorldPosition() - camera_position
+        self._origin += translation
 
         self._scene.releaseLock()
 
@@ -125,9 +128,13 @@ class CameraTool(Tool):
 
         diff = camera.getPosition() - self._origin
 
+        diff_flat = Vector(diff.x, 0.0, diff.z).getNormalized()
+        new_angle = math.acos(diff_flat.dot(diff.getNormalized())) + dy
+
         m = Matrix()
         m.setByRotationAxis(dx, Vector.Unit_Y)
-        m.rotateByAxis(dy, Vector.Unit_Y.cross(diff).normalize())
+        if new_angle < (math.pi / 2 - 0.01):
+            m.rotateByAxis(dy, Vector.Unit_Y.cross(diff).normalize())
 
         n = diff.multiply(m)
         n += self._origin
