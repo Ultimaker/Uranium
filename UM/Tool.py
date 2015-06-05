@@ -17,8 +17,15 @@ class Tool(PluginObject, SignalEmitter):
         self._locked_axis = None
         self._drag_plane = None
         self._drag_start = None
+        self._exposed_properties = []
 
     propertyChanged = Signal()
+
+    def getExposedProperties(self):
+        return self._exposed_properties
+
+    def setExposedProperties(self, *args):
+        self._exposed_properties = args
 
     ##  Handle an event.
     #   \param event \type{Event} The event to handle.
@@ -110,4 +117,3 @@ class Tool(PluginObject, SignalEmitter):
             return drag_end - self._drag_start
 
         return None
-
