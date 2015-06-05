@@ -42,3 +42,9 @@ class View(PluginObject):
     #   after rendering this method should be used.
     def endRendering(self):
         raise NotImplementedError()
+    
+    ##  Handle an event.
+    #   \param event \type{Event} The event to handle.
+    #   \sa Event
+    def event(self, event):
+        pass

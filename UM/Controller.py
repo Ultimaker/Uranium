@@ -197,6 +197,9 @@ class Controller(SignalEmitter):
         if self._active_tool and self._active_tool.event(event):
             return
 
+        if self._active_view:
+            self._active_view.event(event)
+            
         if event.type == Event.MouseReleaseEvent and MouseEvent.RightButton in event.buttons:
             self.contextMenuRequested.emit(event.x, event.y)
 
