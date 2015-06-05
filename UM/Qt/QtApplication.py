@@ -103,8 +103,6 @@ class QtApplication(QApplication, Application, SignalEmitter):
                 self._visible_messages.append(message)
                 message.setTimer(QTimer())
                 self.visibleMessageAdded.emit(message)
-    
-        pass
 
     def setMainQml(self, path):
         self._main_qml = path

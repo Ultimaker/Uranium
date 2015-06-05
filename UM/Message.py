@@ -30,12 +30,17 @@ class Message():
             self._visible = True
             self._application.showMessageSignal.emit(self)
     
+    ##  Set the lifetime timer of the message.
+    #   This is used by the QT application once the message is shown.
+    #   If the lifetime is set to 0, no timer is added.
     def setTimer(self, timer):
         self._lifetime_timer = timer
-        self._lifetime_timer.setInterval(self._lifetime * 1000)
-        self._lifetime_timer.setSingleShot(True)
-        self._lifetime_timer.timeout.connect(self.hide)
-        self._lifetime_timer.start()
+        if self._lifetime_timer:
+            if self._lifetime:
+                self._lifetime_timer.setInterval(self._lifetime * 1000)
+                self._lifetime_timer.setSingleShot(True)
+                self._lifetime_timer.timeout.connect(self.hide)
+                self._lifetime_timer.start()
 
     def addAction(self, action_id, name, icon, description):
         self._actions.append({"action_id": action_id, "name": name, "icon": icon, "description": description})
