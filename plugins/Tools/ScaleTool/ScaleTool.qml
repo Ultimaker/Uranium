@@ -7,6 +7,9 @@ import QtQuick.Controls 1.2
 import UM 1.0 as UM
 
 Item {
+    width: 23 * UM.Theme.sizes.line.width;
+    height: 9.5 * UM.Theme.sizes.line.height;
+
     Button {
         id: resetScaleButton
 
@@ -84,6 +87,7 @@ Item {
             height: UM.Theme.sizes.setting_control.height;
             text: "X";
             font: UM.Theme.fonts.default;
+            color: UM.Theme.colors.text;
             verticalAlignment: Text.AlignVCenter;
         }
 
@@ -91,6 +95,7 @@ Item {
             height: UM.Theme.sizes.setting_control.height;
             text: "Y";
             font: UM.Theme.fonts.default;
+            color: UM.Theme.colors.text;
             verticalAlignment: Text.AlignVCenter;
         }
 
@@ -98,6 +103,7 @@ Item {
             height: UM.Theme.sizes.setting_control.height;
             text: "Z";
             font: UM.Theme.fonts.default;
+            color: UM.Theme.colors.text;
             verticalAlignment: Text.AlignVCenter;
         }
 
