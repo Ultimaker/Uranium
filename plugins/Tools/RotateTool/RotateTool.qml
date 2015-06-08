@@ -7,6 +7,9 @@ import QtQuick.Controls 1.2
 import UM 1.0 as UM
 
 Item {
+    width: 14 * UM.Theme.sizes.line.width;
+    height: 4.5 * UM.Theme.sizes.line.height;
+
     Button {
         id: resetRotationButton
 
@@ -33,7 +36,7 @@ Item {
 
         style: UM.Theme.styles.checkbox;
 
-        checked: UM.ActiveTool.getProperty("RotationSnap");
+        checked: UM.ActiveTool.properties.RotationSnap;
         onClicked: UM.ActiveTool.setProperty("RotationSnap", checked);
     }
 }

@@ -29,14 +29,18 @@ class RotateTool(Tool):
         self._snap_rotation = True
         self._snap_angle = math.radians(15)
 
+        self.setExposedProperties("RotationSnap", "RotationSnapAngle")
+
     def event(self, event):
         super().event(event)
 
         if event.type == Event.KeyPressEvent and event.key == KeyEvent.ShiftKey:
             self._snap_rotation = (not self._snap_rotation)
+            self.propertyChanged.emit()
 
         if event.type == Event.KeyReleaseEvent and event.key == KeyEvent.ShiftKey:
             self._snap_rotation = (not self._snap_rotation)
+            self.propertyChanged.emit()
 
         if event.type == Event.MousePressEvent:
             if MouseEvent.LeftButton not in event.buttons:
@@ -102,13 +106,17 @@ class RotateTool(Tool):
         return self._snap_rotation
 
     def setRotationSnap(self, snap):
-        self._snap_rotation = snap
+        if snap != self._snap_rotation:
+            self._snap_rotation = snap
+            self.propertyChanged.emit()
 
     def getRotationSnapAngle(self):
         return self._snap_angle
 
     def setRotationSnapAngle(self, angle):
-        self._snap_angle = angle
+        if angle != self._snap_angle:
+            self._snap_angle = angle
+            self.propertyChanged.emit()
 
     def resetRotation(self):
         Selection.applyOperation(SetTransformOperation, None, Quaternion(), None)

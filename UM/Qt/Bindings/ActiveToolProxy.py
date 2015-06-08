@@ -16,8 +16,10 @@ class ActiveToolProxy(QObject):
         Application.getInstance().getController().activeToolChanged.connect(self._onActiveToolChanged)
         self._onActiveToolChanged()
 
+        self._properties = { }
+
     activeToolChanged = pyqtSignal()
-    propertyChanged = pyqtSignal()
+    #propertyChanged = pyqtSignal()
 
     @pyqtProperty(bool, notify = activeToolChanged)
     def valid(self):
@@ -44,20 +46,10 @@ class ActiveToolProxy(QObject):
         if action:
             action()
 
-    @pyqtSlot(str, result = "QVariant")
-    def getProperty(self, property):
-        if not self._active_tool:
-            return None
-
-        property_getter = getattr(self._active_tool, "get" + property)
-        if property_getter:
-            return property_getter()
-
-        if hasattr(self._active_tool, property):
-            return getattr(self._active_tool, property)
-
-        return None
-
+    propertiesChanged = pyqtSignal()
+    @pyqtProperty("QVariantMap", notify = propertiesChanged)
+    def properties(self):
+        return self._properties;
 
     @pyqtSlot(str, "QVariant")
     def setProperty(self, property, value):
@@ -72,13 +64,31 @@ class ActiveToolProxy(QObject):
             setattr(self._active_tool, property, value)
 
     def _onPropertyChanged(self):
-        self.propertyChanged.emit()
+        self._updateProperties()
 
     def _onActiveToolChanged(self):
+        if self._active_tool:
+            self._active_tool.propertyChanged.disconnect(self._onPropertyChanged)
+
         self._active_tool = Application.getInstance().getController().getActiveTool()
         if self._active_tool is not None:
             self._active_tool.propertyChanged.connect(self._onPropertyChanged)
+            self._updateProperties()
+
         self.activeToolChanged.emit()
+
+    def _updateProperties(self):
+        self._properties.clear()
+
+        for name in self._active_tool.getExposedProperties():
+            property_getter = getattr(self._active_tool, "get" + name)
+            if property_getter:
+                self._properties[name] = property_getter()
+
+            if hasattr(self._active_tool, name):
+                self._properties[name] = getattr(self._active_tool, name)
+
+        self.propertiesChanged.emit()
 
 def createActiveToolProxy(engine, script_engine):
     return ActiveToolProxy()

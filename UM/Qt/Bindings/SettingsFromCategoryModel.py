@@ -34,6 +34,8 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
         self.addRoleName(self.UnitRole,"unit")
         self.addRoleName(self.DescriptionRole, "description")
         self.addRoleName(self.VisibleRole, "visible")
+        
+    settingChanged = Signal()
 
     @pyqtSlot(int, str, "QVariant")
     ##  Notification that setting has changed.  
@@ -84,6 +86,4 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
                 self.setProperty(index, "visible", (setting.isVisible() and setting.isActive()))
                 self.setProperty(index, "value", setting.getValue())
                 self.setProperty(index, "valid", setting.validate())
-                
-                
-    settingChanged = Signal() # Convenience signal; emitted when one of the settings of the category changes.
+        self.settingChanged.emit()

@@ -395,6 +395,8 @@ class SceneNode(SignalEmitter):
     def setCalculateBoundingBox(self, calculate):
         self._calculate_aabb = calculate
 
+    boundingBoxChanged = Signal()
+
     ##  private:
     def _getDerivedPosition(self):
         if not self._derived_position:
@@ -484,3 +486,4 @@ class _CalculateAABBJob(Job):
 
         self._node._aabb = aabb
         self._node._aabb_job = None
+        self._node.boundingBoxChanged.emit()

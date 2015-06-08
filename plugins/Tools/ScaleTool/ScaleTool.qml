@@ -7,6 +7,9 @@ import QtQuick.Controls 1.2
 import UM 1.0 as UM
 
 Item {
+    width: 23 * UM.Theme.sizes.line.width;
+    height: 9.5 * UM.Theme.sizes.line.height;
+
     Button {
         id: resetScaleButton
 
@@ -52,22 +55,107 @@ Item {
 
         style: UM.Theme.styles.checkbox;
 
-        checked: UM.ActiveTool.getProperty("ScaleSnap");
+        checked: UM.ActiveTool.properties.ScaleSnap;
         onClicked: UM.ActiveTool.setProperty("ScaleSnap", checked);
     }
 
     CheckBox {
-        anchors.left: resetScaleButton.right;
+        anchors.left: snapCheckbox.right;
         anchors.leftMargin: UM.Theme.sizes.default_margin.width;
-        anchors.top: resetScaleButton.top;
+        anchors.bottom: parent.bottom;
 
         //: Uniform scaling checkbox
         text: qsTr("Uniform Scaling");
 
         style: UM.Theme.styles.checkbox;
 
-        checked: !UM.ActiveTool.getProperty("NonUniformScale");
+        checked: !UM.ActiveTool.properties.NonUniformScale;
         onClicked: UM.ActiveTool.setProperty("NonUniformScale", !checked);
+    }
+
+    Grid {
+        anchors.bottom: snapCheckbox.top;
+        anchors.bottomMargin: UM.Theme.sizes.default_margin.height;
+        anchors.left: resetScaleButton.right;
+        anchors.leftMargin: UM.Theme.sizes.default_margin.width;
+
+        columns: 3;
+        flow: Grid.TopToBottom;
+        spacing: UM.Theme.sizes.default_margin.width / 2;
+
+        Label {
+            height: UM.Theme.sizes.setting_control.height;
+            text: "X";
+            font: UM.Theme.fonts.default;
+            color: UM.Theme.colors.text;
+            verticalAlignment: Text.AlignVCenter;
+        }
+
+        Label {
+            height: UM.Theme.sizes.setting_control.height;
+            text: "Y";
+            font: UM.Theme.fonts.default;
+            color: UM.Theme.colors.text;
+            verticalAlignment: Text.AlignVCenter;
+        }
+
+        Label {
+            height: UM.Theme.sizes.setting_control.height;
+            text: "Z";
+            font: UM.Theme.fonts.default;
+            color: UM.Theme.colors.text;
+            verticalAlignment: Text.AlignVCenter;
+        }
+
+        TextField {
+            width: UM.Theme.sizes.setting_control.width;
+            height: UM.Theme.sizes.setting_control.height;
+            property string unit: "mm";
+            style: UM.Theme.styles.text_field;
+            text: Math.round(UM.ActiveTool.properties.ObjectWidth)
+            onEditingFinished: UM.ActiveTool.setProperty("ObjectWidth", text);
+        }
+        TextField {
+            width: UM.Theme.sizes.setting_control.width;
+            height: UM.Theme.sizes.setting_control.height;
+            property string unit: "mm";
+            style: UM.Theme.styles.text_field;
+            text: Math.round(UM.ActiveTool.properties.ObjectDepth)
+            onEditingFinished: UM.ActiveTool.setProperty("ObjectDepth", text);
+        }
+        TextField {
+            width: UM.Theme.sizes.setting_control.width;
+            height: UM.Theme.sizes.setting_control.height;
+            property string unit: "mm";
+            style: UM.Theme.styles.text_field;
+            text: Math.round(UM.ActiveTool.properties.ObjectHeight)
+            onEditingFinished: UM.ActiveTool.setProperty("ObjectHeight", text);
+        }
+
+        TextField {
+            width: UM.Theme.sizes.setting_control.width;
+            height: UM.Theme.sizes.setting_control.height;
+            property string unit: "%";
+            style: UM.Theme.styles.text_field;
+            text: Math.round(UM.ActiveTool.properties.ScaleX * 100);
+            onEditingFinished: UM.ActiveTool.setProperty("ScaleX", parseInt(text) / 100);
+        }
+        TextField {
+            width: UM.Theme.sizes.setting_control.width;
+            height: UM.Theme.sizes.setting_control.height;
+            property string unit: "%";
+            style: UM.Theme.styles.text_field;
+            text: Math.round(UM.ActiveTool.properties.ScaleZ * 100);
+            onEditingFinished: UM.ActiveTool.setProperty("ScaleZ", parseInt(text) / 100);
+        }
+        TextField {
+            width: UM.Theme.sizes.setting_control.width;
+            height: UM.Theme.sizes.setting_control.height;
+            property string unit: "%";
+            style: UM.Theme.styles.text_field;
+            text: Math.round(UM.ActiveTool.properties.ScaleY * 100);
+            onEditingFinished: UM.ActiveTool.setProperty("ScaleY", parseInt(text) / 100);
+        }
     }
 }
 
