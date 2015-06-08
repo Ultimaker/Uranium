@@ -7,9 +7,8 @@ from UM.Qt.ListModel import ListModel
 from UM.Settings.Setting import Setting
 from UM.Resources import Resources
 from UM.Application import Application
-from UM.Signal import Signal, SignalEmitter
 
-class SettingsFromCategoryModel(ListModel, SignalEmitter):
+class SettingsFromCategoryModel(ListModel):
     NameRole = Qt.UserRole + 1
     TypeRole = Qt.UserRole + 2
     ValueRole = Qt.UserRole + 3
@@ -34,8 +33,6 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
         self.addRoleName(self.UnitRole,"unit")
         self.addRoleName(self.DescriptionRole, "description")
         self.addRoleName(self.VisibleRole, "visible")
-        
-    settingChanged = Signal()
 
     @pyqtSlot(int, str, "QVariant")
     ##  Notification that setting has changed.  
@@ -85,4 +82,3 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
                 self.setProperty(index, "visible", (setting.isVisible() and setting.isActive()))
                 self.setProperty(index, "value", setting.getValue())
                 self.setProperty(index, "valid", setting.validate())
-        self.settingChanged.emit()
