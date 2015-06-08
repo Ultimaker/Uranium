@@ -33,7 +33,7 @@ Item {
 
         style: UM.Theme.styles.checkbox;
 
-        checked: UM.ActiveTool.getProperty("RotationSnap");
+        checked: UM.ActiveTool.properties.RotationSnap;
         onClicked: UM.ActiveTool.setProperty("RotationSnap", checked);
     }
 }
