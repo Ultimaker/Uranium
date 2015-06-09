@@ -17,6 +17,8 @@ ScrollView {
     signal showTooltip(Item item, point location, string text);
     signal hideTooltip();
 
+    property variant expandedCategories: []
+
     Column {
         id: contents
         spacing: UM.Theme.sizes.default_margin.height;
@@ -43,6 +45,21 @@ ScrollView {
                     text: model.name;
                     iconSource: UM.Theme.icons[model.icon];
                     checkable: true;
+
+                    property bool previousChecked: false
+                    checked: base.expandedCategories.indexOf(model.id) != -1;
+                    onClicked: {
+                        var categories = base.expandedCategories;
+                        if(checked)
+                        {
+                            categories.push(model.id);
+                        }
+                        else
+                        {
+                            categories.splice(base.expandedCategories.indexOf(model.id), 1);
+                        }
+                        base.expandedCategories = categories;
+                    }
                 }
 
                 Column {
