@@ -104,9 +104,9 @@ class SceneNode(SignalEmitter):
     ##  \brief Get the transformed mesh data from the scene node/object, based on the transformation of scene nodes wrt root. 
     #   \returns MeshData    
     def getMeshDataTransformed(self):
-        transformed_mesh = deepcopy(self._mesh_data)
-        transformed_mesh.transform(self.getWorldTransformation())
-        return transformed_mesh
+        #transformed_mesh = deepcopy(self._mesh_data)
+        #transformed_mesh.transform(self.getWorldTransformation())
+        return self._mesh_data.getTransformed(self.getWorldTransformation())
 
     ##  \brief Set the mesh of this node/object
     #   \param mesh_data MeshData object
