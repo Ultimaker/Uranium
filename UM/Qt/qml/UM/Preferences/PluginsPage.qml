@@ -3,7 +3,6 @@
 
 import QtQuick 2.1
 import QtQuick.Controls 1.1
-import QtQuick.Layouts 1.1
 import QtQuick.Window 2.1
 import QtQuick.Controls.Styles 1.1
 
@@ -12,9 +11,11 @@ import UM 1.0 as UM
 import ".."
 
 PreferencesPage {
+    id: preferencesPage
+
     //: Plugins configuration page
     title: qsTr("Plugins");
-    contents: ScrollView 
+    contents: ScrollView
     {
         anchors.fill: parent;
         ListView 
@@ -30,23 +31,18 @@ PreferencesPage {
     Component
     {
         id: pluginDelegate
-        RowLayout 
-        {
-            width: ListView.view.width;
-            CheckBox
-            {
-                text: model.name;
+        Row {
+            CheckBox {
+                text: model.name
                 x: 0
-                Layout.minimumWidth: 50
-                Layout.preferredWidth: 250
                 checked: model.enabled
                 onClicked: plugin_list.model.setEnabled(model.name, checked)
                 enabled: !model.required 
+                width: 0.83*preferencesPage.width
             }
             Button
             {
                 iconName: "help-about";
-
                 onClicked:
                 {
                     about_window.about_text = model.description
@@ -80,28 +76,6 @@ PreferencesPage {
 
         Label
         {
-            anchors.fill: parent;
-            columns: 2;
-            Label
-            {
-                Layout.columnSpan: 2;
-                text: about_window.plugin_name
-                font.pointSize: 18
-            }
-            Label
-            {
-                Layout.columnSpan: 2;
-                text: about_window.about_text
-            }
-            Label
-            {
-                //: About plugin dialog author label
-                text: qsTr("Author:");
-            }
-            Label
-            {
-                text: about_window.author_text
-            }
             id: pluginTitle
             text: about_window.plugin_name
             font.pointSize: 18
