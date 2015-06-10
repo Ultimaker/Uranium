@@ -16,6 +16,8 @@ Dialog {
 
     //: Preferences dialog title
     title: qsTr("Preferences")
+    minimumWidth: 500;
+    minimumHeight: 400;
 
     RowLayout {
         anchors.fill: parent;
@@ -46,14 +48,12 @@ Dialog {
     leftButtons: Button {
         //: Reset preferences to default
         text: qsTr("Defaults");
-
         onClicked: configPage.item.reset();
     }
 
     rightButtons: Button {
         //: Close preferences dialog
         text: qsTr("Close");
-
         onClicked: base.visible = false;
     }
 
