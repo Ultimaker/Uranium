@@ -58,7 +58,7 @@ PreferencesPage {
             }
         }
     }
-    
+
     Dialog
     {
         id: about_window
@@ -75,8 +75,10 @@ PreferencesPage {
 
         width: Screen.devicePixelRatio * 320;
         height: Screen.devicePixelRatio * 240;
+        minimumWidth: 320
+        minimumHeight: 240
 
-        GridLayout
+        Label
         {
             anchors.fill: parent;
             columns: 2;
@@ -100,15 +102,64 @@ PreferencesPage {
             {
                 text: about_window.author_text
             }
-            Label
-            {
-                //: About plugin dialog version label
-                text: qsTr("Version:");
-            }
-            Text
-            {
-                text: about_window.version_text
-            }
+            id: pluginTitle
+            text: about_window.plugin_name
+            font.pointSize: 18
+            width: parent.width
+            wrapMode: Text.WordWrap
+        }
+
+       Label
+        {
+            id: pluginCaption
+            text: about_window.about_text
+            height: about_window.about_text ? undefined : 0 //if there is no pluginCaption the row height is 0 for layout purposes
+            width: parent.width
+            wrapMode: Text.WordWrap
+            font.italic: true
+            anchors.top: pluginTitle.bottom
+            anchors.topMargin: about_window.about_text ? 3 : 0 //if there is no pluginCaption the topMargin is 0 for layout purposes
+        }
+
+        Label
+        {
+            id: pluginAuthorLabel
+            //: About plugin dialog author label
+            text: qsTr("Author:")
+            width: 0.4*parent.width
+            wrapMode: Text.WordWrap
+            anchors.top: pluginCaption.bottom
+            anchors.topMargin: 10
+        }
+
+        Label
+        {
+            id: pluginAuthor;
+            text: about_window.author_text
+            width: 0.6*parent.width
+            wrapMode: Text.WordWrap
+            anchors.top: pluginCaption.bottom
+            anchors.left: pluginAuthorLabel.right
+            anchors.topMargin: 10
+        }
+
+        Label
+        {
+            id: pluginVersionLabel
+            //: About plugin dialog version label
+            text: qsTr("Version:")
+            width: 0.4*parent.width
+            wrapMode: Text.WordWrap
+            anchors.top: pluginAuthor.bottom
+        }
+
+        Label
+        {
+            id: pluginVersion
+            text: about_window.version_text
+            width: 0.6*parent.width
+            anchors.top: pluginAuthor.bottom
+            anchors.left: pluginVersionLabel.right
         }
 
         rightButtons: Button {
