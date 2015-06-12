@@ -35,10 +35,18 @@ class WindowsRemovableDrives(threading.Thread, SignalEmitter):
                 if letter != "A" and letter != "B" and bitmask & 1 and windll.kernel32.GetDriveTypeA(bytes((letter + ":/"),"ascii")) == 2:
                     volume_name = ""
                     name_buffer = ctypes.create_unicode_buffer(1024)
-                    if windll.kernel32.GetVolumeInformationW(ctypes.c_wchar_p(letter + ":/"), name_buffer, ctypes.sizeof(name_buffer), None, None, None, None, 0) == 0:
+                    filesystem_buffer = ctypes.create_unicode_buffer(1024)
+                    if windll.kernel32.GetVolumeInformationW(ctypes.c_wchar_p(letter + ":/"), name_buffer, ctypes.sizeof(name_buffer), None, None, None, filesystem_buffer, ctypes.sizeof(filesystem_buffer)) == 0:
                         volume_name = name_buffer.value
                     if volume_name == "":
                         volume_name = "Removable Drive"
+
+                    # Certain readers will report themselves as a volume even when there is no card inserted, but will show an
+                    # "No volume in drive" warning when trying to call GetDiskFreeSpace. However, they will not report a valid
+                    # filesystem, so we can filter on that. In addition, this excludes other things with filesystems Windows
+                    # does not support.
+                    if filesystem_buffer.value == "":
+                        continue
 
                     # Check for the free space. Some card readers show up as a drive with 0 space free when there is no card inserted.
                     freeBytes = ctypes.c_longlong(0)
