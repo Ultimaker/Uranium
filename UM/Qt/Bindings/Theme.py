@@ -8,6 +8,7 @@ from PyQt5.QtQml import QQmlComponent
 import json
 import os
 import os.path
+import sys
 
 from UM.Logger import Logger
 from UM.Resources import Resources
@@ -21,6 +22,12 @@ class Theme(QObject):
         self._path = ""
         self._icons = {}
         self._images = {}
+
+        # Workaround for incorrect default font on Windows
+        if sys.platform == "win32":
+            default_font = QFont("Segoe UI")
+            default_font.setPointSize(9)
+            QCoreApplication.instance().setFont(default_font)
 
         self._em_height = int(QFontMetrics(QCoreApplication.instance().font()).ascent())
         self._em_width = self._em_height;
@@ -77,11 +84,14 @@ class Theme(QObject):
             for name, font in data["fonts"].items():
                 f = QFont()
 
-                f.setFamily(font.get("family", QCoreApplication.instance().font().family()))
+                if not sys.platform == "win32":
+                    # Excluding windows here as a workaround for bad font rendering
+                    f.setFamily(font.get("family", QCoreApplication.instance().font().family()))
+
                 f.setStyleName(font.get("style", "Regular"))
                 f.setBold(font.get("bold", False))
                 f.setItalic(font.get("italic", False))
-                f.setPixelSize(int(font.get("size", 1) * self._em_height))
+                f.setPixelSize(font.get("size", 1) * self._em_height)
                 f.setCapitalization(QFont.AllUppercase if font.get("capitalize", False) else QFont.MixedCase)
 
                 self._fonts[name] = f
