@@ -144,9 +144,9 @@ class MeshData(SignalEmitter):
             mesh._normals = self._normals.copy()
             if(self._indices):
                 mesh._indices = self._indices.copy()
-            if(self._colors):
+            if self._colors is not None:
                 mesh._colors = self._colors.copy()
-            if(self._uvs):
+            if self._uvs is not None:
                 mesh._uvs = self._uvs.copy()
             mesh._type = self._type
             mesh._vertex_count = self._vertex_count
