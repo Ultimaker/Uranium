@@ -137,8 +137,20 @@ class MeshData(SignalEmitter):
             data = data.dot(transformation.getTransposed().getData())
             data += transformation.getData()[:,3]
             data = data[:,0:3]
-
-            mesh = copy.deepcopy(self)
+            
+            ##  HACK; Create a manual copy (instead of using deep copy), as this caused problems
+            #   when trying to change the data.
+            mesh = MeshData()
+            mesh._normals = self._normals.copy()
+            if(self._indices):
+                mesh._indices = self._indices.copy()
+            if(self._colors):
+                mesh._colors = self._colors.copy()
+            if(self._uvs):
+                mesh._uvs = self._uvs.copy()
+            mesh._type = self._type
+            mesh._vertex_count = self._vertex_count
+            mesh._face_count = self._face_count 
             mesh._vertices = data
             return mesh
         else:
