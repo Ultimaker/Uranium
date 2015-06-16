@@ -3,15 +3,31 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 from UM.Signal import Signal, SignalEmitter
+from UM.Message import Message
+from UM.Logger import Logger
 
 import threading
 import string
 
 from ctypes import windll
+from ctypes import wintypes
+
 import ctypes
 import time
 import os
 import subprocess
+
+# WinAPI Constants that we need
+# Hardcoded here due to stupid WinDLL stuff that does not give us access to these values.
+GENERIC_READ = 2147483648
+GENERIC_WRITE = 1073741824
+
+FILE_SHARE_READ = 1
+FILE_SHARE_WRITE = 2
+
+IOCTL_STORAGE_EJECT_MEDIA = 2967560
+
+OPEN_EXISTING = 3
 
 ## Removable drive support for windows
 class WindowsRemovableDrives(threading.Thread, SignalEmitter):
@@ -19,9 +35,9 @@ class WindowsRemovableDrives(threading.Thread, SignalEmitter):
         super().__init__()
         self.daemon = True
         self.start()
-        
+
     drivesChanged = Signal()
-        
+
     def run(self):
         while True:
             drives = {}
@@ -54,37 +70,33 @@ class WindowsRemovableDrives(threading.Thread, SignalEmitter):
                         continue
                     if freeBytes.value < 1:
                         continue
-                    
+
                     drives["%s (%s:)" % (volume_name, letter)] = letter + ":/"
                 bitmask >>= 1
 
             self.drivesChanged.emit(drives)
             time.sleep(5)
 
-    def ejectDrive(self, drive):
-        try:
-            mount = self._drives[drive]
-        except KeyError:
+    def ejectDrive(self, name, path):
+        # Magic WinAPI stuff
+        # First, open a handle to the Device
+        handle = windll.kernel32.CreateFileA("\\\\.\\{0}".format(path[:-1]).encode("ascii"), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, None, OPEN_EXISTING, 0, None )
+
+        if handle == -1:
+            print(windll.kernel32.GetLastError())
             return
 
-        #TODO: This really should not be calling magic external executables that are not contained in the source
-        #or properly documented. Since we have WinAPI stuff here anyway, we could just use the WinAPI functions for
-        #ejecting.
-        #
-        #See http://support2.microsoft.com/?scid=kb%3Ben-us%3B165721&x=18&y=13 for how to do it with just WinAPI
-        command = [os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "EjectMedia.exe")), driveName]
-        kwargs = {}
-        if subprocess.mswindows:
-            su = subprocess.STARTUPINFO()
-            su.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-            su.wShowWindow = subprocess.SW_HIDE
-            kwargs["startupinfo"] = su
-        p = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, **kwargs)
-        output = p.communicate()
-
-        if p.wait():
-            print(output[0])
-            print(output[1])
-            return False
+        result = None
+        # Then, try and tell it to eject
+        if not windll.kernel32.DeviceIoControl(handle, IOCTL_STORAGE_EJECT_MEDIA, None, None, None, None, None, None):
+            message = Message("Failed to eject {0}. Maybe it is still in use?".format(name))
+            message.show()
+            result = False
         else:
-            return True
+            message = Message("Ejected {0}. You can now safely remove the card.".format(name))
+            message.show()
+            result = True
+
+        # Finally, close the handle
+        windll.kernel32.CloseHandle(handle)
+        return result

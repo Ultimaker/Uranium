@@ -3,7 +3,7 @@
 
 import QtQuick 2.2
 import QtQuick.Controls 1.1
-import QtQuick.Controls.Styles 1.1
+import QtQuick.Controls.Styles 1.3
 import QtQuick.Layouts 1.1
 
 import UM 1.0 as UM
@@ -20,7 +20,7 @@ ListView {
     delegate: UM.AngledCornerRectangle
     {
         width: UM.Theme.sizes.message.width
-        height: UM.Theme.sizes.message.height;
+        height: childrenRect.height + UM.Theme.sizes.progressbar.height + (UM.Theme.sizes.progressbar_padding.height * 2);
         cornerSize: UM.Theme.sizes.default_margin.width;
 
         anchors.horizontalCenter: parent.horizontalCenter;
@@ -31,8 +31,8 @@ ListView {
         property variant actions: model.actions;
         property variant model_id: model.id
 
-        Label
-        {
+        Label {
+            id: messageLabel
             anchors {
                 left: parent.left;
                 leftMargin: UM.Theme.sizes.default_margin.width;
@@ -50,6 +50,15 @@ ListView {
             color: UM.Theme.colors.message_text;
             font: UM.Theme.fonts.default;
             wrapMode: Text.Wrap;
+
+            ProgressBar {
+                id: totalProgressBar;
+                anchors.top: parent.bottom;
+                anchors.horizontalCenter: parent.horizontalCenter;
+                anchors.topMargin: UM.Theme.sizes.progressbar_padding.height;
+                indeterminate: true;
+                style: UM.Theme.styles.progressbar;
+            }
         }
 
         ToolButton
@@ -107,19 +116,6 @@ ListView {
                     onClicked:UM.Models.visibleMessagesModel.actionTriggered(message.model_id, model.action_id)
                 }
             }
-
-            Item {
-                Layout.fillHeight: true;
-            }
-        }
-
-        ProgressBar
-        {
-            minimumValue: 0;
-            maximumValue: model.max_progress;
-            value: model.progress;
-            Layout.fillWidth: true;
-            visible: model.max_progress != 0 ? true: false
         }
     }
 
