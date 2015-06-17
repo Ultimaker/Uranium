@@ -248,7 +248,7 @@ class QtGL2Renderer(Renderer):
             tool = self._controller.getActiveTool()
             if tool:
                 tool_handle = tool.getHandle()
-                if tool_handle and tool_handle.getSelectionMesh():
+                if tool_handle and tool_handle.getSelectionMesh() and tool_handle.getParent():
                     self._selection_map.update(tool_handle.getSelectionMap())
                     self._gl.glDisable(self._gl.GL_DEPTH_TEST)
                     self._renderItem({

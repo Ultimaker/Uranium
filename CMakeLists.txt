@@ -46,6 +46,12 @@ if(GETTEXT_FOUND)
     set(languages
         en
         x-test
+        ru
+        fr
+        de
+        it
+        es
+        fi
     )
     foreach(lang ${languages})
         file(GLOB po_files resources/i18n/${lang}/*.po)

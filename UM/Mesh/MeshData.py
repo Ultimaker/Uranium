@@ -120,6 +120,9 @@ class MeshData(SignalEmitter):
     def hasColors(self):
         return self._colors is not None
 
+    def getColors(self):
+        return self._colors[0:self._vertex_count]
+
     def hasUVCoordinates(self):
         return self._uvs is not None
 

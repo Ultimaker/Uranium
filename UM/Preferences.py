@@ -66,6 +66,7 @@ class Preferences(SignalEmitter):
                     self._preferences[group][key] = _Preference(key)
 
                 self._preferences[group][key].setValue(value)
+                self.preferenceChanged.emit("{0}/{1}".format(group, key))
 
     def writeToFile(self, file):
         parser = configparser.ConfigParser()
