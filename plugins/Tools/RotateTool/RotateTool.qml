@@ -7,8 +7,8 @@ import QtQuick.Controls 1.2
 import UM 1.0 as UM
 
 Item {
-    width: 14 * UM.Theme.sizes.line.width;
-    height: 4.5 * UM.Theme.sizes.line.height;
+    width: Math.max(14 * UM.Theme.sizes.line.width, childrenRect.width);
+    height: Math.max(4.5 * UM.Theme.sizes.line.height, childrenRect.height);
 
     Button {
         id: resetRotationButton
