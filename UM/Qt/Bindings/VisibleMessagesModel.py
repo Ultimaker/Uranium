@@ -40,7 +40,7 @@ class VisibleMessagesModel(ListModel):
                 "actions":self.createActionsModel(message.getActions()),
                 "dismissable": message.isDismissable()
             })
-    
+
     def createActionsModel(self, actions):
         model = ListModel()
         model.addRoleName(self.IDRole, "action_id")

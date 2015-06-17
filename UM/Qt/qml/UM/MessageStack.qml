@@ -19,15 +19,17 @@ ListView {
 
     delegate: UM.AngledCornerRectangle
     {
+        id: message
         width: UM.Theme.sizes.message.width
-        height: childrenRect.height + UM.Theme.sizes.progressbar.height + (UM.Theme.sizes.progressbar_padding.height * 2);
+        property int labelHeight: messageLabel.height + (UM.Theme.sizes.default_margin.height * 2)
+        property int progressBarHeight: totalProgressBar.height + UM.Theme.sizes.default_margin.height
+        height: model.progress == null ? message.labelHeight : message.labelHeight + message.progressBarHeight
         cornerSize: UM.Theme.sizes.default_margin.width;
 
         anchors.horizontalCenter: parent.horizontalCenter;
 
         color: UM.Theme.colors.message
 
-        id: message
         property variant actions: model.actions;
         property variant model_id: model.id
 
@@ -37,13 +39,14 @@ ListView {
                 left: parent.left;
                 leftMargin: UM.Theme.sizes.default_margin.width;
 
-                top: model._max_progress != 0 ? parent.top : undefined;
+                top: model.progress != null ? parent.top : undefined;
                 topMargin: UM.Theme.sizes.default_margin.width;
 
                 right: actionButtons.left;
                 rightMargin: UM.Theme.sizes.default_margin.width;
 
-                verticalCenter: model._max_progress != 0 ? undefined : parent.verticalCenter;
+                verticalCenter: model.progress != null ? undefined : parent.verticalCenter;
+                bottomMargin: UM.Theme.sizes.default_margin.width;
             }
 
             text: model.text;
@@ -53,11 +56,19 @@ ListView {
 
             ProgressBar {
                 id: totalProgressBar;
+
+                minimumValue: 0;
+                maximumValue: model.max_progress;
+                value: model.progress == null ? 0 : model.progress
+
+                visible: model.progress == null ? false: true//if the progress is null (for example with the loaded message) -> hide the progressbar
+                indeterminate: model.progress == -1 ? true: false //if the progress is unknown (-1) -> the progressbar is indeterminate
+                style: UM.Theme.styles.progressbar
+
                 anchors.top: parent.bottom;
                 anchors.horizontalCenter: parent.horizontalCenter;
-                anchors.topMargin: UM.Theme.sizes.progressbar_padding.height;
-                indeterminate: true;
-                style: UM.Theme.styles.progressbar;
+                anchors.topMargin: UM.Theme.sizes.default_margin.width;
+                anchors.bottomMargin: UM.Theme.sizes.default_margin.width;
             }
         }
 
