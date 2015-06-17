@@ -54,6 +54,18 @@ PreferencesPage {
         anchors.left: languageLabel.right
         anchors.top: languageLabel.top
         anchors.leftMargin: 20
+
+        Component.onCompleted: {
+            // Because ListModel is stupid and does not allow using qsTr() for values.
+            for(var i = 0; i < languageList.count; ++i) {
+                languageList.setProperty(i, "text", qsTr(languageList.get(i).text));
+            }
+
+            // Glorious hack time. ComboBox does not update the text properly after changing the
+            // model. So change the indices around to force it to update.
+            currentIndex += 1;
+            currentIndex -= 1;
+        }
     }
 
     Label {
