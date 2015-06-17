@@ -31,6 +31,7 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
         self._language = language
         self._updateLanguage()
 
+        Preferences.getInstance().preferenceChanged.connect(self._onPreferenceChanged)
 
     ##  Mark a string as translatable
     #
@@ -89,3 +90,6 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
         else:
             self.__translation = None
 
+    def _onPreferenceChanged(self, preference):
+        if preference == "general/language":
+            self._updateLanguage()
