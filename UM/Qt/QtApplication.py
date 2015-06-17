@@ -174,38 +174,7 @@ class QtApplication(QApplication, Application, SignalEmitter):
         #TODO Add support for specifying a language from preferences
         path = None
         if language == "default":
-            # If we have a language set in the environment, try and use that.
-            lang = os.getenv("LANGUAGE")
-            if lang:
-                try:
-                    path = Resources.getPath(Resources.i18nLocation, lang, "LC_MESSAGES", file + ".qm")
-                except FileNotFoundError:
-                    path = None
-
-            # If looking up the language from the enviroment fails, try and use Qt's system locale instead.
-            if not path:
-                locale = QLocale.system()
-
-                # First, try and find a directory for any of the provided languages
-                for lang in locale.uiLanguages():
-                    try:
-                        path = Resources.getPath(Resources.i18nLocation, lang, "LC_MESSAGES", file + ".qm")
-                        language = lang
-                    except FileNotFoundError:
-                        pass
-                    else:
-                        break
-
-                # If that fails, see if we can extract a language "class" from the
-                # preferred language. This will turn "en-GB" into "en" for example.
-                if not path:
-                    lang = locale.uiLanguages()[0]
-                    lang = lang[0:lang.find("-")]
-                    try:
-                        path = Resources.getPath(Resources.i18nLocation, lang, "LC_MESSAGES", file + ".qm")
-                        language = lang
-                    except FileNotFoundError:
-                        pass
+            path = self._getDefaultLanguage(file)
         else:
             path = Resources.getPath(Resources.i18nLocation, language, "LC_MESSAGES", file + ".qm")
 
@@ -241,6 +210,52 @@ class QtApplication(QApplication, Application, SignalEmitter):
         if self._splash:
             self._splash.close()
             self._splash = None
+
+    def _getDefaultLanguage(self, file):
+        # If we have a language override set in the environment, try and use that.
+        lang = os.getenv("URANIUM_LANGUAGE")
+        if lang:
+            try:
+                return Resources.getPath(Resources.i18nLocation, lang, "LC_MESSAGES", file + ".qm")
+            except FileNotFoundError:
+                pass
+
+        # Else, try and get the current language from preferences
+        lang = Preferences.getInstance().getValue("general/language")
+        if lang:
+            try:
+                return Resources.getPath(Resources.i18nLocation, lang, "LC_MESSAGES", file + ".qm")
+            except FileNotFoundError:
+                pass
+
+        # If none of those are set, try to use the environment's LANGUAGE variable.
+        lang = os.getenv("LANGUAGE")
+        if lang:
+            try:
+                return Resources.getPath(Resources.i18nLocation, lang, "LC_MESSAGES", file + ".qm")
+            except FileNotFoundError:
+                pass
+
+        # If looking up the language from the enviroment or preferences fails, try and use Qt's system locale instead.
+        locale = QLocale.system()
+
+        # First, try and find a directory for any of the provided languages
+        for lang in locale.uiLanguages():
+            try:
+                return Resources.getPath(Resources.i18nLocation, lang, "LC_MESSAGES", file + ".qm")
+            except FileNotFoundError:
+                pass
+
+        # If that fails, see if we can extract a language "class" from the
+        # preferred language. This will turn "en-GB" into "en" for example.
+        lang = locale.uiLanguages()[0]
+        lang = lang[0:lang.find("-")]
+        try:
+            return Resources.getPath(Resources.i18nLocation, lang, "LC_MESSAGES", file + ".qm")
+        except FileNotFoundError:
+            pass
+
+        return None
 
 ##  Internal.
 #

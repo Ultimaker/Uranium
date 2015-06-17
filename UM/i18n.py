@@ -27,24 +27,10 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
     #   \note When `language` is `default`, the language to load can be overridden
     #   using the "LANGUAGE" environment variable.
     def __init__(self, name, language = "default"):
-        languages = []
-        if language == "default":
-            envlang = os.getenv("LANGUAGE")
-            if envlang:
-                languages.append(envlang)
-            else:
-                preflang = Preferences.getInstance().getValue("general/language")
-                if preflang:
-                    languages.append(preflang)
-        else:
-            languages.append(language)
+        self._name = name
+        self._language = language
+        self._updateLanguage()
 
-        for path in Resources.getLocation(Resources.i18nLocation):
-            if gettext.find(name, path, languages = languages):
-                self.__translation = gettext.translation(name, path, languages=languages)
-                break
-        else:
-            self.__translation = None
 
     ##  Mark a string as translatable
     #
@@ -73,3 +59,33 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
         return text
 
     #TODO: Add support for plural formats
+
+    def _getDefaultLanguage(self):
+        override_lang = os.getenv("URANIUM_LANGUAGE")
+        if override_lang:
+            return override_lang
+
+        preflang = Preferences.getInstance().getValue("general/language")
+        if preflang:
+            return preflang
+
+        env_lang = os.getenv("LANGUAGE")
+        if env_lang:
+            return env_lang
+
+        return "en"
+
+    def _updateLanguage(self):
+        languages = []
+        if self._language == "default":
+            languages.append(self._getDefaultLanguage())
+        else:
+            languages.append(self._language)
+
+        for path in Resources.getLocation(Resources.i18nLocation):
+            if gettext.find(self._name, path, languages = languages):
+                self.__translation = gettext.translation(self._name, path, languages=languages)
+                break
+        else:
+            self.__translation = None
+
