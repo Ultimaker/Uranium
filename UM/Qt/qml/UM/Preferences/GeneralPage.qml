@@ -24,6 +24,7 @@ PreferencesPage {
     ComboBox {
         id: languageComboBox
         model: ListModel {
+            id: languageList
             //: English language combo box option
             ListElement { text: QT_TR_NOOP("English"); code: "en" }
             //: German language combo box option
@@ -41,14 +42,14 @@ PreferencesPage {
         }
 
         currentIndex: {
-            var code = UM.Preferences.getValue("general/language")
-            for(i in model.count) {
+            var code = UM.Preferences.getValue("general/language");
+            for(var i = 0; i < languageList.count; ++i) {
                 if(model.get(i).code == code) {
                     return i
                 }
             }
         }
-        onCurrentIndexChanged: UM.Preferences.setValue("general/language", model.get(currentIndex).code)
+        onActivated: UM.Preferences.setValue("general/language", model.get(index).code)
 
         anchors.left: languageLabel.right
         anchors.top: languageLabel.top
