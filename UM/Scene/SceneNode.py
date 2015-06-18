@@ -112,16 +112,20 @@ class SceneNode(SignalEmitter):
     #   \param mesh_data MeshData object
     def setMeshData(self, mesh_data):
         if self._mesh_data:
-            self._mesh_data.dataChanged.disconnect(self.meshDataChanged)
+            self._mesh_data.dataChanged.disconnect(self._onMeshDataChanged)
         self._mesh_data = mesh_data
         if self._mesh_data is not None:
-            self._mesh_data.dataChanged.connect(self.meshDataChanged)
+            self._mesh_data.dataChanged.connect(self._onMeshDataChanged)
         self._resetAABB()
         self.meshDataChanged.emit(self)
 
     ##  Emitted whenever the attached mesh data object changes.
     meshDataChanged = Signal()
 
+
+    def _onMeshDataChanged(self):
+        self.meshDataChanged.emit(self)
+        
     ##  \brief Add a child to this node and set it's parent as this node.
     #   \params scene_node SceneNode to add.
     def addChild(self, scene_node):
