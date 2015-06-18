@@ -47,7 +47,6 @@ class MeshListModel(ListModel):
         for group_node in self._scene.getRoot().getChildren():
             for node in DepthFirstIterator(group_node):                
                 if (node.getMeshData() is not None or node.hasChildren()) and type(node) is not Camera and type(node) is not Platform:
-                    print(type(node))
                     parent_key = 0
                     if group_node is not node:
                         parent_key =  id(group_node)
