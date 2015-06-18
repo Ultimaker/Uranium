@@ -7,12 +7,12 @@ from UM.Signal import Signal
 ## Class for displaying messages in the application. 
 #
 class Message():
-    def __init__(self, text = "", lifetime = 10, dismissable = True):
+    def __init__(self, text = "", lifetime = 10, dismissable = True, progress = None):
         super().__init__()
         self._application = Application.getInstance()
         self._visible = False
         self._text = text
-        self._progress = 0
+        self._progress = progress
         self._max_progress = 0
         self._lifetime = lifetime 
         self._lifetime_timer = None

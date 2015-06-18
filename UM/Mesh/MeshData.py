@@ -145,7 +145,7 @@ class MeshData(SignalEmitter):
             #   when trying to change the data.
             mesh = MeshData()
             mesh._normals = self._normals.copy()
-            if(self._indices):
+            if self._indices is not None:
                 mesh._indices = self._indices.copy()
             if self._colors is not None:
                 mesh._colors = self._colors.copy()
