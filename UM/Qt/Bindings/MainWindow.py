@@ -1,7 +1,7 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-from PyQt5.QtCore import pyqtProperty, QObject, Qt, QCoreApplication
+from PyQt5.QtCore import pyqtProperty, QObject, Qt, QCoreApplication, pyqtSignal
 from PyQt5.QtGui import QColor
 from PyQt5.QtQuick import QQuickWindow, QQuickItem
 
@@ -38,6 +38,9 @@ class MainWindow(QQuickWindow):
 
         self.setWidth(int(self._preferences.getValue("general/window_width")))
         self.setHeight(int(self._preferences.getValue("general/window_height")))
+
+        self._mouse_x = 0
+        self._mouse_y = 0
     
     def getBackgroundColor(self):
         return self._background_color
@@ -47,6 +50,15 @@ class MainWindow(QQuickWindow):
         self._app.getRenderer().setBackgroundColor(color)
 
     backgroundColor = pyqtProperty(QColor, fget=getBackgroundColor, fset=setBackgroundColor)
+
+    mousePositionChanged = pyqtSignal()
+    @pyqtProperty(int, notify = mousePositionChanged)
+    def mouseX(self):
+        return self._mouse_x
+
+    @pyqtProperty(int, notify = mousePositionChanged)
+    def mouseY(self):
+        return self._mouse_y
 
 #   Warning! Never reimplemented this as a QExposeEvent can cause a deadlock with QSGThreadedRender due to both trying
 #   to claim the Python GIL.
@@ -60,6 +72,10 @@ class MainWindow(QQuickWindow):
         self._mouse_device.handleEvent(event)
 
     def mouseMoveEvent(self, event):
+        self._mouse_x = event.x()
+        self._mouse_y = event.y()
+        self.mousePositionChanged.emit()
+
         super().mouseMoveEvent(event)
         if event.isAccepted():
             return
