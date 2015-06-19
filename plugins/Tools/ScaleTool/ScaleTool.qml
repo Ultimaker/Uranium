@@ -115,7 +115,7 @@ Item {
             height: UM.Theme.sizes.setting_control.height;
             property string unit: "mm";
             style: UM.Theme.styles.text_field;
-            text: Math.round(UM.ActiveTool.properties.ObjectWidth)
+            text: UM.ActiveTool.properties.ObjectWidth
             onEditingFinished: UM.ActiveTool.setProperty("ObjectWidth", text);
         }
         TextField {
@@ -123,7 +123,7 @@ Item {
             height: UM.Theme.sizes.setting_control.height;
             property string unit: "mm";
             style: UM.Theme.styles.text_field;
-            text: Math.round(UM.ActiveTool.properties.ObjectDepth)
+            text: UM.ActiveTool.properties.ObjectDepth
             onEditingFinished: UM.ActiveTool.setProperty("ObjectDepth", text);
         }
         TextField {
@@ -131,7 +131,7 @@ Item {
             height: UM.Theme.sizes.setting_control.height;
             property string unit: "mm";
             style: UM.Theme.styles.text_field;
-            text: Math.round(UM.ActiveTool.properties.ObjectHeight)
+            text: UM.ActiveTool.properties.ObjectHeight
             onEditingFinished: UM.ActiveTool.setProperty("ObjectHeight", text);
         }
 
@@ -140,24 +140,24 @@ Item {
             height: UM.Theme.sizes.setting_control.height;
             property string unit: "%";
             style: UM.Theme.styles.text_field;
-            text: Math.round(UM.ActiveTool.properties.ScaleX * 100);
-            onEditingFinished: UM.ActiveTool.setProperty("ScaleX", parseInt(text) / 100);
+            text: UM.ActiveTool.properties.ScaleX * 100;
+            onEditingFinished: UM.ActiveTool.setProperty("ScaleX", parseFloat(text) / 100);
         }
         TextField {
             width: UM.Theme.sizes.setting_control.width;
             height: UM.Theme.sizes.setting_control.height;
             property string unit: "%";
             style: UM.Theme.styles.text_field;
-            text: Math.round(UM.ActiveTool.properties.ScaleZ * 100);
-            onEditingFinished: UM.ActiveTool.setProperty("ScaleZ", parseInt(text) / 100);
+            text: UM.ActiveTool.properties.ScaleZ * 100;
+            onEditingFinished: UM.ActiveTool.setProperty("ScaleZ", parseFloat(text) / 100);
         }
         TextField {
             width: UM.Theme.sizes.setting_control.width;
             height: UM.Theme.sizes.setting_control.height;
             property string unit: "%";
             style: UM.Theme.styles.text_field;
-            text: Math.round(UM.ActiveTool.properties.ScaleY * 100);
-            onEditingFinished: UM.ActiveTool.setProperty("ScaleY", parseInt(text) / 100);
+            text: UM.ActiveTool.properties.ScaleY * 100;
+            onEditingFinished: UM.ActiveTool.setProperty("ScaleY", parseFloat(text) / 100);
         }
     }
 }
