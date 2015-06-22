@@ -77,7 +77,7 @@ class SceneNode(SignalEmitter):
     def setParent(self, scene_node):
         if self._parent:
             self._parent.removeChild(self)
-        self._parent = scene_node
+        #self._parent = scene_node
 
         if scene_node:
             scene_node.addChild(self)
