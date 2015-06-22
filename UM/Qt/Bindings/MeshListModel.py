@@ -10,6 +10,7 @@ from UM.Operations.RemoveSceneNodeOperation import RemoveSceneNodeOperation
 from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator
 from UM.Scene.Camera import Camera
 from UM.Scene.Platform import Platform
+from UM.Scene.GroupNode import GroupNode
 import threading
 
 class MeshListModel(ListModel):
@@ -45,8 +46,31 @@ class MeshListModel(ListModel):
         self.updateList(self._scene.getRoot()) # Manually trigger the update
     
     def updateList(self, trigger_node):
-        for group_node in self._scene.getRoot().getChildren():
-            for node in DepthFirstIterator(group_node):                
+        for root_child in self._scene.getRoot().getChildren():
+            if type(root_child) is GroupNode: # Check if its a group node
+                if root_child.hasChildren(): #Check if it has children (only show it if it has)
+                    parent_key = id(root_child)
+                    for node in DepthFirstIterator(root_child): 
+                        data = {"name":node.getName(), "visibility": node.isVisible(), "key": (id(node)), "selected": Selection.isSelected(node),"depth": node.getDepth(),"collapsed": node in self._collapsed_nodes,"parent_key": parent_key, "has_children":node.hasChildren()}
+                        index = self.find("key",(id(node)))
+                        if index is not None and index >= 0:
+                            self.removeItem(index)
+                            self.insertItem(index,data)
+                        else:
+                            self.appendItem(data)
+            elif type(root_child) is not Camera and type(root_child) is not Platform:
+                data = {"name":root_child.getName(), "visibility": root_child.isVisible(), "key": (id(root_child)), "selected": Selection.isSelected(root_child),"depth": root_child.getDepth(),"collapsed": root_child in self._collapsed_nodes,"parent_key": 0, "has_children":root_child.hasChildren()}
+                
+                # Check if data exists, if yes, remove old and re-add.
+                index = self.find("key",(id(root_child)))
+                if index is not None and index >= 0:
+                    self.removeItem(index)
+                    self.insertItem(index,data)
+                else:
+                    self.appendItem(data)
+                
+                
+            '''for node in DepthFirstIterator(group_node):                
                 if (node.getMeshData() is not None or node.hasChildren()) and type(node) is not Camera and type(node) is not Platform:
                     parent_key = 0
                     if group_node is not node:
@@ -57,7 +81,7 @@ class MeshListModel(ListModel):
                         self.removeItem(index)
                         self.insertItem(index,data)
                     else:
-                        self.appendItem(data)
+                        self.appendItem(data)'''
         
     # set the visibility of a node (by key)
     @pyqtSlot("long",bool)
