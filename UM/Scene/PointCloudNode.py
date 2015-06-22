@@ -9,7 +9,6 @@ from UM.Math.Color import Color
 from UM.ColorGenerator import ColorGenerator
 import numpy
 
-
 class PointCloudNode(SceneNode.SceneNode):
     def __init__(self, parent = None):
         super().__init__(parent)
@@ -17,15 +16,20 @@ class PointCloudNode(SceneNode.SceneNode):
         self._selectable = True
         Application.getInstance().addCloudNode(self)
         self._material = None
+        self._color = Color(0,0,0,1)
    
+    def getColor(self):
+        return self._color
+    
+    def setColor(self, color):
+        self._color = color
+        self._material = None # Reset material 
+    
     ##   \brief Create new material. 
-    #    This uses the "global" index of the cloud to create a color. The color is selected from a list of 64 colors.
     def createMaterial(self,renderer):
         self._material = renderer.createMaterial(Resources.getPath(Resources.ShadersLocation, "default.vert"), Resources.getPath(Resources.ShadersLocation, "default.frag"))
         self._material.setUniformValue("u_ambientColor", Color(0.3, 0.3, 0.3, 1.0))
-        cloud_color = ColorGenerator().getColor(Application.getInstance().getCloudNodeIndex(self))
-        #cloud_color = ColorGenerator().getColor(0)
-        self._material.setUniformValue("u_diffuseColor", Color(cloud_color[0], cloud_color[1], cloud_color[2], 1.0))
+        self._material.setUniformValue("u_diffuseColor", self._color)
         self._material.setUniformValue("u_specularColor", Color(1.0, 1.0, 1.0, 1.0))
         self._material.setUniformValue("u_shininess", 50.0)
     
@@ -44,14 +48,13 @@ class PointCloudNode(SceneNode.SceneNode):
         
         # Create a unique color for each vert. First 3 uint 8  represent index in this cloud, final uint8 gives cloud ID.
         vertice_indices = numpy.arange(mesh_data.getVertexCount(), dtype = numpy.int32)
-        cloud_indices = numpy.empty(mesh_data.getVertexCount(),dtype = numpy.int32)
+        cloud_indices = numpy.empty(mesh_data.getVertexCount(), dtype = numpy.int32)
         cloud_indices.fill(255 - id)
-        cloud_indices  = numpy.left_shift(cloud_indices,24) # shift 24 bits.
+        cloud_indices  = numpy.left_shift(cloud_indices, 24) # shift 24 bits.
         combined_clouds = numpy.add(cloud_indices,vertice_indices)
         data = numpy.fromstring(combined_clouds.tostring(),numpy.uint8)
-    
-        
-        colors  = numpy.resize(data,(mesh_data.getVertexCount() , 4))
+
+        colors = numpy.resize(data,(mesh_data.getVertexCount(), 4))
         colors = colors.astype(numpy.float32)
         colors /= 255
         self._mesh_data.setColors(colors)
