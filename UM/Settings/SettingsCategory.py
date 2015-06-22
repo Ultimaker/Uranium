@@ -3,6 +3,7 @@
 
 from UM.Settings.Setting import Setting
 from UM.Signal import Signal, SignalEmitter
+from UM.Logger import Logger
 
 class SettingsCategory(SignalEmitter):
     def __init__(self, key, catalog, parent, icon = None, order = 0):
@@ -29,13 +30,19 @@ class SettingsCategory(SignalEmitter):
             self._icon = data["icon"]
         if "settings" in data:
             for key, value in data["settings"].items():
-                if "default" in value and "type" in value:
-                    temp_setting = Setting(key, self._i18n_catalog, default = value["default"], type = value["type"])
-                    temp_setting.setCategory(self)
-                    temp_setting.setParent(self)
-                    temp_setting.fillByDict(value)
-                    temp_setting.visibleChanged.connect(self._onSettingVisibleChanged)
-                    self._settings.append(temp_setting)
+                setting = self.getSettingByKey(key)
+                if not setting:
+                    if "default" not in value and "type" not in value:
+                        Logger.log("w", "Invalid setting definition for setting %s", key)
+                        continue
+
+                    setting = Setting(key, self._i18n_catalog, default = value["default"], type = value["type"])
+                    setting.setCategory(self)
+                    setting.setParent(self)
+                    self._settings.append(setting)
+
+                setting.fillByDict(value)
+                setting.visibleChanged.connect(self._onSettingVisibleChanged)
 
         self._onSettingVisibleChanged(None)
 

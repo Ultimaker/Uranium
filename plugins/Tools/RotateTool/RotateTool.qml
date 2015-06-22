@@ -7,13 +7,11 @@ import QtQuick.Controls 1.2
 import UM 1.0 as UM
 
 Item {
-    width: 14 * UM.Theme.sizes.line.width;
-    height: 4.5 * UM.Theme.sizes.line.height;
+    width: Math.max(14 * UM.Theme.sizes.line.width, childrenRect.width);
+    height: Math.max(4.5 * UM.Theme.sizes.line.height, childrenRect.height);
 
     Button {
         id: resetRotationButton
-
-        anchors.bottom: parent.bottom;
 
         //: Reset Rotation tool button
         text: qsTr("Reset")
@@ -29,7 +27,7 @@ Item {
     CheckBox {
         anchors.left: resetRotationButton.right;
         anchors.leftMargin: UM.Theme.sizes.default_margin.width;
-        anchors.bottom: parent.bottom;
+        anchors.bottom: resetRotationButton.bottom;
 
         //: Snap Rotation checkbox
         text: qsTr("Snap Rotation");

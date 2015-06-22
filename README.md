@@ -15,4 +15,5 @@ Dependencies
 Documentation
 -----------
 
-API documentation is available at http://software.ultimaker.com/uranium/ .
+API documentation is available at http://ultimaker.github.io/Uranium/ .
+This documentation is updated daily.
