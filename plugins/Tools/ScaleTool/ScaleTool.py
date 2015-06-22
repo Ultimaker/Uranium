@@ -91,6 +91,7 @@ class ScaleTool(Tool):
                 self.setDragPlane(Plane(Vector(0, 1, 0), handle_position.y))
 
             self.setDragStart(event.x, event.y)
+            self.operationStarted.emit(self)
 
         if event.type == Event.MouseMoveEvent:
             if not self.getDragPlane():
@@ -131,6 +132,7 @@ class ScaleTool(Tool):
                 self.setDragPlane(None)
                 self.setLockedAxis(None)
                 self._drag_length = 0
+                self.operationStopped.emit(self)
                 return True
 
     def resetScale(self):

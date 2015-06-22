@@ -68,6 +68,7 @@ class RotateTool(Tool):
 
                 self.setDragStart(event.x, event.y)
                 self._angle = 0
+                self.operationStarted.emit(self)
 
         if event.type == Event.MouseMoveEvent:
             if not self.getDragPlane():
@@ -119,6 +120,7 @@ class RotateTool(Tool):
                 self.setLockedAxis(None)
                 self._angle = None
                 self.propertyChanged.emit()
+                self.operationStopped.emit(self)
                 return True
 
     def getRotation(self):
