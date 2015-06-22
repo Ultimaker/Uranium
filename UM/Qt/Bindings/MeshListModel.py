@@ -35,15 +35,16 @@ class MeshListModel(ListModel):
         self.addRoleName(self.CollapsedRole,"collapsed")
         self.addRoleName(self.HasChildrenRole,"has_children")
         self._scene.rootChanged.connect(self._rootChanged)
-        
+        Selection.selectionChanged.connect(self._onSelectionChanged)
+    
+    def _onSelectionChanged(self):
+        self.updateList(self._scene.getRoot())
         
     def _rootChanged(self):
         self._scene.getRoot().childrenChanged.connect(self.updateList)
         self.updateList(self._scene.getRoot()) # Manually trigger the update
     
     def updateList(self, trigger_node):
-        
-        #self.clear()
         for group_node in self._scene.getRoot().getChildren():
             for node in DepthFirstIterator(group_node):                
                 if (node.getMeshData() is not None or node.hasChildren()) and type(node) is not Camera and type(node) is not Platform:

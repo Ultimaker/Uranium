@@ -24,6 +24,7 @@ class PointCloudNode(SceneNode.SceneNode):
         self._material = renderer.createMaterial(Resources.getPath(Resources.ShadersLocation, "default.vert"), Resources.getPath(Resources.ShadersLocation, "default.frag"))
         self._material.setUniformValue("u_ambientColor", Color(0.3, 0.3, 0.3, 1.0))
         cloud_color = ColorGenerator().getColor(Application.getInstance().getCloudNodeIndex(self))
+        #cloud_color = ColorGenerator().getColor(0)
         self._material.setUniformValue("u_diffuseColor", Color(cloud_color[0], cloud_color[1], cloud_color[2], 1.0))
         self._material.setUniformValue("u_specularColor", Color(1.0, 1.0, 1.0, 1.0))
         self._material.setUniformValue("u_shininess", 50.0)
