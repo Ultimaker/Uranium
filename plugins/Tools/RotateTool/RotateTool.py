@@ -19,6 +19,7 @@ from UM.Operations.SetTransformOperation import SetTransformOperation
 from . import RotateToolHandle
 
 import math
+import time
 
 class RotateTool(Tool):
     def __init__(self):
@@ -30,6 +31,8 @@ class RotateTool(Tool):
         self._snap_angle = math.radians(15)
 
         self._angle = None
+
+        self._angle_update_time = None
 
         self.setExposedProperties("Rotation", "RotationSnap", "RotationSnapAngle")
 
@@ -83,9 +86,6 @@ class RotateTool(Tool):
                 angle = int(angle / self._snap_angle) * self._snap_angle
                 if angle == 0:
                     return
-            else:
-                self._angle += angle
-                self.propertyChanged.emit()
 
             rotation = None
             if self.getLockedAxis() == ToolHandle.XAxis:
@@ -99,7 +99,14 @@ class RotateTool(Tool):
                 rotation = Quaternion.fromAngleAxis(direction * angle, Vector.Unit_Z)
 
             self._angle += direction * angle
-            self.propertyChanged.emit()
+
+            # Rate-limit the angle change notification
+            # This is done to prevent the UI from being flooded with property change notifications,
+            # which in turn would trigger constant repaints.
+            new_time = time.monotonic()
+            if not self._angle_update_time or new_time - self._angle_update_time > 0.01:
+                self.propertyChanged.emit()
+                self._angle_update_time = new_time
 
             Selection.applyOperation(RotateOperation, rotation)
 
