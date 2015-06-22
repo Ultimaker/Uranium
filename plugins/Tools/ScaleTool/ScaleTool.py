@@ -161,37 +161,37 @@ class ScaleTool(Tool):
 
     def getObjectWidth(self):
         if Selection.hasSelection():
-            return float(Selection.getSelectedObject(0).getBoundingBox().width)
+            return round(float(Selection.getSelectedObject(0).getBoundingBox().width), 1)
 
         return 0.0
 
     def getObjectHeight(self):
         if Selection.hasSelection():
-            return float(Selection.getSelectedObject(0).getBoundingBox().height)
+            return round(float(Selection.getSelectedObject(0).getBoundingBox().height), 1)
 
         return 0.0
 
     def getObjectDepth(self):
         if Selection.hasSelection():
-            return float(Selection.getSelectedObject(0).getBoundingBox().depth)
+            return round(float(Selection.getSelectedObject(0).getBoundingBox().depth), 1)
 
         return 0.0
 
     def getScaleX(self):
         if Selection.hasSelection():
-            return float(Selection.getSelectedObject(0).getScale().x)
+            return round(float(Selection.getSelectedObject(0).getScale().x), 3)
 
         return 1.0
 
     def getScaleY(self):
         if Selection.hasSelection():
-            return float(Selection.getSelectedObject(0).getScale().y)
+            return round(float(Selection.getSelectedObject(0).getScale().y), 3)
 
         return 1.0
 
     def getScaleZ(self):
         if Selection.hasSelection():
-            return float(Selection.getSelectedObject(0).getScale().z)
+            return round(float(Selection.getSelectedObject(0).getScale().z), 3)
 
         return 1.0
 

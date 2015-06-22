@@ -29,7 +29,9 @@ class RotateTool(Tool):
         self._snap_rotation = True
         self._snap_angle = math.radians(15)
 
-        self.setExposedProperties("RotationSnap", "RotationSnapAngle")
+        self._angle = None
+
+        self.setExposedProperties("Rotation", "RotationSnap", "RotationSnapAngle")
 
     def event(self, event):
         super().event(event)
@@ -62,6 +64,7 @@ class RotateTool(Tool):
                     self.setDragPlane(Plane(Vector(0, 0, 1), handle_position.z))
 
                 self.setDragStart(event.x, event.y)
+                self._angle = 0
 
         if event.type == Event.MouseMoveEvent:
             if not self.getDragPlane():
@@ -75,10 +78,14 @@ class RotateTool(Tool):
             drag_end = (drag_position - handle_position).normalize()
 
             angle = math.acos(drag_start.dot(drag_end))
+
             if self._snap_rotation:
                 angle = int(angle / self._snap_angle) * self._snap_angle
                 if angle == 0:
                     return
+            else:
+                self._angle += angle
+                self.propertyChanged.emit()
 
             rotation = None
             if self.getLockedAxis() == ToolHandle.XAxis:
@@ -91,6 +98,9 @@ class RotateTool(Tool):
                 direction = 1 if Vector.Unit_Z.dot(drag_start.cross(drag_end)) > 0 else -1
                 rotation = Quaternion.fromAngleAxis(direction * angle, Vector.Unit_Z)
 
+            self._angle += direction * angle
+            self.propertyChanged.emit()
+
             Selection.applyOperation(RotateOperation, rotation)
 
             self.setDragStart(event.x, event.y)
@@ -100,7 +110,12 @@ class RotateTool(Tool):
             if self.getDragPlane():
                 self.setDragPlane(None)
                 self.setLockedAxis(None)
+                self._angle = None
+                self.propertyChanged.emit()
                 return True
+
+    def getRotation(self):
+        return round(math.degrees(self._angle)) if self._angle else None
 
     def getRotationSnap(self):
         return self._snap_rotation
