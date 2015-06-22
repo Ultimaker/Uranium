@@ -141,6 +141,8 @@ class Controller(SignalEmitter):
         name = tool.getPluginId()
         if(name not in self._tools):
             self._tools[name] = tool
+            tool.operationStarted.connect(self.toolOperationStarted)
+            tool.operationStopped.connect(self.toolOperationStopped)
             self.toolsChanged.emit()
         else: 
             Logger.log("w", "%s was already added to tool list. Unable to add it again.", name)
@@ -174,6 +176,18 @@ class Controller(SignalEmitter):
 
     ##  Emitted when the active tool changes.
     activeToolChanged = Signal()
+
+    ##  Emitted whenever a tool starts a longer operation.
+    #
+    #   \param tool The tool that started the operation.
+    #   \sa Tool::startOperation
+    toolOperationStarted = Signal()
+
+    ##  Emitted whenever a tool stops a longer operation.
+    #
+    #   \param tool The tool that stopped the operation.
+    #   \sa Tool::stopOperation
+    toolOperationStopped = Signal()
 
     ##  Get the scene
     #   \return scene \type{Scene}

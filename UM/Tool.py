@@ -19,6 +19,15 @@ class Tool(PluginObject, SignalEmitter):
         self._drag_start = None
         self._exposed_properties = []
 
+    ##  Should be emitted whenever a longer running operation is started, like a drag to scale an object.
+    #
+    #   \param tool The tool that started the operation.
+    operationStarted = Signal()
+    ## Should be emitted whenever a longer running operation is stopped.
+    #
+    #   \param tool The tool that stopped the operation.
+    operationStopped = Signal()
+
     propertyChanged = Signal()
 
     def getExposedProperties(self):
