@@ -7,6 +7,7 @@ from UM.Application import Application
 from UM.Resources import Resources
 from UM.Math.Color import Color
 from UM.ColorGenerator import ColorGenerator
+from UM.Scene.GroupNode import GroupNode
 import numpy
 
 class PointCloudNode(SceneNode.SceneNode):
@@ -17,6 +18,22 @@ class PointCloudNode(SceneNode.SceneNode):
         Application.getInstance().addCloudNode(self)
         self._material = None
         self._color = Color(0,0,0,1)
+        if parent:
+            self._onParentChanged(parent)
+        
+        self.parentChanged.connect(self._onParentChanged)
+    
+    def _onParentChanged(self, parent):
+        if type(parent) is GroupNode:
+            if not hasattr(parent, 'color'):
+                Application.getInstance().addColorIndex(parent)
+                color = ColorGenerator().getColor(Application.getInstance().getColorIndex(parent))
+                setattr(parent, 'color', Color(color[0],color[1],color[2],1)) 
+            self.setColor(getattr(parent, 'color'))
+        else:
+            Application.getInstance().addColorIndex(self)
+            color = ColorGenerator().getColor(Application.getInstance().getColorIndex(self))
+            self.setColor(Color(color[0],color[1],color[2],1))
    
     def getColor(self):
         return self._color
