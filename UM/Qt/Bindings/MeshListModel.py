@@ -51,6 +51,8 @@ class MeshListModel(ListModel):
                 if root_child.hasChildren(): #Check if it has children (only show it if it has)
                     parent_key = id(root_child)
                     for node in DepthFirstIterator(root_child): 
+                        if root_child in self._collapsed_nodes:
+                            self._collapsed_nodes.append(node)
                         data = {"name":node.getName(), "visibility": node.isVisible(), "key": (id(node)), "selected": Selection.isSelected(node),"depth": node.getDepth(),"collapsed": node in self._collapsed_nodes,"parent_key": parent_key, "has_children":node.hasChildren()}
                         index = self.find("key",(id(node)))
                         if index is not None and index >= 0:
