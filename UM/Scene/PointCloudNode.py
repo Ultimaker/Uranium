@@ -9,6 +9,7 @@ from UM.Math.Color import Color
 from UM.ColorGenerator import ColorGenerator
 from UM.Scene.GroupNode import GroupNode
 import numpy
+import colorsys
 
 class PointCloudNode(SceneNode.SceneNode):
     def __init__(self, parent = None):
@@ -24,12 +25,21 @@ class PointCloudNode(SceneNode.SceneNode):
         self.parentChanged.connect(self._onParentChanged)
     
     def _onParentChanged(self, parent):
+        num_scans = 12 #Hardcoded, change this!
         if type(parent) is GroupNode:
             if not hasattr(parent, 'color'):
                 Application.getInstance().addColorIndex(parent)
-                color = ColorGenerator().getColor(Application.getInstance().getColorIndex(parent))
-                setattr(parent, 'color', Color(color[0],color[1],color[2],1)) 
-            self.setColor(getattr(parent, 'color'))
+                color_hsv = ColorGenerator().getColor(Application.getInstance().getColorIndex(parent))
+                #r,g,b = colorsys.hsv_to_rgb(color_hsv[0], color_hsv[1], color_hsv[2])
+                setattr(parent, 'color', color_hsv) 
+            color_hsv = getattr(parent, 'color')
+            if len(parent.getChildren()) > num_scans * 0.5:
+                color_hsv[1] = 0.4 + (0.6 / ((num_scans * 0.5) - 1) * (len(parent.getChildren()) - 1. - 0.5 * num_scans))
+            else: 
+                color_hsv[1] = 1. - (0.6 / ((num_scans * 0.5) - 1)  * (len(parent.getChildren()) - 1.))
+            
+            r,g,b = colorsys.hsv_to_rgb(color_hsv[0], color_hsv[1], color_hsv[2])
+            self.setColor(Color(r,g,b,1))
         else:
             Application.getInstance().addColorIndex(self)
             color = ColorGenerator().getColor(Application.getInstance().getColorIndex(self))
