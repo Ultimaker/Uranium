@@ -42,8 +42,9 @@ class PointCloudNode(SceneNode.SceneNode):
             self.setColor(Color(r,g,b,1))
         else:
             Application.getInstance().addColorIndex(self)
-            color = ColorGenerator().getColor(Application.getInstance().getColorIndex(self))
-            self.setColor(Color(color[0],color[1],color[2],1))
+            color_hsv = ColorGenerator().getColor(Application.getInstance().getColorIndex(self))
+            r,g,b = colorsys.hsv_to_rgb(color_hsv[0], color_hsv[1], color_hsv[2])
+            self.setColor(Color(r,g,b,1))
    
     def getColor(self):
         return self._color
