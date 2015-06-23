@@ -40,6 +40,7 @@ class VisibleMessagesModel(ListModel):
                 "actions":self.createActionsModel(message.getActions()),
                 "dismissable": message.isDismissable()
             })
+        message.progressChanged.connect(self._onMessageProgress)
 
     def createActionsModel(self, actions):
         model = ListModel()
@@ -69,3 +70,7 @@ class VisibleMessagesModel(ListModel):
             if self.items[index]["id"] == message_id:
                 self.removeItem(index)
                 break
+
+    def _onMessageProgress(self, message):
+        index = self.find("id", id(message))
+        self.setProperty(index, "progress", message.getProgress())
