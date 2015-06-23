@@ -124,7 +124,6 @@ class ScaleTool(Tool):
                     Selection.applyOperation(ScaleOperation, scale)
 
                 self._drag_length = (handle_position - drag_position).length()
-                self.updateHandlePosition()
                 return True
 
         if event.type == Event.MouseReleaseEvent:

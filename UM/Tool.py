@@ -43,7 +43,6 @@ class Tool(PluginObject, SignalEmitter):
         if event.type == Event.ToolActivateEvent:
             if Selection.hasSelection() and self._handle:
                 self._handle.setParent(self.getController().getScene().getRoot())
-                self._handle.setPosition(Selection.getAveragePosition())
 
         if event.type == Event.MouseMoveEvent and self._handle:
             if self._locked_axis:
@@ -60,12 +59,6 @@ class Tool(PluginObject, SignalEmitter):
             self._handle.setParent(None)
 
         return False
-    
-    ##  Update the position of the ToolHandle
-    #   \sa ToolHandle
-    def updateHandlePosition(self):
-        if Selection.hasSelection():
-            self._handle.setPosition(Selection.getAveragePosition())
     
     ##  Convenience function 
     def getController(self):

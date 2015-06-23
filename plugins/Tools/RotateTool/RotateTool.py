@@ -112,7 +112,6 @@ class RotateTool(Tool):
             Selection.applyOperation(RotateOperation, rotation)
 
             self.setDragStart(event.x, event.y)
-            self.updateHandlePosition()
 
         if event.type == Event.MouseReleaseEvent:
             if self.getDragPlane():
