@@ -9,6 +9,7 @@ import time
 import os
 
 from UM.Signal import Signal, SignalEmitter
+from UM.Message import Message
     
 try:
     from xml.etree import cElementTree as ElementTree
@@ -58,21 +59,18 @@ class OSXRemovableDrives(threading.Thread, SignalEmitter):
             self.drivesChanged.emit(drives)
             time.sleep(5)
 
-    def ejectDrive(self, drive):
-        #TODO: Check if this needs drive name or mount point
-        try:
-            mount = self._drives[drive]
-        except KeyError:
-            return
-
-        p = subprocess.Popen(["diskutil", "eject", mount], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    def ejectDrive(self, name, path):
+        p = subprocess.Popen(["diskutil", "eject", path], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         output = p.communicate()
 
-        if p.wait():
-            print(output[0])
-            print(output[1])
+        return_code = p.wait()
+        if return_code != 0:
+            message = Message("Failed to eject {0}. Maybe it is still in use?".format(name))
+            message.show()
             return False
         else:
+            message = Message("Ejected {0}. You can now safely remove the card.".format(name))
+            message.show()
             return True
 
     def _parseStupidPListXML(self, e):

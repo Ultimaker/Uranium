@@ -25,6 +25,7 @@ class LocalFileStorageDevice(StorageDevice, SignalEmitter):
 
     def ejectRemovableDrive(self, name):
         if self._removable_drives and name in self._drives:
+            Logger.log("d", "Ejecting %s mounted at %s", name, self._drives[name])
             self._removable_drives.ejectDrive(name, self._drives[name])
 
     def getRemovableDrives(self):
