@@ -49,11 +49,11 @@ class Tool(PluginObject, SignalEmitter):
                 return
 
             id = self._renderer.getIdAtCoordinate(event.x, event.y)
-            if not id:
-                self._handle.setActiveAxis(None)
 
             if self._handle.isAxis(id):
                 self._handle.setActiveAxis(id)
+            else:
+                self._handle.setActiveAxis(None)
 
         if event.type == Event.ToolDeactivateEvent and self._handle:
             self._handle.setParent(None)
