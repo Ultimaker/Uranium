@@ -38,15 +38,15 @@ class RotateToolHandle(ToolHandle):
 
         mb.addDonut(
             inner_radius = 18,
-            outer_radius = 22,
-            width = 2,
+            outer_radius = 21,
+            width = 1,
             color = ToolHandle.ZAxisColor
         )
 
         mb.addDonut(
             inner_radius = 18,
-            outer_radius = 22,
-            width = 2,
+            outer_radius = 21,
+            width = 1,
             axis = Vector.Unit_X,
             angle = math.pi / 2,
             color = ToolHandle.YAxisColor
@@ -54,8 +54,8 @@ class RotateToolHandle(ToolHandle):
 
         mb.addDonut(
             inner_radius = 18,
-            outer_radius = 22,
-            width = 2,
+            outer_radius = 21,
+            width = 1,
             axis = Vector.Unit_Y,
             angle = math.pi / 2,
             color = ToolHandle.XAxisColor

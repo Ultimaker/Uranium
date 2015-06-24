@@ -9,12 +9,16 @@ class Selection:
     def add(cls, object):
         if object not in cls.__selection:
             cls.__selection.append(object)
+            object.transformationChanged.connect(cls._onTransformationChanged)
+            cls._onTransformationChanged(object)
             cls.selectionChanged.emit()
 
     @classmethod
     def remove(cls, object):
         if object in cls.__selection:
             cls.__selection.remove(object)
+            object.transformationChanged.disconnect(cls._onTransformationChanged)
+            cls._onTransformationChanged(object)
             cls.selectionChanged.emit()
 
     @classmethod
@@ -44,29 +48,14 @@ class Selection:
 
     selectionChanged = Signal()
 
-    ##  Calculate the average position of the selection.
+    selectionCenterChanged = Signal()
+
     @classmethod
-    def getAveragePosition(cls):
+    def getSelectionCenter(cls):
         if not cls.__selection:
-            return Vector(0, 0, 0)
+            cls.__selection_center = Vector(0, 0, 0)
 
-        if len(cls.__selection) == 1:
-            node = cls.__selection[0]
-            if node.getBoundingBox() and node.getBoundingBox().isValid():
-                return node.getBoundingBox().center
-            else:
-                return node.getWorldPosition()
-
-        pos = Vector()
-        for node in cls.__selection:
-            if node.getBoundingBox() and node.getBoundingBox().isValid():
-                pos += node.getBoundingBox().center
-            else:
-                pos += node.getWorldPosition()
-
-        pos /= len(cls.__selection)
-
-        return pos
+        return cls.__selection_center
 
     ##  Apply an operation to the entire selection
     #
@@ -96,4 +85,16 @@ class Selection:
 
         op.push()
 
+    @classmethod
+    def _onTransformationChanged(cls, node):
+        cls.__selection_center = Vector(0, 0, 0)
+
+        for object in cls.__selection:
+            cls.__selection_center += object.getWorldPosition()
+
+        cls.__selection_center /= len(cls.__selection)
+
+        cls.selectionCenterChanged.emit()
+
     __selection = []
+    __selection_center = Vector(0, 0, 0)

@@ -83,17 +83,17 @@ class TranslateToolHandle(ToolHandle):
 
         if self.YAxis in self._enabled_axis:
             mb.addCube(
-                width = 4,
+                width = 2,
                 height = 20,
-                depth = 4,
+                depth = 2,
                 center = Vector(0, 10, 0),
                 color = ToolHandle.YAxisColor
             )
 
             mb.addPyramid(
-                width = 4,
-                height = 8,
-                depth = 4,
+                width = 2,
+                height = 4,
+                depth = 2,
                 center = Vector(0, 20, 0),
                 color = ToolHandle.YAxisColor
             )
@@ -101,16 +101,16 @@ class TranslateToolHandle(ToolHandle):
         if self.XAxis in self._enabled_axis:
             mb.addCube(
                 width = 20,
-                height = 4,
-                depth = 4,
+                height = 2,
+                depth = 2,
                 center = Vector(10, 0, 0),
                 color = ToolHandle.XAxisColor
             )
 
             mb.addPyramid(
-                width = 4,
-                height = 8,
-                depth = 4,
+                width = 2,
+                height = 4,
+                depth = 2,
                 center = Vector(20, 0, 0),
                 color = ToolHandle.XAxisColor,
                 axis = Vector.Unit_Z,
@@ -119,17 +119,17 @@ class TranslateToolHandle(ToolHandle):
 
         if self.ZAxis in self._enabled_axis:
             mb.addCube(
-                width = 4,
-                height = 4,
+                width = 2,
+                height = 2,
                 depth = 20,
                 center = Vector(0, 0, 10),
                 color = ToolHandle.ZAxisColor
             )
 
             mb.addPyramid(
-                width = 4,
-                height = 8,
-                depth = 4,
+                width = 2,
+                height = 4,
+                depth = 2,
                 center = Vector(0, 0, 20),
                 color = ToolHandle.ZAxisColor,
                 axis = Vector.Unit_X,

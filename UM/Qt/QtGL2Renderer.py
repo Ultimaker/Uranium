@@ -51,7 +51,12 @@ class QtGL2Renderer(Renderer):
         self._selection_image = None
 
         self._camera = None
-    
+
+    def getPixelMultiplier(self):
+        # Standard assumption for screen pixel density is 96 DPI. We use that as baseline to get
+        # a multiplication factor we can use for screens > 96 DPI.
+        return round(Application.getInstance().primaryScreen().physicalDotsPerInch() / 96.0)
+
     ##  Create a new material
     #   \param vert
     #   \param frag
@@ -205,6 +210,7 @@ class QtGL2Renderer(Renderer):
         self._gl.glDepthFunc(self._gl.GL_LESS)
         self._gl.glDepthMask(self._gl.GL_TRUE)
         self._gl.glDisable(self._gl.GL_CULL_FACE)
+        self._gl.glLineWidth(self.getPixelMultiplier())
 
         self._scene.acquireLock()
 
@@ -281,7 +287,7 @@ class QtGL2Renderer(Renderer):
         if self._render_selection:
             self._gl.glStencilMask(0)
             self._gl.glStencilFunc(self._gl.GL_EQUAL, 0, 0xff)
-            self._gl.glLineWidth(2)
+            self._gl.glLineWidth(2 * self.getPixelMultiplier())
             for node in Selection.getAllSelectedObjects():
                 if node.getMeshData() and type(node) is not PointCloudNode:
                     self._renderItem({
@@ -291,7 +297,7 @@ class QtGL2Renderer(Renderer):
                         "wireframe": True
                     })
 
-            self._gl.glLineWidth(1)
+            self._gl.glLineWidth(self.getPixelMultiplier())
 
         self._gl.glDisable(self._gl.GL_STENCIL_TEST)
         self._gl.glDepthMask(self._gl.GL_FALSE)

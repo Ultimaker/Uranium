@@ -29,9 +29,10 @@ add_custom_target(extract-messages ${CMAKE_SOURCE_DIR}/scripts/extract-messages 
 
 # Build Translations
 find_package(Gettext)
-include(${CMAKE_SOURCE_DIR}/scripts/ECMPoQmTools.cmake)
+find_package(Qt5LinguistTools QUIET CONFIG)
 
-if(GETTEXT_FOUND)
+if(GETTEXT_FOUND AND Qt5LinguistTools_FOUND)
+    include(${CMAKE_SOURCE_DIR}/scripts/ECMPoQmTools.cmake)
     # translations target will convert .po files into .mo and .qm as needed.
     # The files are checked for a _qt suffix and if it is found, converted to
     # qm, otherwise they are converted to .po.

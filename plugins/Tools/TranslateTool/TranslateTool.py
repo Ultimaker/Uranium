@@ -87,7 +87,6 @@ class TranslateTool(Tool):
                 Selection.applyOperation(TranslateOperation, drag)
 
             self.setDragStart(event.x, event.y)
-            self.updateHandlePosition()
             return True
 
         if event.type == Event.MouseReleaseEvent:

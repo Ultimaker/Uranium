@@ -10,6 +10,8 @@ from UM.Application import Application
 from UM.Math.Color import Color
 from UM.Math.Vector import Vector
 
+from UM.Scene.Selection import Selection
+
 class ToolHandle(SceneNode.SceneNode):
     NoAxis = 1
     XAxis = 2
@@ -38,6 +40,8 @@ class ToolHandle(SceneNode.SceneNode):
         self._auto_scale = True
 
         self.setCalculateBoundingBox(False)
+
+        Selection.selectionCenterChanged.connect(self._onSelectionCenterChanged)
 
     def getLineMesh(self):
         return self._line_mesh
@@ -114,3 +118,6 @@ class ToolHandle(SceneNode.SceneNode):
         ZAxis: ZAxisColor,
         AllAxis: AllAxisColor
     }
+
+    def _onSelectionCenterChanged(self):
+        self.setPosition(Selection.getSelectionCenter())
