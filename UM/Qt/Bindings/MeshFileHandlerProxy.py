@@ -46,7 +46,7 @@ class MeshFileHandlerProxy(QObject):
         file_types = []
 
         for ext, desc in self._mesh_handler.getSupportedFileTypesWrite().items():
-            file_types.append("{0} (*.{1})(*.{1})".format(desc, ext))
+            file_types.append("{0} (*.{1})".format(desc, ext))
 
         file_types.sort()
 
@@ -74,6 +74,7 @@ class MeshFileHandlerProxy(QObject):
             job = WriteMeshJob(file.toLocalFile(), node.getMeshData())
             job.start()
             job.finished.connect(self._onWriteJobFinished)
+            break
 
     def _readMeshFinished(self, job):
         mesh = job.getResult()

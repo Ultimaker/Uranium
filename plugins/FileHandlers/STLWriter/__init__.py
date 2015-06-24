@@ -15,7 +15,7 @@ def getMetaData():
             "version": "1.0",
             "decription": i18n_catalog.i18nc("STL Writer plugin description", "Provides support for writing STL files.")
         },
-        "mesh_reader": {
+        "mesh_writer": {
             "extension": "stl",
             "description": i18n_catalog.i18nc("STL Reader plugin file type", "STL File")
         }

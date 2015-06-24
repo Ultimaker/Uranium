@@ -4,6 +4,7 @@
 from . import Operation
 
 from UM.Scene.SceneNode import SceneNode
+from UM.Scene.Selection import Selection
 
 ##  An operation that removes an list of SceneNode from the scene.
 class RemoveSceneNodeOperation(Operation.Operation):
@@ -17,3 +18,5 @@ class RemoveSceneNodeOperation(Operation.Operation):
 
     def redo(self):
         self._node.setParent(None)
+        if Selection.isSelected(self._node):
+            Selection.remove(self._node)

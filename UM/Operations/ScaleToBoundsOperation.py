@@ -17,11 +17,11 @@ class ScaleToBoundsOperation(Operation):
 
         scale_factor = 1.0
         if largest_dimension == bbox.width:
-            scale_factor = bounds.width / bbox.width
+            scale_factor = self._old_scale.x * (bounds.width / bbox.width)
         elif largest_dimension == bbox.height:
-            scale_factor = bounds.height / bbox.height
+            scale_factor = self._old_scale.y * (bounds.height / bbox.height)
         else:
-            scale_factor = bounds.depth / bbox.depth
+            scale_factor = self._old_scale.z * (bounds.depth / bbox.depth)
 
         self._new_scale = Vector(scale_factor, scale_factor, scale_factor)
 
@@ -29,4 +29,5 @@ class ScaleToBoundsOperation(Operation):
         self._node.setScale(self._old_scale)
 
     def redo(self):
+        self._node.setPosition(Vector(0, 0, 0))
         self._node.setScale(self._new_scale)

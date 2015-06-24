@@ -13,7 +13,7 @@ class Message():
         self._visible = False
         self._text = text
         self._progress = progress
-        self._max_progress = 0
+        self._max_progress = 100
         self._lifetime = lifetime 
         self._lifetime_timer = None
         self._dismissable = dismissable # Can the message be closed by user?
@@ -63,7 +63,7 @@ class Message():
 
     def setProgress(self, progress):
         self._progress = progress
-        self.progressChanged.emit()
+        self.progressChanged.emit(self)
 
     progressChanged = Signal()
 
