@@ -24,9 +24,9 @@ PreferencesPage {
                 Layout.fillWidth: true;
                 model: UM.Models.machinesModel;
                 textRole: "name";
-                onCurrentIndexChanged: {
-                    if(currentIndex != -1)
-                        UM.Models.machinesModel.setActive(currentIndex);
+                onActivated: {
+                    if(index != -1)
+                        UM.Models.machinesModel.setActive(index);
                 }
 
                 Connections {
