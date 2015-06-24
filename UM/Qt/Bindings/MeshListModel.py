@@ -45,6 +45,35 @@ class MeshListModel(ListModel):
         self._scene.getRoot().childrenChanged.connect(self.updateList)
         self.updateList(self._scene.getRoot()) # Manually trigger the update
     
+    @pyqtSlot("long",int)
+    def moveItem(self, key, new_index):
+        for node in Application.getInstance().getController().getScene().getRoot().getAllChildren():
+            if id(node) == key:
+                
+                old_index = self.find("key",key)
+                if old_index == new_index:
+                    return
+                #print("found node", new_index , " " , old_index)
+                moved_data = self.getItem(old_index)
+                dropped_data = self.getItem(new_index)
+                #print("moved: ", moved_data)
+                #print("dropped: ",dropped_data)
+                for parent_node in Application.getInstance().getController().getScene().getRoot().getAllChildren():
+                    #print("parent id: " , id(parent_node) , " ", dropped_data['parent_key'], " moved: " , moved_data["parent_key"])
+                    if id(parent_node) == dropped_data['parent_key']:
+                        if id(node.getParent()) != id(parent_node):
+                            node.setParent(parent_node)
+                            self.removeItem(old_index)
+                            if parent_node not in self._collapsed_nodes and node in self._collapsed_nodes:
+                                self._collapsed_nodes.remove(node)
+                            if parent_node in self._collapsed_nodes and node not in self._collapsed_nodes:
+                                self._collapsed_nodes.append(node)
+                        self.updateList(node)
+                      #  break
+        
+                #self.removeItem(old_index)
+                #self.insertItem(new_index,data)
+    
     def updateList(self, trigger_node):
         for root_child in self._scene.getRoot().getChildren():
             if type(root_child) is GroupNode: # Check if its a group node
@@ -55,11 +84,21 @@ class MeshListModel(ListModel):
                             self._collapsed_nodes.append(node)
                         data = {"name":node.getName(), "visibility": node.isVisible(), "key": (id(node)), "selected": Selection.isSelected(node),"depth": node.getDepth(),"collapsed": node in self._collapsed_nodes,"parent_key": parent_key, "has_children":node.hasChildren()}
                         index = self.find("key",(id(node)))
+                        parent_index = self.find("key", data["parent_key"])
+                        num_children = 0
+                        for parent_node in Application.getInstance().getController().getScene().getRoot().getAllChildren():
+                            if id(parent_node) == data["parent_key"]:
+                                num_children = len(parent_node.getChildren())
+                        if parent_index != -1:
+                            corrected_index = parent_index + num_children
+                        else: 
+                            corrected_index = index
                         if index is not None and index >= 0:
                             self.removeItem(index)
                             self.insertItem(index,data)
                         else:
-                            self.appendItem(data)
+                             self.insertItem(corrected_index,data)
+                            #self.appendItem(data)
             elif type(root_child) is not Camera and type(root_child) is not Platform:
                 data = {"name":root_child.getName(), "visibility": root_child.isVisible(), "key": (id(root_child)), "selected": Selection.isSelected(root_child),"depth": root_child.getDepth(),"collapsed": root_child in self._collapsed_nodes,"parent_key": 0, "has_children":root_child.hasChildren()}
                 
