@@ -138,8 +138,8 @@ class ScaleTool(Tool):
         Selection.applyOperation(SetTransformOperation, None, None, Vector(1.0, 1.0, 1.0))
 
     def scaleToMax(self):
-        if self._maximum_bounds:
-            Selection.applyOperation(ScaleToBoundsOperation, self._maximum_bounds)
+        if hasattr(self.getController().getScene(), "_maximum_bounds"):
+            Selection.applyOperation(ScaleToBoundsOperation, self.getController().getScene()._maximum_bounds)
 
     def getNonUniformScale(self):
         return self._non_uniform_scale
@@ -156,9 +156,6 @@ class ScaleTool(Tool):
         if self._snap_scale != snap:
             self._snap_scale = snap
             self.propertyChanged.emit()
-
-    def setMaximumBounds(self, bounds):
-        self._maximum_bounds = bounds
 
     def getObjectWidth(self):
         if Selection.hasSelection():
