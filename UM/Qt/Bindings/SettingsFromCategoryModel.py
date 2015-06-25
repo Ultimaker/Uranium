@@ -23,6 +23,7 @@ class SettingsFromCategoryModel(ListModel):
         super().__init__(parent)
         self._category = category
         self._updateSettings()
+        self._ignore_setting_value_update = None
 
         self.addRoleName(self.NameRole, "name")
         self.addRoleName(self.TypeRole,"type")
@@ -39,7 +40,9 @@ class SettingsFromCategoryModel(ListModel):
     def setSettingValue(self, index, key, value):
         setting = self._category.getSettingByKey(key)
         if setting:
+            self._ignore_setting_value_update = setting
             setting.setValue(value)
+            self._ignore_setting_value_update = None
             self.setProperty(index, "valid", setting.validate())
 
     @pyqtSlot(str)
@@ -80,5 +83,8 @@ class SettingsFromCategoryModel(ListModel):
             index = self.find("key", setting.getKey())
             if index != -1:
                 self.setProperty(index, "visible", (setting.isVisible() and setting.isActive()))
-                self.setProperty(index, "value", setting.getValue())
+
+                if setting is not self._ignore_setting_value_update:
+                    self.setProperty(index, "value", setting.getValue())
+
                 self.setProperty(index, "valid", setting.validate())
