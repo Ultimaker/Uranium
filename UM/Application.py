@@ -366,6 +366,9 @@ class Application(SignalEmitter):
 
     @staticmethod
     def getInstallPrefix():
-        return os.path.abspath(os.path.join(os.path.dirname(sys.executable), ".."))
+        if "python" in os.path.basename(sys.executable):
+            return os.path.abspath(os.path.join(os.path.dirname(sys.argv[0]), ".."))
+        else:
+            return os.path.abspath(os.path.join(os.path.dirname(sys.executable), ".."))
 
     _instance = None
