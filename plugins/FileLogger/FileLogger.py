@@ -2,16 +2,25 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 from UM.Logger import LogOutput
+from UM.Resources import Resources
 
 import logging
+import sys
+import os.path
 
 class FileLogger(LogOutput):
     def __init__(self, file_name):
         super().__init__()
         self._logger =  logging.getLogger(self._name) #Create python logger 
         self._logger.setLevel(logging.DEBUG)
-        self.setFileName(file_name)
         
+        if hasattr(sys, "frozen"):
+            # Running in py2exe or py2app context, do not try to save to the app dir as it may not be writeable.
+            # instead, try and save in the settings location since that should be writeable.
+            self.setFileName(Resources.getStoragePath(Resources.ResourcesLocation, file_name))
+        else:
+            self.setFileName(file_name)
+           
         
     def setFileName(self, file_name):
         if(".log" in file_name):

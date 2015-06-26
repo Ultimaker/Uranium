@@ -101,10 +101,8 @@ ListView {
 
             anchors {
                 right: parent.right;
-                rightMargin: UM.Theme.sizes.default_margin.width;
-                top: closeButton.bottom;
-                topMargin: UM.Theme.sizes.default_margin.height / 2;
-                bottom: parent.bottom;
+                rightMargin: UM.Theme.sizes.default_margin.width * 2;
+                verticalCenter: parent.verticalCenter;
             }
 
             Repeater
