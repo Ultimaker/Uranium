@@ -8,9 +8,9 @@ from UM.Application import Application
 from UM.Scene.Selection import Selection
 from UM.Operations.RemoveSceneNodeOperation import RemoveSceneNodeOperation
 from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator
-from UM.Scene.Camera import Camera
-from UM.Scene.Platform import Platform
 from UM.Scene.GroupNode import GroupNode
+from UM.Scene.SceneNode import SceneNode
+from UM.Scene.PointCloudNode import PointCloudNode
 import threading
 
 class MeshListModel(ListModel):
@@ -99,7 +99,7 @@ class MeshListModel(ListModel):
                         else:
                              self.insertItem(corrected_index,data)
                             #self.appendItem(data)
-            elif type(root_child) is not Camera and type(root_child) is not Platform:
+            elif type(root_child) is SceneNode or type(root_child) is PointCloudNode:
                 data = {"name":root_child.getName(), "visibility": root_child.isVisible(), "key": (id(root_child)), "selected": Selection.isSelected(root_child),"depth": root_child.getDepth(),"collapsed": root_child in self._collapsed_nodes,"parent_key": 0, "has_children":root_child.hasChildren()}
                 
                 # Check if data exists, if yes, remove old and re-add.
