@@ -33,15 +33,31 @@ PreferencesPage {
         id: pluginDelegate
         Row {
             CheckBox {
-                text: model.name
-                x: 0
+                id: pluginCheckbox
                 checked: model.enabled
                 onClicked: plugin_list.model.setEnabled(model.name, checked)
-                enabled: !model.required 
-                width: 0.83*preferencesPage.width
+                enabled: !model.required
             }
-            Button
-            {
+            Button {
+                id: pluginText //is a button so the user doesn't have te click inconvenientley precise to enable or disable the checkbox
+                text: model.name
+                onClicked: plugin_list.model.setEnabled(model.name, checked)
+                tooltip: model.description
+                width: preferencesPage.width/6*4 < UM.Theme.sizes.setting_text_maxwidth.width ? preferencesPage.width/5*4 : UM.Theme.sizes.setting_text_maxwidth.width
+                style: ButtonStyle {
+                    background: Rectangle {
+                        border.width: 0
+                        color: "transparent"
+                    }
+                    label: Text {
+                        renderType: Text.NativeRendering
+                        horizontalAlignment: Text.AlignLeft
+                        text: control.text
+                    }
+                }
+            }
+            Button {
+                id: pluginIcon
                 iconName: "help-about";
                 onClicked:
                 {
