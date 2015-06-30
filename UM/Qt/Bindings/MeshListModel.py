@@ -19,8 +19,8 @@ class MeshListModel(ListModel):
     UniqueKeyRole = Qt.UserRole + 3
     SelectedRole = Qt.UserRole + 4
     DepthRole = Qt.UserRole + 5
-    CollapsedRole = Qt.UserRole+6
-    HasChildrenRole = Qt.UserRole+7
+    CollapsedRole = Qt.UserRole + 6
+    HasChildrenRole = Qt.UserRole + 7
     
     def __init__(self, parent = None):
         super().__init__(parent)

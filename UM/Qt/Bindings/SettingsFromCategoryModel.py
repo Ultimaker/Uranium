@@ -23,7 +23,7 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
     def __init__(self, category, parent = None):
         super().__init__(parent)
         self._category = category
-        self._updateSettings()
+        self.updateSettings()
         self._ignore_setting_value_update = None
 
         self.addRoleName(self.NameRole, "name")
@@ -64,7 +64,7 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
             model.appendItem({"text": str(option)})
         return model
 
-    def _updateSettings(self):
+    def updateSettings(self):
         for setting in self._category.getAllSettings():
             self.appendItem({
                 "name": setting.getLabel(),
