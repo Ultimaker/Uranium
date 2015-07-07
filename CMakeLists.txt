@@ -76,11 +76,12 @@ endif()
 
 include(GNUInstallDirs)
 
-set(PYTHON_SITE_PACKAGES_DIR ${CMAKE_INSTALL_PREFIX}/lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/site-packages CACHE PATH "Install location of Python package")
-set(URANIUM_PLUGINS_DIR ${CMAKE_INSTALL_PREFIX}/lib/uranium CACHE PATH "Install location of Uranium plugins")
-
-install(DIRECTORY UM DESTINATION ${PYTHON_SITE_PACKAGES_DIR})
+if(APPLE)
+    install(DIRECTORY UM DESTINATION lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/site-packages)
+else()
+    install(DIRECTORY UM DESTINATION lib/python${PYTHON_VERSION_MAJOR}/dist-packages)
+endif()
 install(DIRECTORY resources DESTINATION ${CMAKE_INSTALL_DATADIR}/uranium)
-install(DIRECTORY plugins DESTINATION ${URANIUM_PLUGINS_DIR})
+install(DIRECTORY plugins DESTINATION lib/uranium)
 
 include(CPackConfig.cmake)
