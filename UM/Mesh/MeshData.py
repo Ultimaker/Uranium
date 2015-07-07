@@ -136,7 +136,7 @@ class MeshData(SignalEmitter):
     #   \param transformation 4x4 homogenous transformation matrix
     def getTransformed(self, transformation):
         if self._vertices is not None:
-            data = numpy.pad(self._vertices.copy(), ((0,0), (0,1)), "constant", constant_values=(0.0, 0.0))
+            data = numpy.pad(self._vertices, ((0,0), (0,1)), "constant", constant_values=(0.0, 0.0))
             data = data.dot(transformation.getTransposed().getData())
             data += transformation.getData()[:,3]
             data = data[:,0:3]
@@ -154,7 +154,7 @@ class MeshData(SignalEmitter):
         if self._vertices is None:
             return AxisAlignedBox()
 
-        data = numpy.pad(self._vertices.copy(), ((0,0), (0,1)), "constant", constant_values=(0.0, 1.0))
+        data = numpy.pad(self._vertices, ((0,0), (0,1)), "constant", constant_values=(0.0, 1.0))
 
         if matrix is not None:
             transposed = matrix.getTransposed().getData()
