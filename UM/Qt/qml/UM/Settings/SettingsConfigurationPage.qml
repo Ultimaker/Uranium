@@ -94,7 +94,7 @@ PreferencesPage {
         }
     }
 
-    ToolTip {
+    PreferencesToolTip {
         id: toolTip;
     }
 
