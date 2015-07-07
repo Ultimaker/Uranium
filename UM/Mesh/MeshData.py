@@ -385,13 +385,17 @@ class MeshData(SignalEmitter):
         if self._uvs is not None:
             return self._uvs[0 : self._vertex_count].tostring()
 
-    ##  Calculate the normals of this mesh, assuming it was created by using addFace (eg; the verts are connected)    
-    def calculateNormals(self):
+    ##  Calculate the normals of this mesh, assuming it was created by using addFace (eg; the verts are connected)
+    #
+    #   Keyword arguments:
+    #   - fast: A boolean indicating whether or not to use a fast method of normal calculation that assumes each triangle
+    #           is stored as a set of three unique vertices.
+    def calculateNormals(self, **kwargs):
         # Numpy magic!
         # First, reset the normals
         self._normals = numpy.zeros((self._vertex_count, 3), dtype=numpy.float32)
 
-        if self.hasIndices():
+        if self.hasIndices() and not kwargs.get("fast", False):
             for face in self._indices[0:self._face_count]:
                 #print(self._vertices[face[0]])
                 #print(self._vertices[face[1]])
