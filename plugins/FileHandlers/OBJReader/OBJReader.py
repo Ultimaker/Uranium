@@ -95,6 +95,6 @@ class OBJReader(MeshReader):
                     mesh.setVertexUVCoordinates(mesh.getVertexCount() - 1, uv_list[uk][0], uv_list[uk][1])
 
             if not mesh.hasNormals():
-                mesh.calculateNormals()
+                mesh.calculateNormals(fast = True)
 
         return mesh
