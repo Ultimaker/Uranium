@@ -16,10 +16,11 @@ Dialog {
 
     //: Preferences dialog title
     title: qsTr("Preferences")
-    minimumWidth: 500;
-    minimumHeight: 400;
+    minimumWidth: 600;
+    minimumHeight: 500;
 
     RowLayout {
+        id: test
         anchors.fill: parent;
 
         TableView {
