@@ -125,7 +125,7 @@ class Backend(PluginObject, SignalEmitter):
     
     ##  Private socket error handler   
     def _onSocketError(self, error):
-        if error.errno == 98:# Socked in use error
+        if error.errno == 98 or error.errno == 48:# Socked in use error
             self._port += 1
             self._createSocket()
         elif error.errno == 104 or error.errno == 32 or error.errno == 54 or error.errno == 41:

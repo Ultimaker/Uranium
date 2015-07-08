@@ -73,4 +73,6 @@ class VisibleMessagesModel(ListModel):
 
     def _onMessageProgress(self, message):
         index = self.find("id", id(message))
-        self.setProperty(index, "progress", message.getProgress())
+
+        if index != -1:
+            self.setProperty(index, "progress", message.getProgress())

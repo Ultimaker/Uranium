@@ -119,6 +119,10 @@ class KeyEvent(Event):
     LeftKey = 9
     RightKey = 10
     EscapeKey = 11
+    MinusKey = 12
+    UnderscoreKey = 13
+    PlusKey = 14
+    EqualKey = 15
 
     def __init__(self, type, key):
         super().__init__(type)

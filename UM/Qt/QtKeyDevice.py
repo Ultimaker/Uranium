@@ -39,5 +39,13 @@ class QtKeyDevice(InputDevice):
             return KeyEvent.LeftKey
         elif key == Qt.Key_Right:
             return KeyEvent.RightKey
+        elif key == Qt.Key_Minus:
+            return KeyEvent.MinusKey
+        elif key == Qt.Key_Underscore:
+            return KeyEvent.UnderscoreKey
+        elif key == Qt.Key_Plus:
+            return KeyEvent.PlusKey
+        elif key == Qt.Key_Equal:
+            return KeyEvent.EqualKey
 
         return key
