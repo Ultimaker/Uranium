@@ -26,6 +26,7 @@ from . import AngledCornerRectangle
 from . import SettingCategoriesModel
 from . import ActiveToolProxy
 from . import ActiveViewProxy
+from . import OutputDevicesModel
 
 class Bindings:
     @classmethod
@@ -65,6 +66,7 @@ class Bindings:
         qmlRegisterType(JobsModel.JobsModel, "UM", 1, 0, "JobsModel")
         qmlRegisterType(SettingCategoriesModel.SettingCategoriesModel, "UM", 1, 0, "SettingCategoriesModel")
         qmlRegisterType(AngledCornerRectangle.AngledCornerRectangle, "UM", 1, 0, "AngledCornerRectangle")
+        qmlRegisterType(OutputDevicesModel.OutputDevicesModel, "UM", 1, 1, "OutputDevicesModel")
 
         # Singleton proxy objects
         qmlRegisterSingletonType(ControllerProxy, "UM", 1, 0, "Controller", Bindings.createControllerProxy)
