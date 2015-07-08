@@ -12,6 +12,7 @@ from UM.Signal import Signal, SignalEmitter
 from UM.WorkspaceFileHandler import WorkspaceFileHandler
 from UM.Logger import Logger
 from UM.Preferences import Preferences
+from UM.OutputDevice.OutputDeviceManager import OutputDeviceManager
 
 import threading
 import argparse
@@ -74,6 +75,7 @@ class Application(SignalEmitter):
         self._storage_devices = {}
         self._extensions = []
         self._backend = None
+        self._output_device_manager = OutputDeviceManager()
 
         self._machines = []
         self._active_machine = None
@@ -295,6 +297,9 @@ class Application(SignalEmitter):
             del self._storage_devices[name]
         except KeyError:
             pass
+
+    def getOutputDeviceManager(self):
+        return self._output_device_manager
 
     ##  Run the main eventloop.
     #   This method should be reimplemented by subclasses to start the main event loop.
