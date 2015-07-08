@@ -94,13 +94,16 @@ class PluginRegistry(object):
     ##  Load all plugins matching a certain set of metadata
     #   \param metaData \type{dict} The metaData that needs to be matched.
     #   \sa loadPlugin
-    def loadPlugins(self, meta_data):
+    def loadPlugins(self, meta_data = None):
         plugins = self._findAllPlugins()
 
         for id in plugins:
             plugin_data = self.getMetaData(id)
-            if self._subsetInDict(plugin_data, meta_data):
-                self.loadPlugin(id)
+            if meta_data == None or self._subsetInDict(plugin_data, meta_data):
+                try:
+                    self.loadPlugin(id)
+                except PluginNotFoundError:
+                    pass
 
     ##  Get the metadata for a certain plugin
     #   \param id \type{string} The ID of the plugin
