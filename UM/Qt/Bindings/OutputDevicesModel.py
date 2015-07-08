@@ -42,14 +42,17 @@ class OutputDevicesModel(ListModel):
             self._current_device = self.getItem(self.find("id", id))
             self.currentDeviceChanged.emit()
 
-    @pyqtSlot()
-    def requestWriteToCurrentDevice(self):
-        device = Application.getInstance().getOutputDeviceManager().getOutputDevice(self._current_device["id"])
+    @pyqtSlot(str)
+    def requestWriteToDevice(self, device_id):
+        device = Application.getInstance().getOutputDeviceManager().getOutputDevice(device_id)
+        if not device:
+            return
+
         try:
             device.requestWrite(Application.getInstance().getController().getScene().getRoot())
         except WriteRequestFailedError as e:
-            #if e.code != ErrorCodes.UserCanceledError:
-            Logger.log("e", e.message)
+            if e.code != ErrorCodes.UserCanceledError:
+                Logger.log("e", e.message)
 
     def _update(self):
         self.clear()
