@@ -69,7 +69,8 @@ class SceneNode(SignalEmitter):
     
     ##  How many nodes is this node removed from the root
     def getDepth(self):
-        if self._parent is None: return 0
+        if self._parent is None: 
+            return 0
         return self._parent.getDepth() + 1
     
     ##  \brief Set the parent of this object

@@ -39,7 +39,6 @@ class MeshListModel(ListModel):
         Selection.selectionChanged.connect(self._onSelectionChanged)
     
     def _onNodeAdded(self, node):
-        print("node added" , node)
         self.updateList(node)
     
     def _onSelectionChanged(self):
@@ -86,7 +85,11 @@ class MeshListModel(ListModel):
                 for node in DepthFirstIterator(root_child): 
                     if root_child in self._collapsed_nodes:
                         self._collapsed_nodes.append(node)
-                    data = {"name":node.getName(), "visibility": node.isVisible(), "key": (id(node)), "selected": Selection.isSelected(node),"depth": node.getDepth(),"collapsed": node in self._collapsed_nodes,"parent_key": parent_key, "has_children":node.hasChildren()}
+                    if type(node) is GroupNode:
+                        depth = 1
+                    else:
+                        depth = 2
+                    data = {"name":node.getName(), "visibility": node.isVisible(), "key": (id(node)), "selected": Selection.isSelected(node),"depth": depth,"collapsed": node in self._collapsed_nodes,"parent_key": parent_key, "has_children":node.hasChildren()}
                     index = self.find("key",(id(node)))
                     parent_index = self.find("key", data["parent_key"])
                     num_children = 0
