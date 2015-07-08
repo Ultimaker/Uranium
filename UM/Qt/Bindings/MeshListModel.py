@@ -27,7 +27,7 @@ class MeshListModel(ListModel):
         self._collapsed_nodes = []
         self._scene = Application.getInstance().getController().getScene()
         self.updateList(self._scene.getRoot())
-        self._scene.getRoot().childrenChanged.connect(self.updateList)
+        self._scene.getRoot().childrenChanged.connect(self._onNodeAdded)
         self.addRoleName(self.NameRole,"name")
         self.addRoleName(self.VisibilityRole, "visibility")
         self.addRoleName(self.UniqueKeyRole, "key")
@@ -37,6 +37,10 @@ class MeshListModel(ListModel):
         self.addRoleName(self.HasChildrenRole,"has_children")
         self._scene.rootChanged.connect(self._rootChanged)
         Selection.selectionChanged.connect(self._onSelectionChanged)
+    
+    def _onNodeAdded(self, node):
+        print("node added" , node)
+        self.updateList(node)
     
     def _onSelectionChanged(self):
         self.updateList(self._scene.getRoot())
@@ -92,12 +96,12 @@ class MeshListModel(ListModel):
                     if parent_index != -1:
                         corrected_index = parent_index + num_children
                     else: 
-                        corrected_index = index
+                        corrected_index = 0 
                     if index is not None and index >= 0:
                         self.removeItem(index)
                         self.insertItem(index,data)
                     else:
-                            self.insertItem(corrected_index,data)
+                        self.insertItem(corrected_index, data)
                         #self.appendItem(data)
             elif type(root_child) is SceneNode or type(root_child) is PointCloudNode:
                 data = {"name":root_child.getName(), "visibility": root_child.isVisible(), "key": (id(root_child)), "selected": Selection.isSelected(root_child),"depth": root_child.getDepth(),"collapsed": root_child in self._collapsed_nodes,"parent_key": 0, "has_children":root_child.hasChildren()}
