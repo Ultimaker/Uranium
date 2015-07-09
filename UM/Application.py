@@ -223,10 +223,9 @@ class Application(SignalEmitter):
 
         try:
             path = Resources.getStoragePath(Resources.SettingsLocation, urllib.parse.quote_plus(machine.getName()) + ".cfg")
+            os.remove(path)
         except FileNotFoundError:
             pass
-        else:
-            os.remove(path)
 
         self.machinesChanged.emit()
 
