@@ -102,6 +102,10 @@ class Application(SignalEmitter):
         self._message_lock = threading.Lock()
         self.showMessageSignal.connect(self.showMessage)
         self.hideMessageSignal.connect(self.hideMessage)
+
+
+    ##  Emitted when the application window was closed and we need to shut down the application
+    applicationShuttingDown = Signal()
     
     showMessageSignal = Signal()
     

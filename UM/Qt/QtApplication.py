@@ -150,10 +150,11 @@ class QtApplication(QApplication, Application, SignalEmitter):
         return super().event(event)
 
     def windowClosed(self):
-        self.getBackend().close()
-        self.quit()
         self.saveMachines()
         Preferences.getInstance().writeToFile(Resources.getStoragePath(Resources.PreferencesLocation, self.getApplicationName() + ".cfg"))
+        self.applicationShuttingDown.emit()
+        self.getBackend().close()
+        self.quit()
 
     ##  Load a Qt translation catalog.
     #
