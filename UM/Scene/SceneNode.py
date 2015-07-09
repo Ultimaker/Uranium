@@ -52,6 +52,7 @@ class SceneNode(SignalEmitter):
         self._aabb_job = None
         self._visible = True
         self._name = ""
+        self._decorators = []
 
         if parent:
             parent.addChild(self)
@@ -60,6 +61,25 @@ class SceneNode(SignalEmitter):
     #   \returns SceneNode if it has a parent and None if it's the root node.
     def getParent(self):
         return self._parent
+    
+    def addDecorator(self, decorator):
+        self._decorators.append(decorator)
+    
+    def getDecorators(self):
+        return self._decorators
+    
+    def getDecorator(self, type):
+        for decorator in self._decorators:
+            if type(decorator) == type:
+                return decorator
+    
+    def callDecoration(self, function, *args):
+        for decorator in self._decorators:
+            if hasattr(decorator, function):
+                try:
+                    getattr(decorator, function)(*args)
+                except:
+                    break
     
     def getName(self):
         return self._name
