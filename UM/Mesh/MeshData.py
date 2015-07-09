@@ -136,7 +136,7 @@ class MeshData(SignalEmitter):
     #   \param transformation 4x4 homogenous transformation matrix
     def getTransformed(self, transformation):
         if self._vertices is not None:
-            data = numpy.pad(self._vertices.copy(), ((0,0), (0,1)), "constant", constant_values=(0.0, 0.0))
+            data = numpy.pad(self._vertices, ((0,0), (0,1)), "constant", constant_values=(0.0, 0.0))
             data = data.dot(transformation.getTransposed().getData())
             data += transformation.getData()[:,3]
             data = data[:,0:3]
@@ -166,7 +166,7 @@ class MeshData(SignalEmitter):
         if self._vertices is None:
             return AxisAlignedBox()
 
-        data = numpy.pad(self._vertices.copy(), ((0,0), (0,1)), "constant", constant_values=(0.0, 1.0))
+        data = numpy.pad(self._vertices, ((0,0), (0,1)), "constant", constant_values=(0.0, 1.0))
 
         if matrix is not None:
             transposed = matrix.getTransposed().getData()
@@ -397,13 +397,17 @@ class MeshData(SignalEmitter):
         if self._uvs is not None:
             return self._uvs[0 : self._vertex_count].tostring()
 
-    ##  Calculate the normals of this mesh, assuming it was created by using addFace (eg; the verts are connected)    
-    def calculateNormals(self):
+    ##  Calculate the normals of this mesh, assuming it was created by using addFace (eg; the verts are connected)
+    #
+    #   Keyword arguments:
+    #   - fast: A boolean indicating whether or not to use a fast method of normal calculation that assumes each triangle
+    #           is stored as a set of three unique vertices.
+    def calculateNormals(self, **kwargs):
         # Numpy magic!
         # First, reset the normals
         self._normals = numpy.zeros((self._vertex_count, 3), dtype=numpy.float32)
 
-        if self.hasIndices():
+        if self.hasIndices() and not kwargs.get("fast", False):
             for face in self._indices[0:self._face_count]:
                 #print(self._vertices[face[0]])
                 #print(self._vertices[face[1]])

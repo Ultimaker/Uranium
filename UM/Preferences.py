@@ -3,6 +3,7 @@
 
 from UM.Signal import Signal, SignalEmitter
 from UM.Logger import Logger
+from UM.Resources import Resources
 
 import os
 import configparser
@@ -54,6 +55,9 @@ class Preferences(SignalEmitter):
     def readFromFile(self, file):
         self._loadFile(file)
 
+        if not self._parser:
+            return
+
         for group, group_entries in self._parser.items():
             if group == "DEFAULT":
                 continue
@@ -76,7 +80,7 @@ class Preferences(SignalEmitter):
                 if pref.getValue() != pref.getDefault():
                     parser[group][key] = str(pref.getValue())
 
-        parser["general"]["version"] = "1"
+        parser["general"]["version"] = "2"
 
         with open(file, "wt") as f:
             parser.write(f)
@@ -117,7 +121,7 @@ class Preferences(SignalEmitter):
         self._parser = configparser.ConfigParser()
         self._parser.read(file)
 
-        if self._parser["general"]["version"] != "1":
+        if self._parser["general"]["version"] != "2":
             Logger.log("w", "Old config file found, ignoring")
             self._parser = None
             return
