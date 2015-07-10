@@ -51,6 +51,8 @@ class QtApplication(QApplication, Application, SignalEmitter):
         self._engine = None
         self._renderer = None
 
+        self.setAttribute(Qt.AA_UseDesktopOpenGL)
+
         try:
             self._splash = QSplashScreen(QPixmap(Resources.getPath(Resources.ImagesLocation, self.getApplicationName() + ".png")))
         except FileNotFoundError:
