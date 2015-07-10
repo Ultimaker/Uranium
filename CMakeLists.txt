@@ -76,7 +76,7 @@ endif()
 
 include(GNUInstallDirs)
 
-if(APPLE)
+if(APPLE OR WIN32)
     install(DIRECTORY UM DESTINATION lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/site-packages)
 else()
     install(DIRECTORY UM DESTINATION lib/python${PYTHON_VERSION_MAJOR}/dist-packages)
