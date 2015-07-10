@@ -53,6 +53,8 @@ class QtApplication(QApplication, Application, SignalEmitter):
         self._engine = None
         self._renderer = None
 
+        self.setAttribute(Qt.AA_UseDesktopOpenGL)
+
         try:
             self._splash = QSplashScreen(QPixmap(Resources.getPath(Resources.ImagesLocation, self.getApplicationName() + ".png")))
         except FileNotFoundError:
@@ -134,6 +136,12 @@ class QtApplication(QApplication, Application, SignalEmitter):
 
         return self._renderer
 
+    def addCommandLineOptions(self, parser):
+        parser.add_argument("--disable-textures",
+                            dest="disable-textures",
+                            action="store_true", default=False,
+                            help="Disable Qt texture loading as a workaround for certain crashes.")
+
     #   Overridden from QApplication::setApplicationName to call our internal setApplicationName
     def setApplicationName(self, name):
         Application.setApplicationName(self, name)
@@ -152,10 +160,11 @@ class QtApplication(QApplication, Application, SignalEmitter):
         return super().event(event)
 
     def windowClosed(self):
-        self.getBackend().close()
-        self.quit()
         self.saveMachines()
         Preferences.getInstance().writeToFile(Resources.getStoragePath(Resources.PreferencesLocation, self.getApplicationName() + ".cfg"))
+        self.applicationShuttingDown.emit()
+        self.getBackend().close()
+        self.quit()
 
     ##  Load a Qt translation catalog.
     #

@@ -32,6 +32,14 @@ class ReadMeshJob(Job):
 
         mesh = self._handler.read(self._filename, self._device)
 
+        if not mesh:
+            loading_message.hide()
+
+            result_message = Message(i18n_catalog.i18nc("Failed loading mesh message, {0} is file name", "Failed to load {0}").format(self._filename))
+            result_message.show()
+
+            return
+
         # Scale down to maximum bounds size if that is available
         if hasattr(Application.getInstance().getController().getScene(), "_maximum_bounds"):
             max_bounds = Application.getInstance().getController().getScene()._maximum_bounds
