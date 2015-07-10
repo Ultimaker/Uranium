@@ -132,6 +132,12 @@ class QtApplication(QApplication, Application, SignalEmitter):
 
         return self._renderer
 
+    def addCommandLineOptions(self, parser):
+        parser.add_argument("--disable-textures",
+                            dest="disable-textures",
+                            action="store_true", default=False,
+                            help="Disable Qt texture loading as a workaround for certain crashes.")
+
     #   Overridden from QApplication::setApplicationName to call our internal setApplicationName
     def setApplicationName(self, name):
         Application.setApplicationName(self, name)

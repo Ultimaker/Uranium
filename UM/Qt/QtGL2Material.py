@@ -4,6 +4,7 @@
 from PyQt5.QtGui import QOpenGLShader, QOpenGLShaderProgram, QVector2D, QVector3D, QVector4D, QMatrix4x4, QColor, QImage, QOpenGLTexture
 from UM.View.Material import Material
 from UM.Logger import Logger
+from UM.Application import Application
 
 from UM.Math.Vector import Vector
 from UM.Math.Matrix import Matrix
@@ -21,6 +22,8 @@ class QtGL2Material(Material):
         self._uniform_values = {}
         self._bound = False
         self._textures = {}
+
+        self._disable_textures = Application.getInstance().getCommandLineOption("disable-textures", False)
 
     def loadVertexShader(self, file):
         if not self._shader_program:
@@ -63,7 +66,7 @@ class QtGL2Material(Material):
             self._setUniformValueDirect(uniform, value)
 
     def setUniformTexture(self, name, file):
-        if not self._shader_program:
+        if not self._shader_program or self._disable_textures:
             return
 
         if name not in self._uniform_indices:
