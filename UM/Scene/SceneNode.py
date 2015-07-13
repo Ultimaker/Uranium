@@ -86,8 +86,8 @@ class SceneNode(SignalEmitter):
         for decorator in self._decorators:
             if hasattr(decorator, function):
                 try:
-                    getattr(decorator, function)(*args, **kwargs)
-                except:
+                    return getattr(decorator, function)(*args, **kwargs)
+                except Exception as e:
                     break
     
     def getName(self):
