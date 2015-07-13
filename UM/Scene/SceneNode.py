@@ -73,11 +73,20 @@ class SceneNode(SignalEmitter):
             if type(decorator) == type:
                 return decorator
     
-    def callDecoration(self, function, *args):
+    def removeDecorators(self):
+        self._decorators = []
+        
+    def removeDecorator(self, type):
+        for decorator in self._decorators:
+            if type(decorator) == type:
+                self._decorators.remove(decorator)
+                break
+    
+    def callDecoration(self, function, *args, **kwargs):
         for decorator in self._decorators:
             if hasattr(decorator, function):
                 try:
-                    getattr(decorator, function)(*args)
+                    getattr(decorator, function)(*args, **kwargs)
                 except:
                     break
     
