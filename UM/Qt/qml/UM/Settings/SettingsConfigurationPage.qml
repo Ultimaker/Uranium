@@ -75,20 +75,14 @@ PreferencesPage {
             checked: model.visibility
             onClicked: ListView.view.model.setVisibility(model.key, checked)
             enabled: !model.disabled
-            MouseArea {
-                anchors.fill: parent
-                hoverEnabled: true
-                onEntered: {
+
+            onHoveredChanged: {
+                if(hovered) {
                     var xPos = parent.x + settingCheckBox.width;
                     var yPos = parent.y;
-                    toolTip.show(model.description, 1000, 200, undefined, undefined)//tooltip-text, hover-delay in msec, animation-length in msec, position X, position Y (both y en x == undefined: gives the tooltip a standard placement in the right corner)
-                }
-                onExited: {
+                    toolTip.show(model.description, 1000, 200, undefined, undefined) //tooltip-text, hover-delay in msec, animation-length in msec, position X, position Y (both y en x == undefined: gives the tooltip a standard placement in the right corner)
+                } else {
                     toolTip.hide(0, 0)//hover-delay in msec, animation-length in msec
-                }
-                onClicked: {
-                    settingCheckBox.checked = !settingCheckBox.checked;
-                    ListView.view.model.setVisibility(model.key, checked)
                 }
             }
         }
