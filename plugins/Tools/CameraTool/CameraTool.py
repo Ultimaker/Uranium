@@ -73,7 +73,7 @@ class CameraTool(Tool):
         if MouseEvent.RightButton in event.buttons: #rightbutton
             return True
         elif MouseEvent.LeftButton in event.buttons and self._ctrl_is_active is True: #ctr -> leftbutton
-            return True
+            return False #Multi selection also requires this event, so return false
 
     def initiateZoom(self, event):
         #calls the zoomaction method for the mousewheel event and when the plus or minus keys are used
