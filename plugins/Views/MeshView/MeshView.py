@@ -7,6 +7,7 @@ from UM.Resources import Resources
 from UM.Application import Application
 from UM.Math.Color import Color
 from UM.Preferences import Preferences
+from UM.View.Renderer import Renderer
 
 import math
 
@@ -69,6 +70,8 @@ class MeshView(View):
                             renderer.queueNode(node, material = self._enabled_material)
                     else:
                         renderer.queueNode(node, material = self._enabled_material)
+                if node.callDecoration("isGroup"):
+                    renderer.queueNode(node, mesh = node.getBoundingBoxMesh(),mode = Renderer.RenderLines)
 
     def endRendering(self):
         pass

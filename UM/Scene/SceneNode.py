@@ -7,7 +7,7 @@ from UM.Math.Quaternion import Quaternion
 from UM.Math.AxisAlignedBox import AxisAlignedBox
 from UM.Signal import Signal, SignalEmitter
 from UM.Job import Job
-
+from UM.Mesh.MeshData import MeshData
 from copy import copy, deepcopy
 
 import math
@@ -53,6 +53,8 @@ class SceneNode(SignalEmitter):
         self._visible = True
         self._name = ""
         self._decorators = []
+        self._bounding_box_mesh = None
+        self.boundingBoxChanged.connect(self.calculateBoundingBoxMesh)
 
         if parent:
             parent.addChild(self)
@@ -62,11 +64,58 @@ class SceneNode(SignalEmitter):
     def getParent(self):
         return self._parent
     
+    def getBoundingBoxMesh(self):
+        return self._bounding_box_mesh
+    
     def addDecorator(self, decorator):
         self._decorators.append(decorator)
     
     def getDecorators(self):
         return self._decorators
+    
+    def calculateBoundingBoxMesh(self):        
+        self._bounding_box_mesh = MeshData()
+        if self._aabb:
+            
+            rtf = self._aabb.maximum
+            lbb = self._aabb.minimum
+            #print( "calculating bounding boxMesh , " , self._aabb.maximum , " " , self._aabb.minimum)
+
+            self._bounding_box_mesh.addVertex(rtf.x, rtf.y, rtf.z) #Right - Top - Front
+            self._bounding_box_mesh.addVertex(lbb.x, rtf.y, rtf.z) #Left - Top - Front
+
+            self._bounding_box_mesh.addVertex(lbb.x, rtf.y, rtf.z) #Left - Top - Front
+            self._bounding_box_mesh.addVertex(lbb.x, lbb.y, rtf.z) #Left - Bottom - Front
+
+            self._bounding_box_mesh.addVertex(lbb.x, lbb.y, rtf.z) #Left - Bottom - Front
+            self._bounding_box_mesh.addVertex(rtf.x, lbb.y, rtf.z) #Right - Bottom - Front
+
+            self._bounding_box_mesh.addVertex(rtf.x, lbb.y, rtf.z) #Right - Bottom - Front
+            self._bounding_box_mesh.addVertex(rtf.x, rtf.y, rtf.z) #Right - Top - Front
+
+            self._bounding_box_mesh.addVertex(rtf.x, rtf.y, lbb.z) #Right - Top - Back
+            self._bounding_box_mesh.addVertex(lbb.x, rtf.y, lbb.z) #Left - Top - Back
+
+            self._bounding_box_mesh.addVertex(lbb.x, rtf.y, lbb.z) #Left - Top - Back
+            self._bounding_box_mesh.addVertex(lbb.x, lbb.y, lbb.z) #Left - Bottom - Back
+
+            self._bounding_box_mesh.addVertex(lbb.x, lbb.y, lbb.z) #Left - Bottom - Back
+            self._bounding_box_mesh.addVertex(rtf.x, lbb.y, lbb.z) #Right - Bottom - Back
+
+            self._bounding_box_mesh.addVertex(rtf.x, lbb.y, lbb.z) #Right - Bottom - Back
+            self._bounding_box_mesh.addVertex(rtf.x, rtf.y, lbb.z) #Right - Top - Back
+
+            self._bounding_box_mesh.addVertex(rtf.x, rtf.y, rtf.z) #Right - Top - Front
+            self._bounding_box_mesh.addVertex(rtf.x, rtf.y, lbb.z) #Right - Top - Back
+
+            self._bounding_box_mesh.addVertex(lbb.x, rtf.y, rtf.z) #Left - Top - Front
+            self._bounding_box_mesh.addVertex(lbb.x, rtf.y, lbb.z) #Left - Top - Back
+
+            self._bounding_box_mesh.addVertex(lbb.x, lbb.y, rtf.z) #Left - Bottom - Front
+            self._bounding_box_mesh.addVertex(lbb.x, lbb.y, lbb.z) #Left - Bottom - Back
+
+            self._bounding_box_mesh.addVertex(rtf.x, lbb.y, rtf.z) #Right - Bottom - Front
+            self._bounding_box_mesh.addVertex(rtf.x, lbb.y, lbb.z) #Right - Bottom - Back
     
     def getDecorator(self, type):
         for decorator in self._decorators:
@@ -520,4 +569,6 @@ class _CalculateAABBJob(Job):
 
         self._node._aabb = aabb
         self._node._aabb_job = None
+        if self._node.getParent():
+            self._node.getParent()._resetAABB()
         self._node.boundingBoxChanged.emit()
