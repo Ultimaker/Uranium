@@ -3,6 +3,7 @@
 
 from UM.Signal import Signal
 from UM.Math.Vector import Vector
+from UM.Operations.GroupedOperation import GroupedOperation
 
 class Selection:
     @classmethod
