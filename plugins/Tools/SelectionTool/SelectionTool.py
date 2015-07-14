@@ -83,16 +83,14 @@ class SelectionTool(Tool):
                     if Selection.isSelected(node):
                         if node.getParent():
                             if node.getParent().callDecoration("isGroup"):
-                                for child in node.getParent().getChildren():
-                                    Selection.remove(child)
+                                Selection.remove(node.getParent())
                             else:
                                 Selection.remove(node)
                     else: 
                         Selection.add(node)
                         if node.getParent():
                             if node.getParent().callDecoration("isGroup"):
-                                for child in node.getParent().getChildren():
-                                    Selection.add(child)
+                                Selection.add(node.getParent())
                             else:
                                 Selection.add(node)
                 else:
@@ -100,7 +98,6 @@ class SelectionTool(Tool):
                         Selection.clear()
                         if node.getParent():
                             if node.getParent().callDecoration("isGroup"):
-                                for child in node.getParent().getChildren():
-                                    Selection.add(child)
+                                Selection.add(node.getParent())
                             else: 
                                 Selection.add(node)

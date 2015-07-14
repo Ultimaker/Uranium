@@ -73,13 +73,11 @@ class SceneNode(SignalEmitter):
     def getDecorators(self):
         return self._decorators
     
-    def calculateBoundingBoxMesh(self):        
-        self._bounding_box_mesh = MeshData()
+    def calculateBoundingBoxMesh(self):
         if self._aabb:
-            
+            self._bounding_box_mesh = MeshData()
             rtf = self._aabb.maximum
             lbb = self._aabb.minimum
-            #print( "calculating bounding boxMesh , " , self._aabb.maximum , " " , self._aabb.minimum)
 
             self._bounding_box_mesh.addVertex(rtf.x, rtf.y, rtf.z) #Right - Top - Front
             self._bounding_box_mesh.addVertex(lbb.x, rtf.y, rtf.z) #Left - Top - Front
@@ -116,6 +114,8 @@ class SceneNode(SignalEmitter):
 
             self._bounding_box_mesh.addVertex(rtf.x, lbb.y, rtf.z) #Right - Bottom - Front
             self._bounding_box_mesh.addVertex(rtf.x, lbb.y, lbb.z) #Right - Bottom - Back
+        else:
+            self._resetAABB()
     
     def getDecorator(self, type):
         for decorator in self._decorators:
@@ -562,7 +562,7 @@ class _CalculateAABBJob(Job):
         if self._node._mesh_data:
             aabb = self._node._mesh_data.getExtents(self._node.getWorldTransformation())
         else:
-            aabb = AxisAlignedBox()
+            aabb = AxisAlignedBox(minimum = self._node.getPosition(), maximum = self._node.getPosition())
 
         for child in self._node._children:
             aabb += child.getBoundingBox()
@@ -571,4 +571,5 @@ class _CalculateAABBJob(Job):
         self._node._aabb_job = None
         if self._node.getParent():
             self._node.getParent()._resetAABB()
+            
         self._node.boundingBoxChanged.emit()

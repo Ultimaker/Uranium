@@ -63,6 +63,8 @@ class MeshView(View):
             if not node.render(renderer):
                 if node.getMeshData() and node.isVisible():
                     # TODO: Find a better way to handle this
+                    #if node.getBoundingBoxMesh():
+                    #    renderer.queueNode(scene.getRoot(), mesh = node.getBoundingBoxMesh(),mode = Renderer.RenderLines)
                     if hasattr(node, "_outside_buildarea"):
                         if node._outside_buildarea:
                             renderer.queueNode(node, material = self._disabled_material)
@@ -71,7 +73,7 @@ class MeshView(View):
                     else:
                         renderer.queueNode(node, material = self._enabled_material)
                 if node.callDecoration("isGroup"):
-                    renderer.queueNode(node, mesh = node.getBoundingBoxMesh(),mode = Renderer.RenderLines)
+                    renderer.queueNode(scene.getRoot(), mesh = node.getBoundingBoxMesh(),mode = Renderer.RenderLines)
 
     def endRendering(self):
         pass
