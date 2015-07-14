@@ -78,12 +78,29 @@ class SelectionTool(Tool):
             return
         for node in BreadthFirstIterator(self._scene.getRoot()):
             if id(node) == pixel_id:
+                
                 if self._ctrl_is_active:
                     if Selection.isSelected(node):
-                        Selection.remove(node)
+                        if node.getParent():
+                            if node.getParent().callDecoration("isGroup"):
+                                for child in node.getParent().getChildren():
+                                    Selection.remove(child)
+                            else:
+                                Selection.remove(node)
                     else: 
                         Selection.add(node)
+                        if node.getParent():
+                            if node.getParent().callDecoration("isGroup"):
+                                for child in node.getParent().getChildren():
+                                    Selection.add(child)
+                            else:
+                                Selection.add(node)
                 else:
                     if not Selection.isSelected(node) or Selection.getCount() > 1:
                         Selection.clear()
-                        Selection.add(node)
+                        if node.getParent():
+                            if node.getParent().callDecoration("isGroup"):
+                                for child in node.getParent().getChildren():
+                                    Selection.add(child)
+                            else: 
+                                Selection.add(node)
