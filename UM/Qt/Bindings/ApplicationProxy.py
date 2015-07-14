@@ -18,6 +18,10 @@ class ApplicationProxy(QObject):
     def log(self, type, message):
         Logger.log(type, message)
 
+    @pyqtProperty(str, constant = True)
+    def version(self):
+        return self._application.getVersion()
+
     machineChanged = pyqtSignal()
 
     @pyqtProperty(str, notify=machineChanged)
