@@ -117,17 +117,17 @@ class SceneNode(SignalEmitter):
         else:
             self._resetAABB()
     
-    def getDecorator(self, type):
+    def getDecorator(self, dec_type):
         for decorator in self._decorators:
-            if type(decorator) == type:
+            if type(decorator) == dec_type:
                 return decorator
     
     def removeDecorators(self):
         self._decorators = []
         
-    def removeDecorator(self, type):
+    def removeDecorator(self, dec_type):
         for decorator in self._decorators:
-            if type(decorator) == type:
+            if type(decorator) == dec_type:
                 self._decorators.remove(decorator)
                 break
     
