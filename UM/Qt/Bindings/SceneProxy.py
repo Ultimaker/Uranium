@@ -18,9 +18,17 @@ class SceneProxy(QObject):
     @pyqtProperty(int, notify = selectionChanged)    
     def numObjectsSelected(self):
         return Selection.getCount()
+    
+    @pyqtProperty(bool, notify = selectionChanged) 
+    def isGroupSelected(self):
+        for node in Selection.getAllSelectedObjects():
+            if node.callDecoration("isGroup"):
+                return True
+        return False
 
     @pyqtSlot(str)
     def setActiveCamera(self, camera):
         self._scene.setActiveCamera(camera)
-    
+        
+        
     

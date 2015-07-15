@@ -82,22 +82,30 @@ class SelectionTool(Tool):
                 if self._ctrl_is_active:
                     if Selection.isSelected(node):
                         if node.getParent():
-                            if node.getParent().callDecoration("isGroup"):
-                                Selection.remove(node.getParent())
-                            else:
+                            group_node = node.getParent()
+                            if not group_node.callDecoration("isGroup"):
                                 Selection.remove(node)
-                    else: 
-                        Selection.add(node)
-                        if node.getParent():
-                            if node.getParent().callDecoration("isGroup"):
-                                Selection.add(node.getParent())
                             else:
+                                while group_node.getParent().callDecoration("isGroup"):
+                                    group_node = group_node.getParent()
+                                Selection.remove(group_node)
+                    else: 
+                        if node.getParent():
+                            group_node = node.getParent()
+                            if not group_node.callDecoration("isGroup"):
                                 Selection.add(node)
+                            else:
+                                while group_node.getParent().callDecoration("isGroup"):
+                                    group_node = group_node.getParent()
+                                Selection.add(group_node)
                 else:
                     if not Selection.isSelected(node) or Selection.getCount() > 1:
                         Selection.clear()
                         if node.getParent():
-                            if node.getParent().callDecoration("isGroup"):
-                                Selection.add(node.getParent())
-                            else: 
+                            group_node = node.getParent()
+                            if not group_node.callDecoration("isGroup"):
                                 Selection.add(node)
+                            else:
+                                while group_node.getParent().callDecoration("isGroup"):
+                                    group_node = group_node.getParent()
+                                Selection.add(group_node)
