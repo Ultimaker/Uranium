@@ -562,7 +562,7 @@ class _CalculateAABBJob(Job):
         if self._node._mesh_data:
             aabb = self._node._mesh_data.getExtents(self._node.getWorldTransformation())
         else:
-            aabb = AxisAlignedBox(minimum = self._node.getPosition(), maximum = self._node.getPosition())
+            aabb = AxisAlignedBox(minimum = self._node.getWorldPosition(), maximum = self._node.getWorldPosition())
 
         for child in self._node._children:
             aabb += child.getBoundingBox()
