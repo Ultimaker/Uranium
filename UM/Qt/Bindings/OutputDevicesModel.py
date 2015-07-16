@@ -5,7 +5,7 @@ from PyQt5.QtCore import Qt, pyqtSlot, pyqtProperty, pyqtSignal
 
 from UM.Application import Application
 from UM.Qt.ListModel import ListModel
-from UM.OutputDevice.OutputDeviceError import ErrorCodes, WriteRequestFailedError
+from UM.OutputDevice.OutputDeviceError import WriteRequestFailedError, UserCancelledError
 from UM.Logger import Logger
 
 class OutputDevicesModel(ListModel):
@@ -50,9 +50,10 @@ class OutputDevicesModel(ListModel):
 
         try:
             device.requestWrite(Application.getInstance().getController().getScene().getRoot())
+        except UserCancelledError:
+            pass
         except WriteRequestFailedError as e:
-            if e.code != ErrorCodes.UserCanceledError:
-                Logger.log("e", e.message)
+            Logger.log("e", e.message)
 
     def _update(self):
         self.clear()
