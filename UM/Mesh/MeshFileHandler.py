@@ -67,19 +67,23 @@ class MeshFileHandler(object):
 
         return None
 
-    # Get list of all supported filetypes for writing.
-    # \returns Dict of extension, description with all supported filetypes.
+    ##  Get list of all supported filetypes for writing.
+    #   \return List of dicts containing id, extension, description and mime_type for all supported file types.
     def getSupportedFileTypesWrite(self):
-        supported_types = {}
-        meta_data = PluginRegistry.getInstance().getAllMetaData(filter = {"type": "mesh_writer"}, active_only = True)
+        supported_types = []
+        meta_data = PluginRegistry.getInstance().getAllMetaData(filter = {"mesh_writer": {}}, active_only = True)
         for entry in meta_data:
-            if "mesh_writer" in entry:
-                ext = entry["mesh_writer"].get("extension", None)
-                description = entry["mesh_writer"].get("description", ext)
-                if ext:
-                    supported_types[ext] = description
+            ext = entry["mesh_writer"].get("extension", None)
+            description = entry["mesh_writer"].get("description", ext)
+            mime_types = entry["mesh_writer"].get("mime_types")
+            supported_types.append({
+                "id": entry["id"],
+                "extension": ext,
+                "description": description,
+                "mime_types": mime_types
+            })
         return supported_types
-    
+
     # Get list of all supported filetypes for reading.
     # \returns List of strings with all supported filetypes.
     def getSupportedFileTypesRead(self):
