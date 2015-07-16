@@ -316,7 +316,7 @@ class PluginRegistry(object):
         for key in subset:
             if key not in dictionary:
                 return False
-            if dictionary[key] != subset[key]:
+            if subset[key] != {} and dictionary[key] != subset[key]:
                 return False
         return True
 
