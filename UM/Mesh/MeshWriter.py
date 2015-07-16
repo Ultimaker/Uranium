@@ -3,10 +3,17 @@
 
 from UM.PluginObject import PluginObject
 
+##  Base class for mesh writer objects
 class MeshWriter(PluginObject):
     def __init__(self):
         super().__init__()
     
-    #Tries to write to file, returns False if it's unable to do it (either due to type or due to permission / locking)
-    def write(self, file_name, storage_device, mesh_data):
+    ##  Output node to stream in such a way that it makes sense for the file format.
+    #
+    #   For example, in case of STL, it makes sense to go through all child nodes of
+    #   node and write all those as transformed vertices to a single file.
+    #
+    #   \param stream \type{IOStream] The stream to output to.
+    #   \param node \type{SceneNode} The scene node to write to the stream.
+    def write(self, stream, node):
         raise NotImplementedError("Writer plugin was not correctly implemented, no write was specified")
