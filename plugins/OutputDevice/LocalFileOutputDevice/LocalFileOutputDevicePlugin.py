@@ -2,14 +2,17 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 import os.path
+import sys
 
 from PyQt5.QtWidgets import QFileDialog, QMessageBox
 
 from UM.Application import Application
 from UM.Preferences import Preferences
+from UM.Logger import Logger
+from UM.Mesh.WriteMeshJob import WriteMeshJob
 from UM.OutputDevice.OutputDevicePlugin import OutputDevicePlugin
 from UM.OutputDevice.OutputDevice import OutputDevice
-from UM.OutputDevice.OutputDeviceError import ErrorCodes, WriteRequestFailedError
+from UM.OutputDevice.OutputDeviceError import UserCancelledError, PermissionDeniedError, WriteRequestFailedError
 
 from UM.i18n import i18nCatalog
 catalog = i18nCatalog("uranium")
@@ -41,32 +44,35 @@ class LocalFileOutputDevice(OutputDevice):
         dialog.setWindowTitle(catalog.i18n("Save to File"))
         dialog.setFileMode(QFileDialog.AnyFile)
         dialog.setAcceptMode(QFileDialog.AcceptSave)
+        # Ensure platform never ask for overwrite confirmation since we do this ourselves
+        dialog.setOption(QFileDialog.DontConfirmOverwrite)
 
-        file_types = []
+        filters = []
         selected_filter = None
-        last_used_filter = Preferences.getInstance().getValue("local_file/last_used_type")
+        last_used_type = Preferences.getInstance().getValue("local_file/last_used_type")
 
-        for ext, desc in Application.getInstance().getMeshFileHandler().getSupportedFileTypesWrite().items():
-            file_types.append("{0} (*.{1})".format(desc, ext))
-            if ext == last_used_filter:
-                selected_filter = "{0} (*.{1})".format(desc, ext)
+        file_types = Application.getInstance().getMeshFileHandler().getSupportedFileTypesWrite()
+        file_types.sort(key = lambda k: k["description"])
 
-        file_types.sort()
+        for item in file_types:
+            type_filter = "{0} (*.{1})".format(item["description"], item["extension"])
+            filters.append(type_filter)
+            if last_used_type in item["mime_types"]:
+                selected_filter = type_filter
 
-        dialog.setNameFilters(file_types)
+        dialog.setNameFilters(filters)
         if selected_filter != None:
             dialog.selectNameFilter(selected_filter)
 
         dialog.restoreState(Preferences.getInstance().getValue("local_file/dialog_state"))
 
         if not dialog.exec_():
-            raise WriteRequestFailedError(ErrorCodes.UserCanceledError, "Cancelled by user")
+            raise UserCancelledError()
 
         Preferences.getInstance().setValue("local_file/dialog_state", dialog.saveState())
 
-        for ext, desc in Application.getInstance().getMeshFileHandler().getSupportedFileTypesWrite().items():
-            if "{0} (*.{1})".format(desc, ext) == dialog.selectedNameFilter():
-                Preferences.getInstance().setValue("local_file/last_used_type", ext)
+        selected_type = file_types[filters.index(dialog.selectedNameFilter())]
+        Preferences.getInstance().setValue("local_file/last_used_type", selected_type["mime_types"][0])
 
         file_name = dialog.selectedFiles()[0]
 
@@ -75,7 +81,27 @@ class LocalFileOutputDevice(OutputDevice):
             if result == QMessageBox.No:
                 raise WriteRequestFailedError(ErrorCodes.UserCanceledError, "Cancelled by user")
 
-        print(file_name)
-        #Application.getInstance().getMeshFileHandler().write(file_name, node)
+        self.writeStarted.emit(self)
+        mesh_writer = Application.getInstance().getMeshFileHandler().getWriter(selected_type["id"])
+        try:
+            Logger.log("d", "Writing to Local File %s", file_name)
+            stream = open(file_name, "w")
+            job = WriteMeshJob(mesh_writer, stream, node)
+            #job.progress.connect(self._onJobProgress)
+            job.finished.connect(self._onWriteJobFinished)
+            job.start()
+        except PermissionError:
+            raise PermissionDeniedError().with_traceback(sys.exc_info()[2])
+        except OSError:
+            raise WriteRequestFailedError().with_traceback(sys.exc_info()[2])
 
+    def _onJobProgress(self, job):
+        self.writeProgress.emit(job.getProgress())
 
+    def _onWriteJobFinished(self, job):
+        self.writeFinished.emit(self)
+        if job.getResult():
+            self.writeSuccess.emit(self)
+        else:
+            self.writeError.emit(self)
+        job.getStream().close()
