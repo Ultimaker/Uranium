@@ -526,7 +526,12 @@ class SceneNode(SignalEmitter):
                 self._derived_orientation = parent_orientation * self._orientation
             else:
                 self._derived_orientation = self._orientation
-
+            
+            # Sometimes the derived orientation can be None. 
+            # I've not been able to locate the cause of this, but this prevents it being an issue.
+            if not self._derived_orientation:
+                self._derived_orientation = Quaternion() 
+            
             parent_scale = self._parent._getDerivedScale()
             if self._inherit_scale:
                 self._derived_scale = parent_scale.scale(self._scale)
