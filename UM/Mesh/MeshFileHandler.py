@@ -12,12 +12,12 @@ from UM.Math.Matrix import Matrix
 class MeshFileHandler(object):
     def __init__(self):
         super().__init__()
-        self._mesh_readers = []
-        self._mesh_writers = []
+        self._mesh_readers = {}
+        self._mesh_writers = {}
 
         PluginRegistry.addType("mesh_writer", self.addWriter)
         PluginRegistry.addType("mesh_reader", self.addReader)
-    
+
     # Try to read the mesh_data from a file. Based on the extension in the file a correct meshreader is selected.
     # \param file_name The name of the mesh to load.
     # \param storage_device The StorageDevice where the mesh can be found.
@@ -27,7 +27,7 @@ class MeshFileHandler(object):
     # \returns MeshData if it was able to read the file, None otherwise.
     def read(self, file_name, storage_device, **kwargs):
         try:
-            for reader in self._mesh_readers:
+            for id, reader in self._mesh_readers.items():
                 result = reader.read(file_name, storage_device)
                 if(result is not None):
                     if kwargs.get("center", True):
@@ -87,7 +87,7 @@ class MeshFileHandler(object):
         return supported_types
 
     def addWriter(self, writer):
-        self._mesh_writers.append(writer)
-        
+        self._mesh_writers[writer.getPluginId()] = writer
+
     def addReader(self, reader):
-        self._mesh_readers.append(reader)
+        self._mesh_readers[reader.getPluginId()] = reader
