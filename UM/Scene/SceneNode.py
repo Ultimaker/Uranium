@@ -495,7 +495,11 @@ class SceneNode(SignalEmitter):
     def _getDerivedOrientation(self):
         if not self._derived_orientation:
             self._updateTransformation()
-
+        
+        # Sometimes the derived orientation can be None. 
+        # I've not been able to locate the cause of this, but this prevents it being an issue.
+        if not self._derived_orientation:
+            self._derived_orientation = Quaternion() 
         return self._derived_orientation
 
     def _getDerivedScale(self):
