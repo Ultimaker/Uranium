@@ -55,6 +55,7 @@ class SceneNode(SignalEmitter):
         self._decorators = []
         self._bounding_box_mesh = None
         self.boundingBoxChanged.connect(self.calculateBoundingBoxMesh)
+        self.parentChanged.connect(self._onParentChanged)
 
         if parent:
             parent.addChild(self)
@@ -69,6 +70,10 @@ class SceneNode(SignalEmitter):
     
     def addDecorator(self, decorator):
         self._decorators.append(decorator)
+    
+    def _onParentChanged(self, node):
+        for child in self.getChildren():
+            child.parentChanged.emit(self)
     
     def getDecorators(self):
         return self._decorators
