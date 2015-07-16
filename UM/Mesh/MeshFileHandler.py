@@ -45,20 +45,28 @@ class MeshFileHandler(object):
 
         Logger.log("w", "Unable to read file %s", file_name)
         return None #unable to read
-    
-    # Try to write the mesh_data to file. Based on the extension in the file_name a correct meshwriter is selected.
-    # \param file_name The name of the file to write.
-    # \param storage_device The StorageDevice where the file should be written to.
-    # \param mesh_data
-    # \returns True if it was able to create the file, otherwise False
-    def write(self, file_name, storage_device, mesh_data):
-        if(mesh_data is None):
-            return False
-        for writer in self._mesh_writers:
-            if(writer.write(file_name, storage_device, mesh_data)):
-                return True
-        return False
-    
+
+    ##  Get an instance of a mesh writer by ID
+    def getWriter(self, writer_id):
+        if not writer_id in self._mesh_writers:
+            return None
+
+        return self._mesh_writers[writer_id]
+
+    ##  Get a mesh writer object that supports writing the specified mime type
+    #
+    #   \param mime The mime type that should be supported.
+    #   \return A MeshWriter instance or None if no mesh writer supports the specified mime type. If there are multiple
+    #           writers that support the specified mime type, the first entry is returned.
+    def getWriterByMimeType(self, mime):
+        writer_data = PluginRegistry.getInstance().getAllMetaData(filter = {"mesh_writer": {}}, active_only = True)
+        for entry in writer_data:
+            mime_types = entry["mesh_writer"].get("mime_types", [])
+            if mime in mime_types:
+                return self._mesh_writers[entry["id"]]
+
+        return None
+
     # Get list of all supported filetypes for writing.
     # \returns Dict of extension, description with all supported filetypes.
     def getSupportedFileTypesWrite(self):
