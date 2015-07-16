@@ -17,7 +17,11 @@ def getMetaData():
         },
         "mesh_writer": {
             "extension": "stl",
-            "description": i18n_catalog.i18nc("STL Reader plugin file type", "STL File")
+            "description": i18n_catalog.i18nc("STL Reader plugin file type", "STL File"),
+            "mime_types": [
+                "application/x-stl-ascii",
+                "application/x-stl-binary"
+            ]
         }
     }
 
