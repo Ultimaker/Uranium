@@ -34,6 +34,13 @@ class AxisAlignedBox:
 
         if "maximum" in kwargs:
             self._max = kwargs["maximum"]
+            
+        ## Sometimes the min and max are not correctly set. 
+        if not self._max:
+            self._max = Vector()
+            
+        if not self._min:
+            self._min = Vector()    
 
         self._ensureMinMax()
 
