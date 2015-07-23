@@ -46,6 +46,7 @@ class AngledCornerRectangle(QQuickItem):
     def updatePaintNode(self, paint_node, update_data):
         if PYQT_VERSION < 0x050500:
             self._node = QSGGeometryNode()
+            paint_node = self._node
 
             attribs = QSGGeometry.defaultAttributes_Point2D()
             self._geometry = QSGGeometry(attribs, 6, 12)
