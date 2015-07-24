@@ -5,6 +5,10 @@ from UM.PluginObject import PluginObject
 
 ##  Base class for mesh writer objects
 class MeshWriter(PluginObject):
+    class OutputMode:
+        TextMode = 1
+        BinaryMode = 2
+
     def __init__(self):
         super().__init__()
     

@@ -3,7 +3,7 @@
 
 from UM.Logger import Logger
 from UM.PluginRegistry import PluginRegistry
-
+from UM.Mesh.MeshWriter import MeshWriter
 from UM.Math.Matrix import Matrix
 
 ##  Central class for reading and writing meshes.
@@ -61,9 +61,9 @@ class MeshFileHandler(object):
     def getWriterByMimeType(self, mime):
         writer_data = PluginRegistry.getInstance().getAllMetaData(filter = {"mesh_writer": {}}, active_only = True)
         for entry in writer_data:
-            mime_types = entry["mesh_writer"].get("mime_types", [])
-            if mime in mime_types:
-                return self._mesh_writers[entry["id"]]
+            for output in entry["mesh_writer"].get("output", []):
+                if mime == output["mime_type"]:
+                    return self._mesh_writers[entry["id"]]
 
         return None
 
@@ -73,15 +73,18 @@ class MeshFileHandler(object):
         supported_types = []
         meta_data = PluginRegistry.getInstance().getAllMetaData(filter = {"mesh_writer": {}}, active_only = True)
         for entry in meta_data:
-            ext = entry["mesh_writer"].get("extension", None)
-            description = entry["mesh_writer"].get("description", ext)
-            mime_types = entry["mesh_writer"].get("mime_types")
-            supported_types.append({
-                "id": entry["id"],
-                "extension": ext,
-                "description": description,
-                "mime_types": mime_types
-            })
+            for output in entry["mesh_writer"].get("output", []):
+                ext = output.get("extension", "")
+                description = output.get("description", ext)
+                mime_type = output.get("mime_type", "text/plain")
+                mode = output.get("mode", MeshWriter.OutputMode.TextMode)
+                supported_types.append({
+                    "id": entry["id"],
+                    "extension": ext,
+                    "description": description,
+                    "mime_type": mime_type,
+                    "mode": mode
+                })
         return supported_types
 
     # Get list of all supported filetypes for reading.
