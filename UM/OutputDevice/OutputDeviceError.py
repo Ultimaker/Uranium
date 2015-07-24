@@ -12,3 +12,6 @@ class PermissionDeniedError(WriteRequestFailedError):
 
 class DeviceBusyError(WriteRequestFailedError):
     pass
+
+class InvalidModeError(WriteRequestFailedError):
+    pass
