@@ -5,8 +5,9 @@ from PyQt5.QtCore import Qt, pyqtSlot, pyqtProperty, pyqtSignal
 
 from UM.Application import Application
 from UM.Qt.ListModel import ListModel
-from UM.OutputDevice.OutputDeviceError import WriteRequestFailedError, UserCancelledError
+from UM.OutputDevice import OutputDeviceError
 from UM.Logger import Logger
+from UM.Message import Message
 
 class OutputDevicesModel(ListModel):
     IdRole = Qt.UserRole + 1
@@ -50,10 +51,17 @@ class OutputDevicesModel(ListModel):
 
         try:
             device.requestWrite(Application.getInstance().getController().getScene().getRoot())
-        except UserCancelledError:
+        except OutputDeviceError.UserCancelledError:
             pass
-        except WriteRequestFailedError as e:
-            Logger.log("e", e.message)
+        except OutputDeviceError.PermissionDeniedError as e:
+            message = Message("Could not write to {0}: Permission Denied".format(device.getName()))
+            message.show()
+        except OutputDeviceError.DeviceBusyError:
+            message = Message("Could not write to {0}: Device is Busy".format(device.getName()))
+            message.show()
+        except OutputDeviceError.WriteRequestFailedError as e:
+            message = Message("Could not write to {0}: {1}".format(device.getName(), str(e)))
+            message.show()
 
     def _update(self):
         self.clear()
