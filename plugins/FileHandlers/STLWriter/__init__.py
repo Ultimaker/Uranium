@@ -13,14 +13,23 @@ def getMetaData():
             "name": "STL Writer",
             "author": "Ultimaker",
             "version": "1.0",
-            "decription": i18n_catalog.i18nc("STL Writer plugin description", "Provides support for writing STL files.")
+            "decription": i18n_catalog.i18nc("STL Writer plugin description", "Provides support for writing STL files."),
+            "api": 2
         },
         "mesh_writer": {
-            "extension": "stl",
-            "description": i18n_catalog.i18nc("STL Reader plugin file type", "STL File"),
-            "mime_types": [
-                "application/x-stl-ascii",
-                "application/x-stl-binary"
+            "output": [
+                {
+                    "mime_type": "application/x-stl-ascii",
+                    "mode": STLWriter.STLWriter.OutputMode.TextMode,
+                    "extension": "stl",
+                    "description": i18n_catalog.i18nc("STL Writer plugin ascii STL output", "STL File (Ascii)")
+                },
+                {
+                    "mime_type": "application/x-stl-binary",
+                    "mode": STLWriter.STLWriter.OutputMode.BinaryMode,
+                    "extension": "stl",
+                    "description": i18n_catalog.i18nc("STL Writer plugin binary STL output", "STL File (Binary)")
+                }
             ]
         }
     }

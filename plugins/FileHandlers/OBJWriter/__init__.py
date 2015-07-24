@@ -17,11 +17,12 @@ def getMetaData():
             "description": i18n_catalog.i18nc("OBJ Writer plugin description", "Makes it possbile to write Wavefront OBJ files.")
         },
         "mesh_writer": {
-            "extension": "obj",
-            "description": i18n_catalog.i18nc("OBJ Writer file format", "Wavefront OBJ File"),
-            "mime_types": [
-                "application/x-wavefront-obj"
-            ]
+            "output": [{
+                "extension": "obj",
+                "description": i18n_catalog.i18nc("OBJ Writer file format", "Wavefront OBJ File"),
+                "mime_type": "application/x-wavefront-obj",
+                "mode": OBJWriter.OBJWriter.OutputMode.TextMode
+            }]
         }
     }
 
