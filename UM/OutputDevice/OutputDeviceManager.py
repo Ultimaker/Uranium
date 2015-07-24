@@ -80,3 +80,9 @@ class OutputDeviceManager(SignalEmitter):
 
         self._plugins[name].stop()
         del self._plugins[name]
+
+    def getOutputDevicePlugin(self, name):
+        if name not in self._plugins:
+            return None
+
+        return self._plugins[name]
