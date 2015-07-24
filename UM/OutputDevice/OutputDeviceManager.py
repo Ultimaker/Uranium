@@ -17,6 +17,12 @@ class OutputDeviceManager(SignalEmitter):
 
         PluginRegistry.addType("output_device", self.addOutputDevicePlugin)
 
+    writeStarted = Signal()
+    writeProgress = Signal()
+    writeFinished = Signal()
+    writeError = Signal()
+    writeSuccess = Signal()
+
     def getOutputDevices(self):
         return self._output_devices.values()
 
@@ -37,13 +43,24 @@ class OutputDeviceManager(SignalEmitter):
             return
 
         self._output_devices[device.getId()] = device
+        device.writeStarted.connect(self.writeStarted)
+        device.writeProgress.connect(self.writeProgress)
+        device.writeFinished.connect(self.writeFinished)
+        device.writeError.connect(self.writeError)
+        device.writeSuccess.connect(self.writeSuccess)
         self.outputDevicesChanged.emit()
 
     def removeOutputDevice(self, name):
         if name not in self._output_devices:
             return
 
+        device = self._output_devices[name]
         del self._output_devices[name]
+        device.writeStarted.disconnect(self.writeStarted)
+        device.writeProgress.disconnect(self.writeProgress)
+        device.writeFinished.disconnect(self.writeFinished)
+        device.writeError.disconnect(self.writeError)
+        device.writeSuccess.disconnect(self.writeSuccess)
         self.outputDevicesChanged.emit()
 
     def getDefaultOutputDevice(self):
