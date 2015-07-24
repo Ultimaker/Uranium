@@ -46,10 +46,8 @@ class AngledCornerRectangle(QQuickItem):
     def updatePaintNode(self, paint_node, update_data):
         if PYQT_VERSION < 0x050500:
             self._node = QSGGeometryNode()
-            paint_node = self._node
 
-            attribs = QSGGeometry.defaultAttributes_Point2D()
-            self._geometry = QSGGeometry(attribs, 6, 12)
+            self._geometry = QSGGeometry(QSGGeometry.defaultAttributes_Point2D(), 6, 12)
             self._geometry.setDrawingMode(0x0004)
             self._geometry.vertexDataAsPoint2D()[0].set(self._corner_size, 0)
             self._geometry.vertexDataAsPoint2D()[1].set(0, self._corner_size)
@@ -80,6 +78,8 @@ class AngledCornerRectangle(QQuickItem):
             self._material.setColor(self._color)
 
             self._node.setMaterial(self._material)
+
+            return self._node
         else:
             if paint_node is None:
                 paint_node = QSGSimpleRectNode()
@@ -87,4 +87,4 @@ class AngledCornerRectangle(QQuickItem):
             paint_node.setRect(0, 0, self.width(), self.height())
             paint_node.setColor(self._color)
 
-        return paint_node
+            return paint_node
