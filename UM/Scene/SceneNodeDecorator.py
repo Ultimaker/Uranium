@@ -4,3 +4,7 @@
 class SceneNodeDecorator():
     def __init__(self):
         super().__init__()
+        self._node = None
+        
+    def setNode(self, node):
+        self._node = node

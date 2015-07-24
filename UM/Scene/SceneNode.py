@@ -69,6 +69,7 @@ class SceneNode(SignalEmitter):
         return self._bounding_box_mesh
     
     def addDecorator(self, decorator):
+        decorator.setNode(self)
         self._decorators.append(decorator)
     
     def _onParentChanged(self, node):
