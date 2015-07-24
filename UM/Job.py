@@ -25,6 +25,7 @@ class Job(SignalEmitter):
         self._result = None
         self._description = kwargs.get("description", "")
         self._visible = kwargs.get("visible", False)
+        self._error = None
 
     ##  Get the description for this job.
     def getDescription(self):
@@ -52,6 +53,9 @@ class Job(SignalEmitter):
     def setResult(self, result):
         self._result = result
 
+    def setError(self, error):
+        self._error = error
+
     ##  Start the job.
     #
     #   This will put the Job into the JobQueue to be processed whenever a thread is available.
@@ -78,6 +82,12 @@ class Job(SignalEmitter):
     #   \return \type{bool}
     def isFinished(self):
         return self._finished
+
+    def hasError(self):
+        return self._error is not None
+
+    def getError(self):
+        return self._error
 
     ##  Emitted when the job has finished processing.
     #
