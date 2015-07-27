@@ -145,6 +145,12 @@ class SceneNode(SignalEmitter):
                 except Exception as e:
                     return None
     
+    def hasDecoration(self, function):
+        for decorator in self._decorators:
+            if hasattr(decorator, function):
+                return True
+        return False
+    
     def getName(self):
         return self._name
     
