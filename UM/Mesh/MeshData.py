@@ -38,6 +38,8 @@ class MeshData(SignalEmitter):
         self._face_count = len(self._indices) if self._indices is not None else 0
         self._type = MeshType.faces
         self._file_name = None
+        # original center position
+        self._center_position = None 
         self.dataChanged.connect(self._resetVertexBuffer)
         self.dataChanged.connect(self._resetIndexBuffer)
     
@@ -48,6 +50,12 @@ class MeshData(SignalEmitter):
             delattr(self, indexBufferProperty)
         except:
             pass
+    
+    def setCenterPosition(self, position):
+        self._center_position = position
+    
+    def getCenterPosition(self):
+        return self._center_position
     
     def _resetVertexBuffer(self):
         try:

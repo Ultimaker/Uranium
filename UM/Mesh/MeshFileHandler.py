@@ -34,8 +34,9 @@ class MeshFileHandler(object):
                         # Center the mesh
                         extents = result.getExtents()
                         m = Matrix()
-                        m.setByTranslation(-extents.center)
+                        m.setByTranslation(-extents.center)                        
                         result = result.getTransformed(m)
+                        result.setCenterPosition(extents.center)
 
                     result.setFileName(file_name)
                     return result
