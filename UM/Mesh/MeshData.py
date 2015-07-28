@@ -9,6 +9,8 @@ from UM.Signal import Signal, SignalEmitter
 import copy
 import numpy
 import numpy.linalg
+numpy.seterr(all="ignore")
+
 from enum import Enum
 vertexBufferProperty = "__qtgl2_vertex_buffer"
 indexBufferProperty = "__qtgl2_index_buffer"
