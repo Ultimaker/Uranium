@@ -1,12 +1,17 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
+import threading
+import time
+
 from UM.Signal import Signal
 from UM.Message import Message
 from UM.OutputDevice.OutputDevicePlugin import OutputDevicePlugin
 
-import threading
-import time
+from . import RemovableDriveOutputDevice
+
+from UM.i18n import i18nCatalog
+catalog = i18nCatalog("uranium")
 
 class RemovableDrivePlugin(OutputDevicePlugin):
     def __init__(self):
@@ -31,7 +36,16 @@ class RemovableDrivePlugin(OutputDevicePlugin):
     def checkRemovableDrives(self):
         raise NotImplementedError()
 
-    def createOutputDevice(self, key, value):
+    def ejectDevice(self, device):
+        result = self.performEjectDevice(device)
+        if result:
+            message = Message(catalog.i18n("Ejected {0}. You can now safely remove the drive.").format(device.getName()))
+            message.show()
+        else:
+            message = Message(catalog.i18n("Failed to eject {0}. Maybe it is still in use?").format(device.getName()))
+            message.show()
+
+    def performEjectDevice(self, device):
         raise NotImplementedError()
 
     def _updateThread(self):
@@ -44,12 +58,12 @@ class RemovableDrivePlugin(OutputDevicePlugin):
         # First, find and add all new or changed keys
         for key, value in drives.items():
             if key not in self._drives:
-                self.getOutputDeviceManager().addOutputDevice(self.createOutputDevice(key, value))
+                self.getOutputDeviceManager().addOutputDevice(RemovableDriveOutputDevice.RemovableDriveOutputDevice(key, value))
                 continue
 
             if self._drives[key] != value:
                 self.getOutputDeviceManager().removeOutputDevice(key)
-                self.getOutputDeviceManager().addOutputDevice(self.createOutputDevice(key, value))
+                self.getOutputDeviceManager().addOutputDevice(RemovableDriveOutputDevice.RemovableDriveOutputDevice(key, value))
 
         # Then check for keys that have been removed
         for key in self._drives.keys():
