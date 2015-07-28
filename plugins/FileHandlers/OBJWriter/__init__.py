@@ -14,7 +14,8 @@ def getMetaData():
             "name": "Wavefront OBJ Writer",
             "author": "Ultimaker",
             "version": "1.0",
-            "description": i18n_catalog.i18nc("OBJ Writer plugin description", "Makes it possbile to write Wavefront OBJ files.")
+            "description": i18n_catalog.i18nc("OBJ Writer plugin description", "Makes it possbile to write Wavefront OBJ files."),
+            "api": 2
         },
         "mesh_writer": {
             "output": [{
