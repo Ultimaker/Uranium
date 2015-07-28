@@ -44,47 +44,45 @@ class AngledCornerRectangle(QQuickItem):
         return self._color
 
     def updatePaintNode(self, paint_node, update_data):
-        if PYQT_VERSION < 0x050500:
-            self._node = QSGGeometryNode()
+        if paint_node is None:
+            paint_node = QSGGeometryNode()
 
-            self._geometry = QSGGeometry(QSGGeometry.defaultAttributes_Point2D(), 6, 12)
-            self._geometry.setDrawingMode(0x0004)
-            self._geometry.vertexDataAsPoint2D()[0].set(self._corner_size, 0)
-            self._geometry.vertexDataAsPoint2D()[1].set(0, self._corner_size)
-            self._geometry.vertexDataAsPoint2D()[2].set(0, self.height())
-            self._geometry.vertexDataAsPoint2D()[3].set(self.width() - self._corner_size, self.height())
-            self._geometry.vertexDataAsPoint2D()[4].set(self.width(), self.height() - self._corner_size)
-            self._geometry.vertexDataAsPoint2D()[5].set(self.width(), 0)
+        geometry = QSGGeometry(QSGGeometry.defaultAttributes_Point2D(), 6, 12)
+        geometry.setDrawingMode(QSGGeometry.GL_TRIANGLES)
+        geometry.vertexDataAsPoint2D()[0].set(self._corner_size, 0)
+        geometry.vertexDataAsPoint2D()[1].set(0, self._corner_size)
+        geometry.vertexDataAsPoint2D()[2].set(0, self.height())
+        geometry.vertexDataAsPoint2D()[3].set(self.width() - self._corner_size, self.height())
+        geometry.vertexDataAsPoint2D()[4].set(self.width(), self.height() - self._corner_size)
+        geometry.vertexDataAsPoint2D()[5].set(self.width(), 0)
 
-            self._geometry.indexDataAsUShort()[0] = 0
-            self._geometry.indexDataAsUShort()[1] = 1
-            self._geometry.indexDataAsUShort()[2] = 2
+        geometry.indexDataAsUShort()[0] = 0
+        geometry.indexDataAsUShort()[1] = 1
+        geometry.indexDataAsUShort()[2] = 2
 
-            self._geometry.indexDataAsUShort()[3] = 0
-            self._geometry.indexDataAsUShort()[4] = 2
-            self._geometry.indexDataAsUShort()[5] = 3
+        geometry.indexDataAsUShort()[3] = 0
+        geometry.indexDataAsUShort()[4] = 2
+        geometry.indexDataAsUShort()[5] = 3
 
-            self._geometry.indexDataAsUShort()[6] = 0
-            self._geometry.indexDataAsUShort()[7] = 3
-            self._geometry.indexDataAsUShort()[8] = 4
+        geometry.indexDataAsUShort()[6] = 0
+        geometry.indexDataAsUShort()[7] = 3
+        geometry.indexDataAsUShort()[8] = 4
 
-            self._geometry.indexDataAsUShort()[9] = 0
-            self._geometry.indexDataAsUShort()[10] = 4
-            self._geometry.indexDataAsUShort()[11] = 5
+        geometry.indexDataAsUShort()[9] = 0
+        geometry.indexDataAsUShort()[10] = 4
+        geometry.indexDataAsUShort()[11] = 5
 
-            self._node.setGeometry(self._geometry)
+        paint_node.setGeometry(geometry)
 
-            self._material = QSGFlatColorMaterial()
-            self._material.setColor(self._color)
+        material = QSGFlatColorMaterial()
+        material.setColor(self._color)
 
-            self._node.setMaterial(self._material)
+        paint_node.setMaterial(material)
 
-            return self._node
-        else:
-            if paint_node is None:
-                paint_node = QSGSimpleRectNode()
+        # For PyQt 5.4, I need to store these otherwise they will be garbage collected before rendering
+        # and never show up, but otherwise never crash.
+        self._paint_node = paint_node
+        self._geometry = geometry
+        self._material = material
 
-            paint_node.setRect(0, 0, self.width(), self.height())
-            paint_node.setColor(self._color)
-
-            return paint_node
+        return paint_node
