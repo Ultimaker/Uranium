@@ -16,18 +16,23 @@ import json
 class AvailableMachinesModel(ListModel):
     NameRole = Qt.UserRole + 1
     TypeRole = Qt.UserRole + 2
+    VariationsRole = Qt.UserRole + 3
 
     def __init__(self, parent = None):
         super().__init__(parent)
 
         self.addRoleName(self.NameRole, "name")
         self.addRoleName(self.TypeRole, "type")
+        self.addRoleName(self.VariationsRole, "variations")
+        
+        # Groups all machines that have the same id
+        self._machines_by_id = {}
 
         self._updateModel()
 
-    @pyqtSlot(int, str)
-    def createMachine(self, index, name):
-        type = self.getItem(index)["type"]
+    @pyqtSlot(int, int,str)
+    def createMachine(self, index, variation_index, name):
+        type = self.getItem(index)["variations"].getItem(variation_index)["type"]
 
         machine = MachineSettings()
         machine.loadSettingsFromFile(Resources.getPath(Resources.SettingsLocation, type))
@@ -36,6 +41,15 @@ class AvailableMachinesModel(ListModel):
         app = Application.getInstance()
         index = app.addMachine(machine)
         app.setActiveMachine(app.getMachines()[index])
+
+    def _createMachineVariationsModel(self, variations):
+        model = ListModel()
+        model.addRoleName(self.NameRole,"name")
+        model.addRoleName(self.TypeRole, "type")
+        for name, json_file in variations:
+           # print(name, " " ,json_file)
+            model.appendItem({"name": name, "type":json_file})
+        return model
 
     def _updateModel(self):
         dirs = Resources.getLocation(Resources.SettingsLocation)
@@ -67,7 +81,18 @@ class AvailableMachinesModel(ListModel):
                 if appname in data:
                     if not data[appname].get("visible", True):
                         continue
+                
+                manufacturer = "other"
+                if "manufacturer" in data:
+                    manufacturer = data["manufacturer"]    
+                if data["id"] in self._machines_by_id:
+                    self._machines_by_id[data["id"]].append((data["name"],file))
+                else:
+                    self._machines_by_id[data["id"]] = [(data["name"],file)]
+                #self.appendItem({ "name": data["name"], "type": file })
 
-                self.appendItem({ "name": data["name"], "type": file })
-
-                self.sort(lambda e: e["name"])
+                #self.sort(lambda e: e["name"])
+        for entry in self._machines_by_id:
+            self.appendItem({"name": entry, "variations": self._createMachineVariationsModel(self._machines_by_id[entry])})
+        #print(self.items)    
+        #print(self._machines_by_id)
