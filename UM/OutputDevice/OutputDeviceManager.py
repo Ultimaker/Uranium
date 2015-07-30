@@ -14,6 +14,8 @@ class OutputDeviceManager(SignalEmitter):
 
         self._output_devices = {}
         self._plugins = {}
+        self._active_device = None
+        self._active_device_override = False
 
         PluginRegistry.addType("output_device", self.addOutputDevicePlugin)
 
@@ -66,6 +68,22 @@ class OutputDeviceManager(SignalEmitter):
     def getDefaultOutputDevice(self):
         pass
 
+    activeDeviceChanged = Signal()
+    def getActiveDevice(self):
+        return self._active_device
+    def setActiveDevice(self, device_id):
+        if not device_id in self._output_devices:
+            return
+
+        if not self._active_device or self._active_device.getId() != device_id:
+            self._active_device = self.getOutputDevice(device_id)
+            self._active_device_override = True
+            self.activeDeviceChanged.emit()
+
+    def resetActiveDevice(self):
+        self._active_device = self._findHighestPriorityDevice()
+        self._active_device_override = False
+        self.activeDeviceChanged.emit()
     def addOutputDevicePlugin(self, plugin):
         if plugin.getPluginId() in self._plugins:
             Logger.log("i", "Output Device Plugin %s was already added", plugin.getPluginId())
@@ -86,3 +104,10 @@ class OutputDeviceManager(SignalEmitter):
             return None
 
         return self._plugins[name]
+    def _findHighestPriorityDevice(self):
+        device = None
+        for key, value in self._output_devices.items():
+            if not device or value.getPriority() > device.getPriority():
+                device = value
+
+        return device
