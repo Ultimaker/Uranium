@@ -40,14 +40,14 @@ class LocalFileOutputDevice(OutputDevice):
     def __init__(self):
         super().__init__("local_file")
 
-        self.setName(catalog.i18nc("Local File Output Device Name", "Local File"))
-        self.setShortDescription(catalog.i18n("Save to File"))
-        self.setDescription(catalog.i18n("Save to File"))
+        self.setName(catalog.i18nc("@item:inmenu", "Local File"))
+        self.setShortDescription(catalog.i18nc("@action:button", "Save to File"))
+        self.setDescription(catalog.i18nc("@info:tooltip", "Save to File"))
         self.setIconName("save")
 
     def requestWrite(self, node):
         dialog = QFileDialog()
-        dialog.setWindowTitle(catalog.i18n("Save to File"))
+        dialog.setWindowTitle(catalog.i18nc("@title:window", "Save to File"))
         dialog.setFileMode(QFileDialog.AnyFile)
         dialog.setAcceptMode(QFileDialog.AcceptSave)
         # Ensure platform never ask for overwrite confirmation since we do this ourselves
@@ -88,7 +88,7 @@ class LocalFileOutputDevice(OutputDevice):
         file_name = dialog.selectedFiles()[0]
 
         if os.path.exists(file_name):
-            result = QMessageBox.question(None, catalog.i18n("File Already Exists"), catalog.i18n("The file {0} already exists. Are you sure you want to overwrite it?").format(file_name))
+            result = QMessageBox.question(None, catalog.i18nc("@title:window", "File Already Exists"), catalog.i18nc("@label", "The file {0} already exists. Are you sure you want to overwrite it?").format(file_name))
             if result == QMessageBox.No:
                 raise OutputDeviceError.UserCancelledError()
 
@@ -102,24 +102,21 @@ class LocalFileOutputDevice(OutputDevice):
             elif mode == MeshWriter.OutputMode.BinaryMode:
                 Logger.log("d", "Writing to Local File %s in binary mode", file_name)
                 stream = open(file_name, "wb")
-            else:
-                Logger.log("e", "Unknown file output mode %s", selected_type["mode"])
-                raise OutputDeviceError.InvalidModeError()
 
             job = WriteMeshJob(mesh_writer, stream, node, mode)
             job.setFileName(file_name)
             job.progress.connect(self._onJobProgress)
             job.finished.connect(self._onWriteJobFinished)
 
-            message = Message(catalog.i18nc("", "Saving to {0}").format(file_name), 0, False, -1)
+            message = Message(catalog.i18nc("@info:status", "Saving to <filename>{0}</filename>").format(file_name), 0, False, -1)
             message.show()
 
             job._message = message
             job.start()
         except PermissionError as e:
-            raise OutputDeviceError.PermissionDeniedError() from e
+            raise OutputDeviceError.PermissionDeniedError(catalog.i18nc("@info:status", "Permission denied when trying to save <filename>{0}</filename>").format(file_name)) from e
         except OSError as e:
-            raise OutputDeviceError.WriteRequestFailedError() from e
+            raise OutputDeviceError.WriteRequestFailedError(catalog.i18nc("@info:status", "Could not save to <filename>{0}</filename>: <message>{1}</message>").format()) from e
 
     def _onJobProgress(self, job, progress):
         if hasattr(job, "_message"):
@@ -134,13 +131,13 @@ class LocalFileOutputDevice(OutputDevice):
         self.writeFinished.emit(self)
         if job.getResult():
             self.writeSuccess.emit(self)
-            message = Message(catalog.i18nc("", "Saved to {0}").format(job.getFileName()))
-            message.addAction("open_folder", catalog.i18nc("", "Open Folder"), "open-folder", catalog.i18nc("","Open the folder containing the file"))
+            message = Message(catalog.i18nc("@info:status", "Saved to <filename>{0}</filename>").format(job.getFileName()))
+            message.addAction("open_folder", catalog.i18nc("@action:button", "Open Folder"), "open-folder", catalog.i18nc("@info:tooltip","Open the folder containing the file"))
             message._folder = os.path.dirname(job.getFileName())
             message.actionTriggered.connect(self._onMessageActionTriggered)
             message.show()
         else:
-            message = Message(catalog.i18nc("", "Could not save to {0}: {1}").format(job.getFileName(), str(job.getError())))
+            message = Message(catalog.i18nc("@info:status", "Could not save to <filename>{0}</filename>: <message>{1}</message>").format(job.getFileName(), str(job.getError())))
             message.show()
             self.writeError.emit(self)
         job.getStream().close()
