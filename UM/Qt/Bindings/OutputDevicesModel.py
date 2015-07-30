@@ -55,14 +55,8 @@ class OutputDevicesModel(ListModel):
             device.requestWrite(Application.getInstance().getController().getScene().getRoot())
         except OutputDeviceError.UserCancelledError:
             pass
-        except OutputDeviceError.PermissionDeniedError as e:
-            message = Message("Could not write to {0}: Permission Denied".format(device.getName()))
-            message.show()
-        except OutputDeviceError.DeviceBusyError:
-            message = Message("Could not write to {0}: Device is Busy".format(device.getName()))
-            message.show()
         except OutputDeviceError.WriteRequestFailedError as e:
-            message = Message("Could not write to {0}: {1}".format(device.getName(), str(e)))
+            message = Message(str(e))
             message.show()
 
     def _update(self):
