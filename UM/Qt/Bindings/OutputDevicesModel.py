@@ -20,7 +20,9 @@ class OutputDevicesModel(ListModel):
     def __init__(self, parent = None):
         super().__init__(parent)
 
-        self._current_device = None
+        self._device_manager = Application.getInstance().getOutputDeviceManager()
+
+        self._active_device = None
 
         self.addRoleName(self.IdRole, "id")
         self.addRoleName(self.NameRole, "name")
@@ -29,23 +31,23 @@ class OutputDevicesModel(ListModel):
         self.addRoleName(self.IconNameRole, "icon_name")
         self.addRoleName(self.PriorityRole, "priority")
 
-        Application.getInstance().getOutputDeviceManager().outputDevicesChanged.connect(self._update)
+        self._device_manager.outputDevicesChanged.connect(self._update)
+        self._device_manager.activeDeviceChanged.connect(self._onActiveDeviceChanged)
         self._update()
+        self._onActiveDeviceChanged()
 
-    currentDeviceChanged = pyqtSignal()
-    @pyqtProperty("QVariantMap", notify = currentDeviceChanged)
-    def currentDevice(self):
-        return self._current_device
+    activeDeviceChanged = pyqtSignal()
+    @pyqtProperty("QVariantMap", notify = activeDeviceChanged)
+    def activeDevice(self):
+        return self._active_device
 
     @pyqtSlot(str)
-    def setCurrentDevice(self, id):
-        if not self._current_device or self._current_device["id"] != id:
-            self._current_device = self.getItem(self.find("id", id))
-            self.currentDeviceChanged.emit()
+    def setActiveDevice(self, device_id):
+        self._device_manager.setActiveDevice(device_id)
 
     @pyqtSlot(str)
     def requestWriteToDevice(self, device_id):
-        device = Application.getInstance().getOutputDeviceManager().getOutputDevice(device_id)
+        device = self._device_manager.getOutputDevice(device_id)
         if not device:
             return
 
@@ -66,7 +68,7 @@ class OutputDevicesModel(ListModel):
     def _update(self):
         self.clear()
 
-        devices = Application.getInstance().getOutputDeviceManager().getOutputDevices()
+        devices = self._device_manager.getOutputDevices()
         for device in devices:
             self.appendItem({
                 "id": device.getId(),
@@ -79,5 +81,7 @@ class OutputDevicesModel(ListModel):
 
         self.sort(lambda i: -i["priority"])
 
-        if self._current_device == None:
-            self._current_device = self.getItem(0)
+    def _onActiveDeviceChanged(self):
+        device = self._device_manager.getActiveDevice()
+        self._active_device = self.getItem(self.find("id", device.getId()))
+        self.activeDeviceChanged.emit()
