@@ -53,6 +53,12 @@ class Job(SignalEmitter):
     def setResult(self, result):
         self._result = result
 
+    ##  Set an exception that was thrown while the job was being executed.
+    #
+    #   Setting error to something else than None implies the Job failed
+    #   to execute properly.
+    #
+    #   \param error \type{Exception} The exception to set.
     def setError(self, error):
         self._error = error
 
@@ -83,9 +89,15 @@ class Job(SignalEmitter):
     def isFinished(self):
         return self._finished
 
+    ##  Check whether the Job has encountered an error during execution.
+    #
+    #   \return \type{bool} True if an error was set, False if not.
     def hasError(self):
         return self._error is not None
 
+    ##  Get the error that was encountered during execution.
+    #
+    #   \return \type{Exception} The error encountered during execution or None if there was no error.
     def getError(self):
         return self._error
 
