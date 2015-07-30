@@ -8,6 +8,7 @@ from UM.Qt.ListModel import ListModel
 from UM.OutputDevice import OutputDeviceError
 from UM.Logger import Logger
 from UM.Message import Message
+from UM.Scene.Selection import Selection
 
 ##  A list model providing a list of all registered OutputDevice instances.
 #
@@ -60,17 +61,14 @@ class OutputDevicesModel(ListModel):
 
     @pyqtSlot(str)
     def requestWriteToDevice(self, device_id):
-        device = self._device_manager.getOutputDevice(device_id)
-        if not device:
+        self._writeToDevice(Application.getInstance().getController().getScene().getRoot(), device_id)
+
+    @pyqtSlot(str)
+    def requestWriteSelectionToDevice(self, device_id):
+        if not Selection.hasSelection():
             return
 
-        try:
-            device.requestWrite(Application.getInstance().getController().getScene().getRoot())
-        except OutputDeviceError.UserCancelledError:
-            pass
-        except OutputDeviceError.WriteRequestFailedError as e:
-            message = Message(str(e))
-            message.show()
+        self._writeToDevice(Selection.getSelectedObject(0), device_id)
 
     def _update(self):
         self.clear()
@@ -92,3 +90,16 @@ class OutputDevicesModel(ListModel):
         device = self._device_manager.getActiveDevice()
         self._active_device = self.getItem(self.find("id", device.getId()))
         self.activeDeviceChanged.emit()
+
+    def _writeToDevice(self, node, device_id):
+        device = self._device_manager.getOutputDevice(device_id)
+        if not device:
+            return
+
+        try:
+            device.requestWrite(node)
+        except OutputDeviceError.UserCancelledError:
+            pass
+        except OutputDeviceError.WriteRequestFailedError as e:
+            message = Message(str(e))
+            message.show()
