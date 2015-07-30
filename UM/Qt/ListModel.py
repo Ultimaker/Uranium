@@ -1,7 +1,7 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-from PyQt5.QtCore import QObject, QAbstractListModel, QVariant, QModelIndex, pyqtSlot, pyqtProperty, QByteArray
+from PyQt5.QtCore import QObject, QAbstractListModel, QVariant, QModelIndex, pyqtSlot, pyqtProperty, QByteArray, pyqtSignal
 
 ##  Convenience base class for models of a list of items.
 #
@@ -14,6 +14,14 @@ class ListModel(QAbstractListModel):
         super().__init__(parent)
         self._items = []
         self._role_names = {}
+
+        self.rowsInserted.connect(self.countChanged)
+        self.rowsRemoved.connect(self.countChanged)
+
+    countChanged = pyqtSignal()
+    @pyqtProperty(int, notify = countChanged)
+    def count(self):
+        return self.rowCount()
 
     ##  Reimplemented from QAbstractListModel
     @pyqtSlot(result=int)
