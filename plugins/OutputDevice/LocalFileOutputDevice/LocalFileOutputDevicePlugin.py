@@ -78,7 +78,7 @@ class LocalFileOutputDevice(OutputDevice):
         dialog.restoreState(Preferences.getInstance().getValue("local_file/dialog_state").encode())
 
         if not dialog.exec_():
-            raise OutputDeviceError.UserCancelledError()
+            raise OutputDeviceError.UserCanceledError()
 
         Preferences.getInstance().setValue("local_file/dialog_state", str(dialog.saveState()))
 
@@ -90,7 +90,7 @@ class LocalFileOutputDevice(OutputDevice):
         if os.path.exists(file_name):
             result = QMessageBox.question(None, catalog.i18nc("@title:window", "File Already Exists"), catalog.i18nc("@label", "The file {0} already exists. Are you sure you want to overwrite it?").format(file_name))
             if result == QMessageBox.No:
-                raise OutputDeviceError.UserCancelledError()
+                raise OutputDeviceError.UserCanceledError()
 
         self.writeStarted.emit(self)
         mesh_writer = Application.getInstance().getMeshFileHandler().getWriter(selected_type["id"])
