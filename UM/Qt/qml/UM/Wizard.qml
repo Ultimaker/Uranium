@@ -6,21 +6,27 @@ import QtQuick.Controls 1.1
 import QtQuick.Window 2.1
 import QtQuick.Controls.Styles 1.1
 import QtQuick.Layouts 1.1
+import QtQml 2.2
 
 import UM 1.0 as UM
 
 UM.Dialog {
-    id: base
-
-    property string wizardName
-    property bool showProgress
+    id: rootElement
     property int currentPage: 0
-    property alias nextButton: nextButton //this property alias is needed so the loaded pages can access the next-button -> mainly the text and behaviour of the next/finish button
+    property string file
+    property bool firstRun
+    signal finalClicked()
+
+    function getChosenModel(){
+        for (var i = 0; i < UM.Models.addMachinesModel.rowCount(); i++) {
+            if (UM.Models.addMachinesModel.getItem(i).file == rootElement.file){
+                progressList.model = UM.Models.addMachinesModel.getItem(i).pages
+            }
+        }
+    }
 
     minimumWidth: 600;
     minimumHeight: 500;
-    title: wizardModel.title
-
 
     RowLayout {
         anchors.fill: parent;
@@ -28,48 +34,19 @@ UM.Dialog {
 
         Rectangle {
             id: wizardProgress
-            visible: base.showProgress
+            visible: progressList.model.rowCount() > 1 ? true : false
             Layout.fillHeight: true;
             Layout.preferredWidth: Screen.devicePixelRatio * 150;
             color: palette.light
 
-            ListModel {
-                id: wizardModel
-
-                //: Add Ultimaker Original dialog title
-                property string title: "Add Ultimaker Original"
-
-                ListElement {
-                    title: "Add new Printer"
-                    page: "AddMachine"
-                }
-                ListElement {
-                    title: "Select Upgrades"
-                    page: "AddOriginalPage1"
-                }
-                ListElement {
-                    title: "Upgrade Firmware"
-                    page: "AddOriginalPage2"
-                }
-                ListElement {
-                    title: "Ultimaker Checkup"
-                    page: "AddOriginalPage3"
-                }
-                ListElement {
-                    title: "Bedleveling"
-                    page: "AddOriginalPage4"
-                }
-            }
-
             Component {
                 id: wizardDelegate
                 Item {
-                    id: test
                     height: childrenRect.height
                     Button {
                         id: progressButton
+                        width: wizardProgress.width
                         text: title
-                        x: (wizardProgress.width-progressButton.width)/2
                         style: ButtonStyle {
                             background: Rectangle {
                                 border.width: 0
@@ -77,18 +54,18 @@ UM.Dialog {
                             }
                             label: Text {
                                 id: progressText
+                                horizontalAlignment: Text.AlignHCenter
+                                wrapMode: Text.Wrap
                                 renderType: Text.NativeRendering
                                 text: control.text
-                                font.underline: title == wizardModel.get(base.currentPage).title || progressButton.hovered ? true : false
-                                //font.weight: title == wizardModel.get(base.currentPage).title ? Font.DemiBold : Font.Normal
-                                //color: title == wizardModel.get(base.currentPage).title ? palette.text : UM.Theme.colors.button
-                                color: title == wizardModel.get(base.currentPage).title ? palette.text : palette.mid
+                                font.underline: title == progressList.model.getItem(rootElement.currentPage).title || progressButton.hovered ? true : false
+                                color: title == progressList.model.getItem(rootElement.currentPage).title ? palette.text : palette.mid
                             }
                         }
                         onClicked: {
-                            for (var i = 0; i < wizardModel.count; i++) {
-                                if (wizardModel.get(i).title == title){
-                                   base.currentPage = i
+                            for (var i = 0; i < progressList.model.rowCount(); i++) {
+                                if (progressList.model.getItem(i).title == title){
+                                   rootElement.currentPage = i
                                    break
                                 }
                             }
@@ -99,7 +76,7 @@ UM.Dialog {
                         anchors.top: progressButton.bottom
                         x: (wizardProgress.width-progressArrow.width)/2
                         text: "▼"
-                        visible: title != wizardModel.get(wizardModel.count - 1).title ? true : false
+                        visible: title != progressList.model.getItem(progressList.model.rowCount() - 1).title ? true : false
                         color: palette.mid
                     }
                 }
@@ -108,7 +85,7 @@ UM.Dialog {
             ListView {
                 id: progressList
                 property var index: 0
-                model: UM.Models.wizardModel
+                model: getChosenModel()
                 keyNavigationWraps: true
                 delegate: wizardDelegate
                 anchors.fill: parent
@@ -123,14 +100,31 @@ UM.Dialog {
             x: wizardProgress.width + UM.Theme.sizes.default_margin.width
 
             function getPageSource(index){
-                if (base.wizardName == ''){
-                    return "WizardPages/AddMachine.qml"
+                var page = progressList.model.getItem(index).page + '.qml'
+                return UM.Resources.getPath(UM.Resources.WizardPagesLocation, page)
+            }
+
+            function getPageSource2(index){
+                if (wizardModel.get(index) != undefined){
+                    var page = wizardModel.get(index).page
+                    return UM.Resources.getPath(UM.Resources.WizardPagesLocation, page)
                 }
-                else {
-                    return "WizardPages/" + wizardModel.get(index).page + ".qml"
+                else{
+                    return ""
                 }
             }
-            source: pageLoader.getPageSource(currentPage)
+            source: getPageSource(rootElement.currentPage)
+            onStatusChanged: pageLoader.item.title = progressList.model.getItem(rootElement.currentPage).title
+        }
+
+        Connections {
+            target: pageLoader.item
+            ignoreUnknownSignals: true
+            onOpenFile: {
+                rootElement.file = fileName
+                getChosenModel()
+            }
+            onCloseWizard: rootElement.visible = false
         }
     }
 
@@ -139,41 +133,41 @@ UM.Dialog {
             id: backButton
             //: Add Printer wizard Button: 'Back'
             text: qsTr("< Back");
-            visible: base.currentPage <= 0 ? false : true
+            enabled: rootElement.currentPage <= 0 ? false : true
+            visible: rootElement.firstRun ? false : true
             onClicked: {
-                if (base.currentPage > 0){
-                    base.currentPage = base.currentPage -1
+                if (rootElement.currentPage > 0){
+                    rootElement.currentPage -= 1
                 }
             }
         },
         Button {
             id: nextButton
-            //: Add Printer wizard button: 'Next'
 
-            function nextButtonText(){
-                if (base.currentPage < wizardModel.count - 1){
+            text: {
+                if (rootElement.currentPage < progressList.model.rowCount() - 1){
                     //: Add Printer wizard button: 'Next'
                     return qsTr("Next >")
-                } else if (base.currentPage == wizardModel.count -1){
+                } else if (rootElement.currentPage == progressList.model.rowCount() - 1){
                     //: Add Printer wizard button: 'Finish'
                     return qsTr("Finish ✓")
                 }
             }
 
-            text: nextButtonText()
             onClicked: {
-                if (base.currentPage < wizardModel.count - 1){
-                    base.currentPage = base.currentPage + 1
-                }else if (base.currentPage == wizardModel.count - 1){
-                    base.visible = false
+                if (rootElement.currentPage < progressList.model.rowCount() - 1){
+                    rootElement.currentPage += 1
+                }else if (rootElement.currentPage == progressList.model.rowCount() - 1){
+                    rootElement.finalClicked()
                 }
             }
         },
         Button {
             id: cancelButton
             //: Add Printer wizard button: "Cancel"
-            text: qsTr("Cancel X");
-            onClicked: base.visible = false;
+            text: qsTr("Cancel X")
+            onClicked: rootElement.visible = false
+            visible: rootElement.firstRun ? false : true
         }
     ]
 }
