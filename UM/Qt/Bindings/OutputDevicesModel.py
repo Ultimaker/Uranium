@@ -9,6 +9,19 @@ from UM.OutputDevice import OutputDeviceError
 from UM.Logger import Logger
 from UM.Message import Message
 
+##  A list model providing a list of all registered OutputDevice instances.
+#
+#   This list model wraps OutputDeviceManager's list of OutputDevice instances.
+#   Additionally it provides a function to set OutputDeviceManager's active device.
+#
+#   Exposes the following roles:
+#   * id - The device ID
+#   * name - The human-readable name of the device
+#   * short_description - The short description of the device
+#   * description - The full description of the device
+#   * icon_name - The name of the icon used to identify the device
+#   * priority - The device priority
+#
 class OutputDevicesModel(ListModel):
     IdRole = Qt.UserRole + 1
     NameRole = Qt.UserRole + 2
