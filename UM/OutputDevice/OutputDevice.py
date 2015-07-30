@@ -12,7 +12,6 @@ class OutputDevice(SignalEmitter):
         self._short_description = "Unknown Device"
         self._description = "Do something with an unknown device"
         self._icon_name = "generic_device"
-        self._supported_mime_types = []
         self._priority = 0
 
     metaDataChanged = Signal()
@@ -50,14 +49,6 @@ class OutputDevice(SignalEmitter):
     def setIconName(self, name):
         if name != self._icon_name:
             self._icon_name = name
-            self.metaDataChanged.emit(self)
-
-    def getSupportedMimeTypes(self):
-        return self._supported_mime_types
-
-    def setSupportedMimeTypes(self, types):
-        if types != self._supported_mime_types:
-            self._supported_mime_types = types
             self.metaDataChanged.emit(self)
 
     def getPriority(self):

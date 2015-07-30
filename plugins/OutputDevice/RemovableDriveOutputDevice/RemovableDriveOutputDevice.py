@@ -20,7 +20,6 @@ class RemovableDriveOutputDevice(OutputDevice):
         self.setShortDescription(catalog.i18nc("", "Save to Removable Drive"))
         self.setDescription(catalog.i18nc("", "Save to Removable Drive {0}").format(device_name))
         self.setIconName("save_sd")
-        self.setSupportedMimeTypes(["text/x-gcode"])
         self.setPriority(1)
 
     def requestWrite(self, node):
