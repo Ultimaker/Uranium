@@ -3,7 +3,6 @@
 
 from UM.InputDevice import InputDevice
 from UM.View.View import View
-from UM.Tool import Tool
 from UM.Scene.Scene import Scene
 from UM.Event import Event, MouseEvent, ToolEvent
 from UM.Math.Vector import Vector

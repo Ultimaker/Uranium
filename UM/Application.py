@@ -104,6 +104,10 @@ class Application(SignalEmitter):
         self._message_lock = threading.Lock()
         self.showMessageSignal.connect(self.showMessage)
         self.hideMessageSignal.connect(self.hideMessage)
+
+
+    ##  Emitted when the application window was closed and we need to shut down the application
+    applicationShuttingDown = Signal()
     
     showMessageSignal = Signal()
     
@@ -221,10 +225,9 @@ class Application(SignalEmitter):
 
         try:
             path = Resources.getStoragePath(Resources.SettingsLocation, urllib.parse.quote_plus(machine.getName()) + ".cfg")
+            os.remove(path)
         except FileNotFoundError:
             pass
-        else:
-            os.remove(path)
 
         self.machinesChanged.emit()
 

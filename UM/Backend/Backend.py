@@ -157,4 +157,7 @@ class Backend(PluginObject, SignalEmitter):
         self._socket.error.connect(self._onSocketError)
 
         self._socket.listen("127.0.0.1", self._port)
+        
+        if Application.getInstance().getCommandLineOption("external-backend", False):
+            Logger.log("i", "Listening for backend connections on %s", self._port)
 

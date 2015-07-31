@@ -88,7 +88,7 @@ PreferencesPage {
                 }
                 onClicked: {
                     settingCheckBox.checked = !settingCheckBox.checked;
-                    ListView.view.model.setVisibility(model.key, checked)
+                    settingsListView.model.setVisibility(model.key, checked)
                 }
             }
         }

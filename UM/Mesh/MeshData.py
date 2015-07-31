@@ -405,6 +405,9 @@ class MeshData(SignalEmitter):
     #   - fast: A boolean indicating whether or not to use a fast method of normal calculation that assumes each triangle
     #           is stored as a set of three unique vertices.
     def calculateNormals(self, **kwargs):
+        if self._vertices is None:
+            return
+
         # Numpy magic!
         # First, reset the normals
         self._normals = numpy.zeros((self._vertex_count, 3), dtype=numpy.float32)
