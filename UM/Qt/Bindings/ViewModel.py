@@ -18,7 +18,8 @@ class ViewModel(ListModel):
         super().__init__(parent)
         self._controller = Application.getInstance().getController()
         self._controller.viewsChanged.connect(self._onViewsChanged)
-        self._onViewsChanged()
+        self._controller.activeViewChanged.connect(self._onViewsChanged)
+        self._onViewsChanged()  
 
         self.addRoleName(self.IdRole, "id")
         self.addRoleName(self.NameRole, "name")
