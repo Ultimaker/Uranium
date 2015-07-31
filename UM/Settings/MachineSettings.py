@@ -26,6 +26,7 @@ class MachineSettings(SignalEmitter):
         self._name = "Unknown Machine",
         self._type_name = "Unknown"
         self._type_id = "unknown"
+        self._json_file = ""
         self._icon = "unknown.png",
         self._machine_settings = []   ## Settings that don't have a category are 'fixed' (eg; they can not be changed by the user, unless they change the json)
         self._i18n_catalog = None
@@ -37,6 +38,8 @@ class MachineSettings(SignalEmitter):
             data = json.load(f, object_pairs_hook=collections.OrderedDict)
 
         self._i18n_catalog = i18nCatalog(os.path.basename(file_name))
+
+        self._json_file = file_name
 
         if "id" in data:
             self._type_id = data["id"]
@@ -85,9 +88,11 @@ class MachineSettings(SignalEmitter):
     def loadValuesFromFile(self, file_name):
         config = configparser.ConfigParser()
         config.read(file_name)
-
         if not self._categories:
-            self.loadSettingsFromFile(Resources.getPath(Resources.SettingsLocation, config["General"]["type"] + ".json"))
+            try:
+                self.loadSettingsFromFile(Resources.getPath(Resources.SettingsLocation, config["General"]["settings_json_file"]))
+            except KeyError:
+                Logger.log('e' , "Linked json file from preferences not found")
 
         self._name = config.get("General", "name", fallback = "Unknown Machine")
 
@@ -112,6 +117,7 @@ class MachineSettings(SignalEmitter):
 
         config.add_section("General")
         config["General"]["type"] = self._type_id
+        config["General"]["settings_json_file"] = self._json_file
         config["General"]["name"] = self._name
         config["General"]["visibility"] = self._getVisibleSettings()
 
