@@ -98,7 +98,7 @@ class OutputDevicesModel(ListModel):
 
         try:
             device.requestWrite(node)
-        except OutputDeviceError.UserCancelledError:
+        except OutputDeviceError.UserCanceledError:
             pass
         except OutputDeviceError.WriteRequestFailedError as e:
             message = Message(str(e))
