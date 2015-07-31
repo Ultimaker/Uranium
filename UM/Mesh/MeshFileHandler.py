@@ -20,15 +20,14 @@ class MeshFileHandler(object):
 
     # Try to read the mesh_data from a file. Based on the extension in the file a correct meshreader is selected.
     # \param file_name The name of the mesh to load.
-    # \param storage_device The StorageDevice where the mesh can be found.
     # \param kwargs Keyword arguments.
     #               Possible values are:
     #               - Center: True if the model should be centered around (0,0,0), False if it should be loaded as-is. Defaults to True.
     # \returns MeshData if it was able to read the file, None otherwise.
-    def read(self, file_name, storage_device, **kwargs):
+    def read(self, file_name, **kwargs):
         try:
             for id, reader in self._mesh_readers.items():
-                result = reader.read(file_name, storage_device)
+                result = reader.read(file_name)
                 if(result is not None):
                     if kwargs.get("center", True):
                         # Center the mesh

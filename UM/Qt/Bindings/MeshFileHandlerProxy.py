@@ -61,21 +61,6 @@ class MeshFileHandlerProxy(QObject):
         job.finished.connect(self._readMeshFinished)
         job.start()
 
-
-    @pyqtSlot(QUrl)
-    def writeLocalFile(self, file):
-        if not file.isValid():
-            return
-        app = Application.getInstance()
-        for node in DepthFirstIterator(self._scene.getRoot()):
-            if (type(node) is not SceneNode and type(node) is not PointCloudNode) or not node.getMeshData():
-                continue
-
-            job = WriteMeshJob(file.toLocalFile(), node.getMeshData())
-            job.start()
-            job.finished.connect(self._onWriteJobFinished)
-            break
-
     def _readMeshFinished(self, job):
         mesh = job.getResult()
         if mesh != None:
@@ -92,17 +77,6 @@ class MeshFileHandlerProxy(QObject):
             op.push()
 
             self._scene.sceneChanged.emit(node)
-
-    def _onWriteJobFinished(self, job):
-        message = Message(i18n_catalog.i18nc("Save file completed messsage. {0} is file name", "Saved to {0}".format(job.getFileName())))
-        message.addAction("open_folder", i18n_catalog.i18nc("Open Folder message action", "Open Folder"), "open", i18n_catalog.i18n("Open the folder containing the saved file"))
-        message._file = job.getFileName()
-        message.actionTriggered.connect(self._onMessageActionTriggered)
-        message.show()
-
-    def _onMessageActionTriggered(self, message, action):
-        if action == "open_folder":
-            QDesktopServices.openUrl(QUrl.fromLocalFile(os.path.dirname(message._file)))
 
 def createMeshFileHandlerProxy(engine, script_engine):
     return MeshFileHandlerProxy()

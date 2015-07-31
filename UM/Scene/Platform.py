@@ -43,7 +43,7 @@ class Platform(SceneNode.SceneNode):
         self._settings = app.getActiveMachine()
         if self._settings:
             mesh = self._settings.getPlatformMesh()
-            self.setMeshData(app.getMeshFileHandler().read(Resources.getPath(Resources.MeshesLocation, mesh), app.getStorageDevice("LocalFileStorage"), center = False))
+            self.setMeshData(app.getMeshFileHandler().read(Resources.getPath(Resources.MeshesLocation, mesh), center = False))
             self._texture = self._settings.getPlatformTexture()
 
             if self._material and self._texture:
