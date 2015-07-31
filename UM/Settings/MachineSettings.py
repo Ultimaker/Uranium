@@ -10,6 +10,7 @@ import collections
 
 from UM.Settings.SettingsCategory import SettingsCategory
 from UM.Settings.Setting import Setting
+from UM.Settings.Profile import Profile
 from UM.Settings.Validators.ResultCodes import ResultCodes
 from UM.Signal import Signal, SignalEmitter
 from PyQt5.QtCore import QCoreApplication
@@ -29,6 +30,29 @@ class MachineSettings(SignalEmitter):
         self._icon = "unknown.png",
         self._machine_settings = []   ## Settings that don't have a category are 'fixed' (eg; they can not be changed by the user, unless they change the json)
         self._i18n_catalog = None
+        self._active_profile = None
+        
+    def _onSettingChanged(self, setting):
+        if self._active_profile: # Should be a profile if this function is connected to settingChanged
+            self._active_profile.setSettingValue(setting.getKey(),setting.getValue())
+        
+    def setActiveProfile(self, profile):
+        if self._active_profile:
+            self.settingChanged.disconnect(self._onSettingChanged)
+
+        if profile:
+            changed_settings = profile.getChangedSettings()
+            # Reset settings to default
+            for setting in self.getAllSettings():
+                self.setValue(setting.getDefaultValue())
+            
+            # Set all setting values to saved values
+            for setting_key in changed_settings:
+                setting = self.getSettingByKey(setting_key)
+                if setting:
+                    setting.setValue(changed_settings[setting_key])
+            self.settingChanged.connect(self._onSettingChanged)
+        self._active_profile = profile
 
     ##  Load settings from JSON file. Used to load tree structure & default values etc from file.
     #   \param file_name String
