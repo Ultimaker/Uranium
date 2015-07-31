@@ -17,6 +17,8 @@ import os
 #
 #   [plugins]: docs/plugins.md
 class PluginRegistry(object):
+    APIVersion = 2
+
     def __init__(self):
         super(PluginRegistry,self).__init__() # Call super to make multiple inheritence work.
         self._plugins = {}
@@ -68,7 +70,11 @@ class PluginRegistry(object):
 
         if id not in self._meta_data:
             self._populateMetaData(id)
-            
+
+        if self._meta_data[id].get("plugin", {}).get("api", 0) != self.APIVersion:
+            Logger.log("i", "Plugin %s uses an incompatible API version, ignoring", id)
+            return
+
         try:
             to_register = plugin.register(self._application)
             if not to_register:

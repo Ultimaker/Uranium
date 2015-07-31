@@ -13,7 +13,7 @@ def getMetaData():
             "name": "STL Writer",
             "author": "Ultimaker",
             "version": "1.0",
-            "decription": i18n_catalog.i18nc("STL Writer plugin description", "Provides support for writing STL files."),
+            "description": i18n_catalog.i18nc("STL Writer plugin description", "Provides support for writing STL files."),
             "api": 2
         },
         "mesh_writer": {

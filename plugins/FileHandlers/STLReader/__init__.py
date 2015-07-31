@@ -8,12 +8,12 @@ i18n_catalog = i18nCatalog("uranium")
 
 def getMetaData():
     return {
-        "type": "mesh_reader",
         "plugin": {
             "name": "STL Reader",
             "author": "Ultimaker",
             "version": "1.0",
-            "decription": i18n_catalog.i18nc("STL Reader plugin description", "Provides support for reading STL files.")
+            "description": i18n_catalog.i18nc("STL Reader plugin description", "Provides support for reading STL files."),
+            "api": 2
         },
         "mesh_reader": {
             "extension": "stl",

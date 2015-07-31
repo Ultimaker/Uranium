@@ -13,7 +13,8 @@ def getMetaData():
             "name": "Translate Tool",
             "author": "Ultimaker",
             "version": "1.0",
-            "description": i18n_catalog.i18nc("Translate Tool plugin description", "Provides the Translate tool.")
+            "description": i18n_catalog.i18nc("Translate Tool plugin description", "Provides the Translate tool."),
+            "api": 2
         },
         "tool": {
             "name": i18n_catalog.i18nc("Translate Tool name", "Translate"),
