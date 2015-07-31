@@ -45,7 +45,8 @@ class Platform(SceneNode.SceneNode):
             mesh = self._settings.getPlatformMesh()
             if not mesh:
                 mesh = "" # Dirty hack to ensure that if no mesh is set it doesn't crash.
-            self.setMeshData(app.getMeshFileHandler().read(Resources.getPath(Resources.MeshesLocation, mesh), app.getStorageDevice("LocalFileStorage"), center = False))
+
+            self.setMeshData(app.getMeshFileHandler().read(Resources.getPath(Resources.MeshesLocation, mesh), center = False))
             self._texture = self._settings.getPlatformTexture()
 
             if self._material and self._texture:

@@ -20,7 +20,6 @@ class ReadMeshJob(Job):
         super().__init__()
         self._filename = filename
         self._handler = Application.getInstance().getMeshFileHandler()
-        self._device = Application.getInstance().getStorageDevice("LocalFileStorage")
 
     def getFileName(self):
         return self._filename
@@ -30,7 +29,7 @@ class ReadMeshJob(Job):
         loading_message.setProgress(-1)
         loading_message.show()
 
-        mesh = self._handler.read(self._filename, self._device)
+        mesh = self._handler.read(self._filename)
 
         if not mesh:
             loading_message.hide()

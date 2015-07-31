@@ -111,7 +111,12 @@ class _Worker(threading.Thread):
             # Process the job.
             self._queue.jobStarted.emit(job)
             job._running = True
-            job.run()
+
+            try:
+                job.run()
+            except Exception as e:
+                job.setError(e)
+
             job._running = False
             job._finished = True
             job.finished.emit(job)

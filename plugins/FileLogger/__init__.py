@@ -9,12 +9,12 @@ i18n_catalog = i18nCatalog("uranium")
 
 def getMetaData():
     return {
-        "type": "logger",
         "plugin": {
             "name": i18n_catalog.i18nc("File Logger plugin name", "File Logger"),
             "author": "Ultimaker",
             "version": "1.0",
-            "description": i18n_catalog.i18nc("Console Logger plugin description", "Outputs log information to the console.")
+            "description": i18n_catalog.i18nc("Console Logger plugin description", "Outputs log information to the console."),
+            "api": 2
         }
     }
 

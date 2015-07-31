@@ -9,12 +9,12 @@ i18n_catalog = i18nCatalog("uranium")
 
 def getMetaData():
     return {
-        "type": "mesh_reader",
         "plugin": {
             "name": "Wavefront OBJ Reader",
             "author": "Ultimaker",
             "version": "1.0",
-            "description": i18n_catalog.i18nc("OBJ Reader plugin description", "Makes it possbile to read Wavefront OBJ files.")
+            "description": i18n_catalog.i18nc("OBJ Reader plugin description", "Makes it possbile to read Wavefront OBJ files."),
+            "api": 2
         },
         "mesh_reader": {
             "extension": "obj",

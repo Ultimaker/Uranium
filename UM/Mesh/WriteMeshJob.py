@@ -12,15 +12,23 @@ import os.path
 #
 #   The result of this Job is a MeshData object.
 class WriteMeshJob(Job):
-    def __init__(self, filename, mesh):
+    def __init__(self, writer, stream, node, mode):
         super().__init__()
-        self._filename = filename
-        self._handler = Application.getInstance().getMeshFileHandler()
-        self._device = Application.getInstance().getStorageDevice("LocalFileStorage")
-        self._mesh = mesh
+        self._stream = stream
+        self._writer = writer
+        self._node = node
+        self._file_name = ""
+        self._mode = mode
+
+    def setFileName(self, name):
+        self._file_name = name
 
     def getFileName(self):
-        return self._filename
+        return self._file_name
+
+    def getStream(self):
+        return self._stream
 
     def run(self):
-        self.setResult(self._handler.write(self._filename, self._device, self._mesh))
+        self.setResult(self._writer.write(self._stream, self._node, self._mode))
+

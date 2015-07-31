@@ -13,7 +13,8 @@ def getMetaData():
             "name": "Selection Tool",
             "author": "Ultimaker",
             "version": "1.0",
-            "description": i18n_catalog.i18nc("Selection Tool plugin description", "Provides the Selection tool.")
+            "description": i18n_catalog.i18nc("Selection Tool plugin description", "Provides the Selection tool."),
+            "api": 2
         },
         "tool": {
             "visible": False

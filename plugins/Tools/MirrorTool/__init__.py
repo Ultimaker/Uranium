@@ -8,12 +8,12 @@ i18n_catalog = i18nCatalog("uranium")
 
 def getMetaData():
     return {
-        "type": "tool",
         "plugin": {
             "name": "Mirror Tool",
             "author": "Ultimaker",
             "version": "1.0",
-            "description": i18n_catalog.i18nc("Mirror Tool plugin description", "Provides the Mirror tool.")
+            "description": i18n_catalog.i18nc("Mirror Tool plugin description", "Provides the Mirror tool."),
+            "api": 2
         },
         "tool": {
             "name": i18n_catalog.i18nc("Mirror Tool name", "Mirror"),

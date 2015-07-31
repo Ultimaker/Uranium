@@ -3,7 +3,7 @@
 
 from UM.Logger import Logger
 from UM.PluginRegistry import PluginRegistry
-
+from UM.Mesh.MeshWriter import MeshWriter
 from UM.Math.Matrix import Matrix
 
 ##  Central class for reading and writing meshes.
@@ -12,23 +12,22 @@ from UM.Math.Matrix import Matrix
 class MeshFileHandler(object):
     def __init__(self):
         super().__init__()
-        self._mesh_readers = []
-        self._mesh_writers = []
+        self._mesh_readers = {}
+        self._mesh_writers = {}
 
         PluginRegistry.addType("mesh_writer", self.addWriter)
         PluginRegistry.addType("mesh_reader", self.addReader)
-    
+
     # Try to read the mesh_data from a file. Based on the extension in the file a correct meshreader is selected.
     # \param file_name The name of the mesh to load.
-    # \param storage_device The StorageDevice where the mesh can be found.
     # \param kwargs Keyword arguments.
     #               Possible values are:
     #               - Center: True if the model should be centered around (0,0,0), False if it should be loaded as-is. Defaults to True.
     # \returns MeshData if it was able to read the file, None otherwise.
-    def read(self, file_name, storage_device, **kwargs):
+    def read(self, file_name, **kwargs):
         try:
-            for reader in self._mesh_readers:
-                result = reader.read(file_name, storage_device)
+            for id, reader in self._mesh_readers.items():
+                result = reader.read(file_name)
                 if(result is not None):
                     if kwargs.get("center", True):
                         # Center the mesh
@@ -46,38 +45,53 @@ class MeshFileHandler(object):
 
         Logger.log("w", "Unable to read file %s", file_name)
         return None #unable to read
-    
-    # Try to write the mesh_data to file. Based on the extension in the file_name a correct meshwriter is selected.
-    # \param file_name The name of the file to write.
-    # \param storage_device The StorageDevice where the file should be written to.
-    # \param mesh_data
-    # \returns True if it was able to create the file, otherwise False
-    def write(self, file_name, storage_device, mesh_data):
-        if(mesh_data is None):
-            return False
-        for writer in self._mesh_writers:
-            if(writer.write(file_name, storage_device, mesh_data)):
-                return True
-        return False
-    
-    # Get list of all supported filetypes for writing.
-    # \returns Dict of extension, description with all supported filetypes.
+
+    ##  Get an instance of a mesh writer by ID
+    def getWriter(self, writer_id):
+        if not writer_id in self._mesh_writers:
+            return None
+
+        return self._mesh_writers[writer_id]
+
+    ##  Get a mesh writer object that supports writing the specified mime type
+    #
+    #   \param mime The mime type that should be supported.
+    #   \return A MeshWriter instance or None if no mesh writer supports the specified mime type. If there are multiple
+    #           writers that support the specified mime type, the first entry is returned.
+    def getWriterByMimeType(self, mime):
+        writer_data = PluginRegistry.getInstance().getAllMetaData(filter = {"mesh_writer": {}}, active_only = True)
+        for entry in writer_data:
+            for output in entry["mesh_writer"].get("output", []):
+                if mime == output["mime_type"]:
+                    return self._mesh_writers[entry["id"]]
+
+        return None
+
+    ##  Get list of all supported filetypes for writing.
+    #   \return List of dicts containing id, extension, description and mime_type for all supported file types.
     def getSupportedFileTypesWrite(self):
-        supported_types = {}
-        meta_data = PluginRegistry.getInstance().getAllMetaData(filter = {"type": "mesh_writer"}, active_only = True)
+        supported_types = []
+        meta_data = PluginRegistry.getInstance().getAllMetaData(filter = {"mesh_writer": {}}, active_only = True)
         for entry in meta_data:
-            if "mesh_writer" in entry:
-                ext = entry["mesh_writer"].get("extension", None)
-                description = entry["mesh_writer"].get("description", ext)
-                if ext:
-                    supported_types[ext] = description
+            for output in entry["mesh_writer"].get("output", []):
+                ext = output.get("extension", "")
+                description = output.get("description", ext)
+                mime_type = output.get("mime_type", "text/plain")
+                mode = output.get("mode", MeshWriter.OutputMode.TextMode)
+                supported_types.append({
+                    "id": entry["id"],
+                    "extension": ext,
+                    "description": description,
+                    "mime_type": mime_type,
+                    "mode": mode
+                })
         return supported_types
-    
+
     # Get list of all supported filetypes for reading.
     # \returns List of strings with all supported filetypes.
     def getSupportedFileTypesRead(self):
         supported_types = {}
-        meta_data = PluginRegistry.getInstance().getAllMetaData(filter = {"type": "mesh_reader"}, active_only = True)
+        meta_data = PluginRegistry.getInstance().getAllMetaData(filter = {"mesh_reader": {}}, active_only = True)
         for entry in meta_data:
             if "mesh_reader" in entry:
                 ext = entry["mesh_reader"].get("extension", None)
@@ -88,7 +102,7 @@ class MeshFileHandler(object):
         return supported_types
 
     def addWriter(self, writer):
-        self._mesh_writers.append(writer)
-        
+        self._mesh_writers[writer.getPluginId()] = writer
+
     def addReader(self, reader):
-        self._mesh_readers.append(reader)
+        self._mesh_readers[reader.getPluginId()] = reader

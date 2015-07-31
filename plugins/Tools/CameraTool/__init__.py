@@ -8,12 +8,12 @@ i18n_catalog = i18nCatalog("uranium")
 
 def getMetaData():
     return {
-        "type": "tool",
         "plugin": {
             "name": "Camera Tool",
             "author": "Ultimaker",
             "version": "1.0",
-            "description": i18n_catalog.i18nc("Camera Tool plugin description", "Provides the tool to manipulate the camera.")
+            "description": i18n_catalog.i18nc("Camera Tool plugin description", "Provides the tool to manipulate the camera."),
+            "api": 2
         },
         "tool": {
             "visible": False

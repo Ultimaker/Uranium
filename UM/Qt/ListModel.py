@@ -1,7 +1,7 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-from PyQt5.QtCore import QObject, QAbstractListModel, QVariant, QModelIndex, pyqtSlot, pyqtProperty
+from PyQt5.QtCore import QObject, QAbstractListModel, QVariant, QModelIndex, pyqtSlot, pyqtProperty, QByteArray, pyqtSignal
 
 ##  Convenience base class for models of a list of items.
 #
@@ -15,22 +15,32 @@ class ListModel(QAbstractListModel):
         self._items = []
         self._role_names = {}
 
+        self.rowsInserted.connect(self.countChanged)
+        self.rowsRemoved.connect(self.countChanged)
+
+    countChanged = pyqtSignal()
+    @pyqtProperty(int, notify = countChanged)
+    def count(self):
+        return self.rowCount()
+
     ##  Reimplemented from QAbstractListModel
     @pyqtSlot(result=int)
     def rowCount(self, parent = None):
         return len(self._items)
 
     def addRoleName(self,role,name):
-        self._role_names[role] = name
-        
+        # Qt roleNames expects a QByteArray. PyQt 5.5 does not convert str to bytearray implicitly so
+        # force the conversion manually.
+        self._role_names[role] = name.encode("utf-8")
+
     def roleNames(self):
         return self._role_names
-    
+
     ##  Reimplemented from QAbstractListModel
     def data(self, index, role):
         if not index.isValid():
             return QVariant()
-        return self._items[index.row()][self._role_names[role]]
+        return self._items[index.row()][self._role_names[role].decode("utf-8")]
 
     ##  Get an item from the list
     @pyqtSlot(int, result="QVariantMap")
@@ -70,7 +80,7 @@ class ListModel(QAbstractListModel):
         self.beginResetModel()
         self._items.clear()
         self.endResetModel()
-        
+
     @pyqtSlot(int, str, QVariant)
     def setProperty(self, index, property, value):
         self._items[index][property] = value

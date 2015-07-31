@@ -9,9 +9,9 @@ from UM.Resources import Resources
 from UM.Operations.OperationStack import OperationStack
 from UM.Event import CallFunctionEvent
 from UM.Signal import Signal, SignalEmitter
-from UM.WorkspaceFileHandler import WorkspaceFileHandler
 from UM.Logger import Logger
 from UM.Preferences import Preferences
+from UM.OutputDevice.OutputDeviceManager import OutputDeviceManager
 
 import threading
 import argparse
@@ -56,7 +56,6 @@ class Application(SignalEmitter):
 
         self._renderer = None
 
-        PluginRegistry.addType("storage_device", self.addStorageDevice)
         PluginRegistry.addType("backend", self.setBackend)
         PluginRegistry.addType("logger", Logger.addLogger)
         PluginRegistry.addType("extension", self.addExtension)
@@ -70,10 +69,9 @@ class Application(SignalEmitter):
 
         self._controller = Controller(self)
         self._mesh_file_handler = MeshFileHandler()
-        self._workspace_file_handler = WorkspaceFileHandler()
-        self._storage_devices = {}
         self._extensions = []
         self._backend = None
+        self._output_device_manager = OutputDeviceManager()
 
         self._machines = []
         self._active_machine = None
@@ -266,38 +264,12 @@ class Application(SignalEmitter):
     #   \returns MeshFileHandler \type{MeshFileHandler}
     def getMeshFileHandler(self):
         return self._mesh_file_handler
-    
-    ##  Get the workspace file handler of this application.
-    #   The difference between this and the mesh file handler is that the workspace handler accepts a node
-    #   This means that multiple meshes can be saved / loaded in this way. 
-    #   \returns MeshFileHandler
-    def getWorkspaceFileHandler(self):
-        return self._workspace_file_handler
 
     def getOperationStack(self):
         return self._operation_stack
 
-    ##  Get a StorageDevice object by name
-    #   \param name \type{string} The name of the StorageDevice to get.
-    #   \return The named StorageDevice or None if not found.
-    def getStorageDevice(self, name):
-        try:
-            return self._storage_devices[name]
-        except KeyError:
-            return None
-
-    ##  Add a StorageDevice
-    #   \param device \type{StorageDevice} The device to be added.
-    def addStorageDevice(self, device):
-        self._storage_devices[device.getPluginId()] = device
-
-    ##  Remove a StorageDevice
-    #   \param name \type{string} The name of the StorageDevice to be removed.
-    def removeStorageDevice(self, name):
-        try:
-            del self._storage_devices[name]
-        except KeyError:
-            pass
+    def getOutputDeviceManager(self):
+        return self._output_device_manager
 
     ##  Run the main eventloop.
     #   This method should be reimplemented by subclasses to start the main event loop.

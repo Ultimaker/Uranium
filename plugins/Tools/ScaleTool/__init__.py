@@ -13,7 +13,8 @@ def getMetaData():
             "name": "Scale Tool",
             "author": "Ultimaker",
             "version": "1.0",
-            "description": i18n_catalog.i18nc("Scale Tool plugin description", "Provides the Scale tool.")
+            "description": i18n_catalog.i18nc("Scale Tool plugin description", "Provides the Scale tool."),
+            "api": 2
         },
         "tool": {
             "name": i18n_catalog.i18nc("Scale Tool name", "Scale"),

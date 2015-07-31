@@ -12,7 +12,7 @@ class OBJReader(MeshReader):
         super(OBJReader, self).__init__()
         self._supported_extension = ".obj"
         
-    def read(self, file_name, storage_device):
+    def read(self, file_name):
         mesh = None
         extension = os.path.splitext(file_name)[1]
         if extension.lower() == self._supported_extension:
@@ -22,7 +22,7 @@ class OBJReader(MeshReader):
             face_list = []
 
             mesh = MeshData()
-            f = storage_device.openFile(file_name, "rt")
+            f = open(file_name, "rt")
             for line in f:
                 parts = line.split()
                 if len(parts) < 1:
@@ -43,7 +43,7 @@ class OBJReader(MeshReader):
                             if parts[1][1] and parts[idx+1][1] and parts[idx+2][1]:
                                 data += [int(parts[1][1]), int(parts[idx+1][1]), int(parts[idx+2][1])]
                         face_list.append(data)
-            storage_device.closeFile(f)
+            f.close()
 
             mesh.reserveFaceCount(len(face_list))
             num_vertices = len(vertex_list)
