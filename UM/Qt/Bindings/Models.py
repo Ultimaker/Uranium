@@ -13,6 +13,7 @@ from . import ExtensionModel
 from . import MachinesModel
 from . import DirectoryListModel
 from . import AvailableMachinesModel
+from . import AddMachinesModel
 from . import SettingCategoriesModel
 from . import VisibleMessagesModel
 
@@ -33,6 +34,7 @@ class Models(QObject):
         self._machines_model = None
         self._directory_list_model = None
         self._available_machines_model = None
+        self._add_machines_model = None
         self._setting_categories_model = None
         self._visible_messages_model = None
 
@@ -105,6 +107,12 @@ class Models(QObject):
         if not self._available_machines_model:
             self._available_machines_model = AvailableMachinesModel.AvailableMachinesModel()
         return self._available_machines_model
+
+    @pyqtProperty(AddMachinesModel.AddMachinesModel, constant = True)
+    def addMachinesModel(self):
+        if not self._add_machines_model:
+            self._add_machines_model = AddMachinesModel.AddMachinesModel()
+        return self._add_machines_model
 
     @pyqtProperty(SettingCategoriesModel.SettingCategoriesModel, constant = True)
     def settingCategoriesModel(self):

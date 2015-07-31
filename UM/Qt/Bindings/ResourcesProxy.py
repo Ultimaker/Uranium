@@ -12,6 +12,7 @@ class ResourcesProxy(QObject):
         PreferencesLocation = Resources.PreferencesLocation
         ThemesLocation = Resources.ThemesLocation
         ImagesLocation = Resources.ImagesLocation
+        WizardPagesLocation = Resources.WizardPagesLocation
     Q_ENUMS(Location)
 
     def __init__(self, parent = None):

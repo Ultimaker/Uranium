@@ -23,6 +23,7 @@ class Resources:
     ThemesLocation = 8
     FirmwareLocation = 9
     QmlFilesLocation = 10
+    WizardPagesLocation = 11
 
     ApplicationIdentifier = "UM"
 
@@ -152,6 +153,8 @@ class Resources:
             return ["resources", "firmware"]
         elif type == cls.QmlFilesLocation:
             return ["resources", "qml"]
+        elif type == cls.WizardPagesLocation:
+            return ["resources", "qml", "WizardPages"]
         else:
             return None
 
