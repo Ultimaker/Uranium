@@ -86,10 +86,7 @@ class OutputDeviceManager(SignalEmitter):
     #   \param device_id The ID of the device to retrieve.
     #   \return \type{OutputDevice} The output device corresponding to the ID or None if not found.
     def getOutputDevice(self, device_id):
-        if not device_id in self._output_devices:
-            return None
-
-        return self._output_devices[device_id]
+        return self._output_devices.get(device_id, None)
 
     ##  Emitted whenever an output device is added or removed.
     outputDevicesChanged = Signal()
@@ -172,7 +169,7 @@ class OutputDeviceManager(SignalEmitter):
     #   \note This does nothing if the plugin was already added.
     def addOutputDevicePlugin(self, plugin):
         if plugin.getPluginId() in self._plugins:
-            Logger.log("i", "Output Device Plugin %s was already added", plugin.getPluginId())
+            Logger.log("i", "Output Device Plugin %s was already added.", plugin.getPluginId())
             return
 
         self._plugins[plugin.getPluginId()] = plugin
@@ -196,10 +193,7 @@ class OutputDeviceManager(SignalEmitter):
     #
     #   \return The plugin corresponding to the specified ID or None if it was not found.
     def getOutputDevicePlugin(self, plugin_id):
-        if plugin_id not in self._plugins:
-            return None
-
-        return self._plugins[plugin_id]
+        return self._plugins.get(plugin_id, None)
 
     ##  private:
 

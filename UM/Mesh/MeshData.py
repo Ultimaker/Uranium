@@ -9,7 +9,7 @@ from UM.Signal import Signal, SignalEmitter
 import copy
 import numpy
 import numpy.linalg
-numpy.seterr(all="ignore")
+numpy.seterr(all="ignore") # Ignore warnings (dev by zero)
 
 from enum import Enum
 vertexBufferProperty = "__qtgl2_vertex_buffer"
