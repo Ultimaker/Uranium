@@ -109,7 +109,7 @@ class OutputDeviceManager(SignalEmitter):
         device.writeSuccess.connect(self.writeSuccess)
         self.outputDevicesChanged.emit()
 
-        if not self._active_device and not self._active_device_override:
+        if not self._active_device or not self._active_device_override:
             self._active_device = self._findHighestPriorityDevice()
             self.activeDeviceChanged.emit()
 
