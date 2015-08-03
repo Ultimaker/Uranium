@@ -14,45 +14,40 @@ import os.path
 import json
 
 class AvailableMachinesModel(ListModel):
-    NameRole = Qt.UserRole + 1
-    TypeRole = Qt.UserRole + 2
-    VariationsRole = Qt.UserRole + 3
+    IdRole = Qt.UserRole + 1
+    FileRole = Qt.UserRole + 2
+    NameRole = Qt.UserRole + 3
+    ManufacturerRole = Qt.UserRole + 4
+    AuthorRole = Qt.UserRole + 5
 
     def __init__(self, parent = None):
         super().__init__(parent)
 
+        self.addRoleName(self.IdRole, "id")
+        self.addRoleName(self.FileRole, "file")
         self.addRoleName(self.NameRole, "name")
-        self.addRoleName(self.TypeRole, "type")
-        self.addRoleName(self.VariationsRole, "variations")
-        
-        # Groups all machines that have the same id
-        self._machines_by_id = {}
+        self.addRoleName(self.ManufacturerRole, "manufacturer")
+        self.addRoleName(self.AuthorRole, "author")
 
         self._updateModel()
 
+
     @pyqtSlot(int, int,str)
     def createMachine(self, index, variation_index, name):
-        type = self.getItem(index)["variations"].getItem(variation_index)["type"]
+        file = self.getItem(index)["file"]
 
         machine = MachineSettings()
-        machine.loadSettingsFromFile(Resources.getPath(Resources.SettingsLocation, type))
+        machine.loadSettingsFromFile(Resources.getPath(Resources.SettingsLocation, file))
         machine.setName(name)
 
         app = Application.getInstance()
         index = app.addMachine(machine)
         app.setActiveMachine(app.getMachines()[index])
 
-    def _createMachineVariationsModel(self, variations):
-        model = ListModel()
-        model.addRoleName(self.NameRole,"name")
-        model.addRoleName(self.TypeRole, "type")
-        for name, json_file in variations:
-           # print(name, " " ,json_file)
-            model.appendItem({"name": name, "type":json_file})
-        return model
-
     def _updateModel(self):
         dirs = Resources.getLocation(Resources.SettingsLocation)
+        _machines_by_ultimaker = []
+        _machines_by_other = []
 
         for dir in dirs:
             if not os.path.isdir(dir):
@@ -81,18 +76,21 @@ class AvailableMachinesModel(ListModel):
                 if appname in data:
                     if not data[appname].get("visible", True):
                         continue
-                
-                manufacturer = "other"
-                if "manufacturer" in data:
-                    manufacturer = data["manufacturer"]    
-                if data["id"] in self._machines_by_id:
-                    self._machines_by_id[data["id"]].append((data["name"],file))
-                else:
-                    self._machines_by_id[data["id"]] = [(data["name"],file)]
-                #self.appendItem({ "name": data["name"], "type": file })
 
-                #self.sort(lambda e: e["name"])
-        for entry in self._machines_by_id:
-            self.appendItem({"name": entry, "variations": self._createMachineVariationsModel(self._machines_by_id[entry])})
-        #print(self.items)    
-        #print(self._machines_by_id)
+                _id = data.get("id")
+                _file = file
+                _name = data.get("name")
+                _manufacturer = data.get("manufacturer")
+                _author = data.get("author")
+
+                if _manufacturer != "Ultimaker":
+                    _machines_by_other.append([_id, _file, _name, _manufacturer, _author])
+
+                if _manufacturer == "Ultimaker":
+                    _machines_by_ultimaker.append([_id, _file, _name, _manufacturer, _author])
+
+            for item in sorted(_machines_by_ultimaker):
+                self.appendItem({ "id": item[0], "file": item[1], "name": item[2], "manufacturer": item[3], "author": item[4]})
+
+            for item in sorted(_machines_by_other):
+                self.appendItem({ "id": item[0], "file": item[1], "name": item[2], "manufacturer": item[3], "author": item[4]})
