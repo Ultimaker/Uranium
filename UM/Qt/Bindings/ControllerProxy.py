@@ -10,7 +10,6 @@ from UM.Operations.AddSceneNodeOperation import AddSceneNodeOperation
 from UM.Scene.Selection import Selection
 from UM.Operations.RemoveSceneNodeOperation import RemoveSceneNodeOperation
 from UM.Operations.GroupedOperation import GroupedOperation
-from UM.LoadWorkspaceJob import LoadWorkspaceJob
 
 import os.path
 
@@ -39,24 +38,6 @@ class ControllerProxy(QObject):
             op.addOperation(RemoveSceneNodeOperation(node))
         op.push()
         Selection.clear()
-
-    @pyqtSlot()
-    def saveWorkspace(self):
-        #self.loadWorkSpace() # DEBUG STUFF
-        Application.getInstance().getWorkspaceFileHandler().write("derp.mlp",Application.getInstance().getStorageDevice("local"))
-        pass #TODO: Implement workspace saving
-
-    @pyqtSlot()
-    def loadWorkSpace(self):
-        job = LoadWorkspaceJob("meshlab.mlp")
-        job.finished.connect(self._loadWorkspaceFinished)
-        job.start()     
-        #TODO: Implement.
-        pass
-    
-    def _loadWorkspaceFinished(self,job):
-        node = job.getResult()
-        self._controller.getScene().setRoot(node)
 
     contextMenuRequested = pyqtSignal("quint64", arguments=["objectId"])
 
