@@ -6,9 +6,9 @@ from PyQt5.QtCore import Qt, pyqtSlot, pyqtProperty, pyqtSignal
 from UM.Application import Application
 from UM.Qt.ListModel import ListModel
 from UM.OutputDevice import OutputDeviceError
-from UM.Logger import Logger
-from UM.Message import Message
-from UM.Scene.Selection import Selection
+from UM.Event import CallFunctionEvent
+
+import time
 
 ##  A list model providing a list of all registered OutputDevice instances.
 #
@@ -37,6 +37,9 @@ class OutputDevicesModel(ListModel):
         self._device_manager = Application.getInstance().getOutputDeviceManager()
 
         self._active_device = None
+        self._active_device_index = -1
+
+        self._time_since_update = 0
 
         self.addRoleName(self.IdRole, "id")
         self.addRoleName(self.NameRole, "name")
@@ -46,60 +49,43 @@ class OutputDevicesModel(ListModel):
         self.addRoleName(self.PriorityRole, "priority")
 
         self._device_manager.outputDevicesChanged.connect(self._update)
-        self._device_manager.activeDeviceChanged.connect(self._onActiveDeviceChanged)
         self._update()
-        self._onActiveDeviceChanged()
 
-    activeDeviceChanged = pyqtSignal()
-    @pyqtProperty("QVariantMap", notify = activeDeviceChanged)
-    def activeDevice(self):
-        return self._active_device
+    @pyqtSlot(str, result = "QVariantMap")
+    def getDevice(self, device_id):
+        index = self.find("id", device_id)
+        if index != -1:
+            return self.getItem(index)
 
-    @pyqtSlot(str)
-    def setActiveDevice(self, device_id):
-        self._device_manager.setActiveDevice(device_id)
-
-    @pyqtSlot(str)
-    def requestWriteToDevice(self, device_id):
-        self._writeToDevice(Application.getInstance().getController().getScene().getRoot(), device_id)
-
-    @pyqtSlot(str)
-    def requestWriteSelectionToDevice(self, device_id):
-        if not Selection.hasSelection():
-            return
-
-        self._writeToDevice(Selection.getSelectedObject(0), device_id)
+        return { "id": "", "name": "", "short_description": "", "description": "", "icon_name": "save", "priority": -1 }
 
     def _update(self):
-        self.clear()
+        # Workaround for Qt issues on Windows
+        # It seems menu items are created asynchronously on Windows, which causes
+        # crashes when the model changes quickly in succession. To prevent that,
+        # check the last time _update was called and if it was called recently
+        # queue a function call event and return.
+        now = time.time()
+        if now - self._time_since_update < 5:
+            event = CallFunctionEvent(self._update, [], {})
+            Application.getInstance().functionEvent(event)
+            return
+        self._time_since_update = now
 
+        self.beginResetModel()
+
+        self._items.clear()
         devices = self._device_manager.getOutputDevices()
         for device in devices:
-            self.appendItem({
+            item = {
                 "id": device.getId(),
                 "name": device.getName(),
                 "short_description": device.getShortDescription(),
                 "description": device.getDescription(),
                 "icon_name": device.getIconName(),
                 "priority": device.getPriority()
-            })
+            }
+            self.appendItem(item)
 
         self.sort(lambda i: -i["priority"])
-
-    def _onActiveDeviceChanged(self):
-        device = self._device_manager.getActiveDevice()
-        self._active_device = self.getItem(self.find("id", device.getId()))
-        self.activeDeviceChanged.emit()
-
-    def _writeToDevice(self, node, device_id):
-        device = self._device_manager.getOutputDevice(device_id)
-        if not device:
-            return
-
-        try:
-            device.requestWrite(node)
-        except OutputDeviceError.UserCanceledError:
-            pass
-        except OutputDeviceError.WriteRequestFailedError as e:
-            message = Message(str(e))
-            message.show()
+        self.endResetModel()
