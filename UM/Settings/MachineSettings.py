@@ -27,6 +27,7 @@ class MachineSettings(SignalEmitter):
         self._name = "Unknown Machine",
         self._type_name = "Unknown"
         self._type_id = "unknown"
+        self._type_version = "unknown"
         self._json_file = ""
         self._icon = "unknown.png",
         self._machine_settings = []   ## Settings that don't have a category are 'fixed' (eg; they can not be changed by the user, unless they change the json)
@@ -76,6 +77,9 @@ class MachineSettings(SignalEmitter):
 
         if "name" in data:
             self._type_name = data["name"]
+
+        if "version" in data:
+            self._type_version = str(data["version"])
 
         if "icon" in data:
             self._icon = data["icon"]
@@ -142,6 +146,7 @@ class MachineSettings(SignalEmitter):
         config.add_section("General")
         config["General"]["type"] = self._type_id
         config["General"]["settings_json_file"] = self._json_file
+        config["General"]["version"] = self._type_version
         config["General"]["name"] = self._name
         config["General"]["visibility"] = self._getVisibleSettings()
 
