@@ -20,11 +20,27 @@ class OutputDeviceManagerProxy(QObject):
     @pyqtProperty(str, notify = activeDeviceChanged)
     def activeDevice(self):
         return self._device_manager.getActiveDevice().getId()
-    
+
     @pyqtSlot(str)
     def setActiveDevice(self, device_id):
         self._device_manager.setActiveDevice(device_id)
-    
+
+    @pyqtProperty(str, notify = activeDeviceChanged)
+    def activeDeviceName(self):
+        return self._device_manager.getActiveDevice().getName()
+
+    @pyqtProperty(str, notify = activeDeviceChanged)
+    def activeDeviceIconName(self):
+        return self._device_manager.getActiveDevice().getIconName()
+
+    @pyqtProperty(str, notify = activeDeviceChanged)
+    def activeDeviceShortDescription(self):
+        return self._device_manager.getActiveDevice().getShortDescription()
+
+    @pyqtProperty(str, notify = activeDeviceChanged)
+    def activeDeviceDescription(self):
+        return self._device_manager.getActiveDevice().getDescription()
+
     @pyqtSlot(str)
     def requestWriteToDevice(self, device_id):
         # On Windows, calling requestWrite() on LocalFileOutputDevice crashes when called from a signal
