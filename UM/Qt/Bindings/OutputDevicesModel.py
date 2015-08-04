@@ -36,12 +36,6 @@ class OutputDevicesModel(ListModel):
 
         self._device_manager = Application.getInstance().getOutputDeviceManager()
 
-        self._active_device = None
-        self._active_device_index = -1
-
-        self._time_since_update = 0
-        self._timer = None
-
         self.addRoleName(self.IdRole, "id")
         self.addRoleName(self.NameRole, "name")
         self.addRoleName(self.ShortDescriptionRole, "short_description")
@@ -61,17 +55,6 @@ class OutputDevicesModel(ListModel):
         return { "id": "", "name": "", "short_description": "", "description": "", "icon_name": "save", "priority": -1 }
 
     def _update(self):
-        # Workaround for Qt issues on Windows
-        # It seems menu items are created asynchronously on Windows, which causes
-        # crashes when the model changes quickly in succession. To prevent that,
-        # check the last time _update was called and if it was called recently
-        # start a timer and return.
-        now = time.time()
-        if now - self._time_since_update < 2:
-            self._timer = self.startTimer(2000)
-            return
-        self._time_since_update = now
-
         self.beginResetModel()
 
         self._items.clear()
@@ -88,8 +71,3 @@ class OutputDevicesModel(ListModel):
 
         self.sort(lambda i: -i["priority"])
         self.endResetModel()
-
-    def timerEvent(self, event):
-        self.killTimer(self._timer)
-        self._timer = None
-        self._update()
