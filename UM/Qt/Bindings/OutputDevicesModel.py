@@ -40,6 +40,7 @@ class OutputDevicesModel(ListModel):
         self._active_device_index = -1
 
         self._time_since_update = 0
+        self._timer = None
 
         self.addRoleName(self.IdRole, "id")
         self.addRoleName(self.NameRole, "name")
@@ -64,11 +65,10 @@ class OutputDevicesModel(ListModel):
         # It seems menu items are created asynchronously on Windows, which causes
         # crashes when the model changes quickly in succession. To prevent that,
         # check the last time _update was called and if it was called recently
-        # queue a function call event and return.
+        # start a timer and return.
         now = time.time()
-        if now - self._time_since_update < 5:
-            event = CallFunctionEvent(self._update, [], {})
-            Application.getInstance().functionEvent(event)
+        if now - self._time_since_update < 2:
+            self._timer = self.startTimer(2000)
             return
         self._time_since_update = now
 
@@ -77,15 +77,19 @@ class OutputDevicesModel(ListModel):
         self._items.clear()
         devices = self._device_manager.getOutputDevices()
         for device in devices:
-            item = {
+            self._items.append({
                 "id": device.getId(),
                 "name": device.getName(),
                 "short_description": device.getShortDescription(),
                 "description": device.getDescription(),
                 "icon_name": device.getIconName(),
                 "priority": device.getPriority()
-            }
-            self.appendItem(item)
+            })
 
         self.sort(lambda i: -i["priority"])
         self.endResetModel()
+
+    def timerEvent(self, event):
+        self.killTimer(self._timer)
+        self._timer = None
+        self._update()
