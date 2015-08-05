@@ -30,7 +30,7 @@ class Resources:
     Themes = 7
     ## Location of machine definition files. Equal to $resources/machines
     MachineDefinitions = 8
-    ## Location of machine instance files. Equal to $resources/machines/instances
+    ## Location of machine instance files. Equal to $resources/machine_instances
     MachineInstances = 9
     ## Location of setting profile files. Equal to $resources/profiles
     Profiles = 10
@@ -143,7 +143,7 @@ class Resources:
     ##  Add a custom resource type that can be located.
     #
     #   \param type \type{int} An integer that can be used to identify the type. Should be greater than UserType.
-    #   \param path \type{string} The path relative to the search paths where resources of this type can be found.
+    #   \param path \type{string} The path relative to the search paths where resources of this type can be found./
     @classmethod
     def addType(cls, type, path):
         if type in cls.__types:
@@ -234,7 +234,7 @@ class Resources:
         Images: "images",
         Themes: "themes",
         MachineDefinitions: "machines",
-        MachineInstances: "machines/instances",
+        MachineInstances: "machine_instances",
         Profiles: "",
         Settings: "settings"
     }
@@ -242,6 +242,6 @@ class Resources:
         Resources: "",
         Preferences: "",
         MachineDefinitions: "machines",
-        MachineInstances: "machines/instances",
+        MachineInstances: "machine_instances",
         Profiles: "profiles"
     }
