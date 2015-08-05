@@ -6,24 +6,37 @@ import os.path
 import platform
 import sys
 
-class UnknownLocationError(Exception):
+class TypeError(Exception):
     pass
 
-class UnsupportedStorageLocationError(Exception):
+class UnsupportedStorageTypeError(Exception):
     pass
 
+##  Class to look up any form of resource used by Uranium or an application using Uranium
 class Resources:
-    ResourcesLocation = 1
-    SettingsLocation = 2
-    PreferencesLocation = 3
-    MeshesLocation = 4
-    ShadersLocation = 5
-    i18nLocation = 6
-    ImagesLocation = 7
-    ThemesLocation = 8
-    FirmwareLocation = 9
-    QmlFilesLocation = 10
-    WizardPagesLocation = 11
+    ## The main resources location. Equal to $resource_search_path/resources.
+    Resources = 1
+    ## Location of preference configuration files. Actual location depends on platform.
+    Preferences = 2
+    ## Location of meshes. Equal to $resources/meshes.
+    Meshes = 3
+    ## Location of shaders. Equal to $resources/shaders.
+    Shaders = 4
+    ## Location of translation files. Equal to $resources/i18n.
+    i18n = 5
+    ## Location of images not in the theme. Equal to $resources/images.
+    Images = 6
+    ## Location of themes. Equal to $resources/themes.
+    Themes = 7
+    ## Location of machine definition files. Equal to $resources/machines
+    MachineDefinitions = 8
+    ## Location of machine instance files. Equal to $resources/machines/instances
+    MachineInstances = 9
+    ## Location of setting profile files. Equal to $resources/profiles
+    Profiles = 10
+
+    ## Any custom resource types should be greater than this to prevent collisions with standard types.
+    UserType = 128
 
     ApplicationIdentifier = "UM"
 
@@ -32,16 +45,18 @@ class Resources:
     #   \param type \type{int} The type of resource to retrieve a path for.
     #   \param args Arguments that are appended to the location to locate the correct file.
     #
-    #   \return A path to the file
+    #   \return An absolute path to a file.
+    #           If a file exists in any storage path, it is returned without searching other paths.
+    #           If multiple files are found the first found is returned.
     #
     #   \exception FileNotFoundError Raised when the file could not be found.
     @classmethod
     def getPath(cls, type, *args):
         try:
-            path = os.path.join(cls.getStorageLocation(type), *args)
+            path = cls.getStoragePath(type, *args)
             if os.path.exists(path):
                 return path
-        except UnsupportedStorageLocationError:
+        except UnsupportedStorageTypeError:
             pass
 
         paths = cls.__find(type, *args)
@@ -57,48 +72,49 @@ class Resources:
     #   \param args Arguments that are appended to the location for the correct path.
     #
     #   \return A path that can be used to write the file.
+    #
+    #   \note This method does not check whether a given file exists.
     @classmethod
     def getStoragePath(cls, type, *args):
-        return os.path.join(cls.getStorageLocation(type), *args)
+        return os.path.join(cls.getStoragePathForType(type), *args)
 
-    ##  Return a list of paths for a certain resource location.
+    ##  Return a list of paths for a certain resource type.
     #
     #   \param type \type{int} The type of resource to retrieve.
     #   \return \type{list} A list of absolute paths where the resource type can be found.
     #
-    #   \exception UnknownLocationError Raised when type is an unknown value.
+    #   \exception TypeError Raised when type is an unknown value.
     @classmethod
-    def getLocation(cls, type):
-        suffix = cls.__getLocationSuffix(type)
-        if not suffix:
-            raise UnknownLocationError("Unknown location {0}".format(type))
+    def getAllPathsForType(cls, type):
+        if type not in cls.__types:
+            raise TypeError("Unknown type {0}".format(type))
 
-        locations = []
+        paths = []
         for path in cls.__paths:
-            locations.append(os.path.join(path, *suffix))
+            paths.append(os.path.join(path, cls.__types[type]))
 
-        return locations
+        return paths
 
     ##  Return a path where a certain resource type can be stored.
     #
     #   \param type \type{int} The type of resource to store.
     #   \return \type{string} An absolute path where the given resource type can be stored.
     #
-    #   \exception UnsupportedStorageLocationError Raised when writing type is not supported.
+    #   \exception UnsupportedStorageTypeError Raised when writing type is not supported.
     @classmethod
-    def getStorageLocation(cls, type):
+    def getStoragePathForType(cls, type):
+        if type not in cls.__types_storage:
+            raise UnsupportedStorageTypeError("Unknown storage type {0}".format(type))
+
         if cls.__config_storage_path is None or cls.__data_storage_path is None:
             cls.__initializeStoragePaths()
 
         path = None
-        if type == cls.PreferencesLocation:
+        # Special casing for Linux, since config should be stored in ~/.config but data should be stored in ~/.local/share
+        if type == cls.Preferences:
             path = cls.__config_storage_path
-        elif type == cls.SettingsLocation:
-            path = os.path.join(cls.__data_storage_path, "settings")
-        elif type == cls.ResourcesLocation:
-            path = cls.__data_storage_path
         else:
-            raise UnsupportedStorageLocationError("No known location to store type {0}".format(type))
+            path = os.path.join(cls.__data_storage_path, cls.__types_storage[type])
 
         # Ensure the directory we want to write to exists
         try:
@@ -108,55 +124,74 @@ class Resources:
 
         return path
 
-    ##  Add a path relative to which resources can be found.
+    ##  Add a path relative to which resources should be searched for.
+    #
+    #   \param path The path to add.
     @classmethod
-    def addResourcePath(cls, path):
+    def addSearchPath(cls, path):
         if os.path.isdir(path) and path not in cls.__paths:
             cls.__paths.append(path)
+
+    ##  Remove a resource search path.
+    @classmethod
+    def removeSearchPath(cls, path):
+        if path in cls.__paths:
+            del cls.__paths[cls.__paths.index(path)]
+
+    ##  Add a custom resource type that can be located.
+    #
+    #   \param type \type{int} An integer that can be used to identify the type. Should be greater than UserType.
+    #   \param path \type{string} The path relative to the search paths where resources of this type can be found.
+    @classmethod
+    def addType(cls, type, path):
+        if type in cls.__types:
+            raise TypeError("Type {0} already exists".format(type))
+
+        if type <= cls.UserType:
+            raise TypeError("Type should be greater than Resources.UserType")
+
+        cls.__types[type] = path
+
+    ##  Add a custom storage path for a resource type.
+    #
+    #   \param type The type to add a storage path for.
+    #   \param path The path to add as storage path. Should be relative to the resources storage path.
+    @classmethod
+    def addStorageType(cls, type, path):
+        if type in cls.__types:
+            raise TypeError("Type {0} already exists".format(type))
+
+        cls.__types[type] = path
+
+    ##  Remove a custom resource type.
+    @classmethod
+    def removeType(cls, type):
+        if type not in cls.__types:
+            return
+
+        if type <= cls.UserType:
+            raise TypeError("Uranium standard types cannot be removed")
+
+        del cls.__types[type]
+
+        if type in cls.__types_storage:
+            del cls.__types_storage[type]
 
     ## private:
 
     # Returns a list of paths where args was found.
     @classmethod
     def __find(cls, type, *args):
-        suffix = cls.__getLocationSuffix(type)
+        suffix = cls.__types.get(type, None)
         if not suffix:
             return None
 
         files = []
         for path in cls.__paths:
-            file_path = os.path.join(path, *suffix)
-            file_path = os.path.join(file_path, *args)
+            file_path = os.path.join(path, "resources", suffix, *args)
             if os.path.exists(file_path):
                 files.append(file_path)
         return files
-
-    @classmethod
-    def __getLocationSuffix(cls, type):
-        if type == cls.ResourcesLocation:
-            return ["resources"]
-        elif type == cls.SettingsLocation:
-            return ["resources", "settings"]
-        elif type == cls.PreferencesLocation:
-            return ["resources", "preferences"]
-        elif type == cls.MeshesLocation:
-            return ["resources", "meshes"]
-        elif type == cls.ShadersLocation:
-            return ["resources", "shaders"]
-        elif type == cls.i18nLocation:
-            return ["resources", "i18n"]
-        elif type == cls.ImagesLocation:
-            return ["resources", "images"]
-        elif type == cls.ThemesLocation:
-            return ["resources", "themes"]
-        elif type == cls.FirmwareLocation:
-            return ["resources", "firmware"]
-        elif type == cls.QmlFilesLocation:
-            return ["resources", "qml"]
-        elif type == cls.WizardPagesLocation:
-            return ["resources", "qml", "WizardPages"]
-        else:
-            return None
 
     @classmethod
     def __initializeStoragePaths(cls):
@@ -188,3 +223,22 @@ class Resources:
     __config_storage_path = None
     __data_storage_path = None
     __paths = []
+    __types = {
+        Resources: "",
+        Preferences: "preferences",
+        Meshes: "meshes",
+        Shaders: "shaders",
+        i18n: "i18n",
+        Images: "images",
+        Themes: "themes",
+        MachineDefinitions: "machines",
+        MachineInstances: "machines/instances",
+        Profiles: ""
+    }
+    __types_storage = {
+        Resources: "",
+        Preferences: "",
+        MachineDefinitions: "machines",
+        MachineInstances: "machines/instances",
+        Profiles: "profiles"
+    }
