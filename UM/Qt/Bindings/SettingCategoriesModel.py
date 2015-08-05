@@ -34,7 +34,7 @@ class SettingCategoriesModel(ListModel):
             for category in self._machine_settings.getAllCategories():
                 category.visibleChanged.disconnect(self._onCategoryVisibleChanged)
 
-        self._machine_settings = Application.getInstance().getActiveMachine()
+        self._machine_settings = Application.getInstance().getMachineManager().getActiveMachineInstance()
 
         if self._machine_settings:
             for category in self._machine_settings.getAllCategories():
