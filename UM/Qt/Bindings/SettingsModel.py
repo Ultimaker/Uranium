@@ -27,7 +27,7 @@ class SettingsModel(ListModel):
     def __init__(self, parent = None):
         super().__init__(parent)
         self._machine_settings = None
-        Application.getInstance().activeMachineChanged.connect(self._onActiveMachineChanged)
+        Application.getInstance().getMachineManager().activeMachineInstanceChanged.connect(self._onActiveMachineChanged)
         self._onActiveMachineChanged()
 
         self.addRoleName(self.NameRole, "name")

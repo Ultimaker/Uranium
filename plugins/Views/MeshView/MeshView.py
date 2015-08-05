@@ -49,7 +49,7 @@ class MeshView(View):
             self._disabled_material.setUniformValue("u_overhangColor", Color(1.0, 0.0, 0.0, 1.0))
             self._disabled_material.setUniformValue("u_shininess", 50.0)
 
-        if Application.getInstance().getActiveMachine():
+        if Application.getInstance().getMachineManager().getActiveMachineInstance():
             machine = Application.getInstance().getActiveMachine()
 
             if machine.getSettingValueByKey("support_enable"):

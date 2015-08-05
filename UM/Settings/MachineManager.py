@@ -69,7 +69,7 @@ class MachineManager(SignalEmitter):
             return
 
         self._active_machine = machine
-        self.activeMachineChanged.emit()
+        self.activeMachineInstanceChanged.emit()
 
     activeMachineInstanceChanged = Signal()
 

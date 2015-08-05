@@ -74,7 +74,9 @@ class QtApplication(QApplication, Application, SignalEmitter):
         self._plugin_registry.checkRequiredPlugins(self.getRequiredPlugins())
 
         self.showSplashMessage(i18n_catalog.i18nc("Splash screen message", "Loading machines..."))
-        self.loadMachines()
+        self.getMachineManager().updateMachineDefinitions()
+        self.getMachineManager().updateMachineInstances()
+        self.getMachineManager().updateProfiles()
 
         self.showSplashMessage(i18n_catalog.i18nc("Splash screen message", "Loading preferences..."))
         try:

@@ -14,7 +14,7 @@ class Platform(SceneNode.SceneNode):
         self._settings = None
         self._material = None
         self._texture = None
-        Application.getInstance().activeMachineChanged.connect(self._onActiveMachineChanged)
+        Application.getInstance().getMachineManager().activeMachineInstanceChanged.connect(self._onActiveMachineChanged)
         self._onActiveMachineChanged()
 
         self.setCalculateBoundingBox(False)
@@ -40,7 +40,7 @@ class Platform(SceneNode.SceneNode):
             self.setMeshData(None)
 
         app = Application.getInstance()
-        self._settings = app.getActiveMachine()
+        self._settings = app.getMachineManager().getActiveMachineInstance()
         if self._settings:
             mesh = self._settings.getPlatformMesh()
             if not mesh:
