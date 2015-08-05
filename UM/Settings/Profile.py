@@ -21,6 +21,11 @@ class Profile():
     def readFromFile(self, file):
         parser = configparser.ConfigParser()
         parser.read(file)
+        if not parser.has_section("General"):
+            raise SettingsError.InvalidFileError(path)
+
+        if not parser.has_option("General", "version") or parser.get("General", "version") != self.ProfileVersion:
+            raise SettingsError.InvalidVersionError(path)
         for group in parser:
             if group == "DEFAULT":
                 continue

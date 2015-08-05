@@ -12,6 +12,7 @@ from UM.Settings.SettingsCategory import SettingsCategory
 from UM.Settings.Setting import Setting
 from UM.Settings.Profile import Profile
 from UM.Settings.Validators.ResultCodes import ResultCodes
+from UM.Settings import SettingsError
 from UM.Signal import Signal, SignalEmitter
 from PyQt5.QtCore import QCoreApplication
 from UM.Logger import Logger
@@ -19,6 +20,9 @@ from UM.Resources import Resources
 from UM.i18n import i18nCatalog
 
 class MachineSettings(SignalEmitter):
+    MachineDefinitionVersion = 1
+    MachineInstanceVersion = 1
+
     def __init__(self):
         super().__init__()
         self._categories = []
@@ -62,6 +66,11 @@ class MachineSettings(SignalEmitter):
         with open(file_name, "rt", -1, "utf-8") as f:
             data = json.load(f, object_pairs_hook=collections.OrderedDict)
 
+        if "id" not in data or "name" not in data:
+            raise SettingsError.InvalidFileError(file_name)
+
+        if "version" not in data or data["version"] != self.MachineDefinitionVersion:
+            raise SettingsError.InvalidVersionError(file_name)
         self._i18n_catalog = i18nCatalog(os.path.basename(file_name))
 
         self._json_file = file_name
@@ -146,9 +155,9 @@ class MachineSettings(SignalEmitter):
         config.add_section("General")
         config["General"]["type"] = self._type_id
         config["General"]["settings_json_file"] = self._json_file
-        config["General"]["version"] = self._type_version
         config["General"]["name"] = self._name
         config["General"]["visibility"] = self._getVisibleSettings()
+        config["General"]["version"] = self.MachineInstanceVersion
 
         for category in self._categories:
             configData = {}
