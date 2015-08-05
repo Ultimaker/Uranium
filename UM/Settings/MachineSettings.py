@@ -71,21 +71,19 @@ class MachineSettings(SignalEmitter):
 
         if "version" not in data or data["version"] != self.MachineDefinitionVersion:
             raise SettingsError.InvalidVersionError(file_name)
+
         self._i18n_catalog = i18nCatalog(os.path.basename(file_name))
 
         self._json_file = file_name
 
-        if "id" in data:
-            self._type_id = data["id"]
+        self._type_id = data["id"]
+        self._type_name = data["name"]
 
         if "platform" in data:
             self._platform_mesh = data["platform"]
 
         if "platform_texture" in data:
             self._platform_texture = data["platform_texture"]
-
-        if "name" in data:
-            self._type_name = data["name"]
 
         if "version" in data:
             self._type_version = str(data["version"])
@@ -121,54 +119,32 @@ class MachineSettings(SignalEmitter):
         self.settingsLoaded.emit() #Emit signal that all settings are loaded (some setting stuff can only be done when all settings are loaded (eg; the conditional stuff)
     settingsLoaded = Signal()
 
-    ##  Load values of settings from file. 
-    def loadValuesFromFile(self, file_name):
+    def loadFromFile(self, path):
         config = configparser.ConfigParser()
-        config.read(file_name)
-        if not self._categories:
-            try:
-                self.loadSettingsFromFile(Resources.getPath(Resources.SettingsLocation, config["General"]["settings_json_file"]))
-            except KeyError:
-                Logger.log('e' , "Linked json file from preferences not found")
+        config.read(path)
 
+        if not config.has_section("General"):
+            raise SettingsError.InvalidFileError(path)
+
+        if not config.has_option("General", "version") or config.get("General", "version") != self.MachineInstanceVersion:
+            raise SettingsError.InvalidVersionError(path)
+
+        if not config.has_option("General", "name") or not config.has_option("General", "json_file"):
+            raise SettingsError.InvalidFileError(path)
+
+        self.loadSettingsFromFile(Resources.getPath(Resources.SettingsLocation, config["General"]["json_file"]))
         self._name = config.get("General", "name", fallback = "Unknown Machine")
 
-        visibility = config.get("General", "visibility", fallback = None)
-        if visibility:
-            values = visibility.split(",")
-            for setting in self.getAllSettings():
-                if setting.getKey() in values:
-                    setting.setVisible(True)
-                else:
-                    setting.setVisible(False)
-
-        for name, section in config.items():
-            for key in section:
-                setting = self.getSettingByKey(key)
-                if setting is not None:
-                    setting.setValue(section[key])
-
-    ##  Save setting values to file
-    def saveValuesToFile(self, file_name):
+    def saveToFile(self, path):
         config = configparser.ConfigParser()
 
         config.add_section("General")
-        config["General"]["type"] = self._type_id
-        config["General"]["settings_json_file"] = self._json_file
         config["General"]["name"] = self._name
-        config["General"]["visibility"] = self._getVisibleSettings()
+        config["General"]["json_file"] = self._json_file
         config["General"]["version"] = self.MachineInstanceVersion
 
-        for category in self._categories:
-            configData = {}
-            for setting in category.getAllSettings():
-                if setting.isVisible() and setting.isActive():
-                    configData[setting.getKey()] = setting.getValue()
-            config[category.getKey()] = configData
-
-        with open(file_name, "w") as f:
+        with open(path, "wt") as f:
             config.write(f)
-
 
     def getTypeName(self):
         return self._type_name
