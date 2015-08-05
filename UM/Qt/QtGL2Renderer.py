@@ -326,8 +326,8 @@ class QtGL2Renderer(Renderer):
         self._gl.initializeOpenGLFunctions()
 
         self._default_material = self.createMaterial(
-                                     Resources.getPath(Resources.ShadersLocation, "default.vert"),
-                                     Resources.getPath(Resources.ShadersLocation, "default.frag")
+                                     Resources.getPath(Resources.Shaders, "default.vert"),
+                                     Resources.getPath(Resources.Shaders, "default.frag")
                                 )
 
         self._default_material.setUniformValue("u_ambientColor", Color(0.3, 0.3, 0.3, 1.0))
@@ -337,18 +337,18 @@ class QtGL2Renderer(Renderer):
 
         self._selection_buffer = self.createFrameBuffer(128, 128)
         self._selection_material = self.createMaterial(
-                                        Resources.getPath(Resources.ShadersLocation, "basic.vert"),
-                                        Resources.getPath(Resources.ShadersLocation, "color.frag")
+                                        Resources.getPath(Resources.Shaders, "basic.vert"),
+                                        Resources.getPath(Resources.Shaders, "color.frag")
                                    )
 
         self._handle_material = self.createMaterial(
-                                     Resources.getPath(Resources.ShadersLocation, "basic.vert"),
-                                     Resources.getPath(Resources.ShadersLocation, "vertexcolor.frag")
+                                     Resources.getPath(Resources.Shaders, "basic.vert"),
+                                     Resources.getPath(Resources.Shaders, "vertexcolor.frag")
                                 )
 
         self._outline_material = self.createMaterial(
-                                      Resources.getPath(Resources.ShadersLocation, "outline.vert"),
-                                       Resources.getPath(Resources.ShadersLocation, "outline.frag")
+                                      Resources.getPath(Resources.Shaders, "outline.vert"),
+                                       Resources.getPath(Resources.Shaders, "outline.frag")
                                  )
 
         self._initialized = True

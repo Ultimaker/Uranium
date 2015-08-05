@@ -3,21 +3,26 @@
 
 from PyQt5.QtCore import QObject, pyqtSlot, QUrl, Q_ENUMS
 
-from UM.Resources import Resources
+import UM.Resources
 
 class ResourcesProxy(QObject):
-    class Location:
-        ResourcesLocation = Resources.ResourcesLocation
-        SettingsLocation = Resources.SettingsLocation
-        PreferencesLocation = Resources.PreferencesLocation
-        ThemesLocation = Resources.ThemesLocation
-        ImagesLocation = Resources.ImagesLocation
-        WizardPagesLocation = Resources.WizardPagesLocation
-    Q_ENUMS(Location)
+    class Type:
+        Resources = UM.Resources.Resources.Resources
+        Preferences = UM.Resources.Resources.Preferences
+        Themes = UM.Resources.Resources.Themes
+        Images = UM.Resources.Resources.Images
+        Meshes = UM.Resources.Resources.Meshes
+        MachineDefinitions = UM.Resources.Resources.MachineDefinitions
+        MachineInstances = UM.Resources.Resources.MachineInstances
+        Profiles = UM.Resources.Resources.Profiles
+        i18n = UM.Resources.Resources.i18n
+        Shaders = UM.Resources.Resources.Shaders
+        UserType = UM.Resources.Resources.UserType
+    Q_ENUMS(Type)
 
     def __init__(self, parent = None):
         super().__init__(parent)
 
     @pyqtSlot(int, str, result=QUrl)
     def getPath(self, type, name):
-        return QUrl.fromLocalFile(Resources.getPath(type, name))
+        return QUrl.fromLocalFile(UM.Resources.Resources.getPath(type, name))

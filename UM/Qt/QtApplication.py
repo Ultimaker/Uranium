@@ -56,7 +56,7 @@ class QtApplication(QApplication, Application, SignalEmitter):
         self.setAttribute(Qt.AA_UseDesktopOpenGL)
 
         try:
-            self._splash = QSplashScreen(QPixmap(Resources.getPath(Resources.ImagesLocation, self.getApplicationName() + ".png")))
+            self._splash = QSplashScreen(QPixmap(Resources.getPath(Resources.Images, self.getApplicationName() + ".png")))
         except FileNotFoundError:
             self._splash = None
         else:
@@ -78,7 +78,7 @@ class QtApplication(QApplication, Application, SignalEmitter):
 
         self.showSplashMessage(i18n_catalog.i18nc("Splash screen message", "Loading preferences..."))
         try:
-            file = Resources.getPath(Resources.PreferencesLocation, self.getApplicationName() + ".cfg")
+            file = Resources.getPath(Resources.Preferences, self.getApplicationName() + ".cfg")
             Preferences.getInstance().readFromFile(file)
         except FileNotFoundError:
             pass
@@ -161,7 +161,7 @@ class QtApplication(QApplication, Application, SignalEmitter):
 
     def windowClosed(self):
         self.saveMachines()
-        Preferences.getInstance().writeToFile(Resources.getStoragePath(Resources.PreferencesLocation, self.getApplicationName() + ".cfg"))
+        Preferences.getInstance().writeToFile(Resources.getStoragePath(Resources.Preferences, self.getApplicationName() + ".cfg"))
         self.applicationShuttingDown.emit()
         self.getBackend().close()
         self.quit()
@@ -187,13 +187,13 @@ class QtApplication(QApplication, Application, SignalEmitter):
         if language == "default":
             path = self._getDefaultLanguage(file)
         else:
-            path = Resources.getPath(Resources.i18nLocation, language, "LC_MESSAGES", file + ".qm")
+            path = Resources.getPath(Resources.i18n, language, "LC_MESSAGES", file + ".qm")
 
         # If all else fails, fall back to english.
         if not path:
             Logger.log("w", "Could not find any translations matching {0} for file {1}, falling back to english".format(language, file))
             try:
-                path = Resources.getPath(Resources.i18nLocation, "en", "LC_MESSAGES", file + ".qm")
+                path = Resources.getPath(Resources.i18n, "en", "LC_MESSAGES", file + ".qm")
             except FileNotFoundError:
                 Logger.log("w", "Could not find English translations for file {0}. Switching to developer english.".format(file))
                 return
@@ -227,7 +227,7 @@ class QtApplication(QApplication, Application, SignalEmitter):
         lang = os.getenv("URANIUM_LANGUAGE")
         if lang:
             try:
-                return Resources.getPath(Resources.i18nLocation, lang, "LC_MESSAGES", file + ".qm")
+                return Resources.getPath(Resources.i18n, lang, "LC_MESSAGES", file + ".qm")
             except FileNotFoundError:
                 pass
 
@@ -235,7 +235,7 @@ class QtApplication(QApplication, Application, SignalEmitter):
         lang = Preferences.getInstance().getValue("general/language")
         if lang:
             try:
-                return Resources.getPath(Resources.i18nLocation, lang, "LC_MESSAGES", file + ".qm")
+                return Resources.getPath(Resources.i18n, lang, "LC_MESSAGES", file + ".qm")
             except FileNotFoundError:
                 pass
 
@@ -243,7 +243,7 @@ class QtApplication(QApplication, Application, SignalEmitter):
         lang = os.getenv("LANGUAGE")
         if lang:
             try:
-                return Resources.getPath(Resources.i18nLocation, lang, "LC_MESSAGES", file + ".qm")
+                return Resources.getPath(Resources.i18n, lang, "LC_MESSAGES", file + ".qm")
             except FileNotFoundError:
                 pass
 
@@ -253,7 +253,7 @@ class QtApplication(QApplication, Application, SignalEmitter):
         # First, try and find a directory for any of the provided languages
         for lang in locale.uiLanguages():
             try:
-                return Resources.getPath(Resources.i18nLocation, lang, "LC_MESSAGES", file + ".qm")
+                return Resources.getPath(Resources.i18n, lang, "LC_MESSAGES", file + ".qm")
             except FileNotFoundError:
                 pass
 
@@ -262,7 +262,7 @@ class QtApplication(QApplication, Application, SignalEmitter):
         lang = locale.uiLanguages()[0]
         lang = lang[0:lang.find("-")]
         try:
-            return Resources.getPath(Resources.i18nLocation, lang, "LC_MESSAGES", file + ".qm")
+            return Resources.getPath(Resources.i18n, lang, "LC_MESSAGES", file + ".qm")
         except FileNotFoundError:
             pass
 

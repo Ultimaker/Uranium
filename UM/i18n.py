@@ -83,7 +83,7 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
         else:
             languages.append(self._language)
 
-        for path in Resources.getLocation(Resources.i18nLocation):
+        for path in Resources.getAllPathsForType(Resources.i18n):
             if gettext.find(self._name, path, languages = languages):
                 self.__translation = gettext.translation(self._name, path, languages=languages)
                 break

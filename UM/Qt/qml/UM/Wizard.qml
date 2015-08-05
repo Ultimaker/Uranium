@@ -100,14 +100,12 @@ UM.Dialog {
             x: wizardProgress.width + UM.Theme.sizes.default_margin.width
 
             function getPageSource(index){
-                var page = progressList.model.getItem(index).page + '.qml'
-                return UM.Resources.getPath(UM.Resources.WizardPagesLocation, page)
+                return progressList.model.getItem(index).page;
             }
 
             function getPageSource2(index){
                 if (wizardModel.get(index) != undefined){
-                    var page = wizardModel.get(index).page
-                    return UM.Resources.getPath(UM.Resources.WizardPagesLocation, page)
+                    return wizardModel.get(index).page
                 }
                 else{
                     return ""

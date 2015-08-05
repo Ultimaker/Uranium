@@ -37,7 +37,7 @@ class AvailableMachinesModel(ListModel):
         file = self.getItem(index)["file"]
 
         machine = MachineSettings()
-        machine.loadSettingsFromFile(Resources.getPath(Resources.SettingsLocation, file))
+        machine.loadSettingsFromFile(Resources.getPath(Resources.Settings, file))
         machine.setName(name)
 
         app = Application.getInstance()
@@ -45,7 +45,7 @@ class AvailableMachinesModel(ListModel):
         app.setActiveMachine(app.getMachines()[index])
 
     def _updateModel(self):
-        dirs = Resources.getLocation(Resources.SettingsLocation)
+        dirs = Resources.getAllPathsForType(Resources.Settings)
         _machines_by_ultimaker = []
         _machines_by_other = []
 

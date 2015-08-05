@@ -42,7 +42,7 @@ class AddMachinesModel(ListModel):
 
 
     def _updateModel(self):
-        dirs = Resources.getLocation(Resources.SettingsLocation)
+        dirs = Resources.getAllPathsForType(Resources.Settings)
 
         for dir in dirs:
             if not os.path.isdir(dir):

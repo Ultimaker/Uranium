@@ -43,12 +43,12 @@ class Application(SignalEmitter):
         Signal._app = self
         Resources.ApplicationIdentifier = name
 
-        Resources.addResourcePath(os.path.dirname(sys.executable))
-        Resources.addResourcePath(os.path.join(Application.getInstallPrefix(), "share", "uranium"))
-        Resources.addResourcePath(os.path.join(Application.getInstallPrefix(), "Resources", "uranium"))
-        Resources.addResourcePath(os.path.join(Application.getInstallPrefix(), "Resources", self.getApplicationName()))
+        Resources.addSearchPath(os.path.dirname(sys.executable))
+        Resources.addSearchPath(os.path.join(Application.getInstallPrefix(), "share", "uranium"))
+        Resources.addSearchPath(os.path.join(Application.getInstallPrefix(), "Resources", "uranium"))
+        Resources.addSearchPath(os.path.join(Application.getInstallPrefix(), "Resources", self.getApplicationName()))
         if not hasattr(sys, "frozen"):
-            Resources.addResourcePath(os.path.join(os.path.abspath(os.path.dirname(__file__)), ".."))
+            Resources.addSearchPath(os.path.join(os.path.abspath(os.path.dirname(__file__)), ".."))
 
         self._main_thread = threading.current_thread()
 
@@ -63,7 +63,7 @@ class Application(SignalEmitter):
         preferences = Preferences.getInstance()
         preferences.addPreference("general/language", "en")
         try:
-            preferences.readFromFile(Resources.getPath(Resources.PreferencesLocation, self._application_name + ".cfg"))
+            preferences.readFromFile(Resources.getPath(Resources.Preferences, self._application_name + ".cfg"))
         except FileNotFoundError:
             pass
 
@@ -87,7 +87,7 @@ class Application(SignalEmitter):
         self._plugin_registry.addPluginLocation(os.path.join(Application.getInstallPrefix(), "Resources", "uranium", "plugins"))
         self._plugin_registry.addPluginLocation(os.path.join(Application.getInstallPrefix(), "Resources", self.getApplicationName(), "plugins"))
         # Locally installed plugins
-        self._plugin_registry.addPluginLocation(os.path.join(Resources.getStoragePath(Resources.ResourcesLocation), "plugins"))
+        self._plugin_registry.addPluginLocation(os.path.join(Resources.getStoragePath(Resources.Resources), "plugins"))
         if not hasattr(sys, "frozen"):
             self._plugin_registry.addPluginLocation(os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "plugins"))
 
@@ -321,7 +321,7 @@ class Application(SignalEmitter):
         pass
 
     def loadMachines(self):
-        settings_directory = Resources.getStorageLocation(Resources.SettingsLocation)
+        settings_directory = Resources.getStoragePathForType(Resources.Settings)
         for entry in os.listdir(settings_directory):
             settings = MachineSettings()
             settings.loadValuesFromFile(os.path.join(settings_directory, entry))
@@ -329,7 +329,7 @@ class Application(SignalEmitter):
         self._machines.sort(key = lambda k: k.getName())
 
     def saveMachines(self):
-        settings_directory = Resources.getStorageLocation(Resources.SettingsLocation)
+        settings_directory = Resources.getStoragePathForType(Resources.Settings)
         for machine in self._machines:
             machine.saveValuesToFile(os.path.join(settings_directory, urllib.parse.quote_plus(machine.getName()) + ".cfg"))
 

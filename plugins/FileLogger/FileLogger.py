@@ -17,7 +17,7 @@ class FileLogger(LogOutput):
         if hasattr(sys, "frozen"):
             # Running in py2exe or py2app context, do not try to save to the app dir as it may not be writeable.
             # instead, try and save in the settings location since that should be writeable.
-            self.setFileName(Resources.getStoragePath(Resources.ResourcesLocation, file_name))
+            self.setFileName(Resources.getStoragePath(Resources.Resources, file_name))
         else:
             self.setFileName(file_name)
            

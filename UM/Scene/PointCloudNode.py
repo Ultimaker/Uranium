@@ -55,7 +55,7 @@ class PointCloudNode(SceneNode.SceneNode):
     
     ##   \brief Create new material. 
     def createMaterial(self,renderer):
-        self._material = renderer.createMaterial(Resources.getPath(Resources.ShadersLocation, "default.vert"), Resources.getPath(Resources.ShadersLocation, "default.frag"))
+        self._material = renderer.createMaterial(Resources.getPath(Resources.Shaders, "default.vert"), Resources.getPath(Resources.Shaders, "default.frag"))
         self._material.setUniformValue("u_ambientColor", Color(0.3, 0.3, 0.3, 1.0))
         self._material.setUniformValue("u_diffuseColor", self._color)
         self._material.setUniformValue("u_specularColor", Color(1.0, 1.0, 1.0, 1.0))

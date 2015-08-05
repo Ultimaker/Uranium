@@ -31,9 +31,9 @@ class MeshView(View):
 
         if not self._enabled_material:
             if Preferences.getInstance().getValue("view/show_overhang"):
-                self._enabled_material = renderer.createMaterial(Resources.getPath(Resources.ShadersLocation, "default.vert"), Resources.getPath(Resources.ShadersLocation, "overhang.frag"))
+                self._enabled_material = renderer.createMaterial(Resources.getPath(Resources.Shaders, "default.vert"), Resources.getPath(Resources.Shaders, "overhang.frag"))
             else:
-                self._enabled_material = renderer.createMaterial(Resources.getPath(Resources.ShadersLocation, "default.vert"), Resources.getPath(Resources.ShadersLocation, "default.frag"))
+                self._enabled_material = renderer.createMaterial(Resources.getPath(Resources.Shaders, "default.vert"), Resources.getPath(Resources.Shaders, "default.frag"))
 
             self._enabled_material.setUniformValue("u_ambientColor", Color(0.3, 0.3, 0.3, 1.0))
             self._enabled_material.setUniformValue("u_diffuseColor", self.EnabledColor)
@@ -42,7 +42,7 @@ class MeshView(View):
             self._enabled_material.setUniformValue("u_shininess", 50.0)
 
         if not self._disabled_material:
-            self._disabled_material = renderer.createMaterial(Resources.getPath(Resources.ShadersLocation, "default.vert"), Resources.getPath(Resources.ShadersLocation, "default.frag"))
+            self._disabled_material = renderer.createMaterial(Resources.getPath(Resources.Shaders, "default.vert"), Resources.getPath(Resources.Shaders, "default.frag"))
             self._disabled_material.setUniformValue("u_ambientColor", Color(0.3, 0.3, 0.3, 1.0))
             self._disabled_material.setUniformValue("u_diffuseColor", self.DisabledColor)
             self._disabled_material.setUniformValue("u_specularColor", Color(1.0, 1.0, 1.0, 1.0))

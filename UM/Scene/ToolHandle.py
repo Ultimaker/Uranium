@@ -70,8 +70,8 @@ class ToolHandle(SceneNode.SceneNode):
     def render(self, renderer):
         if not self._material:
             self._material = renderer.createMaterial(
-                Resources.getPath(Resources.ShadersLocation, "toolhandle.vert"),
-                Resources.getPath(Resources.ShadersLocation, "toolhandle.frag")
+                Resources.getPath(Resources.Shaders, "toolhandle.vert"),
+                Resources.getPath(Resources.Shaders, "toolhandle.frag")
             )
             self._material.setUniformValue("u_disabledColor", self.DisabledColor)
             self._material.setUniformValue("u_activeColor", self.DisabledColor)
