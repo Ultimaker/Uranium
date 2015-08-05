@@ -12,6 +12,7 @@ from UM.Signal import Signal, SignalEmitter
 from UM.Logger import Logger
 from UM.Preferences import Preferences
 from UM.OutputDevice.OutputDeviceManager import OutputDeviceManager
+from UM.Settings.MachineManager import MachineManager
 
 import threading
 import argparse
@@ -72,11 +73,9 @@ class Application(SignalEmitter):
         self._extensions = []
         self._backend = None
         self._output_device_manager = OutputDeviceManager()
+        self._machine_manager = MachineManager()
 
-        self._machines = []
-        self._active_machine = None
-        
-        self._required_plugins = [] 
+        self._required_plugins = []
 
         self._operation_stack = OperationStack()
 
@@ -101,25 +100,24 @@ class Application(SignalEmitter):
         self.showMessageSignal.connect(self.showMessage)
         self.hideMessageSignal.connect(self.hideMessage)
 
-
     ##  Emitted when the application window was closed and we need to shut down the application
     applicationShuttingDown = Signal()
-    
+
     showMessageSignal = Signal()
-    
+
     hideMessageSignal = Signal()
-    
+
     def hideMessage(self, message):
         raise NotImplementedError
-    
+
     def showMessage(self, message):
         raise NotImplementedError
-    
+
     ##  Get the version of the application  
     #   \returns version \type{string} 
     def getVersion(self):
         return self._version
-    
+
     ##  Add a message to the visible message list so it will be displayed.
     #   This should only be called by message object itself. 
     #   To show a message, simply create it and call its .show() function.
@@ -130,9 +128,9 @@ class Application(SignalEmitter):
     #        if message not in self._visible_messages:
     #            self._visible_messages.append(message)
     #            self.visibleMessageAdded.emit(message)
-    
+
     visibleMessageAdded = Signal()
-    
+
     ##  Remove a message from the visible message list so it will no longer be displayed.
     #   This should only be called by message object itself. 
     #   in principle, this should only be called by the message itself (hide)
@@ -143,7 +141,7 @@ class Application(SignalEmitter):
     #        if message in self._visible_messages:
     #            self._visible_messages.remove(message)
     #            self.visibleMessageRemoved.emit(message)
-    
+
     ##  Hide message by ID (as provided by built-in id function)
     #   \param message_id \type{long}
     def hideMessageById(self, message_id):
@@ -162,7 +160,7 @@ class Application(SignalEmitter):
     def getVisibleMessages(self):
         with self._message_lock:
             return self._visible_messages
-    
+
     ##  Function that needs to be overriden by child classes with a list of plugin it needs.
     def _loadPlugins(self):
         pass
@@ -172,23 +170,23 @@ class Application(SignalEmitter):
             self.parseCommandLine()
 
         return self._parsed_command_line.get(name, default)
-    
+
     ##  Get name of the application.
     #   \returns application_name \type{string}
     def getApplicationName(self):
         return self._application_name
-    
+
     ##  Set name of the application.
     #   \param application_name \type{string}
     def setApplicationName(self, application_name):
         self._application_name = application_name
-        
+
     ##  Application has a list of plugins that it *must* have. If it does not have these, it cannot function.
     #   These plugins can not be disabled in any way.
     #   \returns required_plugins \type{list}
     def getRequiredPlugins(self):
         return self._required_plugins
-    
+
     ##  Set the plugins that the application *must* have in order to function.
     #   \param plugin_names \type{list} List of strings with the names of the required plugins
     def setRequiredPlugins(self, plugin_names):
@@ -199,51 +197,8 @@ class Application(SignalEmitter):
     def setBackend(self, backend):
         self._backend = backend
 
-    ##  Get a list of all machines.
-    #   \returns machines \type{list}
-    def getMachines(self):
-        return self._machines
-    
-    ##  Add a machine to the list.
-    #   The list is sorted by name
-    #   \param machine \type{MachineSettings}
-    #   \returns index \type{int}
-    def addMachine(self, machine):
-        self._machines.append(machine)
-        self._machines.sort(key = lambda k: k.getName())
-        self.machinesChanged.emit()
-        return len(self._machines) - 1
-    
-    ##  Remove a machine from the list.
-    #   \param machine \type{MachineSettings}
-    def removeMachine(self, machine):
-        self._machines.remove(machine)
-
-        try:
-            path = Resources.getStoragePath(Resources.SettingsLocation, urllib.parse.quote_plus(machine.getName()) + ".cfg")
-            os.remove(path)
-        except FileNotFoundError:
-            pass
-
-        self.machinesChanged.emit()
-
-    machinesChanged = Signal()
-    
-    ##  Get the currently active machine
-    #   \returns active_machine \type{MachineSettings}
-    def getActiveMachine(self):
-        return self._active_machine
-    
-    ##  Set the currently active machine
-    #   \param active_machine \type{MachineSettings}
-    def setActiveMachine(self, machine):
-        if machine == self._active_machine:
-            return
-
-        self._active_machine = machine
-        self.activeMachineChanged.emit()
-
-    activeMachineChanged = Signal()
+    def getMachineManager(self):
+        return self._machine_manager
 
     ##  Get the backend of the application (the program that does the heavy lifting).
     #   \returns Backend \type{Backend}
@@ -319,19 +274,6 @@ class Application(SignalEmitter):
     #   \param parser \type{argparse.ArgumentParser} The parser that will parse the command line.
     def addCommandLineOptions(self, parser):
         pass
-
-    def loadMachines(self):
-        settings_directory = Resources.getStoragePathForType(Resources.Settings)
-        for entry in os.listdir(settings_directory):
-            settings = MachineSettings()
-            settings.loadValuesFromFile(os.path.join(settings_directory, entry))
-            self._machines.append(settings)
-        self._machines.sort(key = lambda k: k.getName())
-
-    def saveMachines(self):
-        settings_directory = Resources.getStoragePathForType(Resources.Settings)
-        for machine in self._machines:
-            machine.saveValuesToFile(os.path.join(settings_directory, urllib.parse.quote_plus(machine.getName()) + ".cfg"))
 
     def addExtension(self, extension):
         self._extensions.append(extension)
