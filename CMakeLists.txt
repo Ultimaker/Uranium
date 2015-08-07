@@ -2,6 +2,8 @@ project(uranium)
 
 cmake_minimum_required(VERSION 2.8.12)
 
+include(GNUInstallDirs)
+
 find_package(PythonInterp 3.4.0 REQUIRED)
 
 # Tests
@@ -36,7 +38,7 @@ if(GETTEXT_FOUND AND Qt5LinguistTools_FOUND)
     # translations target will convert .po files into .mo and .qm as needed.
     # The files are checked for a _qt suffix and if it is found, converted to
     # qm, otherwise they are converted to .po.
-    add_custom_target(translations)
+    add_custom_target(translations ALL)
     # copy-translations can be used to copy the built translation files from the
     # build directory to the source resources directory. This is mostly a convenience
     # during development, normally you want to simply use the install target to install
@@ -71,10 +73,10 @@ if(GETTEXT_FOUND AND Qt5LinguistTools_FOUND)
         foreach(file ${qm_files} ${mo_files})
             add_custom_command(TARGET copy-translations POST_BUILD COMMAND cp ARGS ${file} ${CMAKE_SOURCE_DIR}/resources/i18n/${lang}/LC_MESSAGES COMMENT "Copying ${file}...")
         endforeach()
+
+        install(FILES ${qm_files} ${mo_files} DESTINATION ${CMAKE_INSTALL_DATADIR}/uranium/resources/i18n/${lang}/LC_MESSAGES/)
     endforeach()
 endif()
-
-include(GNUInstallDirs)
 
 if(APPLE OR WIN32)
     install(DIRECTORY UM DESTINATION lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/site-packages)
