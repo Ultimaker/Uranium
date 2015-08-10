@@ -54,18 +54,18 @@ class AxisAlignedBox:
         if not other.isValid():
             return self
 
-        newMin = Vector()
-        newMin.setX(min(self._min.x, other.left))
-        newMin.setY(min(self._min.y, other.bottom))
-        newMin.setZ(min(self._min.z, other.back))
+        new_min = Vector()
+        new_min.setX(min(self._min.x, other.left))
+        new_min.setY(min(self._min.y, other.bottom))
+        new_min.setZ(min(self._min.z, other.back))
 
-        newMax = Vector()
-        newMax.setX(max(self._max.x, other.right))
-        newMax.setY(max(self._max.y, other.top))
-        newMax.setZ(max(self._max.z, other.front))
+        new_max = Vector()
+        new_max.setX(max(self._max.x, other.right))
+        new_max.setY(max(self._max.y, other.top))
+        new_max.setZ(max(self._max.z, other.front))
 
-        self._min = newMin
-        self._max = newMax
+        self._min = new_min
+        self._max = new_max
 
         return self
 
