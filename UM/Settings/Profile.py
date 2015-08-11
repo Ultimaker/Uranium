@@ -43,7 +43,7 @@ class Profile(SignalEmitter):
         if not parser.has_section("General"):
             raise SettingsError.InvalidFileError(path)
 
-        if not parser.has_option("General", "version") or parser.get("General", "version") != self.ProfileVersion:
+        if not parser.has_option("General", "version") or int(parser.get("General", "version")) != self.ProfileVersion:
             raise SettingsError.InvalidVersionError(path)
 
         self._name = parser.get("General", "name")
@@ -59,7 +59,7 @@ class Profile(SignalEmitter):
         parser = configparser.ConfigParser()
 
         parser.add_section("General")
-        parser.set("General", "version", self.ProfileVersion)
+        parser.set("General", "version", str(self.ProfileVersion))
         parser.set("General", "name", self._name)
 
         parser.add_section("Settings")
