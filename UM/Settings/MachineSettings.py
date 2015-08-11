@@ -24,7 +24,7 @@ class MachineSettings(SignalEmitter):
         self._categories = []
         self._platform_mesh = None
         self._platform_texture = None
-        self._name = "Unknown Machine",
+        self._name = "Unknown Machine"
         self._type_name = "Unknown"
         self._type_id = "unknown"
         self._type_version = "unknown"
