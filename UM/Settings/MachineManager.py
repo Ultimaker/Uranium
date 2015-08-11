@@ -3,9 +3,11 @@
 
 import urllib
 import os
+import json
 
 from UM.Signal import Signal, SignalEmitter
 from UM.Resources import Resources
+from UM.Logger import Logger
 
 from UM.Settings.MachineDefinition import MachineDefinition
 from UM.Settings.MachineSettings import MachineSettings
@@ -16,8 +18,10 @@ from UM.i18n import i18nCatalog
 catalog = i18nCatalog("uranium")
 
 class MachineManager(SignalEmitter):
-    def __init__(self):
+    def __init__(self, app_name):
         super().__init__()
+
+        self._application_name = app_name
 
         self._machine_defintions = []
         self._machine_instances = []
@@ -159,9 +163,8 @@ class MachineManager(SignalEmitter):
                     continue
 
                 # Ignore any file that is marked as non-visible for the current application.
-                appname = Application.getInstance().getApplicationName()
-                if appname in data:
-                    if not data[appname].get("visible", True):
+                if self._application_name in data:
+                    if not data[self._application_name].get("visible", True):
                         continue
 
                 # Ignore files that are reported using an incompatible version
@@ -175,7 +178,7 @@ class MachineManager(SignalEmitter):
                     Logger.log("e", "JSON file {0} is missing important meta data, ignoring.".format(path))
                     continue
 
-                definition.setName(data.get("name", definition.machine_id))
+                definition.setName(data.get("name", definition.getId()))
                 definition.setVariantName(data.get("variant_name", None))
                 definition.setManufacturer(data.get("manufacturer", catalog.i18nc("", "Other")))
                 definition.setAuthor(data.get("author", catalog.i18nc("", "Unknown Author")))
