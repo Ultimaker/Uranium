@@ -50,7 +50,7 @@ class MachineSettings(SignalEmitter):
             changed_settings = profile.getChangedSettings()
             # Reset settings to default
             for setting in self.getAllSettings():
-                self.setValue(setting.getDefaultValue())
+                setting.setValue(setting.getDefaultValue())
             
             # Set all setting values to saved values
             for setting_key in changed_settings:
