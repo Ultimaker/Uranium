@@ -73,7 +73,7 @@ class Application(SignalEmitter):
         self._extensions = []
         self._backend = None
         self._output_device_manager = OutputDeviceManager()
-        self._machine_manager = MachineManager()
+        self._machine_manager = MachineManager(self._application_name)
 
         self._required_plugins = []
 
