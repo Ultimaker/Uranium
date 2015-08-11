@@ -102,6 +102,13 @@ class MachineManager(SignalEmitter):
         self._profiles.remove(profile)
         self.profilesChanged.emit()
 
+    def findProfile(self, name):
+        for profile in self._profiles:
+            if profile.getName() == name:
+                return profile
+
+        return None
+
     activeProfileChanged = Signal()
 
     def getActiveProfile(self):
