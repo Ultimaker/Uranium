@@ -14,6 +14,9 @@ class MachineDefinition():
         self._manufacturer = ""
         self._author = ""
 
+    def getId(self):
+        return self._machine_id
+
     def getName(self):
         return self._name
 
@@ -43,4 +46,3 @@ class MachineDefinition():
         instance.loadSettingsFromFile(Resources.getPath(Resources.MachineDefinitions, self._json_file))
         instance.setName(name)
         return instance
-
