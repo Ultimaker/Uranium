@@ -131,6 +131,7 @@ class MachineManager(SignalEmitter):
             return
 
         self._active_profile = profile
+        self._active_machine.setActiveProfile(profile)
         self.activeProfileChanged.emit()
 
     def loadAll(self):
