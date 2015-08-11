@@ -126,7 +126,7 @@ class MachineSettings(SignalEmitter):
         if not config.has_section("General"):
             raise SettingsError.InvalidFileError(path)
 
-        if not config.has_option("General", "version") or config.get("General", "version") != self.MachineInstanceVersion:
+        if not config.has_option("General", "version") or int(config.get("General", "version")) != self.MachineInstanceVersion:
             raise SettingsError.InvalidVersionError(path)
 
         if not config.has_option("General", "name") or not config.has_option("General", "json_file"):
@@ -140,8 +140,8 @@ class MachineSettings(SignalEmitter):
 
         config.add_section("General")
         config["General"]["name"] = self._name
-        config["General"]["json_file"] = self._json_file
-        config["General"]["version"] = self.MachineInstanceVersion
+        config["General"]["json_file"] = os.path.basename(self._json_file)
+        config["General"]["version"] = str(self.MachineInstanceVersion)
 
         with open(path, "wt") as f:
             config.write(f)
