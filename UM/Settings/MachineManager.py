@@ -129,7 +129,7 @@ class MachineManager(SignalEmitter):
         self._active_profile = profile
         self.activeProfileChanged.emit()
 
-    def updateMachineDefinitions(self):
+    def loadMachineDefinitions(self):
         dirs = Resources.getAllPathsForType(Resources.MachineDefinitions)
         for dir in dirs:
             if not os.path.isdir(dir):
@@ -178,7 +178,7 @@ class MachineManager(SignalEmitter):
 
         self.machineDefinitionsChanged.emit()
 
-    def updateMachineInstances(self):
+    def loadMachineInstances(self):
         dirs = Resources.getAllPathsForType(Resources.MachineInstances)
         for dir in dirs:
             if not os.path.isdir(dir):
@@ -201,8 +201,8 @@ class MachineManager(SignalEmitter):
 
         self.machineInstancesChanged.emit()
 
-    def updateProfiles(self):
-        dirs = Resources.getAllPathsForType(Resources.MachineInstances)
+    def loadProfiles(self):
+        dirs = Resources.getAllPathsForType(Resources.Profiles)
         for dir in dirs:
             if not os.path.isdir(dir):
                 continue
