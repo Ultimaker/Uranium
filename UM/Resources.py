@@ -92,8 +92,14 @@ class Resources:
             raise TypeError("Unknown type {0}".format(type))
 
         paths = []
+
+        try:
+            paths.append(cls.getStoragePathForType(type))
+        except UnsupportedStorageTypeError:
+            pass
+
         for path in cls.__paths:
-            paths.append(os.path.join(path, cls.__types[type]))
+            paths.append(os.path.join(path, "resources", cls.__types[type]))
 
         return paths
 
