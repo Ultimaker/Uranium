@@ -230,39 +230,17 @@ class MachineManager(SignalEmitter):
 
                 self._profiles.append(profile)
 
-            #settings_directory = Resources.getStoragePathForType(Resources.Settings)
-        #for entry in os.listdir(settings_directory):
-            #settings = MachineSettings()
-            #settings.loadValuesFromFile(os.path.join(settings_directory, entry))
-            #self._machines.append(settings)
-        #self._machines.sort(key = lambda k: k.getName())
 
-    ###  Get a list of all machines.
-    ##   \returns machines \type{list}s
-    #def getMachines(self):
-        #return self._machines
+    def saveAll(self):
+        self.saveMachineInstances()
+        self.saveProfiles()
 
-    ###  Add a machine to the list.
-    ##   The list is sorted by name
-    ##   \param machine \type{MachineSettings}
-    ##   \returns index \type{int}
-    #def addMachine(self, machine):
-        #self._machines.append(machine)
-        #self._machines.sort(key = lambda k: k.getName())
-        #self.machinesChanged.emit()
-        #return len(self._machines) - 1
+    def saveMachineInstances(self):
+        for instance in self._machine_instances:
+            file_name = urllib.parse.quote_plus(instance.getName()) + ".cfg"
+            instance.saveToFile(Resources.getStoragePath(Resources.MachineInstances, file_name))
 
-    ###  Remove a machine from the list.
-    ##   \param machine \type{MachineSettings}
-    #def removeMachine(self, machine):
-        #self._machines.remove(machine)
-
-        #try:
-            #path = Resources.getStoragePath(Resources.SettingsLocation, urllib.parse.quote_plus(machine.getName()) + ".cfg")
-            #os.remove(path)
-        #except FileNotFoundError:
-            #pass
-
-        #self.machinesChanged.emit()
-
-    #machinesChanged = Signal()
+    def saveProfiles(self):
+        for profile in self._profiles:
+            file_name = urllib.parse.quote_plus(profile.getName()) + ".cfg"
+            profile.saveToFile(Resources.getStoragePath(Resources.Profiles, file_name))
