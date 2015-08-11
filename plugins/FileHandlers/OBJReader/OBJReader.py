@@ -6,6 +6,7 @@ from UM.Mesh.MeshReader import MeshReader
 from UM.Mesh.MeshData import MeshData
 import os
 import struct
+from UM.Scene.SceneNode import SceneNode
 
 class OBJReader(MeshReader):
     def __init__(self):
@@ -14,14 +15,17 @@ class OBJReader(MeshReader):
         
     def read(self, file_name):
         mesh = None
+        scene_node = None
         extension = os.path.splitext(file_name)[1]
         if extension.lower() == self._supported_extension:
             vertex_list = []
             normal_list = []
             uv_list = []
             face_list = []
+            scene_node = SceneNode()
 
             mesh = MeshData()
+            scene_node.setMeshData(mesh)
             f = open(file_name, "rt")
             for line in f:
                 parts = line.split()
@@ -96,5 +100,6 @@ class OBJReader(MeshReader):
 
             if not mesh.hasNormals():
                 mesh.calculateNormals(fast = True)
-
-        return mesh
+        return scene_node
+        
+        #return scene_node

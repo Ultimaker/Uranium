@@ -6,7 +6,8 @@ from UM.Application import Application
 from UM.Message import Message
 from UM.Math.AxisAlignedBox import AxisAlignedBox
 from UM.Math.Matrix import Matrix
-
+from UM.Math.Vector import Vector
+import time
 import os.path
 
 from UM.i18n import i18nCatalog
@@ -29,9 +30,8 @@ class ReadMeshJob(Job):
         loading_message.setProgress(-1)
         loading_message.show()
 
-        mesh = self._handler.read(self._filename)
-
-        if not mesh:
+        node = self._handler.read(self._filename)
+        if not node:
             loading_message.hide()
 
             result_message = Message(i18n_catalog.i18nc("Failed loading mesh message, {0} is file name", "Failed to load {0}").format(self._filename))
@@ -42,24 +42,37 @@ class ReadMeshJob(Job):
         # Scale down to maximum bounds size if that is available
         if hasattr(Application.getInstance().getController().getScene(), "_maximum_bounds"):
             max_bounds = Application.getInstance().getController().getScene()._maximum_bounds
-            bbox = mesh.getExtents()
+            node._resetAABB()
+            bounding_box = node.getBoundingBox()
+            timeout_counter = 0
+            
+            #As the calculation of the bounding box is in a seperate thread it might be that it's not done yet.
+            while bounding_box.width == 0 or bounding_box.height == 0 or bounding_box.depth == 0:
+                bounding_box = node.getBoundingBox()
+                time.sleep(0.1)
+                timeout_counter += 1
+                if timeout_counter > 10:
+                    break
 
-            if max_bounds.width < bbox.width or max_bounds.height < bbox.height or max_bounds.depth < bbox.depth:
-                largest_dimension = max(bbox.width, bbox.height, bbox.depth)
+            if max_bounds.width < bounding_box.width or max_bounds.height < bounding_box.height or max_bounds.depth < bounding_box.depth:
+                largest_dimension = max(bounding_box.width, bounding_box.height, bounding_box.depth)
 
                 scale_factor = 1.0
-                if largest_dimension == bbox.width:
-                    scale_factor = max_bounds.width / bbox.width
-                elif largest_dimension == bbox.height:
-                    scale_factor = max_bounds.height / bbox.height
+                if largest_dimension == bounding_box.width:
+                    scale_factor = max_bounds.width / bounding_box.width
+                elif largest_dimension == bounding_box.height:
+                    scale_factor = max_bounds.height / bounding_box.height
                 else:
-                    scale_factor = max_bounds.depth / bbox.depth
+                    scale_factor = max_bounds.depth / bounding_box.depth
 
-                matrix = Matrix()
-                matrix.setByScaleFactor(scale_factor)
-                mesh = mesh.getTransformed(matrix)
+                scale_vector = Vector(scale_factor, scale_factor, scale_factor)
+                
+                try:
+                    node.scale(scale_vector)
+                except Exception as e:
+                    print(e)
 
-        self.setResult(mesh)
+        self.setResult(node)
 
         loading_message.hide()
         result_message = Message(i18n_catalog.i18nc("Finished loading mesh message, {0} is file name", "Loaded {0}").format(self._filename))

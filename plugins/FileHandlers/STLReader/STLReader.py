@@ -7,6 +7,7 @@ from UM.Mesh.MeshData import MeshData
 from UM.Logger import Logger
 from UM.Math.Matrix import Matrix
 from UM.Math.Vector import Vector
+from UM.Scene.SceneNode import SceneNode
 
 import os
 import struct
@@ -20,9 +21,11 @@ class STLReader(MeshReader):
     ## Decide if we need to use ascii or binary in order to read file
     def read(self, file_name):
         mesh = None
+        scene_node = None
         extension = os.path.splitext(file_name)[1]
         if extension.lower() == self._supported_extension:
             mesh = MeshData()
+            scene_node = SceneNode()
             f = open(file_name, "rb")
             if not self._loadBinary(mesh, f):
                 f.close()
@@ -38,7 +41,8 @@ class STLReader(MeshReader):
             mesh.calculateNormals(fast = True)
 
             Logger.log("d", "Loaded a mesh with %s vertices", mesh.getVertexCount())
-        return mesh
+            scene_node.setMeshData(mesh)
+        return scene_node
 
     # Private
     ## Load the STL data from file by consdering the data as ascii.

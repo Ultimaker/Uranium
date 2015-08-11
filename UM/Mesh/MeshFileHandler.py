@@ -28,17 +28,18 @@ class MeshFileHandler(object):
         try:
             for id, reader in self._mesh_readers.items():
                 result = reader.read(file_name)
-                if(result is not None):
+                if result is not None:
                     if kwargs.get("center", True):
                         # Center the mesh
-                        extents = result.getExtents()
-                        m = Matrix()
-                        m.setByTranslation(-extents.center)                        
-                        result = result.getTransformed(m)
+                        extents = result.getMeshData().getExtents()
+                        #m = Matrix()
+                        #m.setByTranslation(-extents.center)                        
+                        #result = result.getTransformed(m)
                         result.setCenterPosition(extents.center)
-
-                    result.setFileName(file_name)
+                    result.getMeshData().setFileName(file_name)
                     return result
+                    #result.getMeshData().setFileName(file_name)
+                    #return result
 
         except OSError as e:
             Logger.log("e", str(e))

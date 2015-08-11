@@ -56,21 +56,15 @@ class MeshFileHandlerProxy(QObject):
     def readLocalFile(self, file):
         if not file.isValid():
             return
-
+        print(" DERP DEEERP" )
         job = ReadMeshJob(file.toLocalFile())
         job.finished.connect(self._readMeshFinished)
         job.start()
 
     def _readMeshFinished(self, job):
-        mesh = job.getResult()
-        if mesh != None:
-            if mesh.getType() is MeshType.pointcloud:  #Depending on the type we need a different node (as pointclouds are rendered differently)
-                node = PointCloudNode()
-            else:
-                node = SceneNode()
-
+        node = job.getResult()
+        if node != None:  
             node.setSelectable(True)
-            node.setMeshData(mesh)
             node.setName(os.path.basename(job.getFileName()))
 
             op = AddSceneNodeOperation(node, self._scene.getRoot())
