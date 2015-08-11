@@ -132,7 +132,11 @@ class MachineSettings(SignalEmitter):
         if not config.has_option("General", "name") or not config.has_option("General", "json_file"):
             raise SettingsError.InvalidFileError(path)
 
-        self.loadSettingsFromFile(Resources.getPath(Resources.SettingsLocation, config["General"]["json_file"]))
+        try:
+            self.loadSettingsFromFile(Resources.getPath(Resources.MachineDefinitions, config["General"]["json_file"]))
+        except FileNotFoundError:
+            raise SettingsError.InvalidFileError(path)
+
         self._name = config.get("General", "name", fallback = "Unknown Machine")
 
     def saveToFile(self, path):
