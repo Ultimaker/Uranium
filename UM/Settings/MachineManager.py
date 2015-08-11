@@ -33,6 +33,9 @@ class MachineManager(SignalEmitter):
 
     machineInstancesChanged = Signal()
 
+    def getMachineInstance(self, index):
+        return self._machine_instances[index]
+
     def getMachineInstances(self):
         return self._machine_instances
 
@@ -56,6 +59,13 @@ class MachineManager(SignalEmitter):
             pass
 
         self.machineInstancesChanged.emit()
+
+    def findMachineInstance(self, name):
+        for i in range(len(self._machine_instances)):
+            if self._machine_instances[i].getName() == name:
+                return i
+
+        return -1
 
     ##  Get the currently active machine instance
     #   \returns active_machine \type{MachineSettings}
