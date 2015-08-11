@@ -123,6 +123,17 @@ class Vector(object):
 
         return Vector(d[0], d[1], d[2])
 
+    def preMultiply(self, matrix):
+        d = numpy.empty(4, dtype=numpy.float32)
+        d[0] = self._data[0]
+        d[1] = self._data[1]
+        d[2] = self._data[2]
+        d[3] = 1.0
+
+        d = matrix.getData().dot(d)
+
+        return Vector(d[0], d[1], d[2])
+
     ##  Scale a vector by another vector.
     #
     #   This will do a component-wise multiply of the two vectors.

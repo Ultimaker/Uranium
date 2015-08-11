@@ -86,3 +86,13 @@ class Camera(SceneNode.SceneNode):
         dir /= numpy.linalg.norm(dir)
 
         return Ray(self.getWorldPosition(), Vector(-dir[0], -dir[1], -dir[2]))
+
+    ##  Project a 3D position onto the 2D view plane.
+    def project(self, position):
+        projection = self._projection_matrix
+        view = self.getWorldTransformation().getInverse()
+
+        position = position.preMultiply(view)
+        position = position.preMultiply(projection)
+
+        return (position.x, position.y)
