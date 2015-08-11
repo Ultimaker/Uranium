@@ -50,7 +50,7 @@ class MeshView(View):
             self._disabled_material.setUniformValue("u_shininess", 50.0)
 
         if Application.getInstance().getMachineManager().getActiveMachineInstance():
-            machine = Application.getInstance().getActiveMachine()
+            machine = Application.getInstance().getMachineManager().getActiveMachineInstance()
 
             if machine.getSettingValueByKey("support_enable"):
                 angle = machine.getSettingValueByKey("support_angle")
