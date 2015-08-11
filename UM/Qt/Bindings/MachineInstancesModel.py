@@ -10,13 +10,13 @@ class MachineInstancesModel(ListModel):
     NameRole = Qt.UserRole + 1
     ActiveRole = Qt.UserRole + 2
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent = None):
+        super().__init__(parent)
 
         self.addRoleName(self.NameRole, "name")
         self.addRoleName(self.ActiveRole, "active")
 
-        self._manager = Application().getInstance().getMachineManager()
+        self._manager = Application.getInstance().getMachineManager()
 
         self._manager.machineInstancesChanged.connect(self._onMachinesChanged)
         self._manager.activeMachineInstanceChanged.connect(self._onActiveMachineChanged)
