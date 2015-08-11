@@ -32,6 +32,7 @@ from . import OutputDeviceManagerProxy
 from . import MachineDefinitionsModel
 from . import MachineInstancesModel
 from . import ProfilesModel
+from . import MachineManagerProxy
 from . import MachineVariantsModel
 
 class Bindings:
@@ -93,6 +94,7 @@ class Bindings:
         qmlRegisterSingletonType(ActiveViewProxy.ActiveViewProxy, "UM", 1, 0, "ActiveView", ActiveViewProxy.createActiveViewProxy)
         qmlRegisterSingletonType(SelectionProxy.SelectionProxy, "UM", 1, 0, "Selection", SelectionProxy.createSelectionProxy)
         qmlRegisterSingletonType(OutputDeviceManagerProxy.OutputDeviceManagerProxy, "UM", 1, 1, "OutputDeviceManager", OutputDeviceManagerProxy.createOutputDeviceManagerProxy)
+        qmlRegisterSingletonType(MachineManagerProxy.MachineManagerProxy, "UM", 1, 1, "MachineManager", MachineManagerProxy.createMachineManagerProxy)
 
         qmlRegisterUncreatableType(Duration, "UM", 1, 0, "Duration", "")
         qmlRegisterUncreatableType(DurationFormat, "UM", 1, 0, "DurationFormat", "")
