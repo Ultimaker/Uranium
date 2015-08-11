@@ -29,6 +29,10 @@ from . import ActiveViewProxy
 from . import OutputDevicesModel
 from . import SelectionProxy
 from . import OutputDeviceManagerProxy
+from . import MachineDefinitionsModel
+from . import MachineInstancesModel
+from . import ProfilesModel
+from . import MachineVariantsModel
 
 class Bindings:
     @classmethod
@@ -69,6 +73,10 @@ class Bindings:
         qmlRegisterType(SettingCategoriesModel.SettingCategoriesModel, "UM", 1, 0, "SettingCategoriesModel")
         qmlRegisterType(AngledCornerRectangle.AngledCornerRectangle, "UM", 1, 0, "AngledCornerRectangle")
         qmlRegisterType(OutputDevicesModel.OutputDevicesModel, "UM", 1, 1, "OutputDevicesModel")
+        qmlRegisterType(MachineDefinitionsModel.MachineDefinitionsModel, "UM", 1, 1, "MachineDefinitionsModel")
+        qmlRegisterType(MachineInstancesModel.MachineInstancesModel, "UM", 1, 1, "MachineInstancesModel")
+        qmlRegisterType(MachineVariantsModel.MachineVariantsModel, "UM", 1, 1, "MachineVariantsModel")
+        qmlRegisterType(ProfilesModel.ProfilesModel, "UM", 1, 1, "ProfilesModel")
 
         # Singleton proxy objects
         qmlRegisterSingletonType(ControllerProxy, "UM", 1, 0, "Controller", Bindings.createControllerProxy)
