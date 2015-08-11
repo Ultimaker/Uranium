@@ -13,8 +13,8 @@ class MachineDefinitionsModel(ListModel):
     ManufacturerRole = Qt.UserRole + 4
     AuthorRole = Qt.UserRole + 5
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent = None):
+        super().__init__(parent)
 
         self.addRoleName(self.IdRole, "id")
         self.addRoleName(self.NameRole, "name")
@@ -22,7 +22,7 @@ class MachineDefinitionsModel(ListModel):
         self.addRoleName(self.ManufacturerRole, "manufacturer")
         self.addRoleName(self.AuthorRole, "author")
 
-        self._manager = Application().getInstance().getMachineManager()
+        self._manager = Application.getInstance().getMachineManager()
 
         self._manager.machineDefinitionsChanged.connect(self._onMachinesChanged)
         self._onMachinesChanged()
