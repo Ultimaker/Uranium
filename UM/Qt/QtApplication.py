@@ -74,9 +74,7 @@ class QtApplication(QApplication, Application, SignalEmitter):
         self._plugin_registry.checkRequiredPlugins(self.getRequiredPlugins())
 
         self.showSplashMessage(i18n_catalog.i18nc("Splash screen message", "Loading machines..."))
-        self.getMachineManager().updateMachineDefinitions()
-        self.getMachineManager().updateMachineInstances()
-        self.getMachineManager().updateProfiles()
+        self.getMachineManager().loadAll()
 
         self.showSplashMessage(i18n_catalog.i18nc("Splash screen message", "Loading preferences..."))
         try:
@@ -162,7 +160,7 @@ class QtApplication(QApplication, Application, SignalEmitter):
         return super().event(event)
 
     def windowClosed(self):
-        self.saveMachines()
+        self.getMachineManager().saveAll()
         Preferences.getInstance().writeToFile(Resources.getStoragePath(Resources.Preferences, self.getApplicationName() + ".cfg"))
         self.applicationShuttingDown.emit()
         self.getBackend().close()
