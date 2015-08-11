@@ -27,6 +27,8 @@ class QtKeyDevice(InputDevice):
             return KeyEvent.ControlKey
         elif key == Qt.Key_Alt:
             return KeyEvent.AltKey
+        elif key == Qt.Key_Space:
+            return KeyEvent.SpaceKey
         elif key == Qt.Key_Meta:
             return KeyEvent.MetaKey
         elif key == Qt.Key_Enter or key == Qt.Key_Return:
