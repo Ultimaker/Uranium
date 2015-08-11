@@ -3,15 +3,27 @@
 
 import configparser
 
+from UM.Signal import Signal, SignalEmitter
 from UM.Settings import SettingsError
 
-class Profile():
+class Profile(SignalEmitter):
     ProfileVersion = 1
 
     def __init__(self):
         super().__init__()
         self._changed_settings = {}
-        
+        self._name = "Unknown Profile"
+
+    nameChanged = Signal()
+
+    def getName(self):
+        return self._name
+
+    def setName(self, name):
+        if name != self._name:
+            self._name = name
+            self.nameChanged.emit()
+
     def setSettingValue(self, key, value):
         self._changed_settings[key] = value
         
@@ -34,6 +46,8 @@ class Profile():
         if not parser.has_option("General", "version") or parser.get("General", "version") != self.ProfileVersion:
             raise SettingsError.InvalidVersionError(path)
 
+        self._name = parser.get("General", "name")
+
         for group in parser:
             if group == "DEFAULT":
                 continue
@@ -46,6 +60,7 @@ class Profile():
 
         parser.add_section("General")
         parser.set("General", "version", self.ProfileVersion)
+        parser.set("General", "name", self._name)
 
         parser.add_section("Settings")
         for setting_key in self._changed_settings:
