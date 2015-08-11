@@ -129,6 +129,11 @@ class MachineManager(SignalEmitter):
         self._active_profile = profile
         self.activeProfileChanged.emit()
 
+    def loadAll(self):
+        self.loadMachineDefinitions()
+        self.loadMachineInstances()
+        self.loadProfiles()
+
     def loadMachineDefinitions(self):
         dirs = Resources.getAllPathsForType(Resources.MachineDefinitions)
         for dir in dirs:
