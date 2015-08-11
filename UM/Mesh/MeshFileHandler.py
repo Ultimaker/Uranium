@@ -30,16 +30,20 @@ class MeshFileHandler(object):
                 result = reader.read(file_name)
                 if result is not None:
                     if kwargs.get("center", True):
-                        # Center the mesh
-                        extents = result.getMeshData().getExtents()
-                        #m = Matrix()
-                        #m.setByTranslation(-extents.center)                        
-                        #result = result.getTransformed(m)
-                        result.setCenterPosition(extents.center)
-                    result.getMeshData().setFileName(file_name)
+                        # If the result has a mesh and no children it needs to be centered
+                        if result.getMeshData() and len(result.getChildren()) == 0:
+                            extents = result.getMeshData().getExtents()
+                            result.setCenterPosition(extents.center)
+                        
+                        # Move all the meshes of children so that toolhandles are shown in the correct place.
+                        for node in result.getChildren():
+                            if node.getMeshData():
+                                extents = node.getMeshData().getExtents()
+                                m = Matrix()
+                                m.translate(-extents.center)
+                                node.setMeshData(node.getMeshData().getTransformed(m))
+                                node.translate(extents.center)
                     return result
-                    #result.getMeshData().setFileName(file_name)
-                    #return result
 
         except OSError as e:
             Logger.log("e", str(e))

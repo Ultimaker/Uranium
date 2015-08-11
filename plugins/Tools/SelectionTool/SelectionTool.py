@@ -78,7 +78,6 @@ class SelectionTool(Tool):
             return
         for node in BreadthFirstIterator(self._scene.getRoot()):
             if id(node) == pixel_id:
-                
                 if self._ctrl_is_active:
                     if Selection.isSelected(node):
                         if node.getParent():

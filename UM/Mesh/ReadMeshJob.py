@@ -29,14 +29,15 @@ class ReadMeshJob(Job):
         loading_message = Message(i18n_catalog.i18nc("Loading mesh message, {0} is file name", "Loading {0}").format(self._filename), lifetime = 0, dismissable = False)
         loading_message.setProgress(-1)
         loading_message.show()
-
-        node = self._handler.read(self._filename)
+        try:
+            node = self._handler.read(self._filename)
+        except Exception as e:
+            print(e)
         if not node:
             loading_message.hide()
 
             result_message = Message(i18n_catalog.i18nc("Failed loading mesh message, {0} is file name", "Failed to load {0}").format(self._filename))
             result_message.show()
-
             return
 
         # Scale down to maximum bounds size if that is available
@@ -45,7 +46,6 @@ class ReadMeshJob(Job):
             node._resetAABB()
             bounding_box = node.getBoundingBox()
             timeout_counter = 0
-            
             #As the calculation of the bounding box is in a seperate thread it might be that it's not done yet.
             while bounding_box.width == 0 or bounding_box.height == 0 or bounding_box.depth == 0:
                 bounding_box = node.getBoundingBox()
@@ -53,7 +53,6 @@ class ReadMeshJob(Job):
                 timeout_counter += 1
                 if timeout_counter > 10:
                     break
-
             if max_bounds.width < bounding_box.width or max_bounds.height < bounding_box.height or max_bounds.depth < bounding_box.depth:
                 largest_dimension = max(bounding_box.width, bounding_box.height, bounding_box.depth)
 
