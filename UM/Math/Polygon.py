@@ -9,7 +9,7 @@ class Polygon:
         self._points = points
 
     def isValid(self):
-        return self._points is not None
+        return self._points is not None and len(self._points)
 
     def getPoints(self):
         return self._points
