@@ -37,10 +37,8 @@ class PerObjectSettingsModel(ListModel):
                 continue
 
             projected_position = camera.project(node.getWorldPosition())
-            #print(projected_position)
 
             index = self.find("id", id(node))
-            print(index)
             self.setProperty(index, "x", float(projected_position[0]))
             self.setProperty(index, "y", float(projected_position[1]))
 
@@ -52,7 +50,6 @@ class PerObjectSettingsModel(ListModel):
                 continue
 
             projected_position = camera.project(node.getWorldPosition())
-            #print(projected_position)
 
             self.appendItem({
                 "id": id(node),
