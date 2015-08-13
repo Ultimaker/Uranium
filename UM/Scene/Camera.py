@@ -95,4 +95,4 @@ class Camera(SceneNode.SceneNode):
         position = position.preMultiply(view)
         position = position.preMultiply(projection)
 
-        return (position.x, position.y)
+        return (position.x / position.z / 2.0, position.y / position.z / 2.0)
