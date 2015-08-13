@@ -6,6 +6,7 @@ from UM.Event import Event, MouseEvent, KeyEvent
 from UM.Math.Vector import Vector
 from UM.Math.Matrix import Matrix
 from UM.Application import Application
+from PyQt5 import QtCore, QtWidgets
 
 import math
 
@@ -49,9 +50,14 @@ class CameraTool(Tool):
         return self._origin
 
     def checkModifierKeys(self, event):
+        modifiers = QtWidgets.QApplication.keyboardModifiers()
+        self._shift_is_active = modifiers == QtCore.Qt.ShiftModifier
+        self._ctrl_is_active = modifiers == QtCore.Qt.ControlModifier
+        self._alt_is_active = modifiers == QtCore.Qt.AltModifier
+
         #checks for the press and release events of the modifier keys (shift and control)
         #sets the accompanying variabel ( _[key]_is_active) on true or false
-        if event.type is Event.KeyPressEvent:
+        '''if event.type is Event.KeyPressEvent:
             if event.key == KeyEvent.ShiftKey:
                 self._shift_is_active = True
             if event.key == KeyEvent.ControlKey:
@@ -68,7 +74,7 @@ class CameraTool(Tool):
             if event.key == KeyEvent.AltKey:
                 self._alt_is_active = False
             if event.key == KeyEvent.SpaceKey:
-                self._space_is_active = False
+                self._space_is_active = False'''
 
     def moveEvent(self, event):
         #defines at which events the _moveCamera method is called
