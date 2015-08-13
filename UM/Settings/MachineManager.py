@@ -91,6 +91,8 @@ class MachineManager(SignalEmitter):
             return
 
         self._active_machine = machine
+        if self._active_profile:
+            self._active_machine.setActiveProfile(self._active_profile)
         self.activeMachineInstanceChanged.emit()
 
     activeMachineInstanceChanged = Signal()
@@ -131,7 +133,8 @@ class MachineManager(SignalEmitter):
             return
 
         self._active_profile = profile
-        self._active_machine.setActiveProfile(profile)
+        if self._active_machine:
+            self._active_machine.setActiveProfile(profile)
         self.activeProfileChanged.emit()
 
     def loadAll(self):
