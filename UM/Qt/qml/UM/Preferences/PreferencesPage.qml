@@ -8,26 +8,39 @@ import QtQuick.Window 2.1
 
 import UM 1.0 as UM
 
-ColumnLayout {
+Item {
     property alias title: titleLabel.text;
-    property alias contents: contentsItem.children;
+    default property alias contents: contentsItem.children;
 
     function reset()
     {
+        UM.Application.log("w", "No reset implemented!")
     }
 
     Label {
         id: titleLabel;
 
-        Layout.fillWidth: true;
+        anchors {
+            top: parent.top;
+            left: parent.left;
+            right: parent.right;
+            margins: 5;
+        }
 
         font.pointSize: 18;
     }
 
     Item {
         id: contentsItem;
-        Layout.fillWidth: true;
-        Layout.fillHeight: true;
+
+        anchors {
+            top: titleLabel.bottom;
+            left: parent.left;
+            right: parent.right;
+            bottom: parent.bottom;
+            margins: 5;
+        }
+
         clip: true;
     }
 }

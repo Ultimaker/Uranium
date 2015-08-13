@@ -15,9 +15,8 @@ PreferencesPage {
 
     //: Plugins configuration page
     title: qsTr("Plugins");
-    contents: ScrollView
+    ScrollView
     {
-        anchors.fill: parent;
         ListView 
         {
             id:plugin_list
