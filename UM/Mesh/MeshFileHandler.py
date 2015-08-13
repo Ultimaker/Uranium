@@ -5,6 +5,7 @@ from UM.Logger import Logger
 from UM.PluginRegistry import PluginRegistry
 from UM.Mesh.MeshWriter import MeshWriter
 from UM.Math.Matrix import Matrix
+from UM.Math.Vector import Vector
 
 ##  Central class for reading and writing meshes.
 #
@@ -33,8 +34,12 @@ class MeshFileHandler(object):
                         # If the result has a mesh and no children it needs to be centered
                         if result.getMeshData() and len(result.getChildren()) == 0:
                             extents = result.getMeshData().getExtents()
-                            result.setCenterPosition(extents.center)
-                        
+                            move_vector = Vector()
+                            move_vector.setX(extents.center.x)
+                            move_vector.setY(0)
+                            move_vector.setZ(extents.center.z)
+                            result.setCenterPosition(move_vector)
+
                         # Move all the meshes of children so that toolhandles are shown in the correct place.
                         for node in result.getChildren():
                             if node.getMeshData():
