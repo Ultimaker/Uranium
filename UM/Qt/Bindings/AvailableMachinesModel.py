@@ -32,8 +32,8 @@ class AvailableMachinesModel(ListModel):
         self._updateModel()
 
 
-    @pyqtSlot(int, int,str)
-    def createMachine(self, index, variation_index, name):
+    @pyqtSlot(int,str)
+    def createMachine(self, index, name):
         file = self.getItem(index)["file"]
 
         machine = MachineSettings()
@@ -84,13 +84,13 @@ class AvailableMachinesModel(ListModel):
                 _author = data.get("author")
 
                 if _manufacturer != "Ultimaker":
-                    _machines_by_other.append([_id, _file, _name, _manufacturer, _author])
+                    _machines_by_other.append([_manufacturer, _id, _file, _name, _author])
 
                 if _manufacturer == "Ultimaker":
-                    _machines_by_ultimaker.append([_id, _file, _name, _manufacturer, _author])
+                     _machines_by_ultimaker.append([_id, _file, _name, _manufacturer, _author])
 
             for item in sorted(_machines_by_ultimaker):
                 self.appendItem({ "id": item[0], "file": item[1], "name": item[2], "manufacturer": item[3], "author": item[4]})
 
             for item in sorted(_machines_by_other):
-                self.appendItem({ "id": item[0], "file": item[1], "name": item[2], "manufacturer": item[3], "author": item[4]})
+                self.appendItem({ "id": item[1], "file": item[2], "name": item[3], "manufacturer": item[0], "author": item[4]})
