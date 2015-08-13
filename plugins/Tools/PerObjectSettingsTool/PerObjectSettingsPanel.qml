@@ -21,6 +21,8 @@ Item {
     Item {
         id: settingsPanel;
 
+        z: 3;
+
         width: childrenRect.width;
         height: childrenRect.height;
 
@@ -58,24 +60,36 @@ Item {
                     style: UM.Theme.styles.setting_item;
 
                     options: UM.ProfilesModel { selectGlobal: true }
+
+                    onItemValueChanged: {
+                        var item = UM.ActiveTool.properties.Model.getItem(base.currentIndex);
+                        UM.ActiveTool.properties.Model.setObjectProfile(item.id, value)
+                    }
                 }
 
                 Repeater {
-                    model: overriddenSettingsModel;
+                    model: UM.ActiveTool.properties.Model.getItem(base.currentIndex).settings
 
                     UM.SettingItem {
                         width: UM.Theme.sizes.setting.width;
                         height: UM.Theme.sizes.setting.height;
 
-                        name: model.name;
+                        name: model.label;
                         type: model.type;
                         value: model.value;
+                        description: model.description;
+                        unit: model.unit;
+                        valid: model.valid;
 
                         style: UM.Theme.styles.setting_item;
 
                         Button {
                             anchors.right: parent.right;
                             text: "x";
+                            opacity: parent.hovered || hovered ? 1 : 0;
+                            onClicked: UM.ActiveTool.properties.Model.removeSettingOverride(UM.ActiveTool.properties.Model.getItem(base.currentIndex).id, model.key)
+
+                            style: ButtonStyle { }
                         }
                     }
                 }
@@ -90,6 +104,8 @@ Item {
                             color: control.hovered ? "blue" : "black"
                         }
                     }
+
+                    onClicked: settingPickDialog.visible = true;
                 }
 
                 Button {
@@ -140,9 +156,40 @@ Item {
         }
     }
 
-    ListModel {
-        id: overriddenSettingsModel
+    UM.Dialog {
+        id: settingPickDialog
 
-        ListElement { name: "Layer Height"; type: "float"; value: "0.1"; }
+        title: "Pick a Setting to Override"
+
+        ScrollView {
+            anchors.fill: parent;
+            ListView {
+                id: settingList;
+
+                model: UM.Models.settingsModel;
+
+                delegate: ToolButton {
+                    text: model.name;
+                    x: model.depth * 25;
+
+                    onClicked: {
+                        UM.ActiveTool.properties.Model.addSettingOverride(UM.ActiveTool.properties.Model.getItem(base.currentIndex).id, model.key);
+                        settingPickDialog.visible = false;
+                    }
+                }
+
+                section.property: "category"
+                section.delegate: Label { text: section; font.bold: true; }
+            }
+        }
+
+        rightButtons: [
+            Button {
+                text: "Cancel";
+                onClicked: {
+                    settingPickDialog.visible = false;
+                }
+            }
+        ]
     }
 }
