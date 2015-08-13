@@ -356,6 +356,8 @@ class QtGL2Renderer(Renderer):
     def _renderItem(self, item):
         node = item["node"]
         mesh = item.get("mesh", node.getMeshData())
+        if not mesh:
+            return #Something went wrong, node has no mesh.
         transform = node.getWorldTransformation()
         material = item["material"]
         mode = item["mode"]
