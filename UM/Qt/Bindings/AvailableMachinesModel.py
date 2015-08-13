@@ -83,6 +83,10 @@ class AvailableMachinesModel(ListModel):
                 _manufacturer = data.get("manufacturer")
                 _author = data.get("author")
 
+                if _manufacturer == None or _author == None:
+                    print(_file)
+                    continue
+
                 if _manufacturer != "Ultimaker":
                     _machines_by_other.append([_manufacturer, _id, _file, _name, _author])
 
