@@ -27,6 +27,8 @@ Item {
     signal showTooltip(variant position);
     signal hideTooltip();
 
+    property bool hovered: false;
+
     MouseArea 
     {
         id: mouse;
@@ -40,6 +42,7 @@ Item {
 
         onEntered: {
             hoverTimer.start();
+            base.hovered = true;
         }
 
         onExited: {
@@ -47,6 +50,7 @@ Item {
                 return;
             }
 
+            base.hovered = false;
             hoverTimer.stop();
             base.hideTooltip();
         }
