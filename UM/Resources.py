@@ -241,7 +241,7 @@ class Resources:
         Themes: "themes",
         MachineDefinitions: "machines",
         MachineInstances: "machine_instances",
-        Profiles: "",
+        Profiles: "profiles",
         Settings: "settings"
     }
     __types_storage = {
