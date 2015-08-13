@@ -147,7 +147,7 @@ class SettingsModel(ListModel):
             for setting in self._machine_settings.getAllSettings():
                 setting.activeChanged.disconnect(self.handleActiveChanged)
 
-        self._machine_settings = Application.getInstance().getActiveMachine()
+        self._machine_settings = Application.getInstance().getMachineManager().getActiveMachineInstance()
 
         if self._machine_settings:
             for setting in self._machine_settings.getAllSettings():
