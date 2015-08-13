@@ -11,32 +11,72 @@ import QtQml 2.2
 import UM 1.0 as UM
 
 UM.Dialog {
-    id: rootElement
+    id: elementRoot
+    property string wizardTitle
+    property var wizardPages
     property int currentPage: 0
-    property string file
-    property bool firstRun
-    signal finalClicked()
+    property ListModel wizardModel: createPageModel(elementRoot.wizardPages)
 
-    function getChosenModel(){
-        for (var i = 0; i < UM.Models.addMachinesModel.rowCount(); i++) {
-            if (UM.Models.addMachinesModel.getItem(i).file == rootElement.file){
-                progressList.model = UM.Models.addMachinesModel.getItem(i).pages
-            }
+    property bool firstRun: false
+    property var pageSizes: getPageSize()
+
+    signal finalClicked()
+    signal resize(int pageWidth, int pageHeight)
+
+    function createPageModel(objectsArray){
+        //create a new qt listmodel with the javascript array of objects it is given
+        var newListModel = Qt.createQmlObject('import QtQuick 2.2; \
+            ListModel {}', elementRoot)
+        for (var i = 0; i < objectsArray.length; i++) {
+            newListModel.append({
+                "page": objectsArray[i].page,
+                "title": objectsArray[i].title
+            });
         }
+        return newListModel
     }
 
-    minimumWidth: 600;
-    minimumHeight: 500;
+    function insertPage(page, title, position){
+        elementRoot.wizardModel.insert(position, {"page": page, "title": title})
+    }
+
+    function removePage(index){
+        elementRoot.wizardModel.remove(index)
+    }
+
+    function getPageSource(index){
+        //returns the actual source of a page
+        var page = progressList.model.get(index).page
+        return UM.Resources.getPath(UM.Resources.WizardPagesLocation, page)
+    }
+
+    function getPageSize(){
+        //returns the pageSize, but also commits the resize signal when the window is resized
+        resize((elementRoot.width - wizardProgress.width), elementRoot.height)
+        return [(elementRoot.width - wizardProgress.width), elementRoot.height]
+    }
+
+    minimumWidth: UM.Theme.sizes.modal_window_minimum.width
+    minimumHeight: UM.Theme.sizes.modal_window_minimum.height
+    title: elementRoot.wizardTitle
 
     RowLayout {
         anchors.fill: parent;
         SystemPalette{id: palette}
 
+        Connections {
+            target: Printer
+            onRequestAddPrinter: {
+                addMachineWizard.visible = true
+            }
+        }
+
         Rectangle {
             id: wizardProgress
-            visible: progressList.model.rowCount() > 1 ? true : false
-            Layout.fillHeight: true;
-            Layout.preferredWidth: Screen.devicePixelRatio * 150;
+            visible: progressList.model.count > 1 ? true : false
+            width: UM.Theme.sizes.wizard_progress.width
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
             color: palette.light
 
             Component {
@@ -58,14 +98,14 @@ UM.Dialog {
                                 wrapMode: Text.Wrap
                                 renderType: Text.NativeRendering
                                 text: control.text
-                                font.underline: title == progressList.model.getItem(rootElement.currentPage).title || progressButton.hovered ? true : false
-                                color: title == progressList.model.getItem(rootElement.currentPage).title ? palette.text : palette.mid
+                                font.underline: title == progressList.model.get(elementRoot.currentPage).title || progressButton.hovered ? true : false
+                                color: title == progressList.model.get(elementRoot.currentPage).title ? palette.text : palette.mid
                             }
                         }
                         onClicked: {
-                            for (var i = 0; i < progressList.model.rowCount(); i++) {
-                                if (progressList.model.getItem(i).title == title){
-                                   rootElement.currentPage = i
+                            for (var i = 0; i < progressList.model.count; i++) {
+                                if (progressList.model.get(i).title == title){
+                                   elementRoot.currentPage = i
                                    break
                                 }
                             }
@@ -76,17 +116,15 @@ UM.Dialog {
                         anchors.top: progressButton.bottom
                         x: (wizardProgress.width-progressArrow.width)/2
                         text: "▼"
-                        visible: title != progressList.model.getItem(progressList.model.rowCount() - 1).title ? true : false
+                        visible: title != progressList.model.get(progressList.model.count - 1).title ? true : false
                         color: palette.mid
                     }
                 }
             }
-
             ListView {
                 id: progressList
                 property var index: 0
-                model: getChosenModel()
-                keyNavigationWraps: true
+                model: elementRoot.wizardModel
                 delegate: wizardDelegate
                 anchors.fill: parent
                 anchors.top: parent.top
@@ -96,35 +134,26 @@ UM.Dialog {
 
         Loader {
             id: pageLoader
-            y: UM.Theme.sizes.default_margin.height
-            x: wizardProgress.width + UM.Theme.sizes.default_margin.width
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.leftMargin: progressList.model.count > 1 ? UM.Theme.sizes.wizard_progress.width + UM.Theme.sizes.default_margin.width : UM.Theme.sizes.default_margin.width
 
-            function getPageSource(index){
-                var page = progressList.model.getItem(index).page + '.qml'
-                return UM.Resources.getPath(UM.Resources.WizardPagesLocation, page)
+            source: elementRoot.getPageSource(elementRoot.currentPage)
+            onStatusChanged: {
+                pageLoader.item.title = progressList.model.get(elementRoot.currentPage).title
+                pageLoader.item.pageHeight = elementRoot.height
+                if (progressList.model.count > 1)
+                    pageLoader.item.pageWidth = elementRoot.width - wizardProgress.width
+                else
+                    pageLoader.item.pageWidth = elementRoot.width
             }
-
-            function getPageSource2(index){
-                if (wizardModel.get(index) != undefined){
-                    var page = wizardModel.get(index).page
-                    return UM.Resources.getPath(UM.Resources.WizardPagesLocation, page)
-                }
-                else{
-                    return ""
-                }
-            }
-            source: getPageSource(rootElement.currentPage)
-            onStatusChanged: pageLoader.item.title = progressList.model.getItem(rootElement.currentPage).title
         }
 
         Connections {
             target: pageLoader.item
             ignoreUnknownSignals: true
-            onOpenFile: {
-                rootElement.file = fileName
-                getChosenModel()
-            }
-            onCloseWizard: rootElement.visible = false
+            onReloadModel: elementRoot.wizardModel = elementRoot.createPageModel(newModel)
+            onCloseWizard: elementRoot.visible = false
         }
     }
 
@@ -133,32 +162,31 @@ UM.Dialog {
             id: backButton
             //: Add Printer wizard Button: 'Back'
             text: qsTr("< Back");
-            enabled: rootElement.currentPage <= 0 ? false : true
-            visible: rootElement.firstRun ? false : true
+            enabled: elementRoot.currentPage <= 0 ? false : true
+            visible: elementRoot.firstRun ? false : true
             onClicked: {
-                if (rootElement.currentPage > 0){
-                    rootElement.currentPage -= 1
+                if (elementRoot.currentPage > 0){
+                    elementRoot.currentPage -= 1
                 }
             }
         },
         Button {
             id: nextButton
-
             text: {
-                if (rootElement.currentPage < progressList.model.rowCount() - 1){
+                if (elementRoot.currentPage < progressList.model.count - 1){
                     //: Add Printer wizard button: 'Next'
                     return qsTr("Next >")
-                } else if (rootElement.currentPage == progressList.model.rowCount() - 1){
+                } else if (elementRoot.currentPage == progressList.model.count - 1){
                     //: Add Printer wizard button: 'Finish'
                     return qsTr("Finish ✓")
                 }
             }
 
             onClicked: {
-                if (rootElement.currentPage < progressList.model.rowCount() - 1){
-                    rootElement.currentPage += 1
-                }else if (rootElement.currentPage == progressList.model.rowCount() - 1){
-                    rootElement.finalClicked()
+                if (elementRoot.currentPage < progressList.model.count - 1){
+                    elementRoot.currentPage += 1
+                }else if (elementRoot.currentPage == progressList.model.count - 1){
+                    elementRoot.finalClicked()
                 }
             }
         },
@@ -166,8 +194,11 @@ UM.Dialog {
             id: cancelButton
             //: Add Printer wizard button: "Cancel"
             text: qsTr("Cancel X")
-            onClicked: rootElement.visible = false
-            visible: rootElement.firstRun ? false : true
+            onClicked: {
+                elementRoot.wizardModel = createPageModel(elementRoot.wizardPages)
+                elementRoot.visible = false
+            }
+            visible: elementRoot.firstRun ? false : true
         }
     ]
 }
