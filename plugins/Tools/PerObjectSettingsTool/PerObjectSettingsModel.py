@@ -7,6 +7,9 @@ from UM.Application import Application
 from UM.Qt.ListModel import ListModel
 from UM.Scene.Iterator.BreadthFirstIterator import BreadthFirstIterator
 from UM.Scene.SceneNode import SceneNode
+from UM.Settings.SettingOverrideDecorator import SettingOverrideDecorator
+
+from . import SettingOverrideModel
 
 class PerObjectSettingsModel(ListModel):
     IdRole = Qt.UserRole + 1
@@ -18,7 +21,8 @@ class PerObjectSettingsModel(ListModel):
 
     def __init__(self, parent = None):
         super().__init__(parent)
-        self._root = Application.getInstance().getController().getScene().getRoot()
+        self._scene = Application.getInstance().getController().getScene()
+        self._root = self._scene.getRoot()
         self._root.transformationChanged.connect(self._updatePositions)
         self._root.childrenChanged.connect(self._updateNodes)
         self._updateNodes(None)
@@ -29,6 +33,45 @@ class PerObjectSettingsModel(ListModel):
         self.addRoleName(self.MaterialRole, "material")
         self.addRoleName(self.ProfileRole, "profile")
         self.addRoleName(self.SettingsRole, "settings")
+
+    @pyqtSlot("quint64", str)
+    def setObjectProfile(self, object_id, profile_name):
+        profile = None
+        if profile_name != "global":
+            profile = Application.getInstance().getMachineManager().findProfile(profile_name)
+
+        node = self._scene.findObject(object_id)
+        if node:
+            if profile:
+                node.callDecoration("setSetting", "profile", profile)
+            else:
+                node.callDecoration("removeSetting", "profile")
+
+    @pyqtSlot("quint64", str)
+    def addSettingOverride(self, object_id, key):
+        machine = Application.getInstance().getMachineManager().getActiveMachineInstance()
+        if not machine:
+            return
+
+        setting = machine.getSettingByKey(key)
+        if not setting:
+            return
+
+        node = self._scene.findObject(object_id)
+        if node:
+            node.callDecoration("setSetting", key, setting.getValue())
+
+    @pyqtSlot("quint64", str, "QVariant")
+    def setSettingOverride(self, object_id, key, value):
+        node = self._scene.findObject(object_id)
+        if node:
+            node.callDecoration("setSetting", key, value)
+
+    @pyqtSlot("quint64", str)
+    def removeSettingOverride(self, object_id, key):
+        node = self._scene.findObject(object_id)
+        if node:
+            node.callDecoration("removeSetting", key)
 
     def _updatePositions(self, source):
         camera =  Application.getInstance().getController().getScene().getActiveCamera()
@@ -49,6 +92,9 @@ class PerObjectSettingsModel(ListModel):
             if type(node) is not SceneNode or not node.getMeshData():
                 continue
 
+            if not node.getDecorator(SettingOverrideDecorator):
+                node.addDecorator(SettingOverrideDecorator())
+
             projected_position = camera.project(node.getWorldPosition())
 
             self.appendItem({
@@ -57,5 +103,5 @@ class PerObjectSettingsModel(ListModel):
                 "y": float(projected_position[1]),
                 "material": "",
                 "profile": "",
-                "settings": []
+                "settings": SettingOverrideModel.SettingOverrideModel(node.getDecorator(SettingOverrideDecorator))
             })
