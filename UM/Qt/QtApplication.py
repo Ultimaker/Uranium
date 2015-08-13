@@ -52,6 +52,7 @@ class QtApplication(QApplication, Application, SignalEmitter):
         self._main_qml = "main.qml"
         self._engine = None
         self._renderer = None
+        self._main_window = None
 
         self.setAttribute(Qt.AA_UseDesktopOpenGL)
 
@@ -145,6 +146,16 @@ class QtApplication(QApplication, Application, SignalEmitter):
     #   Overridden from QApplication::setApplicationName to call our internal setApplicationName
     def setApplicationName(self, name):
         Application.setApplicationName(self, name)
+
+    mainWindowChanged = Signal()
+
+    def getMainWindow(self):
+        return self._main_window
+
+    def setMainWindow(self, window):
+        if window != self._main_window:
+            self._main_window = window
+            self.mainWindowChanged.emit()
 
     #   Handle a function that should be called later.
     def functionEvent(self, event):

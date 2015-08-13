@@ -12,6 +12,7 @@ class ApplicationProxy(QObject):
     def __init__(self, parent = None):
         super().__init__(parent)
         self._application = Application.getInstance()
+        self._application.mainWindowChanged.connect(self._onMainWindowChanged)
 
     @pyqtSlot(str, str)
     def log(self, type, message):
@@ -21,8 +22,10 @@ class ApplicationProxy(QObject):
     def version(self):
         return self._application.getVersion()
 
-    machineChanged = pyqtSignal()
+    mainWindowChanged = pyqtSignal()
+    @pyqtProperty(QObject, notify = mainWindowChanged)
+    def mainWindow(self):
+        return self._application.getMainWindow()
 
-    @pyqtProperty(str, notify=machineChanged)
-    def machineName(self):
-        return ""
+    def _onMainWindowChanged(self):
+        self.mainWindowChanged.emit()

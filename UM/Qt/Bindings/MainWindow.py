@@ -41,6 +41,8 @@ class MainWindow(QQuickWindow):
 
         self._mouse_x = 0
         self._mouse_y = 0
+
+        Application.getInstance().setMainWindow(self)
     
     def getBackgroundColor(self):
         return self._background_color
