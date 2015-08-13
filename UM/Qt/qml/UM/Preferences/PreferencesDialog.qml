@@ -27,7 +27,7 @@ Dialog {
             id: pagesList;
 
             Layout.fillHeight: true;
-            Layout.preferredWidth: Screen.devicePixelRatio * 100;
+            Layout.preferredWidth: Screen.devicePixelRatio * 125;
 
             alternatingRowColors: false;
             headerVisible: false;
@@ -73,10 +73,16 @@ Dialog {
 
         //: General configuration page title
         insertPage(0, qsTr("General"), "", "GeneralPage.qml");
-        //: Machine configuration page title
-        insertPage(1, qsTr("Machine"), "", "../Settings/SettingsConfigurationPage.qml");
+
+        insertPage(1, "Setting Visibility", "", "SettingVisibilityPage.qml")
+
+         //: Machine configuration page title
+        insertPage(2, qsTr("Machines"), "", "MachinesPage.qml");
+
+        insertPage(3, "Profiles", "", "ProfilesPage.qml")
+
         //: Plugins configuration page title
-        insertPage(2, qsTr("Plugins"), "", "PluginsPage.qml");
+        insertPage(4, qsTr("Plugins"), "", "PluginsPage.qml");
 
         pagesList.selection.select(0);
         configPage.source = configPagesModel.get(0).page;
