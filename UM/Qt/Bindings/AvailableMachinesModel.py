@@ -83,9 +83,13 @@ class AvailableMachinesModel(ListModel):
                 _manufacturer = data.get("manufacturer")
                 _author = data.get("author")
 
-                if _manufacturer == None or _author == None:
-                    print(_file)
+                #makes sure that if Cura tries to load a faulty settings file, that it ignores the file and that Cura at least still loads
+                if _id == None or _file == None or _name == None or _manufacturer == None:
                     continue
+
+                #if the file is missing an author, it displays the author as "unspecified" instead of other
+                if _author == None:
+                    _author = "unspecified"
 
                 if _manufacturer != "Ultimaker":
                     _machines_by_other.append([_manufacturer, _id, _file, _name, _author])
