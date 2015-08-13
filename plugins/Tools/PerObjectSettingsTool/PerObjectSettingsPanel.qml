@@ -14,73 +14,89 @@ Item {
     width: 0;
     height: 0;
 
+    property variant position: mapToItem(null, 0, 0)
+
     property int currentIndex;
 
-    Rectangle {
+    Item {
         id: settingsPanel;
 
-        x: 500;
-        y: -500;
         width: childrenRect.width;
         height: childrenRect.height;
+
         opacity: 0;
         Behavior on opacity { NumberAnimation { } }
 
-        Column {
-            spacing: UM.Theme.sizes.default_margin.width;
+        Rectangle {
+            id: arrow;
+            width: 35;
+            height: 35;
+            rotation: 45;
+            anchors.verticalCenter: parent.verticalCenter;
+        }
 
-            Row {
-                Label {
-                    text: "Material";
+        Rectangle {
+            width: childrenRect.width;
+            height: childrenRect.height;
+
+            anchors.left: arrow.horizontalCenter;
+
+            DropArea {
+                anchors.fill: parent;
+            }
+
+            Column {
+                spacing: UM.Theme.sizes.default_margin.width;
+
+                UM.SettingItem {
+                    width: UM.Theme.sizes.setting.width;
+                    height: UM.Theme.sizes.setting.height;
+
+                    name: "Profile"
+                    type: "enum"
+
+                    style: UM.Theme.styles.setting_item;
+
+                    options: UM.ProfilesModel { selectGlobal: true }
                 }
 
-                ComboBox {
-                    model: materialModel;
-                    currentIndex: {
-                        var material = objectsModel.get(base.currentIndex).material;
-                        for(var i = 0; i < materialModel.count; ++i) {
-                            if(materialModel.get(i).text == material) {
-                                return i;
-                            }
+                Repeater {
+                    model: overriddenSettingsModel;
+
+                    UM.SettingItem {
+                        width: UM.Theme.sizes.setting.width;
+                        height: UM.Theme.sizes.setting.height;
+
+                        name: model.name;
+                        type: model.type;
+                        value: model.value;
+
+                        style: UM.Theme.styles.setting_item;
+
+                        Button {
+                            anchors.right: parent.right;
+                            text: "x";
                         }
-                        return -1;
                     }
-
-                    onActivated: UM.ActiveTool.set
-//                     onActivated: objectsModel.setProperty(base.currentIndex, "material", currentText);
-                }
-            }
-
-            Row {
-                Label {
-                    text: "Profile"
                 }
 
-                ComboBox {
-                    anchors.verticalCenter: parent.verticalCenter;
-                    model: UM.ProfilesModel { selectGlobal: true; }
-                    textRole: "name"
-                    currentIndex: {
-                        var profile = objectsModel.get(base.currentIndex).profile;
-                        var index = model.find("name", profile);
-                        if(index == -1) {
-                            return 0;
-                        } else {
-                            return index;
+                Button {
+                    text: "+ Override Setting";
+
+                    style: ButtonStyle {
+                        background: Item { }
+                        label: Label {
+                            text: control.text;
+                            color: control.hovered ? "blue" : "black"
                         }
                     }
-//                     onActivated: objectsModel.setProperty(base.currentIndex, "profile", currentText);
                 }
-            }
 
-            Button {
-                text: "+ Override Setting";
-            }
-
-            Button {
-                text: "Close";
-                onClicked: {
-                    settingsPanel.opacity = 0;
+                Button {
+                    text: "Close";
+                    onClicked: {
+                        settingsPanel.opacity = 0;
+                    }
                 }
             }
         }
@@ -89,13 +105,8 @@ Item {
     Repeater {
         model: UM.ActiveTool.properties.Model;
         delegate: Button {
-            x: position.x;
-            y: position.y;
-
-            property variant position: mapFromItem(null, model.x + Screen.width / 2, model.y + Screen.height / 2);
-            onPositionChanged: console.log(position.x, position.y);
-
-//             property color material: materialModel.getMaterial(model.material).color;
+            x: ((model.x + 1.0) / 2.0) * UM.Application.mainWindow.width - base.position.x - width / 2
+            y: -((model.y + 1.0) / 2.0) * UM.Application.mainWindow.height + (UM.Application.mainWindow.height - base.position.y) + height / 2
 
             width: 35;
             height: 35;
@@ -103,8 +114,14 @@ Item {
             text: "+";
             onClicked: {
                 base.currentIndex = index;
-                settingsPanel.x = x + width;
-                settingsPanel.y = (y + height / 2) - settingsPanel.height / 2;
+
+                if(x < UM.Application.mainWindow.width / 2) {
+                    settingsPanel.anchors.left = right;
+                } else {
+                    settingsPanel.anchors.right = left;
+                }
+                settingsPanel.anchors.verticalCenter = verticalCenter;
+
                 settingsPanel.opacity = 1;
             }
 
@@ -114,56 +131,18 @@ Item {
                     height: control.height;
                     radius: control.height / 2;
 
-//                     color: control.material;
                     color: "white";
 
                     border.color: "black";
                     border.width: 1;
                 }
             }
-
-            Component.onCompleted: console.log("Created button for " + model.id);
         }
-
     }
 
-//     ListModel {
-//         id: objectsModel;
-//
-//         ListElement {
-//             x: 300;
-//             y: 300;
-//             material: "PLA";
-//             profile: "High Quality";
-//         }
-//
-//         ListElement {
-//             x: 600;
-//             y: 300;
-//             material: "PVA";
-//             profile: "Low Quality";
-//         }
-//
-//         ListElement {
-//             x: 600;
-//             y: 600;
-//             material: "UPET";
-//             profile: "";
-//         }
-//     }
-
     ListModel {
-        id: materialModel;
+        id: overriddenSettingsModel
 
-        ListElement { text: "PLA"; color: "red"; }
-        ListElement { text: "PVA"; color: "green"; }
-        ListElement { text: "UPET"; color: "blue"; }
-
-        function getMaterial(name) {
-            for(var i = 0; i < count; ++i) {
-                if(get(i).text == name)
-                    return get(i);
-            }
-        }
+        ListElement { name: "Layer Height"; type: "float"; value: "0.1"; }
     }
 }
