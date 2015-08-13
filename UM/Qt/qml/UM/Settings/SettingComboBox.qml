@@ -13,6 +13,7 @@ ComboBox
     signal valueChanged(string value);
 
     model: options //From parent loader
+    textRole: "name";
 
     currentIndex: {
         for(var i = 0; i < options.rowCount(); ++i) {
@@ -60,5 +61,5 @@ ComboBox
         }
     }
 
-    onCurrentIndexChanged: if (currentIndex != value) valueChanged(currentText);
+    onActivated: if (currentIndex != value) valueChanged(currentText);
 }

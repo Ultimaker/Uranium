@@ -59,9 +59,9 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
     #   \return ListModel with "text":value pairs
     def createOptionsModel(self, options):
         model = ListModel()
-        model.addRoleName(self.NameRole,"text")
+        model.addRoleName(self.NameRole,"name")
         for option in options:
-            model.appendItem({"text": str(option)})
+            model.appendItem({"name": str(option)})
         return model
 
     def updateSettings(self):
