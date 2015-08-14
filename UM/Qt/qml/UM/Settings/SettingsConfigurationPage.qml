@@ -74,7 +74,7 @@ PreferencesPage {
             x: depth * 25
             checked: model.visibility
             onClicked: ListView.view.model.setVisibility(model.key, checked)
-            enabled: !model.disabled
+            //enabled: !model.disabled
 
             onHoveredChanged: {
                 if(hovered) {
