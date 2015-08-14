@@ -12,28 +12,34 @@ import UM 1.0 as UM
 
 import "../Preferences"
 
-PreferencesPage {
+PreferencesPage
+{
     //: Machine configuration page title.
     title: qsTr("Machine");
     id: base
 
-    contents: ColumnLayout {
+    contents: ColumnLayout
+    {
         z: base.z
         anchors.fill: parent;
-        RowLayout {
+        RowLayout
+        {
             //: Active machine combo box label
             Label { text: qsTr("Active Machine:"); }
-            ComboBox {
+            ComboBox
+            {
                 id: machineCombo;
                 Layout.fillWidth: true;
                 model: UM.Models.machinesModel;
                 textRole: "name";
-                onActivated: {
+                onActivated:
+                {
                     if(index != -1)
                         UM.Models.machinesModel.setActive(index);
                 }
 
-                Connections {
+                Connections
+                {
                     id: machineChange
                     target: UM.Application
                     onMachineChanged: machineCombo.currentIndex = machineCombo.find(UM.Application.machineName);
@@ -76,8 +82,10 @@ PreferencesPage {
             onClicked: ListView.view.model.setVisibility(model.key, checked)
             //enabled: !model.disabled
 
-            onHoveredChanged: {
-                if(hovered) {
+            onHoveredChanged:
+            {
+                if(hovered)
+                {
                     var xPos = parent.x + settingCheckBox.width;
                     var yPos = parent.y;
                     toolTip.show(model.description, 1000, 200, undefined, undefined) //tooltip-text, hover-delay in msec, animation-length in msec, position X, position Y (both y en x == undefined: gives the tooltip a standard placement in the right corner)
@@ -88,11 +96,13 @@ PreferencesPage {
         }
     }
 
-    PreferencesToolTip {
+    PreferencesToolTip
+    {
         id: toolTip;
     }
 
-    MessageDialog {
+    MessageDialog
+    {
         id: confirmRemoveDialog;
 
         icon: StandardIcon.Question;
