@@ -106,6 +106,14 @@ class MachineSettings(SignalEmitter):
                     self.addSettingsCategory(category)
                 category.fillByDict(value)
 
+        if "overrides" in data:
+            for key, value in data["overrides"].items():
+                setting = self.getSettingByKey(key)
+                if not setting:
+                    continue
+
+                setting.fillByDict(value)
+
         for setting in self.getAllSettings():
             setting.valueChanged.connect(self.settingChanged)
 
