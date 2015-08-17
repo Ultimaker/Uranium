@@ -24,6 +24,10 @@ UM.Dialog
     signal finalClicked()
     signal resize(int pageWidth, int pageHeight)
 
+    minimumWidth: UM.Theme.sizes.modal_window_minimum.width
+    minimumHeight: UM.Theme.sizes.modal_window_minimum.height
+    title: elementRoot.wizardTitle
+
     function createPageModel(objectsArray)
     {
         //create a new qt listmodel with the javascript array of objects it is given
@@ -56,22 +60,11 @@ UM.Dialog
         return UM.Resources.getPath(UM.Resources.WizardPagesLocation, page)
     }
 
-    function getPageSize()
-    {
-        //returns the pageSize, but also commits the resize signal when the window is resized
-        resize((elementRoot.width - wizardProgress.width), elementRoot.height)
-        return [(elementRoot.width - wizardProgress.width), elementRoot.height]
-    }
-
-    minimumWidth: UM.Theme.sizes.modal_window_minimum.width
-    minimumHeight: UM.Theme.sizes.modal_window_minimum.height
-    title: elementRoot.wizardTitle
-
-    RowLayout
+    Row
     {
         anchors.fill: parent;
         SystemPalette{id: palette}
-
+        spacing:  UM.Theme.sizes.default_margin.width
         Connections
         {
             target: Printer
@@ -158,19 +151,10 @@ UM.Dialog
         {
             id: pageLoader
             anchors.top: parent.top
-            anchors.left: parent.left
-            anchors.leftMargin: progressList.model.count > 1 ? UM.Theme.sizes.wizard_progress.width + UM.Theme.sizes.default_margin.width : UM.Theme.sizes.default_margin.width
-
+            width: parent.width - wizardProgress.width - (2 *  UM.Theme.sizes.default_margin.width)
+            height: parent.height
             source: elementRoot.getPageSource(elementRoot.currentPage)
-            onStatusChanged:
-            {
-                pageLoader.item.title = progressList.model.get(elementRoot.currentPage).title
-                pageLoader.item.pageHeight = elementRoot.height
-                if (progressList.model.count > 1)
-                    pageLoader.item.page_width = elementRoot.width - wizardProgress.width
-                else
-                    pageLoader.item.pageWidth = elementRoot.width
-            }
+
         }
 
         Connections
@@ -198,7 +182,8 @@ UM.Dialog
                 }
             }
         },
-        Button {
+        Button
+        {
             id: nextButton
             text:
             {
