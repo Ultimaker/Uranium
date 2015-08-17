@@ -10,7 +10,8 @@ import QtQml 2.2
 
 import UM 1.0 as UM
 
-UM.Dialog {
+UM.Dialog
+{
     id: elementRoot
     property string wizardTitle
     property var wizardPages
@@ -23,11 +24,13 @@ UM.Dialog {
     signal finalClicked()
     signal resize(int pageWidth, int pageHeight)
 
-    function createPageModel(objectsArray){
+    function createPageModel(objectsArray)
+    {
         //create a new qt listmodel with the javascript array of objects it is given
         var newListModel = Qt.createQmlObject('import QtQuick 2.2; \
             ListModel {}', elementRoot)
-        for (var i = 0; i < objectsArray.length; i++) {
+        for (var i = 0; i < objectsArray.length; i++)
+        {
             newListModel.append({
                 "page": objectsArray[i].page,
                 "title": objectsArray[i].title
@@ -36,21 +39,25 @@ UM.Dialog {
         return newListModel
     }
 
-    function insertPage(page, title, position){
+    function insertPage(page, title, position)
+    {
         elementRoot.wizardModel.insert(position, {"page": page, "title": title})
     }
 
-    function removePage(index){
+    function removePage(index)
+    {
         elementRoot.wizardModel.remove(index)
     }
 
-    function getPageSource(index){
+    function getPageSource(index)
+    {
         //returns the actual source of a page
         var page = progressList.model.get(index).page
         return UM.Resources.getPath(UM.Resources.WizardPagesLocation, page)
     }
 
-    function getPageSize(){
+    function getPageSize()
+    {
         //returns the pageSize, but also commits the resize signal when the window is resized
         resize((elementRoot.width - wizardProgress.width), elementRoot.height)
         return [(elementRoot.width - wizardProgress.width), elementRoot.height]
@@ -60,18 +67,22 @@ UM.Dialog {
     minimumHeight: UM.Theme.sizes.modal_window_minimum.height
     title: elementRoot.wizardTitle
 
-    RowLayout {
+    RowLayout
+    {
         anchors.fill: parent;
         SystemPalette{id: palette}
 
-        Connections {
+        Connections
+        {
             target: Printer
-            onRequestAddPrinter: {
+            onRequestAddPrinter:
+            {
                 addMachineWizard.visible = true
             }
         }
 
-        Rectangle {
+        Rectangle
+        {
             id: wizardProgress
             visible: progressList.model.count > 1 ? true : false
             width: UM.Theme.sizes.wizard_progress.width
@@ -79,20 +90,26 @@ UM.Dialog {
             anchors.bottom: parent.bottom
             color: palette.light
 
-            Component {
+            Component
+            {
                 id: wizardDelegate
-                Item {
+                Item
+                {
                     height: childrenRect.height
-                    Button {
+                    Button
+                    {
                         id: progressButton
                         width: wizardProgress.width
                         text: title
-                        style: ButtonStyle {
-                            background: Rectangle {
+                        style: ButtonStyle
+                        {
+                            background: Rectangle
+                            {
                                 border.width: 0
                                 color: "transparent"
                             }
-                            label: Text {
+                            label: Text
+                            {
                                 id: progressText
                                 horizontalAlignment: Text.AlignHCenter
                                 wrapMode: Text.Wrap
@@ -102,16 +119,20 @@ UM.Dialog {
                                 color: title == progressList.model.get(elementRoot.currentPage).title ? palette.text : palette.mid
                             }
                         }
-                        onClicked: {
-                            for (var i = 0; i < progressList.model.count; i++) {
-                                if (progressList.model.get(i).title == title){
+                        onClicked:
+                        {
+                            for (var i = 0; i < progressList.model.count; i++)
+                            {
+                                if (progressList.model.get(i).title == title)
+                                {
                                    elementRoot.currentPage = i
                                    break
                                 }
                             }
                         }
                     }
-                    Label {
+                    Label
+                    {
                         id: progressArrow
                         anchors.top: progressButton.bottom
                         x: (wizardProgress.width-progressArrow.width)/2
@@ -121,7 +142,8 @@ UM.Dialog {
                     }
                 }
             }
-            ListView {
+            ListView
+            {
                 id: progressList
                 property var index: 0
                 model: elementRoot.wizardModel
@@ -132,24 +154,27 @@ UM.Dialog {
             }
         }
 
-        Loader {
+        Loader
+        {
             id: pageLoader
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.leftMargin: progressList.model.count > 1 ? UM.Theme.sizes.wizard_progress.width + UM.Theme.sizes.default_margin.width : UM.Theme.sizes.default_margin.width
 
             source: elementRoot.getPageSource(elementRoot.currentPage)
-            onStatusChanged: {
+            onStatusChanged:
+            {
                 pageLoader.item.title = progressList.model.get(elementRoot.currentPage).title
                 pageLoader.item.pageHeight = elementRoot.height
                 if (progressList.model.count > 1)
-                    pageLoader.item.pageWidth = elementRoot.width - wizardProgress.width
+                    pageLoader.item.page_width = elementRoot.width - wizardProgress.width
                 else
                     pageLoader.item.pageWidth = elementRoot.width
             }
         }
 
-        Connections {
+        Connections
+        {
             target: pageLoader.item
             ignoreUnknownSignals: true
             onReloadModel: elementRoot.wizardModel = elementRoot.createPageModel(newModel)
@@ -158,43 +183,54 @@ UM.Dialog {
     }
 
     rightButtons: [
-        Button {
+        Button
+        {
             id: backButton
             //: Add Printer wizard Button: 'Back'
             text: qsTr("< Back");
             enabled: elementRoot.currentPage <= 0 ? false : true
             visible: elementRoot.firstRun ? false : true
-            onClicked: {
-                if (elementRoot.currentPage > 0){
+            onClicked:
+            {
+                if (elementRoot.currentPage > 0)
+                {
                     elementRoot.currentPage -= 1
                 }
             }
         },
         Button {
             id: nextButton
-            text: {
-                if (elementRoot.currentPage < progressList.model.count - 1){
+            text:
+            {
+                if (elementRoot.currentPage < progressList.model.count - 1)
+                {
                     //: Add Printer wizard button: 'Next'
                     return qsTr("Next >")
-                } else if (elementRoot.currentPage == progressList.model.count - 1){
+                } else if (elementRoot.currentPage == progressList.model.count - 1)
+                {
                     //: Add Printer wizard button: 'Finish'
                     return qsTr("Finish ✓")
                 }
             }
 
-            onClicked: {
-                if (elementRoot.currentPage < progressList.model.count - 1){
+            onClicked:
+            {
+                if (elementRoot.currentPage < progressList.model.count - 1)
+                {
                     elementRoot.currentPage += 1
-                }else if (elementRoot.currentPage == progressList.model.count - 1){
+                }else if (elementRoot.currentPage == progressList.model.count - 1)
+                {
                     elementRoot.finalClicked()
                 }
             }
         },
-        Button {
+        Button
+        {
             id: cancelButton
             //: Add Printer wizard button: "Cancel"
             text: qsTr("Cancel X")
-            onClicked: {
+            onClicked:
+            {
                 elementRoot.wizardModel = createPageModel(elementRoot.wizardPages)
                 elementRoot.visible = false
             }
