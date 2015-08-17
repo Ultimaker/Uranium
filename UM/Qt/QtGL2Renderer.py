@@ -268,6 +268,14 @@ class QtGL2Renderer(Renderer):
             self._selection_buffer.release()
             self._selection_image = self._selection_buffer.toImage()
 
+        # Workaround for a MacOSX Intel HD Graphics 6000 Bug
+        # Apparently, performing a glReadPixels call on a bound framebuffer breaks releasing the
+        # depth buffer, which means the rest of the depth tested geometry never renders. To work-
+        # around this we perform a clear here. Note that for some reason we also need to set
+        # glClearColor since it is apparently not stored properly.
+        self._gl.glClearColor(self._background_color.redF(), self._background_color.greenF(), self._background_color.blueF(), self._background_color.alphaF())
+        self._gl.glClear(self._gl.GL_COLOR_BUFFER_BIT | self._gl.GL_DEPTH_BUFFER_BIT)
+
         self._gl.glEnable(self._gl.GL_STENCIL_TEST)
         self._gl.glStencilMask(0xff)
         self._gl.glClearStencil(0)
