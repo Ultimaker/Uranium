@@ -23,7 +23,7 @@ endforeach()
 # Documentation
 find_package(Doxygen)
 if(${DOXYGEN_FOUND})
-    add_custom_target(doc ${DOXYGEN_EXECUTABLE} ${CMAKE_SOURCE_DIR}/docs/config WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+    add_custom_target(doc ${DOXYGEN_EXECUTABLE} ${CMAKE_SOURCE_DIR}/Doxyfile WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 endif()
 
 # Extract Strings
