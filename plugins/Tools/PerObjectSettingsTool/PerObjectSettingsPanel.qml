@@ -61,6 +61,8 @@ Item {
 
                     options: UM.ProfilesModel { selectGlobal: true }
 
+                    value: UM.ActiveTool.properties.Model.getItem(base.currentIndex).profile
+
                     onItemValueChanged: {
                         var item = UM.ActiveTool.properties.Model.getItem(base.currentIndex);
                         UM.ActiveTool.properties.Model.setObjectProfile(item.id, value)
@@ -82,6 +84,11 @@ Item {
                         valid: model.valid;
 
                         style: UM.Theme.styles.setting_item;
+
+                        onItemValueChanged: {
+                            var item = UM.ActiveTool.properties.Model.getItem(base.currentIndex);
+                            UM.ActiveTool.properties.Model.setSettingOverride(item.id, model.key, value);
+                        }
 
                         Button {
                             anchors.right: parent.right;

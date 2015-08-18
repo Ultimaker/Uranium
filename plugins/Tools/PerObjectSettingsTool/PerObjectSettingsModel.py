@@ -97,11 +97,17 @@ class PerObjectSettingsModel(ListModel):
 
             projected_position = camera.project(node.getWorldPosition())
 
+            node_profile = node.callDecoration("getSetting", "profile")
+            if not node_profile:
+                node_profile = "global"
+            else:
+                node_profile = node_profile.getName()
+
             self.appendItem({
                 "id": id(node),
                 "x": float(projected_position[0]),
                 "y": float(projected_position[1]),
                 "material": "",
-                "profile": "",
+                "profile": node_profile,
                 "settings": SettingOverrideModel.SettingOverrideModel(node.getDecorator(SettingOverrideDecorator))
             })
