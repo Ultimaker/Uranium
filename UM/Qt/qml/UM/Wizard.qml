@@ -16,12 +16,11 @@ UM.Dialog
     property string wizardTitle
     property var wizardPages
     property int currentPage: 0
-    property ListModel wizardModel: createPageModel(elementRoot.wizardPages)
+    property variant wizardModel: createPageModel(elementRoot.wizardPages)
 
     property bool firstRun: false
-    property var pageSizes: getPageSize()
 
-    signal finalClicked()
+    signal nextClicked()
     signal resize(int pageWidth, int pageHeight)
 
     minimumWidth: UM.Theme.sizes.modal_window_minimum.width
@@ -43,6 +42,7 @@ UM.Dialog
         return newListModel
     }
 
+
     function insertPage(page, title, position)
     {
         elementRoot.wizardModel.insert(position, {"page": page, "title": title})
@@ -58,6 +58,11 @@ UM.Dialog
         //returns the actual source of a page
         var page = progressList.model.get(index).page
         return UM.Resources.getPath(UM.Resources.WizardPagesLocation, page)
+    }
+
+    function getPageCount()
+    {
+        return elementRoot.wizardModel.count
     }
 
     Row
@@ -161,8 +166,10 @@ UM.Dialog
         {
             target: pageLoader.item
             ignoreUnknownSignals: true
-            onReloadModel: elementRoot.wizardModel = elementRoot.createPageModel(newModel)
-            onCloseWizard: elementRoot.visible = false
+            onReloadModel:
+            {
+                elementRoot.wizardModel = newModel
+            }
         }
     }
 
@@ -202,10 +209,11 @@ UM.Dialog
             {
                 if (elementRoot.currentPage < progressList.model.count - 1)
                 {
+                    elementRoot.nextClicked()
                     elementRoot.currentPage += 1
                 }else if (elementRoot.currentPage == progressList.model.count - 1)
                 {
-                    elementRoot.finalClicked()
+                    elementRoot.nextClicked()
                 }
             }
         },
