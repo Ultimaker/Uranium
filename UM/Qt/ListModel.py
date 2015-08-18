@@ -45,7 +45,10 @@ class ListModel(QAbstractListModel):
     ##  Get an item from the list
     @pyqtSlot(int, result="QVariantMap")
     def getItem(self, index):
-        return self._items[index]
+        try:
+            return self._items[index]
+        except:
+            return None
 
     ##  The list of items in this model.
     @pyqtProperty("QVariantList")
