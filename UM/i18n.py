@@ -50,10 +50,14 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
         if self.__require_update:
             self._update()
 
+        translated = text
         if self.__translation:
-            return self._replaceTags(self.__translation.gettext(text).format(*args))
+            translated = self.__translation.gettext(text)
 
-        return self._replaceTags(text.format(*args))
+        if args:
+            translated = translated.format(*args)
+
+        return self._replaceTags(translated)
 
     ##  Mark a string as translatable, provide a context.
     #
@@ -66,13 +70,18 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
         if self.__require_update:
             self._update()
 
+        translated = text
+
         if self.__translation:
             message_with_context = "{0}\x04{1}".format(context, text)
-            translated = self.__translation.gettext(message_with_context)
-            if translated != message_with_context:
-                return self._replaceTags(translated.format(*args))
+            message = self.__translation.gettext(message_with_context)
+            if message != message_with_context:
+                translated = message
 
-        return self._replaceTags(text.format(*args))
+        if args:
+            translated = translated.format(*args)
+
+        return self._replaceTags(translated)
 
     ##  Mark a string as translatable with plural forms.
     #
@@ -92,13 +101,15 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
         if self.__require_update:
             self._update()
 
-        if self.__translation:
-            return self._replaceTags(self.__translation.ngettext(single, multiple, counter).format(*args))
+        translated = multiple if counter != 1 else single
 
-        if counter != 1:
-            return self._replaceTags(multiple.format(*args))
-        else:
-            return self._replaceTags(single.format(*args))
+        if self.__translation:
+            translated = self.__translation.ngettext(single, multiple, counter)
+
+        if args:
+            translated = translated.format(args)
+
+        return self._replaceTags(translated)
 
     ##  Mark a string as translatable with plural forms and a context.
     #
@@ -118,16 +129,19 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
         if self.__require_update:
             self._update()
 
-        if self.__translation:
-            string_with_context = "{0}\x04{1}".format(context, single)
-            translated = self.__translation.ngettext(string_with_context, multiple, counter)
-            if translated != string_with_context:
-                return self._replaceTags(translated.format(*args))
+        translated = multiple if counter != 1 else single
 
-        if counter != 1:
-            return self._replaceTags(multiple.format(*args))
-        else:
-            return self._replaceTags(single.format(*args))
+        if self.__translation:
+            message_with_context = "{0}\x04{1}".format(context, single)
+            message = self.__translation.ngettext(message_with_context, multiple, counter)
+
+            if message != message_with_context:
+                translated = message
+
+        if args:
+            translated = translated.format(args)
+
+        return self._replaceTags(translated)
 
     def _replaceTags(self, string):
         output = string

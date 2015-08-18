@@ -41,8 +41,6 @@ class ReadMeshJob(Job):
             result_message.show()
             return
 
-        self.blah()
-
         # Scale down to maximum bounds size if that is available
         if hasattr(Application.getInstance().getController().getScene(), "_maximum_bounds"):
             max_bounds = Application.getInstance().getController().getScene()._maximum_bounds
