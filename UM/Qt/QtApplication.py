@@ -79,7 +79,10 @@ class QtApplication(QApplication, Application, SignalEmitter):
         self._plugin_registry.checkRequiredPlugins(self.getRequiredPlugins())
 
         self.showSplashMessage(i18n_catalog.i18nc("Splash screen message", "Loading machines..."))
-        self.loadMachines()
+        try:
+            self.loadMachines()
+        except FileNotFoundError:
+            pass
 
         self.showSplashMessage(i18n_catalog.i18nc("Splash screen message", "Loading preferences..."))
         try:
