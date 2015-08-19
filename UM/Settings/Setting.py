@@ -10,6 +10,7 @@ from UM.Logger import Logger
 
 import math
 import ast
+from copy import deepcopy
 
 ##  Raised when an inheritance function tries to use a blacklisted method.
 class IllegalMethodError(Exception):
@@ -30,7 +31,6 @@ class Setting(SignalEmitter):
         self._type = kwargs.get("type", "string")
         self._visible = kwargs.get("visible", True)
         self._validator = None
-        self._conditions = []
         self._parent = None
         self._hide_if_all_children_visible = True
         self._children = []
@@ -355,7 +355,44 @@ class Setting(SignalEmitter):
     def __repr__(self):
         return "<Setting: %s>" % (self._key)
 
-## private:
+    def __deepcopy__(self, memo):
+        copy = Setting(
+            self._key,
+            self._i18n_catalog,
+            label = self._label,
+            description = self._description,
+            default = self._default_value,
+            value = self._value,
+            type = self._type,
+            visible = self._visible,
+            category = self._category,
+            unit = self._unit
+        )
+
+        copy._validator = self._validator
+        copy._parent = self._parent
+        copy._hide_if_all_children_visible = self._hide_if_all_children_visible
+        copy._children = deepcopy(self._children, memo)
+        copy._active = self._active
+        copy._machine_settings = self._machine_settings
+        copy._active_if_setting = self._active_if_setting
+        copy._active_if_value = self._active_if_value
+        copy._options = deepcopy(self._options, memo)
+        copy._inherit = self._inherit
+        copy._inherit_function = deepcopy(self._inherit_function, memo)
+
+        copy._fixChildren()
+
+        return copy
+
+    ## private:
+
+    # Fixes parent assignment after a deepcopy operation
+    def _fixChildren(self):
+        for child in self._children:
+            child.setParent(self)
+            child._fixChildren()
+
     def _onChildVisibileChanged(self, setting):
         self.visibleChanged.emit(setting)
         self.visibleChanged.emit(self)
