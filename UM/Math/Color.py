@@ -17,17 +17,29 @@ class Color:
     def r(self):
         return self._r
 
+    def setR(self, value):
+        self.setValues(value, self._g, self._b, self._a)
+
     @property
     def g(self):
         return self._g
+
+    def setG(self, value):
+        self.setValues(self._r, value, self._b, self._a)
 
     @property
     def b(self):
         return self._b
 
+    def setB(self, value):
+        self.setValues(self._r, self._g, value, self._a)
+
     @property
     def a(self):
         return self._a
+
+    def setA(self, value):
+        self.setValues(self._r, self._g, self._b, value)
 
     def setValues(self, r, g, b, a):
         self._r = r if type(r) is float else r / 255
