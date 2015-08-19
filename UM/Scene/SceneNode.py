@@ -67,18 +67,7 @@ class SceneNode(SignalEmitter):
     
     def getBoundingBoxMesh(self):
         return self._bounding_box_mesh
-    
-    def addDecorator(self, decorator):
-        decorator.setNode(self)
-        self._decorators.append(decorator)
-    
-    def _onParentChanged(self, node):
-        for child in self.getChildren():
-            child.parentChanged.emit(self)
-    
-    def getDecorators(self):
-        return self._decorators
-    
+
     def calculateBoundingBoxMesh(self):
         if self._aabb:
             self._bounding_box_mesh = MeshData()
@@ -122,6 +111,16 @@ class SceneNode(SignalEmitter):
             self._bounding_box_mesh.addVertex(rtf.x, lbb.y, lbb.z) #Right - Bottom - Back
         else:
             self._resetAABB()
+    
+    def _onParentChanged(self, node):
+        for child in self.getChildren():
+            child.parentChanged.emit(self)
+    def addDecorator(self, decorator):
+        decorator.setNode(self)
+        self._decorators.append(decorator)
+    
+    def getDecorators(self):
+        return self._decorators
     
     def getDecorator(self, dec_type):
         for decorator in self._decorators:
