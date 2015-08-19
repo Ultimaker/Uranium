@@ -115,9 +115,12 @@ class SceneNode(SignalEmitter):
     def _onParentChanged(self, node):
         for child in self.getChildren():
             child.parentChanged.emit(self)
+
+    decoratorsChanged = Signal()
     def addDecorator(self, decorator):
         decorator.setNode(self)
         self._decorators.append(decorator)
+        self.decoratorsChanged.emit(self)
     
     def getDecorators(self):
         return self._decorators
@@ -129,11 +132,13 @@ class SceneNode(SignalEmitter):
     
     def removeDecorators(self):
         self._decorators = []
+        self.decoratorsChanged.emit(self)
         
     def removeDecorator(self, dec_type):
         for decorator in self._decorators:
             if type(decorator) == dec_type:
                 self._decorators.remove(decorator)
+                self.decoratorsChanged.emit(self)
                 break
     
     def callDecoration(self, function, *args, **kwargs):
