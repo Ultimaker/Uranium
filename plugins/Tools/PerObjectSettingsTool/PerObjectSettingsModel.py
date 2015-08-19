@@ -38,6 +38,7 @@ class PerObjectSettingsModel(ListModel):
     @pyqtSlot("quint64", str)
     def setObjectProfile(self, object_id, profile_name):
         self.setProperty(self.find("id", object_id), "profile", profile_name)
+
         profile = None
         if profile_name != "global":
             profile = Application.getInstance().getMachineManager().findProfile(profile_name)
@@ -57,25 +58,19 @@ class PerObjectSettingsModel(ListModel):
         if not machine:
             return
 
-        setting = machine.getSettingByKey(key)
-        if not setting:
-            return
-
         node = self._scene.findObject(object_id)
-        if node:
-            node.callDecoration("setSetting", key, setting.getValue())
+        if not node.getDecorator(SettingOverrideDecorator):
+            node.addDecorator(SettingOverrideDecorator())
 
-    @pyqtSlot("quint64", str, "QVariant")
-    def setSettingOverride(self, object_id, key, value):
-        node = self._scene.findObject(object_id)
-        if node:
-            node.callDecoration("setSetting", key, value)
+        node.callDecoration("addSetting", key)
 
     @pyqtSlot("quint64", str)
     def removeSettingOverride(self, object_id, key):
         node = self._scene.findObject(object_id)
-        if node:
-            node.callDecoration("removeSetting", key)
+        node.callDecoration("removeSetting", key)
+
+        if len(node.callDecoration("getAllSettings")) == 0:
+            node.removeDecorator(SettingOverrideDecorator)
 
     def _updatePositions(self, source):
         camera =  Application.getInstance().getController().getScene().getActiveCamera()
@@ -96,9 +91,6 @@ class PerObjectSettingsModel(ListModel):
             if type(node) is not SceneNode or not node.getMeshData():
                 continue
 
-            if not node.getDecorator(SettingOverrideDecorator):
-                node.addDecorator(SettingOverrideDecorator())
-
             projected_position = camera.project(node.getWorldPosition())
 
             node_profile = node.callDecoration("getProfile")
@@ -113,5 +105,5 @@ class PerObjectSettingsModel(ListModel):
                 "y": float(projected_position[1]),
                 "material": "",
                 "profile": node_profile,
-                "settings": SettingOverrideModel.SettingOverrideModel(node.getDecorator(SettingOverrideDecorator))
+                "settings": SettingOverrideModel.SettingOverrideModel(node)
             })

@@ -70,6 +70,8 @@ Item {
                 }
 
                 Repeater {
+                    id: settings;
+
                     model: UM.ActiveTool.properties.Model.getItem(base.currentIndex).settings
 
                     UM.SettingItem {
@@ -86,8 +88,7 @@ Item {
                         style: UM.Theme.styles.setting_item;
 
                         onItemValueChanged: {
-                            var item = UM.ActiveTool.properties.Model.getItem(base.currentIndex);
-                            UM.ActiveTool.properties.Model.setSettingOverride(item.id, model.key, value);
+                            settings.model.setSettingValue(model.key, value)
                         }
 
                         Button {
