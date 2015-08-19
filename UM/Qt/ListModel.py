@@ -98,6 +98,7 @@ class ListModel(QAbstractListModel):
     #   \param key
     #   \param value
     #   \return index of setting if found, None otherwise
+    @pyqtSlot(QVariant, QVariant, result = int)
     def find(self, key, value):
         for i in range(len(self._items)):
             if key in self._items[i]:

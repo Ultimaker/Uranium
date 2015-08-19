@@ -207,6 +207,11 @@ class MachineSettings(SignalEmitter):
             all_settings.extend(category.getAllSettings())
         return all_settings
 
+    ##  Get machine settings of this machine (category less settings).
+    #   \return list of settings
+    def getMachineSettings(self):
+        return self._machine_settings
+
     ##  Get setting by key.
     #   \param key Key to select setting by (string)
     #   \return Setting or none if no setting was found.

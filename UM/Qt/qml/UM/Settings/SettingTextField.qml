@@ -52,7 +52,8 @@ TextField {
                 }
             }
 
-            Rectangle {
+            Rectangle
+            {
                 anchors.fill: parent;
                 anchors.margins: itemStyle.controlBorderWidth;
                 color: itemStyle.controlHighlightColor;
