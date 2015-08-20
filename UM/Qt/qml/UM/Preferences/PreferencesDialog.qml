@@ -57,14 +57,21 @@ Dialog {
         onClicked: base.visible = false;
     }
 
-    function setPage(index) {
+    function setPage(index)
+    {
         configPage.source = configPagesModel.get(index).page;
         pagesList.selection.clear();
         pagesList.selection.select(index);
     }
 
-    function insertPage(index, name, icon, page) {
+    function insertPage(index, name, icon, page)
+    {
         configPagesModel.insert(index, { "name": name, "icon": icon, "page": page });
+    }
+
+    function removePage(index)
+    {
+        configPagesModel.remove(index)
     }
 
     Component.onCompleted: {
@@ -76,7 +83,6 @@ Dialog {
         insertPage(1, catalog.i18nc("@title:tab", "Machine"), "", "../Settings/SettingsConfigurationPage.qml");
         //: Plugins configuration page title
         insertPage(2, catalog.i18nc("@title:tab", "Plugins"), "", "PluginsPage.qml");
-
         pagesList.selection.select(0);
         configPage.source = configPagesModel.get(0).page;
     }
