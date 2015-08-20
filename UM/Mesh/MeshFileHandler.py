@@ -36,7 +36,7 @@ class MeshFileHandler(object):
                             extents = result.getMeshData().getExtents()
                             move_vector = Vector()
                             move_vector.setX(extents.center.x)
-                            move_vector.setY(0)
+                            move_vector.setY(extents.bottom) # Ensure that bottom is on 0 (above plate)
                             move_vector.setZ(extents.center.z)
                             result.setCenterPosition(move_vector)
 
