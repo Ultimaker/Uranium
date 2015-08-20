@@ -6,7 +6,7 @@ import Arcus
 from UM.Signal import Signal, SignalEmitter
 
 ##  A small extension of an Arcus socket that emits queued signals when socket events happen.
-class SignalSocket(Arcus.Socket, SignalEmitter):
+class SignalSocket(SignalEmitter, Arcus.Socket):
     def __init__(self):
         super().__init__()
 
