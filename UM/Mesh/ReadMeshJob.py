@@ -26,9 +26,10 @@ class ReadMeshJob(Job):
         return self._filename
 
     def run(self):
-        loading_message = Message(i18n_catalog.i18nc("Loading mesh message, {0} is file name", "Loading {0}").format(self._filename), lifetime = 0, dismissable = False)
+        loading_message = Message(i18n_catalog.i18nc("@info:status", "Loading <filename>{0}</filename>", self._filename), lifetime = 0, dismissable = False)
         loading_message.setProgress(-1)
         loading_message.show()
+
         try:
             node = self._handler.read(self._filename)
         except Exception as e:
@@ -36,7 +37,7 @@ class ReadMeshJob(Job):
         if not node:
             loading_message.hide()
 
-            result_message = Message(i18n_catalog.i18nc("Failed loading mesh message, {0} is file name", "Failed to load {0}").format(self._filename))
+            result_message = Message(i18n_catalog.i18nc("@info:status", "Failed to load <filename>{0}</filename>", self._filename))
             result_message.show()
             return
 
@@ -74,5 +75,5 @@ class ReadMeshJob(Job):
         self.setResult(node)
 
         loading_message.hide()
-        result_message = Message(i18n_catalog.i18nc("Finished loading mesh message, {0} is file name", "Loaded {0}").format(self._filename))
+        result_message = Message(i18n_catalog.i18nc("@info:status", "Loaded <filename>{0}</filename>", self._filename))
         result_message.show()

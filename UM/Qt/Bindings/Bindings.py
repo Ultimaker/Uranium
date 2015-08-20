@@ -29,6 +29,7 @@ from . import ActiveViewProxy
 from . import OutputDevicesModel
 from . import SelectionProxy
 from . import OutputDeviceManagerProxy
+from . import i18nCatalogProxy
 
 class Bindings:
     @classmethod
@@ -68,7 +69,6 @@ class Bindings:
         qmlRegisterType(JobsModel.JobsModel, "UM", 1, 0, "JobsModel")
         qmlRegisterType(SettingCategoriesModel.SettingCategoriesModel, "UM", 1, 0, "SettingCategoriesModel")
         qmlRegisterType(AngledCornerRectangle.AngledCornerRectangle, "UM", 1, 0, "AngledCornerRectangle")
-        qmlRegisterType(OutputDevicesModel.OutputDevicesModel, "UM", 1, 1, "OutputDevicesModel")
 
         # Singleton proxy objects
         qmlRegisterSingletonType(ControllerProxy, "UM", 1, 0, "Controller", Bindings.createControllerProxy)
@@ -84,7 +84,13 @@ class Bindings:
         qmlRegisterSingletonType(ActiveToolProxy.ActiveToolProxy, "UM", 1, 0, "ActiveTool", ActiveToolProxy.createActiveToolProxy)
         qmlRegisterSingletonType(ActiveViewProxy.ActiveViewProxy, "UM", 1, 0, "ActiveView", ActiveViewProxy.createActiveViewProxy)
         qmlRegisterSingletonType(SelectionProxy.SelectionProxy, "UM", 1, 0, "Selection", SelectionProxy.createSelectionProxy)
-        qmlRegisterSingletonType(OutputDeviceManagerProxy.OutputDeviceManagerProxy, "UM", 1, 1, "OutputDeviceManager", OutputDeviceManagerProxy.createOutputDeviceManagerProxy)
 
         qmlRegisterUncreatableType(Duration, "UM", 1, 0, "Duration", "")
         qmlRegisterUncreatableType(DurationFormat, "UM", 1, 0, "DurationFormat", "")
+
+        # Additions after 15.06. Uses API version 1.1 so should be imported with "import UM 1.1"
+        qmlRegisterType(OutputDevicesModel.OutputDevicesModel, "UM", 1, 1, "OutputDevicesModel")
+        qmlRegisterType(i18nCatalogProxy.i18nCatalogProxy, "UM", 1, 1, "I18nCatalog")
+
+        qmlRegisterSingletonType(OutputDeviceManagerProxy.OutputDeviceManagerProxy, "UM", 1, 1, "OutputDeviceManager", OutputDeviceManagerProxy.createOutputDeviceManagerProxy)
+

@@ -22,7 +22,7 @@ Item {
         //: Reset scale tool button tooltip
         tooltip: qsTr("Reset the scaling of the current selection.");
 
-        style: UM.Theme.styles.tool_button;
+        style: UM.Theme.styles.tool_button_panel;
 
         onClicked: UM.ActiveTool.triggerAction("resetScale");
     }
@@ -38,8 +38,7 @@ Item {
 
         anchors.top: parent.top;
 
-        style: UM.Theme.styles.tool_button;
-
+        style: UM.Theme.styles.tool_button_panel;
         onClicked: UM.ActiveTool.triggerAction("scaleToMax")
     }
 

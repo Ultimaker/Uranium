@@ -96,6 +96,12 @@ class Models(QObject):
             self._machines_model = MachinesModel.MachinesModel()
         return self._machines_model
 
+    @pyqtProperty(AddMachinesModel.AddMachinesModel, constant = True)
+    def addMachinesModel(self):
+        if not self._add_machines_model:
+            self._add_machines_model = AddMachinesModel.AddMachinesModel()
+        return self._add_machines_model
+
     @pyqtProperty(DirectoryListModel.DirectoryListModel, constant = True)
     def directoryListModel(self):
         if not self._directory_list_model:

@@ -9,13 +9,12 @@ import QtQuick.Window 2.1
 
 import ".."
 
-import UM 1.0 as UM
+import UM 1.1 as UM
 
 Dialog {
     id: base;
 
-    //: Preferences dialog title
-    title: qsTr("Preferences")
+    title: catalog.i18nc("@title:window", "Preferences")
     minimumWidth: 600;
     minimumHeight: 500;
 
@@ -44,17 +43,17 @@ Dialog {
             Layout.fillWidth: true
             Layout.fillHeight: true
         }
+
+        UM.I18nCatalog { id: catalog; name: "uranium"; }
     }
 
     leftButtons: Button {
-        //: Reset preferences to default
-        text: qsTr("Defaults");
+        text: catalog.i18nc("@action:button", "Defaults");
         onClicked: configPage.item.reset();
     }
 
     rightButtons: Button {
-        //: Close preferences dialog
-        text: qsTr("Close");
+        text: catalog.i18nc("@action:button", "Close");
         onClicked: base.visible = false;
     }
 
@@ -72,11 +71,11 @@ Dialog {
         //This uses insertPage here because ListModel is stupid and does not allow using qsTr() on elements.
 
         //: General configuration page title
-        insertPage(0, qsTr("General"), "", "GeneralPage.qml");
+        insertPage(0, catalog.i18nc("@title:tab", "General"), "", "GeneralPage.qml");
         //: Machine configuration page title
-        insertPage(1, qsTr("Machine"), "", "../Settings/SettingsConfigurationPage.qml");
+        insertPage(1, catalog.i18nc("@title:tab", "Machine"), "", "../Settings/SettingsConfigurationPage.qml");
         //: Plugins configuration page title
-        insertPage(2, qsTr("Plugins"), "", "PluginsPage.qml");
+        insertPage(2, catalog.i18nc("@title:tab", "Plugins"), "", "PluginsPage.qml");
 
         pagesList.selection.select(0);
         configPage.source = configPagesModel.get(0).page;

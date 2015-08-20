@@ -2,9 +2,11 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 from UM.Signal import Signal, SignalEmitter
+from UM.Logger import Logger
 
 import multiprocessing
 import threading
+import traceback
 
 ##  A thread pool and queue manager for Jobs.
 #
@@ -115,6 +117,9 @@ class _Worker(threading.Thread):
             try:
                 job.run()
             except Exception as e:
+                Logger.log("e", "Error in Job %s", str(job))
+                Logger.log("e", str(e))
+                Logger.log("e", "".join(traceback.format_stack()))
                 job.setError(e)
 
             job._running = False
