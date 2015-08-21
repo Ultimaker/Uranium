@@ -37,17 +37,17 @@ class MeshView(View):
 
             self._enabled_material.setUniformValue("u_ambientColor", Color(0.3, 0.3, 0.3, 1.0))
             self._enabled_material.setUniformValue("u_diffuseColor", self.EnabledColor)
-            self._enabled_material.setUniformValue("u_specularColor", Color(1.0, 1.0, 1.0, 1.0))
+            self._enabled_material.setUniformValue("u_specularColor", Color(0.7, 0.7, 0.7, 1.0))
             self._enabled_material.setUniformValue("u_overhangColor", Color(1.0, 0.0, 0.0, 1.0))
-            self._enabled_material.setUniformValue("u_shininess", 50.0)
+            self._enabled_material.setUniformValue("u_shininess", 20.)
 
         if not self._disabled_material:
             self._disabled_material = renderer.createMaterial(Resources.getPath(Resources.ShadersLocation, "default.vert"), Resources.getPath(Resources.ShadersLocation, "default.frag"))
             self._disabled_material.setUniformValue("u_ambientColor", Color(0.3, 0.3, 0.3, 1.0))
             self._disabled_material.setUniformValue("u_diffuseColor", self.DisabledColor)
-            self._disabled_material.setUniformValue("u_specularColor", Color(1.0, 1.0, 1.0, 1.0))
+            self._enabled_material.setUniformValue("u_specularColor", Color(0.7, 0.7, 0.7, 1.0))
             self._disabled_material.setUniformValue("u_overhangColor", Color(1.0, 0.0, 0.0, 1.0))
-            self._disabled_material.setUniformValue("u_shininess", 50.0)
+            self._disabled_material.setUniformValue("u_shininess", 20.)
 
         if Application.getInstance().getActiveMachine():
             machine = Application.getInstance().getActiveMachine()

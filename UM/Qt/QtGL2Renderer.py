@@ -340,8 +340,8 @@ class QtGL2Renderer(Renderer):
 
         self._default_material.setUniformValue("u_ambientColor", Color(0.3, 0.3, 0.3, 1.0))
         self._default_material.setUniformValue("u_diffuseColor", Color(0.5, 0.5, 0.5, 1.0))
-        self._default_material.setUniformValue("u_specularColor", Color(1.0, 1.0, 1.0, 1.0))
-        self._default_material.setUniformValue("u_shininess", 50.0)
+        self._default_material.setUniformValue("u_specularColor", Color(0.7, 0.7, 0.7, 1.0))
+        self._default_material.setUniformValue("u_shininess", 20.)
 
         self._selection_buffer = self.createFrameBuffer(128, 128)
         self._selection_material = self.createMaterial(
