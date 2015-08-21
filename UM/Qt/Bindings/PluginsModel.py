@@ -24,7 +24,7 @@ class PluginsModel(ListModel):
         self.addRoleName(self.NameRole, "name")
         self.addRoleName(self.RequiredRole, "required")
         self.addRoleName(self.EnabledRole, "enabled")
-        self.addRoleName(self.TypeRole, "type")
+
         self.addRoleName(self.DescriptionRole, "description")
         self.addRoleName(self.AuthorRole, "author")
         self.addRoleName(self.VersionRole, "version")
@@ -42,7 +42,6 @@ class PluginsModel(ListModel):
             self.appendItem({
                 "required": plugin["id"] in self._required_plugins,
                 "enabled": plugin["id"] in active_plugins,
-                "type": plugin["type"],
 
                 "name": aboutData.get("name", plugin["id"]),
                 "description": aboutData.get("description", ""),
@@ -50,7 +49,7 @@ class PluginsModel(ListModel):
                 "version": aboutData.get("version", "Unknown")
             })
 
-            self.sort(lambda k: k["type"])
+            self.sort(lambda k: k["name"])
 
     @pyqtSlot(str,bool)
     def setEnabled(self, name, enabled):

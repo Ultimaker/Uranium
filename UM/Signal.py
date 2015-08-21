@@ -55,6 +55,10 @@ class Signal:
         self.__methods = WeakKeyDictionary()
         self.__signals = WeakSet()
         self.__type = kwargs.get("type", Signal.Auto)
+
+        self.__emitting = False
+        self.__connect_queue = []
+        self.__disconnect_queue = []
     
     ##  \exception NotImplementedError
     def __call__(self):
@@ -86,6 +90,8 @@ class Signal:
         except AttributeError: # If Signal._app is not set
             return
 
+        self.__emitting = True
+
         # Call handler functions
         for func in self.__functions:
             func(*args, **kargs)
@@ -99,9 +105,24 @@ class Signal:
         for signal in self.__signals:
             signal.emit(*args, **kargs)
 
+        self.__emitting = False
+        for connector in self.__connect_queue:
+            self.connect(connector)
+        self.__connect_queue.clear()
+        for connector in self.__disconnect_queue:
+            self.disconnect(connector)
+        self.__connect_queue.clear()
+
     ##  Connect to this signal.
     #   \param connector The signal or slot (function) to connect.
     def connect(self, connector):
+        if self.__emitting:
+            # When we try to connect to a signal we change the dictionary of connectors.
+            # This will cause an Exception since we are iterating over a dictionary that changed.
+            # So instead, defer the connections until after we are done emitting.
+            self.__connect_queue.append(connector)
+            return
+
         if type(connector) == Signal:
             if connector == self:
                 return
@@ -117,6 +138,11 @@ class Signal:
     ##  Disconnect from this signal.
     #   \param connector The signal or slot (function) to disconnect.
     def disconnect(self, connector):
+        if self.__emitting:
+            # See above.
+            self.__disconnect_queue.append(connector)
+            return
+
         try:
             if connector in self.__signals:
                 self.__signals.remove(connector)
@@ -131,6 +157,9 @@ class Signal:
 
     ##  Disconnect all connected slots.
     def disconnectAll(self):
+        if self.__emitting:
+            raise RuntimeError("Tried to disconnect signal while signal is being emitted")
+
         self.__functions.clear()
         self.__methods.clear()
         self.__signals.clear()

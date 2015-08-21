@@ -60,6 +60,16 @@ class SceneNode(SignalEmitter):
         if parent:
             parent.addChild(self)
 
+
+    def setCenterPosition(self, center):
+        if self._mesh_data:
+            m = Matrix()
+            m.setByTranslation(-center)                        
+            self._mesh_data = self._mesh_data.getTransformed(m)  
+            self._mesh_data.setCenterPosition(center)
+        for child in self._children:
+            child.setCenterPosition(center)
+            
     ##  \brief Get the parent of this node. If the node has no parent, it is the root node.
     #   \returns SceneNode if it has a parent and None if it's the root node.
     def getParent(self):

@@ -268,6 +268,14 @@ class QtGL2Renderer(Renderer):
             self._selection_buffer.release()
             self._selection_image = self._selection_buffer.toImage()
 
+        # Workaround for a MacOSX Intel HD Graphics 6000 Bug
+        # Apparently, performing a glReadPixels call on a bound framebuffer breaks releasing the
+        # depth buffer, which means the rest of the depth tested geometry never renders. To work-
+        # around this we perform a clear here. Note that for some reason we also need to set
+        # glClearColor since it is apparently not stored properly.
+        self._gl.glClearColor(self._background_color.redF(), self._background_color.greenF(), self._background_color.blueF(), self._background_color.alphaF())
+        self._gl.glClear(self._gl.GL_COLOR_BUFFER_BIT | self._gl.GL_DEPTH_BUFFER_BIT)
+
         self._gl.glEnable(self._gl.GL_STENCIL_TEST)
         self._gl.glStencilMask(0xff)
         self._gl.glClearStencil(0)
@@ -332,8 +340,8 @@ class QtGL2Renderer(Renderer):
 
         self._default_material.setUniformValue("u_ambientColor", Color(0.3, 0.3, 0.3, 1.0))
         self._default_material.setUniformValue("u_diffuseColor", Color(0.5, 0.5, 0.5, 1.0))
-        self._default_material.setUniformValue("u_specularColor", Color(1.0, 1.0, 1.0, 1.0))
-        self._default_material.setUniformValue("u_shininess", 50.0)
+        self._default_material.setUniformValue("u_specularColor", Color(0.7, 0.7, 0.7, 1.0))
+        self._default_material.setUniformValue("u_shininess", 20.)
 
         self._selection_buffer = self.createFrameBuffer(128, 128)
         self._selection_material = self.createMaterial(
@@ -356,6 +364,8 @@ class QtGL2Renderer(Renderer):
     def _renderItem(self, item):
         node = item["node"]
         mesh = item.get("mesh", node.getMeshData())
+        if not mesh:
+            return #Something went wrong, node has no mesh.
         transform = node.getWorldTransformation()
         material = item["material"]
         mode = item["mode"]

@@ -1,7 +1,7 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-from PyQt5.QtCore import pyqtProperty, QObject, Qt, QCoreApplication, pyqtSignal
+from PyQt5.QtCore import pyqtProperty, QObject, Qt, QCoreApplication, pyqtSignal, pyqtSlot
 from PyQt5.QtGui import QColor
 from PyQt5.QtQuick import QQuickWindow, QQuickItem
 
@@ -43,7 +43,16 @@ class MainWindow(QQuickWindow):
         self._mouse_y = 0
 
         Application.getInstance().setMainWindow(self)
-    
+        self._fullscreen = False
+
+    @pyqtSlot()
+    def toggleFullscreen(self):
+        if self._fullscreen:
+            self.setVisibility(QQuickWindow.Window) # Switch back to windowed
+        else:
+            self.setVisibility(QQuickWindow.FullScreen) # Go to fullscreen
+        self._fullscreen = not self._fullscreen
+
     def getBackgroundColor(self):
         return self._background_color
 

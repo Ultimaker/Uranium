@@ -53,7 +53,7 @@ class TranslateTool(Tool):
                 self.setLockedAxis(id)
             elif self._handle.isAxis(id):
                 return False
-
+            self.operationStarted.emit(self)
             if id == ToolHandle.XAxis:
                 self.setDragPlane(Plane(Vector(0, 0, 1), 0))
             elif id == ToolHandle.YAxis:
@@ -95,6 +95,7 @@ class TranslateTool(Tool):
             if self.getDragPlane():
                 self.setLockedAxis(None)
                 self.setDragPlane(None)
+                self.operationStopped.emit(self)
                 return True
 
         return False

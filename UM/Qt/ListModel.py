@@ -45,7 +45,10 @@ class ListModel(QAbstractListModel):
     ##  Get an item from the list
     @pyqtSlot(int, result="QVariantMap")
     def getItem(self, index):
-        return self._items[index]
+        try:
+            return self._items[index]
+        except:
+            return None
 
     ##  The list of items in this model.
     @pyqtProperty("QVariantList")
@@ -95,7 +98,7 @@ class ListModel(QAbstractListModel):
     #   \param key
     #   \param value
     #   \return index of setting if found, None otherwise
-    @pyqtSlot(str, "QVariant", result = int)
+    @pyqtSlot(str, QVariant, result = int)
     def find(self, key, value):
         for i in range(len(self._items)):
             if key in self._items[i]:

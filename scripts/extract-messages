@@ -13,9 +13,8 @@ catalogname=$2
 # extract strings from JSON files and extract-python to extract strings from Python files.
 #
 mkdir -p $basedir/resources/i18n
-$scriptdir/extract-tr-strings $(find $basedir -name \*.qml) -o "$basedir/resources/i18n/${catalogname}_qt.pot"
 $scriptdir/extract-json $basedir/resources/settings/ $basedir/resources/i18n
-$scriptdir/extract-python $basedir $basedir/resources/i18n/$catalogname.pot
+$scriptdir/extract-all $basedir $basedir/resources/i18n/$catalogname.pot
 msgconv --to-code=UTF-8 $basedir/resources/i18n/$catalogname.pot -o $basedir/resources/i18n/$catalogname.pot
 
 for pot in $basedir/resources/i18n/*.pot; do

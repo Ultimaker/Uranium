@@ -1,7 +1,7 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-from PyQt5.QtCore import Qt, QCoreApplication, pyqtSlot
+from PyQt5.QtCore import Qt, QCoreApplication, pyqtSlot, QVariant
 
 from UM.Qt.ListModel import ListModel
 from UM.Settings.Setting import Setting
@@ -140,6 +140,14 @@ class SettingsModel(ListModel):
             if dic[key] == value:
                 return i
         return -1
+
+    @pyqtSlot(str, result = QVariant)
+    def getMachineSetting(self, key):
+        if self._machine_settings:
+            for setting in self._machine_settings.getMachineSettings():
+                if setting.getKey() == key:
+                    return setting.getValue()
+
 
     def _onActiveMachineChanged(self):
         self.clear()

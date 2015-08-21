@@ -38,7 +38,7 @@ ScrollView {
 
                 SidebarCategoryHeader {
                     id: categoryHeader;
-
+                    activeFocusOnTab: false
                     width: base.viewport.width;
                     height: UM.Theme.sizes.section.height;
 

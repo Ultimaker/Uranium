@@ -28,7 +28,7 @@ class MachineSettings(SignalEmitter):
         self._categories = []
         self._platform_mesh = None
         self._platform_texture = None
-        self._name = "Unknown Machine",
+        self._name = "Unknown Machine"
         self._type_name = "Unknown"
         self._type_id = "unknown"
         self._type_version = "unknown"
@@ -113,6 +113,14 @@ class MachineSettings(SignalEmitter):
                     self.addSettingsCategory(category)
                 category.fillByDict(value)
 
+        if "overrides" in data:
+            for key, value in data["overrides"].items():
+                setting = self.getSettingByKey(key)
+                if not setting:
+                    continue
+
+                setting.fillByDict(value)
+
         for setting in self.getAllSettings():
             setting.valueChanged.connect(self.settingChanged)
 
@@ -187,6 +195,11 @@ class MachineSettings(SignalEmitter):
         for category in self._categories:
             all_settings.extend(category.getAllSettings())
         return all_settings
+
+    ##  Get machine settings of this machine (category less settings).
+    #   \return list of settings
+    def getMachineSettings(self):
+        return self._machine_settings
 
     ##  Get setting by key.
     #   \param key Key to select setting by (string)

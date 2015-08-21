@@ -16,7 +16,7 @@ TextField {
     text: value; //From parent loader
     validator: RegExpValidator { regExp: /[0-9.-]+/ }
 
-    onTextChanged: if (text != value) valueChanged(text);
+    onTextChanged: valueChanged(text);
 
     style: TextFieldStyle
     {
@@ -52,7 +52,8 @@ TextField {
                 }
             }
 
-            Rectangle {
+            Rectangle
+            {
                 anchors.fill: parent;
                 anchors.margins: itemStyle.controlBorderWidth;
                 color: itemStyle.controlHighlightColor;

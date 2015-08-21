@@ -36,9 +36,14 @@ class QtApplication(QApplication, Application, SignalEmitter):
     def __init__(self, **kwargs):
         plugin_path = ""
         if sys.platform == "win32":
-            plugin_path = os.path.join(os.path.dirname(os.path.abspath(sys.executable)), "PyQt5", "plugins")
-            Logger.log("i", "Adding QT5 plugin path: %s" % (plugin_path))
-            QCoreApplication.addLibraryPath(plugin_path)    
+            if hasattr(sys, "frozen"):
+                plugin_path = os.path.join(os.path.dirname(os.path.abspath(sys.executable)), "PyQt5", "plugins")
+                Logger.log("i", "Adding QT5 plugin path: %s" % (plugin_path))
+                QCoreApplication.addLibraryPath(plugin_path)
+            else:
+                import site
+                for dir in site.getsitepackages():
+                    QCoreApplication.addLibraryPath(os.path.join(dir, "PyQt5", "plugins"))
         elif sys.platform == "darwin":
             plugin_path = os.path.join(Application.getInstallPrefix(), "Resources", "plugins")
 
@@ -75,6 +80,7 @@ class QtApplication(QApplication, Application, SignalEmitter):
         self._plugin_registry.checkRequiredPlugins(self.getRequiredPlugins())
 
         self.showSplashMessage(i18n_catalog.i18nc("Splash screen message", "Loading machines..."))
+
         self.getMachineManager().loadAll()
 
         self.showSplashMessage(i18n_catalog.i18nc("Splash screen message", "Loading preferences..."))

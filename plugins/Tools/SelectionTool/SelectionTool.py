@@ -10,7 +10,7 @@ from UM.Scene.Selection import Selection
 from UM.Scene.Iterator.BreadthFirstIterator import BreadthFirstIterator
 
 from PyQt5.QtGui import qAlpha, qRed, qGreen, qBlue
-
+from PyQt5 import QtCore, QtWidgets
 class SelectionTool(Tool):
     PixelSelectionMode = 1
     BoundingBoxSelectionMode = 2
@@ -25,14 +25,8 @@ class SelectionTool(Tool):
         self._ctrl_is_active = None
     
     def checkModifierKeys(self, event):
-        #checks for the press and release events of the modifier keys (shift and control)
-        #sets the accompanying variabel ( _[key]_is_active) on true or false
-        if event.type is KeyEvent.KeyPressEvent:
-            if event.key == KeyEvent.ControlKey:
-                self._ctrl_is_active = True
-        if event.type is KeyEvent.KeyReleaseEvent:
-            if  event.key == KeyEvent.ControlKey:
-                self._ctrl_is_active = False
+        modifiers = QtWidgets.QApplication.keyboardModifiers()
+        self._ctrl_is_active = modifiers == QtCore.Qt.ControlModifier
 
     def setSelectionMode(self, mode):
         self._selection_mode = mode
@@ -78,7 +72,6 @@ class SelectionTool(Tool):
             return
         for node in BreadthFirstIterator(self._scene.getRoot()):
             if id(node) == pixel_id:
-                
                 if self._ctrl_is_active:
                     if Selection.isSelected(node):
                         if node.getParent():

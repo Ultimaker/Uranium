@@ -5,6 +5,7 @@ from UM.Logger import Logger
 from UM.PluginRegistry import PluginRegistry
 from UM.Mesh.MeshWriter import MeshWriter
 from UM.Math.Matrix import Matrix
+from UM.Math.Vector import Vector
 
 ##  Central class for reading and writing meshes.
 #
@@ -28,16 +29,25 @@ class MeshFileHandler(object):
         try:
             for id, reader in self._mesh_readers.items():
                 result = reader.read(file_name)
-                if(result is not None):
+                if result is not None:
                     if kwargs.get("center", True):
-                        # Center the mesh
-                        extents = result.getExtents()
-                        m = Matrix()
-                        m.setByTranslation(-extents.center)                        
-                        result = result.getTransformed(m)
-                        result.setCenterPosition(extents.center)
+                        # If the result has a mesh and no children it needs to be centered
+                        if result.getMeshData() and len(result.getChildren()) == 0:
+                            extents = result.getMeshData().getExtents()
+                            move_vector = Vector()
+                            move_vector.setX(extents.center.x)
+                            move_vector.setY(extents.bottom) # Ensure that bottom is on 0 (above plate)
+                            move_vector.setZ(extents.center.z)
+                            result.setCenterPosition(move_vector)
 
-                    result.setFileName(file_name)
+                        # Move all the meshes of children so that toolhandles are shown in the correct place.
+                        for node in result.getChildren():
+                            if node.getMeshData():
+                                extents = node.getMeshData().getExtents()
+                                m = Matrix()
+                                m.translate(-extents.center)
+                                node.setMeshData(node.getMeshData().getTransformed(m))
+                                node.translate(extents.center)
                     return result
 
         except OSError as e:

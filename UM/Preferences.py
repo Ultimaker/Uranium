@@ -117,12 +117,15 @@ class Preferences(SignalEmitter):
     def _loadFile(self, file):
         if self._file and self._file == file:
             return self._parser
+        try:
+            self._parser = configparser.ConfigParser()
+            self._parser.read(file)
 
-        self._parser = configparser.ConfigParser()
-        self._parser.read(file)
-
-        if self._parser["general"]["version"] != "2":
-            Logger.log("w", "Old config file found, ignoring")
+            if self._parser["general"]["version"] != "2":
+                Logger.log("w", "Old config file found, ignoring")
+                self._parser = None
+                return
+        except:
             self._parser = None
             return
 

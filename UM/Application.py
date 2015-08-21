@@ -13,6 +13,7 @@ from UM.Logger import Logger
 from UM.Preferences import Preferences
 from UM.OutputDevice.OutputDeviceManager import OutputDeviceManager
 from UM.Settings.MachineManager import MachineManager
+from UM.i18n import i18nCatalog
 
 import threading
 import argparse
@@ -43,6 +44,7 @@ class Application(SignalEmitter):
         
         Signal._app = self
         Resources.ApplicationIdentifier = name
+        i18nCatalog.setApplication(self)
 
         Resources.addSearchPath(os.path.dirname(sys.executable))
         Resources.addSearchPath(os.path.join(Application.getInstallPrefix(), "share", "uranium"))
@@ -180,6 +182,21 @@ class Application(SignalEmitter):
     #   \param application_name \type{string}
     def setApplicationName(self, application_name):
         self._application_name = application_name
+
+    def getApplicationLanguage(self):
+        override_lang = os.getenv("URANIUM_LANGUAGE")
+        if override_lang:
+            return override_lang
+
+        preflang = Preferences.getInstance().getValue("general/language")
+        if preflang:
+            return preflang
+
+        env_lang = os.getenv("LANGUAGE")
+        if env_lang:
+            return env_lang
+
+        return "en"
 
     ##  Application has a list of plugins that it *must* have. If it does not have these, it cannot function.
     #   These plugins can not be disabled in any way.
