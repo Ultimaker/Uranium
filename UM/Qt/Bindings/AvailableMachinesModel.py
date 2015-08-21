@@ -117,8 +117,8 @@ class AvailableMachinesModel(ListModel):
                 if _manufacturer == "Ultimaker":
                      _machines_by_ultimaker.append([_id, _file, _name, _manufacturer, _author,_pages])
 
-            for item in sorted(_machines_by_ultimaker):
+            for item in sorted(_machines_by_ultimaker, key = lambda item: item[2]):
                 self.appendItem({ "id": item[0], "file": item[1], "name": item[2], "manufacturer": item[3], "author": item[4],"pages": item[5]})
 
-            for item in sorted(_machines_by_other):
+            for item in sorted(_machines_by_other, key = lambda item: item[2]):
                 self.appendItem({ "id": item[1], "file": item[2], "name": item[3], "manufacturer": item[0], "author": item[4],"pages": item[5]})
