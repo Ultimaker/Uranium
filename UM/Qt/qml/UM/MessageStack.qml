@@ -12,23 +12,29 @@ import "."
 ListView {
     boundsBehavior: ListView.StopAtBounds;
     verticalLayoutDirection: ListView.BottomToTop;
+    visible: true
 
     model: UM.Models.visibleMessagesModel;
 
+    property real slicingProgress: UM.Backend.progress;
+    property bool slicingActivity: Printer.getPlatformActivity;
+    Behavior on slicingProgress { NumberAnimation { duration: 250; } }
+
     interactive: false;
 
-    delegate: UM.AngledCornerRectangle
+    delegate: Rectangle
     {
         id: message
         width: UM.Theme.sizes.message.width
         property int labelHeight: messageLabel.height + (UM.Theme.sizes.default_margin.height * 2)
         property int progressBarHeight: totalProgressBar.height + UM.Theme.sizes.default_margin.height
         height: model.progress == null ? message.labelHeight : message.labelHeight + message.progressBarHeight
-        cornerSize: UM.Theme.sizes.default_margin.width;
 
         anchors.horizontalCenter: parent.horizontalCenter;
 
-        color: UM.Theme.colors.message
+        color: UM.Theme.colors.message_background
+        border.width: UM.Theme.sizes.default_lining.width
+        border.color: UM.Theme.colors.button_lining
 
         property variant actions: model.actions;
         property variant model_id: model.id
@@ -108,21 +114,35 @@ ListView {
             Repeater
             {
                 model: message.actions
-                delegate: ToolButton
-                {
+                delegate: Button{
+                    id: messageStackButton
+                    onClicked:UM.Models.visibleMessagesModel.actionTriggered(message.model_id, model.action_id)
                     text: model.name
-
                     style: ButtonStyle {
-                        background: Rectangle {
-                            color: control.hovered ? UM.Theme.colors.primary_hover : UM.Theme.colors.primary;
+                        background: Item{
+                            property int standardWidth: UM.Theme.sizes.message_button.width
+                            property int responsiveWidth: messageStackButtonText.width + UM.Theme.sizes.default_margin.width
+                            implicitWidth: responsiveWidth > standardWidth ? responsiveWidth : standardWidth
+                            implicitHeight: UM.Theme.sizes.message_button.height
+                            Rectangle {
+                                id: messageStackButtonBackground
+                                width: parent.width
+                                height: parent.height
+                                color: control.hovered ? UM.Theme.colors.load_save_button_hover : UM.Theme.colors.load_save_button
+                                Behavior on color { ColorAnimation { duration: 50; } }
+                            }
+                            Label {
+                                id: messageStackButtonText
+                                anchors.centerIn: parent
+                                text: control.text
+                                color: UM.Theme.colors.load_save_button_text
+                                font: UM.Theme.fonts.default
+                            }
                         }
-                        label: Label {
-                            text: control.text;
-                            color: UM.Theme.colors.primary_text;
+                        label: Label{
+                            visible: false
                         }
                     }
-
-                    onClicked:UM.Models.visibleMessagesModel.actionTriggered(message.model_id, model.action_id)
                 }
             }
         }
