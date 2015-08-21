@@ -11,7 +11,7 @@ import ".." as UM
 ComboBox
 {
     signal valueChanged(string value);
-
+    id: base
     model: options //From parent loader
 
     currentIndex: {
@@ -26,7 +26,17 @@ ComboBox
 
     style: ComboBoxStyle {
         background: Rectangle {
-            color: control.hovered ? itemStyle.controlHighlightColor : itemStyle.controlColor;
+            color:
+            {
+                if(control.hovered || base.activeFocus)
+                {
+                    return itemStyle.controlHighlightColor
+                }
+                else
+                {
+                    return itemStyle.controlColor
+                }
+            }
             border.width: itemStyle.controlBorderWidth;
             border.color: itemStyle.controlBorderColor;
         }

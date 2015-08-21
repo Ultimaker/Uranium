@@ -9,21 +9,35 @@ import QtQuick.Controls.Styles 1.1
 CheckBox
 {
     signal valueChanged(bool value);
-
+    id: base
     checked: value //From parent loader
     onCheckedChanged: valueChanged(checked);
 
-    style: CheckBoxStyle {
+    style: CheckBoxStyle
+    {
         background: Item { }
-        indicator: Rectangle {
+        label: Label{ }
+        indicator: Rectangle
+        {
             implicitWidth:  control.height;
             implicitHeight: control.height;
 
-            color: control.hovered ? itemStyle.controlHighlightColor : itemStyle.controlColor;
+            color:
+            {
+                if(control.hovered || base.activeFocus)
+                {
+                    return itemStyle.controlHighlightColor
+                }
+                else
+                {
+                    return itemStyle.controlColor
+                }
+            }
             border.width: itemStyle.controlBorderWidth;
             border.color: itemStyle.controlBorderColor;
 
-            Label {
+            Label
+            {
                 anchors.centerIn: parent;
                 color: itemStyle.controlTextColor;
                 font: itemStyle.controlFont;
