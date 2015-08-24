@@ -358,16 +358,31 @@ class SceneNode(SignalEmitter):
             raise NotImplementedError()
         elif transform_space == SceneNode.TransformSpace.World:
             if self._parent:
+                scale_change = Vector(1,1,1) - scale
 
-                self._scale = self._scale.scale(self._getDerivedOrientation().getInverse().rotate(scale))
-                if self._scale.x < 0:
-                    self._scale.setX(-self._scale.x)
-                if self._scale.y < 0:
-                    self._scale.setY(-self._scale.y)
-                if self._scale.z < 0:
-                    self._scale.setZ(-self._scale.z)
-            else:
-                self._scale = scale
+                if scale_change.x < 0 or scale_change.y < 0 or scale_change.z < 0:
+                    direction = -1
+                else:
+                    direction = 1
+                # Hackish way to do this, but this seems to correctly scale the object.
+                change_vector = self._scale.scale(self._getDerivedOrientation().getInverse().rotate(scale_change))
+
+                if change_vector.x < 0 and direction == 1:
+                    change_vector.setX(-change_vector.x)
+                if change_vector.x > 0 and direction == -1:
+                    change_vector.setX(-change_vector.x)
+
+                if change_vector.y < 0 and direction == 1:
+                    change_vector.setY(-change_vector.y)
+                if change_vector.y > 0 and direction == -1:
+                    change_vector.setY(-change_vector.y)
+
+                if change_vector.z < 0 and direction == 1:
+                    change_vector.setZ(-change_vector.z)
+                if change_vector.z > 0 and direction == -1:
+                    change_vector.setZ(-change_vector.z)
+
+                self._scale -= self._scale.scale(change_vector)
         else:
             raise ValueError("Unknown transform space {0}".format(transform_space))
 
