@@ -45,7 +45,7 @@ class MeshView(View):
             self._disabled_material = renderer.createMaterial(Resources.getPath(Resources.ShadersLocation, "default.vert"), Resources.getPath(Resources.ShadersLocation, "default.frag"))
             self._disabled_material.setUniformValue("u_ambientColor", Color(0.3, 0.3, 0.3, 1.0))
             self._disabled_material.setUniformValue("u_diffuseColor", self.DisabledColor)
-            self._enabled_material.setUniformValue("u_specularColor", Color(0.7, 0.7, 0.7, 1.0))
+            self._disabled_material.setUniformValue("u_specularColor", Color(0.7, 0.7, 0.7, 1.0))
             self._disabled_material.setUniformValue("u_overhangColor", Color(1.0, 0.0, 0.0, 1.0))
             self._disabled_material.setUniformValue("u_shininess", 20.)
 
