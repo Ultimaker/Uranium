@@ -32,7 +32,10 @@ class Selection:
 
     @classmethod
     def getSelectedObject(cls, index):
-        return cls.__selection[index]
+        try:
+            return cls.__selection[index]
+        except:
+            return None
 
     @classmethod
     def isSelected(cls, object):
