@@ -11,3 +11,7 @@ class InvalidFileError(SettingsError):
 class InvalidVersionError(SettingsError):
     def __init__(self, path):
         super().__init__("Invalid version for file {0}".format(path))
+
+class DefinitionNotFoundError(SettingsError):
+    def __init__(self, type_id):
+        super().__init__("Could not find machine definition {0}".format(type_id))
