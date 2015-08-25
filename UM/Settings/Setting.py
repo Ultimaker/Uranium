@@ -24,6 +24,7 @@ class Setting(SignalEmitter):
         super().__init__()
         self._key = key
         self._i18n_catalog = catalog
+
         self._label = kwargs.get("label", key)
         self._description = kwargs.get("description", "")
         self._default_value = kwargs.get("default", None)
@@ -120,44 +121,43 @@ class Setting(SignalEmitter):
         if "always_visible" in data:
             self._hide_if_all_children_visible = not data["always_visible"]
 
-
-        self._inherit = data.get("inherit", True)
-
-        if "inherit_function" in data:
-            try:
-                tree = ast.parse(data["inherit_function"], "eval")
-                names = _SettingExpressionVisitor().visit(tree)
-                code = compile(data["inherit_function"], self._key, "eval")
-            except (SyntaxError, TypeError) as e:
-                Logger.log("e", "Parse error in inherit function for setting {0}: {1}".format(self._key, str(e)))
-            except IllegalMethodError as e:
-                Logger.log("e", "Use of illegal method {0} in inherit function for setting {1}".format(str(e), self._key))
+        inherit = data.get("inherit", "")
+        if inherit:
+            if inherit.tolower().trim() == "false":
+                self._inherit = False
             else:
-                self._inherit_function = self._createInheritFunction(code, names)
+                self._inherit_function = self._createFunction(inherit)
 
         min_value = None
         max_value = None
         min_value_warning = None
         max_value_warning = None
+
         if "min_value" in data:
-            min_value = data["min_value"]
+            min_value = self._createFunction(data["min_value"])
         if "max_value" in data:
-            max_value = data["max_value"]
+            max_value = self._createFunction(data["max_value"])
         if "min_value_warning" in data:
-            min_value_warning = data["min_value_warning"]
+            min_value_warning = self._createFunction(data["min_value_warning"])
         if "max_value_warning" in data:
-            max_value_warning = data["max_value_warning"]
+            max_value_warning = self._createFunction(data["max_value_warning"])
+
         if  self.getValidator() is not None: #Strings don"t have validators as of yet
             self.getValidator().setRange(min_value,max_value,min_value_warning,max_value_warning)
 
-        if "active_if" in data:
-            if "setting" in data["active_if"] and "value" in data["active_if"]:
-                self._active_if_setting = data["active_if"]["setting"]
-                self._active_if_value = data["active_if"]["value"]
-                self._machine_settings.settingsLoaded.connect(self.activeIfHandler)
+        if "enabled" in data:
+            self._enabled = self._createFunction(data["enabled"])
+
+        #if "active_if" in data:
+            #if "setting" in data["active_if"] and "value" in data["active_if"]:
+                #self._active_if_setting = data["active_if"]["setting"]
+                #self._active_if_value = data["active_if"]["value"]
+                #self._machine_settings.settingsLoaded.connect(self.activeIfHandler)
 
         if "options" in data:
-            self._options = data["options"]
+            self._options = {}
+            for key, value in data["options"].items():
+                self._options[key] = self._i18n_catalog.i18nc("{0} option {1}".format(self._key, key), value)
 
         if "children" in data:
             for key, value in data["children"].items():
@@ -404,9 +404,17 @@ class Setting(SignalEmitter):
         self.visibleChanged.emit(setting)
         self.visibleChanged.emit(self)
 
-    # Create a function that will run \param code, making the names in \param names available as local variables
-    def _createInheritFunction(self, code, names):
-        def inherit(parent, settings, c = code, n = names):
+    def _createFunction(self, code):
+        try:
+            tree = ast.parse(code, "eval")
+            names = _SettingExpressionVisitor().visit(tree)
+            code = compile(tree, self._key, "eval")
+        except (SyntaxError, TypeError) as e:
+            Logger.log("e", "Parse error in inherit function for setting {0}: {1}".format(self._key, str(e)))
+        except IllegalMethodError as e:
+            Logger.log("e", "Use of illegal method {0} in inherit function for setting {1}".format(str(e), self._key))
+
+        def local_function(parent, settings, c = code, n = names):
             locals = {
                 "parent_value": parent.getValue(),
                 "settings": settings
@@ -418,6 +426,22 @@ class Setting(SignalEmitter):
             return eval(c, globals(), locals)
 
         return inherit
+
+
+    # Create a function that will run \param code, making the names in \param names available as local variables
+    #def _createInheritFunction(self, code, names):
+        #def inherit(parent, settings, c = code, n = names):
+            #locals = {
+                #"parent_value": parent.getValue(),
+                #"settings": settings
+            #}
+
+            #for name in names:
+                #locals[name] = settings.getSettingValueByKey(name)
+
+            #return eval(c, globals(), locals)
+
+
 
 # Private AST visitor class used to look up names in the inheritance functions.
 class _SettingExpressionVisitor(ast.NodeVisitor):
