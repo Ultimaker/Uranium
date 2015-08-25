@@ -50,11 +50,11 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
             self._ignore_setting_value_update = None
             self.setProperty(index, "valid", setting.validate())
 
-    @pyqtSlot(str)
-    def hideSetting(self, key):
+    @pyqtSlot(str, bool)
+    def setSettingVisible(self, key, visible):
         setting = self._category.getSettingByKey(key)
         if setting:
-            setting.setVisible(False);
+            setting.setVisible(visible);
 
     ##  Create model for combo box (used by enum type setting) 
     #   \param options List of strings
