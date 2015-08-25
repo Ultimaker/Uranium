@@ -37,7 +37,10 @@ class MachineSettings(SignalEmitter):
     def _onSettingChanged(self, setting):
         if self._active_profile: # Should be a profile if this function is connected to settingChanged
             self._active_profile.setSettingValue(setting.getKey(),setting.getValue())
-        
+
+    def getActiveProfile(self):
+        return self._active_profile
+
     def setActiveProfile(self, profile):
         if self._active_profile:
             self.settingChanged.disconnect(self._onSettingChanged)
