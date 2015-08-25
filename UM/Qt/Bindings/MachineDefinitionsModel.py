@@ -1,10 +1,10 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
+from PyQt5.QtCore import Qt, pyqtSlot, pyqtProperty, pyqtSignal
+
 from UM.Qt.ListModel import ListModel
 from UM.Application import Application
-
-from PyQt5.QtCore import Qt, pyqtSlot
 
 class MachineDefinitionsModel(ListModel):
     IdRole = Qt.UserRole + 1
@@ -26,8 +26,22 @@ class MachineDefinitionsModel(ListModel):
 
         self._manager = Application.getInstance().getMachineManager()
 
+        self._show_variants = True
+
         self._manager.machineDefinitionsChanged.connect(self._onMachinesChanged)
         self._onMachinesChanged()
+
+    showVariantsChanged = pyqtSignal()
+
+    def setShowVariants(self, show):
+        if show != self._show_variants:
+            self._show_variants = show
+            self._onMachinesChanged()
+            self.showVariantsChanged.emit()
+
+    @pyqtProperty(bool, fset = setShowVariants, notify = showVariantsChanged)
+    def showVariants(self):
+        return self._show_variants
 
     def _onMachinesChanged(self):
         self.clear()
