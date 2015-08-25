@@ -44,6 +44,10 @@ Window {
         anchors.fill: parent;
         color: palette.window;
 
+        focus: base.visible;
+
+        Keys.onEscapePressed: base.reject();
+
         Item {
             id: contentItem;
 
