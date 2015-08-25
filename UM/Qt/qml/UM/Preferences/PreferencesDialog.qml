@@ -64,7 +64,8 @@ Dialog {
 
     rightButtons: Button {
         text: catalog.i18nc("@action:button", "Close");
-        onClicked: base.visible = false;
+        iconName: "dialog-close";
+        onClicked: base.accept();
     }
 
     function setPage(index)
