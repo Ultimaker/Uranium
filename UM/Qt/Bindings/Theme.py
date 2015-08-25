@@ -60,9 +60,9 @@ class Theme(QObject):
     def sizes(self):
         return self._sizes
 
-    @pyqtSlot(QUrl)
+    @pyqtSlot(str)
     def load(self, path):
-        self._path = path.toLocalFile()
+        self._path = path
 
         with open(os.path.join(self._path, "theme.json")) as f:
             data = json.load(f)

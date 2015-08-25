@@ -23,6 +23,6 @@ class ResourcesProxy(QObject):
     def __init__(self, parent = None):
         super().__init__(parent)
 
-    @pyqtSlot(int, str, result=QUrl)
+    @pyqtSlot(int, str, result=str)
     def getPath(self, type, name):
-        return QUrl.fromLocalFile(UM.Resources.Resources.getPath(type, name))
+        return UM.Resources.Resources.getPath(type, name)
