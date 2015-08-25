@@ -18,15 +18,20 @@ Dialog {
     minimumWidth: 600;
     minimumHeight: 500;
 
-    RowLayout {
+    Item {
         id: test
         anchors.fill: parent;
 
         TableView {
             id: pagesList;
 
-            Layout.fillHeight: true;
-            Layout.preferredWidth: Screen.devicePixelRatio * 125;
+            anchors {
+                left: parent.left;
+                top: parent.top;
+                bottom: parent.bottom;
+            }
+
+            width: 7 * UM.Theme.sizes.line.width;
 
             alternatingRowColors: false;
             headerVisible: false;
@@ -40,8 +45,12 @@ Dialog {
 
         Loader {
             id: configPage;
-            Layout.fillWidth: true
-            Layout.fillHeight: true
+            anchors {
+                left: pagesList.right;
+                top: parent.top;
+                bottom: parent.bottom;
+                right: parent.right;
+            }
         }
 
         UM.I18nCatalog { id: catalog; name: "uranium"; }
