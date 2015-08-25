@@ -46,3 +46,25 @@ class MachineDefinition():
         instance.loadSettingsFromFile(Resources.getPath(Resources.MachineDefinitions, self._json_file))
         instance.setName(name)
         return instance
+    # Because Python sort is stupid and does not allow for specifying a comparison method
+    def __lt__(self, other):
+        # This makes sure we place Ultimaker machines at the top of the list and "Other" at the bottom
+        if self._manufacturer == self.UltimakerManufacturerString and other.getManufacturer() != self.UltimakerManufacturerString:
+            return True
+
+        if self._manufacturer != self.UltimakerManufacturerString and other.getManufacturer() == self.UltimakerManufacturerString:
+            return False
+
+        if self._manufacturer == self.OtherManufacturerString and other.getManufacturer() != self.OtherManufacturerString:
+            return False
+
+        if self._manufacturer != self.OtherManufacturerString and other.getManufacturer() == self.OtherManufacturerString:
+            return True
+
+        # Otherwise, just sort by manufacturer and name
+        if self._manufacturer < other.getManufacturer():
+            return True
+        elif self._manufacturer == other.getManufacturer():
+            return self._name < other.getName()
+        else:
+            return False
