@@ -1,51 +1,196 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-from UM.Settings.MachineSettings import MachineSettings
+import json
+import collections
+from copy import deepcopy
+
 from UM.Resources import Resources
+from UM.Signal import Signal, SignalEmitter
+from UM.Settings import SettingsError
 
-class MachineDefinition():
-    def __init__(self, machine_id, json_file):
-        self._machine_id = machine_id
-        self._json_file = json_file
+from UM.i18n import i18nCatalog
+uranium_catalog = i18nCatalog("uranium")
 
+class MachineDefinition(SignalEmitter):
+    MachineDefinitionVersion = 1
+    UltimakerManufacturerString = "Ultimaker"
+    OtherManufacturerString = "Other"
+
+    def __init__(self, machine_manager):
+        self._machine_manager = machine_manager
+
+        self._id = ""
         self._name = ""
         self._variant_name = None
         self._manufacturer = ""
         self._author = ""
+        self._visible = True
+        self._pages = []
+
+        self._machine_settings = []
+        self._categories = []
+
+        self._json_data = None
+
+    settingsLoaded = Signal()
 
     def getId(self):
-        return self._machine_id
+        return self._id
 
     def getName(self):
         return self._name
 
-    def setName(self, name):
-        self._name = name
-
     def getVariantName(self):
         return self._variant_name
-
-    def setVariantName(self, name):
-        self._variant_name = name
 
     def getManufacturer(self):
         return self._manufacturer
 
-    def setManufacturer(self, manufacturer):
-        self._manufacturer = manufacturer
-
     def getAuthor(self):
         return self._author
 
-    def setAuthor(self, author):
-        self._author = author
+    def isVisible(self):
+        return self._visible
 
-    def createInstance(self, name):
-        instance = MachineSettings()
-        instance.loadSettingsFromFile(Resources.getPath(Resources.MachineDefinitions, self._json_file))
-        instance.setName(name)
-        return instance
+    def getPages(self):
+        return self._pages
+
+    ##  Get the machine mesh (in most cases platform)
+    #   Todo: Might need to rename this to get machine mesh?
+    def getPlatformMesh(self):
+        return self._platform_mesh
+
+    def getPlatformTexture(self):
+        return self._platform_texture
+
+    def loadMetaData(self, file_name):
+        clean_json = False
+        if not self._json_data:
+            clean_json = True
+            with open(file_name, "rt", -1, "utf-8") as f:
+                self._json_data = json.load(f, object_pairs_hook=collections.OrderedDict)
+
+        if "id" not in self._json_data or "name" not in self._json_data or "version" not in self._json_data:
+            raise SettingsError.InvalidFileError(file_name)
+
+        if self._json_data["version"] != self.MachineDefinitionVersion:
+            raise SettingsError.InvalidVersionError(file_name)
+
+        if self._machine_manager.getApplicationName() in self._json_data:
+            app_data = self._json_data[self._machine_manager.getApplicationName()]
+            self._json_data[self._machine_manager.getApplicationName()] = None
+            self._json_data.update(app_data)
+
+        self._id = self._json_data["id"]
+        self._name = self._json_data["name"]
+        self._visible = self._json_data.get("visible", True)
+        self._variant_name = self._json_data.get("variant", None)
+        self._manufacturer = self._json_data.get("manufacturer", uranium_catalog.i18nc("@label", "Unknown Manufacturer"))
+        self._author = self._json_data.get("author", uranium_catalog.i18nc("@label", "Unknown Author"))
+        self._pages = self._json_data.get("pages", {})
+
+        if clean_json:
+            self._json_data = None
+
+    def loadAll(self, file_name):
+        with open(file_name, "rt", -1, "utf-8") as f:
+            self._json_data = json.load(f, object_pairs_hook=collections.OrderedDict)
+
+        if not self._name:
+            self.loadMetaData(file_name)
+
+        self._i18n_catalog = i18nCatalog(os.path.basename(file_name))
+
+        self._platform_mesh = self._json_data.get("platform", "")
+        self._platform_texture = self._json_data.get("platform_texture", "")
+
+        if "inherits" in self._json_data:
+            inherits_from = self._machine_manager.findMachineDefinition(self._json_data["inherits"])
+
+            self._machine_settings = deepcopy(inherits_from._machine_settings)
+            self._categories = deepcopy(inherits_from._categories)
+
+        if "machine_settings" in data:
+            for key, value in data["machine_settings"].items():
+                setting = self.getSettingByKey(key)
+                if not setting:
+                    setting = Setting(key, self._i18n_catalog)
+                    self._machine_settings.append(setting)
+                setting.fillByDict(value)
+
+        if "categories" in data:
+            for key, value in data["categories"].items():
+                category = self.getSettingsCategory(key)
+                if not category:
+                    category = SettingsCategory(key, self._i18n_catalog, self)
+                    self._categories.append(category)
+                category.fillByDict(value)
+
+        if "overrides" in data:
+            for key, value in data["overrides"].items():
+                setting = self.getSettingByKey(key)
+                if not setting:
+                    continue
+
+                setting.fillByDict(value)
+
+        self.settingsLoaded.emit()
+
+        self._json_data = None
+
+    ##  Get setting category by key
+    #   \param key Category key to get.
+    #   \return category or None if key was not found.
+    def getSettingsCategory(self, key):
+        for category in self._categories:
+            if category.getKey() == key:
+                return category
+        return None
+
+    ##  Get all categories.
+    #   \returns list of categories
+    def getAllCategories(self):
+        return self._categories
+
+    ##  Get all settings of this machine
+    #   \param kwargs Keyword arguments.
+    #                 Possible values are:
+    #                 * include_machine: boolean, True if machine settings should be included. Default False.
+    #                 * visible_only: boolean, True if only visible settings should be included. Default False.
+    #   \return list of settings
+    def getAllSettings(self, **kwargs):
+        all_settings = []
+        if kwargs.get("include_machine", False):
+            all_settings.extend(self._machine_settings)
+
+        for category in self._categories:
+            all_settings.extend(category.getAllSettings())
+
+        if kwargs.get("visible_only"):
+            all_settings = filter(lambda s: s.isVisible(), all_settings)
+
+        return all_settings
+
+    ##  Get machine settings of this machine (category less settings).
+    #   \return list of settings
+    def getMachineSettings(self):
+        return self._machine_settings
+
+    ##  Get setting by key.
+    #   \param key Key to select setting by (string)
+    #   \return Setting or none if no setting was found.
+    def getSettingByKey(self, key):
+        for category in self._categories:
+            setting = category.getSettingByKey(key)
+            if setting is not None:
+                return setting
+        for setting in self._machine_settings:
+            setting = setting.getSettingByKey(key)
+            if setting is not None:
+                return setting
+        return None #No setting found
+
     # Because Python sort is stupid and does not allow for specifying a comparison method
     def __lt__(self, other):
         # This makes sure we place Ultimaker machines at the top of the list and "Other" at the bottom
