@@ -54,6 +54,17 @@ class MachineManager(SignalEmitter):
 
         return variants
 
+    def findMachineDefinition(self, machine_id, variant_name = None):
+        for definition in self._machine_definitions:
+            if definition.getId() == machine_id:
+                if variant_name:
+                    if definition.getVariantName() == variant_name:
+                        return definition
+                else:
+                    return definition
+
+        return None
+
     machineInstancesChanged = Signal()
 
     def getMachineInstance(self, index):
