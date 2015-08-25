@@ -8,3 +8,6 @@ class SceneNodeDecorator():
         
     def setNode(self, node):
         self._node = node
+
+    def getNode(self):
+        return self._node
