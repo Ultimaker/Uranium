@@ -32,6 +32,9 @@ class MachineManager(SignalEmitter):
         self._active_profile = None
 
         Preferences.getInstance().addPreference("machines/setting_visibility", "")
+    def getApplicationName(self):
+        return self._application_name
+
     machineDefinitionsChanged = Signal()
 
     def getMachineDefinitions(self, **kwargs):
