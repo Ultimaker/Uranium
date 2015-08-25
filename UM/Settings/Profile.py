@@ -66,5 +66,5 @@ class Profile(SignalEmitter):
         for setting_key in self._changed_settings:
             parser.set("Settings", setting_key , str(self._changed_settings[setting_key]))
         
-        with open(file, "wt") as f:
+        with open(file, "wt", -1, "utf-8") as f:
             parser.write(f)
