@@ -77,7 +77,7 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
                 "key": setting.getKey(),
                 "options": self.createOptionsModel(setting.getOptions()),
                 "unit": setting.getUnit(),
-                "visible": (setting.isVisible() and setting.isActive())
+                "visible": (setting.isVisible() and setting.isActive()),
                 "depth": setting.getDepth()
             })
             setting.visibleChanged.connect(self._onSettingChanged)
