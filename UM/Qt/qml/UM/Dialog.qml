@@ -23,6 +23,23 @@ Window {
     property alias leftButtons: leftButtonRow.children;
     property alias rightButtons: rightButtonRow.children;
 
+    signal accepted();
+    signal rejected();
+
+    function accept() {
+        base.visible = false;
+        base.accepted();
+    }
+
+    function reject() {
+        base.visible = false;
+        base.rejected();
+    }
+
+    function open() {
+        base.visible = true;
+    }
+
     Rectangle {
         anchors.fill: parent;
         color: palette.window;
