@@ -48,7 +48,7 @@ class MainWindow(QQuickWindow):
     @pyqtSlot()
     def toggleFullscreen(self):
         if self._fullscreen:
-            self.setVisibility(QQuickWindow.Window) # Switch back to windowed
+            self.setVisibility(QQuickWindow.Windowed) # Switch back to windowed
         else:
             self.setVisibility(QQuickWindow.FullScreen) # Go to fullscreen
         self._fullscreen = not self._fullscreen
