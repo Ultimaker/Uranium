@@ -32,6 +32,7 @@ class SettingOverrideDecorator(SceneNodeDecorator, SignalEmitter):
         self._settings[key] = setting_clone
 
         self.settingAdded.emit()
+        Application.getInstance().getController().getScene().sceneChanged.emit(self.getNode())
 
     def setSettingValue(self, key, value):
         if key not in self._settings:
@@ -39,6 +40,7 @@ class SettingOverrideDecorator(SceneNodeDecorator, SignalEmitter):
 
         self._settings[key].setValue(value)
         self.settingChanged.emit(self._settings[key])
+        Application.getInstance().getController().getScene().sceneChanged.emit(self.getNode())
 
     def getSetting(self, key):
         if key not in self._settings:
@@ -58,3 +60,4 @@ class SettingOverrideDecorator(SceneNodeDecorator, SignalEmitter):
 
         del self._settings[key]
         self.settingRemoved.emit()
+        Application.getInstance().getController().getScene().sceneChanged.emit(self.getNode())
