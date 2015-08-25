@@ -88,7 +88,7 @@ Dialog {
     Component.onCompleted: {
         //This uses insertPage here because ListModel is stupid and does not allow using qsTr() on elements.
         insertPage(0, catalog.i18nc("@title:tab", "General"), "", "GeneralPage.qml");
-        insertPage(1, catalog.i18nc("@title:tab", "Setting Visibility"), "", "SettingVisibilityPage.qml");
+        insertPage(1, catalog.i18nc("@title:tab", "Settings"), "", "SettingVisibilityPage.qml");
         insertPage(2, catalog.i18nc("@title:tab", "Machines"), "", "MachinesPage.qml");
         insertPage(3, catalog.i18nc("@title:tab", "Profiles"), "", "ProfilesPage.qml");
         insertPage(4, catalog.i18nc("@title:tab", "Plugins"), "", "PluginsPage.qml");
