@@ -59,7 +59,7 @@ ListView {
                 return model.text + "<font color='black'>" + progress + "%<\>"
             }
 
-            text: model.progress > 0 ? getProgressText() : model.text
+            text: model.progress > 0 ? messageLabel.getProgressText() : model.text
             color: UM.Theme.colors.message_text;
             font: UM.Theme.fonts.default;
             wrapMode: Text.Wrap;
@@ -68,17 +68,7 @@ ListView {
                 id: totalProgressBar;
                 minimumValue: 0;
                 maximumValue: model.max_progress;
-                value: {
-                    if (model.progress > 0){
-                        if (base.slicingProgress <= 0 || base.slicingProgress >= 100){
-                            base.visible = false
-                        }
-                        else {
-                            base.visible = true
-                        }
-                    }
-                    return base.slicingProgress
-                }
+                value: base.slicingProgress
                 visible: model.progress == null ? false: true//if the progress is null (for example with the loaded message) -> hide the progressbar
                 indeterminate: model.progress == -1 ? true: false //if the progress is unknown (-1) -> the progressbar is indeterminate
                 style: UM.Theme.styles.progressbar
