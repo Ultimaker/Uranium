@@ -5,6 +5,7 @@ from PyQt5.QtCore import Qt, pyqtSlot, pyqtProperty, pyqtSignal
 
 from UM.Qt.ListModel import ListModel
 from UM.Application import Application
+from UM.Settings.MachineInstance import MachineInstance
 
 class MachineDefinitionsModel(ListModel):
     IdRole = Qt.UserRole + 1
@@ -42,6 +43,13 @@ class MachineDefinitionsModel(ListModel):
     @pyqtProperty(bool, fset = setShowVariants, notify = showVariantsChanged)
     def showVariants(self):
         return self._show_variants
+
+    @pyqtSlot(str, str)
+    def createInstance(self, name, definition_id):
+        definition = self._manager.findMachineDefinition(definition_id)
+
+        instance = MachineInstance(self._manager, name = name, definition = definition)
+        self._manager.addMachineInstance(instance)
 
     def _onMachinesChanged(self):
         self.clear()
