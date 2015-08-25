@@ -32,8 +32,18 @@ class MachineManager(SignalEmitter):
 
     machineDefinitionsChanged = Signal()
 
-    def getMachineDefinitions(self):
-        return self._machine_defintions
+    def getMachineDefinitions(self, **kwargs):
+        if kwargs.get("include_variants", True):
+            return self._machine_definitions
+
+        definitions = []
+        variant_ids = []
+        for definition in self._machine_definitions:
+            if not definition.getVariantName() or definition.getId() not in variant_ids:
+                definitions.append(definition)
+                variant_ids.append(definition.getId())
+
+        return definitions
 
     def getAllMachineVariants(self, machine_id):
         variants = []
