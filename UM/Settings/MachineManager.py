@@ -187,38 +187,14 @@ class MachineManager(SignalEmitter):
                 if os.path.isdir(path):
                     continue
 
-                with open(path, "rt", -1, "utf-8") as f:
-                    try:
-                        data = json.load(f)
-                    except ValueError as e:
-                        Logger.log("e", "Error when loading file {0}: {1}".format(path, e))
-                        continue
-
-                # Ignore any file that is explicitly marked as non-visible
-                if not data.get("visible", True):
-                    continue
-
-                # Ignore any file that is marked as non-visible for the current application.
-                if self._application_name in data:
-                    if not data[self._application_name].get("visible", True):
-                        continue
-
-                # Ignore files that are reported using an incompatible version
-                if "version" not in data or data["version"] != MachineSettings.MachineDefinitionVersion:
-                    Logger.log("w", "Machine definition %s uses an incompatible format, ignoring", path)
-                    continue
-
+                definition = MachineDefinition(self)
                 try:
-                    definition = MachineDefinition(data["id"], path)
-                except KeyError:
-                    Logger.log("e", "JSON file {0} is missing important meta data, ignoring.".format(path))
+                    definition.loadMetaData(path)
+                except Exception as e:
+                    Logger.log("e", "An error occurred loading Machine Definition %s: %s", path, str(e))
                     continue
 
-                definition.setName(data.get("name", definition.getId()))
-                definition.setVariantName(data.get("variant_name", None))
-                definition.setManufacturer(data.get("manufacturer", catalog.i18nc("", "Other")))
-                definition.setAuthor(data.get("author", catalog.i18nc("", "Unknown Author")))
-                self._machine_defintions.append(definition)
+                self._machine_definitions.append(definition)
 
         self.machineDefinitionsChanged.emit()
 
