@@ -171,23 +171,73 @@ Item {
 
         ScrollView {
             anchors.fill: parent;
-            ListView {
-                id: settingList;
 
-                model: UM.Models.settingsModel;
+            Column {
+                width: childrenRect.width;
+                height: childrenRect.height;
 
-                delegate: ToolButton {
-                    text: model.name;
-                    x: model.depth * 25;
+                Repeater {
+                    id: settingList;
 
-                    onClicked: {
-                        UM.ActiveTool.properties.Model.addSettingOverride(UM.ActiveTool.properties.Model.getItem(base.currentIndex).id, model.key);
-                        settingPickDialog.visible = false;
+                    model: UM.SettingCategoriesModel { }
+
+                    delegate: Item {
+                        id: delegateItem;
+
+                        width: childrenRect.width;
+                        height: childrenRect.height;
+
+                        ToolButton {
+                            id: categoryHeader;
+                            text: model.name;
+                            checkable: true;
+                            onCheckedChanged: settingsColumn.state != "" ? settingsColumn.state = "" : settingsColumn.state = "collapsed";
+
+                            style: ButtonStyle {
+                                background: Item { }
+                                label: Row {
+                                    spacing: UM.Theme.sizes.default_margin.width;
+                                    Label { text: control.checked ? ">" : "v"; }
+                                    Label { text: control.text; font.bold: true; }
+                                }
+                            }
+                        }
+
+                        property variant settingsModel: model.settings;
+
+                        visible: model.visible;
+
+                        Column {
+                            id: settingsColumn;
+
+                            anchors.top: categoryHeader.bottom;
+
+                            width: childrenRect.width;
+                            height: childrenRect.height;
+                            Repeater {
+                                model: delegateItem.settingsModel;
+
+                                delegate: ToolButton {
+                                    x: model.depth * UM.Theme.sizes.default_margin.width;
+                                    text: model.name;
+                                    visible: model.visible;
+
+                                    onClicked: {
+                                        var object_id = UM.ActiveTool.properties.Model.getItem(base.currentIndex).id;
+                                        UM.ActiveTool.properties.Model.addSettingOverride(object_id, model.key);
+                                        settingPickDialog.visible = false;
+                                    }
+                                }
+                            }
+
+                            states: State {
+                                name: "collapsed";
+
+                                PropertyChanges { target: settingsColumn; opacity: 0; height: 0; }
+                            }
+                        }
                     }
                 }
-
-                section.property: "category"
-                section.delegate: Label { text: section; font.bold: true; }
             }
         }
 
