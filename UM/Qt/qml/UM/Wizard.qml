@@ -8,82 +8,61 @@ import QtQuick.Controls.Styles 1.1
 import QtQuick.Layouts 1.1
 import QtQml 2.2
 
-import UM 1.0 as UM
+import UM 1.1 as UM
 
 UM.Dialog
 {
-    id: elementRoot
-    property string wizardTitle
-    property var wizardPages
-    property int currentPage: 0
-    property variant wizardModel: createPageModel(elementRoot.wizardPages)
+    id: base
+
+    property int currentPage: -1;
+    property bool lastPage: currentPage == pagesModel.count - 1;
+    property bool nextAvailable: false;
 
     property bool firstRun: false
 
+    title: currentPage != -1 ? pagesModel.get(currentPage).title : ""
+
     signal nextClicked()
-    signal resize(int pageWidth, int pageHeight)
+    signal backClicked()
 
     minimumWidth: UM.Theme.sizes.modal_window_minimum.width
     minimumHeight: UM.Theme.sizes.modal_window_minimum.height
-    title: elementRoot.wizardTitle
 
-    function createPageModel(objectsArray)
+    function appendPage(page, title)
     {
-        //create a new qt listmodel with the javascript array of objects it is given
-        var newListModel = Qt.createQmlObject('import QtQuick 2.2; \
-            ListModel {}', elementRoot)
-        for (var i = 0; i < objectsArray.length; i++)
-        {
-            newListModel.append({
-                "page": objectsArray[i].page,
-                "title": objectsArray[i].title
-            });
-        }
-        return newListModel
+        pagesModel.append({"page": page, "title": title})
     }
-
 
     function insertPage(page, title, position)
     {
-        elementRoot.wizardModel.insert(position, {"page": page, "title": title})
+        pagesModel.insert(position, {"page": page, "title": title})
     }
 
     function removePage(index)
     {
-        elementRoot.wizardModel.remove(index)
+        pagesModel.remove(index)
     }
 
     function getPageSource(index)
     {
         //returns the actual source of a page
-        var page = progressList.model.get(index).page
-        return UM.Resources.getPath(UM.Resources.WizardPagesLocation, page)
+        return pagesModel.get(index).page
     }
 
     function getPageCount()
     {
-        return elementRoot.wizardModel.count
+        return pagesModel.count;
     }
 
-    Row
+    Item
     {
         anchors.fill: parent;
-        SystemPalette{id: palette}
-        spacing:  UM.Theme.sizes.default_margin.width
-        Connections
-        {
-            target: Printer
-            onRequestAddPrinter:
-            {
-                addMachineWizard.visible = true
-            }
-        }
 
         Rectangle
         {
             id: wizardProgress
-            visible: progressList.model.count > 1 ? true : false
-            width: UM.Theme.sizes.wizard_progress.width
+            visible: pagesModel.count > 1 ? true : false
+            width: visible ? UM.Theme.sizes.wizard_progress.width : 0;
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             color: palette.light
@@ -99,6 +78,9 @@ UM.Dialog
                         id: progressButton
                         width: wizardProgress.width
                         text: title
+
+                        property bool active: text == pagesModel.get(base.currentPage).title;
+
                         style: ButtonStyle
                         {
                             background: Rectangle
@@ -113,8 +95,8 @@ UM.Dialog
                                 wrapMode: Text.Wrap
                                 renderType: Text.NativeRendering
                                 text: control.text
-                                font.underline: title == progressList.model.get(elementRoot.currentPage).title || progressButton.hovered ? true : false
-                                color: title == progressList.model.get(elementRoot.currentPage).title ? palette.text : palette.mid
+                                font.underline: control.active || control.hovered ? true : false
+                                color: control.active ? palette.text : palette.mid
                             }
                         }
                         onClicked:
@@ -123,7 +105,7 @@ UM.Dialog
                             {
                                 if (progressList.model.get(i).title == title)
                                 {
-                                   elementRoot.currentPage = i
+                                   base.currentPage = i
                                    break
                                 }
                             }
@@ -135,19 +117,17 @@ UM.Dialog
                         anchors.top: progressButton.bottom
                         x: (wizardProgress.width-progressArrow.width)/2
                         text: "▼"
-                        visible: title != progressList.model.get(progressList.model.count - 1).title ? true : false
+                        visible: title != pagesModel.get(pagesModel.count - 1).title ? true : false
                         color: palette.mid
                     }
                 }
             }
             ListView
             {
-                id: progressList
-                property var index: 0
-                model: elementRoot.wizardModel
+                model: ListModel { id: pagesModel; }
                 delegate: wizardDelegate
+
                 anchors.fill: parent
-                anchors.top: parent.top
                 anchors.topMargin: UM.Theme.sizes.default_margin.height
             }
         }
@@ -155,10 +135,23 @@ UM.Dialog
         Loader
         {
             id: pageLoader
-            anchors.top: parent.top
+
+            anchors {
+                top: parent.top
+                bottom: parent.bottom;
+                left: wizardProgress.right;
+                leftMargin: UM.Theme.sizes.default_margin.width;
+                right: parent.right;
+            }
+
             width: parent.width - wizardProgress.width - (2 *  UM.Theme.sizes.default_margin.width)
-            height: parent.height
-            source: elementRoot.getPageSource(elementRoot.currentPage)
+            source: pagesModel.get(base.currentPage).page;
+
+            Binding {
+                target: pageLoader.item;
+                property: "wizard";
+                value: base;
+            }
         }
 
         Connections
@@ -167,66 +160,57 @@ UM.Dialog
             ignoreUnknownSignals: true
             onReloadModel:
             {
-                elementRoot.wizardModel = newModel
+                base.wizardModel = newModel
             }
         }
+
+        SystemPalette{ id: palette }
+        UM.I18nCatalog { id: catalog; name: "uranium"; }
     }
 
     rightButtons: [
         Button
         {
             id: backButton
-            //: Add Printer wizard Button: 'Back'
-            text: qsTr("< Back");
-            enabled: elementRoot.currentPage <= 0 ? false : true
-            visible: elementRoot.firstRun ? false : true
+            text: catalog.i18nc("@action:button", "Back");
+            iconName: "go-previous";
+            enabled: base.currentPage <= 0 ? false : true
             onClicked:
             {
-                if (elementRoot.currentPage > 0)
+                base.backClicked()
+
+                if (base.currentPage > 0)
                 {
-                    elementRoot.currentPage -= 1
+                    base.currentPage -= 1
                 }
             }
         },
         Button
         {
             id: nextButton
-            text:
-            {
-                if (elementRoot.currentPage < progressList.model.count - 1)
-                {
-                    //: Add Printer wizard button: 'Next'
-                    return qsTr("Next >")
-                } else if (elementRoot.currentPage == progressList.model.count - 1)
-                {
-                    //: Add Printer wizard button: 'Finish'
-                    return qsTr("Finish ✓")
-                }
-            }
+            text: base.lastPage && !base.nextAvailable ? catalog.i18nc("@action:button", "Finish") : catalog.i18nc("@action:button", "Next")
+            iconName: base.lastPage && !base.nextAvailable ? "dialog-ok" : "go-next";
 
-            onClicked:
-            {
-                if (elementRoot.currentPage < progressList.model.count - 1)
+            onClicked: {
+                base.nextClicked()
+
+                if (!base.lastPage)
                 {
-                    elementRoot.nextClicked()
-                    elementRoot.currentPage += 1
-                }else if (elementRoot.currentPage == progressList.model.count - 1)
+                    base.currentPage += 1
+                }
+                else
                 {
-                    elementRoot.nextClicked()
+                    base.visible = false;
                 }
             }
         },
         Button
         {
             id: cancelButton
-            //: Add Printer wizard button: "Cancel"
-            text: qsTr("Cancel X")
-            onClicked:
-            {
-                elementRoot.wizardModel = createPageModel(elementRoot.wizardPages)
-                elementRoot.visible = false
-            }
-            visible: elementRoot.firstRun ? false : true
+            text: catalog.i18nc("@action:button", "Cancel")
+            iconName: "dialog-cancel";
+            onClicked: base.visible = false;
+            visible: base.firstRun ? false : true
         }
     ]
 }
