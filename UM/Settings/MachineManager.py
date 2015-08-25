@@ -30,6 +30,7 @@ class MachineManager(SignalEmitter):
         self._active_machine = None
         self._active_profile = None
 
+        Preferences.getInstance().addPreference("machines/setting_visibility", "")
     machineDefinitionsChanged = Signal()
 
     def getMachineDefinitions(self, **kwargs):
@@ -100,9 +101,17 @@ class MachineManager(SignalEmitter):
         if machine == self._active_machine:
             return
 
+        setting_visibility = []
+        if self._active_machine:
+            setting_visibility = self._active_machine.getAllSettings(visible_only = True)
+            setting_visibility = list(map(lambda s: s.getKey(), setting_visibility))
+
         self._active_machine = machine
         if self._active_profile:
             self._active_machine.setActiveProfile(self._active_profile)
+
+        self._updateSettingVisibility(setting_visibility)
+
         self.activeMachineInstanceChanged.emit()
 
     activeMachineInstanceChanged = Signal()
@@ -151,6 +160,7 @@ class MachineManager(SignalEmitter):
         self.loadMachineDefinitions()
         self.loadMachineInstances()
         self.loadProfiles()
+        self.loadVisibility()
 
     def loadMachineDefinitions(self):
         dirs = Resources.getAllPathsForType(Resources.MachineDefinitions)
@@ -244,10 +254,17 @@ class MachineManager(SignalEmitter):
 
                 self._profiles.append(profile)
 
+    def loadVisibility(self):
+        preference = Preferences.getInstance().getValue("general/setting_visibility")
+        if not preference or not self._active_machine:
+            return
+
+        self._updateSettingVisibility(preference.split(","))
 
     def saveAll(self):
         self.saveMachineInstances()
         self.saveProfiles()
+        self.saveVisibility()
 
     def saveMachineInstances(self):
         for instance in self._machine_instances:
@@ -258,3 +275,24 @@ class MachineManager(SignalEmitter):
         for profile in self._profiles:
             file_name = urllib.parse.quote_plus(profile.getName()) + ".cfg"
             profile.saveToFile(Resources.getStoragePath(Resources.Profiles, file_name))
+
+    def saveVisibility(self):
+        if not self._active_machine:
+            Logger.log("w", "No active machine found when trying to save setting visibility")
+            return
+
+        visible_settings = self._active_machine.getAllSettings(visible_only = True)
+        visible_settings = map(lambda s: s.getKey(), visible_settings)
+
+        preference = ",".join(visible_settings)
+        Preferences.getInstance().setValue("machines/setting_visibility", preference)
+
+    def _updateSettingVisibility(self, visible_keys):
+        if not visible_keys:
+            return
+
+        for setting in self._active_machine.getAllSettings():
+            if setting.getKey() in visible_keys:
+                setting.setVisible(True)
+            else:
+                setting.setVisible(False)
