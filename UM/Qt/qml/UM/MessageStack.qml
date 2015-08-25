@@ -33,7 +33,7 @@ ListView {
 
         color: UM.Theme.colors.message_background
         border.width: UM.Theme.sizes.default_lining.width
-        border.color: UM.Theme.colors.button_lining
+        border.color: UM.Theme.colors.lining
 
         property variant actions: model.actions;
         property variant model_id: model.id
