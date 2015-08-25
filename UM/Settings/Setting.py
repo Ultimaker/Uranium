@@ -105,6 +105,11 @@ class Setting(SignalEmitter):
         if "description" in data:
             self._description = self._i18n_catalog.i18nc("{0} description".format(self._key), data["description"])
 
+        if "warning_description" in data:
+            self._warning_description = self._i18n_catalog.i18nc("{0} warning description".format(self._key), data["warning_description"])
+
+        if "error_description" in data:
+            self._error_description = self._i18n_catalog.i18nc("{0} error description".format(self._key), data["error_description"])
         if "visible" in data:
             self.setVisible(data["visible"])
 
