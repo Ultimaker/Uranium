@@ -9,6 +9,7 @@ from UM.Signal import Signal, SignalEmitter
 import copy
 import numpy
 import numpy.linalg
+import hashlib
 numpy.seterr(all="ignore") # Ignore warnings (dev by zero)
 
 from enum import Enum
@@ -55,7 +56,12 @@ class MeshData(SignalEmitter):
     
     def setCenterPosition(self, position):
         self._center_position = position
-    
+
+    def getHash(self):
+        m = hashlib.sha256()
+        m.update(self.getVerticesAsByteArray())
+        return m.hexdigest()
+
     def getCenterPosition(self):
         return self._center_position
     
