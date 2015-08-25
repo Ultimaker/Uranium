@@ -110,14 +110,16 @@ class Setting(SignalEmitter):
 
         if "error_description" in data:
             self._error_description = self._i18n_catalog.i18nc("{0} error description".format(self._key), data["error_description"])
+
+        if "unit" in data:
+            self._unit = self._i18n_catalog.i18nc("{0} unit".format(self._key), data["unit"])
+
         if "visible" in data:
             self.setVisible(data["visible"])
 
         if "always_visible" in data:
             self._hide_if_all_children_visible = not data["always_visible"]
 
-        if "unit" in data:
-            self._unit = data["unit"]
 
         self._inherit = data.get("inherit", True)
 
