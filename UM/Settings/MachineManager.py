@@ -8,6 +8,7 @@ import json
 from UM.Signal import Signal, SignalEmitter
 from UM.Resources import Resources
 from UM.Logger import Logger
+from UM.Preferences import Preferences
 
 from UM.Settings.MachineDefinition import MachineDefinition
 from UM.Settings.MachineSettings import MachineSettings
