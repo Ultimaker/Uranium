@@ -12,6 +12,7 @@ class MachineDefinitionsModel(ListModel):
     VariantNameRole = Qt.UserRole + 3
     ManufacturerRole = Qt.UserRole + 4
     AuthorRole = Qt.UserRole + 5
+    PagesRole = Qt.UserRole + 6
 
     def __init__(self, parent = None):
         super().__init__(parent)
@@ -21,6 +22,7 @@ class MachineDefinitionsModel(ListModel):
         self.addRoleName(self.VariantNameRole, "variantName")
         self.addRoleName(self.ManufacturerRole, "manufacturer")
         self.addRoleName(self.AuthorRole, "author")
+        self.addRoleName(self.PagesRole, "pages")
 
         self._manager = Application.getInstance().getMachineManager()
 
@@ -39,5 +41,6 @@ class MachineDefinitionsModel(ListModel):
                 "name": machine.getName(),
                 "variantName": machine.getVariantName(),
                 "manufacturer": machine.getManufacturer(),
-                "author": machine.getAuthor()
+                "author": machine.getAuthor(),
+                "pages": machine.getPages()
             })
