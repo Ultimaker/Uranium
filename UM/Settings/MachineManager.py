@@ -11,7 +11,7 @@ from UM.Logger import Logger
 from UM.Preferences import Preferences
 
 from UM.Settings.MachineDefinition import MachineDefinition
-from UM.Settings.MachineSettings import MachineSettings
+from UM.Settings.MachineInstance import MachineInstance
 from UM.Settings.Profile import Profile
 from UM.Settings.SettingsError import SettingsError
 
@@ -213,11 +213,11 @@ class MachineManager(SignalEmitter):
                 if os.path.isdir(path):
                     continue
 
-                instance = MachineSettings()
+                instance = MachineInstance(self)
                 try:
                     instance.loadFromFile(path)
-                except SettingsError as e:
-                    Logger.log("w", str(e))
+                except Exception as e:
+                    Logger.log("e", "An exception occurred loading Machine Instance: %s: %s", path, str(e))
                     continue
 
                 self._machine_instances.append(instance)
@@ -239,8 +239,8 @@ class MachineManager(SignalEmitter):
                 profile = Profile()
                 try:
                     profile.loadFromFile(path)
-                except SettingsError as e:
-                    Logger.log("w", str(e))
+                except Exception as e:
+                    Logger.log("e", "An exception occurred loading Profile %s: %s", path, str(e))
                     continue
 
                 self._profiles.append(profile)
