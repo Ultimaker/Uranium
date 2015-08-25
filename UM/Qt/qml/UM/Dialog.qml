@@ -59,7 +59,7 @@ Window {
             }
         }
 
-        RowLayout {
+        Item {
             id: buttonRow;
 
             anchors {
@@ -72,11 +72,9 @@ Window {
             }
             height: childrenRect.height;
 
-            Row { id: leftButtonRow; }
+            Row { id: leftButtonRow; anchors.left: parent.left; }
 
-            Item { Layout.fillWidth: true; }
-
-            Row { id: rightButtonRow; }
+            Row { id: rightButtonRow; anchors.right: parent.right; }
         }
     }
 
