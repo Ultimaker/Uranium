@@ -185,7 +185,8 @@ class MachineSettings(SignalEmitter):
     ##  Get all settings of this machine
     #   \param kwargs Keyword arguments.
     #                 Possible values are:
-    #                 * include_machine: boolean, true if machine settings should be included. Default false.
+    #                 * include_machine: boolean, True if machine settings should be included. Default False.
+    #                 * visible_only: boolean, True if only visible settings should be included. Default False.
     #   \return list of settings
     def getAllSettings(self, **kwargs):
         all_settings = []
@@ -194,6 +195,10 @@ class MachineSettings(SignalEmitter):
 
         for category in self._categories:
             all_settings.extend(category.getAllSettings())
+
+        if kwargs.get("visible_only"):
+            all_settings = filter(lambda s: s.isVisible(), all_settings)
+
         return all_settings
 
     ##  Get machine settings of this machine (category less settings).
@@ -280,12 +285,3 @@ class MachineSettings(SignalEmitter):
                 return True
 
         return False
-
-    def _getVisibleSettings(self):
-        visible = []
-        settings = self.getAllSettings()
-        for setting in settings:
-            if setting.isVisible():
-                visible.append(setting.getKey())
-
-        return ",".join(visible)
