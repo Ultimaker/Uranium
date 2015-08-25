@@ -49,6 +49,7 @@ Dialog {
 
     leftButtons: Button {
         text: catalog.i18nc("@action:button", "Defaults");
+        enabled: configPage.item.resetEnabled;
         onClicked: configPage.item.reset();
     }
 

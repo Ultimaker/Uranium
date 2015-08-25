@@ -11,6 +11,7 @@ import UM 1.0 as UM
 Item {
     property alias title: titleLabel.text;
     default property alias contents: contentsItem.children;
+    property bool resetEnabled: true;
 
     function reset()
     {
