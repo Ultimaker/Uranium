@@ -24,7 +24,7 @@ class MachineManager(SignalEmitter):
 
         self._application_name = app_name
 
-        self._machine_defintions = []
+        self._machine_definitions = []
         self._machine_instances = []
         self._profiles = []
 
@@ -52,7 +52,7 @@ class MachineManager(SignalEmitter):
 
     def getAllMachineVariants(self, machine_id):
         variants = []
-        for definition in self._machine_defintions:
+        for definition in self._machine_definitions:
             if definition.getId() == machine_id:
                 variants.append(definition)
 
