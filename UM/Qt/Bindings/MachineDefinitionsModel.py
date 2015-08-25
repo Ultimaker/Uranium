@@ -46,8 +46,9 @@ class MachineDefinitionsModel(ListModel):
     def _onMachinesChanged(self):
         self.clear()
 
-        definitions = self._manager.getMachineDefinitions()
-        definitions.sort(key = lambda k: k.getName())
+        definitions = self._manager.getMachineDefinitions(include_variants = self._show_variants)
+        definitions = filter(lambda s: s.isVisible(), definitions)
+        definitions = sorted(definitions)
 
         for machine in definitions:
             self.appendItem({
