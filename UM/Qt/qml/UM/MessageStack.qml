@@ -10,18 +10,18 @@ import UM 1.0 as UM
 import "."
 
 ListView {
+    id: base
     boundsBehavior: ListView.StopAtBounds;
     verticalLayoutDirection: ListView.BottomToTop;
     visible: true
 
     model: UM.Models.visibleMessagesModel;
 
-    property real slicingProgress: UM.Backend.progress;
+    property real slicingProgress: UM.Backend.progress * 100
     property bool slicingActivity: Printer.getPlatformActivity;
     Behavior on slicingProgress { NumberAnimation { duration: 250; } }
 
     interactive: false;
-
     delegate: Rectangle
     {
         id: message
@@ -29,12 +29,11 @@ ListView {
         property int labelHeight: messageLabel.height + (UM.Theme.sizes.default_margin.height * 2)
         property int progressBarHeight: totalProgressBar.height + UM.Theme.sizes.default_margin.height
         height: model.progress == null ? message.labelHeight : message.labelHeight + message.progressBarHeight
-
         anchors.horizontalCenter: parent.horizontalCenter;
 
         color: UM.Theme.colors.message_background
         border.width: UM.Theme.sizes.default_lining.width
-        border.color: UM.Theme.colors.button_lining
+        border.color: UM.Theme.colors.lining
 
         property variant actions: model.actions;
         property variant model_id: model.id
@@ -55,48 +54,55 @@ ListView {
                 bottomMargin: UM.Theme.sizes.default_margin.width;
             }
 
-            text: model.text;
+            function getProgressText(){
+                var progress = Math.floor(base.slicingProgress)
+                return model.text + "<font color='black'>" + progress + "%<\>"
+            }
+
+            text: model.progress > 0 ? messageLabel.getProgressText() : model.text
             color: UM.Theme.colors.message_text;
             font: UM.Theme.fonts.default;
             wrapMode: Text.Wrap;
 
             ProgressBar {
                 id: totalProgressBar;
-
                 minimumValue: 0;
                 maximumValue: model.max_progress;
-                value: model.progress == null ? 0 : model.progress
-
+                value: base.slicingProgress
                 visible: model.progress == null ? false: true//if the progress is null (for example with the loaded message) -> hide the progressbar
                 indeterminate: model.progress == -1 ? true: false //if the progress is unknown (-1) -> the progressbar is indeterminate
                 style: UM.Theme.styles.progressbar
 
                 anchors.top: parent.bottom;
-                anchors.horizontalCenter: parent.horizontalCenter;
                 anchors.topMargin: UM.Theme.sizes.default_margin.width;
-                anchors.bottomMargin: UM.Theme.sizes.default_margin.width;
+                //anchors.bottomMargin: UM.Theme.sizes.default_margin.width;
             }
         }
 
-        ToolButton
-        {
+        Button {
             id: closeButton;
-
-            anchors {
-                right: parent.right;
-                top: parent.top;
-            }
-
             width: UM.Theme.sizes.message_close.width;
             height: UM.Theme.sizes.message_close.height;
+            anchors {
+                right: parent.right;
+                rightMargin: UM.Theme.sizes.default_margin.width / 2;
+                top: parent.top;
+                topMargin: UM.Theme.sizes.default_margin.width / 2;
+            }
+            UM.RecolorImage {
+                anchors.fill: parent;
+                sourceSize.width: width
+                sourceSize.height: width
+                color: UM.Theme.colors.message_dismiss
+                source: UM.Theme.icons.cross2;
+            }
 
-            text: "x"
             onClicked: UM.Models.visibleMessagesModel.hideMessage(model.id)
             visible: model.dismissable
             enabled: model.dismissable
             style: ButtonStyle {
                 background: Rectangle {
-                    color: control.hovered ? UM.Theme.colors.primary : "transparent";
+                    color: UM.Theme.colors.message_background
                 }
             }
         }
@@ -157,8 +163,9 @@ ListView {
         NumberAnimation { property: "y"; duration: 200; }
     }
 
-    remove: Transition 
+    remove: Transition
     {
         NumberAnimation { property: "opacity"; to: 0; duration: 200; }
     }
+
 }
