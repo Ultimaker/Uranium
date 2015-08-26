@@ -125,7 +125,8 @@ class Preferences(SignalEmitter):
                 Logger.log("w", "Old config file found, ignoring")
                 self._parser = None
                 return
-        except:
+        except Exception as e:
+            Logger.log("e" ,"An exception occured while trying to read preferences file: %s" , e)
             self._parser = None
             return
 
