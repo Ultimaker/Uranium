@@ -81,7 +81,8 @@ class MachineInstance():
         config["general"]["name"] = self._name
         config["general"]["type"] = self._machine_definition.getId()
         config["general"]["version"] = str(self.MachineInstanceVersion)
-        config["general"]["variant"] = self._machine_definition.getVariantName()
+        if self._machine_definition.getVariantName():
+            config["general"]["variant"] = self._machine_definition.getVariantName()
 
         config.add_section("machine_settings")
         for key, value in self._machine_setting_overrides:
