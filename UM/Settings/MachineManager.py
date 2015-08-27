@@ -201,7 +201,9 @@ class MachineManager(SignalEmitter):
                     Logger.log("e", "An error occurred loading Machine Definition %s: %s", path, str(e))
                     continue
 
-                self._machine_definitions.append(definition)
+                # Only add the definition if it did not exist yet. This prevents duplicates.
+                if not self.findMachineDefinition(definition.getId(), definition.getVariantName()):
+                    self._machine_definitions.append(definition)
 
         self.machineDefinitionsChanged.emit()
 
@@ -224,7 +226,8 @@ class MachineManager(SignalEmitter):
                     Logger.log("e", "An exception occurred loading Machine Instance: %s: %s", path, str(e))
                     continue
 
-                self._machine_instances.append(instance)
+                if not self.findMachineInstance(instance.getName()):
+                    self._machine_instances.append(instance)
 
         instance = self.findMachineInstance(Preferences.getInstance().getValue("machines/active_instance"))
         if instance:
@@ -251,7 +254,8 @@ class MachineManager(SignalEmitter):
                     Logger.log("e", "An exception occurred loading Profile %s: %s", path, str(e))
                     continue
 
-                self._profiles.append(profile)
+                if not self.findProfile(profile.getName()):
+                    self._profiles.append(profile)
 
         profile = self.findProfile(Preferences.getInstance().getValue("machines/active_profile"))
         if profile:
