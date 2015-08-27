@@ -24,6 +24,7 @@ class MachineDefinition(SignalEmitter):
         self._machine_manager = machine_manager
 
         self._path = path
+
         self._id = ""
         self._name = ""
         self._variant_name = None
@@ -203,6 +204,23 @@ class MachineDefinition(SignalEmitter):
             if setting is not None:
                 return setting
         return None #No setting found
+
+    def isSetting(self, key):
+        return self.isUserSetting(key) or self.isMachineSetting(key)
+
+    def isUserSetting(self, key):
+        for category in self._categories:
+            if category.getSettingByKey(key):
+                return True
+
+        return False
+
+    def isMachineSetting(self, key):
+        for setting in self._machine_settings:
+            if setting.getSettingByKey(key):
+                return True
+
+        return False
 
     # Because Python sort is stupid and does not allow for specifying a comparison method
     def __lt__(self, other):
