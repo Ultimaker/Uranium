@@ -31,21 +31,33 @@ class MachineInstance():
     def getMachineDefinition(self):
         return self._machine_definition
 
-    def setMachineSetting(self, setting, value):
+    def setMachineSettingValue(self, setting, value):
         if not self._machine_definition.isMachineSetting(setting):
             Logger.log("w", "Tried to override setting %s that is not a machine setting", setting)
             return
 
         self._machine_setting_overrides[setting] = value
 
-    def getMachineSetting(self, setting):
+    def getMachineSettingValue(self, setting):
         if not self._machine_definition.isMachineSetting(setting):
             return
 
         if setting in self._machine_setting_overrides:
             return self._machine_setting_overrides[setting]
 
-        return self._machine_definition.getSetting(setting).getDefault()
+        return self._machine_definition.getSetting(setting).getDefaultValue()
+
+    def getSettingValue(self, key):
+        if self._machine_definition.isSetting(key):
+            return None
+
+        if key in self._machine_setting_overrides:
+            return self._machine_setting_overrides[key]
+
+        return self._machine_definition.getSetting(key).getDefaultValue()
+
+    def hasMachineSettingValue(self, key):
+        return key in self._machine_setting_overrides
 
     def loadFromFile(self, path):
         config = configparser.ConfigParser()
