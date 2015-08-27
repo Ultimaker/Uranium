@@ -18,7 +18,7 @@ class SettingCategoriesModel(ListModel):
 
     def __init__(self, parent = None):
         super().__init__(parent)
-        self._machine_settings = None
+        self._machine_instance = None
         Application.getInstance().getMachineManager().activeMachineInstanceChanged.connect(self._onActiveMachineChanged)
         self._onActiveMachineChanged()
 
@@ -30,14 +30,14 @@ class SettingCategoriesModel(ListModel):
 
     def _onActiveMachineChanged(self):
         self.clear()
-        if self._machine_settings:
-            for category in self._machine_settings.getAllCategories():
+        if self._machine_instance:
+            for category in self._machine_instance.getMachineDefinition().getAllCategories():
                 category.visibleChanged.disconnect(self._onCategoryVisibleChanged)
 
-        self._machine_settings = Application.getInstance().getMachineManager().getActiveMachineInstance()
+        self._machine_instance = Application.getInstance().getMachineManager().getActiveMachineInstance()
 
-        if self._machine_settings:
-            for category in self._machine_settings.getAllCategories():
+        if self._machine_instance:
+            for category in self._machine_instance.getMachineDefinition().getAllCategories():
                 self.appendItem({
                     "id": category.getKey(),
                     "name": category.getLabel(),
@@ -48,7 +48,5 @@ class SettingCategoriesModel(ListModel):
                 category.visibleChanged.connect(self._onCategoryVisibleChanged)
 
     def _onCategoryVisibleChanged(self, category):
-        for index in range(len(self.items)):
-            if self.getItem(index)["id"] == category.getKey():
-                self.setProperty(index, "visible", category.isVisible())
-
+        index = self.find("id", category.getKey())
+        self.setProperty(index, "visible", category.isVisible())

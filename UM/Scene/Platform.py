@@ -11,7 +11,7 @@ class Platform(SceneNode.SceneNode):
     def __init__(self, parent):
         super().__init__(parent)
 
-        self._settings = None
+        self._machine_instance = None
         self._material = None
         self._texture = None
         Application.getInstance().getMachineManager().activeMachineInstanceChanged.connect(self._onActiveMachineChanged)
@@ -36,18 +36,18 @@ class Platform(SceneNode.SceneNode):
             return True
 
     def _onActiveMachineChanged(self):
-        if self._settings:
+        if self._machine_instance:
             self.setMeshData(None)
 
         app = Application.getInstance()
-        self._settings = app.getMachineManager().getActiveMachineInstance()
-        if self._settings:
-            mesh = self._settings.getPlatformMesh()
+        self._machine_instance = app.getMachineManager().getActiveMachineInstance()
+        if self._machine_instance:
+            mesh = self._machine_instance.getMachineDefinition().getPlatformMesh()
             if not mesh:
                 mesh = "" # Dirty hack to ensure that if no mesh is set it doesn't crash.
 
             self.setMeshData(app.getMeshFileHandler().read(Resources.getPath(Resources.Meshes, mesh), center = False).getMeshData())
-            self._texture = self._settings.getPlatformTexture()
+            self._texture = self._machine_instance.getMachineDefinition().getPlatformTexture()
 
             if self._material and self._texture:
                 self._material.setUniformTexture("u_texture", Resources.getPath(Resources.Images, self._texture))

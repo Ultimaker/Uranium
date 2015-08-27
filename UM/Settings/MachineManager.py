@@ -288,7 +288,7 @@ class MachineManager(SignalEmitter):
             Logger.log("w", "No active machine found when trying to save setting visibility")
             return
 
-        visible_settings = self._active_machine.getAllSettings(visible_only = True)
+        visible_settings = self._active_machine.getMachineDefinition().getAllSettings(visible_only = True)
         visible_settings = map(lambda s: s.getKey(), visible_settings)
 
         preference = ",".join(visible_settings)
@@ -298,7 +298,7 @@ class MachineManager(SignalEmitter):
         if not visible_keys:
             return
 
-        for setting in self._active_machine.getAllSettings():
+        for setting in self._active_machine.getMachineDefinition().getAllSettings():
             if setting.getKey() in visible_keys:
                 setting.setVisible(True)
             else:

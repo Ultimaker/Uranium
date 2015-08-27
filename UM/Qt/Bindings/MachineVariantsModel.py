@@ -29,7 +29,7 @@ class MachineVariantsModel(ListModel):
         if not instance:
             return
 
-        definitions = self._manager.getAllMachineVariants(instance.getTypeID())
+        definitions = self._manager.getAllMachineVariants(instance.getMachineDefinition().getId())
         if len(definitions) <= 1:
             return
 
