@@ -247,7 +247,7 @@ class MachineManager(SignalEmitter):
                 if os.path.isdir(path):
                     continue
 
-                profile = Profile()
+                profile = Profile(self)
                 try:
                     profile.loadFromFile(path)
                 except Exception as e:
@@ -260,6 +260,8 @@ class MachineManager(SignalEmitter):
         profile = self.findProfile(Preferences.getInstance().getValue("machines/active_profile"))
         if profile:
             self.setActiveProfile(profile)
+
+        self.profilesChanged.emit()
 
     def loadVisibility(self):
         preference = Preferences.getInstance().getValue("machines/setting_visibility")

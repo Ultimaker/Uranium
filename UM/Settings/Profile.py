@@ -9,10 +9,15 @@ from UM.Settings import SettingsError
 class Profile(SignalEmitter):
     ProfileVersion = 1
 
-    def __init__(self):
+    def __init__(self, machine_manager):
         super().__init__()
+        self._machine_manager = machine_manager
         self._changed_settings = {}
         self._name = "Unknown Profile"
+
+        self._active_instance = None
+        self._machine_manager.activeMachineInstanceChanged.connect(self._onActiveInstanceChanged)
+        self._onActiveInstanceChanged()
 
     nameChanged = Signal()
 
@@ -68,3 +73,6 @@ class Profile(SignalEmitter):
         
         with open(file, "wt", -1, "utf-8") as f:
             parser.write(f)
+
+    def _onActiveInstanceChanged(self):
+        self._active_instance = self._machine_manager.getActiveMachineInstance()
