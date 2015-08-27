@@ -10,11 +10,12 @@ import UM 1.0 as UM
 
 import ".."
 
-PreferencesPage {
+PreferencesPage
+{
     id: preferencesPage
 
     //: Plugins configuration page
-    title: qsTr("Plugins");
+    title: catalog.i18nc("@title", "Plugins");
     contents: ScrollView
     {
         anchors.fill: parent;
@@ -31,32 +32,39 @@ PreferencesPage {
     Component
     {
         id: pluginDelegate
-        Row {
-            CheckBox {
+        Row
+        {
+            CheckBox
+            {
                 id: pluginCheckbox
                 checked: model.enabled
                 onClicked: plugin_list.model.setEnabled(model.name, checked)
                 enabled: !model.required
             }
-            Button {
+            Button
+            {
                 id: pluginText //is a button so the user doesn't have te click inconvenientley precise to enable or disable the checkbox
                 text: model.name
                 onClicked: plugin_list.model.setEnabled(model.name, checked)
                 tooltip: model.description
-                width: preferencesPage.width/6*4 < UM.Theme.sizes.setting_text_maxwidth.width ? preferencesPage.width/5*4 : UM.Theme.sizes.setting_text_maxwidth.width
-                style: ButtonStyle {
-                    background: Rectangle {
+                width: preferencesPage.width / 6 * 4 < UM.Theme.sizes.setting_text_maxwidth.width ? preferencesPage.width / 5 * 4 : UM.Theme.sizes.setting_text_maxwidth.width
+                style: ButtonStyle
+                {
+                    background: Rectangle
+                    {
                         border.width: 0
                         color: "transparent"
                     }
-                    label: Text {
+                    label: Text
+                    {
                         renderType: Text.NativeRendering
                         horizontalAlignment: Text.AlignLeft
                         text: control.text
                     }
                 }
             }
-            Button {
+            Button
+            {
                 id: pluginIcon
                 iconName: "help-about";
                 onClicked:
@@ -76,14 +84,14 @@ PreferencesPage {
         id: about_window
 
         //: Default description for plugin
-        property variant about_text: qsTr("No text available")
+        property variant about_text: catalog.i18nc("@label", "No text available")
 
         property variant author_text: "John doe"
         property variant plugin_name: ""
         property variant version_text: ""
 
         //: About dialog with info about plugin %1
-        title: qsTr("About %1").arg(plugin_name)
+        title: catalog.i18nc("@title", "About: %1").arg(plugin_name)
 
         width: Screen.devicePixelRatio * 320;
         height: Screen.devicePixelRatio * 240;
@@ -99,7 +107,7 @@ PreferencesPage {
             wrapMode: Text.WordWrap
         }
 
-       Label
+        Label
         {
             id: pluginCaption
             text: about_window.about_text
@@ -115,8 +123,8 @@ PreferencesPage {
         {
             id: pluginAuthorLabel
             //: About plugin dialog author label
-            text: qsTr("Author:")
-            width: 0.4*parent.width
+            text: catalog.i18nc("@label", "Author:");
+            width: 0.4 * parent.width
             wrapMode: Text.WordWrap
             anchors.top: pluginCaption.bottom
             anchors.topMargin: 10
@@ -126,7 +134,7 @@ PreferencesPage {
         {
             id: pluginAuthor;
             text: about_window.author_text
-            width: 0.6*parent.width
+            width: 0.6 * parent.width
             wrapMode: Text.WordWrap
             anchors.top: pluginCaption.bottom
             anchors.left: pluginAuthorLabel.right
@@ -137,8 +145,8 @@ PreferencesPage {
         {
             id: pluginVersionLabel
             //: About plugin dialog version label
-            text: qsTr("Version:")
-            width: 0.4*parent.width
+            text: catalog.i18nc("@label", "Version:");
+            width: 0.4 * parent.width
             wrapMode: Text.WordWrap
             anchors.top: pluginAuthor.bottom
         }
@@ -152,9 +160,10 @@ PreferencesPage {
             anchors.left: pluginVersionLabel.right
         }
 
-        rightButtons: Button {
+        rightButtons: Button
+        {
             //: Close "about plugin" dialog button
-            text: qsTr("Close");
+            text: catalog.i18nc("@action:button", "Close");
             onClicked: about_window.visible = false;
         }
     }

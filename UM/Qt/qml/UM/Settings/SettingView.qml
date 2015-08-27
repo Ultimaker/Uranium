@@ -6,9 +6,10 @@ import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.1
 import QtQuick.Layouts 1.1
 
-import UM 1.0 as UM
+import UM 1.1 as UM
 
-ScrollView {
+ScrollView
+{
     id: base;
 
     style: UM.Theme.styles.scrollview;
@@ -17,16 +18,21 @@ ScrollView {
     signal showTooltip(Item item, point location, string text);
     signal hideTooltip();
 
+
     property variant expandedCategories: []
 
-    Column {
+    Column
+    {
+        UM.I18nCatalog { id: catalog; name:"uranium"}
         id: contents
         spacing: UM.Theme.sizes.default_margin.height;
 
-        Repeater {
+        Repeater
+        {
             model: UM.Models.settingCategoriesModel;
 
-            delegate: Item {
+            delegate: Item
+            {
                 id: delegateItem;
 
                 width: childrenRect.width;
@@ -36,7 +42,8 @@ ScrollView {
 
                 property variant settingsModel: model.settings;
 
-                SidebarCategoryHeader {
+                SidebarCategoryHeader
+                {
                     id: categoryHeader;
                     activeFocusOnTab: false
                     width: base.viewport.width;
@@ -48,7 +55,8 @@ ScrollView {
 
                     property bool previousChecked: false
                     checked: base.expandedCategories.indexOf(model.id) != -1;
-                    onClicked: {
+                    onClicked:
+                    {
                         var categories = base.expandedCategories;
                         if(checked)
                         {
@@ -62,7 +70,8 @@ ScrollView {
                     }
                 }
 
-                Column {
+                Column
+                {
                     id: settings;
 
                     anchors.top: categoryHeader.bottom;
@@ -73,13 +82,17 @@ ScrollView {
                     spacing: UM.Theme.sizes.default_margin.height;
                     opacity: 0;
 
-                    property real childrenHeight: {
+                    property real childrenHeight:
+                    {
                         var h = 0.0;
-                        for(var i in children) {
+                        for(var i in children)
+                        {
                             var item = children[i];
-                            h += children[i].height;   
-                            if(item.settingVisible) {
-                                if(i > 0) {
+                            h += children[i].height;
+                            if(item.settingVisible)
+                            {
+                                if(i > 0)
+                                {
                                     h += spacing;
                                 }
                             }
@@ -87,10 +100,12 @@ ScrollView {
                         return h;
                     }
 
-                    Repeater {
+                    Repeater
+                    {
                         model: delegateItem.settingsModel;
 
-                        delegate: UM.SettingItem {
+                        delegate: UM.SettingItem
+                        {
                             id: item;
 
                             width: UM.Theme.sizes.setting.width;
@@ -118,23 +133,26 @@ ScrollView {
                             onItemValueChanged: delegateItem.settingsModel.setSettingValue(index, model.key, value);
                             onContextMenuRequested: contextMenu.popup();
 
-                            onShowTooltip: {
+                            onShowTooltip:
+                            {
                                 position = Qt.point(UM.Theme.sizes.default_margin.width, item.height);
                                 base.showTooltip(item, position, model.description)
                             }
                             onHideTooltip: base.hideTooltip()
 
-                            Menu {
+                            Menu
+                            {
                                 id: contextMenu;
 
-                                MenuItem {
+                                MenuItem
+                                {
                                     //: Settings context menu action
-                                    text: qsTr("Hide this setting");
+                                    text: catalog.i18nc("@action:menu","Hide this setting");
                                     onTriggered: delegateItem.settingsModel.hideSetting(model.key);
                                 }
                                 MenuItem {
                                     //: Settings context menu action
-                                    text: qsTr("Configure setting visiblity...");
+                                    text: catalog.i18nc("@action:menu","Configure setting visiblity...");
 
                                     onTriggered: if(base.configureSettings) base.configureSettings.trigger();
                                 }
@@ -142,11 +160,13 @@ ScrollView {
                         }
                     }
 
-                    states: State {
+                    states: State
+                    {
                         name: "expanded";
                         when: categoryHeader.checked;
 
-                        PropertyChanges {
+                        PropertyChanges
+                        {
                             target: settings;
                             opacity: 1;
                             height: settings.childrenHeight;
@@ -154,11 +174,14 @@ ScrollView {
                         }
                     }
 
-                    transitions: Transition {
+                    transitions: Transition
+                    {
                         to: "expanded";
                         reversible: true;
-                        SequentialAnimation {
-                            ParallelAnimation {
+                        SequentialAnimation
+                        {
+                            ParallelAnimation
+                            {
                                 NumberAnimation { property: "height"; duration: 75; }
                                 NumberAnimation { property: "anchors.topMargin"; duration: 75; }
                             }

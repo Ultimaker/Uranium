@@ -4,37 +4,40 @@
 import QtQuick 2.2
 import QtQuick.Controls 1.2
 
-import UM 1.0 as UM
+import UM 1.1 as UM
 
-Item {
+Item
+{
     width: Math.max(23 * UM.Theme.sizes.line.width, childrenRect.width);
     height: Math.max(9.5 * UM.Theme.sizes.line.height, childrenRect.height);
-
-    Button {
+    UM.I18nCatalog { id: catalog; name:"uranium"}
+    Button
+    {
         id: resetScaleButton
 
         anchors.top: scaleToMaxButton.bottom;
         anchors.topMargin: UM.Theme.sizes.default_margin.height;
 
         //: Reset scale tool button
-        text: qsTr("Reset")
+        text: catalog.i18nc("@action:button","Reset")
         iconSource: UM.Theme.icons.scale_reset;
         //: Reset scale tool button tooltip
-        tooltip: qsTr("Reset the scaling of the current selection.");
+        tooltip: catalog.i18nc("@info:tooltip","Reset the scaling of the current selection.");
 
         style: UM.Theme.styles.tool_button_panel;
 
         onClicked: UM.ActiveTool.triggerAction("resetScale");
     }
 
-    Button {
+    Button
+    {
         id: scaleToMaxButton
 
         //: Scale to max tool button
-        text: qsTr("Scale to Max");
+        text: catalog.i18nc("@action:button","Scale to Max");
         iconSource: UM.Theme.icons.scale_max;
         //: Scale to max tool button tooltip
-        tooltip: qsTr("Scale to maximum size");
+        tooltip: catalog.i18nc("@info:tooltip","Scale to maximum size");
 
         anchors.top: parent.top;
 
@@ -53,9 +56,10 @@ Item {
 
         spacing: UM.Theme.sizes.default_margin.height;
 
-        CheckBox {
+        CheckBox
+        {
             //: Snap Scaling checkbox
-            text: qsTr("Snap Scaling");
+            text: catalog.i18nc("@action:checkbox","Snap Scaling");
 
             style: UM.Theme.styles.checkbox;
 
@@ -63,9 +67,10 @@ Item {
             onClicked: UM.ActiveTool.setProperty("ScaleSnap", checked);
         }
 
-        CheckBox {
+        CheckBox
+        {
             //: Uniform scaling checkbox
-            text: qsTr("Uniform Scaling");
+            text: catalog.i18nc("@action:checkbox","Uniform Scaling");
 
             style: UM.Theme.styles.checkbox;
 
@@ -74,7 +79,8 @@ Item {
         }
     }
 
-    Grid {
+    Grid
+    {
         id: textfields;
 
         anchors.left: resetScaleButton.right;
@@ -85,7 +91,8 @@ Item {
         flow: Grid.TopToBottom;
         spacing: UM.Theme.sizes.default_margin.width / 2;
 
-        Label {
+        Label
+        {
             height: UM.Theme.sizes.setting_control.height;
             text: "X";
             font: UM.Theme.fonts.default;
@@ -93,7 +100,8 @@ Item {
             verticalAlignment: Text.AlignVCenter;
         }
 
-        Label {
+        Label
+        {
             height: UM.Theme.sizes.setting_control.height;
             text: "Y";
             font: UM.Theme.fonts.default;
@@ -101,7 +109,8 @@ Item {
             verticalAlignment: Text.AlignVCenter;
         }
 
-        Label {
+        Label
+        {
             height: UM.Theme.sizes.setting_control.height;
             text: "Z";
             font: UM.Theme.fonts.default;
@@ -109,7 +118,8 @@ Item {
             verticalAlignment: Text.AlignVCenter;
         }
 
-        TextField {
+        TextField
+        {
             width: UM.Theme.sizes.setting_control.width;
             height: UM.Theme.sizes.setting_control.height;
             property string unit: "mm";
@@ -117,7 +127,8 @@ Item {
             text: UM.ActiveTool.properties.ObjectWidth
             onEditingFinished: UM.ActiveTool.setProperty("ObjectWidth", text);
         }
-        TextField {
+        TextField
+        {
             width: UM.Theme.sizes.setting_control.width;
             height: UM.Theme.sizes.setting_control.height;
             property string unit: "mm";
@@ -125,7 +136,8 @@ Item {
             text: UM.ActiveTool.properties.ObjectDepth
             onEditingFinished: UM.ActiveTool.setProperty("ObjectDepth", text);
         }
-        TextField {
+        TextField
+        {
             width: UM.Theme.sizes.setting_control.width;
             height: UM.Theme.sizes.setting_control.height;
             property string unit: "mm";
@@ -134,7 +146,8 @@ Item {
             onEditingFinished: UM.ActiveTool.setProperty("ObjectHeight", text);
         }
 
-        TextField {
+        TextField
+        {
             width: UM.Theme.sizes.setting_control.width;
             height: UM.Theme.sizes.setting_control.height;
             property string unit: "%";
@@ -142,7 +155,8 @@ Item {
             text: UM.ActiveTool.properties.ScaleX * 100;
             onEditingFinished: UM.ActiveTool.setProperty("ScaleX", parseFloat(text) / 100);
         }
-        TextField {
+        TextField
+        {
             width: UM.Theme.sizes.setting_control.width;
             height: UM.Theme.sizes.setting_control.height;
             property string unit: "%";
@@ -150,7 +164,8 @@ Item {
             text: UM.ActiveTool.properties.ScaleZ * 100;
             onEditingFinished: UM.ActiveTool.setProperty("ScaleZ", parseFloat(text) / 100);
         }
-        TextField {
+        TextField
+        {
             width: UM.Theme.sizes.setting_control.width;
             height: UM.Theme.sizes.setting_control.height;
             property string unit: "%";

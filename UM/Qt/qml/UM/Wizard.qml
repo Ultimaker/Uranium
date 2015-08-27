@@ -8,7 +8,7 @@ import QtQuick.Controls.Styles 1.1
 import QtQuick.Layouts 1.1
 import QtQml 2.2
 
-import UM 1.0 as UM
+import UM 1.1 as UM
 
 UM.Dialog
 {
@@ -67,6 +67,7 @@ UM.Dialog
 
     Row
     {
+        UM.I18nCatalog { id: catalog; name:"uranium"}
         anchors.fill: parent;
         SystemPalette{id: palette}
         spacing:  UM.Theme.sizes.default_margin.width
@@ -178,7 +179,7 @@ UM.Dialog
         {
             id: backButton
             //: Add Printer wizard Button: 'Back'
-            text: qsTr("< Back");
+            text: catalog.i18nc("@action:button","< Back");
             enabled: elementRoot.currentPage <= 0 ? false : true
             visible: elementRoot.firstRun ? false : true
             onClicked:
@@ -197,11 +198,11 @@ UM.Dialog
                 if (elementRoot.currentPage < progressList.model.count - 1)
                 {
                     //: Add Printer wizard button: 'Next'
-                    return qsTr("Next >")
+                    return catalog.i18nc("@action:button","Next >")
                 } else if (elementRoot.currentPage == progressList.model.count - 1)
                 {
                     //: Add Printer wizard button: 'Finish'
-                    return qsTr("Finish ✓")
+                    return catalog.i18nc("@action:button","Finish ✓")
                 }
             }
 
@@ -221,7 +222,7 @@ UM.Dialog
         {
             id: cancelButton
             //: Add Printer wizard button: "Cancel"
-            text: qsTr("Cancel X")
+            text: catalog.i18nc("@action:button","Cancel X")
             onClicked:
             {
                 elementRoot.wizardModel = createPageModel(elementRoot.wizardPages)

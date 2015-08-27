@@ -5,23 +5,27 @@ import QtQuick 2.1
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 
-import UM 1.0 as UM
+import UM 1.1 as UM
 
-PreferencesPage {
+PreferencesPage
+{
     //: General configuration page title
-    title: qsTr("General");
+    title: catalog.i18nc("@title:window","General");
 
     function reset() {
         UM.Preferences.resetPreference("general/language")
     }
 
     //: Language selection label
-    Label {
+    Label
+    {
         id: languageLabel
-        text: qsTr("Language")
+        text: catalog.i18nc("@label","Language")
+        UM.I18nCatalog { id: catalog; name:"uranium"}
     }
 
-    ComboBox {
+    ComboBox
+    {
         id: languageComboBox
         model: ListModel {
             id: languageList
@@ -41,10 +45,13 @@ PreferencesPage {
             ListElement { text: QT_TR_NOOP("Russian"); code: "ru" }
         }
 
-        currentIndex: {
+        currentIndex:
+        {
             var code = UM.Preferences.getValue("general/language");
-            for(var i = 0; i < languageList.count; ++i) {
-                if(model.get(i).code == code) {
+            for(var i = 0; i < languageList.count; ++i)
+            {
+                if(model.get(i).code == code)
+                {
                     return i
                 }
             }
@@ -55,10 +62,12 @@ PreferencesPage {
         anchors.top: languageLabel.top
         anchors.leftMargin: 20
 
-        Component.onCompleted: {
+        Component.onCompleted:
+        {
             // Because ListModel is stupid and does not allow using qsTr() for values.
-            for(var i = 0; i < languageList.count; ++i) {
-                languageList.setProperty(i, "text", qsTr(languageList.get(i).text));
+            for(var i = 0; i < languageList.count; ++i)
+            {
+                languageList.setProperty(i, "text", catalog.i18nc("@action:menu",languageList.get(i).text));
             }
 
             // Glorious hack time. ComboBox does not update the text properly after changing the
@@ -68,13 +77,14 @@ PreferencesPage {
         }
     }
 
-    Label {
+    Label
+    {
         id: languageCaption;
         Layout.fillHeight: true
         Layout.fillWidth: true //only two lines left of qt layouts (nescesseray because PreferencesDialog work with layouts)
 
         //: Language change warning
-        text: qsTr("You will need to restart the application for language changes to have effect.")
+        text: catalog.i18nc("@label","You will need to restart the application for language changes to have effect.")
         wrapMode: Text.WordWrap
         font.italic: true
     }
