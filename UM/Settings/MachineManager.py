@@ -125,8 +125,6 @@ class MachineManager(SignalEmitter):
             setting_visibility = list(map(lambda s: s.getKey(), setting_visibility))
 
         self._active_machine = machine
-        if self._active_profile:
-            self._active_machine.setActiveProfile(self._active_profile)
 
         self._updateSettingVisibility(setting_visibility)
 
@@ -172,8 +170,6 @@ class MachineManager(SignalEmitter):
             return
 
         self._active_profile = profile
-        if self._active_machine:
-            self._active_machine.setActiveProfile(profile)
 
         Preferences.getInstance().setValue("machines/active_profile", self._active_profile.getName())
 
