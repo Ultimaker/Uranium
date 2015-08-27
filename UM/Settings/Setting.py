@@ -131,13 +131,31 @@ class Setting(SignalEmitter):
         max_value_warning = None
 
         if "min_value" in data:
-            min_value = self._createFunction(data["min_value"])
+            # Check type for backward compatibility
+            # TODO Drop this check and assume min/max/warn values are strings
+            value = data["min_value"]
+            if type(value) is str:
+                value = self._createFunction(value)
+            else:
+                value = lambda: value
         if "max_value" in data:
-            max_value = self._createFunction(data["max_value"])
+            value = data["max_value"]
+            if type(value) is str:
+                max_value = self._createFunction(value)
+            else:
+                max_value = lambda: value
         if "min_value_warning" in data:
-            min_value_warning = self._createFunction(data["min_value_warning"])
+            value = data["min_value_warning"]
+            if type(value) is str:
+                min_value_warning = self._createFunction(value)
+            else:
+                min_value_warning = lambda: value
         if "max_value_warning" in data:
-            max_value_warning = self._createFunction(data["max_value_warning"])
+            value = data["max_value_warning"]
+            if type(value) is str:
+                max_value_warning = self._createFunction(value)
+            else:
+                max_value_warning = lambda: value
 
         if  self.getValidator() is not None: #Strings don"t have validators as of yet
             self.getValidator().setRange(min_value,max_value,min_value_warning,max_value_warning)
