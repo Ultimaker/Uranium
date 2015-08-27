@@ -287,7 +287,13 @@ class Setting(SignalEmitter):
     #
     #   This will return a string with a description of this setting, if provided by the setting file.
     def getDescription(self):
-        return self._i18n_catalog.i18n(self._description)
+        return self._description
+
+    def getWarningDescription(self):
+        return self._warning_description
+
+    def getErrorDescription(self):
+        return self._error_description
 
     ##  Get the identifier of the setting
     def getKey(self):
