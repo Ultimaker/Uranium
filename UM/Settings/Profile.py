@@ -79,33 +79,30 @@ class Profile(SignalEmitter):
 
     def loadFromFile(self, path):
         parser = configparser.ConfigParser()
-        parser.read(path)
+        parser.read(path, "utf-8")
 
-        if not parser.has_section("General"):
+        if not parser.has_section("general"):
             raise SettingsError.InvalidFileError(path)
 
-        if not parser.has_option("General", "version") or int(parser.get("General", "version")) != self.ProfileVersion:
+        if not parser.has_option("general", "version") or int(parser.get("general", "version")) != self.ProfileVersion:
             raise SettingsError.InvalidVersionError(path)
 
-        self._name = parser.get("General", "name")
+        self._name = parser.get("general", "name")
 
-        for group in parser:
-            if group == "DEFAULT":
-                continue
-            if group == "Settings":
-                for key, value in parser[group].items():
-                    self.setSettingValue(key, value)
-    
+        if parser.has_section("settings"):
+            for key, value in parser["settings"].items():
+                self.setSettingValue(key, value)
+
     def saveToFile(self, file):
         parser = configparser.ConfigParser()
 
-        parser.add_section("General")
-        parser.set("General", "version", str(self.ProfileVersion))
-        parser.set("General", "name", self._name)
+        parser.add_section("general")
+        parser.set("general", "version", str(self.ProfileVersion))
+        parser.set("general", "name", self._name)
 
-        parser.add_section("Settings")
+        parser.add_section("settings")
         for setting_key in self._changed_settings:
-            parser.set("Settings", setting_key , str(self._changed_settings[setting_key]))
+            parser.set("settings", setting_key , str(self._changed_settings[setting_key]))
         
         with open(file, "wt", -1, "utf-8") as f:
             parser.write(f)
