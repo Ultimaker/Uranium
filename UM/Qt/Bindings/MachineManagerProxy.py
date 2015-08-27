@@ -40,8 +40,7 @@ class MachineManagerProxy(QObject):
         if not instance:
             return False
 
-        variants = self._machine_manager.getAllMachineVariants(instance.getTypeID())
-        return len(variants) > 1
+        return instance.getMachineDefinition().hasVariants()
 
     @pyqtSlot(str)
     def setActiveMachineVariant(self, name):
