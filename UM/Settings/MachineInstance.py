@@ -17,6 +17,8 @@ class MachineInstance():
 
         self._name = kwargs.get("name", "")
         self._machine_definition = kwargs.get("definition", None)
+        if self._machine_definition:
+            self._machine_definition.loadAll()
         self._machine_setting_overrides = {}
 
     def getName(self):
@@ -65,6 +67,7 @@ class MachineInstance():
         variant_name = config.get("general", "variant", fallback = "")
 
         self._machine_definition = self._machine_manager.findMachineDefinition(type_name, variant_name)
+        self._machine_definition.loadAll()
 
         self._name = config.get("general", "name")
 
