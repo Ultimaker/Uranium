@@ -121,12 +121,9 @@ class Setting(SignalEmitter):
         if "always_visible" in data:
             self._hide_if_all_children_visible = not data["always_visible"]
 
-        inherit = data.get("inherit", "")
-        if inherit:
-            if inherit.tolower().trim() == "false":
-                self._inherit = False
-            else:
-                self._inherit_function = self._createFunction(inherit)
+        self._inherit = data.get("inherit", True)
+        if "inherit_function" in data:
+            self._inherit_function = self._createFunction(data["inherit_function"])
 
         min_value = None
         max_value = None
