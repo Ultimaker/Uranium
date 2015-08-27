@@ -406,40 +406,24 @@ class Setting(SignalEmitter):
         try:
             tree = ast.parse(code, "eval")
             names = _SettingExpressionVisitor().visit(tree)
-            code = compile(tree, self._key, "eval")
+            compiled = compile(code, self._key, "eval")
         except (SyntaxError, TypeError) as e:
             Logger.log("e", "Parse error in inherit function for setting {0}: {1}".format(self._key, str(e)))
         except IllegalMethodError as e:
             Logger.log("e", "Use of illegal method {0} in inherit function for setting {1}".format(str(e), self._key))
 
-        def local_function(parent, settings, c = code, n = names):
+        def local_function(parent, profile):
             locals = {
-                "parent_value": parent.getValue(),
-                "settings": settings
+                "parent_value": profile.getSettingValue(parent.getKey()),
+                "profile": profile
             }
 
             for name in names:
-                locals[name] = settings.getSettingValueByKey(name)
+                locals[name] = profile.getSettingValue(name)
 
-            return eval(c, globals(), locals)
+            return eval(compiled, globals(), locals)
 
-        return inherit
-
-
-    # Create a function that will run \param code, making the names in \param names available as local variables
-    #def _createInheritFunction(self, code, names):
-        #def inherit(parent, settings, c = code, n = names):
-            #locals = {
-                #"parent_value": parent.getValue(),
-                #"settings": settings
-            #}
-
-            #for name in names:
-                #locals[name] = settings.getSettingValueByKey(name)
-
-            #return eval(c, globals(), locals)
-
-
+        return local_function
 
 # Private AST visitor class used to look up names in the inheritance functions.
 class _SettingExpressionVisitor(ast.NodeVisitor):
