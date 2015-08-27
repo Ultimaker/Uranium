@@ -49,11 +49,11 @@ class MeshView(View):
             self._disabled_material.setUniformValue("u_overhangColor", Color(1.0, 0.0, 0.0, 1.0))
             self._disabled_material.setUniformValue("u_shininess", 20.)
 
-        if Application.getInstance().getMachineManager().getActiveMachineInstance():
-            machine = Application.getInstance().getMachineManager().getActiveMachineInstance()
+        if Application.getInstance().getMachineManager().getActiveProfile():
+            profile = Application.getInstance().getMachineManager().getActiveProfile()
 
-            if machine.getSettingValueByKey("support_enable"):
-                angle = machine.getSettingValueByKey("support_angle")
+            if profile.getSettingValue("support_enable"):
+                angle = profile.getSettingValue("support_angle")
                 if angle != None:
                     self._enabled_material.setUniformValue("u_overhangAngle", math.cos(math.radians(90 - angle)))
             else:
