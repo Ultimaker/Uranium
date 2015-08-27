@@ -3,6 +3,7 @@
 
 import json
 import collections
+import os.path
 from copy import deepcopy
 
 from UM.Resources import Resources
@@ -17,9 +18,10 @@ class MachineDefinition(SignalEmitter):
     UltimakerManufacturerString = "Ultimaker"
     OtherManufacturerString = "Other"
 
-    def __init__(self, machine_manager):
+    def __init__(self, machine_manager, path):
         self._machine_manager = machine_manager
 
+        self._path = path
         self._id = ""
         self._name = ""
         self._variant_name = None
@@ -32,6 +34,7 @@ class MachineDefinition(SignalEmitter):
         self._categories = []
 
         self._json_data = None
+        self._loaded = False
 
     settingsLoaded = Signal()
 
@@ -67,18 +70,18 @@ class MachineDefinition(SignalEmitter):
     def getPlatformTexture(self):
         return self._platform_texture
 
-    def loadMetaData(self, file_name):
+    def loadMetaData(self):
         clean_json = False
         if not self._json_data:
             clean_json = True
-            with open(file_name, "rt", -1, "utf-8") as f:
+            with open(self._path, "rt", -1, "utf-8") as f:
                 self._json_data = json.load(f, object_pairs_hook=collections.OrderedDict)
 
         if "id" not in self._json_data or "name" not in self._json_data or "version" not in self._json_data:
-            raise SettingsError.InvalidFileError(file_name)
+            raise SettingsError.InvalidFileError(self._path)
 
         if self._json_data["version"] != self.MachineDefinitionVersion:
-            raise SettingsError.InvalidVersionError(file_name)
+            raise SettingsError.InvalidVersionError(self._path)
 
         if self._machine_manager.getApplicationName() in self._json_data:
             app_data = self._json_data[self._machine_manager.getApplicationName()]
@@ -96,14 +99,17 @@ class MachineDefinition(SignalEmitter):
         if clean_json:
             self._json_data = None
 
-    def loadAll(self, file_name):
-        with open(file_name, "rt", -1, "utf-8") as f:
+    def loadAll(self):
+        if self._loaded:
+            return
+
+        with open(self._path, "rt", -1, "utf-8") as f:
             self._json_data = json.load(f, object_pairs_hook=collections.OrderedDict)
 
         if not self._name:
-            self.loadMetaData(file_name)
+            self.loadMetaData()
 
-        self._i18n_catalog = i18nCatalog(os.path.basename(file_name))
+        self._i18n_catalog = i18nCatalog(os.path.basename(self._path))
 
         self._platform_mesh = self._json_data.get("platform", "")
         self._platform_texture = self._json_data.get("platform_texture", "")
@@ -141,6 +147,7 @@ class MachineDefinition(SignalEmitter):
         self.settingsLoaded.emit()
 
         self._json_data = None
+        self._loaded = True
 
     ##  Get setting category by key
     #   \param key Category key to get.

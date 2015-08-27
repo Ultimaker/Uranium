@@ -194,9 +194,9 @@ class MachineManager(SignalEmitter):
                 if os.path.isdir(path):
                     continue
 
-                definition = MachineDefinition(self)
+                definition = MachineDefinition(self, path)
                 try:
-                    definition.loadMetaData(path)
+                    definition.loadMetaData()
                 except Exception as e:
                     Logger.log("e", "An error occurred loading Machine Definition %s: %s", path, str(e))
                     continue
