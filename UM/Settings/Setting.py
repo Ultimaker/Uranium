@@ -338,18 +338,6 @@ class Setting(SignalEmitter):
 
     ##  Set the value of this setting and emit valueChanged signal
     #   \param value Value to be set.
-    def setValue(self, value):
-        if self._value != value:
-            # Strings and enums are stored as strings, do not try to parse them.
-            # In addition, if we get a non-string type, also do not try to parse it.
-            if type(value) is str and self._type != "string" and self._type != "enum":
-                try:
-                    self._value = ast.literal_eval(value)
-                except SyntaxError:
-                    self._value = value
-            else:
-                self._value = value
-            self.valueChanged.emit(self)
 
     ##  Validate the value of this setting. 
     #   \returns ResultCodes.succes if there is no validator or if validation is succesfull. Returns warning or error code otherwise.
