@@ -26,7 +26,7 @@ class MachineInstance():
         if name != self._name:
             self._name = name
 
-    def getDefinition(self):
+    def getMachineDefinition(self):
         return self._machine_definition
 
     def setMachineSetting(self, setting, value):
