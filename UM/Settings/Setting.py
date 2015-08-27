@@ -45,7 +45,6 @@ class Setting(SignalEmitter):
         self._inherit = True
         self._inherit_function = None
 
-    valueChanged = Signal()
 
     ##  Triggered when all settings are loaded and the setting has a conditional param
     def activeIfHandler(self):
@@ -334,24 +333,8 @@ class Setting(SignalEmitter):
 
     ##  Get the effective value of the setting. This can be 'overriden' by a parent function if this function is invisible.
     #   \returns value
-    def getValue(self):
-        if not self._visible:
-            if self._inherit and self._parent and type(self._parent) is Setting:
-                if self._inherit_function:
-                    try:
-                        inherit_value = self._inherit_function(self._parent, self._machine_settings)
-                    except Exception as e:
-                        Logger.log("e", "An error occurred in inherit function for {0}: {1}".format(self._key, str(e)))
-                    else:
-                        self.setValue(inherit_value)
-                else:
-                    self.setValue(self._parent.getValue())
 
-        retval = self._value
-        if self._value is None:
-            retval = self._default_value
 
-        return retval
 
     ##  Set the value of this setting and emit valueChanged signal
     #   \param value Value to be set.
