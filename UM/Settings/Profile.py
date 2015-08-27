@@ -5,6 +5,7 @@ import configparser
 
 from UM.Signal import Signal, SignalEmitter
 from UM.Settings import SettingsError
+from UM.Logger import Logger
 
 class Profile(SignalEmitter):
     ProfileVersion = 1
@@ -53,7 +54,29 @@ class Profile(SignalEmitter):
 
     def getChangedSettings(self):
         return self._changed_settings
-    
+
+    def getAllSettingValues(self, **kwargs):
+        values = { }
+
+        if not self._active_instance:
+            return values
+
+        settings = self._active_instance.getMachineDefinition().getAllSettings(include_machine = kwargs.get("include_machine", False))
+
+        for setting in settings:
+            key = setting.getKey()
+
+            if key in self._changed_settings:
+                values[key] = self._changed_settings[key]
+                continue
+
+            if self._active_instance.hasMachineSettingValue(key):
+                values[key] = self._active_instance.getMachineSettingValue(key)
+
+            values[key] = setting.getDefaultValue()
+
+        return values
+
     def loadFromFile(self, path):
         parser = configparser.ConfigParser()
         parser.read(path)
