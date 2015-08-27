@@ -50,6 +50,7 @@ class MachineDefinitionsModel(ListModel):
 
         instance = MachineInstance(self._manager, name = name, definition = definition)
         self._manager.addMachineInstance(instance)
+        self._manager.setActiveMachineInstance(instance)
 
     def _onMachinesChanged(self):
         self.clear()
