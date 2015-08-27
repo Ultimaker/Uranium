@@ -270,10 +270,6 @@ class Setting(SignalEmitter):
 
     ##  Set the range of the setting. The validator will give errors or warnings if these are met.
     #   See Validator for more info
-    def setRange(self, min_value = None, max_value = None, min_value_warning = None, max_value_warning = None):
-        if(self._validator is None):
-            return
-        self._validator.setRange(min_value, max_value, min_value_warning, max_value_warning)
 
     ##  Get the display name of the setting
     def getLabel(self):
