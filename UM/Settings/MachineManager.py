@@ -262,7 +262,7 @@ class MachineManager(SignalEmitter):
             self.setActiveProfile(profile)
 
     def loadVisibility(self):
-        preference = Preferences.getInstance().getValue("general/setting_visibility")
+        preference = Preferences.getInstance().getValue("machines/setting_visibility")
         if not preference or not self._active_machine:
             return
 
