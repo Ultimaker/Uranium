@@ -47,35 +47,9 @@ class Setting(SignalEmitter):
 
 
     ##  Triggered when all settings are loaded and the setting has a conditional param
-    def activeIfHandler(self):
-        setting = self._machine_settings.getSettingByKey(self._active_if_setting)
-        if setting is not None:
-            setting.valueChanged.connect(self.conditionalActiveHandler)
-            self.conditionalActiveHandler(setting)
-        else:
-            Logger.log("w", "Unknown active_if setting %s", self._active_if_setting)
-            # Check current value and update active status. (It can happen that the default value is that it's not active)
-            #self.setActive(str(self._machine_settings.getSettingValueByKey(self._active_if_setting)) == str(self._active_if_value))
-
-    #   Triggered when the setting it's dependant on changes it's value
-    def conditionalActiveHandler(self, setting):
-        self.setActive(setting.getValue() == self._active_if_value)
-
-    def isActive(self):
-        return self._active
-        #if self._parent != None:
-        #   if self._parent.isActive() == True:
-        #        return self._active
         #else:
-        #    return self._active
-        #return False    
 
-    def setActive(self, active):
-        if self._active != active: 
-            self._active = active
-            self.activeChanged.emit(self)
 
-    activeChanged = Signal()
 
     ##  Bind new validator to object based on it's current type
     def bindValidator(self):
