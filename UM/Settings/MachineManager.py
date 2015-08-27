@@ -32,6 +32,9 @@ class MachineManager(SignalEmitter):
         self._active_profile = None
 
         Preferences.getInstance().addPreference("machines/setting_visibility", "")
+        Preferences.getInstance().addPreference("machines/active_instance", "")
+        Preferences.getInstance().addPreference("machines/active_profile", "")
+
     def getApplicationName(self):
         return self._application_name
 
@@ -127,6 +130,8 @@ class MachineManager(SignalEmitter):
 
         self._updateSettingVisibility(setting_visibility)
 
+        Preferences.getInstance().setValue("machines/active_instance", self._active_machine.getName())
+
         self.activeMachineInstanceChanged.emit()
 
     activeMachineInstanceChanged = Signal()
@@ -169,6 +174,9 @@ class MachineManager(SignalEmitter):
         self._active_profile = profile
         if self._active_machine:
             self._active_machine.setActiveProfile(profile)
+
+        Preferences.getInstance().setValue("machines/active_profile", self._active_profile.getName())
+
         self.activeProfileChanged.emit()
 
     def loadAll(self):
@@ -222,6 +230,10 @@ class MachineManager(SignalEmitter):
 
                 self._machine_instances.append(instance)
 
+        instance = self.findMachineInstance(Preferences.getInstance().getValue("machines/active_instance"))
+        if instance:
+            self.setActiveMachineInstance(instance)
+
         self.machineInstancesChanged.emit()
 
     def loadProfiles(self):
@@ -244,6 +256,10 @@ class MachineManager(SignalEmitter):
                     continue
 
                 self._profiles.append(profile)
+
+        profile = self.findProfile(Preferences.getInstance().getValue("machines/active_profile"))
+        if profile:
+            self.setActiveProfile(profile)
 
     def loadVisibility(self):
         preference = Preferences.getInstance().getValue("general/setting_visibility")
