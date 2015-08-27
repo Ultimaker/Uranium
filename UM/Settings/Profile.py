@@ -77,6 +77,15 @@ class Profile(SignalEmitter):
 
         return values
 
+    def hasErrorValue(self):
+        return False
+
+    def hasWarningValue(self):
+        return False
+
+    def hasSettingValue(self, key):
+        return key in self._changed_settings
+
     def loadFromFile(self, path):
         parser = configparser.ConfigParser()
         parser.read(path, "utf-8")
