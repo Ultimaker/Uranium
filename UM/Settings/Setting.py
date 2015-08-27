@@ -250,6 +250,18 @@ class Setting(SignalEmitter):
     ##  get the default value of the setting.
     #   \returns default_value
     def getDefaultValue(self):
+        if not self._visible:
+            if self._inherit and self._parent and type(self._parent) is Setting:
+                if self._inherit_function:
+                    try:
+                        inherit_value = self._inherit_function(self._parent, self._profile)
+                    except Exception as e:
+                        Logger.log("e", "An error occurred in inherit function for {0}: {1}".format(self._key, str(e)))
+                    else:
+                        return inherit_value
+                else:
+                    return self._parent.getDefaultValue()
+
         return self._default_value
 
     ##  Set the visibility of this setting. See setParent for more info.
