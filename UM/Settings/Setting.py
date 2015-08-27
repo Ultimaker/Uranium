@@ -26,22 +26,22 @@ class Setting(SignalEmitter):
         self._i18n_catalog = catalog
 
         self._label = kwargs.get("label", key)
-        self._description = kwargs.get("description", "")
-        self._default_value = kwargs.get("default", None)
-        self._value = kwargs.get("value", None)
         self._type = kwargs.get("type", "string")
-        self._visible = kwargs.get("visible", True)
+        self._category = kwargs.get("category", None)
+        self._profile = kwargs.get("profile", None)
+
+        self._description = ""
+        self._warning_description = ""
+        self._error_description = ""
+        self._default_value = None
+        self._visible = True
         self._validator = None
         self._parent = None
         self._hide_if_all_children_visible = True
         self._children = []
-        self._category = kwargs.get("category", None)
-        self._active = True
-        self._machine_settings = self._category.getParent() if self._category else None
-        self._active_if_setting = None
-        self._active_if_value = None
-        self._options = kwargs.get("options", [])
-        self._unit = kwargs.get("unit", "")
+        self._enabled = None
+        self._options = {}
+        self._unit = ""
         self._inherit = True
         self._inherit_function = None
 
@@ -367,26 +367,26 @@ class Setting(SignalEmitter):
             self._key,
             self._i18n_catalog,
             label = self._label,
-            description = self._description,
-            default = self._default_value,
-            value = self._value,
-            type = self._type,
-            visible = self._visible,
-            category = self._category,
-            unit = self._unit
+            type = self._type
         )
 
-        copy._validator = self._validator
+        copy._description = self._description
+        copy._default_value = self._default_value
+        copy._visible = self._visible
+        copy._category = self._category
+        copy._unit = self._unit
+        copy._validator = deepcopy(self._validator, memo)
         copy._parent = self._parent
         copy._hide_if_all_children_visible = self._hide_if_all_children_visible
         copy._children = deepcopy(self._children, memo)
-        copy._active = self._active
-        copy._machine_settings = self._machine_settings
-        copy._active_if_setting = self._active_if_setting
-        copy._active_if_value = self._active_if_value
         copy._options = deepcopy(self._options, memo)
         copy._inherit = self._inherit
         copy._inherit_function = deepcopy(self._inherit_function, memo)
+
+        copy._warning_description = self._warning_description
+        copy._error_description = self._error_description
+        copy._enabled = deepcopy(self._enabled, memo)
+
 
         copy._fixChildren()
 
