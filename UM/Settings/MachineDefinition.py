@@ -9,6 +9,8 @@ from copy import deepcopy
 from UM.Resources import Resources
 from UM.Signal import Signal, SignalEmitter
 from UM.Settings import SettingsError
+from UM.Settings.Setting import Setting
+from UM.Settings.SettingsCategory import SettingsCategory
 
 from UM.i18n import i18nCatalog
 uranium_catalog = i18nCatalog("uranium")
@@ -115,29 +117,30 @@ class MachineDefinition(SignalEmitter):
         self._platform_texture = self._json_data.get("platform_texture", "")
 
         if "inherits" in self._json_data:
-            inherits_from = self._machine_manager.findMachineDefinition(self._json_data["inherits"])
+            inherits_from = MachineDefinition(self._machine_manager, Resources.getPath(Resources.MachineDefinitions, self._json_data["inherits"]))
+            inherits_from.loadAll()
 
-            self._machine_settings = deepcopy(inherits_from._machine_settings)
-            self._categories = deepcopy(inherits_from._categories)
+            self._machine_settings = inherits_from._machine_settings
+            self._categories = inherits_from._categories
 
-        if "machine_settings" in data:
-            for key, value in data["machine_settings"].items():
+        if "machine_settings" in self._json_data:
+            for key, value in self._json_data["machine_settings"].items():
                 setting = self.getSettingByKey(key)
                 if not setting:
                     setting = Setting(key, self._i18n_catalog)
                     self._machine_settings.append(setting)
                 setting.fillByDict(value)
 
-        if "categories" in data:
-            for key, value in data["categories"].items():
+        if "categories" in self._json_data:
+            for key, value in self._json_data["categories"].items():
                 category = self.getSettingsCategory(key)
                 if not category:
                     category = SettingsCategory(key, self._i18n_catalog, self)
                     self._categories.append(category)
                 category.fillByDict(value)
 
-        if "overrides" in data:
-            for key, value in data["overrides"].items():
+        if "overrides" in self._json_data:
+            for key, value in self._json_data["overrides"].items():
                 setting = self.getSettingByKey(key)
                 if not setting:
                     continue
