@@ -315,11 +315,12 @@ class Setting(SignalEmitter):
     ##  Set the value of this setting and emit valueChanged signal
     #   \param value Value to be set.
 
-    ##  Validate the value of this setting. 
+    ##  Validate a value using this Setting
+    #   \param value The value to validate
     #   \returns ResultCodes.succes if there is no validator or if validation is succesfull. Returns warning or error code otherwise.
-    def validate(self):
+    def validate(self, value):
         if self._validator is not None:
-            return self._validator.validate()
+            return self._validator.validate(value)
         else:
             return ResultCodes.succes
 

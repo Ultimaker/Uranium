@@ -19,7 +19,7 @@ class Validator(object):
         return self._setting
     
     ## Do the validation.
-    def validate(self):
+    def validate(self, value):
         raise NotImplementedError("Validator was not correctly implemented")
     
     ## Check if provided value is within range. 
