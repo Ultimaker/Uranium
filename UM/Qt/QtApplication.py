@@ -122,7 +122,7 @@ class QtApplication(QApplication, Application, SignalEmitter):
         Bindings.register()
 
         self._engine = QQmlApplicationEngine()
-        self.engineCreatedSignal.emit()
+
         
         self._engine.addImportPath(os.path.join(os.path.dirname(sys.executable), "qml"))
         self._engine.addImportPath(os.path.join(Application.getInstallPrefix(), "Resources", "qml"))
@@ -132,6 +132,7 @@ class QtApplication(QApplication, Application, SignalEmitter):
         self.registerObjects(self._engine)
         
         self._engine.load(self._main_qml)
+        self.engineCreatedSignal.emit()
     
     engineCreatedSignal = Signal()
     
