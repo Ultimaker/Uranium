@@ -5,15 +5,17 @@
 from UM.Extension import Extension
 from UM.Logger import Logger
 from UM.i18n import i18nCatalog
+from UM.Application import Application
+from UM.Message import Message
+from UM.Version import Version
+
 import urllib.request
 import platform
-from UM.Application import Application
 import json
 import codecs
 import webbrowser
 from threading import Thread
-from UM.Message import Message
-from UM.Version import Version
+
         
 i18n_catalog = i18nCatalog("uranium")
 
