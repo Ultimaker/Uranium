@@ -6,7 +6,8 @@ import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.1
 
-import ".." as UM
+//import ".." as UM
+import UM 1.1 as UM
 
 ComboBox
 {
@@ -43,29 +44,33 @@ ComboBox
         label: Item {
             Label {
                 anchors.left: parent.left;
-                anchors.leftMargin: itemStyle.controlBorderWidth * 2;
+                anchors.leftMargin: itemStyle.controlBorderWidth
                 anchors.right: downArrow.left;
                 anchors.rightMargin: itemStyle.controlBorderWidth;
                 anchors.verticalCenter: parent.verticalCenter;
 
                 text: control.currentText;
                 font: itemStyle.controlFont;
+                color: itemStyle.controlTextColor;
 
                 elide: Text.ElideRight;
                 verticalAlignment: Text.AlignVCenter;
             }
 
-            Label {
-                id: downArrow;
-
+            UM.RecolorImage {
+                id: downArrow
                 anchors.right: parent.right;
                 anchors.rightMargin: itemStyle.controlBorderWidth * 2;
                 anchors.verticalCenter: parent.verticalCenter;
 
-                color: itemStyle.controlBorderColor;
-                font: itemStyle.controlFont;
+                source: UM.Theme.icons.arrow_bottom
+                width: UM.Theme.sizes.standard_arrow.width
+                height: UM.Theme.sizes.standard_arrow.height
+                sourceSize.width: width + 5
+                sourceSize.height: width + 5
 
-                text: "▼";
+                color: itemStyle.controlTextColor;
+
             }
         }
     }

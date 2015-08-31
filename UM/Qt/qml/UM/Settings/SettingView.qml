@@ -25,7 +25,7 @@ ScrollView
     {
         UM.I18nCatalog { id: catalog; name:"uranium"}
         id: contents
-        spacing: UM.Theme.sizes.default_margin.height;
+        spacing: UM.Theme.sizes.default_lining.height;
 
         Repeater
         {
@@ -34,7 +34,6 @@ ScrollView
             delegate: Item
             {
                 id: delegateItem;
-
                 width: childrenRect.width;
                 height: childrenRect.height;
 
@@ -46,7 +45,7 @@ ScrollView
                 {
                     id: categoryHeader;
                     activeFocusOnTab: false
-                    width: base.viewport.width;
+                    width: UM.Theme.sizes.sidebar.width;
                     height: UM.Theme.sizes.section.height;
 
                     text: model.name;
@@ -75,11 +74,9 @@ ScrollView
                     id: settings;
 
                     anchors.top: categoryHeader.bottom;
-                    anchors.topMargin: 0;
 
                     height: 0;
-                    width: UM.Theme.sizes.setting.width;
-                    spacing: UM.Theme.sizes.default_margin.height;
+                    spacing: 0
                     opacity: 0;
 
                     property real childrenHeight:
@@ -108,9 +105,9 @@ ScrollView
                         {
                             id: item;
 
-                            width: UM.Theme.sizes.setting.width;
+                            width: UM.Theme.sizes.sidebar.width - UM.Theme.sizes.default_margin.width * 2
 
-                            height: model.visible ? UM.Theme.sizes.setting.height : 0;
+                            height: model.visible ? UM.Theme.sizes.setting.height +  UM.Theme.sizes.default_lining.height : 0;
                             Behavior on height { NumberAnimation { duration: 75; } }
                             opacity: model.visible ? 1 : 0;
                             Behavior on opacity { NumberAnimation { duration: 75; } }
@@ -124,6 +121,7 @@ ScrollView
                             value: model.value;
                             unit: model.unit;
                             valid: model.valid;
+                            depth: model.depth
                             type: model.type;
                             options: model.type == "enum" ? model.options : null;
                             key: model.key;
@@ -170,7 +168,7 @@ ScrollView
                             target: settings;
                             opacity: 1;
                             height: settings.childrenHeight;
-                            anchors.topMargin: UM.Theme.sizes.default_margin.height;
+                            //anchors.topMargin: UM.Theme.sizes.default_margin.height;
                         }
                     }
 
@@ -183,7 +181,7 @@ ScrollView
                             ParallelAnimation
                             {
                                 NumberAnimation { property: "height"; duration: 75; }
-                                NumberAnimation { property: "anchors.topMargin"; duration: 75; }
+                                //NumberAnimation { property: "anchors.topMargin"; duration: 75; }
                             }
                             NumberAnimation { property: "opacity"; duration: 75; }
                         }

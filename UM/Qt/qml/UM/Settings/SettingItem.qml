@@ -8,7 +8,7 @@ import QtQuick.Controls.Styles 1.1
 
 import UM 1.0 as UM
 
-Item {
+Rectangle {
     id: base;
 
     property string name;
@@ -17,6 +17,7 @@ Item {
     property string unit;
     property int valid;
     property string type;
+    property int depth;
 
     property variant options;
     property int index;
@@ -66,18 +67,18 @@ Item {
         id: label;
 
         anchors.left: parent.left;
+        anchors.leftMargin: UM.Theme.sizes.section_icon_column.width + 5
         anchors.right: controlContainer.left;
         anchors.rightMargin: base.style.spacing;
+        anchors.verticalCenter: parent.verticalCenter
 
-        height: base.style.fixedHeight > 0 ? base.style.fixedHeight : parent.height;
-
-        horizontalAlignment: Text.AlignRight;
+        height: UM.Theme.sizes.section.height;
         verticalAlignment: Text.AlignVCenter;
 
         text: base.name
         elide: Text.ElideMiddle;
 
-        color: base.style.labelColor;
+        color: base.style.controlTextColor;
         font: base.style.labelFont;
     }
 
@@ -85,12 +86,12 @@ Item {
         id: controlContainer;
 
         anchors.right: parent.right;
-        anchors.rightMargin: base.style.controlRightMargin;
+        anchors.verticalCenter: parent.verticalCenter
 
         width: base.style.controlWidth;
         height: base.style.fixedHeight > 0 ? base.style.fixedHeight : parent.height;
 
-        property variant itemStyle: base.style;
+        property variant itemStyle: base.style
 
         source:
         {
