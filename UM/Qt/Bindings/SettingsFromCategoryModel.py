@@ -19,6 +19,7 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
     UnitRole = Qt.UserRole + 7
     DescriptionRole = Qt.UserRole + 8
     VisibleRole = Qt.UserRole + 9
+    DepthRole = Qt.UserRole + 10
     
     def __init__(self, category, parent = None):
         super().__init__(parent)
@@ -35,7 +36,8 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
         self.addRoleName(self.UnitRole,"unit")
         self.addRoleName(self.DescriptionRole, "description")
         self.addRoleName(self.VisibleRole, "visible")
-    
+        self.addRoleName(self.DepthRole,"depth")
+
     settingChanged = Signal()
 
     @pyqtSlot(int, str, "QVariant")
@@ -75,7 +77,8 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
                 "key": setting.getKey(),
                 "options": self.createOptionsModel(setting.getOptions()),
                 "unit": setting.getUnit(),
-                "visible": (setting.isVisible() and setting.isActive())
+                "visible": (setting.isVisible() and setting.isActive()),
+                "depth": setting.getDepth()
             })
             setting.visibleChanged.connect(self._onSettingChanged)
             setting.activeChanged.connect(self._onSettingChanged)
