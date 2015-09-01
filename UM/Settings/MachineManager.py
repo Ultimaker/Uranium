@@ -269,10 +269,14 @@ class MachineManager(SignalEmitter):
         self.machineInstancesChanged.emit()
 
     def loadProfiles(self):
+        storage_path = Resources.getStoragePathForType(Resources.Profiles)
+
         dirs = Resources.getAllPathsForType(Resources.Profiles)
         for dir in dirs:
             if not os.path.isdir(dir):
                 continue
+
+            read_only = dir != storage_path
 
             for file_name in os.listdir(dir):
                 path = os.path.join(dir, file_name)
@@ -280,7 +284,7 @@ class MachineManager(SignalEmitter):
                 if os.path.isdir(path):
                     continue
 
-                profile = Profile(self)
+                profile = Profile(self, read_only)
                 try:
                     profile.loadFromFile(path)
                 except Exception as e:
@@ -316,6 +320,9 @@ class MachineManager(SignalEmitter):
 
     def saveProfiles(self):
         for profile in self._profiles:
+            if profile.isReadOnly():
+                continue
+
             file_name = urllib.parse.quote_plus(profile.getName()) + ".cfg"
             profile.saveToFile(Resources.getStoragePath(Resources.Profiles, file_name))
 
@@ -346,6 +353,8 @@ class MachineManager(SignalEmitter):
             path = Resources.getStoragePath(Resources.MachineInstances, file_name)
             os.remove(path)
         except FileNotFoundError:
+            pass
+
         self.machineInstanceNameChanged.emit(instance)
 
     def _onProfileNameChanged(self, profile, old_name):
