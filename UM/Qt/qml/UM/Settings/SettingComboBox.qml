@@ -77,6 +77,6 @@ ComboBox
     }
 
     onActivated: {
-        valueChanged(options.getItem(index).name);
+        valueChanged(options.getItem(index).value);
     }
 }
