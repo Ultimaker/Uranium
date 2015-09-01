@@ -15,6 +15,7 @@ class SettingCategoriesModel(ListModel):
     IconRole = Qt.UserRole + 3
     VisibleRole = Qt.UserRole + 4
     SettingsRole = Qt.UserRole + 5
+    HiddenOverriddenSettingCountRole = Qt.UserRole + 6
 
     def __init__(self, parent = None):
         super().__init__(parent)
@@ -22,11 +23,14 @@ class SettingCategoriesModel(ListModel):
         Application.getInstance().getMachineManager().activeMachineInstanceChanged.connect(self._onActiveMachineChanged)
         self._onActiveMachineChanged()
 
+        Application.getInstance().getMachineManager().activeProfileChanged.connect(self._onActiveProfileChanged)
+
         self.addRoleName(self.IdRole, "id")
         self.addRoleName(self.NameRole, "name")
         self.addRoleName(self.IconRole, "icon")
         self.addRoleName(self.VisibleRole, "visible")
         self.addRoleName(self.SettingsRole, "settings")
+        self.addRoleName(self.HiddenOverriddenSettingCountRole, "hiddenOverriddenSettingsCount") # Probably need a better name for this
 
     def _onActiveMachineChanged(self):
         self.clear()
@@ -43,10 +47,17 @@ class SettingCategoriesModel(ListModel):
                     "name": category.getLabel(),
                     "icon": category.getIcon(),
                     "visible": category.isVisible(),
-                    "settings": SettingsFromCategoryModel.SettingsFromCategoryModel(category)
+                    "settings": SettingsFromCategoryModel.SettingsFromCategoryModel(category),
+                    "hiddenOverriddenSettingsCount": category.getHiddenOverriddenSettingsCount()
                 })
                 category.visibleChanged.connect(self._onCategoryVisibleChanged)
 
     def _onCategoryVisibleChanged(self, category):
         index = self.find("id", category.getKey())
         self.setProperty(index, "visible", category.isVisible())
+        self.setProperty(index, "hiddenOverriddenSettingsCount", category.getHiddenOverriddenSettingsCount())
+
+    def _onActiveProfileChanged(self):
+        for category in self._machine_instance.getMachineDefinition().getAllCategories():
+            index = self.find("id", category.getKey())
+            self.setProperty(index, "hiddenOverriddenSettingsCount", category.getHiddenOverriddenSettingsCount())
