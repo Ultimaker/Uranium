@@ -10,7 +10,7 @@ import UM 1.0 as UM
 Window {
     id: base
 
-    modality: Qt.WindowModal;
+    modality: Qt.ApplicationModal;
     flags: Qt.Dialog;
 
     width: Screen.devicePixelRatio * 640;
