@@ -62,7 +62,7 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
     ##  Notification that setting has changed.  
     def setSettingValue(self, index, key, value):
         setting = self._category.getSetting(key)
-        if setting and value:
+        if setting:
             if self._profile.isReadOnly():
                 custom_profile_name = catalog.i18nc("@item appended to customised profiles ({0} is old profile name)", "{0} (Customised)", self._profile.getName())
 
