@@ -8,6 +8,7 @@ from UM.Math.AxisAlignedBox import AxisAlignedBox
 from UM.Signal import Signal, SignalEmitter
 from UM.Job import Job
 from UM.Mesh.MeshData import MeshData
+from UM.Logger import Logger
 from copy import copy, deepcopy
 
 import math
@@ -157,6 +158,7 @@ class SceneNode(SignalEmitter):
                 try:
                     return getattr(decorator, function)(*args, **kwargs)
                 except Exception as e:
+                    Logger.log("e", "Exception calling decoration %s: %s", str(function), str(e))
                     return None
     
     def hasDecoration(self, function):
