@@ -15,13 +15,10 @@ class ListModel(QAbstractListModel):
         self._items = []
         self._role_names = {}
 
-        self.rowsInserted.connect(self.countChanged)
-        self.rowsRemoved.connect(self.countChanged)
 
-    countChanged = pyqtSignal()
-    @pyqtProperty(int, notify = countChanged)
-    def count(self):
-        return self.rowCount()
+    # While it would be nice to expose rowCount() as a count property so
+    # far implementing that only causes crashes due to an infinite recursion
+    # in PyQt.
 
     ##  Reimplemented from QAbstractListModel
     @pyqtSlot(result=int)
