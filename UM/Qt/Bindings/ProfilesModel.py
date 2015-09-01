@@ -44,6 +44,21 @@ class ProfilesModel(ListModel):
     def selectGlobal(self):
         return self._select_global
 
+    @pyqtSlot(str)
+    def removeProfile(self, name):
+        profile = self._manager.findProfile(name)
+        if not profile:
+            return
+
+        self._manager.removeProfile(profile)
+
+    @pyqtSlot(str, str)
+    def renameProfile(self, old_name, new_name):
+        profile = self._manager.findProfile(old_name)
+        if not profile:
+            return
+
+        profile.setName(new_name)
     def _onProfilesChanged(self):
         self.clear()
 
