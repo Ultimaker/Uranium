@@ -90,6 +90,13 @@ class Profile(SignalEmitter):
     def hasSettingValue(self, key):
         return key in self._changed_settings
 
+    def resetSettingValue(self, key):
+        if key not in self._changed_settings:
+            return
+
+        del self._changed_settings[key]
+        self.settingValueChanged.emit(key)
+
     def loadFromFile(self, path):
         parser = configparser.ConfigParser()
         parser.read(path, "utf-8")
