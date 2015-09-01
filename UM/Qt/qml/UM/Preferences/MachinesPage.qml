@@ -9,7 +9,7 @@ import UM 1.1 as UM
 ManagementPage {
     id: base;
 
-    title: catalog.i18nc("@title", "Machines");
+    title: catalog.i18nc("@title:window", "Machines");
 
     model: UM.MachineInstancesModel { }
 

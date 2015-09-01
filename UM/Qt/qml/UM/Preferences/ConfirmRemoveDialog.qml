@@ -13,7 +13,7 @@ MessageDialog
     property string object: "";
 
     icon: StandardIcon.Question;
-    title: catalog.i18nc("@title", "Confirm Remove");
+    title: catalog.i18nc("@title:window", "Confirm Remove");
     text: catalog.i18nc("@label (%1 is object name)", "Are you sure you wish to remove %1? This cannot be undone!").arg(object);
     standardButtons: StandardButton.Yes | StandardButton.No;
     modality: Qt.ApplicationModal;

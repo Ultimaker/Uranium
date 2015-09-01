@@ -54,7 +54,7 @@ Item {
                     width: UM.Theme.sizes.setting.width;
                     height: UM.Theme.sizes.setting.height;
 
-                    name: "Profile"
+                    name: catalog.i18nc("@label", "Profile")
                     type: "enum"
 
                     style: UM.Theme.styles.setting_item;
@@ -103,7 +103,7 @@ Item {
                 }
 
                 Button {
-                    text: "+ Override Setting";
+                    text: catalog.i18nc("@action:button", "Override Profile");
 
                     style: ButtonStyle {
                         background: Item { }
@@ -115,15 +115,10 @@ Item {
 
                     onClicked: settingPickDialog.visible = true;
                 }
-
-                Button {
-                    text: "Close";
-                    onClicked: {
-                        settingsPanel.opacity = 0;
-                    }
-                }
             }
         }
+
+        UM.I18nCatalog { id: catalog; name: "uranium"; }
     }
 
     Repeater {
@@ -167,7 +162,7 @@ Item {
     UM.Dialog {
         id: settingPickDialog
 
-        title: "Pick a Setting to Override"
+        title: catalog.i18nc("@title:window", "Pick a Setting to Override")
 
         ScrollView {
             anchors.fill: parent;
@@ -243,7 +238,7 @@ Item {
 
         rightButtons: [
             Button {
-                text: "Cancel";
+                text: catalog.i18nc("@action:button", "Cancel");
                 onClicked: {
                     settingPickDialog.visible = false;
                 }

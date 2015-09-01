@@ -53,7 +53,7 @@ PreferencesPage {
         }
         Button {
             id: renameButton;
-            text: "Rename";
+            text: catalog.i18nc("@action:button", "Rename");
             iconName: "edit-rename";
             onClicked: base.renameObject();
         }

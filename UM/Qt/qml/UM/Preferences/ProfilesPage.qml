@@ -10,7 +10,7 @@ import UM 1.1 as UM
 ManagementPage {
     id: base;
 
-    title: catalog.i18nc("@title", "Profiles");
+    title: catalog.i18nc("@title:window", "Profiles");
 
     detailsVisible: false;
 
@@ -47,7 +47,7 @@ ManagementPage {
 
         FileDialog {
             id: importDialog;
-            title: catalog.i18nc("@title", "Import Profile");
+            title: catalog.i18nc("@title:window", "Import Profile");
             selectExisting: true;
             nameFilters: [ catalog.i18nc("@item:inlistbox", "Cura Profiles (*.curaprofile)"), catalog.i18nc("@item:inlistbox", "All Files (*)") ]
 
@@ -56,7 +56,7 @@ ManagementPage {
 
         FileDialog {
             id: exportDialog;
-            title: catalog.i18nc("@title", "Export Profile");
+            title: catalog.i18nc("@title:window", "Export Profile");
             selectExisting: false;
             nameFilters: [ catalog.i18nc("@item:inlistbox", "Cura Profiles (*.curaprofile)") ]
 

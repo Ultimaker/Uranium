@@ -15,7 +15,7 @@ Dialog
 
     property alias newName: nameField.text;
 
-    title: catalog.i18nc("@title", "Rename");
+    title: catalog.i18nc("@title:window", "Rename");
     standardButtons: StandardButton.Ok | StandardButton.Cancel;
     modality: Qt.ApplicationModal;
 
