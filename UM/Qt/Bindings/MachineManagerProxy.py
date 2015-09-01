@@ -45,9 +45,17 @@ class MachineManagerProxy(QObject):
 
         return instance.getMachineDefinition().hasVariants()
 
+    @pyqtProperty(str, notify = activeMachineInstanceChanged)
+    def activeMachineVariant(self):
+        instance = self._manager.getActiveMachineInstance()
+        if not instance:
+            return ""
+
+        return instance.getMachineDefinition().getVariantName()
+
     @pyqtSlot(str)
     def setActiveMachineVariant(self, name):
-        pass
+        self._manager.setActiveMachineVariant(name)
 
     activeProfileChanged = pyqtSignal()
     @pyqtProperty(str, notify = activeProfileChanged)
