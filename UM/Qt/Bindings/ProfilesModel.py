@@ -29,6 +29,7 @@ class ProfilesModel(ListModel):
 
         self._manager.profilesChanged.connect(self._onProfilesChanged)
         self._manager.activeProfileChanged.connect(self._onActiveProfileChanged)
+        self._manager.profileNameChanged.connect(self._onProfileNameChanged)
         self._onProfilesChanged()
 
     selectGlobalChanged = pyqtSignal()
@@ -69,3 +70,7 @@ class ProfilesModel(ListModel):
         for index in range(len(self.items)):
             self.setProperty(index, "active", id(active_profile) == self.items[index]["id"])
 
+    def _onProfileNameChanged(self, profile):
+        index = self.find("id", id(profile))
+        if index != -1:
+            self.setProperty(index, "name", profile.getName())
