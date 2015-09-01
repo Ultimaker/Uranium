@@ -15,7 +15,7 @@ class SettingCategoriesModel(ListModel):
     IconRole = Qt.UserRole + 3
     VisibleRole = Qt.UserRole + 4
     SettingsRole = Qt.UserRole + 5
-    HiddenOverriddenSettingCountRole = Qt.UserRole + 6
+    HiddenValuesCountRole = Qt.UserRole + 6 # See SettingsCategory::getHiddenValuesCount()
 
     def __init__(self, parent = None):
         super().__init__(parent)
@@ -30,7 +30,7 @@ class SettingCategoriesModel(ListModel):
         self.addRoleName(self.IconRole, "icon")
         self.addRoleName(self.VisibleRole, "visible")
         self.addRoleName(self.SettingsRole, "settings")
-        self.addRoleName(self.HiddenOverriddenSettingCountRole, "hiddenOverriddenSettingsCount") # Probably need a better name for this
+        self.addRoleName(self.HiddenValuesCountRole, "hiddenValuesCount") # Probably need a better name for this
 
     def _onActiveMachineChanged(self):
         self.clear()
@@ -48,16 +48,16 @@ class SettingCategoriesModel(ListModel):
                     "icon": category.getIcon(),
                     "visible": category.isVisible(),
                     "settings": SettingsFromCategoryModel.SettingsFromCategoryModel(category),
-                    "hiddenOverriddenSettingsCount": category.getHiddenOverriddenSettingsCount()
+                    "hiddenValuesCount": category.getHiddenValuesCount()
                 })
                 category.visibleChanged.connect(self._onCategoryVisibleChanged)
 
     def _onCategoryVisibleChanged(self, category):
         index = self.find("id", category.getKey())
         self.setProperty(index, "visible", category.isVisible())
-        self.setProperty(index, "hiddenOverriddenSettingsCount", category.getHiddenOverriddenSettingsCount())
+        self.setProperty(index, "hiddenValuesCount", category.getHiddenValuesCount())
 
     def _onActiveProfileChanged(self):
         for category in self._machine_instance.getMachineDefinition().getAllCategories():
             index = self.find("id", category.getKey())
-            self.setProperty(index, "hiddenOverriddenSettingsCount", category.getHiddenOverriddenSettingsCount())
+            self.setProperty(index, "hiddenValuesCount", category.getHiddenValuesCount())

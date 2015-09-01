@@ -63,13 +63,14 @@ class SettingsCategory(SignalEmitter):
 
     def isVisible(self):
         if self._visible:
-            return self._children_visible or self.getHiddenOverriddenSettingsCount() != 0
+            return self._children_visible or self.getHiddenValuesCount() != 0
 
         return False
 
     visibleChanged = Signal()
 
-    def getHiddenOverriddenSettingsCount(self):
+    ##  Get the number of settings in this category that are not visible and have a custom value set.
+    def getHiddenValuesCount(self):
         count = 0
         for setting in self.getAllSettings():
             if not setting.isVisible() and self._machine_manager.getActiveProfile().hasSettingValue(setting.getKey()):

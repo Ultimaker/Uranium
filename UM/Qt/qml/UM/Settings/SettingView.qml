@@ -75,7 +75,7 @@ ScrollView
                     width: categoryHeader.width;
                     horizontalAlignment: Text.AlignHCenter;
 
-                    text: catalog.i18ncp("@label", "{0} hidden setting uses a custom value", "{0} hidden settings use custom values", model.hiddenOverriddenSettingsCount);
+                    text: catalog.i18ncp("@label", "{0} hidden setting uses a custom value", "{0} hidden settings use custom values", model.hiddenValuesCount);
 
                     opacity: model.hiddenOverriddenSettingsCount > 0 ? 1 : 0;
                     height: model.hiddenOverriddenSettingsCount > 0 ? 20 : 0;
