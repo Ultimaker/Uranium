@@ -135,7 +135,7 @@ class MachineManager(SignalEmitter):
 
         self._updateSettingVisibility(setting_visibility)
 
-        Preferences.getInstance().setValue("machines/active_instance", self._active_machine.getName())
+        self.activeMachineInstanceChanged.emit()
 
     def setActiveMachineVariant(self, variant):
         if not self._active_machine:
@@ -208,8 +208,6 @@ class MachineManager(SignalEmitter):
             return
 
         self._active_profile = profile
-
-        Preferences.getInstance().setValue("machines/active_profile", self._active_profile.getName())
 
         self.activeProfileChanged.emit()
 
@@ -320,11 +318,14 @@ class MachineManager(SignalEmitter):
         self.saveVisibility()
 
     def saveMachineInstances(self):
+        Preferences.getInstance().setValue("machines/active_instance", self._active_machine.getName())
+
         for instance in self._machine_instances:
             file_name = urllib.parse.quote_plus(instance.getName()) + ".cfg"
             instance.saveToFile(Resources.getStoragePath(Resources.MachineInstances, file_name))
 
     def saveProfiles(self):
+        Preferences.getInstance().setValue("machines/active_profile", self._active_profile.getName())
         for profile in self._profiles:
             if profile.isReadOnly():
                 continue
