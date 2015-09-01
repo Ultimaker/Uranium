@@ -85,6 +85,11 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
         if setting:
             setting.setVisible(visible);
 
+    @pyqtSlot(str)
+    def resetSettingValue(self, key):
+        self._profile.resetSettingValue(key)
+        self.setProperty(self.find("key", key), "overridden", False)
+
     ##  Create model for combo box (used by enum type setting) 
     #   \param options List of strings
     #   \return ListModel with "text":value pairs
