@@ -22,6 +22,8 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
     DepthRole = Qt.UserRole + 10
     WarningDescriptionRole = Qt.UserRole + 11
     ErrorDescriptionRole = Qt.UserRole + 12
+    OverriddenRole = Qt.UserRole + 13
+    EnabledRole = Qt.UserRole + 14
     
     def __init__(self, category, parent = None):
         super().__init__(parent)
@@ -44,6 +46,8 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
         self.addRoleName(self.DepthRole, "depth")
         self.addRoleName(self.WarningDescriptionRole, "warning_description")
         self.addRoleName(self.ErrorDescriptionRole, "error_description")
+        self.addRoleName(self.OverriddenRole, "overridden")
+        self.addRoleName(self.EnabledRole, "enabled")
     
     settingChanged = Signal()
 
@@ -80,42 +84,40 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
         return model
 
     def updateSettings(self):
+        self.clear()
         for setting in self._category.getAllSettings():
+            value = self._profile.getSettingValue(setting.getKey())
+
             self.appendItem({
                 "name": setting.getLabel(),
                 "description": setting.getDescription(),
                 "type": setting.getType(),
-                "value": setting.getDefaultValue(),
-                "valid": setting.validate(self._profile.getSettingValue(setting.getKey())),
+                "value": str(value),
+                "valid": setting.validate(value),
                 "key": setting.getKey(),
                 "options": self.createOptionsModel(setting.getOptions()),
                 "unit": setting.getUnit(),
-                #"visible": (setting.isVisible() and setting.isActive()),
                 "visible": setting.isVisible(),
                 "depth": setting.getDepth(),
                 "warning_description": setting.getWarningDescription(),
                 "error_description": setting.getErrorDescription(),
-                "overridden": self._profile.hasSettingValue(setting.getKey())
+                "overridden": (not self._profile.isReadOnly()) and self._profile.hasSettingValue(setting.getKey()),
+                "enabled": setting.isEnabled()
             })
-            setting.visibleChanged.connect(self._onSettingChanged)
-            #setting.activeChanged.connect(self._onSettingChanged)
-            #setting.valueChanged.connect(self._onSettingChanged)
+            setting.visibleChanged.connect(self._onSettingVisibleChanged)
+            setting.enabledChanged.connect(self._onSettingEnabledChanged)
 
-    def _onSettingChanged(self, setting):
-        self.settingChanged.emit()
-        if setting is not None:
+    def _onSettingVisibleChanged(self, setting):
+        if setting:
             index = self.find("key", setting.getKey())
             if index != -1:
                 self.setProperty(index, "visible", setting.isVisible())
 
-                value = self._profile.getSettingValue(setting.getKey())
-
-                if setting is not self._ignore_setting_value_update:
-                    #self.setProperty(index, "value", setting.getValue())
-                    self.setProperty(index, "value", value)
-
-                self.setProperty(index, "valid", setting.validate(value))
-        self.settingChanged.emit()
+    def _onSettingEnabledChanged(self, setting):
+        if setting:
+            index = self.find("key", setting.getKey())
+            if index != -1:
+                self.setProperty(index, "enabled", setting.isEnabled())
 
     def _onProfileChanged(self):
         if self._profile:
