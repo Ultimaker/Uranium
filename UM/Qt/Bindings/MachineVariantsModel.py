@@ -19,7 +19,6 @@ class MachineVariantsModel(ListModel):
         self._manager = Application.getInstance().getMachineManager()
 
         self._manager.activeMachineInstanceChanged.connect(self._onInstanceChanged)
-        #self._manager.activeMachineVariantChanged.connect(self._onVariantChanged)
         self._onInstanceChanged()
 
     def _onInstanceChanged(self):
@@ -38,8 +37,5 @@ class MachineVariantsModel(ListModel):
         for definition in definitions:
             self.appendItem({
                 "name": definition.getVariantName(),
-                "active": False
+                "active": definition.getVariantName() == instance.getMachineDefinition().getVariantName()
             })
-
-    def _onVariantChanged(self):
-        pass
