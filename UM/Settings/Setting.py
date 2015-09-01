@@ -20,8 +20,11 @@ class IllegalMethodError(Exception):
 #     Settings have validators that check if the value is valid, but do not prevent invalid values!
 #     Settings have conditions that enable/disable this setting depending on other settings. (Ex: Dual-extrusion)
 class Setting(SignalEmitter):    
-    def __init__(self, key, catalog, **kwargs):
+    def __init__(self, machine_manager, key, catalog, **kwargs):
         super().__init__()
+        self._machine_manager = machine_manager
+        self._machine_manager.activeProfileChanged.connect(self._onActiveProfileChanged)
+
         self._key = key
         self._i18n_catalog = catalog
 
@@ -151,7 +154,7 @@ class Setting(SignalEmitter):
             for key, value in data["children"].items():
                 setting = self.getSettingByKey(key)
                 if not setting:
-                    setting = Setting(key, self._i18n_catalog)
+                    setting = Setting(self._machine_manager, key, self._i18n_catalog)
                     setting.setCategory(self._category)
                     setting.setParent(self)
                     setting.visibleChanged.connect(self._onChildVisibileChanged)

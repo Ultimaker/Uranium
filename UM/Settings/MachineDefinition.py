@@ -128,7 +128,7 @@ class MachineDefinition(SignalEmitter):
             for key, value in self._json_data["machine_settings"].items():
                 setting = self.getSettingByKey(key)
                 if not setting:
-                    setting = Setting(key, self._i18n_catalog)
+                    setting = Setting(self._machine_manager, key, self._i18n_catalog)
                     self._machine_settings.append(setting)
                 setting.fillByDict(value)
 
@@ -136,7 +136,7 @@ class MachineDefinition(SignalEmitter):
             for key, value in self._json_data["categories"].items():
                 category = self.getSettingsCategory(key)
                 if not category:
-                    category = SettingsCategory(key, self._i18n_catalog, self)
+                    category = SettingsCategory(self._machine_manager, key, self._i18n_catalog, self)
                     self._categories.append(category)
                 category.fillByDict(value)
 

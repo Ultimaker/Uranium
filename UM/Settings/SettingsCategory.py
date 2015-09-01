@@ -6,7 +6,7 @@ from UM.Signal import Signal, SignalEmitter
 from UM.Logger import Logger
 
 class SettingsCategory(SignalEmitter):
-    def __init__(self, key, catalog, parent, icon = None, order = 0):
+    def __init__(self, machine_manager, key, catalog, parent, icon = None, order = 0):
         self._key = key
         self._i18n_catalog = catalog
         self._label = key
@@ -18,6 +18,7 @@ class SettingsCategory(SignalEmitter):
         self._children_visible = False
         self._settings = []
         self._depth = 0 #Depth of category is 0 by definition (used for display purposes)
+        self._machine_manager = machine_manager
         
     ##  Set values of the setting by providing it with a dict object (as decoded by JSON parser)
     #   \param data Decoded JSON dict
@@ -36,7 +37,7 @@ class SettingsCategory(SignalEmitter):
                         Logger.log("w", "Invalid setting definition for setting %s", key)
                         continue
 
-                    setting = Setting(key, self._i18n_catalog, default = value["default"], type = value["type"])
+                    setting = Setting(self._machine_manager, key, self._i18n_catalog, type = value["type"])
                     setting.setCategory(self)
                     setting.setParent(self)
                     self._settings.append(setting)
