@@ -9,12 +9,18 @@ from PyQt5.QtCore import Qt, pyqtSlot
 class MachineInstancesModel(ListModel):
     NameRole = Qt.UserRole + 1
     ActiveRole = Qt.UserRole + 2
+    TypeNameRole = Qt.UserRole + 3
+    VariantNameRole = Qt.UserRole + 4
+    HasVariantsRole = Qt.UserRole + 5
 
     def __init__(self, parent = None):
         super().__init__(parent)
 
         self.addRoleName(self.NameRole, "name")
         self.addRoleName(self.ActiveRole, "active")
+        self.addRoleName(self.TypeNameRole, "typeName")
+        self.addRoleName(self.VariantNameRole, "variantName")
+        self.addRoleName(self.HasVariantsRole, "hasVariants")
 
         self._manager = Application.getInstance().getMachineManager()
 
@@ -49,7 +55,14 @@ class MachineInstancesModel(ListModel):
         instances.sort(key = lambda k: k.getName())
 
         for machine in instances:
-            self.appendItem({ "id": id(machine), "name": machine.getName(), "active": self._manager.getActiveMachineInstance() == machine })
+            self.appendItem({
+                "id": id(machine),
+                "name": machine.getName(),
+                "active": self._manager.getActiveMachineInstance() == machine,
+                "typeName": machine.getMachineDefinition().getName(),
+                "variantName": machine.getMachineDefinition().getVariantName(),
+                "hasVariants": machine.getMachineDefinition().hasVariants()
+            })
 
     def _onActiveMachineChanged(self):
         active_machine = self._manager.getActiveMachineInstance()
