@@ -52,7 +52,7 @@ class MachineInstance(SignalEmitter):
         return self._machine_definition.getSetting(setting).getDefaultValue()
 
     def getSettingValue(self, key):
-        if self._machine_definition.isSetting(key):
+        if not self._machine_definition.isSetting(key):
             return None
 
         if key in self._machine_setting_overrides:
