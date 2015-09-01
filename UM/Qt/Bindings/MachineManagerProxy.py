@@ -12,31 +12,34 @@ class MachineManagerProxy(QObject):
         self._active_machine_instance = None
         self._active_profile = None
 
-        self._machine_manager = Application.getInstance().getMachineManager()
+        self._manager = Application.getInstance().getMachineManager()
 
-        self._machine_manager.activeMachineInstanceChanged.connect(self._onActiveMachineInstanceChanged)
+        self._active_machine = None
+        self._manager.activeMachineInstanceChanged.connect(self._onActiveMachineInstanceChanged)
+        self._manager.activeProfileChanged.connect(self._onActiveProfileChanged)
+        self._manager.machineInstanceNameChanged.connect(self._onInstanceNameChanged)
+        self._manager.profileNameChanged.connect(self._onProfileNameChanged)
         self._onActiveMachineInstanceChanged()
-        self._machine_manager.activeProfileChanged.connect(self._onActiveProfileChanged)
         self._onActiveProfileChanged()
 
     activeMachineInstanceChanged = pyqtSignal()
     @pyqtProperty(str, notify = activeMachineInstanceChanged)
     def activeMachineInstance(self):
-        instance = self._machine_manager.getActiveMachineInstance()
-        if instance:
-            return instance.getName()
+        instance = self._manager.getActiveMachineInstance()
+        if not instance:
+            return ""
 
-        return ""
+        return instance.getName()
 
     @pyqtSlot(str)
     def setActiveMachineInstance(self, name):
-        index = self._machine_manager.findMachineInstance(name)
-        if index != -1:
-            self._machine_manager.setActiveMachineInstance(self._machine_manager.getMachineInstance(index))
+        instance = self._machine_manager.findMachineInstance(name)
+        if instance:
+            self._machine_manager.setActiveMachineInstance(instance)
 
     @pyqtProperty(bool, notify = activeMachineInstanceChanged)
     def hasVariants(self):
-        instance = self._machine_manager.getActiveMachineInstance()
+        instance = self._manager.getActiveMachineInstance()
         if not instance:
             return False
 
@@ -49,18 +52,28 @@ class MachineManagerProxy(QObject):
     activeProfileChanged = pyqtSignal()
     @pyqtProperty(str, notify = activeProfileChanged)
     def activeProfile(self):
-        return self._machine_manager.getActiveProfile().getName()
+        profile = self._manager.getActiveProfile()
+        if not profile:
+            return ""
+
+        return profile.getName()
 
     @pyqtSlot(str)
     def setActiveProfile(self, name):
-        profile = self._machine_manager.findProfile(name)
+        profile = self._manager.findProfile(name)
         if profile:
-            self._machine_manager.setActiveProfile(profile)
+            self._manager.setActiveProfile(profile)
 
     def _onActiveMachineInstanceChanged(self):
         self.activeMachineInstanceChanged.emit()
 
     def _onActiveProfileChanged(self):
+        self.activeProfileChanged.emit()
+
+    def _onInstanceNameChanged(self, machine):
+        self.activeMachineInstanceChanged.emit()
+
+    def _onProfileNameChanged(self, profile):
         self.activeProfileChanged.emit()
 
 
