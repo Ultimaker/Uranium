@@ -19,6 +19,8 @@ class SettingOverrideModel(ListModel):
     def __init__(self, node, parent = None):
         super().__init__(parent)
 
+        self._ignore_setting_change = None
+
         self._node = node
         self._node.decoratorsChanged.connect(self._onDecoratorsChanged)
         self._onDecoratorsChanged(None)
@@ -36,7 +38,9 @@ class SettingOverrideModel(ListModel):
         if not self._decorator:
             return
 
+        self._ignore_setting_change = key
         self._decorator.setSettingValue(key, value)
+        self._ignore_setting_change = None
 
     def _onDecoratorsChanged(self, node):
         if not self._node.getDecorator(SettingOverrideDecorator):
@@ -46,25 +50,27 @@ class SettingOverrideModel(ListModel):
         self._decorator = self._node.getDecorator(SettingOverrideDecorator)
         self._decorator.settingAdded.connect(self._onSettingsChanged)
         self._decorator.settingRemoved.connect(self._onSettingsChanged)
-        self._decorator.settingChanged.connect(self._onSettingChanged)
+        self._decorator.settingValueChanged.connect(self._onSettingValueChanged)
         self._onSettingsChanged()
 
     def _onSettingsChanged(self):
         self.clear()
 
         for key, setting in self._decorator.getAllSettings().items():
+            value = self._decorator.getSettingValue(key)
             self.appendItem({
                 "key": key,
                 "label": setting.getLabel(),
                 "description": setting.getDescription(),
-                "value": setting.getValue(),
+                "value": str(value),
                 "type": setting.getType(),
                 "unit": setting.getUnit(),
-                "valid": setting.validate()
+                "valid": setting.validate(value)
             })
 
-    def _onSettingChanged(self, setting):
+    def _onSettingValueChanged(self, setting):
         index = self.find("key", setting.getKey())
-        if index != -1:
-            self.setProperty(index, "value", setting.getValue())
-            self.setProperty(index, "valid", setting.validate())
+        if index != -1 and self._ignore_setting_change != setting.getKey():
+            value = self._decorator.getSettingValue(setting.getKey())
+            self.setProperty(index, "value", str(value))
+            self.setProperty(index, "valid", setting.validate(value))

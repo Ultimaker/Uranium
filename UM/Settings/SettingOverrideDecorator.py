@@ -12,24 +12,41 @@ class SettingOverrideDecorator(SceneNodeDecorator, SignalEmitter):
         super().__init__()
 
         self._settings = {}
+        self._setting_values = {}
 
     settingAdded = Signal()
     settingRemoved = Signal()
-    settingChanged = Signal()
+    settingValueChanged = Signal()
 
     def getAllSettings(self):
         return self._settings
 
+    def getAllSettingValues(self):
+        values = {}
+
+        for key, setting in self._settings.items():
+            if key in self._setting_values:
+                values[key] = self._setting_values[key]
+            else:
+                values[key] = setting.getDefaultValue()
+
+            for child in setting.getAllChildren():
+                child_key = child.getKey()
+                if child_key in self._setting_values:
+                    values[child_key] = self._setting_values[child_key]
+                else:
+                    values[child_key] = child.getDefaultValue()
+
+        return values
+
     def addSetting(self, key):
         instance = Application.getInstance().getMachineManager().getActiveMachineInstance()
 
-        setting = instance.getSettingByKey(key)
+        setting = instance.getMachineDefinition().getSetting(key)
         if not setting:
             return
 
-        setting_clone = deepcopy(setting)
-        setting_clone.setParent(None)
-        self._settings[key] = setting_clone
+        self._settings[key] = setting
 
         self.settingAdded.emit()
         Application.getInstance().getController().getScene().sceneChanged.emit(self.getNode())
@@ -38,8 +55,8 @@ class SettingOverrideDecorator(SceneNodeDecorator, SignalEmitter):
         if key not in self._settings:
             return
 
-        self._settings[key].setValue(value)
-        self.settingChanged.emit(self._settings[key])
+        self._setting_values[key] = value
+        self.settingValueChanged.emit(self._settings[key])
         Application.getInstance().getController().getScene().sceneChanged.emit(self.getNode())
 
     def getSetting(self, key):
@@ -54,10 +71,25 @@ class SettingOverrideDecorator(SceneNodeDecorator, SignalEmitter):
         else:
             return self._settings[key]
 
+    def getSettingValue(self, key):
+        if key not in self._settings:
+            return None
+
+        setting = self._settings[key]
+
+        if key in self._setting_values:
+            return setting.parseValue(self._setting_values[key])
+
+        return setting.getDefaultValue()
+
     def removeSetting(self, key):
         if key not in self._settings:
             return
 
         del self._settings[key]
+
+        if key in self._setting_values:
+            del self._setting_values[key]
+
         self.settingRemoved.emit()
         Application.getInstance().getController().getScene().sceneChanged.emit(self.getNode())
