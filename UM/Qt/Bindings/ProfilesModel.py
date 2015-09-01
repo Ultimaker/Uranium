@@ -3,8 +3,10 @@
 
 from UM.Qt.ListModel import ListModel
 from UM.Application import Application
+from UM.Message import Message
+from UM.Settings.Profile import Profile
 
-from PyQt5.QtCore import Qt, pyqtSlot, pyqtSignal, pyqtProperty
+from PyQt5.QtCore import Qt, pyqtSlot, pyqtSignal, pyqtProperty, QUrl
 
 from UM.i18n import i18nCatalog
 catalog = i18nCatalog("uranium")
@@ -59,6 +61,43 @@ class ProfilesModel(ListModel):
             return
 
         profile.setName(new_name)
+
+    @pyqtSlot(QUrl)
+    def importProfile(self, url):
+        path = url.toLocalFile()
+        if not path:
+            return
+
+        profile = Profile(self._manager, read_only = False)
+        try:
+            profile.loadFromFile(path)
+        except Exception as e:
+            m = Message(catalog.i18nc("@info:status", "Failed to import profile from file <filename>{0}</filename>: <message>{1}</message>", path, str(e)))
+            m.show()
+        else:
+            m = Message(catalog.i18nc("@info:status", "Successfully imported profile {0}", profile.getName()))
+            m.show()
+            self._manager.addProfile(profile)
+
+    @pyqtSlot(str, QUrl)
+    def exportProfile(self, name, url):
+        path = url.toLocalFile()
+        if not path:
+            return
+
+        profile = self._manager.findProfile(name)
+        if not profile:
+            return
+
+        try:
+            profile.saveToFile(path)
+        except Exception as e:
+            m = Message(catalog.i18nc("@info:status", "Failed to export profile to <filename>{0}</filename>: <message>{1}</message>", path, str(e)))
+            m.show()
+        else:
+            m = Message(catalog.i18nc("@info:status", "Exported profile to <filename>{0}</filename>", path))
+            m.show()
+
     def _onProfilesChanged(self):
         self.clear()
 
