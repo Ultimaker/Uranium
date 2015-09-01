@@ -2,6 +2,7 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 from . import Operation
+from UM.Scene.SceneNode import SceneNode
 
 class ScaleOperation(Operation.Operation):
     def __init__(self, node, scale, **kwargs):
@@ -18,7 +19,7 @@ class ScaleOperation(Operation.Operation):
         if self._set_scale:
             self._node.setScale(self._scale)
         else:
-            self._node.scale(self._scale)
+            self._node.scale(self._scale, SceneNode.TransformSpace.World)
 
     def mergeWith(self, other):
         if type(other) is not ScaleOperation:

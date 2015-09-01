@@ -8,24 +8,25 @@ import QtQuick.Dialogs 1.1
 import QtQuick.Controls.Styles 1.1
 import QtQml 2.2
 
-import UM 1.0 as UM
+import UM 1.1 as UM
 
 import "../Preferences"
 
 PreferencesPage
 {
     //: Machine configuration page title.
-    title: qsTr("Machine");
+    title: catalog.i18nc("@title:window","Machine");
     id: base
 
     contents: ColumnLayout
     {
         z: base.z
         anchors.fill: parent;
+        UM.I18nCatalog { id: catalog; name:"uranium"}
         RowLayout
         {
             //: Active machine combo box label
-            Label { text: qsTr("Active Machine:"); }
+            Label { text: catalog.i18nc("@label","Active Machine:"); }
             ComboBox
             {
                 id: machineCombo;
@@ -48,7 +49,7 @@ PreferencesPage
                 Component.onCompleted: machineCombo.currentIndex = machineCombo.find(UM.Application.machineName);
             }
             //: Remove active machine button
-            Button { text: qsTr("Remove"); onClicked: confirmRemoveDialog.open(); }
+            Button { text: catalog.i18nc("@action:button","Remove"); onClicked: confirmRemoveDialog.open(); }
         }
         ScrollView
         {
@@ -89,7 +90,8 @@ PreferencesPage
                     var xPos = parent.x + settingCheckBox.width;
                     var yPos = parent.y;
                     toolTip.show(model.description, 1000, 200, undefined, undefined) //tooltip-text, hover-delay in msec, animation-length in msec, position X, position Y (both y en x == undefined: gives the tooltip a standard placement in the right corner)
-                } else {
+                } else
+                {
                     toolTip.hide(0, 0)//hover-delay in msec, animation-length in msec
                 }
             }
@@ -107,9 +109,9 @@ PreferencesPage
 
         icon: StandardIcon.Question;
         //: Remove machine confirmation dialog title
-        title: qsTr("Confirm Machine Deletion");
+        title: catalog.i18nc("@title:","Confirm Machine Deletion");
         //: Remove machine confirmation dialog text
-        text: qsTr("Are you sure you wish to remove the machine?");
+        text: catalog.i18nc("@label","Are you sure you wish to remove the machine?");
         standardButtons: StandardButton.Yes | StandardButton.No;
 
         onYes: UM.Models.machinesModel.removeMachine(machineCombo.currentIndex);

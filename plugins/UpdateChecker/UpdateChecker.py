@@ -5,14 +5,17 @@
 from UM.Extension import Extension
 from UM.Logger import Logger
 from UM.i18n import i18nCatalog
+from UM.Application import Application
+from UM.Message import Message
+from UM.Version import Version
+
 import urllib.request
 import platform
-from UM.Application import Application
 import json
 import codecs
 import webbrowser
 from threading import Thread
-from UM.Message import Message
+
         
 i18n_catalog = i18nCatalog("uranium")
 
@@ -52,7 +55,10 @@ class UpdateChecker(Extension):
             reader = codecs.getreader("utf-8")
             data = json.load(reader(latest_version_file))
             try:
-                local_version = list(map(int, Application.getInstance().getVersion().split(".")))
+                if Application.getInstance().getVersion() is not "master":
+                    local_version = Version(Application.getInstance().getVersion())
+                else:
+                    return
             except ValueError:
                 Logger.log("w", "Could not determine application version from string %s, not checking for updates", Application.getInstance().getVersion())
                 return
@@ -62,7 +68,7 @@ class UpdateChecker(Extension):
                     if "major" in value and "minor" in value and "revision" in value and "url" in value:
                         os = key
                         if platform.system() == os: #TODO: add architecture check
-                            newest_version = [int(value["major"]), int(value["minor"]), int(value["revision"])]
+                            newest_version = Version([int(value["major"]), int(value["minor"]), int(value["revision"])])
                             if local_version < newest_version:
                                 Logger.log("i", "Found a new version of the software. Spawning message")
                                 message = Message(i18n_catalog.i18n("A new version is available!"))

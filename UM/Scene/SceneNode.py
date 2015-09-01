@@ -65,17 +65,17 @@ class SceneNode(SignalEmitter):
     def setCenterPosition(self, center):
         if self._mesh_data:
             m = Matrix()
-            m.setByTranslation(-center)                        
-            self._mesh_data = self._mesh_data.getTransformed(m)  
+            m.setByTranslation(-center)
+            self._mesh_data = self._mesh_data.getTransformed(m)
             self._mesh_data.setCenterPosition(center)
         for child in self._children:
             child.setCenterPosition(center)
-            
+
     ##  \brief Get the parent of this node. If the node has no parent, it is the root node.
     #   \returns SceneNode if it has a parent and None if it's the root node.
     def getParent(self):
         return self._parent
-    
+
     def getBoundingBoxMesh(self):
         return self._bounding_box_mesh
 
@@ -122,7 +122,7 @@ class SceneNode(SignalEmitter):
             self._bounding_box_mesh.addVertex(rtf.x, lbb.y, lbb.z) #Right - Bottom - Back
         else:
             self._resetAABB()
-    
+
     def _onParentChanged(self, node):
         for child in self.getChildren():
             child.parentChanged.emit(self)
@@ -132,26 +132,26 @@ class SceneNode(SignalEmitter):
         decorator.setNode(self)
         self._decorators.append(decorator)
         self.decoratorsChanged.emit(self)
-    
+
     def getDecorators(self):
         return self._decorators
-    
+
     def getDecorator(self, dec_type):
         for decorator in self._decorators:
             if type(decorator) == dec_type:
                 return decorator
-    
+
     def removeDecorators(self):
         self._decorators = []
         self.decoratorsChanged.emit(self)
-        
+
     def removeDecorator(self, dec_type):
         for decorator in self._decorators:
             if type(decorator) == dec_type:
                 self._decorators.remove(decorator)
                 self.decoratorsChanged.emit(self)
                 break
-    
+
     def callDecoration(self, function, *args, **kwargs):
         for decorator in self._decorators:
             if hasattr(decorator, function):
@@ -160,25 +160,25 @@ class SceneNode(SignalEmitter):
                 except Exception as e:
                     Logger.log("e", "Exception calling decoration %s: %s", str(function), str(e))
                     return None
-    
+
     def hasDecoration(self, function):
         for decorator in self._decorators:
             if hasattr(decorator, function):
                 return True
         return False
-    
+
     def getName(self):
         return self._name
-    
+
     def setName(self, name):
         self._name = name
-    
+
     ##  How many nodes is this node removed from the root
     def getDepth(self):
-        if self._parent is None: 
+        if self._parent is None:
             return 0
         return self._parent.getDepth() + 1
-    
+
     ##  \brief Set the parent of this object
     #   \param scene_node SceneNode that is the parent of this object.
     def setParent(self, scene_node):
@@ -199,17 +199,17 @@ class SceneNode(SignalEmitter):
             return self._parent.isVisible()
         else:
             return self._visible
-    
+
     def setVisible(self, visible):
         self._visible = visible
 
-    ##  \brief Get the (original) mesh data from the scene node/object. 
+    ##  \brief Get the (original) mesh data from the scene node/object.
     #   \returns MeshData
     def getMeshData(self):
         return self._mesh_data
 
-    ##  \brief Get the transformed mesh data from the scene node/object, based on the transformation of scene nodes wrt root. 
-    #   \returns MeshData    
+    ##  \brief Get the transformed mesh data from the scene node/object, based on the transformation of scene nodes wrt root.
+    #   \returns MeshData
     def getMeshDataTransformed(self):
         #transformed_mesh = deepcopy(self._mesh_data)
         #transformed_mesh.transform(self.getWorldTransformation())
@@ -232,7 +232,7 @@ class SceneNode(SignalEmitter):
 
     def _onMeshDataChanged(self):
         self.meshDataChanged.emit(self)
-        
+
     ##  \brief Add a child to this node and set it's parent as this node.
     #   \params scene_node SceneNode to add.
     def addChild(self, scene_node):
@@ -248,9 +248,9 @@ class SceneNode(SignalEmitter):
             if not scene_node._parent is self:
                 scene_node._parent = self
                 scene_node.parentChanged.emit(self)
-    
+
     ##  \brief remove a single child
-    #   \param child Scene node that needs to be removed. 
+    #   \param child Scene node that needs to be removed.
     def removeChild(self, child):
         if child not in self._children:
             return
@@ -277,7 +277,7 @@ class SceneNode(SignalEmitter):
     #   \returns List of children
     def getChildren(self):
         return self._children
-    
+
     def hasChildren(self):
         return True if self._children else False
 
@@ -363,7 +363,32 @@ class SceneNode(SignalEmitter):
         elif transform_space == SceneNode.TransformSpace.Parent:
             raise NotImplementedError()
         elif transform_space == SceneNode.TransformSpace.World:
-            raise NotImplementedError()
+            if self._parent:
+                scale_change = Vector(1,1,1) - scale
+
+                if scale_change.x < 0 or scale_change.y < 0 or scale_change.z < 0:
+                    direction = -1
+                else:
+                    direction = 1
+                # Hackish way to do this, but this seems to correctly scale the object.
+                change_vector = self._scale.scale(self._getDerivedOrientation().getInverse().rotate(scale_change))
+
+                if change_vector.x < 0 and direction == 1:
+                    change_vector.setX(-change_vector.x)
+                if change_vector.x > 0 and direction == -1:
+                    change_vector.setX(-change_vector.x)
+
+                if change_vector.y < 0 and direction == 1:
+                    change_vector.setY(-change_vector.y)
+                if change_vector.y > 0 and direction == -1:
+                    change_vector.setY(-change_vector.y)
+
+                if change_vector.z < 0 and direction == 1:
+                    change_vector.setZ(-change_vector.z)
+                if change_vector.z > 0 and direction == -1:
+                    change_vector.setZ(-change_vector.z)
+
+                self._scale -= self._scale.scale(change_vector)
         else:
             raise ValueError("Unknown transform space {0}".format(transform_space))
 
@@ -518,11 +543,11 @@ class SceneNode(SignalEmitter):
     def _getDerivedOrientation(self):
         if not self._derived_orientation:
             self._updateTransformation()
-        
-        # Sometimes the derived orientation can be None. 
+
+        # Sometimes the derived orientation can be None.
         # I've not been able to locate the cause of this, but this prevents it being an issue.
         if not self._derived_orientation:
-            self._derived_orientation = Quaternion() 
+            self._derived_orientation = Quaternion()
         return self._derived_orientation
 
     def _getDerivedScale(self):
@@ -553,12 +578,12 @@ class SceneNode(SignalEmitter):
                 self._derived_orientation = parent_orientation * self._orientation
             else:
                 self._derived_orientation = self._orientation
-            
-            # Sometimes the derived orientation can be None. 
+
+            # Sometimes the derived orientation can be None.
             # I've not been able to locate the cause of this, but this prevents it being an issue.
             if not self._derived_orientation:
-                self._derived_orientation = Quaternion() 
-            
+                self._derived_orientation = Quaternion()
+
             parent_scale = self._parent._getDerivedScale()
             if self._inherit_scale:
                 self._derived_scale = parent_scale.scale(self._scale)
@@ -608,5 +633,5 @@ class _CalculateAABBJob(Job):
         self._node._aabb_job = None
         if self._node.getParent():
             self._node.getParent()._resetAABB()
-            
+
         self._node.boundingBoxChanged.emit()

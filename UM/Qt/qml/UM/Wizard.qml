@@ -56,6 +56,7 @@ UM.Dialog
 
     Item
     {
+        UM.I18nCatalog { id: catalog; name:"uranium"}
         anchors.fill: parent;
 
         Rectangle

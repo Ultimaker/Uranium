@@ -11,18 +11,21 @@ import ".."
 
 import UM 1.1 as UM
 
-Dialog {
+Dialog
+{
     id: base;
 
     title: catalog.i18nc("@title:window", "Preferences")
     minimumWidth: 600;
     minimumHeight: 500;
 
-    Item {
+    Item
+    {
         id: test
         anchors.fill: parent;
 
-        TableView {
+        TableView
+        {
             id: pagesList;
 
             anchors {
@@ -43,7 +46,8 @@ Dialog {
             onClicked: configPage.source = configPagesModel.get(row).page;
         }
 
-        Loader {
+        Loader
+        {
             id: configPage;
             anchors {
                 left: pagesList.right;
@@ -56,13 +60,15 @@ Dialog {
         UM.I18nCatalog { id: catalog; name: "uranium"; }
     }
 
-    leftButtons: Button {
+    leftButtons: Button
+    {
         text: catalog.i18nc("@action:button", "Defaults");
         enabled: configPage.item.resetEnabled;
         onClicked: configPage.item.reset();
     }
 
-    rightButtons: Button {
+    rightButtons: Button
+    {
         text: catalog.i18nc("@action:button", "Close");
         iconName: "dialog-close";
         onClicked: base.accept();
@@ -85,7 +91,8 @@ Dialog {
         configPagesModel.remove(index)
     }
 
-    Component.onCompleted: {
+    Component.onCompleted:
+    {
         //This uses insertPage here because ListModel is stupid and does not allow using qsTr() on elements.
         insertPage(0, catalog.i18nc("@title:tab", "General"), "", "GeneralPage.qml");
         insertPage(1, catalog.i18nc("@title:tab", "Settings"), "", "SettingVisibilityPage.qml");

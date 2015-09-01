@@ -12,12 +12,12 @@ TextField {
     id: base;
 
     signal valueChanged(string value);
+    property bool focusVar: false
 
     text: value; //From parent loader
     validator: RegExpValidator { regExp: /[0-9.-]+/ }
 
     onTextChanged: valueChanged(text);
-
     style: TextFieldStyle
     {
         textColor: itemStyle.controlTextColor;
@@ -28,7 +28,7 @@ TextField {
             implicitWidth: control.width;
 
             border.width: itemStyle.controlBorderWidth;
-            border.color: itemStyle.controlBorderColor;
+            border.color: itemStyle.controlBorderColor
 
             color: {
                 switch(valid) //From parent loader
@@ -47,8 +47,7 @@ TextField {
                         return itemStyle.validationOkColor;
 
                     default:
-                        console.log(base.valid)
-                        return "black"
+                        return itemStyle.controlTextColor;
                 }
             }
 

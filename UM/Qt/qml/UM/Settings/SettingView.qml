@@ -8,7 +8,8 @@ import QtQuick.Layouts 1.1
 
 import UM 1.1 as UM
 
-ScrollView {
+ScrollView
+{
     id: base;
 
     style: UM.Theme.styles.scrollview;
@@ -17,18 +18,21 @@ ScrollView {
     signal showTooltip(Item item, point location, string text);
     signal hideTooltip();
 
+
     property variant expandedCategories: []
 
-    Column {
+    Column
+    {
+        UM.I18nCatalog { id: catalog; name:"uranium"}
         id: contents
-        spacing: UM.Theme.sizes.default_margin.height;
+        spacing: UM.Theme.sizes.default_lining.height;
 
         Repeater {
             model: UM.SettingCategoriesModel { id: categoriesModel; }
 
-            delegate: Item {
+            delegate: Item
+            {
                 id: delegateItem;
-
                 width: childrenRect.width;
                 height: childrenRect.height;
 
@@ -36,10 +40,11 @@ ScrollView {
 
                 property variant settingsModel: model.settings;
 
-                SidebarCategoryHeader {
+                SidebarCategoryHeader
+                {
                     id: categoryHeader;
                     activeFocusOnTab: false
-                    width: base.viewport.width;
+                    width: UM.Theme.sizes.sidebar.width;
                     height: UM.Theme.sizes.section.height;
 
                     text: model.name;
@@ -48,7 +53,8 @@ ScrollView {
 
                     property bool previousChecked: false
                     checked: base.expandedCategories.indexOf(model.id) != -1;
-                    onClicked: {
+                    onClicked:
+                    {
                         var categories = base.expandedCategories;
                         if(checked)
                         {
@@ -79,20 +85,22 @@ ScrollView {
                     id: settings;
 
                     anchors.top: hiddenSettingsLabel.bottom;
-                    anchors.topMargin: spacing;
 
                     height: childrenHeight;
-                    width: UM.Theme.sizes.setting.width;
-                    spacing: UM.Theme.sizes.default_margin.height;
+                    spacing: 0;
                     opacity: 1;
 
-                    property real childrenHeight: {
+                    property real childrenHeight:
+                    {
                         var h = 0.0;
-                        for(var i in children) {
+                        for(var i in children)
+                        {
                             var item = children[i];
-                            h += children[i].height;   
-                            if(item.settingVisible) {
-                                if(i > 0) {
+                            h += children[i].height;
+                            if(item.settingVisible)
+                            {
+                                if(i > 0)
+                                {
                                     h += spacing;
                                 }
                             }
@@ -100,15 +108,17 @@ ScrollView {
                         return h;
                     }
 
-                    Repeater {
+                    Repeater
+                    {
                         model: delegateItem.settingsModel;
 
-                        delegate: UM.SettingItem {
+                        delegate: UM.SettingItem
+                        {
                             id: item;
 
-                            width: UM.Theme.sizes.setting.width;
+                            width: UM.Theme.sizes.sidebar.width - UM.Theme.sizes.default_margin.width * 2
 
-                            height: settingVisible ? UM.Theme.sizes.setting.height : 0;
+                            height: settingVisible ? UM.Theme.sizes.setting.height + UM.Theme.sizes.default_lining.height : 0;
                             Behavior on height { NumberAnimation { duration: 75; } }
                             opacity: settingVisible ? 1 : 0;
                             Behavior on opacity { NumberAnimation { duration: 75; } }
@@ -122,6 +132,7 @@ ScrollView {
                             value: model.value;
                             unit: model.unit;
                             valid: model.valid;
+                            depth: model.depth
                             type: model.type;
                             options: model.type == "enum" ? model.options : null;
                             key: model.key;
@@ -133,23 +144,26 @@ ScrollView {
                             onContextMenuRequested: contextMenu.popup();
                             onResetRequested: delegateItem.settingsModel.resetSettingValue(model.key)
 
-                            onShowTooltip: {
+                            onShowTooltip:
+                            {
                                 position = Qt.point(UM.Theme.sizes.default_margin.width, item.height);
                                 base.showTooltip(item, position, model.description)
                             }
                             onHideTooltip: base.hideTooltip()
 
-                            Menu {
+                            Menu
+                            {
                                 id: contextMenu;
 
-                                MenuItem {
+                                MenuItem
+                                {
                                     //: Settings context menu action
-                                    text: qsTr("Hide this setting");
+                                    text: catalog.i18nc("@action:menu","Hide this setting");
                                     onTriggered: delegateItem.settingsModel.hideSetting(model.key);
                                 }
                                 MenuItem {
                                     //: Settings context menu action
-                                    text: qsTr("Configure setting visiblity...");
+                                    text: catalog.i18nc("@action:menu","Configure setting visiblity...");
 
                                     onTriggered: if(base.configureSettings) base.configureSettings.trigger();
                                 }
@@ -161,7 +175,8 @@ ScrollView {
                         name: "collapsed";
                         when: !categoryHeader.checked;
 
-                        PropertyChanges {
+                        PropertyChanges
+                        {
                             target: settings;
                             opacity: 0;
                             height: 0;
@@ -177,7 +192,7 @@ ScrollView {
                             NumberAnimation { property: "opacity"; duration: 75; }
                             ParallelAnimation {
                                 NumberAnimation { property: "height"; duration: 75; }
-                                NumberAnimation { property: "anchors.topMargin"; duration: 75; }
+                                //NumberAnimation { property: "anchors.topMargin"; duration: 75; }
                             }
                         }
                     }

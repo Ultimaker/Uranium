@@ -27,7 +27,7 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
     ErrorDescriptionRole = Qt.UserRole + 12
     OverriddenRole = Qt.UserRole + 13
     EnabledRole = Qt.UserRole + 14
-    
+
     def __init__(self, category, parent = None):
         super().__init__(parent)
         self._category = category
@@ -55,7 +55,7 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
         self.addRoleName(self.ErrorDescriptionRole, "error_description")
         self.addRoleName(self.OverriddenRole, "overridden")
         self.addRoleName(self.EnabledRole, "enabled")
-    
+
     settingChanged = Signal()
 
     @pyqtSlot(int, str, "QVariant")
