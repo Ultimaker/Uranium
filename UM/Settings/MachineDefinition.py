@@ -27,7 +27,7 @@ class MachineDefinition(SignalEmitter):
 
         self._id = ""
         self._name = ""
-        self._variant_name = None
+        self._variant_name = ""
         self._manufacturer = ""
         self._author = ""
         self._visible = True
@@ -94,7 +94,7 @@ class MachineDefinition(SignalEmitter):
         self._id = self._json_data["id"]
         self._name = self._json_data["name"]
         self._visible = self._json_data.get("visible", True)
-        self._variant_name = self._json_data.get("variant", None)
+        self._variant_name = self._json_data.get("variant", "")
         self._manufacturer = self._json_data.get("manufacturer", uranium_catalog.i18nc("@label", "Unknown Manufacturer"))
         self._author = self._json_data.get("author", uranium_catalog.i18nc("@label", "Unknown Author"))
         self._pages = self._json_data.get("pages", {})
