@@ -6,6 +6,7 @@ import configparser
 from UM.Signal import Signal, SignalEmitter
 from UM.Settings import SettingsError
 from UM.Logger import Logger
+from UM.Settings.Validators.ResultCodes import ResultCodes
 
 class Profile(SignalEmitter):
     ProfileVersion = 1
@@ -87,9 +88,11 @@ class Profile(SignalEmitter):
         return values
 
     def hasErrorValue(self):
-        return False
+        for key, value in self._changed_settings.items():
+            valid = self._active_instance.getMachineDefinition().getSetting(key).validate(value)
+            if valid == ResultCodes.min_value_error or valid == ResultCodes.max_value_error or valid == ResultCodes.not_valid_error:
+                return True
 
-    def hasWarningValue(self):
         return False
 
     def hasSettingValue(self, key):
