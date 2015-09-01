@@ -112,11 +112,13 @@ ScrollView {
                             type: model.type;
                             options: model.type == "enum" ? model.options : null;
                             key: model.key;
+                            overridden: model.overridden;
 
                             style: UM.Theme.styles.setting_item;
 
                             onItemValueChanged: delegateItem.settingsModel.setSettingValue(index, model.key, value);
                             onContextMenuRequested: contextMenu.popup();
+                            onResetRequested: delegateItem.settingsModel.resetSettingValue(model.key)
 
                             onShowTooltip: {
                                 position = Qt.point(UM.Theme.sizes.default_margin.width, item.height);

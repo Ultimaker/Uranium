@@ -22,10 +22,13 @@ Item {
     property int index;
     property variant key;
 
+    property bool overridden;
+
     signal contextMenuRequested();
     signal itemValueChanged(variant value);
     signal showTooltip(variant position);
     signal hideTooltip();
+    signal resetRequested();
 
     property bool hovered: false;
 
@@ -129,6 +132,30 @@ Item {
                         base.hideTooltip();
                     }
                 }
+            }
+        }
+    }
+
+    Button {
+        anchors {
+            right: parent.right;
+            verticalCenter: parent.verticalCenter;
+        }
+        visible: base.overridden;
+        tooltip: "Reset to Default";
+
+        text: "R";
+
+        height: parent.height;
+        width: height;
+
+        onClicked: base.resetRequested()
+
+        style: ButtonStyle {
+            background: Rectangle {
+                border.width: base.style.controlBorderWidth;
+                border.color: base.style.controlBorderColor;
+                color: control.hovered ? base.style.controlHighlightColor : base.style.controlColor;
             }
         }
     }
