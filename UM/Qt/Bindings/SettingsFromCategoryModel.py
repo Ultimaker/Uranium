@@ -61,7 +61,7 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
     @pyqtSlot(int, str, "QVariant")
     ##  Notification that setting has changed.  
     def setSettingValue(self, index, key, value):
-        setting = self._category.getSettingByKey(key)
+        setting = self._category.getSetting(key)
         if setting and value:
             if self._profile.isReadOnly():
                 custom_profile_name = catalog.i18nc("@item appended to customised profiles ({0} is old profile name)", "{0} (Customised)", self._profile.getName())
@@ -81,7 +81,7 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
 
     @pyqtSlot(str, bool)
     def setSettingVisible(self, key, visible):
-        setting = self._category.getSettingByKey(key)
+        setting = self._category.getSetting(key)
         if setting:
             setting.setVisible(visible);
 
@@ -157,7 +157,7 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
     def _onSettingValueChanged(self, key):
         index = self.find("key", key)
         if index != -1:
-            setting = self._category.getSettingByKey(key)
+            setting = self._category.getSetting(key)
             value = self._profile.getSettingValue(key)
             self.setProperty(index, "value", str(value))
             self.setProperty(index, "overridden", self._profile.hasSettingValue(key))

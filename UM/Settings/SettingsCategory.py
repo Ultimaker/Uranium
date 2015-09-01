@@ -31,7 +31,7 @@ class SettingsCategory(SignalEmitter):
             self._icon = data["icon"]
         if "settings" in data:
             for key, value in data["settings"].items():
-                setting = self.getSettingByKey(key)
+                setting = self.getSetting(key)
                 if not setting:
                     if "default" not in value and "type" not in value:
                         Logger.log("w", "Invalid setting definition for setting %s", key)
@@ -81,9 +81,9 @@ class SettingsCategory(SignalEmitter):
     def addSetting(self, setting):
         self._settings.append(setting)
 
-    def getSettingByKey(self, key):
+    def getSetting(self, key):
         for s in self._settings:
-            ret = s.getSettingByKey(key)
+            ret = s.getSetting(key)
             if ret is not None:
                 return ret
         return None # No setting was found

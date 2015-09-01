@@ -196,11 +196,11 @@ class MachineDefinition(SignalEmitter):
     #   \return Setting or none if no setting was found.
     def getSetting(self, key):
         for category in self._categories:
-            setting = category.getSettingByKey(key)
+            setting = category.getSetting(key)
             if setting is not None:
                 return setting
         for setting in self._machine_settings:
-            setting = setting.getSettingByKey(key)
+            setting = setting.getSetting(key)
             if setting is not None:
                 return setting
         return None #No setting found
@@ -210,14 +210,14 @@ class MachineDefinition(SignalEmitter):
 
     def isUserSetting(self, key):
         for category in self._categories:
-            if category.getSettingByKey(key):
+            if category.getSetting(key):
                 return True
 
         return False
 
     def isMachineSetting(self, key):
         for setting in self._machine_settings:
-            if setting.getSettingByKey(key):
+            if setting.getSetting(key):
                 return True
 
         return False

@@ -140,7 +140,7 @@ class Setting(SignalEmitter):
 
         if "children" in data:
             for key, value in data["children"].items():
-                setting = self.getSettingByKey(key)
+                setting = self.getSetting(key)
                 if not setting:
                     setting = Setting(self._machine_manager, key, self._i18n_catalog)
                     setting.setCategory(self._category)
@@ -196,11 +196,11 @@ class Setting(SignalEmitter):
 
     ##  Recursively check it's children to see if the key matches.
     #   \returns Setting if key match is found, None otherwise.
-    def getSettingByKey(self, key):
+    def getSetting(self, key):
         if self._key == key:
             return self
         for s in self._children:
-            ret = s.getSettingByKey(key)
+            ret = s.getSetting(key)
             if ret is not None:
                 return ret
         return None

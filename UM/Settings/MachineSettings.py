@@ -57,7 +57,7 @@ class MachineSettings(SignalEmitter):
             
             # Set all setting values to saved values
             for setting_key in changed_settings:
-                setting = self.getSettingByKey(setting_key)
+                setting = self.getSetting(setting_key)
                 if setting:
                     setting.setValue(changed_settings[setting_key])
             self.settingChanged.connect(self._onSettingChanged)
