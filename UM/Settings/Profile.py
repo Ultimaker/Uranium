@@ -47,13 +47,17 @@ class Profile(SignalEmitter):
 
         self._changed_settings[key] = value
         self.settingValueChanged.emit(key)
-        
+
     def getSettingValue(self, key):
-        if not self._active_instance or not self._active_instance.getMachineDefinition().isSetting(key):
+        if not self._active_instance:
+            return None
+
+        setting = self._active_instance.getMachineDefinition().getSetting(key)
+        if not setting:
             return None
 
         if key in self._changed_settings:
-            return self._changed_settings[key]
+            return setting.parseValue(self._changed_settings[key])
 
         return self._active_instance.getSettingValue(key)
 
@@ -72,7 +76,7 @@ class Profile(SignalEmitter):
             key = setting.getKey()
 
             if key in self._changed_settings:
-                values[key] = self._changed_settings[key]
+                values[key] = setting.parseValue(self._changed_settings[key])
                 continue
 
             if self._active_instance.hasMachineSettingValue(key):
