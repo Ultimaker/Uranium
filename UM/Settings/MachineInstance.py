@@ -3,16 +3,16 @@
 
 import configparser
 
-from UM.Resources import Resources
 from UM.Settings import SettingsError
 from UM.Logger import Logger
+from UM.Signal import Signal, SignalEmitter
 
-from UM.Settings.MachineSettings import MachineSettings
-
-class MachineInstance():
+class MachineInstance(SignalEmitter):
     MachineInstanceVersion = 1
 
     def __init__(self, machine_manager, **kwargs):
+        super().__init__()
+
         self._machine_manager = machine_manager
 
         self._name = kwargs.get("name", "")
@@ -21,12 +21,16 @@ class MachineInstance():
             self._machine_definition.loadAll()
         self._machine_setting_overrides = {}
 
+    nameChanged = Signal()
+
     def getName(self):
         return self._name
 
     def setName(self, name):
         if name != self._name:
+            old_name = self._name
             self._name = name
+            self.nameChanged.emit(self, old_name)
 
     def getMachineDefinition(self):
         return self._machine_definition
