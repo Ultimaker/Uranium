@@ -81,10 +81,10 @@ ScrollView {
                     anchors.top: hiddenSettingsLabel.bottom;
                     anchors.topMargin: spacing;
 
-                    height: 0;
+                    height: childrenHeight;
                     width: UM.Theme.sizes.setting.width;
                     spacing: UM.Theme.sizes.default_margin.height;
-                    opacity: 0;
+                    opacity: 1;
 
                     property real childrenHeight: {
                         var h = 0.0;
@@ -108,14 +108,14 @@ ScrollView {
 
                             width: UM.Theme.sizes.setting.width;
 
-                            height: model.visible ? UM.Theme.sizes.setting.height : 0;
+                            height: settingVisible ? UM.Theme.sizes.setting.height : 0;
                             Behavior on height { NumberAnimation { duration: 75; } }
-                            opacity: model.visible ? 1 : 0;
+                            opacity: settingVisible ? 1 : 0;
                             Behavior on opacity { NumberAnimation { duration: 75; } }
 
-                            enabled: categoryHeader.checked && model.visible;
+                            enabled: categoryHeader.checked && settingVisible;
 
-                            property bool settingVisible: model.visible;
+                            property bool settingVisible: model.visible && model.enabled;
 
                             name: model.name;
                             description: model.description;
@@ -158,26 +158,27 @@ ScrollView {
                     }
 
                     states: State {
-                        name: "expanded";
-                        when: categoryHeader.checked;
+                        name: "collapsed";
+                        when: !categoryHeader.checked;
 
                         PropertyChanges {
                             target: settings;
-                            opacity: 1;
-                            height: settings.childrenHeight;
-                            anchors.topMargin: UM.Theme.sizes.default_margin.height;
+                            opacity: 0;
+                            height: 0;
+                            anchors.topMargin: 0;
                         }
                     }
 
                     transitions: Transition {
-                        to: "expanded";
+                        to: "collapsed";
                         reversible: true;
+                        enabled: !categoriesModel.resetting;
                         SequentialAnimation {
+                            NumberAnimation { property: "opacity"; duration: 75; }
                             ParallelAnimation {
                                 NumberAnimation { property: "height"; duration: 75; }
                                 NumberAnimation { property: "anchors.topMargin"; duration: 75; }
                             }
-                            NumberAnimation { property: "opacity"; duration: 75; }
                         }
                     }
                 }
