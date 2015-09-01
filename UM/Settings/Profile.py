@@ -10,11 +10,12 @@ from UM.Logger import Logger
 class Profile(SignalEmitter):
     ProfileVersion = 1
 
-    def __init__(self, machine_manager):
+    def __init__(self, machine_manager, read_only = False):
         super().__init__()
         self._machine_manager = machine_manager
         self._changed_settings = {}
         self._name = "Unknown Profile"
+        self._read_only = read_only
 
         self._active_instance = None
         self._machine_manager.activeMachineInstanceChanged.connect(self._onActiveInstanceChanged)
@@ -29,6 +30,9 @@ class Profile(SignalEmitter):
         if name != self._name:
             self._name = name
             self.nameChanged.emit()
+
+    def isReadOnly(self):
+        return self._read_only
 
     settingValueChanged = Signal()
 
