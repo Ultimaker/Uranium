@@ -96,7 +96,8 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
     #
     #   \note For languages other than English, more than one plural form might exist. The counter
     #         is at all times used to determine what form to use, with the language files
-    #         specifying what plural forms are available.
+    #         specifying what plural forms are available.  Additionally, counter is passed as first
+    #         argument to format the string.
     def i18np(self, single, multiple, counter, *args):
         if self.__require_update:
             self._update()
@@ -106,8 +107,7 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
         if self.__translation:
             translated = self.__translation.ngettext(single, multiple, counter)
 
-        if args:
-            translated = translated.format(args)
+        translated = translated.format(counter, args)
 
         return self._replaceTags(translated)
 
@@ -117,6 +117,7 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
     #   \param single The singular form of the string.
     #   \param multiple The plural form of the string.
     #   \param counter The value that determines whether the singular or plural form should be used.
+    #   \param args Formatting arguments. These will replace formatting elements in the translated string. See python str.format()
     #
     #   \return The translated string, or the untranslated text if no translation could be found.
     #           Note that the fallback simply checks if counter is greater than one and if so, returns
@@ -124,7 +125,8 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
     #
     #   \note For languages other than English, more than one plural form might exist. The counter
     #         is at all times used to determine what form to use, with the language files
-    #         specifying what plural forms are available.
+    #         specifying what plural forms are available. Additionally, counter is passed as first
+    #         argument to format the string.
     def i18ncp(self, context, single, multiple, counter, *args):
         if self.__require_update:
             self._update()
@@ -138,8 +140,7 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
             if message != message_with_context:
                 translated = message
 
-        if args:
-            translated = translated.format(args)
+        translated = translated.format(counter, args)
 
         return self._replaceTags(translated)
 
