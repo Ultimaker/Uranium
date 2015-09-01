@@ -9,6 +9,9 @@ from UM.Resources import Resources
 from UM.Application import Application
 from UM.Signal import Signal, SignalEmitter
 
+from UM.i18n import i18nCatalog
+catalog = i18nCatalog("uranium")
+
 class SettingsFromCategoryModel(ListModel, SignalEmitter):
     NameRole = Qt.UserRole + 1
     TypeRole = Qt.UserRole + 2
@@ -30,8 +33,12 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
         self._category = category
         self._ignore_setting_value_update = None
 
+        self._machine_manager = Application.getInstance().getMachineManager()
+
+        self._changed_setting = None
+
         self._profile = None
-        Application.getInstance().getMachineManager().activeProfileChanged.connect(self._onProfileChanged)
+        self._machine_manager.activeProfileChanged.connect(self._onProfileChanged)
         self._onProfileChanged()
 
         self.addRoleName(self.NameRole, "name")
@@ -54,14 +61,23 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
     @pyqtSlot(int, str, "QVariant")
     ##  Notification that setting has changed.  
     def setSettingValue(self, index, key, value):
-        self._profile.setSettingValue(key, value)
+        setting = self._category.getSettingByKey(key)
+        if setting and value:
+            if self._profile.isReadOnly():
+                custom_profile_name = catalog.i18nc("@item appended to customised profiles ({0} is old profile name)", "{0} (Customised)", self._profile.getName())
 
-        #setting = self._category.getSettingByKey(key)
-        #if setting:
-            #self._ignore_setting_value_update = setting
-            #setting.setValue(value)
-            #self._ignore_setting_value_update = None
-            #self.setProperty(index, "valid", setting.validate())
+                custom_profile = self._machine_manager.findProfile(custom_profile_name)
+                if not custom_profile:
+                    custom_profile = deepcopy(self._profile)
+                    custom_profile.setName(custom_profile_name)
+                    self._machine_manager.addProfile(custom_profile)
+
+                self._changed_setting = (key, value)
+                self._machine_manager.setActiveProfile(custom_profile)
+                return
+
+            self._profile.setSettingValue(key, value)
+            self.setProperty(index, "valid", setting.validate(setting.parseValue(value)))
 
     @pyqtSlot(str, bool)
     def setSettingVisible(self, key, visible):
@@ -123,11 +139,21 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
         if self._profile:
             self._profile.settingValueChanged.disconnect(self._onSettingValueChanged)
 
-        self._profile = Application.getInstance().getMachineManager().getActiveProfile()
-        self._profile.settingValueChanged.connect(self._onSettingValueChanged)
-        self.updateSettings()
+        self._profile = self._machine_manager.getActiveProfile()
+        if self._profile:
+            self._profile.settingValueChanged.connect(self._onSettingValueChanged)
+            self.updateSettings()
+
+            if self._changed_setting:
+                index = self.find("key", self._changed_setting[0])
+                self.setSettingValue(index, self._changed_setting[0], self._changed_setting[1])
+                self._changed_setting = None
 
     def _onSettingValueChanged(self, key):
         index = self.find("key", key)
         if index != -1:
-            self.setProperty(index, "value", self._profile.getSettingValue(key))
+            setting = self._category.getSettingByKey(key)
+            value = self._profile.getSettingValue(key)
+            self.setProperty(index, "value", str(value))
+            self.setProperty(index, "overridden", self._profile.hasSettingValue(key))
+            self.setProperty(index, "valid", setting.validate(value))
