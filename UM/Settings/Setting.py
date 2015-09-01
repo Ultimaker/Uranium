@@ -42,11 +42,13 @@ class Setting(SignalEmitter):
         self._parent = None
         self._hide_if_all_children_visible = True
         self._children = []
-        self._enabled = None
+        self._enabled_function = None
         self._options = {}
         self._unit = ""
         self._inherit = True
         self._inherit_function = None
+
+        self._dependent_settings = set()
 
 
     ##  Triggered when all settings are loaded and the setting has a conditional param
@@ -107,37 +109,19 @@ class Setting(SignalEmitter):
         max_value_warning = None
 
         if "min_value" in data:
-            # Check type for backward compatibility
-            # TODO Drop this check and assume min/max/warn values are strings
-            value = data["min_value"]
-            if type(value) is str:
-                value = self._createFunction(value)
-            else:
-                value = lambda: value
+            min_value = self._createFunction(data["min_value"])
         if "max_value" in data:
-            value = data["max_value"]
-            if type(value) is str:
-                max_value = self._createFunction(value)
-            else:
-                max_value = lambda: value
+            max_value = self._createFunction(data["max_value"])
         if "min_value_warning" in data:
-            value = data["min_value_warning"]
-            if type(value) is str:
-                min_value_warning = self._createFunction(value)
-            else:
-                min_value_warning = lambda: value
+            min_value_warning = self._createFunction(data["min_value_warning"])
         if "max_value_warning" in data:
-            value = data["max_value_warning"]
-            if type(value) is str:
-                max_value_warning = self._createFunction(value)
-            else:
-                max_value_warning = lambda: value
+            max_value_warning = self._createFunction(data["max_value_warning"])
 
         if  self.getValidator() is not None: #Strings don"t have validators as of yet
             self.getValidator().setRange(min_value,max_value,min_value_warning,max_value_warning)
 
         if "enabled" in data:
-            self._enabled = self._createFunction(data["enabled"])
+            self._enabled_function = self._createFunction(data["enabled"])
 
         #if "active_if" in data:
             #if "setting" in data["active_if"] and "value" in data["active_if"]:
@@ -230,7 +214,7 @@ class Setting(SignalEmitter):
             if self._inherit and self._parent and type(self._parent) is Setting:
                 if self._inherit_function:
                     try:
-                        inherit_value = self._inherit_function(self._parent, self._profile)
+                        inherit_value = self._inherit_function()
                     except Exception as e:
                         Logger.log("e", "An error occurred in inherit function for {0}: {1}".format(self._key, str(e)))
                     else:
@@ -309,6 +293,14 @@ class Setting(SignalEmitter):
 
     def getUnit(self):
         return self._unit
+
+    enabledChanged = Signal()
+
+    def isEnabled(self):
+        if self._enabled_function:
+            return self._enabled_function()
+
+        return True
 
     ##  Get the effective value of the setting. This can be 'overriden' by a parent function if this function is invisible.
     #   \returns value
@@ -402,22 +394,38 @@ class Setting(SignalEmitter):
             names = _SettingExpressionVisitor().visit(tree)
             compiled = compile(code, self._key, "eval")
         except (SyntaxError, TypeError) as e:
-            Logger.log("e", "Parse error in inherit function for setting {0}: {1}".format(self._key, str(e)))
+            Logger.log("e", "Parse error in function ({2}) for setting {0}: {1}".format(self._key, str(e), code))
         except IllegalMethodError as e:
-            Logger.log("e", "Use of illegal method {0} in inherit function for setting {1}".format(str(e), self._key))
+            Logger.log("e", "Use of illegal method {0} in function for setting {1}".format(str(e), self._key))
 
-        def local_function(parent, profile):
+        def local_function():
+            profile = self._machine_manager.getActiveProfile()
             locals = {
-                "parent_value": profile.getSettingValue(parent.getKey()),
+                "parent_value": profile.getSettingValue(self.getParent().getKey()) if self.getParent() else None,
                 "profile": profile
             }
 
+            self._dependent_settings.add(self.getParent().getKey())
+
             for name in names:
                 locals[name] = profile.getSettingValue(name)
+                self._dependent_settings.add(name)
 
             return eval(compiled, globals(), locals)
 
         return local_function
+
+    def _onSettingValueChanged(self, key):
+        if key in self._dependent_settings:
+            self.enabledChanged.emit(self)
+
+    def _onActiveProfileChanged(self):
+        if self._profile:
+            self._profile.settingValueChanged.disconnect(self._onSettingValueChanged)
+
+        self._profile = self._machine_manager.getActiveProfile()
+        if self._profile:
+            self._profile.settingValueChanged.connect(self._onSettingValueChanged)
 
 # Private AST visitor class used to look up names in the inheritance functions.
 class _SettingExpressionVisitor(ast.NodeVisitor):
