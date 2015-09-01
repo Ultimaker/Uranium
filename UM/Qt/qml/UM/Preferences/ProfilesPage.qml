@@ -3,24 +3,64 @@
 
 import QtQuick 2.1
 import QtQuick.Controls 1.1
-import QtQuick.Layouts 1.1
+import QtQuick.Dialogs 1.2
 
 import UM 1.1 as UM
 
-PreferencesPage {
-    title: "Profiles";
+ManagementPage {
+    id: base;
 
-    function reset() {
+    title: catalog.i18nc("@title", "Profiles");
+
+    detailsVisible: false;
+
+    model: UM.ProfilesModel { }
+
+    onAddObject: importDialog.open();
+    onRemoveObject: confirmDialog.open();
+    onRenameObject: renameDialog.open();
+
+    addText: catalog.i18nc("@action:button", "Import");
+
+    removeEnabled: currentItem != null ? !currentItem.readOnly : false;
+    renameEnabled: currentItem != null ? !currentItem.readOnly : false;
+
+    buttons: Button {
+        text: catalog.i18nc("@action:button", "Export");
+        iconName: "document-export";
+        onClicked: exportDialog.open();
     }
 
-    Row {
-        anchors.fill: parent;
-        TableView {
-            TableViewColumn { role: "name" }
+    Item {
+        UM.I18nCatalog { id: catalog; name: "uranium"; }
 
-            headerVisibile: false
+        ConfirmRemoveDialog {
+            id: confirmDialog;
+            object: base.currentItem.name;
+            onYes: base.model.removeProfile(base.currentItem.name);
+        }
+        RenameDialog {
+            id: renameDialog;
+            object: base.currentItem.name;
+            onAccepted: base.model.renameProfile(base.currentItem.name, newName);
+        }
 
-            model: UM.ProfilesModel { }
+        FileDialog {
+            id: importDialog;
+            title: catalog.i18nc("@title", "Import Profile");
+            selectExisting: true;
+            nameFilters: [ catalog.i18nc("@item:inlistbox", "Cura Profiles (*.curaprofile)"), catalog.i18nc("@item:inlistbox", "All Files (*)") ]
+
+            onAccepted: base.model.importProfile(fileUrl)
+        }
+
+        FileDialog {
+            id: exportDialog;
+            title: catalog.i18nc("@title", "Export Profile");
+            selectExisting: false;
+            nameFilters: [ catalog.i18nc("@item:inlistbox", "Cura Profiles (*.curaprofile)") ]
+
+            onAccepted: base.model.exportProfile(base.currentItem.name, fileUrl)
         }
     }
 }
