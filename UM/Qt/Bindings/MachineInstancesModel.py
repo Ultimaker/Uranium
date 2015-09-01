@@ -22,6 +22,26 @@ class MachineInstancesModel(ListModel):
         self._manager.activeMachineInstanceChanged.connect(self._onActiveMachineChanged)
         self._onMachinesChanged()
 
+    @pyqtSlot()
+    def requestAddMachine(self):
+        self._manager.addMachineRequested.emit()
+
+    @pyqtSlot(str)
+    def removeMachineInstance(self, name):
+        instance = self._manager.findMachineInstance(name)
+        if not instance:
+            return
+
+        self._manager.removeMachineInstance(instance)
+
+    @pyqtSlot(str, str)
+    def renameMachineInstance(self, old_name, new_name):
+        instance = self._manager.findMachineInstance(old_name)
+        if not instance:
+            return
+
+        instance.setName(new_name)
+
     def _onMachinesChanged(self):
         self.clear()
 
