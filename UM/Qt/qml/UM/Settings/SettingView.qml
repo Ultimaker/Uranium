@@ -6,7 +6,7 @@ import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.1
 import QtQuick.Layouts 1.1
 
-import UM 1.0 as UM
+import UM 1.1 as UM
 
 ScrollView {
     id: base;
@@ -24,7 +24,7 @@ ScrollView {
         spacing: UM.Theme.sizes.default_margin.height;
 
         Repeater {
-            model: UM.Models.settingCategoriesModel;
+            model: UM.SettingCategoriesModel { id: categoriesModel; }
 
             delegate: Item {
                 id: delegateItem;
@@ -62,11 +62,24 @@ ScrollView {
                     }
                 }
 
+                Label {
+                    id: hiddenSettingsLabel;
+
+                    anchors.top: categoryHeader.bottom;
+                    width: categoryHeader.width;
+                    horizontalAlignment: Text.AlignHCenter;
+
+                    text: catalog.i18ncp("@label", "{0} hidden setting uses a custom value", "{0} hidden settings use custom values", model.hiddenOverriddenSettingsCount);
+
+                    opacity: model.hiddenOverriddenSettingsCount > 0 ? 1 : 0;
+                    height: model.hiddenOverriddenSettingsCount > 0 ? 20 : 0;
+                }
+
                 Column {
                     id: settings;
 
-                    anchors.top: categoryHeader.bottom;
-                    anchors.topMargin: 0;
+                    anchors.top: hiddenSettingsLabel.bottom;
+                    anchors.topMargin: spacing;
 
                     height: 0;
                     width: UM.Theme.sizes.setting.width;
@@ -170,5 +183,7 @@ ScrollView {
                 }
             }
         }
+
+        UM.I18nCatalog { id: catalog; name: "uranium"; }
     }
 }
