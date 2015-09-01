@@ -26,6 +26,7 @@ class MachineInstancesModel(ListModel):
 
         self._manager.machineInstancesChanged.connect(self._onMachinesChanged)
         self._manager.activeMachineInstanceChanged.connect(self._onActiveMachineChanged)
+        self._manager.machineInstanceNameChanged.connect(self._onInstanceNameChanged)
         self._onMachinesChanged()
 
     @pyqtSlot()
@@ -69,3 +70,9 @@ class MachineInstancesModel(ListModel):
         for index in range(len(self.items)):
             self.setProperty(index, "active", id(active_machine) == self.items[index]["id"])
 
+    def _onInstanceNameChanged(self, machine):
+        index = self.find("id", id(machine))
+        if index == -1:
+            return
+
+        self.setProperty(index, "name", machine.getName())
