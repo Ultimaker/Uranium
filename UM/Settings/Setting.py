@@ -16,9 +16,19 @@ from copy import deepcopy
 class IllegalMethodError(Exception):
     pass
 
-##    A setting object contains a (single) configuration setting.
-#     Settings have validators that check if the value is valid, but do not prevent invalid values!
-#     Settings have conditions that enable/disable this setting depending on other settings. (Ex: Dual-extrusion)
+##  A setting object contains the definition of a (single) configuration setting.
+#
+#   The Setting object provides the definition of a setting, like the user-visible label,
+#   description and other properties. It does not contain any values, for that you should
+#   use the Profile class.
+#
+#   \note Currently there is still too much state embedded in a setting. All value functions
+#         and things like visibility should really be separated into a different class.
+#
+#   Settings have validators that check if the value is valid, but do not prevent invalid values!
+#   Settings have conditions that enable/disable this setting depending on other settings. (Ex: Dual-extrusion)
+#
+#
 class Setting(SignalEmitter):    
     def __init__(self, machine_manager, key, catalog, **kwargs):
         super().__init__()
@@ -49,12 +59,6 @@ class Setting(SignalEmitter):
         self._inherit_function = None
 
         self._dependent_settings = set()
-
-
-    ##  Triggered when all settings are loaded and the setting has a conditional param
-        #else:
-
-
 
     ##  Bind new validator to object based on it's current type
     def bindValidator(self):
@@ -302,14 +306,6 @@ class Setting(SignalEmitter):
 
         return True
 
-    ##  Get the effective value of the setting. This can be 'overriden' by a parent function if this function is invisible.
-    #   \returns value
-
-
-
-    ##  Set the value of this setting and emit valueChanged signal
-    #   \param value Value to be set.
-
     ##  Validate a value using this Setting
     #   \param value The value to validate
     #   \returns ResultCodes.succes if there is no validator or if validation is succesfull. Returns warning or error code otherwise.
@@ -329,6 +325,11 @@ class Setting(SignalEmitter):
     def getChildren(self):
         return self._children
 
+    ##  Parse a value so it is a proper value for this setting.
+    #
+    #   \param value The value to parse.
+    #
+    #   \return A value that is valid for this setting.
     def parseValue(self, value):
         if not type(value) is str:
             return value
