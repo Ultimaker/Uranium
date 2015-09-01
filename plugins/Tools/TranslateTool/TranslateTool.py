@@ -63,6 +63,8 @@ class TranslateTool(Tool):
             else:
                 self.setDragPlane(Plane(Vector(0, 1, 0), 0))
 
+            self.setDragStart(event.x, event.y)
+
         if event.type == Event.MouseMoveEvent:
             if not self.getDragPlane():
                 return False
