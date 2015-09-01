@@ -130,6 +130,23 @@ class MachineManager(SignalEmitter):
 
         Preferences.getInstance().setValue("machines/active_instance", self._active_machine.getName())
 
+    def setActiveMachineVariant(self, variant):
+        if not self._active_machine:
+            return
+
+        variant = self.findMachineDefinition(self._active_machine.getMachineDefinition().getId(), variant)
+        if not variant:
+            return
+
+        setting_visibility = []
+        if self._active_machine:
+            setting_visibility = self._active_machine.getMachineDefinition().getAllSettings(visible_only = True)
+            setting_visibility = list(map(lambda s: s.getKey(), setting_visibility))
+
+        self._active_machine.setMachineDefinition(variant)
+
+        self._updateSettingVisibility(setting_visibility)
+
         self.activeMachineInstanceChanged.emit()
 
     activeMachineInstanceChanged = Signal()
