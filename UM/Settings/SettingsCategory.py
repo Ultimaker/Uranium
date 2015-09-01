@@ -69,6 +69,14 @@ class SettingsCategory(SignalEmitter):
 
     visibleChanged = Signal()
 
+    def getHiddenOverriddenSettingsCount(self):
+        count = 0
+        for setting in self.getAllSettings():
+            if not setting.isVisible() and self._machine_manager.getActiveProfile().hasSettingValue(setting.getKey()):
+                count += 1
+
+        return count
+
     def addSetting(self, setting):
         self._settings.append(setting)
 
