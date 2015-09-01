@@ -126,7 +126,7 @@ class MachineDefinition(SignalEmitter):
 
         if "machine_settings" in self._json_data:
             for key, value in self._json_data["machine_settings"].items():
-                setting = self.getSettingByKey(key)
+                setting = self.getSetting(key)
                 if not setting:
                     setting = Setting(self._machine_manager, key, self._i18n_catalog)
                     self._machine_settings.append(setting)
@@ -142,7 +142,7 @@ class MachineDefinition(SignalEmitter):
 
         if "overrides" in self._json_data:
             for key, value in self._json_data["overrides"].items():
-                setting = self.getSettingByKey(key)
+                setting = self.getSetting(key)
                 if not setting:
                     continue
 
@@ -194,7 +194,7 @@ class MachineDefinition(SignalEmitter):
     ##  Get setting by key.
     #   \param key Key to select setting by (string)
     #   \return Setting or none if no setting was found.
-    def getSettingByKey(self, key):
+    def getSetting(self, key):
         for category in self._categories:
             setting = category.getSettingByKey(key)
             if setting is not None:
