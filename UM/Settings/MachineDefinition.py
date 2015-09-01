@@ -63,7 +63,7 @@ class MachineDefinition(SignalEmitter):
         return self._pages
 
     def hasVariants(self):
-        return len(self._machine_manager.getAllMachineVariants(self._id)) > 0
+        return len(self._machine_manager.getAllMachineVariants(self._id)) > 1
 
     ##  Get the machine mesh (in most cases platform)
     #   Todo: Might need to rename this to get machine mesh?
