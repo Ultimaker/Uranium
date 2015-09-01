@@ -128,7 +128,7 @@ class MachineManager(SignalEmitter):
 
         setting_visibility = []
         if self._active_machine:
-            setting_visibility = self._active_machine.getAllSettings(visible_only = True)
+            setting_visibility = self._active_machine.getMachineDefinition().getAllSettings(visible_only = True)
             setting_visibility = list(map(lambda s: s.getKey(), setting_visibility))
 
         self._active_machine = machine
