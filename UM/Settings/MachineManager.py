@@ -72,6 +72,8 @@ class MachineManager(SignalEmitter):
 
         return None
 
+    addMachineRequested = Signal()
+
     machineInstancesChanged = Signal()
 
     machineInstanceNameChanged = Signal()
