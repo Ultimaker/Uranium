@@ -23,7 +23,6 @@ ScrollView
 
     Column
     {
-        UM.I18nCatalog { id: catalog; name:"uranium"}
         id: contents
         spacing: UM.Theme.sizes.default_lining.height;
 
