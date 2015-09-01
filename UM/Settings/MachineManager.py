@@ -74,6 +74,8 @@ class MachineManager(SignalEmitter):
 
     machineInstancesChanged = Signal()
 
+    machineInstanceNameChanged = Signal()
+
     def getMachineInstance(self, index):
         return self._machine_instances[index]
 
@@ -85,6 +87,7 @@ class MachineManager(SignalEmitter):
             return
 
         self._machine_instances.append(instance)
+        instance.nameChanged.connect(self._onInstanceNameChanged)
         self.machineInstancesChanged.emit()
 
     def removeMachineInstance(self, instance):
@@ -92,6 +95,7 @@ class MachineManager(SignalEmitter):
             return
 
         self._machine_instances.remove(instance)
+        instance.nameChanged.disconnect(self._onInstanceNameChanged)
 
         try:
             path = Resources.getStoragePath(Resources.MachineInstances, urllib.parse.quote_plus(instance.getName()) + ".cfg")
@@ -153,6 +157,8 @@ class MachineManager(SignalEmitter):
 
     profilesChanged = Signal()
 
+    profileNameChanged = Signal()
+
     def getProfiles(self):
         return self._profiles
 
@@ -161,6 +167,7 @@ class MachineManager(SignalEmitter):
             return
 
         self._profiles.append(profile)
+        profile.nameChanged.connect(self._onProfileNameChanged)
         self.profilesChanged.emit()
 
     def removeProfile(self, profile):
@@ -168,6 +175,7 @@ class MachineManager(SignalEmitter):
             return
 
         self._profiles.remove(profile)
+        profile.nameChanged.disconnect(self._onProfileNameChanged)
         self.profilesChanged.emit()
 
     def findProfile(self, name):
@@ -245,6 +253,7 @@ class MachineManager(SignalEmitter):
 
                 if not self.findMachineInstance(instance.getName()):
                     self._machine_instances.append(instance)
+                    instance.nameChanged.connect(self._onInstanceNameChanged)
 
         instance = self.findMachineInstance(Preferences.getInstance().getValue("machines/active_instance"))
         if instance:
@@ -273,6 +282,7 @@ class MachineManager(SignalEmitter):
 
                 if not self.findProfile(profile.getName()):
                     self._profiles.append(profile)
+                    profile.nameChanged.connect(self._onProfileNameChanged)
 
         profile = self.findProfile(Preferences.getInstance().getValue("machines/active_profile"))
         if profile:
@@ -322,3 +332,9 @@ class MachineManager(SignalEmitter):
                 setting.setVisible(True)
             else:
                 setting.setVisible(False)
+
+    def _onInstanceNameChanged(self, instance, old_name):
+        self.machineInstanceNameChanged.emit(instance)
+
+    def _onProfileNameChanged(self, profile, old_name):
+        self.profileNameChanged.emit(profile)
