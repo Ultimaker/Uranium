@@ -176,6 +176,13 @@ class MachineManager(SignalEmitter):
 
         self._profiles.remove(profile)
         profile.nameChanged.disconnect(self._onProfileNameChanged)
+
+        try:
+            path = Resources.getStoragePath(Resources.Profiles, urllib.parse.quote_plus(profile.getName()) + ".cfg")
+            os.remove(path)
+        except FileNotFoundError:
+            pass
+
         self.profilesChanged.emit()
 
     def findProfile(self, name):
@@ -334,7 +341,19 @@ class MachineManager(SignalEmitter):
                 setting.setVisible(False)
 
     def _onInstanceNameChanged(self, instance, old_name):
+        file_name = urllib.parse.quote_plus(old_name) + ".cfg"
+        try:
+            path = Resources.getStoragePath(Resources.MachineInstances, file_name)
+            os.remove(path)
+        except FileNotFoundError:
         self.machineInstanceNameChanged.emit(instance)
 
     def _onProfileNameChanged(self, profile, old_name):
+        file_name = urllib.parse.quote_plus(old_name) + ".cfg"
+        try:
+            path = Resources.getStoragePath(Resources.Profiles, file_name)
+            os.remove(path)
+        except FileNotFoundError:
+            pass
+
         self.profileNameChanged.emit(profile)
