@@ -397,7 +397,9 @@ class Setting(SignalEmitter):
         except (SyntaxError, TypeError) as e:
             Logger.log("e", "Parse error in function ({2}) for setting {0}: {1}".format(self._key, str(e), code))
         except IllegalMethodError as e:
-            Logger.log("e", "Use of illegal method {0} in function for setting {1}".format(str(e), self._key))
+            Logger.log("e", "Use of illegal method {0} in function ({2}) for setting {1}".format(str(e), self._key, code))
+        except Exception as e:
+            Logger.log("e", "Exception in function ({2}) for setting {0}: {1}".format(self._key, str(e), code))
 
         def local_function():
             profile = self._machine_manager.getActiveProfile()
