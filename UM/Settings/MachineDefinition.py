@@ -74,6 +74,11 @@ class MachineDefinition(SignalEmitter):
         return self._platform_texture
 
     def loadMetaData(self):
+        # Should we clean up the loaded JSON data after reading metadata?
+        # When we call loadALL the JSON data gets loaded and cleaned up in loadAll.
+        # loadAll calls loadMetaData internally but we should not try to load the
+        # JSON data again. So only perform the JSON data cleanup when we are not being
+        # called by loadAll.
         clean_json = False
         if not self._json_data:
             clean_json = True
