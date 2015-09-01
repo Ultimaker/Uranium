@@ -20,7 +20,7 @@ class ProfilesModel(ListModel):
     def __init__(self, parent = None):
         super().__init__(parent)
 
-        self._select_global = False
+        self._add_use_global = False
 
         self.addRoleName(self.IdRole, "id")
         self.addRoleName(self.NameRole, "name")
@@ -34,17 +34,18 @@ class ProfilesModel(ListModel):
         self._manager.profileNameChanged.connect(self._onProfileNameChanged)
         self._onProfilesChanged()
 
-    selectGlobalChanged = pyqtSignal()
+    addUseGlobalChanged = pyqtSignal()
 
-    def setSelectGlobal(self, select):
-        if select != self._select_global:
-            self._select_global = select
+    def setAddUseGlobal(self, add):
+        if add != self._add_use_global:
+            self._add_use_global = add
             self._onProfilesChanged()
-            self.selectGlobalChanged.emit()
+            self.addUseGlobalChanged.emit()
 
-    @pyqtProperty(bool, fset = setSelectGlobal, notify = selectGlobalChanged)
-    def selectGlobal(self):
-        return self._select_global
+    ##  Whether to add a "Use Global Profile" entry.
+    @pyqtProperty(bool, fset = setAddUseGlobal, notify = addUseGlobalChanged)
+    def addUseGlobal(self):
+        return self._add_use_global
 
     @pyqtSlot(str)
     def removeProfile(self, name):
@@ -101,7 +102,7 @@ class ProfilesModel(ListModel):
     def _onProfilesChanged(self):
         self.clear()
 
-        if self._select_global:
+        if self._add_use_global:
             self.appendItem({
                 "id": 1,
                 "name": catalog.i18nc("@item:inlistbox", "<Use Global Profile>"),

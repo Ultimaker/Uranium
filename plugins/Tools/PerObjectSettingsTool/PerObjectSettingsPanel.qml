@@ -59,7 +59,7 @@ Item {
 
                     style: UM.Theme.styles.setting_item;
 
-                    options: UM.ProfilesModel { selectGlobal: true }
+                    options: UM.ProfilesModel { addUseGlobal: true }
 
                     value: UM.ActiveTool.properties.Model.getItem(base.currentIndex).profile
 
