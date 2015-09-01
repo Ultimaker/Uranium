@@ -28,8 +28,9 @@ class Profile(SignalEmitter):
 
     def setName(self, name):
         if name != self._name:
+            old_name = self._name
             self._name = name
-            self.nameChanged.emit()
+            self.nameChanged.emit(self, old_name)
 
     def isReadOnly(self):
         return self._read_only
