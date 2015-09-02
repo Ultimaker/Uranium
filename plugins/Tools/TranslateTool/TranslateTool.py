@@ -95,6 +95,7 @@ class TranslateTool(Tool):
             if self.getDragPlane():
                 self.setLockedAxis(None)
                 self.setDragPlane(None)
+                self.setDragStart(None, None)
                 self.operationStopped.emit(self)
                 return True
 
