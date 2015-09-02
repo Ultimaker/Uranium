@@ -350,8 +350,9 @@ class Setting(SignalEmitter):
 
     def __deepcopy__(self, memo):
         copy = Setting(
-            self._key,
-            self._i18n_catalog,
+            machine_manager = self._machine_manager,
+            key = self._key,
+            catalog = self._i18n_catalog,
             label = self._label,
             type = self._type
         )
@@ -371,7 +372,7 @@ class Setting(SignalEmitter):
 
         copy._warning_description = self._warning_description
         copy._error_description = self._error_description
-        copy._enabled = deepcopy(self._enabled, memo)
+        copy._enabled_function = deepcopy(self._enabled_function, memo)
 
         copy._fixChildren()
 
