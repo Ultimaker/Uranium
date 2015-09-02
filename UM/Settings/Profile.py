@@ -33,6 +33,9 @@ class Profile(SignalEmitter):
             self._name = name
             self.nameChanged.emit(self, old_name)
 
+    def setReadOnly(self, read_only):
+        self._read_only = read_only
+
     def isReadOnly(self):
         return self._read_only
 

@@ -67,10 +67,10 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
         if setting:
             if self._profile.isReadOnly():
                 custom_profile_name = catalog.i18nc("@item appended to customised profiles ({0} is old profile name)", "{0} (Customised)", self._profile.getName())
-
                 custom_profile = self._machine_manager.findProfile(custom_profile_name)
                 if not custom_profile:
                     custom_profile = deepcopy(self._profile)
+                    custom_profile.setReadOnly(False)
                     custom_profile.setName(custom_profile_name)
                     self._machine_manager.addProfile(custom_profile)
 
