@@ -9,6 +9,8 @@ from UM.Resources import Resources
 from UM.Application import Application
 from UM.Signal import Signal, SignalEmitter
 
+from copy import deepcopy
+
 from UM.i18n import i18nCatalog
 catalog = i18nCatalog("uranium")
 
