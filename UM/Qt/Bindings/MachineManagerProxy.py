@@ -33,9 +33,9 @@ class MachineManagerProxy(QObject):
 
     @pyqtSlot(str)
     def setActiveMachineInstance(self, name):
-        instance = self._machine_manager.findMachineInstance(name)
+        instance = self._manager.findMachineInstance(name)
         if instance:
-            self._machine_manager.setActiveMachineInstance(instance)
+            self._manager.setActiveMachineInstance(instance)
 
     @pyqtProperty(bool, notify = activeMachineInstanceChanged)
     def hasVariants(self):
@@ -71,6 +71,14 @@ class MachineManagerProxy(QObject):
         profile = self._manager.findProfile(name)
         if profile:
             self._manager.setActiveProfile(profile)
+
+    @pyqtSlot(str)
+    def getSettingValue(self, setting):
+        profile = self._manager.getActiveProfile()
+        if not profile:
+            return None
+
+        return profile.getSettingValue(setting)
 
     def _onActiveMachineInstanceChanged(self):
         self.activeMachineInstanceChanged.emit()
