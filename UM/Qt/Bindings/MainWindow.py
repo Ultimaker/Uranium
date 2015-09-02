@@ -35,10 +35,14 @@ class MainWindow(QQuickWindow):
 
         self._preferences.addPreference("general/window_width", 1280)
         self._preferences.addPreference("general/window_height", 720)
+        self._preferences.addPreference("general/window_left", 50)
+        self._preferences.addPreference("general/window_top", 50)
+        self._preferences.addPreference("general/window_state", Qt.WindowNoState)
 
         self.setWidth(int(self._preferences.getValue("general/window_width")))
         self.setHeight(int(self._preferences.getValue("general/window_height")))
-
+        self.setPosition(int(self._preferences.getValue("general/window_left")), int(self._preferences.getValue("general/window_top")))
+        self.setWindowState(int(self._preferences.getValue("general/window_state")))
         self._mouse_x = 0
         self._mouse_y = 0
 
@@ -121,6 +125,14 @@ class MainWindow(QQuickWindow):
 
         self._mouse_device.handleEvent(event)
 
+    def moveEvent(self, event):
+        if self.windowState() == Qt.WindowNoState:
+            self._preferences.setValue("general/window_left", event.pos().x())
+            self._preferences.setValue("general/window_top", event.pos().y())
+            self._preferences.setValue("general/window_state", Qt.WindowNoState)
+        elif self.windowState() == Qt.WindowMaximized:
+            self._preferences.setValue("general/window_state", Qt.WindowMaximized)
+
     def resizeEvent(self, event):
         super().resizeEvent(event)
         
@@ -134,8 +146,14 @@ class MainWindow(QQuickWindow):
             else:
                 proj.setOrtho(-w / 2, w / 2, -h / 2, h / 2, -500, 500)
             camera.setProjectionMatrix(proj)
-        self._preferences.setValue("general/window_width", event.size().width())
-        self._preferences.setValue("general/window_height", event.size().height())
+
+        if self.windowState() == Qt.WindowNoState:
+            self._preferences.setValue("general/window_width", event.size().width())
+            self._preferences.setValue("general/window_height", event.size().height())
+            self._preferences.setValue("general/window_state", Qt.WindowNoState)
+        elif self.windowState() == Qt.WindowMaximized:
+            self._preferences.setValue("general/window_state", Qt.WindowMaximized)
+
         self._app.getRenderer().setViewportSize(w, h)
 
     def hideEvent(self, event):
