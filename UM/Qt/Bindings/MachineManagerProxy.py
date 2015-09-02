@@ -33,9 +33,9 @@ class MachineManagerProxy(QObject):
 
     @pyqtSlot(str)
     def setActiveMachineInstance(self, name):
-        instance = self._machine_manager.findMachineInstance(name)
+        instance = self._manager.findMachineInstance(name)
         if instance:
-            self._machine_manager.setActiveMachineInstance(instance)
+            self._manager.setActiveMachineInstance(instance)
 
     @pyqtProperty(bool, notify = activeMachineInstanceChanged)
     def hasVariants(self):
