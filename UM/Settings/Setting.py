@@ -10,6 +10,7 @@ from UM.Logger import Logger
 
 import math
 import ast
+import collections
 from copy import deepcopy
 
 ##  Raised when an inheritance function tries to use a blacklisted method.
@@ -53,7 +54,7 @@ class Setting(SignalEmitter):
         self._hide_if_all_children_visible = True
         self._children = []
         self._enabled_function = None
-        self._options = {}
+        self._options = collections.OrderedDict()
         self._unit = ""
         self._inherit = True
         self._inherit_function = None
