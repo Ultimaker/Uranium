@@ -327,13 +327,17 @@ class MachineManager(SignalEmitter):
             instance.saveToFile(Resources.getStoragePath(Resources.MachineInstances, file_name))
 
     def saveProfiles(self):
-        Preferences.getInstance().setValue("machines/active_profile", self._active_profile.getName())
-        for profile in self._profiles:
-            if profile.isReadOnly():
-                continue
+        try:
+            Preferences.getInstance().setValue("machines/active_profile", self._active_profile.getName())
+            for profile in self._profiles:
+                if profile.isReadOnly():
+                    continue
 
-            file_name = urllib.parse.quote_plus(profile.getName()) + ".cfg"
-            profile.saveToFile(Resources.getStoragePath(Resources.Profiles, file_name))
+                file_name = urllib.parse.quote_plus(profile.getName()) + ".cfg"
+                profile.saveToFile(Resources.getStoragePath(Resources.Profiles, file_name))
+        except AttributeError:
+            pass
+
 
     def saveVisibility(self):
         if not self._active_machine:
