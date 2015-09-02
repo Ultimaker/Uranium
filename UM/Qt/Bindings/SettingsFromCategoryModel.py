@@ -77,8 +77,9 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
                 self._changed_setting = (key, value)
                 self._machine_manager.setActiveProfile(custom_profile)
                 return
-
+            self._ignore_setting_value_update = setting
             self._profile.setSettingValue(key, value)
+            self._ignore_setting_value_update = None
             self.setProperty(index, "valid", setting.validate(setting.parseValue(value)))
 
     @pyqtSlot(str, bool)
@@ -161,6 +162,7 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
         if index != -1:
             setting = self._category.getSetting(key)
             value = self._profile.getSettingValue(key)
-            self.setProperty(index, "value", str(value))
+            if setting is not self._ignore_setting_value_update:
+                self.setProperty(index, "value", str(value))
             self.setProperty(index, "overridden", self._profile.hasSettingValue(key))
             self.setProperty(index, "valid", setting.validate(value))
