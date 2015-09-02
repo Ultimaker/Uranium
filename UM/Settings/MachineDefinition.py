@@ -155,7 +155,7 @@ class MachineDefinition(SignalEmitter):
 
         self.settingsLoaded.emit()
 
-        self._json_data = None
+        #self._json_data = None
         self._loaded = True
 
     ##  Get setting category by key

@@ -95,7 +95,6 @@ class Profile(SignalEmitter):
         for key, value in self._changed_settings.items():
             valid = self._active_instance.getMachineDefinition().getSetting(key).validate(value)
             if valid == ResultCodes.min_value_error or valid == ResultCodes.max_value_error or valid == ResultCodes.not_valid_error:
-                print("KEY ", key , " value" , value, " " , valid)
                 return True
 
         return False
