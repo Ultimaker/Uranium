@@ -1,7 +1,7 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-from PyQt5.QtCore import pyqtProperty, QObject, Qt, QCoreApplication, pyqtSignal, pyqtSlot
+from PyQt5.QtCore import pyqtProperty, QObject, Qt, QCoreApplication, pyqtSignal, pyqtSlot, QMetaObject
 from PyQt5.QtGui import QColor
 from PyQt5.QtQuick import QQuickWindow, QQuickItem
 
@@ -126,12 +126,7 @@ class MainWindow(QQuickWindow):
         self._mouse_device.handleEvent(event)
 
     def moveEvent(self, event):
-        if self.windowState() == Qt.WindowNoState:
-            self._preferences.setValue("general/window_left", event.pos().x())
-            self._preferences.setValue("general/window_top", event.pos().y())
-            self._preferences.setValue("general/window_state", Qt.WindowNoState)
-        elif self.windowState() == Qt.WindowMaximized:
-            self._preferences.setValue("general/window_state", Qt.WindowMaximized)
+        QMetaObject.invokeMethod(self, "_onWindowGeometryChanged", Qt.QueuedConnection);
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
@@ -147,14 +142,9 @@ class MainWindow(QQuickWindow):
                 proj.setOrtho(-w / 2, w / 2, -h / 2, h / 2, -500, 500)
             camera.setProjectionMatrix(proj)
 
-        if self.windowState() == Qt.WindowNoState:
-            self._preferences.setValue("general/window_width", event.size().width())
-            self._preferences.setValue("general/window_height", event.size().height())
-            self._preferences.setValue("general/window_state", Qt.WindowNoState)
-        elif self.windowState() == Qt.WindowMaximized:
-            self._preferences.setValue("general/window_state", Qt.WindowMaximized)
-
         self._app.getRenderer().setViewportSize(w, h)
+
+        QMetaObject.invokeMethod(self, "_onWindowGeometryChanged", Qt.QueuedConnection);
 
     def hideEvent(self, event):
         Application.getInstance().windowClosed()
@@ -171,3 +161,14 @@ class MainWindow(QQuickWindow):
 
     def _onSceneChanged(self, object):
         self.update()
+
+    @pyqtSlot()
+    def _onWindowGeometryChanged(self):
+        if self.windowState() == Qt.WindowNoState:
+            self._preferences.setValue("general/window_width", self.width())
+            self._preferences.setValue("general/window_height", self.height())
+            self._preferences.setValue("general/window_left", self.x())
+            self._preferences.setValue("general/window_top", self.y())
+            self._preferences.setValue("general/window_state", Qt.WindowNoState)
+        elif self.windowState() == Qt.WindowMaximized:
+            self._preferences.setValue("general/window_state", Qt.WindowMaximized)
