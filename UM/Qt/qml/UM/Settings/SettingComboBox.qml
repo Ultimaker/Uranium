@@ -18,7 +18,7 @@ ComboBox
 
     currentIndex: {
         for(var i = 0; i < options.rowCount(); ++i) {
-            if(options.getItem(i).name == value /*From parent loader*/) {
+            if(options.getItem(i).value == value /*From parent loader*/) {
                 return i;
             }
         }
