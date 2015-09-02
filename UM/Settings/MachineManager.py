@@ -320,7 +320,8 @@ class MachineManager(SignalEmitter):
         self.saveVisibility()
 
     def saveMachineInstances(self):
-        Preferences.getInstance().setValue("machines/active_instance", self._active_machine.getName())
+        if self._active_machine:
+            Preferences.getInstance().setValue("machines/active_instance", self._active_machine.getName())
 
         for instance in self._machine_instances:
             file_name = urllib.parse.quote_plus(instance.getName()) + ".cfg"
