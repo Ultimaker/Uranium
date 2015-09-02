@@ -2,6 +2,7 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 import configparser
+from copy import deepcopy
 
 from UM.Signal import Signal, SignalEmitter
 from UM.Settings import SettingsError
@@ -137,6 +138,14 @@ class Profile(SignalEmitter):
         
         with open(file, "wt", -1, "utf-8") as f:
             parser.write(f)
+
+    def __deepcopy__(self, memo):
+        copy = Profile(self._machine_manager, self._read_only)
+
+        copy._changed_settings = deepcopy(self._changed_settings, memo)
+        copy.setName(self._name)
+
+        return copy
 
     def _onActiveInstanceChanged(self):
         self._active_instance = self._machine_manager.getActiveMachineInstance()
