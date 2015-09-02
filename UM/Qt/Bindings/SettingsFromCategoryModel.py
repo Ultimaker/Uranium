@@ -32,12 +32,14 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
     OverriddenRole = Qt.UserRole + 13
     EnabledRole = Qt.UserRole + 14
 
-    def __init__(self, category, parent = None):
+    def __init__(self, category, parent = None, machine_manager = None):
         super().__init__(parent)
         self._category = category
         self._ignore_setting_value_update = None
 
-        self._machine_manager = Application.getInstance().getMachineManager()
+        self._machine_manager = machine_manager
+        if not self._machine_manager:
+            self._machine_manager = Application.getInstance().getMachineManager()
 
         self._changed_setting = None
 
