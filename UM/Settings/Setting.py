@@ -334,17 +334,19 @@ class Setting(SignalEmitter):
     def parseValue(self, value):
         if not type(value) is str:
             return value
-
-        if self._type == "bool":
-            return bool(ast.literal_eval(value))
-        elif self._type == "int":
-            return int(ast.literal_eval(value))
-        elif self._type == "float":
-            return float(ast.literal_eval(value.replace(",", ".")))
-        elif self._type == "string" or self._type == "enum":
+        try:
+            if self._type == "bool":
+                return bool(ast.literal_eval(value))
+            elif self._type == "int":
+                return int(ast.literal_eval(value))
+            elif self._type == "float":
+                return float(ast.literal_eval(value.replace(",", ".")))
+            elif self._type == "string" or self._type == "enum":
+                return value
+            else:
+                return ast.literal_eval(value)
+        except SyntaxError:
             return value
-        else:
-            return ast.literal_eval(value)
 
     def __repr__(self):
         return "<Setting: %s>" % (self._key)
