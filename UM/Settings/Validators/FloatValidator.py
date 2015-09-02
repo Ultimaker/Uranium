@@ -24,6 +24,6 @@ class FloatValidator(Validator):
     # \returns message Message providing more detail about warning / error (if any)
     def validate(self, value):
         try:
-            return self._checkRange(value, self._min_value, self._max_value, self._min_value_warning, self._max_value_warning)
-        except (ValueError, SyntaxError, TypeError, NameError):
+            return self._checkRange(float(value), self._min_value, self._max_value, self._min_value_warning, self._max_value_warning)
+        except (ValueError, SyntaxError, TypeError, NameError) as e:
             return ResultCodes.not_valid_error
