@@ -101,9 +101,10 @@ UM.Dialog
                         }
                         onClicked:
                         {
-                            for (var i = 0; i < progressList.model.count; i++)
+                            //console.log(title
+                            for (var i = 0; i < pagesModel.count; i++)
                             {
-                                if (progressList.model.get(i).title == title)
+                                if (pagesModel.get(i).title == title)
                                 {
                                    base.currentPage = i
                                    break
