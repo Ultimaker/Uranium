@@ -12,13 +12,13 @@ def getMetaData():
             "name": "Per Object Settings Tool",
             "author": "Ultimaker",
             "version": "1.0",
-            "description": i18n_catalog.i18nc("Mirror Tool plugin description", "Provides the Mirror tool."),
+            "description": i18n_catalog.i18nc("Per Object Settings plugin description", "Provides the Per Object Settings."),
             "api": 2
         },
         "tool": {
             "name": i18n_catalog.i18nc("Mirror Tool name", "Per Object Settings"),
-            "description": i18n_catalog.i18nc("Mirror Tool description", "Configure per-object settings"),
-            "icon": "mirror",
+            "description": i18n_catalog.i18nc("Per Object Settings description", "Configure per-object settings"),
+            "icon": "setting_per_object",
             "tool_panel": "PerObjectSettingsPanel.qml"
         },
     }
