@@ -4,7 +4,10 @@
 class Version(object):
     def __init__(self, version):
         super().__init__()
-        version_list = version.split(".")
+        try:
+            version_list = version.split(".")
+        except AttributeError:
+            version_list = version
         self._major = int(version_list[0])
         self._minor = int(version_list[1])
         self._revision = int(version_list[2])
@@ -27,12 +30,13 @@ class Version(object):
             return False
 
     def __lt__(self, other):
+        print("derp")
         if type(other) is Version:
             if self._major < other.getMajor():
                 return True
-            if self._minor < other.getMinor():
+            if self._minor < other.getMinor() and self._major == other.getMajor():
                 return True
-            if self._revision < other.getRevision():
+            if self._revision < other.getRevision() and self._major == other.getMajor() and self._minor == other.getMinor():
                 return True
             return False
         elif type(other) is str:
