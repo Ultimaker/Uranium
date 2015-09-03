@@ -84,6 +84,7 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
             self._ignore_setting_value_update = setting
             self._profile.setSettingValue(key, value)
             self._ignore_setting_value_update = None
+            self.setProperty(index, "value", str(value))
             self.setProperty(index, "valid", setting.validate(setting.parseValue(value)))
 
     @pyqtSlot(str, bool)
