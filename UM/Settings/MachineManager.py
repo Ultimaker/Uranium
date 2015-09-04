@@ -304,7 +304,11 @@ class MachineManager(SignalEmitter):
         profile = self.findProfile(Preferences.getInstance().getValue("machines/active_profile"))
         if profile:
             self.setActiveProfile(profile)
-
+        else:
+            if Preferences.getInstance().getValue("machines/active_profile") == "":
+                for profile in self._profiles:
+                    self.setActiveProfile(profile) #default to first profile you can find
+                    break
         self.profilesChanged.emit()
 
     def loadVisibility(self):
