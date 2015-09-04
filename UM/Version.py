@@ -30,7 +30,6 @@ class Version(object):
             return False
 
     def __lt__(self, other):
-        print("derp")
         if type(other) is Version:
             if self._major < other.getMajor():
                 return True
