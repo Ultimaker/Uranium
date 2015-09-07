@@ -64,9 +64,12 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
 
     settingChanged = Signal()
 
-    @pyqtSlot(int, str, "QVariant")
+    @pyqtSlot(str, "QVariant")
     ##  Notification that setting has changed.  
-    def setSettingValue(self, index, key, value):
+    def setSettingValue(self, key, value):
+        index = self.find("key", key)
+        if index == -1:
+            return
         setting = self._category.getSetting(key)
         if setting:
             if self._profile.isReadOnly():
@@ -158,8 +161,7 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
             self.updateSettings()
 
             if self._changed_setting:
-                index = self.find("key", self._changed_setting[0])
-                self.setSettingValue(index, self._changed_setting[0], self._changed_setting[1])
+                self.setSettingValue(self._changed_setting[0], self._changed_setting[1])
                 self._changed_setting = None
 
     def _onSettingValueChanged(self, key):

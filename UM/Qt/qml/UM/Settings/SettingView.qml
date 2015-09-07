@@ -142,7 +142,7 @@ ScrollView
 
                             style: UM.Theme.styles.setting_item;
 
-                            onItemValueChanged: delegateItem.settingsModel.setSettingValue(index, model.key, value);
+                            onItemValueChanged: delegateItem.settingsModel.setSettingValue(model.key, value);
                             onContextMenuRequested: contextMenu.popup();
                             onResetRequested: delegateItem.settingsModel.resetSettingValue(model.key)
 
@@ -163,7 +163,8 @@ ScrollView
                                     text: catalog.i18nc("@action:menu","Hide this setting");
                                     onTriggered: delegateItem.settingsModel.hideSetting(model.key);
                                 }
-                                MenuItem {
+                                MenuItem
+                                {
                                     //: Settings context menu action
                                     text: catalog.i18nc("@action:menu","Configure setting visiblity...");
 
