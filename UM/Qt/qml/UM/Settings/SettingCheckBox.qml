@@ -44,7 +44,7 @@ CheckBox
 
                 text: "✓";
 
-                opacity: control.checked ? 1 : 0;
+                opacity: control.checked == "True" ? 1 : 0;
                 Behavior on opacity { NumberAnimation { duration: 100; } }
             }
         }
