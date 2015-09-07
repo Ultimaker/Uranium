@@ -7,7 +7,8 @@ import QtQuick.Layouts 1.1
 
 import UM 1.1 as UM
 
-PreferencesPage {
+PreferencesPage
+{
     id: base;
 
     property alias model: objectList.model;
@@ -33,25 +34,29 @@ PreferencesPage {
 
     resetEnabled: false;
 
-    Row {
+    Row
+    {
         id: buttons;
 
         width: childrenRect.width;
         height: childrenRect.height;
 
-        Button {
+        Button
+        {
             id: addButton;
             text: catalog.i18nc("@action:button", "Add");
             iconName: "list-add";
             onClicked: base.addObject();
         }
-        Button {
+        Button
+        {
             id: removeButton;
             text: catalog.i18nc("@action:button", "Remove");
             iconName: "list-remove";
             onClicked: base.removeObject();
         }
-        Button {
+        Button
+        {
             id: renameButton;
             text: catalog.i18nc("@action:button", "Rename");
             iconName: "edit-rename";
@@ -59,18 +64,22 @@ PreferencesPage {
         }
     }
 
-    Item {
-        anchors {
+    Item
+    {
+        anchors
+        {
             top: buttons.bottom;
             left: parent.left;
             right: parent.right;
             bottom: parent.bottom;
         }
 
-        TableView {
+        TableView
+        {
             id: objectList;
 
-            anchors {
+            anchors
+            {
                 top: parent.top;
                 bottom: parent.bottom;
                 left: parent.left;
@@ -82,23 +91,28 @@ PreferencesPage {
 
             headerVisible: false;
 
-            onActivated: {
+            onActivated:
+            {
                 base.currentItem = model.getItem(row);
                 base.itemActivated();
             }
 
-            Component.onCompleted: {
-                if(model.count > 0) {
+            Component.onCompleted:
+            {
+                if(model.count > 0)
+                {
                     selection.select(0, 0);
                     base.currentItem = model.getItem(0);
                 }
             }
         }
 
-        Item {
+        Item
+        {
             id: detailsPane;
 
-            anchors {
+            anchors
+            {
                 left: objectList.right;
                 leftMargin: UM.Theme.sizes.default_margin.width;
                 top: parent.top;
