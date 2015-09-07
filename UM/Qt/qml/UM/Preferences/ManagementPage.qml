@@ -90,7 +90,11 @@ PreferencesPage
             TableViewColumn { role: base.nameRole; }
 
             headerVisible: false;
-
+            onClicked:
+            {
+                base.currentItem = model.getItem(row);
+                base.itemActivated();
+            }
             onActivated:
             {
                 base.currentItem = model.getItem(row);
