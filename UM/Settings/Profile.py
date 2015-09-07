@@ -43,6 +43,7 @@ class Profile(SignalEmitter):
     settingValueChanged = Signal()
 
     def setSettingValue(self, key, value):
+        Logger.log('d' , "Setting value of setting %s to %s",key,value)
         if not self._active_instance or not self._active_instance.getMachineDefinition().isUserSetting(key):
             Logger.log("w", "Tried to set value of non-user setting %s", key)
             return

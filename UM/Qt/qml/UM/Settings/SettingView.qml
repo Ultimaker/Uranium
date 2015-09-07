@@ -26,7 +26,8 @@ ScrollView
         id: contents
         spacing: UM.Theme.sizes.default_lining.height;
 
-        Repeater {
+        Repeater
+        {
             model: UM.SettingCategoriesModel { id: categoriesModel; }
 
             delegate: Item
@@ -67,7 +68,8 @@ ScrollView
                     }
                 }
 
-                Label {
+                Label
+                {
                     id: hiddenSettingsLabel;
 
                     anchors.top: categoryHeader.bottom;
@@ -80,7 +82,8 @@ ScrollView
                     height: model.hiddenOverriddenSettingsCount > 0 ? 20 : 0;
                 }
 
-                Column {
+                Column
+                {
                     id: settings;
 
                     anchors.top: hiddenSettingsLabel.bottom;
@@ -170,7 +173,8 @@ ScrollView
                         }
                     }
 
-                    states: State {
+                    states: State
+                    {
                         name: "collapsed";
                         when: !categoryHeader.checked;
 
@@ -183,13 +187,16 @@ ScrollView
                         }
                     }
 
-                    transitions: Transition {
+                    transitions: Transition
+                    {
                         to: "collapsed";
                         reversible: true;
                         enabled: !categoriesModel.resetting;
-                        SequentialAnimation {
+                        SequentialAnimation
+                        {
                             NumberAnimation { property: "opacity"; duration: 75; }
-                            ParallelAnimation {
+                            ParallelAnimation
+                            {
                                 NumberAnimation { property: "height"; duration: 75; }
                                 //NumberAnimation { property: "anchors.topMargin"; duration: 75; }
                             }
