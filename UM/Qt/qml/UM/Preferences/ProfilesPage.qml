@@ -40,13 +40,13 @@ ManagementPage
         ConfirmRemoveDialog
         {
             id: confirmDialog;
-            object: base.currentItem.name;
+            object: base.currentItem != null ? base.currentItem.name : "";
             onYes: base.model.removeProfile(base.currentItem.name);
         }
         RenameDialog
         {
             id: renameDialog;
-            object: base.currentItem.name;
+            object: base.currentItem != null ? base.currentItem.name : "";
             onAccepted: base.model.renameProfile(base.currentItem.name, newName);
         }
 
