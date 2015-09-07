@@ -33,7 +33,7 @@ class MachineManager(SignalEmitter):
 
         Preferences.getInstance().addPreference("machines/setting_visibility", "")
         Preferences.getInstance().addPreference("machines/active_instance", "")
-        Preferences.getInstance().addPreference("machines/active_profile", "")
+        Preferences.getInstance().addPreference("machines/active_profile", "Normal Quality")
 
     def getApplicationName(self):
         return self._application_name
