@@ -7,7 +7,8 @@ import QtQuick.Dialogs 1.2
 
 import UM 1.1 as UM
 
-ManagementPage {
+ManagementPage
+{
     id: base;
 
     title: catalog.i18nc("@title:window", "Profiles");
@@ -25,27 +26,32 @@ ManagementPage {
     removeEnabled: currentItem != null ? !currentItem.readOnly : false;
     renameEnabled: currentItem != null ? !currentItem.readOnly : false;
 
-    buttons: Button {
+    buttons: Button
+    {
         text: catalog.i18nc("@action:button", "Export");
         iconName: "document-export";
         onClicked: exportDialog.open();
     }
 
-    Item {
+    Item
+    {
         UM.I18nCatalog { id: catalog; name: "uranium"; }
 
-        ConfirmRemoveDialog {
+        ConfirmRemoveDialog
+        {
             id: confirmDialog;
             object: base.currentItem.name;
             onYes: base.model.removeProfile(base.currentItem.name);
         }
-        RenameDialog {
+        RenameDialog
+        {
             id: renameDialog;
             object: base.currentItem.name;
             onAccepted: base.model.renameProfile(base.currentItem.name, newName);
         }
 
-        FileDialog {
+        FileDialog
+        {
             id: importDialog;
             title: catalog.i18nc("@title:window", "Import Profile");
             selectExisting: true;
@@ -54,7 +60,8 @@ ManagementPage {
             onAccepted: base.model.importProfile(fileUrl)
         }
 
-        FileDialog {
+        FileDialog
+        {
             id: exportDialog;
             title: catalog.i18nc("@title:window", "Export Profile");
             selectExisting: false;
