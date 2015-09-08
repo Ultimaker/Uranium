@@ -17,6 +17,20 @@ Item {
     {
         UM.Application.log("w", "No reset implemented!")
     }
+    function boolCheck(value) //Hack to ensure a good match between python and qml.
+    {
+        if(value == "True")
+        {
+            return true
+        }else if(value == "False")
+        {
+            return false
+        }
+        else
+        {
+            return value
+        }
+    }
 
     Label {
         id: titleLabel;
