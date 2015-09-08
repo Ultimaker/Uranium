@@ -36,7 +36,9 @@ class ExtensionModel(ListModel):
         model.addRoleName(self.NameRole,"text")
         for option in options:
             model.appendItem({"text": str(option)})
-        return model    
+        if len(options) != 0:
+            return model
+        return None
     
     @pyqtSlot(str,str)
     def subMenuTriggered(self,extention_name, option_name):
