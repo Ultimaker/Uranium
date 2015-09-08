@@ -9,15 +9,15 @@ i18n_catalog = i18nCatalog("uranium")
 def getMetaData():
     return {
         "plugin": {
-            "name": "Rotate Tool",
+            "name": i18n_catalog.i18nc("@label", "Rotate Tool"),
             "author": "Ultimaker",
             "version": "1.0",
-            "description": i18n_catalog.i18nc("Rotate Tool plugin description", "Provides the Rotate tool."),
+            "description": i18n_catalog.i18nc("@info:whatsthis", "Provides the Rotate tool."),
             "api": 2
         },
         "tool": {
-            "name": i18n_catalog.i18nc("Rotate tool name", "Rotate"),
-            "description": i18n_catalog.i18nc("Rotate tool description", "Rotate Object"),
+            "name": i18n_catalog.i18nc("@label", "Rotate"),
+            "description": i18n_catalog.i18nc("@info:tooltip", "Rotate Object"),
             "icon": "rotate",
             "tool_panel": "RotateTool.qml"
         }

@@ -10,14 +10,14 @@ def getMetaData():
     return {
         "type": "view",
         "plugin": {
-            "name": "Wireframe View",
+            "name": i18n_catalog.i18nc("@label", "Wireframe View"),
             "author": "Ultimaker",
             "version": "1.0",
-            "description": i18n_catalog.i18nc("Wireframe View plugin description", "Provides a simple wireframe view"),
+            "description": i18n_catalog.i18nc("@info:whatsthis", "Provides a simple wireframe view"),
             "api": 2
         },
         "view": {
-            "name": i18n_catalog.i18nc("Wireframe View plugin view name", "Wireframe"),
+            "name": "Wireframe",
             "visible": False
         }
     }

@@ -16,7 +16,6 @@ import codecs
 import webbrowser
 from threading import Thread
 
-        
 i18n_catalog = i18nCatalog("uranium")
 
 ## This extention checks for new versions of the application based on the application name and the version number.
@@ -25,7 +24,7 @@ i18n_catalog = i18nCatalog("uranium")
 class UpdateChecker(Extension):
     def __init__(self):
         super().__init__()
-        self.addMenuItem(i18n_catalog.i18n("Check for Updates"), self.checkNewVersion)
+        self.addMenuItem(i18n_catalog.i18nc("@item:inmenu", "Check for Updates"), self.checkNewVersion)
         self._url = None
         
         thread = Thread(target = self.checkNewVersion)
@@ -71,8 +70,8 @@ class UpdateChecker(Extension):
                             newest_version = Version([int(value["major"]), int(value["minor"]), int(value["revision"])])
                             if local_version < newest_version:
                                 Logger.log("i", "Found a new version of the software. Spawning message")
-                                message = Message(i18n_catalog.i18n("A new version is available!"))
-                                message.addAction("download", "Download", "[no_icon]", "[no_description]")
+                                message = Message(i18n_catalog.i18nc("@info", "A new version is available!"))
+                                message.addAction("download", catalog.i18nc("@action:button", "Download"), "[no_icon]", "[no_description]")
                                 self._url = value["url"]
                                 message.actionTriggered.connect(self.actionTriggered)
                                 message.show()

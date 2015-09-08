@@ -9,15 +9,15 @@ i18n_catalog = i18nCatalog("uranium")
 def getMetaData():
     return {
         "plugin": {
-            "name": "Per Object Settings Tool",
+            "name": i18n_catalog.i18nc("@label", "Per Object Settings Tool"),
             "author": "Ultimaker",
             "version": "1.0",
-            "description": i18n_catalog.i18nc("Per Object Settings plugin description", "Provides the Per Object Settings."),
+            "description": i18n_catalog.i18nc("@info:whatsthis", "Provides the Per Object Settings."),
             "api": 2
         },
         "tool": {
-            "name": i18n_catalog.i18nc("Mirror Tool name", "Per Object Settings"),
-            "description": i18n_catalog.i18nc("Per Object Settings description", "Configure per-object settings"),
+            "name": i18n_catalog.i18nc("@label", "Per Object Settings"),
+            "description": i18n_catalog.i18nc("@info:tooltip", "Configure per-object settings"),
             "icon": "setting_per_object",
             "tool_panel": "PerObjectSettingsPanel.qml"
         },

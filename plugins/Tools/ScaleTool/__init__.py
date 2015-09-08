@@ -10,15 +10,15 @@ def getMetaData():
     return {
         "type": "tool",
         "plugin": {
-            "name": "Scale Tool",
+            "name": i18n_catalog.i18nc("@label", "Scale Tool"),
             "author": "Ultimaker",
             "version": "1.0",
-            "description": i18n_catalog.i18nc("Scale Tool plugin description", "Provides the Scale tool."),
+            "description": i18n_catalog.i18nc("@info:whatsthis", "Provides the Scale tool."),
             "api": 2
         },
         "tool": {
-            "name": i18n_catalog.i18nc("Scale Tool name", "Scale"),
-            "description": i18n_catalog.i18nc("Scale Tool description", "Scale Object"),
+            "name": i18n_catalog.i18nc("@label", "Scale"),
+            "description": i18n_catalog.i18nc("@info:tooltip", "Scale Object"),
             "icon": "scale",
             "tool_panel": "ScaleTool.qml"
         }
