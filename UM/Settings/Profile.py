@@ -92,6 +92,31 @@ class Profile(SignalEmitter):
 
         return values
 
+    def getChangedSettingValues(self):
+        values = {}
+
+        if not self._active_instance:
+            return values
+
+        definition = self._active_instance.getMachineDefinition()
+
+        for key, value in self._changed_settings.items():
+            setting = definition.getSetting(key)
+            if not setting:
+                continue
+
+            values[key] = setting.parseValue(value)
+
+            for child in setting.getAllChildren():
+                child_key = child.getKey()
+                if child_key in self._changed_settings:
+                    values[child_key] = child.parseValue(self._changed_settings[child_key])
+                else:
+                    values[child_key] = child.getDefaultValue(self)
+
+        return values
+
+
     def hasErrorValue(self):
         for key, value in self._changed_settings.items():
             valid = self._active_instance.getMachineDefinition().getSetting(key).validate(value)
