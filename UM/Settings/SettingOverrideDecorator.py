@@ -26,16 +26,16 @@ class SettingOverrideDecorator(SceneNodeDecorator, SignalEmitter):
 
         for key, setting in self._settings.items():
             if key in self._setting_values:
-                values[key] = self._setting_values[key]
+                values[key] = setting.parseValue(self._setting_values[key])
             else:
-                values[key] = setting.getDefaultValue()
+                values[key] = setting.getDefaultValue(self)
 
             for child in setting.getAllChildren():
                 child_key = child.getKey()
                 if child_key in self._setting_values:
-                    values[child_key] = self._setting_values[child_key]
+                    values[child_key] = child.parseValue(self._setting_values[child_key])
                 else:
-                    values[child_key] = child.getDefaultValue()
+                    values[child_key] = child.getDefaultValue(self)
 
         return values
 
@@ -73,14 +73,14 @@ class SettingOverrideDecorator(SceneNodeDecorator, SignalEmitter):
 
     def getSettingValue(self, key):
         if key not in self._settings:
-            return None
+            return Application.getInstance().getMachineManager().getActiveProfile().getSettingValue(key)
 
         setting = self._settings[key]
 
         if key in self._setting_values:
             return setting.parseValue(self._setting_values[key])
 
-        return setting.getDefaultValue()
+        return setting.getDefaultValue(self)
 
     def removeSetting(self, key):
         if key not in self._settings:

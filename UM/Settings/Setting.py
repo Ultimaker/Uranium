@@ -213,19 +213,20 @@ class Setting(SignalEmitter):
         return self
 
     ##  get the default value of the setting.
+    #   \param values The object to use to get setting values from. Use by the inherit function, if set.
     #   \returns default_value
-    def getDefaultValue(self):
+    def getDefaultValue(self, values = None):
         if not self._visible:
             if self._inherit and self._parent and type(self._parent) is Setting:
                 if self._inherit_function:
                     try:
-                        inherit_value = self._inherit_function()
+                        inherit_value = self._inherit_function(values)
                     except Exception as e:
                         Logger.log("e", "An error occurred in inherit function for {0}: {1}".format(self._key, str(e)))
                     else:
                         return inherit_value
                 else:
-                    return self._parent.getDefaultValue()
+                    return self._parent.getDefaultValue(values)
 
         return self._default_value
 
@@ -405,8 +406,9 @@ class Setting(SignalEmitter):
         except Exception as e:
             Logger.log("e", "Exception in function ({2}) for setting {0}: {1}".format(self._key, str(e), code))
 
-        def local_function():
-            profile = self._machine_manager.getActiveProfile()
+        def local_function(profile = None):
+            if not profile:
+                profile = self._machine_manager.getActiveProfile()
             locals = {
                 "parent_value": profile.getSettingValue(self.getParent().getKey()) if self.getParent() else None,
                 "profile": profile
