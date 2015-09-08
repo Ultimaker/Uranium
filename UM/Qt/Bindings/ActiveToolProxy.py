@@ -55,10 +55,10 @@ class ActiveToolProxy(QObject):
     def setProperty(self, property, value):
         if not self._active_tool:
             return
-
-        option_setter = getattr(self._active_tool, "set" + property)
-        if option_setter:
-            option_setter(value)
+        if hasattr(self._active_tool, "set" + property):
+            option_setter = getattr(self._active_tool, "set" + property)
+            if option_setter:
+                option_setter(value)
 
         if hasattr(self._active_tool, property):
             setattr(self._active_tool, property, value)
