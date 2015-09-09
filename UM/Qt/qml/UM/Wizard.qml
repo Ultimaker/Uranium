@@ -210,7 +210,17 @@ UM.Dialog
             id: cancelButton
             text: catalog.i18nc("@action:button", "Cancel")
             iconName: "dialog-cancel";
-            onClicked: base.visible = false;
+            onClicked:
+            {
+                base.visible = false;
+                var old_page_count = getPageCount()
+                // Delete old pages (if any)
+                for (var i = old_page_count - 1; i > 0; i--)
+                {
+                    removePage(i)
+                }
+                currentPage = 0
+            }
             visible: base.firstRun ? false : true
         }
     ]
