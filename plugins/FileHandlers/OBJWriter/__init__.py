@@ -19,7 +19,7 @@ def getMetaData():
         "mesh_writer": {
             "output": [{
                 "extension": "obj",
-                "description": i18n_catalog.i18nc("@item:inlistbox", "Wavefront OBJ File"),
+                "description": i18n_catalog.i18nc("@item:inlistbox displays the fileformat in a list", "Wavefront OBJ File"),
                 "mime_type": "application/x-wavefront-obj",
                 "mode": OBJWriter.OBJWriter.OutputMode.TextMode
             }]

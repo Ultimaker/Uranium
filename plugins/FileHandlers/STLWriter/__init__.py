@@ -22,13 +22,13 @@ def getMetaData():
                     "mime_type": "application/x-stl-ascii",
                     "mode": STLWriter.STLWriter.OutputMode.TextMode,
                     "extension": "stl",
-                    "description": i18n_catalog.i18nc("@item:inlistbox", "STL File (Ascii)")
+                    "description": i18n_catalog.i18nc("@item:inlistbox displays the fileformat in a list", "STL File (Ascii)")
                 },
                 {
                     "mime_type": "application/x-stl-binary",
                     "mode": STLWriter.STLWriter.OutputMode.BinaryMode,
                     "extension": "stl",
-                    "description": i18n_catalog.i18nc("@item:inlistbox", "STL File (Binary)")
+                    "description": i18n_catalog.i18nc("@item:inlistbox displays the fileformat in a list", "STL File (Binary)")
                 }
             ]
         }

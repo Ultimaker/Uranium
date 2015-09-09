@@ -27,7 +27,7 @@ class ReadMeshJob(Job):
         return self._filename
 
     def run(self):
-        loading_message = Message(i18n_catalog.i18nc("@info:progress", "Loading <filename>{0}</filename>", self._filename), lifetime = 0, dismissable = False)
+        loading_message = Message(i18n_catalog.i18nc("@info:progress please include the tags (<filename>, </filename>) but don't translate them", "Loading <filename>{0}</filename>", self._filename), lifetime = 0, dismissable = False)
         loading_message.setProgress(-1)
         loading_message.show()
 
@@ -38,7 +38,7 @@ class ReadMeshJob(Job):
         if not node:
             loading_message.hide()
 
-            result_message = Message(i18n_catalog.i18nc("@info:status", "Failed to load <filename>{0}</filename>", self._filename))
+            result_message = Message(i18n_catalog.i18nc("@info:status please include the tags (<filename>, </filename>) but don't translate them", "Failed to load <filename>{0}</filename>", self._filename))
             result_message.show()
             return
 
@@ -76,5 +76,5 @@ class ReadMeshJob(Job):
         self.setResult(node)
 
         loading_message.hide()
-        result_message = Message(i18n_catalog.i18nc("@info:status", "Loaded <filename>{0}</filename>", self._filename))
+        result_message = Message(i18n_catalog.i18nc("@info:status please include the tags (<filename>, </filename>) but don't translate them", "Loaded <filename>{0}</filename>", self._filename))
         result_message.show()
