@@ -11,7 +11,7 @@ ManagementPage
 {
     id: base;
 
-    title: catalog.i18nc("@title:window", "Profiles");
+    title: catalog.i18nc("@title:tab", "Profiles");
 
     detailsVisible: false;
 

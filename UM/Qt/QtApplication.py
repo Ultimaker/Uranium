@@ -75,15 +75,15 @@ class QtApplication(QApplication, Application, SignalEmitter):
 
         i18n_catalog = i18nCatalog("uranium")
 
-        self.showSplashMessage(i18n_catalog.i18nc("Splash screen message", "Loading plugins..."))
+        self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Loading plugins..."))
         self._loadPlugins()
         self._plugin_registry.checkRequiredPlugins(self.getRequiredPlugins())
 
-        self.showSplashMessage(i18n_catalog.i18nc("Splash screen message", "Loading machines..."))
+        self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Loading machines..."))
 
         self.getMachineManager().loadAll()
 
-        self.showSplashMessage(i18n_catalog.i18nc("Splash screen message", "Loading preferences..."))
+        self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Loading preferences..."))
         try:
             file = Resources.getPath(Resources.Preferences, self.getApplicationName() + ".cfg")
             Preferences.getInstance().readFromFile(file)
@@ -92,7 +92,7 @@ class QtApplication(QApplication, Application, SignalEmitter):
 
         self._translators = {}
 
-        self.showSplashMessage(i18n_catalog.i18nc("Splash screen message", "Loading translations..."))
+        self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Loading translations..."))
 
         self.loadQtTranslation("uranium_qt")
         self.loadQtTranslation(self.getApplicationName() + "_qt")

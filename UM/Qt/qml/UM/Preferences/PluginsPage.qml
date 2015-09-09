@@ -14,7 +14,7 @@ PreferencesPage
 {
     id: preferencesPage
 
-    title: catalog.i18nc("@title", "Plugins");
+    title: catalog.i18nc("@title:tab", "Plugins");
     contents: ScrollView
     {
         anchors.fill:parent
