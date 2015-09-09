@@ -88,16 +88,16 @@ class Duration(QObject):
     def getDisplayString(self, format = DurationFormat.Format.Short):
         if format == DurationFormat.Format.Short:
             if self._days > 0:
-                return i18n_catalog.i18nc("Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes", "{0:0>2}d {1:0>2}:{2:0>2}", self._days, self._hours, self._minutes)
+                return i18n_catalog.i18nc("@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes", "{0:0>2}d {1:0>2}:{2:0>2}", self._days, self._hours, self._minutes)
             else:
-                return i18n_catalog.i18nc("Short hours-minutes format. {0} is hours, {1} is minutes", "{0:0>2}:{1:0>2}", self._hours, self._minutes)
+                return i18n_catalog.i18nc("@label Short hours-minutes format. {0} is hours, {1} is minutes", "{0:0>2}:{1:0>2}", self._hours, self._minutes)
         elif format == DurationFormat.Format.Long:
             if self._days > 0:
-                return i18n_catalog.i18nc("Days-hours-minutes duration format. {0} is days, {1} is hours, {2} is minutes", "{0} days {1} hours {2} minutes", self._days, self._hours, self._minutes)
+                return i18n_catalog.i18nc("@label Days-hours-minutes duration format. {0} is days, {1} is hours, {2} is minutes", "{0} days {1} hours {2} minutes", self._days, self._hours, self._minutes)
             elif self._hours > 0:
-                return i18n_catalog.i18nc("Hours-minutes duration fromat. {0} is hours, {1} is minutes", "{0} hours {1} minutes", self._hours, self._minutes)
+                return i18n_catalog.i18nc("@label Hours-minutes duration fromat. {0} is hours, {1} is minutes", "{0} hours {1} minutes", self._hours, self._minutes)
             else:
-                return i18n_catalog.i18nc("Minutes only duration format, {0} is minutes", "{0} minutes", self._minutes)
+                return i18n_catalog.i18nc("@label Minutes only duration format, {0} is minutes", "{0} minutes", self._minutes)
 
         return ""
 

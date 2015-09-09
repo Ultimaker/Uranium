@@ -15,7 +15,7 @@ import "../Preferences"
 PreferencesPage
 {
     //: Machine configuration page title.
-    title: catalog.i18nc("@title:window","Machine");
+    title: catalog.i18nc("@title:tab","Machine");
     id: base
 
     contents: ColumnLayout
@@ -26,7 +26,7 @@ PreferencesPage
         RowLayout
         {
             //: Active machine combo box label
-            Label { text: catalog.i18nc("@label","Active Machine:"); }
+            Label { text: catalog.i18nc("@label:listbox","Active Machine:"); }
             ComboBox
             {
                 id: machineCombo;
@@ -109,7 +109,7 @@ PreferencesPage
 
         icon: StandardIcon.Question;
         //: Remove machine confirmation dialog title
-        title: catalog.i18nc("@title:","Confirm Machine Deletion");
+        title: catalog.i18nc("@title:window","Confirm Machine Deletion");
         //: Remove machine confirmation dialog text
         text: catalog.i18nc("@label","Are you sure you wish to remove the machine?");
         standardButtons: StandardButton.Yes | StandardButton.No;

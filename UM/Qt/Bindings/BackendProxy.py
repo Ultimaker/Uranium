@@ -23,7 +23,7 @@ class BackendProxy(QObject):
     @pyqtProperty(float, notify = processingProgress)
     def progress(self):
         if self._progress > 0 and self._progress < 1 and self._messageDisplayed == False:
-            self._message = Message(i18n_catalog.i18n("Slicing in Process: "), 0, False, self._progress)
+            self._message = Message(i18n_catalog.i18nc("@item:progress", "Slicing in Process: "), 0, False, self._progress)
             self._message.show()
             self._messageDisplayed = True
         if self._progress >= 1 and self._messageDisplayed == True:

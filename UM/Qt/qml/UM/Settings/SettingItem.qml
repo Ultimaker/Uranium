@@ -145,7 +145,7 @@ Rectangle {
         visible: base.overridden;
         tooltip: "Reset to Default";
 
-        text: "R";
+        text: "R"; //TODO
 
         height: parent.height;
         width: height;

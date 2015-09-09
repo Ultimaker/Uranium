@@ -27,7 +27,7 @@ class ReadMeshJob(Job):
         return self._filename
 
     def run(self):
-        loading_message = Message(i18n_catalog.i18nc("@info:status", "Loading <filename>{0}</filename>", self._filename), lifetime = 0, dismissable = False)
+        loading_message = Message(i18n_catalog.i18nc("@info:progress", "Loading <filename>{0}</filename>", self._filename), lifetime = 0, dismissable = False)
         loading_message.setProgress(-1)
         loading_message.show()
 
@@ -62,8 +62,10 @@ class ReadMeshJob(Job):
                 scale_factor = min(scale_factor_width,scale_factor_height,scale_factor_depth)
 
                 scale_vector = Vector(scale_factor, scale_factor, scale_factor)
+                display_scale_factor = scale_factor * 100
+
                 if Preferences.getInstance().getValue("mesh/scale_to_fit") == True:
-                    scale_message = Message(i18n_catalog.i18nc("", "Auto scaled object to {0} % of original size", ("%.2f" % scale_factor)))
+                    scale_message = Message(i18n_catalog.i18nc("@info:status", "Auto scaled object to {0}% of original size", ("%i" % display_scale_factor)))
 
                     try:
                         node.scale(scale_vector)

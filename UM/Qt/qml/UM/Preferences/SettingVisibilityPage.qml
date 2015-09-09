@@ -24,7 +24,7 @@ PreferencesPage {
                 right: parent.right;
             }
 
-            placeholderText: catalog.i18nc("@label", "Filter...");
+            placeholderText: catalog.i18nc("@label:textbox", "Filter...");
         }
 
         ScrollView {
