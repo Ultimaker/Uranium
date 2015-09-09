@@ -56,15 +56,10 @@ class ReadMeshJob(Job):
                 if timeout_counter > 10:
                     break
             if max_bounds.width < bounding_box.width or max_bounds.height < bounding_box.height or max_bounds.depth < bounding_box.depth:
-                largest_dimension = max(bounding_box.width, bounding_box.height, bounding_box.depth)
-
-                scale_factor = 1.0
-                if largest_dimension == bounding_box.width:
-                    scale_factor = max_bounds.width / bounding_box.width
-                elif largest_dimension == bounding_box.height:
-                    scale_factor = max_bounds.height / bounding_box.height
-                else:
-                    scale_factor = max_bounds.depth / bounding_box.depth
+                scale_factor_width = max_bounds.width / bounding_box.width
+                scale_factor_height = max_bounds.height / bounding_box.height
+                scale_factor_depth = max_bounds.depth / bounding_box.depth
+                scale_factor = min(scale_factor_width,scale_factor_height,scale_factor_depth)
 
                 scale_vector = Vector(scale_factor, scale_factor, scale_factor)
                 if Preferences.getInstance().getValue("mesh/scale_to_fit") == True:
