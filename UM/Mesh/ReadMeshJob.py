@@ -7,6 +7,7 @@ from UM.Message import Message
 from UM.Math.AxisAlignedBox import AxisAlignedBox
 from UM.Math.Matrix import Matrix
 from UM.Math.Vector import Vector
+from UM.Preferences import Preferences
 import time
 import os.path
 
@@ -66,13 +67,14 @@ class ReadMeshJob(Job):
                     scale_factor = max_bounds.depth / bounding_box.depth
 
                 scale_vector = Vector(scale_factor, scale_factor, scale_factor)
-                scale_message = Message(i18n_catalog.i18nc("", "Auto scaled object to {0} % of original size", ("%.2f" % scale_factor)))
+                if Preferences.getInstance().getValue("mesh/scale_to_fit") == True:
+                    scale_message = Message(i18n_catalog.i18nc("", "Auto scaled object to {0} % of original size", ("%.2f" % scale_factor)))
 
-                try:
-                    node.scale(scale_vector)
-                    scale_message.show()
-                except Exception as e:
-                    print(e)
+                    try:
+                        node.scale(scale_vector)
+                        scale_message.show()
+                    except Exception as e:
+                        print(e)
 
         self.setResult(node)
 
