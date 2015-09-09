@@ -59,7 +59,7 @@ Item
         CheckBox
         {
             //: Snap Scaling checkbox
-            text: catalog.i18nc("@action:checkbox","Snap Scaling");
+            text: catalog.i18nc("@option:check","Snap Scaling");
 
             style: UM.Theme.styles.checkbox;
 
@@ -70,7 +70,7 @@ Item
         CheckBox
         {
             //: Uniform scaling checkbox
-            text: catalog.i18nc("@action:checkbox","Uniform Scaling");
+            text: catalog.i18nc("@option:check","Uniform Scaling");
 
             style: UM.Theme.styles.checkbox;
 

@@ -18,103 +18,122 @@ Item {
 
     property int currentIndex;
 
-    Item {
+    Rectangle {
         id: settingsPanel;
 
         z: 3;
 
-        width: childrenRect.width;
-        height: childrenRect.height;
+        width: UM.Theme.sizes.per_object_settings_panel.width;
+        height: items.height;
 
         opacity: 0;
         Behavior on opacity { NumberAnimation { } }
 
-        Rectangle {
-            id: arrow;
-            width: 35;
-            height: 35;
-            rotation: 45;
-            anchors.verticalCenter: parent.verticalCenter;
+        border.width: UM.Theme.sizes.per_object_settings_panel_border.width;
+        border.color: UM.Theme.colors.per_object_settings_panel_border;
+
+        color: UM.Theme.colors.per_object_settings_panel_background;
+
+        DropArea {
+            anchors.fill: parent;
         }
 
-        Rectangle {
-            width: childrenRect.width;
-            height: childrenRect.height;
+        Column {
+            id: items
 
-            anchors.left: arrow.horizontalCenter;
-
-            DropArea {
-                anchors.fill: parent;
+            anchors {
+                left: parent.left;
+                leftMargin: UM.Theme.sizes.default_margin
+                right: parent.right;
+                rightMargin: UM.Theme.sizes.default_margin
+                top: parent.top;
+                topMargin: UM.Theme.sizes.default_margin
             }
 
-            Column {
-                spacing: UM.Theme.sizes.default_margin.width;
+            spacing: UM.Theme.sizes.default_margin.width;
+
+            UM.SettingItem {
+                id: profileSelection
+
+                x: UM.Theme.sizes.per_object_settings_panel_border.width;
+
+                width: UM.Theme.sizes.setting.width;
+                height: UM.Theme.sizes.setting.height;
+
+                name: catalog.i18nc("@label", "Profile")
+                type: "enum"
+
+                style: UM.Theme.styles.setting_item;
+
+                options: UM.ProfilesModel { addUseGlobal: true }
+
+                value: UM.ActiveTool.properties.Model.getItem(base.currentIndex).profile
+
+                onItemValueChanged: {
+                    var item = UM.ActiveTool.properties.Model.getItem(base.currentIndex);
+                    UM.ActiveTool.properties.Model.setObjectProfile(item.id, value)
+                }
+            }
+
+            Repeater {
+                id: settings;
+
+                model: UM.ActiveTool.properties.Model.getItem(base.currentIndex).settings
 
                 UM.SettingItem {
                     width: UM.Theme.sizes.setting.width;
                     height: UM.Theme.sizes.setting.height;
 
-                    name: catalog.i18nc("@label", "Profile")
-                    type: "enum"
+                    name: model.label;
+                    type: model.type;
+                    value: model.value;
+                    description: model.description;
+                    unit: model.unit;
+                    valid: model.valid;
 
                     style: UM.Theme.styles.setting_item;
 
-                    options: UM.ProfilesModel { addUseGlobal: true }
-
-                    value: UM.ActiveTool.properties.Model.getItem(base.currentIndex).profile
-
                     onItemValueChanged: {
-                        var item = UM.ActiveTool.properties.Model.getItem(base.currentIndex);
-                        UM.ActiveTool.properties.Model.setObjectProfile(item.id, value)
+                        settings.model.setSettingValue(model.key, value)
                     }
-                }
 
-                Repeater {
-                    id: settings;
+                    Button {
+                        anchors.left: parent.right;
+                        text: "x";
 
-                    model: UM.ActiveTool.properties.Model.getItem(base.currentIndex).settings
-
-                    UM.SettingItem {
-                        width: UM.Theme.sizes.setting.width;
+                        width: UM.Theme.sizes.setting.height;
                         height: UM.Theme.sizes.setting.height;
 
-                        name: model.label;
-                        type: model.type;
-                        value: model.value;
-                        description: model.description;
-                        unit: model.unit;
-                        valid: model.valid;
+                        opacity: parent.hovered || hovered ? 1 : 0;
+                        onClicked: UM.ActiveTool.properties.Model.removeSettingOverride(UM.ActiveTool.properties.Model.getItem(base.currentIndex).id, model.key)
 
-                        style: UM.Theme.styles.setting_item;
+                        style: ButtonStyle { }
+                    }
+                }
+            }
 
-                        onItemValueChanged: {
-                            settings.model.setSettingValue(model.key, value)
-                        }
+            Button
+            {
+                anchors.right: profileSelection.right;
 
-                        Button {
-                            anchors.right: parent.right;
-                            text: "x";
-                            opacity: parent.hovered || hovered ? 1 : 0;
-                            onClicked: UM.ActiveTool.properties.Model.removeSettingOverride(UM.ActiveTool.properties.Model.getItem(base.currentIndex).id, model.key)
+                text: catalog.i18nc("@action:button", "Customize Settings");
 
-                            style: ButtonStyle { }
-                        }
+                style: ButtonStyle
+                {
+                    background: Rectangle
+                    {
+                        width: control.width;
+                        height: control.height;
+                        color: control.hovered ? UM.Theme.colors.load_save_button_hover : UM.Theme.colors.load_save_button;
+                    }
+                    label: Label
+                    {
+                        text: control.text;
+                        color: UM.Theme.colors.load_save_button_text;
                     }
                 }
 
-                Button {
-                    text: catalog.i18nc("@action:button", "Override Profile");
-
-                    style: ButtonStyle {
-                        background: Item { }
-                        label: Label {
-                            text: control.text;
-                            color: control.hovered ? "blue" : "black"
-                        }
-                    }
-
-                    onClicked: settingPickDialog.visible = true;
-                }
+                onClicked: settingPickDialog.visible = true;
             }
         }
 
@@ -127,33 +146,36 @@ Item {
             x: ((model.x + 1.0) / 2.0) * UM.Application.mainWindow.width - base.position.x - width / 2
             y: -((model.y + 1.0) / 2.0) * UM.Application.mainWindow.height + (UM.Application.mainWindow.height - base.position.y) + height / 2
 
-            width: 35;
-            height: 35;
+            width: UM.Theme.sizes.per_object_settings_button.width
+            height: UM.Theme.sizes.per_object_settings_button.height
 
-            text: "+";
+            tooltip: catalog.i18nc("@info:tooltip", "Customise settings for this object");
+
+            checkable: true;
             onClicked: {
                 base.currentIndex = index;
 
-                if(x < UM.Application.mainWindow.width / 2) {
-                    settingsPanel.anchors.left = right;
-                } else {
-                    settingsPanel.anchors.right = left;
-                }
-                settingsPanel.anchors.verticalCenter = verticalCenter;
+                settingsPanel.anchors.left = right;
+                settingsPanel.anchors.top = top;
 
                 settingsPanel.opacity = 1;
             }
 
-            style: ButtonStyle {
-                background: Rectangle {
+            style: ButtonStyle
+            {
+                background: Rectangle
+                {
                     width: control.width;
                     height: control.height;
-                    radius: control.height / 2;
 
-                    color: "white";
-
-                    border.color: "black";
-                    border.width: 1;
+                    color: control.hovered ? UM.Theme.colors.button_active : UM.Theme.colors.button_hover;
+                }
+                label: Image {
+                    width: control.width;
+                    height: control.height;
+                    sourceSize.width: width;
+                    sourceSize.height: height;
+                    source: UM.Theme.icons.plus;
                 }
             }
         }
@@ -162,7 +184,7 @@ Item {
     UM.Dialog {
         id: settingPickDialog
 
-        title: catalog.i18nc("@title:window", "Pick a Setting to Override")
+        title: catalog.i18nc("@title:window", "Pick a Setting to Customize")
 
         ScrollView {
             anchors.fill: parent;

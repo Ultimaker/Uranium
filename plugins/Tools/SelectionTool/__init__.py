@@ -10,10 +10,10 @@ def getMetaData():
     return {
         "type": "tool",
         "plugin": {
-            "name": "Selection Tool",
+            "name": i18n_catalog.i18nc("@label", "Selection Tool"),
             "author": "Ultimaker",
             "version": "1.0",
-            "description": i18n_catalog.i18nc("Selection Tool plugin description", "Provides the Selection tool."),
+            "description": i18n_catalog.i18nc("@info:whatsthis", "Provides the Selection tool."),
             "api": 2
         },
         "tool": {

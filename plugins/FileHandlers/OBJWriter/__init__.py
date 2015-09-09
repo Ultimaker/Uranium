@@ -10,16 +10,16 @@ i18n_catalog = i18nCatalog("uranium")
 def getMetaData():
     return {
         "plugin": {
-            "name": "Wavefront OBJ Writer",
+            "name": i18n_catalog.i18nc("@label", "Wavefront OBJ Writer"),
             "author": "Ultimaker",
             "version": "1.0",
-            "description": i18n_catalog.i18nc("OBJ Writer plugin description", "Makes it possbile to write Wavefront OBJ files."),
+            "description": i18n_catalog.i18nc("@info:whatsthis", "Makes it possbile to write Wavefront OBJ files."),
             "api": 2
         },
         "mesh_writer": {
             "output": [{
                 "extension": "obj",
-                "description": i18n_catalog.i18nc("OBJ Writer file format", "Wavefront OBJ File"),
+                "description": i18n_catalog.i18nc("@item:inlistbox", "Wavefront OBJ File"),
                 "mime_type": "application/x-wavefront-obj",
                 "mode": OBJWriter.OBJWriter.OutputMode.TextMode
             }]

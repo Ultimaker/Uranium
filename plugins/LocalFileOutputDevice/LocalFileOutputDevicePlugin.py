@@ -108,7 +108,7 @@ class LocalFileOutputDevice(OutputDevice):
             job.progress.connect(self._onJobProgress)
             job.finished.connect(self._onWriteJobFinished)
 
-            message = Message(catalog.i18nc("@info:status", "Saving to <filename>{0}</filename>").format(file_name), 0, False, -1)
+            message = Message(catalog.i18nc("@info:progress", "Saving to <filename>{0}</filename>").format(file_name), 0, False, -1)
             message.show()
 
             job._message = message

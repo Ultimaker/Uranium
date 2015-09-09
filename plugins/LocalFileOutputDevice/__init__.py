@@ -9,8 +9,8 @@ catalog = i18nCatalog("uranium")
 def getMetaData():
     return {
         "plugin": {
-            "name": catalog.i18nc("Local File Output Device plugin name", "Local File Output Device"),
-            "description": catalog.i18nc("Local File Output Device plugin description", "Enables saving to local files"),
+            "name": catalog.i18nc("@label", "Local File Output Device"),
+            "description": catalog.i18nc("@info:whatsthis", "Enables saving to local files"),
             "author": "Ultimaker B.V.",
             "version": "1.0",
             "api": 2,
