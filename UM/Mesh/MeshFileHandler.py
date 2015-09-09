@@ -40,7 +40,7 @@ class MeshFileHandler(object):
                             move_vector.setZ(extents.center.z)
                             result.setCenterPosition(move_vector)
                             move_distance = extents.center.y
-                            if move_distance < 0:
+                            if move_distance <= 0:
                                 move_distance = -extents.bottom
 
                             result.translate(Vector(0,move_distance,0))
