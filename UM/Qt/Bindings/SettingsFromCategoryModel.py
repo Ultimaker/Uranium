@@ -115,6 +115,12 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
             model.appendItem({"value": str(value), "name": str(name)})
         return model
 
+    @pyqtSlot(str)
+    def hideSetting(self, key):
+        setting = self._category.getSetting(key)
+        if setting:
+            setting.setVisible(False);
+
     def updateSettings(self):
         self.clear()
         for setting in self._category.getAllSettings():
