@@ -56,7 +56,7 @@ ListView {
 
             function getProgressText(){
                 var progress = Math.floor(base.slicingProgress)
-                return model.text + "<font color='black'>" + progress + "<\>"
+                return model.text + "<font color='black'>" + progress + "%<\>"
             }
 
             text: model.progress > 0 ? messageLabel.getProgressText() : model.text == undefined ? '' : model.text
