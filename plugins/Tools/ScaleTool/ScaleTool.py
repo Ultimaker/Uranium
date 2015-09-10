@@ -93,10 +93,7 @@ class ScaleTool(Tool):
                 self.setDragPlane(Plane(Vector(0, 1, 0), handle_position.y))
 
             self.setDragStart(event.x, event.y)
-            for node in Selection.getAllSelectedObjects():
-                if node.getBoundingBox().bottom != 0:
-                    self._move_up = False
-                    break
+            self._move_up = self._getMoveUpAmount() == 0
             self.operationStarted.emit(self)
 
         if event.type == Event.MouseMoveEvent:
@@ -138,14 +135,18 @@ class ScaleTool(Tool):
                 self.setLockedAxis(None)
                 self._drag_length = 0
                 if self._move_up:
-                    move_up_amount = 0
-                    for node in Selection.getAllSelectedObjects():
-                        if move_up_amount > node.getBoundingBox().bottom:
-                            move_up_amount = node.getBoundingBox().bottom
-                    Selection.applyOperation(TranslateOperation, Vector(0, -1 * move_up_amount,0 ))
+                    move_up_amount = self._getMoveUpAmount()
+                    Selection.applyOperation(TranslateOperation, Vector(0, move_up_amount,0 ))
                 self._move_up = True
                 self.operationStopped.emit(self)
                 return True
+
+    def _getMoveUpAmount(self):
+        move_up_amount = 0
+        for node in Selection.getAllSelectedObjects():
+            if move_up_amount > node.getBoundingBox().bottom:
+                move_up_amount = node.getBoundingBox().bottom
+        return -1 * move_up_amount
 
     def resetScale(self):
         Selection.applyOperation(SetTransformOperation, None, None, Vector(1.0, 1.0, 1.0))
