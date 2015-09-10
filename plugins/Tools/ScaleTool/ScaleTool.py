@@ -13,6 +13,7 @@ from UM.Operations.ScaleOperation import ScaleOperation
 from UM.Operations.GroupedOperation import GroupedOperation
 from UM.Operations.SetTransformOperation import SetTransformOperation
 from UM.Operations.ScaleToBoundsOperation import ScaleToBoundsOperation
+from UM.Operations.TranslateOperation import TranslateOperation
 
 from . import ScaleToolHandle
 
@@ -29,6 +30,7 @@ class ScaleTool(Tool):
         self._drag_length = 0
 
         self._maximum_bounds = None
+        self._move_up = True
 
         self.setExposedProperties(
             "ScaleSnap",
@@ -91,6 +93,10 @@ class ScaleTool(Tool):
                 self.setDragPlane(Plane(Vector(0, 1, 0), handle_position.y))
 
             self.setDragStart(event.x, event.y)
+            for node in Selection.getAllSelectedObjects():
+                if node.getBoundingBox().bottom != 0:
+                    self._move_up = False
+                    break
             self.operationStarted.emit(self)
 
         if event.type == Event.MouseMoveEvent:
@@ -131,6 +137,13 @@ class ScaleTool(Tool):
                 self.setDragPlane(None)
                 self.setLockedAxis(None)
                 self._drag_length = 0
+                if self._move_up:
+                    move_up_amount = 0
+                    for node in Selection.getAllSelectedObjects():
+                        if move_up_amount > node.getBoundingBox().bottom:
+                            move_up_amount = node.getBoundingBox().bottom
+                    Selection.applyOperation(TranslateOperation, Vector(0, -1 * move_up_amount,0 ))
+                self._move_up = True
                 self.operationStopped.emit(self)
                 return True
 
