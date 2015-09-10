@@ -89,7 +89,9 @@ class ListModel(QAbstractListModel):
     ##  Sort the list.
     #   \param fun The callable to use for determining the sort key.
     def sort(self, fun):
+        self.beginResetModel()
         self._items.sort(key = fun)
+        self.endResetModel()
 
     ##  Find a entry by key value pair
     #   \param key
