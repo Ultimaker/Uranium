@@ -79,12 +79,14 @@ class Controller(SignalEmitter):
     ##  Set the currently active view.
     #   \param name \type{string} The name of the view to set as active
     def setActiveView(self, name):
+        Logger.log("d", "Setting active view to %s", name)
         try:
             self._active_view = self._views[name]
             self.activeViewChanged.emit()
         except KeyError:
             Logger.log("e", "No view named %s found", name)
-
+        except Exception as e:
+            Logger.log("e", "An exception occured while switching views", str(e))
     ##  Emitted when the list of views changes.
     viewsChanged = Signal()
 
