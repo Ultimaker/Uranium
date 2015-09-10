@@ -144,7 +144,6 @@ class CameraTool(Tool):
                 if length_squared > (self._drag_distance * self._drag_distance):
                     if self._rotate:
                         self._rotateCamera(event.deltaX, event.deltaY)
-                        print(event.deltaX, "", event.deltaY)
                         self._dragged = True
                         return True
                     elif self._move:
