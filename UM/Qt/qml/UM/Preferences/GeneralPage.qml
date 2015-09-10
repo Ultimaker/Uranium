@@ -10,7 +10,7 @@ import UM 1.1 as UM
 PreferencesPage
 {
     //: General configuration page title
-    title: catalog.i18nc("@title:window","General");
+    title: catalog.i18nc("@title:tab","General");
 
     function reset() {
         UM.Preferences.resetPreference("general/language")
@@ -21,7 +21,7 @@ PreferencesPage
         Label
         {
             id: languageLabel
-            text: catalog.i18nc("@label","Language")
+            text: catalog.i18nc("@label:listbox","Language")
             UM.I18nCatalog { id: catalog; name:"uranium"}
         }
 
@@ -65,7 +65,7 @@ PreferencesPage
                 // Because ListModel is stupid and does not allow using qsTr() for values.
                 for(var i = 0; i < languageList.count; ++i)
                 {
-                    languageList.setProperty(i, "text", catalog.i18nc("@action:menu",languageList.get(i).text));
+                    languageList.setProperty(i, "text", catalog.i18nc("@action:inmenu",languageList.get(i).text));
                 }
             }
         }

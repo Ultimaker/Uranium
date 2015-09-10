@@ -17,7 +17,7 @@ def getMetaData():
         },
         "mesh_reader": {
             "extension": "stl",
-            "description": i18n_catalog.i18nc("@item:inlistbox", "STL File")
+            "description": i18n_catalog.i18nc("@item:inlistbox displays the fileformat in a list", "STL File")
         }
     }
 
