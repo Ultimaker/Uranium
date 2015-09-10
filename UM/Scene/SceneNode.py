@@ -622,12 +622,17 @@ class _CalculateAABBJob(Job):
     def run(self):
         aabb = None
         if self._node._mesh_data:
+            print("normal one", self._node)
             aabb = self._node._mesh_data.getExtents(self._node.getWorldTransformation())
         else:
-            aabb = AxisAlignedBox(minimum = self._node.getWorldPosition(), maximum = self._node.getWorldPosition())
+            print("gettin weird one", self._node)
+            aabb = None
 
         for child in self._node._children:
-            aabb += child.getBoundingBox()
+            if aabb is None:
+                aabb = child.getBoundingBox()
+            else:
+                aabb += child.getBoundingBox()
 
         self._node._aabb = aabb
         self._node._aabb_job = None
