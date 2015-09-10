@@ -622,10 +622,8 @@ class _CalculateAABBJob(Job):
     def run(self):
         aabb = None
         if self._node._mesh_data:
-            print("normal one", self._node)
             aabb = self._node._mesh_data.getExtents(self._node.getWorldTransformation())
         else:
-            print("gettin weird one", self._node)
             aabb = None
 
         for child in self._node._children:
