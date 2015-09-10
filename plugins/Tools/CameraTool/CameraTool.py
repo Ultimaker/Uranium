@@ -116,6 +116,16 @@ class CameraTool(Tool):
     def event(self, event):
         self.checkModifierKeys(event)
         self.initiateZoom(event)
+
+        if event.type is event.KeyPressEvent:
+            if event.key == KeyEvent.UpKey:
+                self._rotateCamera(0, 0.01)
+            if event.key == KeyEvent.DownKey:
+                self._rotateCamera(0, -0.01)
+            if event.key == KeyEvent.RightKey:
+                self._rotateCamera(-0.01, 0)
+            if event.key == KeyEvent.LeftKey:
+                self._rotateCamera(0.01, 0)
         if event.type is Event.MousePressEvent:
             if self.moveEvent(event) == True:
                 self._move = True
@@ -134,6 +144,7 @@ class CameraTool(Tool):
                 if length_squared > (self._drag_distance * self._drag_distance):
                     if self._rotate:
                         self._rotateCamera(event.deltaX, event.deltaY)
+                        print(event.deltaX, "", event.deltaY)
                         self._dragged = True
                         return True
                     elif self._move:

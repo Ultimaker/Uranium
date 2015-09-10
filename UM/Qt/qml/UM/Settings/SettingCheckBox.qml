@@ -10,9 +10,22 @@ CheckBox
 {
     signal valueChanged(bool value);
     id: base
-    checked: value //From parent loader
+    checked: boolCheck(value) //From parent loader
     onCheckedChanged: valueChanged(checked);
-
+    function boolCheck(value) //Hack to ensure a good match between python and qml.
+    {
+        if(value == "True")
+        {
+            return true
+        }else if(value == "False")
+        {
+            return false
+        }
+        else
+        {
+            return value
+        }
+    }
     style: CheckBoxStyle
     {
         background: Item { }
@@ -44,7 +57,7 @@ CheckBox
 
                 text: "✓";
 
-                opacity: control.checked == "True" ? 1 : 0;
+                opacity: control.checked
                 Behavior on opacity { NumberAnimation { duration: 100; } }
             }
         }
