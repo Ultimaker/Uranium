@@ -31,10 +31,8 @@ add_custom_target(extract-messages ${CMAKE_SOURCE_DIR}/scripts/extract-messages 
 
 # Build Translations
 find_package(Gettext)
-find_package(Qt5LinguistTools QUIET CONFIG)
 
-if(GETTEXT_FOUND AND Qt5LinguistTools_FOUND)
-    include(${CMAKE_SOURCE_DIR}/scripts/ECMPoQmTools.cmake)
+if(GETTEXT_FOUND)
     # translations target will convert .po files into .mo and .qm as needed.
     # The files are checked for a _qt suffix and if it is found, converted to
     # qm, otherwise they are converted to .po.
@@ -55,26 +53,23 @@ if(GETTEXT_FOUND AND Qt5LinguistTools_FOUND)
         it
         es
         fi
+        pl
+        cs
+        bg
     )
     foreach(lang ${languages})
         file(GLOB po_files resources/i18n/${lang}/*.po)
         foreach(file ${po_files})
-            string(REGEX MATCH "qt\\.po$" match "${file}")
-            if(match)
-                ecm_process_po_files_as_qm(${lang} PO_FILES ${file})
-            else()
-                string(REGEX REPLACE ".*/(.*).po" "${lang}/\\1.mo" mofile ${file})
-                add_custom_command(TARGET translations POST_BUILD COMMAND mkdir ARGS -p ${lang} COMMAND ${GETTEXT_MSGFMT_EXECUTABLE} ARGS ${file} -o ${mofile})
-            endif()
+            string(REGEX REPLACE ".*/(.*).po" "${lang}/\\1.mo" mofile ${file})
+            add_custom_command(TARGET translations POST_BUILD COMMAND mkdir ARGS -p ${lang} COMMAND ${GETTEXT_MSGFMT_EXECUTABLE} ARGS ${file} -o ${mofile})
         endforeach()
 
-        file(GLOB qm_files ${CMAKE_BINARY_DIR}/${lang}/*.qm)
         file(GLOB mo_files ${CMAKE_BINARY_DIR}/${lang}/*.mo)
-        foreach(file ${qm_files} ${mo_files})
+        foreach(file ${mo_files})
             add_custom_command(TARGET copy-translations POST_BUILD COMMAND cp ARGS ${file} ${CMAKE_SOURCE_DIR}/resources/i18n/${lang}/LC_MESSAGES COMMENT "Copying ${file}...")
         endforeach()
 
-        install(FILES ${qm_files} ${mo_files} DESTINATION ${CMAKE_INSTALL_DATADIR}/uranium/resources/i18n/${lang}/LC_MESSAGES/)
+        install(FILES ${mo_files} DESTINATION ${CMAKE_INSTALL_DATADIR}/uranium/resources/i18n/${lang}/LC_MESSAGES/)
     endforeach()
 endif()
 
