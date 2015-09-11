@@ -10,6 +10,7 @@ import copy
 import numpy
 import numpy.linalg
 import hashlib
+from copy import deepcopy
 numpy.seterr(all="ignore") # Ignore warnings (dev by zero)
 
 from enum import Enum
@@ -48,6 +49,22 @@ class MeshData(SignalEmitter):
     
     dataChanged = Signal()
     
+    def __deepcopy__(self, memo):
+        copy = MeshData()
+        print("Starting deepcopy of mesh " , self , " to: ", copy)
+        copy._vertices = deepcopy(self._vertices, memo)
+        copy._normals = deepcopy(self._normals, memo)
+        copy._indices = deepcopy(self._indices, memo)
+        copy._colors = deepcopy(self._colors, memo)
+        copy._uvs = deepcopy(self._uvs, memo)
+        copy._vertex_count = deepcopy(self._vertex_count, memo)
+        copy._face_count = deepcopy(self._face_count, memo)
+        copy._type = deepcopy(self._type, memo)
+        copy._file_name = deepcopy(self._file_name, memo)
+        self._center_position = deepcopy (self._center_position, memo)
+        print("completed deepcopy of mesh" , self)
+        return copy
+
     def _resetIndexBuffer(self):
         try:
             delattr(self, indexBufferProperty)
@@ -156,20 +173,8 @@ class MeshData(SignalEmitter):
             data = data.dot(transformation.getTransposed().getData())
             data += transformation.getData()[:,3]
             data = data[:,0:3]
-            
-            ##  HACK; Create a manual copy (instead of using deep copy), as this caused problems
-            #   when trying to change the data.
-            mesh = MeshData()
-            mesh._normals = self._normals.copy()
-            if self._indices is not None:
-                mesh._indices = self._indices.copy()
-            if self._colors is not None:
-                mesh._colors = self._colors.copy()
-            if self._uvs is not None:
-                mesh._uvs = self._uvs.copy()
-            mesh._type = self._type
-            mesh._vertex_count = self._vertex_count
-            mesh._face_count = self._face_count 
+
+            mesh = deepcopy(self)
             mesh._vertices = data
             return mesh
         else:

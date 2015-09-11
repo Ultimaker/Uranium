@@ -61,6 +61,21 @@ class SceneNode(SignalEmitter):
         if parent:
             parent.addChild(self)
 
+    def __deepcopy__(self, memo):
+        copy = SceneNode()
+        copy.translate(self.getPosition())
+        copy.setOrientation(self.getOrientation())
+        copy.setScale(self.getScale())
+        copy.setMeshData(deepcopy(self._mesh_data, memo))
+        copy.setVisible(deepcopy(self._visible, memo))
+
+        for decorator in self._decorators:
+            copy.addDecorator(deepcopy(decorator, memo))
+
+        for child in self._children:
+            copy.addChild(deepcopy(child, memo))
+        return copy
+
 
     def setCenterPosition(self, center):
         if self._mesh_data:
