@@ -50,6 +50,16 @@ def processSettings(file, settings):
         if "description" in value:
             appendMessage(file, name, "description", value["description"])
 
+        if "warning_description" in value:
+            appendMessage(file, name, "warning_description", value["warning_description"])
+
+        if "error_description" in value:
+            appendMessage(file, name, "error_description", value["error_description"])
+
+        if "options" in value:
+            for item, description in value["options"].items():
+                appendMessage(file, name, "option {0}".format(item), description)
+
         if "children" in value:
             processSettings(file, value["children"])
 
