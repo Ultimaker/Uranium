@@ -90,13 +90,6 @@ class QtApplication(QApplication, Application, SignalEmitter):
         except FileNotFoundError:
             pass
 
-        self._translators = {}
-
-        self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Loading translations..."))
-
-        self.loadQtTranslation("uranium_qt")
-        self.loadQtTranslation(self.getApplicationName() + "_qt")
-
     def run(self):
         pass
     
