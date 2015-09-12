@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-11 13:40+0200\n"
+"POT-Creation-Date: 2015-09-12 12:24+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,17 +20,13 @@ msgstr ""
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Mesh/ReadMeshJob.py:30
 #, python-brace-format
-msgctxt ""
-"@info:progress please include the tags (<filename>, </filename>) but don't "
-"translate them"
+msgctxt "@info:status"
 msgid "Loading <filename>{0}</filename>"
 msgstr ""
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Mesh/ReadMeshJob.py:41
 #, python-brace-format
-msgctxt ""
-"@info:status please include the tags (<filename>, </filename>) but don't "
-"translate them"
+msgctxt "@info:status"
 msgid "Failed to load <filename>{0}</filename>"
 msgstr ""
 
@@ -42,10 +38,15 @@ msgstr ""
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Mesh/ReadMeshJob.py:79
 #, python-brace-format
-msgctxt ""
-"@info:status please include the tags (<filename>, </filename>) but don't "
-"translate them"
+msgctxt "@info:status"
 msgid "Loaded <filename>{0}</filename>"
+msgstr ""
+
+#: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/Bindings/SettingsFromCategoryModel.py:76
+#, python-brace-format
+msgctxt ""
+"@item:intext appended to customised profiles ({0} is old profile name)"
+msgid "{0} (Customised)"
 msgstr ""
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/Bindings/ProfilesModel.py:78
@@ -77,30 +78,34 @@ msgstr ""
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/Bindings/ProfilesModel.py:110
 msgctxt "@item:inlistbox"
-msgid "<Use Global Profile>"
-msgstr ""
-
-#: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/Bindings/BackendProxy.py:26
-msgctxt "@item:progress"
-msgid "Slicing in Process: "
+msgid "- Use Global Profile -"
 msgstr ""
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:39
 #, python-brace-format
-msgctxt "@item:inlistbox Open file dialog type option"
+msgctxt "@item:inlistbox"
 msgid "All Supported Types ({0})"
 msgstr ""
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:40
-msgctxt "@item:inlistbox Open file dialog type option"
+#: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:58
+msgctxt "@item:inlistbox"
 msgid "All Files (*)"
 msgstr ""
 
-#: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/Bindings/SettingsFromCategoryModel.py:76
-#, python-brace-format
-msgctxt ""
-"@item:intext appended to customised profiles ({0} is old profile name)"
-msgid "{0} (Customised)"
+#: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/QtApplication.py:78
+msgctxt "@info:progress"
+msgid "Loading plugins..."
+msgstr ""
+
+#: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/QtApplication.py:82
+msgctxt "@info:progress"
+msgid "Loading machines..."
+msgstr ""
+
+#: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/QtApplication.py:86
+msgctxt "@info:progress"
+msgid "Loading preferences..."
 msgstr ""
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/Duration.py:91
@@ -108,13 +113,13 @@ msgstr ""
 msgctxt ""
 "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is "
 "minutes"
-msgid "{0:0>2}d {1:0>2}:{2:0>2}"
+msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
 msgstr ""
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/Duration.py:93
 #, python-brace-format
 msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
-msgid "{0:0>2}:{1:0>2}"
+msgid "{0:0>2}h {1:0>2}min"
 msgstr ""
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/Duration.py:96
@@ -135,21 +140,6 @@ msgstr ""
 #, python-brace-format
 msgctxt "@label Minutes only duration format, {0} is minutes"
 msgid "{0} minutes"
-msgstr ""
-
-#: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/QtApplication.py:78
-msgctxt "@info:progress"
-msgid "Loading plugins..."
-msgstr ""
-
-#: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/QtApplication.py:82
-msgctxt "@info:progress"
-msgid "Loading machines..."
-msgstr ""
-
-#: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/QtApplication.py:86
-msgctxt "@info:progress"
-msgid "Loading preferences..."
 msgstr ""
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Settings/MachineDefinition.py:103
@@ -185,7 +175,7 @@ msgstr ""
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/FileHandlers/OBJReader/__init__.py:21
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/FileHandlers/OBJWriter/__init__.py:22
-msgctxt "@item:inlistbox displays the fileformat in a list"
+msgctxt "@item:inlistbox"
 msgid "Wavefront OBJ File"
 msgstr ""
 
@@ -210,7 +200,7 @@ msgid "Provides support for reading STL files."
 msgstr ""
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/FileHandlers/STLReader/__init__.py:20
-msgctxt "@item:inlistbox displays the fileformat in a list"
+msgctxt "@item:inlistbox"
 msgid "STL File"
 msgstr ""
 
@@ -225,12 +215,12 @@ msgid "Provides support for writing STL files."
 msgstr ""
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/FileHandlers/STLWriter/__init__.py:25
-msgctxt "@item:inlistbox displays the fileformat in a list"
+msgctxt "@item:inlistbox"
 msgid "STL File (Ascii)"
 msgstr ""
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/FileHandlers/STLWriter/__init__.py:31
-msgctxt "@item:inlistbox displays the fileformat in a list"
+msgctxt "@item:inlistbox"
 msgid "STL File (Binary)"
 msgstr ""
 
@@ -276,39 +266,34 @@ msgstr ""
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:91
 #, python-brace-format
-msgctxt "@label filename is {0}"
-msgid "The file {0} already exists. Are you sure you want to overwrite it?"
+msgctxt "@label"
+msgid ""
+"The file <filename>{0}</filename> already exists. Are you sure you want to "
+"overwrite it?"
 msgstr ""
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:111
 #, python-brace-format
-msgctxt ""
-"@info:progress please include the tags (<filename>, </filename>) but don't "
-"translate them"
+msgctxt "@info:progress"
 msgid "Saving to <filename>{0}</filename>"
 msgstr ""
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:117
 #, python-brace-format
-msgctxt ""
-"@info:status please include the tags (<filename>, </filename>) but don't "
-"translate them"
+msgctxt "@info:status"
 msgid "Permission denied when trying to save <filename>{0}</filename>"
 msgstr ""
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:119
+#: /home/ahiemstra/dev/15.10/src/uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:140
 #, python-brace-format
-msgctxt ""
-"@info:status please include the tags (<filename>, </filename>) but don't "
-"translate them"
+msgctxt "@info:status"
 msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
 msgstr ""
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:134
 #, python-brace-format
-msgctxt ""
-"@info:status please include the tags (<filename>, </filename>) but don't "
-"translate them"
+msgctxt "@info:status"
 msgid "Saved to <filename>{0}</filename>"
 msgstr ""
 
@@ -320,14 +305,6 @@ msgstr ""
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:135
 msgctxt "@info:tooltip"
 msgid "Open the folder containing the file"
-msgstr ""
-
-#: /home/ahiemstra/dev/15.10/src/uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:140
-#, python-brace-format
-msgctxt ""
-"@info:status please include the tags (<filename>, </filenamen>, <message>, </"
-"message>) but don't translate them"
-msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
 msgstr ""
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/Tools/CameraTool/__init__.py:12
@@ -362,7 +339,7 @@ msgstr ""
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/Tools/PerObjectSettingsTool/__init__.py:12
 msgctxt "@label"
-msgid "Settings Per Object Tool"
+msgid "Per Object Settings Tool"
 msgstr ""
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/Tools/PerObjectSettingsTool/__init__.py:15
@@ -377,7 +354,7 @@ msgstr ""
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/Tools/PerObjectSettingsTool/__init__.py:20
 msgctxt "@info:tooltip"
-msgid "Configure Settings Per Object"
+msgid "Configure Per Object Settings"
 msgstr ""
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/Tools/RotateTool/__init__.py:12
@@ -537,13 +514,12 @@ msgid "Defaults"
 msgstr ""
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:72
-#: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:167
+#: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:166
 msgctxt "@action:button"
 msgid "Close"
 msgstr ""
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:97
-#: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Preferences/GeneralPage.qml:13
 msgctxt "@title:tab"
 msgid "General"
 msgstr ""
@@ -576,17 +552,6 @@ msgctxt "@title:window"
 msgid "Rename"
 msgstr ""
 
-#: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Preferences/GeneralPage.qml:24
-msgctxt "@label:listbox"
-msgid "Language"
-msgstr ""
-
-#: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Preferences/GeneralPage.qml:80
-msgctxt "@label"
-msgid ""
-"You will need to restart the application for language changes to have effect."
-msgstr ""
-
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:28
 msgctxt "@label"
 msgid "Type"
@@ -595,26 +560,6 @@ msgstr ""
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:31
 msgctxt "@label"
 msgid "Variant"
-msgstr ""
-
-#: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:88
-msgctxt "@label"
-msgid "No text available"
-msgstr ""
-
-#: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:95
-msgctxt "@title"
-msgid "About: %1"
-msgstr ""
-
-#: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:127
-msgctxt "@label"
-msgid "Author:"
-msgstr ""
-
-#: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:149
-msgctxt "@label"
-msgid "Version:"
 msgstr ""
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:24
@@ -638,11 +583,6 @@ msgctxt "@item:inlistbox"
 msgid "Cura Profiles (*.curaprofile)"
 msgstr ""
 
-#: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:58
-msgctxt "@item:inlistbox"
-msgid "All Files (*)"
-msgstr ""
-
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:66
 msgctxt "@title:window"
 msgid "Export Profile"
@@ -658,21 +598,24 @@ msgctxt "@label:textbox"
 msgid "Filter..."
 msgstr ""
 
-#: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Settings/SettingView.qml:79
+#: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:88
 msgctxt "@label"
-msgid "{0} hidden setting uses a custom value"
-msgid_plural "{0} hidden settings use custom values"
-msgstr[0] ""
-msgstr[1] ""
-
-#: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Settings/SettingView.qml:163
-msgctxt "@action:menu"
-msgid "Hide this setting"
+msgid "No text available"
 msgstr ""
 
-#: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Settings/SettingView.qml:169
-msgctxt "@action:menu"
-msgid "Configure setting visiblity..."
+#: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:94
+msgctxt "@title:window"
+msgid "About %1"
+msgstr ""
+
+#: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:126
+msgctxt "@label"
+msgid "Author:"
+msgstr ""
+
+#: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:148
+msgctxt "@label"
+msgid "Version:"
 msgstr ""
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Settings/SettingsConfigurationPage.qml:18
@@ -693,6 +636,23 @@ msgstr ""
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Settings/SettingsConfigurationPage.qml:114
 msgctxt "@label"
 msgid "Are you sure you wish to remove the machine?"
+msgstr ""
+
+#: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Settings/SettingView.qml:79
+msgctxt "@label"
+msgid "{0} hidden setting uses a custom value"
+msgid_plural "{0} hidden settings use custom values"
+msgstr[0] ""
+msgstr[1] ""
+
+#: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Settings/SettingView.qml:165
+msgctxt "@action:menu"
+msgid "Hide this setting"
+msgstr ""
+
+#: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Settings/SettingView.qml:171
+msgctxt "@action:menu"
+msgid "Configure setting visiblity..."
 msgstr ""
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Wizard.qml:176
