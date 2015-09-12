@@ -40,6 +40,8 @@ class QtGL2Renderer(Renderer):
         self._background_color = QColor(128, 128, 128)
         self._viewport_width = 0
         self._viewport_height = 0
+        self._window_width = 0
+        self._window_height = 0
 
         self._solids_queue = []
         self._transparent_queue = []
@@ -88,6 +90,10 @@ class QtGL2Renderer(Renderer):
     def setViewportSize(self, width, height):
         self._viewport_width = width
         self._viewport_height = height
+
+    def setWindowSize(self, width, height):
+        self._window_width = width
+        self._window_height = height
         
     ##  Reset the selection image, so a redraw is forced.
     #   This is used when the scene is changed by delete actions, so the image needs to be redrawn.
@@ -141,8 +147,8 @@ class QtGL2Renderer(Renderer):
         if not self._selection_image:
             return None
 
-        px = (0.5 + x / 2.0) * self._viewport_width
-        py = (0.5 + y / 2.0) * self._viewport_height
+        px = (0.5 + x / 2.0) * self._window_width
+        py = (0.5 + y / 2.0) * self._window_height
 
         if px < 0 or px > (self._selection_image.width() - 1) or py < 0 or py > (self._selection_image.height() - 1):
             return None
@@ -227,7 +233,7 @@ class QtGL2Renderer(Renderer):
                 selectable_nodes.append(node)
         if selectable_nodes:
             #TODO: Use a limited area around the mouse rather than a full viewport for rendering
-            if self._selection_buffer.width() < self._viewport_width or self._selection_buffer.height() < self._viewport_height:
+            if self._selection_buffer.width() != self._viewport_width or self._selection_buffer.height() != self._viewport_height:
                 self._selection_buffer = self.createFrameBuffer(self._viewport_width, self._viewport_height)
 
             self._selection_buffer.bind()
