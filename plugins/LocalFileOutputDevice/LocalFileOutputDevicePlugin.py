@@ -88,7 +88,7 @@ class LocalFileOutputDevice(OutputDevice):
         file_name = dialog.selectedFiles()[0]
 
         if os.path.exists(file_name):
-            result = QMessageBox.question(None, catalog.i18nc("@title:window", "File Already Exists"), catalog.i18nc("@label filename is {0}", "The file {0} already exists. Are you sure you want to overwrite it?").format(file_name))
+            result = QMessageBox.question(None, catalog.i18nc("@title:window", "File Already Exists"), catalog.i18nc("@label", "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?").format(file_name))
             if result == QMessageBox.No:
                 raise OutputDeviceError.UserCanceledError()
 
@@ -108,15 +108,15 @@ class LocalFileOutputDevice(OutputDevice):
             job.progress.connect(self._onJobProgress)
             job.finished.connect(self._onWriteJobFinished)
 
-            message = Message(catalog.i18nc("@info:progress please include the tags (<filename>, </filename>) but don't translate them", "Saving to <filename>{0}</filename>").format(file_name), 0, False, -1)
+            message = Message(catalog.i18nc("@info:progress", "Saving to <filename>{0}</filename>").format(file_name), 0, False, -1)
             message.show()
 
             job._message = message
             job.start()
         except PermissionError as e:
-            raise OutputDeviceError.PermissionDeniedError(catalog.i18nc("@info:status please include the tags (<filename>, </filename>) but don't translate them", "Permission denied when trying to save <filename>{0}</filename>").format(file_name)) from e
+            raise OutputDeviceError.PermissionDeniedError(catalog.i18nc("@info:status", "Permission denied when trying to save <filename>{0}</filename>").format(file_name)) from e
         except OSError as e:
-            raise OutputDeviceError.WriteRequestFailedError(catalog.i18nc("@info:status please include the tags (<filename>, </filename>) but don't translate them", "Could not save to <filename>{0}</filename>: <message>{1}</message>").format()) from e
+            raise OutputDeviceError.WriteRequestFailedError(catalog.i18nc("@info:status", "Could not save to <filename>{0}</filename>: <message>{1}</message>").format()) from e
 
     def _onJobProgress(self, job, progress):
         if hasattr(job, "_message"):
@@ -131,13 +131,13 @@ class LocalFileOutputDevice(OutputDevice):
         self.writeFinished.emit(self)
         if job.getResult():
             self.writeSuccess.emit(self)
-            message = Message(catalog.i18nc("@info:status please include the tags (<filename>, </filename>) but don't translate them", "Saved to <filename>{0}</filename>").format(job.getFileName()))
+            message = Message(catalog.i18nc("@info:status", "Saved to <filename>{0}</filename>").format(job.getFileName()))
             message.addAction("open_folder", catalog.i18nc("@action:button", "Open Folder"), "open-folder", catalog.i18nc("@info:tooltip","Open the folder containing the file"))
             message._folder = os.path.dirname(job.getFileName())
             message.actionTriggered.connect(self._onMessageActionTriggered)
             message.show()
         else:
-            message = Message(catalog.i18nc("@info:status please include the tags (<filename>, </filenamen>, <message>, </message>) but don't translate them", "Could not save to <filename>{0}</filename>: <message>{1}</message>").format(job.getFileName(), str(job.getError())))
+            message = Message(catalog.i18nc("@info:status", "Could not save to <filename>{0}</filename>: <message>{1}</message>").format(job.getFileName(), str(job.getError())))
             message.show()
             self.writeError.emit(self)
         job.getStream().close()

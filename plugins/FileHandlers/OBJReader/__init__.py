@@ -18,7 +18,7 @@ def getMetaData():
         },
         "mesh_reader": {
             "extension": "obj",
-            "description": i18n_catalog.i18nc("@item:inlistbox displays the fileformat in a list", "Wavefront OBJ File")
+            "description": i18n_catalog.i18nc("@item:inlistbox", "Wavefront OBJ File")
         }
     }
 
