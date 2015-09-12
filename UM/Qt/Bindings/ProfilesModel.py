@@ -107,7 +107,7 @@ class ProfilesModel(ListModel):
         if self._add_use_global:
             self.appendItem({
                 "id": 1,
-                "name": catalog.i18nc("@item:inlistbox", "<Use Global Profile>"),
+                "name": catalog.i18nc("@item:inlistbox", "- Use Global Profile -"),
                 "active": False,
                 "readOnly": True,
                 "value": "global"
