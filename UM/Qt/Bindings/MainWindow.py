@@ -1,7 +1,7 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-from PyQt5.QtCore import pyqtProperty, QObject, Qt, QCoreApplication, pyqtSignal, pyqtSlot, QMetaObject
+from PyQt5.QtCore import pyqtProperty, QObject, Qt, QCoreApplication, pyqtSignal, pyqtSlot, QMetaObject, QRectF
 from PyQt5.QtGui import QColor
 from PyQt5.QtQuick import QQuickWindow, QQuickItem
 
@@ -46,6 +46,8 @@ class MainWindow(QQuickWindow):
         self._mouse_x = 0
         self._mouse_y = 0
 
+        self._viewport_rect = QRectF(0, 0, 1.0, 1.0)
+
         Application.getInstance().setMainWindow(self)
         self._fullscreen = False
 
@@ -74,6 +76,17 @@ class MainWindow(QQuickWindow):
     @pyqtProperty(int, notify = mousePositionChanged)
     def mouseY(self):
         return self._mouse_y
+
+    def setViewportRect(self, rect):
+        if rect != self._viewport_rect:
+            self._viewport_rect = rect
+            self._updateViewportGeometry(self.width(), self.height())
+            self.viewportRectChanged.emit()
+
+    viewportRectChanged = pyqtSignal()
+    @pyqtProperty(QRectF, fset = setViewportRect, notify = viewportRectChanged)
+    def viewportRect(self):
+        return self._viewport_rect
 
 #   Warning! Never reimplemented this as a QExposeEvent can cause a deadlock with QSGThreadedRender due to both trying
 #   to claim the Python GIL.
@@ -130,19 +143,11 @@ class MainWindow(QQuickWindow):
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
-        
-        w = event.size().width() * self.devicePixelRatio()
-        h = event.size().height() * self.devicePixelRatio()
-        for camera in self._app.getController().getScene().getAllCameras():
-            camera.setViewportSize(w, h)
-            proj = Matrix()
-            if camera.isPerspective():
-                proj.setPerspective(30, w/h, 1, 500)
-            else:
-                proj.setOrtho(-w / 2, w / 2, -h / 2, h / 2, -500, 500)
-            camera.setProjectionMatrix(proj)
 
-        self._app.getRenderer().setViewportSize(w, h)
+        win_w = event.size().width() * self.devicePixelRatio()
+        win_h = event.size().height() * self.devicePixelRatio()
+
+        self._updateViewportGeometry(win_w, win_h)
 
         QMetaObject.invokeMethod(self, "_onWindowGeometryChanged", Qt.QueuedConnection);
 
@@ -172,3 +177,19 @@ class MainWindow(QQuickWindow):
             self._preferences.setValue("general/window_state", Qt.WindowNoState)
         elif self.windowState() == Qt.WindowMaximized:
             self._preferences.setValue("general/window_state", Qt.WindowMaximized)
+
+    def _updateViewportGeometry(self, width, height):
+        view_w = width * self._viewport_rect.width()
+        view_h = height * self._viewport_rect.height()
+
+        for camera in self._app.getController().getScene().getAllCameras():
+            camera.setViewportSize(view_w, view_h)
+            proj = Matrix()
+            if camera.isPerspective():
+                proj.setPerspective(30, view_w / view_h, 1, 500)
+            else:
+                proj.setOrtho(-view_w / 2, view_w / 2, -view_h / 2, view_h / 2, -500, 500)
+            camera.setProjectionMatrix(proj)
+
+        self._app.getRenderer().setViewportSize(view_w, view_h)
+        self._app.getRenderer().setWindowSize(width, height)

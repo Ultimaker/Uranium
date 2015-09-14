@@ -91,8 +91,7 @@ PreferencesPage
             property variant plugin_name: ""
             property variant version_text: ""
 
-            //: About dialog with info about plugin %1
-            title: catalog.i18nc("@title", "About: %1").arg(plugin_name)
+            title: catalog.i18nc("@title:window", "About %1").arg(plugin_name)
 
             width: Screen.devicePixelRatio * 320;
             height: Screen.devicePixelRatio * 240;
