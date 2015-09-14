@@ -117,7 +117,7 @@ class CameraTool(Tool):
         self.checkModifierKeys(event)
         self.initiateZoom(event)
 
-        if event.type is event.KeyPressEvent:
+        if event.type is event.KeyPressEvent and not self._ctrl_is_active:
             if event.key == KeyEvent.UpKey:
                 self._rotateCamera(0, 0.01)
             if event.key == KeyEvent.DownKey:
