@@ -39,11 +39,9 @@ class MeshFileHandler(object):
                             move_vector.setY(extents.center.y) # Ensure that bottom is on 0 (above plate)
                             move_vector.setZ(extents.center.z)
                             result.setCenterPosition(move_vector)
-                            move_distance = extents.center.y
-                            if move_distance <= 0:
-                                move_distance = -extents.bottom
 
-                            result.translate(Vector(0,move_distance,0))
+                            if result.getMeshData().getExtents().bottom != 0:
+                               result.translate(Vector(0,-result.getMeshData().getExtents().bottom ,0))
 
                         # Move all the meshes of children so that toolhandles are shown in the correct place.
                         for node in result.getChildren():
