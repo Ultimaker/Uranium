@@ -139,7 +139,7 @@ Rectangle {
 
     Button {
         anchors {
-            right: parent.right;
+            left: parent.right;
             verticalCenter: parent.verticalCenter;
         }
         visible: base.overridden;
@@ -147,7 +147,7 @@ Rectangle {
 
         text: "R"; //TODO
 
-        height: parent.height;
+        height: parent.height - base.style.controlBorderWidth;
         width: height;
 
         onClicked: base.resetRequested()
