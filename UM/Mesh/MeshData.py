@@ -51,7 +51,6 @@ class MeshData(SignalEmitter):
     
     def __deepcopy__(self, memo):
         copy = MeshData()
-        print("Starting deepcopy of mesh " , self , " to: ", copy)
         copy._vertices = deepcopy(self._vertices, memo)
         copy._normals = deepcopy(self._normals, memo)
         copy._indices = deepcopy(self._indices, memo)
@@ -62,7 +61,6 @@ class MeshData(SignalEmitter):
         copy._type = deepcopy(self._type, memo)
         copy._file_name = deepcopy(self._file_name, memo)
         self._center_position = deepcopy (self._center_position, memo)
-        print("completed deepcopy of mesh" , self)
         return copy
 
     def _resetIndexBuffer(self):

@@ -68,12 +68,13 @@ class SceneNode(SignalEmitter):
         copy.setScale(self.getScale())
         copy.setMeshData(deepcopy(self._mesh_data, memo))
         copy.setVisible(deepcopy(self._visible, memo))
-
+        copy._selectable = deepcopy(self._selectable, memo)
         for decorator in self._decorators:
             copy.addDecorator(deepcopy(decorator, memo))
 
         for child in self._children:
             copy.addChild(deepcopy(child, memo))
+        self.calculateBoundingBoxMesh()
         return copy
 
 
