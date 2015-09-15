@@ -41,7 +41,8 @@ class ReadMeshJob(Job):
             result_message = Message(i18n_catalog.i18nc("@info:status", "Failed to load <filename>{0}</filename>", self._filename))
             result_message.show()
             return
-
+        if node.getMeshData():
+            node.getMeshData().setFileName(self._filename)
         # Scale down to maximum bounds size if that is available
         if hasattr(Application.getInstance().getController().getScene(), "_maximum_bounds"):
             max_bounds = Application.getInstance().getController().getScene()._maximum_bounds

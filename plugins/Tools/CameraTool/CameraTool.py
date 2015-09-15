@@ -94,7 +94,7 @@ class CameraTool(Tool):
 
     def initiateZoom(self, event):
         #calls the zoomaction method for the mousewheel event, mouseMoveEvent (in combo with alt or space) and when the plus or minus keys are used
-        if event.type is Event.MouseMoveEvent and (self._space_is_active is True or self._alt_is_active is True): #space -> mousemove or alt -> mousemove
+        if event.type is Event.MouseMoveEvent and (self._space_is_active is True): #space -> mousemove
             if self._start_y == None:
                 self._start_y = event.y
             _diff_y = self._start_y - event.y
