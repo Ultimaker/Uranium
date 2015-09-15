@@ -47,6 +47,13 @@ class Profile(SignalEmitter):
         if not self._active_instance or not self._active_instance.getMachineDefinition().isUserSetting(key):
             Logger.log("w", "Tried to set value of non-user setting %s", key)
             return
+        if key in self._changed_settings:
+            setting = self._active_instance.getMachineDefinition().getSetting(key)
+
+            if value == str(setting.getDefaultValue()) or value == setting.getDefaultValue():
+                del self._changed_settings[key]
+                self.settingValueChanged.emit(key)
+                return
 
         if key in self._changed_settings and self._changed_settings[key] == value:
             return
