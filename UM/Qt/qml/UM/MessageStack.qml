@@ -17,9 +17,8 @@ ListView {
 
     model: UM.Models.visibleMessagesModel;
 
-    property real slicingProgress: UM.Backend.progress * 100
-    property bool slicingActivity: Printer.getPlatformActivity;
-    Behavior on slicingProgress { NumberAnimation { duration: 250; } }
+    property real progress: UM.Backend.progress * 100
+    Behavior on progress { NumberAnimation { duration: 250; } }
 
     interactive: false;
     delegate: Rectangle
@@ -55,7 +54,7 @@ ListView {
             }
 
             function getProgressText(){
-                var progress = Math.floor(base.slicingProgress)
+                var progress = Math.floor(base.progress)
                 return "%1 <font color='black'>%2%</font>".arg(model.text).arg(progress)
             }
 
@@ -68,7 +67,7 @@ ListView {
                 id: totalProgressBar;
                 minimumValue: 0;
                 maximumValue: model.max_progress;
-                value: base.slicingProgress
+                value: base.progress
                 visible: model.progress == null ? false: true//if the progress is null (for example with the loaded message) -> hide the progressbar
                 indeterminate: model.progress == -1 ? true: false //if the progress is unknown (-1) -> the progressbar is indeterminate
                 style: UM.Theme.styles.progressbar
