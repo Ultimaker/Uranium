@@ -62,8 +62,7 @@ class AddMachinesModel(ListModel):
                         continue
 
                 if not data.get("id"):
-                    #the base model (fdmprinter.json) has no id, but also doesn't represent a real printer profile, so we dump it
-                    continue
+                    continue # Any model without an ID is seen as an 'abstract'
 
                 _file = file
                 _id = data.get("id")
