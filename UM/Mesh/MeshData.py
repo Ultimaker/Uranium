@@ -5,12 +5,14 @@ from UM.Mesh.Vertex import Vertex
 from UM.Math.Vector import Vector
 from UM.Math.AxisAlignedBox import AxisAlignedBox
 from UM.Signal import Signal, SignalEmitter
+from UM.Logger import Logger
 
 import copy
 import numpy
 import numpy.linalg
 import hashlib
 from copy import deepcopy
+from time import time
 numpy.seterr(all="ignore") # Ignore warnings (dev by zero)
 
 from enum import Enum
@@ -424,7 +426,7 @@ class MeshData(SignalEmitter):
     def calculateNormals(self, **kwargs):
         if self._vertices is None:
             return
-
+        start_time = time()
         # Numpy magic!
         # First, reset the normals
         self._normals = numpy.zeros((self._vertex_count, 3), dtype=numpy.float32)
@@ -456,3 +458,5 @@ class MeshData(SignalEmitter):
             # Finally, we store the normals per vertex, with each face normal being repeated three times, once for
             # every vertex.
             self._normals = n.repeat(3, axis=0)
+        end_time = time()
+        Logger.log("d", "Calculating normals took %s seconds", end_time - start_time)
