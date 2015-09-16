@@ -69,7 +69,9 @@ class OutputDeviceManagerProxy(QObject):
             return
 
         try:
-            device.requestWrite(node)
+            if not self._device_manager.isWriteInProgress():
+                self._device_manager.setWriteInProgress(True)
+                device.requestWrite(node)
         except OutputDeviceError.UserCanceledError:
             pass
         except OutputDeviceError.WriteRequestFailedError as e:

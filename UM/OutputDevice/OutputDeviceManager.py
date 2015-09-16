@@ -45,8 +45,18 @@ class OutputDeviceManager(SignalEmitter):
         self._plugins = {}
         self._active_device = None
         self._active_device_override = False
-
+        self._write_in_progress = False
         PluginRegistry.addType("output_device", self.addOutputDevicePlugin)
+        self.writeStarted.connect(self._onWriteStarted)
+        self.writeError.connect(self._onWriteError)
+        self.writeFinished.connect(self._onWriteFinished)
+
+    def isWriteInProgress(self):
+        return self._write_in_progress
+
+    def setWriteInProgress(self, value):
+        self._write_in_progress = value
+
 
     ##  Emitted whenever a registered device emits writeStarted.
     #
@@ -68,6 +78,18 @@ class OutputDeviceManager(SignalEmitter):
     #
     #   \sa OutputDevice::writeSuccess
     writeSuccess = Signal()
+
+    def _onWriteStarted(self, device):
+        if self._active_device == device:
+            self._write_in_progress = True
+
+    def _onWriteFinished(self, device):
+        if self._active_device == device:
+            self._write_in_progress = False
+
+    def _onWriteError(self, device):
+        if self._active_device == device:
+            self._write_in_progress = False
 
     ##  Get a list of all registered output devices.
     #
@@ -132,6 +154,7 @@ class OutputDeviceManager(SignalEmitter):
         self.outputDevicesChanged.emit()
 
         if self._active_device.getId() == device_id:
+            self._write_in_progress = False
             self.resetActiveDevice()
 
     ##  Emitted whenever the active device changes.
@@ -153,6 +176,7 @@ class OutputDeviceManager(SignalEmitter):
 
         if not self._active_device or self._active_device.getId() != device_id:
             self._active_device = self.getOutputDevice(device_id)
+            self._write_in_progress = False
             self._active_device_override = True
             self.activeDeviceChanged.emit()
 
@@ -160,6 +184,7 @@ class OutputDeviceManager(SignalEmitter):
     def resetActiveDevice(self):
         self._active_device = self._findHighestPriorityDevice()
         self._active_device_override = False
+        self._write_in_progress = False
         self.activeDeviceChanged.emit()
 
     ##  Add an OutputDevicePlugin instance.
