@@ -12,6 +12,7 @@ from UM.Scene.SceneNode import SceneNode
 import os
 import struct
 import math
+import time
 
 class STLReader(MeshReader):
     def __init__(self):
@@ -37,7 +38,7 @@ class STLReader(MeshReader):
                 f.close()
 
             f.close()
-
+            time.sleep(0.1) #Yield somewhat to ensure the GUI has time to update a bit.
             mesh.calculateNormals(fast = True)
 
             Logger.log("d", "Loaded a mesh with %s vertices", mesh.getVertexCount())
