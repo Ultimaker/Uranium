@@ -49,7 +49,7 @@ class OBJReader(MeshReader):
                         face_list.append(data)
             f.close()
 
-            mesh.reserveFaceCount(len(face_list))
+            mesh.reserveVertexCount(3 * len(face_list))
             num_vertices = len(vertex_list)
             num_normals = len(normal_list)
 
@@ -97,7 +97,6 @@ class OBJReader(MeshReader):
 
                 if uk != -1:
                     mesh.setVertexUVCoordinates(mesh.getVertexCount() - 1, uv_list[uk][0], uv_list[uk][1])
-
             if not mesh.hasNormals():
                 mesh.calculateNormals(fast = True)
         return scene_node
