@@ -7,7 +7,6 @@ from UM.Application import Application
 from UM.Resources import Resources
 from UM.Math.Color import Color
 from UM.ColorGenerator import ColorGenerator
-from UM.Scene.GroupNode import GroupNode
 import numpy
 import colorsys
 
@@ -26,7 +25,7 @@ class PointCloudNode(SceneNode.SceneNode):
     
     def _onParentChanged(self, parent):
         num_scans = 12 #Hardcoded, change this!
-        if type(parent) is GroupNode:
+        if parent.callDecoration("isGroup"):
             if not hasattr(parent, 'color'):
                 Application.getInstance().addColorIndex(parent)
                 color_hsv = ColorGenerator().getColor(Application.getInstance().getColorIndex(parent))
