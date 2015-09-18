@@ -89,6 +89,36 @@ Rectangle {
         font: base.style.labelFont;
     }
 
+    Button {
+        anchors {
+            right: controlContainer.left
+            verticalCenter: parent.verticalCenter;
+        }
+        visible: base.overridden;
+        tooltip: "Reset to Default";
+
+        height: parent.height - base.style.controlBorderWidth;
+        width: height;
+
+        onClicked: base.resetRequested()
+
+        style: ButtonStyle {
+            background: Rectangle {
+                color: control.hovered ? base.style.controlHighlightColor : base.style.controlColor;
+                UM.RecolorImage {
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    width: parent.width/2
+                    height: parent.height/2
+                    sourceSize.width: width
+                    sourceSize.height: width
+                    color: UM.Theme.colors.setting_control_revert
+                    source: UM.Theme.icons.reset
+                }
+            }
+        }
+    }
+
     Loader {
         id: controlContainer;
 
@@ -133,30 +163,6 @@ Rectangle {
                         base.hideTooltip();
                     }
                 }
-            }
-        }
-    }
-
-    Button {
-        anchors {
-            left: parent.right;
-            verticalCenter: parent.verticalCenter;
-        }
-        visible: base.overridden;
-        tooltip: "Reset to Default";
-
-        text: "R"; //TODO
-
-        height: parent.height - base.style.controlBorderWidth;
-        width: height;
-
-        onClicked: base.resetRequested()
-
-        style: ButtonStyle {
-            background: Rectangle {
-                border.width: base.style.controlBorderWidth;
-                border.color: base.style.controlBorderColor;
-                color: control.hovered ? base.style.controlHighlightColor : base.style.controlColor;
             }
         }
     }
