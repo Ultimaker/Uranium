@@ -5,6 +5,7 @@ from UM.Settings.Setting import Setting
 from UM.Signal import Signal, SignalEmitter
 from UM.Logger import Logger
 
+##  A Category containing a bunch of settings.
 class SettingsCategory(SignalEmitter):
     def __init__(self, machine_manager, key, catalog, parent, icon = None, order = 0):
         self._key = key

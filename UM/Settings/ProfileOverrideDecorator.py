@@ -4,6 +4,7 @@
 from UM.Scene.SceneNodeDecorator import SceneNodeDecorator
 from UM.Application import Application
 
+##  A Decorator that can be used to override the profile of an object.
 class ProfileOverrideDecorator(SceneNodeDecorator):
     def __init__(self):
         super().__init__()
