@@ -8,6 +8,7 @@ from UM.Signal import Signal, SignalEmitter
 from UM.Settings import SettingsError
 from UM.Logger import Logger
 from UM.Settings.Validators.ResultCodes import ResultCodes
+from UM.SaveFile import SaveFile
 
 ##  Provides a collection of setting values
 #
@@ -219,8 +220,11 @@ class Profile(SignalEmitter):
         for setting_key in self._changed_settings:
             parser.set("settings", setting_key , str(self._changed_settings[setting_key]))
         
-        with open(file, "wt", -1, "utf-8") as f:
-            parser.write(f)
+        try:
+            with SaveFile(file, "wt", -1, "utf-8") as f:
+                parser.write(f)
+        except Exception as e:
+            Logger.log("e", "Failed to write profile to %s: %s", file, str(e))
 
     ##  Reimplemented deepcopy that makes sure we do not copy the machine instance.
     def __deepcopy__(self, memo):
