@@ -98,7 +98,11 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
 
     @pyqtSlot(str)
     def resetSettingValue(self, key):
-        self._profile.resetSettingValue(key)
+        setting = self._category.getSetting(key)
+        if setting:
+            self._ignore_setting_value_update = setting
+            self._profile.resetSettingValue(key)
+            self._ignore_setting_value_update = None
         self.setProperty(self.find("key", key), "overridden", False)
 
     ##  Create model for combo box (used by enum type setting) 

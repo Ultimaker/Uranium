@@ -12,7 +12,7 @@ class Message():
         self._application = Application.getInstance()
         self._visible = False
         self._text = text
-        self._progress = progress
+        self._progress = progress # If progress is set to -1, the progress is seen as indeterminate
         self._max_progress = 100
         self._lifetime = lifetime 
         self._lifetime_timer = None

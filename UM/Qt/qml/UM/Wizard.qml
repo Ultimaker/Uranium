@@ -5,7 +5,6 @@ import QtQuick 2.2
 import QtQuick.Controls 1.1
 import QtQuick.Window 2.1
 import QtQuick.Controls.Styles 1.1
-import QtQuick.Layouts 1.1
 import QtQml 2.2
 
 import UM 1.1 as UM
@@ -16,7 +15,6 @@ UM.Dialog
 
     property int currentPage: -1;
     property bool lastPage: currentPage == pagesModel.count - 1;
-    property bool nextAvailable: false;
 
     property bool firstRun: false
 
@@ -101,7 +99,6 @@ UM.Dialog
                         }
                         onClicked:
                         {
-                            //console.log(title
                             for (var i = 0; i < pagesModel.count; i++)
                             {
                                 if (pagesModel.get(i).title == title)
@@ -117,9 +114,16 @@ UM.Dialog
                         id: progressArrow
                         anchors.top: progressButton.bottom
                         x: (wizardProgress.width-progressArrow.width)/2
-                        text: "▼"
                         visible: title != pagesModel.get(pagesModel.count - 1).title ? true : false
-                        color: palette.mid
+                        UM.RecolorImage {
+                            id: downArrow
+                            width: UM.Theme.sizes.standard_arrow.width
+                            height: UM.Theme.sizes.standard_arrow.height
+                            sourceSize.width: width
+                            sourceSize.height: width
+                            color: palette.mid
+                            source: UM.Theme.icons.arrow_bottom
+                        }
                     }
                 }
             }
@@ -127,7 +131,6 @@ UM.Dialog
             {
                 model: ListModel { id: pagesModel; }
                 delegate: wizardDelegate
-
                 anchors.fill: parent
                 anchors.topMargin: UM.Theme.sizes.default_margin.height
             }
@@ -189,8 +192,9 @@ UM.Dialog
         Button
         {
             id: nextButton
-            text: base.lastPage && !base.nextAvailable ? catalog.i18nc("@action:button", "Finish") : catalog.i18nc("@action:button", "Next")
-            iconName: base.lastPage && !base.nextAvailable ? "dialog-ok" : "go-next";
+            text: base.lastPage ? catalog.i18nc("@action:button", "Finish") : catalog.i18nc("@action:button", "Next")
+            iconName: base.lastPage ? "dialog-ok" : "go-next";
+            height: backButton.height
 
             onClicked: {
                 base.nextClicked()
@@ -208,6 +212,7 @@ UM.Dialog
         Button
         {
             id: cancelButton
+            height: backButton.height
             text: catalog.i18nc("@action:button", "Cancel")
             iconName: "dialog-cancel";
             onClicked:
