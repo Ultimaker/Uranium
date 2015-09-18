@@ -7,6 +7,7 @@ from UM.Application import Application
 
 from copy import deepcopy
 
+##  A decorator that can be used to override individual setting values.
 class SettingOverrideDecorator(SceneNodeDecorator, SignalEmitter):
     def __init__(self):
         super().__init__()

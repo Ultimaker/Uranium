@@ -9,9 +9,21 @@ from UM.Settings import SettingsError
 from UM.Logger import Logger
 from UM.Settings.Validators.ResultCodes import ResultCodes
 
+##  Provides a collection of setting values
+#
+#   The profile class handles setting values for "user" settings. User settings are settings
+#   that can be adjusted by users, as opposed to machine settings which are mostly intrinsic
+#   values of the machine, but which can optionally be overridden from MachineInstance.
+#
+#   The Profile class provides getters and setters for setting values, in addition to
+#   serialization and deserialization methods. There are two intrinsic properties for a profile,
+#   its name, which is used as a human-readable identifier and a read only property. Read only
+#   profiles are profiles that should not be modified because they are read from system locations
+#   that cannot be written to, for example /usr/share on Linux systems.
 class Profile(SignalEmitter):
     ProfileVersion = 1
 
+    ##  Constructor.
     def __init__(self, machine_manager, read_only = False):
         super().__init__()
         self._machine_manager = machine_manager
@@ -23,25 +35,41 @@ class Profile(SignalEmitter):
         self._machine_manager.activeMachineInstanceChanged.connect(self._onActiveInstanceChanged)
         self._onActiveInstanceChanged()
 
+    ##  Emitted when the name of the profile changes.
     nameChanged = Signal()
 
+    ##  Retrieve the name of the profile.
     def getName(self):
         return self._name
 
+    ##  Set the name of the profile.
+    #
+    #   \param name \type{string} The new name of the profile.
     def setName(self, name):
         if name != self._name:
             old_name = self._name
             self._name = name
             self.nameChanged.emit(self, old_name)
 
+    ##  Set whether this profile should be considered a read only profile.
     def setReadOnly(self, read_only):
         self._read_only = read_only
 
+    ##  Retrieve if this profile is a read only profile.
     def isReadOnly(self):
         return self._read_only
 
+    ##  Emitted whenever a setting value changes.
+    #
+    #   \param key \type{string} The key of the setting that changed.
     settingValueChanged = Signal()
 
+    ##  Set a certain setting value.
+    #
+    #   \param key The key of the setting to set.
+    #   \param value The new value of the setting.
+    #
+    #   \note If the setting is not a user-settable setting, this method will do nothing.
     def setSettingValue(self, key, value):
         Logger.log('d' , "Setting value of setting %s to %s",key,value)
         if not self._active_instance or not self._active_instance.getMachineDefinition().isUserSetting(key):
@@ -61,6 +89,13 @@ class Profile(SignalEmitter):
         self._changed_settings[key] = value
         self.settingValueChanged.emit(key)
 
+    ##  Get the value of a setting.
+    #
+    #   This method will retrieve the value of a setting. If the value has been set in the profile, it will
+    #   return the value from the profile. If the value was not set, it will fall back to the active machine
+    #   instance and call MachineInstance::getSettingValue().
+    #
+    #   \param key \type{string} The key of the setting to retrieve the value for.
     def getSettingValue(self, key):
         if not self._active_instance:
             return None
@@ -74,9 +109,15 @@ class Profile(SignalEmitter):
 
         return self._active_instance.getSettingValue(key)
 
+    ##  Get a dictionary of all settings that have a value set in this profile.
     def getChangedSettings(self):
         return self._changed_settings
 
+    ##  Get a dictionary of all setting values.
+    #
+    #   \param kwargs Keyword arguments.
+    #                 Possible values:
+    #                 - include_machine \type{bool} Include machine settings.
     def getAllSettingValues(self, **kwargs):
         values = { }
 
@@ -99,6 +140,10 @@ class Profile(SignalEmitter):
 
         return values
 
+    ##  Get a dictionary of all settings with changed values and their children.
+    #
+    #   Since children can have inheritance functions we need to recalculate the setting
+    #   values based on the setting values from this profile.
     def getChangedSettingValues(self):
         values = {}
 
@@ -123,7 +168,7 @@ class Profile(SignalEmitter):
 
         return values
 
-
+    ##  Validate all settings and check if any setting has an error.
     def hasErrorValue(self):
         for key, value in self._changed_settings.items():
             valid = self._active_instance.getMachineDefinition().getSetting(key).validate(value)
@@ -133,9 +178,11 @@ class Profile(SignalEmitter):
 
         return False
 
+    ##  Check whether this profile has a value for a certain setting.
     def hasSettingValue(self, key):
         return key in self._changed_settings
 
+    ##  Remove a setting value from this profile, resetting it to its default value.
     def resetSettingValue(self, key):
         if key not in self._changed_settings:
             return
@@ -143,6 +190,7 @@ class Profile(SignalEmitter):
         del self._changed_settings[key]
         self.settingValueChanged.emit(key)
 
+    ##  Load a serialized profile from a file.
     def loadFromFile(self, path):
         parser = configparser.ConfigParser()
         parser.read(path, "utf-8")
@@ -159,6 +207,7 @@ class Profile(SignalEmitter):
             for key, value in parser["settings"].items():
                 self.setSettingValue(key, value)
 
+    ##  Serialize this profile to a file so it can be loaded later.
     def saveToFile(self, file):
         parser = configparser.ConfigParser()
 
@@ -173,6 +222,7 @@ class Profile(SignalEmitter):
         with open(file, "wt", -1, "utf-8") as f:
             parser.write(f)
 
+    ##  Reimplemented deepcopy that makes sure we do not copy the machine instance.
     def __deepcopy__(self, memo):
         copy = Profile(self._machine_manager, self._read_only)
 
@@ -180,6 +230,8 @@ class Profile(SignalEmitter):
         copy.setName(self._name)
 
         return copy
+
+    # private:
 
     def _onActiveInstanceChanged(self):
         self._active_instance = self._machine_manager.getActiveMachineInstance()
