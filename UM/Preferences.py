@@ -5,6 +5,8 @@ from UM.Signal import Signal, SignalEmitter
 from UM.Logger import Logger
 from UM.Resources import Resources
 
+from UM.SaveFile import SaveFile
+
 import os
 import configparser
 
@@ -82,8 +84,11 @@ class Preferences(SignalEmitter):
 
         parser["general"]["version"] = "2"
 
-        with open(file, "wt") as f:
-            parser.write(f)
+        try:
+            with SaveFile(file, "wt") as f:
+                parser.write(f)
+        except Exception as e:
+            Logger.log("e", "Failed to write preferences to %s: %s", file, str(e))
 
     preferenceChanged = Signal()
 

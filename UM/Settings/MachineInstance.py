@@ -6,6 +6,7 @@ import configparser
 from UM.Settings import SettingsError
 from UM.Logger import Logger
 from UM.Signal import Signal, SignalEmitter
+from UM.SaveFile import SaveFile
 
 class MachineInstance(SignalEmitter):
     MachineInstanceVersion = 1
@@ -111,5 +112,8 @@ class MachineInstance(SignalEmitter):
         for key, value in self._machine_setting_overrides:
             config["machine_settings"][key] = str(value)
 
-        with open(path, "wt", -1, "utf-8") as f:
-            config.write(f)
+        try:
+            with SaveFile(path, "wt", -1, "utf-8") as f:
+                config.write(f)
+        except Exception as e:
+            Logger.log("e", "Failed to write Instance to %s: %s", path, str(e))

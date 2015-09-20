@@ -26,10 +26,6 @@ class IllegalMethodError(Exception):
 #   \note Currently there is still too much state embedded in a setting. All value functions
 #         and things like visibility should really be separated into a different class.
 #
-#   Settings have validators that check if the value is valid, but do not prevent invalid values!
-#   Settings have conditions that enable/disable this setting depending on other settings. (Ex: Dual-extrusion)
-#
-#
 class Setting(SignalEmitter):    
     def __init__(self, machine_manager, key, catalog, **kwargs):
         super().__init__()
@@ -128,12 +124,6 @@ class Setting(SignalEmitter):
         if "enabled" in data:
             self._enabled_function = self._createFunction(data["enabled"])
 
-        #if "active_if" in data:
-            #if "setting" in data["active_if"] and "value" in data["active_if"]:
-                #self._active_if_setting = data["active_if"]["setting"]
-                #self._active_if_value = data["active_if"]["value"]
-                #self._machine_settings.settingsLoaded.connect(self.activeIfHandler)
-
         if "options" in data:
             self._options = {}
             for key, value in data["options"].items():
@@ -151,7 +141,9 @@ class Setting(SignalEmitter):
 
                 setting.fillByDict(value)
 
-    ##  Return the values this setting can have (needs to be set if this is setting is an enum!)
+    ##  Return a dict with the values this setting can have.
+    #
+    #   The dict contains a value as key and a user-visible label that can be used to display the value to the user.
     def getOptions(self):
         return self._options
 
@@ -178,7 +170,9 @@ class Setting(SignalEmitter):
         for child in self._children:
             child.setCategory(category)
 
-    ##  Set the parent of this setting. Parents can override the value of the setting if the child setting is not visible.
+    ##  Set the parent of this setting.
+    #
+    #   Parents can be used to determine the value of the setting if the setting is not visible.
     #   mostly used for giving a 'global' setting (such as speed), with children being travel speed, infill speed, etc.
     #   \param setting Setting
     def setParent(self, setting):
@@ -195,7 +189,9 @@ class Setting(SignalEmitter):
         setting.setParent(self)
         self._children.append(setting)
 
-    ##  Recursively check it's children to see if the key matches.
+    ##  Retrieve a setting or child setting by key.
+    #
+    #   \param key The key to search for.
     #   \returns Setting if key match is found, None otherwise.
     def getSetting(self, key):
         if self._key == key:
@@ -207,13 +203,15 @@ class Setting(SignalEmitter):
         return None
 
     ##  Set the default value of the setting.
+    #
+    #   Note that the default value may be overridden when the setting is not visible.
     #   \param value
     def setDefaultValue(self, value):
         self._default_value = value
         return self
 
     ##  get the default value of the setting.
-    #   \param values The object to use to get setting values from. Use by the inherit function, if set.
+    #   \param values The object to use to get setting values from. Used by the inherit function, if set.
     #   \returns default_value
     def getDefaultValue(self, values = None):
         if not self._visible:
@@ -230,18 +228,20 @@ class Setting(SignalEmitter):
 
         return self._default_value
 
-    ##  Set the visibility of this setting. See setParent for more info.
+    ##  Set the visibility of this setting.
     #   \param visible Bool
     def setVisible(self, visible):
         if visible != self._visible:
             self._visible = visible
             self.visibleChanged.emit(self)
 
-    ##  Check if the setting is visible. It can be that the setting visible is true, 
-    #   but it still should be invisible as all it's children are visible (at this point this setting is overiden by its children 
+    ##  Check if the setting is visible.
+    #
+    #   It can be that the setting visible is true,
+    #   but it still should be invisible as all it's children are visible (at this point this setting is overridden by its children
     #   changing it does nothing, so it needs to be hidden!)
-    #   The value is also hidden if it's not active (due to condition (some properties are active based on values of other settings)
     #   \returns bool
+    #   \sa isEnabled
     def isVisible(self):
         if not self._visible:
             return False
@@ -249,6 +249,7 @@ class Setting(SignalEmitter):
             return False
         return True
 
+    ##  Emitted when visible is changed either due to explicitly setting it or due to children visibility changing.
     visibleChanged = Signal()
 
     ##  Check if all children are visible.
@@ -260,9 +261,6 @@ class Setting(SignalEmitter):
             if not child.isVisible() and not child.checkAllChildrenVisible():
                 return False
         return True
-
-    ##  Set the range of the setting. The validator will give errors or warnings if these are met.
-    #   See Validator for more info
 
     ##  Get the display name of the setting
     def getLabel(self):
@@ -282,9 +280,15 @@ class Setting(SignalEmitter):
     def getDescription(self):
         return self._description
 
+    ##  Get the warning description of the setting.
+    #
+    #   This provides a descriptive text about why the setting is in a warning state.
     def getWarningDescription(self):
         return self._warning_description
 
+    ##  Get the error description of the setting.
+    #
+    #   This provides a descriptive text about why the setting is in an error state.
     def getErrorDescription(self):
         return self._error_description
 
@@ -297,11 +301,18 @@ class Setting(SignalEmitter):
     def getType(self):
         return self._type
 
+    ##  Get the unit of the setting.
+    #
+    #   This is primarily a user-visible string that can be displayed to provide information about the unit.
     def getUnit(self):
         return self._unit
 
+    ##  Emitted whenever this setting's enabled state changes.
     enabledChanged = Signal()
 
+    ##  Check whether this setting is enabled.
+    #
+    #   Enabled settings can be displayed and used. Disabled settings should be ignored.
     def isEnabled(self):
         if self._enabled_function:
             return self._enabled_function()
@@ -317,6 +328,7 @@ class Setting(SignalEmitter):
         else:
             return ResultCodes.succes
 
+    ##  Get a list of all children of this setting, including children of children.
     def getAllChildren(self):
         all_children = []
         for s in self._children:
@@ -324,6 +336,7 @@ class Setting(SignalEmitter):
             all_children.extend(s.getAllChildren())
         return all_children
 
+    ##  Get a list of the direct children of this setting (so no children of children).
     def getChildren(self):
         return self._children
 
