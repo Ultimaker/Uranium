@@ -64,9 +64,9 @@ class ThreeMFWriter(MeshWriter):
                         v1 = verts[face[0]]
                         v2 = verts[face[1]]
                         v3 = verts[face[2]]
-                        xml_vertex1 = ET.SubElement(vertices, "vertex", x = str(v1[0]), y = str(-v1[2]), z = str(v1[1]))
-                        xml_vertex2 = ET.SubElement(vertices, "vertex", x = str(v2[0]), y = str(-v2[2]), z = str(v2[1]))
-                        xml_vertex3 = ET.SubElement(vertices, "vertex", x = str(v3[0]), y = str(-v3[2]), z = str(v3[1]))
+                        xml_vertex1 = ET.SubElement(vertices, "vertex", x = str(v1[0]), y = str(v1[2]), z = str(v1[1]))
+                        xml_vertex2 = ET.SubElement(vertices, "vertex", x = str(v2[0]), y = str(v2[2]), z = str(v2[1]))
+                        xml_vertex3 = ET.SubElement(vertices, "vertex", x = str(v3[0]), y = str(v3[2]), z = str(v3[1]))
 
                     triangles = ET.SubElement(mesh, "triangles")
                     for face in mesh_data.getIndices():
