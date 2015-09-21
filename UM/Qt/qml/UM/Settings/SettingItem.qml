@@ -75,7 +75,7 @@ Rectangle {
 
         anchors.left: parent.left;
         anchors.leftMargin: UM.Theme.sizes.section_icon_column.width + 5
-        anchors.right: controlContainer.left;
+        anchors.right: base.overridden? revertButton.left : controlContainer.left;
         anchors.rightMargin: base.style.spacing;
         anchors.verticalCenter: parent.verticalCenter
 
@@ -90,6 +90,7 @@ Rectangle {
     }
 
     Button {
+        id: revertButton
         anchors {
             right: controlContainer.left
             verticalCenter: parent.verticalCenter;
