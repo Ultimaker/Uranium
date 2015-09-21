@@ -69,12 +69,25 @@ Rectangle {
     }
     property variant style: SettingItemStyle { }
 
+    Rectangle{
+        visible: base.depth > 1 ? true : false
+        id: separationLine
+        width: 2
+        height: label.height / 2
+        color: UM.Theme.colors.setting_control_depth_line
+        anchors.right: label.left
+        anchors.rightMargin: UM.Theme.sizes.setting_control_depth_margin.width / 2
+        anchors.verticalCenter: parent.verticalCenter
+        z: parent.z + 1
+    }
+
     Label
     {
         id: label;
+        property int depth: base.depth - 1
 
         anchors.left: parent.left;
-        anchors.leftMargin: UM.Theme.sizes.section_icon_column.width + 5
+        anchors.leftMargin: (UM.Theme.sizes.section_icon_column.width + 5) + (label.depth * UM.Theme.sizes.setting_control_depth_margin.width)
         anchors.right: base.overridden? revertButton.left : controlContainer.left;
         anchors.rightMargin: base.style.spacing;
         anchors.verticalCenter: parent.verticalCenter
