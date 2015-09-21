@@ -5,6 +5,7 @@ from UM.Mesh.MeshWriter import MeshWriter
 from UM.Scene.SceneNode import SceneNode
 from UM.Scene.Iterator.BreadthFirstIterator import BreadthFirstIterator
 from UM.Logger import Logger
+from UM.Math.Matrix import Matrix
 
 import xml.etree.ElementTree as ET
 import zipfile
@@ -62,15 +63,18 @@ class ThreeMFWriter(MeshWriter):
                     v1 = verts[face[0]]
                     v2 = verts[face[1]]
                     v3 = verts[face[2]]
-                    xml_vertex1 = ET.SubElement(vertices, "vertex", x = str(v1[0]), y = str(-v1[1]), z = str(v1[2]))
-                    xml_vertex2 = ET.SubElement(vertices, "vertex", x = str(v2[0]), y = str(-v2[1]), z = str(v2[2]))
-                    xml_vertex3 = ET.SubElement(vertices, "vertex", x = str(v3[0]), y = str(-v3[1]), z = str(v3[2]))
+                    xml_vertex1 = ET.SubElement(vertices, "vertex", x = str(v1[0]), y = str(-v1[2]), z = str(v1[1]))
+                    xml_vertex2 = ET.SubElement(vertices, "vertex", x = str(v2[0]), y = str(-v2[2]), z = str(v2[1]))
+                    xml_vertex3 = ET.SubElement(vertices, "vertex", x = str(v3[0]), y = str(-v3[2]), z = str(v3[1]))
 
                 triangles = ET.SubElement(mesh, "triangles")
                 for face in mesh_data.getIndices():
                     triangle = ET.SubElement(triangles, "triangle", v1 = str(face[0]) , v2 = str(face[1]), v3 = str(face[2]))
                 transformation_string = self._convertMatrixToString(node.getWorldTransformation())
-                item = ET.SubElement(build, "item", objectid = str(index+1)) #, transform = transformation_string)
+                if transformation_string != self._convertMatrixToString(Matrix()):
+                    item = ET.SubElement(build, "item", objectid = str(index+1), transform = transformation_string)
+                else:
+                    item = ET.SubElement(build, "item", objectid = str(index+1)) #, transform = transformation_string)
 
             archive.writestr(model_file, b'<?xml version="1.0" encoding="UTF-8"?> \n' + ET.tostring(model))
             archive.writestr(content_types_file, "")
