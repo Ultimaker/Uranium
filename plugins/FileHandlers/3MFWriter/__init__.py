@@ -4,20 +4,24 @@
 from . import ThreeMFWriter
 
 from UM.i18n import i18nCatalog
-catalog = i18nCatalog("uranium")
+i18n_catalog = i18nCatalog("uranium")
 
 def getMetaData():
     return {
         "plugin": {
-            "name": catalog.i18nc("@label", "3MF Writer"),
+            "name": i18n_catalog.i18nc("@label", "3MF Writer"),
             "author": "Ultimaker",
             "version": "1.0",
-            "description": catalog.i18nc("@info:whatsthis", "Provides support for reading 3MF files."),
+            "description": i18n_catalog.i18nc("@info:whatsthis", "Provides support for writing 3MF files."),
             "api": 2
         },
         "mesh_writer": {
-            "extension": "3mf",
-            "description": catalog.i18nc("@item:inlistbox", "3MF File")
+            "output": [{
+                "extension": "3mf",
+                "description": i18n_catalog.i18nc("@item:inlistbox", "3MF file"),
+                "mime_type": "application/vnd.ms-package.3dmanufacturing-3dmodel+xml",
+                "mode": ThreeMFWriter.ThreeMFWriter().OutputMode().BinaryMode
+            }]
         }
     }
 def register(app):
