@@ -15,8 +15,7 @@ class ThreeMFWriter(MeshWriter):
     def __init__(self):
         super().__init__()
         self._namespaces = {
-            "3mf": "http://schemas.microsoft.com/3dmanufacturing/core/2015/02",
-            "cura": "http://software.ultimaker.com/xml/cura/3mf/2015/10"
+            "3mf": "http://schemas.microsoft.com/3dmanufacturing/core/2015/02"
         }
 
     def _convertMatrixToString(self, matrix):
@@ -49,7 +48,7 @@ class ThreeMFWriter(MeshWriter):
         try:
             model_file = zipfile.ZipInfo("3D/3dmodel.model")
             content_types_file = zipfile.ZipInfo("[Content_Types].xml")
-            model = ET.Element('model', unit = "millimeter", xmlns = self._namespaces["cura"])
+            model = ET.Element('model', unit = "millimeter", xmlns = self._namespaces["3mf"])
             resources = ET.SubElement(model, "resources")
             build = ET.SubElement(model, "build")
             for index, n in enumerate(nodes):
@@ -63,9 +62,9 @@ class ThreeMFWriter(MeshWriter):
                     v1 = verts[face[0]]
                     v2 = verts[face[1]]
                     v3 = verts[face[2]]
-                    xml_vertex1 = ET.SubElement(vertices, "vertex", x = str(v1[0]), y = str(-v1[2]), z = str(v1[1]))
-                    xml_vertex2 = ET.SubElement(vertices, "vertex", x = str(v2[0]), y = str(-v2[2]), z = str(v2[1]))
-                    xml_vertex3 = ET.SubElement(vertices, "vertex", x = str(v3[0]), y = str(-v3[2]), z = str(v3[1]))
+                    xml_vertex1 = ET.SubElement(vertices, "vertex", x = str(v1[0]), y = str(-v1[1]), z = str(v1[2]))
+                    xml_vertex2 = ET.SubElement(vertices, "vertex", x = str(v2[0]), y = str(-v2[1]), z = str(v2[2]))
+                    xml_vertex3 = ET.SubElement(vertices, "vertex", x = str(v3[0]), y = str(-v3[1]), z = str(v3[2]))
 
                 triangles = ET.SubElement(mesh, "triangles")
                 for face in mesh_data.getIndices():
