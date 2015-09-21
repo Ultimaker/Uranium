@@ -2,9 +2,18 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 import tempfile
-import fcntl
 import os
 import os.path
+import sys
+
+if sys.platform != "win32":
+    import fcntl
+
+    def lock_file(file):
+        fcntl.flock(file, fcntl.LOCK_EX)
+else:
+    def lock_file(file):
+        pass
 
 ##  A class to handle atomic writes to a file.
 #
@@ -25,7 +34,8 @@ class SaveFile:
         f = open(self._path, self._mode, *self._open_args, **self._open_kwargs)
         while True:
             # Try to acquire a lock. This will block if the file was already locked by a different process.
-            fcntl.flock(f, fcntl.LOCK_EX)
+            lock_file(f)
+
             # Once the lock is released it is possible the other instance already replaced the file we opened.
             # So try to open it again and check if we have the same file.
             # If we do, that means the file did not get replaced in the mean time and we properly acquired a lock on the right file.
