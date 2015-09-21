@@ -57,19 +57,24 @@ class ThreeMFWriter(MeshWriter):
                 mesh = ET.SubElement(object, "mesh")
 
                 mesh_data = n.getMeshData()
-                verts = mesh_data.getVertices()
                 vertices = ET.SubElement(mesh, "vertices")
-                for face in mesh_data.getIndices():
-                    v1 = verts[face[0]]
-                    v2 = verts[face[1]]
-                    v3 = verts[face[2]]
-                    xml_vertex1 = ET.SubElement(vertices, "vertex", x = str(v1[0]), y = str(-v1[2]), z = str(v1[1]))
-                    xml_vertex2 = ET.SubElement(vertices, "vertex", x = str(v2[0]), y = str(-v2[2]), z = str(v2[1]))
-                    xml_vertex3 = ET.SubElement(vertices, "vertex", x = str(v3[0]), y = str(-v3[2]), z = str(v3[1]))
+                verts = mesh_data.getVertices()
+                if mesh_data.hasIndices():
+                    for face in mesh_data.getIndices():
+                        v1 = verts[face[0]]
+                        v2 = verts[face[1]]
+                        v3 = verts[face[2]]
+                        xml_vertex1 = ET.SubElement(vertices, "vertex", x = str(v1[0]), y = str(-v1[2]), z = str(v1[1]))
+                        xml_vertex2 = ET.SubElement(vertices, "vertex", x = str(v2[0]), y = str(-v2[2]), z = str(v2[1]))
+                        xml_vertex3 = ET.SubElement(vertices, "vertex", x = str(v3[0]), y = str(-v3[2]), z = str(v3[1]))
 
-                triangles = ET.SubElement(mesh, "triangles")
-                for face in mesh_data.getIndices():
-                    triangle = ET.SubElement(triangles, "triangle", v1 = str(face[0]) , v2 = str(face[1]), v3 = str(face[2]))
+                    triangles = ET.SubElement(mesh, "triangles")
+                    for face in mesh_data.getIndices():
+                        triangle = ET.SubElement(triangles, "triangle", v1 = str(face[0]) , v2 = str(face[1]), v3 = str(face[2]))
+                else:
+                    for vert in verts:
+                        xml_vertex = ET.SubElement(vertices, "vertex", x = str(vert[0]), y = str(vert[0]), z = str(vert[0]))
+
                 transformation_string = self._convertMatrixToString(node.getWorldTransformation())
                 if transformation_string != self._convertMatrixToString(Matrix()):
                     item = ET.SubElement(build, "item", objectid = str(index+1), transform = transformation_string)
