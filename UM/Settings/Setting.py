@@ -315,7 +315,7 @@ class Setting(SignalEmitter):
     #   Enabled settings can be displayed and used. Disabled settings should be ignored.
     def isEnabled(self):
         if self._enabled_function:
-            return self._enabled_function()
+            return self._enabled_function() == True #Force check. 
 
         return True
 
