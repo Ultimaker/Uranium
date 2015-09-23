@@ -88,7 +88,7 @@ class PerObjectSettingsModel(ListModel):
         self.clear()
         camera =  Application.getInstance().getController().getScene().getActiveCamera()
         for node in BreadthFirstIterator(self._root):
-            if type(node) is not SceneNode or not node.getMeshData():
+            if type(node) is not SceneNode or not node.getMeshData() or not node.isSelectable():
                 continue
 
             projected_position = camera.project(node.getWorldPosition())
