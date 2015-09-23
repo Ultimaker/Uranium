@@ -119,9 +119,11 @@ class OutputDevice(SignalEmitter):
     #
     #   \param node \type{SceneNode} The root of a tree of scene nodes that should be
     #                                written to the device.
+    #   \param file_name \type{string} A suggestion for the file name to write to.
+    #                                  Can be freely ignored if providing a file name makes no sense.
     #
     #   \exception OutputDeviceError.WriteRequestFailedError
-    def requestWrite(self, node):
+    def requestWrite(self, node, file_name = None):
         raise NotImplementedError("requestWrite needs to be implemented")
 
     writeStarted = Signal()
