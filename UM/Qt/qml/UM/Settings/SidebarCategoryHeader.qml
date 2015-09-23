@@ -16,4 +16,31 @@ Button {
 
     property variant color;
     style: UM.Theme.styles.sidebar_category;
+
+    Button{
+        id: settingsButton
+        visible: base.hovered || settingsButton.hovered
+        height: base.height * 0.6
+        width: base.height * 0.6
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.right: parent.right
+        anchors.rightMargin: UM.Theme.sizes.setting_preferences_button_margin.width
+        style: ButtonStyle {
+            background: UM.RecolorImage {
+                id: settingsImage
+                width: control.width
+                height: control.height
+                sourceSize.width: width
+                sourceSize.height: width
+                color: UM.Theme.colors.setting_unit
+                source: UM.Theme.icons.settings
+            }
+            label: Label{}
+        }
+        onClicked: {
+            preferences.visible = true;
+            preferences.setPage(2);
+        }
+    }
 }
+
