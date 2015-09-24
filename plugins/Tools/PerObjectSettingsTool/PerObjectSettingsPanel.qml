@@ -186,8 +186,27 @@ Item {
 
         title: catalog.i18nc("@title:window", "Pick a Setting to Customize")
 
+        TextField {
+            id: filter;
+
+            anchors {
+                top: parent.top;
+                left: parent.left;
+                right: parent.right;
+            }
+
+            placeholderText: catalog.i18nc("@label:textbox", "Filter...");
+
+            onTextChanged: settingCategoriesModel.filter(text);
+        }
+
         ScrollView {
-            anchors.fill: parent;
+            anchors {
+                top: filter.bottom;
+                left: parent.left;
+                right: parent.right;
+                bottom: parent.bottom;
+            }
 
             Column {
                 width: childrenRect.width;
@@ -196,7 +215,7 @@ Item {
                 Repeater {
                     id: settingList;
 
-                    model: UM.SettingCategoriesModel { }
+                    model: UM.SettingCategoriesModel { id: settingCategoriesModel; }
 
                     delegate: Item {
                         id: delegateItem;
@@ -229,12 +248,31 @@ Item {
 
                             anchors.top: categoryHeader.bottom;
 
+                            property real childrenHeight:
+                            {
+                                var h = 0.0;
+                                for(var i in children)
+                                {
+                                    var item = children[i];
+                                    h += children[i].height;
+                                    if(item.settingVisible)
+                                    {
+                                        if(i > 0)
+                                        {
+                                            h += spacing;
+                                        }
+                                    }
+                                }
+                                return h;
+                            }
+
                             width: childrenRect.width;
-                            height: childrenRect.height;
+                            height: childrenHeight;
                             Repeater {
                                 model: delegateItem.settingsModel;
 
                                 delegate: ToolButton {
+                                    id: button;
                                     x: model.depth * UM.Theme.sizes.default_margin.width;
                                     text: model.name;
                                     visible: model.visible;
@@ -243,6 +281,12 @@ Item {
                                         var object_id = UM.ActiveTool.properties.Model.getItem(base.currentIndex).id;
                                         UM.ActiveTool.properties.Model.addSettingOverride(object_id, model.key);
                                         settingPickDialog.visible = false;
+                                    }
+
+                                    states: State {
+                                        name: "filtered"
+                                        when: model.filtered
+                                        PropertyChanges { target: button; height: 0; opacity: 0; }
                                     }
                                 }
                             }
