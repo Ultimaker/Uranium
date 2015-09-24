@@ -32,6 +32,11 @@ class SettingCategoriesModel(ListModel):
         self.addRoleName(self.SettingsRole, "settings")
         self.addRoleName(self.HiddenValuesCountRole, "hiddenValuesCount") # Probably need a better name for this
 
+    @pyqtSlot(str)
+    def filter(self, text):
+        for item in self.items:
+            item["settings"].filter(text)
+
     def _onActiveMachineChanged(self):
         self.clear()
         if self._machine_instance:

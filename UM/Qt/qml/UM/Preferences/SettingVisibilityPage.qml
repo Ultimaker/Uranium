@@ -25,6 +25,8 @@ PreferencesPage {
             }
 
             placeholderText: catalog.i18nc("@label:textbox", "Filter...");
+
+            onTextChanged: settingCategoriesModel.filter(text);
         }
 
         ScrollView {
@@ -42,7 +44,7 @@ PreferencesPage {
                 Repeater {
                     id: settingList;
 
-                    model: UM.SettingCategoriesModel { }
+                    model: UM.SettingCategoriesModel { id: settingCategoriesModel; }
 
                     delegate: Item {
                         id: delegateItem;
@@ -73,17 +75,43 @@ PreferencesPage {
 
                             anchors.top: categoryHeader.bottom;
 
+                            property real childrenHeight:
+                            {
+                                var h = 0.0;
+                                for(var i in children)
+                                {
+                                    var item = children[i];
+                                    h += children[i].height;
+                                    if(item.settingVisible)
+                                    {
+                                        if(i > 0)
+                                        {
+                                            h += spacing;
+                                        }
+                                    }
+                                }
+                                return h;
+                            }
+
                             width: childrenRect.width;
-                            height: childrenRect.height;
+                            height: childrenHeight;
+
                             Repeater {
                                 model: delegateItem.settingsModel;
 
                                 delegate: CheckBox {
+                                    id: check
                                     x: model.depth * UM.Theme.sizes.default_margin.width;
                                     text: model.name;
                                     checked: model.visible;
 
                                     onClicked: delegateItem.settingsModel.setSettingVisible(model.key, checked);
+
+                                    states: State {
+                                        name: "filtered";
+                                        when: model.filtered;
+                                        PropertyChanges { target: check; opacity: 0; height: 0; }
+                                    }
                                 }
                             }
 
