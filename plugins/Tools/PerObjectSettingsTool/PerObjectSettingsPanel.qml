@@ -298,6 +298,7 @@ Item {
                                     id: button;
                                     x: model.depth * UM.Theme.sizes.default_margin.width;
                                     text: model.name;
+                                    tooltip: model.description;
 
                                     onClicked: {
                                         var object_id = UM.ActiveTool.properties.Model.getItem(base.currentIndex).id;

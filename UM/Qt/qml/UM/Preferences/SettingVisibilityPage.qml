@@ -14,6 +14,7 @@ PreferencesPage {
     }
 
     Item {
+        id: base;
         anchors.fill: parent;
         TextField {
             id: filter;
@@ -49,21 +50,37 @@ PreferencesPage {
                     delegate: Item {
                         id: delegateItem;
 
-                        width: childrenRect.width;
+                        width: base.width - UM.Theme.sizes.default_margin.width * 2;
                         height: childrenRect.height;
 
                         ToolButton {
                             id: categoryHeader;
                             text: model.name;
                             checkable: true;
-                            onClicked: settingsColumn.state != "" ? settingsColumn.state = "" : settingsColumn.state = "collapsed";
+                            width: parent.width;
+                            onCheckedChanged: settingsColumn.state != "" ? settingsColumn.state = "" : settingsColumn.state = "collapsed";
 
                             style: ButtonStyle {
-                                background: Item { }
-                                label: Row {
+                                background: Rectangle
+                                {
+                                    width: control.width;
+                                    height: control.height;
+                                    color: control.hovered ? palette.highlight : "transparent";
+                                }
+                                label: Row
+                                {
                                     spacing: UM.Theme.sizes.default_margin.width;
-                                    Label { text: control.checked ? ">" : "v"; }
-                                    Label { text:  control.text; font.bold: true; }
+                                    Image
+                                    {
+                                        anchors.verticalCenter: parent.verticalCenter;
+                                        source: control.checked ? UM.Theme.icons.arrow_right : UM.Theme.icons.arrow_bottom;
+                                    }
+                                    Label
+                                    {
+                                        text: control.text;
+                                        font.bold: true;
+                                        color: control.hovered ? palette.highlightedText : palette.text;
+                                    }
                                 }
                             }
                         }
@@ -96,21 +113,33 @@ PreferencesPage {
                             width: childrenRect.width;
                             height: childrenHeight;
 
-                            Repeater {
+                            Repeater
+                            {
                                 model: delegateItem.settingsModel;
 
-                                delegate: CheckBox {
-                                    id: check
+                                delegate: UM.TooltipArea
+                                {
                                     x: model.depth * UM.Theme.sizes.default_margin.width;
-                                    text: model.name;
-                                    checked: model.visible;
+                                    text: model.description;
 
-                                    onClicked: delegateItem.settingsModel.setSettingVisible(model.key, checked);
+                                    width: childrenRect.width;
+                                    height: childrenRect.height;
 
-                                    states: State {
-                                        name: "filtered";
-                                        when: model.filtered;
-                                        PropertyChanges { target: check; opacity: 0; height: 0; }
+                                    CheckBox
+                                    {
+                                        id: check
+
+                                        text: model.name;
+                                        checked: model.visible;
+
+                                        onClicked: delegateItem.settingsModel.setSettingVisible(model.key, checked);
+
+                                        states: State
+                                        {
+                                            name: "filtered";
+                                            when: model.filtered;
+                                            PropertyChanges { target: check; opacity: 0; height: 0; }
+                                        }
                                     }
                                 }
                             }
@@ -135,5 +164,6 @@ PreferencesPage {
         }
 
         UM.I18nCatalog { name: "uranium"; }
+        SystemPalette { id: palette; }
     }
 }
