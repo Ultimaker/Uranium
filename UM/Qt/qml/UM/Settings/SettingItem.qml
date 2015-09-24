@@ -24,6 +24,8 @@ Rectangle {
     property variant key;
 
     property bool overridden;
+    property bool perObjectSetting;
+    property bool dismissable;
 
     signal contextMenuRequested();
     signal itemValueChanged(variant value);
@@ -87,7 +89,7 @@ Rectangle {
         property int depth: base.depth - 1
 
         anchors.left: parent.left;
-        anchors.leftMargin: (UM.Theme.sizes.section_icon_column.width + 5) + (label.depth * UM.Theme.sizes.setting_control_depth_margin.width)
+        anchors.leftMargin: base.perObjectSetting ? UM.Theme.sizes.default_margin.width : (UM.Theme.sizes.section_icon_column.width + 5) + (label.depth * UM.Theme.sizes.setting_control_depth_margin.width)
         anchors.right: base.overridden? revertButton.left : controlContainer.left;
         anchors.rightMargin: base.style.spacing;
         anchors.verticalCenter: parent.verticalCenter
@@ -104,17 +106,18 @@ Rectangle {
 
     Button {
         id: revertButton
+
         anchors {
             right: controlContainer.left
             verticalCenter: parent.verticalCenter;
         }
-        visible: base.overridden;
-        tooltip: "Reset to Default";
+        visible: !base.perObjectSetting ? base.overridden :  base.dismissable ? true : false
+        tooltip: !base.perObjectSetting ? catalog.i18nc("@info:tooltip", "Reset to Default") : catalog.i18nc("@info:tooltip", "Remove Customised Setting")
 
         height: parent.height - base.style.controlBorderWidth;
         width: height;
 
-        onClicked: base.resetRequested()
+        onClicked: !base.perObjectSetting ? base.resetRequested() : UM.ActiveTool.properties.Model.removeSettingOverride(UM.ActiveTool.properties.Model.getItem(base.currentIndex).id, model.key)
 
         style: ButtonStyle {
             background: Rectangle {
@@ -127,7 +130,7 @@ Rectangle {
                     sourceSize.width: width
                     sourceSize.height: width
                     color: UM.Theme.colors.setting_control_revert
-                    source: UM.Theme.icons.reset
+                    source: !base.perObjectSetting ? UM.Theme.icons.reset : UM.Theme.icons.cross1
                 }
             }
         }

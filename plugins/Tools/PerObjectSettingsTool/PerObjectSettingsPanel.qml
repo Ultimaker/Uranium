@@ -43,28 +43,22 @@ Item {
 
         Column {
             id: items
+            anchors.top: parent.top;
+            anchors.topMargin: UM.Theme.sizes.default_margin.height;
 
-            anchors {
-                left: parent.left;
-                leftMargin: UM.Theme.sizes.default_margin.width;
-                right: parent.right;
-                rightMargin: UM.Theme.sizes.default_margin.width;
-                top: parent.top;
-                topMargin: UM.Theme.sizes.default_margin.height;
-            }
-
-            spacing: UM.Theme.sizes.default_margin.width;
+            spacing: UM.Theme.sizes.default_lining.height;
 
             UM.SettingItem {
                 id: profileSelection
 
-                x: UM.Theme.sizes.per_object_settings_panel_border.width;
+                x: UM.Theme.sizes.per_object_settings_panel_border.width + 1
 
                 width: UM.Theme.sizes.setting.width;
                 height: UM.Theme.sizes.setting.height;
 
                 name: catalog.i18nc("@label", "Profile")
                 type: "enum"
+                perObjectSetting: true
 
                 style: UM.Theme.styles.setting_item;
 
@@ -86,6 +80,7 @@ Item {
                 UM.SettingItem {
                     width: UM.Theme.sizes.setting.width;
                     height: UM.Theme.sizes.setting.height;
+                    x: UM.Theme.sizes.per_object_settings_panel_border.width + 1
 
                     name: model.label;
                     type: model.type;
@@ -93,6 +88,8 @@ Item {
                     description: model.description;
                     unit: model.unit;
                     valid: model.valid;
+                    perObjectSetting: true
+                    dismissable: true
 
                     style: UM.Theme.styles.setting_item;
 
@@ -100,19 +97,25 @@ Item {
                         settings.model.setSettingValue(model.key, value)
                     }
 
-                    Button {
-                        anchors.left: parent.right;
-                        text: "x";
-
-                        width: UM.Theme.sizes.setting.height;
-                        height: UM.Theme.sizes.setting.height;
-
-                        opacity: parent.hovered || hovered ? 1 : 0;
-                        onClicked: UM.ActiveTool.properties.Model.removeSettingOverride(UM.ActiveTool.properties.Model.getItem(base.currentIndex).id, model.key)
-
-                        style: ButtonStyle { }
-                    }
+//                     Button {
+//                         anchors.left: parent.right;
+//                         text: "x";
+//
+//                         width: UM.Theme.sizes.setting.height;
+//                         height: UM.Theme.sizes.setting.height;
+//
+//                         opacity: parent.hovered || hovered ? 1 : 0;
+//                         onClicked: UM.ActiveTool.properties.Model.removeSettingOverride(UM.ActiveTool.properties.Model.getItem(base.currentIndex).id, model.key)
+//
+//                         style: ButtonStyle { }
+//                     }
                 }
+            }
+
+            Item
+            {
+                height: UM.Theme.sizes.default_margin.height / 2
+                width: parent.width
             }
 
             Button
