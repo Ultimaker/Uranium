@@ -16,6 +16,9 @@ Item {
 
     property variant position: mapToItem(null, 0, 0)
 
+    property real viewportWidth: UM.Application.mainWindow.width * UM.Application.mainWindow.viewportRect.width;
+    property real viewportHeight: UM.Application.mainWindow.height * UM.Application.mainWindow.viewportRect.height;
+
     property int currentIndex;
 
     Rectangle {
@@ -24,7 +27,7 @@ Item {
         z: 3;
 
         width: UM.Theme.sizes.per_object_settings_panel.width;
-        height: items.height;
+        height: items.height + UM.Theme.sizes.default_margin.height * 2;
 
         opacity: 0;
         Behavior on opacity { NumberAnimation { } }
@@ -43,11 +46,11 @@ Item {
 
             anchors {
                 left: parent.left;
-                leftMargin: UM.Theme.sizes.default_margin
+                leftMargin: UM.Theme.sizes.default_margin.width;
                 right: parent.right;
-                rightMargin: UM.Theme.sizes.default_margin
+                rightMargin: UM.Theme.sizes.default_margin.width;
                 top: parent.top;
-                topMargin: UM.Theme.sizes.default_margin
+                topMargin: UM.Theme.sizes.default_margin.height;
             }
 
             spacing: UM.Theme.sizes.default_margin.width;
@@ -143,8 +146,8 @@ Item {
     Repeater {
         model: UM.ActiveTool.properties.Model;
         delegate: Button {
-            x: ((model.x + 1.0) / 2.0) * UM.Application.mainWindow.width - base.position.x - width / 2
-            y: -((model.y + 1.0) / 2.0) * UM.Application.mainWindow.height + (UM.Application.mainWindow.height - base.position.y) + height / 2
+            x: ((model.x + 1.0) / 2.0) * base.viewportWidth - base.position.x - width / 2
+            y: -((model.y + 1.0) / 2.0) * base.viewportHeight + (base.viewportHeight - base.position.y) + height / 2
 
             width: UM.Theme.sizes.per_object_settings_button.width
             height: UM.Theme.sizes.per_object_settings_button.height
@@ -201,6 +204,7 @@ Item {
         }
 
         ScrollView {
+            id: view;
             anchors {
                 top: filter.bottom;
                 left: parent.left;
@@ -209,7 +213,7 @@ Item {
             }
 
             Column {
-                width: childrenRect.width;
+                width: view.width - UM.Theme.sizes.default_margin.width * 2;
                 height: childrenRect.height;
 
                 Repeater {
@@ -220,21 +224,37 @@ Item {
                     delegate: Item {
                         id: delegateItem;
 
-                        width: childrenRect.width;
+                        width: parent.width;
                         height: childrenRect.height;
 
                         ToolButton {
                             id: categoryHeader;
                             text: model.name;
                             checkable: true;
+                            width: parent.width;
                             onCheckedChanged: settingsColumn.state != "" ? settingsColumn.state = "" : settingsColumn.state = "collapsed";
 
                             style: ButtonStyle {
-                                background: Item { }
-                                label: Row {
+                                background: Rectangle
+                                {
+                                    width: control.width;
+                                    height: control.height;
+                                    color: control.hovered ? palette.highlight : "transparent";
+                                }
+                                label: Row
+                                {
                                     spacing: UM.Theme.sizes.default_margin.width;
-                                    Label { text: control.checked ? ">" : "v"; }
-                                    Label { text: control.text; font.bold: true; }
+                                    Image
+                                    {
+                                        anchors.verticalCenter: parent.verticalCenter;
+                                        source: control.checked ? UM.Theme.icons.arrow_right : UM.Theme.icons.arrow_bottom;
+                                    }
+                                    Label
+                                    {
+                                        text: control.text;
+                                        font.bold: true;
+                                        color: control.hovered ? palette.highlightedText : palette.text;
+                                    }
                                 }
                             }
                         }
@@ -275,7 +295,6 @@ Item {
                                     id: button;
                                     x: model.depth * UM.Theme.sizes.default_margin.width;
                                     text: model.name;
-                                    visible: model.visible;
 
                                     onClicked: {
                                         var object_id = UM.ActiveTool.properties.Model.getItem(base.currentIndex).id;
@@ -285,7 +304,7 @@ Item {
 
                                     states: State {
                                         name: "filtered"
-                                        when: model.filtered
+                                        when: model.filtered || !model.visible || !model.enabled
                                         PropertyChanges { target: button; height: 0; opacity: 0; }
                                     }
                                 }
@@ -311,4 +330,6 @@ Item {
             }
         ]
     }
+
+    SystemPalette { id: palette; }
 }
