@@ -6,6 +6,7 @@ from . import SceneNode
 from UM.Application import Application
 from UM.View.Renderer import Renderer
 from UM.Resources import Resources
+from UM.Math.Vector import Vector
 
 class Platform(SceneNode.SceneNode):
     def __init__(self, parent):
@@ -53,3 +54,9 @@ class Platform(SceneNode.SceneNode):
 
             if self._material and self._texture:
                 self._material.setUniformTexture("u_texture", Resources.getPath(Resources.Images, self._texture))
+
+            offset = self._machine_instance.getSettingValue("machine_platform_offset")
+            if offset:
+                self.setPosition(Vector(offset[0], offset[1], offset[2]))
+            else:
+                self.setPosition(Vector(0.0, 0.0, 0.0))
