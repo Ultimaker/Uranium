@@ -359,7 +359,7 @@ class Setting(SignalEmitter):
                 return value
             else:
                 return ast.literal_eval(value)
-        except SyntaxError:
+        except Exception:
             return value
 
     def __repr__(self):
