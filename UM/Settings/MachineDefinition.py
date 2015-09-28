@@ -88,7 +88,7 @@ class MachineDefinition(SignalEmitter):
         if "id" not in self._json_data or "name" not in self._json_data or "version" not in self._json_data:
             raise SettingsError.InvalidFileError(self._path)
 
-        if self._json_data["version"] != self.MachineDefinitionVersion:
+        if int(self._json_data["version"]) != self.MachineDefinitionVersion:
             raise SettingsError.InvalidVersionError(self._path)
 
         if self._machine_manager.getApplicationName() in self._json_data:
