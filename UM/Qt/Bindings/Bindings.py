@@ -35,6 +35,7 @@ from . import ProfilesModel
 from . import MachineManagerProxy
 from . import MachineVariantsModel
 from . import i18nCatalogProxy
+from . import ActiveProfileProxy
 
 class Bindings:
     @classmethod
@@ -103,3 +104,4 @@ class Bindings:
 
         qmlRegisterSingletonType(OutputDeviceManagerProxy.OutputDeviceManagerProxy, "UM", 1, 1, "OutputDeviceManager", OutputDeviceManagerProxy.createOutputDeviceManagerProxy)
         qmlRegisterSingletonType(MachineManagerProxy.MachineManagerProxy, "UM", 1, 1, "MachineManager", MachineManagerProxy.createMachineManagerProxy)
+        qmlRegisterSingletonType(ActiveProfileProxy.ActiveProfileProxy, "UM", 1, 1, "ActiveProfile", ActiveProfileProxy.createActiveProfileProxy)
