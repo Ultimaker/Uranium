@@ -39,9 +39,14 @@ class MainWindow(QQuickWindow):
         self._preferences.addPreference("general/window_top", 50)
         self._preferences.addPreference("general/window_state", Qt.WindowNoState)
 
+        # Restore window geometry
         self.setWidth(int(self._preferences.getValue("general/window_width")))
         self.setHeight(int(self._preferences.getValue("general/window_height")))
         self.setPosition(int(self._preferences.getValue("general/window_left")), int(self._preferences.getValue("general/window_top")))
+        # Make sure restored geometry is not outside the currently available screens
+        if not self.geometry().intersects(self.screen().availableGeometry()):
+            self.setPosition(50,50)
+
         self.setWindowState(int(self._preferences.getValue("general/window_state")))
         self._mouse_x = 0
         self._mouse_y = 0

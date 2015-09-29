@@ -56,10 +56,13 @@ class SaveFile:
 
     def __exit__(self, exc_type, exc_value, traceback):
         self._temp_file.close()
+
+        # Close the actual file to release the file lock.
+        # Note that this introduces a possible race condition where another process can lock the file
+        # before this process can replace it.
+        self._file.close()
+
         # Replace the existing file with the temporary file.
         # This operation is guaranteed to be atomic on Unix systems and should be atomic on Windows as well.
         # This way we can ensure we either have the old file or the new file.
         os.replace(self._temp_file.name, self._path)
-        # The old file now points to an invalid file location and should now simply be closed.
-        self._file.close()
-

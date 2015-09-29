@@ -31,6 +31,7 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
     ErrorDescriptionRole = Qt.UserRole + 12
     OverriddenRole = Qt.UserRole + 13
     EnabledRole = Qt.UserRole + 14
+    FilteredRole = Qt.UserRole + 15
 
     def __init__(self, category, parent = None, machine_manager = None):
         super().__init__(parent)
@@ -61,6 +62,7 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
         self.addRoleName(self.ErrorDescriptionRole, "error_description")
         self.addRoleName(self.OverriddenRole, "overridden")
         self.addRoleName(self.EnabledRole, "enabled")
+        self.addRoleName(self.FilteredRole, "filtered")
 
     settingChanged = Signal()
 
@@ -125,6 +127,15 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
         if setting:
             setting.setVisible(False);
 
+    @pyqtSlot(str)
+    def filter(self, filter):
+        filter = filter.lower()
+        for index in range(len(self.items)):
+            if filter in self.items[index]["name"].lower():
+                self.setProperty(index, "filtered", False)
+            else:
+                self.setProperty(index, "filtered", True)
+
     def updateSettings(self):
         self.clear()
         for setting in self._category.getAllSettings():
@@ -144,7 +155,8 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
                 "warning_description": setting.getWarningDescription(),
                 "error_description": setting.getErrorDescription(),
                 "overridden": (not self._profile.isReadOnly()) and self._profile.hasSettingValue(setting.getKey()),
-                "enabled": setting.isEnabled()
+                "enabled": setting.isEnabled(),
+                "filtered": False
             })
             setting.visibleChanged.connect(self._onSettingVisibleChanged)
             setting.enabledChanged.connect(self._onSettingEnabledChanged)

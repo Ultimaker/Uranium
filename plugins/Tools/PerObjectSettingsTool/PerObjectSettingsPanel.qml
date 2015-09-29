@@ -16,6 +16,9 @@ Item {
 
     property variant position: mapToItem(null, 0, 0)
 
+    property real viewportWidth: UM.Application.mainWindow.width * UM.Application.mainWindow.viewportRect.width;
+    property real viewportHeight: UM.Application.mainWindow.height * UM.Application.mainWindow.viewportRect.height;
+
     property int currentIndex;
 
     Rectangle {
@@ -24,7 +27,7 @@ Item {
         z: 3;
 
         width: UM.Theme.sizes.per_object_settings_panel.width;
-        height: items.height;
+        height: items.height + UM.Theme.sizes.default_margin.height * 2;
 
         opacity: 0;
         Behavior on opacity { NumberAnimation { } }
@@ -40,28 +43,22 @@ Item {
 
         Column {
             id: items
+            anchors.top: parent.top;
+            anchors.topMargin: UM.Theme.sizes.default_margin.height;
 
-            anchors {
-                left: parent.left;
-                leftMargin: UM.Theme.sizes.default_margin
-                right: parent.right;
-                rightMargin: UM.Theme.sizes.default_margin
-                top: parent.top;
-                topMargin: UM.Theme.sizes.default_margin
-            }
-
-            spacing: UM.Theme.sizes.default_margin.width;
+            spacing: UM.Theme.sizes.default_lining.height;
 
             UM.SettingItem {
                 id: profileSelection
 
-                x: UM.Theme.sizes.per_object_settings_panel_border.width;
+                x: UM.Theme.sizes.per_object_settings_panel_border.width + 1
 
                 width: UM.Theme.sizes.setting.width;
                 height: UM.Theme.sizes.setting.height;
 
                 name: catalog.i18nc("@label", "Profile")
                 type: "enum"
+                perObjectSetting: true
 
                 style: UM.Theme.styles.setting_item;
 
@@ -83,6 +80,7 @@ Item {
                 UM.SettingItem {
                     width: UM.Theme.sizes.setting.width;
                     height: UM.Theme.sizes.setting.height;
+                    x: UM.Theme.sizes.per_object_settings_panel_border.width + 1
 
                     name: model.label;
                     type: model.type;
@@ -90,6 +88,8 @@ Item {
                     description: model.description;
                     unit: model.unit;
                     valid: model.valid;
+                    perObjectSetting: true
+                    dismissable: true
 
                     style: UM.Theme.styles.setting_item;
 
@@ -97,19 +97,25 @@ Item {
                         settings.model.setSettingValue(model.key, value)
                     }
 
-                    Button {
-                        anchors.left: parent.right;
-                        text: "x";
-
-                        width: UM.Theme.sizes.setting.height;
-                        height: UM.Theme.sizes.setting.height;
-
-                        opacity: parent.hovered || hovered ? 1 : 0;
-                        onClicked: UM.ActiveTool.properties.Model.removeSettingOverride(UM.ActiveTool.properties.Model.getItem(base.currentIndex).id, model.key)
-
-                        style: ButtonStyle { }
-                    }
+//                     Button {
+//                         anchors.left: parent.right;
+//                         text: "x";
+//
+//                         width: UM.Theme.sizes.setting.height;
+//                         height: UM.Theme.sizes.setting.height;
+//
+//                         opacity: parent.hovered || hovered ? 1 : 0;
+//                         onClicked: UM.ActiveTool.properties.Model.removeSettingOverride(UM.ActiveTool.properties.Model.getItem(base.currentIndex).id, model.key)
+//
+//                         style: ButtonStyle { }
+//                     }
                 }
+            }
+
+            Item
+            {
+                height: UM.Theme.sizes.default_margin.height / 2
+                width: parent.width
             }
 
             Button
@@ -143,8 +149,8 @@ Item {
     Repeater {
         model: UM.ActiveTool.properties.Model;
         delegate: Button {
-            x: ((model.x + 1.0) / 2.0) * UM.Application.mainWindow.width - base.position.x - width / 2
-            y: -((model.y + 1.0) / 2.0) * UM.Application.mainWindow.height + (UM.Application.mainWindow.height - base.position.y) + height / 2
+            x: ((model.x + 1.0) / 2.0) * base.viewportWidth - base.position.x - width / 2
+            y: -((model.y + 1.0) / 2.0) * base.viewportHeight + (base.viewportHeight - base.position.y) + height / 2
 
             width: UM.Theme.sizes.per_object_settings_button.width
             height: UM.Theme.sizes.per_object_settings_button.height
@@ -186,36 +192,72 @@ Item {
 
         title: catalog.i18nc("@title:window", "Pick a Setting to Customize")
 
+        TextField {
+            id: filter;
+
+            anchors {
+                top: parent.top;
+                left: parent.left;
+                right: parent.right;
+            }
+
+            placeholderText: catalog.i18nc("@label:textbox", "Filter...");
+
+            onTextChanged: settingCategoriesModel.filter(text);
+        }
+
         ScrollView {
-            anchors.fill: parent;
+            id: view;
+            anchors {
+                top: filter.bottom;
+                left: parent.left;
+                right: parent.right;
+                bottom: parent.bottom;
+            }
 
             Column {
-                width: childrenRect.width;
+                width: view.width - UM.Theme.sizes.default_margin.width * 2;
                 height: childrenRect.height;
 
                 Repeater {
                     id: settingList;
 
-                    model: UM.SettingCategoriesModel { }
+                    model: UM.SettingCategoriesModel { id: settingCategoriesModel; }
 
                     delegate: Item {
                         id: delegateItem;
 
-                        width: childrenRect.width;
+                        width: parent.width;
                         height: childrenRect.height;
 
                         ToolButton {
                             id: categoryHeader;
                             text: model.name;
                             checkable: true;
+                            width: parent.width;
                             onCheckedChanged: settingsColumn.state != "" ? settingsColumn.state = "" : settingsColumn.state = "collapsed";
 
                             style: ButtonStyle {
-                                background: Item { }
-                                label: Row {
+                                background: Rectangle
+                                {
+                                    width: control.width;
+                                    height: control.height;
+                                    color: control.hovered ? palette.highlight : "transparent";
+                                }
+                                label: Row
+                                {
                                     spacing: UM.Theme.sizes.default_margin.width;
-                                    Label { text: control.checked ? ">" : "v"; }
-                                    Label { text: control.text; font.bold: true; }
+                                    Image
+                                    {
+                                        anchors.verticalCenter: parent.verticalCenter;
+                                        source: control.checked ? UM.Theme.icons.arrow_right : UM.Theme.icons.arrow_bottom;
+                                    }
+                                    Label
+                                    {
+                                        text: control.text;
+                                        font.bold: true;
+                                        color: control.hovered ? palette.highlightedText : palette.text;
+                                    }
                                 }
                             }
                         }
@@ -229,20 +271,45 @@ Item {
 
                             anchors.top: categoryHeader.bottom;
 
+                            property real childrenHeight:
+                            {
+                                var h = 0.0;
+                                for(var i in children)
+                                {
+                                    var item = children[i];
+                                    h += children[i].height;
+                                    if(item.settingVisible)
+                                    {
+                                        if(i > 0)
+                                        {
+                                            h += spacing;
+                                        }
+                                    }
+                                }
+                                return h;
+                            }
+
                             width: childrenRect.width;
-                            height: childrenRect.height;
+                            height: childrenHeight;
                             Repeater {
                                 model: delegateItem.settingsModel;
 
                                 delegate: ToolButton {
+                                    id: button;
                                     x: model.depth * UM.Theme.sizes.default_margin.width;
                                     text: model.name;
-                                    visible: model.visible;
+                                    tooltip: model.description;
 
                                     onClicked: {
                                         var object_id = UM.ActiveTool.properties.Model.getItem(base.currentIndex).id;
                                         UM.ActiveTool.properties.Model.addSettingOverride(object_id, model.key);
                                         settingPickDialog.visible = false;
+                                    }
+
+                                    states: State {
+                                        name: "filtered"
+                                        when: model.filtered || !model.visible || !model.enabled
+                                        PropertyChanges { target: button; height: 0; opacity: 0; }
                                     }
                                 }
                             }
@@ -267,4 +334,6 @@ Item {
             }
         ]
     }
+
+    SystemPalette { id: palette; }
 }

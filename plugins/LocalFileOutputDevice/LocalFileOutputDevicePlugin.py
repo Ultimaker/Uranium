@@ -45,7 +45,7 @@ class LocalFileOutputDevice(OutputDevice):
         self.setDescription(catalog.i18nc("@info:tooltip", "Save to File"))
         self.setIconName("save")
 
-    def requestWrite(self, node):
+    def requestWrite(self, node, file_name = None):
         dialog = QFileDialog()
         dialog.setWindowTitle(catalog.i18nc("@title:window", "Save to File"))
         dialog.setFileMode(QFileDialog.AnyFile)
@@ -74,6 +74,9 @@ class LocalFileOutputDevice(OutputDevice):
         dialog.setNameFilters(filters)
         if selected_filter != None:
             dialog.selectNameFilter(selected_filter)
+
+        if file_name != None:
+            dialog.selectFile(file_name)
 
         dialog.restoreState(Preferences.getInstance().getValue("local_file/dialog_state").encode())
 

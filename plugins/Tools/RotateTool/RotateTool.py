@@ -81,14 +81,21 @@ class RotateTool(Tool):
             if not self.getDragPlane():
                 return False
 
+            if not self.getDragStart():
+                self.setDragStart(event.x, event.y)
+
             handle_position = self._handle.getWorldPosition()
+
             drag_start = (self.getDragStart() - handle_position).normalize()
             drag_position = self.getDragPosition(event.x, event.y)
             if not drag_position:
                 return
             drag_end = (drag_position - handle_position).normalize()
 
-            angle = math.acos(drag_start.dot(drag_end))
+            try:
+                angle = math.acos(drag_start.dot(drag_end))
+            except ValueError:
+                angle = 0
 
             if self._snap_rotation:
                 angle = int(angle / self._snap_angle) * self._snap_angle

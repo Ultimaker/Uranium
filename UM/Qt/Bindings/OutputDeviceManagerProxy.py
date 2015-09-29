@@ -41,29 +41,29 @@ class OutputDeviceManagerProxy(QObject):
     def activeDeviceDescription(self):
         return self._device_manager.getActiveDevice().getDescription()
 
-    @pyqtSlot(str)
-    def requestWriteToDevice(self, device_id):
+    @pyqtSlot(str, str)
+    def requestWriteToDevice(self, device_id, file_name):
         # On Windows, calling requestWrite() on LocalFileOutputDevice crashes when called from a signal
         # handler attached to a QML MenuItem. So instead, defer the call to the next run of the event 
         # loop, since that does work.
-        event = CallFunctionEvent(self._writeToDevice, [Application.getInstance().getController().getScene().getRoot(), device_id], {})
+        event = CallFunctionEvent(self._writeToDevice, [Application.getInstance().getController().getScene().getRoot(), device_id, file_name], {})
         Application.getInstance().functionEvent(event)
 
-    @pyqtSlot(str)
-    def requestWriteSelectionToDevice(self, device_id):
+    @pyqtSlot(str, str)
+    def requestWriteSelectionToDevice(self, device_id, file_name):
         if not Selection.hasSelection():
             return
 
         # On Windows, calling requestWrite() on LocalFileOutputDevice crashes when called from a signal
         # handler attached to a QML MenuItem. So instead, defer the call to the next run of the event 
         # loop, since that does work.
-        event = CallFunctionEvent(self._writeToDevice, [Selection.getSelectedObject(0), device_id], {})
+        event = CallFunctionEvent(self._writeToDevice, [Selection.getSelectedObject(0), device_id, file_name], {})
         Application.getInstance().functionEvent(event)
 
     def _onActiveDeviceChanged(self):
         self.activeDeviceChanged.emit()
 
-    def _writeToDevice(self, node, device_id):
+    def _writeToDevice(self, node, device_id, file_name):
         device = self._device_manager.getOutputDevice(device_id)
         if not device:
             return
@@ -71,8 +71,10 @@ class OutputDeviceManagerProxy(QObject):
         try:
             if not self._device_manager.isWriteInProgress():
                 self._device_manager.setWriteInProgress(True)
-                device.requestWrite(node)
+                device.requestWrite(node, file_name)
         except OutputDeviceError.UserCanceledError:
+            pass
+        except OutputDeviceError.DeviceBusyError:
             pass
         except OutputDeviceError.WriteRequestFailedError as e:
             message = Message(str(e))
