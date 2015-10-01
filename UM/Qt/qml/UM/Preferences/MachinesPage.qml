@@ -11,36 +11,40 @@ ManagementPage {
 
     title: catalog.i18nc("@title:tab", "Machines");
 
-    model: UM.MachineInstancesModel { }
+    model: UM.MachineInstancesModel
+    {
+        onRowsInserted: removeEnabled = model.rowCount() > 1
+        onRowsRemoved: removeEnabled = model.rowCount() > 1
+    }
 
     onAddObject: model.requestAddMachine();
     onRemoveObject: confirmDialog.open();
     onRenameObject: renameDialog.open();
 
-    removeEnabled: model.rowCount() > 1;
+    removeEnabled: model.rowCount() > 1
 
     Flow {
         anchors.fill: parent;
         spacing: UM.Theme.sizes.default_margin.height;
 
-        Label { text: base.currentItem.name; font: UM.Theme.fonts.large; width: parent.width; }
+        Label { text: base.currentItem.name ? base.currentItem.name : ""; font: UM.Theme.fonts.large; width: parent.width; }
 
         Label { text: catalog.i18nc("@label", "Type"); width: parent.width * 0.2; }
-        Label { text: base.currentItem.typeName; width: parent.width * 0.7; }
+        Label { text: base.currentItem.typeName ? base.currentItem.typeName : ""; width: parent.width * 0.7; }
 
-        Label { visible: base.currentItem.hasVariants; text: catalog.i18nc("@label", "Variant"); width: parent.width * 0.2; }
-        Label { visible: base.currentItem.hasVariants; text: base.currentItem.variantName; width: parent.width * 0.7; }
+        Label { visible: base.currentItem.hasVariants != undefined ? base.currentItem.hasVariants : false; text: catalog.i18nc("@label", "Variant"); width: parent.width * 0.2; }
+        Label { visible: base.currentItem.hasVariants != undefined ? base.currentItem.hasVariants : false; text: base.currentItem.variantName ? base.currentItem.variantName : ""; width: parent.width * 0.7; }
 
         UM.I18nCatalog { id: catalog; name: "uranium"; }
 
         ConfirmRemoveDialog {
             id: confirmDialog;
-            object: base.currentItem.name;
+            object: base.currentItem.name ? base.currentItem.name : "";
             onYes: base.model.removeMachineInstance(base.currentItem.name);
         }
         RenameDialog {
             id: renameDialog;
-            object: base.currentItem.name;
+            object: base.currentItem.name ? base.currentItem.name : "";
             onAccepted: base.model.renameMachineInstance(base.currentItem.name, newName);
         }
     }
