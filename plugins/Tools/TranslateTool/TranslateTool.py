@@ -27,6 +27,7 @@ class TranslateTool(Tool):
 
         self._grid_snap = False
         self._grid_size = 10
+        self._moved = False
 
     def setEnabledAxis(self, axis):
         self._enabled_axis = axis
@@ -54,6 +55,7 @@ class TranslateTool(Tool):
             elif self._handle.isAxis(id):
                 return False
             self.operationStarted.emit(self)
+            self._moved = False
             if id == ToolHandle.XAxis:
                 self.setDragPlane(Plane(Vector(0, 0, 1), 0))
             elif id == ToolHandle.YAxis:
@@ -86,6 +88,8 @@ class TranslateTool(Tool):
                     drag.setX(0)
                     drag.setY(0)
 
+                self._moved = True
+
                 Selection.applyOperation(TranslateOperation, drag)
 
             self.setDragStart(event.x, event.y)
@@ -93,10 +97,12 @@ class TranslateTool(Tool):
 
         if event.type == Event.MouseReleaseEvent:
             if self.getDragPlane():
+                if self._moved:
+                    self.operationStopped.emit(self)
+
                 self.setLockedAxis(None)
                 self.setDragPlane(None)
                 self.setDragStart(None, None)
-                self.operationStopped.emit(self)
                 return True
 
         return False
