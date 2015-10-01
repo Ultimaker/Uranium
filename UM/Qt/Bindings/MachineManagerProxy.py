@@ -1,9 +1,14 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
+from copy import deepcopy
+
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal, pyqtSlot
 
 from UM.Application import Application
+
+from UM.i18n import i18nCatalog
+catalog = i18nCatalog("uranium")
 
 class MachineManagerProxy(QObject):
     def __init__(self, parent = None):
@@ -13,6 +18,8 @@ class MachineManagerProxy(QObject):
         self._active_profile = None
 
         self._manager = Application.getInstance().getMachineManager()
+
+        self._changed_setting = None
 
         self._active_machine = None
         self._manager.activeMachineInstanceChanged.connect(self._onActiveMachineInstanceChanged)
@@ -80,11 +87,44 @@ class MachineManagerProxy(QObject):
 
         return profile.getSettingValue(setting)
 
+    @pyqtSlot(str, "QVariant")
+    def setSettingValue(self, key, value):
+        profile = self._manager.getActiveProfile()
+        if not profile:
+            return
+
+        if profile.isReadOnly():
+            custom_profile_name = catalog.i18nc("@item:intext appended to customised profiles ({0} is old profile name)", "{0} (Customised)", profile.getName())
+            custom_profile = self._manager.findProfile(custom_profile_name)
+            if not custom_profile:
+                custom_profile = deepcopy(profile)
+                custom_profile.setReadOnly(False)
+                custom_profile.setName(custom_profile_name)
+                self._manager.addProfile(custom_profile)
+
+            self._changed_setting = (key, value)
+            self._manager.setActiveProfile(custom_profile)
+            return
+
+        profile.setSettingValue(key, value)
+
+    @pyqtSlot(str, "QVariant")
+    def setMachineSettingValue(self, key, value):
+        instance = self._manager.getActiveMachineInstance()
+        if not instance:
+            return
+
+        instance.setMachineSettingValue(key, value)
+
     def _onActiveMachineInstanceChanged(self):
         self.activeMachineInstanceChanged.emit()
 
     def _onActiveProfileChanged(self):
         self.activeProfileChanged.emit()
+
+        if self._changed_setting:
+            self.setSettingValue(self._changed_setting[0], self._changed_setting[1])
+            self._changed_setting = None
 
     def _onInstanceNameChanged(self, machine):
         self.activeMachineInstanceChanged.emit()
