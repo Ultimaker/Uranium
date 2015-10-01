@@ -54,7 +54,7 @@ class TranslateTool(Tool):
                 self.setLockedAxis(id)
             elif self._handle.isAxis(id):
                 return False
-            self.operationStarted.emit(self)
+
             self._moved = False
             if id == ToolHandle.XAxis:
                 self.setDragPlane(Plane(Vector(0, 0, 1), 0))
@@ -88,7 +88,9 @@ class TranslateTool(Tool):
                     drag.setX(0)
                     drag.setY(0)
 
-                self._moved = True
+                if not self._moved:
+                    self._moved = True
+                    self.operationStarted.emit(self)
 
                 Selection.applyOperation(TranslateOperation, drag)
 
