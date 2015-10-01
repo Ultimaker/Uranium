@@ -231,6 +231,10 @@ class QtGL2Renderer(Renderer):
         for node in DepthFirstIterator(self._scene.getRoot()):
             if node.isSelectable() and node.getMeshData():
                 selectable_nodes.append(node)
+
+        if not selectable_nodes:
+            self._selection_image = None
+
         if selectable_nodes:
             #TODO: Use a limited area around the mouse rather than a full viewport for rendering
             if self._selection_buffer.width() != self._viewport_width or self._selection_buffer.height() != self._viewport_height:
@@ -271,8 +275,8 @@ class QtGL2Renderer(Renderer):
                     })
                     self._gl.glEnable(self._gl.GL_DEPTH_TEST)
 
-            self._selection_buffer.release()
             self._selection_image = self._selection_buffer.toImage()
+            self._selection_buffer.release()
 
         # Workaround for a MacOSX Intel HD Graphics 6000 Bug
         # Apparently, performing a glReadPixels call on a bound framebuffer breaks releasing the
