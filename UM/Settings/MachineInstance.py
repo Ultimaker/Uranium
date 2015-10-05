@@ -72,7 +72,7 @@ class MachineInstance(SignalEmitter):
         return key in self._machine_setting_overrides
 
     def loadFromFile(self, path):
-        config = configparser.ConfigParser()
+        config = configparser.ConfigParser(interpolation = None)
         config.read(path, "utf-8")
 
         if not config.has_section("general"):
@@ -99,7 +99,7 @@ class MachineInstance(SignalEmitter):
             self._machine_setting_overrides[key] = value
 
     def saveToFile(self, path):
-        config = configparser.ConfigParser()
+        config = configparser.ConfigParser(interpolation = None)
 
         config.add_section("general")
         config["general"]["name"] = self._name

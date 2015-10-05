@@ -95,7 +95,7 @@ class Preferences(SignalEmitter):
     @classmethod
     def getInstance(cls):
         if not cls._instance:
-            cls._instance = Preferences()
+            cls._instance = Preferences(interpolation = None)
 
         return cls._instance
 
@@ -123,7 +123,7 @@ class Preferences(SignalEmitter):
         if self._file and self._file == file:
             return self._parser
         try:
-            self._parser = configparser.ConfigParser()
+            self._parser = configparser.ConfigParser(interpolation = None)
             self._parser.read(file)
 
             if self._parser["general"]["version"] != "2":
