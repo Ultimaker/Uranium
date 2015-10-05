@@ -75,7 +75,7 @@ class Preferences(SignalEmitter):
                 self.preferenceChanged.emit("{0}/{1}".format(group, key))
 
     def writeToFile(self, file):
-        parser = configparser.ConfigParser()
+        parser = configparser.ConfigParser(interpolation = None)
         for group, group_entries in self._preferences.items():
             parser[group] = {}
             for key, pref in group_entries.items():
@@ -95,7 +95,7 @@ class Preferences(SignalEmitter):
     @classmethod
     def getInstance(cls):
         if not cls._instance:
-            cls._instance = Preferences(interpolation = None)
+            cls._instance = Preferences()
 
         return cls._instance
 
