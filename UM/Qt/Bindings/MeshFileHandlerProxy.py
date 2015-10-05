@@ -45,8 +45,8 @@ class MeshFileHandlerProxy(QObject):
     def supportedWriteFileTypes(self):
         file_types = []
 
-        for ext, desc in self._mesh_handler.getSupportedFileTypesWrite().items():
-            file_types.append("{0} (*.{1})".format(desc, ext))
+        for item in self._mesh_handler.getSupportedFileTypesWrite():
+            file_types.append("{0} (*.{1})".format(item["description"], item["extension"]))
 
         file_types.sort()
 
