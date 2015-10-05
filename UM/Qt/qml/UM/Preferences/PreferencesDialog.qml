@@ -19,6 +19,8 @@ Dialog
     minimumWidth: 600;
     minimumHeight: 500;
 
+    property int currentPage: 0;
+
     Item
     {
         id: test
@@ -43,17 +45,30 @@ Dialog
 
             TableViewColumn { role: "name" }
 
-            onClicked: configPage.source = configPagesModel.get(row).page;
+            onClicked:
+            {
+                if(base.currentPage != row)
+                {
+                    stackView.pop()
+                    stackView.push(configPagesModel.get(row).item);
+                    base.currentPage = row;
+                }
+            }
         }
 
-        Loader
-        {
-            id: configPage;
+        StackView {
+            id: stackView
             anchors {
                 left: pagesList.right;
                 top: parent.top;
                 bottom: parent.bottom;
                 right: parent.right;
+            }
+
+            initialItem: Item { property bool resetEnabled: false; }
+
+            delegate: StackViewDelegate {
+                pushTransition: StackViewTransition { }
             }
         }
 
@@ -63,8 +78,8 @@ Dialog
     leftButtons: Button
     {
         text: catalog.i18nc("@action:button", "Defaults");
-        enabled: configPage.item.resetEnabled;
-        onClicked: configPage.item.reset();
+        enabled: stackView.currentItem.resetEnabled;
+        onClicked: stackView.currentItem.reset();
     }
 
     rightButtons: Button
@@ -76,14 +91,16 @@ Dialog
 
     function setPage(index)
     {
-        configPage.source = configPagesModel.get(index).page;
         pagesList.selection.clear();
         pagesList.selection.select(index);
+
+        stackView.pop()
+        stackView.push(configPagesModel.get(index).item);
     }
 
-    function insertPage(index, name, icon, page)
+    function insertPage(index, name, item)
     {
-        configPagesModel.insert(index, { "name": name, "icon": icon, "page": page });
+        configPagesModel.insert(index, { "name": name, "item": item });
     }
 
     function removePage(index)
@@ -94,13 +111,22 @@ Dialog
     Component.onCompleted:
     {
         //This uses insertPage here because ListModel is stupid and does not allow using qsTr() on elements.
-        insertPage(0, catalog.i18nc("@title:tab", "General"), "", "GeneralPage.qml");
-        insertPage(1, catalog.i18nc("@title:tab", "Settings"), "", "SettingVisibilityPage.qml");
-        insertPage(2, catalog.i18nc("@title:tab", "Machines"), "", "MachinesPage.qml");
-        insertPage(3, catalog.i18nc("@title:tab", "Profiles"), "", "ProfilesPage.qml");
-        insertPage(4, catalog.i18nc("@title:tab", "Plugins"), "", "PluginsPage.qml");
+        insertPage(0, catalog.i18nc("@title:tab", "General"), generalPage);
+        insertPage(1, catalog.i18nc("@title:tab", "Settings"), settingVisibilityPage);
+        insertPage(2, catalog.i18nc("@title:tab", "Machines"), machinesPage);
+        insertPage(3, catalog.i18nc("@title:tab", "Profiles"), profilesPage);
+        insertPage(4, catalog.i18nc("@title:tab", "Plugins"), pluginsPage);
 
-        pagesList.selection.select(0);
-        configPage.source = configPagesModel.get(0).page;
+        setPage(0)
+    }
+
+    Item
+    {
+        visible: false
+        GeneralPage { id: generalPage }
+        SettingVisibilityPage { id: settingVisibilityPage }
+        MachinesPage { id: machinesPage }
+        ProfilesPage { id: profilesPage }
+        PluginsPage { id: pluginsPage }
     }
 }
