@@ -86,7 +86,7 @@ class Backend(PluginObject, SignalEmitter):
     
     ##  Get the command used to start the backend executable 
     def getEngineCommand(self):
-        return [Preferences.getInstance().getValue("backend/location"), "--port", str(self._socket_thread.getPort())]
+        return [Preferences.getInstance().getValue("backend/location"), "--port", str(self._socket.getPort())]
 
     ##  Start the (external) backend process.
     def _runEngineProcess(self, command_list):

@@ -221,7 +221,7 @@ class Resources:
 
             cls.__data_storage_path = os.path.join(xdg_data_home, cls.ApplicationIdentifier)
         else:
-            cls.__config_storage_path = cls.__relativeToAppBase("")
+            cls.__config_storage_path = "."
 
         if not cls.__data_storage_path:
             cls.__data_storage_path = cls.__config_storage_path

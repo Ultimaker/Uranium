@@ -52,4 +52,4 @@ class SetTransformOperation(Operation.Operation):
         return op
 
     def __repr__(self):
-        return "SetTransformOperation(node = {0}, old_transform={1}, new_transform={2})".format(self._node, self._old_transform, self._new_transform)
+        return "SetTransformOperation(node = {0})".format(self._node)
