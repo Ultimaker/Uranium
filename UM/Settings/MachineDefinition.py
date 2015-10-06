@@ -56,6 +56,9 @@ class MachineDefinition(SignalEmitter):
     def getAuthor(self):
         return self._author
 
+    def getPath(self):
+        return self._path
+
     def isVisible(self):
         return self._visible
 
