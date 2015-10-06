@@ -36,5 +36,5 @@ class ScaleOperation(Operation.Operation):
         return op
 
     def __repr__(self):
-        return "ScaleOperation(node = {0}, scale={1})".format(self._node, self._new_scale)
+        return "ScaleOperation(node = {0}, scale={1})".format(self._node, self._scale)
 

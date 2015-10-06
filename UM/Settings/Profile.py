@@ -193,7 +193,7 @@ class Profile(SignalEmitter):
 
     ##  Load a serialized profile from a file.
     def loadFromFile(self, path):
-        parser = configparser.ConfigParser()
+        parser = configparser.ConfigParser(interpolation = None)
         parser.read(path, "utf-8")
 
         if not parser.has_section("general"):
@@ -210,7 +210,7 @@ class Profile(SignalEmitter):
 
     ##  Serialize this profile to a file so it can be loaded later.
     def saveToFile(self, file):
-        parser = configparser.ConfigParser()
+        parser = configparser.ConfigParser(interpolation = None)
 
         parser.add_section("general")
         parser.set("general", "version", str(self.ProfileVersion))

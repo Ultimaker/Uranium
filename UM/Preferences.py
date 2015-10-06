@@ -75,7 +75,7 @@ class Preferences(SignalEmitter):
                 self.preferenceChanged.emit("{0}/{1}".format(group, key))
 
     def writeToFile(self, file):
-        parser = configparser.ConfigParser()
+        parser = configparser.ConfigParser(interpolation = None)
         for group, group_entries in self._preferences.items():
             parser[group] = {}
             for key, pref in group_entries.items():
@@ -123,7 +123,7 @@ class Preferences(SignalEmitter):
         if self._file and self._file == file:
             return self._parser
         try:
-            self._parser = configparser.ConfigParser()
+            self._parser = configparser.ConfigParser(interpolation = None)
             self._parser.read(file)
 
             if self._parser["general"]["version"] != "2":

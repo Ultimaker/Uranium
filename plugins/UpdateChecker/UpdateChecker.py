@@ -71,7 +71,7 @@ class UpdateChecker(Extension):
                             if local_version < newest_version:
                                 Logger.log("i", "Found a new version of the software. Spawning message")
                                 message = Message(i18n_catalog.i18nc("@info", "A new version is available!"))
-                                message.addAction("download", catalog.i18nc("@action:button", "Download"), "[no_icon]", "[no_description]")
+                                message.addAction("download", i18n_catalog.i18nc("@action:button", "Download"), "[no_icon]", "[no_description]")
                                 self._url = value["url"]
                                 message.actionTriggered.connect(self.actionTriggered)
                                 message.show()

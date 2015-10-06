@@ -6,6 +6,8 @@ import math
 
 from UM.Math.Vector import Vector
 
+from copy import deepcopy
+
 numpy.seterr(divide="ignore")
 
 ## This class is a 4x4 homogenous matrix wrapper arround numpy.
@@ -74,12 +76,17 @@ class Matrix(object):
     ##  Return a inverted copy of the matrix.
     #   \returns The invertex matrix.
     def getInverse(self):
-        return Matrix(numpy.linalg.inv(self._data))
+        try:
+            return Matrix(numpy.linalg.inv(self._data))
+        except:
+            return deepcopy(self)
 
     ##  Return the transpose of the matrix.
     def getTransposed(self):
-        m = Matrix(numpy.transpose(self._data))
-        return m
+        try:
+            return Matrix(numpy.transpose(self._data))
+        except:
+            return deepcopy(self)
 
     ##  Translate the matrix based on Vector.
     #   \param direction The vector by which the matrix needs to be translated.

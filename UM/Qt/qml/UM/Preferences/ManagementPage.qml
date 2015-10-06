@@ -15,7 +15,7 @@ PreferencesPage
     property string nameRole: "name";
     property bool detailsVisible: true;
 
-    property variant currentItem: null;
+    property variant currentItem    ;
 
     default property alias details: detailsPane.children;
 

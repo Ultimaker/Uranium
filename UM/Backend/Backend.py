@@ -12,6 +12,7 @@ import struct
 import subprocess
 import threading
 import platform
+import sys
 from time import sleep
 
 ##      Base class for any backend communication (seperate piece of software).
@@ -85,12 +86,12 @@ class Backend(PluginObject, SignalEmitter):
     
     ##  Get the command used to start the backend executable 
     def getEngineCommand(self):
-        return [Preferences.getInstance().getValue("backend/location"), "--port", str(self._socket_thread.getPort())]
+        return [Preferences.getInstance().getValue("backend/location"), "--port", str(self._socket.getPort())]
 
     ##  Start the (external) backend process.
     def _runEngineProcess(self, command_list):
         kwargs = {}
-        if subprocess.mswindows:
+        if sys.platform == "win32":
             su = subprocess.STARTUPINFO()
             su.dwFlags |= subprocess.STARTF_USESHOWWINDOW
             su.wShowWindow = subprocess.SW_HIDE

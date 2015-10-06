@@ -85,7 +85,7 @@ class MainWindow(QQuickWindow):
     def setViewportRect(self, rect):
         if rect != self._viewport_rect:
             self._viewport_rect = rect
-            self._updateViewportGeometry(self.width(), self.height())
+            self._updateViewportGeometry(self.width() * self.devicePixelRatio(), self.height() * self.devicePixelRatio())
             self.viewportRectChanged.emit()
 
     viewportRectChanged = pyqtSignal()

@@ -48,7 +48,7 @@ class SelectionTool(Tool):
 
         intersections = []
         for node in BreadthFirstIterator(root):
-            if node.getSelectionMask() == self._selectionMask and not node.isLocked():
+            if node.isEnabled() and not node.isLocked():
                 intersection = node.getBoundingBox().intersectsRay(ray)
                 if intersection:
                     intersections.append((node, intersection[0], intersection[1]))

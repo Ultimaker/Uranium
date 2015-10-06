@@ -125,6 +125,12 @@ Item
             property string unit: "mm";
             style: UM.Theme.styles.text_field;
             text: UM.ActiveTool.properties.ObjectWidth
+            validator: DoubleValidator
+            {
+                bottom: 0.1
+                locale: "en_US"
+            }
+
             onEditingFinished: UM.ActiveTool.setProperty("ObjectWidth", text);
         }
         TextField
@@ -134,6 +140,12 @@ Item
             property string unit: "mm";
             style: UM.Theme.styles.text_field;
             text: UM.ActiveTool.properties.ObjectDepth
+            validator: DoubleValidator
+            {
+                bottom: 0.1
+                locale: "en_US"
+            }
+
             onEditingFinished: UM.ActiveTool.setProperty("ObjectDepth", text);
         }
         TextField
@@ -143,6 +155,12 @@ Item
             property string unit: "mm";
             style: UM.Theme.styles.text_field;
             text: UM.ActiveTool.properties.ObjectHeight
+            validator: DoubleValidator
+            {
+                bottom: 0.1
+                locale: "en_US"
+            }
+
             onEditingFinished: UM.ActiveTool.setProperty("ObjectHeight", text);
         }
 
@@ -153,6 +171,12 @@ Item
             property string unit: "%";
             style: UM.Theme.styles.text_field;
             text: UM.ActiveTool.properties.ScaleX * 100;
+            validator: DoubleValidator
+            {
+                bottom: 100 * (0.1 / (UM.ActiveTool.properties.ObjectWidth / UM.ActiveTool.properties.ScaleX));
+                locale: "en_US"
+            }
+
             onEditingFinished: UM.ActiveTool.setProperty("ScaleX", parseFloat(text) / 100);
         }
         TextField
@@ -162,6 +186,12 @@ Item
             property string unit: "%";
             style: UM.Theme.styles.text_field;
             text: UM.ActiveTool.properties.ScaleZ * 100;
+            validator: DoubleValidator
+            {
+                bottom: 100 * (0.1 / (UM.ActiveTool.properties.ObjectDepth / UM.ActiveTool.properties.ScaleZ));
+                locale: "en_US"
+            }
+
             onEditingFinished: UM.ActiveTool.setProperty("ScaleZ", parseFloat(text) / 100);
         }
         TextField
@@ -171,8 +201,13 @@ Item
             property string unit: "%";
             style: UM.Theme.styles.text_field;
             text: UM.ActiveTool.properties.ScaleY * 100;
+            validator: DoubleValidator
+            {
+                bottom: 100 * (0.1 / (UM.ActiveTool.properties.ObjectHeight / UM.ActiveTool.properties.ScaleY))
+                locale: "en_US"
+            }
+
             onEditingFinished: UM.ActiveTool.setProperty("ScaleY", parseFloat(text) / 100);
         }
     }
 }
-
