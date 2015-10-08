@@ -13,15 +13,12 @@ class FileLogger(LogOutput):
         super().__init__()
         self._logger =  logging.getLogger(self._name) #Create python logger 
         self._logger.setLevel(logging.DEBUG)
-        
-        if hasattr(sys, "frozen"):
-            # Running in py2exe or py2app context, do not try to save to the app dir as it may not be writeable.
-            # instead, try and save in the settings location since that should be writeable.
-            self.setFileName(Resources.getStoragePath(Resources.Resources, file_name))
-        else:
-            self.setFileName(file_name)
-           
-        
+
+        # Do not try to save to the app dir as it may not be writeable or may not be the right
+        # location to save the log file. Instead, try and save in the settings location since
+        # that should be writeable.
+        self.setFileName(Resources.getStoragePath(Resources.Resources, file_name))
+
     def setFileName(self, file_name):
         if(".log" in file_name):
             file_handler = logging.FileHandler(file_name)
