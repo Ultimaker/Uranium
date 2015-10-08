@@ -40,6 +40,7 @@ class Backend(PluginObject, SignalEmitter):
         try:
             command = self.getEngineCommand()
             if not command:
+                self._createSocket()
                 return
 
             self._backend_log = []
