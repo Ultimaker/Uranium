@@ -43,7 +43,12 @@ class Preferences(SignalEmitter):
         preference = self._findPreference(key)
 
         if preference:
-            return preference.getValue()
+            value = preference.getValue()
+            if value == "True":
+                value = True
+            elif value == "False":
+                value = False
+            return value
 
         return None
 
