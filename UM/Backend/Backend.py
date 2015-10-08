@@ -38,8 +38,12 @@ class Backend(PluginObject, SignalEmitter):
     #   Runs the engine, this is only called when the socket is fully opend & ready to accept connections
     def startEngine(self):
         try:
+            command = self.getEngineCommand()
+            if not command:
+                return
+
             self._backend_log = []
-            self._process = self._runEngineProcess(self.getEngineCommand())
+            self._process = self._runEngineProcess(command)
             Logger.log("i", "Started engine process: %s" % (self.getEngineCommand()[0]))
             self._backend_log.append(bytes("Calling engine with: %s\n" % self.getEngineCommand(), 'utf-8'))
             t = threading.Thread(target=self._storeOutputToLogThread, args=(self._process.stdout,))
