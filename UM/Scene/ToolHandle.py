@@ -20,9 +20,9 @@ class ToolHandle(SceneNode.SceneNode):
     AllAxis = 5
 
     DisabledColor = Color(0.5, 0.5, 0.5, 1.0)
-    XAxisColor = Color(1.0, 0.0, 0.0, 1.0)
-    YAxisColor = Color(0.0, 0.0, 1.0, 1.0)
-    ZAxisColor = Color(0.0, 1.0, 0.0, 1.0)
+    XAxisColor = Color(1.0, 0.0, 0.0, 0.8)
+    YAxisColor = Color(0.0, 0.0, 1.0, 0.8)
+    ZAxisColor = Color(0.0, 1.0, 0.0, 0.8)
     AllAxisColor = Color(1.0, 1.0, 1.0, 1.0)
 
     def __init__(self, parent = None):
@@ -49,7 +49,7 @@ class ToolHandle(SceneNode.SceneNode):
     def setLineMesh(self, mesh):
         self._line_mesh = mesh
         self.meshDataChanged.emit(self)
-        
+
     def getSolidMesh(self):
         return self._solid_mesh
 
@@ -79,7 +79,7 @@ class ToolHandle(SceneNode.SceneNode):
         if self._auto_scale:
             camera_position = self._scene.getActiveCamera().getWorldPosition()
             dist = (camera_position - self.getWorldPosition()).length()
-            scale = dist / 200
+            scale = dist / 400
             self.setScale(Vector(scale, scale, scale))
 
         if self._line_mesh:
