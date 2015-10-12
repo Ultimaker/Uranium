@@ -18,6 +18,12 @@ class TranslateToolHandle(ToolHandle):
         self._handleHeight = 7
         self._handleWidth = 3
 
+        self._activeLineWidth = 0.8
+        self._activeLineLength= 40
+        self._activeHandlePosition = 40
+        self._activeHandleHeight = 9
+        self._activeHandleWidth = 7
+
     def setEnabledAxis(self, axis):
         self._enabled_axis = axis
         self._rebuild()
@@ -25,7 +31,7 @@ class TranslateToolHandle(ToolHandle):
     def _rebuild(self):
         mb = MeshBuilder()
 
-        #LINES
+        #SOLIDMESH -> LINES
         if self.YAxis in self._enabled_axis:
             mb.addCube(
                 width = self._lineWidth,
@@ -52,7 +58,7 @@ class TranslateToolHandle(ToolHandle):
                 color = ToolHandle.ZAxisColor
             )
 
-        #HANDLES
+        #SOLIDMESH -> HANDLES
         if self.YAxis in self._enabled_axis:
             mb.addPyramid(
                 width = self._handleWidth,
@@ -85,3 +91,65 @@ class TranslateToolHandle(ToolHandle):
             )
 
         self.setSolidMesh(mb.getData())
+
+        mb = MeshBuilder()
+        #ACTIVEMESH -> LINES
+        if self.YAxis in self._enabled_axis:
+            mb.addCube(
+                width = self._activeLineWidth,
+                height = self._activeLineLength,
+                depth = self._activeLineWidth,
+                center = Vector(0, self._activeHandlePosition/2, 0),
+                color = ToolHandle.YAxisColor
+            )
+        if self.XAxis in self._enabled_axis:
+            mb.addCube(
+                width = self._activeLineLength,
+                height = self._activeLineWidth,
+                depth = self._activeLineWidth,
+                center = Vector(self._activeHandlePosition/2, 0, 0),
+                color = ToolHandle.XAxisColor
+            )
+
+        if self.ZAxis in self._enabled_axis:
+            mb.addCube(
+                width = self._activeLineWidth,
+                height = self._activeLineWidth,
+                depth = self._activeLineLength,
+                center = Vector(0, 0, self._activeHandlePosition/2),
+                color = ToolHandle.ZAxisColor
+            )
+
+        #SELECTIONMESH -> HANDLES
+        mb.addCube(
+            width = self._activeHandleWidth,
+            height = self._activeHandleWidth,
+            depth = self._activeHandleWidth,
+            center = Vector(0, 0, 0),
+            color = ToolHandle.AllAxisColor
+        )
+
+        mb.addCube(
+            width = self._activeHandleWidth,
+            height = self._activeHandleWidth,
+            depth = self._activeHandleWidth,
+            center = Vector(0, self._activeHandlePosition, 0),
+            color = ToolHandle.YAxisColor
+        )
+
+        mb.addCube(
+            width = self._activeHandleWidth,
+            height = self._activeHandleWidth,
+            depth = self._activeHandleWidth,
+            center = Vector(self._activeHandlePosition, 0, 0),
+            color = ToolHandle.XAxisColor
+        )
+
+        mb.addCube(
+            width = self._activeHandleWidth,
+            height = self._activeHandleWidth,
+            depth = self._activeHandleWidth,
+            center = Vector(0, 0, self._activeHandlePosition),
+            color = ToolHandle.ZAxisColor
+        )
+        self.setSelectionMesh(mb.getData())
