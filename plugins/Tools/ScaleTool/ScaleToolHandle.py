@@ -78,9 +78,7 @@ class ScaleToolHandle(ToolHandle):
             center = Vector(0, 0, self._handlePosition),
             color = ToolHandle.ZAxisColor
         )
-
         self.setSolidMesh(mb.getData())
-
 
         #SELECTIONMESH -> LINES
         mb = MeshBuilder()
