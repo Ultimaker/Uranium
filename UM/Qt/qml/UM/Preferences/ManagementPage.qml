@@ -15,7 +15,7 @@ PreferencesPage
     property string nameRole: "name";
     property bool detailsVisible: true;
 
-    property variant currentItem    ;
+    property variant currentItem: objectList.currentItem != null ? objectList.model.getItem(objectList.currentIndex) : null;
 
     default property alias details: detailsPane.children;
 
@@ -74,10 +74,9 @@ PreferencesPage
             bottom: parent.bottom;
         }
 
-        TableView
+        ScrollView
         {
-            id: objectList;
-
+            id: objectListContainer
             anchors
             {
                 top: parent.top;
@@ -86,27 +85,44 @@ PreferencesPage
             }
 
             width: base.detailsVisible ? parent.width / 2 : parent.width;
+            frameVisible: true;
 
-            TableViewColumn { role: base.nameRole; }
-
-            headerVisible: false;
-            onClicked:
-            {
-                base.currentItem = model.getItem(row);
-                base.itemActivated();
-            }
-            onActivated:
-            {
-                base.currentItem = model.getItem(row);
-                base.itemActivated();
+            Rectangle {
+                parent: viewport
+                anchors.fill: parent
+                color: palette.light
             }
 
-            Component.onCompleted:
+            ListView
             {
-                if(model.count > 0)
+                id: objectList;
+
+                delegate: Rectangle
                 {
-                    selection.select(0, 0);
-                    base.currentItem = model.getItem(0);
+                    width: objectListContainer.viewport.width;
+                    height: childrenRect.height;
+                    color: ListView.isCurrentItem ? palette.highlight : index % 2 ? palette.light : palette.midlight
+
+                    Label
+                    {
+                        anchors.left: parent.left;
+                        anchors.leftMargin: UM.Theme.sizes.default_margin.width;
+                        text: model.name
+                        color: parent.ListView.isCurrentItem ? palette.highlightedText : palette.text;
+                    }
+
+                    MouseArea
+                    {
+                        anchors.fill: parent;
+                        onClicked:
+                        {
+                            if(!parent.ListView.isCurrentItem)
+                            {
+                                parent.ListView.view.currentIndex = index;
+                                base.itemActivated();
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -117,7 +133,7 @@ PreferencesPage
 
             anchors
             {
-                left: objectList.right;
+                left: objectListContainer.right;
                 leftMargin: UM.Theme.sizes.default_margin.width;
                 top: parent.top;
                 bottom: parent.bottom;
@@ -128,5 +144,6 @@ PreferencesPage
         }
 
         UM.I18nCatalog { id: catalog; name: "uranium"; }
+        SystemPalette { id: palette }
     }
 }
