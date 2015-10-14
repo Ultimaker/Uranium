@@ -92,10 +92,14 @@ class ProfilesModel(ListModel):
         if not profile:
             return
 
+        error = ""
         try:
-            profile.saveToFile(path)
+            error = profile.saveToFile(path)
         except Exception as e:
-            m = Message(catalog.i18nc("@info:status", "Failed to export profile to <filename>{0}</filename>: <message>{1}</message>", path, str(e)))
+            error = str(e)
+
+        if error:
+            m = Message(catalog.i18nc("@info:status", "Failed to export profile to <filename>{0}</filename>: <message>{1}</message>", path, error))
             m.show()
         else:
             m = Message(catalog.i18nc("@info:status", "Exported profile to <filename>{0}</filename>", path))
