@@ -17,6 +17,7 @@ UM.Dialog
     property bool lastPage: currentPage == pagesModel.count - 1;
 
     property var addOriginalProgress: {
+        "upgrades": [true, false, false],
         "firmwareUpgrade": false,
         "checkUp": [false, false, false, false, false, false, false],
         "bedLeveling": false
