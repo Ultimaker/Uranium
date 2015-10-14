@@ -90,6 +90,7 @@ Item {
                     valid: model.valid;
                     perObjectSetting: true
                     dismissable: true
+                    options: model.options
 
                     style: UM.Theme.styles.setting_item;
 
