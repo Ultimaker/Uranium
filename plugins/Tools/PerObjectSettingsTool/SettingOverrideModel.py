@@ -96,7 +96,7 @@ class SettingOverrideModel(ListModel):
 
     def _onSettingValueChanged(self, setting):
         index = self.find("key", setting.getKey())
+        value = self._decorator.getSettingValue(setting.getKey())
         if index != -1 and self._ignore_setting_change != setting.getKey():
-            value = self._decorator.getSettingValue(setting.getKey())
             self.setProperty(index, "value", str(value))
-            self.setProperty(index, "valid", setting.validate(value))
+        self.setProperty(index, "valid", setting.validate(value))
