@@ -45,6 +45,7 @@ class SettingsCategory(SignalEmitter):
 
                 setting.fillByDict(value)
                 setting.visibleChanged.connect(self._onSettingVisibleChanged)
+                setting.defaultValueChanged.connect(self.defaultValueChanged)
 
         self._onSettingVisibleChanged(None)
 
@@ -69,6 +70,8 @@ class SettingsCategory(SignalEmitter):
         return False
 
     visibleChanged = Signal()
+
+    defaultValueChanged = Signal()
 
     ##  Get the number of settings in this category that are not visible and have a custom value set.
     def getHiddenValuesCount(self):
