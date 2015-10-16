@@ -189,7 +189,7 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
         if index != -1:
             setting = self._category.getSetting(key)
             value = self._profile.getSettingValue(key)
-            if setting is not self._ignore_setting_value_update:
-                self.setProperty(index, "value", str(value))
+
+            self.setProperty(index, "value", str(value))
             self.setProperty(index, "overridden", self._profile.hasSettingValue(key))
             self.setProperty(index, "valid", setting.validate(value))
