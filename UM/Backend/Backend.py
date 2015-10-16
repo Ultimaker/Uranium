@@ -146,8 +146,10 @@ class Backend(PluginObject, SignalEmitter):
                     self._createSocket()
             else:
                 Logger.log("e", str(error))
+                self._createSocket()
         except Exception as e:
             Logger.log("e", "Failed to parse socket error")
+            self._createSocket()
     
     ##  Creates a socket and attaches listeners.
     def _createSocket(self):
