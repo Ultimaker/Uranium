@@ -10,62 +10,65 @@ from UM.Math.Vector import Vector
 class MirrorToolHandle(ToolHandle):
     def __init__(self, parent = None):
         super().__init__(parent)
+        self._handleWidth = 8
+        self._handleHeight = 14
+        self._handlePosition = 20
 
         mb = MeshBuilder()
 
         mb.addPyramid(
-            width = 4,
-            height = 7,
-            depth = 4,
-            center = Vector(0, 10, 0),
+            width = self._handleWidth,
+            height = self._handleHeight,
+            depth = self._handleWidth,
+            center = Vector(0, self._handlePosition, 0),
             color = ToolHandle.YAxisColor
         )
 
         mb.addPyramid(
-            width = 4,
-            height = 7,
-            depth = 4,
-            center = Vector(0, -10, 0),
+            width = self._handleWidth,
+            height = self._handleHeight,
+            depth = self._handleWidth,
+            center = Vector(0, -self._handlePosition, 0),
             color = ToolHandle.YAxisColor,
             axis = Vector.Unit_X,
             angle = 180
         )
 
         mb.addPyramid(
-            width = 4,
-            height = 7,
-            depth = 4,
-            center = Vector(10, 0, 0),
+            width = self._handleWidth,
+            height = self._handleHeight,
+            depth = self._handleWidth,
+            center = Vector(self._handlePosition, 0, 0),
             color = ToolHandle.XAxisColor,
             axis = Vector.Unit_Z,
             angle = 90
         )
 
         mb.addPyramid(
-            width = 4,
-            height = 7,
-            depth = 4,
-            center = Vector(-10, 0, 0),
+            width = self._handleWidth,
+            height = self._handleHeight,
+            depth = self._handleWidth,
+            center = Vector(-self._handlePosition, 0, 0),
             color = ToolHandle.XAxisColor,
             axis = Vector.Unit_Z,
             angle = -90
         )
 
         mb.addPyramid(
-            width = 4,
-            height = 7,
-            depth = 4,
-            center = Vector(0, 0, -10),
+            width = self._handleWidth,
+            height = self._handleHeight,
+            depth = self._handleWidth,
+            center = Vector(0, 0, -self._handlePosition),
             color = ToolHandle.ZAxisColor,
             axis = Vector.Unit_X,
             angle = 90
         )
 
         mb.addPyramid(
-            width = 4,
-            height = 7,
-            depth = 4,
-            center = Vector(0, 0, 10),
+            width = self._handleWidth,
+            height = self._handleHeight,
+            depth = self._handleWidth,
+            center = Vector(0, 0, self._handlePosition),
             color = ToolHandle.ZAxisColor,
             axis = Vector.Unit_X,
             angle = -90

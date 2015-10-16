@@ -17,7 +17,8 @@ TextField {
     text: value; //From parent loader
     validator: RegExpValidator { regExp: /[0-9.-]+/ }
 
-    onTextChanged: valueChanged(text);
+    onTextChanged: if(base.focus) { valueChanged(text); }
+
     style: TextFieldStyle
     {
         textColor: itemStyle.controlTextColor;

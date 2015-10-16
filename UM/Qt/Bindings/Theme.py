@@ -90,6 +90,7 @@ class Theme(QObject):
 
                 f.setStyleName(font.get("style", "Regular"))
                 f.setBold(font.get("bold", False))
+                f.setLetterSpacing(QFont.AbsoluteSpacing, font.get("letterSpacing", 0))
                 f.setItalic(font.get("italic", False))
                 f.setPixelSize(font.get("size", 1) * self._em_height)
                 f.setCapitalization(QFont.AllUppercase if font.get("capitalize", False) else QFont.MixedCase)

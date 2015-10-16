@@ -26,6 +26,13 @@ ComboBox
         return -1;
     }
 
+    MouseArea
+    {
+        anchors.fill: parent;
+        acceptedButtons: Qt.NoButton;
+        onWheel: wheel.accepted = true;
+    }
+
     style: ComboBoxStyle {
         background: Rectangle {
             color:

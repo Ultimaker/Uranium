@@ -11,7 +11,7 @@ CheckBox
     signal valueChanged(bool value);
     id: base
     checked: boolCheck(value) //From parent loader
-    onCheckedChanged: valueChanged(checked);
+
     function boolCheck(value) //Hack to ensure a good match between python and qml.
     {
         if(value == "True")
@@ -26,6 +26,12 @@ CheckBox
             return value
         }
     }
+
+    MouseArea {
+        anchors.fill: parent;
+        onClicked: valueChanged(!checked);
+    }
+
     style: CheckBoxStyle
     {
         background: Item { }

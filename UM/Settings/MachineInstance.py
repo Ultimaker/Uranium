@@ -109,7 +109,7 @@ class MachineInstance(SignalEmitter):
             config["general"]["variant"] = self._machine_definition.getVariantName()
 
         config.add_section("machine_settings")
-        for key, value in self._machine_setting_overrides:
+        for key, value in self._machine_setting_overrides.items():
             config["machine_settings"][key] = str(value)
 
         try:

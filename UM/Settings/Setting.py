@@ -104,6 +104,9 @@ class Setting(SignalEmitter):
         if "inherit_function" in data:
             self._inherit_function = self._createFunction(data["inherit_function"])
 
+        if not self._inherit_function and self._inherit and self._parent and isinstance(self._parent, Setting):
+            self._inherit_function = self._createFunction("parent_value")
+
         min_value = None
         max_value = None
         min_value_warning = None
@@ -137,6 +140,7 @@ class Setting(SignalEmitter):
                     setting.setCategory(self._category)
                     setting.setParent(self)
                     setting.visibleChanged.connect(self._onChildVisibileChanged)
+                    setting.defaultValueChanged.connect(self.defaultValueChanged)
                     self._children.append(setting)
 
                 setting.fillByDict(value)
@@ -178,6 +182,8 @@ class Setting(SignalEmitter):
     def setParent(self, setting):
         self._parent = setting
 
+        if not self._inherit_function and self._inherit and self._parent and isinstance(self._parent, Setting):
+            self._inherit_function = self._createFunction("parent_value")
     ##  Get the parent.
     #   \returns Setting
     def getParent(self):
@@ -214,19 +220,17 @@ class Setting(SignalEmitter):
     #   \param values The object to use to get setting values from. Used by the inherit function, if set.
     #   \returns default_value
     def getDefaultValue(self, values = None):
-        if not self._visible:
-            if self._inherit and self._parent and type(self._parent) is Setting:
-                if self._inherit_function:
-                    try:
-                        inherit_value = self._inherit_function(values)
-                    except Exception as e:
-                        Logger.log("e", "An error occurred in inherit function for {0}: {1}".format(self._key, str(e)))
-                    else:
-                        return inherit_value
-                else:
-                    return self._parent.getDefaultValue(values)
+        if self._inherit and self._inherit_function:
+            try:
+                inherit_value = self._inherit_function(values)
+            except Exception as e:
+                Logger.log("e", "An error occurred in inherit function for {0}: {1}".format(self._key, str(e)))
+            else:
+                return inherit_value
 
         return self._default_value
+
+    defaultValueChanged = Signal()
 
     ##  Set the visibility of this setting.
     #   \param visible Bool
@@ -440,6 +444,7 @@ class Setting(SignalEmitter):
     def _onSettingValueChanged(self, key):
         if key in self._dependent_settings:
             self.enabledChanged.emit(self)
+            self.defaultValueChanged.emit(self)
 
     def _onActiveProfileChanged(self):
         if self._profile:

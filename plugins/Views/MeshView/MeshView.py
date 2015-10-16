@@ -19,7 +19,7 @@ class MeshView(View):
     def __init__(self):
         super().__init__()
 
-        Preferences.getInstance().addPreference("view/show_overhang", False)
+        Preferences.getInstance().addPreference("view/show_overhang", True)
         Preferences.getInstance().preferenceChanged.connect(self._onPreferenceChanged)
 
         self._enabled_material = None

@@ -225,6 +225,9 @@ class Profile(SignalEmitter):
                 parser.write(f)
         except Exception as e:
             Logger.log("e", "Failed to write profile to %s: %s", file, str(e))
+            return str(e)
+
+        return None
 
     ##  Reimplemented deepcopy that makes sure we do not copy the machine instance.
     def __deepcopy__(self, memo):
@@ -238,4 +241,15 @@ class Profile(SignalEmitter):
     # private:
 
     def _onActiveInstanceChanged(self):
+        if self._active_instance:
+            for category in self._active_instance.getMachineDefinition().getAllCategories():
+                category.defaultValueChanged.disconnect(self._onDefaultValueChanged)
+
         self._active_instance = self._machine_manager.getActiveMachineInstance()
+
+        if self._active_instance:
+            for category in self._active_instance.getMachineDefinition().getAllCategories():
+                category.defaultValueChanged.connect(self._onDefaultValueChanged)
+
+    def _onDefaultValueChanged(self, setting):
+        self.settingValueChanged.emit(setting.getKey())
