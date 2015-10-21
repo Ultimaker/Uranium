@@ -122,7 +122,7 @@ class XmlReport(pep8.StandardReport):
             testsuite.text = '\n'
             testsuite.tail = '\n'
             for line_number, text, lines in data:
-                testcase = ElementTree.SubElement(testsuite, 'testsuite', {"classname": "%s.line_%d" % (filename, line_number), "name": text})
+                testcase = ElementTree.SubElement(testsuite, 'testcase', {"classname": "%s.line_%d" % (filename, line_number), "name": text})
                 testcase.text = '\n'
                 testcase.tail = '\n'
                 failure = ElementTree.SubElement(testcase, 'failure', {"message": "test failure"})
