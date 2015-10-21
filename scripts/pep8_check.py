@@ -6,6 +6,7 @@ import re
 import os
 import sys
 import token as token_type
+from xml.etree import ElementTree
 
 CLASS_NAME_MATCH = re.compile(r'^_*[A-Z][a-zA-Z0-9]*_*$')
 FUNCTION_NAME_MATCH = re.compile(r'^(_*|test_)[a-z][a-zA-Z0-9]*_*$')
@@ -114,17 +115,14 @@ class XmlReport(pep8.StandardReport):
         self._error_files[self.filename].append((line_number, text, lines))
     
     def getJUnitXml(self):
-        xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
-        xml += '<testsuites>\n'
+        xml = ElementTree.Element('testsuites')
         for filename, data in self._error_files.items():
-            xml += '    <testsuite name="%s" errors="0" tests="%d" failures="%d" time="0" timestamp="2013-05-24T10:23:58">\n' % (filename, len(data), len(data))
+            testsuite = ElementTree.SubElement(xml, 'testsuite', {"name": filename, "errors": "0", "tests": str(len(data)), "failures": str(len(data)), "time": "0", "timestamp":"2013-05-24T10:23:58"})
             for line_number, text, lines in data:
-                xml += '        <testcase classname="%s.line_%d" name="%s" time="0.0">\n' % (filename, line_number, text.replace('&', '&amp;'))
-                xml += '            <failure message="test failure">%s</failure>\n' % (''.join(lines).replace('&', '&amp;'))
-                xml += '        </testcase>\n'
-            xml += '    </testsuite>\n'
-        xml += '</testsuites>\n'
-        return xml
+                testcase = ElementTree.SubElement(testsuite, 'testsuite', {"classname": "%s.line_%d" % (filename, line_number), "name": text})
+                failure = ElementTree.SubElement(testcase, 'failure', {"message": "test failure"})
+                failure.text = ''.join(lines)
+        return ElementTree.tostring(xml)
 
 
 def main(paths=["."]):
@@ -161,7 +159,7 @@ def main(paths=["."]):
     result.print_statistics()
     print("Total: %d" % (result.get_count()))
 
-    f = open("pep8_output.xml", "w")
+    f = open("pep8_output.xml", "wb")
     f.write(result.getJUnitXml())
     f.close()
 
