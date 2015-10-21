@@ -119,8 +119,8 @@ class XmlReport(pep8.StandardReport):
         for filename, data in self._error_files.items():
             xml += '    <testsuite name="%s" errors="0" tests="%d" failures="%d" time="0" timestamp="2013-05-24T10:23:58">\n' % (filename, len(data), len(data))
             for line_number, text, lines in data:
-                xml += '        <testcase classname="%s.line_%d" name="%s" time="0.0">\n' % (filename, line_number, text)
-                xml += '            <failure message="test failure">%s</failure>\n' % (''.join(lines))
+                xml += '        <testcase classname="%s.line_%d" name="%s" time="0.0">\n' % (filename, line_number, text.replace('&', '&amp;'))
+                xml += '            <failure message="test failure">%s</failure>\n' % (''.join(lines).replace('&', '&amp;'))
                 xml += '        </testcase>\n'
             xml += '    </testsuite>\n'
         xml += '</testsuites>\n'
