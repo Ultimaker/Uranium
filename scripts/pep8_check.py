@@ -107,6 +107,10 @@ class XmlReport(pep8.StandardReport):
 
     def error(self, line_number, offset, text, check):
         super().error(line_number, offset, text, check)
+
+        code = text[:4]
+        if self._ignore_code(code):
+            return
         
         if self.filename not in self._error_files:
             self._error_files[self.filename] = []
