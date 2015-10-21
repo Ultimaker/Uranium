@@ -99,6 +99,34 @@ def blankLines(logical_line, blank_lines, indent_level, line_number, blank_befor
             yield 0, "U302 expected 2 blank lines, found 0"
 
 
+class XmlReport(pep8.StandardReport):
+    def __init__(self, options):
+        super().__init__(options)
+        self._error_files = {}
+
+    def error(self, line_number, offset, text, check):
+        super().error(line_number, offset, text, check)
+        
+        if self.filename not in self._error_files:
+            self._error_files[self.filename] = []
+        lines = self.lines[line_number-2:line_number+2]
+        lines.insert(2, (' ' * offset) + '^\n')
+        self._error_files[self.filename].append((line_number, text, lines))
+    
+    def getJUnitXml(self):
+        xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
+        xml += '<testsuites>\n'
+        for filename, data in self._error_files.items():
+            xml += '    <testsuite name="%s" errors="0" tests="%d" failures="%d" time="0" timestamp="2013-05-24T10:23:58">\n' % (filename, len(data), len(data))
+            for line_number, text, lines in data:
+                xml += '        <testcase classname="%s.line_%d" name="%s" time="0.0">\n' % (filename, line_number, text)
+                xml += '            <failure message="test failure">%s</failure>\n' % (''.join(lines))
+                xml += '        </testcase>\n'
+            xml += '    </testsuite>\n'
+        xml += '</testsuites>\n'
+        return xml
+
+
 def main(paths=["."]):
     pep8.register_check(checkNames)
     pep8.register_check(blankLines)
@@ -120,6 +148,7 @@ def main(paths=["."]):
     critical.append("U")     # All Ultimaker specific stuff.
 
     pep8style = pep8.StyleGuide(quiet=False, select=critical, ignore=ignore, show_source=True)
+    pep8style.init_report(XmlReport)
     for path in paths:
         if path.endswith(".py") and "_pb2.py" not in path:
             pep8style.paths.append(path)
@@ -131,19 +160,10 @@ def main(paths=["."]):
     print("----------------------------------")
     result.print_statistics()
     print("Total: %d" % (result.get_count()))
-    
-    f = open("pep8_output.xml", "w")
-    f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
-    f.write('<testsuites>\n')
-    for key in result.messages.keys():
-        f.write('    <testsuite name="%s" errors="0" tests="%d" failures="%d" time="0" timestamp="2013-05-24T10:23:58">\n' % (key, result.counters[key], result.counters[key]))
-        for cnt in range(0, result.counters[key]):
-            f.write('        <testcase classname="%s.%s_%d" name="%s" time="0.0">\n' % (key, key, cnt, result.messages[key]))
-            f.write('            <failure message="test failure">Assertion failed</failure>\n')
-            f.write('        </testcase>\n')
-        f.write('    </testsuite>\n')
-    f.write('</testsuites>\n')
 
+    f = open("pep8_output.xml", "w")
+    f.write(result.getJUnitXml())
+    f.close()
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
