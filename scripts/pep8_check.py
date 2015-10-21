@@ -131,6 +131,19 @@ def main(paths=["."]):
     print("----------------------------------")
     result.print_statistics()
     print("Total: %d" % (result.get_count()))
+    
+    f = open("pep8_output.xml", "w")
+    f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
+    f.write('<testsuites>\n')
+    for key in result.messages.keys():
+        f.write('    <testsuite name="JUnitXmlReporter" errors="0" tests="%d" failures="%d" time="0" timestamp="2013-05-24T10:23:58">\n' % (result.counters[key], result.counters[key]))
+        for cnt in range(0, result.counters[key]):
+            f.write('        <testcase classname="JUnitXmlReporter.constructor" name="%s" time="0.0">\n' % (result.messages[key]))
+            f.write('            <failure message="test failure">Assertion failed</failure>\n')
+            f.write('        </testcase>\n')
+        f.write('    </testsuite>\n')
+    f.write('</testsuites>\n')
+
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
