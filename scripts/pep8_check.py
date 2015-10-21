@@ -136,9 +136,9 @@ def main(paths=["."]):
     f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
     f.write('<testsuites>\n')
     for key in result.messages.keys():
-        f.write('    <testsuite name="JUnitXmlReporter" errors="0" tests="%d" failures="%d" time="0" timestamp="2013-05-24T10:23:58">\n' % (result.counters[key], result.counters[key]))
+        f.write('    <testsuite name="%s" errors="0" tests="%d" failures="%d" time="0" timestamp="2013-05-24T10:23:58">\n' % (key, result.counters[key], result.counters[key]))
         for cnt in range(0, result.counters[key]):
-            f.write('        <testcase classname="JUnitXmlReporter.constructor" name="%s" time="0.0">\n' % (result.messages[key]))
+            f.write('        <testcase classname="%s.%s_%d" name="%s" time="0.0">\n' % (key, key, cnt, result.messages[key]))
             f.write('            <failure message="test failure">Assertion failed</failure>\n')
             f.write('        </testcase>\n')
         f.write('    </testsuite>\n')
