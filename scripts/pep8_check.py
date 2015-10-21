@@ -20,7 +20,7 @@ indent_stack = []
 # The coding style set at Ultimaker.
 def checkNames(logical_line, physical_line, tokens, indent_level):
     global indent_stack
-    if logical_line != '':
+    if logical_line != "":
         while indent_stack and indent_stack[-1][0] >= indent_level:
             indent_stack.pop()
         if not indent_stack or indent_stack[-1][0] < indent_level:
@@ -68,9 +68,9 @@ def checkNames(logical_line, physical_line, tokens, indent_level):
         if not MEMBER_NAME_MATCH.match(tokens[idx + 2].string):
             yield tokens[idx + 2].start, "U202 Member name not in lower_case_underscore_format"
     elif len(tokens) > idx + 2 and tokens[idx + 1].string == "=":
-        if len(indent_stack) > 1 and indent_stack[-2][1].startswith('class '):
+        if len(indent_stack) > 1 and indent_stack[-2][1].startswith("class "):
             # definition is a class member
-            if tokens[idx].string.startswith('_'):
+            if tokens[idx].string.startswith("_"):
                 # class member is a private, match the member name style.
                 if not MEMBER_NAME_MATCH.match(tokens[idx].string):
                     yield tokens[idx].start, "U202 Member name not in lower_case_underscore_format"
@@ -111,23 +111,23 @@ class XmlReport(pep8.StandardReport):
         if self.filename not in self._error_files:
             self._error_files[self.filename] = []
         lines = self.lines[line_number-2:line_number+2]
-        lines.insert(2, (' ' * offset) + '^\n')
+        lines.insert(2, (" " * offset) + "^\n")
         self._error_files[self.filename].append((line_number, text, lines))
     
     def getJUnitXml(self):
-        xml = ElementTree.Element('testsuites')
-        xml.text = '\n'
+        xml = ElementTree.Element("testsuites")
+        xml.text = "\n"
         for filename, data in self._error_files.items():
-            testsuite = ElementTree.SubElement(xml, 'testsuite', {"name": filename, "errors": "0", "tests": str(len(data)), "failures": str(len(data)), "time": "0", "timestamp":"2013-05-24T10:23:58"})
-            testsuite.text = '\n'
-            testsuite.tail = '\n'
+            testsuite = ElementTree.SubElement(xml, "testsuite", {"name": filename, "errors": "0", "tests": str(len(data)), "failures": str(len(data)), "time": "0", "timestamp":"2013-05-24T10:23:58"})
+            testsuite.text = "\n"
+            testsuite.tail = "\n"
             for line_number, text, lines in data:
-                testcase = ElementTree.SubElement(testsuite, 'testcase', {"classname": "%s.line_%d" % (filename, line_number), "name": text})
-                testcase.text = '\n'
-                testcase.tail = '\n'
-                failure = ElementTree.SubElement(testcase, 'failure', {"message": "test failure"})
-                failure.text = ''.join(lines)
-                failure.tail = '\n'
+                testcase = ElementTree.SubElement(testsuite, "testcase", {"classname": "%s.line_%d" % (filename, line_number), "name": text})
+                testcase.text = "\n"
+                testcase.tail = "\n"
+                failure = ElementTree.SubElement(testcase, "failure", {"message": "test failure"})
+                failure.text = "".join(lines)
+                failure.tail = "\n"
         return ElementTree.ElementTree(xml)
 
 
@@ -165,7 +165,7 @@ def main(paths=["."]):
     result.print_statistics()
     print("Total: %d" % (result.get_count()))
 
-    result.getJUnitXml().write('pep8_output.xml', 'utf-8', True)
+    result.getJUnitXml().write("pep8_output.xml", "utf-8", True)
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
