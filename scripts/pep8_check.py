@@ -116,13 +116,19 @@ class XmlReport(pep8.StandardReport):
     
     def getJUnitXml(self):
         xml = ElementTree.Element('testsuites')
+        xml.text = '\n'
         for filename, data in self._error_files.items():
             testsuite = ElementTree.SubElement(xml, 'testsuite', {"name": filename, "errors": "0", "tests": str(len(data)), "failures": str(len(data)), "time": "0", "timestamp":"2013-05-24T10:23:58"})
+            testsuite.text = '\n'
+            testsuite.tail = '\n'
             for line_number, text, lines in data:
                 testcase = ElementTree.SubElement(testsuite, 'testsuite', {"classname": "%s.line_%d" % (filename, line_number), "name": text})
+                testcase.text = '\n'
+                testcase.tail = '\n'
                 failure = ElementTree.SubElement(testcase, 'failure', {"message": "test failure"})
                 failure.text = ''.join(lines)
-        return ElementTree.tostring(xml)
+                failure.tail = '\n'
+        return ElementTree.ElementTree(xml)
 
 
 def main(paths=["."]):
@@ -159,9 +165,7 @@ def main(paths=["."]):
     result.print_statistics()
     print("Total: %d" % (result.get_count()))
 
-    f = open("pep8_output.xml", "wb")
-    f.write(result.getJUnitXml())
-    f.close()
+    result.getJUnitXml().write('pep8_output.xml', 'utf-8', True)
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
