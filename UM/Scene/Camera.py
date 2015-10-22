@@ -23,6 +23,8 @@ class Camera(SceneNode.SceneNode):
         self._perspective = False
         self._viewport_width = 0
         self._viewport_height = 0
+        self._window_width = 0
+        self._window_height = 0
 
         self.setCalculateBoundingBox(False)
 
@@ -45,6 +47,10 @@ class Camera(SceneNode.SceneNode):
     
     def getViewportHeight(self):
         return self._viewport_height
+
+    def setWindowSize(self, w, h):
+        self._window_width = w
+        self._window_height = h
     
     ##  Set the projection matrix of this camera.
     #   \param matrix The projection matrix to use for this camera.
@@ -69,15 +75,20 @@ class Camera(SceneNode.SceneNode):
     #
     #   \note The near-plane coordinates should be in normalized form, that is within (-1, 1).
     def getRay(self, x, y):
+        window_x = ((x + 1) / 2) * self._window_width
+        window_y = ((y + 1) / 2) * self._window_height
+        view_x = (window_x / self._viewport_width) * 2 - 1
+        view_y = (window_y / self._viewport_height) * 2 - 1
+
         invp = numpy.linalg.inv(self._projection_matrix.getData().copy())
         invv = self.getWorldTransformation().getData()
 
-        near = numpy.array([x, -y, -1.0, 1.0], dtype=numpy.float32)
+        near = numpy.array([view_x, -view_y, -1.0, 1.0], dtype=numpy.float32)
         near = numpy.dot(invp, near)
         near = numpy.dot(invv, near)
         near = near[0:3] / near[3]
 
-        far = numpy.array([x, -y, 1.0, 1.0], dtype = numpy.float32)
+        far = numpy.array([view_x, -view_y, 1.0, 1.0], dtype = numpy.float32)
         far = numpy.dot(invp, far)
         far = numpy.dot(invv, far)
         far = far[0:3] / far[3]

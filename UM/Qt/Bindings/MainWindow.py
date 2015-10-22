@@ -189,6 +189,7 @@ class MainWindow(QQuickWindow):
 
         for camera in self._app.getController().getScene().getAllCameras():
             camera.setViewportSize(view_w, view_h)
+            camera.setWindowSize(width, height)
             proj = Matrix()
             if camera.isPerspective():
                 proj.setPerspective(30, view_w / view_h, 1, 500)
