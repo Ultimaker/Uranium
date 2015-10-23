@@ -14,6 +14,8 @@ PreferencesPage
 {
     id: preferencesPage
 
+    resetEnabled: false;
+
     title: catalog.i18nc("@title:tab", "Plugins");
     contents: ScrollView
     {
