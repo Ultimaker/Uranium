@@ -6,6 +6,8 @@ import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.1
 
+import UM 1.0 as UM
+
 CheckBox
 {
     signal valueChanged(bool value);
@@ -55,14 +57,15 @@ CheckBox
             border.width: itemStyle.controlBorderWidth;
             border.color: itemStyle.controlBorderColor;
 
-            Label
-            {
-                anchors.centerIn: parent;
-                color: itemStyle.controlTextColor;
-                font: itemStyle.controlFont;
-
-                text: "✓";
-
+            UM.RecolorImage {
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.horizontalCenter: parent.horizontalCenter
+                width: parent.width/2.5
+                height: parent.height/2.5
+                sourceSize.width: width
+                sourceSize.height: width
+                color: UM.Theme.colors.setting_control_revert
+                source: UM.Theme.icons.check
                 opacity: control.checked
                 Behavior on opacity { NumberAnimation { duration: 100; } }
             }
