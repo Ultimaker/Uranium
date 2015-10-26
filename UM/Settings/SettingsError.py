@@ -19,3 +19,13 @@ class InvalidVersionError(SettingsError):
 class DefinitionNotFoundError(SettingsError):
     def __init__(self, type_id):
         super().__init__("Could not find machine definition {0}".format(type_id))
+
+##  Error thrown when trying to add a duplicate machine instance.
+class DuplicateMachineInstanceError(SettingsError):
+    def __init__(self, machine_name):
+        super().__init__("Tried to add a machine with name {0} that already exists".format(machine_name))
+
+##  Error thrown when trying to add a duplicate profile.
+class DuplicateProfileError(SettingsError):
+    def __init__(self, profile_name):
+        super().__init__("Tried to add a profile with name {0} that already exists".format(profile_name))
