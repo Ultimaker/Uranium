@@ -70,6 +70,7 @@ class LocalFileOutputDevice(OutputDevice):
             mime_types.append(item["mime_type"])
             if last_used_type == item["mime_type"]:
                 selected_filter = type_filter
+                file_name += "." + item["extension"]
 
         dialog.setNameFilters(filters)
         if selected_filter != None:
