@@ -8,23 +8,53 @@ import QtQuick.Window 2.1
 
 import UM 1.1 as UM
 
-Dialog
+UM.Dialog
 {
     id: base;
     property string object: "";
 
     property alias newName: nameField.text;
+    property bool validName: true;
+    property string validationError;
 
     title: catalog.i18nc("@title:window", "Rename");
-    standardButtons: StandardButton.Ok | StandardButton.Cancel;
-    modality: Qt.ApplicationModal;
+
+    minimumWidth: 400 * Screen.devicePixelRatio;
+    minimumHeight: 120 * Screen.devicePixelRatio;
+    width: minimumWidth
+    height: minimumHeight
 
     property variant catalog: UM.I18nCatalog { name: "uranium"; }
 
-    TextField {
-        id: nameField;
-        width: Screen.devicePixelRatio * 200;
-        text: base.object;
+    signal textChanged(string text);
+
+    Column {
+        anchors.fill: parent;
+
+        TextField {
+            id: nameField;
+            width: parent.width;
+            text: base.object;
+            onTextChanged: base.textChanged(text);
+        }
+
+        Label {
+            visible: !base.validName;
+            text: base.validationError;
+        }
     }
+
+    rightButtons: [
+        Button {
+            text: catalog.i18nc("@action:button","Cancel");
+            onClicked: base.reject();
+        },
+        Button {
+            text: catalog.i18nc("@action:button", "Ok");
+            onClicked: base.accept();
+            enabled: base.validName;
+        }
+
+    ]
 }
 
