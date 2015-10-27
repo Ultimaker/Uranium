@@ -106,24 +106,27 @@ class ScaleTool(Tool):
                 if self._drag_length > 0:
                     drag_change = (drag_length - self._drag_length) / 100
 
-                    if self._snap_scale and abs(drag_change) < self._snap_amount:
-                        return False
+                    if self._snap_scale:
+                        drag_change = int(drag_change / self._snap_amount) * self._snap_amount
+                        if drag_change == 0:
+                            return False
 
                     scale = Vector(1.0, 1.0, 1.0)
                     if self._non_uniform_scale:
                         if self.getLockedAxis() == ToolHandle.XAxis:
-                            scale.setX(1.0 + drag_change)
+                            scale.setX(drag_change)
                         elif self.getLockedAxis() == ToolHandle.YAxis:
-                            scale.setY(1.0 + drag_change)
+                            scale.setY(drag_change)
                         elif self.getLockedAxis() == ToolHandle.ZAxis:
-                            scale.setZ(1.0 + drag_change)
+                            scale.setZ(drag_change)
 
                     if scale == Vector(1.0, 1.0, 1.0):
-                        scale.setX(1.0 + drag_change)
-                        scale.setY(1.0 + drag_change)
-                        scale.setZ(1.0 + drag_change)
+                        scale.setX(drag_change)
+                        scale.setY(drag_change)
+                        scale.setZ(drag_change)
 
-                    Selection.applyOperation(ScaleOperation, scale)
+                    print(scale)
+                    Selection.applyOperation(ScaleOperation, scale, add_scale=True)
 
                 self._drag_length = (handle_position - drag_position).length()
                 return True
