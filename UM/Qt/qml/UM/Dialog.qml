@@ -11,7 +11,7 @@ Window {
     id: base
 
     modality: Qt.ApplicationModal;
-    flags: Qt.Dialog;
+    flags: Qt.Dialog | Qt.CustomizeWindowHint | Qt.WindowTitleHint | Qt.WindowCloseButtonHint;
 
     width: Screen.devicePixelRatio * 640;
     height: Screen.devicePixelRatio * 480;

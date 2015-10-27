@@ -12,6 +12,7 @@ PreferencesPage {
 
     function reset() {
     }
+    resetEnabled: false;
 
     Item {
         id: base;

@@ -13,7 +13,7 @@ from UM.Preferences import Preferences
 from UM.Settings.MachineDefinition import MachineDefinition
 from UM.Settings.MachineInstance import MachineInstance
 from UM.Settings.Profile import Profile
-from UM.Settings.SettingsError import SettingsError
+from UM.Settings import SettingsError
 
 from UM.i18n import i18nCatalog
 catalog = i18nCatalog("uranium")
@@ -87,6 +87,10 @@ class MachineManager(SignalEmitter):
     def addMachineInstance(self, instance):
         if instance in self._machine_instances:
             return
+
+        for i in self._machine_instances:
+            if i.getName() == instance.getName():
+                raise SettingsError.DuplicateMachineInstanceError(instance.getName())
 
         self._machine_instances.append(instance)
         instance.nameChanged.connect(self._onInstanceNameChanged)
@@ -170,6 +174,10 @@ class MachineManager(SignalEmitter):
     def addProfile(self, profile):
         if profile in self._profiles:
             return
+
+        for p in self._profiles:
+            if p.getName() == profile.getName():
+                raise SettingsError.DuplicateProfileError(profile.getName())
 
         self._profiles.append(profile)
         profile.nameChanged.connect(self._onProfileNameChanged)

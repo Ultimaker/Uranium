@@ -1,6 +1,7 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
+import os
 import os.path
 import sys
 
@@ -53,7 +54,7 @@ class LocalFileOutputDevice(OutputDevice):
         # Ensure platform never ask for overwrite confirmation since we do this ourselves
         dialog.setOption(QFileDialog.DontConfirmOverwrite)
 
-        if sys.platform == "linux":
+        if sys.platform == "linux" and "KDE_FULL_SESSION" in os.environ:
             dialog.setOption(QFileDialog.DontUseNativeDialog)
 
         filters = []
@@ -70,6 +71,7 @@ class LocalFileOutputDevice(OutputDevice):
             mime_types.append(item["mime_type"])
             if last_used_type == item["mime_type"]:
                 selected_filter = type_filter
+                file_name += "." + item["extension"]
 
         dialog.setNameFilters(filters)
         if selected_filter != None:

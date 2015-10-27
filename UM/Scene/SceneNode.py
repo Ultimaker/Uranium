@@ -263,6 +263,7 @@ class SceneNode(SignalEmitter):
 
             if not scene_node._parent is self:
                 scene_node._parent = self
+                scene_node._transformChanged()
                 scene_node.parentChanged.emit(self)
 
     ##  \brief remove a single child
@@ -277,6 +278,7 @@ class SceneNode(SignalEmitter):
 
         self._children.remove(child)
         child._parent = None
+        child._transformChanged()
         child.parentChanged.emit(self)
 
         self.childrenChanged.emit(self)

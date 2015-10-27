@@ -35,8 +35,6 @@ class RotateTool(Tool):
 
         self._angle_update_time = None
 
-        self._move_up = True
-
         self.setExposedProperties("Rotation", "RotationSnap", "RotationSnapAngle")
 
     def event(self, event):
@@ -71,10 +69,6 @@ class RotateTool(Tool):
 
                 self.setDragStart(event.x, event.y)
                 self._angle = 0
-                for node in Selection.getAllSelectedObjects():
-                    if node.getBoundingBox().bottom != 0:
-                        self._move_up = False
-                        break
                 self.operationStarted.emit(self)
 
         if event.type == Event.MouseMoveEvent:
@@ -132,13 +126,6 @@ class RotateTool(Tool):
                 self.setDragPlane(None)
                 self.setLockedAxis(None)
                 self._angle = None
-                if self._move_up:
-                    move_up_amount = 0
-                    for node in Selection.getAllSelectedObjects():
-                        if move_up_amount > node.getBoundingBox().bottom:
-                            move_up_amount = node.getBoundingBox().bottom
-                    Selection.applyOperation(TranslateOperation, Vector(0, -1 * move_up_amount,0 ))
-                self._move_up = True
                 self.propertyChanged.emit()
                 self.operationStopped.emit(self)
                 return True
