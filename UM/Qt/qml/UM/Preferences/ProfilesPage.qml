@@ -51,6 +51,13 @@ ManagementPage
             onAccepted: base.model.renameProfile(base.currentItem.name, newName);
             validationError: "A profile with that name already exists!";
         }
+        MessageDialog
+        {
+            id: messageDialog
+            title: catalog.i18nc("@window:title", "Import Profile");
+            standardButtons: StandardButton.Ok
+            modality: Qt.ApplicationModel
+        }
 
         FileDialog
         {
@@ -59,7 +66,24 @@ ManagementPage
             selectExisting: true;
             nameFilters: [ catalog.i18nc("@item:inlistbox", "Cura Profiles (*.curaprofile)"), catalog.i18nc("@item:inlistbox", "All Files (*)") ]
 
-            onAccepted: base.model.importProfile(fileUrl)
+            onAccepted:
+            {
+                var result = base.model.importProfile(fileUrl)
+                messageDialog.text = result.message
+                if(result.status == "ok")
+                {
+                    messageDialog.icon = StandardIcon.Information
+                }
+                else if(result.status == "duplicate")
+                {
+                    messageDialog.icon = StandardIcon.Warning
+                }
+                else
+                {
+                    messageDialog.icon = StandardIcon.Error
+                }
+                messageDialog.open()
+            }
         }
 
         FileDialog
