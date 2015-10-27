@@ -47,7 +47,9 @@ ManagementPage
         {
             id: renameDialog;
             object: base.currentItem != null ? base.currentItem.name : "";
+            onTextChanged: validName = !(base.model.checkProfileExists(text) && object != text);
             onAccepted: base.model.renameProfile(base.currentItem.name, newName);
+            validationError: "A profile with that name already exists!";
         }
 
         FileDialog

@@ -65,7 +65,15 @@ class ProfilesModel(ListModel):
 
         profile.setName(new_name)
 
-    @pyqtSlot(QUrl)
+    @pyqtSlot(str, result = bool)
+    def checkProfileExists(self, name):
+        profile = self._manager.findProfile(name)
+        if profile:
+            return True
+
+        return False
+
+    @pyqtSlot(QUrl, result="QVariantMap")
     def importProfile(self, url):
         path = url.toLocalFile()
         if not path:
