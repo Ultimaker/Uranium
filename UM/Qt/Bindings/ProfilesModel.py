@@ -87,6 +87,11 @@ class ProfilesModel(ListModel):
         except SettingsError.DuplicateProfileError as e:
             count = 2
             name = "{0} {1}".format(profile.getName(), count)
+            while(self._manager.findProfile(name) != None):
+                count += 1
+                name = "{0} {1}".format(profile.getName(), count)
+            profile.setName(name)
+            self._manager.addProfile(profile)
             return { "status": "duplicate", "message": catalog.i18nc("@info:status", "Profile was imported as {0}", name) }
         except Exception as e:
             return { "status": "error", "message": catalog.i18nc("@info:status", "Failed to import profile from file <filename>{0}</filename>: <message>{1}</message>", path, str(e)) }
