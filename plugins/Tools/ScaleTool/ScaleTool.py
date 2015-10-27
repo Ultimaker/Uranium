@@ -16,6 +16,7 @@ from UM.Operations.ScaleToBoundsOperation import ScaleToBoundsOperation
 from UM.Operations.TranslateOperation import TranslateOperation
 
 from . import ScaleToolHandle
+import copy
 
 class ScaleTool(Tool):
     def __init__(self):
@@ -24,8 +25,12 @@ class ScaleTool(Tool):
         self._handle = ScaleToolHandle.ScaleToolHandle()
 
         self._snap_scale = True
-        self._snap_amount = 0.05
+        self._snap_range = 0.1
         self._non_uniform_scale = False
+        self._scale_speed = 8
+
+        self._base_scale = Vector(1.0, 1.0, 1.0)
+        self._old_scale = Vector(1.0, 1.0, 1.0)
 
         self._drag_length = 0
 
@@ -47,6 +52,7 @@ class ScaleTool(Tool):
         super().event(event)
 
         if event.type == Event.ToolActivateEvent:
+            self._old_scale = Selection.getSelectedObject(0).getScale()
             for node in Selection.getAllSelectedObjects():
                 node.boundingBoxChanged.connect(self.propertyChanged)
 
@@ -55,6 +61,7 @@ class ScaleTool(Tool):
                 node.boundingBoxChanged.disconnect(self.propertyChanged)
 
         if event.type == Event.KeyPressEvent:
+            #TODO the shiftkey somehow doesn't work
             if event.key == KeyEvent.ShiftKey:
                 self._lock_steps = False
                 self.propertyChanged.emit()
@@ -101,31 +108,35 @@ class ScaleTool(Tool):
 
             handle_position = self._handle.getWorldPosition()
             drag_position = self.getDragPosition(event.x, event.y)
+            scale = copy.deepcopy(self._base_scale)
+
             if drag_position:
                 drag_length = (drag_position - handle_position).length()
                 if self._drag_length > 0:
-                    drag_change = (drag_length - self._drag_length) / 100
+                    drag_change = (drag_length - self._drag_length) / 100 * self._scale_speed
 
-                    if self._snap_scale and abs(drag_change) < self._snap_amount:
-                        return False
+                    if self._snap_scale:
+                        scaleFactor = round(drag_change, 1)
+                    else:
+                        scaleFactor = drag_change
 
-                    scale = Vector(1.0, 1.0, 1.0)
                     if self._non_uniform_scale:
                         if self.getLockedAxis() == ToolHandle.XAxis:
-                            scale.setX(1.0 + drag_change)
+                            scale.setX(abs(scale.x + scaleFactor))
                         elif self.getLockedAxis() == ToolHandle.YAxis:
-                            scale.setY(1.0 + drag_change)
+                            scale.setY(abs(scale.y + scaleFactor))
                         elif self.getLockedAxis() == ToolHandle.ZAxis:
-                            scale.setZ(1.0 + drag_change)
+                            scale.setZ(abs(scale.z + scaleFactor))
 
-                    if scale == Vector(1.0, 1.0, 1.0):
-                        scale.setX(1.0 + drag_change)
-                        scale.setY(1.0 + drag_change)
-                        scale.setZ(1.0 + drag_change)
+                    else:
+                        scale.setX(abs(scale.x + scaleFactor))
+                        scale.setY(abs(scale.y + scaleFactor))
+                        scale.setZ(abs(scale.z + scaleFactor))
 
-                    Selection.applyOperation(ScaleOperation, scale)
-
+                    #Selection.applyOperation(ScaleOperation, scale)
+                    Selection.applyOperation(SetTransformOperation, None, None, scale, self._old_scale)
                 self._drag_length = (handle_position - drag_position).length()
+                self._base_scale = scale
                 return True
 
         if event.type == Event.MouseReleaseEvent:
@@ -156,6 +167,10 @@ class ScaleTool(Tool):
 
     def setScaleSnap(self, snap):
         if self._snap_scale != snap:
+            scale = self._base_scale
+            scale.setX(round(scale.x, 1))
+            scale.setY(round(scale.y, 1))
+            scale.setZ(round(scale.z, 1))
             self._snap_scale = snap
             self.propertyChanged.emit()
 
