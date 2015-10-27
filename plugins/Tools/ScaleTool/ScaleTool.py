@@ -106,8 +106,10 @@ class ScaleTool(Tool):
                 if self._drag_length > 0:
                     drag_change = (drag_length - self._drag_length) / 100
 
-                    if self._snap_scale and abs(drag_change) < self._snap_amount:
-                        return False
+                    if self._snap_scale:
+                        drag_change = int(drag_change / self._snap_amount) * self._snap_amount
+                        if drag_change == 0:
+                            return False
 
                     scale = Vector(1.0, 1.0, 1.0)
                     if self._non_uniform_scale:
