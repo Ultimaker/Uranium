@@ -25,12 +25,8 @@ class ScaleTool(Tool):
         self._handle = ScaleToolHandle.ScaleToolHandle()
 
         self._snap_scale = True
-        self._snap_range = 0.1
         self._non_uniform_scale = False
-        self._scale_speed = 8
-
-        self._base_scale = Vector(1.0, 1.0, 1.0)
-        self._old_scale = Vector(1.0, 1.0, 1.0)
+        self._scale_speed = 10
 
         self._drag_length = 0
 
@@ -108,35 +104,31 @@ class ScaleTool(Tool):
 
             handle_position = self._handle.getWorldPosition()
             drag_position = self.getDragPosition(event.x, event.y)
-            scale = copy.deepcopy(self._base_scale)
-
             if drag_position:
                 drag_length = (drag_position - handle_position).length()
                 if self._drag_length > 0:
                     drag_change = (drag_length - self._drag_length) / 100 * self._scale_speed
-
                     if self._snap_scale:
                         scaleFactor = round(drag_change, 1)
                     else:
                         scaleFactor = drag_change
 
+                    scale = Vector(0.0, 0.0, 0.0)
                     if self._non_uniform_scale:
                         if self.getLockedAxis() == ToolHandle.XAxis:
-                            scale.setX(abs(scale.x + scaleFactor))
+                            scale.setX(scaleFactor)
                         elif self.getLockedAxis() == ToolHandle.YAxis:
-                            scale.setY(abs(scale.y + scaleFactor))
+                            scale.setY(scaleFactor)
                         elif self.getLockedAxis() == ToolHandle.ZAxis:
-                            scale.setZ(abs(scale.z + scaleFactor))
+                            scale.setZ(scaleFactor)
 
                     else:
-                        scale.setX(abs(scale.x + scaleFactor))
-                        scale.setY(abs(scale.y + scaleFactor))
-                        scale.setZ(abs(scale.z + scaleFactor))
+                        scale.setX(scaleFactor)
+                        scale.setY(scaleFactor)
+                        scale.setZ(scaleFactor)
 
-                    #Selection.applyOperation(ScaleOperation, scale)
-                    Selection.applyOperation(SetTransformOperation, None, None, scale, self._old_scale)
+                    Selection.applyOperation(ScaleOperation, scale, add_scale=True)
                 self._drag_length = (handle_position - drag_position).length()
-                self._base_scale = scale
                 return True
 
         if event.type == Event.MouseReleaseEvent:
@@ -167,10 +159,6 @@ class ScaleTool(Tool):
 
     def setScaleSnap(self, snap):
         if self._snap_scale != snap:
-            scale = self._base_scale
-            scale.setX(round(scale.x, 1))
-            scale.setY(round(scale.y, 1))
-            scale.setZ(round(scale.z, 1))
             self._snap_scale = snap
             self.propertyChanged.emit()
 
