@@ -58,7 +58,6 @@ Item {
 
                 name: catalog.i18nc("@label", "Profile")
                 type: "enum"
-                perObjectSetting: true
 
                 style: UM.Theme.styles.setting_item;
 
@@ -88,8 +87,6 @@ Item {
                     description: model.description;
                     unit: model.unit;
                     valid: model.valid;
-                    perObjectSetting: true
-                    dismissable: true
                     options: model.options
 
                     style: UM.Theme.styles.setting_item;
@@ -98,18 +95,36 @@ Item {
                         settings.model.setSettingValue(model.key, value)
                     }
 
-//                     Button {
-//                         anchors.left: parent.right;
-//                         text: "x";
-//
-//                         width: UM.Theme.sizes.setting.height;
-//                         height: UM.Theme.sizes.setting.height;
-//
-//                         opacity: parent.hovered || hovered ? 1 : 0;
-//                         onClicked: UM.ActiveTool.properties.Model.removeSettingOverride(UM.ActiveTool.properties.Model.getItem(base.currentIndex).id, model.key)
-//
-//                         style: ButtonStyle { }
-//                     }
+                    Button
+                    {
+                        anchors.left: parent.horizontalCenter;
+                        anchors.leftMargin: UM.Theme.sizes.default_margin.width;
+
+                        width: UM.Theme.sizes.setting.height;
+                        height: UM.Theme.sizes.setting.height;
+
+                        opacity: parent.hovered || hovered ? 1 : 0;
+                        onClicked: UM.ActiveTool.properties.Model.removeSettingOverride(UM.ActiveTool.properties.Model.getItem(base.currentIndex).id, model.key)
+
+                        style: ButtonStyle
+                        {
+                            background: Rectangle
+                            {
+                                color: control.hovered ? control.parent.style.controlHighlightColor : control.parent.style.controlColor;
+                                UM.RecolorImage
+                                {
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                    width: parent.width/2
+                                    height: parent.height/2
+                                    sourceSize.width: width
+                                    sourceSize.height: width
+                                    color: UM.Theme.colors.setting_control_revert
+                                    source: UM.Theme.icons.cross1
+                                }
+                            }
+                        }
+                    }
                 }
             }
 
