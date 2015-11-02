@@ -56,7 +56,7 @@ ManagementPage
             id: messageDialog
             title: catalog.i18nc("@window:title", "Import Profile");
             standardButtons: StandardButton.Ok
-            modality: Qt.ApplicationModel
+            modality: Qt.ApplicationModal
         }
 
         FileDialog
