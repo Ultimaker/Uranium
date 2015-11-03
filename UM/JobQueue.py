@@ -118,8 +118,6 @@ class _Worker(threading.Thread):
                 job.run()
             except Exception as e:
                 Logger.log("e", "Job %s caused the exception:%s", str(job),str(e))
-                #Logger.log("e", "exception: %s", str(e))
-                Logger.log("e", "".join(traceback.format_stack()))
                 job.setError(e)
 
             job._running = False
