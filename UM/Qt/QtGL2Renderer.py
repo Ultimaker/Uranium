@@ -400,17 +400,27 @@ class QtGL2Renderer(Renderer):
             normal_matrix = normal_matrix.getInverse().getTransposed()
             material.setUniformValue("u_normalMatrix", normal_matrix, cache = False)
 
+        vertex_buffer = None
         try:
             vertex_buffer = getattr(mesh, vertexBufferProperty)
         except AttributeError:
+            pass
+
+        if vertex_buffer is None:
             vertex_buffer =  self._createVertexBuffer(mesh)
+
         vertex_buffer.bind()
 
         if mesh.hasIndices():
+            index_buffer = None
             try:
                 index_buffer = getattr(mesh, indexBufferProperty)
             except AttributeError:
+                pass
+
+            if index_buffer is None:
                 index_buffer = self._createIndexBuffer(mesh)
+
             index_buffer.bind()
 
         material.enableAttribute("a_vertex", "vector3f", 0)
