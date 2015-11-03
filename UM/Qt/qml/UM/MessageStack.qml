@@ -55,7 +55,7 @@ ListView {
             }
 
             function getProgressText(){
-                var progress = Math.floor(base.slicingProgress)
+                var progress = Math.floor(model.progress)
                 return "%1 <font color='black'>%2%</font>".arg(model.text).arg(progress)
             }
 
@@ -67,8 +67,8 @@ ListView {
             ProgressBar {
                 id: totalProgressBar;
                 minimumValue: 0;
-                maximumValue: model.max_progress;
-                value: base.slicingProgress
+                maximumValue: 100;
+                value: model.progress
                 visible: model.progress == null ? false: true//if the progress is null (for example with the loaded message) -> hide the progressbar
                 indeterminate: model.progress == -1 ? true: false //if the progress is unknown (-1) -> the progressbar is indeterminate
                 style: UM.Theme.styles.progressbar
