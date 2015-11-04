@@ -4,6 +4,7 @@
 from UM.Signal import Signal, SignalEmitter
 from UM.Logger import Logger
 
+import sys
 import multiprocessing
 import threading
 import traceback
@@ -117,7 +118,10 @@ class _Worker(threading.Thread):
             try:
                 job.run()
             except Exception as e:
-                Logger.log("e", "Job %s caused the exception:%s", str(job),str(e))
+                Logger.log("e", "Job %s caused an exception:", str(job))
+                output = traceback.format_exception(sys.exc_info()[0], sys.exc_info()[1], sys.exc_info()[2])
+                for string in output:
+                    Logger.log("e", string.strip("\n"))
                 job.setError(e)
 
             job._running = False
