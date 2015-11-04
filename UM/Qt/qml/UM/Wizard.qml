@@ -212,7 +212,6 @@ UM.Dialog
                 }
                 else
                 {
-                    base.visible = false;
                     var old_page_count = getPageCount()
                     // Delete old pages (if any)
                     for (var i = old_page_count - 1; i > 0; i--)
