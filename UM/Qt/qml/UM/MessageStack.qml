@@ -17,10 +17,6 @@ ListView {
 
     model: UM.Models.visibleMessagesModel;
 
-    property real slicingProgress: UM.Backend.progress * 100
-    property bool slicingActivity: Printer.getPlatformActivity;
-    Behavior on slicingProgress { NumberAnimation { duration: 250; } }
-
     interactive: false;
     delegate: Rectangle
     {
@@ -68,14 +64,19 @@ ListView {
                 id: totalProgressBar;
                 minimumValue: 0;
                 maximumValue: 100;
-                value: model.progress
+
+                value: 0
+                Behavior on value { NumberAnimation { duration: 100; } }
+
+                // Doing this in an explicit binding since the implicit binding breaks on occasion.
+                Binding { target: totalProgressBar; property: "value"; value: model.progress }
+
                 visible: model.progress == null ? false: true//if the progress is null (for example with the loaded message) -> hide the progressbar
                 indeterminate: model.progress == -1 ? true: false //if the progress is unknown (-1) -> the progressbar is indeterminate
                 style: UM.Theme.styles.progressbar
 
                 anchors.top: parent.bottom;
                 anchors.topMargin: UM.Theme.sizes.default_margin.width;
-                //anchors.bottomMargin: UM.Theme.sizes.default_margin.width;
             }
         }
 
