@@ -79,6 +79,10 @@ class MachineManagerProxy(QObject):
         if profile:
             self._manager.setActiveProfile(profile)
 
+    @pyqtSlot(str, result = bool)
+    def getNameUniqueness(self, name):
+        return self._manager.getNameUniqueness(name)
+
     @pyqtSlot(str, result = int)
     def getSettingValue(self, setting):
         profile = self._manager.getActiveProfile()

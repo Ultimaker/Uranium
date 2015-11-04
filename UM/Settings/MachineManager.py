@@ -84,13 +84,18 @@ class MachineManager(SignalEmitter):
     def getMachineInstances(self):
         return self._machine_instances
 
+    def getNameUniqueness(self, name):
+        for i in self._machine_instances:
+            if i.getName() == name:
+                return False
+        return True
+
     def addMachineInstance(self, instance):
         if instance in self._machine_instances:
             return
 
-        for i in self._machine_instances:
-            if i.getName() == instance.getName():
-                raise SettingsError.DuplicateMachineInstanceError(instance.getName())
+        if self.getNameUniqueness(instance.getName()) == False:
+            raise SettingsError.DuplicateMachineInstanceError(instance.getName())
 
         self._machine_instances.append(instance)
         instance.nameChanged.connect(self._onInstanceNameChanged)
