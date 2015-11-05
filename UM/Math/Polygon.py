@@ -2,6 +2,15 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 import numpy
+import time
+
+from UM.Job import Job
+
+try:
+    import scipy.spatial
+    has_scipy = True
+except ImportError:
+    has_scipy = False
 
 ##  A class representing an arbitrary 2-dimensional polygon.
 class Polygon:
@@ -92,38 +101,45 @@ class Polygon:
     ##  Calculate the convex hull around the set of points of this polygon.
     #
     #   \return \type{Polygon} The convex hull around the points of this polygon.
-    def getConvexHull(self):
-        unique = {}
-        for p in self._points:
-            unique[p[0], p[1]] = 1
+    if has_scipy:
+        def getConvexHull(self):
+            hull = scipy.spatial.ConvexHull(self._points)
+            return Polygon(numpy.flipud(self._points[hull.vertices]))
+    else:
+        def getConvexHull(self):
+            unique = {}
+            for p in self._points:
+                unique[p[0], p[1]] = 1
 
-        points = list(unique.keys())
-        points.sort()
-        if len(points) < 1:
-            return Polygon(numpy.zeros((0, 2), numpy.float32))
-        if len(points) < 2:
-            return Polygon(numpy.array(points, numpy.float32))
+            points = list(unique.keys())
+            points.sort()
+            if len(points) < 1:
+                return Polygon(numpy.zeros((0, 2), numpy.float32))
+            if len(points) < 2:
+                return Polygon(numpy.array(points, numpy.float32))
 
-        # Build upper half of the hull.
-        upper = [points[0], points[1]]
-        for p in points[2:]:
-            upper.append(p)
-            while len(upper) > 2 and not self._isRightTurn(*upper[-3:]):
-                del upper[-2]
+            counter = 0
+            # Build upper half of the hull.
+            upper = [points[0], points[1]]
+            for p in points[2:]:
+                upper.append(p)
+                while len(upper) > 2 and not self._isRightTurn(*upper[-3:]):
+                    del upper[-2]
 
-        # Build lower half of the hull.
-        points = points[::-1]
-        lower = [points[0], points[1]]
-        for p in points[2:]:
-            lower.append(p)
-            while len(lower) > 2 and not self._isRightTurn(*lower[-3:]):
-                del lower[-2]
+            counter = 0
+            # Build lower half of the hull.
+            points = points[::-1]
+            lower = [points[0], points[1]]
+            for p in points[2:]:
+                lower.append(p)
+                while len(lower) > 2 and not self._isRightTurn(*lower[-3:]):
+                    del lower[-2]
 
-        # Remove duplicates.
-        del lower[0]
-        del lower[-1]
+            # Remove duplicates.
+            del lower[0]
+            del lower[-1]
 
-        return Polygon(numpy.array(upper + lower, numpy.float32))
+            return Polygon(numpy.array(upper + lower, numpy.float32))
 
     ##  Perform a Minkowski sum of this polygon with another polygon.
     #
@@ -134,6 +150,8 @@ class Polygon:
         for n in range(0, len(self._points)):
             for m in range(0, len(other._points)):
                 points[n * len(other._points) + m] = self._points[n] + other._points[m]
+
+                time.sleep(0.00001)
 
         return Polygon(points)
 
