@@ -16,13 +16,6 @@ UM.Dialog
     property int currentPage: -1;
     property bool lastPage: currentPage == pagesModel.count - 1;
 
-    property var addOriginalProgress: {
-        "upgrades": [true, false, false],
-        "firmwareUpgrade": false,
-        "checkUp": [false, false, false, false, false, false, false],
-        "bedLeveling": false
-    }
-
     property bool firstRun: false
 
     title: currentPage != -1 ? pagesModel.get(currentPage).title : ""
@@ -219,7 +212,7 @@ UM.Dialog
                         removePage(i)
                     }
                     currentPage = 0
-                    }
+                }
             }
         },
         Button
