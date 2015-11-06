@@ -142,7 +142,7 @@ class Profile(SignalEmitter):
             if self._active_instance.hasMachineSettingValue(key):
                 values[key] = self._active_instance.getMachineSettingValue(key)
 
-            values[key] = setting.getDefaultValue()
+            values[key] = setting.getDefaultValue(self)
 
         return values
 
