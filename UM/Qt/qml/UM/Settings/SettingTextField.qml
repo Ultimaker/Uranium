@@ -14,10 +14,19 @@ TextField {
     signal valueChanged(string value);
     property bool focusVar: false
 
-    text: value; //From parent loader
     validator: RegExpValidator { regExp: /[0-9.-]+/ }
 
     onTextChanged: if(base.focus) { valueChanged(text); }
+
+    property variant parentValue: value
+
+    Binding
+    {
+        target: base
+        property: "text"
+        value: base.parentValue
+        when: !base.focus
+    }
 
     style: TextFieldStyle
     {
