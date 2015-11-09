@@ -41,6 +41,33 @@ Item {
             anchors.fill: parent;
         }
 
+        Button {
+            id: closeButton;
+            width: UM.Theme.sizes.message_close.width;
+            height: UM.Theme.sizes.message_close.height;
+            anchors {
+                right: parent.right;
+                rightMargin: UM.Theme.sizes.default_margin.width / 2;
+                top: parent.top;
+                topMargin: UM.Theme.sizes.default_margin.width / 2;
+            }
+            UM.RecolorImage {
+                anchors.fill: parent;
+                sourceSize.width: width
+                sourceSize.height: width
+                color: UM.Theme.colors.message_dismiss
+                source: UM.Theme.icons.cross2;
+            }
+
+            onClicked: settingsPanel.opacity = 0
+
+            style: ButtonStyle {
+                background: Rectangle {
+                    color: UM.Theme.colors.message_background
+                }
+            }
+        }
+
         Column {
             id: items
             anchors.top: parent.top;
