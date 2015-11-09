@@ -108,6 +108,7 @@ class ScaleTool(Tool):
                 drag_length = (drag_position - handle_position).length()
                 if self._drag_length > 0:
                     drag_change = (drag_length - self._drag_length) / 100 * self._scale_speed
+
                     if self._snap_scale:
                         scaleFactor = round(drag_change, 1)
                     else:
@@ -128,6 +129,23 @@ class ScaleTool(Tool):
                         scale.setZ(scaleFactor)
 
                     Selection.applyOperation(ScaleOperation, scale, add_scale=True)
+
+                    #this part prevents the mesh being scaled to a size < 0.
+                    #This cannot be done before the operation (even though that would be more efficient)
+                    #because then the operation can distract more of the mesh then is remaining of its size
+                    realWorldMeshScale = Selection.getSelectedObject(0).getScale()
+                    if realWorldMeshScale.x <= 0 or realWorldMeshScale.y <= 0 or realWorldMeshScale.z <= 0:
+                        minimumScale = 0.01 #1% so the mesh never completely disapears for the user
+                        if self._snap_scale:
+                            minimumScale = 0.1 #10% same reason as above
+                        if realWorldMeshScale.x <= 0:
+                            realWorldMeshScale.setX(minimumScale)
+                        if realWorldMeshScale.y <= 0:
+                            realWorldMeshScale.setY(minimumScale)
+                        if realWorldMeshScale.z <= 0:
+                            realWorldMeshScale.setZ(minimumScale)
+                        Selection.applyOperation(SetTransformOperation, None, None, realWorldMeshScale)
+
                 self._drag_length = (handle_position - drag_position).length()
                 return True
 
