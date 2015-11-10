@@ -136,7 +136,7 @@ class ScaleTool(Tool):
                     realWorldMeshScale = Selection.getSelectedObject(0).getScale()
                     if realWorldMeshScale.x <= 0 or realWorldMeshScale.y <= 0 or realWorldMeshScale.z <= 0:
                         minimumScale = 0.01 #1% so the mesh never completely disapears for the user
-                        if self._snap_scale:
+                        if self._snap_scale == True:
                             minimumScale = 0.1 #10% same reason as above
                         if realWorldMeshScale.x <= 0:
                             realWorldMeshScale.setX(minimumScale)
