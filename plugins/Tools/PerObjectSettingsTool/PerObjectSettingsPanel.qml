@@ -214,12 +214,19 @@ Item {
 
             checkable: true;
             onClicked: {
-                base.currentIndex = index;
+                if(settingsPanel.opacity < 0.5) //Per-object panel is not currently displayed.
+                {
+                    base.currentIndex = index;
 
-                settingsPanel.anchors.left = right;
-                settingsPanel.anchors.top = top;
+                    settingsPanel.anchors.left = right;
+                    settingsPanel.anchors.top = top;
 
-                settingsPanel.opacity = 1;
+                    settingsPanel.opacity = 1;
+                }
+                else //Per-object panel is already displayed. Deactivate it (same behaviour as the close button).
+                {
+                    settingsPanel.opacity = 0;
+                }
             }
 
             style: ButtonStyle
