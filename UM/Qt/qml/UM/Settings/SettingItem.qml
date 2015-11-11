@@ -116,7 +116,10 @@ Rectangle {
         height: parent.height - base.style.controlBorderWidth;
         width: height;
 
-        onClicked: base.resetRequested()
+        onClicked: {
+            base.resetRequested()
+            controlContainer.notifyReset();
+        }
 
         style: ButtonStyle {
             background: Rectangle {
@@ -145,6 +148,14 @@ Rectangle {
         height: base.style.fixedHeight > 0 ? base.style.fixedHeight : parent.height;
 
         property variant itemStyle: base.style
+
+        function notifyReset()
+        {
+            if(item && item.notifyReset)
+            {
+                item.notifyReset();
+            }
+        }
 
         source:
         {

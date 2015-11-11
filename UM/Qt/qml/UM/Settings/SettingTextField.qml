@@ -28,6 +28,12 @@ TextField {
         when: !base.focus
     }
 
+    function notifyReset()
+    {
+        base.focus = false;
+        base.text = base.parentValue;
+    }
+
     style: TextFieldStyle
     {
         textColor: itemStyle.controlTextColor;
