@@ -118,7 +118,6 @@ class Polygon:
             if len(points) < 2:
                 return Polygon(numpy.array(points, numpy.float32))
 
-            counter = 0
             # Build upper half of the hull.
             upper = [points[0], points[1]]
             for p in points[2:]:
@@ -126,7 +125,6 @@ class Polygon:
                 while len(upper) > 2 and not self._isRightTurn(*upper[-3:]):
                     del upper[-2]
 
-            counter = 0
             # Build lower half of the hull.
             points = points[::-1]
             lower = [points[0], points[1]]
