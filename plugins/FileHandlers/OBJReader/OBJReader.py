@@ -49,7 +49,7 @@ class OBJReader(MeshReader):
                             if parts[1][1] and parts[idx+1][1] and parts[idx+2][1]:
                                 data += [int(parts[1][1]), int(parts[idx+1][1]), int(parts[idx+2][1])]
                         face_list.append(data)
-                        Job.yieldThread()
+                Job.yieldThread()
             f.close()
 
             mesh.reserveVertexCount(3 * len(face_list))
