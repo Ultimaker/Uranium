@@ -64,7 +64,7 @@ CheckBox
                 height: parent.height/2.5
                 sourceSize.width: width
                 sourceSize.height: width
-                color: UM.Theme.colors.setting_control_revert
+                color: UM.Theme.colors.checkbox_mark
                 source: UM.Theme.icons.check
                 opacity: control.checked
                 Behavior on opacity { NumberAnimation { duration: 100; } }
