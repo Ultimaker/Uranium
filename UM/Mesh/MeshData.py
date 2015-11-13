@@ -200,6 +200,17 @@ class MeshData(SignalEmitter):
 
         return AxisAlignedBox(minimum=Vector(min[0], min[1], min[2]), maximum=Vector(max[0], max[1], max[2]))
 
+    def clear(self):
+        setattr(self, "__qtgl2_vertex_buffer", None)
+        setattr(self, "__qtgl2_index_buffer", None)
+        self._vertices = None
+        self._normals = None
+        self._indices = None
+        self._colors = None
+        self._uvs = None
+        self._vertex_count = 0
+        self._face_count = 0
+
     ##  Set the amount of faces before loading data to the mesh.
     #
     #   This way we can create the array before we fill it. This method will reserve

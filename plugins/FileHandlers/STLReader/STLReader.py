@@ -8,6 +8,7 @@ from UM.Logger import Logger
 from UM.Math.Matrix import Matrix
 from UM.Math.Vector import Vector
 from UM.Scene.SceneNode import SceneNode
+from UM.Job import Job
 
 import os
 import struct
@@ -73,6 +74,8 @@ class STLReader(MeshReader):
                         )
                         vertex = 0
 
+                Job.yieldThread()
+
     # Private
     ## Load the STL data from file by consdering the data as Binary.
     # \param mesh The MeshData object where the data is written to.
@@ -97,6 +100,7 @@ class STLReader(MeshReader):
                 data[3], data[5], -data[4],
                 data[6], data[8], -data[7],
                 data[9], data[11], -data[10]
-        )
+            )
+            Job.yieldThread()
 
         return True

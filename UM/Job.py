@@ -1,6 +1,7 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
+import time
 
 from UM.Signal import Signal, SignalEmitter
 
@@ -111,3 +112,12 @@ class Job(SignalEmitter):
     #   \param job \type{Job} The job reporting progress.
     #   \param amount \type{int} The amount of progress made, from 0 to 100.
     progress = Signal()
+
+    ##  Utility function that allows us to yield thread processing.
+    #
+    #   This is mostly a workaround for broken python threads. This function
+    #   forces a GIL release and allows a different thread to start processing
+    #   if it is waiting.
+    @staticmethod
+    def yieldThread():
+        time.sleep(0) #Sleeping for 0 introduces no delay but does allow context switching.

@@ -30,5 +30,6 @@ class WriteMeshJob(Job):
         return self._stream
 
     def run(self):
+        Job.yieldThread()
         self.setResult(self._writer.write(self._stream, self._node, self._mode))
 

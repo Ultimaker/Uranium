@@ -5,6 +5,7 @@ from UM.Qt.ListModel import ListModel
 from UM.Application import Application
 from UM.Message import Message
 from UM.Settings.Profile import Profile
+from UM.Settings import SettingsError
 
 from PyQt5.QtCore import Qt, pyqtSlot, pyqtSignal, pyqtProperty, QUrl
 
@@ -65,7 +66,15 @@ class ProfilesModel(ListModel):
 
         profile.setName(new_name)
 
-    @pyqtSlot(QUrl)
+    @pyqtSlot(str, result = bool)
+    def checkProfileExists(self, name):
+        profile = self._manager.findProfile(name)
+        if profile:
+            return True
+
+        return False
+
+    @pyqtSlot(QUrl, result="QVariantMap")
     def importProfile(self, url):
         path = url.toLocalFile()
         if not path:
@@ -74,13 +83,20 @@ class ProfilesModel(ListModel):
         profile = Profile(self._manager, read_only = False)
         try:
             profile.loadFromFile(path)
-        except Exception as e:
-            m = Message(catalog.i18nc("@info:status", "Failed to import profile from file <filename>{0}</filename>: <message>{1}</message>", path, str(e)))
-            m.show()
-        else:
-            m = Message(catalog.i18nc("@info:status", "Successfully imported profile {0}", profile.getName()))
-            m.show()
             self._manager.addProfile(profile)
+        except SettingsError.DuplicateProfileError as e:
+            count = 2
+            name = "{0} {1}".format(profile.getName(), count)
+            while(self._manager.findProfile(name) != None):
+                count += 1
+                name = "{0} {1}".format(profile.getName(), count)
+            profile.setName(name)
+            self._manager.addProfile(profile)
+            return { "status": "duplicate", "message": catalog.i18nc("@info:status", "Profile was imported as {0}", name) }
+        except Exception as e:
+            return { "status": "error", "message": catalog.i18nc("@info:status", "Failed to import profile from file <filename>{0}</filename>: <message>{1}</message>", path, str(e)) }
+        else:
+            return { "status": "ok", "message": catalog.i18nc("@info:status", "Successfully imported profile {0}", profile.getName()) }
 
     @pyqtSlot(str, QUrl)
     def exportProfile(self, name, url):

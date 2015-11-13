@@ -102,6 +102,9 @@ class MainWindow(QQuickWindow):
         if event.isAccepted():
             return
 
+        if self.activeFocusItem():
+            self.activeFocusItem().setFocus(False)
+
         self._mouse_device.handleEvent(event)
 
     def mouseMoveEvent(self, event):

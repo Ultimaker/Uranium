@@ -73,16 +73,21 @@ class Profile(SignalEmitter):
     #   \note If the setting is not a user-settable setting, this method will do nothing.
     def setSettingValue(self, key, value):
         Logger.log('d' , "Setting value of setting %s to %s",key,value)
+
         if not self._active_instance or not self._active_instance.getMachineDefinition().isUserSetting(key):
             Logger.log("w", "Tried to set value of non-user setting %s", key)
             return
-        if key in self._changed_settings:
-            setting = self._active_instance.getMachineDefinition().getSetting(key)
 
-            if value == str(setting.getDefaultValue()) or value == setting.getDefaultValue():
+        setting = self._active_instance.getMachineDefinition().getSetting(key)
+        if not setting:
+            return
+
+        if value == setting.getDefaultValue() or value == str(setting.getDefaultValue()):
+            if key in self._changed_settings:
                 del self._changed_settings[key]
                 self.settingValueChanged.emit(key)
-                return
+
+            return
 
         if key in self._changed_settings and self._changed_settings[key] == value:
             return
@@ -137,7 +142,7 @@ class Profile(SignalEmitter):
             if self._active_instance.hasMachineSettingValue(key):
                 values[key] = self._active_instance.getMachineSettingValue(key)
 
-            values[key] = setting.getDefaultValue()
+            values[key] = setting.getDefaultValue(self)
 
         return values
 

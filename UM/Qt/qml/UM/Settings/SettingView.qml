@@ -13,6 +13,7 @@ ScrollView
     id: base;
 
     style: UM.Theme.styles.scrollview;
+    flickableItem.flickableDirection: Flickable.VerticalFlick;
 
     property Action configureSettings;
     signal showTooltip(Item item, point location, string text);

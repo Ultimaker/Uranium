@@ -10,6 +10,7 @@ class ScaleOperation(Operation.Operation):
         self._node = node
         self._old_scale = node.getScale()
         self._set_scale = kwargs.get("set_scale", False)
+        self._add_scale = kwargs.get("add_scale", False)
         self._scale = scale
 
     def undo(self):
@@ -18,6 +19,8 @@ class ScaleOperation(Operation.Operation):
     def redo(self):
         if self._set_scale:
             self._node.setScale(self._scale)
+        elif self._add_scale:
+            self._node.setScale(self._node.getScale() + self._scale)
         else:
             self._node.scale(self._scale, SceneNode.TransformSpace.World)
 
@@ -29,6 +32,9 @@ class ScaleOperation(Operation.Operation):
             return False
 
         if other._set_scale and not self._set_scale:
+            return False
+
+        if other._add_scale and not self._add_scale:
             return False
 
         op = ScaleOperation(self._node, self._scale)

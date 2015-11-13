@@ -8,9 +8,20 @@ import UM 1.1 as UM
 
 Item
 {
+    id: base
     width: Math.max(23 * UM.Theme.sizes.line.width, childrenRect.width);
     height: Math.max(9.5 * UM.Theme.sizes.line.height, childrenRect.height);
     UM.I18nCatalog { id: catalog; name:"uranium"}
+
+    function getPercentage(scale){
+        if (snapScalingCheckbox.checked){
+            return Math.round(scale * 10) * 10 //rounds the percentage at tens
+        }
+        else{
+            return scale * 100;
+        }
+    }
+
     Button
     {
         id: resetScaleButton
@@ -58,13 +69,21 @@ Item
 
         CheckBox
         {
+            id: snapScalingCheckbox
             //: Snap Scaling checkbox
             text: catalog.i18nc("@option:check","Snap Scaling");
 
             style: UM.Theme.styles.checkbox;
 
             checked: UM.ActiveTool.properties.ScaleSnap;
-            onClicked: UM.ActiveTool.setProperty("ScaleSnap", checked);
+            onClicked: {
+                UM.ActiveTool.setProperty("ScaleSnap", checked);
+                if (snapScalingCheckbox.checked){
+                    UM.ActiveTool.setProperty("ScaleX", parseFloat(xPercentage.text) / 100);
+                    UM.ActiveTool.setProperty("ScaleY", parseFloat(yPercentage.text) / 100);
+                    UM.ActiveTool.setProperty("ScaleZ", parseFloat(zPercentage.text) / 100);
+                }
+            }
         }
 
         CheckBox
@@ -166,11 +185,12 @@ Item
 
         TextField
         {
+            id: xPercentage
             width: UM.Theme.sizes.setting_control.width;
             height: UM.Theme.sizes.setting_control.height;
             property string unit: "%";
             style: UM.Theme.styles.text_field;
-            text: UM.ActiveTool.properties.ScaleX * 100;
+            text: base.getPercentage(UM.ActiveTool.properties.ScaleX)
             validator: DoubleValidator
             {
                 bottom: 100 * (0.1 / (UM.ActiveTool.properties.ObjectWidth / UM.ActiveTool.properties.ScaleX));
@@ -181,11 +201,12 @@ Item
         }
         TextField
         {
+            id: zPercentage
             width: UM.Theme.sizes.setting_control.width;
             height: UM.Theme.sizes.setting_control.height;
             property string unit: "%";
             style: UM.Theme.styles.text_field;
-            text: UM.ActiveTool.properties.ScaleZ * 100;
+            text: base.getPercentage(UM.ActiveTool.properties.ScaleZ)
             validator: DoubleValidator
             {
                 bottom: 100 * (0.1 / (UM.ActiveTool.properties.ObjectDepth / UM.ActiveTool.properties.ScaleZ));
@@ -196,11 +217,12 @@ Item
         }
         TextField
         {
+            id: yPercentage
             width: UM.Theme.sizes.setting_control.width;
             height: UM.Theme.sizes.setting_control.height;
             property string unit: "%";
             style: UM.Theme.styles.text_field;
-            text: UM.ActiveTool.properties.ScaleY * 100;
+            text: base.getPercentage(UM.ActiveTool.properties.ScaleY)
             validator: DoubleValidator
             {
                 bottom: 100 * (0.1 / (UM.ActiveTool.properties.ObjectHeight / UM.ActiveTool.properties.ScaleY))

@@ -86,9 +86,8 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
                 self._changed_setting = (key, value)
                 self._machine_manager.setActiveProfile(custom_profile)
                 return
-            self._ignore_setting_value_update = setting
+
             self._profile.setSettingValue(key, value)
-            self._ignore_setting_value_update = None
             self.setProperty(index, "value", str(value))
             self.setProperty(index, "valid", setting.validate(setting.parseValue(value)))
 

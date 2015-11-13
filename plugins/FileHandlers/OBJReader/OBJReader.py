@@ -8,6 +8,8 @@ import os
 import struct
 from UM.Scene.SceneNode import SceneNode
 
+from UM.Job import Job
+
 class OBJReader(MeshReader):
     def __init__(self):
         super(OBJReader, self).__init__()
@@ -47,6 +49,7 @@ class OBJReader(MeshReader):
                             if parts[1][1] and parts[idx+1][1] and parts[idx+2][1]:
                                 data += [int(parts[1][1]), int(parts[idx+1][1]), int(parts[idx+2][1])]
                         face_list.append(data)
+                Job.yieldThread()
             f.close()
 
             mesh.reserveVertexCount(3 * len(face_list))
@@ -97,6 +100,8 @@ class OBJReader(MeshReader):
 
                 if uk != -1:
                     mesh.setVertexUVCoordinates(mesh.getVertexCount() - 1, uv_list[uk][0], uv_list[uk][1])
+
+                Job.yieldThread()
             if not mesh.hasNormals():
                 mesh.calculateNormals(fast = True)
         return scene_node

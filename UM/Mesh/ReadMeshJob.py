@@ -32,7 +32,9 @@ class ReadMeshJob(Job):
         loading_message = Message(i18n_catalog.i18nc("@info:status", "Loading <filename>{0}</filename>", self._filename), lifetime = 0, dismissable = False)
         loading_message.setProgress(-1)
         loading_message.show()
-        time.sleep(0.1) # Yield to any other thread that might want to do something else.
+
+        Job.yieldThread() # Yield to any other thread that might want to do something else.
+
         try:
             begin_time = time.time()
             node = self._handler.read(self._filename)
