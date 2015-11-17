@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-12 12:24+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2015-09-30 11:41+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -21,32 +21,32 @@ msgstr ""
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Loading <filename>{0}</filename>"
-msgstr ""
+msgstr "<filename>{0}</filename> wird geladen"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Mesh/ReadMeshJob.py:41
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Failed to load <filename>{0}</filename>"
-msgstr ""
+msgstr "Laden von <filename>{0}</filename> fehlgeschlagen"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Mesh/ReadMeshJob.py:68
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled object to {0}% of original size"
-msgstr ""
+msgstr "Automatische Skalierung des Objekts auf {0}% der Originalgröße"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Mesh/ReadMeshJob.py:79
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Loaded <filename>{0}</filename>"
-msgstr ""
+msgstr "<filename>{0}</filename> wurde geladen"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/Bindings/SettingsFromCategoryModel.py:76
 #, python-brace-format
 msgctxt ""
 "@item:intext appended to customised profiles ({0} is old profile name)"
 msgid "{0} (Customised)"
-msgstr ""
+msgstr "{0} (Angepasst)"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/Bindings/ProfilesModel.py:78
 #, python-brace-format
@@ -54,31 +54,31 @@ msgctxt "@info:status"
 msgid ""
 "Failed to import profile from file <filename>{0}</filename>: <message>{1}</"
 "message>"
-msgstr ""
+msgstr "Import des Profils aus Datei <filename>{0}</filename> fehlgeschlagen: <message>{1}</message>"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/Bindings/ProfilesModel.py:81
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Successfully imported profile {0}"
-msgstr ""
+msgstr "Profil erfolgreich importiert {0}"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/Bindings/ProfilesModel.py:98
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
 "Failed to export profile to <filename>{0}</filename>: <message>{1}</message>"
-msgstr ""
+msgstr "Export des Profils nach <filename>{0}</filename> fehlgeschlagen: <message>{1}</message>"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/Bindings/ProfilesModel.py:101
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Exported profile to <filename>{0}</filename>"
-msgstr ""
+msgstr "Profil wurde nach <filename>{0}</filename> exportiert"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/Bindings/ProfilesModel.py:110
 msgctxt "@item:inlistbox"
 msgid "- Use Global Profile -"
-msgstr ""
+msgstr "- Globales Profil verwenden -"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:39
 #, fuzzy, python-brace-format
@@ -97,13 +97,13 @@ msgstr "Alle Dateien (*)"
 #, fuzzy
 msgctxt "@info:progress"
 msgid "Loading plugins..."
-msgstr "Plug-Ins werden geladen..."
+msgstr "Plugins werden geladen..."
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/QtApplication.py:82
 #, fuzzy
 msgctxt "@info:progress"
 msgid "Loading machines..."
-msgstr "Maschinen werden geladen..."
+msgstr "Geräte werden geladen..."
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/QtApplication.py:86
 #, fuzzy
@@ -117,13 +117,13 @@ msgctxt ""
 "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is "
 "minutes"
 msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
-msgstr "{0:0>2}T {1:0>2}:{2:0>2}"
+msgstr "{0:0>2}Tag {1:0>2}Stunde {2:0>2}Minute"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/Duration.py:93
 #, fuzzy, python-brace-format
 msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
 msgid "{0:0>2}h {1:0>2}min"
-msgstr "{0:0>2}:{1:0>2}"
+msgstr "{0:0>2}Stunde {1:0>2}Minute"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/Duration.py:96
 #, fuzzy, python-brace-format
@@ -148,18 +148,18 @@ msgstr "{0} Minuten"
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Settings/MachineDefinition.py:103
 msgctxt "@label"
 msgid "Unknown Manufacturer"
-msgstr ""
+msgstr "Unbekannter Hersteller"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Settings/MachineDefinition.py:104
 msgctxt "@label"
 msgid "Unknown Author"
-msgstr ""
+msgstr "Unbekannter Autor"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/ConsoleLogger/__init__.py:13
 #, fuzzy
 msgctxt "@label"
 msgid "Console Logger"
-msgstr "Dateiprotokoll"
+msgstr "Konsolen-Protokolleinrichtung"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/ConsoleLogger/__init__.py:16
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/FileLogger/__init__.py:16
@@ -172,7 +172,7 @@ msgstr "Gibt Protokoll-Informationen an die Konsole weiter."
 #, fuzzy
 msgctxt "@label"
 msgid "Wavefront OBJ Reader"
-msgstr "Wavefront OBJ-Datei"
+msgstr "Wavefront OBJ-Reader"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/FileHandlers/OBJReader/__init__.py:16
 #, fuzzy
@@ -191,7 +191,7 @@ msgstr "Wavefront OBJ-Datei"
 #, fuzzy
 msgctxt "@label"
 msgid "Wavefront OBJ Writer"
-msgstr "Wavefront OBJ-Datei"
+msgstr "Wavefront OBJ-Writer"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/FileHandlers/OBJWriter/__init__.py:16
 #, fuzzy
@@ -202,7 +202,7 @@ msgstr "Ermöglicht das Schreiben von Wavefront OBJ-Dateien."
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/FileHandlers/STLReader/__init__.py:12
 msgctxt "@label"
 msgid "STL Reader"
-msgstr ""
+msgstr "STL-Reader"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/FileHandlers/STLReader/__init__.py:15
 #, fuzzy
@@ -220,7 +220,7 @@ msgstr "STL-Datei"
 #, fuzzy
 msgctxt "@label"
 msgid "STL Writer"
-msgstr "STL-Datei"
+msgstr "STL-Writer"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/FileHandlers/STLWriter/__init__.py:16
 #, fuzzy
@@ -232,60 +232,60 @@ msgstr "Bietet Unterstützung für das Schreiben von STL-Dateien."
 #, fuzzy
 msgctxt "@item:inlistbox"
 msgid "STL File (Ascii)"
-msgstr "STL-Datei"
+msgstr "STL-Datei (ASCII)"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/FileHandlers/STLWriter/__init__.py:31
 #, fuzzy
 msgctxt "@item:inlistbox"
 msgid "STL File (Binary)"
-msgstr "STL-Datei"
+msgstr "STL-Datei (Binär)"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/FileLogger/__init__.py:13
 #, fuzzy
 msgctxt "@label"
 msgid "File Logger"
-msgstr "Dateiprotokoll"
+msgstr "Datei-Protokolleinrichtung"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/LocalFileOutputDevice/__init__.py:12
 #, fuzzy
 msgctxt "@label"
 msgid "Local File Output Device"
-msgstr "Lokale Dateispeicherung"
+msgstr "Lokales Dateiausgabegerät"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/LocalFileOutputDevice/__init__.py:13
 #, fuzzy
 msgctxt "@info:whatsthis"
 msgid "Enables saving to local files"
-msgstr "Bietet den Zugriff auf lokale Dateien."
+msgstr "Ermöglicht das Speichern als lokale Dateien."
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:43
 #, fuzzy
 msgctxt "@item:inmenu"
 msgid "Local File"
-msgstr "Lokale Dateispeicherung"
+msgstr "Lokale Datei"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:44
 #, fuzzy
 msgctxt "@action:button"
 msgid "Save to File"
-msgstr "Gespeichert unter {0}"
+msgstr "Als Datei speichern"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:45
 #, fuzzy
 msgctxt "@info:tooltip"
 msgid "Save to File"
-msgstr "Gespeichert unter {0}"
+msgstr "Als Datei speichern"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:50
 #, fuzzy
 msgctxt "@title:window"
 msgid "Save to File"
-msgstr "Gespeichert unter {0}"
+msgstr "Als Datei speichern"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:91
 msgctxt "@title:window"
 msgid "File Already Exists"
-msgstr ""
+msgstr "Datei bereits vorhanden"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:91
 #, python-brace-format
@@ -293,32 +293,32 @@ msgctxt "@label"
 msgid ""
 "The file <filename>{0}</filename> already exists. Are you sure you want to "
 "overwrite it?"
-msgstr ""
+msgstr "Die Datei <filename>{0}</filename> ist bereits vorhanden. Soll die Datei wirklich überschrieben werden?"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:111
 #, python-brace-format
 msgctxt "@info:progress"
 msgid "Saving to <filename>{0}</filename>"
-msgstr ""
+msgstr "Wird gespeichert unter <filename>{0}</filename>"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:117
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Permission denied when trying to save <filename>{0}</filename>"
-msgstr ""
+msgstr "Beim Versuch <filename>{0}</filename> zu speichern, wird der Zugriff verweigert"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:119
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:140
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
-msgstr ""
+msgstr "Konnte nicht als <filename>{0}</filename> gespeichert werden: <message>{1}</message>"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:134
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Saved to <filename>{0}</filename>"
-msgstr ""
+msgstr "Wurde als <filename>{0}</filename> gespeichert"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:135
 #, fuzzy
@@ -330,24 +330,24 @@ msgstr "Ordner öffnen"
 #, fuzzy
 msgctxt "@info:tooltip"
 msgid "Open the folder containing the file"
-msgstr "Öffnet den Ordner, welcher die gespeicherte Datei enthält"
+msgstr "Öffnet den Ordner, der die gespeicherte Datei enthält"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/Tools/CameraTool/__init__.py:12
 msgctxt "@label"
 msgid "Camera Tool"
-msgstr ""
+msgstr "Kamera-Tool"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/Tools/CameraTool/__init__.py:15
 #, fuzzy
 msgctxt "@info:whatsthis"
 msgid "Provides the tool to manipulate the camera."
-msgstr "Stellt das Werkzeug für die Manipulation der Kamera zur Verfügung."
+msgstr "Stellt das Werkzeug zur Bedienung der Kamera zur Verfügung."
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/Tools/MirrorTool/__init__.py:12
 #, fuzzy
 msgctxt "@label"
 msgid "Mirror Tool"
-msgstr "Spiegeln"
+msgstr "Spiegel-Werkzeug"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/Tools/MirrorTool/__init__.py:15
 #, fuzzy
@@ -370,35 +370,35 @@ msgstr "Objekt spiegeln"
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/Tools/PerObjectSettingsTool/__init__.py:12
 msgctxt "@label"
 msgid "Per Object Settings Tool"
-msgstr ""
+msgstr "Werkzeug „Einstellungen für einzelne Objekte“"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/Tools/PerObjectSettingsTool/__init__.py:15
 #, fuzzy
 msgctxt "@info:whatsthis"
 msgid "Provides the Per Object Settings."
-msgstr "Stellt das Auswahl-Werkzeug zur Verfügung."
+msgstr "Stellt das Werkzeug „Einstellungen für einzelne Objekte“ zur Verfügung."
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/Tools/PerObjectSettingsTool/__init__.py:19
 msgctxt "@label"
 msgid "Per Object Settings"
-msgstr ""
+msgstr "Einstellungen für einzelne Objekte"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/Tools/PerObjectSettingsTool/__init__.py:20
 msgctxt "@info:tooltip"
 msgid "Configure Per Object Settings"
-msgstr ""
+msgstr "Per Objekteinstellungen konfigurieren"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/Tools/RotateTool/__init__.py:12
 #, fuzzy
 msgctxt "@label"
 msgid "Rotate Tool"
-msgstr "Drehen"
+msgstr "Drehen-Werkzeug"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/Tools/RotateTool/__init__.py:15
 #, fuzzy
 msgctxt "@info:whatsthis"
 msgid "Provides the Rotate tool."
-msgstr "Stellt das Dreh-Werkzeug zur Verfügung."
+msgstr "Stellt das Drehen-Werkzeug zur Verfügung."
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/Tools/RotateTool/__init__.py:19
 #, fuzzy
@@ -416,7 +416,7 @@ msgstr "Objekt drehen"
 #, fuzzy
 msgctxt "@label"
 msgid "Scale Tool"
-msgstr "Skalieren"
+msgstr "Skalier-Werkzeug"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/Tools/ScaleTool/__init__.py:16
 #, fuzzy
@@ -440,7 +440,7 @@ msgstr "Objekt skalieren"
 #, fuzzy
 msgctxt "@label"
 msgid "Selection Tool"
-msgstr "Stellt das Auswahl-Werkzeug zur Verfügung."
+msgstr "Auswahl-Wrkzeug"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/Tools/SelectionTool/__init__.py:16
 #, fuzzy
@@ -452,13 +452,13 @@ msgstr "Stellt das Auswahl-Werkzeug zur Verfügung."
 #, fuzzy
 msgctxt "@label"
 msgid "Translate Tool"
-msgstr "Übersetzen"
+msgstr "Übersetzen-Werkzeug"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/Tools/TranslateTool/__init__.py:16
 #, fuzzy
 msgctxt "@info:whatsthis"
 msgid "Provides the Translate tool."
-msgstr "Stellt das Übersetzungs-Werkzeug zur Verfügung."
+msgstr "Stellt das Übersetzen-Werkzeug zur Verfügung."
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/Tools/TranslateTool/__init__.py:20
 #, fuzzy
@@ -487,12 +487,12 @@ msgstr "Eine neue Version ist verfügbar!"
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/UpdateChecker/UpdateChecker.py:74
 msgctxt "@action:button"
 msgid "Download"
-msgstr ""
+msgstr "Download"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/UpdateChecker/__init__.py:12
 msgctxt "@label"
 msgid "Update Checker"
-msgstr ""
+msgstr "Update-Prüfer"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/UpdateChecker/__init__.py:15
 #, fuzzy
@@ -503,13 +503,13 @@ msgstr "Sucht nach Software-Updates."
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/Views/MeshView/__init__.py:12
 msgctxt "@label"
 msgid "Mesh View"
-msgstr ""
+msgstr "Mesh-Ansicht"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/Views/MeshView/__init__.py:15
 #, fuzzy
 msgctxt "@info:whatsthis"
 msgid "Provides a normal solid mesh view."
-msgstr "Bietet eine normale, solide Netz-Ansicht."
+msgstr "Bietet eine normale, solide Mesh-Ansicht."
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/Views/MeshView/__init__.py:19
 #, fuzzy
@@ -521,7 +521,7 @@ msgstr "Solide"
 #, fuzzy
 msgctxt "@label"
 msgid "Wireframe View"
-msgstr "Drahtmodell"
+msgstr "Drahtmodell-Ansicht"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/Views/WireframeView/__init__.py:16
 #, fuzzy
@@ -532,18 +532,18 @@ msgstr "Bietet eine einfache Drahtmodell-Ansicht"
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:16
 msgctxt "@title:window"
 msgid "Confirm Remove"
-msgstr ""
+msgstr "Entfernen bestätigen"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:17
 #, fuzzy
 msgctxt "@label (%1 is object name)"
 msgid "Are you sure you wish to remove %1? This cannot be undone!"
-msgstr "Möchten Sie die Maschine wirklich entfernen?"
+msgstr "Möchten Sie %1 wirklich entfernen? Dies kann nicht rückgängig gemacht werden!"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Preferences/ManagementPage.qml:47
 msgctxt "@action:button"
 msgid "Add"
-msgstr ""
+msgstr "Hinzufügen"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Preferences/ManagementPage.qml:54
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Settings/SettingsConfigurationPage.qml:52
@@ -555,7 +555,7 @@ msgstr "Entfernen"
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Preferences/ManagementPage.qml:61
 msgctxt "@action:button"
 msgid "Rename"
-msgstr ""
+msgstr "Umbenennen"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:18
 #, fuzzy
@@ -585,79 +585,79 @@ msgstr "Allgemein"
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:98
 msgctxt "@title:tab"
 msgid "Settings"
-msgstr ""
+msgstr "Einstellungen"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:99
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:12
 #, fuzzy
 msgctxt "@title:tab"
 msgid "Machines"
-msgstr "Maschine"
+msgstr "Maschinen"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:100
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:14
 msgctxt "@title:tab"
 msgid "Profiles"
-msgstr ""
+msgstr "Profile"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:101
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:17
 #, fuzzy
 msgctxt "@title:tab"
 msgid "Plugins"
-msgstr "Plug-Ins"
+msgstr "Plugins"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:18
 msgctxt "@title:window"
 msgid "Rename"
-msgstr ""
+msgstr "Umbenennen"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:28
 msgctxt "@label"
 msgid "Type"
-msgstr ""
+msgstr "Typ"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:31
 msgctxt "@label"
 msgid "Variant"
-msgstr ""
+msgstr "Variante"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:24
 msgctxt "@action:button"
 msgid "Import"
-msgstr ""
+msgstr "Import"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:31
 msgctxt "@action:button"
 msgid "Export"
-msgstr ""
+msgstr "Export"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:56
 msgctxt "@title:window"
 msgid "Import Profile"
-msgstr ""
+msgstr "Profil importieren"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:58
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:68
 msgctxt "@item:inlistbox"
 msgid "Cura Profiles (*.curaprofile)"
-msgstr ""
+msgstr "Cura-Profile (*.curaprofile)"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:66
 msgctxt "@title:window"
 msgid "Export Profile"
-msgstr ""
+msgstr "Profil exportieren"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityPage.qml:11
 #, fuzzy
 msgctxt "@title:tab"
 msgid "Setting Visibility"
-msgstr "Sichtbarkeit der Einstellung konfigurieren..."
+msgstr "Sichtbarkeit einstellen"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityPage.qml:27
 msgctxt "@label:textbox"
 msgid "Filter..."
-msgstr ""
+msgstr "Wird gefiltert..."
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:88
 #, fuzzy
@@ -687,32 +687,32 @@ msgstr "Version:"
 #, fuzzy
 msgctxt "@title:tab"
 msgid "Machine"
-msgstr "Maschine"
+msgstr "Gerät"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Settings/SettingsConfigurationPage.qml:29
 #, fuzzy
 msgctxt "@label:listbox"
 msgid "Active Machine:"
-msgstr "Aktive Maschine:"
+msgstr "Aktives Gerät:"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Settings/SettingsConfigurationPage.qml:112
 #, fuzzy
 msgctxt "@title:window"
 msgid "Confirm Machine Deletion"
-msgstr "Löschen der Maschine bestätigen"
+msgstr "Löschen des Geräts bestätigen"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Settings/SettingsConfigurationPage.qml:114
 #, fuzzy
 msgctxt "@label"
 msgid "Are you sure you wish to remove the machine?"
-msgstr "Möchten Sie die Maschine wirklich entfernen?"
+msgstr "Möchten Sie das Gerät wirklich entfernen?"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Settings/SettingView.qml:79
 msgctxt "@label"
 msgid "{0} hidden setting uses a custom value"
 msgid_plural "{0} hidden settings use custom values"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{0} ausgeblendete Einstellung verwendet einen benutzerdefinierten Wert"
+msgstr[1] "{0} ausgeblendete Einstellungen verwenden benutzerdefinierte Werte"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Settings/SettingView.qml:165
 #, fuzzy
@@ -724,49 +724,49 @@ msgstr "Diese Einstellung ausblenden"
 #, fuzzy
 msgctxt "@action:menu"
 msgid "Configure setting visiblity..."
-msgstr "Sichtbarkeit der Einstellung konfigurieren..."
+msgstr "Sichtbarkeit der Einstellung wird konfiguriert..."
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Wizard.qml:176
 msgctxt "@action:button"
 msgid "Back"
-msgstr ""
+msgstr "Zurück"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Wizard.qml:192
 #, fuzzy
 msgctxt "@action:button"
 msgid "Finish"
-msgstr "Finnisch"
+msgstr "Beenden"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Wizard.qml:192
 msgctxt "@action:button"
 msgid "Next"
-msgstr ""
+msgstr "Weiter"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/UM/Qt/qml/UM/Wizard.qml:211
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/Tools/PerObjectSettingsTool/PerObjectSettingsPanel.qml:263
 msgctxt "@action:button"
 msgid "Cancel"
-msgstr ""
+msgstr "Abbrechen"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/Tools/PerObjectSettingsTool/PerObjectSettingsPanel.qml:63
 msgctxt "@label"
 msgid "Profile"
-msgstr ""
+msgstr "Profil"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/Tools/PerObjectSettingsTool/PerObjectSettingsPanel.qml:119
 msgctxt "@action:button"
 msgid "Customize Settings"
-msgstr ""
+msgstr "Einstellungen anpassen"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/Tools/PerObjectSettingsTool/PerObjectSettingsPanel.qml:152
 msgctxt "@info:tooltip"
 msgid "Customise settings for this object"
-msgstr ""
+msgstr "Einstellungen für dieses Objekt anpassen"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/Tools/PerObjectSettingsTool/PerObjectSettingsPanel.qml:187
 msgctxt "@title:window"
 msgid "Pick a Setting to Customize"
-msgstr ""
+msgstr "Wähle eine Einstellung zum Anpassen"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/Tools/RotateTool/RotateTool.qml:19
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/Tools/ScaleTool/ScaleTool.qml:22
@@ -779,7 +779,7 @@ msgstr "Zurücksetzen"
 #, fuzzy
 msgctxt "@info:tooltip"
 msgid "Reset the rotation of the current selection."
-msgstr "Setzt die Rotation der aktuellen Auswahl zurück."
+msgstr "Drehung der aktuellen Auswahl zurücksetzen."
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/Tools/RotateTool/RotateTool.qml:36
 #, fuzzy
@@ -791,13 +791,13 @@ msgstr "Snap-Drehung"
 #, fuzzy
 msgctxt "@info:tooltip"
 msgid "Reset the scaling of the current selection."
-msgstr "Setzt die Skalierung der aktuellen Auswahl zurück."
+msgstr "Skalierung der aktuellen Auswahl zurücksetzen."
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/Tools/ScaleTool/ScaleTool.qml:37
 #, fuzzy
 msgctxt "@action:button"
 msgid "Scale to Max"
-msgstr "Auf Max. skalieren"
+msgstr "Auf Maximum skalieren"
 
 #: /home/ahiemstra/dev/15.10/src/uranium/plugins/Tools/ScaleTool/ScaleTool.qml:40
 #, fuzzy

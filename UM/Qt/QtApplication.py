@@ -62,7 +62,7 @@ class QtApplication(QApplication, Application, SignalEmitter):
         self.setAttribute(Qt.AA_UseDesktopOpenGL)
 
         try:
-            self._splash = QSplashScreen(QPixmap(Resources.getPath(Resources.Images, self.getApplicationName() + ".png")))
+            self._splash = self._createSplashScreen()
         except FileNotFoundError:
             self._splash = None
         else:
@@ -232,6 +232,9 @@ class QtApplication(QApplication, Application, SignalEmitter):
         if self._splash:
             self._splash.close()
             self._splash = None
+
+    def _createSplashScreen(self):
+        return QSplashScreen(QPixmap(Resources.getPath(Resources.Images, self.getApplicationName() + ".png")))
 
     def _getDefaultLanguage(self, file):
         # If we have a language override set in the environment, try and use that.

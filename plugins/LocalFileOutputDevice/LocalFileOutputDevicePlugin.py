@@ -46,7 +46,12 @@ class LocalFileOutputDevice(OutputDevice):
         self.setDescription(catalog.i18nc("@info:tooltip", "Save to File"))
         self.setIconName("save")
 
+        self._writing = False
+
     def requestWrite(self, node, file_name = None):
+        if self._writing:
+            raise OutputDeviceError.DeviceBusyError()
+
         dialog = QFileDialog()
         dialog.setWindowTitle(catalog.i18nc("@title:window", "Save to File"))
         dialog.setFileMode(QFileDialog.AnyFile)
@@ -117,6 +122,7 @@ class LocalFileOutputDevice(OutputDevice):
             message.show()
 
             job._message = message
+            self._writing = True
             job.start()
         except PermissionError as e:
             raise OutputDeviceError.PermissionDeniedError(catalog.i18nc("@info:status", "Permission denied when trying to save <filename>{0}</filename>").format(file_name)) from e
@@ -133,6 +139,7 @@ class LocalFileOutputDevice(OutputDevice):
             job._message.hide()
             job._message = None
 
+        self._writing = False
         self.writeFinished.emit(self)
         if job.getResult():
             self.writeSuccess.emit(self)
