@@ -32,6 +32,7 @@ CheckBox
     MouseArea {
         anchors.fill: parent;
         onClicked: valueChanged(!checked);
+        cursorShape: Qt.PointingHandCursor;
     }
 
     style: CheckBoxStyle
