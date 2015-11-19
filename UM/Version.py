@@ -8,9 +8,14 @@ class Version(object):
             version_list = version.split(".")
         except AttributeError:
             version_list = version
-        self._major = int(version_list[0])
-        self._minor = int(version_list[1])
-        self._revision = int(version_list[2])
+        #Helps to test the changelog when in master
+        #if version_list[0] == 'master':
+            #self._major = 0
+            #self._minor = 0
+        else:
+            self._major = int(version_list[0])
+            self._minor = int(version_list[1])
+            self._revision = int(version_list[2])
 
     def getMajor(self):
         return self._major
