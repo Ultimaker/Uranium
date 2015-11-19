@@ -55,7 +55,7 @@ CheckBox
                 }
             }
             border.width: itemStyle.controlBorderWidth;
-            border.color: itemStyle.controlBorderColor;
+            border.color: control.hovered ? itemStyle.controlBorderHighlightColor : itemStyle.controlBorderColor;
 
             UM.RecolorImage {
                 anchors.verticalCenter: parent.verticalCenter
