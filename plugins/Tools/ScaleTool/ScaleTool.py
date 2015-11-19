@@ -57,9 +57,8 @@ class ScaleTool(Tool):
                 node.boundingBoxChanged.disconnect(self.propertyChanged)
 
         if event.type == Event.KeyPressEvent:
-            #TODO the shiftkey somehow doesn't work
             if event.key == KeyEvent.ShiftKey:
-                self._lock_steps = False
+                self._snap_scale = False
                 self.propertyChanged.emit()
             elif event.key == KeyEvent.ControlKey:
                 self._non_uniform_scale = True
@@ -67,7 +66,7 @@ class ScaleTool(Tool):
 
         if event.type == Event.KeyReleaseEvent:
             if event.key == KeyEvent.ShiftKey:
-                self._lock_steps = True
+                self._snap_scale = True
                 self.propertyChanged.emit()
             elif event.key == KeyEvent.ControlKey:
                 self._non_uniform_scale = False
