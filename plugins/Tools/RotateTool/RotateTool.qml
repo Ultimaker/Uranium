@@ -21,7 +21,7 @@ Item
         //: Reset Rotation tool button tooltip
         tooltip: catalog.i18nc("@info:tooltip","Reset the rotation of the current selection.");
 
-        style: UM.Theme.styles.tool_button;
+        style: UM.Theme.styles.tool_button_panel;
 
         onClicked: UM.ActiveTool.triggerAction("resetRotation");
     }
