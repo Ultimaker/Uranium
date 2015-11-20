@@ -15,6 +15,8 @@ class SettingOverrideDecorator(SceneNodeDecorator, SignalEmitter):
         self._settings = {}
         self._setting_values = {}
 
+        self._temp_values = {}
+
     settingAdded = Signal()
     settingRemoved = Signal()
     settingValueChanged = Signal()
@@ -23,18 +25,20 @@ class SettingOverrideDecorator(SceneNodeDecorator, SignalEmitter):
         return self._settings
 
     def getAllSettingValues(self):
-        values = {}
+        self._temp_values = {}
 
         settings = Application.getInstance().getMachineManager().getActiveMachineInstance().getMachineDefinition().getAllSettings(include_machine = False)
         for setting in settings:
             key = setting.getKey()
 
             if key in self._setting_values:
-                values[key] = setting.parseValue(self._setting_values[key])
+                self._temp_values[key] = setting.parseValue(self._setting_values[key])
                 continue
 
-            values[key] = setting.getDefaultValue(self)
+            self._temp_values[key] = setting.getDefaultValue(self)
 
+        values = self._temp_values
+        self._temp_values = {}
         return values
 
     def addSetting(self, key):
@@ -70,11 +74,14 @@ class SettingOverrideDecorator(SceneNodeDecorator, SignalEmitter):
             return self._settings[key]
 
     def getSettingValue(self, key):
-        if key not in self._settings:
+        if key not in self._settings and key not in self._temp_values:
             if self.getNode().callDecoration("getProfile"):
                 return self.getNode().callDecoration("getProfile").getSettingValue(key)
 
             return Application.getInstance().getMachineManager().getActiveProfile().getSettingValue(key)
+
+        if key in self._temp_values:
+            return self._temp_values[key]
 
         setting = self._settings[key]
 
