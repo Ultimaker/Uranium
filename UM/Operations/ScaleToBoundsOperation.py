@@ -3,24 +3,48 @@
 
 from UM.Operations.Operation import Operation
 from UM.Math.Vector import Vector
+from UM.Application import Application
 
 ##  Operation subclass that will scale a node to fit within the bounds provided.
 class ScaleToBoundsOperation(Operation):
     def __init__(self, node, bounds):
         super().__init__()
 
-        #StartingPoint: get the old scale, boundingbox and largest dimension
+        #StartingPoint: get the old scale, active machine & active profile
         self._node = node
         self._old_scale = node.getScale()
+        machine = Application.getInstance().getMachineManager().getActiveMachineInstance()
+        profile = Application.getInstance().getMachineManager().getActiveProfile()
 
-        #Get the sizes of the boundingbox but substract the disallowed area's
+        #Calculate the size of the outer ribbon -> this is the outer area of the build plate where you can't print anything
+        #The size is dependant on adhesion type, sizes, etc.
+        outer_ribbon_size = 0.0
+        adhesion_type = profile.getSettingValue("adhesion_type")
+        if adhesion_type == "skirt":
+            skirt_distance = profile.getSettingValue("skirt_gap")
+            skirt_line_count = profile.getSettingValue("skirt_line_count")
+            outer_ribbon_size = skirt_distance + (skirt_line_count * profile.getSettingValue("skirt_line_width"))
+        elif adhesion_type == "brim":
+            brim_line_count = profile.getSettingValue("brim_line_count")
+            outer_ribbon_size = brim_line_count * profile.getSettingValue("skirt_line_width")
+        elif adhesion_type == "raft":
+            outer_ribbon_size = profile.getSettingValue("raft_margin") + 1
+
+        if profile.getSettingValue("draft_shield_enabled"):
+            outer_ribbon_size += profile.getSettingValue("draft_shield_dist")
+
+        outer_ribbon_size += profile.getSettingValue("xy_offset")
+
+        #calculate the sizes of the printable area
+        printable_area_width = machine.getMachineSettingValue("machine_width") - (outer_ribbon_size * 2) - 2
+        printable_area_depth = machine.getMachineSettingValue("machine_depth") - (outer_ribbon_size * 2) - 2 #substract an extra 2 because else in some cases it slightly touches the non-printable are probably rounding differences
+        printable_area_height = machine.getMachineSettingValue("machine_height")
+
+        #Get the boundingbox of the mesh and check which of its dimensions is biggest.
         bbox = self._node.getBoundingBox()
-        printable_area_width = bounds.width
-        printable_area_depth  =  bounds.depth
-        printable_area_height = bounds.height
         largest_dimension = max(bbox.width, bbox.height, bbox.depth)
 
-        #Get the maximum scale factor by deviding the the size of the bounding box by the largest dimension
+        #Get the maximum scale factor by dividing the size of the bounding box by the largest dimension
         scale_factor = 1.0
         if largest_dimension == bbox.depth:
             scale_factor = printable_area_depth / bbox.depth
