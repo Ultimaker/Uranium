@@ -17,6 +17,12 @@ Button {
     property variant color;
     style: UM.Theme.styles.sidebar_category;
 
+    MouseArea {
+        anchors.fill: parent
+        cursorShape: Qt.PointingHandCursor
+        acceptedButtons: Qt.NoButton
+    }
+
     Button{
         id: settingsButton
         visible: base.hovered || settingsButton.hovered
@@ -40,6 +46,11 @@ Button {
         onClicked: {
             preferences.visible = true;
             preferences.setPage(2);
+        }
+        MouseArea {
+            anchors.fill: parent
+            cursorShape: Qt.PointingHandCursor
+            acceptedButtons: Qt.NoButton
         }
     }
 }
