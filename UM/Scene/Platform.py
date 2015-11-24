@@ -8,6 +8,8 @@ from UM.View.Renderer import Renderer
 from UM.Resources import Resources
 from UM.Math.Vector import Vector
 
+from UM.View.GL.OpenGL import OpenGL
+
 class Platform(SceneNode.SceneNode):
     def __init__(self, parent):
         super().__init__(parent)
@@ -22,15 +24,7 @@ class Platform(SceneNode.SceneNode):
 
     def render(self, renderer):
         if not self._material:
-            self._material = renderer.createMaterial(
-                Resources.getPath(Resources.Shaders, "default.vert"),
-                Resources.getPath(Resources.Shaders, "platform.frag")
-            )
-            self._material.setUniformValue("u_ambientColor", [0.3, 0.3, 0.3, 1.0])
-            self._material.setUniformValue("u_diffuseColor", [1.0, 1.0, 1.0, 1.0])
-            self._material.setUniformValue("u_opacity", 0.5)
-            if self._texture:
-                self._material.setUniformTexture("u_texture", Resources.getPath(Resources.Images, self._texture))
+            self._material = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "platform.shader"))
 
         if self.getMeshData():
             renderer.queueNode(self, material = self._material, transparent = True)
@@ -52,8 +46,8 @@ class Platform(SceneNode.SceneNode):
             self.setMeshData(meshData)
             self._texture = self._machine_instance.getMachineDefinition().getPlatformTexture()
 
-            if self._material and self._texture:
-                self._material.setUniformTexture("u_texture", Resources.getPath(Resources.Images, self._texture))
+            #if self._material and self._texture:
+                #self._material.setUniformTexture("u_texture", Resources.getPath(Resources.Images, self._texture))
 
             offset = self._machine_instance.getSettingValue("machine_platform_offset")
             if offset:
