@@ -3,10 +3,10 @@
 
 import configparser
 
-class InvalidMaterialError(Exception):
+class InvalidShaderProgramError(Exception):
     pass
 
-class Material:
+class ShaderProgram:
     def __init__(self):
         self._bindings = {}
         self._attribute_bindings = {}
@@ -16,10 +16,10 @@ class Material:
         parser.read(file_name)
 
         if not "shaders" in parser:
-            raise InvalidMaterialError("{0} is missing a vertex of fragment shader".format(file_name))
+            raise InvalidShaderProgramError("{0} is missing a vertex of fragment shader".format(file_name))
 
         if not "vertex" in parser["shaders"] or not "fragment" in parser["shaders"]:
-            raise InvalidMaterialError("{0} is missing a vertex of fragment shader".format(file_name))
+            raise InvalidShaderProgramError("{0} is missing a vertex of fragment shader".format(file_name))
 
         self.setVertexShader(parser["shaders"]["vertex"])
         self.setFragmentShader(parser["shaders"]["fragment"])

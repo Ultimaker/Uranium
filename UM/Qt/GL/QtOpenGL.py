@@ -12,7 +12,7 @@ from UM.View.GL.OpenGL import OpenGL
 
 from . import QtFrameBufferObject
 from . import QtTexture
-from . import QtMaterial
+from . import QtShaderProgram
 
 class QtOpenGL(OpenGL):
     def __init__(self):
@@ -65,8 +65,8 @@ class QtOpenGL(OpenGL):
     def createTexture(self, width, height):
         return QtTexture.QtTexture(width, height)
 
-    def createMaterial(self, file_name):
-        mat = QtMaterial.QtMaterial()
-        mat.load(file_name)
-        mat.build()
-        return mat
+    def createShaderProgram(self, file_name):
+        shader = QtShaderProgram.QtShaderProgram()
+        shader.load(file_name)
+        shader.build()
+        return shader

@@ -20,10 +20,6 @@ class Renderer():
     def __init__(self):
         super().__init__()
 
-    ##  Create an instance of a renderer-specific subclass of Material
-    def createMaterial(self):
-        raise NotImplementedError()
-
     ##  Signal the beginning of the rendering process.
     #
     #   This should set up any required state before any actual rendering happens.

@@ -29,7 +29,7 @@ class OpenGL:
     def createTexture(self, width, height):
         raise NotImplementedError("Should be implemented by subclasses")
 
-    def createMaterial(self, file_name):
+    def createShaderProgram(self, file_name):
         raise NotImplementedError("Should be implemented by subclasses")
 
     @classmethod
