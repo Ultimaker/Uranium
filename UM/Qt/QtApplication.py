@@ -13,7 +13,7 @@ from PyQt5.QtGui import QGuiApplication, QPixmap
 from PyQt5.QtCore import QTimer
 
 from UM.Application import Application
-from UM.Qt.QtGL2Renderer import QtGL2Renderer
+from UM.Qt.QtRenderer import QtRenderer
 from UM.Qt.Bindings.Bindings import Bindings
 from UM.JobQueue import JobQueue
 from UM.Signal import Signal, SignalEmitter
@@ -133,7 +133,7 @@ class QtApplication(QApplication, Application, SignalEmitter):
 
     def getRenderer(self):
         if not self._renderer:
-            self._renderer = QtGL2Renderer()
+            self._renderer = QtRenderer()
 
         return self._renderer
 

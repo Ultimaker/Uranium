@@ -14,7 +14,9 @@ from UM.Scene.Selection import Selection
 from UM.Scene.PointCloudNode import PointCloudNode
 from UM.Math.Color import Color
 
-from . import QtGL2Material
+from UM.View.CompositePass import CompositePass
+from UM.View.GL.OpenGL import OpenGL
+from UM.Qt.GL.QtOpenGL import QtOpenGL
 
 import numpy
 import copy
@@ -24,7 +26,7 @@ vertexBufferProperty = "__qtgl2_vertex_buffer"
 indexBufferProperty = "__qtgl2_index_buffer"
 
 ##  A Renderer implementation using OpenGL2 to render.
-class QtGL2Renderer(Renderer):
+class QtRenderer(Renderer):
     def __init__(self):
         super().__init__()
 
@@ -47,10 +49,8 @@ class QtGL2Renderer(Renderer):
         self._transparent_queue = []
         self._overlay_queue = []
 
-        self._render_selection = True
-        self._selection_buffer = None
-        self._selection_map = {}
-        self._selection_image = None
+        self._render_passes = []
+        self._composite_pass = None
 
         self._camera = None
 
@@ -58,30 +58,6 @@ class QtGL2Renderer(Renderer):
         # Standard assumption for screen pixel density is 96 DPI. We use that as baseline to get
         # a multiplication factor we can use for screens > 96 DPI.
         return round(Application.getInstance().primaryScreen().physicalDotsPerInch() / 96.0)
-
-    ##  Create a new material
-    #   \param vert
-    #   \param frag
-    #   \return material
-    def createMaterial(self, vert, frag):
-        mat = QtGL2Material.QtGL2Material(self)
-        mat.loadVertexShader(vert)
-        mat.loadFragmentShader(frag)
-        mat.build()
-        return mat
-    
-    ##  Create frame buffer with given width/height
-    #   \param width Width of buffer
-    #   \param height Height of buffer
-    #   \return Created frame buffer
-    def createFrameBuffer(self, width, height):
-        buffer_format = QOpenGLFramebufferObjectFormat()
-        buffer_format.setAttachment(QOpenGLFramebufferObject.Depth)
-        return QOpenGLFramebufferObject(width, height, buffer_format)
-
-    ##  Set light position of global light
-    def setLightPosition(self, position):
-        self._light_position = position
     
     ##  Set background color of the rendering.
     def setBackgroundColor(self, color):
@@ -94,71 +70,6 @@ class QtGL2Renderer(Renderer):
     def setWindowSize(self, width, height):
         self._window_width = width
         self._window_height = height
-        
-    ##  Reset the selection image, so a redraw is forced.
-    #   This is used when the scene is changed by delete actions, so the image needs to be redrawn.
-    #   It can happen that mouse events fire much faster than rendering, which can cause problems 
-    #   if the old selection image is still used.
-    def resetSelectionImage(self):
-        self._selection_image = None
-    
-    ##  Get the selection colors within a radius.
-    #   All objects (either full objects or single points in a cloud are drawn with an unique color.
-    #   \param x from -1 to 1
-    #   \param y from -1 to 1
-    #   \param radius Radius in pixels to select.
-    #   \return list of colors ARGB (values from 0 to 1.)
-    def getSelectionColorAtCoorindateRadius(self,x,y,radius):
-        if not self._selection_image:
-            return None
-        px = (0.5 + x / 2.0) * self._viewport_width
-        py = (0.5 + y / 2.0) * self._viewport_height
-        squared_radius = radius * radius
-        samples = []
-        for sx in range(-radius, radius):
-            squared_sx = sx*sx
-            if px + sx < 0 or px + sx > (self._selection_image.width() - 1):
-                continue
-            for sy in range(-radius, radius):
-                squared_sy = sy * sy
-                if py + sy < 0 or py + sy > (self._selection_image.height() - 1):
-                    continue
-                if squared_sx + squared_sy < squared_radius:
-                    pixel = self._selection_image.pixel(px + sx, py + sy)
-                    samples.append(Color.fromARGB(pixel))
-        return samples
-    
-    ##  Get the selection colors on coordinate
-    #   All objects (either full objects or single points in a cloud are drawn with an unique color.
-    #   \param x from -1 to 1
-    #   \param y from -1 to 1
-    #   \return color ARGB (values from 0 to 1.)
-    def getSelectionColorAtCoordinate(self,x,y):
-        if not self._selection_image:
-            return None
-        px = (0.5 + x / 2.0) * self._viewport_width
-        py = (0.5 + y / 2.0) * self._viewport_height
-        return Color.fromARGB(self._selection_image.pixel(px,py))
-    
-    ##  Get object ID at coordinate. 
-    #   \param x from -1 to 1
-    #   \param y from -1 to 1
-    def getIdAtCoordinate(self, x, y):
-        if not self._selection_image:
-            return None
-
-        px = (0.5 + x / 2.0) * self._window_width
-        py = (0.5 + y / 2.0) * self._window_height
-
-        if px < 0 or px > (self._selection_image.width() - 1) or py < 0 or py > (self._selection_image.height() - 1):
-            return None
-
-        pixel = self._selection_image.pixel(px, py)
-        return self._selection_map.get(Color.fromARGB(pixel), None)
-
-    ##  Render selection is used to 'highlight' the selected objects
-    def setRenderSelection(self, render):
-        self._render_selection = render
 
     def beginRendering(self):
         if not self._initialized:
@@ -168,15 +79,6 @@ class QtGL2Renderer(Renderer):
         self._gl.glClearColor(self._background_color.redF(), self._background_color.greenF(), self._background_color.blueF(), self._background_color.alphaF())
         self._gl.glClear(self._gl.GL_COLOR_BUFFER_BIT | self._gl.GL_DEPTH_BUFFER_BIT)
 
-        if not QOpenGLContext.currentContext().format().renderableType() == QSurfaceFormat.OpenGLES:
-            self._gl.glPointSize(2)
-
-        self._solids_queue.clear()
-        self._transparent_queue.clear()
-        self._overlay_queue.clear()
-
-        self._render_selection = True
-   
     ##  Put a node in the render queue
     def queueNode(self, node, **kwargs):
         queue_item = { "node": node }
@@ -338,36 +240,12 @@ class QtGL2Renderer(Renderer):
         pass
 
     def _initialize(self):
-        profile = QOpenGLVersionProfile()
-        profile.setVersion(2, 0)
-        self._gl = QOpenGLContext.currentContext().versionFunctions(profile)
-        self._gl.initializeOpenGLFunctions()
+        OpenGL.setInstance(QtOpenGL())
+        self._gl = OpenGL.getInstance().getBindingsObject()
 
-        self._default_material = self.createMaterial(
-                                     Resources.getPath(Resources.Shaders, "default.vert"),
-                                     Resources.getPath(Resources.Shaders, "default.frag")
-                                )
+        self._default_material = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "default.shader"))
 
-        self._default_material.setUniformValue("u_ambientColor", Color(0.3, 0.3, 0.3, 1.0))
-        self._default_material.setUniformValue("u_diffuseColor", Color(0.5, 0.5, 0.5, 1.0))
-        self._default_material.setUniformValue("u_specularColor", Color(0.7, 0.7, 0.7, 1.0))
-        self._default_material.setUniformValue("u_shininess", 20.)
-
-        self._selection_buffer = self.createFrameBuffer(128, 128)
-        self._selection_material = self.createMaterial(
-                                        Resources.getPath(Resources.Shaders, "basic.vert"),
-                                        Resources.getPath(Resources.Shaders, "color.frag")
-                                   )
-
-        self._handle_material = self.createMaterial(
-                                     Resources.getPath(Resources.Shaders, "basic.vert"),
-                                     Resources.getPath(Resources.Shaders, "vertexcolor.frag")
-                                )
-
-        self._outline_material = self.createMaterial(
-                                      Resources.getPath(Resources.Shaders, "outline.vert"),
-                                       Resources.getPath(Resources.Shaders, "outline.frag")
-                                 )
+        self._composite_pass = CompositePass("composite", 1280, 720)
 
         self._initialized = True
 
