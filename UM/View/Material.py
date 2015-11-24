@@ -1,20 +1,51 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
+import configparser
+
+class InvalidMaterialError(Exception):
+    pass
+
 class Material:
     def __init__(self):
-        pass
+        self._bindings = {}
+        self._attribute_bindings = {}
 
-    ##  Load the vertex shader from a file.
+    def load(self, file_name):
+        parser = configparser.ConfigParser()
+        parser.read(file_name)
+
+        if not "shaders" in parser:
+            raise InvalidMaterialError("{0} is missing a vertex of fragment shader".format(file_name))
+
+        if not "vertex" in parser["shaders"] or not "fragment" in parser["shaders"]:
+            raise InvalidMaterialError("{0} is missing a vertex of fragment shader".format(file_name))
+
+        self.setVertexShader(parser["shaders"]["vertex"])
+        self.setFragmentShader(parser["shaders"]["fragment"])
+
+        if "defaults" in parser:
+            for key, value in parser["defaults"].items():
+                self.setUniformValue(key, value, cache = True)
+
+        if "bindings" in parser:
+            for key, value in parser["bindings"].items():
+                self.addBinding(key, value)
+
+        if "attributes" in parser:
+            for key, value in parser["attributes"].items():
+                self.addAttributeBinding(key, value)
+
+    ##  Set the vertex shader to use.
     #
-    #   \param file \type{string} The filename to load the vertex shader from.
-    def loadVertexShader(self, file):
+    #   \param shader \type{string} The vertex shader to use.
+    def setVertexShader(self, shader):
         raise NotImplementedError()
 
     ##  Load the fragment shader from a file.
     #
-    #   \param file \type{string} The filename to load the fragment shader from.
-    def loadFragmentShader(self, file):
+    #   \param shader \type{string} The fragment shader to use.
+    def setFragmentShader(self, shader):
         raise NotImplementedError()
 
     ##  Build the complete shader program out of the separately loaded sources.
@@ -55,3 +86,26 @@ class Material:
     ##  Release the material so it will no longer be used for rendering.
     def release(self):
         raise NotImplementedError()
+
+    def addBinding(self, key, value):
+        self._bindings[key] = value
+
+    def removeBinding(self, key):
+        if key not in self._bindings:
+            return
+
+        del self._bindings[key]
+
+    def updateBindings(self, state):
+        for uniform, binding in self._bindings.items():
+            if binding in state:
+                self.setUniformValue(uniform, state[binding], cache = False)
+
+    def addAttributeBinding(self, key, value):
+        self._attribute_bindings[key] = value
+
+    def removeAttributeBinding(self, key):
+        if key not in self._attribute_bindings:
+            return
+
+        self._attribute_bindings.remove(key)
