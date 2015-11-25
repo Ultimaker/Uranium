@@ -24,6 +24,12 @@ Item
         style: UM.Theme.styles.tool_button_panel;
 
         onClicked: UM.ActiveTool.triggerAction("resetRotation");
+
+        MouseArea {
+            anchors.fill: parent
+            cursorShape: Qt.PointingHandCursor
+            acceptedButtons: Qt.NoButton
+        }
     }
 
     CheckBox
@@ -39,5 +45,11 @@ Item
 
         checked: UM.ActiveTool.properties.RotationSnap;
         onClicked: UM.ActiveTool.setProperty("RotationSnap", checked);
+
+        MouseArea {
+            anchors.fill: parent
+            cursorShape: Qt.PointingHandCursor
+            acceptedButtons: Qt.NoButton
+        }
     }
 }
