@@ -16,13 +16,13 @@ class RenderBatch():
         Points = 6
         Wireframe = 7
 
-    def __init__(self, kwargs**):
+    def __init__(self, **kwargs):
         self._render_type = kwargs.get("type", self.RenderType.Solid)
         self._render_mode = kwargs.get("mode", self.RenderMode.Triangles)
-        self._material = kwargs.get("material", None)
-        self._backface_cull = kwargs.get("backface_cull", True)]
+        self._shader = kwargs.get("shader", None)
+        self._backface_cull = kwargs.get("backface_cull", True)
         self._render_range = kwargs.get("range", None)
-        self._items = kwargs.get("items", [])
+        self._items = []
 
     @property
     def renderType(self):
