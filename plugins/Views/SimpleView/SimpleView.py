@@ -18,19 +18,19 @@ class SimpleView(View):
     def __init__(self):
         super().__init__()
 
-        self._material = None
+        self._shader = None
 
     def beginRendering(self):
         scene = self.getController().getScene()
         renderer = self.getRenderer()
 
-        if not self._material:
-            self._material = OpenGL.getInstance().createMaterial(Resources.getPath(Resources.Shaders, "object.shader"))
+        if not self._shader:
+            self._shader = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "object.shader"))
 
         for node in DepthFirstIterator(scene.getRoot()):
             if not node.render(renderer):
                 if node.getMeshData() and node.isVisible():
-                    renderer.queueNode(node, material = self._material)
+                    renderer.queueNode(node, material = self._shader)
 
     def endRendering(self):
         pass
