@@ -4,6 +4,7 @@
 import sys
 import ctypes
 
+from UM.Application import Application
 from UM.Logger import Logger
 from UM.Platform import Platform
 
@@ -70,6 +71,10 @@ class RenderPass:
         self._gl.glBindTexture(self._gl.GL_TEXTURE_2D, 0)
 
         return data
+
+    def renderBatches(self, **kwargs):
+        for batch in Application.getInstance().getRenderer().getBatches():
+            batch.render()
 
     ## private:
 
