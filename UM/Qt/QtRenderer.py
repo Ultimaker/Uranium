@@ -14,8 +14,10 @@ from UM.Scene.Selection import Selection
 from UM.Scene.PointCloudNode import PointCloudNode
 from UM.Math.Color import Color
 
+from UM.Mesh.MeshBuilder import MeshBuilder
 from UM.View.CompositePass import CompositePass
 from UM.View.GL.OpenGL import OpenGL
+from UM.View.RenderBatch import RenderBatch
 from UM.Qt.GL.QtOpenGL import QtOpenGL
 
 import numpy
@@ -45,12 +47,12 @@ class QtRenderer(Renderer):
         self._window_width = 0
         self._window_height = 0
 
-        self._solids_queue = []
-        self._transparent_queue = []
-        self._overlay_queue = []
+        self._batches = []
 
         self._render_passes = []
         self._composite_pass = None
+
+        self._quad_geometry = None
 
         self._camera = None
 
@@ -58,6 +60,12 @@ class QtRenderer(Renderer):
         # Standard assumption for screen pixel density is 96 DPI. We use that as baseline to get
         # a multiplication factor we can use for screens > 96 DPI.
         return round(Application.getInstance().primaryScreen().physicalDotsPerInch() / 96.0)
+
+    def getBatches(self):
+        return self._batches
+
+    def getRenderPasses(self):
+        return self._render_passes
     
     ##  Set background color of the rendering.
     def setBackgroundColor(self, color):
@@ -81,163 +89,213 @@ class QtRenderer(Renderer):
 
     ##  Put a node in the render queue
     def queueNode(self, node, **kwargs):
-        queue_item = { "node": node }
+        batch = RenderBatch(
+            type = kwargs.get("type", RenderBatch.RenderType.Solid),
+            mode = kwargs.get("mode", RenderBatch.RenderMode.Triangles),
+            shader = kwargs.get("shader", self._default_material),
+            backface_cull = kwargs.get("backface_cull", True),
+            range = kwargs.get("range", None)
+        )
 
-        if "mesh" in kwargs:
-            queue_item["mesh"] = kwargs["mesh"]
+        batch.addItem(node.getWorldTransformation(), kwargs.get("mesh", node.getMeshData()))
 
-        queue_item["material"] = kwargs.get("material", self._default_material)
+        self._batches.append(batch)
 
-        mode = kwargs.get("mode", Renderer.RenderTriangles)
-        if mode is Renderer.RenderLines:
-            queue_item["mode"] = self._gl.GL_LINES
-        elif mode is Renderer.RenderLineLoop:
-            queue_item["mode"] = self._gl.GL_LINE_LOOP
-        elif mode is Renderer.RenderPoints:
-            queue_item["mode"] = self._gl.GL_POINTS
-        else:
-            queue_item["mode"] = self._gl.GL_TRIANGLES
 
-        queue_item["wireframe"] = (mode == Renderer.RenderWireframe)
+        #queue_item = { "node": node }
 
-        queue_item["force_single_sided"] = kwargs.get("force_single_sided", False)
+        #if "mesh" in kwargs:
+            #queue_item["mesh"] = kwargs["mesh"]
 
-        if kwargs.get("end", None):
-            queue_item["range"] = [kwargs.get("start", 0), kwargs.get("end")]
+        #queue_item["material"] = kwargs.get("material", self._default_material)
 
-        if kwargs.get("transparent", False):
-            self._transparent_queue.append(queue_item)
-        elif kwargs.get("overlay", False):
-            self._overlay_queue.append(queue_item)
-        else:
-            self._solids_queue.append(queue_item)
+        #mode = kwargs.get("mode", Renderer.RenderTriangles)
+        #if mode is Renderer.RenderLines:
+            #queue_item["mode"] = self._gl.GL_LINES
+        #elif mode is Renderer.RenderLineLoop:
+            #queue_item["mode"] = self._gl.GL_LINE_LOOP
+        #elif mode is Renderer.RenderPoints:
+            #queue_item["mode"] = self._gl.GL_POINTS
+        #else:
+            #queue_item["mode"] = self._gl.GL_TRIANGLES
+
+        #queue_item["wireframe"] = (mode == Renderer.RenderWireframe)
+
+        #queue_item["force_single_sided"] = kwargs.get("force_single_sided", False)
+
+        #if kwargs.get("end", None):
+            #queue_item["range"] = [kwargs.get("start", 0), kwargs.get("end")]
+
+        #if kwargs.get("transparent", False):
+            #self._transparent_queue.append(queue_item)
+        #elif kwargs.get("overlay", False):
+            #self._overlay_queue.append(queue_item)
+        #else:
+            #self._solids_queue.append(queue_item)
     
     ##  Render all nodes in the queue
     def renderQueuedNodes(self):
-        self._gl.glEnable(self._gl.GL_DEPTH_TEST)
-        self._gl.glDepthFunc(self._gl.GL_LESS)
-        self._gl.glDepthMask(self._gl.GL_TRUE)
-        self._gl.glDisable(self._gl.GL_CULL_FACE)
-        self._gl.glLineWidth(self.getPixelMultiplier())
+        for render_pass in self._render_passes:
+            render_pass.bind()
+            render_pass.renderContents()
+            render_pass.release()
 
-        self._scene.acquireLock()
+        self._composite_pass.renderOutput()
+        #self._gl.glEnable(self._gl.GL_DEPTH_TEST)
+        #self._gl.glDepthFunc(self._gl.GL_LESS)
+        #self._gl.glDepthMask(self._gl.GL_TRUE)
+        #self._gl.glDisable(self._gl.GL_CULL_FACE)
+        #self._gl.glLineWidth(self.getPixelMultiplier())
 
-        self._camera = self._scene.getActiveCamera()
-        if not self._camera:
-            Logger.log("e", "No active camera set, can not render")
-            self._scene.releaseLock()
-            return
+        #self._scene.acquireLock()
 
-        # Render the selection image
-        selectable_nodes = []
-        for node in DepthFirstIterator(self._scene.getRoot()):
-            if node.isSelectable() and node.getMeshData():
-                selectable_nodes.append(node)
+        #self._camera = self._scene.getActiveCamera()
+        #if not self._camera:
+            #Logger.log("e", "No active camera set, can not render")
+            #self._scene.releaseLock()
+            #return
 
-        if not selectable_nodes:
-            self._selection_image = None
+        ## Render the selection image
+        #selectable_nodes = []
+        #for node in DepthFirstIterator(self._scene.getRoot()):
+            #if node.isSelectable() and node.getMeshData():
+                #selectable_nodes.append(node)
 
-        if selectable_nodes:
-            #TODO: Use a limited area around the mouse rather than a full viewport for rendering
-            if self._selection_buffer.width() != self._viewport_width or self._selection_buffer.height() != self._viewport_height:
-                self._selection_buffer = self.createFrameBuffer(self._viewport_width, self._viewport_height)
+        #if not selectable_nodes:
+            #self._selection_image = None
 
-            self._selection_buffer.bind()
-            self._gl.glClearColor(0.0, 0.0, 0.0, 0.0)
-            self._gl.glClear(self._gl.GL_COLOR_BUFFER_BIT | self._gl.GL_DEPTH_BUFFER_BIT)
-            self._gl.glDisable(self._gl.GL_BLEND)
-            self._selection_map.clear()
-            for node in selectable_nodes:
-                if type(node) is PointCloudNode: #Pointcloud node sets vertex color (to be used for point precise selection)
-                    self._renderItem({
-                        "node": node,
-                        "material": self._handle_material,
-                        "mode": self._gl.GL_POINTS
-                    })
-                else :
-                    color = self._getObjectColor(node)
-                    self._selection_map[color] = id(node)
-                    self._selection_material.setUniformValue("u_color", color)
-                    self._renderItem({
-                        "node": node,
-                        "material": self._selection_material,
-                        "mode": self._gl.GL_TRIANGLES
-                    })
-            tool = self._controller.getActiveTool()
-            if tool:
-                tool_handle = tool.getHandle()
-                if tool_handle and tool_handle.getSelectionMesh() and tool_handle.getParent():
-                    self._selection_map.update(tool_handle.getSelectionMap())
-                    self._gl.glDisable(self._gl.GL_DEPTH_TEST)
-                    self._renderItem({
-                        "node": tool_handle,
-                        "mesh": tool_handle.getSelectionMesh(),
-                        "material": self._handle_material,
-                        "mode": self._gl.GL_TRIANGLES
-                    })
-                    self._gl.glEnable(self._gl.GL_DEPTH_TEST)
+        #if selectable_nodes:
+            ##TODO: Use a limited area around the mouse rather than a full viewport for rendering
+            #if self._selection_buffer.width() != self._viewport_width or self._selection_buffer.height() != self._viewport_height:
+                #self._selection_buffer = self.createFrameBuffer(self._viewport_width, self._viewport_height)
 
-            self._selection_image = self._selection_buffer.toImage()
-            self._selection_buffer.release()
+            #self._selection_buffer.bind()
+            #self._gl.glClearColor(0.0, 0.0, 0.0, 0.0)
+            #self._gl.glClear(self._gl.GL_COLOR_BUFFER_BIT | self._gl.GL_DEPTH_BUFFER_BIT)
+            #self._gl.glDisable(self._gl.GL_BLEND)
+            #self._selection_map.clear()
+            #for node in selectable_nodes:
+                #if type(node) is PointCloudNode: #Pointcloud node sets vertex color (to be used for point precise selection)
+                    #self._renderItem({
+                        #"node": node,
+                        #"material": self._handle_material,
+                        #"mode": self._gl.GL_POINTS
+                    #})
+                #else :
+                    #color = self._getObjectColor(node)
+                    #self._selection_map[color] = id(node)
+                    #self._selection_material.setUniformValue("u_color", color)
+                    #self._renderItem({
+                        #"node": node,
+                        #"material": self._selection_material,
+                        #"mode": self._gl.GL_TRIANGLES
+                    #})
+            #tool = self._controller.getActiveTool()
+            #if tool:
+                #tool_handle = tool.getHandle()
+                #if tool_handle and tool_handle.getSelectionMesh() and tool_handle.getParent():
+                    #self._selection_map.update(tool_handle.getSelectionMap())
+                    #self._gl.glDisable(self._gl.GL_DEPTH_TEST)
+                    #self._renderItem({
+                        #"node": tool_handle,
+                        #"mesh": tool_handle.getSelectionMesh(),
+                        #"material": self._handle_material,
+                        #"mode": self._gl.GL_TRIANGLES
+                    #})
+                    #self._gl.glEnable(self._gl.GL_DEPTH_TEST)
+
+            #self._selection_image = self._selection_buffer.toImage()
+            #self._selection_buffer.release()
 
         # Workaround for a MacOSX Intel HD Graphics 6000 Bug
         # Apparently, performing a glReadPixels call on a bound framebuffer breaks releasing the
         # depth buffer, which means the rest of the depth tested geometry never renders. To work-
         # around this we perform a clear here. Note that for some reason we also need to set
         # glClearColor since it is apparently not stored properly.
-        self._gl.glClearColor(self._background_color.redF(), self._background_color.greenF(), self._background_color.blueF(), self._background_color.alphaF())
-        self._gl.glClear(self._gl.GL_COLOR_BUFFER_BIT | self._gl.GL_DEPTH_BUFFER_BIT)
+        #self._gl.glClearColor(self._background_color.redF(), self._background_color.greenF(), self._background_color.blueF(), self._background_color.alphaF())
+        #self._gl.glClear(self._gl.GL_COLOR_BUFFER_BIT | self._gl.GL_DEPTH_BUFFER_BIT)
 
-        self._gl.glEnable(self._gl.GL_STENCIL_TEST)
-        self._gl.glStencilMask(0xff)
-        self._gl.glClearStencil(0)
-        self._gl.glClear(self._gl.GL_STENCIL_BUFFER_BIT)
-        self._gl.glStencilFunc(self._gl.GL_ALWAYS, 0xff, 0xff)
-        self._gl.glStencilOp(self._gl.GL_REPLACE, self._gl.GL_REPLACE, self._gl.GL_REPLACE)
-        self._gl.glStencilMask(0)
+        #self._gl.glEnable(self._gl.GL_STENCIL_TEST)
+        #self._gl.glStencilMask(0xff)
+        #self._gl.glClearStencil(0)
+        #self._gl.glClear(self._gl.GL_STENCIL_BUFFER_BIT)
+        #self._gl.glStencilFunc(self._gl.GL_ALWAYS, 0xff, 0xff)
+        #self._gl.glStencilOp(self._gl.GL_REPLACE, self._gl.GL_REPLACE, self._gl.GL_REPLACE)
+        #self._gl.glStencilMask(0)
 
-        for item in self._solids_queue:
-            if Selection.isSelected(item["node"]):
-                self._gl.glStencilMask(0xff)
-                self._renderItem(item)
-                self._gl.glStencilMask(0)
-            else:
-                self._renderItem(item)
+        #for item in self._solids_queue:
+            #if Selection.isSelected(item["node"]):
+                #self._gl.glStencilMask(0xff)
+                #self._renderItem(item)
+                #self._gl.glStencilMask(0)
+            #else:
+                #self._renderItem(item)
 
-        if self._render_selection:
-            self._gl.glStencilMask(0)
-            self._gl.glStencilFunc(self._gl.GL_EQUAL, 0, 0xff)
-            self._gl.glLineWidth(2 * self.getPixelMultiplier())
-            for node in Selection.getAllSelectedObjects():
-                if node.getMeshData() and type(node) is not PointCloudNode:
-                    self._renderItem({
-                        "node": node,
-                        "material": self._outline_material,
-                        "mode": self._gl.GL_TRIANGLES,
-                        "wireframe": True
-                    })
+        #if self._render_selection:
+            #self._gl.glStencilMask(0)
+            #self._gl.glStencilFunc(self._gl.GL_EQUAL, 0, 0xff)
+            #self._gl.glLineWidth(2 * self.getPixelMultiplier())
+            #for node in Selection.getAllSelectedObjects():
+                #if node.getMeshData() and type(node) is not PointCloudNode:
+                    #self._renderItem({
+                        #"node": node,
+                        #"material": self._outline_material,
+                        #"mode": self._gl.GL_TRIANGLES,
+                        #"wireframe": True
+                    #})
 
-            self._gl.glLineWidth(self.getPixelMultiplier())
+            #self._gl.glLineWidth(self.getPixelMultiplier())
 
-        self._gl.glDisable(self._gl.GL_STENCIL_TEST)
-        self._gl.glDepthMask(self._gl.GL_FALSE)
-        self._gl.glEnable(self._gl.GL_BLEND)
-        self._gl.glEnable(self._gl.GL_CULL_FACE)
-        self._gl.glBlendFunc(self._gl.GL_SRC_ALPHA, self._gl.GL_ONE_MINUS_SRC_ALPHA)
+        #self._gl.glDisable(self._gl.GL_STENCIL_TEST)
+        #self._gl.glDepthMask(self._gl.GL_FALSE)
+        #self._gl.glEnable(self._gl.GL_BLEND)
+        #self._gl.glEnable(self._gl.GL_CULL_FACE)
+        #self._gl.glBlendFunc(self._gl.GL_SRC_ALPHA, self._gl.GL_ONE_MINUS_SRC_ALPHA)
 
-        for item in self._transparent_queue:
-            self._renderItem(item)
+        #for item in self._transparent_queue:
+            #self._renderItem(item)
 
-        self._gl.glDisable(self._gl.GL_DEPTH_TEST)
-        self._gl.glDisable(self._gl.GL_CULL_FACE)
+        #self._gl.glDisable(self._gl.GL_DEPTH_TEST)
+        #self._gl.glDisable(self._gl.GL_CULL_FACE)
 
-        for item in self._overlay_queue:
-            self._renderItem(item)
+        #for item in self._overlay_queue:
+            #self._renderItem(item)
 
-        self._scene.releaseLock()
+        #self._scene.releaseLock()
 
     def endRendering(self):
         pass
+
+    def renderQuad(self, shader):
+        if not self._quad_geometry:
+            mb = MeshBuilder()
+            mb.addQuad(Vector(-1.0, -1.0, 0.0), Vector(1.0, -1.0, 0.0), Vector(1.0, 1.0, 0.0), Vector(-1.0, 1.0, 0.0))
+            self._quad_geometry = mb.getData()
+            self._quad_geometry.setVertexUVCoordinates(0, 0.0, 0.0)
+            self._quad_geometry.setVertexUVCoordinates(1, 1.0, 1.0)
+            self._quad_geometry.setVertexUVCoordinates(2, 1.0, 0.0)
+            self._quad_geometry.setVertexUVCoordinates(3, 0.0, 0.0)
+            self._quad_geometry.setVertexUVCoordinates(4, 0.0, 1.0)
+            self._quad_geometry.setVertexUVCoordinates(5, 1.0, 1.0)
+
+            self._createVertexBuffer(self._quad_geometry)
+
+        shader.setUniformValue("u_modelViewProjectionMatrix", Matrix())
+
+        vertex_buffer = getattr(self._quad_geometry, vertexBufferProperty)
+        vertex_buffer.bind()
+
+        shader.enableAttribute("a_vertex", "vector3f", 0)
+        offset = self._quad_geometry.getVertexCount() * 3 * 4
+
+        shader.enableAttribute("a_uvs", "vector2f", offset)
+        offset += self._quad_geometry.getVertexCount() * 2 * 4
+
+        self._gl.glDrawArrays(self._gl.GL_TRIANGLES, 0, self._quad_geometry.getVertexCount())
+
+        shader.disableAttribute("a_vertex")
+        shader.disableAttribute("a_uvs")
+        vertex_buffer.release()
 
     def _initialize(self):
         OpenGL.setInstance(QtOpenGL())
@@ -245,7 +303,7 @@ class QtRenderer(Renderer):
 
         self._default_material = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "default.shader"))
 
-        self._composite_pass = CompositePass("composite", 1280, 720)
+        self._composite_pass = CompositePass(1280, 720)
 
         self._initialized = True
 
