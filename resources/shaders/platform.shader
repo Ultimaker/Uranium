@@ -47,12 +47,12 @@ fragment =
 
         /* Diffuse Component */
         highp float n_dot_l = clamp(dot(normal, light_dir), 0.0, 1.0);
-        finalColor += (n_dot_l * u_diffuseColor);
+        final_color += (n_dot_l * u_diffuseColor);
 
-        finalColor.a = u_opacity;
+        final_color.a = u_opacity;
 
         lowp vec4 texture = texture2D(u_texture, v_uvs);
-        finalColor = mix(final_color, texture, texture.a);
+        final_color = mix(final_color, texture, texture.a);
 
         gl_FragColor = final_color;
     }
