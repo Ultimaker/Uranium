@@ -2,6 +2,7 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 import configparser
+import ast
 
 class InvalidShaderProgramError(Exception):
     pass
@@ -24,9 +25,11 @@ class ShaderProgram:
         self.setVertexShader(parser["shaders"]["vertex"])
         self.setFragmentShader(parser["shaders"]["fragment"])
 
+        self.build()
+
         if "defaults" in parser:
             for key, value in parser["defaults"].items():
-                self.setUniformValue(key, value, cache = True)
+                self.setUniformValue(key, ast.literal_eval(value), cache = True)
 
         if "bindings" in parser:
             for key, value in parser["bindings"].items():

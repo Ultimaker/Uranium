@@ -68,5 +68,4 @@ class QtOpenGL(OpenGL):
     def createShaderProgram(self, file_name):
         shader = QtShaderProgram.QtShaderProgram()
         shader.load(file_name)
-        shader.build()
         return shader
