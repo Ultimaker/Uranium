@@ -11,31 +11,37 @@ from UM.View.GL.OpenGL import OpenGL
 
 class CompositePass(RenderPass):
     def __init__(self, width, height):
-        super().__init__("composite", width, height)
+        super().__init__("composite", width, height, 999)
 
         self._shader = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "composite.shader"))
         self._gl = OpenGL.getInstance().getBindingsObject()
         self._renderer = Application.getInstance().getRenderer()
 
+        self._layer_bindings = [ "default", "selection" ]
+
     def setCompositeShader(self, shader):
         self._shader = shader
 
-    def renderContents(self):
-        pass
+    def setLayerBindings(self, bindings):
+        self._layer_bindings = bindings
 
-    def renderOutput(self):
+    def render(self):
         self._shader.bind()
 
         texture_unit = 0
-        for render_pass in self._renderer.getRenderPasses():
-            self._gl.glActiveTexture(texture_unit)
+        for binding in self._layer_bindings:
+            render_pass = self._renderer.getRenderPass(binding)
+            if not render_pass:
+                continue
+
+            self._gl.glActiveTexture(getattr(self._gl, "GL_TEXTURE{0}".format(texture_unit)))
             self._gl.glBindTexture(self._gl.GL_TEXTURE_2D, render_pass.getTextureId())
             texture_unit += 1
 
-        self._renderer.renderQuad(self._shader)
+        self._renderer.renderFullScreenQuad(self._shader)
 
         for i in range(texture_unit):
-            self._gl.glActiveTexture(texture_unit)
+            self._gl.glActiveTexture(getattr(self._gl, "GL_TEXTURE{0}".format(i)))
             self._gl.glBindTexture(self._gl.GL_TEXTURE_2D, 0)
 
         self._shader.release()
