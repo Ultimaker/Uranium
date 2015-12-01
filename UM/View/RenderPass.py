@@ -11,10 +11,11 @@ from UM.Platform import Platform
 from UM.View.GL.OpenGL import OpenGL
 
 class RenderPass:
-    def __init__(self, name, width, height):
+    def __init__(self, name, width, height, priority = 0):
         self._name = name
         self._width = width
         self._height = height
+        self._priority = priority
 
         self._gl = OpenGL.getInstance().getBindingsObject()
 
@@ -30,6 +31,9 @@ class RenderPass:
 
     def getName(self):
         return self._name
+
+    def getPriority(self):
+        return self._priority
 
     ##  Set the size of this render pass.
     def setSize(self, width, height):
