@@ -13,7 +13,8 @@ class ShaderProgram:
         self._attribute_bindings = {}
 
     def load(self, file_name):
-        parser = configparser.ConfigParser()
+        parser = configparser.ConfigParser(interpolation = None)
+        parser.optionxform = lambda option: option
         parser.read(file_name)
 
         if not "shaders" in parser:
@@ -91,7 +92,7 @@ class ShaderProgram:
         raise NotImplementedError()
 
     def addBinding(self, key, value):
-        self._bindings[key] = value
+        self._bindings[value] = key
 
     def removeBinding(self, key):
         if key not in self._bindings:
@@ -99,10 +100,10 @@ class ShaderProgram:
 
         del self._bindings[key]
 
-    def updateBindings(self, state):
-        for uniform, binding in self._bindings.items():
-            if binding in state:
-                self.setUniformValue(uniform, state[binding], cache = False)
+    def updateBindings(self, **kwargs):
+        for key, value in kwargs.items():
+            if key in self._bindings:
+                self.setUniformValue(self._bindings[key], value, cache = False)
 
     def addAttributeBinding(self, key, value):
         self._attribute_bindings[key] = value
