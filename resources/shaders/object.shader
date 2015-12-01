@@ -10,8 +10,6 @@ vertex =
 
     varying highp vec3 v_vertex;
     varying highp vec3 v_normal;
-    varying highp vec3 v_viewVector;
-    varying highp vec2 v_uvs;
 
     void main()
     {
@@ -20,8 +18,6 @@ vertex =
 
         v_vertex = world_space_vert.xyz;
         v_normal = (u_normalMatrix * normalize(a_normal)).xyz;
-
-        v_uvs = a_uvs;
     }
 
 fragment =
@@ -64,14 +60,15 @@ fragment =
 u_ambientColor = [0.3, 0.3, 0.3, 1.0]
 u_diffuseColor = [0.5, 0.5, 0.5, 1.0]
 u_specularColor = [0.7, 0.7, 0.7, 1.0]
-u_shininess = 20
+u_shininess = 20.0
 
 [bindings]
 u_modelMatrix = model_matrix
 u_viewProjectionMatrix = view_projection_matrix
 u_normalMatrix = normal_matrix
+u_viewPosition = view_position
+u_lightPosition = light_0_position
 
 [attributes]
 a_vertex = vertex
 a_normal = normal
-a_uvs = uv0
