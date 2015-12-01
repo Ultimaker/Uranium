@@ -303,7 +303,9 @@ class QtRenderer(Renderer):
 
         self._default_material = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "default.shader"))
 
-        self._composite_pass = CompositePass(1280, 720)
+        self._render_passes.add(DefaultPass(self._viewport_width, self._viewport_height))
+        self._render_passes.add(SelectionPass(self._viewport_width, self._viewport_height))
+        self._render_passes.add(CompositePass(self._viewport_width, self._viewport_height))
 
         self._initialized = True
 

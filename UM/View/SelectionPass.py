@@ -1,40 +1,98 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Cura is released under the terms of the AGPLv3 or higher.
 
+import random
+
 from UM.Resources import Resources
 from UM.Application import Application
 
+from UM.Math.Color import Color
+
+from UM.Scene.Selection import Selection
+from UM.Scene.ToolHandle import ToolHandle
 from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator
 
 from UM.View.RenderPass import RenderPass
+from UM.View.RenderBatch import RenderBatch
 from UM.View.GL.OpenGL import OpenGL
 
-class CompositePass(RenderPass):
-    def __init__(self, name, width, height):
-        super().__init__(name, width, height)
+class SelectionPass(RenderPass):
+    def __init__(self, width, height):
+        super().__init__("selection", width, height, -999)
 
-        self._shader = OpenGL.getInstance().createMaterial(Resources.getPath(Resources.Shaders, "composite.shader"))
+        self._shader = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "selection.shader"))
+        self._tool_handle_shader = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "default.shader"))
         self._gl = OpenGL.getInstance().getBindingsObject()
         self._scene = Application.getInstance().getController().getScene()
 
-    def renderContents(self):
+        self._renderer = Application.getInstance().getRenderer()
+
+        self._selection_map = {
+            ToolHandle.DisabledColor: ToolHandle.NoAxis,
+            ToolHandle.XAxisColor: ToolHandle.XAxis,
+            ToolHandle.YAxisColor: ToolHandle.YAxis,
+            ToolHandle.ZAxisColor: ToolHandle.ZAxis,
+            ToolHandle.AllAxisColor: ToolHandle.AllAxis
+        }
+
+        self._output = None
+
+    def render(self):
+        self._selection_map = {
+            ToolHandle.DisabledColor: ToolHandle.NoAxis,
+            ToolHandle.XAxisColor: ToolHandle.XAxis,
+            ToolHandle.YAxisColor: ToolHandle.YAxis,
+            ToolHandle.ZAxisColor: ToolHandle.ZAxis,
+            ToolHandle.AllAxisColor: ToolHandle.AllAxis
+        }
+
+        batch = RenderBatch(shader = self._shader)
+        tool_handle = RenderBatch(shader = self._tool_handle_shader)
+        selectable_objects = False
         for node in DepthFirstIterator(self._scene.getRoot()):
+            if isinstance(node, ToolHandle):
+                tool_handle.addItem(node.getWorldTransformation(), mesh = node.getSelectionMesh())
+                continue
+
             if node.isSelectable() and node.getMeshData():
-                self.renderNode(node)
+                selectable_objects = True
+                batch.addItem(transform = node.getWorldTransformation(), mesh = node.getMeshData(), uniforms = { "selection_color": self._getNodeColor(node)})
 
-    def renderOutput(self):
-        self._shader.bind()
+        if selectable_objects:
+            self.bind()
 
-        texture_unit = 0
-        for render_pass in renderer.getRenderPasses():
-            self._gl.glActiveTexture(texture_unit)
-            self._gl.glBindTexture(self._gl.GL_TEXTURE_2D, render_pass.getTextureId())
-            texture_unit += 1
+            batch.render(self._scene.getActiveCamera())
 
-        self._shader.setUniformValue("u_layer_count", texture_unit + 1)
-        self._shader.setUniformValueArray("u_layers", [range(0, texture_unit)], texture_unit + 1)
+            tool_handle.render(self._scene.getActiveCamera())
 
-        self.renderQuad()
+            self.release()
 
-        self._shader.release()
+    def getIdAtPosition(self, x, y):
+        output = self.getOutput()
 
+        window_size = self._renderer.getWindowSize()
+
+        px = (0.5 + x / 2.0) * window_size[0]
+        py = (0.5 + y / 2.0) * window_size[1]
+
+        if px < 0 or px > (output.width() - 1) or py < 0 or py > (output.height() - 1):
+            return None
+
+        pixel = output.pixel(px, py)
+        return self._selection_map.get(Color.fromARGB(pixel), None)
+
+
+    def _getNodeColor(self, node):
+        while True:
+            r = random.randint(0, 255)
+            g = random.randint(0, 255)
+            b = random.randint(0, 255)
+            a = 255 if Selection.isSelected(node) else 0
+            color = Color(r, g, b, a)
+
+            if color not in self._selection_map:
+                break
+
+        self._selection_map[color] = id(node)
+
+        return color
