@@ -16,6 +16,8 @@ from UM.Math.Color import Color
 
 from UM.Mesh.MeshBuilder import MeshBuilder
 from UM.View.CompositePass import CompositePass
+from UM.View.DefaultPass import DefaultPass
+from UM.View.SelectionPass import SelectionPass
 from UM.View.GL.OpenGL import OpenGL
 from UM.View.RenderBatch import RenderBatch
 from UM.Qt.GL.QtOpenGL import QtOpenGL
@@ -73,9 +75,15 @@ class QtRenderer(Renderer):
         self._viewport_width = width
         self._viewport_height = height
 
+        for render_pass in self._render_passes:
+            render_pass.setSize(width, height)
+
     def setWindowSize(self, width, height):
         self._window_width = width
         self._window_height = height
+
+    def getWindowSize(self):
+        return (self._window_width, self._window_height)
 
     def beginRendering(self):
         if not self._initialized:
@@ -84,11 +92,18 @@ class QtRenderer(Renderer):
         self._gl.glViewport(0, 0, self._viewport_width, self._viewport_height)
         self._gl.glClearColor(self._background_color.redF(), self._background_color.greenF(), self._background_color.blueF(), self._background_color.alphaF())
         self._gl.glClear(self._gl.GL_COLOR_BUFFER_BIT | self._gl.GL_DEPTH_BUFFER_BIT)
+        self._gl.glClearColor(0.0, 0.0, 0.0, 0.0)
 
     ##  Put a node in the render queue
     def queueNode(self, node, **kwargs):
+        type = RenderBatch.RenderType.Solid
+        if kwargs.get("transparent", False):
+            type = RenderBatch.RenderType.Transparent
+        elif kwargs.get("overlay", False):
+            type = RenderBatch.RenderType.Overlay
+
         batch = RenderBatch(
-            type = kwargs.get("type", RenderBatch.RenderType.Solid),
+            type = type,
             mode = kwargs.get("mode", RenderBatch.RenderMode.Triangles),
             shader = kwargs.get("shader", self._default_material),
             backface_cull = kwargs.get("backface_cull", True),
@@ -133,12 +148,11 @@ class QtRenderer(Renderer):
     
     ##  Render all nodes in the queue
     def renderQueuedNodes(self):
-        for render_pass in self._render_passes:
-            render_pass.bind()
-            render_pass.renderContents()
-            render_pass.release()
+        self._batches.sort()
 
-        self._composite_pass.renderOutput()
+        for render_pass in self.getRenderPasses():
+            render_pass.render()
+
         #self._gl.glEnable(self._gl.GL_DEPTH_TEST)
         #self._gl.glDepthFunc(self._gl.GL_LESS)
         #self._gl.glDepthMask(self._gl.GL_TRUE)
@@ -262,21 +276,24 @@ class QtRenderer(Renderer):
         #self._scene.releaseLock()
 
     def endRendering(self):
-        pass
+        self._batches.clear()
 
-    def renderQuad(self, shader):
+    def renderFullScreenQuad(self, shader):
         if not self._quad_geometry:
             mb = MeshBuilder()
-            mb.addQuad(Vector(-1.0, -1.0, 0.0), Vector(1.0, -1.0, 0.0), Vector(1.0, 1.0, 0.0), Vector(-1.0, 1.0, 0.0))
+            mb.addQuad(Vector(-1.0, -1.0, 0.0), Vector(-1.0, 1.0, 0.0), Vector(1.0, 1.0, 0.0), Vector(1.0, -1.0, 0.0))
             self._quad_geometry = mb.getData()
             self._quad_geometry.setVertexUVCoordinates(0, 0.0, 0.0)
             self._quad_geometry.setVertexUVCoordinates(1, 1.0, 1.0)
-            self._quad_geometry.setVertexUVCoordinates(2, 1.0, 0.0)
+            self._quad_geometry.setVertexUVCoordinates(2, 0.0, 1.0)
             self._quad_geometry.setVertexUVCoordinates(3, 0.0, 0.0)
-            self._quad_geometry.setVertexUVCoordinates(4, 0.0, 1.0)
+            self._quad_geometry.setVertexUVCoordinates(4, 1.0, 0.0)
             self._quad_geometry.setVertexUVCoordinates(5, 1.0, 1.0)
 
             self._createVertexBuffer(self._quad_geometry)
+
+        self._gl.glDisable(self._gl.GL_DEPTH_TEST)
+        self._gl.glDisable(self._gl.GL_BLEND)
 
         shader.setUniformValue("u_modelViewProjectionMatrix", Matrix())
 
