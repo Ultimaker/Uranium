@@ -25,9 +25,9 @@ class RenderPass:
         self._updateRenderStorage()
 
         if self._fbo:
-            self.release = self._releaseFBO()
+            self.release = self._releaseFBO
         else:
-            self.release = self._releaseTexture()
+            self.release = self._releaseTexture
 
     def getName(self):
         return self._name
