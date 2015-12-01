@@ -15,7 +15,7 @@ class Platform(SceneNode.SceneNode):
         super().__init__(parent)
 
         self._machine_instance = None
-        self._material = None
+        self._shader = None
         self._texture = None
         Application.getInstance().getMachineManager().activeMachineInstanceChanged.connect(self._onActiveMachineChanged)
         self._onActiveMachineChanged()
@@ -23,11 +23,11 @@ class Platform(SceneNode.SceneNode):
         self.setCalculateBoundingBox(False)
 
     def render(self, renderer):
-        if not self._material:
-            self._material = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "platform.shader"))
+        if not self._shader:
+            self._shader = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "platform.shader"))
 
         if self.getMeshData():
-            renderer.queueNode(self, material = self._material, transparent = True)
+            renderer.queueNode(self, shader = self._shader, transparent = True)
             return True
 
     def _onActiveMachineChanged(self):
