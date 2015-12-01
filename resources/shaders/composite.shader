@@ -22,15 +22,10 @@ fragment =
 
     void main()
     {
-        mediump vec4 result = vec4(0.0);
-
-        result += texture2D(u_layer0, v_uvs);
-        result += texture2D(u_layer1, v_uvs);
-        result += texture2D(u_layer2, v_uvs);
-        result += texture2D(u_layer3, v_uvs);
-
-        //gl_FragColor = result;
-        gl_FragColor = vec4(v_uvs.x, v_uvs.y, 0.0, 1.0);
+        vec4 result = vec4(0.95, 0.95, 0.95, 1.0);
+        vec4 layer0 = texture2D(u_layer0, v_uvs);
+        vec4 layer1 = vec4(texture2D(u_layer1, v_uvs).a);
+        gl_FragColor = mix(result, layer0, layer0.a);
     }
 
 [defaults]
