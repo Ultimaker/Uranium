@@ -73,8 +73,8 @@ Rectangle {
     Rectangle{
         visible: base.depth > 1 ? true : false
         id: separationLine
-        width: 2
-        height: label.height / 2
+        width: UM.Theme.sizes.default_lining.width
+        height: label.height
         color: UM.Theme.colors.setting_control_depth_line
         anchors.right: label.left
         anchors.rightMargin: UM.Theme.sizes.setting_control_depth_margin.width / 2
