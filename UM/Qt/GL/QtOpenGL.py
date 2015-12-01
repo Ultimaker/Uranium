@@ -23,6 +23,10 @@ class QtOpenGL(OpenGL):
             QMessageBox.critical("Failed to Initialize OpenGL", "Could not initialize OpenGL. Cura requires OpenGL 2.0 or higher. Please check your video card drivers.")
             sys.exit(1)
 
+        if not self.hasFrameBufferObjects():
+            QMessageBox.critical("Critical OpenGL Extensions Missing", "Critical OpenGL extensions are missing. Cura requires support for Framebuffer Objects. Please check your video card drivers.")
+            sys.exit(1)
+
         self._gl.initializeOpenGLFunctions()
 
         self._gpu_vendor = OpenGL.Vendor.Other
