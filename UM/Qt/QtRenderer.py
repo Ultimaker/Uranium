@@ -49,9 +49,6 @@ class QtRenderer(Renderer):
 
         self._batches = []
 
-        self._render_passes = []
-        self._composite_pass = None
-
         self._quad_geometry = None
 
         self._camera = None
@@ -64,9 +61,10 @@ class QtRenderer(Renderer):
     def getBatches(self):
         return self._batches
 
-    def getRenderPasses(self):
-        return self._render_passes
-    
+    def addRenderPass(self, render_pass):
+        super().addRenderPass(render_pass)
+        render_pass.setSize(self._viewport_width, self._viewport_height)
+
     ##  Set background color of the rendering.
     def setBackgroundColor(self, color):
         self._background_color = color

@@ -1,7 +1,7 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-
+from UM.SortedList import SortedListWithKey
 
 ##  Abstract base class for different rendering implementations.
 #
@@ -19,6 +19,8 @@ class Renderer():
 
     def __init__(self):
         super().__init__()
+
+        self._render_passes = SortedListWithKey(key = lambda k: k.getPriority())
 
     ##  Signal the beginning of the rendering process.
     #
@@ -46,3 +48,20 @@ class Renderer():
     ##  Finish rendering, finalize and clear state.
     def endRendering(self):
         raise NotImplementedError()
+
+    def addRenderPass(self, render_pass):
+        self._render_passes.add(render_pass)
+
+    def removeRenderPass(self, render_pass):
+        if render_pass in self._render_passes:
+            self._render_passes.remove(render_pass)
+
+    def getRenderPass(self, name):
+        for render_pass in self._render_passes:
+            if render_pass.getName() == name:
+                return render_pass
+
+        return None
+
+    def getRenderPasses(self):
+        return self._render_passes
