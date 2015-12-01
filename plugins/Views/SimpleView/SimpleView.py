@@ -30,7 +30,7 @@ class SimpleView(View):
         for node in DepthFirstIterator(scene.getRoot()):
             if not node.render(renderer):
                 if node.getMeshData() and node.isVisible():
-                    renderer.queueNode(node, material = self._shader)
+                    renderer.queueNode(node, shader = self._shader)
 
     def endRendering(self):
         pass
