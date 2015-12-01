@@ -21,3 +21,6 @@ class QtFrameBufferObject(FrameBufferObject):
 
     def getTextureId(self):
         return self._fbo.texture()
+
+    def getContents(self):
+        return self._fbo.toImage()

@@ -14,3 +14,5 @@ class FrameBufferObject:
     def release(self):
         raise NotImplementedError("Should be reimplemented by subclasses")
 
+    def getContents(self):
+        raise NotImplementedError("Should be reimplemented by subclasses")
