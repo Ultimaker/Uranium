@@ -63,15 +63,8 @@ class RenderPass:
 
     ##  Get the pixel data produced by this render pass
     def getOutput(self):
-        data = ctypes.c_uint32 * self._width * self._height;
-
-        texture = self.getTextureId()
-
-        self._gl.glBindTexture(self._gl.GL_TEXTURE_2D, texture)
-        self._gl.glGetTexImage(self._gl.GL_TEXTURE_2D, 0, self._gl.GL_RGBA, self._gl.GL_UNSIGNED_INT, data)
-        self._gl.glBindTexture(self._gl.GL_TEXTURE_2D, 0)
-
-        return data
+        if self._fbo:
+            return self._fbo.getContents()
 
     def renderBatches(self, **kwargs):
         for batch in Application.getInstance().getRenderer().getBatches():
