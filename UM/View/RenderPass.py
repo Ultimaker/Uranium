@@ -54,11 +54,7 @@ class RenderPass:
         pass
 
     ##  Render the contents of this render pass.
-    def renderContents(self):
-        raise NotImplementedError("Should be implemented by subclasses")
-
-    ##  Render the output of this render pass.
-    def renderOutput(self):
+    def render(self):
         raise NotImplementedError("Should be implemented by subclasses")
 
     ##  Get the texture ID of this render pass so it can be reused by other passes.
