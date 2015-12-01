@@ -46,6 +46,7 @@ class RenderPass:
     def bind(self):
         if self._fbo:
             self._fbo.bind()
+            self._gl.glClear(self._gl.GL_COLOR_BUFFER_BIT | self._gl.GL_DEPTH_BUFFER_BIT)
 
     ##  Release the render pass
     def release(self):
