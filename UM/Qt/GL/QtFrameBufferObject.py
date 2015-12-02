@@ -13,7 +13,10 @@ class QtFrameBufferObject(FrameBufferObject):
         buffer_format.setAttachment(QOpenGLFramebufferObject.Depth)
         self._fbo = QOpenGLFramebufferObject(width, height, buffer_format)
 
+        self._contents = None
+
     def bind(self):
+        self._contents = None
         self._fbo.bind()
 
     def release(self):
@@ -23,4 +26,7 @@ class QtFrameBufferObject(FrameBufferObject):
         return self._fbo.texture()
 
     def getContents(self):
-        return self._fbo.toImage()
+        if not self._contents:
+            self._contents = self._fbo.toImage()
+
+        return self._contents
