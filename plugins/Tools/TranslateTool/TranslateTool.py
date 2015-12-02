@@ -21,7 +21,6 @@ class TranslateTool(Tool):
     def __init__(self):
         super().__init__()
 
-        self._selection_pass = Application.getInstance().getRenderer().getRenderPass("selection")
         self._handle = TranslateToolHandle.TranslateToolHandle()
         self._enabled_axis = [ToolHandle.XAxis, ToolHandle.YAxis, ToolHandle.ZAxis]
 

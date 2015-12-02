@@ -21,7 +21,6 @@ import copy
 class ScaleTool(Tool):
     def __init__(self):
         super().__init__()
-        self._renderer = Application.getInstance().getRenderer()
         self._handle = ScaleToolHandle.ScaleToolHandle()
 
         self._snap_scale = True
@@ -77,7 +76,7 @@ class ScaleTool(Tool):
             if MouseEvent.LeftButton not in event.buttons:
                 return False
 
-            id = self._renderer.getIdAtCoordinate(event.x, event.y)
+            id = self._selection_pass.getIdAtPosition(event.x, event.y)
             if not id:
                 return False
 
