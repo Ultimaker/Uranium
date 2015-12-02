@@ -88,7 +88,7 @@ Rectangle {
         property int depth: base.depth - 1
 
         anchors.left: parent.left;
-        anchors.leftMargin: base.indent ? (UM.Theme.sizes.section_icon_column.width + 5) + (label.depth * UM.Theme.sizes.setting_control_depth_margin.width) : UM.Theme.sizes.default_margin.width
+        anchors.leftMargin: base.indent ? (UM.Theme.sizes.section_icon_column.width + 5) + (label.depth * UM.Theme.sizes.setting_control_depth_margin.width) : 0
         anchors.right: base.overridden? revertButton.left : controlContainer.left;
         anchors.rightMargin: base.style.spacing;
         anchors.verticalCenter: parent.verticalCenter
