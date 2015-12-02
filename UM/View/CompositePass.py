@@ -28,6 +28,15 @@ class CompositePass(RenderPass):
     def render(self):
         self._shader.bind()
 
+        step_x = 1 / self._width
+        step_y = 1 / self._height
+        offset = [
+            [-step_x, -step_y], [0.0, -step_y], [step_x, -step_y],
+            [-step_x, 0.0],     [0.0, 0.0],     [step_x, 0.0],
+            [-step_x, step_y],  [0.0, step_y],  [step_x, step_y]
+        ]
+        self._shader.setUniformValue("u_offset", offset)
+
         texture_unit = 0
         for binding in self._layer_bindings:
             render_pass = self._renderer.getRenderPass(binding)
@@ -45,3 +54,5 @@ class CompositePass(RenderPass):
             self._gl.glBindTexture(self._gl.GL_TEXTURE_2D, 0)
 
         self._shader.release()
+
+        self._gl.glActiveTexture(self._gl.GL_TEXTURE0)
