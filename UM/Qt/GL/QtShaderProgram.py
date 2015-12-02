@@ -53,7 +53,7 @@ class QtShaderProgram(ShaderProgram):
         if uniform == -1:
             return
 
-        if kwargs.get("cache", False):
+        if kwargs.get("cache", True):
             self._uniform_values[uniform] = value
 
         if self._bound:
