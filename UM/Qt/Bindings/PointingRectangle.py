@@ -76,7 +76,7 @@ class PointingRectangle(QQuickItem):
         geometry.vertexDataAsPoint2D()[6].set(0, 0)
 
         target_offset = self._target - QPoint(self.x(), self.y())
-        print(target_offset)
+
         if target_offset.x() >= 0 and target_offset.x() <= self.width():
             arrow_size = min(self._arrow_size, self.width()/2)
             arrow_offset = max(arrow_size, min(self.width() - arrow_size, target_offset.x()))
