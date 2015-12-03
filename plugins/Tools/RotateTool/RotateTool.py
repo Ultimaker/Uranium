@@ -1,9 +1,12 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
+from PyQt5.QtWidgets import QApplication
+
 from UM.Tool import Tool
 from UM.Event import Event, MouseEvent, KeyEvent
 from UM.Application import Application
+from UM.Message import Message
 from UM.Scene.ToolHandle import ToolHandle
 from UM.Scene.Selection import Selection
 from UM.Scene.SceneNode import SceneNode
@@ -154,22 +157,40 @@ class RotateTool(Tool):
         Selection.applyOperation(SetTransformOperation, None, Quaternion(), None)
 
     def layFlat(self):
+        self.operationStarted.emit(self)
+        progress_message = Message("Finding flat base...", lifetime = 0, dismissable = False)
+        progress_message.setProgress(0)
+        progress_message.show()
+    
         selected_object = Selection.getSelectedObject(0)
         transformed_vertices = selected_object.getMeshDataTransformed().getVertices()
         min_z_vertex = transformed_vertices[transformed_vertices.argmin(0)[2]]
         dot_min = 1.0
         dot_v = None
 
+        iterations = 0
+        total_iterations = len(transformed_vertices) * 2
+        last_progress = 0
+        
         for v in transformed_vertices:
             diff = v - min_z_vertex
-            len = math.sqrt(diff[0] * diff[0] + diff[1] * diff[1] + diff[2] * diff[2])
-            if len < 5:
+            length = math.sqrt(diff[0] * diff[0] + diff[1] * diff[1] + diff[2] * diff[2])
+            if length < 5:
                 continue
-            dot = (diff[2] / len)
+            dot = (diff[2] / length)
             if dot_min > dot:
                 dot_min = dot
                 dot_v = diff
+            iterations += 1
+            progress = round(100*iterations/total_iterations)
+            if progress != last_progress:
+                last_progress = progress
+                progress_message.setProgress(progress)
+                QApplication.processEvents()
+
         if dot_v is None:
+            progress_message.hide()
+            self.operationStopped.emit(self)
             return
         rad = math.atan2(dot_v[1], dot_v[0])
         m = Matrix([
@@ -194,14 +215,23 @@ class RotateTool(Tool):
 
         for v in transformed_vertices:
             diff = v - min_z_vertex
-            len = math.sqrt(diff[1] * diff[1] + diff[2] * diff[2])
-            if len < 5:
+            length = math.sqrt(diff[1] * diff[1] + diff[2] * diff[2])
+            if length < 5:
                 continue
-            dot = (diff[2] / len)
+            dot = (diff[2] / length)
             if dot_min > dot:
                 dot_min = dot
                 dot_v = diff
+            iterations += 1
+            progress = round(100*iterations/total_iterations)
+            if progress != last_progress:
+                last_progress = progress
+                progress_message.setProgress(progress)
+                QApplication.processEvents()
+
         if dot_v is None:
+            progress_message.hide()
+            self.operationStopped.emit(self)
             return
         if dot_v[1] < 0:
             rad = -math.asin(dot_min)
@@ -213,3 +243,5 @@ class RotateTool(Tool):
             [ 0,-math.sin(rad), math.cos(rad) ]
         ])
         selected_object.rotate(Quaternion.fromMatrix(m), SceneNode.TransformSpace.Local)
+        progress_message.hide()
+        self.operationStopped.emit(self)
