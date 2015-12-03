@@ -192,7 +192,7 @@ class RotateTool(Tool):
             progress_message.hide()
             self.operationStopped.emit(self)
             return
-        rad = math.atan2(dot_v[1], dot_v[0])
+        rad = -math.atan2(dot_v[1], dot_v[0])
         m = Matrix([
             [ math.cos(rad), math.sin(rad), 0 ],
             [-math.sin(rad), math.cos(rad), 0 ],
@@ -200,7 +200,7 @@ class RotateTool(Tool):
         ])
         selected_object.rotate(Quaternion.fromMatrix(m), SceneNode.TransformSpace.Local)
 
-        rad = math.asin(dot_min)
+        rad = -math.asin(dot_min)
         m = Matrix([
             [ math.cos(rad), 0, math.sin(rad)],
             [ 0,             1, 0 ],
@@ -234,9 +234,9 @@ class RotateTool(Tool):
             self.operationStopped.emit(self)
             return
         if dot_v[1] < 0:
-            rad = -math.asin(dot_min)
-        else:
             rad = math.asin(dot_min)
+        else:
+            rad = -math.asin(dot_min)
         m = Matrix([
             [ 1, 0,             0 ],
             [ 0, math.cos(rad), math.sin(rad) ],
