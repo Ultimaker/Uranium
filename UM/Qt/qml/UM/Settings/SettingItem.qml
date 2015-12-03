@@ -121,12 +121,6 @@ Rectangle {
             controlContainer.notifyReset();
         }
 
-        MouseArea {
-            anchors.fill: parent
-            cursorShape: Qt.PointingHandCursor
-            acceptedButtons: Qt.NoButton
-        }
-
         style: ButtonStyle {
             background: Rectangle {
                 color: control.hovered ? base.style.controlHighlightColor : base.style.controlColor;

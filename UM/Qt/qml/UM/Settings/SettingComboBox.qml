@@ -31,7 +31,6 @@ ComboBox
         anchors.fill: parent;
         acceptedButtons: Qt.NoButton;
         onWheel: wheel.accepted = true;
-        cursorShape: Qt.PointingHandCursor;
     }
 
     style: ComboBoxStyle {

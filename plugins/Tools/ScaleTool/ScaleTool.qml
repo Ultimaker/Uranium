@@ -38,12 +38,6 @@ Item
         style: UM.Theme.styles.tool_button;
 
         onClicked: UM.ActiveTool.triggerAction("resetScale");
-
-        MouseArea {
-            anchors.fill: parent
-            cursorShape: Qt.PointingHandCursor
-            acceptedButtons: Qt.NoButton
-        }
     }
 
     Button
@@ -60,12 +54,6 @@ Item
 
         style: UM.Theme.styles.tool_button;
         onClicked: UM.ActiveTool.triggerAction("scaleToMax")
-
-        MouseArea {
-            anchors.fill: parent
-            cursorShape: Qt.PointingHandCursor
-            acceptedButtons: Qt.NoButton
-        }
     }
 
     Flow {
@@ -96,12 +84,6 @@ Item
                     UM.ActiveTool.setProperty("ScaleZ", parseFloat(zPercentage.text) / 100);
                 }
             }
-
-            MouseArea {
-                anchors.fill: parent
-                cursorShape: Qt.PointingHandCursor
-                acceptedButtons: Qt.NoButton
-            }
         }
 
         CheckBox
@@ -113,12 +95,6 @@ Item
 
             checked: !UM.ActiveTool.properties.NonUniformScale;
             onClicked: UM.ActiveTool.setProperty("NonUniformScale", !checked);
-
-            MouseArea {
-                anchors.fill: parent
-                cursorShape: Qt.PointingHandCursor
-                acceptedButtons: Qt.NoButton
-            }
         }
     }
 
