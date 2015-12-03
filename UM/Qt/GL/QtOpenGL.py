@@ -66,8 +66,8 @@ class QtOpenGL(OpenGL):
     def createFrameBufferObject(self, width, height):
         return QtFrameBufferObject.QtFrameBufferObject(width, height)
 
-    def createTexture(self, width, height):
-        return QtTexture.QtTexture(width, height)
+    def createTexture(self):
+        return QtTexture.QtTexture()
 
     def createShaderProgram(self, file_name):
         shader = QtShaderProgram.QtShaderProgram()

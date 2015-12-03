@@ -25,6 +25,8 @@ class Platform(SceneNode.SceneNode):
     def render(self, renderer):
         if not self._shader:
             self._shader = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "platform.shader"))
+            if self._texture:
+                self._shader.setTexture(0, Resources.getPath(Resources.Images, self._texture))
 
         if self.getMeshData():
             renderer.queueNode(self, shader = self._shader, transparent = True)
@@ -44,7 +46,10 @@ class Platform(SceneNode.SceneNode):
                 if _meshData:
                     meshData = _meshData.getMeshData()
             self.setMeshData(meshData)
+
             self._texture = self._machine_instance.getMachineDefinition().getPlatformTexture()
+            if self._texture and self._shader:
+                self._shader.setTexture(0, Resources.getPath(Resources.Images, self._texture))
 
             #if self._material and self._texture:
                 #self._material.setUniformTexture("u_texture", Resources.getPath(Resources.Images, self._texture))

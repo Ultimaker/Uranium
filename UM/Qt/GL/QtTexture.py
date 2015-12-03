@@ -4,27 +4,30 @@
 from PyQt5.QtGui import QOpenGLTexture, QImage
 
 from UM.View.GL.Texture import Texture
+from UM.View.GL.OpenGL import OpenGL
 
 class QtTexture(Texture):
-    def __init__(self, width = 0, height = 0):
+    def __init__(self):
         super().__init__()
 
         self._qt_texture = QOpenGLTexture(QOpenGLTexture.Target2D)
-        self._qt_texture.setSize(width, height)
-        self._qt_texture.allocateStorage(QOpenGLTexture.RGBA, QOpenGLTexture.UInt32)
+        self._gl = OpenGL.getInstance().getBindingsObject()
 
     def getTextureId(self):
         return self._qt_texture.textureId()
 
     def bind(self, unit):
-        self._qt_texture.bind()
+        self._qt_texture.bind(unit)
 
-    def release(self):
-        self._qt_texture.release()
+    def release(self, unit):
+        self._qt_texture.release(unit)
+
+    def load(self, file_name):
+        image = QImage(file_name).mirrored()
+        self._qt_texture.setData(image)
 
     def getData(self):
         return None
 
     def setData(self, data):
-        pass
-
+        self._qt_texture.setData(data)

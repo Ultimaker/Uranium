@@ -66,6 +66,9 @@ class ShaderProgram:
     def setUniformValue(self, name, value, **kwargs):
         raise NotImplementedError()
 
+    def setTexture(self, texture_unit, texture):
+        raise NotImplementedError()
+
     ##  Enable a vertex attribute to be used.
     #
     #   \param name The name of the attribute to enable.

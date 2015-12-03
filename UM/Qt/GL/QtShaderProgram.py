@@ -21,6 +21,7 @@ class QtShaderProgram(ShaderProgram):
         self._attribute_indices = {}
         self._uniform_values = {}
         self._bound = False
+        self._textures = {}
 
     def setVertexShader(self, shader):
         if not self._shader_program:
@@ -58,6 +59,11 @@ class QtShaderProgram(ShaderProgram):
 
         if self._bound:
             self._setUniformValueDirect(uniform, value)
+
+    def setTexture(self, texture_unit, file_name):
+        texture = OpenGL.getInstance().createTexture()
+        texture.load(file_name)
+        self._textures[texture_unit] = texture
 
     def enableAttribute(self, name, type, offset, stride = 0):
         if not self._shader_program:
@@ -108,12 +114,18 @@ class QtShaderProgram(ShaderProgram):
         for uniform in self._uniform_values:
             self._setUniformValueDirect(uniform, self._uniform_values[uniform])
 
+        for texture_unit, texture in self._textures.items():
+            texture.bind(texture_unit)
+
     def release(self):
         if not self._shader_program or not self._bound:
             return
 
         self._bound = False
         self._shader_program.release()
+
+        for texture_unit, texture in self._textures.items():
+            texture.release(texture_unit)
 
     def _matrixToQMatrix4x4(self, m):
         return QMatrix4x4(m.at(0,0), m.at(0, 1), m.at(0, 2), m.at(0, 3),
