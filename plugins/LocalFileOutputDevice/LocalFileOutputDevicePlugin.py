@@ -125,8 +125,10 @@ class LocalFileOutputDevice(OutputDevice):
             self._writing = True
             job.start()
         except PermissionError as e:
+            Logger.log("e", "Permission denied when trying to write to %s: %s", file_name, str(e))
             raise OutputDeviceError.PermissionDeniedError(catalog.i18nc("@info:status", "Permission denied when trying to save <filename>{0}</filename>").format(file_name)) from e
         except OSError as e:
+            Logger.log("e", "Operating system would not let us write to %s: %s", file_name, str(e))
             raise OutputDeviceError.WriteRequestFailedError(catalog.i18nc("@info:status", "Could not save to <filename>{0}</filename>: <message>{1}</message>").format()) from e
 
     def _onJobProgress(self, job, progress):
