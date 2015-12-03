@@ -26,6 +26,7 @@ class MainWindow(QQuickWindow):
         self._mouse_device.setPluginId("qt_mouse")
         self._key_device = QtKeyDevice()
         self._key_device.setPluginId("qt_key")
+        self._previous_focus = None
 
         self._app = QCoreApplication.instance()
         self._app.getController().addInputDevice(self._mouse_device)
@@ -102,9 +103,10 @@ class MainWindow(QQuickWindow):
         if event.isAccepted():
             return
 
-        if self.activeFocusItem():
+        if self.activeFocusItem() != None and self.activeFocusItem() != self._previous_focus:
             self.activeFocusItem().setFocus(False)
 
+        self._previous_focus = self.activeFocusItem()
         self._mouse_device.handleEvent(event)
 
     def mouseMoveEvent(self, event):
@@ -122,7 +124,6 @@ class MainWindow(QQuickWindow):
         super().mouseReleaseEvent(event)
         if event.isAccepted():
             return
-
         self._mouse_device.handleEvent(event)
 
     def keyPressEvent(self, event):
