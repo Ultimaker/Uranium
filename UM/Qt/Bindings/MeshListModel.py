@@ -8,6 +8,7 @@ from UM.Application import Application
 from UM.Scene.Selection import Selection
 from UM.Operations.RemoveSceneNodeOperation import RemoveSceneNodeOperation
 from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator
+from UM.Scene.GroupNode import GroupNode
 from UM.Scene.SceneNode import SceneNode
 from UM.Scene.PointCloudNode import PointCloudNode
 import threading
@@ -17,9 +18,8 @@ class MeshListModel(ListModel):
     VisibilityRole = Qt.UserRole + 2
     UniqueKeyRole = Qt.UserRole + 3
     SelectedRole = Qt.UserRole + 4
-    DepthRole = Qt.UserRole + 5
-    CollapsedRole = Qt.UserRole + 6
-    HasChildrenRole = Qt.UserRole + 7
+    CollapsedRole = Qt.UserRole + 5
+    IsGroupRole = Qt.UserRole + 6
     
     def __init__(self, parent = None):
         super().__init__(parent)
@@ -31,9 +31,8 @@ class MeshListModel(ListModel):
         self.addRoleName(self.VisibilityRole, "visibility")
         self.addRoleName(self.UniqueKeyRole, "key")
         self.addRoleName(self.SelectedRole, "selected")
-        self.addRoleName(self.DepthRole, "depth")
         self.addRoleName(self.CollapsedRole,"collapsed")
-        self.addRoleName(self.HasChildrenRole,"has_children")
+        self.addRoleName(self.IsGroupRole,"is_group")
         self._scene.rootChanged.connect(self._rootChanged)
         Selection.selectionChanged.connect(self._onSelectionChanged)
     
@@ -78,17 +77,13 @@ class MeshListModel(ListModel):
     
     def updateList(self, trigger_node):
         for root_child in self._scene.getRoot().getChildren():
-            if root_child.callDecoration("isGroup"): # Check if its a group node
+            if type(root_child) is GroupNode: # Check if its a group node
                 #if root_child.hasChildren(): #Check if it has children (only show it if it has)
                 parent_key = id(root_child)
                 for node in DepthFirstIterator(root_child): 
                     if root_child in self._collapsed_nodes:
                         self._collapsed_nodes.append(node)
-                    if node.callDecoration("isGroup"):
-                        depth = 1
-                    else:
-                        depth = 2
-                    data = {"name":node.getName(), "visibility": node.isVisible(), "key": (id(node)), "selected": Selection.isSelected(node),"depth": depth,"collapsed": node in self._collapsed_nodes,"parent_key": parent_key, "has_children":node.hasChildren()}
+                    data = {"name":node.getName(), "visibility": node.isVisible(), "key": (id(node)), "selected": Selection.isSelected(node),"collapsed": node in self._collapsed_nodes,"parent_key": parent_key, "is_group":bool(node.callDecoration("isGroup"))}
                     index = self.find("key",(id(node)))
                     parent_index = self.find("key", data["parent_key"])
                     num_children = 0
@@ -106,8 +101,7 @@ class MeshListModel(ListModel):
                         self.insertItem(corrected_index, data)
                         #self.appendItem(data)
             elif type(root_child) is SceneNode or type(root_child) is PointCloudNode:
-                data = {"name":root_child.getName(), "visibility": root_child.isVisible(), "key": (id(root_child)), "selected": Selection.isSelected(root_child),"depth": root_child.getDepth(),"collapsed": root_child in self._collapsed_nodes,"parent_key": 0, "has_children":root_child.hasChildren()}
-                
+                data = {"name":root_child.getName(), "visibility": root_child.isVisible(), "key": (id(root_child)), "selected": Selection.isSelected(root_child),"collapsed": root_child in self._collapsed_nodes,"parent_key": 0, "is_group":bool(root_child.callDecoration("isGroup"))}
                 # Check if data exists, if yes, remove old and re-add.
                 index = self.find("key",(id(root_child)))
                 if index is not None and index >= 0:
@@ -145,7 +139,7 @@ class MeshListModel(ListModel):
                     if id(node) == key:
                         node.setName(name)
     
-    #Set a single item to selected, by key
+    #Set a single item to be selected, by key
     @pyqtSlot("long")
     def setSelected(self, key):
         for index in range(0,len(self.items)):
@@ -154,13 +148,13 @@ class MeshListModel(ListModel):
                     if id(node) == key:
                         if node not in Selection.getAllSelectedObjects(): #node already selected
                             Selection.add(node)
-                            if self.items[index]["depth"] == 1: #Its a group node
+                            if node.callDecoration("isGroup"): #Its a group node
                                 for child_node in node.getChildren(): 
                                     if child_node not in Selection.getAllSelectedObjects(): #Set all children to parent state (if they arent already)
                                         Selection.add(child_node) 
                         else:
                             Selection.remove(node)
-                            if self.items[index]["depth"] == 1: #Its a group
+                            if node.callDecoration("isGroup"): #Its a group
                                 for child_node in node.getChildren():
                                     if child_node in Selection.getAllSelectedObjects():
                                         Selection.remove(child_node)    
