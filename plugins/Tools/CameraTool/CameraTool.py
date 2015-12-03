@@ -28,7 +28,6 @@ class CameraTool(Tool):
 
         self._shift_is_active = None
         self._ctrl_is_active = None
-        self._alt_is_active = None
         self._space_is_active = None
 
         self._start_drag = None
@@ -53,28 +52,13 @@ class CameraTool(Tool):
         modifiers = QtWidgets.QApplication.keyboardModifiers()
         self._shift_is_active = modifiers == QtCore.Qt.ShiftModifier
         self._ctrl_is_active = modifiers == QtCore.Qt.ControlModifier
-        self._alt_is_active = modifiers == QtCore.Qt.AltModifier
-
-        #checks for the press and release events of the modifier keys (shift and control)
-        #sets the accompanying variabel ( _[key]_is_active) on true or false
-        '''if event.type is Event.KeyPressEvent:
-            if event.key == KeyEvent.ShiftKey:
-                self._shift_is_active = True
-            if event.key == KeyEvent.ControlKey:
-                self._ctrl_is_active = True
-            if event.key == KeyEvent.AltKey:
-                self._alt_is_active = True
+        #checks for the press and release event of the space key
+        if event.type is Event.KeyPressEvent:
             if event.key == KeyEvent.SpaceKey:
                 self._space_is_active = True
         if event.type is Event.KeyReleaseEvent:
-            if  event.key == KeyEvent.ShiftKey:
-                self._shift_is_active = False
-            if  event.key == KeyEvent.ControlKey:
-                self._ctrl_is_active = False
-            if event.key == KeyEvent.AltKey:
-                self._alt_is_active = False
             if event.key == KeyEvent.SpaceKey:
-                self._space_is_active = False'''
+                self._space_is_active = False
 
     def moveEvent(self, event):
         #defines at which events the _moveCamera method is called
@@ -89,19 +73,21 @@ class CameraTool(Tool):
         #defines at which events the _rotateCamera method is called
         if MouseEvent.RightButton in event.buttons: #rightbutton
             return True
-        elif MouseEvent.LeftButton in event.buttons and self._ctrl_is_active is True: #ctr -> leftbutton
-            return False #Multi selection also requires this event, so return false
+        elif MouseEvent.LeftButton in event.buttons and self._space_is_active is True: #shift -> leftbutton
+            return True
 
     def initiateZoom(self, event):
         #calls the zoomaction method for the mousewheel event, mouseMoveEvent (in combo with alt or space) and when the plus or minus keys are used
-        if event.type is Event.MouseMoveEvent and (self._space_is_active is True): #space -> mousemove
-            if self._start_y == None:
-                self._start_y = event.y
-            _diff_y = self._start_y - event.y
-            if _diff_y != 0.0:
-                _zoom_speed = 2000
-                self._zoomCamera(_diff_y * _zoom_speed)
-                self._start_y = None
+        if event.type is event.MousePressEvent:
+            return False
+        elif event.type is Event.MouseMoveEvent and self._space_is_active is True: #space -> mousemove
+                if self._start_y == None:
+                    self._start_y = event.y
+                _diff_y = self._start_y - event.y
+                if _diff_y != 0.0:
+                    _zoom_speed = 2000
+                    self._zoomCamera(_diff_y * _zoom_speed)
+                    self._start_y = None
         elif event.type is Event.MouseWheelEvent:
             self._zoomCamera(event.vertical)
             return True
@@ -126,6 +112,7 @@ class CameraTool(Tool):
                 self._rotateCamera(-0.01, 0)
             if event.key == KeyEvent.LeftKey:
                 self._rotateCamera(0.01, 0)
+
         if event.type is Event.MousePressEvent:
             if self.moveEvent(event) == True:
                 self._move = True
