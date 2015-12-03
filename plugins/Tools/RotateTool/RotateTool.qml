@@ -39,7 +39,7 @@ Item
 
         //: Lay Flat tool button
         text: catalog.i18nc("@action:button","Lay flat")
-        iconSource: UM.Theme.icons.rotate_reset;
+        iconSource: UM.Theme.icons.rotate_layflat;
         //: Reset Rotation tool button tooltip
         tooltip: catalog.i18nc("@info:tooltip","Attempt to lay the object flat on the buildplate.");
 
