@@ -161,7 +161,7 @@ class MeshListModel(ListModel):
         all_children_selected = True
         #Check all group nodes to see if all their children are selected (if so, they also need to be selected!)
         for index in range(0,len(self.items)):
-            if self.items[index]["depth"] == 1:
+            if self.items[index]["is_group"]:
                 for node in Application.getInstance().getController().getScene().getRoot().getAllChildren():
                     if node.hasChildren():
                         if id(node) == self.items[index]["key"] and id(node) != key: 
