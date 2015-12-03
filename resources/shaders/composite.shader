@@ -36,9 +36,8 @@ fragment =
         kernel[3] = 1.0; kernel[4] = -4.0; kernel[5] = 1.0;
         kernel[6] = 0.0; kernel[7] = 1.0; kernel[8] = 0.0;
 
-        vec4 result = vec4(0.95, 0.95, 0.95, 1.0);
+        vec4 result = vec4(0.965, 0.965, 0.965, 1.0);
         vec4 layer0 = texture2D(u_layer0, v_uvs);
-        vec4 layer1 = vec4(texture2D(u_layer1, v_uvs).a);
 
         result = layer0 * layer0.a + result * (1.0 - layer0.a);
 
