@@ -15,9 +15,6 @@ Item
     {
         id: resetRotationButton
 
-        anchors.left: parent.left;
-        anchors.leftMargin: UM.Theme.sizes.default_margin.width;
-
         //: Reset Rotation tool button
         text: catalog.i18nc("@action:button","Reset")
         iconSource: UM.Theme.icons.rotate_reset;
@@ -29,30 +26,11 @@ Item
         onClicked: UM.ActiveTool.triggerAction("resetRotation");
     }
 
-    Button
-    {
-        id: layFlatButton
-
-        anchors.left: resetRotationButton.right;
-        anchors.leftMargin: UM.Theme.sizes.default_margin.width;
-
-        //: Lay Flat tool button
-        text: catalog.i18nc("@action:button","Lay flat")
-        iconSource: UM.Theme.icons.rotate_reset;
-        //: Reset Rotation tool button tooltip
-        tooltip: catalog.i18nc("@info:tooltip","Attempt to lay the object flat on the buildplate.");
-
-        style: UM.Theme.styles.tool_button;
-
-        onClicked: UM.ActiveTool.triggerAction("layFlat");
-    }
-
     CheckBox
     {
-        anchors.left: parent.left;
+        anchors.left: resetRotationButton.right;
         anchors.leftMargin: UM.Theme.sizes.default_margin.width;
-        anchors.top: resetRotationButton.bottom;
-        anchors.topMargin: UM.Theme.sizes.default_margin.width;
+        anchors.bottom: resetRotationButton.bottom;
 
         //: Snap Rotation checkbox
         text: catalog.i18nc("@action:checkbox","Snap Rotation");
