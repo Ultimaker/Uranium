@@ -68,7 +68,20 @@ class MeshListModel(ListModel):
                                 self._collapsed_nodes.remove(node)
                             if parent_node in self._collapsed_nodes and node not in self._collapsed_nodes:
                                 self._collapsed_nodes.append(node)
+                        # Magical move
+                        for node2 in Application.getInstance().getController().getScene().getRoot().getAllChildren():
+                            if id(node2) == dropped_data["key"]:
+                                # actually swap the order the items are in.
+                                children = parent_node.getChildren()
+                                a, b = children.index(node), children.index(node2)
+                                # Swap the nodes
+                                children[b], children[a] = children[a], children[b]
+
+                                # Swap the items in the model. (so display actually matches!)
+                                a , b = self.find("key",(id(node))), self.find("key",(id(node2)))
+                                self._items[b], self._items[a] = self._items[a], self._items[b]
                         self.updateList(node)
+                        break
                       #  break
         
                 #self.removeItem(old_index)
