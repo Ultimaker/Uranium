@@ -8,7 +8,6 @@ from UM.Application import Application
 from UM.Scene.Selection import Selection
 from UM.Operations.RemoveSceneNodeOperation import RemoveSceneNodeOperation
 from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator
-from UM.Scene.GroupNode import GroupNode
 from UM.Scene.SceneNode import SceneNode
 from UM.Scene.PointCloudNode import PointCloudNode
 import threading
@@ -77,7 +76,7 @@ class MeshListModel(ListModel):
     
     def updateList(self, trigger_node):
         for root_child in self._scene.getRoot().getChildren():
-            if type(root_child) is GroupNode: # Check if its a group node
+            if root_child.callDecoration("isGroup"): # Check if its a group node
                 #if root_child.hasChildren(): #Check if it has children (only show it if it has)
                 parent_key = id(root_child)
                 for node in DepthFirstIterator(root_child): 
