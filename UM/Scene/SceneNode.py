@@ -25,7 +25,7 @@ class SceneNode(SignalEmitter):
         Parent = 2
         World = 3
 
-    def __init__(self, parent = None):
+    def __init__(self, parent = None, name = ""):
         super().__init__() # Call super to make multiple inheritence work.
 
         self._children = []
@@ -52,7 +52,7 @@ class SceneNode(SignalEmitter):
         self._aabb = None
         self._aabb_job = None
         self._visible = True
-        self._name = ""
+        self._name = name
         self._decorators = []
         self._bounding_box_mesh = None
         self.boundingBoxChanged.connect(self.calculateBoundingBoxMesh)
