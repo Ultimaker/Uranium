@@ -28,8 +28,10 @@ class CompositePass(RenderPass):
     def render(self):
         self._shader.bind()
 
-        step_x = 1 / self._width
-        step_y = 1 / self._height
+        outline_size = 2.0
+
+        step_x = outline_size / self._width
+        step_y = outline_size / self._height
         offset = [
             [-step_x, -step_y], [0.0, -step_y], [step_x, -step_y],
             [-step_x, 0.0],     [0.0, 0.0],     [step_x, 0.0],
