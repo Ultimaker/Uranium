@@ -25,8 +25,7 @@ class ScaleToBoundsOperation(Operation):
             skirt_line_count = profile.getSettingValue("skirt_line_count")
             outer_ribbon_size = skirt_distance + (skirt_line_count * profile.getSettingValue("skirt_line_width"))
         elif adhesion_type == "brim":
-            brim_line_count = profile.getSettingValue("brim_line_count")
-            outer_ribbon_size = brim_line_count * profile.getSettingValue("skirt_line_width")
+            outer_ribbon_size = profile.getSettingValue("brim_width")
         elif adhesion_type == "raft":
             outer_ribbon_size = profile.getSettingValue("raft_margin") + 1
 
