@@ -5,6 +5,7 @@ from PyQt5.QtGui import QOpenGLFramebufferObject, QOpenGLFramebufferObjectFormat
 
 from UM.View.GL.FrameBufferObject import FrameBufferObject
 
+##  FrameBufferObject subclass using the PyQt OpenGL implementation.
 class QtFrameBufferObject(FrameBufferObject):
     def __init__(self, width, height):
         super().__init__()

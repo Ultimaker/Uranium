@@ -12,6 +12,7 @@ from UM.Math.Color import Color
 from UM.View.GL.OpenGL import OpenGL
 from UM.View.GL.ShaderProgram import ShaderProgram
 
+##  Shader program subclass using PyQt for the OpenGL implementation.
 class QtShaderProgram(ShaderProgram):
     def __init__(self):
         super().__init__()
@@ -60,9 +61,7 @@ class QtShaderProgram(ShaderProgram):
         if self._bound:
             self._setUniformValueDirect(uniform, value)
 
-    def setTexture(self, texture_unit, file_name):
-        texture = OpenGL.getInstance().createTexture()
-        texture.load(file_name)
+    def setTexture(self, texture_unit, texture):
         self._textures[texture_unit] = texture
 
     def enableAttribute(self, name, type, offset, stride = 0):

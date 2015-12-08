@@ -3,6 +3,7 @@
 
 import sys
 
+##  Convenience class to simplify OS checking and similar platform-specific handling.
 class Platform:
     class PlatformType:
         Windows = 1
@@ -10,18 +11,22 @@ class Platform:
         OSX = 3
         Other = 4
 
+    ##  Check to see if we are currently running on OSX.
     @classmethod
     def isOSX(cls):
         return cls.__platform_type == cls.PlatformType.OSX
 
+    ##  Check to see if we are currently running on Windows.
     @classmethod
     def isWindows(cls):
         return cls.__platform_type == cls.PlatformType.Windows
 
+    ##  Check to see if we are currently running on Linux.
     @classmethod
     def isLinux(cls):
         return cls.__platform_type == cls.PlatformType.Linux
 
+    ##  Get the platform type.
     @classmethod
     def getType(cls):
         return cls.__platform_type

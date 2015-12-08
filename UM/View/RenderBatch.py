@@ -12,12 +12,24 @@ from UM.View.GL.OpenGL import OpenGL
 vertexBufferProperty = "__gl_vertex_buffer"
 indexBufferProperty = "__gl_index_buffer"
 
+##  The RenderBatch class represent a batch of objects that should be rendered.
+#
+#   Each RenderBatch contains a list of objects to render and all state related
+#   to those objects. It tries to minimise changes to state between render the
+#   individual objects. This means that for example the ShaderProgram used is
+#   only bound once, at the start of rendering. There are a few values, like
+#   the model-view-projection matrix that are updated for each object.
 class RenderBatch():
+    ##  The type of render batch.
+    #
+    #   This determines some basic state values, like blending on/off and additionally
+    #   is used to determine sorting order.
     class RenderType:
         Solid = 1
         Transparent = 2
         Overlay = 3
 
+    ##  The mode to render objects in. These correspond to OpenGL render modes.
     class RenderMode:
         Points = 0x0000
         Lines = 0x0001
@@ -27,10 +39,19 @@ class RenderBatch():
         TriangleStrip = 0x0005
         TriangleFan = 0x0006
 
-    def __init__(self, **kwargs):
+    ##  Init method.
+    #
+    #   \param shader The shader to use for this batch.
+    #   \param kwargs Keyword arguments.
+    #                 Possible values:
+    #                 - type: The RenderType to use for this batch. Defaults to RenderType.Solid.
+    #                 - mode: The RenderMode to use for this batch. Defaults to RenderMode.Triangles.
+    #                 - backface_cull: Whether to enable or disable backface culling. Defaults to True.
+    #                 - range: A tuple indicating the start and end of a range of triangles to render. Defaults to None.
+    def __init__(self, shader, **kwargs):
+        self._shader = shader
         self._render_type = kwargs.get("type", self.RenderType.Solid)
         self._render_mode = kwargs.get("mode", self.RenderMode.Triangles)
-        self._shader = kwargs.get("shader", None)
         self._backface_cull = kwargs.get("backface_cull", True)
         self._render_range = kwargs.get("range", None)
         self._items = []
@@ -40,30 +61,44 @@ class RenderBatch():
 
         self._gl = OpenGL.getInstance().getBindingsObject()
 
+    ##  The RenderType for this batch.
     @property
     def renderType(self):
         return self._render_type
 
+    ##  The RenderMode for this batch.
     @property
     def renderMode(self):
         return self._render_mode
 
+    ##  The shader for this batch.
     @property
-    def material(self):
-        return self._material
+    def shader(self):
+        return self._shader
 
+    ##  Whether backface culling is enabled or not.
     @property
     def backfaceCull(self):
         return self._backface_cull
 
+    ##  The range of elements to render.
+    #
+    #   \return The range of elements to render, as a tuple of (start, end)
     @property
     def renderRange(self):
         return self._render_range
 
+    ##  The items to render.
+    #
+    #   \return A list of tuples, where each item is (transform_matrix, mesh, extra_uniforms)
     @property
     def items(self):
         return self._items
 
+    ##  Less-than comparison method.
+    #
+    #   This sorts RenderType.Solid before RenderType.Transparent
+    #   and RenderType.Transparent before RenderType.Overlay.
     def __lt__(self, other):
         if self._render_type == self.RenderType.Solid:
             return True
@@ -73,9 +108,18 @@ class RenderBatch():
 
         return False
 
+    ##  Add an item to render to this batch.
+    #
+    #   \param transform The transformation matrix to use for rendering the item.
+    #   \param mesh The mesh to render with the transform matrix.
+    #   \param uniforms A dict of additional uniform bindings to set when rendering the item.
+    #                   Note these are set specifically for this item.
     def addItem(self, transform, mesh, uniforms = None):
         self._items.append((transform, mesh, uniforms))
 
+    ##  Render the batch.
+    #
+    #   \param camera The camera to render from.
     def render(self, camera):
         self._shader.bind()
 

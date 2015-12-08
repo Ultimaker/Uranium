@@ -14,6 +14,7 @@ from . import QtFrameBufferObject
 from . import QtTexture
 from . import QtShaderProgram
 
+##  OpenGL subclass providing the PyQt OpenGL implementation.
 class QtOpenGL(OpenGL):
     def __init__(self):
         profile = QOpenGLVersionProfile()

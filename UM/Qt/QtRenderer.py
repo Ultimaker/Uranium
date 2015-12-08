@@ -29,7 +29,7 @@ from ctypes import c_void_p
 vertexBufferProperty = "__qtgl2_vertex_buffer"
 indexBufferProperty = "__qtgl2_index_buffer"
 
-##  A Renderer implementation using OpenGL2 to render.
+##  A Renderer implementation using PyQt's OpenGL implementation to render.
 class QtRenderer(Renderer):
     def __init__(self):
         super().__init__()
@@ -55,22 +55,31 @@ class QtRenderer(Renderer):
 
         self._camera = None
 
+    ##  Get an integer multiplier that can be used to correct for screen DPI.
     def getPixelMultiplier(self):
         # Standard assumption for screen pixel density is 96 DPI. We use that as baseline to get
         # a multiplication factor we can use for screens > 96 DPI.
         return round(Application.getInstance().primaryScreen().physicalDotsPerInch() / 96.0)
 
+    ##  Get the list of render batches.
     def getBatches(self):
         return self._batches
 
+    ##  Overridden from Renderer.
+    #
+    #   This makes sure the added render pass has the right size.
     def addRenderPass(self, render_pass):
         super().addRenderPass(render_pass)
         render_pass.setSize(self._viewport_width, self._viewport_height)
 
-    ##  Set background color of the rendering.
+    ##  Set background color used when rendering.
     def setBackgroundColor(self, color):
         self._background_color = color
 
+    ##  Set the viewport size.
+    #
+    #   \param width The new width of the viewport.
+    #   \param height The new height of the viewport.
     def setViewportSize(self, width, height):
         self._viewport_width = width
         self._viewport_height = height
@@ -78,10 +87,14 @@ class QtRenderer(Renderer):
         for render_pass in self._render_passes:
             render_pass.setSize(width, height)
 
+    ##  Set the window size.
     def setWindowSize(self, width, height):
         self._window_width = width
         self._window_height = height
 
+    ##  Get the window size.
+    #
+    #   \return A tuple of (window_width, window_height)
     def getWindowSize(self):
         return (self._window_width, self._window_height)
 
@@ -103,9 +116,9 @@ class QtRenderer(Renderer):
             type = RenderBatch.RenderType.Overlay
 
         batch = RenderBatch(
+            kwargs.get("shader", self._default_material),
             type = type,
             mode = kwargs.get("mode", RenderBatch.RenderMode.Triangles),
-            shader = kwargs.get("shader", self._default_material),
             backface_cull = kwargs.get("backface_cull", True),
             range = kwargs.get("range", None)
         )
@@ -124,6 +137,9 @@ class QtRenderer(Renderer):
     def endRendering(self):
         self._batches.clear()
 
+    ##  Render a full screen quad.
+    #
+    #   \param shader The shader to use when rendering.
     def renderFullScreenQuad(self, shader):
         self._gl.glDisable(self._gl.GL_DEPTH_TEST)
         self._gl.glDisable(self._gl.GL_BLEND)

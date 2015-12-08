@@ -16,6 +16,12 @@ from UM.View.RenderPass import RenderPass
 from UM.View.RenderBatch import RenderBatch
 from UM.View.GL.OpenGL import OpenGL
 
+##  A RenderPass subclass responsible for rendering selectable objects to a texture.
+#
+#   This pass performs the rendering of selectable objects to a texture that can be
+#   sampled to retrieve the actual object that was underneath the mouse cursor. Additionally,
+#   information about what objects are actually selected is rendered into the alpha channel
+#   of this render pass so it can be used later on in the composite pass.
 class SelectionPass(RenderPass):
     def __init__(self, width, height):
         super().__init__("selection", width, height, -999)
@@ -27,18 +33,17 @@ class SelectionPass(RenderPass):
 
         self._renderer = Application.getInstance().getRenderer()
 
-        self._selection_map = {
-            ToolHandle.DisabledColor: ToolHandle.NoAxis,
-            ToolHandle.XAxisColor: ToolHandle.XAxis,
-            ToolHandle.YAxisColor: ToolHandle.YAxis,
-            ToolHandle.ZAxisColor: ToolHandle.ZAxis,
-            ToolHandle.AllAxisColor: ToolHandle.AllAxis
-        }
-
+        self._selection_map = {}
         self._output = None
 
+    ##  Perform the actual rendering.
     def render(self):
         self._selection_map = {
+            self._dropAlpha(ToolHandle.DisabledColor): ToolHandle.NoAxis,
+            self._dropAlpha(ToolHandle.XAxisColor): ToolHandle.XAxis,
+            self._dropAlpha(ToolHandle.YAxisColor): ToolHandle.YAxis,
+            self._dropAlpha(ToolHandle.ZAxisColor): ToolHandle.ZAxis,
+            self._dropAlpha(ToolHandle.AllAxisColor): ToolHandle.AllAxis,
             ToolHandle.DisabledColor: ToolHandle.NoAxis,
             ToolHandle.XAxisColor: ToolHandle.XAxis,
             ToolHandle.YAxisColor: ToolHandle.YAxis,
@@ -63,10 +68,17 @@ class SelectionPass(RenderPass):
 
             batch.render(self._scene.getActiveCamera())
 
+            self._gl.glColorMask(self._gl.GL_TRUE, self._gl.GL_TRUE, self._gl.GL_TRUE, self._gl.GL_FALSE)
+            self._gl.glDisable(self._gl.GL_DEPTH_TEST)
+
             tool_handle.render(self._scene.getActiveCamera())
+
+            self._gl.glEnable(self._gl.GL_DEPTH_TEST)
+            self._gl.glColorMask(self._gl.GL_TRUE, self._gl.GL_TRUE, self._gl.GL_TRUE, self._gl.GL_TRUE)
 
             self.release()
 
+    ##  Get the object id at a certain pixel coordinate.
     def getIdAtPosition(self, x, y):
         output = self.getOutput()
 

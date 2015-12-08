@@ -6,6 +6,7 @@ from PyQt5.QtGui import QOpenGLTexture, QImage
 from UM.View.GL.Texture import Texture
 from UM.View.GL.OpenGL import OpenGL
 
+##  Texture subclass using PyQt for the OpenGL implementation.
 class QtTexture(Texture):
     def __init__(self):
         super().__init__()
@@ -25,9 +26,3 @@ class QtTexture(Texture):
     def load(self, file_name):
         image = QImage(file_name).mirrored()
         self._qt_texture.setData(image)
-
-    def getData(self):
-        return None
-
-    def setData(self, data):
-        self._qt_texture.setData(data)
