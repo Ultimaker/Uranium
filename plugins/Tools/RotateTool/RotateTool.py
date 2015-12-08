@@ -196,13 +196,13 @@ class RotateTool(Tool):
             progress_message.hide()
             self.operationStopped.emit(self)
             return
-        rad = -math.atan2(dot_v[2], dot_v[0])
+        rad = math.atan2(dot_v[2], dot_v[0])
         m = Matrix([
             [ math.cos(rad), 0, math.sin(rad)],
             [ 0,             1, 0 ],
             [-math.sin(rad), 0, math.cos(rad)]
         ])
-        selected_object.rotate(Quaternion.fromMatrix(m), SceneNode.TransformSpace.Local)
+        selected_object.rotate(Quaternion.fromMatrix(m), SceneNode.TransformSpace.World)
 
         rad = -math.asin(dot_min)
         m = Matrix([
@@ -210,7 +210,7 @@ class RotateTool(Tool):
             [-math.sin(rad), math.cos(rad), 0 ],
             [ 0,             0,             1 ]
         ])
-        selected_object.rotate(Quaternion.fromMatrix(m), SceneNode.TransformSpace.Local)
+        selected_object.rotate(Quaternion.fromMatrix(m), SceneNode.TransformSpace.World)
 
         transformed_vertices = selected_object.getMeshDataTransformed().getVertices()
         min_y_vertex = transformed_vertices[transformed_vertices.argmin(0)[1]]
@@ -238,14 +238,14 @@ class RotateTool(Tool):
             self.operationStopped.emit(self)
             return
         if dot_v[2] < 0:
-            rad = math.asin(dot_min)
-        else:
             rad = -math.asin(dot_min)
+        else:
+            rad = math.asin(dot_min)
         m = Matrix([
             [ 1, 0,             0 ],
             [ 0, math.cos(rad),-math.sin(rad) ],
             [ 0, math.sin(rad), math.cos(rad) ]
         ])
-        selected_object.rotate(Quaternion.fromMatrix(m), SceneNode.TransformSpace.Local)
+        selected_object.rotate(Quaternion.fromMatrix(m), SceneNode.TransformSpace.World)
         progress_message.hide()
         self.operationStopped.emit(self)
