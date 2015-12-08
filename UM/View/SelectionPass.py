@@ -51,8 +51,8 @@ class SelectionPass(RenderPass):
             ToolHandle.AllAxisColor: ToolHandle.AllAxis
         }
 
-        batch = RenderBatch(shader = self._shader)
-        tool_handle = RenderBatch(shader = self._tool_handle_shader)
+        batch = RenderBatch(self._shader)
+        tool_handle = RenderBatch(self._tool_handle_shader, type = RenderBatch.RenderType.Overlay)
         selectable_objects = False
         for node in DepthFirstIterator(self._scene.getRoot()):
             if isinstance(node, ToolHandle):
@@ -108,3 +108,6 @@ class SelectionPass(RenderPass):
         self._selection_map[color] = id(node)
 
         return color
+
+    def _dropAlpha(self, color):
+        return Color(color.r, color.g, color.b, 0.0)
