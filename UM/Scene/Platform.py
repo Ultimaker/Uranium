@@ -26,7 +26,9 @@ class Platform(SceneNode.SceneNode):
         if not self._shader:
             self._shader = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "platform.shader"))
             if self._texture:
-                self._shader.setTexture(0, Resources.getPath(Resources.Images, self._texture))
+                self._shader.setTexture(0, self._texture)
+            else:
+                self._updateTexture()
 
         if self.getMeshData():
             renderer.queueNode(self, shader = self._shader, transparent = True)
@@ -47,15 +49,26 @@ class Platform(SceneNode.SceneNode):
                     meshData = _meshData.getMeshData()
             self.setMeshData(meshData)
 
-            self._texture = self._machine_instance.getMachineDefinition().getPlatformTexture()
-            if self._texture and self._shader:
-                self._shader.setTexture(0, Resources.getPath(Resources.Images, self._texture))
-
-            #if self._material and self._texture:
-                #self._material.setUniformTexture("u_texture", Resources.getPath(Resources.Images, self._texture))
+            self._updateTexture()
 
             offset = self._machine_instance.getSettingValue("machine_platform_offset")
             if offset:
                 self.setPosition(Vector(offset[0], offset[1], offset[2]))
             else:
                 self.setPosition(Vector(0.0, 0.0, 0.0))
+
+    def _updateTexture(self):
+        if not self._machine_instance or not OpenGL.getInstance():
+            return
+
+        texture_file = self._machine_instance.getMachineDefinition().getPlatformTexture()
+        if texture_file:
+            self._texture = OpenGL.getInstance().createTexture()
+            self._texture.load(Resources.getPath(Resources.Images, texture_file))
+
+            if self._shader:
+                self._shader.setTexture(0, self._texture)
+        else:
+            self._texture = None
+            if self._shader:
+                self._shader.setTexture(0, None)
