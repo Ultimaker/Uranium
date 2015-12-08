@@ -126,21 +126,4 @@ class RenderPass:
             Logger.log("w", "Tried to create render pass with size <= 0")
             return
 
-        if OpenGL.getInstance().hasFrameBufferObjects():
-            self._fbo = OpenGL.getInstance().createFrameBufferObject(self._width, self._height)
-        else:
-            self._texture = OpenGL.getInstance().createTexture(self._width, self._height)
-
-    def _releaseFBO(self):
-        self._fbo.release()
-
-        # Workaround for a driver bug with recent Intel chips on OSX.
-        # Releasing the current FBO does not properly clear the depth buffer, so we have to do that manually.
-        #if Platform.isOSX() and OpenGL.getInstance().getGPUVendor() == OpenGL.Vendor.Intel:
-            #self._gl.glClear(self._gl.GL_COLOR_BUFFER_BIT | self._gl.GL_DEPTH_BUFFER_BIT)
-
-    def _releaseTexture(self):
-        self._texture.bind()
-        self._gl.glCopyTexImage2D(self._gl.GL_TEXTURE_2D, 0, self._gl.GL_RGBA, 0, 0, self._width, self._height, 0)
-        self._texture.release()
-        self._gl.glClear(self._gl.GL_COLOR_BUFFER_BIT | self._gl.GL_DEPTH_BUFFER_BIT)
+        self._fbo = OpenGL.getInstance().createFrameBufferObject(self._width, self._height)
