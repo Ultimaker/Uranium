@@ -25,6 +25,7 @@ class RenderBatch():
     #   This determines some basic state values, like blending on/off and additionally
     #   is used to determine sorting order.
     class RenderType:
+        NoType = 0
         Solid = 1
         Transparent = 2
         Overlay = 3
@@ -52,7 +53,7 @@ class RenderBatch():
         self._shader = shader
         self._render_type = kwargs.get("type", self.RenderType.Solid)
         self._render_mode = kwargs.get("mode", self.RenderMode.Triangles)
-        self._backface_cull = kwargs.get("backface_cull", True)
+        self._backface_cull = kwargs.get("backface_cull", False)
         self._render_range = kwargs.get("range", None)
         self._items = []
 
