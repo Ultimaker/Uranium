@@ -35,7 +35,7 @@ fragment =
 [defaults]
 u_disabledColor = [0.5, 0.5, 0.5, 1.0]
 u_activeColor = [0.5, 0.5, 0.5, 1.0]
-u_disabledMultiplier = 0.5
+u_disabledMultiplier = 0.75
 
 [bindings]
 u_modelViewProjectionMatrix = model_view_projection_matrix
