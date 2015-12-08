@@ -23,9 +23,9 @@ class ToolHandle(SceneNode.SceneNode):
     AllAxis = 5
 
     DisabledColor = Color(0.5, 0.5, 0.5, 1.0)
-    XAxisColor = Color(1.0, 0.0, 0.0, 0.8)
-    YAxisColor = Color(0.0, 0.0, 1.0, 0.8)
-    ZAxisColor = Color(0.0, 1.0, 0.0, 0.8)
+    XAxisColor = Color(1.0, 0.0, 0.0, 1.0)
+    YAxisColor = Color(0.0, 0.0, 1.0, 1.0)
+    ZAxisColor = Color(0.0, 1.0, 0.0, 1.0)
     AllAxisColor = Color(1.0, 1.0, 1.0, 1.0)
 
     def __init__(self, parent = None):
