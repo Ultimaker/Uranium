@@ -9,7 +9,6 @@ from UM.Resources import Resources
 from UM.Application import Application
 
 class SettingsModel(ListModel):
-    
     NameRole = Qt.UserRole + 1 #Label 
     CategoryRole =Qt.UserRole + 2 #Key of category
     CollapsedRole = Qt.UserRole + 3 #Is it collapsed
@@ -23,7 +22,7 @@ class SettingsModel(ListModel):
     OptionsRole = Qt.UserRole + 11
     UnitRole = Qt.UserRole + 12
     DescriptionRole = Qt.UserRole + 13
-    
+
     def __init__(self, parent = None):
         super().__init__(parent)
         self._machine_settings = None
