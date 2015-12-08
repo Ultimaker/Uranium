@@ -17,7 +17,7 @@ fragment =
 
     void main()
     {
-        if(v_color != vec4(0.0, 0.0, 0.0, 0.0))
+        if(v_color != vec4(0.0, 0.0, 0.0, 1.0))
         {
             gl_FragColor = v_color;
         }
