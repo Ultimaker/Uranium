@@ -48,7 +48,7 @@ fragment =
             sum += color * (kernel[i] / u_outline_strength);
         }
 
-        gl_FragColor = result + vec4(abs(sum.a)) * u_outline_color;
+        gl_FragColor = mix(result, vec4(abs(sum.a)) * u_outline_color, abs(sum.a));
     }
 
 [defaults]
@@ -56,8 +56,8 @@ u_layer0 = 0
 u_layer1 = 1
 u_layer2 = 2
 u_layer3 = 3
-u_outline_strength = 2.0
-u_outline_color = [1.0, 0.0, 1.0, 1.0]
+u_outline_strength = 1.0
+u_outline_color = [0.05, 0.66, 0.89, 1.0]
 
 [bindings]
 
