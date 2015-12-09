@@ -25,10 +25,10 @@ class RenderBatch():
     #   This determines some basic state values, like blending on/off and additionally
     #   is used to determine sorting order.
     class RenderType:
-        NoType = 0
-        Solid = 1
-        Transparent = 2
-        Overlay = 3
+        NoType = 0 ## No special state changes are done.
+        Solid = 1 ## Depth testing and depth writing are enabled.
+        Transparent = 2 ## Depth testing is enabled, depth writing is disabled.
+        Overlay = 3 ## Depth testing is disabled.
 
     ##  The mode to render objects in. These correspond to OpenGL render modes.
     class RenderMode:
