@@ -32,14 +32,9 @@ class Renderer():
     #
     #   \param node The node to queue for rendering.
     #   \param kwargs Keyword arguments.
-    #                 Possible keywords:
-    #                 - mesh: The MeshData object to render at the node's position. By default this is the node's MeshData object.
-    #                 - shader: The shader to use to render. By default this is a simple vertex color shader.
-    #                 - mode: The mode to render in. By default this is RenderBatch.RenderMode.Triangles.
-    #                 - transparent: Should this mesh be rendered with transparency. Boolean value, default False.
-    #                 - overlay: Should this mesh be rendered on top of everything else. Boolean value, default False.
-    #                 - backface_cull: Should backface culling be enabled for this object. Defaults to True.
-    #                 - range: A tuple indicating the range of elements to render. Defaults to None to indicate the full object should be rendered.
+    #                 Most of these are passed to the RenderBatch constructor directly. See RenderBatch for all available options.
+    #                 In addition, the parameter "shader" is available, which determines the shader to render with. When not specified,
+    #                 it defaults to a simple vertex color shader.
     def queueNode(self, node, **kwargs):
         raise NotImplementedError()
 
