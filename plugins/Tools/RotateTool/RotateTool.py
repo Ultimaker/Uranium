@@ -164,7 +164,7 @@ class RotateTool(Tool):
         progress_message = Message("Finding flat base...", lifetime = 0, dismissable = False)
         progress_message.setProgress(0)
         progress_message.show()
-    
+
         selected_object = Selection.getSelectedObject(0)
         transformed_vertices = selected_object.getMeshDataTransformed().getVertices()
         min_y_vertex = transformed_vertices[transformed_vertices.argmin(0)[1]]
@@ -174,7 +174,7 @@ class RotateTool(Tool):
         iterations = 0
         total_iterations = len(transformed_vertices) * 2
         last_progress = 0
-        
+
         for v in transformed_vertices:
             diff = v - min_y_vertex
             length = math.sqrt(diff[0] * diff[0] + diff[2] * diff[2] + diff[1] * diff[1])
@@ -195,19 +195,20 @@ class RotateTool(Tool):
             progress_message.hide()
             self.operationStopped.emit(self)
             return
-        rad = math.atan2(dot_v[2], dot_v[0])
-        m = Matrix([
-            [ math.cos(rad), 0, math.sin(rad)],
-            [ 0,             1, 0 ],
-            [-math.sin(rad), 0, math.cos(rad)]
-        ])
-        selected_object.rotate(Quaternion.fromMatrix(m), SceneNode.TransformSpace.Parent)
 
         rad = -math.asin(dot_min)
         m = Matrix([
             [ math.cos(rad), math.sin(rad), 0 ],
             [-math.sin(rad), math.cos(rad), 0 ],
             [ 0,             0,             1 ]
+        ])
+        selected_object.rotate(Quaternion.fromMatrix(m), SceneNode.TransformSpace.Parent)
+
+        rad = math.atan2(dot_v[2], dot_v[0])
+        m = Matrix([
+            [ math.cos(rad), 0, math.sin(rad)],
+            [ 0,             1, 0 ],
+            [-math.sin(rad), 0, math.cos(rad)]
         ])
         selected_object.rotate(Quaternion.fromMatrix(m), SceneNode.TransformSpace.Parent)
 
@@ -236,6 +237,7 @@ class RotateTool(Tool):
             progress_message.hide()
             self.operationStopped.emit(self)
             return
+
         if dot_v[2] < 0:
             rad = -math.asin(dot_min)
         else:
@@ -246,5 +248,6 @@ class RotateTool(Tool):
             [ 0, math.sin(rad), math.cos(rad) ]
         ])
         selected_object.rotate(Quaternion.fromMatrix(m), SceneNode.TransformSpace.Parent)
+
         progress_message.hide()
         self.operationStopped.emit(self)
