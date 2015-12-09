@@ -153,7 +153,7 @@ class ShaderProgram:
     #         updated.
     def updateBindings(self, **kwargs):
         for key, value in kwargs.items():
-            if key in self._bindings:
+            if key in self._bindings and value is not None:
                 self.setUniformValue(self._bindings[key], value, cache = False)
 
     ##  Add an attribute binding.
