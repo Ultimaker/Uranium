@@ -49,12 +49,14 @@ class RenderBatch():
     #                 - mode: The RenderMode to use for this batch. Defaults to RenderMode.Triangles.
     #                 - backface_cull: Whether to enable or disable backface culling. Defaults to True.
     #                 - range: A tuple indicating the start and end of a range of triangles to render. Defaults to None.
+    #                 - sort: A modifier to influence object sorting. Lower values will cause the object to be rendered before others. Mostly relevant to Transparent mode.
     def __init__(self, shader, **kwargs):
         self._shader = shader
         self._render_type = kwargs.get("type", self.RenderType.Solid)
         self._render_mode = kwargs.get("mode", self.RenderMode.Triangles)
         self._backface_cull = kwargs.get("backface_cull", False)
         self._render_range = kwargs.get("range", None)
+        self._sort_weight = kwargs.get("sort", 0)
         self._items = []
 
         self._view_matrix = None
@@ -101,6 +103,9 @@ class RenderBatch():
     #   This sorts RenderType.Solid before RenderType.Transparent
     #   and RenderType.Transparent before RenderType.Overlay.
     def __lt__(self, other):
+        if self._render_type == other._render_type:
+            return self._sort_weight < other._sort_weight
+
         if self._render_type == self.RenderType.Solid:
             return True
 
