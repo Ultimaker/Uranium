@@ -152,7 +152,7 @@ ScrollView
                             onShowTooltip:
                             {
                                 position = Qt.point(0, item.height);
-                                base.showTooltip(item, position, model.description)
+                                base.showTooltip(item, position, "<b>"+model.name+"</b><br/>"+model.description)
                             }
                             onHideTooltip: base.hideTooltip()
 
