@@ -113,6 +113,7 @@ class Backend(PluginObject, SignalEmitter):
 
     ##  Private socket state changed handler.
     def _onSocketStateChanged(self, state):
+        Logger.log("d", "socket state: %s", state)
         if state == SignalSocket.ListeningState:
             if not Application.getInstance().getCommandLineOption("external-backend", False):
                 self.startEngine()
@@ -163,6 +164,8 @@ class Backend(PluginObject, SignalEmitter):
         self._socket.stateChanged.connect(self._onSocketStateChanged)
         self._socket.messageReceived.connect(self._onMessageReceived)
         self._socket.error.connect(self._onSocketError)
+
+        Logger.log("d", "Starting listen on port %s", self._port)
 
         self._socket.listen("127.0.0.1", self._port)
         
