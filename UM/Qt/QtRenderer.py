@@ -108,20 +108,17 @@ class QtRenderer(Renderer):
         self._gl.glClearColor(0.0, 0.0, 0.0, 0.0)
 
     ##  Put a node in the render queue
+    #
+    #   See Renderer.queueNode() for an explanation of kwargs.
     def queueNode(self, node, **kwargs):
-        type = RenderBatch.RenderType.Solid
-        if kwargs.get("transparent", False):
+        type = kwargs.pop("type", RenderBatch.RenderType.Solid)
+        if kwargs.pop("transparent", False):
             type = RenderBatch.RenderType.Transparent
-        elif kwargs.get("overlay", False):
+        elif kwargs.pop("overlay", False):
             type = RenderBatch.RenderType.Overlay
 
-        batch = RenderBatch(
-            kwargs.get("shader", self._default_material),
-            type = type,
-            mode = kwargs.get("mode", RenderBatch.RenderMode.Triangles),
-            backface_cull = kwargs.get("backface_cull", True),
-            range = kwargs.get("range", None)
-        )
+        shader = kwargs.pop("shader", self._default_material)
+        batch = RenderBatch(shader, type = type, **kwargs)
 
         batch.addItem(node.getWorldTransformation(), kwargs.get("mesh", node.getMeshData()))
 
