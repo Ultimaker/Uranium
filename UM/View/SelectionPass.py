@@ -63,9 +63,8 @@ class SelectionPass(RenderPass):
                 selectable_objects = True
                 batch.addItem(transform = node.getWorldTransformation(), mesh = node.getMeshData(), uniforms = { "selection_color": self._getNodeColor(node)})
 
+        self.bind()
         if selectable_objects:
-            self.bind()
-
             batch.render(self._scene.getActiveCamera())
 
             self._gl.glColorMask(self._gl.GL_TRUE, self._gl.GL_TRUE, self._gl.GL_TRUE, self._gl.GL_FALSE)
@@ -76,7 +75,7 @@ class SelectionPass(RenderPass):
             self._gl.glEnable(self._gl.GL_DEPTH_TEST)
             self._gl.glColorMask(self._gl.GL_TRUE, self._gl.GL_TRUE, self._gl.GL_TRUE, self._gl.GL_TRUE)
 
-            self.release()
+        self.release()
 
     ##  Get the object id at a certain pixel coordinate.
     def getIdAtPosition(self, x, y):
