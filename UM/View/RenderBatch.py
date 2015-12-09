@@ -57,6 +57,10 @@ class RenderBatch():
     #                 - range: A tuple indicating the start and end of a range of triangles to render. Defaults to None.
     #                 - sort: A modifier to influence object sorting. Lower values will cause the object to be rendered before others. Mostly relevant to Transparent mode.
     #                 - blend_mode: The BlendMode to use to render this batch. Defaults to NoBlending when type is Solid, Normal when type is Transparent or Overlay.
+    #                 - state_setup_callback: A callback function to be called just after the state has been set up but before rendering.
+    #                                         This can be used to do additional alterations to the state that can not be done otherwise.
+    #                                         The callback is passed the OpenGL bindings object as first and only parameter.
+    #                 - state_teardown_callback: A callback similar to state_setup_callback, but called after everything was rendered, to handle cleaning up state changes made in state_setup_callback.
     def __init__(self, shader, **kwargs):
         self._shader = shader
         self._render_type = kwargs.get("type", self.RenderType.Solid)
@@ -67,6 +71,8 @@ class RenderBatch():
         self._blend_mode = kwargs.get("blend_mode", None)
         if not self._blend_mode:
             self._blend_mode = self.BlendMode.NoBlending if self._render_type == self.RenderType.Solid else self.BlendMode.Normal
+        self._state_setup_callback = kwargs.get("state_setup_callback", None)
+        self._state_teardown_callback = kwargs.get("state_teardown_callback", None)
         self._items = []
 
         self._view_matrix = None
@@ -162,6 +168,9 @@ class RenderBatch():
             self._gl.glEnable(self._gl.GL_BLEND)
             self._gl.glBlendFunc(self._gl.GL_SRC_ALPHA, self._gl.GL_ONE)
 
+        if self._state_setup_callback:
+            self._state_setup_callback(self._gl)
+
         self._view_matrix = camera.getWorldTransformation().getInverse()
         self._projection_matrix = camera.getProjectionMatrix()
         self._view_projection_matrix = camera.getProjectionMatrix().multiply(self._view_matrix)
@@ -176,6 +185,9 @@ class RenderBatch():
 
         for item in self._items:
             self._renderItem(item)
+
+        if self._state_teardown_callback:
+            self._state_teardown_callback(self._gl)
 
         self._shader.release()
 
