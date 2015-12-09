@@ -40,6 +40,12 @@ class RenderBatch():
         TriangleStrip = 0x0005
         TriangleFan = 0x0006
 
+    ##  Blending mode.
+    class BlendMode:
+        NoBlending = 0 ## Blending disabled.
+        Normal = 1 ## Standard alpha blending, mixing source and destination values based on respective alpha channels.
+        Additive = 2 ## Additive blending, the value of the rendered pixel is added to the color already in the buffer.
+
     ##  Init method.
     #
     #   \param shader The shader to use for this batch.
@@ -50,6 +56,7 @@ class RenderBatch():
     #                 - backface_cull: Whether to enable or disable backface culling. Defaults to True.
     #                 - range: A tuple indicating the start and end of a range of triangles to render. Defaults to None.
     #                 - sort: A modifier to influence object sorting. Lower values will cause the object to be rendered before others. Mostly relevant to Transparent mode.
+    #                 - blend_mode: The BlendMode to use to render this batch. Defaults to NoBlending when type is Solid, Normal when type is Transparent or Overlay.
     def __init__(self, shader, **kwargs):
         self._shader = shader
         self._render_type = kwargs.get("type", self.RenderType.Solid)
@@ -57,6 +64,9 @@ class RenderBatch():
         self._backface_cull = kwargs.get("backface_cull", False)
         self._render_range = kwargs.get("range", None)
         self._sort_weight = kwargs.get("sort", 0)
+        self._blend_mode = kwargs.get("blend_mode", None)
+        if not self._blend_mode:
+            self._blend_mode = self.BlendMode.NoBlending if self._render_type == self.RenderType.Solid else self.BlendMode.Normal
         self._items = []
 
         self._view_matrix = None
@@ -135,15 +145,22 @@ class RenderBatch():
             self._gl.glDisable(self._gl.GL_CULL_FACE)
 
         if self._render_type == self.RenderType.Solid:
-            self._gl.glDisable(self._gl.GL_BLEND)
             self._gl.glEnable(self._gl.GL_DEPTH_TEST)
             self._gl.glDepthMask(self._gl.GL_TRUE)
-        if self._render_type == self.RenderType.Transparent:
+        elif self._render_type == self.RenderType.Transparent:
+            self._gl.glEnable(self._gl.GL_DEPTH_TEST)
             self._gl.glDepthMask(self._gl.GL_FALSE)
-            self._gl.glEnable(self._gl.GL_BLEND)
-            self._gl.glBlendFunc(self._gl.GL_SRC_ALPHA, self._gl.GL_ONE_MINUS_SRC_ALPHA)
         elif self._render_type == self.RenderType.Overlay:
             self._gl.glDisable(self._gl.GL_DEPTH_TEST)
+
+        if self._blend_mode == self.BlendMode.NoBlending:
+            self._gl.glDisable(self._gl.GL_BLEND)
+        elif self._blend_mode == self.BlendMode.Normal:
+            self._gl.glEnable(self._gl.GL_BLEND)
+            self._gl.glBlendFunc(self._gl.GL_SRC_ALPHA, self._gl.GL_ONE_MINUS_SRC_ALPHA)
+        elif self._blend_mode == self.BlendMode.Additive:
+            self._gl.glEnable(self._gl.GL_BLEND)
+            self._gl.glBlendFunc(self._gl.GL_SRC_ALPHA, self._gl.GL_ONE)
 
         self._view_matrix = camera.getWorldTransformation().getInverse()
         self._projection_matrix = camera.getProjectionMatrix()
