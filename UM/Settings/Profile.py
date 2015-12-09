@@ -3,6 +3,7 @@
 
 import configparser
 from copy import deepcopy
+import io #For serialising the profile to strings.
 
 from UM.Signal import Signal, SignalEmitter
 from UM.Settings import SettingsError
@@ -197,16 +198,35 @@ class Profile(SignalEmitter):
         del self._changed_settings[key]
         self.settingValueChanged.emit(key)
 
-    ##  Load a serialized profile from a file.
+    ##  Load a serialised profile from a file.
+    #
+    #   The read is currently not atomic, only the write is. So this method
+    #   assumes that there are no other processes than this Cura instance
+    #   writing to the file. If there are, the ConfigParser will likely fail
+    #   (but the file doesn't get corrupt).
+    #   \param path The path to the file to load from.
     def loadFromFile(self, path):
+        f = open(path) #Open file for reading.
+        serialised = f.read()
+        self.unserialise(serialised, path) #Unserialise the serialised contents that we found in that file.
+
+    ##  Load a serialized profile from a string.
+    #
+    #   The unserialised profile is saved in this instance.
+    #   \param serialised A string containing the serialised form of the
+    #   profile.
+    #   \param origin A string representing the origin of this serialised
+    #   string. This is only used when an error occurs.
+    def unserialise(self, serialised, origin = "(unknown)"):
+        stream = io.StringIO(serialised) #ConfigParser needs to read from a stream.
         parser = configparser.ConfigParser(interpolation = None)
-        parser.read(path, "utf-8")
+        parser.readfp(stream)
 
         if not parser.has_section("general"):
-            raise SettingsError.InvalidFileError(path)
+            raise SettingsError.InvalidFileError(origin)
 
         if not parser.has_option("general", "version") or int(parser.get("general", "version")) != self.ProfileVersion:
-            raise SettingsError.InvalidVersionError(path)
+            raise SettingsError.InvalidVersionError(origin)
 
         self._name = parser.get("general", "name")
 
@@ -214,26 +234,34 @@ class Profile(SignalEmitter):
             for key, value in parser["settings"].items():
                 self.setSettingValue(key, value)
 
-    ##  Serialize this profile to a file so it can be loaded later.
+    ##  Store this profile in a file so it can be loaded later.
+    #
+    #   \param file The file to save the profile to.
     def saveToFile(self, file):
-        parser = configparser.ConfigParser(interpolation = None)
-
-        parser.add_section("general")
-        parser.set("general", "version", str(self.ProfileVersion))
-        parser.set("general", "name", self._name)
-
-        parser.add_section("settings")
-        for setting_key in self._changed_settings:
-            parser.set("settings", setting_key , str(self._changed_settings[setting_key]))
-        
+        serialised = self.serialise() #Serialise this profile instance to a string.
         try:
-            with SaveFile(file, "wt", -1, "utf-8") as f:
-                parser.write(f)
+            with SaveFile(file, "wt", -1, "utf-8") as f: #Open the specified file.
+                f.write(serialised)
         except Exception as e:
             Logger.log("e", "Failed to write profile to %s: %s", file, str(e))
             return str(e)
-
         return None
+    
+    ##  Serialise this profile to a string.
+    def serialise(self):
+        stream = io.StringIO() #ConfigParser needs to write to a stream.
+        parser = configparser.ConfigParser(interpolation = None)
+
+        parser.add_section("general") #Write a general section.
+        parser.set("general", "version", str(self.ProfileVersion))
+        parser.set("general", "name", self._name)
+
+        parser.add_section("settings") #Write each changed setting in a settings section.
+        for setting_key in self._changed_settings:
+            parser.set("settings", setting_key , str(self._changed_settings[setting_key]))
+        
+        parser.write(stream) #Actually serialise it to the stream.
+        return stream.getvalue()
 
     ##  Reimplemented deepcopy that makes sure we do not copy the machine instance.
     def __deepcopy__(self, memo):

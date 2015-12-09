@@ -47,7 +47,7 @@ ComboBox
                 }
             }
             border.width: itemStyle.controlBorderWidth;
-            border.color: itemStyle.controlBorderColor;
+            border.color: control.hovered ? itemStyle.controlBorderHighlightColor : itemStyle.controlBorderColor;
         }
         label: Item {
             Label {

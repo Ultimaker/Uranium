@@ -44,7 +44,7 @@ TextField {
             implicitWidth: control.width;
 
             border.width: itemStyle.controlBorderWidth;
-            border.color: itemStyle.controlBorderColor
+            border.color: control.hovered ? itemStyle.controlBorderHighlightColor : itemStyle.controlBorderColor
 
             color: {
                 switch(valid) //From parent loader

@@ -35,7 +35,7 @@ Item
         //: Reset scale tool button tooltip
         tooltip: catalog.i18nc("@info:tooltip","Reset the scaling of the current selection.");
 
-        style: UM.Theme.styles.tool_button_panel;
+        style: UM.Theme.styles.tool_button;
 
         onClicked: UM.ActiveTool.triggerAction("resetScale");
     }
@@ -52,7 +52,7 @@ Item
 
         anchors.top: parent.top;
 
-        style: UM.Theme.styles.tool_button_panel;
+        style: UM.Theme.styles.tool_button;
         onClicked: UM.ActiveTool.triggerAction("scaleToMax")
     }
 
