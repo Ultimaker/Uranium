@@ -161,7 +161,7 @@ class RotateTool(Tool):
         # Note: Y & Z axis are swapped
 
         self.operationStarted.emit(self)
-        progress_message = Message("Finding flat base...", lifetime = 0, dismissable = False)
+        progress_message = Message("Laying object flat on buildplate...", lifetime = 0, dismissable = False)
         progress_message.setProgress(0)
         progress_message.show()
 
