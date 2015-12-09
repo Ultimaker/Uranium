@@ -114,11 +114,6 @@ class RenderPass:
     def getOutput(self):
         return self._fbo.getContents()
 
-    ##  Render all batches as currently defined by the Renderer.
-    def renderBatches(self, **kwargs):
-        for batch in Application.getInstance().getRenderer().getBatches():
-            batch.render()
-
     ## private:
 
     def _updateRenderStorage(self):
