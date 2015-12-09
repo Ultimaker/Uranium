@@ -22,6 +22,7 @@ Item
         tooltip: catalog.i18nc("@info:tooltip","Reset the rotation of the current selection.");
 
         style: UM.Theme.styles.tool_button;
+        z: 1
 
         onClicked: UM.ActiveTool.triggerAction("resetRotation");
     }
