@@ -31,7 +31,7 @@ class Platform(SceneNode.SceneNode):
                 self._updateTexture()
 
         if self.getMeshData():
-            renderer.queueNode(self, shader = self._shader, transparent = True, backface_cull = True)
+            renderer.queueNode(self, shader = self._shader, transparent = True, backface_cull = True, sort = -10)
             return True
 
     def _onActiveMachineChanged(self):
