@@ -12,6 +12,7 @@ class QtTexture(Texture):
         super().__init__()
 
         self._qt_texture = QOpenGLTexture(QOpenGLTexture.Target2D)
+        self._qt_texture.setMinMagFilters(QOpenGLTexture.Linear, QOpenGLTexture.Linear)
         self._gl = OpenGL.getInstance().getBindingsObject()
 
     def getTextureId(self):
