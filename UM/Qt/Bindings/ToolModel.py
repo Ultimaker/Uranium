@@ -43,16 +43,18 @@ class ToolModel(ListModel):
             # Optional metadata elements
             description = toolMetaData.get("description", "")
             iconName = toolMetaData.get("icon", "default.png")
+            weight = toolMetaData.get("weight", 0)
 
             self.appendItem({
                 "id": name,
                 "name": toolMetaData.get("name", name),
                 "icon": iconName,
                 "active": False,
-                "description": description
+                "description": description,
+                "weight": weight
             })
 
-        self.sort(lambda t: t["name"])
+        self.sort(lambda t: t["weight"])
 
     def _onActiveToolChanged(self):
         activeTool = self._controller.getActiveTool()

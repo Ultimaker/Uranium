@@ -84,5 +84,5 @@ class ReadMeshJob(Job):
         self.setResult(node)
 
         loading_message.hide()
-        result_message = Message(i18n_catalog.i18nc("@info:status", "Loaded <filename>{0}</filename>", self._filename))
-        result_message.show()
+        #result_message = Message(i18n_catalog.i18nc("@info:status", "Loaded <filename>{0}</filename>", self._filename))
+        #result_message.show()
