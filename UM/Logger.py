@@ -37,7 +37,7 @@ class Logger:
         # The function traceback.format_exception gives a list of strings, but those are not properly split on newlines.
         # traceback.format_exc only gives back a single string, but we can properly split that. It does add an extra newline at the end, so strip that.
         for line in traceback.format_exc().rstrip().split("\n"):
-            cls.log(log_type, line)
+            cls.log(log_type, "%s", line)
 
     __loggers = []
 
