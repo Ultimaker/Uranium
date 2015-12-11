@@ -98,6 +98,7 @@ class QtRenderer(Renderer):
     def getWindowSize(self):
         return (self._window_width, self._window_height)
 
+    ##  Overrides Renderer::beginRendering()
     def beginRendering(self):
         if not self._initialized:
             self._initialize()
@@ -107,9 +108,7 @@ class QtRenderer(Renderer):
         self._gl.glClear(self._gl.GL_COLOR_BUFFER_BIT | self._gl.GL_DEPTH_BUFFER_BIT)
         self._gl.glClearColor(0.0, 0.0, 0.0, 0.0)
 
-    ##  Put a node in the render queue
-    #
-    #   See Renderer.queueNode() for an explanation of kwargs.
+    ##  Overrides Renderer::queueNode()
     def queueNode(self, node, **kwargs):
         type = kwargs.pop("type", RenderBatch.RenderType.Solid)
         if kwargs.pop("transparent", False):
@@ -131,6 +130,7 @@ class QtRenderer(Renderer):
         for render_pass in self.getRenderPasses():
             render_pass.render()
 
+    ##  Overrides Renderer::endRendering()
     def endRendering(self):
         self._batches.clear()
 
