@@ -38,8 +38,8 @@ class Renderer():
     def queueNode(self, node, **kwargs):
         raise NotImplementedError()
 
-    ##  Render all queued meshes, in an order specified by the renderer.
-    def renderQueuedNodes(self):
+    ##  Render everything that was set up to be rendered.
+    def render(self):
         raise NotImplementedError()
 
     ##  Finish rendering, finalize and clear state.

@@ -124,8 +124,8 @@ class QtRenderer(Renderer):
 
         self._batches.append(batch)
     
-    ##  Render all nodes in the queue
-    def renderQueuedNodes(self):
+    ##  Overrides Renderer::render()
+    def render(self):
         self._batches.sort()
 
         for render_pass in self.getRenderPasses():
