@@ -35,13 +35,14 @@ class ReadMeshJob(Job):
 
         Job.yieldThread() # Yield to any other thread that might want to do something else.
 
+        node = None
         try:
             begin_time = time.time()
             node = self._handler.read(self._filename)
             end_time = time.time()
             Logger.log("d", "Loading mesh took %s seconds", end_time - begin_time)
-        except Exception as e:
-            print(e)
+        except:
+            Logger.logException("e", "Exception in mesh loader")
         if not node:
             loading_message.hide()
 
