@@ -21,11 +21,18 @@ class QtOpenGL(OpenGL):
         profile.setVersion(2, 0)
         self._gl = QOpenGLContext.currentContext().versionFunctions(profile)
         if not self._gl:
-            QMessageBox.critical("Failed to Initialize OpenGL", "Could not initialize OpenGL. Cura requires OpenGL 2.0 or higher. Please check your video card drivers.")
+            Logger.log("e", "Startup failed due to OpenGL initialization failing")
+            QMessageBox.critical("Failed to Initialize OpenGL", "Could not initialize OpenGL. This program requires OpenGL 2.0 or higher. Please check your video card drivers.")
             sys.exit(1)
 
+        # It would be nice to be able to not necessarily need OpenGL Framebuffer Object support, but
+        # due to a limiation in PyQt, currently glReadPixels or similar methods are not available.
+        # This means we can only get frame buffer contents through methods that indirectly call
+        # those methods, in this case primarily QOpenGLFramebufferObject::toImage(), making us
+        # hard-depend on Framebuffer Objects.
         if not self.hasFrameBufferObjects():
-            QMessageBox.critical("Critical OpenGL Extensions Missing", "Critical OpenGL extensions are missing. Cura requires support for Framebuffer Objects. Please check your video card drivers.")
+            Logger.log("e", "Starup failed, OpenGL does not support Frame Buffer Objects")
+            QMessageBox.critical("Critical OpenGL Extensions Missing", "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers.")
             sys.exit(1)
 
         self._gl.initializeOpenGLFunctions()
@@ -49,27 +56,35 @@ class QtOpenGL(OpenGL):
         Logger.log("d", "OpenGL Vendor:   %s", self._gl.glGetString(self._gl.GL_VENDOR))
         Logger.log("d", "OpenGL Renderer: %s", self._gpu_type)
 
+    ##  Overrides OpenGL::hasFrameBufferObjects()
     def hasFrameBufferObjects(self):
         return QOpenGLFramebufferObject.hasOpenGLFramebufferObjects()
 
+    ##  Overrides OpenGL::hasExtension()
     def hasExtension(self, extension):
         return QOpenGLContext.currentContext().hasExtension(extension)
 
+    ##  Overrides OpenGL::getGPUVendor()
     def getGPUVendor(self):
         return self._gpu_vendor
 
+    ##  Overrides OpenGL::getGPUType()
     def getGPUType(self):
         return self._gpu_type
 
+    ##  Overrides OpenGL::getBindingsObject()
     def getBindingsObject(self):
         return self._gl
 
+    ##  Overrides OpenGL::createFrameBufferObject()
     def createFrameBufferObject(self, width, height):
         return QtFrameBufferObject.QtFrameBufferObject(width, height)
 
+    ##  Overrides OpenGL::createTexture()
     def createTexture(self):
         return QtTexture.QtTexture()
 
+    ##  Overrides OpenGL::createShaderProgram()
     def createShaderProgram(self, file_name):
         shader = QtShaderProgram.QtShaderProgram()
         shader.load(file_name)
