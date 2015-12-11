@@ -3,11 +3,11 @@
 
 ##  Convenience methods for dealing with OpenGL.
 #
-#   This class simplifies dealing with OpenGL and different implementations
-#   of it. It mostly describes an interface that should be implemented for
-#   different implementations. Additionally, it provides singleton handling.
-#   The implementation-defined subclass should be set as singleton instance
-#   as soon as possible.
+#   This class simplifies dealing with OpenGL and different Python OpenGL bindings. It
+#   mostly describes an interface that should be implemented for dealing with basic OpenGL
+#   functionality using these different OpenGL bindings. Additionally, it provides singleton
+#   handling. The implementation-defined subclass must be set as singleton instance as soon
+#   as possible so that any calls to getInstance() return a proper object.
 class OpenGL:
     ##  Different OpenGL chipset vendors.
     class Vendor:
@@ -24,7 +24,7 @@ class OpenGL:
 
     ##  Check to see if the current OpenGL implementation has a certain OpenGL extension.
     #
-    #   \param extension The extension to query for.
+    #   \param extension \type{string} The name of the extension to query for.
     #
     #   \return True if the extension is available, False if not.
     def hasExtension(self, extension):
