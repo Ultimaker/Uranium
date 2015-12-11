@@ -31,7 +31,7 @@ class ShaderProgram:
     #
     #   \param file_name The shader file to load.
     #
-    #   \exception{InvalidShaderProgramError} Raised when the file provided does not contain any shaders.
+    #   \exception{InvalidShaderProgramError} Raised when the file provided does not contain any valid shaders.
     def load(self, file_name):
         parser = configparser.ConfigParser(interpolation = None)
         parser.optionxform = lambda option: option
