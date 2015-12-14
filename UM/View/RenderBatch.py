@@ -217,7 +217,7 @@ class RenderBatch():
         )
 
         if item["uniforms"] is not None:
-            self._shader.updateBindings(**item[2])
+            self._shader.updateBindings(**item["uniforms"])
 
         vertex_buffer = OpenGL.getInstance().createVertexBuffer(mesh)
         vertex_buffer.bind()
