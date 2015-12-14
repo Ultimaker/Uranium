@@ -3,7 +3,7 @@
 
 import copy
 
-from PyQt5.QtGui import QOpenGLBuffer
+from UM.Logger import Logger
 
 from UM.Math.Vector import Vector
 
@@ -15,7 +15,7 @@ indexBufferProperty = "__gl_index_buffer"
 ##  The RenderBatch class represent a batch of objects that should be rendered.
 #
 #   Each RenderBatch contains a list of objects to render and all state related
-#   to those objects. It tries to minimise changes to state between render the
+#   to those objects. It tries to minimize changes to state between render the
 #   individual objects. This means that for example the ShaderProgram used is
 #   only bound once, at the start of rendering. There are a few values, like
 #   the model-view-projection matrix that are updated for each object.
@@ -132,12 +132,16 @@ class RenderBatch():
 
     ##  Add an item to render to this batch.
     #
-    #   \param transform The transformation matrix to use for rendering the item.
+    #   \param transformation The transformation matrix to use for rendering the item.
     #   \param mesh The mesh to render with the transform matrix.
     #   \param uniforms A dict of additional uniform bindings to set when rendering the item.
     #                   Note these are set specifically for this item.
-    def addItem(self, transform, mesh, uniforms = None):
-        self._items.append((transform, mesh, uniforms))
+    def addItem(self, transformation, mesh, uniforms = None):
+        if not transformation or not mesh:
+            Logger.log("w", "Tried to add an item to batch without transformation or mesh")
+            return
+
+        self._items.append({ "transformation": transformation, "mesh": mesh, "uniforms": uniforms})
 
     ##  Render the batch.
     #
@@ -192,29 +196,27 @@ class RenderBatch():
         self._shader.release()
 
     def _renderItem(self, item):
-        transform = item[0]
-        mesh = item[1]
-        if not mesh:
-            return #Something went wrong, node has no mesh.
+        transformation = item["transformation"]
+        mesh = item["mesh"]
 
         normal_matrix = None
         if mesh.hasNormals():
-            normal_matrix = copy.deepcopy(transform)
+            normal_matrix = copy.deepcopy(transformation)
             normal_matrix.setRow(3, [0, 0, 0, 1])
             normal_matrix.setColumn(3, [0, 0, 0, 1])
             normal_matrix = normal_matrix.getInverse().getTransposed()
 
-        model_view_matrix = copy.deepcopy(transform).preMultiply(self._view_matrix)
-        model_view_projection_matrix = copy.deepcopy(transform).preMultiply(self._view_projection_matrix)
+        model_view_matrix = copy.deepcopy(transformation).preMultiply(self._view_matrix)
+        model_view_projection_matrix = copy.deepcopy(transformation).preMultiply(self._view_projection_matrix)
 
         self._shader.updateBindings(
-            model_matrix = item[0],
+            model_matrix = transformation,
             normal_matrix = normal_matrix,
             model_view_matrix = model_view_matrix,
             model_view_projection_matrix = model_view_projection_matrix
         )
 
-        if item[2] is not None:
+        if item["uniforms"] is not None:
             self._shader.updateBindings(**item[2])
 
         vertex_buffer = OpenGL.getInstance().createVertexBuffer(mesh)

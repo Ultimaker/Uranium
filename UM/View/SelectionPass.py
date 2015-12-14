@@ -61,7 +61,7 @@ class SelectionPass(RenderPass):
 
             if node.isSelectable() and node.getMeshData():
                 selectable_objects = True
-                batch.addItem(transform = node.getWorldTransformation(), mesh = node.getMeshData(), uniforms = { "selection_color": self._getNodeColor(node)})
+                batch.addItem(transformation = node.getWorldTransformation(), mesh = node.getMeshData(), uniforms = { "selection_color": self._getNodeColor(node)})
 
         self.bind()
         if selectable_objects:
