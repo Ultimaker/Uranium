@@ -3,7 +3,7 @@
 
 import sys
 
-from PyQt5.QtGui import QOpenGLVersionProfile, QOpenGLContext, QOpenGLFramebufferObject
+from PyQt5.QtGui import QOpenGLVersionProfile, QOpenGLContext, QOpenGLFramebufferObject, QOpenGLBuffer
 from PyQt5.QtWidgets import QMessageBox
 
 from UM.Logger import Logger
@@ -89,3 +89,65 @@ class QtOpenGL(OpenGL):
         shader = QtShaderProgram.QtShaderProgram()
         shader.load(file_name)
         return shader
+
+    def createVertexBuffer(self, mesh, **kwargs):
+        if not kwargs.get("force_recreate", False) and hasattr(mesh, OpenGL.VertexBufferProperty):
+            return getattr(mesh, OpenGL.VertexBufferProperty)
+
+        buffer = QOpenGLBuffer(QOpenGLBuffer.VertexBuffer)
+        buffer.create()
+        buffer.bind()
+
+        buffer_size = mesh.getVertexCount() * 3 * 4 # Vertex count * number of components * sizeof(float32)
+        if mesh.hasNormals():
+            buffer_size += mesh.getVertexCount() * 3 * 4 # Vertex count * number of components * sizeof(float32)
+        if mesh.hasColors():
+            buffer_size += mesh.getVertexCount() * 4 * 4 # Vertex count * number of components * sizeof(float32)
+        if mesh.hasUVCoordinates():
+            buffer_size += mesh.getVertexCount() * 2 * 4 # Vertex count * number of components * sizeof(float32)
+
+        buffer.allocate(buffer_size)
+
+        offset = 0
+        vertices = mesh.getVerticesAsByteArray()
+        if vertices is not None:
+            buffer.write(0, vertices, len(vertices))
+            offset += len(vertices)
+
+        if mesh.hasNormals():
+            normals = mesh.getNormalsAsByteArray()
+            buffer.write(offset, normals, len(normals))
+            offset += len(normals)
+
+        if mesh.hasColors():
+            colors = mesh.getColorsAsByteArray()
+            buffer.write(offset, colors, len(colors))
+            offset += len(colors)
+
+        if mesh.hasUVCoordinates():
+            uvs = mesh.getUVCoordinatesAsByteArray()
+            buffer.write(offset, uvs, len(uvs))
+            offset += len(uvs)
+
+        buffer.release()
+
+        setattr(mesh, OpenGL.VertexBufferProperty, buffer)
+        return buffer
+
+    def createIndexBuffer(self, mesh, **kwargs):
+        if not mesh.hasIndices():
+            return None
+
+        if not kwargs.get("force_recreate", False) and hasattr(mesh, OpenGL.IndexBufferProperty):
+            return getattr(mesh, OpenGL.IndexBufferProperty)
+
+        buffer = QOpenGLBuffer(QOpenGLBuffer.IndexBuffer)
+        buffer.create()
+        buffer.bind()
+
+        data = mesh.getIndicesAsByteArray()
+        buffer.allocate(data, len(data))
+        buffer.release()
+
+        setattr(mesh, OpenGL.IndexBufferProperty, buffer)
+        return buffer

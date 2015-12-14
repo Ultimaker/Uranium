@@ -217,27 +217,11 @@ class RenderBatch():
         if item[2] is not None:
             self._shader.updateBindings(**item[2])
 
-        vertex_buffer = None
-        try:
-            vertex_buffer = getattr(mesh, vertexBufferProperty)
-        except AttributeError:
-            pass
-
-        if vertex_buffer is None:
-            vertex_buffer =  self._createVertexBuffer(mesh)
-
+        vertex_buffer = OpenGL.getInstance().createVertexBuffer(mesh)
         vertex_buffer.bind()
 
-        if mesh.hasIndices():
-            index_buffer = None
-            try:
-                index_buffer = getattr(mesh, indexBufferProperty)
-            except AttributeError:
-                pass
-
-            if index_buffer is None:
-                index_buffer = self._createIndexBuffer(mesh)
-
+        index_buffer = OpenGL.getInstance().createIndexBuffer(mesh)
+        if index_buffer is not None:
             index_buffer.bind()
 
         self._shader.enableAttribute("a_vertex", "vector3f", 0)
@@ -275,58 +259,5 @@ class RenderBatch():
         self._shader.disableAttribute("a_uvs")
         vertex_buffer.release()
 
-        if mesh.hasIndices():
+        if index_buffer is not None:
             index_buffer.release()
-
-    def _createVertexBuffer(self, mesh):
-        buffer = QOpenGLBuffer(QOpenGLBuffer.VertexBuffer)
-        buffer.create()
-        buffer.bind()
-
-        buffer_size = mesh.getVertexCount() * 3 * 4 # Vertex count * number of components * sizeof(float32)
-        if mesh.hasNormals():
-            buffer_size += mesh.getVertexCount() * 3 * 4 # Vertex count * number of components * sizeof(float32)
-        if mesh.hasColors():
-            buffer_size += mesh.getVertexCount() * 4 * 4 # Vertex count * number of components * sizeof(float32)
-        if mesh.hasUVCoordinates():
-            buffer_size += mesh.getVertexCount() * 2 * 4 # Vertex count * number of components * sizeof(float32)
-
-        buffer.allocate(buffer_size)
-
-        offset = 0
-        vertices = mesh.getVerticesAsByteArray()
-        if vertices is not None:
-            buffer.write(0, vertices, len(vertices))
-            offset += len(vertices)
-
-        if mesh.hasNormals():
-            normals = mesh.getNormalsAsByteArray()
-            buffer.write(offset, normals, len(normals))
-            offset += len(normals)
-
-        if mesh.hasColors():
-            colors = mesh.getColorsAsByteArray()
-            buffer.write(offset, colors, len(colors))
-            offset += len(colors)
-
-        if mesh.hasUVCoordinates():
-            uvs = mesh.getUVCoordinatesAsByteArray()
-            buffer.write(offset, uvs, len(uvs))
-            offset += len(uvs)
-
-        buffer.release()
-
-        setattr(mesh, vertexBufferProperty, buffer)
-        return buffer
-
-    def _createIndexBuffer(self, mesh):
-        buffer = QOpenGLBuffer(QOpenGLBuffer.IndexBuffer)
-        buffer.create()
-        buffer.bind()
-
-        data = mesh.getIndicesAsByteArray()
-        buffer.allocate(data, len(data))
-        buffer.release()
-
-        setattr(mesh, indexBufferProperty, buffer)
-        return buffer

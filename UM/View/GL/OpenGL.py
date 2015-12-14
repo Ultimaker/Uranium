@@ -1,5 +1,5 @@
 # Copyright (c) 2015 Ultimaker B.V.
-# Cura is released under the terms of the AGPLv3 or higher.
+# Uranium is released under the terms of the AGPLv3 or higher.
 
 ##  Convenience methods for dealing with OpenGL.
 #
@@ -9,6 +9,9 @@
 #   handling. The implementation-defined subclass must be set as singleton instance as soon
 #   as possible so that any calls to getInstance() return a proper object.
 class OpenGL:
+    VertexBufferProperty = "__vertex_buffer"
+    IndexBufferProperty = "__index_buffer"
+
     ##  Different OpenGL chipset vendors.
     class Vendor:
         NVidia = 1
@@ -67,6 +70,38 @@ class OpenGL:
     #
     #   This should return an implementation-specifc ShaderProgram subclass.
     def createShaderProgram(self, file_name):
+        raise NotImplementedError("Should be implemented by subclasses")
+
+    ##  Create a Vertex buffer for a mesh.
+    #
+    #   This will create a vertex buffer object that is filled with the
+    #   vertex data of the mesh.
+    #
+    #   By default, the associated vertex buffer should be cached using a
+    #   custom property on the mesh. This should use the VertexBufferProperty
+    #   property name.
+    #
+    #   \param mesh The mesh to create a vertex buffer for.
+    #   \param kwargs Keyword arguments.
+    #                 Possible values:
+    #                 - force_recreate: Ignore the cached value if set and always create a new buffer.
+    def createVertexBuffer(self, mesh, **kwargs):
+        raise NotImplementedError("Should be implemented by subclasses")
+
+    ##  Create an index buffer for a mesh.
+    #
+    #   This will create an index buffer object that is filled with the
+    #   index data of the mesh.
+    #
+    #   By default, the associated index buffer should be cached using a
+    #   custom property on the mesh. This should use the IndexBufferProperty
+    #   property name.
+    #
+    #   \param mesh The mesh to create an index buffer for.
+    #   \param kwargs Keyword arguments.
+    #                 Possible values:
+    #                 - force_recreate: Ignore the cached value if set and always create a new buffer.
+    def createIndexBuffer(self, mesh, **kwargs):
         raise NotImplementedError("Should be implemented by subclasses")
 
     ##  Get the singleton instance.
