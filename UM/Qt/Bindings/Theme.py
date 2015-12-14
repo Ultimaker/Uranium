@@ -100,8 +100,8 @@ class Theme(QObject):
         if "sizes" in data:
             for name, size in data["sizes"].items():
                 s = QSizeF()
-                s.setWidth(size[0] * self._em_width)
-                s.setHeight(size[1] * self._em_height)
+                s.setWidth(round(size[0] * self._em_width))
+                s.setHeight(round(size[1] * self._em_height))
 
                 self._sizes[name] = s
 

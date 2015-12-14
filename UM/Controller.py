@@ -4,7 +4,7 @@
 from UM.InputDevice import InputDevice
 from UM.View.View import View
 from UM.Scene.Scene import Scene
-from UM.Event import Event, MouseEvent, ToolEvent
+from UM.Event import Event, MouseEvent, ToolEvent, ViewEvent
 from UM.Math.Vector import Vector
 from UM.Math.Quaternion import Quaternion
 from UM.Signal import Signal, SignalEmitter
@@ -81,7 +81,14 @@ class Controller(SignalEmitter):
     def setActiveView(self, name):
         Logger.log("d", "Setting active view to %s", name)
         try:
+            if self._active_view:
+                self._active_view.event(ViewEvent(Event.ViewDeactivateEvent))
+
             self._active_view = self._views[name]
+
+            if self._active_view:
+                self._active_view.event(ViewEvent(Event.ViewActivateEvent))
+
             self.activeViewChanged.emit()
         except KeyError:
             Logger.log("e", "No view named %s found", name)

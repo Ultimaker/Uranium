@@ -18,6 +18,7 @@ QtObject {
     property color controlBorderColor: Qt.rgba(0.0, 0.0, 0.0, 1.0);
     property color controlTextColor: Qt.rgba(0.0, 0.0, 0.0, 1.0);
     property color controlHighlightColor: Qt.rgba(0.9, 0.9, 0.9, 1.0);
+    property color controlBorderHighlightColor: Qt.rgba(0.1, 0.1, 0.1, 1.0);
     property font controlFont;
 
     property color validationErrorColor: Qt.rgba(1.0, 0.0, 0.0, 1.0);

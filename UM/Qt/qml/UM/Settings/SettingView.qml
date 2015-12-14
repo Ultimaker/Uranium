@@ -151,8 +151,8 @@ ScrollView
 
                             onShowTooltip:
                             {
-                                position = Qt.point(UM.Theme.sizes.default_margin.width, item.height);
-                                base.showTooltip(item, position, model.description)
+                                position = Qt.point(0, item.height);
+                                base.showTooltip(item, position, "<b>"+model.name+"</b><br/>"+model.description)
                             }
                             onHideTooltip: base.hideTooltip()
 

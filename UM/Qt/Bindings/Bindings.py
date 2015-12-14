@@ -23,6 +23,7 @@ from . import MeshFileHandlerProxy
 from . import PreferencesProxy
 from . import Theme
 from . import AngledCornerRectangle
+from . import PointingRectangle
 from . import SettingCategoriesModel
 from . import ActiveToolProxy
 from . import ActiveViewProxy
@@ -75,6 +76,7 @@ class Bindings:
         qmlRegisterType(JobsModel.JobsModel, "UM", 1, 0, "JobsModel")
         qmlRegisterType(SettingCategoriesModel.SettingCategoriesModel, "UM", 1, 0, "SettingCategoriesModel")
         qmlRegisterType(AngledCornerRectangle.AngledCornerRectangle, "UM", 1, 0, "AngledCornerRectangle")
+        qmlRegisterType(PointingRectangle.PointingRectangle, "UM", 1, 0, "PointingRectangle")
 
         # Singleton proxy objects
         qmlRegisterSingletonType(ControllerProxy, "UM", 1, 0, "Controller", Bindings.createControllerProxy)

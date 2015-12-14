@@ -169,7 +169,7 @@ class MainWindow(QQuickWindow):
 
         renderer.beginRendering()
         view.beginRendering()
-        renderer.renderQueuedNodes()
+        renderer.render()
         view.endRendering()
         renderer.endRendering()
 
