@@ -64,17 +64,17 @@ class ShaderProgram:
     #
     #   \param shader \type{string} The vertex shader to use.
     def setVertexShader(self, shader):
-        raise NotImplementedError()
+        raise NotImplementedError("Should be reimplemented by subclasses")
 
     ##  Set the fragment shader to use.
     #
     #   \param shader \type{string} The fragment shader to use.
     def setFragmentShader(self, shader):
-        raise NotImplementedError()
+        raise NotImplementedError("Should be reimplemented by subclasses")
 
     ##  Build the complete shader program out of the separately provided sources.
     def build(self):
-        raise NotImplementedError()
+        raise NotImplementedError("Should be reimplemented by subclasses")
 
     ##  Set a named uniform variable.
     #
@@ -88,14 +88,14 @@ class ShaderProgram:
     #                 Possible keywords:
     #                 - cache: False when the value should not be cached for later calls to bind().
     def setUniformValue(self, name, value, **kwargs):
-        raise NotImplementedError()
+        raise NotImplementedError("Should be reimplemented by subclasses")
 
     ##  Set a texture that should be bound to a specified texture unit when this shader is bound.
     #
     #   \param texture_unit \type{int} The texture unit to bind the texture to.
     #   \param texture \type{Texture} The texture object to bind to the texture unit.
     def setTexture(self, texture_unit, texture):
-        raise NotImplementedError()
+        raise NotImplementedError("Should be reimplemented by subclasses")
 
     ##  Enable a vertex attribute to be used.
     #
@@ -106,21 +106,21 @@ class ShaderProgram:
     #
     #   \note If the shader is not bound, this will bind the shader.
     def enableAttribute(self, name, type, offset, stride = 0):
-        raise NotImplementedError()
+        raise NotImplementedError("Should be reimplemented by subclasses")
 
     ##  Disable a vertex attribute so it is no longer used.
     #
     #   \param name The name of the attribute to use.
     def disableAttribute(self, name):
-        raise NotImplementedError()
+        raise NotImplementedError("Should be reimplemented by subclasses")
 
     ##  Bind the shader to use it for rendering.
     def bind(self):
-        raise NotImplementedError()
+        raise NotImplementedError("Should be reimplemented by subclasses")
 
     ##  Release the shader so it will no longer be used for rendering.
     def release(self):
-        raise NotImplementedError()
+        raise NotImplementedError("Should be reimplemented by subclasses")
 
     ##  Add a uniform value binding.
     #
