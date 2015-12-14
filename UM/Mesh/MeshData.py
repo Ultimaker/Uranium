@@ -169,7 +169,7 @@ class MeshData(SignalEmitter):
     #   \param transformation 4x4 homogenous transformation matrix
     def getTransformed(self, transformation):
         if self._vertices is not None:
-            data = numpy.pad(self._vertices, ((0,0), (0,1)), "constant", constant_values=(0.0, 0.0))
+            data = numpy.pad(self._vertices[0:self._vertex_count], ((0,0), (0,1)), "constant", constant_values=(0.0, 0.0))
             data = data.dot(transformation.getTransposed().getData())
             data += transformation.getData()[:,3]
             data = data[:,0:3]
@@ -187,7 +187,7 @@ class MeshData(SignalEmitter):
         if self._vertices is None:
             return AxisAlignedBox()
 
-        data = numpy.pad(self._vertices, ((0,0), (0,1)), "constant", constant_values=(0.0, 1.0))
+        data = numpy.pad(self._vertices[0:self._vertex_count], ((0,0), (0,1)), "constant", constant_values=(0.0, 1.0))
 
         if matrix is not None:
             transposed = matrix.getTransposed().getData()
@@ -460,7 +460,7 @@ class MeshData(SignalEmitter):
             # zero. The second array is built from the difference between every third item in the array starting at
             # two and every third item in the array starting at zero. The cross operation then returns an array of
             # the normals of each set of three vertices.
-            n = numpy.cross(self._vertices[1::3] - self._vertices[::3], self._vertices[2::3] - self._vertices[::3])
+            n = numpy.cross(self._vertices[1:self._vertex_count:3] - self._vertices[:self._vertex_count:3], self._vertices[2:self._vertex_count:3] - self._vertices[:self._vertex_count:3])
             # We then calculate the length for each normal and perform normalization on the normals.
             l = numpy.linalg.norm(n, axis=1)
             n[:, 0] /= l

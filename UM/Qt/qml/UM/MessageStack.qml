@@ -12,7 +12,7 @@ import "."
 ListView {
     id: base
     boundsBehavior: ListView.StopAtBounds;
-    verticalLayoutDirection: ListView.BottomToTop;
+    verticalLayoutDirection: ListView.TopToBottom;
     visible: true
 
     model: UM.Models.visibleMessagesModel;

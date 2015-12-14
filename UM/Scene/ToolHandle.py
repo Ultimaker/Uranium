@@ -12,6 +12,9 @@ from UM.Math.Vector import Vector
 
 from UM.Scene.Selection import Selection
 
+from UM.View.GL.OpenGL import OpenGL
+from UM.View.RenderBatch import RenderBatch
+
 class ToolHandle(SceneNode.SceneNode):
     NoAxis = 1
     XAxis = 2
@@ -20,9 +23,9 @@ class ToolHandle(SceneNode.SceneNode):
     AllAxis = 5
 
     DisabledColor = Color(0.5, 0.5, 0.5, 1.0)
-    XAxisColor = Color(1.0, 0.0, 0.0, 0.8)
-    YAxisColor = Color(0.0, 0.0, 1.0, 0.8)
-    ZAxisColor = Color(0.0, 1.0, 0.0, 0.8)
+    XAxisColor = Color(1.0, 0.0, 0.0, 1.0)
+    YAxisColor = Color(0.0, 0.0, 1.0, 1.0)
+    ZAxisColor = Color(0.0, 1.0, 0.0, 1.0)
     AllAxisColor = Color(1.0, 1.0, 1.0, 1.0)
 
     def __init__(self, parent = None):
@@ -33,7 +36,7 @@ class ToolHandle(SceneNode.SceneNode):
         self._solid_mesh = None
         self._line_mesh = None
         self._selection_mesh = None
-        self._material = None
+        self._shader = None
 
         self._previous_dist = None
         self._active_axis = None
@@ -65,17 +68,12 @@ class ToolHandle(SceneNode.SceneNode):
         self.meshDataChanged.emit(self)
 
     def getMaterial(self):
-        return self._material
+        return self._shader
 
     def render(self, renderer):
-        if not self._material:
-            self._material = renderer.createMaterial(
-                Resources.getPath(Resources.Shaders, "toolhandle.vert"),
-                Resources.getPath(Resources.Shaders, "toolhandle.frag")
-            )
-            self._material.setUniformValue("u_disabledColor", self.DisabledColor)
-            self._material.setUniformValue("u_activeColor", self.DisabledColor)
-        
+        if not self._shader:
+            self._shader = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "toolhandle.shader"))
+
         if self._auto_scale:
             camera_position = self._scene.getActiveCamera().getWorldPosition()
             dist = (camera_position - self.getWorldPosition()).length()
@@ -83,9 +81,10 @@ class ToolHandle(SceneNode.SceneNode):
             self.setScale(Vector(scale, scale, scale))
 
         if self._line_mesh:
-            renderer.queueNode(self, mesh = self._line_mesh, mode = Renderer.RenderLines, overlay = True, material = self._material)
+            renderer.queueNode(self, mesh = self._line_mesh, mode = RenderBatch.RenderMode.Lines, overlay = True, shader = self._shader)
         if self._solid_mesh:
-            renderer.queueNode(self, mesh = self._solid_mesh, mode = Renderer.RenderTriangles, overlay = True, material = self._material)
+            renderer.queueNode(self, mesh = self._solid_mesh, overlay = True, shader = self._shader)
+
         return True
 
     def getSelectionMap(self):
@@ -97,13 +96,13 @@ class ToolHandle(SceneNode.SceneNode):
         }
 
     def setActiveAxis(self, axis):
-        if axis == self._active_axis or not self._material:
+        if axis == self._active_axis or not self._shader:
             return
 
         if axis:
-            self._material.setUniformValue("u_activeColor", self._axisColorMap[axis])
+            self._shader.setUniformValue("u_activeColor", self._axisColorMap[axis])
         else:
-            self._material.setUniformValue("u_activeColor", self.DisabledColor)
+            self._shader.setUniformValue("u_activeColor", self.DisabledColor)
         self._active_axis = axis
         self._scene.sceneChanged.emit(self)
 

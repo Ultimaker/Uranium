@@ -1,6 +1,8 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
+import traceback
+
 from UM.PluginObject import PluginObject
 
 
@@ -26,6 +28,16 @@ class Logger:
         for logger in cls.__loggers:
             filled_message = message % args # Replace all the %s with the variables. Python formating is magic.
             logger.log(log_type, filled_message)
+
+    ##
+    @classmethod
+    def logException(cls, log_type, message, *args):
+        filled_message = message % args
+        cls.log(log_type, "Exception: %s" % filled_message)
+        # The function traceback.format_exception gives a list of strings, but those are not properly split on newlines.
+        # traceback.format_exc only gives back a single string, but we can properly split that. It does add an extra newline at the end, so strip that.
+        for line in traceback.format_exc().rstrip().split("\n"):
+            cls.log(log_type, "%s", line)
 
     __loggers = []
 

@@ -28,6 +28,7 @@ Item
 
         anchors.top: scaleToMaxButton.bottom;
         anchors.topMargin: UM.Theme.sizes.default_margin.height;
+        z: 1
 
         //: Reset scale tool button
         text: catalog.i18nc("@action:button","Reset")
@@ -35,7 +36,7 @@ Item
         //: Reset scale tool button tooltip
         tooltip: catalog.i18nc("@info:tooltip","Reset the scaling of the current selection.");
 
-        style: UM.Theme.styles.tool_button_panel;
+        style: UM.Theme.styles.tool_button;
 
         onClicked: UM.ActiveTool.triggerAction("resetScale");
     }
@@ -51,8 +52,9 @@ Item
         tooltip: catalog.i18nc("@info:tooltip","Scale to maximum size");
 
         anchors.top: parent.top;
+        z: 1
 
-        style: UM.Theme.styles.tool_button_panel;
+        style: UM.Theme.styles.tool_button;
         onClicked: UM.ActiveTool.triggerAction("scaleToMax")
     }
 

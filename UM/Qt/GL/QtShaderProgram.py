@@ -2,7 +2,6 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 from PyQt5.QtGui import QOpenGLShader, QOpenGLShaderProgram, QVector2D, QVector3D, QVector4D, QMatrix4x4, QColor, QImage, QOpenGLTexture
-from UM.View.Material import Material
 from UM.Logger import Logger
 from UM.Application import Application
 
@@ -10,11 +9,13 @@ from UM.Math.Vector import Vector
 from UM.Math.Matrix import Matrix
 from UM.Math.Color import Color
 
-class QtGL2Material(Material):
-    def __init__(self, renderer):
-        super().__init__()
+from UM.View.GL.OpenGL import OpenGL
+from UM.View.GL.ShaderProgram import ShaderProgram
 
-        self._gl = renderer._gl
+##  Shader program subclass using PyQt for the OpenGL implementation.
+class QtShaderProgram(ShaderProgram):
+    def __init__(self):
+        super().__init__()
 
         self._shader_program = None
         self._uniform_indices = {}
@@ -23,34 +24,29 @@ class QtGL2Material(Material):
         self._bound = False
         self._textures = {}
 
-        self._disable_textures = Application.getInstance().getCommandLineOption("disable-textures", False)
-
-    def loadVertexShader(self, file):
+    def setVertexShader(self, shader):
         if not self._shader_program:
             self._shader_program = QOpenGLShaderProgram()
 
-        self._shader_program.addShaderFromSourceFile(QOpenGLShader.Vertex, file)
+        self._shader_program.addShaderFromSourceCode(QOpenGLShader.Vertex, shader)
 
-    def loadFragmentShader(self, file):
+    def setFragmentShader(self, shader):
         if not self._shader_program:
             self._shader_program = QOpenGLShaderProgram()
 
-        self._shader_program.addShaderFromSourceFile(QOpenGLShader.Fragment, file)
+        self._shader_program.addShaderFromSourceCode(QOpenGLShader.Fragment, shader)
 
     def build(self):
         if not self._shader_program:
             Logger.log("e", "No shader sources loaded")
             return
 
-        self._shader_program.link()
+        if not self._shader_program.link():
+            Logger.log("e", "Shader failed to compile!")
 
     def setUniformValue(self, name, value, **kwargs):
         if not self._shader_program:
             return
-
-        cache = True
-        if "cache" in kwargs:
-            cache = kwargs["cache"]
 
         if name not in self._uniform_indices:
             self._uniform_indices[name] = self._shader_program.uniformLocation(name)
@@ -59,31 +55,14 @@ class QtGL2Material(Material):
         if uniform == -1:
             return
 
-        if cache:
+        if kwargs.get("cache", True):
             self._uniform_values[uniform] = value
 
         if self._bound:
             self._setUniformValueDirect(uniform, value)
 
-    def setUniformTexture(self, name, file):
-        if not self._shader_program or self._disable_textures:
-            return
-
-        if name not in self._uniform_indices:
-            self._uniform_indices[name] = self._shader_program.uniformLocation(name)
-
-        index = self._uniform_indices[name]
-
-        texture = QOpenGLTexture(QImage(file).mirrored())
-        texture.setMinMagFilters(QOpenGLTexture.Linear, QOpenGLTexture.Linear)
-        self._textures[index] = texture
-
-        self._uniform_values[index] = 1
-
-        if self._bound:
-            texture = self._textures[index]
-            texture.bind()
-            self._setUniformValueDirect(index, texture.textureId())
+    def setTexture(self, texture_unit, texture):
+        self._textures[texture_unit] = texture
 
     def enableAttribute(self, name, type, offset, stride = 0):
         if not self._shader_program:
@@ -99,15 +78,15 @@ class QtGL2Material(Material):
             return
 
         if type is "int":
-            self._shader_program.setAttributeBuffer(attribute, self._gl.GL_INT, offset, 1, stride)
+            self._shader_program.setAttributeBuffer(attribute, 0x1404, offset, 1, stride) #GL_INT
         elif type is "float":
-            self._shader_program.setAttributeBuffer(attribute, self._gl.GL_FLOAT, offset, 1, stride)
+            self._shader_program.setAttributeBuffer(attribute, 0x1406, offset, 1, stride) #GL_FLOAT
         elif type is "vector2f":
-            self._shader_program.setAttributeBuffer(attribute, self._gl.GL_FLOAT, offset, 2, stride)
+            self._shader_program.setAttributeBuffer(attribute, 0x1406, offset, 2, stride) #GL_FLOAT
         elif type is "vector3f":
-            self._shader_program.setAttributeBuffer(attribute, self._gl.GL_FLOAT, offset, 3, stride)
+            self._shader_program.setAttributeBuffer(attribute, 0x1406, offset, 3, stride) #GL_FLOAT
         elif type is "vector4f":
-            self._shader_program.setAttributeBuffer(attribute, self._gl.GL_FLOAT, offset, 4, stride)
+            self._shader_program.setAttributeBuffer(attribute, 0x1406, offset, 4, stride) #GL_FLOAT
 
         self._shader_program.enableAttributeArray(attribute)
 
@@ -132,22 +111,20 @@ class QtGL2Material(Material):
         self._shader_program.bind()
 
         for uniform in self._uniform_values:
-            if uniform in self._textures:
-                texture = self._textures[uniform]
-                texture.bind()
-                self._setUniformValueDirect(uniform, 0)
-            else:
-                self._setUniformValueDirect(uniform, self._uniform_values[uniform])
+            self._setUniformValueDirect(uniform, self._uniform_values[uniform])
+
+        for texture_unit, texture in self._textures.items():
+            texture.bind(texture_unit)
 
     def release(self):
         if not self._shader_program or not self._bound:
             return
 
-        for texture in self._textures.values():
-            texture.release()
-
         self._bound = False
         self._shader_program.release()
+
+        for texture_unit, texture in self._textures.items():
+            texture.release(texture_unit)
 
     def _matrixToQMatrix4x4(self, m):
         return QMatrix4x4(m.at(0,0), m.at(0, 1), m.at(0, 2), m.at(0, 3),
@@ -168,6 +145,8 @@ class QtGL2Material(Material):
             self._shader_program.setUniformValue(uniform, QVector3D(value[0], value[1], value[2]))
         elif type(value) is list and len(value) is 4:
             self._shader_program.setUniformValue(uniform, QVector4D(value[0], value[1], value[2], value[3]))
+        elif type(value) is list and type(value[0]) is list and len(value[0]) is 2:
+            self._shader_program.setUniformValueArray(uniform, [QVector2D(i[0], i[1]) for i in value])
         else:
             self._shader_program.setUniformValue(uniform, value)
 

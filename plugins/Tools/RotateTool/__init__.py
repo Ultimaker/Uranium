@@ -19,7 +19,8 @@ def getMetaData():
             "name": i18n_catalog.i18nc("@label", "Rotate"),
             "description": i18n_catalog.i18nc("@info:tooltip", "Rotate Object"),
             "icon": "rotate",
-            "tool_panel": "RotateTool.qml"
+            "tool_panel": "RotateTool.qml",
+            "weight": 1
         }
     }
 

@@ -43,6 +43,7 @@ class Setting(SignalEmitter):
         self._description = ""
         self._warning_description = ""
         self._error_description = ""
+        self._global_only = False
         self._default_value = None
         self._visible = True
         self._validator = None
@@ -96,6 +97,13 @@ class Setting(SignalEmitter):
 
         if "visible" in data:
             self.setVisible(data["visible"])
+
+        if "global_only" in data:
+            #if the data contains global_only; it can contain a boolean value or a function that returns a boolean value
+            if isinstance(data["global_only"], bool):
+                self._global_only = data["global_only"]
+            else:
+                 self._global_only = self._createFunction(data["global_only"])
 
         if "always_visible" in data:
             self._hide_if_all_children_visible = not data["always_visible"]
@@ -296,6 +304,14 @@ class Setting(SignalEmitter):
     def getErrorDescription(self):
         return self._error_description
 
+    ##  Get whether the setting is global only or not.
+    #
+    #   Global only means that this setting cannot be used as a per object setting.
+    def getGlobalOnly(self):
+        if not isinstance(self._global_only, bool):
+            return self._global_only()
+        return self._global_only
+
     ##  Get the identifier of the setting
     def getKey(self):
         return self._key
@@ -393,6 +409,7 @@ class Setting(SignalEmitter):
 
         copy._warning_description = self._warning_description
         copy._error_description = self._error_description
+        copy._global_only = deepcopy(self._global_only, memo)
         copy._enabled_function = deepcopy(self._enabled_function, memo)
 
         copy._fixChildren()
@@ -436,9 +453,7 @@ class Setting(SignalEmitter):
             for name in names:
                 locals[name] = profile.getSettingValue(name)
                 self._dependent_settings.add(name)
-
             return eval(compiled, globals(), locals)
-
         return local_function
 
     def _onSettingValueChanged(self, key):

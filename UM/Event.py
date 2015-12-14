@@ -17,6 +17,8 @@ class Event:
     ToolDeactivateEvent = 8
     MouseWheelEvent = 9
     CallFunctionEvent = 10
+    ViewActivateEvent = 11
+    ViewDeactivateEvent = 12
 
     def __init__(self, type):
         super().__init__()
@@ -147,3 +149,7 @@ class CallFunctionEvent(Event):
 
     def call(self):
         self._function(*self._args, **self._kwargs)
+
+##  View related event class.
+class ViewEvent(Event):
+    pass

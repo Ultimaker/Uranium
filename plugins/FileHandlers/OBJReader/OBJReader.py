@@ -80,14 +80,14 @@ class OBJReader(MeshReader):
                     uj = -1
                     uk = -1
 
-                #TODO: improve this handling, this can cause weird errors
+                #TODO: improve this handling, this can cause weird errors (negative indexes are relative indexes, and are not properly handled)
                 if i < 0 or i >= num_vertices:
                     i = 0
                 if j < 0 or j >= num_vertices:
                     j = 0
                 if k < 0 or k >= num_vertices:
                     k = 0
-                if(ni != -1 and nj != -1 and nk != -1):
+                if ni != -1 and nj != -1 and nk != -1:
                     mesh.addFaceWithNormals(vertex_list[i][0], vertex_list[i][1], vertex_list[i][2], normal_list[ni][0], normal_list[ni][1], normal_list[ni][2], vertex_list[j][0], vertex_list[j][1], vertex_list[j][2], normal_list[nj][0], normal_list[nj][1], normal_list[nj][2], vertex_list[k][0], vertex_list[k][1], vertex_list[k][2],normal_list[nk][0], normal_list[nk][1], normal_list[nk][2])
                 else:
                     mesh.addFace(vertex_list[i][0], vertex_list[i][1], vertex_list[i][2], vertex_list[j][0], vertex_list[j][1], vertex_list[j][2], vertex_list[k][0], vertex_list[k][1], vertex_list[k][2])

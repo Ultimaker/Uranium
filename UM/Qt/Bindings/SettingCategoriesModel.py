@@ -37,6 +37,20 @@ class SettingCategoriesModel(ListModel):
         for item in self.items:
             item["settings"].filter(text)
 
+    @pyqtSlot()
+    def reload(self):
+        self.clear()
+        if self._machine_instance:
+            for category in self._machine_instance.getMachineDefinition().getAllCategories():
+                self.appendItem({
+                    "id": category.getKey(),
+                    "name": category.getLabel(),
+                    "icon": category.getIcon(),
+                    "visible": category.isVisible(),
+                    "settings": SettingsFromCategoryModel.SettingsFromCategoryModel(category),
+                    "hiddenValuesCount": category.getHiddenValuesCount()
+                })
+
     def _onActiveMachineChanged(self):
         self.clear()
         if self._machine_instance:

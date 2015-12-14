@@ -10,7 +10,6 @@ from UM.Settings.Setting import Setting
 from UM.Resources import Resources
 from UM.Application import Application
 from UM.Signal import Signal, SignalEmitter
-
 from copy import deepcopy
 
 from UM.i18n import i18nCatalog
@@ -32,6 +31,7 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
     OverriddenRole = Qt.UserRole + 13
     EnabledRole = Qt.UserRole + 14
     FilteredRole = Qt.UserRole + 15
+    GlobalOnlyRole = Qt.UserRole + 16
 
     def __init__(self, category, parent = None, machine_manager = None):
         super().__init__(parent)
@@ -63,6 +63,7 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
         self.addRoleName(self.OverriddenRole, "overridden")
         self.addRoleName(self.EnabledRole, "enabled")
         self.addRoleName(self.FilteredRole, "filtered")
+        self.addRoleName(self.GlobalOnlyRole, "global_only")
 
     settingChanged = Signal()
 
@@ -133,6 +134,7 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
             else:
                 self.setProperty(index, "filtered", True)
 
+    @pyqtSlot()
     def updateSettings(self):
         self.clear()
         for setting in self._category.getAllSettings():
@@ -153,7 +155,8 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
                 "error_description": setting.getErrorDescription(),
                 "overridden": (not self._profile.isReadOnly()) and self._profile.hasSettingValue(setting.getKey()),
                 "enabled": setting.isEnabled(),
-                "filtered": False
+                "filtered": False,
+                "global_only": setting.getGlobalOnly()
             })
             setting.visibleChanged.connect(self._onSettingVisibleChanged)
             setting.enabledChanged.connect(self._onSettingEnabledChanged)
