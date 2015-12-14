@@ -1,5 +1,5 @@
 # Copyright (c) 2015 Ultimaker B.V.
-# Cura is released under the terms of the AGPLv3 or higher.
+# Uranium is released under the terms of the AGPLv3 or higher.
 
 ##  A class describing the interface to be used for texture objects.
 #
