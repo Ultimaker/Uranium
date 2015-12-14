@@ -19,6 +19,8 @@ class Tool(PluginObject, SignalEmitter):
         self._drag_start = None
         self._exposed_properties = []
 
+        self._selection_pass = None
+
     ##  Should be emitted whenever a longer running operation is started, like a drag to scale an object.
     #
     #   \param tool The tool that started the operation.
@@ -40,6 +42,9 @@ class Tool(PluginObject, SignalEmitter):
     #   \param event \type{Event} The event to handle.
     #   \sa Event
     def event(self, event):
+        if not self._selection_pass:
+            self._selection_pass = UM.Application.Application.getInstance().getRenderer().getRenderPass("selection")
+
         if event.type == Event.ToolActivateEvent:
             if Selection.hasSelection() and self._handle:
                 self._handle.setParent(self.getController().getScene().getRoot())
@@ -48,7 +53,7 @@ class Tool(PluginObject, SignalEmitter):
             if self._locked_axis:
                 return
 
-            id = self._renderer.getIdAtCoordinate(event.x, event.y)
+            id = self._selection_pass.getIdAtPosition(event.x, event.y)
 
             if self._handle.isAxis(id):
                 self._handle.setActiveAxis(id)

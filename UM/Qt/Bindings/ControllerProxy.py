@@ -18,7 +18,7 @@ class ControllerProxy(QObject):
         super().__init__(parent)
         self._controller = Application.getInstance().getController()
         self._controller.contextMenuRequested.connect(self._onContextMenuRequested)
-        self._renderer = Application.getInstance().getRenderer()
+        self._selection_pass = None
 
     @pyqtSlot(str)
     def setActiveView(self, view):
@@ -42,7 +42,10 @@ class ControllerProxy(QObject):
     contextMenuRequested = pyqtSignal("quint64", arguments=["objectId"])
 
     def _onContextMenuRequested(self, x, y):
-        id = self._renderer.getIdAtCoordinate(x, y)
+        if not self._selection_pass:
+            self._selection_pass =  Application.getInstance().getRenderer().getRenderPass("selection")
+
+        id = self._selection_pass.getIdAtPosition(x, y)
 
         if id:
             self.contextMenuRequested.emit(id)

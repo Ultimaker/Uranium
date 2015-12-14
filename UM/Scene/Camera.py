@@ -9,6 +9,7 @@ from UM.Math.Vector import Vector
 
 import numpy
 import numpy.linalg
+import copy
 
 ##  A SceneNode subclass that provides a camera object.
 #
@@ -30,7 +31,7 @@ class Camera(SceneNode.SceneNode):
 
     ##  Get the projection matrix of this camera.
     def getProjectionMatrix(self):
-        return self._projection_matrix
+        return copy.deepcopy(self._projection_matrix)
     
     def getViewportWidth(self):
         return self._viewport_width

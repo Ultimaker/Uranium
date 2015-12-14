@@ -1,7 +1,7 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-
+from UM.SortedList import SortedListWithKey
 
 ##  Abstract base class for different rendering implementations.
 #
@@ -20,9 +20,7 @@ class Renderer():
     def __init__(self):
         super().__init__()
 
-    ##  Create an instance of a renderer-specific subclass of Material
-    def createMaterial(self):
-        raise NotImplementedError()
+        self._render_passes = SortedListWithKey(key = lambda k: k.getPriority())
 
     ##  Signal the beginning of the rendering process.
     #
@@ -34,19 +32,45 @@ class Renderer():
     #
     #   \param node The node to queue for rendering.
     #   \param kwargs Keyword arguments.
-    #                 Possible keywords:
-    #                 - mesh: A different mesh from the node's MeshData to use for rendering.
-    #                 - material: The material to use to render. By default this is a standard grey lighted material.
-    #                 - mode: The mode to render in. By default this is Renderer.RenderTriangles.
-    #                 - transparent: Should this mesh be rendered with transparency. Boolean value, default False.
-    #                 - overlay: Should this mesh be rendered on top of everything else. Boolean value, default False.
+    #                 Most of these are passed to the RenderBatch constructor directly. See RenderBatch for all available options.
+    #                 In addition, the parameter "shader" is available, which determines the shader to render with. When not specified,
+    #                 it defaults to a simple vertex color shader.
     def queueNode(self, node, **kwargs):
         raise NotImplementedError()
 
-    ##  Render all queued meshes, in an order specified by the renderer.
-    def renderQueuedNodes(self):
+    ##  Render everything that was set up to be rendered.
+    def render(self):
         raise NotImplementedError()
 
     ##  Finish rendering, finalize and clear state.
     def endRendering(self):
         raise NotImplementedError()
+
+    ##  Add a render pass that should be rendered.
+    #
+    #   \param render_pass The render pass to add.
+    def addRenderPass(self, render_pass):
+        self._render_passes.add(render_pass)
+
+    ##  Remove a render pass from the list of render passes to render.
+    #
+    #   \param render_pass The render pass to remove.
+    def removeRenderPass(self, render_pass):
+        if render_pass in self._render_passes:
+            self._render_passes.remove(render_pass)
+
+    ##  Get a render pass by name.
+    #
+    #   \param name The name of the render pass to get.
+    #
+    #   \return The named render pass or None if not found.
+    def getRenderPass(self, name):
+        for render_pass in self._render_passes:
+            if render_pass.getName() == name:
+                return render_pass
+
+        return None
+
+    ##  Get the list of all render passes that should be rendered.
+    def getRenderPasses(self):
+        return self._render_passes

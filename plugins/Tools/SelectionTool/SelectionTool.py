@@ -11,6 +11,7 @@ from UM.Scene.Iterator.BreadthFirstIterator import BreadthFirstIterator
 
 from PyQt5.QtGui import qAlpha, qRed, qGreen, qBlue
 from PyQt5 import QtCore, QtWidgets
+
 class SelectionTool(Tool):
     PixelSelectionMode = 1
     BoundingBoxSelectionMode = 2
@@ -20,6 +21,8 @@ class SelectionTool(Tool):
 
         self._scene = Application.getInstance().getController().getScene()
         self._renderer = Application.getInstance().getRenderer()
+
+        self._selection_pass = None
 
         self._selection_mode = self.PixelSelectionMode
         self._ctrl_is_active = None
@@ -32,6 +35,9 @@ class SelectionTool(Tool):
         self._selection_mode = mode
 
     def event(self, event):
+        if self._selection_pass is None:
+            self._selection_pass = self._renderer.getRenderPass("selection")
+
         self.checkModifierKeys(event)
         if event.type == MouseEvent.MousePressEvent and MouseEvent.LeftButton in event.buttons:
             if self._selection_mode == self.PixelSelectionMode:
@@ -65,13 +71,14 @@ class SelectionTool(Tool):
             Selection.clear()
 
     def _pixelSelection(self, event):
-        pixel_id = self._renderer.getIdAtCoordinate(event.x, event.y)
+        item_id = self._selection_pass.getIdAtPosition(event.x, event.y)
 
-        if not pixel_id:
+        if not item_id:
             Selection.clear()
             return
+
         for node in BreadthFirstIterator(self._scene.getRoot()):
-            if id(node) == pixel_id:
+            if id(node) == item_id:
                 if self._ctrl_is_active:
                     if Selection.isSelected(node):
                         if node.getParent():
@@ -82,7 +89,7 @@ class SelectionTool(Tool):
                                 while group_node.getParent().callDecoration("isGroup"):
                                     group_node = group_node.getParent()
                                 Selection.remove(group_node)
-                    else: 
+                    else:
                         if node.getParent():
                             group_node = node.getParent()
                             if not group_node.callDecoration("isGroup"):
