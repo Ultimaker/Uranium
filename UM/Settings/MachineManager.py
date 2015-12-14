@@ -8,6 +8,7 @@ import json
 from UM.Signal import Signal, SignalEmitter
 from UM.Resources import Resources
 from UM.Logger import Logger
+from UM.PluginRegistry import PluginRegistry #For registering profile reader plugins.
 from UM.Preferences import Preferences
 
 from UM.Settings.MachineDefinition import MachineDefinition
@@ -30,6 +31,9 @@ class MachineManager(SignalEmitter):
 
         self._active_machine = None
         self._active_profile = None
+
+        self._profile_readers = {} #Plugins that read profiles.
+        PluginRegistry.addType("profile_reader", self.addProfileReader)
 
         Preferences.getInstance().addPreference("machines/setting_visibility", "")
         Preferences.getInstance().addPreference("machines/active_instance", "")
@@ -351,6 +355,20 @@ class MachineManager(SignalEmitter):
         except AttributeError:
             pass
 
+    ##  Adds a new profile reader plugin.
+    #
+    #   The reader is registered to load profiles with the import button in the
+    #   profile manager.
+    #
+    #   \param reader The plugin to read profiles with.
+    def addProfileReader(self, reader):
+        self._profile_readers[reader.getPluginId()] = reader
+
+    ##  Returns an iterable of all profile readers.
+    #
+    #   \return All profile readers that are currently loaded.
+    def getProfileReaders(self):
+        return self._profile_readers.items()
 
     def saveVisibility(self):
         if not self._active_machine:

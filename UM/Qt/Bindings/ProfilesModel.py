@@ -80,23 +80,30 @@ class ProfilesModel(ListModel):
         if not path:
             return
 
-        profile = Profile(self._manager, read_only = False)
-        try:
-            profile.loadFromFile(path)
-            self._manager.addProfile(profile)
-        except SettingsError.DuplicateProfileError as e:
-            count = 2
-            name = "{0} {1}".format(profile.getName(), count)
-            while(self._manager.findProfile(name) != None):
-                count += 1
-                name = "{0} {1}".format(profile.getName(), count)
-            profile.setName(name)
-            self._manager.addProfile(profile)
-            return { "status": "duplicate", "message": catalog.i18nc("@info:status", "Profile was imported as {0}", name) }
-        except Exception as e:
-            return { "status": "error", "message": catalog.i18nc("@info:status", "Failed to import profile from file <filename>{0}</filename>: <message>{1}</message>", path, str(e)) }
-        else:
-            return { "status": "ok", "message": catalog.i18nc("@info:status", "Successfully imported profile {0}", profile.getName()) }
+        for profile_reader in self._manager.getProfileReaders:
+            try:
+                profile = profile_reader.read(path) #Try to open the file with the profile reader.
+            except Exception as e:
+                #Note that this will fail quickly. That is, if any profile reader throws an exception, it will stop reading. It will only continue reading if the reader returned None.
+                return { "status": "error", "message": catalog.i18nc("@info:status", "Failed to import profile from file <filename>{0}</filename>: <message>{1}</message>", path, str(e)) }
+            if profile: #Success!
+                profile.setReadOnly(False)
+                try:
+                    self._manager.addProfile(profile) #Add the new profile to the list of profiles.
+                except SettingsError.DuplicateProfileError as e:
+                    count = 2
+                    name = "{0} {1}".format(profile.getName(), count) #Try alternative profile names with a number appended to them.
+                    while self._manager.findProfile(name) != None:
+                        count += 1
+                        name = "{0} {1}".format(profile.getName(), count)
+                    profile.setName(name)
+                    self._manager.addProfile(profile)
+                    return { "status": "duplicate", "message": catalog.i18nc("@info:status", "Profile was imported as {0}", name) }
+                else:
+                    return { "status": "ok", "message": catalog.i18nc("@info:status", "Successfully imported profile {0}", profile.getName()) }
+
+        #If it hasn't returned by now, none of the plugins loaded the profile successfully.
+        return { "status": "error", "message": catalog.i18nc("@info:status", "Profile {0} has an unknown file type.", path) }
 
     @pyqtSlot(str, QUrl)
     def exportProfile(self, name, url):
