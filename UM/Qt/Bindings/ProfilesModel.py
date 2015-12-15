@@ -80,7 +80,7 @@ class ProfilesModel(ListModel):
         if not path:
             return
 
-        for profile_reader in self._manager.getProfileReaders():
+        for profile_reader_id, profile_reader in self._manager.getProfileReaders():
             try:
                 profile = profile_reader.read(path) #Try to open the file with the profile reader.
             except Exception as e:
