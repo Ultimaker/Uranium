@@ -16,10 +16,12 @@ def getMetaData():
             "description": i18n_catalog.i18nc("@info:whatsthis", "Makes it possbile to read Wavefront OBJ files."),
             "api": 2
         },
-        "mesh_reader": {
-            "extension": "obj",
-            "description": i18n_catalog.i18nc("@item:inlistbox", "Wavefront OBJ File")
-        }
+        "mesh_reader": [
+            {
+                "extension": "obj",
+                "description": i18n_catalog.i18nc("@item:inlistbox", "Wavefront OBJ File")
+            }
+        ]
     }
 
 def register(app):
