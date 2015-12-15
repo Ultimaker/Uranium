@@ -415,6 +415,8 @@ class MachineManager(SignalEmitter):
                         description = supported_type.get("description", extension)
                         supported_types[extension] = description
 
+        return supported_types
+
     def saveVisibility(self):
         if not self._active_machine:
             Logger.log("w", "No active machine found when trying to save setting visibility")
