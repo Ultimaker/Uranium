@@ -362,7 +362,7 @@ class MachineManager(SignalEmitter):
     #   \param reader The plugin to read profiles with.
     def addProfileReader(self, reader):
         self._profile_readers[reader.getPluginId()] = reader
-    
+
     ##  Adds a new profile writer plugin.
     #
     #   \param writer The plugin to write profiles with.
@@ -374,7 +374,7 @@ class MachineManager(SignalEmitter):
     #   \return All profile readers that are currently loaded.
     def getProfileReaders(self):
         return self._profile_readers.items()
-    
+
     ##  Returns an iterable of all profile writers.
     #
     #   \return All profile writers that are currently loaded.
