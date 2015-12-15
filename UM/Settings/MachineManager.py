@@ -32,8 +32,10 @@ class MachineManager(SignalEmitter):
         self._active_machine = None
         self._active_profile = None
 
-        self._profile_readers = {} #Plugins that read profiles.
+        self._profile_readers = {} #Plugins that read profiles from file.
+        self._profile_writers = {} #Plugins that write profiles to file.
         PluginRegistry.addType("profile_reader", self.addProfileReader)
+        PluginRegistry.addType("profile_writer", self.addProfileWriter)
 
         Preferences.getInstance().addPreference("machines/setting_visibility", "")
         Preferences.getInstance().addPreference("machines/active_instance", "")
@@ -363,12 +365,24 @@ class MachineManager(SignalEmitter):
     #   \param reader The plugin to read profiles with.
     def addProfileReader(self, reader):
         self._profile_readers[reader.getPluginId()] = reader
+    
+    ##  Adds a new profile writer plugin.
+    #
+    #   \param writer The plugin to write profiles with.
+    def addProfileWriter(self, writer):
+        self._profile_writers[writer.getPluginId()] = writer
 
     ##  Returns an iterable of all profile readers.
     #
     #   \return All profile readers that are currently loaded.
     def getProfileReaders(self):
         return self._profile_readers.items()
+    
+    ##  Returns an iterable of all profile writers.
+    #
+    #   \return All profile writers that are currently loaded.
+    def getProfileWriters(self):
+        return self._profile_writers.items()
 
     ##  Returns a dictionary of the file types the profile readers can read.
     #
