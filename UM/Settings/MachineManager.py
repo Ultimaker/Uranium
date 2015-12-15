@@ -380,10 +380,11 @@ class MachineManager(SignalEmitter):
         meta_data = PluginRegistry.getInstance().getAllMetaData(filter = {"profile_reader": {}}, active_only = True)
         for plugin in meta_data:
             if "profile_reader" in plugin:
-                extension = plugin["profile_reader"].get("extension", None)
-                if extension:
-                    description = plugin["profile_reader"].get("description", extension)
-                    supported_types[extension] = description
+                for supported_type in plugin["profile_reader"]: #All extensions that this plugin can supposedly read.
+                    extension = supported_type.get("extension", None)
+                    if extension:
+                        description = supported_type.get("description", extension)
+                        supported_types[extension] = description
 
         return supported_types
 
