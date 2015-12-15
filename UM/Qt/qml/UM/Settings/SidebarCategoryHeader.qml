@@ -32,7 +32,7 @@ Button {
                 height: control.height
                 sourceSize.width: width
                 sourceSize.height: width
-                color: UM.Theme.colors.setting_unit
+                color: control.hovered ? UM.Theme.colors.setting_control_button_hover : UM.Theme.colors.setting_control_button
                 source: UM.Theme.icons.settings
             }
             label: Label{}
