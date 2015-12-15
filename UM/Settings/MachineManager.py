@@ -359,9 +359,6 @@ class MachineManager(SignalEmitter):
 
     ##  Adds a new profile reader plugin.
     #
-    #   The reader is registered to load profiles with the import button in the
-    #   profile manager.
-    #
     #   \param reader The plugin to read profiles with.
     def addProfileReader(self, reader):
         self._profile_readers[reader.getPluginId()] = reader
