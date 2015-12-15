@@ -399,6 +399,11 @@ class MachineManager(SignalEmitter):
 
         return supported_types
 
+    ##  Returns a dictionary of the file types the profile writers can write.
+    #
+    #   Each file extension should have a description.
+    #
+    #   \return A dictionary of the file types the profile writers can write.
     def getProfileSupportedFileTypesWrite(self):
         supported_types = {}
         meta_data = PluginRegistry.getInstance().getAllMetaData(filter = {"profile_writer": {}}, active_only = True)
