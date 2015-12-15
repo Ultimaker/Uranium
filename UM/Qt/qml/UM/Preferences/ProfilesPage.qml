@@ -91,7 +91,7 @@ ManagementPage
             id: exportDialog;
             title: catalog.i18nc("@title:window", "Export Profile");
             selectExisting: false;
-            nameFilters: [ catalog.i18nc("@item:inlistbox", "Cura Profiles (*.curaprofile)") ]
+            nameFilters: base.model.getFileNameFiltersWrite()
 
             onAccepted: base.model.exportProfile(base.currentItem.name, fileUrl)
         }

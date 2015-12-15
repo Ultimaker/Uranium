@@ -136,7 +136,20 @@ class ProfilesModel(ListModel):
     @pyqtSlot(result = "QVariantList")
     def getFileNameFiltersRead(self):
         filters = []
-        for extension,description in self._manager.getProfileSupportedFileTypesRead().items(): #Format the file types that can be read correctly for the open file dialog.
+        for extension, description in self._manager.getProfileSupportedFileTypesRead().items(): #Format the file types that can be read correctly for the open file dialog.
+            filters.append(description + " (*." + extension + ")")
+        filters.append(catalog.i18nc("@item:inlistbox", "All Files (*)")) #Also allow arbitrary files, if the user so prefers.
+        return filters
+    
+    ##  Gets a list of the possible file filters that the plugins have
+    #   registered they can write.
+    #
+    #   \return A list of strings indicating file name filters for a file
+    #   dialog.
+    @pyqtSlot(result = "QVariantList")
+    def getFileNameFiltersWrite(self):
+        filters = []
+        for extension, description in self._manager.getProfileSupportedFileTypesWrite().items(): #Format the file types that can be written correctly for the save file dialog.
             filters.append(description + " (*." + extension + ")")
         filters.append(catalog.i18nc("@item:inlistbox", "All Files (*)")) #Also allow arbitrary files, if the user so prefers.
         return filters
