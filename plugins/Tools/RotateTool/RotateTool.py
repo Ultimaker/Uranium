@@ -165,89 +165,88 @@ class RotateTool(Tool):
         progress_message.setProgress(0)
         progress_message.show()
 
-        selected_object = Selection.getSelectedObject(0)
-        transformed_vertices = selected_object.getMeshDataTransformed().getVertices()
-        min_y_vertex = transformed_vertices[transformed_vertices.argmin(0)[1]]
-        dot_min = 1.0
-        dot_v = None
-
         iterations = 0
-        total_iterations = len(transformed_vertices) * 2
         last_progress = 0
+        total_iterations = 0
+        for selected_object in Selection.getAllSelectedObjects():
+            total_iterations += len(selected_object.getMeshDataTransformed().getVertices()) * 2
 
-        for v in transformed_vertices:
-            diff = v - min_y_vertex
-            length = math.sqrt(diff[0] * diff[0] + diff[2] * diff[2] + diff[1] * diff[1])
-            if length < 5:
+        for selected_object in Selection.getAllSelectedObjects():
+            transformed_vertices = selected_object.getMeshDataTransformed().getVertices()
+            min_y_vertex = transformed_vertices[transformed_vertices.argmin(0)[1]]
+            dot_min = 1.0
+            dot_v = None
+
+            for v in transformed_vertices:
+                diff = v - min_y_vertex
+                length = math.sqrt(diff[0] * diff[0] + diff[2] * diff[2] + diff[1] * diff[1])
+                if length < 5:
+                    continue
+                dot = (diff[1] / length)
+                if dot_min > dot:
+                    dot_min = dot
+                    dot_v = diff
+                iterations += 1
+                progress = round(100*iterations/total_iterations)
+                if progress != last_progress:
+                    last_progress = progress
+                    progress_message.setProgress(progress)
+                    QApplication.processEvents()
+
+            if dot_v is None:
+                iterations += len(transformed_vertices)
                 continue
-            dot = (diff[1] / length)
-            if dot_min > dot:
-                dot_min = dot
-                dot_v = diff
-            iterations += 1
-            progress = round(100*iterations/total_iterations)
-            if progress != last_progress:
-                last_progress = progress
-                progress_message.setProgress(progress)
-                QApplication.processEvents()
 
-        if dot_v is None:
-            progress_message.hide()
-            self.operationStopped.emit(self)
-            return
-
-        rad = -math.asin(dot_min)
-        m = Matrix([
-            [ math.cos(rad), math.sin(rad), 0 ],
-            [-math.sin(rad), math.cos(rad), 0 ],
-            [ 0,             0,             1 ]
-        ])
-        selected_object.rotate(Quaternion.fromMatrix(m), SceneNode.TransformSpace.Parent)
-
-        rad = math.atan2(dot_v[2], dot_v[0])
-        m = Matrix([
-            [ math.cos(rad), 0, math.sin(rad)],
-            [ 0,             1, 0 ],
-            [-math.sin(rad), 0, math.cos(rad)]
-        ])
-        selected_object.rotate(Quaternion.fromMatrix(m), SceneNode.TransformSpace.Parent)
-
-        transformed_vertices = selected_object.getMeshDataTransformed().getVertices()
-        min_y_vertex = transformed_vertices[transformed_vertices.argmin(0)[1]]
-        dot_min = 1.0
-        dot_v = None
-
-        for v in transformed_vertices:
-            diff = v - min_y_vertex
-            length = math.sqrt(diff[2] * diff[2] + diff[1] * diff[1])
-            if length < 5:
-                continue
-            dot = (diff[1] / length)
-            if dot_min > dot:
-                dot_min = dot
-                dot_v = diff
-            iterations += 1
-            progress = round(100*iterations/total_iterations)
-            if progress != last_progress:
-                last_progress = progress
-                progress_message.setProgress(progress)
-                QApplication.processEvents()
-
-        if dot_v is None:
-            progress_message.hide()
-            self.operationStopped.emit(self)
-            return
-
-        if dot_v[2] < 0:
             rad = -math.asin(dot_min)
-        else:
-            rad = math.asin(dot_min)
-        m = Matrix([
-            [ 1, 0,             0 ],
-            [ 0, math.cos(rad),-math.sin(rad) ],
-            [ 0, math.sin(rad), math.cos(rad) ]
-        ])
-        selected_object.rotate(Quaternion.fromMatrix(m), SceneNode.TransformSpace.Parent)
+            m = Matrix([
+                [ math.cos(rad), math.sin(rad), 0 ],
+                [-math.sin(rad), math.cos(rad), 0 ],
+                [ 0,             0,             1 ]
+            ])
+            selected_object.rotate(Quaternion.fromMatrix(m), SceneNode.TransformSpace.Parent)
+
+            rad = math.atan2(dot_v[2], dot_v[0])
+            m = Matrix([
+                [ math.cos(rad), 0, math.sin(rad)],
+                [ 0,             1, 0 ],
+                [-math.sin(rad), 0, math.cos(rad)]
+            ])
+            selected_object.rotate(Quaternion.fromMatrix(m), SceneNode.TransformSpace.Parent)
+
+            transformed_vertices = selected_object.getMeshDataTransformed().getVertices()
+            min_y_vertex = transformed_vertices[transformed_vertices.argmin(0)[1]]
+            dot_min = 1.0
+            dot_v = None
+
+            for v in transformed_vertices:
+                diff = v - min_y_vertex
+                length = math.sqrt(diff[2] * diff[2] + diff[1] * diff[1])
+                if length < 5:
+                    continue
+                dot = (diff[1] / length)
+                if dot_min > dot:
+                    dot_min = dot
+                    dot_v = diff
+                iterations += 1
+                progress = round(100*iterations/total_iterations)
+                if progress != last_progress:
+                    last_progress = progress
+                    progress_message.setProgress(progress)
+                    QApplication.processEvents()
+
+            if dot_v is None:
+                continue
+
+            if dot_v[2] < 0:
+                rad = -math.asin(dot_min)
+            else:
+                rad = math.asin(dot_min)
+            m = Matrix([
+                [ 1, 0,             0 ],
+                [ 0, math.cos(rad),-math.sin(rad) ],
+                [ 0, math.sin(rad), math.cos(rad) ]
+            ])
+            selected_object.rotate(Quaternion.fromMatrix(m), SceneNode.TransformSpace.Parent)
 
         progress_message.hide()
         self.operationStopped.emit(self)
