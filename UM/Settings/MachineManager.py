@@ -399,6 +399,17 @@ class MachineManager(SignalEmitter):
 
         return supported_types
 
+    def getProfileSupportedFileTypesWrite(self):
+        supported_types = {}
+        meta_data = PluginRegistry.getInstance().getAllMetaData(filter = {"profile_writer": {}}, active_only = True)
+        for plugin in meta_data:
+            if "profile_writer" in plugin:
+                for supported_type in plugin["profile_writer"]: #All extensions that this plugin can supposedly write.
+                    extension = supported_type.get("extension", None)
+                    if extension:
+                        description = supported_type.get("description", extension)
+                        supported_types[extension] = description
+
     def saveVisibility(self):
         if not self._active_machine:
             Logger.log("w", "No active machine found when trying to save setting visibility")
