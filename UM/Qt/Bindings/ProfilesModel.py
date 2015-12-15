@@ -128,6 +128,19 @@ class ProfilesModel(ListModel):
             m = Message(catalog.i18nc("@info:status", "Exported profile to <filename>{0}</filename>", path))
             m.show()
 
+    ##  Gets a list of the possible file filters that the plugins have
+    #   registered they can open.
+    #
+    #   \return A list of strings indicating file name filters for a file
+    #   dialog.
+    @pyqtSlot(result = "QVariantList")
+    def getFileNameFiltersRead(self):
+        filters = []
+        for extension,description in self._manager.getProfileSupportedFileTypesRead().items(): #Format the file types that can be read correctly for the open file dialog.
+            filters.append(description + " (*." + extension + ")")
+        filters.append(catalog.i18nc("@item:inlistbox", "All Files (*)")) #Also allow arbitrary files, if the user so prefers.
+        return filters
+
     def _onProfilesChanged(self):
         self.clear()
 

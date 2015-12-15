@@ -64,7 +64,7 @@ ManagementPage
             id: importDialog;
             title: catalog.i18nc("@title:window", "Import Profile");
             selectExisting: true;
-            nameFilters: [ catalog.i18nc("@item:inlistbox", "Cura Profiles (*.curaprofile)"), catalog.i18nc("@item:inlistbox", "All Files (*)") ]
+            nameFilters: base.model.getFileNameFiltersRead()
 
             onAccepted:
             {

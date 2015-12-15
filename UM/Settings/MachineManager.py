@@ -370,6 +370,23 @@ class MachineManager(SignalEmitter):
     def getProfileReaders(self):
         return self._profile_readers.items()
 
+    ##  Returns a dictionary of the file types the profile readers can read.
+    #
+    #   Each file extension should have a description.
+    #
+    #   \return A dictionary of the file types the profile readers can read.
+    def getProfileSupportedFileTypesRead(self):
+        supported_types = {}
+        meta_data = PluginRegistry.getInstance().getAllMetaData(filter = {"profile_reader": {}}, active_only = True)
+        for plugin in meta_data:
+            if "profile_reader" in plugin:
+                extension = plugin["profile_reader"].get("extension", None)
+                if extension:
+                    description = plugin["profile_reader"].get("description", extension)
+                    supported_types[extension] = description
+
+        return supported_types
+
     def saveVisibility(self):
         if not self._active_machine:
             Logger.log("w", "No active machine found when trying to save setting visibility")
