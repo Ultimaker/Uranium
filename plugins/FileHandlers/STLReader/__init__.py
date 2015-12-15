@@ -15,10 +15,12 @@ def getMetaData():
             "description": i18n_catalog.i18nc("@info:whatsthis", "Provides support for reading STL files."),
             "api": 2
         },
-        "mesh_reader": {
-            "extension": "stl",
-            "description": i18n_catalog.i18nc("@item:inlistbox", "STL File")
-        }
+        "mesh_reader": [
+            {
+                "extension": "stl",
+                "description": i18n_catalog.i18nc("@item:inlistbox", "STL File")
+            }
+        ]
     }
 
 def register(app):

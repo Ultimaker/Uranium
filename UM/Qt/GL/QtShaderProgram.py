@@ -64,7 +64,10 @@ class QtShaderProgram(ShaderProgram):
             self._setUniformValueDirect(uniform, value)
 
     def setTexture(self, texture_unit, texture):
-        self._textures[texture_unit] = texture
+        if texture:
+            self._textures[texture_unit] = texture
+        elif texture_unit in self._textures:
+            del self._textures[texture_unit]
 
     def enableAttribute(self, name, type, offset, stride = 0):
         if not self._shader_program:
