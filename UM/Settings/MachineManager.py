@@ -386,7 +386,7 @@ class MachineManager(SignalEmitter):
     #   Each file extension should have a description.
     #
     #   \return A dictionary of the file types the profile readers can read.
-    def getProfileSupportedFileTypesRead(self):
+    def getSupportedProfileTypesRead(self):
         supported_types = {}
         meta_data = PluginRegistry.getInstance().getAllMetaData(filter = {"profile_reader": {}}, active_only = True)
         for plugin in meta_data:
@@ -404,7 +404,7 @@ class MachineManager(SignalEmitter):
     #   Each file extension should have a description.
     #
     #   \return A dictionary of the file types the profile writers can write.
-    def getProfileSupportedFileTypesWrite(self):
+    def getSupportedProfileTypesWrite(self):
         supported_types = {}
         meta_data = PluginRegistry.getInstance().getAllMetaData(filter = {"profile_writer": {}}, active_only = True)
         for plugin in meta_data:
