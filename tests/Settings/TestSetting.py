@@ -161,7 +161,7 @@ class TestSetting(unittest.TestCase):
         # An error value should return a default value valid for the setting type.
         self.assertEqual(setting.parseValue("something"), 0)
 
-        setting = Setting(self._machine_manager, "test", self._catalog, type = "bool")
+        setting = Setting(self._machine_manager, "test", self._catalog, type = "boolean")
 
         self.assertEqual(setting.parseValue("True"), True)
         self.assertEqual(setting.parseValue(1), True)
