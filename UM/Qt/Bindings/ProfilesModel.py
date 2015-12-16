@@ -163,8 +163,11 @@ class ProfilesModel(ListModel):
     @pyqtSlot(result = "QVariantList")
     def getFileNameFiltersRead(self):
         filters = []
+        all_supported = []
         for extension, description in self._manager.getProfileSupportedFileTypesRead().items(): #Format the file types that can be read correctly for the open file dialog.
+            all_supported.append("*." + extension)
             filters.append(description + " (*." + extension + ")")
+        filters.insert(0, catalog.i18nc("@item:inlistbox", "All supported files") + "(" + " ".join(all_supported) + ")") #An entry to show all file extensions that are supported.
         filters.append(catalog.i18nc("@item:inlistbox", "All Files (*)")) #Also allow arbitrary files, if the user so prefers.
         return filters
     
