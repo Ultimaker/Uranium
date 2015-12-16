@@ -16,8 +16,8 @@ Dialog
     id: base;
 
     title: catalog.i18nc("@title:window", "Preferences")
-    minimumWidth: 600;
-    minimumHeight: 500;
+    minimumWidth: UM.Theme.sizes.modal_window_minimum.width;
+    minimumHeight: UM.Theme.sizes.modal_window_minimum.height;
 
     property int currentPage: 0;
 
