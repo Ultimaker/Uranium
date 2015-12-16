@@ -28,13 +28,15 @@ class QtShaderProgram(ShaderProgram):
         if not self._shader_program:
             self._shader_program = QOpenGLShaderProgram()
 
-        self._shader_program.addShaderFromSourceCode(QOpenGLShader.Vertex, shader)
+        if not self._shader_program.addShaderFromSourceCode(QOpenGLShader.Vertex, shader):
+            Logger.log("e", "Vertex shader failed to compile: %s", self._shader_program.log())
 
     def setFragmentShader(self, shader):
         if not self._shader_program:
             self._shader_program = QOpenGLShaderProgram()
 
-        self._shader_program.addShaderFromSourceCode(QOpenGLShader.Fragment, shader)
+        if not self._shader_program.addShaderFromSourceCode(QOpenGLShader.Fragment, shader):
+            Logger.log("e", "Fragment shader failed to compile: %s", self._shader_program.log())
 
     def build(self):
         if not self._shader_program:
@@ -42,7 +44,7 @@ class QtShaderProgram(ShaderProgram):
             return
 
         if not self._shader_program.link():
-            Logger.log("e", "Shader failed to compile!")
+            Logger.log("e", "Shader failed to link: %s", self._shader_program.log())
 
     def setUniformValue(self, name, value, **kwargs):
         if not self._shader_program:
