@@ -72,11 +72,14 @@ class Setting(SignalEmitter):
     ##  Set values of the setting by providing it with a dict object (as decoded by JSON parser)
     #   \param data Decoded JSON dict
     def fillByDict(self, data):
-        if "default" in data:
-            self._default_value = data["default"]
-
         if "type" in data:
             self._type = data["type"]
+            if self._type not in ["int", "float", "string", "enum", "boolean", "polygon"]:
+                Logger.log("e", "Invalid type for Setting %s, ignoring", self._key)
+                return
+
+        if "default" in data:
+            self._default_value = data["default"]
 
         self.bindValidator()
 
@@ -361,20 +364,22 @@ class Setting(SignalEmitter):
     #
     #   \return A value that is valid for this setting.
     def parseValue(self, value):
-        if not type(value) is str:
-            return value
-        try:
-            if self._type == "bool":
-                return bool(ast.literal_eval(value))
-            elif self._type == "int":
-                return int(ast.literal_eval(value))
-            elif self._type == "float":
-                return float(ast.literal_eval(value.replace(",", ".")))
-            elif self._type == "string" or self._type == "enum":
-                return value
-            else:
-                return ast.literal_eval(value)
-        except Exception:
+        if self._type == "string" or self._type == "enum":
+            return str(value)
+
+        if isinstance(value, str):
+            try:
+                value = ast.literal_eval(value.replace(",", "."))
+            except Exception:
+                value = None
+
+        if self._type == "boolean":
+            return bool(value) if value else False
+        elif self._type == "int":
+            return int(value) if value else 0
+        elif self._type == "float":
+            return float(value) if value else 0.0
+        else:
             return value
 
     def __repr__(self):
