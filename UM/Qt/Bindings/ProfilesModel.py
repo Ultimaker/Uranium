@@ -118,6 +118,7 @@ class ProfilesModel(ListModel):
             return
 
         #Parse the fileType to deduce what plugin can save the file format.
+        #TODO: This parsing can be made unnecessary by storing for each plugin what the fileType string is in complete (in addition to the {(description,extension)} dict).
         #fileType has the format "<description> (*.<extension>)"
         split = fileType.rfind(" (*.") #Find where the description ends and the extension starts.
         if split < 0: #Not found. Invalid format.
