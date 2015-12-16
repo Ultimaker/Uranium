@@ -143,7 +143,7 @@ class ProfilesModel(ListModel):
 
         success = False
         try:
-            success = good_profile_writer.write(file(path), profile)
+            success = good_profile_writer.write(path, profile)
         except Exception as e:
             m = Message(catalog.i18nc("@info:status", "Failed to export profile to <filename>{0}</filename>: <message>{1}</message>", path, str(e)))
             m.show()

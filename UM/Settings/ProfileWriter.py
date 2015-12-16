@@ -13,12 +13,13 @@ class ProfileWriter(PluginObject):
     def __init__(self):
         super().__init__()
 
-    ##  Writes a profile to the specified stream.
+    ##  Writes a profile to the specified file path.
     #
-    #   For example, the stream could be a file stream. The profile writer then
-    #   writes its own file format to the specified file.
+    #   The profile writer may write its own file format to the specified file.
     #
-    #   \param stream \type{IOStream} The stream to output to.
-    #   \param profile \type{Profile} The profile to write to the stream.
-    def write(self, stream, node):
+    #   \param path \type{string} The file to output to.
+    #   \param profile \type{Profile} The profile to write to the file.
+    #   \return \code True \endcode if the writing was successful, or \code
+    #   False \endcode if it wasn't.
+    def write(self, path, node):
         raise NotImplementedError("Profile writer plugin was not correctly implemented. No write was specified.")
