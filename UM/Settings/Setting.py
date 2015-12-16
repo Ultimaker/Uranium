@@ -147,7 +147,6 @@ class Setting(SignalEmitter):
                     setting = Setting(self._machine_manager, key, self._i18n_catalog)
                     setting.setCategory(self._category)
                     setting.setParent(self)
-                    setting.visibleChanged.connect(self._onChildVisibileChanged)
                     setting.defaultValueChanged.connect(self.defaultValueChanged)
                     self._children.append(setting)
 
@@ -255,11 +254,7 @@ class Setting(SignalEmitter):
     #   \returns bool
     #   \sa isEnabled
     def isVisible(self):
-        if not self._visible:
-            return False
-        if self._hide_if_all_children_visible and self.checkAllChildrenVisible():
-            return False
-        return True
+        return self._visible
 
     ##  Emitted when visible is changed either due to explicitly setting it or due to children visibility changing.
     visibleChanged = Signal()
@@ -423,10 +418,6 @@ class Setting(SignalEmitter):
         for child in self._children:
             child.setParent(self)
             child._fixChildren()
-
-    def _onChildVisibileChanged(self, setting):
-        self.visibleChanged.emit(setting)
-        self.visibleChanged.emit(self)
 
     def _createFunction(self, code):
         try:
