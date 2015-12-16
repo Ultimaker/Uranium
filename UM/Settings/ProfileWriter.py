@@ -12,7 +12,7 @@ class ProfileWriter(PluginObject):
     #   This currently doesn't do anything since the writer is basically static.
     def __init__(self):
         super().__init__()
-    
+
     ##  Writes a profile to the specified stream.
     #
     #   For example, the stream could be a file stream. The profile writer then

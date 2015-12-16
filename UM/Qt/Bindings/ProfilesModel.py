@@ -4,6 +4,7 @@
 from UM.Qt.ListModel import ListModel
 from UM.Application import Application
 from UM.Message import Message
+from UM.PluginRegistry import PluginRegistry #For getting the possible profile writers to write with.
 from UM.Settings.Profile import Profile
 from UM.Settings import SettingsError
 
@@ -105,8 +106,9 @@ class ProfilesModel(ListModel):
         #If it hasn't returned by now, none of the plugins loaded the profile successfully.
         return { "status": "error", "message": catalog.i18nc("@info:status", "Profile {0} has an unknown file type.", path) }
 
-    @pyqtSlot(str, QUrl)
-    def exportProfile(self, name, url):
+    @pyqtSlot(str, QUrl, str)
+    def exportProfile(self, name, url, fileType):
+        #Input checking.
         path = url.toLocalFile()
         if not path:
             return
@@ -115,18 +117,43 @@ class ProfilesModel(ListModel):
         if not profile:
             return
 
-        error = ""
-        try:
-            error = profile.saveToFile(path)
-        except Exception as e:
-            error = str(e)
+        #Parse the fileType to deduce what plugin can save the file format.
+        #fileType has the format "<description> (*.<extension>)"
+        split = fileType.rfind(" (*.") #Find where the description ends and the extension starts.
+        if split < 0: #Not found. Invalid format.
+            Logger.log("e", "Invalid file format identifier %s", fileType)
+        description = fileType[:split]
+        extension = fileType[split + 4:-1] #Leave out the " (*." and ")".
+        if not path.endswith("." + extension): #Auto-fill the extension if the user did not provide any.
+            path += "." + extension
 
-        if error:
-            m = Message(catalog.i18nc("@info:status", "Failed to export profile to <filename>{0}</filename>: <message>{1}</message>", path, error))
+        good_profile_writer = None
+        for profile_writer_id, profile_writer in self._manager.getProfileWriters(): #Find which profile writer can write this file type.
+            meta_data = PluginRegistry.getInstance().getMetaData(profile_writer_id)
+            if "profile_writer" in meta_data:
+                for supported_type in meta_data["profile_writer"]: #All file types this plugin can supposedly write.
+                    supported_extension = supported_type.get("extension", None)
+                    if supported_extension == extension: #This plugin supports a file type with the same extension.
+                        supported_description = supported_type.get("description", None)
+                        if supported_description == description: #The description is also identical. Assume it's the same file type.
+                            good_profile_writer = profile_writer
+                            break
+            if good_profile_writer: #If we found a writer in this iteration, break the loop.
+                break
+
+        success = False
+        try:
+            success = good_profile_writer.write(file(path), profile)
+        except Exception as e:
+            m = Message(catalog.i18nc("@info:status", "Failed to export profile to <filename>{0}</filename>: <message>{1}</message>", path, str(e)))
             m.show()
-        else:
-            m = Message(catalog.i18nc("@info:status", "Exported profile to <filename>{0}</filename>", path))
+            return
+        if not success:
+            m = Message(catalog.i18nc("@info:status", "Failed to export profile to <filename>{0}</filename>: Writer plugin reported failure.", path))
             m.show()
+            return
+        m = Message(catalog.i18nc("@info:status", "Exported profile to <filename>{0}</filename>", path))
+        m.show()
 
     ##  Gets a list of the possible file filters that the plugins have
     #   registered they can open.

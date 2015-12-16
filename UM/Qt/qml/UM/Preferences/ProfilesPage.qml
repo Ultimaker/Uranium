@@ -93,7 +93,7 @@ ManagementPage
             selectExisting: false;
             nameFilters: base.model.getFileNameFiltersWrite()
 
-            onAccepted: base.model.exportProfile(base.currentItem.name, fileUrl)
+            onAccepted: base.model.exportProfile(base.currentItem.name, fileUrl, selectedNameFilter)
         }
     }
 }
