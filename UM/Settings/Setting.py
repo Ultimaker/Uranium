@@ -236,7 +236,8 @@ class Setting(SignalEmitter):
             except Exception as e:
                 Logger.log("e", "An error occurred in inherit function for {0}: {1}".format(self._key, str(e)))
             else:
-                return inherit_value
+                if inherit_value:
+                    return inherit_value
 
         return self._default_value
 
@@ -439,17 +440,24 @@ class Setting(SignalEmitter):
         def local_function(profile = None):
             if not profile:
                 profile = self._machine_manager.getActiveProfile()
+
+            if not profile:
+                return None
+
             locals = {
-                "parent_value": profile.getSettingValue(self.getParent().getKey()) if self.getParent() else None,
                 "profile": profile
             }
 
-            self._dependent_settings.add(self.getParent().getKey())
+            if self.getParent():
+                locals["parent_value"] = profile.getSettingValue(self.getParent().getKey())
+                self._dependent_settings.add(self.getParent().getKey())
 
             for name in names:
                 locals[name] = profile.getSettingValue(name)
                 self._dependent_settings.add(name)
+
             return eval(compiled, globals(), locals)
+
         return local_function
 
     def _onSettingValueChanged(self, key):
