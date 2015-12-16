@@ -122,6 +122,7 @@ class ProfilesModel(ListModel):
         split = fileType.rfind(" (*.") #Find where the description ends and the extension starts.
         if split < 0: #Not found. Invalid format.
             Logger.log("e", "Invalid file format identifier %s", fileType)
+            return
         description = fileType[:split]
         extension = fileType[split + 4:-1] #Leave out the " (*." and ")".
         if not path.endswith("." + extension): #Auto-fill the extension if the user did not provide any.
