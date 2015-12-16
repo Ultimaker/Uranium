@@ -14,6 +14,8 @@ class TestApplication(Application):
     def __init__(self):
         super().__init__("test", "1.0")
 
+        self._test_plugin = None
+
     def registerTestPlugin(self, name):
         self._test_plugin = name
         
@@ -27,14 +29,13 @@ class TestPluginRegistry(unittest.TestCase):
 
     # Called after the last testfunction was executed
     def tearDown(self):
-        pass
+        self._app = None
 
     def test_metaData(self):
         registry = self._createRegistry()
         
         metaData = registry.getMetaData("TestPlugin")
-        self.assertEqual("TestPlugin", metaData["name"])
-        self.assertEqual("test", metaData["type"])
+        self.assertDictEqual({ "id": "TestPlugin", "plugin": { "name": "TestPlugin", "api": 2 } }, metaData)
 
     def test_load(self):
         registry = self._createRegistry()
@@ -52,12 +53,18 @@ class TestPluginRegistry(unittest.TestCase):
         registry = self._createRegistry()
         
         names = registry._findAllPlugins()
-        self.assertEqual(["TestPlugin", "TestPlugin2"], names)
+        self.assertListEqual(["OldTestPlugin", "TestPlugin", "TestPlugin2"], sorted(names))
         
     def test_pluginNotFound(self):
         registry = self._createRegistry()
         
         self.assertRaises(PluginNotFoundError, registry.loadPlugin, "NoSuchPlugin")
+
+    def test_ignoreOldApi(self):
+        registry = self._createRegistry()
+
+        registry.loadPlugin("OldTestPlugin")
+        self.assertEqual(None, self._app.getTestPlugin())
         
     def _createRegistry(self):
         registry = PluginRegistry()

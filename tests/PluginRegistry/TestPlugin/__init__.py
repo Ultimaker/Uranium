@@ -2,7 +2,12 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 def getMetaData():
-    return { "name": "TestPlugin", "type": "test" }
+    return {
+        "plugin": {
+            "name": "TestPlugin",
+            "api": 2
+        }
+    }
 
 def register(app):
     app.registerTestPlugin("TestPlugin")
