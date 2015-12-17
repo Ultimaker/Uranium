@@ -167,5 +167,5 @@ class RotateTool(Tool):
             
         Selection.applyOperation(LayFlatOperation)
 
-        self._progress_message.hide()
+        progress_message.hide()
         self.operationStopped.emit(self)
