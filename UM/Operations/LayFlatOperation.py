@@ -17,15 +17,16 @@ class LayFlatOperation(Operation.Operation):
         self._node = node
 
         self._old_orientation = node.getOrientation()
-        self._new_orientation = orientation
-
         if orientation:
-            return
-        
+            self._new_orientation = orientation
+        else:
+            self._new_orientation = self._old_orientation
+
+    def process(self):
         # Based on https://github.com/daid/Cura/blob/SteamEngine/Cura/util/printableObject.py#L207
         # Note: Y & Z axis are swapped
 
-        transformed_vertices = node.getMeshDataTransformed().getVertices()
+        transformed_vertices = self._node.getMeshDataTransformed().getVertices()
         min_y_vertex = transformed_vertices[transformed_vertices.argmin(0)[1]]
         dot_min = 1.0
         dot_v = None
@@ -43,24 +44,23 @@ class LayFlatOperation(Operation.Operation):
         if dot_v is None:
             return
 
-        rad = -math.asin(dot_min)
-
-        m = Matrix([
-            [ math.cos(rad), math.sin(rad), 0 ],
-            [-math.sin(rad), math.cos(rad), 0 ],
-            [ 0,             0,             1 ]
-        ])
-        node.rotate(Quaternion.fromMatrix(m), SceneNode.TransformSpace.Parent)
-
         rad = math.atan2(dot_v[2], dot_v[0])
         m = Matrix([
             [ math.cos(rad), 0, math.sin(rad)],
             [ 0,             1, 0 ],
             [-math.sin(rad), 0, math.cos(rad)]
         ])
-        node.rotate(Quaternion.fromMatrix(m), SceneNode.TransformSpace.Parent)
+        self._node.rotate(Quaternion.fromMatrix(m), SceneNode.TransformSpace.Parent)
 
-        transformed_vertices = node.getMeshDataTransformed().getVertices()
+        rad = -math.asin(dot_min)
+        m = Matrix([
+            [ math.cos(rad), math.sin(rad), 0 ],
+            [-math.sin(rad), math.cos(rad), 0 ],
+            [ 0,             0,             1 ]
+        ])
+        self._node.rotate(Quaternion.fromMatrix(m), SceneNode.TransformSpace.Parent)
+
+        transformed_vertices = self._node.getMeshDataTransformed().getVertices()
         min_y_vertex = transformed_vertices[transformed_vertices.argmin(0)[1]]
         dot_min = 1.0
         dot_v = None
@@ -76,7 +76,7 @@ class LayFlatOperation(Operation.Operation):
                 dot_v = diff
 
         if dot_v is None:
-            node.setOrientation(self._old_orientation)
+            self._node.setOrientation(self._old_orientation)
             return
 
         if dot_v[2] < 0:
@@ -88,10 +88,9 @@ class LayFlatOperation(Operation.Operation):
             [ 0, math.cos(rad),-math.sin(rad) ],
             [ 0, math.sin(rad), math.cos(rad) ]
         ])
-        node.rotate(Quaternion.fromMatrix(m), SceneNode.TransformSpace.Parent)
+        self._node.rotate(Quaternion.fromMatrix(m), SceneNode.TransformSpace.Parent)
 
-        self._new_orientation = node.getOrientation()
-        node.setOrientation(self._old_orientation)
+        self._new_orientation = self._node.getOrientation()
 
     def undo(self):
         self._node.setOrientation(self._old_orientation)

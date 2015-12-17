@@ -71,23 +71,30 @@ class Selection:
     #   \param operation \type{Class} The operation to create and push. It should take a SceneNode as first positional parameter.
     #   \param args The additional positional arguments passed along to the operation constructor.
     #   \param kwargs The additional keyword arguements that will be passed along to the operation constructor.
+    #
+    #   \return list of instantiated operations
     @classmethod
     def applyOperation(cls, operation, *args, **kwargs):
         if not cls.__selection:
             return
 
         op = None
+        operations = []
 
         if len(cls.__selection) == 1:
             node = cls.__selection[0]
             op = operation(node, *args, **kwargs)
+            operations.append(op)
         else:
             op = GroupedOperation()
 
             for node in Selection.getAllSelectedObjects():
-                op.addOperation(operation(node, *args, **kwargs))
+                sub_op = operation(node, *args, **kwargs)
+                op.addOperation(sub_op)
+                operations.append(sub_op)
 
         op.push()
+        return operations
 
     @classmethod
     def _onTransformationChanged(cls, node):

@@ -1,9 +1,6 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-# TODO: find a better way to let the gui thread process events
-from PyQt5.QtWidgets import QApplication
-
 from UM.Tool import Tool
 from UM.Event import Event, MouseEvent, KeyEvent
 from UM.Application import Application
@@ -22,6 +19,8 @@ from UM.Operations.GroupedOperation import GroupedOperation
 from UM.Operations.SetTransformOperation import SetTransformOperation
 from UM.Operations.LayFlatOperation import LayFlatOperation
 
+from UM.Job import Job
+
 from . import RotateToolHandle
 
 import math
@@ -36,8 +35,9 @@ class RotateTool(Tool):
         self._snap_angle = math.radians(15)
 
         self._angle = None
-
         self._angle_update_time = None
+
+        self._progress_message = None
 
         self.setExposedProperties("Rotation", "RotationSnap", "RotationSnapAngle")
 
@@ -158,21 +158,36 @@ class RotateTool(Tool):
 
     def layFlat(self):
         self.operationStarted.emit(self)
-        progress_message = Message("Laying object flat on buildplate...", lifetime = 0, dismissable = False)
-        progress_message.setProgress(-1)
-
-        # TODO: find a better way to let the gui thread process events
-        QApplication.processEvents()
+        self._progress_message = Message("Laying object flat on buildplate...", lifetime = 0, dismissable = False)
+        self._progress_message.setProgress(-1)
         
         total_iterations = 0
         for selected_object in Selection.getAllSelectedObjects():
             total_iterations += len(selected_object.getMeshDataTransformed().getVertices()) * 2
 
-        progress_message.setMaxProgress(total_iterations)
-        progress_message.show()
+        self._progress_message.setMaxProgress(total_iterations)
+        self._progress_message.show()
 
         # TODO: find a way to show progress during applyOperation
-        Selection.applyOperation(LayFlatOperation)
-
-        progress_message.hide()
+        operations = Selection.applyOperation(LayFlatOperation)
+        
+        job = LayFlatJob(operations)
+        job.finished.connect(self._layFlatFinished)
+        job.start()
+        
+    def _layFlatFinished(self, job):
+        if self._progress_message:
+            self._progress_message.hide()
+            self._progress_message = None
+            
         self.operationStopped.emit(self)
+        
+class LayFlatJob(Job):
+    def __init__(self, operations):
+        super().__init__()
+
+        self._operations = operations
+
+    def run(self):        
+        for op in self._operations:
+            op.process()
