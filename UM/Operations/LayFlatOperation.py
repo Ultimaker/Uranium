@@ -7,14 +7,22 @@ from UM.Scene.SceneNode import SceneNode
 from UM.Math.Matrix import Matrix
 from UM.Math.Quaternion import Quaternion
 
+from UM.Signal import Signal
+from UM.Job import Job
+
 import math
+import time
 
 
 class LayFlatOperation(Operation.Operation):
+    progress = Signal()
 
     def __init__(self, node, orientation = None):
         super().__init__()
         self._node = node
+
+        self._progress_emit_time = None
+        self._progress = 0
 
         self._old_orientation = node.getOrientation()
         if orientation:
@@ -40,8 +48,10 @@ class LayFlatOperation(Operation.Operation):
             if dot_min > dot:
                 dot_min = dot
                 dot_v = diff
+            self._emitProgress(1)
 
         if dot_v is None:
+            self._emitProgress(len(transformed_vertices))
             return
 
         rad = math.atan2(dot_v[2], dot_v[0])
@@ -74,6 +84,7 @@ class LayFlatOperation(Operation.Operation):
             if dot_min > dot:
                 dot_min = dot
                 dot_v = diff
+            self._emitProgress(1)
 
         if dot_v is None:
             self._node.setOrientation(self._old_orientation)
@@ -91,6 +102,17 @@ class LayFlatOperation(Operation.Operation):
         self._node.rotate(Quaternion.fromMatrix(m), SceneNode.TransformSpace.Parent)
 
         self._new_orientation = self._node.getOrientation()
+
+    def _emitProgress(self, progress):
+        # Rate-limited progress notification
+        # This is done to prevent the UI from being flooded with progress signals.
+        self._progress += progress
+
+        new_time = time.monotonic()
+        if not self._progress_emit_time or new_time - self._progress_emit_time > 0.5:
+            self.progress.emit(self._progress)
+            self._progress_emit_time = new_time
+            self._progress = 0
 
     def undo(self):
         self._node.setOrientation(self._old_orientation)

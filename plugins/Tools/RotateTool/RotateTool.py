@@ -2,6 +2,7 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 from UM.Tool import Tool
+from UM.Job import Job
 from UM.Event import Event, MouseEvent, KeyEvent
 from UM.Application import Application
 from UM.Message import Message
@@ -18,8 +19,6 @@ from UM.Operations.TranslateOperation import TranslateOperation
 from UM.Operations.GroupedOperation import GroupedOperation
 from UM.Operations.SetTransformOperation import SetTransformOperation
 from UM.Operations.LayFlatOperation import LayFlatOperation
-
-from UM.Job import Job
 
 from . import RotateToolHandle
 
@@ -38,6 +37,8 @@ class RotateTool(Tool):
         self._angle_update_time = None
 
         self._progress_message = None
+        self._iterations = 0
+        self._total_iterations = 0
 
         self.setExposedProperties("Rotation", "RotationSnap", "RotationSnapAngle")
 
@@ -159,22 +160,27 @@ class RotateTool(Tool):
     def layFlat(self):
         self.operationStarted.emit(self)
         self._progress_message = Message("Laying object flat on buildplate...", lifetime = 0, dismissable = False)
-        self._progress_message.setProgress(-1)
-        
-        total_iterations = 0
-        for selected_object in Selection.getAllSelectedObjects():
-            total_iterations += len(selected_object.getMeshDataTransformed().getVertices()) * 2
+        self._progress_message.setProgress(0)
 
-        self._progress_message.setMaxProgress(total_iterations)
+        self._iterations = 0
+        self._total_iterations = 0
+        for selected_object in Selection.getAllSelectedObjects():
+            self._total_iterations += len(selected_object.getMeshDataTransformed().getVertices()) * 2
+
         self._progress_message.show()
 
-        # TODO: find a way to show progress during applyOperation
         operations = Selection.applyOperation(LayFlatOperation)
-        
+        for op in operations:
+            op.progress.connect(self._layFlatProgress)
+
         job = LayFlatJob(operations)
         job.finished.connect(self._layFlatFinished)
         job.start()
-        
+
+    def _layFlatProgress(self, iterations):
+        self._iterations += iterations
+        self._progress_message.setProgress(100 * self._iterations / self._total_iterations)
+
     def _layFlatFinished(self, job):
         if self._progress_message:
             self._progress_message.hide()
