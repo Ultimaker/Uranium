@@ -1,6 +1,9 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
+# TODO: find a better way to let the gui thread process events
+from PyQt5.QtWidgets import QApplication
+
 from UM.Tool import Tool
 from UM.Event import Event, MouseEvent, KeyEvent
 from UM.Application import Application
@@ -158,13 +161,17 @@ class RotateTool(Tool):
         progress_message = Message("Laying object flat on buildplate...", lifetime = 0, dismissable = False)
         progress_message.setProgress(-1)
 
+        # TODO: find a better way to let the gui thread process events
+        QApplication.processEvents()
+        
         total_iterations = 0
         for selected_object in Selection.getAllSelectedObjects():
             total_iterations += len(selected_object.getMeshDataTransformed().getVertices()) * 2
 
         progress_message.setMaxProgress(total_iterations)
         progress_message.show()
-            
+
+        # TODO: find a way to show progress during applyOperation
         Selection.applyOperation(LayFlatOperation)
 
         progress_message.hide()
