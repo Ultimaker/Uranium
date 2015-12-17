@@ -77,6 +77,7 @@ class RenderBatch():
 
         self._view_matrix = None
         self._projection_matrix = None
+        self._view_projection_matrix = None
 
         self._gl = OpenGL.getInstance().getBindingsObject()
 
