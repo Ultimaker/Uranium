@@ -108,7 +108,6 @@ class MeshFileHandler(object):
         for entry in meta_data:
             if "mesh_reader" in entry:
                 for input_type in entry["mesh_reader"]:
-                    print("INPUT_TYPE: ", str(input_type))
                     ext = input_type.get("extension", None)
                     if ext:
                         description = input_type.get("description", ext)
