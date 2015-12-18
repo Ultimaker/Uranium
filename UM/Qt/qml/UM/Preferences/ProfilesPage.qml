@@ -64,7 +64,7 @@ ManagementPage
             id: importDialog;
             title: catalog.i18nc("@title:window", "Import Profile");
             selectExisting: true;
-            nameFilters: [ catalog.i18nc("@item:inlistbox", "Cura Profiles (*.curaprofile)"), catalog.i18nc("@item:inlistbox", "All Files (*)") ]
+            nameFilters: base.model.getFileNameFiltersRead()
 
             onAccepted:
             {
@@ -91,9 +91,9 @@ ManagementPage
             id: exportDialog;
             title: catalog.i18nc("@title:window", "Export Profile");
             selectExisting: false;
-            nameFilters: [ catalog.i18nc("@item:inlistbox", "Cura Profiles (*.curaprofile)") ]
+            nameFilters: base.model.getFileNameFiltersWrite()
 
-            onAccepted: base.model.exportProfile(base.currentItem.name, fileUrl)
+            onAccepted: base.model.exportProfile(base.currentItem.name, fileUrl, selectedNameFilter)
         }
     }
 }

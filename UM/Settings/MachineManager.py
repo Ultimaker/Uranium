@@ -8,6 +8,7 @@ import json
 from UM.Signal import Signal, SignalEmitter
 from UM.Resources import Resources
 from UM.Logger import Logger
+from UM.PluginRegistry import PluginRegistry #For registering profile reader plugins.
 from UM.Preferences import Preferences
 
 from UM.Settings.MachineDefinition import MachineDefinition
@@ -30,6 +31,11 @@ class MachineManager(SignalEmitter):
 
         self._active_machine = None
         self._active_profile = None
+
+        self._profile_readers = {} #Plugins that read profiles from file.
+        self._profile_writers = {} #Plugins that write profiles to file.
+        PluginRegistry.addType("profile_reader", self.addProfileReader)
+        PluginRegistry.addType("profile_writer", self.addProfileWriter)
 
         Preferences.getInstance().addPreference("machines/setting_visibility", "")
         Preferences.getInstance().addPreference("machines/active_instance", "")
@@ -351,6 +357,65 @@ class MachineManager(SignalEmitter):
         except AttributeError:
             pass
 
+    ##  Adds a new profile reader plugin.
+    #
+    #   \param reader The plugin to read profiles with.
+    def addProfileReader(self, reader):
+        self._profile_readers[reader.getPluginId()] = reader
+
+    ##  Adds a new profile writer plugin.
+    #
+    #   \param writer The plugin to write profiles with.
+    def addProfileWriter(self, writer):
+        self._profile_writers[writer.getPluginId()] = writer
+
+    ##  Returns an iterable of all profile readers.
+    #
+    #   \return All profile readers that are currently loaded.
+    def getProfileReaders(self):
+        return self._profile_readers.items()
+
+    ##  Returns an iterable of all profile writers.
+    #
+    #   \return All profile writers that are currently loaded.
+    def getProfileWriters(self):
+        return self._profile_writers.items()
+
+    ##  Returns a dictionary of the file types the profile readers can read.
+    #
+    #   Each file extension should have a description.
+    #
+    #   \return A dictionary of the file types the profile readers can read.
+    def getSupportedProfileTypesRead(self):
+        supported_types = {}
+        meta_data = PluginRegistry.getInstance().getAllMetaData(filter = {"profile_reader": {}}, active_only = True)
+        for plugin in meta_data:
+            if "profile_reader" in plugin:
+                for supported_type in plugin["profile_reader"]: #All extensions that this plugin can supposedly read.
+                    extension = supported_type.get("extension", None)
+                    if extension:
+                        description = supported_type.get("description", extension)
+                        supported_types[extension] = description
+
+        return supported_types
+
+    ##  Returns a dictionary of the file types the profile writers can write.
+    #
+    #   Each file extension should have a description.
+    #
+    #   \return A dictionary of the file types the profile writers can write.
+    def getSupportedProfileTypesWrite(self):
+        supported_types = {}
+        meta_data = PluginRegistry.getInstance().getAllMetaData(filter = {"profile_writer": {}}, active_only = True)
+        for plugin in meta_data:
+            if "profile_writer" in plugin:
+                for supported_type in plugin["profile_writer"]: #All extensions that this plugin can supposedly write.
+                    extension = supported_type.get("extension", None)
+                    if extension:
+                        description = supported_type.get("description", extension)
+                        supported_types[extension] = description
+
+        return supported_types
 
     def saveVisibility(self):
         if not self._active_machine:

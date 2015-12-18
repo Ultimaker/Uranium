@@ -72,11 +72,14 @@ class Setting(SignalEmitter):
     ##  Set values of the setting by providing it with a dict object (as decoded by JSON parser)
     #   \param data Decoded JSON dict
     def fillByDict(self, data):
-        if "default" in data:
-            self._default_value = data["default"]
-
         if "type" in data:
             self._type = data["type"]
+            if self._type not in ["int", "float", "string", "enum", "boolean", "polygon"]:
+                Logger.log("e", "Invalid type for Setting %s, ignoring", self._key)
+                return
+
+        if "default" in data:
+            self._default_value = data["default"]
 
         self.bindValidator()
 
@@ -147,7 +150,6 @@ class Setting(SignalEmitter):
                     setting = Setting(self._machine_manager, key, self._i18n_catalog)
                     setting.setCategory(self._category)
                     setting.setParent(self)
-                    setting.visibleChanged.connect(self._onChildVisibileChanged)
                     setting.defaultValueChanged.connect(self.defaultValueChanged)
                     self._children.append(setting)
 
@@ -234,7 +236,8 @@ class Setting(SignalEmitter):
             except Exception as e:
                 Logger.log("e", "An error occurred in inherit function for {0}: {1}".format(self._key, str(e)))
             else:
-                return inherit_value
+                if inherit_value:
+                    return inherit_value
 
         return self._default_value
 
@@ -255,11 +258,7 @@ class Setting(SignalEmitter):
     #   \returns bool
     #   \sa isEnabled
     def isVisible(self):
-        if not self._visible:
-            return False
-        if self._hide_if_all_children_visible and self.checkAllChildrenVisible():
-            return False
-        return True
+        return self._visible
 
     ##  Emitted when visible is changed either due to explicitly setting it or due to children visibility changing.
     visibleChanged = Signal()
@@ -366,20 +365,22 @@ class Setting(SignalEmitter):
     #
     #   \return A value that is valid for this setting.
     def parseValue(self, value):
-        if not type(value) is str:
-            return value
-        try:
-            if self._type == "bool":
-                return bool(ast.literal_eval(value))
-            elif self._type == "int":
-                return int(ast.literal_eval(value))
-            elif self._type == "float":
-                return float(ast.literal_eval(value.replace(",", ".")))
-            elif self._type == "string" or self._type == "enum":
-                return value
-            else:
-                return ast.literal_eval(value)
-        except Exception:
+        if self._type == "string" or self._type == "enum":
+            return str(value)
+
+        if isinstance(value, str):
+            try:
+                value = ast.literal_eval(value.replace(",", "."))
+            except Exception:
+                value = None
+
+        if self._type == "boolean":
+            return bool(value) if value else False
+        elif self._type == "int":
+            return int(value) if value else 0
+        elif self._type == "float":
+            return float(value) if value else 0.0
+        else:
             return value
 
     def __repr__(self):
@@ -424,10 +425,6 @@ class Setting(SignalEmitter):
             child.setParent(self)
             child._fixChildren()
 
-    def _onChildVisibileChanged(self, setting):
-        self.visibleChanged.emit(setting)
-        self.visibleChanged.emit(self)
-
     def _createFunction(self, code):
         try:
             tree = ast.parse(code, "eval")
@@ -443,17 +440,24 @@ class Setting(SignalEmitter):
         def local_function(profile = None):
             if not profile:
                 profile = self._machine_manager.getActiveProfile()
+
+            if not profile:
+                return None
+
             locals = {
-                "parent_value": profile.getSettingValue(self.getParent().getKey()) if self.getParent() else None,
                 "profile": profile
             }
 
-            self._dependent_settings.add(self.getParent().getKey())
+            if self.getParent():
+                locals["parent_value"] = profile.getSettingValue(self.getParent().getKey())
+                self._dependent_settings.add(self.getParent().getKey())
 
             for name in names:
                 locals[name] = profile.getSettingValue(name)
                 self._dependent_settings.add(name)
+
             return eval(compiled, globals(), locals)
+
         return local_function
 
     def _onSettingValueChanged(self, key):
