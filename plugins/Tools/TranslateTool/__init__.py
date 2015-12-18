@@ -18,7 +18,8 @@ def getMetaData():
         },
         "tool": {
             "name": i18n_catalog.i18nc("@action:button", "Translate"),
-            "description": i18n_catalog.i18nc("@info:tooltip", "Translate Object")
+            "description": i18n_catalog.i18nc("@info:tooltip", "Translate Object"),
+            "weight": 3
         },
         "cura": {
             "tool": {
