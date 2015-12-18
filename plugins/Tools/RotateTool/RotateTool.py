@@ -185,15 +185,15 @@ class RotateTool(Tool):
         if self._progress_message:
             self._progress_message.hide()
             self._progress_message = None
-            
+
         self.operationStopped.emit(self)
-        
+
 class LayFlatJob(Job):
     def __init__(self, operations):
         super().__init__()
 
         self._operations = operations
 
-    def run(self):        
+    def run(self):
         for op in self._operations:
             op.process()
