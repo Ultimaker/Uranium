@@ -4,7 +4,7 @@
 from . import Operation
 
 from UM.Scene.SceneNode import SceneNode
-from UM.Math.Matrix import Matrix
+from UM.Math.Vector import Vector
 from UM.Math.Quaternion import Quaternion
 
 from UM.Signal import Signal
@@ -55,20 +55,11 @@ class LayFlatOperation(Operation.Operation):
             return
 
         rad = math.atan2(dot_v[2], dot_v[0])
-        m = Matrix([
-            [ math.cos(rad), 0, math.sin(rad)],
-            [ 0,             1, 0 ],
-            [-math.sin(rad), 0, math.cos(rad)]
-        ])
-        self._node.rotate(Quaternion.fromMatrix(m), SceneNode.TransformSpace.Parent)
+        self._node.rotate(Quaternion.fromAngleAxis(rad, Vector.Unit_Y), SceneNode.TransformSpace.Parent)
+
 
         rad = -math.asin(dot_min)
-        m = Matrix([
-            [ math.cos(rad), math.sin(rad), 0 ],
-            [-math.sin(rad), math.cos(rad), 0 ],
-            [ 0,             0,             1 ]
-        ])
-        self._node.rotate(Quaternion.fromMatrix(m), SceneNode.TransformSpace.Parent)
+        self._node.rotate(Quaternion.fromAngleAxis(rad, Vector.Unit_Z), SceneNode.TransformSpace.Parent)
 
         transformed_vertices = self._node.getMeshDataTransformed().getVertices()
         min_y_vertex = transformed_vertices[transformed_vertices.argmin(0)[1]]
@@ -94,12 +85,7 @@ class LayFlatOperation(Operation.Operation):
             rad = -math.asin(dot_min)
         else:
             rad = math.asin(dot_min)
-        m = Matrix([
-            [ 1, 0,             0 ],
-            [ 0, math.cos(rad),-math.sin(rad) ],
-            [ 0, math.sin(rad), math.cos(rad) ]
-        ])
-        self._node.rotate(Quaternion.fromMatrix(m), SceneNode.TransformSpace.Parent)
+        self._node.rotate(Quaternion.fromAngleAxis(rad, Vector.Unit_X), SceneNode.TransformSpace.Parent)
 
         self._new_orientation = self._node.getOrientation()
 
