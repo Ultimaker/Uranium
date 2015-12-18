@@ -87,8 +87,8 @@ class ProfilesModel(ListModel):
                 profile = profile_reader.read(path) #Try to open the file with the profile reader.
             except Exception as e:
                 #Note that this will fail quickly. That is, if any profile reader throws an exception, it will stop reading. It will only continue reading if the reader returned None.
-                Logger.log("e", "Failed to import profile from file %s: %s", path, str(e))
-                return { "status": "error", "message": catalog.i18nc("@info:status", "Failed to import profile from file <filename>{0}</filename>: <message>{1}</message>", path, str(e)) }
+                Logger.log("e", "Failed to import profile from %s: %s", path, str(e))
+                return { "status": "error", "message": catalog.i18nc("@info:status", "Failed to import profile from <filename>{0}</filename>: <message>{1}</message>", path, str(e)) }
             if profile: #Success!
                 profile.setReadOnly(False)
                 try:
