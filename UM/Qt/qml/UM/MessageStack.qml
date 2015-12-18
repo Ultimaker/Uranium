@@ -66,7 +66,6 @@ ListView {
                 maximumValue: model.max_progress;
 
                 value: 0
-                Behavior on value { NumberAnimation { duration: 100; } }
 
                 // Doing this in an explicit binding since the implicit binding breaks on occasion.
                 Binding { target: totalProgressBar; property: "value"; value: model.progress }
