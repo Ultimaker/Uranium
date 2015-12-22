@@ -26,6 +26,8 @@ class MachineInstance(SignalEmitter):
             self._machine_definition.loadAll()
         self._machine_setting_overrides = {}
 
+        self._active_profile_name = None
+
     nameChanged = Signal()
 
     def getName(self):
@@ -36,6 +38,12 @@ class MachineInstance(SignalEmitter):
             old_name = self._name
             self._name = name
             self.nameChanged.emit(self, old_name)
+
+    def getActiveProfileName(self):
+        return self._active_profile_name
+
+    def setActiveProfileName(self, active_profile_name):
+        self._active_profile_name = active_profile_name
 
     def getMachineDefinition(self):
         return self._machine_definition
