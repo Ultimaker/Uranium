@@ -31,6 +31,9 @@ class Profile(SignalEmitter):
         self._machine_manager = machine_manager
         self._changed_settings = {}
         self._name = "Unknown Profile"
+        self._machine_type = None
+        self._machine_variant = None
+        self._machine_instance = None
         self._read_only = read_only
 
         self._active_instance = None
@@ -60,6 +63,18 @@ class Profile(SignalEmitter):
     ##  Retrieve if this profile is a read only profile.
     def isReadOnly(self):
         return self._read_only
+
+    ##  Retrieve the name of the machine type.
+    def getMachineType(self):
+        return self._machine_type
+
+    ##  Retrieve the name of the machine variant.
+    def getMachineVariant(self):
+        return self._machine_variant
+
+    ##  Retrieve the name of the machine instance.
+    def getMachineInstance(self):
+        return self._machine_instance
 
     ##  Emitted whenever a setting value changes.
     #
@@ -229,6 +244,12 @@ class Profile(SignalEmitter):
             raise SettingsError.InvalidVersionError(origin)
 
         self._name = parser.get("general", "name")
+        if "machine_type" in parser["general"]:
+            self._machine_type = parser.get("general", "machine_type")
+        if "machine_variant" in parser["general"]:
+            self._machine_variant = parser.get("general", "machine_variant")
+        if "machine_instance" in parser["general"]:
+            self._machine_instance = parser.get("general", "machine_instance")
 
         if parser.has_section("settings"):
             for key, value in parser["settings"].items():
@@ -255,6 +276,12 @@ class Profile(SignalEmitter):
         parser.add_section("general") #Write a general section.
         parser.set("general", "version", str(self.ProfileVersion))
         parser.set("general", "name", self._name)
+        if self._machine_type:
+            parser.set("general", "machine_type", self._machine_type)
+        if self._machine_variant:
+            parser.set("general", "machine_variant", self._machine_variant)
+        if self._machine_instance:
+            parser.set("general", "machine_instance", self._machine_instance)
 
         parser.add_section("settings") #Write each changed setting in a settings section.
         for setting_key in self._changed_settings:

@@ -37,6 +37,7 @@ class ProfilesModel(ListModel):
         self._manager = Application.getInstance().getMachineManager()
 
         self._manager.profilesChanged.connect(self._onProfilesChanged)
+        self._manager.activeMachineInstanceChanged.connect(self._onMachineInstanceChanged)
         self._manager.activeProfileChanged.connect(self._onActiveProfileChanged)
         self._manager.profileNameChanged.connect(self._onProfileNameChanged)
         self._onProfilesChanged()
@@ -191,6 +192,9 @@ class ProfilesModel(ListModel):
             filters.append(description + " (*." + extension + ")")
         filters.append(catalog.i18nc("@item:inlistbox", "All Files (*)")) #Also allow arbitrary files, if the user so prefers.
         return filters
+
+    def _onMachineInstanceChanged(self):
+        self._onProfilesChanged()
 
     def _onProfilesChanged(self):
         self.clear()

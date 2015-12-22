@@ -175,7 +175,27 @@ class MachineManager(SignalEmitter):
     profileNameChanged = Signal()
 
     def getProfiles(self):
-        return self._profiles
+        active_machine_type = self._active_machine.getMachineDefinition().getId()
+        active_machine_variant = self._active_machine.getMachineDefinition().getVariantName()
+        active_machine_instance = self._active_machine.getName()
+
+        filtered_profiles = []
+        for profile in self._profiles:
+            machine_type = profile.getMachineType()
+            machine_variant = profile.getMachineVariant()
+            machine_instance = profile.getMachineInstance()
+
+            if machine_type and machine_type == active_machine_type:
+                if (not machine_instance) and (not machine_variant):
+                    filtered_profiles.append(profile)                
+                elif (not machine_instance) or (machine_instance == active_machine_instance):
+                    filtered_profiles.append(profile)
+                elif (not machine_variant) or (machine_variant == active_machine_variant):
+                    filtered_profiles.append(profile)
+            elif not machine_type:
+                filtered_profiles.append(profile)
+
+        return filtered_profiles
 
     def addProfile(self, profile):
         if profile in self._profiles:
