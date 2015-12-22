@@ -22,7 +22,7 @@ Item
         text: catalog.i18nc("@action:button","Reset")
         iconSource: UM.Theme.icons.rotate_reset;
         //: Reset Rotation tool button tooltip
-        tooltip: catalog.i18nc("@info:tooltip","Reset the rotation of the current selection.");
+        //tooltip: catalog.i18nc("@info:tooltip","Reset the rotation of the current selection.");
 
         style: UM.Theme.styles.tool_button;
         z: 1
@@ -41,7 +41,7 @@ Item
         text: catalog.i18nc("@action:button","Lay flat")
         iconSource: UM.Theme.icons.rotate_layflat;
         //: Reset Rotation tool button tooltip
-        tooltip: catalog.i18nc("@info:tooltip","Attempt to lay the object flat on the buildplate.");
+        //tooltip: catalog.i18nc("@info:tooltip","Attempt to lay the object flat on the buildplate.");
 
         style: UM.Theme.styles.tool_button;
 
