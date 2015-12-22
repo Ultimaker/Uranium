@@ -80,9 +80,14 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
                 custom_profile_name = catalog.i18nc("@item:intext appended to customised profiles ({0} is old profile name)", "{0} (Customised)", self._profile.getName())
                 custom_profile = self._machine_manager.findProfile(custom_profile_name)
                 if not custom_profile:
+                    machine_instance = self._machine_manager.getActiveMachineInstance()
+
                     custom_profile = deepcopy(self._profile)
                     custom_profile.setReadOnly(False)
                     custom_profile.setName(custom_profile_name)
+                    custom_profile.setMachineType(machine_instance.getMachineDefinition().getId())
+                    custom_profile.setMachineVariant(machine_instance.getMachineDefinition().getVariantName())
+                    custom_profile.setMachineInstance(machine_instance.getName())
                     self._machine_manager.addProfile(custom_profile)
 
                 self._changed_setting = (key, value)
