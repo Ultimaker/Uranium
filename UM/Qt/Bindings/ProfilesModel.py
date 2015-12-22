@@ -196,6 +196,18 @@ class ProfilesModel(ListModel):
     def _onMachineInstanceChanged(self):
         self._onProfilesChanged()
 
+        #Restore active profile for this machine_instance.
+        active_profile = None
+        active_instance_name = self._manager.getActiveMachineInstance().getActiveProfileName()
+        #We can't use findProfile(active_instance_name) because there may be multiple profiles with the same name on different machine instances.
+        profiles = self._manager.getProfiles()
+        for profile in profiles:
+            if profile.getName() == active_instance_name:
+                active_profile = profile
+                break
+
+        self._manager.setActiveProfile(active_profile)
+
     def _onProfilesChanged(self):
         self.clear()
 

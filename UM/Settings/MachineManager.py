@@ -244,6 +244,7 @@ class MachineManager(SignalEmitter):
             return
 
         self._active_profile = profile
+        self._active_machine.setActiveProfileName(profile.getName())
 
         self.activeProfileChanged.emit()
 
