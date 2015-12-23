@@ -279,7 +279,7 @@ class Profile(SignalEmitter):
             Logger.log("e", "Failed to write profile to %s: %s", file, str(e))
             return str(e)
         return None
-    
+
     ##  Serialise this profile to a string.
     def serialise(self):
         stream = io.StringIO() #ConfigParser needs to write to a stream.
@@ -298,7 +298,7 @@ class Profile(SignalEmitter):
         parser.add_section("settings") #Write each changed setting in a settings section.
         for setting_key in self._changed_settings:
             parser.set("settings", setting_key , str(self._changed_settings[setting_key]))
-        
+
         parser.write(stream) #Actually serialise it to the stream.
         return stream.getvalue()
 
