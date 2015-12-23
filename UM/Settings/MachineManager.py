@@ -184,7 +184,10 @@ class MachineManager(SignalEmitter):
 
     profileNameChanged = Signal()
 
-    def getProfiles(self):
+    def getProfiles(self, active_instance_profiles_only = True):
+        if not active_instance_profiles_only:
+            return self._profiles
+
         active_machine_type = self._active_machine.getMachineDefinition().getId()
         active_machine_variant = self._active_machine.getMachineDefinition().getVariantName()
         active_machine_instance = self._active_machine.getName()
@@ -240,8 +243,10 @@ class MachineManager(SignalEmitter):
             except:
                 self.setActiveProfile(None)
 
-    def findProfile(self, name):
-        for profile in self._profiles:
+    def findProfile(self, name, active_instance_profiles_only = True):
+        profiles = self.getProfiles(active_instance_profiles_only);
+
+        for profile in profiles:
             if profile.getName() == name:
                 return profile
 
