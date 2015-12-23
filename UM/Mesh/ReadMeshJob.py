@@ -9,6 +9,7 @@ from UM.Math.Matrix import Matrix
 from UM.Math.Vector import Vector
 from UM.Preferences import Preferences
 from UM.Logger import Logger
+from UM.Mesh.MeshReader import MeshReader
 
 import time
 import os.path
@@ -29,6 +30,18 @@ class ReadMeshJob(Job):
         return self._filename
 
     def run(self):
+        reader = self._handler.getReaderForFile(self._filename)
+        if not reader:
+            result_message = Message(i18n_catalog.i18nc("@info:status", "Cannot open file type <filename>{0}</filename>", self._filename))
+            result_message.show()
+            return
+
+        # Give the plugin a chance to display a dialog before showing the loading UI
+        pre_read_result = reader.preRead(self._filename)
+
+        if pre_read_result != MeshReader.PreReadResult.accepted:
+            return
+
         loading_message = Message(i18n_catalog.i18nc("@info:status", "Loading <filename>{0}</filename>", self._filename), lifetime = 0, dismissable = False)
         loading_message.setProgress(-1)
         loading_message.show()
@@ -37,7 +50,7 @@ class ReadMeshJob(Job):
 
         try:
             begin_time = time.time()
-            node = self._handler.read(self._filename)
+            node = self._handler.readerRead(reader, self._filename)
             end_time = time.time()
             Logger.log("d", "Loading mesh took %s seconds", end_time - begin_time)
         except Exception as e:
