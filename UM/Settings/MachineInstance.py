@@ -108,7 +108,7 @@ class MachineInstance(SignalEmitter):
         self._machine_definition.loadAll()
 
         self._name = config.get("general", "name")
-        self._active_profile_name = config.get("general", "acitve_profile", fallback="")
+        self._active_profile_name = config.get("general", "active_profile", fallback="")
 
         for key, value in config["machine_settings"].items():
             self._machine_setting_overrides[key] = value
