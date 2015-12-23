@@ -200,6 +200,13 @@ class ProfilesModel(ListModel):
         active_instance_name = self._manager.getActiveMachineInstance().getActiveProfileName()
         active_profile = self._manager.findProfile(active_instance_name)
 
+        if not active_profile:
+            #A profile by this name is no longer in the filtered list of profiles.
+            profiles = self._manager.getProfiles()
+            for profile in profiles:
+                active_profile = profile #Default to first profile you can find.
+                break
+
         self._manager.setActiveProfile(active_profile)
 
     def _onProfilesChanged(self):
