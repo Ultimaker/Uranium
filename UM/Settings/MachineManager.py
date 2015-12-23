@@ -39,7 +39,6 @@ class MachineManager(SignalEmitter):
 
         Preferences.getInstance().addPreference("machines/setting_visibility", "")
         Preferences.getInstance().addPreference("machines/active_instance", "")
-        Preferences.getInstance().addPreference("machines/active_profile", "Normal Quality")
 
     def getApplicationName(self):
         return self._application_name
@@ -348,14 +347,6 @@ class MachineManager(SignalEmitter):
                     self._profiles.append(profile)
                     profile.nameChanged.connect(self._onProfileNameChanged)
 
-        profile = self.findProfile(Preferences.getInstance().getValue("machines/active_profile"))
-        if profile:
-            self.setActiveProfile(profile)
-        else:
-            if Preferences.getInstance().getValue("machines/active_profile") == "":
-                for profile in self._profiles:
-                    self.setActiveProfile(profile) #default to first profile you can find
-                    break
         self.profilesChanged.emit()
 
     def loadVisibility(self):
@@ -380,7 +371,6 @@ class MachineManager(SignalEmitter):
 
     def saveProfiles(self):
         try:
-            Preferences.getInstance().setValue("machines/active_profile", self._active_profile.getName())
             for profile in self._profiles:
                 if profile.isReadOnly():
                     continue
