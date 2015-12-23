@@ -204,9 +204,9 @@ class MachineManager(SignalEmitter):
             if machine_type and machine_type == active_machine_type:
                 if (not machine_instance) and (not machine_variant):
                     filtered_profiles.append(profile)
-                elif (not machine_instance) or (machine_instance == active_machine_instance):
+                elif machine_instance and (machine_instance == active_machine_instance):
                     filtered_profiles.append(profile)
-                elif (not machine_instance) and (machine_variant == active_machine_variant):
+                elif machine_variant and (machine_variant == active_machine_variant):
                     filtered_profiles.append(profile)
             elif not machine_type:
                 filtered_profiles.append(profile)
