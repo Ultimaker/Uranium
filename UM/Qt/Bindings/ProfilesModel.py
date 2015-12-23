@@ -198,7 +198,7 @@ class ProfilesModel(ListModel):
 
         #Restore active profile for this machine_instance.
         active_instance_name = self._manager.getActiveMachineInstance().getActiveProfileName()
-        active_profile = self._manager.findProfile(name)
+        active_profile = self._manager.findProfile(active_instance_name)
 
         self._manager.setActiveProfile(active_profile)
 
