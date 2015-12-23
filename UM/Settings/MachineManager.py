@@ -184,9 +184,9 @@ class MachineManager(SignalEmitter):
 
         filtered_profiles = []
         for profile in self._profiles:
-            machine_type = profile.getMachineType()
-            machine_variant = profile.getMachineVariant()
-            machine_instance = profile.getMachineInstance()
+            machine_type = profile.getMachineTypeName()
+            machine_variant = profile.getMachineVariantName()
+            machine_instance = profile.getMachineInstanceName()
 
             if machine_type and machine_type == active_machine_type:
                 if (not machine_instance) and (not machine_variant):

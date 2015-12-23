@@ -85,9 +85,9 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
                     custom_profile = deepcopy(self._profile)
                     custom_profile.setReadOnly(False)
                     custom_profile.setName(custom_profile_name)
-                    custom_profile.setMachineType(machine_instance.getMachineDefinition().getId())
-                    custom_profile.setMachineVariant(machine_instance.getMachineDefinition().getVariantName())
-                    custom_profile.setMachineInstance(machine_instance.getName())
+                    custom_profile.setMachineTypeName(machine_instance.getMachineDefinition().getId())
+                    custom_profile.setMachineVariantName(machine_instance.getMachineDefinition().getVariantName())
+                    custom_profile.setMachineInstanceName(machine_instance.getName())
                     self._machine_manager.addProfile(custom_profile)
 
                 self._changed_setting = (key, value)
