@@ -187,6 +187,9 @@ class MachineManager(SignalEmitter):
     def getProfiles(self, active_instance_profiles_only = True):
         if not active_instance_profiles_only:
             return self._profiles
+        
+        if not self._active_machine:
+            return self._profiles
 
         active_machine_type = self._active_machine.getMachineDefinition().getId()
         active_machine_variant = self._active_machine.getMachineDefinition().getVariantName()
@@ -214,7 +217,8 @@ class MachineManager(SignalEmitter):
         if profile in self._profiles:
             return
 
-        for p in self._profiles:
+        profiles = self.getProfiles()
+        for p in profiles:
             if p.getName() == profile.getName():
                 raise SettingsError.DuplicateProfileError(profile.getName())
 
@@ -388,7 +392,7 @@ class MachineManager(SignalEmitter):
                 if profile.isReadOnly():
                     continue
 
-                profile_name = profile.getName() + "@" + profile.getMachineInstance() 
+                profile_name = profile.getName() + "@" + profile.getMachineInstanceName() 
                 file_name = urllib.parse.quote_plus(profile_name) + ".cfg"
                 profile.saveToFile(Resources.getStoragePath(Resources.Profiles, file_name))
         except AttributeError:
