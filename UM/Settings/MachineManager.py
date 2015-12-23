@@ -146,6 +146,14 @@ class MachineManager(SignalEmitter):
 
         self._updateSettingVisibility(setting_visibility)
 
+        profile = self.findProfile(machine.getActiveProfileName())
+        if profile:
+            self.setActiveProfile(profile)
+        else:
+            for profile in self._profiles:
+                self.setActiveProfile(profile) #default to first profile you can find
+                break
+
         self.activeMachineInstanceChanged.emit()
 
     def setActiveMachineVariant(self, variant):
@@ -248,9 +256,9 @@ class MachineManager(SignalEmitter):
         self.activeProfileChanged.emit()
 
     def loadAll(self):
+        self.loadProfiles()
         self.loadMachineDefinitions()
         self.loadMachineInstances()
-        self.loadProfiles()
         self.loadVisibility()
 
     def loadMachineDefinitions(self):
