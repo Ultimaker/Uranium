@@ -41,6 +41,36 @@ class Polygon:
 
         return (projection_min, projection_max)
 
+    ##  Mirrors this polygon across the specified axis.
+    #
+    #   \param point_on_axis A point on the axis to mirror across.
+    #   \param axis_direction The direction vector of the axis to mirror across.
+    def mirror(self, point_on_axis, axis_direction):
+        #Input checking.
+        if axis_direction == [0,0,0]:
+            return #Axis has no direction. Can't expect us to mirror anything!
+        axis_direction /= numpy.linalg.norm(axis_direction) #Normalise the direction.
+        
+        #In order to be able to mirror points around an arbitrary axis, we have to normalize the axis and all points such that the axis goes through the origin.
+        point_matrix = numpy.matrix(self._points)
+        point_matrix -= point_on_axis #Moves all points such that the axis origin is at [0,0].
+        
+        #To mirror a coordinate, we have to add the projection of the point to the axis twice (where v is the vector to reflect):
+        #  reflection(v) = 2 * projection(v) - v
+        #Writing out the projection, this becomes (where l is the normalised direction of the line):
+        #  reflection(v) = 2 * (l . v) l - v
+        #With Snell's law this can be simplified to the Householder transformation matrix:
+        #  reflection(v) = R v
+        #  R = 2 l l^T - I
+        #This simplifies the entire reflection to one big matrix transformation.
+        axis_matrix = numpy.matrix(axis_direction)
+        reflection = 2 * numpy.transpose(axis_matrix) * axis_matrix - numpy.identity(2)
+        point_matrix = point_matrix * reflection #Apply the actual transformation.
+        
+        #Shift the points back to the original coordinate space before the axis was normalised to the origin.
+        point_matrix += point_on_axis
+        self._points = point_matrix #Note: The points are now a matrix instead of an array. It behaves like an array though, so all should be all right.
+
     ##  Check to see whether this polygon intersects with another polygon.
     #
     #   \param other \type{Polygon} The polygon to check for intersection.
