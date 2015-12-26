@@ -48,6 +48,8 @@ class ReadMeshJob(Job):
 
         Job.yieldThread() # Yield to any other thread that might want to do something else.
 
+        node = None
+
         try:
             begin_time = time.time()
             node = self._handler.readerRead(reader, self._filename)
