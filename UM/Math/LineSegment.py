@@ -41,7 +41,6 @@ class LineSegment(object):
         perpendicular = direction_me.perpendicular()
         denominator = perpendicular.dot(direction_other) #Project onto the perpendicular.
         numerator = perpendicular.dot(diff_starts)
-        print(numerator, "/", denominator)
         if denominator == 0: #Lines are parallel.
             return None
         return (numerator / denominator.astype(float)) * direction_other + other._start
