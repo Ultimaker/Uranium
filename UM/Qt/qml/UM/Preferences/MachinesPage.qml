@@ -32,8 +32,8 @@ ManagementPage {
         Label { text: catalog.i18nc("@label", "Type"); width: parent.width * 0.2; }
         Label { text: base.currentItem.typeName ? base.currentItem.typeName : ""; width: parent.width * 0.7; }
 
-        Label { visible: base.currentItem.hasVariants != undefined ? base.currentItem.hasVariants : false; text: catalog.i18nc("@label", "Variant"); width: parent.width * 0.2; }
-        Label { visible: base.currentItem.hasVariants != undefined ? base.currentItem.hasVariants : false; text: base.currentItem.variantName ? base.currentItem.variantName : ""; width: parent.width * 0.7; }
+        //Label { visible: base.currentItem.hasVariants != undefined ? base.currentItem.hasVariants : false; text: catalog.i18nc("@label", "Variant"); width: parent.width * 0.2; }
+        //Label { visible: base.currentItem.hasVariants != undefined ? base.currentItem.hasVariants : false; text: base.currentItem.variantName ? base.currentItem.variantName : ""; width: parent.width * 0.7; }
 
         UM.I18nCatalog { id: catalog; name: "uranium"; }
 
