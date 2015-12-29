@@ -69,7 +69,7 @@ class Polygon:
         
         #Shift the points back to the original coordinate space before the axis was normalised to the origin.
         point_matrix += point_on_axis
-        self._points = point_matrix.getA()
+        self._points = point_matrix.getA()[::-1]
 
     ##  Check to see whether this polygon intersects with another polygon.
     #
