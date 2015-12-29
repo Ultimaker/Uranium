@@ -1,7 +1,7 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-from Float import Float
+from UM.Math.Float import Float #For fuzzy comparison of edge cases.
 
 ##  Represents a line segment in 2D.
 #
@@ -69,4 +69,4 @@ class LineSegment(object):
     #   \param end Another point on the line.
     def _pointIsRight(self, p, start, end):
         shifted_end = end - start
-        return shifted_end.cross(p) < 0
+        return shifted_end.cross(p - start) < 0
