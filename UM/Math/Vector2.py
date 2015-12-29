@@ -174,6 +174,12 @@ class Vector2(object):
         result *= other
         return result
 
+    ##  Negates the vector, resulting in a vector with the opposite direction.
+    #
+    #   \return The negated vector.
+    def __neg__(self):
+        return Vector2(data = -self._data)
+
     ##  Subtracts the specified vector from this vector element-wise.
     #
     #   \param other The vector that must be subtracted from this vector.
