@@ -113,7 +113,7 @@ Dialog
         //This uses insertPage here because ListModel is stupid and does not allow using qsTr() on elements.
         insertPage(0, catalog.i18nc("@title:tab", "General"), generalPage);
         insertPage(1, catalog.i18nc("@title:tab", "Settings"), settingVisibilityPage);
-        insertPage(2, catalog.i18nc("@title:tab", "Machines"), machinesPage);
+        insertPage(2, catalog.i18nc("@title:tab", "Printers"), machinesPage);
         insertPage(3, catalog.i18nc("@title:tab", "Profiles"), profilesPage);
         insertPage(4, catalog.i18nc("@title:tab", "Plugins"), pluginsPage);
 
