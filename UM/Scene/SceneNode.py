@@ -33,6 +33,7 @@ class SceneNode(SignalEmitter):
 
         self._position = Vector()
         self._scale = Vector(1.0, 1.0, 1.0)
+        self._mirror = Vector(1.0, 1.0, 1.0)
         self._orientation = Quaternion()
 
         self._transformation = None
@@ -422,6 +423,43 @@ class SceneNode(SignalEmitter):
         self._scale = scale
         self._transformChanged()
 
+    ##  Get the local mirror values.
+    #
+    #   \return The mirror values as vector of scaling values.
+    def getMirror(self):
+        return deepcopy(self._mirror)
+
+    ##  Mirror the scene object (and thus its children) in the given directions.
+    #
+    #   \param mirror \type{Vector} A vector of three scale values that is used
+    #   to mirror the node.
+    #   \param transform_space The space relative to which to scale. Can be any
+    #   one of the constants in SceneNode::TransformSpace.
+    def mirror(self, mirror, transform_space = TransformSpace.Local):
+        if not self._enabled:
+            return
+
+        if transform_space == SceneNode.TransformSpace.Local:
+            self._mirror *= mirror
+        elif transform_space == SceneNode.TransformSpace.Parent:
+            self._mirror *= mirror
+        elif transform_space == SceneNode.TransformSpace.World:
+            self._mirror *= mirror
+        else:
+            raise ValueError("Unknown transform space {0}".format(transform_space))
+
+        self._transformChanged()
+
+    ##  Set the local mirror values.
+    #
+    #   \param mirror \type{Vector} The new mirror values as scale multipliers.
+    def setMirror(self, mirror):
+        if not self._enabled or mirror == self._mirror:
+            return
+
+        self._mirror = mirror
+        self._transformChanged()
+
     ##  Get the local position.
     def getPosition(self):
         return deepcopy(self._position)
@@ -588,7 +626,8 @@ class SceneNode(SignalEmitter):
             child._transformChanged()
 
     def _updateTransformation(self):
-        self._transformation = Matrix.fromPositionOrientationScale(self._position, self._orientation, self._scale)
+        scale_and_mirror = self._scale * self._mirror
+        self._transformation = Matrix.fromPositionOrientationScale(self._position, self._orientation, scale_and_mirror)
 
         if self._parent:
             parent_orientation = self._parent._getDerivedOrientation()
@@ -604,9 +643,9 @@ class SceneNode(SignalEmitter):
 
             parent_scale = self._parent._getDerivedScale()
             if self._inherit_scale:
-                self._derived_scale = parent_scale.scale(self._scale)
+                self._derived_scale = parent_scale.scale(scale_and_mirror)
             else:
-                self._derived_scale = self._scale
+                self._derived_scale = scale_and_mirror
 
             self._derived_position = parent_orientation.rotate(parent_scale.scale(self._position))
             self._derived_position += self._parent._getDerivedPosition()
@@ -615,7 +654,7 @@ class SceneNode(SignalEmitter):
         else:
             self._derived_position = self._position
             self._derived_orientation = self._orientation
-            self._derived_scale = self._scale
+            self._derived_scale = scale_and_mirror
             self._world_transformation = self._transformation
 
     def _resetAABB(self):
