@@ -20,6 +20,7 @@ class ProfilesModel(ListModel):
     ActiveRole = Qt.UserRole + 3
     ReadOnlyRole = Qt.UserRole + 4
     ValueRole = Qt.UserRole + 5
+    SettingsRole = Qt.UserRole + 6
 
     def __init__(self, parent = None):
         super().__init__(parent)
@@ -31,6 +32,7 @@ class ProfilesModel(ListModel):
         self.addRoleName(self.ActiveRole, "active")
         self.addRoleName(self.ReadOnlyRole, "readOnly")
         self.addRoleName(self.ValueRole, "value")
+        self.addRoleName(self.SettingsRole, "settings")
 
         self._manager = Application.getInstance().getMachineManager()
 
@@ -199,18 +201,26 @@ class ProfilesModel(ListModel):
                 "name": catalog.i18nc("@item:inlistbox", "- Use Global Profile -"),
                 "active": False,
                 "readOnly": True,
-                "value": "global"
+                "value": "global",
+                "settings": None
             })
 
         profiles = self._manager.getProfiles()
         profiles.sort(key = lambda k: k.getName())
         for profile in profiles:
+            settings_dict = profile.getChangedSettings()
+            settings_list = []
+            for key, value in settings_dict.items():
+                setting = self._manager.getActiveMachineInstance().getMachineDefinition().getSetting(key)
+                settings_list.append({"name": setting.getLabel(), "value": value})
+
             self.appendItem({
                 "id": id(profile),
                 "name": profile.getName(),
                 "active": self._manager.getActiveProfile() == profile,
                 "readOnly": profile.isReadOnly(),
-                "value": profile.getName()
+                "value": profile.getName(),
+                "settings": settings_list
             })
 
     def _onActiveProfileChanged(self):
