@@ -42,8 +42,9 @@ class ViewModel(ListModel):
             name = viewMetaData.get("name", id)
             description = viewMetaData.get("description", "")
             iconName = viewMetaData.get("icon", "")
+            weight = viewMetaData.get("weight", 0)
 
             currentView = self._controller.getActiveView()
-            self.appendItem({ "id": id, "name": name, "active": id == currentView.getPluginId(), "description": description, "icon": iconName })
+            self.appendItem({ "id": id, "name": name, "active": id == currentView.getPluginId(), "description": description, "icon": iconName, "weight": weight })
 
-        self.sort(lambda t: t["name"])
+        self.sort(lambda t: t["weight"])
