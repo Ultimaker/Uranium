@@ -1,6 +1,7 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
+from UM.Backend.OutputHandler import OutputHandler #For creating a handler for output writing plugins.
 from UM.Controller import Controller
 from UM.PluginRegistry import PluginRegistry
 from UM.Mesh.MeshFileHandler import MeshFileHandler
@@ -74,6 +75,7 @@ class Application(SignalEmitter):
 
         self._controller = Controller(self)
         self._mesh_file_handler = MeshFileHandler()
+        self._output_handler = OutputHandler()
         self._extensions = []
         self._backend = None
         self._output_device_manager = OutputDeviceManager()
@@ -238,6 +240,12 @@ class Application(SignalEmitter):
     #   \returns MeshFileHandler \type{MeshFileHandler}
     def getMeshFileHandler(self):
         return self._mesh_file_handler
+
+    ##  Get the OutputHandler of this application.
+    #
+    #   \return \type{OutputHandler} An output handler.
+    def getOutputHandler(self):
+        return self._output_handler
 
     def getOperationStack(self):
         return self._operation_stack
