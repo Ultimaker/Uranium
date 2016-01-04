@@ -16,6 +16,7 @@ from UM.Operations.AddSceneNodeOperation import AddSceneNodeOperation
 from UM.Message import Message
 
 import os.path
+import platform
 
 from UM.i18n import i18nCatalog
 i18n_catalog = i18nCatalog("uranium")
@@ -31,9 +32,14 @@ class MeshFileHandlerProxy(QObject):
         file_types = []
         all_types = []
 
-        for ext, desc in self._mesh_handler.getSupportedFileTypesRead().items():
-            file_types.append("{0} (*.{1})".format(desc, ext))
-            all_types.append("*.{0}".format(ext))
+        if platform.system() == "Linux":
+            for ext, desc in self._mesh_handler.getSupportedFileTypesRead().items():
+                file_types.append("{0} (*.{1} *.{2})".format(desc, ext.lower(), ext.upper()))
+                all_types.append("*.{0} *.{1}".format(ext.lower(), ext.upper()))
+        else:
+            for ext, desc in self._mesh_handler.getSupportedFileTypesRead().items():
+                file_types.append("{0} (*.{1})".format(desc, ext))
+                all_types.append("*.{0}".format(ext))
 
         file_types.sort()
         file_types.insert(0, i18n_catalog.i18nc("@item:inlistbox", "All Supported Types ({0})".format(" ".join(all_types))))
