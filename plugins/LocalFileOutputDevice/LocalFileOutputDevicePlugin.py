@@ -10,12 +10,14 @@ from PyQt5.QtGui import QDesktopServices
 from PyQt5.QtWidgets import QFileDialog, QMessageBox
 
 from UM.Application import Application
+from UM.Backend.WriteBackendJob import WriteBackendJob
 from UM.Preferences import Preferences
 from UM.Logger import Logger
 from UM.Mesh.MeshWriter import MeshWriter
 from UM.Mesh.WriteMeshJob import WriteMeshJob
 from UM.OutputDevice.OutputDevicePlugin import OutputDevicePlugin
 from UM.OutputDevice.OutputDevice import OutputDevice
+from UM.OutputDevice.OutputSubject import OutputSubject
 from UM.OutputDevice import OutputDeviceError
 from UM.Message import Message
 
@@ -27,7 +29,8 @@ class LocalFileOutputDevicePlugin(OutputDevicePlugin):
     def __init__(self):
         super().__init__()
 
-        Preferences.getInstance().addPreference("local_file/last_used_type", "")
+        Preferences.getInstance().addPreference("local_file/last_used_mesh_type", "")
+        Preferences.getInstance().addPreference("local_file/last_used_backend_type", "")
         Preferences.getInstance().addPreference("local_file/dialog_state", "")
 
     def start(self):
@@ -48,7 +51,7 @@ class LocalFileOutputDevice(OutputDevice):
 
         self._writing = False
 
-    def requestWrite(self, node, file_name = None):
+    def requestWrite(self, node, output_subject, file_name = None):
         if self._writing:
             raise OutputDeviceError.DeviceBusyError()
 
@@ -65,9 +68,17 @@ class LocalFileOutputDevice(OutputDevice):
         filters = []
         mime_types = []
         selected_filter = None
-        last_used_type = Preferences.getInstance().getValue("local_file/last_used_type")
+        if output_subject == OutputSubject.MESH:
+            last_used_type = Preferences.getInstance().getValue("local_file/last_used_mesh_type")
+            file_handler = Application.getInstance().getMeshFileHandler()
+        elif output_subject == OutputSubject.BACKEND:
+            last_used_type = Preferences.getInstance().getValue("local_file/last_used_backend_type")
+            file_handler = Application.getInstance().getOutputHandler()
+        else:
+            Logger.log("e", "Output type not supported by LocalFileOutputDevicePlugin.")
+            raise OutputDeviceError.UnsupportedOperationError()
 
-        file_types = Application.getInstance().getMeshFileHandler().getSupportedFileTypesWrite()
+        file_types = file_handler.getSupportedFileTypesWrite()
         file_types.sort(key = lambda k: k["description"])
 
         for item in file_types:
@@ -93,7 +104,10 @@ class LocalFileOutputDevice(OutputDevice):
         Preferences.getInstance().setValue("local_file/dialog_state", str(dialog.saveState()))
 
         selected_type = file_types[filters.index(dialog.selectedNameFilter())]
-        Preferences.getInstance().setValue("local_file/last_used_type", selected_type["mime_type"])
+        if output_subject == OutputSubject.MESH:
+            Preferences.getInstance().setValue("local_file/last_used_mesh_type", selected_type["mime_type"])
+        elif output_subject == OutputSubject.BACKEND:
+            Preferences.getInstance().setValue("local_file/last_used_backend_type", selected_type["mime_type"])
 
         file_name = dialog.selectedFiles()[0]
 
@@ -103,17 +117,20 @@ class LocalFileOutputDevice(OutputDevice):
                 raise OutputDeviceError.UserCanceledError()
 
         self.writeStarted.emit(self)
-        mesh_writer = Application.getInstance().getMeshFileHandler().getWriter(selected_type["id"])
+        writer = file_handler.getWriter(selected_type["id"])
         try:
-            mode = selected_type["mode"]
-            if mode == MeshWriter.OutputMode.TextMode:
-                Logger.log("d", "Writing to Local File %s in text mode", file_name)
+            if output_subject == OutputSubject.MESH:
+                mode = selected_type["mode"]
+                if mode == MeshWriter.OutputMode.TextMode:
+                    Logger.log("d", "Writing to Local File %s in text mode", file_name)
+                    stream = open(file_name, "wt")
+                elif mode == MeshWriter.OutputMode.BinaryMode:
+                    Logger.log("d", "Writing to Local File %s in binary mode", file_name)
+                    stream = open(file_name, "wb")
+                job = WriteMeshJob(writer, stream, node, mode)
+            elif output_subject == OutputSubject.BACKEND:
                 stream = open(file_name, "wt")
-            elif mode == MeshWriter.OutputMode.BinaryMode:
-                Logger.log("d", "Writing to Local File %s in binary mode", file_name)
-                stream = open(file_name, "wb")
-
-            job = WriteMeshJob(mesh_writer, stream, node, mode)
+                job = WriteBackendJob(writer, stream)
             job.setFileName(file_name)
             job.progress.connect(self._onJobProgress)
             job.finished.connect(self._onWriteJobFinished)
