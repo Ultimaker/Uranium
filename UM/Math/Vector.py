@@ -191,6 +191,11 @@ class Vector(object):
         if t is float or t is numpy.float32 or t is numpy.float64 or t is int:
             self._data *= other
             return self
+        elif t is Vector: #Element-wise multiplication.
+            self._data[0] *= other._data[0]
+            self._data[1] *= other._data[1]
+            self._data[2] *= other._data[2]
+            return self
         else:
             raise NotImplementedError()
 

@@ -8,7 +8,7 @@ from UM.Math.Matrix import Matrix
 from UM.Math.Vector import Vector
 
 ##  Central class for reading and writing meshes.
-#
+#preRead
 #   This class is created by Application and handles reading and writing mesh files.
 class MeshFileHandler(object):
     def __init__(self):
@@ -19,39 +19,53 @@ class MeshFileHandler(object):
         PluginRegistry.addType("mesh_writer", self.addWriter)
         PluginRegistry.addType("mesh_reader", self.addReader)
 
-    # Try to read the mesh_data from a file. Based on the extension in the file a correct meshreader is selected.
+    ##  Find a MeshReader that accepts the given file name.
+    #   \param file_name The name of file to load.
+    #   \returns MeshReader that accepts the given file name. If no acceptable MeshReader is found None is returned.
+    def getReaderForFile(self, file_name):
+        
+        for id, reader in self._mesh_readers.items():
+            try:
+                if reader.acceptsFile(file_name):
+                    return reader
+            except Exception as e:
+                Logger.log("e", str(e))
+
+        return None
+
+    # Try to read the mesh_data from a file using a specified MeshReader.
+    # \param reader the MeshReader to read the file with.
     # \param file_name The name of the mesh to load.
     # \param kwargs Keyword arguments.
     #               Possible values are:
     #               - Center: True if the model should be centered around (0,0,0), False if it should be loaded as-is. Defaults to True.
     # \returns MeshData if it was able to read the file, None otherwise.
-    def read(self, file_name, **kwargs):
+    def readerRead(self, reader, file_name, **kwargs):
         try:
-            for id, reader in self._mesh_readers.items():
-                result = reader.read(file_name)
-                if result is not None:
-                    if kwargs.get("center", True):
-                        # If the result has a mesh and no children it needs to be centered
-                        if result.getMeshData() and len(result.getChildren()) == 0:
-                            extents = result.getMeshData().getExtents()
-                            move_vector = Vector()
-                            move_vector.setX(extents.center.x)
-                            move_vector.setY(extents.center.y) # Ensure that bottom is on 0 (above plate)
-                            move_vector.setZ(extents.center.z)
-                            result.setCenterPosition(move_vector)
+            result = reader.read(file_name)
+            if result is not None:
+                if kwargs.get("center", True):
+                    # If the result has a mesh and no children it needs to be centered
+                    if result.getMeshData() and len(result.getChildren()) == 0:
+                        extents = result.getMeshData().getExtents()
+                        move_vector = Vector()
+                        move_vector.setX(extents.center.x)
+                        move_vector.setY(extents.center.y) # Ensure that bottom is on 0 (above plate)
+                        move_vector.setZ(extents.center.z)
+                        result.setCenterPosition(move_vector)
 
-                            if result.getMeshData().getExtents().bottom != 0:
-                               result.translate(Vector(0,-result.getMeshData().getExtents().bottom ,0))
+                        if result.getMeshData().getExtents().bottom != 0:
+                           result.translate(Vector(0,-result.getMeshData().getExtents().bottom ,0))
 
-                        # Move all the meshes of children so that toolhandles are shown in the correct place.
-                        for node in result.getChildren():
-                            if node.getMeshData():
-                                extents = node.getMeshData().getExtents()
-                                m = Matrix()
-                                m.translate(-extents.center)
-                                node.setMeshData(node.getMeshData().getTransformed(m))
-                                node.translate(extents.center)
-                    return result
+                    # Move all the meshes of children so that toolhandles are shown in the correct place.
+                    for node in result.getChildren():
+                        if node.getMeshData():
+                            extents = node.getMeshData().getExtents()
+                            m = Matrix()
+                            m.translate(-extents.center)
+                            node.setMeshData(node.getMeshData().getTransformed(m))
+                            node.translate(extents.center)
+                return result
 
         except OSError as e:
             Logger.log("e", str(e))

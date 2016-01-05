@@ -44,7 +44,9 @@ class Platform(SceneNode.SceneNode):
             meshData = None
             mesh = self._machine_instance.getMachineDefinition().getPlatformMesh()
             if mesh:
-                _meshData = app.getMeshFileHandler().read(Resources.getPath(Resources.Meshes, mesh), center = False)
+                path = Resources.getPath(Resources.Meshes, mesh)
+                reader = app.getMeshFileHandler().getReaderForFile(path)
+                _meshData = app.getMeshFileHandler().readerRead(reader, path, center = False)
                 if _meshData:
                     meshData = _meshData.getMeshData()
             self.setMeshData(meshData)

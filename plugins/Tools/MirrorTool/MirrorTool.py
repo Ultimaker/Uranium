@@ -8,7 +8,7 @@ from UM.Math.Plane import Plane
 from UM.Math.Vector import Vector
 from UM.Math.Float import Float
 
-from UM.Operations.ScaleOperation import ScaleOperation
+from UM.Operations.MirrorOperation import MirrorOperation
 from UM.Operations.GroupedOperation import GroupedOperation
 from UM.Application import Application
 
@@ -43,28 +43,28 @@ class MirrorTool(Tool):
                 op = None
                 if Selection.getCount() == 1:
                     node = Selection.getSelectedObject(0)
-                    scale = node.getScale()
+                    mirror = node.getMirror()
                     if self.getLockedAxis() == ToolHandle.XAxis:
-                        scale.setX(-scale.x)
+                        mirror.setX(-mirror.x)
                     elif self.getLockedAxis() == ToolHandle.YAxis:
-                        scale.setY(-scale.y)
+                        mirror.setY(-mirror.y)
                     elif self.getLockedAxis() == ToolHandle.ZAxis:
-                        scale.setZ(-scale.z)
+                        mirror.setZ(-mirror.z)
 
-                    op = ScaleOperation(node, scale, set_scale=True)
+                    op = MirrorOperation(node, mirror, set_mirror=True)
                 else:
                     op = GroupedOperation()
 
                     for node in Selection.getAllSelectedObjects():
-                        scale = node.getScale()
+                        mirror = node.getMirror()
                         if self.getLockedAxis() == ToolHandle.XAxis:
-                            scale.setX(-scale.x)
+                            mirror.setX(-mirror.x)
                         elif self.getLockedAxis() == ToolHandle.YAxis:
-                            scale.setY(-scale.y)
+                            mirror.setY(-mirror.y)
                         elif self.getLockedAxis() == ToolHandle.ZAxis:
-                            scale.setZ(-scale.z)
+                            mirror.setZ(-mirror.z)
 
-                        op.addOperation(ScaleOperation(node, scale, set_scale = True))
+                        op.addOperation(MirrorOperation(node, mirror, set_mirror = True))
 
                 op.push()
 

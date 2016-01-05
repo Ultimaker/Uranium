@@ -18,32 +18,31 @@ import time
 class STLReader(MeshReader):
     def __init__(self):
         super(STLReader, self).__init__()
-        self._supported_extension = ".stl"
-    
+        self._supported_extensions = [".stl"]
+
     ## Decide if we need to use ascii or binary in order to read file
     def read(self, file_name):
         mesh = None
         scene_node = None
-        extension = os.path.splitext(file_name)[1]
-        if extension.lower() == self._supported_extension:
-            mesh = MeshData()
-            scene_node = SceneNode()
-            f = open(file_name, "rb")
-            if not self._loadBinary(mesh, f):
-                f.close()
-                f = open(file_name, "rt")
-                try:
-                    self._loadAscii(mesh, f)
-                except UnicodeDecodeError:
-                    pass
-                f.close()
 
+        mesh = MeshData()
+        scene_node = SceneNode()
+        f = open(file_name, "rb")
+        if not self._loadBinary(mesh, f):
             f.close()
-            time.sleep(0.1) #Yield somewhat to ensure the GUI has time to update a bit.
-            mesh.calculateNormals(fast = True)
+            f = open(file_name, "rt")
+            try:
+                self._loadAscii(mesh, f)
+            except UnicodeDecodeError:
+                pass
+            f.close()
 
-            Logger.log("d", "Loaded a mesh with %s vertices", mesh.getVertexCount())
-            scene_node.setMeshData(mesh)
+        f.close()
+        time.sleep(0.1) #Yield somewhat to ensure the GUI has time to update a bit.
+        mesh.calculateNormals(fast = True)
+
+        Logger.log("d", "Loaded a mesh with %s vertices", mesh.getVertexCount())
+        scene_node.setMeshData(mesh)
         return scene_node
 
     # Private

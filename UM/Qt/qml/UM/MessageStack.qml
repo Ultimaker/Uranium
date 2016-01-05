@@ -12,7 +12,7 @@ import "."
 ListView {
     id: base
     boundsBehavior: ListView.StopAtBounds;
-    verticalLayoutDirection: ListView.TopToBottom;
+    verticalLayoutDirection: ListView.BottomToTop;
     visible: true
 
     model: UM.Models.visibleMessagesModel;
@@ -66,7 +66,6 @@ ListView {
                 maximumValue: model.max_progress;
 
                 value: 0
-                Behavior on value { NumberAnimation { duration: 100; } }
 
                 // Doing this in an explicit binding since the implicit binding breaks on occasion.
                 Binding { target: totalProgressBar; property: "value"; value: model.progress }
@@ -135,14 +134,15 @@ ListView {
                                 id: messageStackButtonBackground
                                 width: parent.width
                                 height: parent.height
-                                color: control.hovered ? UM.Theme.colors.load_save_button_hover : UM.Theme.colors.load_save_button
+                                color: control.pressed ? UM.Theme.colors.button_active : 
+                                       control.hovered ? UM.Theme.colors.button_hover : UM.Theme.colors.button
                                 Behavior on color { ColorAnimation { duration: 50; } }
                             }
                             Label {
                                 id: messageStackButtonText
                                 anchors.centerIn: parent
                                 text: control.text
-                                color: UM.Theme.colors.load_save_button_text
+                                color: UM.Theme.colors.button_text
                                 font: UM.Theme.fonts.default
                             }
                         }

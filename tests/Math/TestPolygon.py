@@ -17,6 +17,72 @@ class TestPolygon(unittest.TestCase):
         # Called after the last testfunction was executed
         pass
 
+    ##  Tests mirroring a polygon horizontally.
+    def test_mirrorHorizontal(self):
+        p = Polygon(numpy.array([ #Make a triangle.
+            [0.0, 0.0],
+            [2.0, 0.0],
+            [1.0, 2.0]
+        ], numpy.float32))
+        p.mirror([0, 0], [0, 1]) #Mirror over the vertical axis.
+        self.assertEqual(len(p), 3)
+        self.assertEqual(p[0], [0.0, 0.0])
+        self.assertEqual(p[1], [-2.0, 0.0])
+        self.assertEqual(p[2], [-1.0, 2.0])
+
+    ##  Tests mirroring a polygon vertically.
+    def test_mirrorVertical(self):
+        p = Polygon(numpy.array([ #Make a triangle.
+            [0.0, 0.0],
+            [2.0, 0.0],
+            [1.0, 2.0]
+        ], numpy.float32))
+        p.mirror([0, 0], [1, 0]) #Mirror over the horizontal axis.
+        self.assertEqual(len(p), 3)
+        self.assertEqual(p[0], [0.0, 0.0])
+        self.assertEqual(p[1], [2.0, 0.0])
+        self.assertEqual(p[2], [1.0, -2.0])
+
+    ##  Tests mirroring a polygon horizontally on an axis that is not through
+    #   the origin.
+    def test_mirrorHorizontalFar(self):
+        p = Polygon(numpy.array([ #Make a triangle.
+            [0.0, 0.0],
+            [2.0, 0.0],
+            [1.0, 2.0]
+        ], numpy.float32))
+        p.mirror([10, 0], [0, 1]) #Mirror over the vertical axis with an offset.
+        self.assertEqual(len(p), 3)
+        self.assertEqual(p[0], [20.0, 0.0])
+        self.assertEqual(p[1], [18.0, 0.0])
+        self.assertEqual(p[2], [19.0, 2.0])
+
+    ##  Tests mirroring a polygon diagonally.
+    def test_mirrorDiagonal(self):
+        p = Polygon(numpy.array([ #Make a triangle.
+            [0.0, 0.0],
+            [2.0, 0.0],
+            [1.0, 2.0]
+        ], numpy.float32))
+        p.mirror([0, 4], [1, 1]) #Mirror over the diagonal axis. The diagonal axis also has an offset.
+        self.assertEqual(len(p), 3)
+        self.assertEqual(p[0], [-4.0, 4.0])
+        self.assertEqual(p[1], [-4.0, 6.0])
+        self.assertEqual(p[2], [-2.0, 5.0])
+
+    ##  Tests mirroring a polygon with only one vertex.
+    def test_mirrorSingleVertex(self):
+        p = Polygon(numpy.array([[10.0, 0.0]], numpy.float32)) #Single vertex.
+        p.mirror([0, 0], [1, 0]) #Mirror over the horizontal axis.
+        self.assertEqual(len(p), 1)
+        self.assertEqual(p[0], [-10.0, 0.0])
+
+    ##  Tests mirroring an empty polygon.
+    def test_mirrorEmpty(self):
+        p = Polygon(numpy.array([], numpy.float32)) #Empty polygon.
+        p.mirror([0, 0], [1, 0]) #Mirror over the horizontal axis.
+        self.assertEqual(len(p), 0)
+
     def test_project(self):
         p = Polygon(numpy.array([
             [0.0, 1.0],
