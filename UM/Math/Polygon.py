@@ -51,7 +51,8 @@ class Polygon:
     #   \param axis_direction The direction vector of the axis to mirror across.
     def mirror(self, point_on_axis, axis_direction):
         #Input checking.
-        if axis_direction == [0,0,0]:
+        if axis_direction == [0, 0, 0]:
+            Logger.log("w", "Tried to mirror a polygon over an axis with direction [0, 0, 0].")
             return #Axis has no direction. Can't expect us to mirror anything!
         axis_direction /= numpy.linalg.norm(axis_direction) #Normalise the direction.
         
