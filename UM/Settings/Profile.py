@@ -76,7 +76,7 @@ class Profile(SignalEmitter):
     def getMachineVariantName(self):
         return self._machine_variant_name
 
-    ##  Set the name of the machine type.
+    ##  Set the name of the machine variant.
     def setMachineVariantName(self, machine_variant):
         self._machine_variant_name = machine_variant
 
@@ -84,7 +84,7 @@ class Profile(SignalEmitter):
     def getMachineInstanceName(self):
         return self._machine_instance_name
 
-    ##  Set the name of the machine type.
+    ##  Set the name of the machine instance.
     def setMachineInstanceName(self, machine_instance):
         self._machine_instance_name = machine_instance
 
