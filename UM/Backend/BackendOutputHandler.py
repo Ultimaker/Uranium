@@ -3,40 +3,40 @@
 
 from UM.Logger import Logger
 from UM.PluginRegistry import PluginRegistry
-from UM.Backend.OutputWriter import OutputWriter
+from UM.Backend.BackendOutputWriter import BackendOutputWriter
 
 ##  Central class for managing where the backend output goes.
 #
 #   This class is created by Application.
-class OutputHandler(object):
+class BackendOutputHandler(object):
     def __init__(self):
         super().__init__()
 
-        self._output_writers = {}
-        PluginRegistry.addType("output_writer", self.addWriter)
+        self._backend_output_writers = {}
+        PluginRegistry.addType("backend_output_writer", self.addWriter)
 
     ##  Get an instance of an output writer by ID.
     #
     #   \param writer_id The ID of the output writer to find.
     def getWriter(self, writer_id):
-        if not writer_id in self._output_writers:
+        if not writer_id in self._backend_output_writers:
             return None
 
-        return self._output_writers[writer_id]
+        return self._backend_output_writers[writer_id]
 
-    ##  Get an output writer object that supports writing the specified MIME
-    #   type.
+    ##  Get a backend output writer object that supports writing the specified
+    #   MIME type.
     #
     #   \param mime The MIME type that should be supported.
-    #   \return An OutputWriter instance or None if no output writer supports
-    #   the specified MIME type. If there are multiple writers that support the
-    #   specified MIME type, the first entry is returned.
+    #   \return A BackendOutputWriter instance or None if no backend output
+    #   writer supports the specified MIME type. If there are multiple writers
+    #   that support the specified MIME type, the first entry is returned.
     def getWriterByMimeType(self, mime):
-        writer_data = PluginRegistry.getInstance().getAllMetaData(filter = {"output_writer": {}}, active_only = True)
-        for entry in writer_data: #Search through all output writers.
-            for output in entry["output_writer"].get("output", []):
+        writer_data = PluginRegistry.getInstance().getAllMetaData(filter = {"backend_output_writer": {}}, active_only = True)
+        for entry in writer_data: #Search through all backend output writers.
+            for output in entry["backend_output_writer"].get("output", []):
                 if mime == output["mime_type"]: #MIME type is correct.
-                    return self._output_writers[entry["id"]]
+                    return self._backend_output_writers[entry["id"]]
         return None #No writer was found to support the MIME type.
 
     ##  Get list of all supported filetypes for writing.
@@ -45,9 +45,9 @@ class OutputHandler(object):
     #   description and MIME type for all supported file types.
     def getSupportedFileTypesWrite(self):
         supported_types = []
-        meta_data = PluginRegistry.getInstance().getAllMetaData(filter = {"output_writer": {}}, active_only = True)
+        meta_data = PluginRegistry.getInstance().getAllMetaData(filter = {"backend_output_writer": {}}, active_only = True)
         for entry in meta_data: #Search through all output writers.
-            for output in entry["output_writer"].get("output", []):
+            for output in entry["backend_output_writer"].get("output", []):
                 extension = output.get("extension", "")
                 description = output.get("description", extension)
                 mime_type = output.get("mime_type", "text/plain")
@@ -60,4 +60,4 @@ class OutputHandler(object):
         return supported_types
 
     def addWriter(self, writer):
-        self._output_writers[writer.getPluginId()] = writer
+        self._backend_output_writers[writer.getPluginId()] = writer

@@ -4,7 +4,7 @@
 from UM.PluginObject import PluginObject
 
 ##  Base class for output writer plugin objects.
-class OutputWriter(PluginObject):
+class BackendOutputWriter(PluginObject):
     def __init__(self):
         super().__init__()
 
@@ -19,4 +19,4 @@ class OutputWriter(PluginObject):
     #   \param scene \type{SceneNode} The scene node whose output to write to
     #   the stream.
     def write(self, stream, scene):
-        raise NotImplementedError("Output writer plugin was not correctly implemented. No write was specified.")
+        raise NotImplementedError("Backend output writer plugin was not correctly implemented. No write was specified.")

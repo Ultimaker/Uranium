@@ -10,6 +10,6 @@ from enum import Enum
 class OutputSubject(Enum):
     ##  Writes a serialised representation of a mesh.
     MESH = 1
-    
+
     ##  Writes the output of the backend.
-    BACKEND = 2
+    BACKEND_OUTPUT = 2

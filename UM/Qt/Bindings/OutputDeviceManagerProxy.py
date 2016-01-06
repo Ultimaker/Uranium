@@ -52,11 +52,11 @@ class OutputDeviceManagerProxy(QObject):
         Application.getInstance().functionEvent(event)
 
     @pyqtSlot(str, str)
-    def requestWriteOutputToDevice(self, device_id, file_name):
+    def requestWriteBackendOutputToDevice(self, device_id, file_name):
         # On Windows, calling requestWrite() on LocalFileOutputDevice crashes when called from a signal
         # handler attached to a QML MenuItem. So instead, defer the call to the next run of the event 
         # loop, since that does work.
-        event = CallFunctionEvent(self._writeToDevice, [Application.getInstance().getController().getScene().getRoot(), device_id, OutputSubject.BACKEND, file_name], {})
+        event = CallFunctionEvent(self._writeToDevice, [Application.getInstance().getController().getScene().getRoot(), device_id, OutputSubject.BACKEND_OUTPUT, file_name], {})
         Application.getInstance().functionEvent(event)
 
     @pyqtSlot(str, str)

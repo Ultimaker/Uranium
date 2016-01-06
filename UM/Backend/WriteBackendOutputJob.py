@@ -12,13 +12,13 @@ import os.path
 #
 #   The result of this job is True if the write was successful or False when it
 #   wasn't successful.
-class WriteBackendJob(Job):
-    ##  Creates a new WriteBackendJob.
+class WriteBackendOutputJob(Job):
+    ##  Creates a new WriteBackendOutputJob.
     #
     #   No file name is initialised. This must be set using setFileName.
     #
-    #   \param writer The output writer to write with.
-    #   \param stream The stream to write to with the output writer.
+    #   \param writer The backend output writer to write with.
+    #   \param stream The stream to write to with the backend output writer.
     def __init__(self, writer, stream):
         super().__init__()
         self._stream = stream
