@@ -52,6 +52,14 @@ class MachineManagerProxy(QObject):
 
         return instance.getMachineDefinition().hasVariants()
 
+    @pyqtProperty(bool, notify = activeMachineInstanceChanged)
+    def hasMaterials(self):
+        instance = self._manager.getActiveMachineInstance()
+        if not instance:
+            return False
+
+        return instance.getMachineDefinition().hasMaterials()
+
     @pyqtProperty(str, notify = activeMachineInstanceChanged)
     def activeMachineVariant(self):
         instance = self._manager.getActiveMachineInstance()

@@ -66,6 +66,14 @@ class MachineManager(SignalEmitter):
 
         return variants
 
+    def getAllMachineMaterials(self, machine_id):
+        materials = []
+        for definition in self._machine_definitions:
+            if definition.getId() == machine_id:
+                materials.append(definition)
+
+        return materials
+
     def findMachineDefinition(self, machine_id, variant_name = None):
         for definition in self._machine_definitions:
             if definition.getId() == machine_id:
