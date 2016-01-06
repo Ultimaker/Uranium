@@ -41,6 +41,13 @@ class MachineInstancesModel(ListModel):
 
         self._manager.removeMachineInstance(instance)
 
+    @pyqtSlot(str, result = bool)
+    def checkInstanceNameExists(self, name):
+        instance = self._manager.findMachineInstance(name)
+        if instance:
+            return True
+        return False
+
     @pyqtSlot(str, str)
     def renameMachineInstance(self, old_name, new_name):
         instance = self._manager.findMachineInstance(old_name)
