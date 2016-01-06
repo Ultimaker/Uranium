@@ -8,10 +8,7 @@ find_package(PythonInterp 3.4.0 REQUIRED)
 
 # Tests
 add_custom_target(tests)
-file(GLOB test_files tests/*/Test*.py)
-foreach(file ${test_files})
-    add_custom_command(TARGET tests POST_BUILD COMMAND "PYTHONPATH=${CMAKE_SOURCE_DIR}" ${PYTHON_EXECUTABLE} ARGS ${file} COMMENT "Running test ${file}")
-endforeach()
+add_custom_command(TARGET tests POST_BUILD COMMAND "PYTHONPATH=${CMAKE_SOURCE_DIR}" ${PYTHON_EXECUTABLE} ARGS -m pytest ${CMAKE_SOURCE_DIR})
 
 # Benchmarks
 add_custom_target(benchmark)
