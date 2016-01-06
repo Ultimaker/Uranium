@@ -32,7 +32,7 @@ class ReadMeshJob(Job):
     def run(self):
         reader = self._handler.getReaderForFile(self._filename)
         if not reader:
-            result_message = Message(i18n_catalog.i18nc("@info:status", "Cannot open file type <filename>{0}</filename>", self._filename))
+            result_message = Message(i18n_catalog.i18nc("@info:status", "Cannot open file type <filename>{0}</filename>", self._filename), lifetime = 0)
             result_message.show()
             return
 
@@ -60,7 +60,7 @@ class ReadMeshJob(Job):
         if not node:
             loading_message.hide()
 
-            result_message = Message(i18n_catalog.i18nc("@info:status", "Failed to load <filename>{0}</filename>", self._filename))
+            result_message = Message(i18n_catalog.i18nc("@info:status", "Failed to load <filename>{0}</filename>", self._filename), lifetime = 0)
             result_message.show()
             return
         if node.getMeshData():
