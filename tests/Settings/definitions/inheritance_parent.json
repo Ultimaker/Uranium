@@ -1,0 +1,18 @@
+{
+    "id": "test_inheritance_parent",
+    "name": "Inheritance Test (Parent)",
+    "version": 1,
+    "visible": false,
+
+    "machine_settings": {
+        "parent_machine_setting_0": { "default": 0 },
+        "parent_machine_setting_1": { "default": 1 }
+    },
+
+    "categories": {
+        "parent_category_0": {
+        },
+        "parent_category_1": {
+        }
+    }
+}

@@ -52,7 +52,7 @@ class TestMachineDefinition():
         pass
 
     def _getFilePath(self, file):
-        return os.path.join(os.path.dirname(os.path.abspath(__file__)), file)
+        return os.path.join(os.path.dirname(os.path.abspath(__file__)), "definitions", file)
 
 
 if __name__ == "__main__":

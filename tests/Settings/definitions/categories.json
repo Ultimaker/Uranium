@@ -1,0 +1,18 @@
+{
+    "id": "test_categories",
+    "name": "Categories Test",
+    "version": 1,
+
+    "categories": {
+        "test_category_0": {
+            "name": "Test Category 0",
+            "settings": {
+            }
+        },
+        "test_category_1": {
+            "name": "Test Category 1",
+            "settings": {
+            }
+        }
+    }
+}
