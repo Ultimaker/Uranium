@@ -48,8 +48,37 @@ class TestMachineDefinition():
         assert definition.getManufacturer() == expected["manufacturer"]
         assert definition.getAuthor() == expected["author"]
 
-    def test_loadAll(self):
-        pass
+    test_loadAll_data = [
+        ("basic.json", {
+            "id": "test_basic",
+            "machine_setting_count": 0,
+            "category_count": 0,
+        }),
+        ("machine_settings.json", {
+            "id": "test_machine_settings",
+            "machine_setting_count": 5,
+            "category_count": 0,
+        }),
+        ("categories.json", {
+            "id": "test_categories",
+            "machine_setting_count": 0,
+            "category_count": 2,
+        }),
+        ("inheritance_child.json", {
+            "id": "test_inheritance_child",
+            "machine_setting_count": 4,
+            "category_count": 4
+        }),
+    ]
+
+    @pytest.mark.parametrize("file_name, expected", test_loadAll_data)
+    def test_loadAll(self, machine_manager, file_name, expected):
+        definition = MachineDefinition(machine_manager, self._getFilePath(file_name))
+        definition.loadAll()
+
+        assert definition.getId() == expected["id"]
+        assert len(definition.getMachineSettings()) == expected["machine_setting_count"]
+        assert len(definition.getAllCategories()) == expected["category_count"]
 
     def _getFilePath(self, file):
         return os.path.join(os.path.dirname(os.path.abspath(__file__)), "definitions", file)
