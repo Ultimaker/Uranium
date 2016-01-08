@@ -236,7 +236,7 @@ class Setting(SignalEmitter):
             except Exception as e:
                 Logger.log("e", "An error occurred in inherit function for {0}: {1}".format(self._key, str(e)))
             else:
-                if inherit_value:
+                if inherit_value is not None:
                     return inherit_value
 
         return self._default_value
