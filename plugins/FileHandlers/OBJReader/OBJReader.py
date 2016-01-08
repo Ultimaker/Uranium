@@ -20,7 +20,7 @@ class OBJReader(MeshReader):
         scene_node = None
 
         extension = os.path.splitext(file_name)[1]
-        if extension.lower() == self._supported_extension:
+        if extension.lower() == self._supported_extensions:
             vertex_list = []
             normal_list = []
             uv_list = []
