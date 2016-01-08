@@ -120,13 +120,22 @@ class ScaleTool(Tool):
                             scale.setY(scale_factor)
                         elif self.getLockedAxis() == ToolHandle.ZAxis:
                             scale.setZ(scale_factor)
-
                     else:
                         scale.setX(scale_factor)
                         scale.setY(scale_factor)
                         scale.setZ(scale_factor)
 
-                    Selection.applyOperation(ScaleOperation, scale, add_scale=True)
+                    Selection.applyOperation(ScaleOperation, scale, add_scale = True)
+
+                    # Ensure that snap scaling is actually rounded.
+                    # We need to do this as scale to max and auto scale can cause objects to be scaled
+                    # in steps smaller then the snap.
+                    if self._snap_scale:
+                        current_scale = Selection.getSelectedObject(0).getScale()
+                        current_scale.setX(round(current_scale.x, 1))
+                        current_scale.setY(round(current_scale.y, 1))
+                        current_scale.setZ(round(current_scale.z, 1))
+                        Selection.applyOperation(SetTransformOperation, None, None, current_scale)
 
                     #this part prevents the mesh being scaled to a size < 0.
                     #This cannot be done before the operation (even though that would be more efficient)
