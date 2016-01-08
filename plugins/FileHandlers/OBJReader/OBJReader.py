@@ -13,11 +13,12 @@ from UM.Job import Job
 class OBJReader(MeshReader):
     def __init__(self):
         super(OBJReader, self).__init__()
-        self._supported_extension = ".obj"
+        self._supported_extensions = [".obj"]
         
     def read(self, file_name):
         mesh = None
         scene_node = None
+
         extension = os.path.splitext(file_name)[1]
         if extension.lower() == self._supported_extension:
             vertex_list = []
@@ -104,6 +105,5 @@ class OBJReader(MeshReader):
                 Job.yieldThread()
             if not mesh.hasNormals():
                 mesh.calculateNormals(fast = True)
+
         return scene_node
-        
-        #return scene_node

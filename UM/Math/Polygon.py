@@ -1,10 +1,14 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
+import copy
 import numpy
 import time
 
 from UM.Job import Job
+from UM.Math.Float import Float #For fuzzy comparison of edge cases.
+from UM.Math.LineSegment import LineSegment #For line-line intersections for computing polygon intersections.
+from UM.Math.Vector2 import Vector2 #For constructing line segments for polygon intersections.
 
 try:
     import scipy.spatial
@@ -40,6 +44,152 @@ class Polygon:
             projection_max = max(projection_max, projection)
 
         return (projection_min, projection_max)
+
+    ##  Mirrors this polygon across the specified axis.
+    #
+    #   \param point_on_axis A point on the axis to mirror across.
+    #   \param axis_direction The direction vector of the axis to mirror across.
+    def mirror(self, point_on_axis, axis_direction):
+        #Input checking.
+        if axis_direction == [0,0,0]:
+            return #Axis has no direction. Can't expect us to mirror anything!
+        axis_direction /= numpy.linalg.norm(axis_direction) #Normalise the direction.
+        
+        #In order to be able to mirror points around an arbitrary axis, we have to normalize the axis and all points such that the axis goes through the origin.
+        point_matrix = numpy.matrix(self._points)
+        point_matrix -= point_on_axis #Moves all points such that the axis origin is at [0,0].
+        
+        #To mirror a coordinate, we have to add the projection of the point to the axis twice (where v is the vector to reflect):
+        #  reflection(v) = 2 * projection(v) - v
+        #Writing out the projection, this becomes (where l is the normalised direction of the line):
+        #  reflection(v) = 2 * (l . v) l - v
+        #With Snell's law this can be simplified to the Householder transformation matrix:
+        #  reflection(v) = R v
+        #  R = 2 l l^T - I
+        #This simplifies the entire reflection to one big matrix transformation.
+        axis_matrix = numpy.matrix(axis_direction)
+        reflection = 2 * numpy.transpose(axis_matrix) * axis_matrix - numpy.identity(2)
+        point_matrix = point_matrix * reflection #Apply the actual transformation.
+        
+        #Shift the points back to the original coordinate space before the axis was normalised to the origin.
+        point_matrix += point_on_axis
+        self._points = point_matrix.getA()[::-1]
+
+    ##  Computes the intersection of the convex hulls of this and another
+    #   polygon.
+    #
+    #   This is an implementation of O'Rourke's "Chase" algorithm. For a more
+    #   detailed description of why the algorithm works the way it does, please
+    #   consult the book "Computational Geometry in C", second edition, chapter
+    #   7.6.
+    #
+    #   \param other The other polygon to intersect convex hulls with.
+    #   \return The intersection of the two polygons' convex hulls.
+    def intersectionConvexHulls(self, other):
+        me = self.getConvexHull()
+        him = other.getConvexHull()
+
+        if len(me._points) <= 2 or len(him._points) <= 2: #If either polygon has no surface area, then the intersection is empty.
+            return Polygon()
+
+        index_me = 0 #The current vertex index.
+        index_him = 0
+        advances_me = 0 #How often we've advanced.
+        advances_him = 0
+        who_is_inside = "unknown" #Which of the two polygons is currently on the inside.
+        directions_me = numpy.subtract(numpy.roll(me._points, -1, axis = 0), me._points) #Pre-compute the difference between consecutive points to get a direction for each point.
+        directions_him = numpy.subtract(numpy.roll(him._points, -1, axis = 0), him._points)
+        result = []
+
+        #Iterate through both polygons until we've made a loop through both polygons.
+        while advances_me <= len(me._points) or advances_him <= len(him._points):
+            vertex_me = me._points[index_me]
+            vertex_him = him._points[index_him]
+            if advances_me > len(me._points) * 2 or advances_him > len(him._points) * 2: #Also, if we've looped twice through either polygon, the boundaries of the polygons don't intersect.
+                if len(result) > 2:
+                    return result
+                if me.isInside(vertex_him): #Other polygon is inside this one.
+                    return him
+                if him.isInside(vertex_me): #This polygon is inside the other.
+                    return me
+                #Polygons are disjunct.
+                return Polygon()
+
+            me_start = Vector2(data = vertex_me)
+            me_end = Vector2(data = vertex_me + directions_me[index_me])
+            him_start = Vector2(data = vertex_him)
+            him_end = Vector2(data = vertex_him + directions_him[index_him])
+
+            me_in_him_halfplane = (me_end - him_start).cross(him_end - him_start) #Cross gives positive if him_end is to the left of me_end (as seen from him_start).
+            him_in_me_halfplane = (him_end - me_start).cross(me_end - me_start) #Arr, I's got him in me halfplane, cap'n.
+            intersection = LineSegment(me_start, me_end).intersection(LineSegment(him_start, him_end))
+
+            if intersection:
+                result.append(intersection.getData()) #The intersection is always in the hull.
+                if me_in_him_halfplane > 0: #At the intersection, who was inside changes.
+                    who_is_inside = "me"
+                elif him_in_me_halfplane > 0:
+                    who_is_inside = "him"
+                else:
+                    pass #Otherwise, whoever is inside remains the same (or unknown).
+                advances_me += 1
+                index_me = (index_me + 1) % len(me._points)
+                advances_him += 1
+                index_him = (index_him + 1) % len(him._points)
+                continue
+
+            cross = (Vector2(data = directions_me[index_me]).cross(Vector2(data = directions_him[index_him])))
+            
+            #Edge case: Two exactly opposite edges facing away from each other.
+            if Float.fuzzyCompare(cross, 0) and me_in_him_halfplane <= 0 and him_in_me_halfplane <= 0:
+                # The polygons must be disjunct then.
+                return Polygon()
+
+            if Float.fuzzyCompare(cross, 0) and directions_me[index_me].dot(directions_him[index_him]) < 0 and me_in_him_halfplane > 0:
+                #Just advance the inside.
+                if who_is_inside == "him":
+                    advances_him += 1
+                    index_him = (index_him + 1) % len(him._points)
+                else: #him OR unknown! If it's unknown, it doesn't matter which one is advanced, since it only happens when the starting edge was already colinear.
+                    advances_me += 1
+                    index_me = (index_me + 1) % len(me._points)
+                continue
+
+            #Edge case: Two colinear edges.
+            if Float.fuzzyCompare(cross, 0): #Two edges overlap.
+                #Just advance the outside.
+                if who_is_inside == "me":
+                    advances_him += 1
+                    index_him = (index_him + 1) % len(him._points)
+                else: #him OR unknown! If it's unknown, it doesn't matter which one is advanced, since it only happens when the starting edge was already colinear.
+                    advances_me += 1
+                    index_me = (index_me + 1) % len(me._points)
+                continue
+
+            #Generic case: Advance whichever polygon is on the outside.
+            if cross >= 0: #This polygon is going faster towards the inside.
+                if him_in_me_halfplane > 0:
+                    advances_me += 1
+                    index_me = (index_me + 1) % len(me._points)
+                    if who_is_inside == "him":
+                        result.append(vertex_him)
+                else:
+                    advances_him += 1
+                    index_him = (index_him + 1) % len(him._points)
+                    if who_is_inside == "me":
+                        result.append(vertex_me)
+            else: #The other polygon is going faster towards the inside.
+                if me_in_him_halfplane > 0:
+                    advances_him += 1
+                    index_him = (index_him + 1) % len(him._points)
+                    if who_is_inside == "me":
+                        result.append(vertex_me)
+                else:
+                    advances_me += 1
+                    index_me = (index_me + 1) % len(me._points)
+                    if who_is_inside == "him":
+                        result.append(vertex_him)
+        return Polygon(points = result)
 
     ##  Check to see whether this polygon intersects with another polygon.
     #
@@ -122,7 +272,7 @@ class Polygon:
             upper = [points[0], points[1]]
             for p in points[2:]:
                 upper.append(p)
-                while len(upper) > 2 and not self._isRightTurn(*upper[-3:]):
+                while len(upper) > 2 and self._isRightTurn(*upper[-3:]) != 1:
                     del upper[-2]
 
             # Build lower half of the hull.
@@ -130,7 +280,7 @@ class Polygon:
             lower = [points[0], points[1]]
             for p in points[2:]:
                 lower.append(p)
-                while len(lower) > 2 and not self._isRightTurn(*lower[-3:]):
+                while len(lower) > 2 and self._isRightTurn(*lower[-3:]) != 1:
                     del lower[-2]
 
             # Remove duplicates.
@@ -164,11 +314,26 @@ class Polygon:
         sum = self.getMinkowskiSum(other)
         return sum.getConvexHull()
 
+    ##  Whether the specified point is inside this polygon.
+    #
+    #   If the point is exactly on the border or on a vector, it does not count
+    #   as being inside the polygon.
+    #
+    #   \param point The point to check of whether it is inside.
+    #   \return True if it is inside, or False otherwise.
+    def isInside(self, point):
+        for i in range(0,len(self._points)):
+            if self._isRightTurn(self._points[i], self._points[(i + 1) % len(self._points)], point) == -1: #Outside this halfplane!
+                return False
+        return True
+
     def _isRightTurn(self, p, q, r):
         sum1 = q[0] * r[1] + p[0] * q[1] + r[0] * p[1]
         sum2 = q[0] * p[1] + r[0] * q[1] + p[0] * r[1]
 
         if sum1 - sum2 < 0:
             return 1
-        else:
+        elif sum1 == sum2:
             return 0
+        else:
+            return -1

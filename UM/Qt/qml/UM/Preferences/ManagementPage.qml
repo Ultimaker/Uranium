@@ -69,6 +69,7 @@ PreferencesPage
         anchors
         {
             top: buttons.bottom;
+            topMargin: UM.Theme.sizes.default_margin.height;
             left: parent.left;
             right: parent.right;
             bottom: parent.bottom;

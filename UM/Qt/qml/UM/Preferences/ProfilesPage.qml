@@ -13,8 +13,6 @@ ManagementPage
 
     title: catalog.i18nc("@title:tab", "Profiles");
 
-    detailsVisible: false;
-
     model: UM.ProfilesModel { }
 
     onAddObject: importDialog.open();
@@ -25,6 +23,34 @@ ManagementPage
 
     removeEnabled: currentItem != null ? !currentItem.readOnly : false;
     renameEnabled: currentItem != null ? !currentItem.readOnly : false;
+
+    Flow {
+        anchors.fill: parent
+        spacing: UM.Theme.sizes.default_margin.height
+
+        Label { text: base.currentItem.name ? base.currentItem.name : ""; font: UM.Theme.fonts.large; width: parent.width; }
+
+        Grid {
+            columns: 2
+            spacing: UM.Theme.sizes.default_margin.width
+
+            Label { text: catalog.i18nc("@label", "Profile type"); }
+            Label { text: base.currentItem.readOnly ? catalog.i18nc("@label", "Starter profile (protected)") : catalog.i18nc("@label", "Custom profile"); }
+
+            Column {
+                Repeater {
+                        model: base.currentItem.settings
+                        Label { text: modelData.name.toString(); }
+                }
+            }
+            Column {
+                Repeater {
+                        model: base.currentItem.settings
+                        Label { text: modelData.value.toString(); }
+                }
+            }
+        }
+    }
 
     buttons: Button
     {
@@ -64,7 +90,7 @@ ManagementPage
             id: importDialog;
             title: catalog.i18nc("@title:window", "Import Profile");
             selectExisting: true;
-            nameFilters: [ catalog.i18nc("@item:inlistbox", "Cura Profiles (*.curaprofile)"), catalog.i18nc("@item:inlistbox", "All Files (*)") ]
+            nameFilters: base.model.getFileNameFiltersRead()
 
             onAccepted:
             {
@@ -91,9 +117,9 @@ ManagementPage
             id: exportDialog;
             title: catalog.i18nc("@title:window", "Export Profile");
             selectExisting: false;
-            nameFilters: [ catalog.i18nc("@item:inlistbox", "Cura Profiles (*.curaprofile)") ]
+            nameFilters: base.model.getFileNameFiltersWrite()
 
-            onAccepted: base.model.exportProfile(base.currentItem.name, fileUrl)
+            onAccepted: base.model.exportProfile(base.currentItem.name, fileUrl, selectedNameFilter)
         }
     }
 }
