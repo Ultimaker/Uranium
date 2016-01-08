@@ -8,14 +8,14 @@ find_package(PythonInterp 3.4.0 REQUIRED)
 
 # Tests
 add_custom_target(tests)
-add_custom_command(TARGET tests POST_BUILD COMMAND "PYTHONPATH=${CMAKE_SOURCE_DIR}" ${PYTHON_EXECUTABLE} ARGS -m pytest ${CMAKE_SOURCE_DIR})
+add_custom_command(TARGET tests POST_BUILD COMMAND "PYTHONPATH=${CMAKE_SOURCE_DIR}" ${PYTHON_EXECUTABLE} ARGS -m pytest -r a --junitxml=${CMAKE_BINARY_DIR}/junit.xml ${CMAKE_SOURCE_DIR})
 
-# Benchmarks
-add_custom_target(benchmark)
-file(GLOB bench_files tests/benchmarks/*/profile*.py)
-foreach(file ${bench_files})
-    add_custom_command(TARGET benchmark POST_BUILD COMMAND "PYTHONPATH=${CMAKE_SOURCE_DIR}" kernprof ARGS -l -v ${file})
-endforeach()
+# # Benchmarks
+# add_custom_target(benchmark)
+# file(GLOB bench_files tests/benchmarks/*/profile*.py)
+# foreach(file ${bench_files})
+#     add_custom_command(TARGET benchmark POST_BUILD COMMAND "PYTHONPATH=${CMAKE_SOURCE_DIR}" kernprof ARGS -l -v ${file})
+# endforeach()
 
 # Documentation
 find_package(Doxygen)

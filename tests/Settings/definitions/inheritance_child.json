@@ -1,0 +1,18 @@
+{
+    "id": "test_inheritance_child",
+    "name": "Inheritance Test (Child)",
+    "version": 1,
+    "inherits": "inheritance_parent.json",
+
+    "machine_settings": {
+        "child_machine_setting_0": { "default": 0 },
+        "child_machine_setting_1": { "default": 1 }
+    },
+
+    "categories": {
+        "child_category_0": {
+        },
+        "child_category_1": {
+        }
+    }
+}

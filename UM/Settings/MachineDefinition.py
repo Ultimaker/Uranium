@@ -126,7 +126,16 @@ class MachineDefinition(SignalEmitter):
         self._platform_texture = self._json_data.get("platform_texture", "")
 
         if "inherits" in self._json_data:
-            inherits_from = MachineDefinition(self._machine_manager, Resources.getPath(Resources.MachineDefinitions, self._json_data["inherits"]))
+            try:
+                path = Resources.getPath(Resources.MachineDefinitions, self._json_data["inherits"])
+            except FileNotFoundError as e:
+                # If we cannot find the file in Resources, try and see if it can be found relative to this file.
+                # This is primarily used by the unit tests.
+                path = os.path.join(os.path.dirname(self._path), self._json_data["inherits"])
+                if not os.path.exists(path):
+                    raise FileNotFoundError("Could not find file {0} in Resources or next to {1}".format(self._json_data["inherits"], self._path)) from e
+
+            inherits_from = MachineDefinition(self._machine_manager, path)
             inherits_from.loadAll()
 
             self._machine_settings = inherits_from._machine_settings
