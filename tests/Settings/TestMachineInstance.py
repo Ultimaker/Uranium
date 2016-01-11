@@ -11,16 +11,6 @@ from UM.Settings.MachineManager import MachineManager
 from UM.Settings import SettingsError
 
 class TestMachineInstance():
-    def setup_method(self, method):
-        #self._machine_manager = MachineManager()
-        #self._catalog = i18nCatalog("TestSetting")
-        pass
-
-    def teardown_method(self, method):
-        #self._machine_manager = None
-        #self._catalog = None
-        pass
-
     test_construct_data = [("basic.json", "basic"),
                            ("machine_settings.json", "machine_settings"),
                            ("categories.json", "categories"),
@@ -37,17 +27,36 @@ class TestMachineInstance():
         assert machine_instance.getMachineDefinition() == definition
         assert machine_instance.getName() == instance_name
 
-    '''test_loadFromFile_data = [("basic.json", "basic.cfg")]
-    @pytest.mark.parametrize("definition_file_name, instance_file_name", test_loadFromFile_data)
-    def test_loadFromFile(self, machine_manager, definition_file_name, instance_file_name):
+    test_instanceOverride_data = [("basic.json", "basic.cfg", {}),
+                                  ("machine_settings.json", "machine_settings.cfg", {
+                                                                                        "test_setting_0": 0,
+                                                                                        "test_setting_1": 1,
+                                                                                        "test_setting_2": True,
+                                                                                        "test_setting_3": "3",
+                                                                                        "test_setting_4": [ 4, 4 ]
+                                                                                    }),
+                                  ("machine_settings.json", "machine_settings_with_overrides.cfg", {
+                                                                                        "test_setting_0": "1",
+                                                                                        "test_setting_1": "0",
+                                                                                        "test_setting_2": "false",
+                                                                                        "test_setting_3": '"4"',
+                                                                                        "test_setting_4": "true"
+                                                                                    })]
+    ## TODO: Note that in these tests the type is not taken into account, as technically machineSettings don't have
+    #  a type to which it can be forcefully cast.
+    @pytest.mark.parametrize("definition_file_name, instance_file_name, expected_values", test_instanceOverride_data)
+    def test_instanceOverride(self, machine_manager, definition_file_name, instance_file_name, expected_values):
         # Create a definition
         definition = MachineDefinition(machine_manager, self._getDefinitionsFilePath(definition_file_name))
         definition.loadMetaData()
 
+        machine_manager.addMachineDefinition(definition)
+
         machine_instance = MachineInstance(machine_manager, definition = definition)
-        print(machine_manager._machine_definitions)
-        #with pytest.raises(InvalidFileError):
-        machine_instance.loadFromFile(self._getInstancesFilePath(instance_file_name))'''
+        machine_instance.loadFromFile(self._getInstancesFilePath(instance_file_name))
+
+        for key in expected_values:
+            assert machine_instance.getSettingValue(key) == expected_values[key]
 
     test_loadFromFileExceptions_data = [("basic.json", "invalid_file.cfg", SettingsError.InvalidFileError),
                                         ("basic.json", "unknown_type.cfg", SettingsError.DefinitionNotFoundError),
