@@ -96,7 +96,7 @@ class MachineInstance(SignalEmitter):
 
         self._machine_definition = self._machine_manager.findMachineDefinition(type_name, variant_name)
         if not self._machine_definition:
-            raise SettingsError.DefinitionNotFoundError()
+            raise SettingsError.DefinitionNotFoundError(type_name)
         self._machine_definition.loadAll()
 
         self._name = config.get("general", "name")
