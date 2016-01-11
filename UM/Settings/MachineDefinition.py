@@ -86,7 +86,10 @@ class MachineDefinition(SignalEmitter):
         if not self._json_data:
             clean_json = True
             with open(self._path, "rt", -1, "utf-8") as f:
-                self._json_data = json.load(f, object_pairs_hook=collections.OrderedDict)
+                try:
+                    self._json_data = json.load(f, object_pairs_hook=collections.OrderedDict)
+                except json.decoder.JSONDecodeError as e:
+                    raise SettingsError.InvalidFileError(self._path) from e
 
         if "id" not in self._json_data or "name" not in self._json_data or "version" not in self._json_data:
             raise SettingsError.InvalidFileError(self._path)
@@ -115,7 +118,10 @@ class MachineDefinition(SignalEmitter):
             return
 
         with open(self._path, "rt", -1, "utf-8") as f:
-            self._json_data = json.load(f, object_pairs_hook=collections.OrderedDict)
+            try:
+                self._json_data = json.load(f, object_pairs_hook=collections.OrderedDict)
+            except json.decoder.JSONDecodeError as e:
+                raise SettingsError.InvalidFileError(self._path) from e
 
         if not self._name:
             self.loadMetaData()
