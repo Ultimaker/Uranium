@@ -233,6 +233,11 @@ class MachineManager(SignalEmitter):
         self.loadProfiles()
         self.loadVisibility()
 
+    def addMachineDefinition(self, definition):
+        if not self.findMachineDefinition(definition.getId(), definition.getVariantName()):
+            self._machine_definitions.append(definition)
+            self.machineDefinitionsChanged.emit()
+
     def loadMachineDefinitions(self):
         dirs = Resources.getAllPathsForType(Resources.MachineDefinitions)
         for dir in dirs:
@@ -254,6 +259,7 @@ class MachineManager(SignalEmitter):
                     continue
 
                 # Only add the definition if it did not exist yet. This prevents duplicates.
+                # We don't use addMachineDefinition to prevent signal spam.
                 if not self.findMachineDefinition(definition.getId(), definition.getVariantName()):
                     self._machine_definitions.append(definition)
 
