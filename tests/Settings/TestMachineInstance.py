@@ -8,7 +8,7 @@ from UM.Settings.MachineInstance import MachineInstance
 from UM.Settings.MachineDefinition import MachineDefinition
 from UM.Settings.MachineManager import MachineManager
 
-from UM.Settings.SettingsError import InvalidFileError
+from UM.Settings import SettingsError
 
 class TestMachineInstance():
     def setup_method(self, method):
@@ -49,8 +49,19 @@ class TestMachineInstance():
         #with pytest.raises(InvalidFileError):
         machine_instance.loadFromFile(self._getInstancesFilePath(instance_file_name))'''
 
-    #def test_loadFromFileExceptions(self, machine_manager, definition_file_name, instance_file_name):
+    test_loadFromFileExceptions_data = [("basic.json", "invalid_file.cfg", SettingsError.InvalidFileError),
+                                        ("basic.json", "unknown_type.cfg", SettingsError.DefinitionNotFoundError),
+                                        ("basic.json", "invalid_version.cfg", SettingsError.SettingsError)]
 
+    @pytest.mark.parametrize("definition_file_name, instance_file_name, expected_exception", test_loadFromFileExceptions_data)
+    def test_loadFromFileExceptions(self, machine_manager, definition_file_name, instance_file_name, expected_exception):
+        # Create a definition
+        definition = MachineDefinition(machine_manager, self._getDefinitionsFilePath(definition_file_name))
+        definition.loadMetaData()
+
+        machine_instance = MachineInstance(machine_manager, definition = definition)
+        with pytest.raises(expected_exception):
+            machine_instance.loadFromFile(self._getInstancesFilePath(instance_file_name))
 
     def _getDefinitionsFilePath(self, file):
         return os.path.join(os.path.dirname(os.path.abspath(__file__)), "definitions", file)
