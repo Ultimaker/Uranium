@@ -124,6 +124,17 @@ class TestMachineDefinition():
                 { "id": "child_machine_setting_1", "default": 1 },
             ],
         }),
+        # Test that overrides work properly for inheritance.
+        ("inheritance_overrides.json", {
+            "id": "test_inheritance_overrides",
+            "machine_setting_count": 2,
+            "category_count": 2,
+
+            "machine_settings": [
+                { "id": "parent_machine_setting_0", "default": 2 },
+                { "id": "parent_machine_setting_1", "default": 3 },
+            ],
+        }),
     ]
 
     @pytest.mark.parametrize("file_name, expected", test_loadAll_data)
