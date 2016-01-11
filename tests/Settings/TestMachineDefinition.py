@@ -168,5 +168,21 @@ class TestMachineDefinition():
                         assert setting.getType() == expected_setting["type"]
                         assert setting.getDefaultValue(None) == expected_setting["default"]
 
+    test_loadError_data = [
+        ( "file_not_found.json", FileNotFoundError ),
+        ( "error_empty.json", SettingsError.InvalidFileError ),
+        ( "error_no_id.json", SettingsError.InvalidFileError ),
+        ( "error_no_version.json", SettingsError.InvalidFileError ),
+        ( "error_invalid_version.json", SettingsError.InvalidVersionError ),
+    ]
+
+    @pytest.mark.parametrize("file_name, exception_type", test_loadError_data)
+    def test_loadError(self, machine_manager, file_name, exception_type):
+        definition = MachineDefinition(machine_manager, self._getFilePath(file_name))
+
+        with pytest.raises(exception_type):
+            definition.loadAll()
+
+
     def _getFilePath(self, file):
         return os.path.join(os.path.dirname(os.path.abspath(__file__)), "definitions", file)
