@@ -3,6 +3,7 @@
 
 import pytest
 import os
+import configparser
 
 from UM.Settings.MachineInstance import MachineInstance
 from UM.Settings.MachineDefinition import MachineDefinition
@@ -71,6 +72,35 @@ class TestMachineInstance():
         machine_instance = MachineInstance(machine_manager, definition = definition)
         with pytest.raises(expected_exception):
             machine_instance.loadFromFile(self._getInstancesFilePath(instance_file_name))
+
+    test_loadAndSave_data = [("machine_settings.json", "machine_settings_with_overrides.cfg", "machine_settings_with_overrides_test.cfg")]
+    @pytest.mark.parametrize("definition_file_name, instance_file_name, target_instance_file_name", test_loadAndSave_data)
+    def test_loadAndSave(self, machine_manager, definition_file_name, instance_file_name, target_instance_file_name):
+        # Create a definition
+        definition = MachineDefinition(machine_manager, self._getDefinitionsFilePath(definition_file_name))
+        definition.loadMetaData()
+
+        machine_manager.addMachineDefinition(definition)
+
+        machine_instance = MachineInstance(machine_manager, definition = definition)
+        machine_instance.loadFromFile(self._getInstancesFilePath(instance_file_name))
+        try:
+            os.remove(self._getInstancesFilePath(target_instance_file_name)) # Clear any previous tests
+        except:
+            pass
+        machine_instance.saveToFile(self._getInstancesFilePath(target_instance_file_name))
+
+        config_loaded = configparser.ConfigParser()
+        config_loaded.read(self._getInstancesFilePath(instance_file_name))
+        config_saved = configparser.ConfigParser()
+        config_saved.read(self._getInstancesFilePath(target_instance_file_name))
+
+        for section in config_loaded.sections():
+            assert section in config_saved.sections()
+            for key in config_loaded[section]:
+                assert key in config_saved[section]
+                assert config_loaded[section][key] == config_saved[section][key]
+
 
     def _getDefinitionsFilePath(self, file):
         return os.path.join(os.path.dirname(os.path.abspath(__file__)), "definitions", file)
