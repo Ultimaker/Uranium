@@ -356,22 +356,23 @@ class MachineManager(SignalEmitter):
 
             read_only = dir != storage_path
 
-            for file_name in os.listdir(dir):
-                path = os.path.join(dir, file_name)
+            for root, dirs, files in os.walk(dir):
+                for file_name in files:
+                    path = os.path.join(root, file_name)
 
-                if os.path.isdir(path):
-                    continue
+                    if os.path.isdir(path):
+                        continue
 
-                profile = Profile(self, read_only)
-                try:
-                    profile.loadFromFile(path)
-                except Exception as e:
-                    Logger.log("e", "An exception occurred loading Profile %s: %s", path, str(e))
-                    continue
+                    profile = Profile(self, read_only)
+                    try:
+                        profile.loadFromFile(path)
+                    except Exception as e:
+                        Logger.log("e", "An exception occurred loading Profile %s: %s", path, str(e))
+                        continue
 
-                if not self.findProfile(profile.getName()):
-                    self._profiles.append(profile)
-                    profile.nameChanged.connect(self._onProfileNameChanged)
+                    if not self.findProfile(profile.getName()):
+                        self._profiles.append(profile)
+                        profile.nameChanged.connect(self._onProfileNameChanged)
 
         self.profilesChanged.emit()
 
