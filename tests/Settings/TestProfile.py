@@ -3,6 +3,7 @@
 
 import pytest
 import os
+import configparser
 
 from UM.Settings.Profile import Profile
 
@@ -58,8 +59,37 @@ class TestProfile():
         profile.loadFromFile(self._getProfileFilePath(profile_file_name))
 
         for key in expected_values:
-            print(profile.getSettingValue(key))
             assert profile.getSettingValue(key) == expected_values[key]
+
+    test_loadAndSave_data = [("simple_machine.json", "simple_machine_with_overrides.cfg", "simple_machine_with_overrides.cfg", "simple_machine_with_overrides_test.cfg")]
+    @pytest.mark.parametrize("definition_file_name, instance_file_name, profile_file_name, target_profile_file_name", test_loadAndSave_data)
+    def test_loadAndSave(self, machine_manager, definition_file_name, instance_file_name, profile_file_name, target_profile_file_name):
+        profile = Profile(machine_manager)
+        definition = MachineDefinition(machine_manager, self._getDefinitionsFilePath(definition_file_name))
+        definition.loadMetaData()
+
+        machine_manager.addMachineDefinition(definition)
+
+        machine_instance = MachineInstance(machine_manager, definition = definition)
+        machine_instance.loadFromFile(self._getInstancesFilePath(instance_file_name))
+        profile._active_instance = machine_instance
+        profile.loadFromFile(self._getProfileFilePath(profile_file_name))
+        try:
+            os.remove(self._getProfileFilePath(target_profile_file_name)) # Clear any previous tests
+        except:
+            pass
+        profile.saveToFile(self._getProfileFilePath(target_profile_file_name))
+
+        config_loaded = configparser.ConfigParser()
+        config_loaded.read(self._getProfileFilePath(instance_file_name))
+        config_saved = configparser.ConfigParser()
+        config_saved.read(self._getProfileFilePath(target_profile_file_name))
+
+        for section in config_loaded.sections():
+            assert section in config_saved.sections()
+            for key in config_loaded[section]:
+                assert key in config_saved[section]
+                assert config_loaded[section][key] == config_saved[section][key]
 
 
     def _getProfileFilePath(self, file):
