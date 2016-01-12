@@ -6,6 +6,12 @@ import collections
 import os.path
 from copy import deepcopy
 
+## Python 3.4 work arround (3.4 -> 3.5 added json.decoder.JSONDecodeError)
+try:
+    JSONDecodeError = json.decoder.JSONDecodeError
+except:
+    JSONDecodeError = ValueError
+
 from UM.Resources import Resources
 from UM.Signal import Signal, SignalEmitter
 from UM.Settings import SettingsError
@@ -88,7 +94,7 @@ class MachineDefinition(SignalEmitter):
             with open(self._path, "rt", -1, "utf-8") as f:
                 try:
                     self._json_data = json.load(f, object_pairs_hook=collections.OrderedDict)
-                except json.decoder.JSONDecodeError as e:
+                except JSONDecodeError as e:
                     raise SettingsError.InvalidFileError(self._path) from e
 
         if "id" not in self._json_data or "name" not in self._json_data or "version" not in self._json_data:
@@ -120,7 +126,7 @@ class MachineDefinition(SignalEmitter):
         with open(self._path, "rt", -1, "utf-8") as f:
             try:
                 self._json_data = json.load(f, object_pairs_hook=collections.OrderedDict)
-            except json.decoder.JSONDecodeError as e:
+            except JSONDecodeError as e:
                 raise SettingsError.InvalidFileError(self._path) from e
 
         if not self._name:
