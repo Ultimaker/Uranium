@@ -4,14 +4,16 @@
 import pytest
 
 from UM.Application import Application
+from UM.Signal import Signal
 
 class FixtureApplication(Application):
     def __init__(self):
         Application._instance = None
         super().__init__("test", "1.0")
+        Signal._app = self
 
     def functionEvent(self, event):
-        pass
+        event.call()
 
     def parseCommandLine(self):
         pass
