@@ -18,7 +18,7 @@ class TestPolygon(unittest.TestCase):
         pass
 
     ##  Tests mirroring a polygon horizontally.
-    @unittest.skip("invalid test")
+    #@unittest.skip("invalid test")
     def test_mirrorHorizontal(self):
         p = Polygon(numpy.array([ #Make a triangle.
             [0.0, 0.0],
@@ -26,13 +26,14 @@ class TestPolygon(unittest.TestCase):
             [1.0, 2.0]
         ], numpy.float32))
         p.mirror([0, 0], [0, 1]) #Mirror over the vertical axis.
-        self.assertEqual(len(p), 3)
-        self.assertEqual(p[0], [0.0, 0.0])
-        self.assertEqual(p[1], [-2.0, 0.0])
-        self.assertEqual(p[2], [-1.0, 2.0])
+        points = p.getPoints()
+        self.assertEqual(len(points), 3)
+        self.assertTrue((points[0] == [-1.0, 2.0]).all())
+        self.assertTrue((points[1] == [-2.0, 0.0]).all())
+        self.assertTrue((points[2] == [0.0, 0.0]).all())
 
     ##  Tests mirroring a polygon vertically.
-    @unittest.skip("invalid test")
+    #@unittest.skip("invalid test")
     def test_mirrorVertical(self):
         p = Polygon(numpy.array([ #Make a triangle.
             [0.0, 0.0],
@@ -40,14 +41,15 @@ class TestPolygon(unittest.TestCase):
             [1.0, 2.0]
         ], numpy.float32))
         p.mirror([0, 0], [1, 0]) #Mirror over the horizontal axis.
-        self.assertEqual(len(p), 3)
-        self.assertEqual(p[0], [0.0, 0.0])
-        self.assertEqual(p[1], [2.0, 0.0])
-        self.assertEqual(p[2], [1.0, -2.0])
+        points = p.getPoints()
+        self.assertEqual(len(points), 3)
+        self.assertTrue((points[0] == [1.0, -2.0]).all())
+        self.assertTrue((points[1] == [2.0, 0.0]).all())
+        self.assertTrue((points[2] == [0.0, 0.0]).all())
 
     ##  Tests mirroring a polygon horizontally on an axis that is not through
     #   the origin.
-    @unittest.skip("invalid test")
+    #@unittest.skip("invalid test")
     def test_mirrorHorizontalFar(self):
         p = Polygon(numpy.array([ #Make a triangle.
             [0.0, 0.0],
@@ -55,13 +57,14 @@ class TestPolygon(unittest.TestCase):
             [1.0, 2.0]
         ], numpy.float32))
         p.mirror([10, 0], [0, 1]) #Mirror over the vertical axis with an offset.
-        self.assertEqual(len(p), 3)
-        self.assertEqual(p[0], [20.0, 0.0])
-        self.assertEqual(p[1], [18.0, 0.0])
-        self.assertEqual(p[2], [19.0, 2.0])
+        points = p.getPoints()
+        self.assertEqual(len(points), 3)
+        self.assertTrue((points[0] == [19.0, 2.0]).all())
+        self.assertTrue((points[1] == [18.0, 0.0]).all())
+        self.assertTrue((points[2] == [20.0, 0.0]).all())
 
     ##  Tests mirroring a polygon diagonally.
-    @unittest.skip("invalid test")
+    #@unittest.skip("invalid test")
     def test_mirrorDiagonal(self):
         p = Polygon(numpy.array([ #Make a triangle.
             [0.0, 0.0],
@@ -69,25 +72,28 @@ class TestPolygon(unittest.TestCase):
             [1.0, 2.0]
         ], numpy.float32))
         p.mirror([0, 4], [1, 1]) #Mirror over the diagonal axis. The diagonal axis also has an offset.
-        self.assertEqual(len(p), 3)
-        self.assertEqual(p[0], [-4.0, 4.0])
-        self.assertEqual(p[1], [-4.0, 6.0])
-        self.assertEqual(p[2], [-2.0, 5.0])
+        points = p.getPoints()
+        self.assertEqual(len(points), 3)
+        self.assertEqual(points[0][0], -2.0)
+        self.assertTrue((points[0] == [-2.0, 5.0]).all())
+        self.assertTrue((points[1] == [-4.0, 6.0]).all())
+        self.assertTrue((points[2] == [-4.0, 4.0]).all())
 
     ##  Tests mirroring a polygon with only one vertex.
-    @unittest.skip("invalid test")
+    #@unittest.skip("invalid test")
     def test_mirrorSingleVertex(self):
         p = Polygon(numpy.array([[10.0, 0.0]], numpy.float32)) #Single vertex.
-        p.mirror([0, 0], [1, 0]) #Mirror over the horizontal axis.
-        self.assertEqual(len(p), 1)
-        self.assertEqual(p[0], [-10.0, 0.0])
+        p.mirror([0, 0], [0, 1]) #Mirror over the vertical axis.
+        points = p.getPoints()
+        self.assertEqual(len(points), 1)
+        self.assertTrue((points[0] == [-10.0, 0.0]).all())
 
     ##  Tests mirroring an empty polygon.
-    @unittest.skip("invalid test")
+    #@unittest.skip("invalid test")
     def test_mirrorEmpty(self):
         p = Polygon(numpy.array([], numpy.float32)) #Empty polygon.
         p.mirror([0, 0], [1, 0]) #Mirror over the horizontal axis.
-        self.assertEqual(len(p), 0)
+        self.assertEqual(len(p.getPoints()), 0)
 
     def test_project(self):
         p = Polygon(numpy.array([
