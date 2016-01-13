@@ -118,7 +118,10 @@ class MachineManager(SignalEmitter):
         self.machineInstancesChanged.emit()
 
         if self._active_machine == instance:
-            self.setActiveMachineInstance(self._machine_instances[0])
+            try:
+                self.setActiveMachineInstance(self._machine_instances[0])
+            except:
+                self.setActiveMachineInstance(None)
 
     def findMachineInstance(self, name):
         for instance in self._machine_instances:

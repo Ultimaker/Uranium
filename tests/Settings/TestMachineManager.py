@@ -75,8 +75,8 @@ class TestMachineManager():
 
 
 
-        #machine_manager.removeMachineInstance(machine_instance)
-        #assert machine_manager.getMachineInstances() == []
+        machine_manager.removeMachineInstance(machine_instance)
+        assert machine_manager.getMachineInstances() == []
 
 
 
