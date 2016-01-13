@@ -110,7 +110,7 @@ class Polygon:
             vertex_him = him._points[index_him]
             if advances_me > len(me._points) * 2 or advances_him > len(him._points) * 2: #Also, if we've looped twice through either polygon, the boundaries of the polygons don't intersect.
                 if len(result) > 2:
-                    return result
+                    return Polygon(points = result)
                 if me.isInside(vertex_him): #Other polygon is inside this one.
                     return him
                 if him.isInside(vertex_me): #This polygon is inside the other.
