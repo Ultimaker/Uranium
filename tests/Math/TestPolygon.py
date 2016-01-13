@@ -109,7 +109,7 @@ class TestPolygon():
 
     ##  The individual test cases for convex hull intersection tests.
     test_intersectConvex_data = [
-        ({ "p1": [[-42, -32], [-42, 12], [62, 12], [-62, -32]], "p2": [[-62, -12], [-62, 32], [42, 32], [42, -12]], "answer": [[-42, -12], [-42, 12], [42, 12], [42, -12]], "label": "UM2 Fans", "A simple intersection without edge cases of UM2 fans collision area." })
+        ({ "p1": [[-42, -32], [-42, 12], [62, 12], [-62, -32]], "p2": [[-62, -12], [-62, 32], [42, 32], [42, -12]], "answer": [[-42, -12], [-42, 12], [42, 12], [42, -12]], "label": "UM2 Fans", "description": "A simple intersection without edge cases of UM2 fans collision area." })
     ]
 
     ##  Tests the convex hull intersect function.
