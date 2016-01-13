@@ -208,7 +208,10 @@ class MachineManager(SignalEmitter):
         self.profilesChanged.emit()
 
         if profile == self._active_profile:
-            self.setActiveProfile(self._profiles[0])
+            try:
+                self.setActiveProfile(self._profiles[0])
+            except:
+                self.setActiveProfile(None)
 
     def findProfile(self, name):
         for profile in self._profiles:
