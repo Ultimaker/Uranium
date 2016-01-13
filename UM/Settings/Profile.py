@@ -286,4 +286,5 @@ class Profile(SignalEmitter):
                 category.defaultValueChanged.connect(self._onDefaultValueChanged)
 
     def _onDefaultValueChanged(self, setting):
-        self.settingValueChanged.emit(setting.getKey())
+        if setting.getKey() not in self._changed_settings:
+            self.settingValueChanged.emit(setting.getKey())
