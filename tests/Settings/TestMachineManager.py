@@ -121,8 +121,7 @@ class TestMachineManager():
         assert machine_manager.getActiveProfile() == profile_2
 
         machine_manager.removeProfile(profile_2)
-
-        assert machine_manager.getActiveProfile == None
+        
         assert machine_manager.getProfiles() == []
 
     def _getProfileFilePath(self, file):
