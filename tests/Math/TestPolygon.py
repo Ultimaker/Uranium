@@ -69,12 +69,12 @@ class TestPolygon():
 
     ##  The individual test cases for the intersection tests.
     test_intersect_data = [
-        ({ "polygon": [[ 5,  0], [15,  0], [15, 10], [ 5, 10]], "answer": [-5.0,  0.0], "label": "Intersect Simple", "description": "Intersect with a polygon that fully intersects." }),
-        ({ "polygon": [[-5,  0], [ 5,  0], [ 5, 10], [-5, 10]], "answer": [ 5.0,  0.0], "label": "Intersect Left", "description": "Intersect with a polygon on the negative x-axis side that fully intersects." }),
-        ({ "polygon": [[ 0,  5], [10,  5], [10, 15], [ 0, 15]], "answer": [ 0.0, -5.0], "label": "Intersect Straight Above", "description": "Intersect with a polygon that is exactly above the base polygon (edge case)." }),
-        ({ "polygon": [[ 0, -5], [10, -5], [10,  5], [ 0,  5]], "answer": [ 0.0,  5.0], "label": "Intersect Straight Left", "description": "Intersect with a polygon that is exactly left of the base polygon (edge case)." }),
-        ({ "polygon": [[ 5,  5], [15, -5], [30,  5], [15, 15]], "answer": [-5.0,  0.0], "label": "Intersect Rotated", "description": "Intersect with a rotated square." }),
-        ({ "polygon": [[15,  0], [25,  0], [25, 10], [15, 10]], "answer": None,         "label": "Intersect Miss", "description": "Intersect with a polygon that doesn't intersect at all." })
+        ({ "polygon": [[ 5.0,  0.0], [15.0,  0.0], [15.0, 10.0], [ 5.0, 10.0]], "answer": [-5.0,  0.0], "label": "Intersect Simple", "description": "Intersect with a polygon that fully intersects." }),
+        ({ "polygon": [[-5.0,  0.0], [ 5.0,  0.0], [ 5.0, 10.0], [-5.0, 10.0]], "answer": [ 5.0,  0.0], "label": "Intersect Left", "description": "Intersect with a polygon on the negative x-axis side that fully intersects." }),
+        ({ "polygon": [[ 0.0,  5.0], [10.0,  5.0], [10.0, 15.0], [ 0.0, 15.0]], "answer": [ 0.0, -5.0], "label": "Intersect Straight Above", "description": "Intersect with a polygon that is exactly above the base polygon (edge case)." }),
+        ({ "polygon": [[ 0.0, -5.0], [10.0, -5.0], [10.0,  5.0], [ 0.0,  5.0]], "answer": [ 0.0,  5.0], "label": "Intersect Straight Left", "description": "Intersect with a polygon that is exactly left of the base polygon (edge case)." }),
+        ({ "polygon": [[ 5.0,  5.0], [15.0, -5.0], [30.0,  5.0], [15.0, 15.0]], "answer": [-5.0,  0.0], "label": "Intersect Rotated", "description": "Intersect with a rotated square." }),
+        ({ "polygon": [[15.0,  0.0], [25.0,  0.0], [25.0, 10.0], [15.0, 10.0]], "answer": None,         "label": "Intersect Miss", "description": "Intersect with a polygon that doesn't intersect at all." })
     ]
 
     ##  Tests the polygon intersect function.
@@ -93,7 +93,7 @@ class TestPolygon():
             [ 0, 10]
         ], numpy.float32))
         p2 = Polygon(numpy.array(data["polygon"])) #The parametrised polygon to intersect with.
-        
+
         #Shift the order of vertices in both polygons around. The outcome should be independent of what the first vertex is.
         for n in range(0, len(p1.getPoints())):
             for m in range(0, len(data["polygon"])):
