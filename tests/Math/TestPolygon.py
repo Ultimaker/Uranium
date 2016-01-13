@@ -106,3 +106,34 @@ class TestPolygon():
                         assert Float.fuzzyCompare(result[i], data["answer"][i])
                 p2.setPoints(numpy.roll(p2.getPoints(), 1, axis = 0)) #Shift p2.
             p1.setPoints(numpy.roll(p1.getPoints(), 1, axis = 0)) #Shift p1.
+
+    ##  The individual test cases for convex hull intersection tests.
+    test_intersectConvex_data = [
+        ({ "p1": [[-42, -32], [-42, 12], [62, 12], [-62, -32]], "p2": [[-62, -12], [-62, 32], [42, 32], [42, -12]], "answer": [[-42, -12], [-42, 12], [42, 12], [42, -12]], "label": "UM2 Fans", "A simple intersection without edge cases of UM2 fans collision area." })
+    ]
+
+    ##  Tests the convex hull intersect function.
+    #
+    #   \param data The data of the test case. Must include two polygons and a
+    #   required result polygon.
+    @pytest.mark.parametrize("data", test_intersectConvex_data)
+    def test_intersectConvexHull(self, data):
+        p1 = Polygon(numpy.array(data["p1"]))
+        p2 = Polygon(numpy.array(data["p2"]))
+        result = p1.intersectionConvexHulls(p2)
+        assert len(result.getPoints()) == len(data["answer"]) #Same amount of vertices.
+        isCorrect = False
+        for rotation in range(0, len(result.getPoints())): #The order of vertices doesn't matter, so rotate the result around and if any check succeeds, the answer is correct.
+            thisCorrect = True #Is this rotation correct?
+            for vertex in range(0, len(result.getPoints())):
+                for dimension in range(0, len(result.getPoints()[vertex])):
+                    if not Float.fuzzyCompare(result.getPoints()[vertex][dimension], data["answer"][vertex][dimension]):
+                        thisCorrect = False
+                        break #Break out of two loops.
+                if not thisCorrect:
+                    break
+            if thisCorrect: #All vertices checked and it's still correct.
+                isCorrect = True
+                break
+            result.setPoints(numpy.roll(result.getPoints(), 1, axis = 0)) #Perform the rotation for the next check.
+        assert isCorrect
