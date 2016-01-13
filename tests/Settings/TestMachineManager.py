@@ -2,6 +2,7 @@ import pytest
 import os
 
 from UM.Settings.MachineDefinition import MachineDefinition
+from UM.Settings.MachineInstance import MachineInstance
 
 class TestMachineManager():
     def test_emptyManager(self, machine_manager):
@@ -9,7 +10,9 @@ class TestMachineManager():
         assert machine_manager.getMachineDefinitions() == []
         assert machine_manager.getAllMachineVariants("none") == []
         assert machine_manager.findMachineDefinition("none") is None
+        assert machine_manager.findMachineInstance("Not there") is None
         assert machine_manager.getActiveMachineInstance() is None
+        assert machine_manager.getMachineInstances() == []
         assert machine_manager.getProfiles() == []
         assert machine_manager.getProfileReaders() == {}.items()
         assert machine_manager.getProfileWriters() == {}.items()
@@ -37,6 +40,13 @@ class TestMachineManager():
         definition_2.loadMetaData()
         machine_manager.addMachineDefinition(definition_2)
 
+        machine_instance = MachineInstance(machine_manager, definition = definition_1)
+        machine_manager.addMachineInstance(machine_instance)
+        machine_manager.setActiveMachineInstance(machine_instance)
+
+        machine_manager.setActiveMachineVariant("Variant test 2")
+        assert machine_manager.getActiveMachineInstance().getMachineDefinition() == definition_2
+
         returned_definitions = machine_manager.getMachineDefinitions()
         assert definition_1 in returned_definitions and definition_2 in returned_definitions
 
@@ -51,7 +61,30 @@ class TestMachineManager():
         assert machine_manager.findMachineDefinition("variant", "Variant test 2") == definition_2
         assert machine_manager.findMachineDefinition("variant", "Not existing variant") is None
 
+    def test_instances(self, machine_manager):
+        definition = MachineDefinition(machine_manager, self._getDefinitionsFilePath("basic.json"))
+        definition.loadMetaData()
+        machine_manager.addMachineDefinition(definition)
 
+        machine_instance = MachineInstance(machine_manager, definition = definition, name = "Basic Test")
+        machine_manager.addMachineInstance(machine_instance)
+        assert machine_manager.getMachineInstances() == [machine_instance]
+        assert machine_manager.findMachineInstance("Basic Test") == machine_instance
+        machine_manager.setActiveMachineInstance(machine_instance)
+        assert machine_manager.getActiveMachineInstance() == machine_instance
+
+
+
+        #machine_manager.removeMachineInstance(machine_instance)
+        #assert machine_manager.getMachineInstances() == []
+
+
+
+    def _getProfileFilePath(self, file):
+        return os.path.join(os.path.dirname(os.path.abspath(__file__)), "profiles", file)
 
     def _getDefinitionsFilePath(self, file):
         return os.path.join(os.path.dirname(os.path.abspath(__file__)), "definitions", file)
+
+    def _getInstancesFilePath(self, file):
+        return os.path.join(os.path.dirname(os.path.abspath(__file__)), "instances", file)
