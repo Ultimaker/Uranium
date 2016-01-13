@@ -3,6 +3,10 @@ import os
 
 from UM.Settings.MachineDefinition import MachineDefinition
 from UM.Settings.MachineInstance import MachineInstance
+from UM.Settings.Profile import Profile
+
+from UM.Settings.SettingsError import DuplicateProfileError
+
 
 class TestMachineManager():
     def test_emptyManager(self, machine_manager):
@@ -73,12 +77,53 @@ class TestMachineManager():
         machine_manager.setActiveMachineInstance(machine_instance)
         assert machine_manager.getActiveMachineInstance() == machine_instance
 
-
-
         machine_manager.removeMachineInstance(machine_instance)
         assert machine_manager.getMachineInstances() == []
 
+    def test_profiles(self, machine_manager):
+        profile_1 = Profile(machine_manager)
+        profile_2 = Profile(machine_manager)
+        definition = MachineDefinition(machine_manager, self._getDefinitionsFilePath("simple_machine.json"))
+        definition.loadMetaData()
+        machine_manager.addMachineDefinition(definition)
 
+        machine_instance = MachineInstance(machine_manager, definition = definition, name = "Basic Test")
+        machine_instance.loadFromFile(self._getInstancesFilePath("simple_machine.cfg"))
+        machine_manager.addMachineInstance(machine_instance)
+        profile_1._active_instance = machine_instance
+        profile_2._active_instance = machine_instance
+
+        profile_1.loadFromFile(self._getProfileFilePath("simple_machine_with_overrides.cfg"))
+        profile_2.loadFromFile(self._getProfileFilePath("simple_machine_with_overrides.cfg"))
+        machine_manager.addProfile(profile_1)
+        assert machine_manager.getProfiles() == [profile_1]
+
+        # Check if adding again has no effect
+        machine_manager.addProfile(profile_1)
+        assert machine_manager.getProfiles() == [profile_1]
+
+        # Check that adding another profile with same name does not work
+        with pytest.raises(DuplicateProfileError):
+            machine_manager.addProfile(profile_2)
+
+        # Changing the name and then adding it should work
+        profile_2.setName("test")
+        machine_manager.addProfile(profile_2)
+        assert profile_1 in machine_manager.getProfiles() and profile_2 in machine_manager.getProfiles()
+
+        assert machine_manager.findProfile("test") == profile_2
+
+        # Check if removing one of the profiles works
+        machine_manager.removeProfile(profile_1)
+        assert machine_manager.getProfiles() == [profile_2]
+
+        machine_manager.setActiveProfile(profile_2)
+        assert machine_manager.getActiveProfile() == profile_2
+
+        machine_manager.removeProfile(profile_2)
+
+        assert machine_manager.getActiveProfile == None
+        assert machine_manager.getProfiles() == []
 
     def _getProfileFilePath(self, file):
         return os.path.join(os.path.dirname(os.path.abspath(__file__)), "profiles", file)
