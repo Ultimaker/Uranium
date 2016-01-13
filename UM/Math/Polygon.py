@@ -55,6 +55,8 @@ class Polygon:
             Logger.log("w", "Tried to mirror a polygon over an axis with direction [0, 0, 0].")
             return #Axis has no direction. Can't expect us to mirror anything!
         axis_direction /= numpy.linalg.norm(axis_direction) #Normalise the direction.
+        if len(self._points) == 0: #No points to mirror. We can skip this altogether.
+            return
         
         #In order to be able to mirror points around an arbitrary axis, we have to normalize the axis and all points such that the axis goes through the origin.
         point_matrix = numpy.matrix(self._points)
