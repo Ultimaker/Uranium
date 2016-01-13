@@ -192,6 +192,8 @@ class Polygon:
                     index_me = advances_me % len(me._points)
                     if who_is_inside == "him":
                         result.append(vertex_him)
+        if (result[0] == result[-1]).all(): #If the last two edges are parallel, the first vertex will have been added again. So if it is the same as the last element, remove it.
+            result = result[:-1] #This also handles the case where the intersection is only one point.
         return Polygon(points = result)
 
     ##  Check to see whether this polygon intersects with another polygon.
