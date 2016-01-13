@@ -203,5 +203,10 @@ class Vector2(object):
             raise NotImplementedError()
         return self
 
+    ##  Gives a programmer-readable string representation of this vector.
+    #
+    #   The format is: [x,y]
+    #
+    #   \return A string representation of this vector.
     def __str__(self):
         return "[" + str(self._data[0]) + "," + str(self._data[1]) + "]"
