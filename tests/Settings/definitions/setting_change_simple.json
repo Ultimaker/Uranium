@@ -1,6 +1,6 @@
 {
-    "id": "test_setting_change",
-    "name": "Setting Change Test",
+    "id": "test_setting_change_simple",
+    "name": "Simple Setting Change Test",
     "version": 1,
 
     "machine_settings": {
