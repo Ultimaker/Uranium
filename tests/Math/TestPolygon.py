@@ -69,12 +69,12 @@ class TestPolygon():
 
     ##  The individual test cases for the intersection tests.
     test_intersect_data = [
-        ({ "polygon": [[ 5,  0], [15,  0], [15, 10], [ 5, 10]], "answer": [-5.0,  0.0], "label": "Intersect Simple", "description": "Intersect with a polygon that fully intersects." }),
-        ({ "polygon": [[-5,  0], [ 5,  0], [ 5, 10], [-5, 10]], "answer": [ 5.0,  0.0], "label": "Intersect Left", "description": "Intersect with a polygon on the negative x-axis side that fully intersects." }),
-        ({ "polygon": [[ 0,  5], [10,  5], [10, 15], [ 0, 15]], "answer": [ 0.0, -5.0], "label": "Intersect Straight Above", "description": "Intersect with a polygon that is exactly above the base polygon (edge case)." }),
-        ({ "polygon": [[ 0, -5], [10, -5], [10,  5], [ 0,  5]], "answer": [ 0.0,  5.0], "label": "Intersect Straight Left", "description": "Intersect with a polygon that is exactly left of the base polygon (edge case)." }),
-        ({ "polygon": [[ 5,  5], [15, -5], [30,  5], [15, 15]], "answer": [-5.0,  0.0], "label": "Intersect Rotated", "description": "Intersect with a rotated square." }),
-        ({ "polygon": [[15,  0], [25,  0], [25, 10], [15, 10]], "answer": None,         "label": "Intersect Miss", "description": "Intersect with a polygon that doesn't intersect at all." })
+        ({ "polygon": [[ 5.0,  0.0], [15.0,  0.0], [15.0, 10.0], [ 5.0, 10.0]], "answer": [-5.0,  0.0], "label": "Intersect Simple", "description": "Intersect with a polygon that fully intersects." }),
+        ({ "polygon": [[-5.0,  0.0], [ 5.0,  0.0], [ 5.0, 10.0], [-5.0, 10.0]], "answer": [ 5.0,  0.0], "label": "Intersect Left", "description": "Intersect with a polygon on the negative x-axis side that fully intersects." }),
+        ({ "polygon": [[ 0.0,  5.0], [10.0,  5.0], [10.0, 15.0], [ 0.0, 15.0]], "answer": [ 0.0, -5.0], "label": "Intersect Straight Above", "description": "Intersect with a polygon that is exactly above the base polygon (edge case)." }),
+        ({ "polygon": [[ 0.0, -5.0], [10.0, -5.0], [10.0,  5.0], [ 0.0,  5.0]], "answer": [ 0.0,  5.0], "label": "Intersect Straight Left", "description": "Intersect with a polygon that is exactly left of the base polygon (edge case)." }),
+        ({ "polygon": [[ 5.0,  5.0], [15.0, -5.0], [30.0,  5.0], [15.0, 15.0]], "answer": [-5.0,  0.0], "label": "Intersect Rotated", "description": "Intersect with a rotated square." }),
+        ({ "polygon": [[15.0,  0.0], [25.0,  0.0], [25.0, 10.0], [15.0, 10.0]], "answer": None,         "label": "Intersect Miss", "description": "Intersect with a polygon that doesn't intersect at all." })
     ]
 
     ##  Tests the polygon intersect function.
@@ -93,7 +93,7 @@ class TestPolygon():
             [ 0, 10]
         ], numpy.float32))
         p2 = Polygon(numpy.array(data["polygon"])) #The parametrised polygon to intersect with.
-        
+
         #Shift the order of vertices in both polygons around. The outcome should be independent of what the first vertex is.
         for n in range(0, len(p1.getPoints())):
             for m in range(0, len(data["polygon"])):
@@ -106,3 +106,34 @@ class TestPolygon():
                         assert Float.fuzzyCompare(result[i], data["answer"][i])
                 p2.setPoints(numpy.roll(p2.getPoints(), 1, axis = 0)) #Shift p2.
             p1.setPoints(numpy.roll(p1.getPoints(), 1, axis = 0)) #Shift p1.
+
+    ##  The individual test cases for convex hull intersection tests.
+    test_intersectConvex_data = [
+        ({ "p1": [[-42, -32], [-42, 12], [62, 12], [62, -32]], "p2": [[-62, -12], [-62, 32], [42, 32], [42, -12]], "answer": [[-42, -12], [-42, 12], [42, 12], [42, -12]], "label": "UM2 Fans", "description": "A simple intersection without edge cases of UM2 fans collision area." })
+    ]
+
+    ##  Tests the convex hull intersect function.
+    #
+    #   \param data The data of the test case. Must include two polygons and a
+    #   required result polygon.
+    @pytest.mark.parametrize("data", test_intersectConvex_data)
+    def test_intersectConvexHull(self, data):
+        p1 = Polygon(numpy.array(data["p1"]))
+        p2 = Polygon(numpy.array(data["p2"]))
+        result = p1.intersectionConvexHulls(p2)
+        assert len(result.getPoints()) == len(data["answer"]) #Same amount of vertices.
+        isCorrect = False
+        for rotation in range(0, len(result.getPoints())): #The order of vertices doesn't matter, so rotate the result around and if any check succeeds, the answer is correct.
+            thisCorrect = True #Is this rotation correct?
+            for vertex in range(0, len(result.getPoints())):
+                for dimension in range(0, len(result.getPoints()[vertex])):
+                    if not Float.fuzzyCompare(result.getPoints()[vertex][dimension], data["answer"][vertex][dimension]):
+                        thisCorrect = False
+                        break #Break out of two loops.
+                if not thisCorrect:
+                    break
+            if thisCorrect: #All vertices checked and it's still correct.
+                isCorrect = True
+                break
+            result.setPoints(numpy.roll(result.getPoints(), 1, axis = 0)) #Perform the rotation for the next check.
+        assert isCorrect

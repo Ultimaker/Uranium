@@ -1,0 +1,47 @@
+{
+    "id": "test_setting_change_noparent",
+    "name": "Setting Change Test",
+    "version": 1,
+
+    "machine_settings": {
+        "test_setting_0": { "default": 0 },
+        "test_setting_1": { "default": 1.0 },
+        "test_setting_2": { "default": true },
+        "test_setting_3": { "default": "3" },
+        "test_setting_4": { "default": [ 4, 4 ] }
+    },
+
+    "categories": {
+        "test_category": {
+            "label": "Test Category",
+            "settings": {
+                "test_setting_0": {
+                    "label": "Test Setting 0",
+                    "type": "int",
+                    "default": 10
+                },
+
+                "test_setting_1": {
+                    "label": "Test Setting 1",
+                    "type": "int",
+                    "default": 20,
+                    "inherit_function": "test_setting_0 * 2"
+                },
+
+                "test_setting_2": {
+                    "label": "Test Setting 2",
+                    "type": "int",
+                    "default": 15,
+                    "inherit_function": "test_setting_3 * 3"
+                },
+
+                "test_setting_3": {
+                    "label": "Test Setting 3",
+                    "type": "int",
+                    "default": 5
+                }
+            }
+        }
+    }
+}
+

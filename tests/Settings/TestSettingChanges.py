@@ -20,6 +20,13 @@ class SettingChangeListener():
 
         return self._profile_change_count[setting_name]
 
+    def getTotalProfileChangeCount(self):
+        count = 0
+        for key in self._profile_change_count:
+            count += self._profile_change_count[key]
+
+        return count
+
     def _onSettingValueChanged(self, setting_name):
         if not setting_name in self._profile_change_count:
             self._profile_change_count[setting_name] = 0
@@ -31,17 +38,9 @@ class SettingChangeListener():
 
 class TestSettingChanges():
     def test_simple_change(self, application, machine_manager):
-        definition = MachineDefinition(machine_manager, self._getFilePath("setting_change.json"))
-        definition.loadAll()
-        machine_manager.addMachineDefinition(definition)
-        instance = MachineInstance(machine_manager, definition = definition)
-        machine_manager.addMachineInstance(instance)
-        machine_manager.setActiveMachineInstance(instance)
-        profile = Profile(machine_manager)
-        machine_manager.addProfile(profile)
-        machine_manager.setActiveProfile(profile)
+        definition, profile = self._createProfile(machine_manager, "setting_change_simple.json")
 
-        assert definition.getId() == "test_setting_change"
+        assert definition.getId() == "test_setting_change_simple"
 
         assert definition.isSetting("test_setting_0")
         assert definition.isSetting("test_setting_0_child_0")
@@ -79,7 +78,87 @@ class TestSettingChanges():
         assert profile.getSettingValue("test_setting_0_child_0") == 50
         assert profile.getSettingValue("test_setting_0_child_1") == 250
 
+        listener.clear()
 
+        profile.setSettingValue("test_setting_0_child_0", 20)
+        profile.setSettingValue("test_setting_0", 60)
 
-    def _getFilePath(self, file):
-        return os.path.join(os.path.dirname(os.path.abspath(__file__)), "definitions", file)
+        assert listener.getProfileChangeCount("test_setting_0") == 1
+        assert listener.getProfileChangeCount("test_setting_0_child_0") == 1
+        assert listener.getProfileChangeCount("test_setting_0_child_1") == 1
+
+        assert len(profile.getChangedSettings()) == 2
+
+        assert profile.getSettingValue("test_setting_0") == 60
+        assert profile.getSettingValue("test_setting_0_child_0") == 20
+        assert profile.getSettingValue("test_setting_0_child_1") == 300
+
+    test_change_noparent_data = [
+        ({ "test_setting_0": 20 }, {
+             "changed_setting_count": 1,
+             "total_change_signals": 2,
+             "test_setting_0": { "change_signals": 1, "value": 20 },
+             "test_setting_1": { "change_signals": 1, "value": 40 },
+             "test_setting_2": { "change_signals": 0, "value": 15 },
+             "test_setting_3": { "change_signals": 0, "value": 5 }
+        }),
+        ({ "test_setting_3": 10 }, {
+             "changed_setting_count": 1,
+             "total_change_signals": 2,
+             "test_setting_0": { "change_signals": 0, "value": 10 },
+             "test_setting_1": { "change_signals": 0, "value": 20 },
+             "test_setting_2": { "change_signals": 1, "value": 30 },
+             "test_setting_3": { "change_signals": 1, "value": 10 }
+        }),
+        ({ "test_setting_0": 20, "test_setting_3": 10 }, {
+             "changed_setting_count": 2,
+             "total_change_signals": 4,
+             "test_setting_0": { "change_signals": 1, "value": 20 },
+             "test_setting_1": { "change_signals": 1, "value": 40 },
+             "test_setting_2": { "change_signals": 1, "value": 30 },
+             "test_setting_3": { "change_signals": 1, "value": 10 }
+        }),
+        ({ "test_setting_1": 40, "test_setting_2": 30 }, {
+             "changed_setting_count": 2,
+             "total_change_signals": 2,
+             "test_setting_0": { "change_signals": 0, "value": 10 },
+             "test_setting_1": { "change_signals": 1, "value": 40 },
+             "test_setting_2": { "change_signals": 1, "value": 30 },
+             "test_setting_3": { "change_signals": 0, "value": 5 }
+        }),
+    ]
+
+    @pytest.mark.parametrize("setting_changes,expected", test_change_noparent_data)
+    def test_change_noparent(self, application, machine_manager, setting_changes, expected):
+        definition, profile = self._createProfile(machine_manager, "setting_change_noparent.json")
+
+        listener = SettingChangeListener(profile)
+
+        assert definition.getId() == "test_setting_change_noparent"
+
+        assert profile.getSettingValue("test_setting_0") == 10
+        assert profile.getSettingValue("test_setting_1") == 20
+        assert profile.getSettingValue("test_setting_2") == 15
+        assert profile.getSettingValue("test_setting_3") == 5
+
+        for key, value in setting_changes.items():
+            profile.setSettingValue(key, value)
+
+        assert len(profile.getChangedSettings()) == expected.pop("changed_setting_count")
+        assert listener.getTotalProfileChangeCount() == expected.pop("total_change_signals")
+        for key, value in expected.items():
+            assert listener.getProfileChangeCount(key) == value["change_signals"]
+            assert profile.getSettingValue(key) == value["value"]
+
+    def _createProfile(self, machine_manager, definition_file):
+        definition = MachineDefinition(machine_manager, os.path.join(os.path.dirname(os.path.abspath(__file__)), "definitions", definition_file))
+        definition.loadAll()
+        machine_manager.addMachineDefinition(definition)
+        instance = MachineInstance(machine_manager, definition = definition)
+        machine_manager.addMachineInstance(instance)
+        machine_manager.setActiveMachineInstance(instance)
+        profile = Profile(machine_manager)
+        machine_manager.addProfile(profile)
+        machine_manager.setActiveProfile(profile)
+
+        return (definition, profile)
