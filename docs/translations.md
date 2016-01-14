@@ -72,7 +72,7 @@ i18n_catalog.i18nc("@action:button", "Back");
 Extract the messages
 --------------------
 
-The following steps are pretty much the same for both Cura and Uranium, but have to be performed for both separately. |The only difference is that in Cura you have to open CmakeLists.txt and make sure that URANIUM_SCRIPTS_DIR is set to the correct folder (the folder in Uranium that contains the scripts). Use the terminal to create the buildfiles in a new build folder in the source-directory: 
+The following steps are pretty much the same for both Cura and Uranium, but have to be performed for both separately. The only difference is that in Cura you have to open CmakeLists.txt and make sure that URANIUM_SCRIPTS_DIR is set to the correct folder (the folder in Uranium that contains the scripts). Use the terminal to create the buildfiles in a new build folder in the source-directory: 
 ```
 mkdir build
 cd build
@@ -118,8 +118,8 @@ Create a directory in the directory of the language (x-test is this example). Th
 msgfmt xxx.po -o LC_MESSAGES/xxx.mo
 ```
 Setting the environment variable doesn't function. So for now you need to edit the language default in: Uranium/UM/i18n.py
+~~def __init__(self, name = None, language = "default"):~~
 ```
-~~~def __init__(self, name = None, language = "default"):~~~
 def __init__(self, name = None, language = "x-test"):
 ```
 Carefully test whether ALL strings are being properly translated, before you send the PO files to the translators. You can test this by looking if all strings have 2 X's around them. 
