@@ -64,7 +64,7 @@ Insert the i18n catalog object into your qml file.  Obviously the name needs to 
 ```
 UM.I18nCatalog{id: i18n_catalog; name:"cura"}
 ```
-For convenience we name the id 'i18_catalog'. Everything else works exactly the same as in python: 
+For convenience we name the id 'i18n_catalog'. Everything else works exactly the same as in python: 
 ```
 i18n_catalog.i18nc("@action:button", "Back");
 ```
