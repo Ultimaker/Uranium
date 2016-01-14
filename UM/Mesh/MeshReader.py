@@ -13,6 +13,8 @@ class MeshReader(PluginObject):
         accepted = 1
         #The user has cancelled the dialog so don't load the mesh.
         cancelled = 2
+        #preRead has failed and no further processing should happen.
+        failed = 3
 
     def __init__(self):
         super().__init__()
