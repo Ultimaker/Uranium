@@ -10,7 +10,7 @@ The first paragraph in this document ("Mark strings as translatable in Python") 
 Mark strings as translatable in Python
 --------------------------------------
 
-Import either Cura's or Uraniums i18n Catalog (depending whether your working in Uranium or Cura..). Assign the appropriate catalog to a variable named 'i18n_catalog'. 
+Import either Cura's or Uraniums i18n Catalog (depending whether you're working in Uranium or Cura..). Assign the appropriate catalog to a variable named 'i18n_catalog'. 
 ```
 from UM.i18n import i18nCatalog
 i18n_catalog = i18nCatalog("cura")
