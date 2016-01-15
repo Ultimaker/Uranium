@@ -118,6 +118,7 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
         model.addRoleName(Qt.UserRole + 2, "name")
         for value, name in options.items():
             model.appendItem({"value": str(value), "name": str(name)})
+        model.sort(lambda t: t["name"])
         return model
 
     @pyqtSlot(str)
