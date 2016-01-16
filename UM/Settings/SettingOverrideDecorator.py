@@ -26,10 +26,10 @@ class SettingOverrideDecorator(SceneNodeDecorator, SignalEmitter):
 
     def getAllSettingValues(self):
         self._temp_values = {}
+        instance = Application.getInstance().getMachineManager().getActiveMachineInstance()
 
-        settings = Application.getInstance().getMachineManager().getActiveMachineInstance().getMachineDefinition().getAllSettings(include_machine = False)
-        for setting in settings:
-            key = setting.getKey()
+        for key in self._settings:
+            setting = instance.getMachineDefinition().getSetting(key)
 
             if key in self._setting_values:
                 self._temp_values[key] = setting.parseValue(self._setting_values[key])

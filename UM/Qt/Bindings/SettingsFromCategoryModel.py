@@ -44,9 +44,10 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
 
         self._changed_setting = None
 
-        self._profile = None
+        self._profile = self._machine_manager.getActiveProfile()
         self._machine_manager.activeProfileChanged.connect(self._onProfileChanged)
-        self._onProfileChanged()
+        if self._profile is not None: # A profile is already set but we did not recieve the event.
+            self._onProfileChanged()
 
         self.addRoleName(self.NameRole, "name")
         self.addRoleName(self.TypeRole,"type")
@@ -117,6 +118,7 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
         model.addRoleName(Qt.UserRole + 2, "name")
         for value, name in options.items():
             model.appendItem({"value": str(value), "name": str(name)})
+        model.sort(lambda t: t["name"])
         return model
 
     @pyqtSlot(str)
@@ -134,7 +136,6 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
             else:
                 self.setProperty(index, "filtered", True)
 
-    @pyqtSlot()
     def updateSettings(self):
         self.clear()
         for setting in self._category.getAllSettings():

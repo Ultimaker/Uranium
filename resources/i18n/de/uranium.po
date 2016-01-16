@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-08 13:41+0100\n"
+"POT-Creation-Date: 2016-01-13 15:47+0100\n"
 "PO-Revision-Date: 2015-09-30 11:41+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -554,12 +554,12 @@ msgctxt "@info:status"
 msgid "Auto scaled object to {0}% of original size"
 msgstr "Automatische Skalierung des Objekts auf {0}% der Originalgröße"
 
-#: /home/tamara/2.1/Uranium/UM/Settings/MachineDefinition.py:106
+#: /home/tamara/2.1/Uranium/UM/Settings/MachineDefinition.py:115
 msgctxt "@label"
 msgid "Unknown Manufacturer"
 msgstr "Unbekannter Hersteller"
 
-#: /home/tamara/2.1/Uranium/UM/Settings/MachineDefinition.py:107
+#: /home/tamara/2.1/Uranium/UM/Settings/MachineDefinition.py:116
 msgctxt "@label"
 msgid "Unknown Author"
 msgstr "Unbekannter Autor"
