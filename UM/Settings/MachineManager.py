@@ -402,7 +402,9 @@ class MachineManager(SignalEmitter):
                 if profile.isReadOnly():
                     continue
 
-                profile_file_name = profile.getName() + "@" + profile.getMachineInstanceName()
+                profile_file_name = profile.getName()
+                if profile.getMachineInstanceName():
+                    profile_file_name += "@" + profile.getMachineInstanceName()
                 file_name = urllib.parse.quote_plus(profile_file_name) + ".cfg"
                 profile.saveToFile(Resources.getStoragePath(Resources.Profiles, file_name))
         except AttributeError:
