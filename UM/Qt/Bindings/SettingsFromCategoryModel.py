@@ -76,24 +76,6 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
             return
         setting = self._category.getSetting(key)
         if setting:
-            if self._profile.isReadOnly():
-                custom_profile_name = catalog.i18nc("@item:intext appended to customised profiles ({0} is old profile name)", "{0} (Customised)", self._profile.getName())
-                custom_profile = self._machine_manager.findProfile(custom_profile_name)
-                if not custom_profile:
-                    machine_instance = self._machine_manager.getActiveMachineInstance()
-
-                    custom_profile = deepcopy(self._profile)
-                    custom_profile.setReadOnly(False)
-                    custom_profile.setName(custom_profile_name)
-                    custom_profile.setMachineTypeName(machine_instance.getMachineDefinition().getId())
-                    custom_profile.setMachineVariantName(machine_instance.getMachineDefinition().getVariantName())
-                    custom_profile.setMachineInstanceName(machine_instance.getName())
-                    self._machine_manager.addProfile(custom_profile)
-
-                self._changed_setting = (key, value)
-                self._machine_manager.setActiveProfile(custom_profile)
-                return
-
             self._profile.setSettingValue(key, value)
             self.setProperty(index, "value", str(value))
             self.setProperty(index, "valid", setting.validate(setting.parseValue(value)))
