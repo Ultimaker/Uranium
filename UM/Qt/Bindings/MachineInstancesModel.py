@@ -72,7 +72,7 @@ class MachineInstancesModel(ListModel):
                 "typeName": machine.getMachineDefinition().getName(),
                 "variantName": machine.getMachineDefinition().getVariantName(),
                 "hasVariants": machine.getMachineDefinition().hasVariants(),
-                "hasMaterials": machine.getMachineDefinition().hasMaterials()
+                "hasMaterials": machine.hasMaterials()
             })
 
     def _onActiveMachineChanged(self):

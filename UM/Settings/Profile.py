@@ -34,7 +34,9 @@ class Profile(SignalEmitter):
         self._machine_type_name = None
         self._machine_variant_name = None
         self._machine_instance_name = None
+        self._material_name = None
         self._read_only = read_only
+        self._type = None
 
         self._active_instance = None
         self._machine_manager.activeMachineInstanceChanged.connect(self._onActiveInstanceChanged)
@@ -64,6 +66,10 @@ class Profile(SignalEmitter):
     def isReadOnly(self):
         return self._read_only
 
+    ##  Retrieve the type of this profile.
+    def getType(self):
+        return self._type
+
     ##  Retrieve the name of the machine type.
     def getMachineTypeName(self):
         return self._machine_type_name
@@ -87,6 +93,14 @@ class Profile(SignalEmitter):
     ##  Set the name of the machine type.
     def setMachineInstanceName(self, machine_instance):
         self._machine_instance_name = machine_instance
+
+    ##  Retrieve the name of the material.
+    def getMaterialName(self):
+        return self._material_name
+
+    ##  Set the name of the machine type.
+    def setMaterialName(self, material):
+        self._material_name = material
 
     ##  Emitted whenever a setting value changes.
     #
@@ -256,12 +270,18 @@ class Profile(SignalEmitter):
             raise SettingsError.InvalidVersionError(origin)
 
         self._name = parser.get("general", "name")
+        if "type" in parser["general"]:
+            self._type = parser.get("general", "type")
         if "machine_type" in parser["general"]:
             self._machine_type_name = parser.get("general", "machine_type")
         if "machine_variant" in parser["general"]:
             self._machine_variant_name = parser.get("general", "machine_variant")
         if "machine_instance" in parser["general"]:
             self._machine_instance_name = parser.get("general", "machine_instance")
+        if "material" in parser["general"]:
+            self._material_name = parser.get("general", "material")
+        elif self._type == "material" and "name" in parser["general"]:
+            self._material_name = parser.get("general", "name")
 
         if parser.has_section("settings"):
             for key, value in parser["settings"].items():
@@ -288,12 +308,16 @@ class Profile(SignalEmitter):
         parser.add_section("general") #Write a general section.
         parser.set("general", "version", str(self.ProfileVersion))
         parser.set("general", "name", self._name)
+        if self._type:
+            parser.set("general", "type", self._type)
         if self._machine_type_name:
             parser.set("general", "machine_type", self._machine_type_name)
         if self._machine_variant_name:
             parser.set("general", "machine_variant", self._machine_variant_name)
         if self._machine_instance_name:
             parser.set("general", "machine_instance", self._machine_instance_name)
+        if self._material_name and not self._type:
+            parser.set("general", "material", self._material_name)
 
         parser.add_section("settings") #Write each changed setting in a settings section.
         for setting_key in self._changed_settings:

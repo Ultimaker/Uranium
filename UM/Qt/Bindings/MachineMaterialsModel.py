@@ -28,14 +28,14 @@ class MachineMaterialsModel(ListModel):
         if not instance:
             return
 
-        definitions = self._manager.getAllMachineMaterials(instance.getMachineDefinition().getId())
-        if len(definitions) <= 1:
+        materials = self._manager.getAllMachineMaterials(instance.getName())
+        if len(materials) < 1:
             return
 
-        definitions.sort(key = lambda k: k.getMaterialName())
+        materials.sort()
 
-        for definition in definitions:
+        for material in materials:
             self.appendItem({
-                "name": definition.getMaterialName(),
-                "active": definition.getMaterialName() == instance.getMachineDefinition().getMaterialName()
+                "name": material,
+                "active": material == instance.getMaterialName()
             })

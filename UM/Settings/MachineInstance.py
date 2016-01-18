@@ -27,6 +27,7 @@ class MachineInstance(SignalEmitter):
         self._machine_setting_overrides = {}
 
         self._active_profile_name = None
+        self._material_name = None
 
     nameChanged = Signal()
 
@@ -44,6 +45,15 @@ class MachineInstance(SignalEmitter):
 
     def setActiveProfileName(self, active_profile_name):
         self._active_profile_name = active_profile_name
+
+    def getMaterialName(self):
+        return self._material_name
+
+    def setMaterialName(self, material_name):
+        self._material_name = material_name
+
+    def hasMaterials(self):
+        return len(self._machine_manager.getAllMachineMaterials(self._name)) > 0
 
     def getMachineDefinition(self):
         return self._machine_definition
@@ -109,6 +119,8 @@ class MachineInstance(SignalEmitter):
 
         self._name = config.get("general", "name")
         self._active_profile_name = config.get("general", "active_profile", fallback="")
+
+        self._material_name = config.get("general", "material", fallback = "")
 
         for key, value in config["machine_settings"].items():
             self._machine_setting_overrides[key] = value

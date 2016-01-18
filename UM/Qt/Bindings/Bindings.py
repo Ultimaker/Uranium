@@ -103,7 +103,7 @@ class Bindings:
         qmlRegisterType(MachineDefinitionsModel.MachineDefinitionsModel, "UM", 1, 1, "MachineDefinitionsModel")
         qmlRegisterType(MachineInstancesModel.MachineInstancesModel, "UM", 1, 1, "MachineInstancesModel")
         qmlRegisterType(MachineVariantsModel.MachineVariantsModel, "UM", 1, 1, "MachineVariantsModel")
-        qmlRegisterType(MachineVariantsModel.MachineVariantsModel, "UM", 1, 1, "MachineMaterialsModel")
+        qmlRegisterType(MachineMaterialsModel.MachineMaterialsModel, "UM", 1, 1, "MachineMaterialsModel")
         qmlRegisterType(ProfilesModel.ProfilesModel, "UM", 1, 1, "ProfilesModel")
 
         qmlRegisterSingletonType(OutputDeviceManagerProxy.OutputDeviceManagerProxy, "UM", 1, 1, "OutputDeviceManager", OutputDeviceManagerProxy.createOutputDeviceManagerProxy)

@@ -66,13 +66,45 @@ class MachineManager(SignalEmitter):
 
         return variants
 
-    def getAllMachineMaterials(self, machine_id):
-        materials = []
-        for definition in self._machine_definitions:
-            if definition.getId() == machine_id:
-                materials.append(definition)
+    def getAllMachineMaterials(self, instance_id):
+        generic_materials = []
+        machine_materials = []
 
-        return materials
+        machine = self.findMachineInstance(instance_id)
+        if not machine:
+            return machine_materials
+            
+        machine_type = machine.getMachineDefinition().getId()
+        machine_variant = machine.getMachineDefinition().getVariantName()
+
+        for profile in self._profiles:
+            profile_type = profile.getType()
+            #Filter out "partial" profiles
+            if profile_type == "material":
+                generic_materials.append(profile.getName())
+                continue
+
+            material = profile.getMaterialName()
+            if not material or material in machine_materials:
+                continue
+
+            profile_machine_type = profile.getMachineTypeName()
+            profile_machine_variant = profile.getMachineVariantName()
+            profile_machine_instance = profile.getMachineInstanceName()
+
+            if (profile_machine_instance and profile_machine_instance == instance_id) or \
+                    (profile_machine_variant and profile_machine_variant == machine_variant and profile_machine_type == machine_type) or \
+                    (profile_machine_type == machine_type):
+                machine_materials.append(material)
+
+        if len(machine_materials) > 0:
+            return machine_materials
+        elif machine.getMachineDefinition().getSetting("machine_gcode_flavor").getDefaultValue() == "UltiGCode":
+            #UltiGCode printers don't use generic materials in Cura
+            return []
+        else:
+            return generic_materials
+
 
     def findMachineDefinition(self, machine_id, variant_name = None):
         for definition in self._machine_definitions:
@@ -202,12 +234,19 @@ class MachineManager(SignalEmitter):
         active_machine_type = self._active_machine.getMachineDefinition().getId()
         active_machine_variant = self._active_machine.getMachineDefinition().getVariantName()
         active_machine_instance = self._active_machine.getName()
+        active_machine_material = self._active_machine.getMaterialName()
 
         filtered_profiles = []
         for profile in self._profiles:
+            profile_type = profile.getType()
+            #Filter out "partial" profiles
+            if profile_type == "material":
+                continue
+
             machine_type = profile.getMachineTypeName()
             machine_variant = profile.getMachineVariantName()
             machine_instance = profile.getMachineInstanceName()
+            material = profile.getMaterialName()
 
             if machine_type and machine_type == active_machine_type:
                 if (not machine_instance) and (not machine_variant):
@@ -256,11 +295,14 @@ class MachineManager(SignalEmitter):
             except:
                 self.setActiveProfile(None)
 
-    def findProfile(self, name, active_instance_profiles_only = True):
+    def findProfile(self, name, variant_name = None, material_name = None, active_instance_profiles_only = True):
         profiles = self.getProfiles(active_instance_profiles_only);
 
         for profile in profiles:
             if profile.getName() == name:
+                if (variant_name and not profile.getMachineVariantName() == variant_name) or \
+                        (material_name and not profile.getMaterialName() == material_name):
+                    continue
                 return profile
 
         return None
@@ -370,7 +412,7 @@ class MachineManager(SignalEmitter):
                         Logger.log("e", "An exception occurred loading Profile %s: %s", path, str(e))
                         continue
 
-                    if not self.findProfile(profile.getName()):
+                    if not self.findProfile(profile.getName(), variant_name = profile.getMachineVariantName(), material_name = profile.getMaterialName()):
                         self._profiles.append(profile)
                         profile.nameChanged.connect(self._onProfileNameChanged)
 
