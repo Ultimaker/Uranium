@@ -19,7 +19,7 @@ class Preferences(SignalEmitter):
         self._file = None
         self._parser = None
         self._preferences = {}
-    
+
     def addPreference(self, key, default_value):
         preference = self._findPreference(key)
         if preference:
@@ -32,13 +32,28 @@ class Preferences(SignalEmitter):
 
         self._preferences[group][key] = _Preference(key, default_value)
 
+    ##  Changes the default value of a preference.
+    #
+    #   If the preference is currently set to the old default, the value of the
+    #   preference will be set to the new default.
+    #
+    #   \param key The key of the preference to set the default of.
+    #   \param default_value The new default value of the preference.
+    def setDefault(self, key, default_value):
+        preference = self._findPreference(key)
+        if not preference: #Key not found.
+            return
+        if preference.getValue() == preference.getDefault():
+            self.setValue(key, default_value)
+        preference.setDefault(default_value)
+
     def setValue(self, key, value):
         preference = self._findPreference(key)
 
         if preference:
             preference.setValue(value)
             self.preferenceChanged.emit(key)
-    
+
     def getValue(self, key):
         preference = self._findPreference(key)
 
