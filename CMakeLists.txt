@@ -17,7 +17,23 @@ add_custom_command(TARGET tests POST_BUILD COMMAND "PYTHONPATH=${CMAKE_SOURCE_DI
 #     add_custom_command(TARGET benchmark POST_BUILD COMMAND "PYTHONPATH=${CMAKE_SOURCE_DIR}" kernprof ARGS -l -v ${file})
 # endforeach()
 
+
 # Documentation
+
+# Macro needed to list all sub-directory of a directory.
+# There is no function in cmake as far as I know.
+# Found at: http://stackoverflow.com/a/7788165
+MACRO(SUBDIRLIST result curdir)
+  FILE(GLOB children RELATIVE ${curdir} ${curdir}/*)
+  SET(dirlist "")
+  FOREACH(child ${children})
+    IF(IS_DIRECTORY ${curdir}/${child})
+        LIST(APPEND dirlist ${child})
+    ENDIF()
+  ENDFOREACH()
+  SET(${result} ${dirlist})
+ENDMACRO()
+
 find_package(Doxygen)
 if(${DOXYGEN_FOUND})
     add_custom_target(doc ${DOXYGEN_EXECUTABLE} ${CMAKE_SOURCE_DIR}/Doxyfile WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
@@ -40,20 +56,7 @@ if(GETTEXT_FOUND)
     # the files along side the rest of the application.
     add_custom_target(copy-translations)
 
-    #TODO: Properly install the built files. This should be done after we move the applications out of the Uranium repo.
-    set(languages
-        en
-        x-test
-        ru
-        fr
-        de
-        it
-        es
-        fi
-        pl
-        cs
-        bg
-    )
+    SUBDIRLIST(languages ${CMAKE_SOURCE_DIR}/resources/i18n/)
     foreach(lang ${languages})
         file(GLOB po_files ${CMAKE_SOURCE_DIR}/resources/i18n/${lang}/*.po)
         foreach(po_file ${po_files})
