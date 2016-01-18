@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-13 15:47+0100\n"
+"POT-Creation-Date: 2016-01-18 11:15+0100\n"
 "PO-Revision-Date: 2015-09-30 11:41+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -426,7 +426,7 @@ msgctxt "@label Minutes only duration format, {0} is minutes"
 msgid "{0} minutes"
 msgstr "{0} Minuten"
 
-#: /home/tamara/2.1/Uranium/UM/Qt/Bindings/SettingsFromCategoryModel.py:79
+#: /home/tamara/2.1/Uranium/UM/Qt/Bindings/SettingsFromCategoryModel.py:80
 #: /home/tamara/2.1/Uranium/UM/Qt/Bindings/MachineManagerProxy.py:104
 #, python-brace-format
 msgctxt ""
@@ -536,19 +536,20 @@ msgctxt "@info:status"
 msgid "Cannot open file type <filename>{0}</filename>"
 msgstr "Profil wurde nach <filename>{0}</filename> exportiert"
 
-#: /home/tamara/2.1/Uranium/UM/Mesh/ReadMeshJob.py:45
-#, python-brace-format
-msgctxt "@info:status"
-msgid "Loading <filename>{0}</filename>"
-msgstr "<filename>{0}</filename> wird geladen"
-
-#: /home/tamara/2.1/Uranium/UM/Mesh/ReadMeshJob.py:63
+#: /home/tamara/2.1/Uranium/UM/Mesh/ReadMeshJob.py:44
+#: /home/tamara/2.1/Uranium/UM/Mesh/ReadMeshJob.py:66
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Failed to load <filename>{0}</filename>"
 msgstr "Laden von <filename>{0}</filename> fehlgeschlagen"
 
-#: /home/tamara/2.1/Uranium/UM/Mesh/ReadMeshJob.py:91
+#: /home/tamara/2.1/Uranium/UM/Mesh/ReadMeshJob.py:48
+#, python-brace-format
+msgctxt "@info:status"
+msgid "Loading <filename>{0}</filename>"
+msgstr "<filename>{0}</filename> wird geladen"
+
+#: /home/tamara/2.1/Uranium/UM/Mesh/ReadMeshJob.py:94
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled object to {0}% of original size"
