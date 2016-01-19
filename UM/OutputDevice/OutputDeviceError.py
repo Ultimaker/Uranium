@@ -20,3 +20,7 @@ class PermissionDeniedError(WriteRequestFailedError):
 ##  The device is busy and cannot accept write requests at the moment.
 class DeviceBusyError(WriteRequestFailedError):
     pass
+
+##  The request is not supported by this output device.
+class UnsupportedOperationError(WriteRequestFailedError):
+    pass

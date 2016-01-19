@@ -7,6 +7,7 @@ from UM.Application import Application
 from UM.Event import CallFunctionEvent
 from UM.Scene.Selection import Selection
 from UM.Message import Message
+from UM.OutputDevice.OutputSubject import OutputSubject
 from UM.OutputDevice import OutputDeviceError
 
 class OutputDeviceManagerProxy(QObject):
@@ -42,11 +43,20 @@ class OutputDeviceManagerProxy(QObject):
         return self._device_manager.getActiveDevice().getDescription()
 
     @pyqtSlot(str, str)
-    def requestWriteToDevice(self, device_id, file_name):
+    def requestWriteMeshToDevice(self, device_id, file_name):
+        #On Windows, calling requestWrite() on LocalFileOutputDevice crashes
+        #when called from a signal handler attached to a QML MenuItem. So
+        #instead, defer the call to the next run of the event loop, since that
+        #does work.
+        event = CallFunctionEvent(self._writeToDevice, [Application.getInstance().getController().getScene().getRoot(), device_id, OutputSubject.MESH, file_name], {})
+        Application.getInstance().functionEvent(event)
+
+    @pyqtSlot(str, str)
+    def requestWriteBackendOutputToDevice(self, device_id, file_name):
         # On Windows, calling requestWrite() on LocalFileOutputDevice crashes when called from a signal
         # handler attached to a QML MenuItem. So instead, defer the call to the next run of the event 
         # loop, since that does work.
-        event = CallFunctionEvent(self._writeToDevice, [Application.getInstance().getController().getScene().getRoot(), device_id, file_name], {})
+        event = CallFunctionEvent(self._writeToDevice, [Application.getInstance().getController().getScene().getRoot(), device_id, OutputSubject.BACKEND_OUTPUT, file_name], {})
         Application.getInstance().functionEvent(event)
 
     @pyqtSlot(str, str)
@@ -63,13 +73,13 @@ class OutputDeviceManagerProxy(QObject):
     def _onActiveDeviceChanged(self):
         self.activeDeviceChanged.emit()
 
-    def _writeToDevice(self, node, device_id, file_name):
+    def _writeToDevice(self, node, device_id, output_subject, file_name):
         device = self._device_manager.getOutputDevice(device_id)
         if not device:
             return
 
         try:
-            device.requestWrite(node, file_name)
+            device.requestWrite(node, output_subject, file_name)
         except OutputDeviceError.UserCanceledError:
             pass
         except OutputDeviceError.DeviceBusyError:
