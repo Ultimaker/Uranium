@@ -1,0 +1,14 @@
+{
+    "id": "test_machine_settings",
+    "name": "Machine Settings Test",
+    "version": 1,
+
+    "machine_settings": {
+        "test_setting_0": { "default": 0 },
+        "test_setting_1": { "default": 1.0 },
+        "test_setting_2": { "default": true },
+        "test_setting_3": { "default": "3" },
+        "test_setting_4": { "default": [ 4, 4 ] }
+    }
+}
+

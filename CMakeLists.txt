@@ -8,19 +8,32 @@ find_package(PythonInterp 3.4.0 REQUIRED)
 
 # Tests
 add_custom_target(tests)
-file(GLOB test_files tests/*/Test*.py)
-foreach(file ${test_files})
-    add_custom_command(TARGET tests POST_BUILD COMMAND "PYTHONPATH=${CMAKE_SOURCE_DIR}" ${PYTHON_EXECUTABLE} ARGS ${file} COMMENT "Running test ${file}")
-endforeach()
+add_custom_command(TARGET tests POST_BUILD COMMAND "PYTHONPATH=${CMAKE_SOURCE_DIR}" ${PYTHON_EXECUTABLE} ARGS -m pytest -r a --junitxml=${CMAKE_BINARY_DIR}/junit.xml ${CMAKE_SOURCE_DIR})
 
-# Benchmarks
-add_custom_target(benchmark)
-file(GLOB bench_files tests/benchmarks/*/profile*.py)
-foreach(file ${bench_files})
-    add_custom_command(TARGET benchmark POST_BUILD COMMAND "PYTHONPATH=${CMAKE_SOURCE_DIR}" kernprof ARGS -l -v ${file})
-endforeach()
+# # Benchmarks
+# add_custom_target(benchmark)
+# file(GLOB bench_files tests/benchmarks/*/profile*.py)
+# foreach(file ${bench_files})
+#     add_custom_command(TARGET benchmark POST_BUILD COMMAND "PYTHONPATH=${CMAKE_SOURCE_DIR}" kernprof ARGS -l -v ${file})
+# endforeach()
+
 
 # Documentation
+
+# Macro needed to list all sub-directory of a directory.
+# There is no function in cmake as far as I know.
+# Found at: http://stackoverflow.com/a/7788165
+MACRO(SUBDIRLIST result curdir)
+  FILE(GLOB children RELATIVE ${curdir} ${curdir}/*)
+  SET(dirlist "")
+  FOREACH(child ${children})
+    IF(IS_DIRECTORY ${curdir}/${child})
+        LIST(APPEND dirlist ${child})
+    ENDIF()
+  ENDFOREACH()
+  SET(${result} ${dirlist})
+ENDMACRO()
+
 find_package(Doxygen)
 if(${DOXYGEN_FOUND})
     add_custom_target(doc ${DOXYGEN_EXECUTABLE} ${CMAKE_SOURCE_DIR}/Doxyfile WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
@@ -43,34 +56,17 @@ if(GETTEXT_FOUND)
     # the files along side the rest of the application.
     add_custom_target(copy-translations)
 
-    #TODO: Properly install the built files. This should be done after we move the applications out of the Uranium repo.
-    set(languages
-        en
-        x-test
-        ru
-        fr
-        de
-        it
-        es
-        fi
-        pl
-        cs
-        bg
-    )
+    SUBDIRLIST(languages ${CMAKE_SOURCE_DIR}/resources/i18n/)
     foreach(lang ${languages})
-        file(GLOB po_files resources/i18n/${lang}/*.po)
-        foreach(file ${po_files})
-            string(REGEX REPLACE ".*/(.*).po" "${lang}/\\1.mo" mofile ${file})
-            add_custom_command(TARGET translations POST_BUILD COMMAND mkdir ARGS -p ${lang} COMMAND ${GETTEXT_MSGFMT_EXECUTABLE} ARGS ${file} -o ${mofile})
+        file(GLOB po_files ${CMAKE_SOURCE_DIR}/resources/i18n/${lang}/*.po)
+        foreach(po_file ${po_files})
+            string(REGEX REPLACE ".*/(.*).po" "${CMAKE_BINARY_DIR}/resources/i18n/${lang}/LC_MESSAGES/\\1.mo" mo_file ${po_file})
+            add_custom_command(TARGET translations POST_BUILD
+                               COMMAND mkdir ARGS -p ${CMAKE_BINARY_DIR}/resources/i18n/${lang}/LC_MESSAGES/
+                               COMMAND ${GETTEXT_MSGFMT_EXECUTABLE} ARGS ${po_file} -o ${mo_file})
         endforeach()
-
-        file(GLOB mo_files ${CMAKE_BINARY_DIR}/${lang}/*.mo)
-        foreach(file ${mo_files})
-            add_custom_command(TARGET copy-translations POST_BUILD COMMAND cp ARGS ${file} ${CMAKE_SOURCE_DIR}/resources/i18n/${lang}/LC_MESSAGES COMMENT "Copying ${file}...")
-        endforeach()
-
-        install(FILES ${mo_files} DESTINATION ${CMAKE_INSTALL_DATADIR}/uranium/resources/i18n/${lang}/LC_MESSAGES/)
     endforeach()
+    install(DIRECTORY ${CMAKE_BINARY_DIR}/resources DESTINATION ${CMAKE_INSTALL_DATADIR}/uranium/)
 endif()
 
 if(APPLE OR WIN32)

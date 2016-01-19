@@ -8,6 +8,10 @@ from UM.Logger import Logger
 from UM.Signal import Signal, SignalEmitter
 from UM.SaveFile import SaveFile
 
+##    A machine instance is a sort of wrapper for a machine definition.
+#     Where machine defintion defines base values of a machine
+#     The machine instance defines specific overrides of certain settings that are only
+#     valid for this -single instance- of the machine (eg; Some after market modification)
 class MachineInstance(SignalEmitter):
     MachineInstanceVersion = 1
 
@@ -91,6 +95,8 @@ class MachineInstance(SignalEmitter):
         variant_name = config.get("general", "variant", fallback = "")
 
         self._machine_definition = self._machine_manager.findMachineDefinition(type_name, variant_name)
+        if not self._machine_definition:
+            raise SettingsError.DefinitionNotFoundError(type_name)
         self._machine_definition.loadAll()
 
         self._name = config.get("general", "name")

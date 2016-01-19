@@ -1,0 +1,12 @@
+{
+    "id": "test_inheritance_overrides",
+    "name": "Inheritance Test (Overrides)",
+    "version": 1,
+    "inherits": "inheritance_parent.json",
+
+    "overrides": {
+        "parent_machine_setting_0": { "default": 2 },
+        "parent_machine_setting_1": { "default": 3 }
+    }
+}
+

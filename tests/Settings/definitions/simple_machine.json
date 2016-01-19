@@ -1,0 +1,51 @@
+{
+    "id": "simple_machine",
+    "name": "Simple Machine",
+    "version": 1,
+    "machine_settings": {
+        "test_setting_0": { "default": 0 },
+        "test_setting_1": { "default": 1.0 },
+        "test_setting_2": { "default": true },
+        "test_setting_3": { "default": "3" },
+        "test_setting_4": { "default": [ 4, 4 ] }
+    },
+    "categories": {
+        "category_0": {
+            "name": "Test Category 0",
+            "settings": {
+                "test_setting_5": {
+                    "label": "test_setting_0",
+                    "description": "None",
+                    "unit": "mm",
+                    "type": "float",
+                    "default": 0.5,
+                    "min_value": "0",
+                    "max_value_warning": "10",
+                    "visible": false
+                },
+                "test_setting_6": {
+                    "label": "test_setting_1",
+                    "description": "None",
+                    "unit": "mm",
+                    "type": "float",
+                    "default": 0.5,
+                    "min_value": "0",
+                    "max_value_warning": "10",
+                    "visible": true
+                }
+            }
+        },
+        "category_1": {
+            "name": "Test Category 1",
+            "settings": {
+                "test_setting_7": {
+                    "label": "test test",
+                    "description": "omg zomg",
+                    "type": "boolean",
+                    "default": false,
+                    "visible": true
+                }
+            }
+        }
+    }
+}

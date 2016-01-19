@@ -143,11 +143,10 @@ Rectangle {
 
         anchors.right: parent.right;
         anchors.verticalCenter: parent.verticalCenter
-
         width: base.style.controlWidth;
         height: base.style.fixedHeight > 0 ? base.style.fixedHeight : parent.height;
-
         property variant itemStyle: base.style
+        visible: status == Loader.Ready
 
         function notifyReset()
         {
@@ -171,6 +170,8 @@ Rectangle {
                     return "SettingComboBox.qml"
                 case "boolean":
                     return "SettingCheckBox.qml"
+                case "string":
+                    return "SettingTextField.qml"
                 default:
                     return "SettingUnknown.qml"
             }

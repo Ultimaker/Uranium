@@ -51,14 +51,17 @@ class Polygon:
     #   \param axis_direction The direction vector of the axis to mirror across.
     def mirror(self, point_on_axis, axis_direction):
         #Input checking.
-        if axis_direction == [0,0,0]:
+        if axis_direction == [0, 0, 0]:
+            Logger.log("w", "Tried to mirror a polygon over an axis with direction [0, 0, 0].")
             return #Axis has no direction. Can't expect us to mirror anything!
         axis_direction /= numpy.linalg.norm(axis_direction) #Normalise the direction.
-        
+        if len(self._points) == 0: #No points to mirror. We can skip this altogether.
+            return
+
         #In order to be able to mirror points around an arbitrary axis, we have to normalize the axis and all points such that the axis goes through the origin.
         point_matrix = numpy.matrix(self._points)
         point_matrix -= point_on_axis #Moves all points such that the axis origin is at [0,0].
-        
+
         #To mirror a coordinate, we have to add the projection of the point to the axis twice (where v is the vector to reflect):
         #  reflection(v) = 2 * projection(v) - v
         #Writing out the projection, this becomes (where l is the normalised direction of the line):
@@ -70,7 +73,7 @@ class Polygon:
         axis_matrix = numpy.matrix(axis_direction)
         reflection = 2 * numpy.transpose(axis_matrix) * axis_matrix - numpy.identity(2)
         point_matrix = point_matrix * reflection #Apply the actual transformation.
-        
+
         #Shift the points back to the original coordinate space before the axis was normalised to the origin.
         point_matrix += point_on_axis
         self._points = point_matrix.getA()[::-1]
@@ -101,13 +104,13 @@ class Polygon:
         directions_him = numpy.subtract(numpy.roll(him._points, -1, axis = 0), him._points)
         result = []
 
-        #Iterate through both polygons until we've made a loop through both polygons.
+        #Iterate through both polygons to find intersections and inside vertices until we've made a loop through both polygons.
         while advances_me <= len(me._points) or advances_him <= len(him._points):
             vertex_me = me._points[index_me]
             vertex_him = him._points[index_him]
             if advances_me > len(me._points) * 2 or advances_him > len(him._points) * 2: #Also, if we've looped twice through either polygon, the boundaries of the polygons don't intersect.
                 if len(result) > 2:
-                    return result
+                    return Polygon(points = result)
                 if me.isInside(vertex_him): #Other polygon is inside this one.
                     return him
                 if him.isInside(vertex_me): #This polygon is inside the other.
@@ -133,62 +136,64 @@ class Polygon:
                 else:
                     pass #Otherwise, whoever is inside remains the same (or unknown).
                 advances_me += 1
-                index_me = (index_me + 1) % len(me._points)
+                index_me = advances_me % len(me._points)
                 advances_him += 1
-                index_him = (index_him + 1) % len(him._points)
+                index_him = advances_him % len(him._points)
                 continue
 
             cross = (Vector2(data = directions_me[index_me]).cross(Vector2(data = directions_him[index_him])))
-            
+
             #Edge case: Two exactly opposite edges facing away from each other.
             if Float.fuzzyCompare(cross, 0) and me_in_him_halfplane <= 0 and him_in_me_halfplane <= 0:
                 # The polygons must be disjunct then.
                 return Polygon()
 
-            if Float.fuzzyCompare(cross, 0) and directions_me[index_me].dot(directions_him[index_him]) < 0 and me_in_him_halfplane > 0:
-                #Just advance the inside.
-                if who_is_inside == "him":
-                    advances_him += 1
-                    index_him = (index_him + 1) % len(him._points)
-                else: #him OR unknown! If it's unknown, it doesn't matter which one is advanced, since it only happens when the starting edge was already colinear.
-                    advances_me += 1
-                    index_me = (index_me + 1) % len(me._points)
+            #Edge case: Two colinear edges.
+            if Float.fuzzyCompare(cross, 0) and me_in_him_halfplane <= 0:
+                advances_me += 1
+                index_me = advances_me % len(me._points)
+                continue
+            if Float.fuzzyCompare(cross, 0) and him_in_me_halfplane <= 0:
+                advances_him += 1
+                index_him = advances_him % len(him._points)
                 continue
 
-            #Edge case: Two colinear edges.
-            if Float.fuzzyCompare(cross, 0): #Two edges overlap.
+            #Edge case: Two edges overlap.
+            if Float.fuzzyCompare(cross, 0):
                 #Just advance the outside.
                 if who_is_inside == "me":
                     advances_him += 1
-                    index_him = (index_him + 1) % len(him._points)
-                else: #him OR unknown! If it's unknown, it doesn't matter which one is advanced, since it only happens when the starting edge was already colinear.
+                    index_him = advances_him % len(him._points)
+                else: #him or unknown. If it's unknown, it doesn't matter which one is advanced, as long as it's the same polygon being advanced every time (me in this case).
                     advances_me += 1
-                    index_me = (index_me + 1) % len(me._points)
+                    index_me = advances_me % len(me._points)
                 continue
 
             #Generic case: Advance whichever polygon is on the outside.
             if cross >= 0: #This polygon is going faster towards the inside.
                 if him_in_me_halfplane > 0:
                     advances_me += 1
-                    index_me = (index_me + 1) % len(me._points)
+                    index_me = advances_me % len(me._points)
                     if who_is_inside == "him":
                         result.append(vertex_him)
                 else:
                     advances_him += 1
-                    index_him = (index_him + 1) % len(him._points)
+                    index_him = advances_him % len(him._points)
                     if who_is_inside == "me":
                         result.append(vertex_me)
             else: #The other polygon is going faster towards the inside.
                 if me_in_him_halfplane > 0:
                     advances_him += 1
-                    index_him = (index_him + 1) % len(him._points)
+                    index_him = advances_him % len(him._points)
                     if who_is_inside == "me":
                         result.append(vertex_me)
                 else:
                     advances_me += 1
-                    index_me = (index_me + 1) % len(me._points)
+                    index_me = advances_me % len(me._points)
                     if who_is_inside == "him":
                         result.append(vertex_him)
+        if (result[0] == result[-1]).all(): #If the last two edges are parallel, the first vertex will have been added again. So if it is the same as the last element, remove it.
+            result = result[:-1] #This also handles the case where the intersection is only one point.
         return Polygon(points = result)
 
     ##  Check to see whether this polygon intersects with another polygon.
