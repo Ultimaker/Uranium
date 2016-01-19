@@ -197,6 +197,20 @@ class MachineManager(SignalEmitter):
                 self.setActiveProfile(profile) #default to first profile you can find
                 break
 
+        if self._active_machine.hasMaterials():
+            material = self._active_machine.getMaterialName()
+            available_materials = self.getAllMachineMaterials(self._active_machine.getName())
+            if not material or (len(available_materials) > 0 and material not in available_materials):
+                self._active_machine.setMaterialName(available_materials[0])
+
+        self.activeMachineInstanceChanged.emit()
+
+    def setActiveMaterial(self, material):
+        if not self._active_machine:
+            return
+
+        self._active_machine.setMaterialName(material)
+
         self.activeMachineInstanceChanged.emit()
 
     def setActiveMachineVariant(self, variant):
@@ -235,8 +249,6 @@ class MachineManager(SignalEmitter):
         active_machine_variant = self._active_machine.getMachineDefinition().getVariantName()
         active_machine_instance = self._active_machine.getName()
         active_machine_material = self._active_machine.getMaterialName()
-        # TEMP alert:
-        active_machine_material = "PLA"
 
         generic_profiles = []
         specific_profiles = []
@@ -250,7 +262,7 @@ class MachineManager(SignalEmitter):
             machine_variant = profile.getMachineVariantName()
             machine_instance = profile.getMachineInstanceName()
             material = profile.getMaterialName()
-            
+
             if machine_type and machine_type == active_machine_type or machine_type == "all":
                 if (not machine_instance) and (not machine_variant):
                     specific_profiles.append(profile)
