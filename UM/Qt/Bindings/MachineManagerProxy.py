@@ -104,9 +104,14 @@ class MachineManagerProxy(QObject):
             custom_profile_name = catalog.i18nc("@item:intext appended to customised profiles ({0} is old profile name)", "{0} (Customised)", profile.getName())
             custom_profile = self._manager.findProfile(custom_profile_name)
             if not custom_profile:
+                machine_instance = self._manager.getActiveMachineInstance()
+
                 custom_profile = deepcopy(profile)
                 custom_profile.setReadOnly(False)
                 custom_profile.setName(custom_profile_name)
+                custom_profile.setMachineTypeName(machine_instance.getMachineDefinition().getId())
+                custom_profile.setMachineVariantName(machine_instance.getMachineDefinition().getVariantName())
+                custom_profile.setMachineInstanceName(machine_instance.getName())
                 self._manager.addProfile(custom_profile)
 
             self._changed_setting = (key, value)

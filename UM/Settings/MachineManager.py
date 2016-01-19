@@ -39,7 +39,6 @@ class MachineManager(SignalEmitter):
 
         Preferences.getInstance().addPreference("machines/setting_visibility", "")
         Preferences.getInstance().addPreference("machines/active_instance", "")
-        Preferences.getInstance().addPreference("machines/active_profile", "Normal Quality")
 
     def getApplicationName(self):
         return self._application_name
@@ -150,6 +149,14 @@ class MachineManager(SignalEmitter):
 
         self._updateSettingVisibility(setting_visibility)
 
+        profile = self.findProfile(machine.getActiveProfileName())
+        if profile:
+            self.setActiveProfile(profile)
+        else:
+            for profile in self._profiles:
+                self.setActiveProfile(profile) #default to first profile you can find
+                break
+
         self.activeMachineInstanceChanged.emit()
 
     def setActiveMachineVariant(self, variant):
@@ -177,14 +184,41 @@ class MachineManager(SignalEmitter):
 
     profileNameChanged = Signal()
 
-    def getProfiles(self):
-        return self._profiles
+    def getProfiles(self, active_instance_profiles_only = True):
+        if not active_instance_profiles_only:
+            return self._profiles
+
+        if not self._active_machine:
+            return self._profiles
+
+        active_machine_type = self._active_machine.getMachineDefinition().getId()
+        active_machine_variant = self._active_machine.getMachineDefinition().getVariantName()
+        active_machine_instance = self._active_machine.getName()
+
+        filtered_profiles = []
+        for profile in self._profiles:
+            machine_type = profile.getMachineTypeName()
+            machine_variant = profile.getMachineVariantName()
+            machine_instance = profile.getMachineInstanceName()
+
+            if machine_type and machine_type == active_machine_type:
+                if (not machine_instance) and (not machine_variant):
+                    filtered_profiles.append(profile)
+                elif machine_instance and (machine_instance == active_machine_instance):
+                    filtered_profiles.append(profile)
+                elif machine_variant and (machine_variant == active_machine_variant):
+                    filtered_profiles.append(profile)
+            elif not machine_type:
+                filtered_profiles.append(profile)
+
+        return filtered_profiles
 
     def addProfile(self, profile):
         if profile in self._profiles:
             return
 
-        for p in self._profiles:
+        profiles = self.getProfiles()
+        for p in profiles:
             if p.getName() == profile.getName():
                 raise SettingsError.DuplicateProfileError(profile.getName())
 
@@ -200,7 +234,8 @@ class MachineManager(SignalEmitter):
         profile.nameChanged.disconnect(self._onProfileNameChanged)
 
         try:
-            path = Resources.getStoragePath(Resources.Profiles, urllib.parse.quote_plus(profile.getName()) + ".cfg")
+            profile_file_name = profile.getName() + "@" + profile.getMachineInstanceName()
+            path = Resources.getStoragePath(Resources.Profiles, urllib.parse.quote_plus(profile_file_name) + ".cfg")
             os.remove(path)
         except FileNotFoundError:
             pass
@@ -213,8 +248,10 @@ class MachineManager(SignalEmitter):
             except:
                 self.setActiveProfile(None)
 
-    def findProfile(self, name):
-        for profile in self._profiles:
+    def findProfile(self, name, active_instance_profiles_only = True):
+        profiles = self.getProfiles(active_instance_profiles_only);
+
+        for profile in profiles:
             if profile.getName() == name:
                 return profile
 
@@ -230,13 +267,14 @@ class MachineManager(SignalEmitter):
             return
 
         self._active_profile = profile
+        self._active_machine.setActiveProfileName(profile.getName())
 
         self.activeProfileChanged.emit()
 
     def loadAll(self):
+        self.loadProfiles()
         self.loadMachineDefinitions()
         self.loadMachineInstances()
-        self.loadProfiles()
         self.loadVisibility()
 
     def addMachineDefinition(self, definition):
@@ -327,14 +365,6 @@ class MachineManager(SignalEmitter):
                     self._profiles.append(profile)
                     profile.nameChanged.connect(self._onProfileNameChanged)
 
-        profile = self.findProfile(Preferences.getInstance().getValue("machines/active_profile"))
-        if profile:
-            self.setActiveProfile(profile)
-        else:
-            if Preferences.getInstance().getValue("machines/active_profile") == "":
-                for profile in self._profiles:
-                    self.setActiveProfile(profile) #default to first profile you can find
-                    break
         self.profilesChanged.emit()
 
     def loadVisibility(self):
@@ -359,12 +389,12 @@ class MachineManager(SignalEmitter):
 
     def saveProfiles(self):
         try:
-            Preferences.getInstance().setValue("machines/active_profile", self._active_profile.getName())
             for profile in self._profiles:
                 if profile.isReadOnly():
                     continue
 
-                file_name = urllib.parse.quote_plus(profile.getName()) + ".cfg"
+                profile_file_name = profile.getName() + "@" + profile.getMachineInstanceName()
+                file_name = urllib.parse.quote_plus(profile_file_name) + ".cfg"
                 profile.saveToFile(Resources.getStoragePath(Resources.Profiles, file_name))
         except AttributeError:
             pass
@@ -458,10 +488,26 @@ class MachineManager(SignalEmitter):
         except FileNotFoundError:
             pass
 
+        #Update machine instance name for all profiles attached to this machine instance
+        for profile in self._profiles:
+            if profile.isReadOnly() or profile.getMachineInstanceName() != old_name:
+                continue
+
+            profile_file_name = profile.getName() + "@" + old_name
+            file_name = urllib.parse.quote_plus(profile_file_name) + ".cfg"
+            try:
+                path = Resources.getStoragePath(Resources.Profiles, file_name)
+                os.remove(path)
+            except FileNotFoundError:
+                pass
+
+            profile.setMachineInstanceName(instance.getName())
+
         self.machineInstanceNameChanged.emit(instance)
 
     def _onProfileNameChanged(self, profile, old_name):
-        file_name = urllib.parse.quote_plus(old_name) + ".cfg"
+        profile_file_name = old_name + "@" + profile.getMachineInstanceName()
+        file_name = urllib.parse.quote_plus(profile_file_name) + ".cfg"
         try:
             path = Resources.getStoragePath(Resources.Profiles, file_name)
             os.remove(path)

@@ -26,6 +26,8 @@ class MachineInstance(SignalEmitter):
             self._machine_definition.loadAll()
         self._machine_setting_overrides = {}
 
+        self._active_profile_name = None
+
     nameChanged = Signal()
 
     def getName(self):
@@ -36,6 +38,12 @@ class MachineInstance(SignalEmitter):
             old_name = self._name
             self._name = name
             self.nameChanged.emit(self, old_name)
+
+    def getActiveProfileName(self):
+        return self._active_profile_name
+
+    def setActiveProfileName(self, active_profile_name):
+        self._active_profile_name = active_profile_name
 
     def getMachineDefinition(self):
         return self._machine_definition
@@ -100,6 +108,7 @@ class MachineInstance(SignalEmitter):
         self._machine_definition.loadAll()
 
         self._name = config.get("general", "name")
+        self._active_profile_name = config.get("general", "active_profile", fallback="")
 
         for key, value in config["machine_settings"].items():
             self._machine_setting_overrides[key] = value
@@ -110,6 +119,7 @@ class MachineInstance(SignalEmitter):
         config.add_section("general")
         config["general"]["name"] = self._name
         config["general"]["type"] = self._machine_definition.getId()
+        config["general"]["active_profile"] = self._active_profile_name
         config["general"]["version"] = str(self.MachineInstanceVersion)
         if self._machine_definition.getVariantName():
             config["general"]["variant"] = self._machine_definition.getVariantName()

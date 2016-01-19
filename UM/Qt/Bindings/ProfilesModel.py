@@ -37,6 +37,7 @@ class ProfilesModel(ListModel):
         self._manager = Application.getInstance().getMachineManager()
 
         self._manager.profilesChanged.connect(self._onProfilesChanged)
+        self._manager.activeMachineInstanceChanged.connect(self._onMachineInstanceChanged)
         self._manager.activeProfileChanged.connect(self._onActiveProfileChanged)
         self._manager.profileNameChanged.connect(self._onProfileNameChanged)
         self._onProfilesChanged()
@@ -191,6 +192,22 @@ class ProfilesModel(ListModel):
             filters.append(description + " (*." + extension + ")")
         filters.append(catalog.i18nc("@item:inlistbox", "All Files (*)")) #Also allow arbitrary files, if the user so prefers.
         return filters
+
+    def _onMachineInstanceChanged(self):
+        self._onProfilesChanged()
+
+        #Restore active profile for this machine_instance.
+        active_instance_name = self._manager.getActiveMachineInstance().getActiveProfileName()
+        active_profile = self._manager.findProfile(active_instance_name)
+
+        if not active_profile:
+            #A profile by this name is no longer in the filtered list of profiles.
+            profiles = self._manager.getProfiles()
+            for profile in profiles:
+                active_profile = profile #Default to first profile you can find.
+                break
+
+        self._manager.setActiveProfile(active_profile)
 
     def _onProfilesChanged(self):
         self.clear()
