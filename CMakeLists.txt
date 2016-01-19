@@ -61,7 +61,9 @@ if(GETTEXT_FOUND)
         file(GLOB po_files ${CMAKE_SOURCE_DIR}/resources/i18n/${lang}/*.po)
         foreach(po_file ${po_files})
             string(REGEX REPLACE ".*/(.*).po" "${CMAKE_BINARY_DIR}/resources/i18n/${lang}/LC_MESSAGES/\\1.mo" mo_file ${po_file})
-            add_custom_command(TARGET translations POST_BUILD COMMAND mkdir ARGS -p ${CMAKE_BINARY_DIR}/resources/i18n/${lang}/LC_MESSAGES/ COMMAND ${GETTEXT_MSGFMT_EXECUTABLE} ARGS ${po_file} -o ${mo_file})
+            add_custom_command(TARGET translations POST_BUILD
+                               COMMAND mkdir ARGS -p ${CMAKE_BINARY_DIR}/resources/i18n/${lang}/LC_MESSAGES/
+                               COMMAND ${GETTEXT_MSGFMT_EXECUTABLE} ARGS ${po_file} -o ${mo_file})
         endforeach()
     endforeach()
     install(DIRECTORY ${CMAKE_BINARY_DIR}/resources DESTINATION ${CMAKE_INSTALL_DATADIR}/uranium/)
