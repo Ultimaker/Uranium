@@ -88,7 +88,7 @@ class MachineManager(SignalEmitter):
             if not material or material in machine_materials:
                 continue
 
-            profile_machine_type = profile.getMachineTypeName()
+            profile_machine_type = profile.getMachineTypeId()
             profile_machine_variant = profile.getMachineVariantName()
             profile_machine_instance = profile.getMachineInstanceName()
 
@@ -235,30 +235,37 @@ class MachineManager(SignalEmitter):
         active_machine_variant = self._active_machine.getMachineDefinition().getVariantName()
         active_machine_instance = self._active_machine.getName()
         active_machine_material = self._active_machine.getMaterialName()
+        # TEMP alert:
+        active_machine_material = "PLA"
 
-        filtered_profiles = []
+        generic_profiles = []
+        specific_profiles = []
         for profile in self._profiles:
             profile_type = profile.getType()
             #Filter out "partial" profiles
             if profile_type == "material":
                 continue
 
-            machine_type = profile.getMachineTypeName()
+            machine_type = profile.getMachineTypeId()
             machine_variant = profile.getMachineVariantName()
             machine_instance = profile.getMachineInstanceName()
             material = profile.getMaterialName()
-
-            if machine_type and machine_type == active_machine_type:
+            
+            if machine_type and machine_type == active_machine_type or machine_type == "all":
                 if (not machine_instance) and (not machine_variant):
-                    filtered_profiles.append(profile)
-                elif machine_instance and (machine_instance == active_machine_instance):
-                    filtered_profiles.append(profile)
-                elif machine_variant and (machine_variant == active_machine_variant):
-                    filtered_profiles.append(profile)
+                    specific_profiles.append(profile)
+                elif not material or material == active_machine_material:
+                    if machine_instance and (machine_instance == active_machine_instance):
+                        specific_profiles.append(profile)
+                    elif machine_variant and (machine_variant == active_machine_variant):
+                        specific_profiles.append(profile)
             elif not machine_type:
-                filtered_profiles.append(profile)
+                generic_profiles.append(profile)
 
-        return filtered_profiles
+        if len(specific_profiles) > 0:
+            return specific_profiles
+        else:
+            return generic_profiles
 
     def addProfile(self, profile):
         if profile in self._profiles:

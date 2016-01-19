@@ -31,7 +31,7 @@ class Profile(SignalEmitter):
         self._machine_manager = machine_manager
         self._changed_settings = {}
         self._name = "Unknown Profile"
-        self._machine_type_name = None
+        self._machine_type_id = None
         self._machine_variant_name = None
         self._machine_instance_name = None
         self._material_name = None
@@ -71,12 +71,12 @@ class Profile(SignalEmitter):
         return self._type
 
     ##  Retrieve the name of the machine type.
-    def getMachineTypeName(self):
-        return self._machine_type_name
+    def getMachineTypeId(self):
+        return self._machine_type_id
 
     ##  Set the name of the machine type.
-    def setMachineTypeName(self, machine_type):
-        self._machine_type_name = machine_type
+    def setMachineTypeId(self, machine_type):
+        self._machine_type_id = machine_type
 
     ##  Retrieve the name of the machine variant.
     def getMachineVariantName(self):
@@ -273,7 +273,7 @@ class Profile(SignalEmitter):
         if "type" in parser["general"]:
             self._type = parser.get("general", "type")
         if "machine_type" in parser["general"]:
-            self._machine_type_name = parser.get("general", "machine_type")
+            self._machine_type_id = parser.get("general", "machine_type")
         if "machine_variant" in parser["general"]:
             self._machine_variant_name = parser.get("general", "machine_variant")
         if "machine_instance" in parser["general"]:
@@ -310,8 +310,8 @@ class Profile(SignalEmitter):
         parser.set("general", "name", self._name)
         if self._type:
             parser.set("general", "type", self._type)
-        if self._machine_type_name:
-            parser.set("general", "machine_type", self._machine_type_name)
+        if self._machine_type_id:
+            parser.set("general", "machine_type", self._machine_type_id)
         if self._machine_variant_name:
             parser.set("general", "machine_variant", self._machine_variant_name)
         if self._machine_instance_name:
