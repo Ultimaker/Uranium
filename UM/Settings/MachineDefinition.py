@@ -177,6 +177,12 @@ class MachineDefinition(SignalEmitter):
 
                 setting.fillByDict(value)
 
+        # Ensure that the required by setting keys are set.
+        # This needs to be done now, as we can now guarantee that all settings are created.
+        for setting in self.getAllSettings(include_machine = True):
+            for key in setting.getRequiredSettingKeys():
+                self.getSetting(key).addRequiredBySettingKey(setting.getKey())
+
         self.settingsLoaded.emit()
 
         #self._json_data = None

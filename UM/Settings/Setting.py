@@ -59,6 +59,15 @@ class Setting(SignalEmitter):
         # Keys of the settings that this setting requires to set certain values (As defined by inherit & enabled function)
         self._required_setting_keys = set()
 
+        # Keys of the settings that require this setting to set certain vailes (As defined by inherit & enabled function)
+        self._required_by_setting_keys = set()
+
+    def addRequiredBySettingKey(self, key):
+        self._required_by_setting_keys.add(key)
+
+    def getRequiredSettingKeys(self):
+        return self._required_setting_keys
+
     ##  Bind new validator to object based on it's current type
     def bindValidator(self):
         if self._type == "float":
@@ -449,9 +458,10 @@ class Setting(SignalEmitter):
                 "profile": profile
             }
 
-            if self.getParent():
+            if self.getParent() and isinstance(self.getParent(), Setting):
                 locals["parent_value"] = profile.getSettingValue(self.getParent().getKey())
                 self._required_setting_keys.add(self.getParent().getKey())
+                self.getParent().addRequiredBySettingKey(self._key)
 
             for name in names:
                 locals[name] = profile.getSettingValue(name)
