@@ -56,7 +56,8 @@ class Setting(SignalEmitter):
         self._inherit = True
         self._inherit_function = None
 
-        self._dependent_settings = set()
+        # All (other) settings that this setting requires to set certain values (As defined by inherit & enabled function)
+        self._required_settings = set()
 
     ##  Bind new validator to object based on it's current type
     def bindValidator(self):
@@ -450,18 +451,18 @@ class Setting(SignalEmitter):
 
             if self.getParent():
                 locals["parent_value"] = profile.getSettingValue(self.getParent().getKey())
-                self._dependent_settings.add(self.getParent().getKey())
+                self._required_settings.add(self.getParent().getKey())
 
             for name in names:
                 locals[name] = profile.getSettingValue(name)
-                self._dependent_settings.add(name)
+                self._required_settings.add(name)
 
             return eval(compiled, globals(), locals)
 
         return local_function
 
     def _onSettingValueChanged(self, key):
-        if key in self._dependent_settings:
+        if key in self._required_settings:
             self.enabledChanged.emit(self)
             self.defaultValueChanged.emit(self)
 
