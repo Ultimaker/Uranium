@@ -175,6 +175,11 @@ class Controller(SignalEmitter):
             if self._active_tool:
                 self._active_tool.event(ToolEvent(ToolEvent.ToolActivateEvent))
 
+            from UM.Scene.Selection import Selection #Imported here to prevent a circular dependency.
+            if not self._active_tool and Selection.getCount() > 0: #If something is selected, a tool must always be active.
+                self._active_tool = self._tools["TranslateTool"] #Then default to the translation tool.
+                self._active_tool.event(ToolEvent(ToolEvent.ToolActivateEvent))
+
             self.activeToolChanged.emit()
         except KeyError:
             Logger.log("e", "No tool named %s found.", name)

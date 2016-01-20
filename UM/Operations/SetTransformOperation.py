@@ -4,13 +4,13 @@
 from . import Operation
 
 class SetTransformOperation(Operation.Operation):
-    def __init__(self, node, translation = None, orientation = None, scale = None, old_scale = None):
+    def __init__(self, node, translation = None, orientation = None, scale = None):
         super().__init__()
         self._node = node
 
         self._old_translation = node.getPosition()
         self._old_orientation = node.getOrientation()
-        self._old_scale = old_scale
+        self._old_scale = node.getScale()
 
         self._new_translation = translation
         self._new_orientation = orientation
@@ -20,7 +20,6 @@ class SetTransformOperation(Operation.Operation):
         self._node.setPosition(self._old_translation)
         self._node.setOrientation(self._old_orientation)
         self._node.setScale(self._old_scale)
-
 
     def redo(self):
         if self._new_translation:

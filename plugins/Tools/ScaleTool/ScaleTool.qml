@@ -14,12 +14,7 @@ Item
     UM.I18nCatalog { id: catalog; name:"uranium"}
 
     function getPercentage(scale){
-        if (snapScalingCheckbox.checked){
-            return Math.round(scale * 10) * 10 //rounds the percentage at tens
-        }
-        else{
-            return scale * 100;
-        }
+        return scale * 100;
     }
 
     Button

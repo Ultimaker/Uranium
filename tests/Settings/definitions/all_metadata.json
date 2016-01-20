@@ -1,0 +1,12 @@
+{
+    "id": "test_all_metadata",
+    "name": "All Metadata Test",
+    "version": 1,
+    "manufacturer": "Test Manufacturer",
+    "author": "Test Author",
+    "platform": "test_platform.stl",
+    "platform_texture": "test_platform_texture.png",
+    "visible": false,
+    "variant": "Test Variant"
+}
+

@@ -151,7 +151,7 @@ class LocalFileOutputDevice(OutputDevice):
             message.actionTriggered.connect(self._onMessageActionTriggered)
             message.show()
         else:
-            message = Message(catalog.i18nc("@info:status", "Could not save to <filename>{0}</filename>: <message>{1}</message>").format(job.getFileName(), str(job.getError())))
+            message = Message(catalog.i18nc("@info:status", "Could not save to <filename>{0}</filename>: <message>{1}</message>").format(job.getFileName(), str(job.getError())), lifetime = 0)
             message.show()
             self.writeError.emit(self)
         job.getStream().close()

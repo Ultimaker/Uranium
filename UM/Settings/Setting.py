@@ -56,7 +56,20 @@ class Setting(SignalEmitter):
         self._inherit = True
         self._inherit_function = None
 
-        self._dependent_settings = set()
+        # Keys of the settings that this setting requires to set certain values (As defined by inherit & enabled function)
+        self._required_setting_keys = set()
+
+        # Keys of the settings that require this setting to set certain vailes (As defined by inherit & enabled function)
+        self._required_by_setting_keys = set()
+
+    def addRequiredBySettingKey(self, key):
+        self._required_by_setting_keys.add(key)
+
+    def getRequiredBySettingKeys(self):
+        return self._required_by_setting_keys
+
+    def getRequiredSettingKeys(self):
+        return self._required_setting_keys
 
     ##  Bind new validator to object based on it's current type
     def bindValidator(self):
@@ -112,6 +125,7 @@ class Setting(SignalEmitter):
             self._hide_if_all_children_visible = not data["always_visible"]
 
         self._inherit = data.get("inherit", True)
+
         if "inherit_function" in data:
             self._inherit_function = self._createFunction(data["inherit_function"])
 
@@ -236,7 +250,7 @@ class Setting(SignalEmitter):
             except Exception as e:
                 Logger.log("e", "An error occurred in inherit function for {0}: {1}".format(self._key, str(e)))
             else:
-                if inherit_value:
+                if inherit_value is not None:
                     return inherit_value
 
         return self._default_value
@@ -448,20 +462,20 @@ class Setting(SignalEmitter):
                 "profile": profile
             }
 
-            if self.getParent():
+            if self.getParent() and isinstance(self.getParent(), Setting):
                 locals["parent_value"] = profile.getSettingValue(self.getParent().getKey())
-                self._dependent_settings.add(self.getParent().getKey())
+                self._required_setting_keys.add(self.getParent().getKey())
+                self.getParent().addRequiredBySettingKey(self._key)
 
             for name in names:
                 locals[name] = profile.getSettingValue(name)
-                self._dependent_settings.add(name)
-
+                self._required_setting_keys.add(name)
             return eval(compiled, globals(), locals)
 
         return local_function
 
     def _onSettingValueChanged(self, key):
-        if key in self._dependent_settings:
+        if key in self._required_setting_keys:
             self.enabledChanged.emit(self)
             self.defaultValueChanged.emit(self)
 

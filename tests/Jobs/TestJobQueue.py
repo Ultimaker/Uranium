@@ -1,7 +1,7 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-import unittest
+import pytest
 
 from UM.Application import Application
 from UM.Job import Job
@@ -10,98 +10,78 @@ from UM.JobQueue import JobQueue
 import time
 import threading
 
-class TestJob(Job):
-    def __init__(self):
-        super().__init__()
-
+class ShortTestJob(Job):
     def run(self):
         self.setResult("TestJob")
 
 class LongTestJob(Job):
-    def __init__(self):
-        super().__init__()
-
     def run(self):
         time.sleep(1.5)
         self.setResult("LongTestJob")
 
-class JobQueueApplication(Application):
-    def __init__(self):
-        super().__init__("test", "1.0")
+@pytest.fixture
+def job_queue():
+    JobQueue._instance = None
+    return JobQueue()
 
-    def functionEvent(self, event):
-        pass
-
-class TestJobQueue(unittest.TestCase):
-    def setUp(self):
-        # Called before the first testfunction is executed
-        self._app = JobQueueApplication.getInstance()
-
-    def tearDown(self):
-        # Called after the last testfunction was executed
-        pass
-
+class TestJobQueue():
     def test_create(self):
         JobQueue._instance = None
         jq = JobQueue()
 
-        self.assertGreater(len(jq._threads), 0)
-        self.assertEqual(jq, JobQueue.getInstance())
+        assert len(jq._threads) > 0
+        assert jq == JobQueue.getInstance()
 
         JobQueue._instance = None
 
         jq = JobQueue(4)
-        self.assertEqual(len(jq._threads), 4)
+        assert len(jq._threads) == 4
 
-    def test_add(self):
-        jq = JobQueue.getInstance()
-
-        job = TestJob()
+    def test_addShort(self, job_queue):
+        job = ShortTestJob()
         job.start()
 
-        self.assertIn(job, jq._jobs)
+        assert job in job_queue._jobs
 
         time.sleep(0.1)
 
-        self.assertEqual(job.isFinished(), True)
-        self.assertEqual(job.getResult(), "TestJob")
+        assert job.isFinished()
+        assert job.getResult() == "TestJob"
 
-        job1 = TestJob()
-        job2 = TestJob()
-
-        job1.start()
-        job2.start()
-
-        time.sleep(0.1)
-
-        self.assertEqual(job1.isFinished(), True)
-        self.assertEqual(job1.getResult(), "TestJob")
-        self.assertEqual(job2.isFinished(), True)
-        self.assertEqual(job2.getResult(), "TestJob")
-
+    def test_addLong(self, job_queue):
         job = LongTestJob()
         job.start()
 
-        time.sleep(1)
-
-        self.assertEqual(job.isFinished(), False)
-        self.assertEqual(job.getResult(), None)
+        assert job in job_queue._jobs
 
         time.sleep(1)
 
-        self.assertEqual(job.isFinished(), True)
-        self.assertEqual(job.getResult(), "LongTestJob")
+        assert not job.isFinished()
+        assert job.getResult() == None
 
+        time.sleep(1)
+
+        assert job.isFinished()
+        assert job.getResult() == "LongTestJob"
+
+
+    test_addMultiple_data = [2, 5, 10]
+    @pytest.mark.parametrize("count", test_addMultiple_data)
+    def test_addMultiple(self, job_queue, count):
         jobs = []
-        for i in range(10):
-            job = TestJob()
+        for i in range(count):
+            job = ShortTestJob()
             job.start()
+
             jobs.append(job)
 
-        time.sleep(0.5)
+            assert job in job_queue._jobs
+
+        time.sleep(0.01 * count)
+
         for job in jobs:
-            self.assertEqual(job.isFinished(), True)
-            self.assertEqual(job.getResult(), "TestJob")
+            assert job.isFinished()
+            assert job.getResult() == "TestJob"
 
     def test_remove(self):
         pass
