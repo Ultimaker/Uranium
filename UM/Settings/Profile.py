@@ -251,13 +251,14 @@ class Profile(SignalEmitter):
     ## Merge settings from another profile
     def mergeSettingsFrom(self, profile, reset = False):
         if reset:
-            _changed_settings = {}
-            _changed_settings_defaults = {}
-            
-        settings = profile.getAllSettingValues()
-        for (key, value) in settings:
-            _changed_settings[key] = value
-            _changed_settings_defaults[key] = value
+            self._changed_settings = {}
+            self._changed_settings_defaults = {}
+
+        settings = profile.getChangedSettings()
+
+        for key, value in settings.items():
+            self._changed_settings[key] = value
+            self._changed_settings_defaults[key] = value
 
     ##  Load a serialised profile from a file.
     #

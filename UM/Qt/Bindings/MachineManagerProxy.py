@@ -109,14 +109,14 @@ class MachineManagerProxy(QObject):
 
     @pyqtSlot(str, result = int)
     def getSettingValue(self, setting):
-        profile = self._manager.getActiveProfile()
+        profile = self._manager.getWorkingProfile()
         if not profile:
             return None
         return profile.getSettingValue(setting)
 
     @pyqtSlot(str, "QVariant")
     def setSettingValue(self, key, value):
-        profile = self._manager.getActiveProfile()
+        profile = self._manager.getWorkingProfile()
         if not profile:
             return
 

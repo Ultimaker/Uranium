@@ -328,6 +328,9 @@ class MachineManager(SignalEmitter):
 
     activeProfileChanged = Signal()
 
+    def getWorkingProfile(self):
+        return self._active_machine.getWorkingProfile()
+
     def getActiveProfile(self):
         return self._active_profile
 
@@ -335,15 +338,16 @@ class MachineManager(SignalEmitter):
         if profile not in self._profiles or self._active_profile == profile:
             return
 
+        self._active_machine.getWorkingProfile().mergeSettingsFrom(profile, reset = True)
         self._active_profile = profile
         self._active_machine.setActiveProfileName(profile.getName())
 
         self.activeProfileChanged.emit()
 
     def loadAll(self):
-        self.loadProfiles()
         self.loadMachineDefinitions()
         self.loadMachineInstances()
+        self.loadProfiles()
         self.loadVisibility()
 
     def addMachineDefinition(self, definition):
