@@ -65,6 +65,9 @@ class Setting(SignalEmitter):
     def addRequiredBySettingKey(self, key):
         self._required_by_setting_keys.add(key)
 
+    def getRequiredBySettingKeys(self):
+        return self._required_by_setting_keys
+
     def getRequiredSettingKeys(self):
         return self._required_setting_keys
 
@@ -122,6 +125,7 @@ class Setting(SignalEmitter):
             self._hide_if_all_children_visible = not data["always_visible"]
 
         self._inherit = data.get("inherit", True)
+
         if "inherit_function" in data:
             self._inherit_function = self._createFunction(data["inherit_function"])
 
@@ -466,7 +470,6 @@ class Setting(SignalEmitter):
             for name in names:
                 locals[name] = profile.getSettingValue(name)
                 self._required_setting_keys.add(name)
-
             return eval(compiled, globals(), locals)
 
         return local_function

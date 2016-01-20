@@ -27,13 +27,16 @@ class SettingOverrideDecorator(SceneNodeDecorator, SignalEmitter):
     def getAllSettingValues(self):
         self._temp_values = {}
         instance = Application.getInstance().getMachineManager().getActiveMachineInstance()
-
+        #instance.getMachineDefinition().updateRequiredBy()
         for key in self._settings:
             setting = instance.getMachineDefinition().getSetting(key)
-
             if key in self._setting_values:
                 self._temp_values[key] = setting.parseValue(self._setting_values[key])
                 continue
+
+            for required_by_key in self._getDependentSettingKeys(key):
+                if required_by_key not in self._temp_values:
+                    self._temp_values[required_by_key] = instance.getMachineDefinition().getSetting(required_by_key).getDefaultValue(self)
 
             self._temp_values[key] = setting.getDefaultValue(self)
 
@@ -52,6 +55,16 @@ class SettingOverrideDecorator(SceneNodeDecorator, SignalEmitter):
 
         self.settingAdded.emit()
         Application.getInstance().getController().getScene().sceneChanged.emit(self.getNode())
+
+    ##  Recursively find all settings that directly or indirectly depend on certain setting.
+    def _getDependentSettingKeys(self, key):
+        required_setting_keys = set()
+        instance = Application.getInstance().getMachineManager().getActiveMachineInstance()
+        setting = instance.getMachineDefinition().getSetting(key)
+        for dependent_key in setting.getRequiredBySettingKeys():
+            required_setting_keys.add(dependent_key)
+            required_setting_keys.update(self._getDependentSettingKeys(dependent_key))
+        return required_setting_keys
 
     def setSettingValue(self, key, value):
         if key not in self._settings:
