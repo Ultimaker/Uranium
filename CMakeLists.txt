@@ -49,10 +49,34 @@ if(GETTEXT_FOUND)
     # translations target will convert .po files into .mo and .qm as needed.
     # The files are checked for a _qt suffix and if it is found, converted to
     # qm, otherwise they are converted to .po.
+    add_custom_target(i18n-create-po)
+    add_custom_target(i18n-update-po)
     add_custom_target(i18n-create-mo ALL)
 
     SUBDIRLIST(languages ${CMAKE_SOURCE_DIR}/resources/i18n/)
+    file(GLOB pot_files ${CMAKE_SOURCE_DIR}/resources/i18n/*.pot)
     foreach(language ${languages})
+        # *.po files
+        add_custom_target(i18n-create-po-${language})
+        add_dependencies(i18n-create-po i18n-create-po-${language})
+        add_custom_target(i18n-update-po-${language})
+        add_dependencies(i18n-update-po i18n-update-po-${language})
+
+        foreach(pot_file ${pot_files})
+            string(REGEX REPLACE ".*/(.*).pot" "${CMAKE_BINARY_DIR}/resources/i18n/${language}/\\1.po" po_file ${pot_file})
+            if(DEFINED GETTEXT_MSGINIT_EXECUTABLE)
+                message("Using GETTEXT_MSGINIT_EXECUTABLE at:" ${GETTEXT_MSGINIT_EXECUTABLE})
+                add_custom_command(TARGET i18n-create-po-${language} POST_BUILD
+                                   COMMAND ${GETTEXT_MSGINIT_EXECUTABLE} ARGS --no-translator -l ${language} -i ${pot_file} -o ${po_file})
+            else()
+                message("GETTEXT_MSGINIT_EXECUTABLE not found!")
+            endif()
+            message("GETTEXT_MSGMERGE_EXECUTABLE:" ${GETTEXT_MSGMERGE_EXECUTABLE})
+            add_custom_command(TARGET i18n-update-po-${language} POST_BUILD
+                               COMMAND ${GETTEXT_MSGMERGE_EXECUTABLE} ARGS -o ${po_file} ${po_file} ${po_file})
+        endforeach()
+
+        # *.mo files
         add_custom_target(i18n-create-mo-${language})
         add_dependencies(i18n-create-mo i18n-create-mo-${language})
 
