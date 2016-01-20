@@ -35,7 +35,7 @@ ManagementPage
             columns: 2
             spacing: UM.Theme.sizes.default_margin.width
 
-            Label { text: catalog.i18nc("@label", "Profile type"); width: 115}
+            Label { text: catalog.i18nc("@label", "Profile type"); width: 155}
             Label { text: base.currentItem.readOnly ? catalog.i18nc("@label", "Starter profile (protected)") : catalog.i18nc("@label", "Custom profile"); }
 
             Column {
@@ -43,7 +43,7 @@ ManagementPage
                         model: base.currentItem.settings
                         Label {
                             text: modelData.name.toString();
-                            width: 115
+                            width: 155
                             elide: Text.ElideMiddle;
                         }
                 }
