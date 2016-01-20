@@ -49,15 +49,18 @@ if(GETTEXT_FOUND)
     # translations target will convert .po files into .mo and .qm as needed.
     # The files are checked for a _qt suffix and if it is found, converted to
     # qm, otherwise they are converted to .po.
-    add_custom_target(translations ALL)
+    add_custom_target(i18n-create-mo ALL)
 
     SUBDIRLIST(languages ${CMAKE_SOURCE_DIR}/resources/i18n/)
-    foreach(lang ${languages})
-        file(GLOB po_files ${CMAKE_SOURCE_DIR}/resources/i18n/${lang}/*.po)
+    foreach(language ${languages})
+        add_custom_target(i18n-create-mo-${language})
+        add_dependencies(i18n-create-mo i18n-create-mo-${language})
+
+        file(GLOB po_files ${CMAKE_SOURCE_DIR}/resources/i18n/${language}/*.po)
         foreach(po_file ${po_files})
-            string(REGEX REPLACE ".*/(.*).po" "${CMAKE_BINARY_DIR}/resources/i18n/${lang}/LC_MESSAGES/\\1.mo" mo_file ${po_file})
-            add_custom_command(TARGET translations POST_BUILD
-                               COMMAND mkdir ARGS -p ${CMAKE_BINARY_DIR}/resources/i18n/${lang}/LC_MESSAGES/
+            string(REGEX REPLACE ".*/(.*).po" "${CMAKE_BINARY_DIR}/resources/i18n/${language}/LC_MESSAGES/\\1.mo" mo_file ${po_file})
+            add_custom_command(TARGET i18n-create-mo-${language} POST_BUILD
+                               COMMAND mkdir ARGS -p ${CMAKE_BINARY_DIR}/resources/i18n/${language}/LC_MESSAGES/
                                COMMAND ${GETTEXT_MSGFMT_EXECUTABLE} ARGS ${po_file} -o ${mo_file})
         endforeach()
     endforeach()
