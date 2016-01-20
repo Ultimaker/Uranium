@@ -148,7 +148,7 @@ class Backend(PluginObject, SignalEmitter):
             else:
                 Logger.log("e", str(error))
         except Exception as e:
-            Logger.log("e", "Failed to parse socket error")
+            Logger.log("e", "Failed to parse socket error: %s" , str(e))
 
         self._createSocket()
     
