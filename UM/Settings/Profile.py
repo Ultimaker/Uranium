@@ -18,10 +18,10 @@ from UM.SaveFile import SaveFile
 #   values of the machine, but which can optionally be overridden from MachineInstance.
 #
 #   The Profile class provides getters and setters for setting values, in addition to
-#   serialization and deserialization methods. There are two intrinsic properties for a profile,
-#   its name, which is used as a human-readable identifier and a read only property. Read only
-#   profiles are profiles that should not be modified because they are read from system locations
-#   that cannot be written to, for example /usr/share on Linux systems.
+#   serialization and deserialization methods. There are a couple of intrinsic properties for a 
+#   profile eg a name, which is used as a human-readable identifier and a read only property. 
+#   Read only profiles are profiles that should not be modified because they are read from system 
+#   locations that cannot be written to, for example /usr/share on Linux systems.
 class Profile(SignalEmitter):
     ProfileVersion = 1
 
@@ -30,13 +30,14 @@ class Profile(SignalEmitter):
         super().__init__()
         self._machine_manager = machine_manager
         self._changed_settings = {}
+        self._changed_settings_defaults = {}
         self._name = "Unknown Profile"
+        self._type = None
         self._machine_type_id = None
         self._machine_variant_name = None
         self._machine_instance_name = None
         self._material_name = None
         self._read_only = read_only
-        self._type = None
 
         self._active_instance = None
         self._machine_manager.activeMachineInstanceChanged.connect(self._onActiveInstanceChanged)
@@ -65,6 +66,10 @@ class Profile(SignalEmitter):
     ##  Retrieve if this profile is a read only profile.
     def isReadOnly(self):
         return self._read_only
+
+    ##  Set the type of this profile.
+    def setType(self, type):
+        self._type = type
 
     ##  Retrieve the type of this profile.
     def getType(self):
@@ -236,8 +241,23 @@ class Profile(SignalEmitter):
         if key not in self._changed_settings:
             return
 
-        del self._changed_settings[key]
+        if key in self._changed_settings_defaults:
+            self._changed_settings[key] = self._changed_settings_defaults[key]
+        else:
+            del self._changed_settings[key]
+
         self.settingValueChanged.emit(key)
+
+    ## Merge settings from another profile
+    def mergeSettingsFrom(self, profile, reset = False):
+        if reset:
+            _changed_settings = {}
+            _changed_settings_defaults = {}
+            
+        settings = profile.getAllSettingValues()
+        for (key, value) in settings:
+            _changed_settings[key] = value
+            _changed_settings_defaults[key] = value
 
     ##  Load a serialised profile from a file.
     #
@@ -286,6 +306,11 @@ class Profile(SignalEmitter):
         if parser.has_section("settings"):
             for key, value in parser["settings"].items():
                 self.setSettingValue(key, value)
+                
+        if parser.has_section("defaults"):
+            self._changed_settings_defaults = {}
+            for key, value in parser["defaults"].items():
+                self._changed_settings_defaults[key] = value
 
     ##  Store this profile in a file so it can be loaded later.
     #
@@ -322,6 +347,11 @@ class Profile(SignalEmitter):
         parser.add_section("settings") #Write each changed setting in a settings section.
         for setting_key in self._changed_settings:
             parser.set("settings", setting_key , str(self._changed_settings[setting_key]))
+
+        if len(self._changed_settings_defaults) > 0:
+            parser.add_section("defaults") #Write each changed setting in a settings section.
+            for setting_key in self._changed_settings_defaults:
+                parser.set("defaults", setting_key , str(self._changed_settings_defaults[setting_key]))
 
         parser.write(stream) #Actually serialise it to the stream.
         return stream.getvalue()
