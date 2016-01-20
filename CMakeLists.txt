@@ -70,7 +70,6 @@ if(GETTEXT_FOUND)
             else()
                 message("GETTEXT_MSGINIT_EXECUTABLE not found!")
             endif()
-            message("GETTEXT_MSGMERGE_EXECUTABLE:" ${GETTEXT_MSGMERGE_EXECUTABLE})
             add_custom_command(TARGET i18n-update-po-${language} POST_BUILD
                                COMMAND ${GETTEXT_MSGMERGE_EXECUTABLE} ARGS -o ${po_file} ${po_file} ${po_file})
         endforeach()
