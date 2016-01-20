@@ -31,16 +31,21 @@ ManagementPage
         Label { text: base.currentItem.name ? base.currentItem.name : ""; font: UM.Theme.fonts.large; width: parent.width; }
 
         Grid {
+            id: containerGrid
             columns: 2
             spacing: UM.Theme.sizes.default_margin.width
 
-            Label { text: catalog.i18nc("@label", "Profile type"); }
+            Label { text: catalog.i18nc("@label", "Profile type"); width: 115}
             Label { text: base.currentItem.readOnly ? catalog.i18nc("@label", "Starter profile (protected)") : catalog.i18nc("@label", "Custom profile"); }
 
             Column {
                 Repeater {
                         model: base.currentItem.settings
-                        Label { text: modelData.name.toString(); }
+                        Label {
+                            text: modelData.name.toString();
+                            width: 115
+                            elide: Text.ElideMiddle;
+                        }
                 }
             }
             Column {
