@@ -34,6 +34,8 @@ class Resources:
     MachineInstances = 9
     ## Location of setting profile files. Equal to $resources/profiles
     Profiles = 10
+    ## Location of working profiles for each machine instance. Equal to $resources/instance_profiles
+    MachineInstanceProfiles = 11
 
     ## Any custom resource types should be greater than this to prevent collisions with standard types.
     UserType = 128
@@ -239,12 +241,14 @@ class Resources:
         Themes: "themes",
         MachineDefinitions: "machines",
         MachineInstances: "machine_instances",
-        Profiles: "profiles"
+        Profiles: "profiles",
+        MachineInstanceProfiles: "instance_profiles"
     }
     __types_storage = {
         Resources: "",
         Preferences: "",
         MachineDefinitions: "machines",
         MachineInstances: "machine_instances",
-        Profiles: "profiles"
+        Profiles: "profiles",
+        MachineInstanceProfiles: "instance_profiles"
     }

@@ -7,6 +7,7 @@ from UM.Settings import SettingsError
 from UM.Logger import Logger
 from UM.Signal import Signal, SignalEmitter
 from UM.SaveFile import SaveFile
+from UM.Settings.Profile import Profile
 
 ##    A machine instance is a sort of wrapper for a machine definition.
 #     Where machine defintion defines base values of a machine
@@ -29,6 +30,9 @@ class MachineInstance(SignalEmitter):
         self._active_profile_name = None
         self._active_material_name = None
 
+        self._working_profile = Profile(machine_manager)
+        self._working_profile.setType("machine_instance_profile")
+
     nameChanged = Signal()
 
     def getName(self):
@@ -38,7 +42,11 @@ class MachineInstance(SignalEmitter):
         if name != self._name:
             old_name = self._name
             self._name = name
+            self._working_profile.setName(name)
             self.nameChanged.emit(self, old_name)
+
+    def getWorkingProfile(self):
+        return self._working_profile
 
     def getActiveProfileName(self):
         return self._active_profile_name
@@ -118,8 +126,9 @@ class MachineInstance(SignalEmitter):
         self._machine_definition.loadAll()
 
         self._name = config.get("general", "name")
-        self._active_profile_name = config.get("general", "active_profile", fallback="")
+        self._working_profile.setName(self._name)
 
+        self._active_profile_name = config.get("general", "active_profile", fallback="")
         self._active_material_name = config.get("general", "material", fallback = "")
 
         for key, value in config["machine_settings"].items():

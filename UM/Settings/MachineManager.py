@@ -397,6 +397,12 @@ class MachineManager(SignalEmitter):
                     Logger.log("e", "An exception occurred loading Machine Instance: %s: %s", path, str(e))
                     continue
 
+                try:
+                    file_name = urllib.parse.quote_plus(instance.getName()) + ".curaprofile"
+                    instance.getWorkingProfile().loadFromFile(Resources.getStoragePath(Resources.MachineInstanceProfiles, file_name))
+                except Exception as e:
+                    Logger.log("w", "Could not load working profile: %s: %s", file_name, str(e))
+
                 if not self.findMachineInstance(instance.getName()):
                     self._machine_instances.append(instance)
                     instance.nameChanged.connect(self._onInstanceNameChanged)
@@ -456,6 +462,8 @@ class MachineManager(SignalEmitter):
         for instance in self._machine_instances:
             file_name = urllib.parse.quote_plus(instance.getName()) + ".cfg"
             instance.saveToFile(Resources.getStoragePath(Resources.MachineInstances, file_name))
+            file_name = urllib.parse.quote_plus(instance.getName()) + ".curaprofile"
+            instance.getWorkingProfile().saveToFile(Resources.getStoragePath(Resources.MachineInstanceProfiles, file_name))
 
     def saveProfiles(self):
         try:
@@ -553,9 +561,11 @@ class MachineManager(SignalEmitter):
                 setting.setVisible(False)
 
     def _onInstanceNameChanged(self, instance, old_name):
-        file_name = urllib.parse.quote_plus(old_name) + ".cfg"
+        file_name = urllib.parse.quote_plus(old_name)
         try:
-            path = Resources.getStoragePath(Resources.MachineInstances, file_name)
+            path = Resources.getStoragePath(Resources.MachineInstances, file_name + ".cfg")
+            os.remove(path)
+            path = Resources.getStoragePath(Resources.MachineInstanceProfiles, file_name + ".curaprofile")
             os.remove(path)
         except FileNotFoundError:
             pass
