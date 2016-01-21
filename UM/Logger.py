@@ -3,6 +3,16 @@
 
 from UM.PluginObject import PluginObject
 
+import warnings
+
+def deprecated(message):
+    def deprecated_decorator(function):
+        def deprecated_function(*args, **kwargs):
+            warnings.warn(message, DeprecationWarning, stacklevel=2)
+            function(*args, **kwargs)
+
+        return deprecated_function
+    return deprecated_decorator
 
 class Logger:
     ##  Add a logger to the list.
