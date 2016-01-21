@@ -17,7 +17,7 @@ Rectangle{
     property int yPos
     SystemPalette{id: palette}
     opacity: 0
-    width: UM.Theme.sizes.tooltip.width
+    width: UM.Theme.getSize("tooltip").width
     x: xPos
     y: yPos
 
@@ -30,8 +30,8 @@ Rectangle{
             standardPlacement()
         }
         else {
-            toolTip.xPos = _xPos + UM.Theme.sizes.default_margin.width
-            toolTip.yPos = _yPos + UM.Theme.sizes.default_margin.height
+            toolTip.xPos = _xPos + UM.Theme.getSize("default_margin").width
+            toolTip.yPos = _yPos + UM.Theme.getSize("default_margin").height
         }
         toolTipTimer.restart()
     }
@@ -46,7 +46,7 @@ Rectangle{
         toolTip.anchors.top = base.top
         toolTip.anchors.topMargin = base.height - settingsScrollView.height
         toolTip.anchors.right = base.right
-        toolTip.anchors.rightMargin = UM.Theme.sizes.default_margin.width
+        toolTip.anchors.rightMargin = UM.Theme.getSize("default_margin").width
     }
 
     Timer {
@@ -66,7 +66,7 @@ Rectangle{
     }
 
     Label {
-        width: parent.width - UM.Theme.sizes.default_margin.width
+        width: parent.width - UM.Theme.getSize("default_margin").width
         wrapMode: Text.Wrap
         text: parent.text
         renderType: Text.NativeRendering
@@ -76,8 +76,8 @@ Rectangle{
             z: parent.z - 1
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
-            width: UM.Theme.sizes.tooltip.width
-            height: parent.height + UM.Theme.sizes.default_margin.width
+            width: UM.Theme.getSize("tooltip").width
+            height: parent.height + UM.Theme.getSize("default_margin").width
             color: palette.light
             border.color: "black"
         }

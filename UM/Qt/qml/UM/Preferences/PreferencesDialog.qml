@@ -16,8 +16,8 @@ Dialog
     id: base;
 
     title: catalog.i18nc("@title:window", "Preferences")
-    minimumWidth: UM.Theme.sizes.modal_window_minimum.width;
-    minimumHeight: UM.Theme.sizes.modal_window_minimum.height;
+    minimumWidth: UM.Theme.getSize("modal_window_minimum").width;
+    minimumHeight: UM.Theme.getSize("modal_window_minimum").height;
 
     property int currentPage: 0;
 
@@ -36,7 +36,7 @@ Dialog
                 bottom: parent.bottom;
             }
 
-            width: 7 * UM.Theme.sizes.line.width;
+            width: 7 * UM.Theme.getSize("line").width;
 
             alternatingRowColors: false;
             headerVisible: false;

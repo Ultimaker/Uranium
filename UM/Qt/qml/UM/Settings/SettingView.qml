@@ -25,7 +25,7 @@ ScrollView
     Column
     {
         id: contents
-        spacing: UM.Theme.sizes.default_lining.height;
+        spacing: UM.Theme.getSize("default_lining").height;
 
         Repeater
         {
@@ -46,8 +46,8 @@ ScrollView
                 {
                     id: categoryHeader;
                     activeFocusOnTab: false
-                    width: UM.Theme.sizes.sidebar.width;
-                    height: UM.Theme.sizes.section.height;
+                    width: UM.Theme.getSize("sidebar").width;
+                    height: UM.Theme.getSize("section").height;
 
                     text: model.name;
                     iconSource: UM.Theme.icons[model.icon];
@@ -78,7 +78,7 @@ ScrollView
                     width: categoryHeader.width
 
                     opacity: categoryHeader.checked && model.hiddenValuesCount > 0 ? 1 : 0
-                    height: categoryHeader.checked && model.hiddenValuesCount > 0 ? UM.Theme.sizes.lineHeight : 0
+                    height: categoryHeader.checked && model.hiddenValuesCount > 0 ? UM.Theme.getSize("lineHeight").height : 0
 
                     text: catalog.i18ncp("@label", "{0} hidden setting uses a custom value", "{0} hidden settings use custom values", model.hiddenValuesCount)
                     onClicked: { UM.ActiveProfile.showHiddenValues(model.id) }
@@ -91,8 +91,8 @@ ScrollView
                             text: control.text
 
                             horizontalAlignment: Text.AlignHCenter
-                            font: UM.Theme.fonts.default
-                            color: control.hovered? UM.Theme.colors.text_hover : UM.Theme.colors.text
+                            font: UM.Theme.getFont("default")
+                            color: control.hovered ? UM.Theme.getColor("text_hover") : UM.Theme.getColor("text")
                         }
                     }
                 }
@@ -133,9 +133,9 @@ ScrollView
                         {
                             id: item;
 
-                            width: UM.Theme.sizes.sidebar.width - UM.Theme.sizes.default_margin.width * 2
+                            width: UM.Theme.getSize("sidebar").width - UM.Theme.getSize("default_margin").width * 2
 
-                            height: settingVisible ? UM.Theme.sizes.setting.height + UM.Theme.sizes.default_lining.height : 0;
+                            height: settingVisible ? UM.Theme.getSize("setting").height + UM.Theme.getSize("default_lining").height : 0;
                             Behavior on height { NumberAnimation { duration: 75; } }
                             opacity: settingVisible ? 1 : 0;
                             Behavior on opacity { NumberAnimation { duration: 75; } }
