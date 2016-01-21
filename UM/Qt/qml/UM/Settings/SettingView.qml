@@ -158,7 +158,7 @@ ScrollView
                             style: UM.Theme.styles.setting_item;
 
                             onItemValueChanged: delegateItem.settingsModel.setSettingValue(model.key, value);
-                            onContextMenuRequested: contextMenu.popup();
+                            onContextMenuRequested: { contextMenu.key = model.key; contextMenu.popup(); }
                             onResetRequested: delegateItem.settingsModel.resetSettingValue(model.key)
 
                             onShowTooltip:
@@ -167,29 +167,6 @@ ScrollView
                                 base.showTooltip(item, position, "<b>"+model.name+"</b><br/>"+model.description)
                             }
                             onHideTooltip: base.hideTooltip()
-
-                            Menu
-                            {
-                                id: contextMenu;
-
-                                MenuItem
-                                {
-                                    //: Settings context menu action
-                                    text: catalog.i18nc("@action:menu","Hide this setting");
-                                    onTriggered: delegateItem.settingsModel.hideSetting(model.key);
-                                }
-                                MenuItem
-                                {
-                                    //: Settings context menu action
-                                    text: catalog.i18nc("@action:menu","Configure setting visiblity...");
-
-                                    onTriggered: {
-                                        preferences.visible = true;
-                                        preferences.setPage(2);
-                                        preferences.getCurrentItem().scrollToSection(categoryId);
-                                    }
-                                }
-                            }
                         }
                     }
 
@@ -227,5 +204,26 @@ ScrollView
         }
 
         UM.I18nCatalog { id: catalog; name: "uranium"; }
+
+        Menu
+        {
+            id: contextMenu;
+
+            property string key;
+
+            MenuItem
+            {
+                //: Settings context menu action
+                text: catalog.i18nc("@action:menu","Hide this setting");
+                onTriggered: delegateItem.settingsModel.hideSetting(key);
+            }
+            MenuItem
+            {
+                //: Settings context menu action
+                text: catalog.i18nc("@action:menu","Configure setting visiblity...");
+
+                onTriggered: if(base.configureSettings) base.configureSettings.trigger(key);
+            }
+        }
     }
 }
