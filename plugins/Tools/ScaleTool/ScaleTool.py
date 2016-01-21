@@ -71,7 +71,7 @@ class ScaleTool(Tool):
                 self._non_uniform_scale = False
                 self.propertyChanged.emit()
 
-        if event.type == Event.MousePressEvent:
+        if event.type == Event.MousePressEvent and self._controller.getToolsEnabled():
             if MouseEvent.LeftButton not in event.buttons:
                 return False
 

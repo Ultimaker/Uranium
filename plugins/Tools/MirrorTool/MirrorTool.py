@@ -26,7 +26,7 @@ class MirrorTool(Tool):
     def event(self, event):
         super().event(event)
 
-        if event.type == Event.MousePressEvent:
+        if event.type == Event.MousePressEvent and self._controller.getToolsEnabled():
             if MouseEvent.LeftButton not in event.buttons:
                 return False
 

@@ -20,7 +20,7 @@ class ControllerProxy(QObject):
         self._controller.contextMenuRequested.connect(self._onContextMenuRequested)
         self._selection_pass = None
         self._tools_enabled = True
-        
+
         self._controller.toolOperationStarted.connect(self._onToolOperationStarted)
         self._controller.toolOperationStopped.connect(self._onToolOperationStopped)
 
@@ -64,9 +64,10 @@ class ControllerProxy(QObject):
 
     def _onToolOperationStarted(self, tool):
         self._tools_enabled = False
+        self._controller.setToolsEnabled(False)
         self.toolsEnabledChanged.emit()
 
     def _onToolOperationStopped(self, tool):
         self._tools_enabled = True
+        self._controller.setToolsEnabled(True)
         self.toolsEnabledChanged.emit()
- 

@@ -39,7 +39,7 @@ class SelectionTool(Tool):
             self._selection_pass = self._renderer.getRenderPass("selection")
 
         self.checkModifierKeys(event)
-        if event.type == MouseEvent.MousePressEvent and MouseEvent.LeftButton in event.buttons:
+        if event.type == MouseEvent.MousePressEvent and MouseEvent.LeftButton in event.buttons and self._controller.getToolsEnabled():
             if self._selection_mode == self.PixelSelectionMode:
                 self._pixelSelection(event)
             else:

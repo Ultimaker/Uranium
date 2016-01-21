@@ -41,7 +41,7 @@ class TranslateTool(Tool):
         if event.type == Event.KeyReleaseEvent and event.key == KeyEvent.ShiftKey:
             self._grid_snap = False
 
-        if event.type == Event.MousePressEvent:
+        if event.type == Event.MousePressEvent and self._controller.getToolsEnabled():
             if MouseEvent.LeftButton not in event.buttons:
                 return False
 
