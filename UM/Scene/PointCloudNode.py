@@ -8,6 +8,7 @@ from UM.Resources import Resources
 from UM.Math.Color import Color
 from UM.ColorGenerator import ColorGenerator
 from UM.View.GL.OpenGL import OpenGL
+from UM.View.RenderBatch import RenderBatch
 import numpy
 import colorsys
 
@@ -66,7 +67,7 @@ class PointCloudNode(SceneNode.SceneNode):
         if not self._material:
             self.createMaterial()
         if self.getMeshData() and self.isVisible():
-            renderer.queueNode(self, mode = Renderer.RenderPoints, material = self._material)
+            renderer.queueNode(self, mode = RenderBatch.RenderMode.Points, shader = self._material)
             return True
     
     ##  \brief Set the mesh of this node/object
