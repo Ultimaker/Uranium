@@ -10,7 +10,7 @@ import os
 import os.path
 import sys
 
-from UM.Logger import Logger
+from UM.Logger import Logger, deprecated
 from UM.Resources import Resources
 
 class Theme(QObject):
@@ -36,26 +36,47 @@ class Theme(QObject):
 
     themeLoaded = pyqtSignal()
 
+    @pyqtSlot(str, result = "QColor")
+    def getColor(self, color):
+        return self._colors.get(color, QColor())
+
+    @pyqtSlot(str, result = "QSizeF")
+    def getSize(self, size):
+        return self._sizes.get(size, QSizeF())
+
+    @pyqtSlot(str, result = "QUrl")
+    def getIcon(self, icon_name):
+        return self._icons.get(icon_name, "")
+
+    @pyqtSlot(str, result = "QFont")
+    def getFont(self, font_name):
+        return self._fonts.get(font_name, QFont())
+
     @pyqtProperty(QObject, notify = themeLoaded)
     def styles(self):
         return self._styles
 
+    @deprecated("Use getIcon for performance reasons")
     @pyqtProperty("QVariantMap", notify = themeLoaded)
     def icons(self):
         return self._icons
 
+    @deprecated("Use getImage for performance reasons")
     @pyqtProperty("QVariantMap", notify = themeLoaded)
     def images(self):
         return self._images
 
+    @deprecated("Use getColor for performance reasons")
     @pyqtProperty("QVariantMap", notify = themeLoaded)
     def colors(self):
         return self._colors
 
+    @deprecated("Use getFont for performance reasons")
     @pyqtProperty("QVariantMap", notify = themeLoaded)
     def fonts(self):
         return self._fonts
 
+    @deprecated("Use getSize for performance reasons")
     @pyqtProperty("QVariantMap", notify = themeLoaded)
     def sizes(self):
         return self._sizes
