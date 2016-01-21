@@ -64,8 +64,8 @@ CheckBox
                 height: parent.height/2.5
                 sourceSize.width: width
                 sourceSize.height: width
-                color: UM.Theme.colors.checkbox_mark
-                source: UM.Theme.icons.check
+                color: UM.Theme.getColor("checkbox_mark");
+                source: UM.Theme.getIcon("check")
                 opacity: control.checked
                 Behavior on opacity { NumberAnimation { duration: 100; } }
             }

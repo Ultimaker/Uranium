@@ -73,11 +73,11 @@ Rectangle {
     Rectangle{
         visible: base.depth > 1 ? true : false
         id: separationLine
-        width: UM.Theme.sizes.default_lining.width
+        width: UM.Theme.getSize("default_lining").width
         height: label.height
-        color: UM.Theme.colors.setting_control_depth_line
+        color: UM.Theme.getColor("setting_control_depth_line");
         anchors.right: label.left
-        anchors.rightMargin: UM.Theme.sizes.setting_control_depth_margin.width / 2
+        anchors.rightMargin: UM.Theme.getSize("setting_control_depth_margin").width / 2
         anchors.verticalCenter: parent.verticalCenter
         z: parent.z + 1
     }
@@ -88,12 +88,12 @@ Rectangle {
         property int depth: base.depth - 1
 
         anchors.left: parent.left;
-        anchors.leftMargin: base.indent ? (UM.Theme.sizes.section_icon_column.width + 5) + (label.depth * UM.Theme.sizes.setting_control_depth_margin.width) : 0
+        anchors.leftMargin: base.indent ? (UM.Theme.getSize("section_icon_column").width + 5) + (label.depth * UM.Theme.getSize("setting_control_depth_margin").width) : 0
         anchors.right: base.overridden? revertButton.left : controlContainer.left;
         anchors.rightMargin: base.style.spacing;
         anchors.verticalCenter: parent.verticalCenter
 
-        height: UM.Theme.sizes.section.height;
+        height: UM.Theme.getSize("section").height;
         verticalAlignment: Text.AlignVCenter;
 
         text: base.name
