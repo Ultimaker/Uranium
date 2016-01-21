@@ -88,31 +88,25 @@ class MeshListModel(ListModel):
                 #self.insertItem(new_index,data)
     
     def updateList(self, trigger_node):
+        self.clear()
         for root_child in self._scene.getRoot().getChildren():
             if root_child.callDecoration("isGroup"): # Check if its a group node
-                #if root_child.hasChildren(): #Check if it has children (only show it if it has)
                 parent_key = id(root_child)
-                for node in DepthFirstIterator(root_child): 
+                for node in DepthFirstIterator(root_child):
                     if root_child in self._collapsed_nodes:
                         self._collapsed_nodes.append(node)
-                    data = {"name":node.getName(), "visibility": node.isVisible(), "key": (id(node)), "selected": Selection.isSelected(node),"collapsed": node in self._collapsed_nodes,"parent_key": parent_key, "is_group":bool(node.callDecoration("isGroup"))}
-                    index = self.find("key",(id(node)))
-                    parent_index = self.find("key", data["parent_key"])
-                    num_children = 0
-                    for parent_node in Application.getInstance().getController().getScene().getRoot().getAllChildren():
-                        if id(parent_node) == data["parent_key"]:
-                            num_children = len(parent_node.getChildren())
-                    if parent_index != -1:
-                        corrected_index = parent_index + num_children
-                    else: 
-                        corrected_index = 0 
-                    if index is not None and index >= 0:
-                        self.removeItem(index)
-                        self.insertItem(index,data)
-                    else:
-                        self.insertItem(corrected_index, data)
-                        #self.appendItem(data)
-            elif type(root_child) is SceneNode or type(root_child) is PointCloudNode:
+
+                    data = {"name":node.getName(),
+                            "visibility": node.isVisible(),
+                            "key": (id(node)),
+                            "selected": Selection.isSelected(node),
+                            "collapsed": node in self._collapsed_nodes,
+                            "parent_key": parent_key,
+                            "is_group":bool(node.callDecoration("isGroup"))
+                            }
+                    self.appendItem(data)
+
+            elif type(root_child) is SceneNode or type(root_child) is PointCloudNode: # Item is not a group node.
                 data = {"name":root_child.getName(), "visibility": root_child.isVisible(), "key": (id(root_child)), "selected": Selection.isSelected(root_child),"collapsed": root_child in self._collapsed_nodes,"parent_key": 0, "is_group":bool(root_child.callDecoration("isGroup"))}
                 # Check if data exists, if yes, remove old and re-add.
                 index = self.find("key",(id(root_child)))
@@ -121,20 +115,6 @@ class MeshListModel(ListModel):
                     self.insertItem(index,data)
                 else:
                     self.appendItem(data)
-                
-                
-            '''for node in DepthFirstIterator(group_node):                
-                if (node.getMeshData() is not None or node.hasChildren()) and type(node) is not Camera and type(node) is not Platform:
-                    parent_key = 0
-                    if group_node is not node:
-                        parent_key =  id(group_node)
-                    index = self.find("key",(id(node)))
-                    data = {"name":node.getName(), "visibility": node.isVisible(), "key": (id(node)), "selected": Selection.isSelected(node),"depth": node.getDepth(),"collapsed": node in self._collapsed_nodes,"parent_key": parent_key, "has_children":node.hasChildren()}
-                    if index is not None and index >= 0:
-                        self.removeItem(index)
-                        self.insertItem(index,data)
-                    else:
-                        self.appendItem(data)'''
         
     # set the visibility of a node (by key)
     @pyqtSlot("long",bool)
