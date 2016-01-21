@@ -36,7 +36,7 @@ class ActiveProfileProxy(QObject):
         if self._active_profile:
             self._active_profile.settingValueChanged.disconnect(self._onSettingValuesChanged)
 
-        self._active_profile = Application.getInstance().getMachineManager().getActiveProfile()
+        self._active_profile = Application.getInstance().getMachineManager().getWorkingProfile()
         self.activeProfileChanged.emit()
 
         if self._active_profile:

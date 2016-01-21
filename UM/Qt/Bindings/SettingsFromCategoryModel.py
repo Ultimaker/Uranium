@@ -44,7 +44,7 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
 
         self._changed_setting = None
 
-        self._profile = self._machine_manager.getActiveProfile()
+        self._profile = self._machine_manager.getWorkingProfile()
         self._machine_manager.activeProfileChanged.connect(self._onProfileChanged)
         if self._profile is not None: # A profile is already set but we did not recieve the event.
             self._onProfileChanged()
@@ -165,7 +165,7 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
         if self._profile:
             self._profile.settingValueChanged.disconnect(self._onSettingValueChanged)
 
-        self._profile = self._machine_manager.getActiveProfile()
+        self._profile = self._machine_manager.getWorkingProfile()
         if self._profile:
             self._profile.settingValueChanged.connect(self._onSettingValueChanged)
             self.updateSettings()
