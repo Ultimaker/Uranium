@@ -7,6 +7,7 @@ from UM.Application import Application
 from UM.Resources import Resources
 from UM.Math.Color import Color
 from UM.ColorGenerator import ColorGenerator
+from UM.View.GL.OpenGL import OpenGL
 import numpy
 import colorsys
 
@@ -53,8 +54,9 @@ class PointCloudNode(SceneNode.SceneNode):
         self._material = None # Reset material 
     
     ##   \brief Create new material. 
-    def createMaterial(self,renderer):
-        self._material = renderer.createMaterial(Resources.getPath(Resources.Shaders, "default.vert"), Resources.getPath(Resources.Shaders, "default.frag"))
+    def createMaterial(self):
+        self._material = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "default.shader"))
+
         self._material.setUniformValue("u_ambientColor", Color(0.3, 0.3, 0.3, 1.0))
         self._material.setUniformValue("u_diffuseColor", self._color)
         self._material.setUniformValue("u_specularColor", Color(1.0, 1.0, 1.0, 1.0))
@@ -62,7 +64,7 @@ class PointCloudNode(SceneNode.SceneNode):
     
     def render(self, renderer):
         if not self._material:
-            self.createMaterial(renderer)
+            self.createMaterial()
         if self.getMeshData() and self.isVisible():
             renderer.queueNode(self, mode = Renderer.RenderPoints, material = self._material)
             return True
