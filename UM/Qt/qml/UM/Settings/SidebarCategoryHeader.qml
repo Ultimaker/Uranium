@@ -11,32 +11,31 @@ import UM 1.0 as UM
 Button {
     id: base;
 
-    Layout.preferredHeight: UM.Theme.sizes.section.height;
-    Layout.preferredWidth: UM.Theme.sizes.sidebar.width;
-
     property variant color;
+
     style: UM.Theme.styles.sidebar_category;
 
-    Button{
+    MouseArea {
         id: settingsButton
+
         visible: base.hovered || settingsButton.hovered
         height: base.height * 0.6
         width: base.height * 0.6
+
         anchors.verticalCenter: parent.verticalCenter
         anchors.right: parent.right
-        anchors.rightMargin: UM.Theme.sizes.setting_preferences_button_margin.width
-        style: ButtonStyle {
-            background: UM.RecolorImage {
-                id: settingsImage
-                width: control.width
-                height: control.height
-                sourceSize.width: width
-                sourceSize.height: width
-                color: control.hovered ? UM.Theme.colors.setting_control_button_hover : UM.Theme.colors.setting_control_button
-                source: UM.Theme.icons.settings
-            }
-            label: Label{}
+        anchors.rightMargin: UM.Theme.getSize("setting_preferences_button_margin").width
+
+        UM.RecolorImage {
+            anchors.fill: parent;
+
+            sourceSize.width: width
+            sourceSize.height: width
+
+            color: parent.containsMouse ? UM.Theme.getColor("setting_control_button_hover") : UM.Theme.getColor("setting_control_button");
+            source: UM.Theme.getIcon("settings");
         }
+
         onClicked: {
             preferences.visible = true;
             preferences.setPage(2);
