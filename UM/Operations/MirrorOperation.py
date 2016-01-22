@@ -32,7 +32,7 @@ class MirrorOperation(Operation.Operation):
             return False
 
         op = MirrorOperation(self._node, self._mirror)
-        op._old_scale = other._old_scale
+        op._old_mirror = other._old_mirror
         return op
 
     def __repr__(self):
