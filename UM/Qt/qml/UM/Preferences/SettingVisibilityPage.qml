@@ -10,6 +10,14 @@ import UM 1.1 as UM
 PreferencesPage {
     title: catalog.i18nc("@title:tab", "Setting Visibility");
 
+    signal scrollToSection( string key )
+    onScrollToSection: {
+        var index = Math.max(0, settingList.model.find("id", key));
+        var offsetY = settingList.itemAt(index).mapToItem(settingList, 0, 0).y;
+
+        scrollView.flickableItem.contentY = offsetY;
+    }
+
     function reset() {
     }
     resetEnabled: false;
@@ -32,6 +40,8 @@ PreferencesPage {
         }
 
         ScrollView {
+            id: scrollView
+
             anchors {
                 top: filter.bottom;
                 left: parent.left;

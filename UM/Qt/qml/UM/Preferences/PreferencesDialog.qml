@@ -108,6 +108,11 @@ Dialog
         configPagesModel.remove(index)
     }
 
+    function getCurrentItem(key)
+    {
+        return stackView.currentItem
+    }
+
     Component.onCompleted:
     {
         //This uses insertPage here because ListModel is stupid and does not allow using qsTr() on elements.
