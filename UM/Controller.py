@@ -34,6 +34,8 @@ class Controller(SignalEmitter):
         self._camera_tool = None
         self._selection_tool = None
 
+        self._tools_enabled = True
+
         PluginRegistry.addType("view", self.addView)
         PluginRegistry.addType("tool", self.addTool)
         PluginRegistry.addType("input_device", self.addInputDevice)
@@ -247,3 +249,10 @@ class Controller(SignalEmitter):
     #   \sa setActiveTool
     def setSelectionTool(self, tool):
         self._selection_tool = self.getTool(tool)
+
+
+    def getToolsEnabled(self):
+        return self._tools_enabled
+
+    def setToolsEnabled(self, enabled):
+        self._tools_enabled = enabled
