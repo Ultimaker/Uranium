@@ -211,6 +211,11 @@ class MachineManager(SignalEmitter):
 
         self._active_machine.setMaterialName(material)
 
+        material_profile = self.findProfile(material, type="material")
+        if material_profile:
+            print(material_profile.getChangedSettingValues())
+            self._active_machine.getWorkingProfile().mergeSettingsFrom(material_profile, reset = False)
+
         self.activeMachineInstanceChanged.emit()
 
     def setActiveMachineVariant(self, variant):
@@ -238,7 +243,7 @@ class MachineManager(SignalEmitter):
 
     profileNameChanged = Signal()
 
-    def getProfiles(self, active_instance_profiles_only = True):
+    def getProfiles(self, type = None, active_instance_profiles_only = True):
         if not active_instance_profiles_only:
             return self._profiles
 
@@ -255,7 +260,7 @@ class MachineManager(SignalEmitter):
         for profile in self._profiles:
             profile_type = profile.getType()
             #Filter out "partial" profiles
-            if profile_type == "material":
+            if type != "all" and type != profile_type:
                 continue
 
             machine_type = profile.getMachineTypeId()
@@ -314,13 +319,14 @@ class MachineManager(SignalEmitter):
             except:
                 self.setActiveProfile(None)
 
-    def findProfile(self, name, variant_name = None, material_name = None, active_instance_profiles_only = True):
-        profiles = self.getProfiles(active_instance_profiles_only);
+    def findProfile(self, name, variant_name = None, material_name = None, type = None, active_instance_profiles_only = True):
+        profiles = self.getProfiles(type = type, active_instance_profiles_only = active_instance_profiles_only);
 
         for profile in profiles:
             if profile.getName() == name:
                 if (variant_name and not profile.getMachineVariantName() == variant_name) or \
-                        (material_name and not profile.getMaterialName() == material_name):
+                        (material_name and not profile.getMaterialName() == material_name) or \
+                        (type and not profile.getType() == type):
                     continue
                 return profile
 
@@ -338,7 +344,10 @@ class MachineManager(SignalEmitter):
         if profile not in self._profiles or self._active_profile == profile:
             return
 
+        #Replace working profile with a copy of the new profile
+        #TODO: warn user, allow cancel
         self._active_machine.getWorkingProfile().mergeSettingsFrom(profile, reset = True)
+            
         self._active_profile = profile
         self._active_machine.setActiveProfileName(profile.getName())
 

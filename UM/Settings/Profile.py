@@ -129,7 +129,8 @@ class Profile(SignalEmitter):
         if not setting:
             return
 
-        if value == setting.getDefaultValue() or value == str(setting.getDefaultValue()):
+        if value == setting.getDefaultValue() or value == str(setting.getDefaultValue()) and not self._type:
+            #Note: partial profiles can have values that equal the default setting
             if key in self._changed_settings:
                 del self._changed_settings[key]
                 self.settingValueChanged.emit(key)
