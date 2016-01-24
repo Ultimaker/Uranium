@@ -213,7 +213,6 @@ class MachineManager(SignalEmitter):
 
         material_profile = self.findProfile(material, type="material")
         if material_profile:
-            print(material_profile.getChangedSettingValues())
             self._active_machine.getWorkingProfile().mergeSettingsFrom(material_profile, reset = False)
 
         self.activeMachineInstanceChanged.emit()
@@ -350,6 +349,10 @@ class MachineManager(SignalEmitter):
             
         self._active_profile = profile
         self._active_machine.setActiveProfileName(profile.getName())
+
+        #Reapply previously selected partial material profile
+        if self._active_machine.hasMaterials():
+            self.setActiveMaterial(self._active_machine.getMaterialName())
 
         self.activeProfileChanged.emit()
 
