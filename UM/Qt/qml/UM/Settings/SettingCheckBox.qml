@@ -8,6 +8,71 @@ import QtQuick.Controls.Styles 1.1
 
 import UM 1.0 as UM
 
+MouseArea
+{
+    id: base;
+
+    signal valueChanged(bool value);
+
+    property bool checked:
+    {
+        if(value == "True")
+        {
+            return true;
+        }
+        else if(value == "False")
+        {
+            return false;
+        }
+        else
+        {
+            return value;
+        }
+    }
+
+    onClicked: valueChanged(!checked);
+
+    hoverEnabled: true;
+
+    Rectangle
+    {
+        anchors
+        {
+            top: parent.top
+            bottom: parent.bottom
+            left: parent.left
+        }
+        width: height
+
+        color:
+        {
+            if(base.containsMouse || base.activeFocus)
+            {
+                return itemStyle.controlHighlightColor
+            }
+            else
+            {
+                return itemStyle.controlColor
+            }
+        }
+        border.width: itemStyle.controlBorderWidth;
+        border.color: base.containsMouse ? itemStyle.controlBorderHighlightColor : itemStyle.controlBorderColor;
+
+        UM.RecolorImage {
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+            width: parent.width/2.5
+            height: parent.height/2.5
+            sourceSize.width: width
+            sourceSize.height: width
+            color: UM.Theme.getColor("checkbox_mark");
+            source: UM.Theme.getIcon("check")
+            opacity: base.checked
+            Behavior on opacity { NumberAnimation { duration: 100; } }
+        }
+    }
+}
+/*
 CheckBox
 {
     signal valueChanged(bool value);
@@ -38,37 +103,6 @@ CheckBox
     {
         background: Item { }
         label: Label{ }
-        indicator: Rectangle
-        {
-            implicitWidth:  control.height;
-            implicitHeight: control.height;
-
-            color:
-            {
-                if(control.hovered || base.activeFocus)
-                {
-                    return itemStyle.controlHighlightColor
-                }
-                else
-                {
-                    return itemStyle.controlColor
-                }
-            }
-            border.width: itemStyle.controlBorderWidth;
-            border.color: control.hovered ? itemStyle.controlBorderHighlightColor : itemStyle.controlBorderColor;
-
-            UM.RecolorImage {
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.horizontalCenter: parent.horizontalCenter
-                width: parent.width/2.5
-                height: parent.height/2.5
-                sourceSize.width: width
-                sourceSize.height: width
-                color: UM.Theme.getColor("checkbox_mark");
-                source: UM.Theme.getIcon("check")
-                opacity: control.checked
-                Behavior on opacity { NumberAnimation { duration: 100; } }
-            }
-        }
+        indicator:
     }
-}
+}*/
