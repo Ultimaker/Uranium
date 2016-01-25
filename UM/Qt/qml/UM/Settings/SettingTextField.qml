@@ -25,7 +25,7 @@ TextField
     {
         target: base
         property: "text"
-        value: base.parentValue
+        value: parseFloat(base.parentValue) ? parseFloat(base.parentValue).toFixed(4).replace(/\.?0*$/,"") : base.parentValue //If it's a float, round to four decimals.
         when: !base.activeFocus
     }
 
