@@ -12,6 +12,8 @@ import sys
 
 from UM.Logger import Logger, deprecated
 from UM.Resources import Resources
+from UM.Preferences import Preferences
+from UM.Application import Application
 
 class Theme(QObject):
     def __init__(self, engine, parent = None):
@@ -32,7 +34,13 @@ class Theme(QObject):
         self._em_height = int(QFontMetrics(QCoreApplication.instance().font()).ascent())
         self._em_width = self._em_height;
 
-        self._initializeDefaults()
+        Preferences.getInstance().addPreference("general/theme", Application.getInstance().getApplicationName())
+
+        try:
+            theme_path = Resources.getPath(Resources.Themes, Preferences.getInstance().getValue("general/theme"))
+            self.load(theme_path)
+        except FileNotFoundError:
+            pass
 
     themeLoaded = pyqtSignal()
 
@@ -83,6 +91,9 @@ class Theme(QObject):
 
     @pyqtSlot(str)
     def load(self, path):
+        if path == self._path:
+            return
+
         self._path = path
 
         with open(os.path.join(self._path, "theme.json")) as f:
