@@ -5,12 +5,13 @@ from UM.PluginObject import PluginObject
 
 import warnings
 
-def deprecated(message):
+def deprecated(message, since = "Unknown"):
     def deprecated_decorator(function):
         def deprecated_function(*args, **kwargs):
-            warnings.warn(message, DeprecationWarning, stacklevel=2)
-            function(*args, **kwargs)
-
+            warning = "{0} is deprecated (since {1}): {2}".format(function, since, message)
+            Logger.log("w", warning)
+            warnings.warn(warning, DeprecationWarning, stacklevel=2)
+            return function(*args, **kwargs)
         return deprecated_function
     return deprecated_decorator
 
