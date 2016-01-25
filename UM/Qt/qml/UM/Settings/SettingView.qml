@@ -50,7 +50,7 @@ ScrollView
                     height: UM.Theme.getSize("section").height;
 
                     text: model.name;
-                    iconSource: UM.Theme.icons[model.icon];
+                    iconSource: UM.Theme.getIcon(model.icon);
                     checkable: true;
 
                     property bool previousChecked: false
