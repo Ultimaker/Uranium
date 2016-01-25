@@ -136,10 +136,11 @@ Item
             height: UM.Theme.sizes.setting_control.height;
             property string unit: "mm";
             style: UM.Theme.styles.text_field;
-            text: UM.ActiveTool.properties.ObjectWidth
+            text: UM.ActiveTool.properties.ObjectWidth.toFixed(4).replace(/\.?0*$/,"");
             validator: DoubleValidator
             {
                 bottom: 0.1
+                decimals: 4
                 locale: "en_US"
             }
 
@@ -151,10 +152,11 @@ Item
             height: UM.Theme.sizes.setting_control.height;
             property string unit: "mm";
             style: UM.Theme.styles.text_field;
-            text: UM.ActiveTool.properties.ObjectDepth
+            text: UM.ActiveTool.properties.ObjectDepth.toFixed(4).replace(/\.?0*$/,"");
             validator: DoubleValidator
             {
                 bottom: 0.1
+                decimals: 4
                 locale: "en_US"
             }
 
@@ -166,10 +168,11 @@ Item
             height: UM.Theme.sizes.setting_control.height;
             property string unit: "mm";
             style: UM.Theme.styles.text_field;
-            text: UM.ActiveTool.properties.ObjectHeight
+            text: UM.ActiveTool.properties.ObjectHeight.toFixed(4).replace(/\.?0*$/,"");
             validator: DoubleValidator
             {
                 bottom: 0.1
+                decimals: 4
                 locale: "en_US"
             }
 
@@ -183,10 +186,11 @@ Item
             height: UM.Theme.sizes.setting_control.height;
             property string unit: "%";
             style: UM.Theme.styles.text_field;
-            text: base.getPercentage(UM.ActiveTool.properties.ScaleX)
+            text: base.getPercentage(UM.ActiveTool.properties.ScaleX).toFixed(4).replace(/\.?0*$/,"");
             validator: DoubleValidator
             {
                 bottom: 100 * (0.1 / (UM.ActiveTool.properties.ObjectWidth / UM.ActiveTool.properties.ScaleX));
+                decimals: 4
                 locale: "en_US"
             }
 
@@ -199,10 +203,11 @@ Item
             height: UM.Theme.sizes.setting_control.height;
             property string unit: "%";
             style: UM.Theme.styles.text_field;
-            text: base.getPercentage(UM.ActiveTool.properties.ScaleZ)
+            text: base.getPercentage(UM.ActiveTool.properties.ScaleZ).toFixed(4).replace(/\.?0*$/,"");
             validator: DoubleValidator
             {
                 bottom: 100 * (0.1 / (UM.ActiveTool.properties.ObjectDepth / UM.ActiveTool.properties.ScaleZ));
+                decimals: 4
                 locale: "en_US"
             }
 
@@ -215,10 +220,11 @@ Item
             height: UM.Theme.sizes.setting_control.height;
             property string unit: "%";
             style: UM.Theme.styles.text_field;
-            text: base.getPercentage(UM.ActiveTool.properties.ScaleY)
+            text: base.getPercentage(UM.ActiveTool.properties.ScaleY).toFixed(4).replace(/\.?0*$/,"");
             validator: DoubleValidator
             {
                 bottom: 100 * (0.1 / (UM.ActiveTool.properties.ObjectHeight / UM.ActiveTool.properties.ScaleY))
+                decimals: 4
                 locale: "en_US"
             }
 
