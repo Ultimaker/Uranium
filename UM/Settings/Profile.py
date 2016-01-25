@@ -255,7 +255,7 @@ class Profile(SignalEmitter):
             setting = self._active_instance.getMachineDefinition().getSetting(key)
             if not setting:
                 return False
-            valid = setting.validate(value)
+            valid = setting.validate(setting.parseValue(value))
             if valid == ResultCodes.min_value_error or valid == ResultCodes.max_value_error or valid == ResultCodes.not_valid_error:
                 Logger.log("w", "The setting %s has an invalid value of %s", key, value)
                 return True
