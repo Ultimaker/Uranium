@@ -76,8 +76,8 @@ ScrollView
                     anchors.top: categoryHeader.bottom
                     width: categoryHeader.width
 
-                    opacity: model.hiddenValuesCount > 0 ? 1 : 0
-                    height: model.hiddenValuesCount > 0 ? UM.Theme.sizes.lineHeight : 0
+                    opacity: categoryHeader.checked && model.hiddenValuesCount > 0 ? 1 : 0
+                    height: categoryHeader.checked && model.hiddenValuesCount > 0 ? UM.Theme.sizes.lineHeight : 0
 
                     text: catalog.i18ncp("@label", "{0} hidden setting uses a custom value", "{0} hidden settings use custom values", model.hiddenValuesCount)
                     onClicked: { UM.ActiveProfile.showHiddenValues(model.id) }
