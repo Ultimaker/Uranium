@@ -6,7 +6,7 @@ import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.1
 
-import UM 1.0 as UM
+import UM 1.1 as UM
 
 Rectangle {
     id: base;
@@ -103,38 +103,27 @@ Rectangle {
         font: base.style.labelFont;
     }
 
-    Button {
-        id: revertButton
+    UM.SimpleButton
+    {
+        id: revertButton;
 
         anchors {
             right: controlContainer.left
             verticalCenter: parent.verticalCenter;
         }
         visible: base.overridden
-        tooltip: catalog.i18nc("@info:tooltip", "Reset to Default")
 
-        height: parent.height - base.style.controlBorderWidth;
+        height: parent.height / 2;
         width: height;
+
+        backgroundColor: hovered ? base.style.controlHighlightColor : base.style.controlColor;
+
+        color: hovered ? UM.Theme.getColor("setting_control_button_hover") : UM.Theme.getColor("setting_control_button")
+        iconSource: UM.Theme.getIcon("reset")
 
         onClicked: {
             base.resetRequested()
             controlContainer.notifyReset();
-        }
-
-        style: ButtonStyle {
-            background: Rectangle {
-                color: control.hovered ? base.style.controlHighlightColor : base.style.controlColor;
-                UM.RecolorImage {
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    width: parent.width/2
-                    height: parent.height/2
-                    sourceSize.width: width
-                    sourceSize.height: width
-                    color: control.hovered ? UM.Theme.colors.setting_control_button_hover : UM.Theme.colors.setting_control_button
-                    source: UM.Theme.icons.reset
-                }
-            }
         }
     }
 
