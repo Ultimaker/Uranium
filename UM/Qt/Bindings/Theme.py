@@ -64,28 +64,28 @@ class Theme(QObject):
     def styles(self):
         return self._styles
 
-    @deprecated("Use getIcon for performance reasons")
     @pyqtProperty("QVariantMap", notify = themeLoaded)
+    @deprecated("Use getIcon for performance reasons", "2.1")
     def icons(self):
         return self._icons
 
-    @deprecated("Use getImage for performance reasons")
     @pyqtProperty("QVariantMap", notify = themeLoaded)
+    @deprecated("Use getImage for performance reasons", "2.1")
     def images(self):
         return self._images
 
-    @deprecated("Use getColor for performance reasons")
     @pyqtProperty("QVariantMap", notify = themeLoaded)
+    @deprecated("Use getColor for performance reasons", "2.1")
     def colors(self):
         return self._colors
 
-    @deprecated("Use getFont for performance reasons")
     @pyqtProperty("QVariantMap", notify = themeLoaded)
+    @deprecated("Use getFont for performance reasons", "2.1")
     def fonts(self):
         return self._fonts
 
-    @deprecated("Use getSize for performance reasons")
     @pyqtProperty("QVariantMap", notify = themeLoaded)
+    @deprecated("Use getSize for performance reasons", "2.1")
     def sizes(self):
         return self._sizes
 
