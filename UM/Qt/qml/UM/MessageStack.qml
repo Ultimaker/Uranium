@@ -56,8 +56,8 @@ ListView {
             }
 
             text: model.progress > 0 ? messageLabel.getProgressText() : model.text == undefined ? '' : model.text
-            color: UM.Theme.getColor("message_text;")
-            font: UM.Theme.getFont("default;")
+            color: UM.Theme.getColor("message_text")
+            font: UM.Theme.getFont("default")
             wrapMode: Text.Wrap;
 
             ProgressBar {
@@ -94,7 +94,7 @@ ListView {
                 sourceSize.width: width
                 sourceSize.height: width
                 color: UM.Theme.getColor("message_dismiss")
-                source: UM.Theme.getIcon("cross2;")
+                source: UM.Theme.getIcon("cross2")
             }
 
             onClicked: UM.Models.visibleMessagesModel.hideMessage(model.id)
