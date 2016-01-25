@@ -34,6 +34,8 @@ class MachineManager(SignalEmitter):
         self._active_machine = None
         self._active_profile = None
 
+        self._protect_working_profile = False
+
         self._profile_readers = {} #Plugins that read profiles from file.
         self._profile_writers = {} #Plugins that write profiles to file.
         PluginRegistry.addType("profile_reader", self.addProfileReader)
@@ -191,6 +193,7 @@ class MachineManager(SignalEmitter):
 
         self._updateSettingVisibility(setting_visibility)
 
+        self._protect_working_profile = True
         profile = self.findProfile(machine.getActiveProfileName())
         if profile:
             self.setActiveProfile(profile)
@@ -206,6 +209,7 @@ class MachineManager(SignalEmitter):
                 self._active_machine.setMaterialName(available_materials[0])
 
         self.activeMachineInstanceChanged.emit()
+        self._protect_working_profile = False
 
     def setActiveMaterial(self, material):
         if not self._active_machine:
@@ -345,25 +349,26 @@ class MachineManager(SignalEmitter):
         if profile not in self._profiles or self._active_profile == profile:
             return
 
-        #TODO: only ask the user if there are custom settings to be saved
-        result = QMessageBox.question(None, catalog.i18nc("@title:window", "Replace profile"),
-                    catalog.i18nc("@label", "Selecting the {0} profile replaces your current settings. Do you want to save your settings in a custom profile?").format(profile.getName()), 
-                    QMessageBox.Cancel | QMessageBox.Yes | QMessageBox.No)
-        if result == QMessageBox.Cancel:
-            return
-        elif result == QMessageBox.Yes:
-            #TODO: store working profile in new custom profile
-            pass
+        if not self._protect_working_profile:
+            #TODO: only ask the user if there are custom settings to be saved
+            result = QMessageBox.question(None, catalog.i18nc("@title:window", "Replace profile"),
+                        catalog.i18nc("@label", "Selecting the {0} profile replaces your current settings. Do you want to save your settings in a custom profile?").format(profile.getName()), 
+                        QMessageBox.Cancel | QMessageBox.Yes | QMessageBox.No)
+            if result == QMessageBox.Cancel:
+                return
+            elif result == QMessageBox.Yes:
+                #TODO: store working profile in new custom profile
+                pass
 
-        #Replace working profile with a copy of the new profile
-        self._active_machine.getWorkingProfile().mergeSettingsFrom(profile, reset = True)
-            
+            #Replace working profile with a copy of the new profile
+            self._active_machine.getWorkingProfile().mergeSettingsFrom(profile, reset = True)
+
+            #Reapply previously selected partial material profile
+            if self._active_machine.hasMaterials():
+                self.setActiveMaterial(self._active_machine.getMaterialName())
+
         self._active_profile = profile
         self._active_machine.setActiveProfileName(profile.getName())
-
-        #Reapply previously selected partial material profile
-        if self._active_machine.hasMaterials():
-            self.setActiveMaterial(self._active_machine.getMaterialName())
 
         self.activeProfileChanged.emit()
 
