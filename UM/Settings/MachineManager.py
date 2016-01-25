@@ -432,12 +432,6 @@ class MachineManager(SignalEmitter):
                     Logger.log("e", "An exception occurred loading Machine Instance: %s: %s", path, str(e))
                     continue
 
-                try:
-                    file_name = urllib.parse.quote_plus(instance.getName()) + ".curaprofile"
-                    instance.getWorkingProfile().loadFromFile(Resources.getStoragePath(Resources.MachineInstanceProfiles, file_name))
-                except Exception as e:
-                    Logger.log("w", "Could not load working profile: %s: %s", file_name, str(e))
-
                 if not self.findMachineInstance(instance.getName()):
                     self._machine_instances.append(instance)
                     instance.nameChanged.connect(self._onInstanceNameChanged)
@@ -475,6 +469,13 @@ class MachineManager(SignalEmitter):
                     if not self.findProfile(profile.getName(), variant_name = profile.getMachineVariantName(), material_name = profile.getMaterialName()):
                         self._profiles.append(profile)
                         profile.nameChanged.connect(self._onProfileNameChanged)
+
+        for instance in self._machine_instances:
+            try:
+                file_name = urllib.parse.quote_plus(instance.getName()) + ".curaprofile"
+                instance.getWorkingProfile().loadFromFile(Resources.getStoragePath(Resources.MachineInstanceProfiles, file_name))
+            except Exception as e:
+                Logger.log("w", "Could not load working profile: %s: %s", file_name, str(e))
 
         self._protect_working_profile = True
 
