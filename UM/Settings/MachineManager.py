@@ -206,7 +206,10 @@ class MachineManager(SignalEmitter):
             material = self._active_machine.getMaterialName()
             available_materials = self.getAllMachineMaterials(self._active_machine.getName())
             if not material or (len(available_materials) > 0 and material not in available_materials):
-                self._active_machine.setMaterialName(available_materials[0])
+                if "PLA" in available_materials:
+                    self._active_machine.setMaterialName("PLA")
+                else:
+                    self._active_machine.setMaterialName(available_materials[0])
 
         self.activeMachineInstanceChanged.emit()
         self._protect_working_profile = False
@@ -473,7 +476,22 @@ class MachineManager(SignalEmitter):
                         self._profiles.append(profile)
                         profile.nameChanged.connect(self._onProfileNameChanged)
 
+        self._protect_working_profile = True
+
+        profile_name = self._active_machine.getActiveProfileName()
+        if profile_name == "":
+            profile_name = "Normal Quality"
+
+        profile = self.findProfile(self._active_machine.getActiveProfileName())
+        if profile:
+            self.setActiveProfile(profile)
+        else:
+            profiles = self.getProfiles()
+            if len(profiles) > 0:
+                self.setActiveProfile(profiles[0])
+
         self.profilesChanged.emit()
+        self._protect_working_profile = False
 
     def loadVisibility(self):
         preference = Preferences.getInstance().getValue("machines/setting_visibility")
