@@ -68,6 +68,14 @@ class Theme(QObject):
         Logger.log("w", "No icon %s defined in Theme", icon_name)
         return QUrl()
 
+    @pyqtSlot(str, result = "QUrl")
+    def getImage(self, image_name):
+        if image_name in self._images:
+            return self._sizes[image_name]
+
+        Logger.log("w", "No image %s defined in Theme", image_name)
+        return QUrl()
+
     @pyqtSlot(str, result = "QFont")
     def getFont(self, font_name):
         if font_name in self._fonts:
