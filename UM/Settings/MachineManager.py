@@ -5,6 +5,8 @@ import urllib
 import os
 import json
 
+from PyQt5.QtWidgets import QMessageBox
+
 from UM.Signal import Signal, SignalEmitter
 from UM.Resources import Resources
 from UM.Logger import Logger
@@ -343,8 +345,17 @@ class MachineManager(SignalEmitter):
         if profile not in self._profiles or self._active_profile == profile:
             return
 
+        #TODO: only ask the user if there are custom settings to be saved
+        result = QMessageBox.question(None, catalog.i18nc("@title:window", "Replace profile"),
+                    catalog.i18nc("@label", "Selecting the {0} profile replaces your current settings. Do you want to save your settings in a custom profile?").format(profile.getName()), 
+                    QMessageBox.Cancel | QMessageBox.Yes | QMessageBox.No)
+        if result == QMessageBox.Cancel:
+            return
+        elif result == QMessageBox.Yes:
+            #TODO: store working profile in new custom profile
+            pass
+
         #Replace working profile with a copy of the new profile
-        #TODO: warn user, allow cancel
         self._active_machine.getWorkingProfile().mergeSettingsFrom(profile, reset = True)
             
         self._active_profile = profile
