@@ -46,19 +46,35 @@ class Theme(QObject):
 
     @pyqtSlot(str, result = "QColor")
     def getColor(self, color):
-        return self._colors.get(color, QColor())
+        if color in self._colors:
+            return self._colors[color]
+
+        Logger.log("w", "No color %s defined in Theme", color)
+        return QColor()
 
     @pyqtSlot(str, result = "QSizeF")
     def getSize(self, size):
-        return self._sizes.get(size, QSizeF())
+        if size in self._sizes:
+            return self._sizes[size]
+
+        Logger.log("w", "No size %s defined in Theme", size)
+        return QSizeF()
 
     @pyqtSlot(str, result = "QUrl")
     def getIcon(self, icon_name):
-        return self._icons.get(icon_name, "")
+        if icon_name in self._icons:
+            return self._icons[icon_name]
+
+        Logger.log("w", "No icon %s defined in Theme", icon_name)
+        return QUrl()
 
     @pyqtSlot(str, result = "QFont")
     def getFont(self, font_name):
-        return self._fonts.get(font_name, QFont())
+        if font_name in self._fonts:
+            return self._fonts[font_name]
+
+        Logger.log("w", "No font %s defined in Theme", font_name)
+        return QFont()
 
     @pyqtProperty(QObject, notify = themeLoaded)
     def styles(self):
