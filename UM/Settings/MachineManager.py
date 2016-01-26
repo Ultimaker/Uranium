@@ -316,10 +316,8 @@ class MachineManager(SignalEmitter):
     def addProfileFromWorkingProfile(self):
         profile = copy.deepcopy(self._active_machine.getWorkingProfile())
         profile.setName("Custom profile")
+        #Make this profile available to all printers of the same type only
         profile.setMachineTypeId(self._active_profile.getMachineTypeId())
-        profile.setMachineVariantName(self._active_profile.getMachineVariantName())
-        profile.setMachineInstanceName(self._active_profile.getMachineInstanceName())
-        profile.setMaterialName(self._active_profile.getMaterialName())
         self._profiles.append(profile)
         self.profilesChanged.emit()
 
