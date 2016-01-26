@@ -137,8 +137,6 @@ Rectangle {
         property variant itemStyle: base.style
         visible: status == Loader.Ready
 
-        asynchronous: true;
-
         function notifyReset()
         {
             if(item && item.notifyReset)

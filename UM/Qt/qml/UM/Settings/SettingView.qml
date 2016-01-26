@@ -129,12 +129,13 @@ ScrollView
                     {
                         model: delegateItem.settingsModel;
 
-                        delegate: UM.SettingItem
+                        delegate: Loader
                         {
-                            id: item;
+                            id: settingLoader;
 
                             width: UM.Theme.getSize("sidebar").width - UM.Theme.getSize("default_margin").width * 2
 
+                            property bool settingVisible: model.visible && model.enabled;
                             height: settingVisible ? UM.Theme.getSize("setting").height + UM.Theme.getSize("default_lining").height : 0;
                             Behavior on height { NumberAnimation { duration: 75; } }
                             opacity: settingVisible ? 1 : 0;
@@ -142,31 +143,65 @@ ScrollView
 
                             enabled: categoryHeader.checked && settingVisible;
 
-                            property bool settingVisible: model.visible && model.enabled;
+                            property bool loadComplete: status == Loader.Ready
 
-                            name: model.name;
-                            description: model.description;
-                            value: model.value;
-                            unit: model.unit;
-                            valid: model.valid;
-                            depth: model.depth
-                            type: model.type;
-                            options: model.type == "enum" ? model.options : null;
-                            key: model.key;
-                            overridden: model.overridden;
+                            asynchronous: true;
 
-                            style: UM.Theme.styles.setting_item;
+                            source: Qt.resolvedUrl("SettingItem.qml");
 
-                            onItemValueChanged: delegateItem.settingsModel.setSettingValue(model.key, value);
-                            onContextMenuRequested: { contextMenu.key = model.key; contextMenu.popup(); }
-                            onResetRequested: delegateItem.settingsModel.resetSettingValue(model.key)
-
-                            onShowTooltip:
+                            onLoaded:
                             {
-                                position = Qt.point(0, item.height);
-                                base.showTooltip(item, position, "<b>"+model.name+"</b><br/>"+model.description)
+                                item.name = model.name;
+                                //item.description = model.description;
+                                item.unit = model.unit;
+                                item.value = model.valid;
+                                item.depth = model.depth;
+                                item.type = model.type;
+                                item.key = model.key;
+
+                                item.style = UM.Theme.styles.setting_item;
+
+                                if(model.type == "enum")
+                                {
+                                    item.options = model.options;
+                                }
+
+                                settings.itemsLoaded += 1;
                             }
-                            onHideTooltip: base.hideTooltip()
+
+                            Binding
+                            {
+                                when: loadComplete
+                                target: item;
+                                property: "valid"
+                                value: model.valid
+                            }
+
+                            Binding
+                            {
+                                when: loadComplete
+                                target: item
+                                property: "value"
+                                value: model.value
+                            }
+
+                            Binding
+                            {
+                                when: loadComplete
+                                target: item
+                                property: "overridden"
+                                value: model.overridden
+                            }
+
+                            Connections
+                            {
+                                target: item;
+                                onItemValueChanged: delegateItem.settingsModel.setSettingValue(model.key, value);
+                                onContextMenuRequested: { contextMenu.key = model.key; contextMenu.popup(); }
+                                onResetRequested: delegateItem.settingsModel.resetSettingValue(model.key);
+                                onShowTooltip: base.showTooltip(settingLoader, Qt.point(0, settingLoader.height / 2), "<b>"+model.name+"</b><br/>"+model.description)
+                                onHideTooltip: base.hideTooltip();
+                            }
                         }
                     }
 
