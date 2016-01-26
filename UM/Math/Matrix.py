@@ -69,13 +69,24 @@ class Matrix(object):
         else:
             self._data[index, 3] = 0
 
-    def multiply(self, matrix):
-        self._data = numpy.dot(self._data, matrix.getData())
-        return self
+    def multiply(self, matrix, copy = False):
+        if not copy:
+            self._data = numpy.dot(self._data, matrix.getData())
+            return self
+        else:
+            new_matrix = Matrix(data = self._data)
+            new_matrix.multiply(matrix)
+            return new_matrix
 
-    def preMultiply(self, matrix):
-        self._data = numpy.dot(matrix.getData(),self._data)
-        return self
+    def preMultiply(self, matrix, copy = False):
+        if not copy:
+            self._data = numpy.dot(matrix.getData(),self._data)
+            return self
+        else:
+            new_matrix = Matrix(data = self._data)
+            new_matrix.preMultiply(matrix)
+            return new_matrix
+
 
     ##  Get raw data.
     #   \returns 4x4 numpy array
