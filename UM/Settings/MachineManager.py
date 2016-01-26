@@ -153,8 +153,8 @@ class MachineManager(SignalEmitter):
         self._machine_instances.remove(instance)
         instance.nameChanged.disconnect(self._onInstanceNameChanged)
 
+        file_name = urllib.parse.quote_plus(instance.getName())
         try:
-            file_name = urllib.parse.quote_plus(instance.getName())
             path = Resources.getStoragePath(Resources.MachineInstances, file_name + ".cfg")
             os.remove(path)
             path = Resources.getStoragePath(Resources.MachineInstanceProfiles, file_name + ".cfg")
@@ -328,9 +328,8 @@ class MachineManager(SignalEmitter):
         self._profiles.remove(profile)
         profile.nameChanged.disconnect(self._onProfileNameChanged)
 
+        path = Resources.getStoragePath(Resources.Profiles, urllib.parse.quote_plus(profile.getName()) + ".cfg")
         try:
-            profile_file_name = profile.getName() + "@" + profile.getMachineInstanceName()
-            path = Resources.getStoragePath(Resources.Profiles, urllib.parse.quote_plus(profile_file_name) + ".cfg")
             os.remove(path)
         except FileNotFoundError:
             pass
@@ -545,10 +544,7 @@ class MachineManager(SignalEmitter):
                 if profile.isReadOnly():
                     continue
 
-                profile_file_name = profile.getName()
-                if profile.getMachineInstanceName():
-                    profile_file_name += "@" + profile.getMachineInstanceName()
-                file_name = urllib.parse.quote_plus(profile_file_name) + ".cfg"
+                file_name = urllib.parse.quote_plus(profile.getName()) + ".cfg"
                 profile.saveToFile(Resources.getStoragePath(Resources.Profiles, file_name))
         except AttributeError:
             pass
@@ -649,8 +645,7 @@ class MachineManager(SignalEmitter):
             if profile.isReadOnly() or profile.getMachineInstanceName() != old_name:
                 continue
 
-            profile_file_name = profile.getName() + "@" + old_name
-            file_name = urllib.parse.quote_plus(profile_file_name) + ".cfg"
+            file_name = urllib.parse.quote_plus(profile.getName()) + ".cfg"
             try:
                 path = Resources.getStoragePath(Resources.Profiles, file_name)
                 os.remove(path)
@@ -662,10 +657,9 @@ class MachineManager(SignalEmitter):
         self.machineInstanceNameChanged.emit(instance)
 
     def _onProfileNameChanged(self, profile, old_name):
-        profile_file_name = old_name + "@" + profile.getMachineInstanceName()
-        file_name = urllib.parse.quote_plus(profile_file_name) + ".cfg"
+        file_name = urllib.parse.quote_plus(old_name) + ".cfg"
+        path = Resources.getStoragePath(Resources.Profiles, file_name)
         try:
-            path = Resources.getStoragePath(Resources.Profiles, file_name)
             os.remove(path)
         except FileNotFoundError:
             pass
