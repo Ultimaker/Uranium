@@ -4,6 +4,7 @@
 import urllib
 import os
 import json
+import copy
 
 from PyQt5.QtWidgets import QMessageBox
 
@@ -312,6 +313,16 @@ class MachineManager(SignalEmitter):
         profile.nameChanged.connect(self._onProfileNameChanged)
         self.profilesChanged.emit()
 
+    def addProfileFromWorkingProfile(self):
+        profile = copy.deepcopy(self._active_machine.getWorkingProfile())
+        profile.setName("Custom profile")
+        profile.setMachineTypeId(self._active_profile.getMachineTypeId())
+        profile.setMachineVariantName(self._active_profile.getMachineVariantName())
+        profile.setMachineInstanceName(self._active_profile.getMachineInstanceName())
+        profile.setMaterialName(self._active_profile.getMaterialName())
+        self._profiles.append(profile)
+        self.profilesChanged.emit()
+
     def removeProfile(self, profile):
         if profile not in self._profiles:
             return
@@ -360,18 +371,18 @@ class MachineManager(SignalEmitter):
             return
 
         if not self._protect_working_profile:
-            #TODO: only ask the user if there are custom settings to be saved
-            result = QMessageBox.question(None, catalog.i18nc("@title:window", "Replace profile"),
-                        catalog.i18nc("@label", "Selecting the {0} profile replaces your current settings. Do you want to save your settings in a custom profile?").format(profile.getName()), 
-                        QMessageBox.Cancel | QMessageBox.Yes | QMessageBox.No)
-            if result == QMessageBox.Cancel:
-                return
-            elif result == QMessageBox.Yes:
-                #TODO: store working profile in new custom profile
-                pass
+            working_profile = self._active_machine.getWorkingProfile()
+            if working_profile.hasChangedSettings():
+                result = QMessageBox.question(None, catalog.i18nc("@title:window", "Replace profile"),
+                            catalog.i18nc("@label", "Selecting the {0} profile replaces your current settings. Do you want to save your settings in a custom profile?").format(profile.getName()), 
+                            QMessageBox.Cancel | QMessageBox.Yes | QMessageBox.No)
+                if result == QMessageBox.Cancel:
+                    return
+                elif result == QMessageBox.Yes:
+                    self.addProfileFromWorkingProfile()
 
             #Replace working profile with a copy of the new profile
-            self._active_machine.getWorkingProfile().mergeSettingsFrom(profile, reset = True)
+            working_profile.mergeSettingsFrom(profile, reset = True)
 
             #Reapply previously selected partial material profile
             if self._active_machine.hasMaterials():
