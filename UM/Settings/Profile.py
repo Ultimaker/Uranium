@@ -255,6 +255,9 @@ class Profile(SignalEmitter):
             self._changed_settings = {}
             self._changed_settings_defaults = {}
 
+        if not profile:
+            return
+
         settings = profile.getChangedSettings()
 
         for key, value in settings.items():

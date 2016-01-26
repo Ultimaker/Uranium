@@ -78,7 +78,7 @@ class SettingsCategory(SignalEmitter):
         count = 0
         if self._machine_manager.getActiveProfile():
             for setting in self.getAllSettings():
-                if not setting.isVisible() and self._machine_manager.getActiveProfile().hasSettingValue(setting.getKey()):
+                if not setting.isVisible() and self._machine_manager.getWorkingProfile().hasSettingValue(setting.getKey()):
                     count += 1
 
         return count

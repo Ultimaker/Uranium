@@ -153,7 +153,10 @@ class MachineManager(SignalEmitter):
         instance.nameChanged.disconnect(self._onInstanceNameChanged)
 
         try:
-            path = Resources.getStoragePath(Resources.MachineInstances, urllib.parse.quote_plus(instance.getName()) + ".cfg")
+            file_name = urllib.parse.quote_plus(instance.getName())
+            path = Resources.getStoragePath(Resources.MachineInstances, file_name + ".cfg")
+            os.remove(path)
+            path = Resources.getStoragePath(Resources.MachineInstanceProfiles, file_name + ".cfg")
             os.remove(path)
         except FileNotFoundError:
             pass
@@ -218,13 +221,17 @@ class MachineManager(SignalEmitter):
         if not self._active_machine:
             return
 
-        self._active_machine.setMaterialName(material)
+        emit = False
+        if material != self._active_machine.getMaterialName():
+            self._active_machine.setMaterialName(material)
+            emit = True
 
         material_profile = self.findProfile(material, type="material")
         if material_profile:
             self._active_machine.getWorkingProfile().mergeSettingsFrom(material_profile, reset = False)
 
-        self.activeMachineInstanceChanged.emit()
+        if emit:
+            self.activeMachineInstanceChanged.emit()
 
     def setActiveMachineVariant(self, variant):
         if not self._active_machine:
@@ -476,6 +483,13 @@ class MachineManager(SignalEmitter):
                 instance.getWorkingProfile().loadFromFile(Resources.getStoragePath(Resources.MachineInstanceProfiles, file_name))
             except Exception as e:
                 Logger.log("w", "Could not load working profile: %s: %s", file_name, str(e))
+
+                #Set working profile to a copy of the new profile
+                instance.getWorkingProfile().mergeSettingsFrom(self._active_profile, reset = True)
+
+                #Apply partial material profile
+                if instance.hasMaterials():
+                    self.setActiveMaterial(instance.getMaterialName())
 
         self._protect_working_profile = True
 
