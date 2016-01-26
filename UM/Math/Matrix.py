@@ -369,6 +369,9 @@ class Matrix(object):
                 M[:3, 3] = (factor * numpy.dot(origin[:3], direction_data)) * direction_data
         self._data = M
 
+    def setByScaleVector(self, scale):
+        self._data = numpy.diag([scale.x, scale.y, scale.z, 1.0])
+
     def getScale(self):
         x = numpy.linalg.norm(self._data[0,0:3])
         y = numpy.linalg.norm(self._data[1,0:3])
