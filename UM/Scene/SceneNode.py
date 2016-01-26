@@ -471,7 +471,7 @@ class SceneNode(SignalEmitter):
     ##  Set the local position value.
     #
     #   \param position The new position value of the SceneNode.
-    def setPosition(self, position):
+    def setPosition(self, position, transform_space = TransformSpace.Local):
         if not self._enabled or position == self._position:
             return
 
@@ -479,7 +479,15 @@ class SceneNode(SignalEmitter):
         orientation_matrix = self._orientation.toMatrix()
         euler_angles = orientation_matrix.getEuler()
 
-        new_transform_matrix.compose(scale = self._scale, angles = euler_angles, translate = position )
+        if transform_space == SceneNode.TransformSpace.Local:
+            new_transform_matrix.compose(scale = self._scale, angles = euler_angles, translate = position)
+        if transform_space == SceneNode.TransformSpace.World:
+            if self.getWorldPosition() == position:
+                return
+
+            new_position = position - (self.getWorldPosition() - self._position)
+            new_transform_matrix.compose(scale = self._scale, angles = euler_angles, translate = new_position)
+
         self._transformation = new_transform_matrix
         self._transformChanged()
 

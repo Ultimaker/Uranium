@@ -158,6 +158,14 @@ class SceneNodeTest(unittest.TestCase):
         self.assertTrue(Float.fuzzyCompare(pos.y, 0, 1e-4), "{0} does not equal {1}".format(pos, Vector(70, 0, 30)))
         self.assertTrue(Float.fuzzyCompare(pos.z, 30, 1e-4), "{0} does not equal {1}".format(pos, Vector(70, 0, 30)))
 
+        node1 = SceneNode()
+        node2 = SceneNode(node1)
+        node1.setPosition(Vector(15,15,15))
+        node2.setPosition(Vector(10,10,10))
+        self.assertEqual(node2.getWorldPosition(), Vector(25, 25, 25))
+        node2.setPosition(Vector(15,15,15), SceneNode.TransformSpace.World)
+        self.assertEqual(node2.getWorldPosition(), Vector(15, 15, 15))
+        self.assertEqual(node2.getPosition(), Vector(0,0,0))
 
     def test_rotateWorld(self):
         pass
