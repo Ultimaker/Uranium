@@ -40,8 +40,6 @@ class SceneNode(SignalEmitter):
         self._world_transformation = Matrix()
 
         self._derived_position = Vector()
-        self._derived_orientation = Quaternion()
-        self._derived_scale = Vector()
 
         self._inherit_orientation = True
         self._inherit_scale = True
@@ -77,7 +75,6 @@ class SceneNode(SignalEmitter):
             copy.addChild(deepcopy(child, memo))
         self.calculateBoundingBoxMesh()
         return copy
-
 
     def setCenterPosition(self, center):
         if self._mesh_data:
@@ -246,7 +243,6 @@ class SceneNode(SignalEmitter):
     ##  Emitted whenever the attached mesh data object changes.
     meshDataChanged = Signal()
 
-
     def _onMeshDataChanged(self):
         self.meshDataChanged.emit(self)
 
@@ -333,7 +329,6 @@ class SceneNode(SignalEmitter):
     def getOrientation(self):
         return deepcopy(self._orientation)
 
-
     ##  \brief Rotate the scene object (and thus its children) by given amount
     #
     #   \param rotation \type{Quaternion} A quaternion indicating the amount of rotation.
@@ -341,6 +336,7 @@ class SceneNode(SignalEmitter):
     def rotate(self, rotation, transform_space = TransformSpace.Local):
         if not self._enabled:
             return
+
         orientation_matrix = rotation.toMatrix()
         if transform_space == SceneNode.TransformSpace.Local:
             self._transformation.multiply(orientation_matrix)
@@ -379,6 +375,7 @@ class SceneNode(SignalEmitter):
     def scale(self, scale, transform_space = TransformSpace.Local):
         if not self._enabled:
             return
+
         scale_matrix = Matrix()
         scale_matrix.setByScaleVector(scale)
         if transform_space == SceneNode.TransformSpace.Local:
@@ -457,7 +454,6 @@ class SceneNode(SignalEmitter):
     #   \param translation \type{Vector} The amount to translate by.
     #   \param transform_space The space relative to which to translate. Can be any one of the constants in SceneNode::TransformSpace.
     def translate(self, translation, transform_space = TransformSpace.Local):
-
         if not self._enabled:
             return
         translation_matrix = Matrix()
@@ -476,7 +472,6 @@ class SceneNode(SignalEmitter):
     #
     #   \param position The new position value of the SceneNode.
     def setPosition(self, position):
-
         if not self._enabled or position == self._position:
             return
 
@@ -579,37 +574,9 @@ class SceneNode(SignalEmitter):
     boundingBoxChanged = Signal()
 
     ##  private:
-    def _getDerivedPosition(self):
-        if not self._derived_position:
-            self._updateTransformation()
-
-        return self._derived_position
-
-    def _getDerivedOrientation(self):
-        if not self._derived_orientation:
-            self._updateTransformation()
-
-        # Sometimes the derived orientation can be None.
-        # I've not been able to locate the cause of this, but this prevents it being an issue.
-        if not self._derived_orientation:
-            self._derived_orientation = Quaternion()
-        return self._derived_orientation
-
-    def _getDerivedScale(self):
-        if not self._derived_scale:
-            self._updateTransformation()
-
-        return self._derived_scale
-
     def _transformChanged(self):
         self._updateTransformation()
         self._resetAABB()
-        #self._transformation = None
-        #self._world_transformation = None
-        #self._derived_position = None
-        #self._derived_orientation = None
-        #self._derived_scale = None
-
         self.transformationChanged.emit(self)
 
         for child in self._children:
@@ -628,20 +595,12 @@ class SceneNode(SignalEmitter):
         orientation.setByMatrix(euler_angle_matrix)
         self._orientation = orientation
         if self._parent:
-            #print(self, " parent: " , self._parent.getWorldTransformation(), " own: " ,self._transformation  )
             self._world_transformation = self._parent.getWorldTransformation().multiply(self._transformation, copy = True)
         else:
             self._world_transformation = self._transformation
 
         world_scale, world_shear, world_euler_angles, world_translation = self._world_transformation.decompose()
         self._derived_position = world_translation
-        self._derived_scale = world_scale
-
-        world_orientation = Quaternion()
-        world_euler_angle_matrix = Matrix()
-        world_euler_angle_matrix.setByEuler(world_euler_angles.x,world_euler_angles.y, world_euler_angles.z)
-        world_orientation.setByMatrix(world_euler_angle_matrix)
-        self._derived_orientation = world_orientation
 
     def _resetAABB(self):
         if not self._calculate_aabb:
