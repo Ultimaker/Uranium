@@ -6,6 +6,8 @@ from PyQt5.QtCore import pyqtSlot, pyqtProperty, pyqtSignal, QObject, QUrl
 from UM.Application import Application
 from UM.PluginRegistry import PluginRegistry
 
+from . import ContainerProxy
+
 import os.path
 
 class ActiveToolProxy(QObject):
@@ -17,6 +19,7 @@ class ActiveToolProxy(QObject):
         self._onActiveToolChanged()
 
         self._properties = { }
+        self._properties_proxy = ContainerProxy.ContainerProxy(self._properties)
 
     activeToolChanged = pyqtSignal()
     #propertyChanged = pyqtSignal()
@@ -47,9 +50,9 @@ class ActiveToolProxy(QObject):
             action()
 
     propertiesChanged = pyqtSignal()
-    @pyqtProperty("QVariantMap", notify = propertiesChanged)
+    @pyqtProperty(QObject, notify = propertiesChanged)
     def properties(self):
-        return self._properties;
+        return self._properties_proxy;
 
     @pyqtSlot(str, "QVariant")
     def setProperty(self, property, value):

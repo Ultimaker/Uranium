@@ -5,11 +5,15 @@ from PyQt5.QtCore import pyqtSlot, pyqtProperty, pyqtSignal, QObject, QVariant, 
 
 from UM.Application import Application
 from UM.PluginRegistry import PluginRegistry
+#from UM.Logger import deprecated
+
+from . import ContainerProxy
 
 class ActiveProfileProxy(QObject):
     def __init__(self, parent = None):
         super().__init__(parent)
-        self._setting_values = None
+        self._setting_values = {}
+        self._container_proxy = ContainerProxy.ContainerProxy(self._setting_values)
         self._active_profile = None
         Application.getInstance().getMachineManager().activeProfileChanged.connect(self._onActiveProfileChanged)
         self._onActiveProfileChanged()
@@ -21,15 +25,12 @@ class ActiveProfileProxy(QObject):
         return self._active_profile != None
 
     settingValuesChanges = pyqtSignal()
-    @pyqtProperty("QVariant", notify = settingValuesChanges)
+    @pyqtProperty(QObject, notify = settingValuesChanges)
     def settingValues(self):
-        return self._setting_values
+        return self._container_proxy
 
     @pyqtSlot(str, "QVariant")
     def setSettingValue(self, key, value):
-        if key in self._setting_values and self._setting_values[key] == value:
-            return
-
         self._active_profile.setSettingValue(key, value)
 
     def _onActiveProfileChanged(self):
@@ -44,7 +45,7 @@ class ActiveProfileProxy(QObject):
             self._onSettingValuesChanged()
 
     def _onSettingValuesChanged(self, setting = None):
-        self._setting_values = self._active_profile.getAllSettingValues()
+        self._setting_values.update(self._active_profile.getAllSettingValues())
         self.settingValuesChanges.emit()
 
 def createActiveProfileProxy(engine, script_engine):
