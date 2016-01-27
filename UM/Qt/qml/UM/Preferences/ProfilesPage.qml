@@ -29,30 +29,38 @@ ManagementPage
         anchors.fill: parent
         spacing: UM.Theme.sizes.default_margin.height
 
-        Label { text: base.currentItem.name ? base.currentItem.name : ""; font: UM.Theme.fonts.large; width: parent.width; }
+        Label { id: profileName; text: base.currentItem.name ? base.currentItem.name : ""; font: UM.Theme.fonts.large; width: parent.width; }
 
-        Grid {
-            id: containerGrid
-            columns: 2
-            spacing: UM.Theme.sizes.default_margin.width
+        ScrollView {
+            anchors.left: parent.left
+            anchors.top: profileName.bottom
+            anchors.topMargin: UM.Theme.sizes.default_margin.height
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
 
-            Label { text: catalog.i18nc("@label", "Profile type"); width: 155}
-            Label { text: base.currentItem.readOnly ? catalog.i18nc("@label", "Starter profile (protected)") : catalog.i18nc("@label", "Custom profile"); }
+            Grid {
+                id: containerGrid
+                columns: 2
+                spacing: UM.Theme.sizes.default_margin.width
 
-            Column {
-                Repeater {
-                        model: base.currentItem.settings
-                        Label {
-                            text: modelData.name.toString();
-                            width: 155
-                            elide: Text.ElideMiddle;
-                        }
+                Label { text: catalog.i18nc("@label", "Profile type"); width: 155}
+                Label { text: base.currentItem.readOnly ? catalog.i18nc("@label", "Starter profile (protected)") : catalog.i18nc("@label", "Custom profile"); }
+
+                Column {
+                    Repeater {
+                            model: base.currentItem.settings
+                            Label {
+                                text: modelData.name.toString();
+                                width: 155
+                                elide: Text.ElideMiddle;
+                            }
+                    }
                 }
-            }
-            Column {
-                Repeater {
-                        model: base.currentItem.settings
-                        Label { text: modelData.value.toString(); }
+                Column {
+                    Repeater {
+                            model: base.currentItem.settings
+                            Label { text: modelData.value.toString(); }
+                    }
                 }
             }
         }
