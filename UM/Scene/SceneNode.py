@@ -40,6 +40,8 @@ class SceneNode(SignalEmitter):
         self._world_transformation = Matrix()
 
         self._derived_position = Vector()
+        self._derived_orientation = Quaternion()
+        self._derived_scale = Vector()
 
         self._inherit_orientation = True
         self._inherit_scale = True
@@ -329,6 +331,9 @@ class SceneNode(SignalEmitter):
     def getOrientation(self):
         return deepcopy(self._orientation)
 
+    def getWorldOrientation(self):
+        return deepcopy(self._derived_orientation)
+
     ##  \brief Rotate the scene object (and thus its children) by given amount
     #
     #   \param rotation \type{Quaternion} A quaternion indicating the amount of rotation.
@@ -352,12 +357,19 @@ class SceneNode(SignalEmitter):
     ##  Set the local orientation of this scene node.
     #
     #   \param orientation \type{Quaternion} The new orientation of this scene node.
-    def setOrientation(self, orientation):
+    def setOrientation(self, orientation, transform_space = TransformSpace.Local):
         if not self._enabled or orientation == self._orientation:
             return
 
         new_transform_matrix = Matrix()
-        orientation_matrix = orientation.toMatrix()
+        if transform_space == SceneNode.TransformSpace.Local:
+            orientation_matrix = orientation.toMatrix()
+        if transform_space == SceneNode.TransformSpace.World:
+            if self.getWorldOrientation() == orientation:
+                return
+            #print(self.getWorldOrientation().getInverse() * self._orientation.getInverse())
+            new_orientation = orientation * (self.getWorldOrientation() * self._orientation.getInverse()).getInverse()
+            orientation_matrix = new_orientation.toMatrix()
         euler_angles = orientation_matrix.getEuler()
 
         new_transform_matrix.compose(scale = self._scale, angles = euler_angles, translate = self._position )
@@ -367,6 +379,9 @@ class SceneNode(SignalEmitter):
     ##  Get the local scaling value.
     def getScale(self):
         return deepcopy(self._scale)
+
+    def getWorldScale(self):
+        return deepcopy(self._derived_scale)
 
     ##  Scale the scene object (and thus its children) by given amount
     #
@@ -392,15 +407,22 @@ class SceneNode(SignalEmitter):
     ##  Set the local scale value.
     #
     #   \param scale \type{Vector} The new scale value of the scene node.
-    def setScale(self, scale):
+    def setScale(self, scale, transform_space = TransformSpace.Local):
         if not self._enabled or scale == self._scale:
             return
 
         new_transform_matrix = Matrix()
         orientation_matrix = self._orientation.toMatrix()
         euler_angles = orientation_matrix.getEuler()
+        if transform_space == SceneNode.TransformSpace.Local:
+            new_transform_matrix.compose(scale = scale, angles = euler_angles, translate = self._position )
+        if transform_space == SceneNode.TransformSpace.World:
+            if self.getWorldScale() == scale:
+                return
 
-        new_transform_matrix.compose(scale = scale, angles = euler_angles, translate = self._position )
+            new_scale = scale - (self.getWorldScale() - self._scale)
+            new_transform_matrix.compose(scale = new_scale, angles = euler_angles, translate = self._position )
+
         self._transformation = new_transform_matrix
         self._transformChanged()
 
@@ -516,13 +538,8 @@ class SceneNode(SignalEmitter):
             [ 0.0,  0.0,  0.0,  1.0]
         ])
 
-        if self._parent:
-            #TODO: This needs to be fixed (as it now doesn't quite correctly set the orientation.
-            self.setOrientation(Quaternion.fromMatrix(m))
-            #self._orientation = self._parent._getDerivedOrientation() * Quaternion.fromMatrix(m)
-        else:
-            self.setOrientation(Quaternion.fromMatrix(m))
-        self._transformChanged()
+
+        self.setOrientation(Quaternion.fromMatrix(m))
 
     ##  Can be overridden by child nodes if they need to perform special rendering.
     #   If you need to handle rendering in a special way, for example for tool handles,
@@ -609,6 +626,11 @@ class SceneNode(SignalEmitter):
 
         world_scale, world_shear, world_euler_angles, world_translation = self._world_transformation.decompose()
         self._derived_position = world_translation
+        self._derived_scale = world_scale
+
+        world_euler_angle_matrix = Matrix()
+        world_euler_angle_matrix.setByEuler(world_euler_angles.x, world_euler_angles.y, world_euler_angles.z)
+        self._derived_orientation.setByMatrix(world_euler_angle_matrix)
 
     def _resetAABB(self):
         if not self._calculate_aabb:
