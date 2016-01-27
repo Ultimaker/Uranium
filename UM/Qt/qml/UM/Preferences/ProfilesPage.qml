@@ -23,6 +23,8 @@ ManagementPage
 
     removeEnabled: currentItem != null ? !currentItem.readOnly : false;
 
+    scrollviewCaption: catalog.i18nc("@label %1 is printer name","Printer: %1").arg(UM.MachineManager.activeMachineInstance)
+
     Flow {
         anchors.fill: parent
         spacing: UM.Theme.sizes.default_margin.height
