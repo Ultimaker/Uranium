@@ -185,6 +185,17 @@ class SceneNodeTest(unittest.TestCase):
         pass
 
     def test_scaleWorld(self):
+        node1 = SceneNode()
+        node2 = SceneNode(node1)
+
+        node2.scale(Vector(1.5,1.,1.))
+        node2.translate(Vector(10,10,10))
+        self.assertEqual(node2.getWorldPosition(), Vector(15,10,10))
+        node2.scale(Vector(1.5,1,1))
+        self.assertEqual(node2.getWorldPosition(), Vector(15,10,10))
+        #print(node2.getPosition())
+        #print(node2.getWorldPosition())
+        #raise ValueError()
         pass
 
 if __name__ == "__main__":
