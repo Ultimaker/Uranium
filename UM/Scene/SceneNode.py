@@ -419,7 +419,6 @@ class SceneNode(SignalEmitter):
         if transform_space == SceneNode.TransformSpace.World:
             if self.getWorldScale() == scale:
                 return
-
             new_scale = scale - (self.getWorldScale() - self._scale)
             new_transform_matrix.compose(scale = new_scale, angles = euler_angles, translate = self._position )
 
