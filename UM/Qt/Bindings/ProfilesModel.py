@@ -96,6 +96,9 @@ class ProfilesModel(ListModel):
             if profile: #Success!
                 profile.setReadOnly(False)
                 profile.setName(self._manager.makeUniqueProfileName(profile.getName())) #Ensure a unique name
+                if profile.getMachineTypeId():
+                    #Make sure the profile is available for the currently selected printer
+                    profile.setMachineTypeId(self._manager.getActiveMachineInstance().getMachineDefinition().getId())
                 self._manager.addProfile(profile) #Add the new profile to the list of profiles.
                 return { "status": "ok", "message": catalog.i18nc("@info:status", "Successfully imported profile {0}", profile.getName()) }
 
