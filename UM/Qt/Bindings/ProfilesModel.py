@@ -70,6 +70,7 @@ class ProfilesModel(ListModel):
             return
 
         profile.setName(new_name)
+        self._manager.profilesChanged.emit()
 
     @pyqtSlot(str, result = bool)
     def checkProfileExists(self, name):

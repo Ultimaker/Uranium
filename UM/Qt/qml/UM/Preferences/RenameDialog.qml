@@ -27,6 +27,11 @@ UM.Dialog
     property variant catalog: UM.I18nCatalog { name: "uranium"; }
 
     signal textChanged(string text);
+    signal selectText()
+    onSelectText: {
+        nameField.selectAll();
+        nameField.focus = true;
+    }
 
     Column {
         anchors.fill: parent;
@@ -53,6 +58,7 @@ UM.Dialog
             text: catalog.i18nc("@action:button", "Ok");
             onClicked: base.accept();
             enabled: base.validName;
+            isDefault: true;
         }
 
     ]

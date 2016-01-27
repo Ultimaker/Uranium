@@ -315,7 +315,8 @@ class MachineManager(SignalEmitter):
 
     def addProfileFromWorkingProfile(self):
         profile = copy.deepcopy(self._active_machine.getWorkingProfile())
-        profile.setName("Custom profile")
+        profile.setName(catalog.i18nc("@item:profile name", "Custom profile"))
+        
         #Make this profile available to all printers of the same type only
         profile.setMachineTypeId(self._active_profile.getMachineTypeId())
         self._profiles.append(profile)
@@ -355,10 +356,22 @@ class MachineManager(SignalEmitter):
 
         return None
 
+    def makeUniqueProfileName(self, base_name):
+        if base_name == "":
+            base_name = catalog.i18nc("@item:profile name", "Custom profile")
+        profile_name = base_name
+        i = 1
+        while self.findProfile(profile_name, active_instance_profiles_only = False):
+            i = i + 1
+            profile_name = "%s #%d" % (base_name, i)
+
+        return profile_name
+
     activeProfileChanged = Signal()
 
     def getWorkingProfile(self):
-        return self._active_machine.getWorkingProfile()
+        if self._active_machine:
+            return self._active_machine.getWorkingProfile()
 
     def getActiveProfile(self):
         return self._active_profile
@@ -501,17 +514,18 @@ class MachineManager(SignalEmitter):
 
         self._protect_working_profile = True
 
-        profile_name = self._active_machine.getActiveProfileName()
-        if profile_name == "":
-            profile_name = "Normal Quality"
+        if self._active_machine:
+            profile_name = self._active_machine.getActiveProfileName()
+            if profile_name == "":
+                profile_name = "Normal Quality"
 
-        profile = self.findProfile(self._active_machine.getActiveProfileName())
-        if profile:
-            self.setActiveProfile(profile)
-        else:
-            profiles = self.getProfiles()
-            if len(profiles) > 0:
-                self.setActiveProfile(profiles[0])
+            profile = self.findProfile(self._active_machine.getActiveProfileName())
+            if profile:
+                self.setActiveProfile(profile)
+            else:
+                profiles = self.getProfiles()
+                if len(profiles) > 0:
+                    self.setActiveProfile(profiles[0])
 
         self.profilesChanged.emit()
         self._protect_working_profile = False
