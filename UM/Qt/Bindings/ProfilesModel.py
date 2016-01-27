@@ -26,6 +26,7 @@ class ProfilesModel(ListModel):
         super().__init__(parent)
 
         self._add_use_global = False
+        self._add_working_profile = False
 
         self.addRoleName(self.IdRole, "id")
         self.addRoleName(self.NameRole, "name")
@@ -54,6 +55,19 @@ class ProfilesModel(ListModel):
     @pyqtProperty(bool, fset = setAddUseGlobal, notify = addUseGlobalChanged)
     def addUseGlobal(self):
         return self._add_use_global
+
+    addWorkingProfileChanged = pyqtSignal()
+
+    def setAddWorkingProfile(self, add):
+        if add != self._add_working_profile:
+            self._add_working_profile = add
+            self._onProfilesChanged()
+            self.addWorkingProfileChanged.emit()
+
+    ##  Whether to add a "Current Settings;8" entry.
+    @pyqtProperty(bool, fset = setAddWorkingProfile, notify = addWorkingProfileChanged)
+    def addWorkingProfile(self):
+        return self._add_working_profile
 
     @pyqtSlot(str)
     def removeProfile(self, name):
@@ -215,6 +229,24 @@ class ProfilesModel(ListModel):
                 "value": "global",
                 "settings": None
             })
+
+        if self._add_working_profile:
+            profile = self._manager.getWorkingProfile()
+            settings_dict = profile.getChangedSettings()
+            settings_list = []
+            for key, value in settings_dict.items():
+                setting = self._manager.getActiveMachineInstance().getMachineDefinition().getSetting(key)
+                settings_list.append({"name": setting.getLabel(), "value": value})
+            settings_list = sorted(settings_list, key = lambda setting:setting["name"])
+            self.appendItem({
+                "id": 1,
+                "name": catalog.i18nc("@item:inlistbox", "Current settings"),
+                "active": False,
+                "readOnly": True,
+                "value": "working",
+                "settings": settings_list
+            })
+
 
         profiles = self._manager.getProfiles()
         profiles.sort(key = lambda k: k.getName())

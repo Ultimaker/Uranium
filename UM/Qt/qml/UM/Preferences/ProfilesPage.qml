@@ -13,7 +13,7 @@ ManagementPage
 
     title: catalog.i18nc("@title:tab", "Profiles");
 
-    model: UM.ProfilesModel { }
+    model: UM.ProfilesModel { addWorkingProfile: true }
 
     onAddObject: importDialog.open();
     onRemoveObject: confirmDialog.open();
