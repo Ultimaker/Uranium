@@ -95,19 +95,9 @@ class ProfilesModel(ListModel):
                 return { "status": "error", "message": catalog.i18nc("@info:status", "Failed to import profile from <filename>{0}</filename>: <message>{1}</message>", path, str(e)) }
             if profile: #Success!
                 profile.setReadOnly(False)
-                try:
-                    self._manager.addProfile(profile) #Add the new profile to the list of profiles.
-                except SettingsError.DuplicateProfileError as e:
-                    count = 2
-                    name = "{0} {1}".format(profile.getName(), count) #Try alternative profile names with a number appended to them.
-                    while self._manager.findProfile(name) != None:
-                        count += 1
-                        name = "{0} {1}".format(profile.getName(), count)
-                    profile.setName(name)
-                    self._manager.addProfile(profile)
-                    return { "status": "duplicate", "message": catalog.i18nc("@info:status", "Profile was imported as {0}", name) }
-                else:
-                    return { "status": "ok", "message": catalog.i18nc("@info:status", "Successfully imported profile {0}", profile.getName()) }
+                profile.setName(self._manager.makeUniqueProfileName(profile.getName())) #Ensure a unique name
+                self._manager.addProfile(profile) #Add the new profile to the list of profiles.
+                return { "status": "ok", "message": catalog.i18nc("@info:status", "Successfully imported profile {0}", profile.getName()) }
 
         #If it hasn't returned by now, none of the plugins loaded the profile successfully.
         return { "status": "error", "message": catalog.i18nc("@info:status", "Profile {0} has an unknown file type.", path) }
