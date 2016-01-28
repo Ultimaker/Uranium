@@ -411,20 +411,15 @@ class SceneNode(SignalEmitter):
     def setScale(self, scale, transform_space = TransformSpace.Local):
         if not self._enabled or scale == self._scale:
             return
-
-        new_transform_matrix = Matrix()
-        orientation_matrix = self._orientation.toMatrix()
-        euler_angles = orientation_matrix.getEuler()
         if transform_space == SceneNode.TransformSpace.Local:
-            new_transform_matrix.compose(scale = scale, angles = euler_angles, translate = self._position, shear = self._shear)
+            self.scale(scale / self._scale, SceneNode.TransformSpace.Local)
+            return
+            #new_transform_matrix.compose(scale = scale, angles = euler_angles, translate = self._position, shear = self._shear)
         if transform_space == SceneNode.TransformSpace.World:
             if self.getWorldScale() == scale:
                 return
-            new_scale = scale - (self.getWorldScale() - self._scale)
-            new_transform_matrix.compose(scale = new_scale, angles = euler_angles, translate = self._position, shear = self._shear)
+            self.scale(scale / self._scale, SceneNode.TransformSpace.World)
 
-        self._transformation = new_transform_matrix
-        self._transformChanged()
 
     ##  Get the local mirror values.
     #

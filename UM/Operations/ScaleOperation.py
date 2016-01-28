@@ -4,6 +4,7 @@
 from . import Operation
 from UM.Scene.SceneNode import SceneNode
 from UM.Math.Vector import Vector
+from UM.Math.Matrix import Matrix
 import copy
 class ScaleOperation(Operation.Operation):
     def __init__(self, node, scale, **kwargs):
@@ -33,10 +34,13 @@ class ScaleOperation(Operation.Operation):
             self._node.scale(scale_factor, SceneNode.TransformSpace.Parent)
             if self._snap:
                 new_scale = copy.deepcopy(self._node.getScale())
-                new_scale.setX(round(new_scale.x, 1))
-                new_scale.setY(round(new_scale.y, 1))
-                new_scale.setZ(round(new_scale.z, 1))
-                self._node.setScale(new_scale)
+                if(scale_factor.x != 1.0):
+                    new_scale.setX(round(new_scale.x, 1))
+                if(scale_factor.y != 1.0):
+                    new_scale.setY(round(new_scale.y, 1))
+                if(scale_factor.z != 1.0):
+                    new_scale.setZ(round(new_scale.z, 1))
+                self._node.setScale(new_scale, SceneNode.TransformSpace.World)
         else:
             self._node.scale(self._scale, SceneNode.TransformSpace.World)
 

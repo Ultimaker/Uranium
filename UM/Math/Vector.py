@@ -213,6 +213,9 @@ class Vector(object):
         if type(other) is float or type(other) is int:
             self._data /= other
             return self
+        if type(other) is Vector:
+            self._data /= other._data
+            return self
         else:
             raise NotImplementedError()
 
