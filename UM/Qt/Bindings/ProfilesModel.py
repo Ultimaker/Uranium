@@ -131,7 +131,7 @@ class ProfilesModel(ListModel):
         if not path:
             return
 
-        if id==0:
+        if id==-1:
             profile = copy.deepcopy(self._working_profile)
             profile.setType(None)
             profile.setMachineTypeId(self._manager.getActiveMachineInstance().getMachineDefinition().getProfilesMachineId())
@@ -261,7 +261,7 @@ class ProfilesModel(ListModel):
                     settings_list.append({"name": setting.getLabel(), "value": value})
                 settings_list = sorted(settings_list, key = lambda setting:setting["name"])
             self.appendItem({
-                "id": 0,
+                "id": -1,
                 "name": catalog.i18nc("@item:inlistbox", "Current settings"),
                 "active": False,
                 "readOnly": True,

@@ -43,7 +43,8 @@ ManagementPage
                 spacing: UM.Theme.sizes.default_margin.width
 
                 Label { text: catalog.i18nc("@label", "Profile type"); width: 155}
-                Label { text: base.currentItem.readOnly ? catalog.i18nc("@label", "Starter profile (protected)") : catalog.i18nc("@label", "Custom profile"); }
+                Label { text: base.currentItem.id == -1 ? catalog.i18nc("@label", "Current settings")  : 
+                              base.currentItem.readOnly ? catalog.i18nc("@label", "Starter profile (protected)") : catalog.i18nc("@label", "Custom profile"); }
 
                 Column {
                     Repeater {
