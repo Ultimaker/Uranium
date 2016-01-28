@@ -25,9 +25,8 @@ ManagementPage
 
     scrollviewCaption: catalog.i18nc("@label %1 is printer name","Printer: %1").arg(UM.MachineManager.activeMachineInstance)
 
-    Flow {
+    Item {
         anchors.fill: parent
-        spacing: UM.Theme.sizes.default_margin.height
 
         Label { id: profileName; text: base.currentItem.name ? base.currentItem.name : ""; font: UM.Theme.fonts.large; width: parent.width; }
 
@@ -131,7 +130,7 @@ ManagementPage
             selectExisting: false;
             nameFilters: base.model.getFileNameFiltersWrite()
 
-            onAccepted: base.model.exportProfile(base.currentItem.name, fileUrl, selectedNameFilter)
+            onAccepted: base.model.exportProfile(base.currentItem.id, base.currentItem.name, fileUrl, selectedNameFilter)
         }
     }
 }

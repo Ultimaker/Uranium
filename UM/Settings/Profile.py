@@ -11,6 +11,9 @@ from UM.Logger import Logger
 from UM.Settings.Validators.ResultCodes import ResultCodes
 from UM.SaveFile import SaveFile
 
+from UM.i18n import i18nCatalog
+catalog = i18nCatalog("uranium")
+
 ##  Provides a collection of setting values
 #
 #   The profile class handles setting values for "user" settings. User settings are settings
@@ -31,7 +34,7 @@ class Profile(SignalEmitter):
         self._machine_manager = machine_manager
         self._changed_settings = {}
         self._changed_settings_defaults = {}
-        self._name = "Unknown Profile"
+        self._name = catalog.i18nc("@label", "Current Settings")
         self._type = None
         self._machine_type_id = None
         self._machine_variant_name = None

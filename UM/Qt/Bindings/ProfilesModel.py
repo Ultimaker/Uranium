@@ -1,6 +1,8 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
+import copy
+
 from UM.Qt.ListModel import ListModel
 from UM.Application import Application
 from UM.Logger import Logger
@@ -119,14 +121,19 @@ class ProfilesModel(ListModel):
         #If it hasn't returned by now, none of the plugins loaded the profile successfully.
         return { "status": "error", "message": catalog.i18nc("@info:status", "Profile {0} has an unknown file type.", path) }
 
-    @pyqtSlot(str, QUrl, str)
-    def exportProfile(self, name, url, fileType):
+    @pyqtSlot(int, str, QUrl, str)
+    def exportProfile(self, id, name, url, fileType):
         #Input checking.
         path = url.toLocalFile()
         if not path:
             return
 
-        profile = self._manager.findProfile(name)
+        if id==0:
+            profile = copy.deepcopy(self._manager.getWorkingProfile())
+            profile.setType(None)
+            profile.setMachineTypeId(self._manager.getActiveMachineInstance().getMachineDefinition().getId())
+        else:
+            profile = self._manager.findProfile(name)
         if not profile:
             return
 
@@ -239,7 +246,7 @@ class ProfilesModel(ListModel):
                 settings_list.append({"name": setting.getLabel(), "value": value})
             settings_list = sorted(settings_list, key = lambda setting:setting["name"])
             self.appendItem({
-                "id": 1,
+                "id": 0,
                 "name": catalog.i18nc("@item:inlistbox", "Current settings"),
                 "active": False,
                 "readOnly": True,

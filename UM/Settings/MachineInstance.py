@@ -42,7 +42,6 @@ class MachineInstance(SignalEmitter):
         if name != self._name:
             old_name = self._name
             self._name = name
-            self._working_profile.setName(name)
             self.nameChanged.emit(self, old_name)
 
     def getWorkingProfile(self):
@@ -126,7 +125,6 @@ class MachineInstance(SignalEmitter):
         self._machine_definition.loadAll()
 
         self._name = config.get("general", "name")
-        self._working_profile.setName(self._name)
 
         self._active_profile_name = config.get("general", "active_profile", fallback="")
         self._active_material_name = config.get("general", "material", fallback = "")
