@@ -3,7 +3,7 @@
 
 from . import Operation
 from UM.Scene.SceneNode import SceneNode
-
+from UM.Math.Vector import Vector
 class ScaleOperation(Operation.Operation):
     def __init__(self, node, scale, **kwargs):
         super().__init__()

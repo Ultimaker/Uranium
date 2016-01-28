@@ -34,6 +34,7 @@ class SceneNode(SignalEmitter):
         self._position = Vector()
         self._scale = Vector(1.0, 1.0, 1.0)
         self._mirror = Vector(1.0, 1.0, 1.0)
+        self._shear = Vector(0.0, 0.0, 0.0)
         self._orientation = Quaternion()
 
         self._transformation = Matrix() #local transformation
@@ -372,7 +373,7 @@ class SceneNode(SignalEmitter):
             orientation_matrix = new_orientation.toMatrix()
         euler_angles = orientation_matrix.getEuler()
 
-        new_transform_matrix.compose(scale = self._scale, angles = euler_angles, translate = self._position )
+        new_transform_matrix.compose(scale = self._scale, angles = euler_angles, translate = self._position, shear = self._shear)
         self._transformation = new_transform_matrix
         self._transformChanged()
 
@@ -415,12 +416,12 @@ class SceneNode(SignalEmitter):
         orientation_matrix = self._orientation.toMatrix()
         euler_angles = orientation_matrix.getEuler()
         if transform_space == SceneNode.TransformSpace.Local:
-            new_transform_matrix.compose(scale = scale, angles = euler_angles, translate = self._position )
+            new_transform_matrix.compose(scale = scale, angles = euler_angles, translate = self._position, shear = self._shear)
         if transform_space == SceneNode.TransformSpace.World:
             if self.getWorldScale() == scale:
                 return
             new_scale = scale - (self.getWorldScale() - self._scale)
-            new_transform_matrix.compose(scale = new_scale, angles = euler_angles, translate = self._position )
+            new_transform_matrix.compose(scale = new_scale, angles = euler_angles, translate = self._position, shear = self._shear)
 
         self._transformation = new_transform_matrix
         self._transformChanged()
@@ -501,13 +502,13 @@ class SceneNode(SignalEmitter):
         euler_angles = orientation_matrix.getEuler()
 
         if transform_space == SceneNode.TransformSpace.Local:
-            new_transform_matrix.compose(scale = self._scale, angles = euler_angles, translate = position)
+            new_transform_matrix.compose(scale = self._scale, angles = euler_angles, translate = position, shear = self._shear)
         if transform_space == SceneNode.TransformSpace.World:
             if self.getWorldPosition() == position:
                 return
 
             new_position = position - (self.getWorldPosition() - self._position)
-            new_transform_matrix.compose(scale = self._scale, angles = euler_angles, translate = new_position)
+            new_transform_matrix.compose(scale = self._scale, angles = euler_angles, translate = new_position, shear = self._shear)
 
         self._transformation = new_transform_matrix
         self._transformChanged()
@@ -612,7 +613,7 @@ class SceneNode(SignalEmitter):
         scale, shear, euler_angles, translation = self._transformation.decompose()
         self._position = translation
         self._scale = scale
-
+        self._shear = shear
         orientation = Quaternion()
         euler_angle_matrix = Matrix()
         euler_angle_matrix.setByEuler(euler_angles.x, euler_angles.y, euler_angles.z)
@@ -630,6 +631,8 @@ class SceneNode(SignalEmitter):
         world_euler_angle_matrix = Matrix()
         world_euler_angle_matrix.setByEuler(world_euler_angles.x, world_euler_angles.y, world_euler_angles.z)
         self._derived_orientation.setByMatrix(world_euler_angle_matrix)
+
+        world_scale, world_shear, world_euler_angles, world_translation = self._world_transformation.decompose()
 
     def _resetAABB(self):
         if not self._calculate_aabb:
