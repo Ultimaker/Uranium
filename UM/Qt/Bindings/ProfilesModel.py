@@ -82,7 +82,9 @@ class ProfilesModel(ListModel):
     def importProfile(self, url):
         path = url.toLocalFile()
         if not path:
-            return {"status":"error", "message":"Not a valid path. This shouldn't happen."}
+            error_str = "Not a valid path. This is an unexpected error. If it happens again please report it."
+            error_str = i18nCatalog.i18nc("@info:status", error_str)
+            return {"status":"error", "message":error_str}
 
         for profile_reader_id, profile_reader in self._manager.getProfileReaders():
             try:
@@ -115,11 +117,15 @@ class ProfilesModel(ListModel):
         #Input checking.
         path = url.toLocalFile()
         if not path:
-            return {"status":"error", "message":"Not a valid path. This shouldn't happen."}
+            error_str = "Not a valid path. This is an unexpected error. If it happens again please report it."
+            error_str = i18nCatalog.i18nc("@info:status", error_str)
+            return {"status":"error", "message":error_str}
 
         profile = self._manager.findProfile(name)
         if not profile:
-            return {"status":"error", "message":"Profile not found. This shouldn't happen."}
+            error_str = "Profile not found. This is an unexpected error. If it happens again please report it."
+            error_str = i18nCatalog.i18nc("@info:status", error_str)
+            return {"status":"error", "message":error_str}
 
         #Parse the fileType to deduce what plugin can save the file format.
         #TODO: This parsing can be made unnecessary by storing for each plugin what the fileType string is in complete (in addition to the {(description,extension)} dict).
@@ -127,7 +133,7 @@ class ProfilesModel(ListModel):
         split = fileType.rfind(" (*.") #Find where the description ends and the extension starts.
         if split < 0: #Not found. Invalid format.
             Logger.log("e", "Invalid file format identifier %s", fileType)
-            error_str = catalog.i18nc("@info:status", "Invalid file format identifier: {0}", fileType)
+            error_str = catalog.i18nc("@info:status", "Invalid file format: {0}", fileType)
             return {"status":"error", "message":error_str}
         description = fileType[:split]
         extension = fileType[split + 4:-1] #Leave out the " (*." and ")".
