@@ -127,11 +127,11 @@ class Backend(PluginObject, SignalEmitter):
     def _onMessageReceived(self):
         message = self._socket.takeNextMessage()
 
-        if type(message) not in self._message_handlers:
+        if message.getTypeName() not in self._message_handlers:
             Logger.log("e", "No handler defined for message of type %s", type(message))
             return
 
-        self._message_handlers[type(message)](message)
+        self._message_handlers[message.getTypeName()](message)
     
     ##  Private socket error handler   
     def _onSocketError(self, error):
