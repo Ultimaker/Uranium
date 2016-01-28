@@ -79,7 +79,7 @@ class MachineManager(SignalEmitter):
         if not machine:
             return machine_materials
             
-        machine_type = machine.getMachineDefinition().getId()
+        machine_type = machine.getMachineDefinition().getProfilesMachineId()
         machine_variant = machine.getMachineDefinition().getVariantName()
 
         for profile in self._profiles:
@@ -266,7 +266,7 @@ class MachineManager(SignalEmitter):
         if not self._active_machine:
             return self._profiles
 
-        active_machine_type = self._active_machine.getMachineDefinition().getId()
+        active_machine_type = self._active_machine.getMachineDefinition().getProfilesMachineId()
         active_machine_variant = self._active_machine.getMachineDefinition().getVariantName()
         active_machine_instance = self._active_machine.getName()
         active_machine_material = self._active_machine.getMaterialName()

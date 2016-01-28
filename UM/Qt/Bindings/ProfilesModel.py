@@ -117,7 +117,7 @@ class ProfilesModel(ListModel):
                 profile.setName(self._manager.makeUniqueProfileName(profile.getName())) #Ensure a unique name
                 if profile.getMachineTypeId():
                     #Make sure the profile is available for the currently selected printer
-                    profile.setMachineTypeId(self._manager.getActiveMachineInstance().getMachineDefinition().getId())
+                    profile.setMachineTypeId(self._manager.getActiveMachineInstance().getMachineDefinition().getProfilesMachineId())
                 self._manager.addProfile(profile) #Add the new profile to the list of profiles.
                 return { "status": "ok", "message": catalog.i18nc("@info:status", "Successfully imported profile {0}", profile.getName()) }
 
@@ -134,7 +134,7 @@ class ProfilesModel(ListModel):
         if id==0:
             profile = copy.deepcopy(self._working_profile)
             profile.setType(None)
-            profile.setMachineTypeId(self._manager.getActiveMachineInstance().getMachineDefinition().getId())
+            profile.setMachineTypeId(self._manager.getActiveMachineInstance().getMachineDefinition().getProfilesMachineId())
         else:
             profile = self._manager.findProfile(name)
         if not profile:

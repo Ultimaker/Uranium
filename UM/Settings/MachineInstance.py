@@ -138,7 +138,7 @@ class MachineInstance(SignalEmitter):
         config.add_section("general")
         config["general"]["name"] = self._name
         config["general"]["type"] = self._machine_definition.getId()
-        config["general"]["active_profile"] = self._active_profile_name
+        config["general"]["active_profile"] = str(self._active_profile_name)
         config["general"]["version"] = str(self.MachineInstanceVersion)
         if self._machine_definition.getVariantName():
             config["general"]["variant"] = self._machine_definition.getVariantName()
