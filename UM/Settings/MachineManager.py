@@ -118,7 +118,10 @@ class MachineManager(SignalEmitter):
         self.machineInstancesChanged.emit()
 
         if self._active_machine == instance:
-            self.setActiveMachineInstance(self._machine_instances[0])
+            try:
+                self.setActiveMachineInstance(self._machine_instances[0])
+            except:
+                self.setActiveMachineInstance(None)
 
     def findMachineInstance(self, name):
         for instance in self._machine_instances:
@@ -205,7 +208,10 @@ class MachineManager(SignalEmitter):
         self.profilesChanged.emit()
 
         if profile == self._active_profile:
-            self.setActiveProfile(self._profiles[0])
+            try:
+                self.setActiveProfile(self._profiles[0])
+            except:
+                self.setActiveProfile(None)
 
     def findProfile(self, name):
         for profile in self._profiles:
@@ -233,6 +239,11 @@ class MachineManager(SignalEmitter):
         self.loadProfiles()
         self.loadVisibility()
 
+    def addMachineDefinition(self, definition):
+        if not self.findMachineDefinition(definition.getId(), definition.getVariantName()):
+            self._machine_definitions.append(definition)
+            self.machineDefinitionsChanged.emit()
+
     def loadMachineDefinitions(self):
         dirs = Resources.getAllPathsForType(Resources.MachineDefinitions)
         for dir in dirs:
@@ -254,6 +265,7 @@ class MachineManager(SignalEmitter):
                     continue
 
                 # Only add the definition if it did not exist yet. This prevents duplicates.
+                # We don't use addMachineDefinition to prevent signal spam.
                 if not self.findMachineDefinition(definition.getId(), definition.getVariantName()):
                     self._machine_definitions.append(definition)
 

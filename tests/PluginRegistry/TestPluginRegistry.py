@@ -3,74 +3,56 @@
 
 #!/usr/bin/env python2
 
-import unittest
+import pytest
 import os
 
 from UM.Application import Application
 from UM.PluginRegistry import PluginRegistry
 from UM.PluginError import PluginNotFoundError
 
-class TestApplication(Application):
-    def __init__(self):
-        super().__init__("test", "1.0")
+class FixtureRegistry(PluginRegistry):
+    def registerTestPlugin(self, plugin):
+        self._test_plugin = plugin
 
-        self._test_plugin = None
-
-    def registerTestPlugin(self, name):
-        self._test_plugin = name
-        
     def getTestPlugin(self):
-        return self._test_plugin
+        if hasattr(self, "_test_plugin"):
+            return self._test_plugin
 
-class TestPluginRegistry(unittest.TestCase):
-    # Called before the first testfunction is executed
-    def setUp(self):
-        self._app = TestApplication.getInstance()
+        return None
 
-    # Called after the last testfunction was executed
-    def tearDown(self):
-        self._app = None
+@pytest.fixture
+def registry(application):
+    registry = FixtureRegistry()
+    registry.addPluginLocation(os.path.dirname(os.path.abspath(__file__)))
+    registry.addType("test", registry.registerTestPlugin)
+    registry.setApplication(application)
+    return registry
 
-    def test_metaData(self):
-        registry = self._createRegistry()
-        
+class TestPluginRegistry():
+    def test_metaData(self, registry):
         metaData = registry.getMetaData("TestPlugin")
-        self.assertDictEqual({ "id": "TestPlugin", "plugin": { "name": "TestPlugin", "api": 2 } }, metaData)
 
-    def test_load(self):
-        registry = self._createRegistry()
-        
+        assert metaData == { "id": "TestPlugin", "plugin": { "name": "TestPlugin", "api": 2 } }
+
+    def test_load(self, registry):
         registry.loadPlugin("TestPlugin")
-        self.assertEqual("TestPlugin", self._app.getTestPlugin())
+
+        assert registry.getTestPlugin().getPluginId() == "TestPlugin"
     
-    def test_loadNested(self):
-        registry = self._createRegistry()
-        
+    def test_loadNested(self, registry):
         registry.loadPlugin("TestPlugin2")
-        self.assertEqual("TestPlugin2", self._app.getTestPlugin())
+
+        assert registry.getTestPlugin().getPluginId() == "TestPlugin2"
         
-    def test_findAllPlugins(self):
-        registry = self._createRegistry()
-        
+    def test_findAllPlugins(self, registry):
         names = registry._findAllPlugins()
-        self.assertListEqual(["OldTestPlugin", "TestPlugin", "TestPlugin2"], sorted(names))
+        assert sorted(names) == ["OldTestPlugin", "TestPlugin", "TestPlugin2"]
         
-    def test_pluginNotFound(self):
-        registry = self._createRegistry()
-        
-        self.assertRaises(PluginNotFoundError, registry.loadPlugin, "NoSuchPlugin")
+    def test_pluginNotFound(self, registry):
+        with pytest.raises(PluginNotFoundError):
+            registry.loadPlugin("NoSuchPlugin")
 
-    def test_ignoreOldApi(self):
-        registry = self._createRegistry()
-
+    def test_ignoreOldApi(self, registry):
         registry.loadPlugin("OldTestPlugin")
-        self.assertEqual(None, self._app.getTestPlugin())
-        
-    def _createRegistry(self):
-        registry = PluginRegistry()
-        registry.addPluginLocation(os.path.dirname(os.path.abspath(__file__)))
-        registry.setApplication(self._app)
-        return registry
 
-if __name__ == "__main__":
-    unittest.main()
+        assert registry.getTestPlugin() is None

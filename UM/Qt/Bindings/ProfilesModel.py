@@ -152,12 +152,12 @@ class ProfilesModel(ListModel):
             success = good_profile_writer.write(path, profile)
         except Exception as e:
             Logger.log("e", "Failed to export profile to %s: %s", path, str(e))
-            m = Message(catalog.i18nc("@info:status", "Failed to export profile to <filename>{0}</filename>: <message>{1}</message>", path, str(e)))
+            m = Message(catalog.i18nc("@info:status", "Failed to export profile to <filename>{0}</filename>: <message>{1}</message>", path, str(e)), lifetime = 0)
             m.show()
             return
         if not success:
             Logger.log("w", "Failed to export profile to %s: Writer plugin reported failure.", path)
-            m = Message(catalog.i18nc("@info:status", "Failed to export profile to <filename>{0}</filename>: Writer plugin reported failure.", path))
+            m = Message(catalog.i18nc("@info:status", "Failed to export profile to <filename>{0}</filename>: Writer plugin reported failure.", path), lifetime = 0)
             m.show()
             return
         m = Message(catalog.i18nc("@info:status", "Exported profile to <filename>{0}</filename>", path))
@@ -213,7 +213,7 @@ class ProfilesModel(ListModel):
             for key, value in settings_dict.items():
                 setting = self._manager.getActiveMachineInstance().getMachineDefinition().getSetting(key)
                 settings_list.append({"name": setting.getLabel(), "value": value})
-
+            settings_list = sorted(settings_list, key = lambda setting:setting["name"])
             self.appendItem({
                 "id": id(profile),
                 "name": profile.getName(),

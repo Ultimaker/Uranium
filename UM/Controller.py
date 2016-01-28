@@ -34,6 +34,8 @@ class Controller(SignalEmitter):
         self._camera_tool = None
         self._selection_tool = None
 
+        self._tools_enabled = True
+
         PluginRegistry.addType("view", self.addView)
         PluginRegistry.addType("tool", self.addTool)
         PluginRegistry.addType("input_device", self.addInputDevice)
@@ -175,6 +177,11 @@ class Controller(SignalEmitter):
             if self._active_tool:
                 self._active_tool.event(ToolEvent(ToolEvent.ToolActivateEvent))
 
+            from UM.Scene.Selection import Selection #Imported here to prevent a circular dependency.
+            if not self._active_tool and Selection.getCount() > 0: #If something is selected, a tool must always be active.
+                self._active_tool = self._tools["TranslateTool"] #Then default to the translation tool.
+                self._active_tool.event(ToolEvent(ToolEvent.ToolActivateEvent))
+
             self.activeToolChanged.emit()
         except KeyError:
             Logger.log("e", "No tool named %s found.", name)
@@ -242,3 +249,10 @@ class Controller(SignalEmitter):
     #   \sa setActiveTool
     def setSelectionTool(self, tool):
         self._selection_tool = self.getTool(tool)
+
+
+    def getToolsEnabled(self):
+        return self._tools_enabled
+
+    def setToolsEnabled(self, enabled):
+        self._tools_enabled = enabled

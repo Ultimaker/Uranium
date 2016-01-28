@@ -1,7 +1,7 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-import unittest
+import pytest
 import collections
 
 from UM.Signal import Signal
@@ -10,14 +10,14 @@ from UM.i18n import i18nCatalog
 from UM.Settings.MachineManager import MachineManager
 from UM.Settings.Setting import Setting
 
-class TestMachineManager():
+class MachineManager():
     def __init__(self):
         self.activeProfileChanged = Signal()
 
     def getActiveProfile(self):
         return None
 
-class TestProfile():
+class Profile():
     def __init__(self, root_setting):
         self._root_setting = root_setting
 
@@ -28,13 +28,13 @@ class TestProfile():
 
         return None
 
-class TestSetting(unittest.TestCase):
-    def setUp(self):
+class TestSetting():
+    def setup_method(self, method):
         # Called before the first testfunction is executed
-        self._machine_manager = TestMachineManager()
+        self._machine_manager = MachineManager()
         self._catalog = i18nCatalog("TestSetting")
 
-    def tearDown(self):
+    def teardown_method(self, method):
         # Called after the last testfunction was executed
         self._machine_manager = None
         self._catalog = None
@@ -44,8 +44,8 @@ class TestSetting(unittest.TestCase):
         setting = Setting(self._machine_manager, "test", self._catalog)
 
         # This check is mostly to see if the object was constructed properly
-        self.assertIsInstance(setting, Setting)
-        self.assertEqual("test", setting.getKey())
+        assert isinstance(setting, Setting)
+        assert setting.getKey() == "test"
 
         # Construct with keyword arguments
         setting = Setting(
@@ -54,31 +54,30 @@ class TestSetting(unittest.TestCase):
             type = "string",
         )
 
-        self.assertIsInstance(setting, Setting)
-        self.assertEqual("test", setting.getKey())
-        self.assertEqual("Test Setting", setting.getLabel())
-        self.assertEqual("string", setting.getType())
+        assert isinstance(setting, Setting)
+        assert setting.getKey() == "test"
+        assert setting.getLabel() == "Test Setting"
+        assert setting.getType() == "string"
 
-    def test_fillByDict(self):
+    test_fillByDict_data = [
+        ({ "type": "boolean", "default": True, "label": "Test Boolean", "description": "A boolean test setting" }),
+        ({ "type": "int", "default": 10, "label": "Test Integer", "description": "An integer test setting" }),
+        ({ "type": "float", "default": True, "label": "Test Float", "description": "A float test setting" }),
+        ({ "type": "string", "default": "test", "label": "Test String", "description": "A string test setting" }),
+        ({ "type": "enum", "default": "one", "label": "Test Enum", "description": "An enum test setting" }),
+    ]
+
+    @pytest.mark.parametrize("data", test_fillByDict_data)
+    def test_fillByDict(self, data):
         setting = Setting(self._machine_manager, "test", self._catalog)
-
-        data = {
-            "type": "int",
-            "default": 4,
-            "label": "Test Setting",
-            "description": "A Test Setting",
-            "unit": "furlongs per fortnight",
-            "visible": True
-        }
 
         setting.fillByDict(data)
 
-        self.assertEqual("int", setting.getType())
-        self.assertEqual(4, setting.getDefaultValue())
-        self.assertEqual("Test Setting", setting.getLabel())
-        self.assertEqual("A Test Setting", setting.getDescription())
-        self.assertEqual("furlongs per fortnight", setting.getUnit())
-        self.assertTrue(setting.isVisible())
+        assert setting.getType() == data["type"]
+        assert setting.getDefaultValue() == data["default"]
+        assert setting.getLabel() == data["label"]
+        assert setting.getDescription() == data["description"]
+        assert setting.isVisible()
 
     def test_fillByDictWithChildren(self):
         setting = Setting(self._machine_manager, "test", self._catalog)
@@ -120,69 +119,61 @@ class TestSetting(unittest.TestCase):
 
         setting.fillByDict(data)
 
-        profile = TestProfile(setting)
+        profile = Profile(setting)
 
-        self.assertEqual(len(setting.getChildren()), 3)
+        assert len(setting.getChildren()) == 3
 
         child1 = setting.getChildren()[0]
         child2 = setting.getChildren()[1]
         child3 = setting.getChildren()[2]
+
         # Children should keep the order in which they were defined
-        self.assertEqual("test_child1", child1.getKey())
-        self.assertEqual("test_child2", child2.getKey())
-        self.assertEqual("test_child3", child3.getKey())
+        assert child1.getKey() == "test_child1"
+        assert child2.getKey() == "test_child2"
+        assert child3.getKey() == "test_child3"
 
         # All children should have "setting" as their parent.
-        self.assertEqual(setting, child1.getParent())
-        self.assertEqual(setting, child2.getParent())
-        self.assertEqual(setting, child3.getParent())
+        assert child1.getParent() == setting
+        assert child2.getParent() == setting
+        assert child3.getParent() == setting
 
         # Child visibility should not affect parent visibility.
-        self.assertTrue(setting.isVisible())
+        assert setting.isVisible()
 
         # Child 1 uses default inheritance so should inherit its parent value
-        self.assertEqual(4, child1.getDefaultValue(profile))
+        assert child1.getDefaultValue(profile) == 4
 
         # Child 2 does not inherit so should return its default value
-        self.assertEqual(5, child2.getDefaultValue(profile))
+        assert child2.getDefaultValue(profile) == 5
 
         # Child 3 uses an inherit function and should return parent's value * 10.
-        self.assertEqual(40, child3.getDefaultValue(profile))
+        assert child3.getDefaultValue(profile) == 40
 
-    def test_parseValue(self):
-        setting = Setting(self._machine_manager, "test", self._catalog, type = "int")
+    test_parseValue_data = [
+        ("int", "1", 1),
+        ("int", 1, 1),
+        ("int", True, 1),
+        ("int", False, 0),
+        ("int", 1.1, 1),
+        ("int", "something", 0),
+        ("boolean", "True", True),
+        ("boolean", 1, True),
+        ("boolean", 1.0, True),
+        ("boolean", "False", False),
+        ("boolean", 0, False),
+        ("boolean", -1, True),
+        ("boolean", "true", False),
+        ("boolean", "something", False),
+        ("float", "1.0", 1.0),
+        ("float", "1", 1.0),
+        ("float", "True", 1.0),
+        ("float", "10.0", 10.0),
+        ("float", "1,0", 1.0),
+        ("float", "something", 0.0),
+    ]
 
-        self.assertEqual(setting.parseValue("1"), 1)
-        self.assertEqual(setting.parseValue(1), 1)
-        self.assertEqual(setting.parseValue(True), 1)
-        self.assertEqual(setting.parseValue(False), 0)
-        self.assertEqual(setting.parseValue(1.1), 1)
+    @pytest.mark.parametrize("setting_type,data,result", test_parseValue_data)
+    def test_parseValue(self, setting_type, data, result):
+        setting = Setting(self._machine_manager, "test", self._catalog, type = setting_type)
 
-        # An error value should return a default value valid for the setting type.
-        self.assertEqual(setting.parseValue("something"), 0)
-
-        setting = Setting(self._machine_manager, "test", self._catalog, type = "boolean")
-
-        self.assertEqual(setting.parseValue("True"), True)
-        self.assertEqual(setting.parseValue(1), True)
-        self.assertEqual(setting.parseValue(1.0), True)
-        self.assertEqual(setting.parseValue("False"), False)
-        self.assertEqual(setting.parseValue(0), False)
-        self.assertEqual(setting.parseValue(-1), True)
-
-        # Value should be a valid python literal expression
-        self.assertEqual(setting.parseValue("true"), False)
-
-        setting = Setting(self._machine_manager, "test", self._catalog, type = "float")
-
-        self.assertEqual(setting.parseValue("1.0"), 1.0)
-        self.assertEqual(setting.parseValue(1), 1.0)
-        self.assertEqual(setting.parseValue(True), 1.0)
-
-        # Floats should also be able to be specified using , as decimal separator.
-        self.assertEqual(setting.parseValue("1,0"), 1.0)
-
-        self.assertEqual(setting.parseValue("something"), 0.0)
-
-if __name__ == "__main__":
-    unittest.main()
+        assert setting.parseValue(data) == result

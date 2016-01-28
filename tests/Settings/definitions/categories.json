@@ -1,0 +1,52 @@
+{
+    "id": "test_categories",
+    "name": "Categories Test",
+    "version": 1,
+
+    "categories": {
+        "test_category_0": {
+            "label": "Test Category 0",
+            "settings": {
+                "test_category_0_setting_0": {
+                    "label": "Test Category 0 Test Setting 0",
+                    "type": "int",
+                    "default": 0
+                },
+                "test_category_0_setting_1": {
+                    "label": "Test Category 0 Test Setting 1",
+                    "type": "int",
+                    "default": 1
+                }
+            }
+        },
+        "test_category_1": {
+            "label": "Test Category 1",
+            "visible": false,
+            "settings": {
+                "test_category_1_setting_0": {
+                    "label": "Test Category 1 Test Setting 0",
+                    "type": "int",
+                    "default": 0,
+                    "visible": true
+                }
+            }
+        },
+        "test_category_2": {
+            "label": "Test Category 2",
+            "settings": {
+                "test_category_2_setting_0": {
+                    "label": "Test Category 2 Test Setting 0",
+                    "type": "int",
+                    "default": 0,
+                    "visible": false
+                },
+                "test_category_2_setting_1": {
+                    "label": "Test Category 2 Test Setting 1",
+                    "type": "int",
+                    "default": 1,
+                    "visible": false
+                }
+            }
+        }
+    }
+}

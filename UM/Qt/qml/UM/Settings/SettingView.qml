@@ -80,7 +80,7 @@ ScrollView
                     text: catalog.i18ncp("@label", "{0} hidden setting uses a custom value", "{0} hidden settings use custom values", model.hiddenValuesCount);
 
                     opacity: model.hiddenValuesCount > 0 ? 1 : 0;
-                    height: model.hiddenValuesCount > 0 ? UM.Theme.sizes.line.height : 0;
+                    height: model.hiddenValuesCount > 0 ? UM.Theme.sizes.lineHeight : 0;
 
                     font: UM.Theme.fonts.default;
                 }

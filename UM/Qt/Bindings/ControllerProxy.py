@@ -1,7 +1,7 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-from PyQt5.QtCore import QObject, QCoreApplication, pyqtSlot, QUrl, pyqtSignal
+from PyQt5.QtCore import QObject, QCoreApplication, pyqtSlot, QUrl, pyqtSignal, pyqtProperty
 
 from UM.Application import Application
 from UM.Scene.SceneNode import SceneNode
@@ -19,6 +19,16 @@ class ControllerProxy(QObject):
         self._controller = Application.getInstance().getController()
         self._controller.contextMenuRequested.connect(self._onContextMenuRequested)
         self._selection_pass = None
+        self._tools_enabled = True
+
+        self._controller.toolOperationStarted.connect(self._onToolOperationStarted)
+        self._controller.toolOperationStopped.connect(self._onToolOperationStopped)
+
+    toolsEnabledChanged = pyqtSignal()
+
+    @pyqtProperty(bool, notify = toolsEnabledChanged)
+    def toolsEnabled(self):
+        return self._tools_enabled
 
     @pyqtSlot(str)
     def setActiveView(self, view):
@@ -51,3 +61,13 @@ class ControllerProxy(QObject):
             self.contextMenuRequested.emit(id)
         else:
             self.contextMenuRequested.emit(0)
+
+    def _onToolOperationStarted(self, tool):
+        self._tools_enabled = False
+        self._controller.setToolsEnabled(False)
+        self.toolsEnabledChanged.emit()
+
+    def _onToolOperationStopped(self, tool):
+        self._tools_enabled = True
+        self._controller.setToolsEnabled(True)
+        self.toolsEnabledChanged.emit()

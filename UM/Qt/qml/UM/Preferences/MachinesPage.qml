@@ -43,6 +43,7 @@ ManagementPage {
             id: renameDialog;
             object: base.currentItem.name ? base.currentItem.name : "";
             onAccepted: base.model.renameMachineInstance(base.currentItem.name, newName);
+            onTextChanged: validName = (!base.model.checkInstanceNameExists(newName) || base.currentItem.name == newName);
         }
     }
 }

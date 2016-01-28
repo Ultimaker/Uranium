@@ -8,7 +8,8 @@ import QtQuick.Controls.Styles 1.1
 
 import ".." as UM
 
-TextField {
+TextField
+{
     id: base;
 
     signal valueChanged(string value);
@@ -16,7 +17,7 @@ TextField {
 
     validator: RegExpValidator { regExp: /[0-9.-]+/ }
 
-    onTextChanged: if(base.focus) { valueChanged(text); }
+    onTextChanged: if(base.activeFocus) { valueChanged(text); }
 
     property variant parentValue: value
 
@@ -24,13 +25,15 @@ TextField {
     {
         target: base
         property: "text"
-        value: base.parentValue
-        when: !base.focus
+        value: parseFloat(base.parentValue) ? parseFloat(base.parentValue).toFixed(4).replace(/\.?0*$/,"") : base.parentValue //If it's a float, round to four decimals.
+        when: !base.activeFocus
     }
 
     function notifyReset()
     {
-        base.focus = false;
+        // The reset of this setting field was called so this is the item that has the focus.
+        // This ensures that all values are correctly updated when inheritance is in play.
+        forceActiveFocus()
         base.text = base.parentValue;
     }
 
@@ -75,7 +78,8 @@ TextField {
                 opacity: !control.hovered ? 0 : valid == 5 ? 1.0 : 0.35;
             }
 
-            Label {
+            Label
+            {
                 anchors.right: parent.right;
                 anchors.rightMargin: itemStyle.unitRightMargin;
                 anchors.verticalCenter: parent.verticalCenter;
