@@ -235,7 +235,10 @@ class Profile(SignalEmitter):
     ##  Validate all settings and check if any setting has an error.
     def hasErrorValue(self):
         for key, value in self._changed_settings.items():
-            valid = self._active_instance.getMachineDefinition().getSetting(key).validate(value)
+            setting = self._active_instance.getMachineDefinition().getSetting(key)
+            if not setting:
+                return False
+            valid = setting.validate(value)
             if valid == ResultCodes.min_value_error or valid == ResultCodes.max_value_error or valid == ResultCodes.not_valid_error:
                 Logger.log("w", "The setting %s has an invalid value of %s",key,value)
                 return True

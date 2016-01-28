@@ -76,7 +76,7 @@ class ProfilesModel(ListModel):
 
     @pyqtSlot(str)
     def removeProfile(self, name):
-        profile = self._manager.findProfile(name)
+        profile = self._manager.findProfile(name, instance = self._manager.getActiveMachineInstance())
         if not profile:
             return
 
@@ -84,7 +84,7 @@ class ProfilesModel(ListModel):
 
     @pyqtSlot(str, str)
     def renameProfile(self, old_name, new_name):
-        profile = self._manager.findProfile(old_name)
+        profile = self._manager.findProfile(old_name, instance = self._manager.getActiveMachineInstance())
         if not profile:
             return
 
@@ -93,7 +93,7 @@ class ProfilesModel(ListModel):
 
     @pyqtSlot(str, result = bool)
     def checkProfileExists(self, name):
-        profile = self._manager.findProfile(name)
+        profile = self._manager.findProfile(name, instance = self._manager.getActiveMachineInstance())
         if profile:
             return True
 
@@ -136,7 +136,7 @@ class ProfilesModel(ListModel):
             profile.setType(None)
             profile.setMachineTypeId(self._manager.getActiveMachineInstance().getMachineDefinition().getProfilesMachineId())
         else:
-            profile = self._manager.findProfile(name)
+            profile = self._manager.findProfile(name, instance = self._manager.getActiveMachineInstance())
         if not profile:
             return
 
@@ -222,11 +222,11 @@ class ProfilesModel(ListModel):
 
         #Restore active profile for this machine_instance.
         active_instance_name = self._manager.getActiveMachineInstance().getActiveProfileName()
-        active_profile = self._manager.findProfile(active_instance_name)
+        active_profile = self._manager.findProfile(active_instance_name, instance = self._manager.getActiveMachineInstance())
 
         if not active_profile:
             #A profile by this name is no longer in the filtered list of profiles.
-            profiles = self._manager.getProfiles()
+            profiles = self._manager.getProfiles(instance = self._manager.getActiveMachineInstance())
             for profile in profiles:
                 active_profile = profile #Default to first profile you can find.
                 break
@@ -258,7 +258,8 @@ class ProfilesModel(ListModel):
             if active_machine:
                 for key, value in settings_dict.items():
                     setting = active_machine.getMachineDefinition().getSetting(key)
-                    settings_list.append({"name": setting.getLabel(), "value": value})
+                    if setting:
+                        settings_list.append({"name": setting.getLabel(), "value": value})
                 settings_list = sorted(settings_list, key = lambda setting:setting["name"])
             self.appendItem({
                 "id": -1,
@@ -270,7 +271,7 @@ class ProfilesModel(ListModel):
             })
 
 
-        profiles = self._manager.getProfiles()
+        profiles = self._manager.getProfiles(instance = self._manager.getActiveMachineInstance())
         profiles.sort(key = lambda k: k.getName())
         for profile in profiles:
             settings_dict = profile.getChangedSettings()
