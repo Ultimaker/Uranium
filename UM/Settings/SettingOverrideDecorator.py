@@ -78,7 +78,7 @@ class SettingOverrideDecorator(SceneNodeDecorator, SignalEmitter):
             if self.getNode().callDecoration("getProfile"):
                 return self.getNode().callDecoration("getProfile").getSettingValue(key)
 
-            return Application.getInstance().getMachineManager().getActiveProfile().getSettingValue(key)
+            return Application.getInstance().getMachineManager().getWorkingProfile().getSettingValue(key)
 
         if key in self._temp_values:
             return self._temp_values[key]

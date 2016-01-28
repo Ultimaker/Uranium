@@ -76,7 +76,7 @@ class SettingsCategory(SignalEmitter):
     ##  Get the number of settings in this category that are not visible and have a custom value set.
     def getHiddenValuesCount(self):
         count = 0
-        if self._machine_manager.getActiveProfile():
+        if self._machine_manager.getWorkingProfile():
             for setting in self.getAllSettings():
                 if not setting.isVisible() and self._machine_manager.getWorkingProfile().hasSettingValue(setting.getKey()):
                     count += 1
