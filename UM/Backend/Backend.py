@@ -154,7 +154,7 @@ class Backend(PluginObject, SignalEmitter):
         self._createSocket()
     
     ##  Creates a socket and attaches listeners.
-    def _createSocket(self):
+    def _createSocket(self, protocol_file):
         if self._socket:
             self._socket.stateChanged.disconnect(self._onSocketStateChanged)
             self._socket.messageReceived.disconnect(self._onMessageReceived)
@@ -165,8 +165,11 @@ class Backend(PluginObject, SignalEmitter):
         self._socket.messageReceived.connect(self._onMessageReceived)
         self._socket.error.connect(self._onSocketError)
 
-        self._socket.listen("127.0.0.1", self._port)
-        
+        if not self._socket.registerAllMessageTypes(protocol_file):
+            Logger.log("e", "Could not register Cura protocol messages: %s", self._socket.getLastError())
+
         if Application.getInstance().getCommandLineOption("external-backend", False):
             Logger.log("i", "Listening for backend connections on %s", self._port)
+
+        self._socket.listen("127.0.0.1", self._port)
 
