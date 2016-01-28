@@ -135,23 +135,14 @@ class Backend(PluginObject, SignalEmitter):
     
     ##  Private socket error handler   
     def _onSocketError(self, error):
-        try: 
-            if error.errno == 98 or error.errno == 48:# Socked in use error
-                self._port += 1
-            elif error.errno == 104 or error.errno == 32 or error.errno == 54 or error.errno == 41:
-                # 104 is connection reset by peer. 32 is broken pipe. 54 is also connection reset by peer.
-                # 41 is specific for MacOSX and happens when closing a socket.
-                # All these imply the connection to the backend was broken and we need to restart it.
-                Logger.log("i", "Backend crashed or closed. Restarting...")
-            elif platform.system() == "Windows":
-                if error.winerror == 10048:# Socked in use error
-                    self._port += 1
-                elif error.winerror == 10054:
-                    Logger.log("i", "Backend crashed or closed. Restarting...")
-            else:
-                Logger.log("e", str(error))
-        except Exception as e:
-            Logger.log("e", "Failed to parse socket error: %s" , str(e))
+        #Logger.log("d", str(error))
+
+        if error.getErrorCode() == Arcus.ErrorCode.BindFailedError:
+            self._port += 1
+        elif error.getErrorCode() == Arcus.ErrorCode.ConnectionResetError:
+            Logger.log("i", "Backend crashed or closed. Restarting...")
+        else:
+            Logger.log("w", str(error))
 
         self._createSocket()
     
