@@ -27,9 +27,10 @@ class Backend(PluginObject, SignalEmitter):
 
         self._socket = None
         self._port = 49674
-        self._createSocket()
         self._process = None
         self._backend_log = []
+
+        Application.getInstance().callLater(self._createSocket)
 
     processingProgress = Signal()
     backendConnected = Signal()
