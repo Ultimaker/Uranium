@@ -13,6 +13,7 @@ class ScaleOperation(Operation.Operation):
         self._set_scale = kwargs.get("set_scale", False)
         self._add_scale = kwargs.get("add_scale", False)
         self._relative_scale = kwargs.get("relative_scale", False)
+        self._snap = kwargs.get("snap", False)
         self._scale = scale
 
     def undo(self):
@@ -24,13 +25,18 @@ class ScaleOperation(Operation.Operation):
         elif self._add_scale:
             self._node.setScale(self._node.getScale() + self._scale)
         elif self._relative_scale:
-            new_scale = self._node.getScale() + self._scale
+            scale_factor = self._node.getScale() + self._scale
             current_scale = copy.deepcopy(self._node.getScale())
-            new_scale.setX(new_scale.x / current_scale.x)
-            new_scale.setY(new_scale.y / current_scale.y)
-            new_scale.setZ(new_scale.z / current_scale.z)
-
-            self._node.scale(new_scale, SceneNode.TransformSpace.Parent)
+            scale_factor.setX(scale_factor.x / current_scale.x)
+            scale_factor.setY(scale_factor.y / current_scale.y)
+            scale_factor.setZ(scale_factor.z / current_scale.z)
+            self._node.scale(scale_factor, SceneNode.TransformSpace.Parent)
+            if self._snap:
+                new_scale = copy.deepcopy(self._node.getScale())
+                new_scale.setX(round(new_scale.x, 1))
+                new_scale.setY(round(new_scale.y, 1))
+                new_scale.setZ(round(new_scale.z, 1))
+                self._node.setScale(new_scale)
         else:
             self._node.scale(self._scale, SceneNode.TransformSpace.World)
 

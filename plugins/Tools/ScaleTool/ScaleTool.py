@@ -108,10 +108,7 @@ class ScaleTool(Tool):
                 if self._drag_length > 0:
                     drag_change = (drag_length - self._drag_length) / 100 * self._scale_speed
 
-                    if self._snap_scale:
-                        scale_factor = round(drag_change, 1)
-                    else:
-                        scale_factor = drag_change
+                    scale_factor = drag_change
 
                     scale_change = Vector(0.0, 0.0, 0.0)
                     if self._non_uniform_scale:
@@ -126,7 +123,7 @@ class ScaleTool(Tool):
                         scale_change.setY(scale_factor)
                         scale_change.setZ(scale_factor)
 
-                    Selection.applyOperation(ScaleOperation, scale_change, relative_scale = True)
+                    Selection.applyOperation(ScaleOperation, scale_change, relative_scale = True, snap = self._snap_scale)
 
                 self._drag_length = (handle_position - drag_position).length()
                 return True
