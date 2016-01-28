@@ -38,6 +38,9 @@ class ProfilesModel(ListModel):
         self.addRoleName(self.SettingsRole, "settings")
 
         self._manager = Application.getInstance().getMachineManager()
+        self._working_profile = self._manager.getWorkingProfile()
+        if self._working_profile:
+            self._working_profile.settingValueChanged.connect(self._onWorkingProfileValueChanged)
 
         self._manager.profilesChanged.connect(self._onProfilesChanged)
         self._manager.activeMachineInstanceChanged.connect(self._onMachineInstanceChanged)
@@ -129,7 +132,7 @@ class ProfilesModel(ListModel):
             return
 
         if id==0:
-            profile = copy.deepcopy(self._manager.getWorkingProfile())
+            profile = copy.deepcopy(self._working_profile)
             profile.setType(None)
             profile.setMachineTypeId(self._manager.getActiveMachineInstance().getMachineDefinition().getId())
         else:
@@ -209,6 +212,12 @@ class ProfilesModel(ListModel):
         return filters
 
     def _onMachineInstanceChanged(self):
+        if self._working_profile:
+            self._working_profile.settingValueChanged.disconnect(self._onWorkingProfileValueChanged)
+        self._working_profile = self._manager.getWorkingProfile()
+        if self._working_profile:
+            self._working_profile.settingValueChanged.connect(self._onWorkingProfileValueChanged)
+
         self._onProfilesChanged()
 
         #Restore active profile for this machine_instance.
@@ -224,6 +233,9 @@ class ProfilesModel(ListModel):
 
         self._manager.setActiveProfile(active_profile)
 
+    def _onWorkingProfileValueChanged(self, setting):
+        self._onProfilesChanged()
+        
     def _onProfilesChanged(self):
         self.clear()
 
@@ -240,7 +252,7 @@ class ProfilesModel(ListModel):
         active_machine = self._manager.getActiveMachineInstance()
 
         if self._add_working_profile and active_machine:
-            profile = self._manager.getWorkingProfile()
+            profile = self._working_profile
             settings_dict = profile.getChangedSettings()
             settings_list = []
             if active_machine:

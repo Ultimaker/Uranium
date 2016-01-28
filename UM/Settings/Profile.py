@@ -122,7 +122,7 @@ class Profile(SignalEmitter):
     #
     #   \note If the setting is not a user-settable setting, this method will do nothing.
     def setSettingValue(self, key, value):
-        Logger.log('d' , "Setting value of setting %s to %s",key,value)
+        Logger.log('d' , "Setting value of %s to %s on profile %s",key,value,self._name)
 
         if not self._active_instance:
             #Active profile is not yet set, so we can't check against machine definition or default values.
