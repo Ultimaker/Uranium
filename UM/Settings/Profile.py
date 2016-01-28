@@ -124,7 +124,13 @@ class Profile(SignalEmitter):
     def setSettingValue(self, key, value):
         Logger.log('d' , "Setting value of setting %s to %s",key,value)
 
-        if not self._active_instance or not self._active_instance.getMachineDefinition().isUserSetting(key):
+        if not self._active_instance:
+            #Active profile is not yet set, so we can't check against machine definition or default values.
+            #This happens when loading profiles on first start of Cura.
+            self._changed_settings[key] = value
+            return
+
+        if not self._active_instance.getMachineDefinition().isUserSetting(key):
             Logger.log("w", "Tried to set value of non-user setting %s", key)
             return
 

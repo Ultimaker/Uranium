@@ -237,14 +237,17 @@ class ProfilesModel(ListModel):
                 "settings": None
             })
 
-        if self._add_working_profile:
+        active_machine = self._manager.getActiveMachineInstance()
+
+        if self._add_working_profile and active_machine:
             profile = self._manager.getWorkingProfile()
             settings_dict = profile.getChangedSettings()
             settings_list = []
-            for key, value in settings_dict.items():
-                setting = self._manager.getActiveMachineInstance().getMachineDefinition().getSetting(key)
-                settings_list.append({"name": setting.getLabel(), "value": value})
-            settings_list = sorted(settings_list, key = lambda setting:setting["name"])
+            if active_machine:
+                for key, value in settings_dict.items():
+                    setting = active_machine.getMachineDefinition().getSetting(key)
+                    settings_list.append({"name": setting.getLabel(), "value": value})
+                settings_list = sorted(settings_list, key = lambda setting:setting["name"])
             self.appendItem({
                 "id": 0,
                 "name": catalog.i18nc("@item:inlistbox", "Current settings"),
@@ -260,9 +263,10 @@ class ProfilesModel(ListModel):
         for profile in profiles:
             settings_dict = profile.getChangedSettings()
             settings_list = []
-            for key, value in settings_dict.items():
-                setting = self._manager.getActiveMachineInstance().getMachineDefinition().getSetting(key)
-                settings_list.append({"name": setting.getLabel(), "value": value})
+            if active_machine:
+                for key, value in settings_dict.items():
+                    setting = self._manager.getActiveMachineInstance().getMachineDefinition().getSetting(key)
+                    settings_list.append({"name": setting.getLabel(), "value": value})
             settings_list = sorted(settings_list, key = lambda setting:setting["name"])
             self.appendItem({
                 "id": id(profile),
