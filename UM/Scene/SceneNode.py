@@ -328,6 +328,10 @@ class SceneNode(SignalEmitter):
 
         return deepcopy(self._transformation)
 
+    def setTransformation(self, transformation):
+        self._transformation = transformation
+        self._transformChanged()
+
     ##  Get the local orientation value.
     def getOrientation(self):
         return deepcopy(self._orientation)

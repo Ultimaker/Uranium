@@ -10,7 +10,7 @@ class ScaleOperation(Operation.Operation):
     def __init__(self, node, scale, **kwargs):
         super().__init__()
         self._node = node
-        self._old_scale = node.getScale()
+        self._old_transformation = node.getLocalTransformation()
         self._set_scale = kwargs.get("set_scale", False)
         self._add_scale = kwargs.get("add_scale", False)
         self._relative_scale = kwargs.get("relative_scale", False)
@@ -18,7 +18,8 @@ class ScaleOperation(Operation.Operation):
         self._scale = scale
 
     def undo(self):
-        self._node.setScale(self._old_scale)
+        self._node.setTransformation(self._old_transformation)
+        #self._node.setScale(self._old_scale, SceneNode.TransformSpace.World)
 
     def redo(self):
         if self._set_scale:
@@ -58,7 +59,7 @@ class ScaleOperation(Operation.Operation):
             return False
 
         op = ScaleOperation(self._node, self._scale)
-        op._old_scale = other._old_scale
+        op._old_transformation = other._old_transformation
         return op
 
     def __repr__(self):
