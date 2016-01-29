@@ -227,12 +227,7 @@ class ScaleTool(Tool):
             obj_width = obj.getBoundingBox().width / obj_scale.x
             target_scale = float(width) / obj_width
             if obj_scale.x != target_scale:
-                obj_scale.setX(target_scale)
-                if not self._non_uniform_scale:
-                    obj_scale.setY(target_scale)
-                    obj_scale.setZ(target_scale)
-                operation = SetTransformOperation(obj, None, None, obj_scale)
-                operation.push()
+                self.setScaleX(target_scale)
 
     def setObjectHeight(self, height):
         obj = Selection.getSelectedObject(0)
@@ -241,12 +236,7 @@ class ScaleTool(Tool):
             obj_height = obj.getBoundingBox().height / obj_scale.y
             target_scale = float(height) / obj_height
             if obj_scale.y != target_scale:
-                obj_scale.setY(target_scale)
-                if not self._non_uniform_scale:
-                    obj_scale.setX(target_scale)
-                    obj_scale.setZ(target_scale)
-                operation = SetTransformOperation(obj, None, None, obj_scale)
-                operation.push()
+                self.setScaleY(target_scale)
 
     def setObjectDepth(self, depth):
         obj = Selection.getSelectedObject(0)
@@ -255,22 +245,18 @@ class ScaleTool(Tool):
             obj_depth = obj.getBoundingBox().depth / obj_scale.z
             target_scale = float(depth) / obj_depth
             if obj_scale.z != target_scale:
-                obj_scale.setZ(target_scale)
-                if not self._non_uniform_scale:
-                    obj_scale.setY(target_scale)
-                    obj_scale.setX(target_scale)
-                operation = SetTransformOperation(obj, None, None, obj_scale)
-                operation.push()
+                self.setScaleZ((target_scale))
 
     def setScaleX(self, scale):
         obj = Selection.getSelectedObject(0)
         if obj:
             obj_scale = obj.getScale()
             if obj_scale.x != scale:
+                ratio = scale/obj_scale.x
                 obj_scale.setX(scale)
                 if not self._non_uniform_scale:
-                    obj_scale.setY(scale)
-                    obj_scale.setZ(scale)
+                    obj_scale.setY( obj_scale.y * ratio)
+                    obj_scale.setZ( obj_scale.z * ratio)
                 operation = SetTransformOperation(obj, None, None, obj_scale)
                 operation.push()
 
@@ -279,10 +265,11 @@ class ScaleTool(Tool):
         if obj:
             obj_scale = obj.getScale()
             if obj_scale.y != scale:
+                ratio = scale/obj_scale.y
                 obj_scale.setY(scale)
                 if not self._non_uniform_scale:
-                    obj_scale.setX(scale)
-                    obj_scale.setZ(scale)
+                    obj_scale.setX( obj_scale.x * ratio)
+                    obj_scale.setZ( obj_scale.z * ratio)
                 operation = SetTransformOperation(obj, None, None, obj_scale)
                 operation.push()
 
@@ -291,9 +278,10 @@ class ScaleTool(Tool):
         if obj:
             obj_scale = obj.getScale()
             if obj_scale.z != scale:
+                ratio = scale/obj_scale.z
                 obj_scale.setZ(scale)
                 if not self._non_uniform_scale:
-                    obj_scale.setY(scale)
-                    obj_scale.setX(scale)
+                    obj_scale.setY( obj_scale.y * ratio)
+                    obj_scale.setX( obj_scale.x * ratio)
                 operation = SetTransformOperation(obj, None, None, obj_scale)
                 operation.push()
