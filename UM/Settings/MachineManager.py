@@ -145,43 +145,7 @@ class MachineManager(SignalEmitter):
         self._machine_instances.append(instance)
         instance.nameChanged.connect(self._onInstanceNameChanged)
 
-        materials = self.getAllMachineMaterials(instance.getName())
-        if len(materials) > 0:
-            instance.setMaterialName("PLA" if "PLA" in materials else material[0])
-
-        variants = self.getAllMachineVariants(instance.getMachineDefinition().getId())
-        for variant in variants:
-            if variant.getVariantName() == "0.4 mm":
-                instance.setMachineDefinition(variant)
-                break
-
-        #Set default variant, material and profile
-        profile = self.findProfile("Normal Quality", variant_name = instance.getMachineDefinition().getVariantName(), material_name = instance.getMaterialName(), instance = instance)
-        if not profile:
-            profile = self.findProfile("Normal Quality", material_name = instance.getMaterialName(), instance = instance)
-        if not profile:
-            profile = self.findProfile("Normal Quality", instance = instance)
-        if not profile:
-            profiles = self.getProfiles(instance = instance)
-            if len(profiles) > 0:
-                profile = profiles[0]
-
-        if profile:
-            instance.setActiveProfileName(profile.getName())
-            if profile.getMaterialName():
-                instance.setMaterialName(profile.getMaterialName())
-
-            #Set working profile to a copy of the new profile
-            instance.getWorkingProfile().mergeSettingsFrom(profile, reset = True)
-
-            if not profile.getMaterialName() and instance.hasMaterials():
-                #Apply partial material profile
-                materials = self.getAllMachineMaterials(instance.getName())
-                material_name = "PLA" if "PLA" in materials else materials[0]
-                instance.setMaterialName(material_name)
-                material_profile = self.findProfile(material_name, type="material", instance = instance)
-
-                instance.getWorkingProfile().mergeSettingsFrom(material_profile, reset = False)
+        self._setDefaultVariantMaterialProfile(instance)
 
         self.machineInstancesChanged.emit()
 
@@ -540,14 +504,7 @@ class MachineManager(SignalEmitter):
                 instance.getWorkingProfile().loadFromFile(Resources.getStoragePath(Resources.MachineInstanceProfiles, file_name))
             except Exception as e:
                 Logger.log("w", "Could not load working profile: %s: %s", file_name, str(e))
-
-                #Set working profile to a copy of the new profile
-                #FIXME
-                instance.getWorkingProfile().mergeSettingsFrom(self._active_profile, reset = True)
-
-                #Apply partial material profile
-                if instance.hasMaterials():
-                    self.setActiveMaterial(instance.getMaterialName())
+                _setDefaultVariantMaterialProfile(instance)
 
         self._protect_working_profile = True
 
@@ -716,3 +673,37 @@ class MachineManager(SignalEmitter):
             pass
 
         self.profileNameChanged.emit(profile)
+
+    def _setDefaultVariantMaterialProfile(self, instance):
+        materials = self.getAllMachineMaterials(instance.getName())
+        if len(materials) > 0:
+            instance.setMaterialName("PLA" if "PLA" in materials else material[0])
+
+        variants = self.getAllMachineVariants(instance.getMachineDefinition().getId())
+        for variant in variants:
+            if variant.getVariantName() == "0.4 mm":
+                instance.setMachineDefinition(variant)
+                break
+
+        profile = self.findProfile("Normal Quality", variant_name = instance.getMachineDefinition().getVariantName(), material_name = instance.getMaterialName(), instance = instance)
+        if not profile:
+            profile = self.findProfile("Normal Quality", material_name = instance.getMaterialName(), instance = instance)
+        if not profile:
+            profile = self.findProfile("Normal Quality", instance = instance)
+        if not profile:
+            profiles = self.getProfiles(instance = instance)
+            if len(profiles) > 0:
+                profile = profiles[0]
+
+        if profile:
+            instance.setActiveProfileName(profile.getName())
+            if profile.getMaterialName():
+                instance.setMaterialName(profile.getMaterialName())
+
+            #Set working profile to a copy of the new profile
+            instance.getWorkingProfile().mergeSettingsFrom(profile, reset = True)
+
+            if not profile.getMaterialName() and instance.hasMaterials():
+                #Apply partial material profile
+                material_profile = self.findProfile(instance.getMaterialName(), type="material", instance = instance)
+                instance.getWorkingProfile().mergeSettingsFrom(material_profile, reset = False)
