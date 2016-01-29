@@ -32,6 +32,7 @@ class Backend(PluginObject, SignalEmitter):
         self._backend_log = []
 
     processingProgress = Signal()
+    backendStateChange = Signal()
     backendConnected = Signal()
 
     ##   \brief Start the backend / engine.
