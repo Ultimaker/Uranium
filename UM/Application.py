@@ -263,6 +263,15 @@ class Application(SignalEmitter):
     def functionEvent(self, event):
         raise NotImplementedError("functionEvent must be implemented by subclasses.")
 
+    ##  Call a function the next time the event loop runs.
+    #
+    #   \param function The function to call.
+    #   \param args The positional arguments to pass to the function.
+    #   \param kwargs The keyword arguments to pass to the function.
+    def callLater(self, function, *args, **kwargs):
+        event = CallFunctionEvent(function, args, kwargs)
+        self.functionEvent(event)
+
     ##  Get the application"s main thread.
     def getMainThread(self):
         return self._main_thread
