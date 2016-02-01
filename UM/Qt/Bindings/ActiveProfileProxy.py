@@ -5,7 +5,6 @@ from PyQt5.QtCore import pyqtSlot, pyqtProperty, pyqtSignal, QObject, QVariant, 
 
 from UM.Application import Application
 from UM.PluginRegistry import PluginRegistry
-#from UM.Logger import deprecated
 
 from . import ContainerProxy
 
