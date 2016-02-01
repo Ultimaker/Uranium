@@ -22,7 +22,6 @@ class ActiveToolProxy(QObject):
         self._properties_proxy = ContainerProxy.ContainerProxy(self._properties)
 
     activeToolChanged = pyqtSignal()
-    #propertyChanged = pyqtSignal()
 
     @pyqtProperty(bool, notify = activeToolChanged)
     def valid(self):
