@@ -74,7 +74,7 @@ class ProfilesModel(ListModel):
     def checkProfileExists(self, name):
         profile = self._manager.findProfile(name)
         if profile:
-            return Truegit 
+            return True
 
         return False
 
