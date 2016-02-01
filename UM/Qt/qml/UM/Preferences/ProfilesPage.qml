@@ -22,7 +22,6 @@ ManagementPage
     addText: catalog.i18nc("@action:button", "Import");
 
     removeEnabled: currentItem != null ? !currentItem.readOnly : false;
-    renameEnabled: currentItem != null ? !currentItem.readOnly : false;
 
     Flow {
         anchors.fill: parent
@@ -78,8 +77,8 @@ ManagementPage
         {
             id: renameDialog;
             object: base.currentItem != null ? base.currentItem.name : "";
-            onTextChanged: validName = !(base.model.checkProfileExists(text) && object != text);
-            onAccepted: base.model.renameProfile(base.currentItem.name, newName);
+            onTextChanged: validName = !(base.model.checkProfileExists(text.trim()) && object != text.trim());
+            onAccepted: base.model.renameProfile(base.currentItem.name, newName.trim());
             validationError: "A profile with that name already exists!";
         }
         MessageDialog
