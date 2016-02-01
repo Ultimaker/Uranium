@@ -111,7 +111,7 @@ ManagementPage
                 }
                 else
                 {
-                    messageDialog.icon = StandardIcon.Error
+                    messageDialog.icon = StandardIcon.Critical
                 }
                 messageDialog.open()
             }
