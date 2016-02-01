@@ -74,7 +74,7 @@ class ProfilesModel(ListModel):
     def checkProfileExists(self, name):
         profile = self._manager.findProfile(name)
         if profile:
-            return True
+            return Truegit 
 
         return False
 
@@ -82,7 +82,7 @@ class ProfilesModel(ListModel):
     def importProfile(self, url):
         path = url.toLocalFile()
         if not path:
-            error_str = "Not a valid path. If this problem persists, please contact Ultimaker support."
+            error_str = "Not a valid path. If this problem persists, please report a bug."
             error_str = i18nCatalog.i18nc("@info:status", error_str)
             return {"status":"error", "message":error_str}
 
@@ -117,13 +117,13 @@ class ProfilesModel(ListModel):
         #Input checking.
         path = url.toLocalFile()
         if not path:
-            error_str = "Not a valid path. If this problem persists, please contact Ultimaker support."
+            error_str = "Not a valid path. If this problem persists, please report a bug."
             error_str = i18nCatalog.i18nc("@info:status", error_str)
             return {"status":"error", "message":error_str}
 
         profile = self._manager.findProfile(name)
         if not profile:
-            error_str = "Profile not found. If this problem persists, please contact Ultimaker support."
+            error_str = "Profile not found. If this problem persists, please report a bug."
             error_str = i18nCatalog.i18nc("@info:status", error_str)
             return {"status":"error", "message":error_str}
 
