@@ -68,7 +68,7 @@ Item
 
             style: UM.Theme.styles.checkbox;
 
-            checked: UM.ActiveTool.properties.ScaleSnap;
+            checked: UM.ActiveTool.properties.getValue("ScaleSnap");
             onClicked: {
                 UM.ActiveTool.setProperty("ScaleSnap", checked);
                 if (snapScalingCheckbox.checked){
@@ -86,7 +86,7 @@ Item
 
             style: UM.Theme.styles.checkbox;
 
-            checked: !UM.ActiveTool.properties.NonUniformScale;
+            checked: !UM.ActiveTool.properties.getValue("NonUniformScale");
             onClicked: UM.ActiveTool.setProperty("NonUniformScale", !checked);
         }
     }
@@ -136,7 +136,7 @@ Item
             height: UM.Theme.sizes.setting_control.height;
             property string unit: "mm";
             style: UM.Theme.styles.text_field;
-            text: UM.ActiveTool.properties.ObjectWidth.toFixed(4).replace(/\.?0*$/,"");
+            text: UM.ActiveTool.properties.getValue("ObjectWidth")
             validator: DoubleValidator
             {
                 bottom: 0.1
@@ -152,7 +152,7 @@ Item
             height: UM.Theme.sizes.setting_control.height;
             property string unit: "mm";
             style: UM.Theme.styles.text_field;
-            text: UM.ActiveTool.properties.ObjectDepth.toFixed(4).replace(/\.?0*$/,"");
+            text: UM.ActiveTool.properties.getValue("ObjectDepth")
             validator: DoubleValidator
             {
                 bottom: 0.1
@@ -168,7 +168,7 @@ Item
             height: UM.Theme.sizes.setting_control.height;
             property string unit: "mm";
             style: UM.Theme.styles.text_field;
-            text: UM.ActiveTool.properties.ObjectHeight.toFixed(4).replace(/\.?0*$/,"");
+            text: UM.ActiveTool.properties.getValue("ObjectHeight")
             validator: DoubleValidator
             {
                 bottom: 0.1
@@ -186,11 +186,10 @@ Item
             height: UM.Theme.sizes.setting_control.height;
             property string unit: "%";
             style: UM.Theme.styles.text_field;
-            text: base.getPercentage(UM.ActiveTool.properties.ScaleX).toFixed(4).replace(/\.?0*$/,"");
+            text: base.getPercentage(UM.ActiveTool.properties.getValue("ScaleX"))
             validator: DoubleValidator
             {
-                bottom: 100 * (0.1 / (UM.ActiveTool.properties.ObjectWidth / UM.ActiveTool.properties.ScaleX));
-                decimals: 4
+                bottom: 100 * (0.1 / (UM.ActiveTool.properties.getValue("ObjectWidth") / UM.ActiveTool.properties.getValue("ScaleX")));
                 locale: "en_US"
             }
 
@@ -203,11 +202,11 @@ Item
             height: UM.Theme.sizes.setting_control.height;
             property string unit: "%";
             style: UM.Theme.styles.text_field;
-            text: base.getPercentage(UM.ActiveTool.properties.ScaleZ).toFixed(4).replace(/\.?0*$/,"");
+            text: base.getPercentage(UM.ActiveTool.properties.getValue("ScaleZ"))
             validator: DoubleValidator
             {
-                bottom: 100 * (0.1 / (UM.ActiveTool.properties.ObjectDepth / UM.ActiveTool.properties.ScaleZ));
-                decimals: 4
+                bottom: 100 * (0.1 / (UM.ActiveTool.properties.getValue("ObjectDepth") / UM.ActiveTool.properties.getValue("ScaleZ")));
+		decimals: 4
                 locale: "en_US"
             }
 
@@ -220,11 +219,11 @@ Item
             height: UM.Theme.sizes.setting_control.height;
             property string unit: "%";
             style: UM.Theme.styles.text_field;
-            text: base.getPercentage(UM.ActiveTool.properties.ScaleY).toFixed(4).replace(/\.?0*$/,"");
+            text: base.getPercentage(UM.ActiveTool.properties.getValue("ScaleY"))
             validator: DoubleValidator
             {
-                bottom: 100 * (0.1 / (UM.ActiveTool.properties.ObjectHeight / UM.ActiveTool.properties.ScaleY))
-                decimals: 4
+                bottom: 100 * (0.1 / (UM.ActiveTool.properties.getValue("ObjectHeight") / UM.ActiveTool.properties.getValue("ScaleY")))
+		decimals: 4
                 locale: "en_US"
             }
 

@@ -56,7 +56,7 @@ Item
 
         style: UM.Theme.styles.checkbox;
 
-        checked: UM.ActiveTool.properties.RotationSnap;
+        checked: UM.ActiveTool.properties.getValue("RotationSnap");
         onClicked: UM.ActiveTool.setProperty("RotationSnap", checked);
     }
 }
