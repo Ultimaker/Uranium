@@ -151,6 +151,8 @@ class Setting(SignalEmitter):
                     setting.setCategory(self._category)
                     setting.setParent(self)
                     setting.defaultValueChanged.connect(self.defaultValueChanged)
+                    # Pass visibility to parent, as the category needs to be notified when it changes.
+                    setting.visibleChanged.connect(self.visibleChanged)
                     self._children.append(setting)
 
                 setting.fillByDict(value)
