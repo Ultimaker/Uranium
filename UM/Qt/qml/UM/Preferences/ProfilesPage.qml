@@ -22,7 +22,6 @@ ManagementPage
     addText: catalog.i18nc("@action:button", "Import");
 
     removeEnabled: currentItem != null ? !currentItem.readOnly : false;
-    renameEnabled: currentItem != null ? !currentItem.readOnly : false;
 
     Flow {
         anchors.fill: parent
