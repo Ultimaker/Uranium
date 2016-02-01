@@ -82,7 +82,9 @@ class ProfilesModel(ListModel):
     def importProfile(self, url):
         path = url.toLocalFile()
         if not path:
-            return
+            error_str = "Not a valid path. If this problem persists, please contact Ultimaker support."
+            error_str = i18nCatalog.i18nc("@info:status", error_str)
+            return {"status":"error", "message":error_str}
 
         for profile_reader_id, profile_reader in self._manager.getProfileReaders():
             try:
@@ -110,16 +112,20 @@ class ProfilesModel(ListModel):
         #If it hasn't returned by now, none of the plugins loaded the profile successfully.
         return { "status": "error", "message": catalog.i18nc("@info:status", "Profile {0} has an unknown file type.", path) }
 
-    @pyqtSlot(str, QUrl, str)
+    @pyqtSlot(str, QUrl, str, result="QVariantMap")
     def exportProfile(self, name, url, fileType):
         #Input checking.
         path = url.toLocalFile()
         if not path:
-            return
+            error_str = "Not a valid path. If this problem persists, please contact Ultimaker support."
+            error_str = i18nCatalog.i18nc("@info:status", error_str)
+            return {"status":"error", "message":error_str}
 
         profile = self._manager.findProfile(name)
         if not profile:
-            return
+            error_str = "Profile not found. If this problem persists, please contact Ultimaker support."
+            error_str = i18nCatalog.i18nc("@info:status", error_str)
+            return {"status":"error", "message":error_str}
 
         #Parse the fileType to deduce what plugin can save the file format.
         #TODO: This parsing can be made unnecessary by storing for each plugin what the fileType string is in complete (in addition to the {(description,extension)} dict).
@@ -127,7 +133,8 @@ class ProfilesModel(ListModel):
         split = fileType.rfind(" (*.") #Find where the description ends and the extension starts.
         if split < 0: #Not found. Invalid format.
             Logger.log("e", "Invalid file format identifier %s", fileType)
-            return
+            error_str = catalog.i18nc("@info:status", "Invalid file format: {0}", fileType)
+            return {"status":"error", "message":error_str}
         description = fileType[:split]
         extension = fileType[split + 4:-1] #Leave out the " (*." and ")".
         if not path.endswith("." + extension): #Auto-fill the extension if the user did not provide any.
@@ -152,14 +159,12 @@ class ProfilesModel(ListModel):
             success = good_profile_writer.write(path, profile)
         except Exception as e:
             Logger.log("e", "Failed to export profile to %s: %s", path, str(e))
-            m = Message(catalog.i18nc("@info:status", "Failed to export profile to <filename>{0}</filename>: <message>{1}</message>", path, str(e)), lifetime = 0)
-            m.show()
-            return
+            error_str = catalog.i18nc("@info:status", "Failed to export profile to <filename>{0}</filename>: <message>{1}</message>", path, str(e))
+            return {"status":"error", "message":error_str}
         if not success:
             Logger.log("w", "Failed to export profile to %s: Writer plugin reported failure.", path)
-            m = Message(catalog.i18nc("@info:status", "Failed to export profile to <filename>{0}</filename>: Writer plugin reported failure.", path), lifetime = 0)
-            m.show()
-            return
+            error_str = catalog.i18nc("@info:status", "Failed to export profile to <filename>{0}</filename>: Writer plugin reported failure.", path)
+            return {"status":"error", "message":error_str}
         m = Message(catalog.i18nc("@info:status", "Exported profile to <filename>{0}</filename>", path))
         m.show()
 
