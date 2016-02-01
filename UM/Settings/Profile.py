@@ -25,6 +25,11 @@ catalog = i18nCatalog("uranium")
 #   profile eg a name, which is used as a human-readable identifier and a read only property. 
 #   Read only profiles are profiles that should not be modified because they are read from system 
 #   locations that cannot be written to, for example /usr/share on Linux systems.
+#
+#   Each machine instance has a single "working profile" which has the current settings for this
+#   machine instance. This working profile is different in that it can also stores the settings 
+#   of the profile(s) it was based on. This is done so settings can be reset to the value of the
+#   profile the working profile was based on.
 class Profile(SignalEmitter):
     ProfileVersion = 1
 
@@ -122,7 +127,7 @@ class Profile(SignalEmitter):
     #
     #   \note If the setting is not a user-settable setting, this method will do nothing.
     def setSettingValue(self, key, value):
-        Logger.log('d' , "Setting value of %s to %s on profile %s",key,value,self._name)
+        Logger.log("d", "Setting value of %s to %s on profile %s", key, value, self._name)
 
         if not self._active_instance:
             #Active profile is not yet set, so we can't check against machine definition or default values.
@@ -240,7 +245,7 @@ class Profile(SignalEmitter):
                 return False
             valid = setting.validate(value)
             if valid == ResultCodes.min_value_error or valid == ResultCodes.max_value_error or valid == ResultCodes.not_valid_error:
-                Logger.log("w", "The setting %s has an invalid value of %s",key,value)
+                Logger.log("w", "The setting %s has an invalid value of %s", key, value)
                 return True
 
         return False

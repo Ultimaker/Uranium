@@ -124,6 +124,11 @@ class ProfilesModel(ListModel):
         #If it hasn't returned by now, none of the plugins loaded the profile successfully.
         return { "status": "error", "message": catalog.i18nc("@info:status", "Profile {0} has an unknown file type.", path) }
 
+    ##  Exports a profile to a file.
+    #   \param id: the id() added by the model. An id of -1 can be used to export the working profile of the active machine
+    #   \param name: the name of the profile to be exported, used to find the actual profile
+    #   \param url: the path returned from the FileDialog
+    #   \param fileType: the file type description ("<description> (*.<extension>)"), used to add an extension if the user did not enter one
     @pyqtSlot(int, str, QUrl, str)
     def exportProfile(self, id, name, url, fileType):
         #Input checking.
@@ -131,7 +136,8 @@ class ProfilesModel(ListModel):
         if not path:
             return
 
-        if id==-1:
+        if id == -1:
+            #id -1 references the "Current settings"/working profile
             profile = copy.deepcopy(self._working_profile)
             profile.setType(None)
             profile.setMachineTypeId(self._manager.getActiveMachineInstance().getMachineDefinition().getProfilesMachineId())
@@ -241,7 +247,7 @@ class ProfilesModel(ListModel):
 
         if self._add_use_global:
             self.appendItem({
-                "id": 1,
+                "id": -1, #-1 is used in order not to conflict with a normally created id()
                 "name": catalog.i18nc("@item:inlistbox", "- Use Global Profile -"),
                 "active": False,
                 "readOnly": True,
@@ -262,7 +268,7 @@ class ProfilesModel(ListModel):
                         settings_list.append({"name": setting.getLabel(), "value": value})
                 settings_list = sorted(settings_list, key = lambda setting:setting["name"])
             self.appendItem({
-                "id": -1,
+                "id": -1, #-1 is used in order not to conflict with a normally created id()
                 "name": catalog.i18nc("@item:inlistbox", "Current settings"),
                 "active": False,
                 "readOnly": True,

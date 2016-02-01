@@ -97,15 +97,16 @@ class MachineManager(SignalEmitter):
             profile_machine_variant = profile.getMachineVariantName()
             profile_machine_instance = profile.getMachineInstanceName()
 
-            if (profile_machine_instance and profile_machine_instance == instance_id) or \
-                    (profile_machine_variant and profile_machine_variant == machine_variant and profile_machine_type == machine_type) or \
-                    (profile_machine_type == machine_type):
+            if profile_machine_instance and profile_machine_instance == instance_id:
+                machine_materials.append(material)
+            elif profile_machine_variant == machine_variant and profile_machine_type == machine_type:
                 machine_materials.append(material)
 
         if len(machine_materials) > 0:
+            #This includes Ultigcode printers that have machine-specific material profiles (eg Ultimaker 2+)
             return machine_materials
         elif machine.getMachineDefinition().getSetting("machine_gcode_flavor").getDefaultValue() == "UltiGCode":
-            #UltiGCode printers don't use generic materials in Cura
+            #UltiGCode printers don't use the generic set of generic materials (eg Ultimaker 2)
             return []
         else:
             return generic_materials
@@ -231,9 +232,12 @@ class MachineManager(SignalEmitter):
             emit = True
 
         material_profile = self.findProfile(material, type = "material", instance = self._active_machine)
+        #This finds only profiles of type "material", which are partial profiles
         if material_profile:
             self._active_machine.getWorkingProfile().mergeSettingsFrom(material_profile, reset = False)
+            emit = True
 
+        #Update the UI if the material selection and/or settings have changed
         if emit:
             self.activeMachineInstanceChanged.emit()
 
