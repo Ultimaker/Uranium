@@ -95,6 +95,20 @@ Item
     {
         id: textfields;
 
+        //Rounds a floating point number to 4 decimals. This prevents floating
+        //point rounding errors.
+        //
+        //input:    The number to round.
+        //decimals: The number of decimals (digits after the radix) to round to.
+        //return:   The rounded number.
+        function roundFloat(input, decimals)
+        {
+            //First convert to fixed-point notation to round the number to 4 decimals and not introduce new floating point errors.
+            //Then convert to a string (is implicit). The fixed-point notation will be something like "3.200".
+            //Then remove any trailing zeroes and the radix.
+            return input.toFixed(decimals).replace(/\.?0*$/, ""); //Match on periods, if any ( \.? ), followed by any number of zeros ( 0* ), then the end of string ( $ ).
+        }
+
         anchors.left: resetScaleButton.right;
         anchors.leftMargin: UM.Theme.sizes.default_margin.width;
         anchors.top: parent.top;
@@ -136,7 +150,7 @@ Item
             height: UM.Theme.sizes.setting_control.height;
             property string unit: "mm";
             style: UM.Theme.styles.text_field;
-            text: UM.ActiveTool.properties.getValue("ObjectWidth")
+            text: UM.ActiveTool.properties.getValue("ObjectWidth").toFixed(4).replace(/\.?0*$/, "")
             validator: DoubleValidator
             {
                 bottom: 0.1
@@ -152,7 +166,7 @@ Item
             height: UM.Theme.sizes.setting_control.height;
             property string unit: "mm";
             style: UM.Theme.styles.text_field;
-            text: UM.ActiveTool.properties.getValue("ObjectDepth")
+            text: parent.roundFloat(UM.ActiveTool.properties.getValue("ObjectDepth"), 4)
             validator: DoubleValidator
             {
                 bottom: 0.1
@@ -168,7 +182,7 @@ Item
             height: UM.Theme.sizes.setting_control.height;
             property string unit: "mm";
             style: UM.Theme.styles.text_field;
-            text: UM.ActiveTool.properties.getValue("ObjectHeight")
+            text: parent.roundFloat(UM.ActiveTool.properties.getValue("ObjectHeight"), 4)
             validator: DoubleValidator
             {
                 bottom: 0.1
@@ -186,7 +200,7 @@ Item
             height: UM.Theme.sizes.setting_control.height;
             property string unit: "%";
             style: UM.Theme.styles.text_field;
-            text: base.getPercentage(UM.ActiveTool.properties.getValue("ScaleX"))
+            text: parent.roundFloat(base.getPercentage(UM.ActiveTool.properties.getValue("ScaleX")), 4)
             validator: DoubleValidator
             {
                 bottom: 100 * (0.1 / (UM.ActiveTool.properties.getValue("ObjectWidth") / UM.ActiveTool.properties.getValue("ScaleX")));
@@ -202,7 +216,7 @@ Item
             height: UM.Theme.sizes.setting_control.height;
             property string unit: "%";
             style: UM.Theme.styles.text_field;
-            text: base.getPercentage(UM.ActiveTool.properties.getValue("ScaleZ"))
+            text: parent.roundFloat(base.getPercentage(UM.ActiveTool.properties.getValue("ScaleZ")), 4)
             validator: DoubleValidator
             {
                 bottom: 100 * (0.1 / (UM.ActiveTool.properties.getValue("ObjectDepth") / UM.ActiveTool.properties.getValue("ScaleZ")));
@@ -219,7 +233,7 @@ Item
             height: UM.Theme.sizes.setting_control.height;
             property string unit: "%";
             style: UM.Theme.styles.text_field;
-            text: base.getPercentage(UM.ActiveTool.properties.getValue("ScaleY"))
+            text: parent.roundFloat(base.getPercentage(UM.ActiveTool.properties.getValue("ScaleY")), 4)
             validator: DoubleValidator
             {
                 bottom: 100 * (0.1 / (UM.ActiveTool.properties.getValue("ObjectHeight") / UM.ActiveTool.properties.getValue("ScaleY")))
