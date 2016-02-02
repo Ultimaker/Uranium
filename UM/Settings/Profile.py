@@ -21,13 +21,13 @@ catalog = i18nCatalog("uranium")
 #   values of the machine, but which can optionally be overridden from MachineInstance.
 #
 #   The Profile class provides getters and setters for setting values, in addition to
-#   serialization and deserialization methods. There are a couple of intrinsic properties for a 
-#   profile eg a name, which is used as a human-readable identifier and a read only property. 
-#   Read only profiles are profiles that should not be modified because they are read from system 
+#   serialization and deserialization methods. There are a couple of intrinsic properties for a
+#   profile eg a name, which is used as a human-readable identifier and a read only property.
+#   Read only profiles are profiles that should not be modified because they are read from system
 #   locations that cannot be written to, for example /usr/share on Linux systems.
 #
 #   Each machine instance has a single "working profile" which has the current settings for this
-#   machine instance. This working profile is different in that it can also stores the settings 
+#   machine instance. This working profile is different in that it can also stores the settings
 #   of the profile(s) it was based on. This is done so settings can be reset to the value of the
 #   profile the working profile was based on.
 class Profile(SignalEmitter):
@@ -46,6 +46,7 @@ class Profile(SignalEmitter):
         self._machine_instance_name = None
         self._material_name = None
         self._read_only = read_only
+        self._dirty = True
 
         self._active_instance = None
         self._machine_manager.activeMachineInstanceChanged.connect(self._onActiveInstanceChanged)
@@ -115,6 +116,10 @@ class Profile(SignalEmitter):
     def setMaterialName(self, material):
         self._material_name = material
 
+    ##  Get whether the profile has unsaved changed
+    def hasUnsavedChanges(self):
+        return self._dirty
+
     ##  Emitted whenever a setting value changes.
     #
     #   \param key \type{string} The key of the setting that changed.
@@ -128,6 +133,8 @@ class Profile(SignalEmitter):
     #   \note If the setting is not a user-settable setting, this method will do nothing.
     def setSettingValue(self, key, value):
         Logger.log("d", "Setting value of %s to %s on profile %s", key, value, self._name)
+
+        self._dirty = True
 
         if not self._active_instance:
             #Active profile is not yet set, so we can't check against machine definition or default values.
@@ -287,6 +294,8 @@ class Profile(SignalEmitter):
             self._changed_settings[key] = value
             self._changed_settings_defaults[key] = value
 
+        self._dirty = True
+
     ##  Load a serialised profile from a file.
     #
     #   The read is currently not atomic, only the write is. So this method
@@ -298,6 +307,7 @@ class Profile(SignalEmitter):
         f = open(path) #Open file for reading.
         serialised = f.read()
         self.unserialise(serialised, path) #Unserialise the serialised contents that we found in that file.
+        self._dirty = False
 
     ##  Load a serialized profile from a string.
     #
@@ -334,7 +344,7 @@ class Profile(SignalEmitter):
         if parser.has_section("settings"):
             for key, value in parser["settings"].items():
                 self.setSettingValue(key, value)
-                
+
         if parser.has_section("defaults"):
             self._changed_settings_defaults = {}
             for key, value in parser["defaults"].items():
@@ -351,6 +361,8 @@ class Profile(SignalEmitter):
         except Exception as e:
             Logger.log("e", "Failed to write profile to %s: %s", file, str(e))
             return str(e)
+
+        self._dirty = False
         return None
 
     ##  Serialise this profile to a string.
