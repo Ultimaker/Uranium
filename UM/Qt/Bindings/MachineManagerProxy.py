@@ -130,9 +130,9 @@ class MachineManagerProxy(QObject):
 
         instance.setMachineSettingValue(key, value)
 
-    @pyqtSlot()
+    @pyqtSlot(result = str)
     def createProfile(self):
-        self._manager.addProfileFromWorkingProfile()
+        return self._manager.addProfileFromWorkingProfile()
 
     def _onActiveMachineInstanceChanged(self):
         self.activeMachineInstanceChanged.emit()

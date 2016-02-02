@@ -15,6 +15,7 @@ PreferencesPage
     property string nameRole: "name";
     property bool detailsVisible: true;
 
+    property variant objectList: objectList;
     property variant currentItem: objectList.currentItem != null ? objectList.model.getItem(objectList.currentIndex) : null;
     property string scrollviewCaption: "";
 

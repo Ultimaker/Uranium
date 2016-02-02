@@ -78,7 +78,7 @@ class MachineManager(SignalEmitter):
         machine = self.findMachineInstance(instance_id)
         if not machine:
             return machine_materials
-            
+
         machine_type = machine.getMachineDefinition().getProfilesMachineId()
         machine_variant = machine.getMachineDefinition().getVariantName()
 
@@ -320,11 +320,13 @@ class MachineManager(SignalEmitter):
     def addProfileFromWorkingProfile(self):
         profile = copy.deepcopy(self._active_machine.getWorkingProfile())
         profile.setName(catalog.i18nc("@item:profile name", "Custom profile"))
-        
+
         #Make this profile available to all printers of the same type only
         profile.setMachineTypeId(self._active_profile.getMachineTypeId())
         self._profiles.append(profile)
         self.profilesChanged.emit()
+
+        return profile.getName()
 
     def removeProfile(self, profile):
         if profile not in self._profiles:
@@ -389,12 +391,17 @@ class MachineManager(SignalEmitter):
             working_profile = self._active_machine.getWorkingProfile()
             if working_profile.hasChangedSettings():
                 result = QMessageBox.question(None, catalog.i18nc("@title:window", "Replace profile"),
-                            catalog.i18nc("@label", "Selecting the {0} profile replaces your current settings. Do you want to save your settings in a custom profile?").format(profile.getName()), 
+                            catalog.i18nc("@label", "Selecting the {0} profile replaces your current settings. Do you want to save your settings in a custom profile?").format(profile.getName()),
                             QMessageBox.Cancel | QMessageBox.Yes | QMessageBox.No)
                 if result == QMessageBox.Cancel:
                     return
                 elif result == QMessageBox.Yes:
-                    self.addProfileFromWorkingProfile()
+                    #Message is imported here because importing it at the top leads to a circular import
+                    from UM.Message import Message
+
+                    profile_name = self.addProfileFromWorkingProfile()
+                    message = Message(catalog.i18nc("@info:status", "Added a new profile named {0}").format(profile_name))
+                    message.show()
 
             #Replace working profile with a copy of the new profile
             working_profile.mergeSettingsFrom(profile, reset = True)
