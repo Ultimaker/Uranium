@@ -22,15 +22,13 @@ ManagementPage
     addText: catalog.i18nc("@action:button", "Import");
 
     removeEnabled: currentItem != null ? !currentItem.readOnly : false;
-    renameEnabled: currentItem != null ? !currentItem.readOnly : false;
 
     scrollviewCaption: catalog.i18nc("@label %1 is printer name","Printer: %1").arg(UM.MachineManager.activeMachineInstance)
 
     Item {
-        visible: base.currentItem != null
         anchors.fill: parent
 
-        Label { id: profileName; text: base.currentItem ? base.currentItem.name : ""; font: UM.Theme.fonts.large; width: parent.width; }
+        Label { id: profileName; text: base.currentItem.name ? base.currentItem.name : ""; font: UM.Theme.fonts.large; width: parent.width; }
 
         ScrollView {
             anchors.left: parent.left
@@ -45,13 +43,12 @@ ManagementPage
                 spacing: UM.Theme.sizes.default_margin.width
 
                 Label { text: catalog.i18nc("@label", "Profile type"); width: 155}
-                Label { text: base.currentItem == null ? "" :
-                              base.currentItem.id == -1 ? catalog.i18nc("@label", "Current settings") :
+                Label { text: base.currentItem.id == -1 ? catalog.i18nc("@label", "Current settings")  : 
                               base.currentItem.readOnly ? catalog.i18nc("@label", "Starter profile (protected)") : catalog.i18nc("@label", "Custom profile"); }
 
                 Column {
                     Repeater {
-                            model: base.currentItem ? base.currentItem.settings : null
+                            model: base.currentItem.settings
                             Label {
                                 text: modelData.name.toString();
                                 width: 155
@@ -61,7 +58,7 @@ ManagementPage
                 }
                 Column {
                     Repeater {
-                            model: base.currentItem ? base.currentItem.settings : null
+                            model: base.currentItem.settings
                             Label { text: modelData.value.toString(); }
                     }
                 }

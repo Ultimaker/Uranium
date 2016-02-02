@@ -351,7 +351,7 @@ class MachineManager(SignalEmitter):
         profiles = self.getProfiles(type = type, instance = instance);
 
         for profile in profiles:
-            if profile.getName() == name:
+            if profile.getName().lower() == name.lower():
                 if (variant_name and not profile.getMachineVariantName() == variant_name) or \
                         (material_name and not profile.getMaterialName() == material_name) or \
                         (type and not profile.getType() == type):
