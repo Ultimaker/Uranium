@@ -365,7 +365,8 @@ class MachineManager(SignalEmitter):
             base_name = catalog.i18nc("@item:profile name", "Custom profile")
         profile_name = base_name
         i = 1
-        while self.findProfile(profile_name, profile = None):
+        #Make sure there is no profile for any instance/variant/material with the same name
+        while self.findProfile(profile_name):
             i = i + 1
             profile_name = "%s #%d" % (base_name, i)
 
@@ -709,5 +710,5 @@ class MachineManager(SignalEmitter):
 
             if not profile.getMaterialName() and instance.hasMaterials():
                 #Apply partial material profile
-                material_profile = self.findProfile(instance.getMaterialName(), type="material", instance = instance)
+                material_profile = self.findProfile(instance.getMaterialName(), type = "material", instance = instance)
                 instance.getWorkingProfile().mergeSettingsFrom(material_profile, reset = False)
