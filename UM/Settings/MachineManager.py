@@ -277,6 +277,8 @@ class MachineManager(SignalEmitter):
 
         generic_profiles = []
         specific_profiles = []
+        add_generic_profiles = True;
+
         for profile in self._profiles:
             profile_type = profile.getType()
             #Filter out "partial" profiles
@@ -289,20 +291,32 @@ class MachineManager(SignalEmitter):
             material = profile.getMaterialName()
 
             if machine_type and machine_type == active_machine_type or machine_type == "all":
+                is_specific_profile = False
                 if (not machine_instance) and (not machine_variant):
-                    specific_profiles.append(profile)
+                    is_specific_profile = True
                 elif not material or material == active_machine_material:
                     if machine_instance and (machine_instance == active_machine_instance):
-                        specific_profiles.append(profile)
+                        is_specific_profile = True
                     elif machine_variant and (machine_variant == active_machine_variant):
-                        specific_profiles.append(profile)
+                        is_specific_profile = True
+
+                if is_specific_profile:
+                    specific_profiles.append(profile)
+                    if profile.isReadOnly():
+                        #There is at least one machine-specific starter-profile, so we don't need the generic profiles
+                        add_generic_profiles = False
+
             elif not machine_type:
                 generic_profiles.append(profile)
 
-        if len(specific_profiles) > 0:
-            return specific_profiles
-        else:
+        if len(specific_profiles) == 0:
+            #Custom machine-specific profiles were found, but no starter-profiles
             return generic_profiles
+
+        if add_generic_profiles:
+            specific_profiles.extend(generic_profiles)
+
+        return specific_profiles
 
     def addProfile(self, profile):
         if profile in self._profiles:
