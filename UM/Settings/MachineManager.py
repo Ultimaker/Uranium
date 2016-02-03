@@ -235,7 +235,7 @@ class MachineManager(SignalEmitter):
         #This finds only profiles of type "material", which are partial profiles
         if material_profile:
             self._active_machine.getWorkingProfile().mergeSettingsFrom(material_profile, reset = False)
-            emit = True
+            #NB: Don't emit on behalf of this profile merge; that would result in an infinit loop
 
         #Update the UI if the material selection and/or settings have changed
         if emit:
