@@ -77,14 +77,14 @@ ManagementPage
         {
             text: catalog.i18nc("@action:button", "Import");
             iconName: "document-import";
-            onClicked: exportDialog.open();
+            onClicked: importDialog.open();
         }
 
         Button
         {
             text: catalog.i18nc("@action:button", "Export");
             iconName: "document-export";
-            onClicked: importDialog.open();
+            onClicked: exportDialog.open();
         }
     }
 
