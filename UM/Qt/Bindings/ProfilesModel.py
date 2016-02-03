@@ -2,6 +2,7 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 import copy
+import os.path
 
 from UM.Qt.ListModel import ListModel
 from UM.Application import Application
@@ -69,7 +70,7 @@ class ProfilesModel(ListModel):
             self._onProfilesChanged()
             self.addWorkingProfileChanged.emit()
 
-    ##  Whether to add a "Current Settings;8" entry.
+    ##  Whether to add a "Current Settings" entry.
     @pyqtProperty(bool, fset = setAddWorkingProfile, notify = addWorkingProfileChanged)
     def addWorkingProfile(self):
         return self._add_working_profile
@@ -114,7 +115,11 @@ class ProfilesModel(ListModel):
                 return { "status": "error", "message": catalog.i18nc("@info:status", "Failed to import profile from <filename>{0}</filename>: <message>{1}</message>", path, str(e)) }
             if profile: #Success!
                 profile.setReadOnly(False)
-                profile.setName(self._manager.makeUniqueProfileName(profile.getName())) #Ensure a unique name
+
+                #File name (without extension) trumps the name stored in the profile
+                file_name = os.path.basename(os.path.splitext(path)[0])
+                profile.setName(self._manager.makeUniqueProfileName(file_name))
+
                 if profile.getMachineTypeId():
                     #Make sure the profile is available for the currently selected printer
                     profile.setMachineTypeId(self._manager.getActiveMachineInstance().getMachineDefinition().getProfilesMachineId())
@@ -203,7 +208,7 @@ class ProfilesModel(ListModel):
         filters.insert(0, catalog.i18nc("@item:inlistbox", "All supported files") + "(" + " ".join(all_supported) + ")") #An entry to show all file extensions that are supported.
         filters.append(catalog.i18nc("@item:inlistbox", "All Files (*)")) #Also allow arbitrary files, if the user so prefers.
         return filters
-    
+
     ##  Gets a list of the possible file filters that the plugins have
     #   registered they can write.
     #
@@ -241,7 +246,7 @@ class ProfilesModel(ListModel):
 
     def _onWorkingProfileValueChanged(self, setting):
         self._onProfilesChanged()
-        
+
     def _onProfilesChanged(self):
         self.clear()
 

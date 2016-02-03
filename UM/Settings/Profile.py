@@ -39,7 +39,7 @@ class Profile(SignalEmitter):
         self._machine_manager = machine_manager
         self._changed_settings = {}
         self._changed_settings_defaults = {}
-        self._name = catalog.i18nc("@label", "Current Settings")
+        self._name = catalog.i18nc("@label", "Current settings")
         self._type = None
         self._machine_type_id = None
         self._machine_variant_name = None
