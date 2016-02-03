@@ -17,6 +17,7 @@ from UM.Operations.TranslateOperation import TranslateOperation
 
 from . import ScaleToolHandle
 import copy
+from copy import deepcopy
 
 class ScaleTool(Tool):
     def __init__(self):
@@ -108,22 +109,43 @@ class ScaleTool(Tool):
                     drag_change = (drag_length - self._drag_length) / 100 * self._scale_speed
 
                     if self._snap_scale:
-                        scale_factor = round(drag_change, 1)
+                        scale_delta = round(drag_change, 1)
                     else:
-                        scale_factor = drag_change
+                        scale_delta = drag_change
 
-                    if self.getLockedAxis() == ToolHandle.XAxis:
-                        new_scale = Selection.getSelectedObject(0).getScale().x + scale_factor
-                        if new_scale > 0:
-                            self.setScaleX(new_scale)
-                    elif self.getLockedAxis() == ToolHandle.YAxis:
-                        new_scale = Selection.getSelectedObject(0).getScale().y + scale_factor
-                        if new_scale > 0:
-                            self.setScaleY(new_scale)
-                    elif self.getLockedAxis() == ToolHandle.ZAxis:
-                        new_scale = Selection.getSelectedObject(0).getScale().z + scale_factor
-                        if new_scale > 0:
-                            self.setScaleZ(new_scale)
+                    old_scale_vec = Selection.getSelectedObject(0).getScale()
+                    new_scale_vec = deepcopy(old_scale_vec)
+
+                    if not self._non_uniform_scale:
+                        ratio = None
+                        if self.getLockedAxis() == ToolHandle.XAxis:
+                            ratio = (old_scale_vec.x + scale_delta) / old_scale_vec.x
+                        elif self.getLockedAxis() == ToolHandle.YAxis:
+                            ratio = (old_scale_vec.y + scale_delta) / old_scale_vec.y
+                        elif self.getLockedAxis() == ToolHandle.ZAxis:
+                            ratio = (old_scale_vec.z + scale_delta) / old_scale_vec.z
+
+                        if ratio is not None and ratio > 0:
+                            new_scale_vec = old_scale_vec*ratio
+
+                    else:
+                        if self.getLockedAxis() == ToolHandle.XAxis:
+                            new_x = new_scale_vec.x + scale_delta
+                            if new_x > 0:
+                                new_scale_vec.setX( new_x )
+
+                        elif self.getLockedAxis() == ToolHandle.YAxis:
+                            new_y = new_scale_vec.y + scale_delta
+                            if new_y > 0:
+                                new_scale_vec.setY( new_y )
+
+                        elif self.getLockedAxis() == ToolHandle.ZAxis:
+                            new_z = new_scale_vec.z + scale_delta
+                            if new_z > 0:
+                                new_scale_vec.setZ( new_z )
+
+                    if new_scale_vec != old_scale_vec:
+                        Selection.applyOperation(ScaleOperation, new_scale_vec, set_scale = True)
 
                 self._drag_length = (handle_position - drag_position).length()
                 return True
