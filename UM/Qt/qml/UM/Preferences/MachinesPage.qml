@@ -34,13 +34,15 @@ ManagementPage
         Label
         {
             text: base.currentItem.name ? base.currentItem.name : ""
-            font: UM.Theme.fonts.large; width: parent.width
+            font: UM.Theme.fonts.large
+            width: parent.width
             id: label_printer_name
         }
 
         Label
         {
-            text: catalog.i18nc("@label", "Type"); width: parent.width * 0.2
+            text: catalog.i18nc("@label", "Type")
+            width: parent.width * 0.2
             id: label_type
         }
 
