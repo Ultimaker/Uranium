@@ -361,6 +361,8 @@ class SceneNode(SignalEmitter):
     ##  Set the local orientation of this scene node.
     #
     #   \param orientation \type{Quaternion} The new orientation of this scene node.
+    #   \param transform_space The space relative to which to rotate. Can be any one of the constants in SceneNode::TransformSpace.
+    #   \param transform_space The space relative to which to rotate. Can be Local or World from SceneNode::TransformSpace.
     def setOrientation(self, orientation, transform_space = TransformSpace.Local):
         if not self._enabled or orientation == self._orientation:
             return
@@ -371,7 +373,6 @@ class SceneNode(SignalEmitter):
         if transform_space == SceneNode.TransformSpace.World:
             if self.getWorldOrientation() == orientation:
                 return
-            #print(self.getWorldOrientation().getInverse() * self._orientation.getInverse())
             new_orientation = orientation * (self.getWorldOrientation() * self._orientation.getInverse()).getInverse()
             orientation_matrix = new_orientation.toMatrix()
         euler_angles = orientation_matrix.getEuler()
@@ -411,13 +412,13 @@ class SceneNode(SignalEmitter):
     ##  Set the local scale value.
     #
     #   \param scale \type{Vector} The new scale value of the scene node.
+    #   \param transform_space The space relative to which to rotate. Can be Local or World from SceneNode::TransformSpace.
     def setScale(self, scale, transform_space = TransformSpace.Local):
         if not self._enabled or scale == self._scale:
             return
         if transform_space == SceneNode.TransformSpace.Local:
             self.scale(scale / self._scale, SceneNode.TransformSpace.Local)
             return
-            #new_transform_matrix.compose(scale = scale, angles = euler_angles, translate = self._position, shear = self._shear)
         if transform_space == SceneNode.TransformSpace.World:
             if self.getWorldScale() == scale:
                 return
@@ -453,6 +454,7 @@ class SceneNode(SignalEmitter):
     ##  Set the local position value.
     #
     #   \param position The new position value of the SceneNode.
+    #   \param transform_space The space relative to which to rotate. Can be Local or World from SceneNode::TransformSpace.
     def setPosition(self, position, transform_space = TransformSpace.Local):
         if not self._enabled or position == self._position:
             return
