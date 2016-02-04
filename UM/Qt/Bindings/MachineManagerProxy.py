@@ -132,14 +132,24 @@ class MachineManagerProxy(QObject):
 
         instance.setMachineSettingValue(key, value)
 
+    @pyqtSlot(result = str)
+    def getMachineDefinitionType(self):
+        instance = self._manager.getActiveMachineInstance()
+        if not instance:
+            return ""
+
+        return instance.getMachineDefinition().getId()
+
     @pyqtSlot(str)
     def setMachineDefinitionType(self, type_name):
         instance = self._manager.getActiveMachineInstance()
         if not instance:
             return
 
-        variant_name = instance.getMachineDefinition().getVariantName()
-        machine_definition = self._manager.findMachineDefinition(type_name, variant_name)
+        machine_definition = self._manager.findMachineDefinition(type_name, "0.4 mm")
+        if not machine_definition:
+            variant_name = instance.getMachineDefinition().getVariantName()
+            machine_definition = self._manager.findMachineDefinition(type_name, variant_name)
         if not machine_definition:
             return
 
