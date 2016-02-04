@@ -146,7 +146,9 @@ class Backend(PluginObject, SignalEmitter):
         else:
             Logger.log("w", str(error))
 
+        sleep(0.1) #Hack: Withouth a sleep this can deadlock the application spamming error messages.
         self._createSocket()
+
     
     ##  Creates a socket and attaches listeners.
     def _createSocket(self, protocol_file):
