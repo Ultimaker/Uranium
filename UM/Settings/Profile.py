@@ -258,13 +258,18 @@ class Profile(SignalEmitter):
         return False
 
     ##  Check whether this profile has a value for a certain setting.
-    def hasSettingValue(self, key):
-        return key in self._changed_settings and ( key not in self._changed_settings_defaults or self._changed_settings[key] != self._changed_settings_defaults[key])
+    #   /param key The key for the setting to check
+    #   /param filter_defaults Don't include setting if its value equals the default setting for this profile
+    def hasSettingValue(self, key, filter_defaults = False):
+        if filter_defaults:
+            return key in self._changed_settings and ( key not in self._changed_settings_defaults or self._changed_settings[key] != self._changed_settings_defaults[key])
+        else:
+            return key in self._changed_settings
 
     ## Check whether this profile has any changed settings that are different from the default.
     def hasChangedSettings(self):
         for key in self._changed_settings:
-            if self.hasSettingValue(key):
+            if self.hasSettingValue(key, filter_defaults = True):
                 return True
 
     ##  Remove a setting value from this profile, resetting it to its default value.

@@ -57,7 +57,7 @@ class SettingsCategory(SignalEmitter):
     
     def getDepth(self):
         return self._depth
-    
+
     def setVisible(self, visible):
         if visible != self._visible:
             self._visible = visible
@@ -78,7 +78,7 @@ class SettingsCategory(SignalEmitter):
         count = 0
         if self._machine_manager.getWorkingProfile():
             for setting in self.getAllSettings():
-                if not setting.isVisible() and self._machine_manager.getWorkingProfile().hasSettingValue(setting.getKey()):
+                if not setting.isVisible() and self._machine_manager.getWorkingProfile().hasSettingValue(setting.getKey(), filter_defaults = False):
                     count += 1
 
         return count

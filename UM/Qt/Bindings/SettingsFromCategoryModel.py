@@ -141,7 +141,7 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
                 "depth": setting.getDepth(),
                 "warning_description": setting.getWarningDescription(),
                 "error_description": setting.getErrorDescription(),
-                "overridden": (not self._profile.isReadOnly()) and self._profile.hasSettingValue(setting.getKey()),
+                "overridden": (not self._profile.isReadOnly()) and self._profile.hasSettingValue(setting.getKey(), filter_defaults = True),
                 "enabled": setting.isEnabled(),
                 "filtered": False,
                 "global_only": setting.getGlobalOnly()
@@ -181,5 +181,5 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
             value = self._profile.getSettingValue(key)
 
             self.setProperty(index, "value", str(value))
-            self.setProperty(index, "overridden", self._profile.hasSettingValue(key))
+            self.setProperty(index, "overridden", self._profile.hasSettingValue(key, filter_defaults = True))
             self.setProperty(index, "valid", setting.validate(value))

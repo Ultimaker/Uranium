@@ -37,7 +37,7 @@ class ActiveProfileProxy(QObject):
     def showHiddenValues(self, category_id):
         category = Application.getInstance().getMachineManager().getActiveMachineInstance().getMachineDefinition().getSettingsCategory(category_id)
         for setting in category.getAllSettings():
-            if not setting.isVisible() and self._active_profile.hasSettingValue(setting.getKey()):
+            if not setting.isVisible() and self._active_profile.hasSettingValue(setting.getKey(), filter_defaults = False):
                 setting.setVisible(True)
         category.visibleChanged.emit(category)
 
