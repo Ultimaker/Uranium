@@ -179,18 +179,21 @@ class ScaleTool(Tool):
 
     def getScaleX(self):
         if Selection.hasSelection():
+            ## Ensure that the returned value is positive (mirror causes scale to be negative)
             return abs(round(float(Selection.getSelectedObject(0).getScale().x), 4))
 
         return 1.0
 
     def getScaleY(self):
         if Selection.hasSelection():
+            ## Ensure that the returned value is positive (mirror causes scale to be negative)
             return abs(round(float(Selection.getSelectedObject(0).getScale().y), 4))
 
         return 1.0
 
     def getScaleZ(self):
         if Selection.hasSelection():
+            ## Ensure that the returned value is positive (mirror causes scale to be negative)
             return abs(round(float(Selection.getSelectedObject(0).getScale().z), 4))
 
         return 1.0
