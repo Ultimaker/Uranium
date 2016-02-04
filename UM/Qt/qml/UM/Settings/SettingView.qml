@@ -39,6 +39,7 @@ ScrollView
 
                 visible: model.visible;
 
+                property string categoryId: model.id;
                 property variant settingsModel: model.settings;
 
                 SidebarCategoryHeader
@@ -88,7 +89,7 @@ ScrollView
                         label: Label
                         {
                             text: control.text
-                            
+
                             horizontalAlignment: Text.AlignHCenter
                             font: UM.Theme.fonts.default
                             color: control.hovered? UM.Theme.colors.text_hover : UM.Theme.colors.text
@@ -182,7 +183,11 @@ ScrollView
                                     //: Settings context menu action
                                     text: catalog.i18nc("@action:menu","Configure setting visiblity...");
 
-                                    onTriggered: if(base.configureSettings) base.configureSettings.trigger();
+                                    onTriggered: {
+                                        preferences.visible = true;
+                                        preferences.setPage(2);
+                                        preferences.getCurrentItem().scrollToSection(categoryId);
+                                    }
                                 }
                             }
                         }
