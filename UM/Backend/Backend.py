@@ -137,12 +137,13 @@ class Backend(PluginObject, SignalEmitter):
     
     ##  Private socket error handler   
     def _onSocketError(self, error):
-        #Logger.log("d", str(error))
-
         if error.getErrorCode() == Arcus.ErrorCode.BindFailedError:
             self._port += 1
         elif error.getErrorCode() == Arcus.ErrorCode.ConnectionResetError:
             Logger.log("i", "Backend crashed or closed. Restarting...")
+        elif error.getErrorCode() == Arcus.ErrorCode.Debug:
+            Logger.log("d", str(error))
+            return
         else:
             Logger.log("w", str(error))
 
