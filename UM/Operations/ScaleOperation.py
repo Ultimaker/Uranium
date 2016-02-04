@@ -19,7 +19,6 @@ class ScaleOperation(Operation.Operation):
 
     def undo(self):
         self._node.setTransformation(self._old_transformation)
-        #self._node.setScale(self._old_scale, SceneNode.TransformSpace.World)
 
     def redo(self):
         if self._set_scale:
