@@ -7,6 +7,7 @@ from UM.Logger import Logger
 from UM.Signal import Signal, SignalEmitter
 from UM.Application import Application
 from UM.PluginObject import PluginObject
+from UM.Platform import Platform
 
 import Arcus
 
@@ -145,7 +146,9 @@ class Backend(PluginObject, SignalEmitter):
         else:
             Logger.log("w", str(error))
 
+        sleep(0.1) #Hack: Withouth a sleep this can deadlock the application spamming error messages.
         self._createSocket()
+
     
     ##  Creates a socket and attaches listeners.
     def _createSocket(self, protocol_file):
@@ -158,6 +161,11 @@ class Backend(PluginObject, SignalEmitter):
         self._socket.stateChanged.connect(self._onSocketStateChanged)
         self._socket.messageReceived.connect(self._onMessageReceived)
         self._socket.error.connect(self._onSocketError)
+        
+        if Platform.isWindows():
+            # On Windows, the Protobuf DiskSourceTree does stupid things with paths.
+            # So convert to forward slashes here so it finds the proto file properly.
+            protocol_file = protocol_file.replace("\\", "/")
 
         if not self._socket.registerAllMessageTypes(protocol_file):
             Logger.log("e", "Could not register Cura protocol messages: %s", self._socket.getLastError())
