@@ -132,6 +132,20 @@ class MachineManagerProxy(QObject):
 
         instance.setMachineSettingValue(key, value)
 
+    @pyqtSlot(str)
+    def setMachineDefinitionType(self, type_name):
+        instance = self._manager.getActiveMachineInstance()
+        if not instance:
+            return
+
+        variant_name = instance.getMachineDefinition().getVariantName()
+        machine_definition = self._manager.findMachineDefinition(type_name, variant_name)
+        if not machine_definition:
+            return
+
+        instance.setMachineDefinition(machine_definition)
+        self._manager.activeMachineInstanceChanged.emit()
+
     @pyqtSlot(result = str)
     def createProfile(self):
         profile = self._manager.addProfileFromWorkingProfile()
