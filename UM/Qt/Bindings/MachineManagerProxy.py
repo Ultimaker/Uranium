@@ -132,7 +132,11 @@ class MachineManagerProxy(QObject):
 
     @pyqtSlot(result = str)
     def createProfile(self):
-        return self._manager.addProfileFromWorkingProfile()
+        profile = self._manager.addProfileFromWorkingProfile()
+        #Hack to prevent "Replace profile?" dialog; working profile will get replaced by setActiveProfile()
+        self._manager.getWorkingProfile().setChangedSettings({})
+        self._manager.setActiveProfile(profile)
+        return profile.getName()
 
     def _onActiveMachineInstanceChanged(self):
         self.activeMachineInstanceChanged.emit()

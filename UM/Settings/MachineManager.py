@@ -341,7 +341,7 @@ class MachineManager(SignalEmitter):
         self._profiles.append(profile)
         self.profilesChanged.emit()
 
-        return profile.getName()
+        return profile
 
     def removeProfile(self, profile):
         if profile not in self._profiles:
@@ -425,8 +425,8 @@ class MachineManager(SignalEmitter):
                 if result == cancel_button:
                     return
                 elif result == create_button:
-                    profile_name = self.addProfileFromWorkingProfile()
-                    message = UM.Message.Message(catalog.i18nc("@info:status", "Added a new profile named \"{0}\"").format(profile_name))
+                    profile = self.addProfileFromWorkingProfile()
+                    message = UM.Message.Message(catalog.i18nc("@info:status", "Added a new profile named \"{0}\"").format(profile.getName()))
                     message.show()
                 elif result == update_button:
                     #Replace changed settings of the profile with the changed settings of the working profile
