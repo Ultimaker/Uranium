@@ -31,23 +31,26 @@ ManagementPage
         anchors.fill: parent
         spacing: UM.Theme.sizes.default_margin.height
 
-        Label {
+        Label
+        {
                 text: base.currentItem.name ? base.currentItem.name : ""
                 font: UM.Theme.fonts.large
                 width: parent.width
                 id: label_printer_name
-              }
+        }
 
-        Label {
+        Label
+        {
                 text: catalog.i18nc("@label", "Type")
                 width: parent.width * 0.2
                 id: label_type
-              }
-        Label {
+        }
+        Label
+        {
                 text: base.currentItem.typeName ? base.currentItem.typeName : ""
                 width: parent.width * 0.7
                 id: label_printer_type
-              }
+        }
 
         UM.I18nCatalog
         {
