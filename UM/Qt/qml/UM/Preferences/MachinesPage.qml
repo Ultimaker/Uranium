@@ -31,27 +31,23 @@ ManagementPage
         anchors.fill: parent
         spacing: UM.Theme.sizes.default_margin.height
 
-        Label
-        {
-            text: base.currentItem.name ? base.currentItem.name : ""
-            font: UM.Theme.fonts.large
-            width: parent.width
-            id: label_printer_name
-        }
+        Label {
+                text: base.currentItem.name ? base.currentItem.name : ""
+                font: UM.Theme.fonts.large
+                width: parent.width
+                id: label_printer_name
+              }
 
-        Label
-        {
-            text: catalog.i18nc("@label", "Type")
-            width: parent.width * 0.2
-            id: label_type
-        }
-
-        Label
-        {
-            text: base.currentItem.typeName ? base.currentItem.typeName : ""
-            width: parent.width * 0.7
-            id: label_printer_type
-         }
+        Label {
+                text: catalog.i18nc("@label", "Type")
+                width: parent.width * 0.2
+                id: label_type
+              }
+        Label {
+                text: base.currentItem.typeName ? base.currentItem.typeName : ""
+                width: parent.width * 0.7
+                id: label_printer_type
+              }
 
         UM.I18nCatalog
         {
@@ -65,9 +61,9 @@ ManagementPage
             object: base.currentItem.name ? base.currentItem.name : ""
             onYes:
             {
-                     base.model.removeMachineInstance(base.currentItem.name)
-                     label_printer_type_text = ""
-                     label_printer_name_text = ""
+                base.model.removeMachineInstance(base.currentItem.name)
+                label_printer_type_text = ""
+                label_printer_name_text = ""
             }
         }
 
