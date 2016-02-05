@@ -1,0 +1,5 @@
+subdirs( 3MFWriter )
+subdirs( OBJReader )
+subdirs( OBJWriter )
+subdirs( STLReader )
+subdirs( STLWriter )

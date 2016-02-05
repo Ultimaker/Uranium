@@ -1,0 +1,6 @@
+subdirs( CameraTool )
+subdirs( MirrorTool )
+subdirs( ScaleTool )
+subdirs( SelectionTool )
+subdirs( TranslateTool )
+subdirs( RotateTool )
