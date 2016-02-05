@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-18 11:15+0100\n"
-"PO-Revision-Date: 2016-01-18 11:15+0100\n"
+"PO-Revision-Date: 2016-01-26 08:37+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: en\n"
@@ -189,9 +189,7 @@ msgctxt "@label"
 msgid ""
 "The file <filename>{0}</filename> already exists. Are you sure you want to "
 "overwrite it?"
-msgstr ""
-"The file <filename>{0}</filename> already exists. Are you sure you want to "
-"overwrite it?"
+msgstr "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
 
 #: /home/tamara/2.1/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:121
 #, python-brace-format
@@ -246,7 +244,7 @@ msgstr "Wavefront OBJ Reader"
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/OBJReader/__init__.py:16
 msgctxt "@info:whatsthis"
 msgid "Makes it possbile to read Wavefront OBJ files."
-msgstr "Makes it possbile to read Wavefront OBJ files."
+msgstr "Makes it possible to read Wavefront OBJ files."
 
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/OBJReader/__init__.py:22
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:22
@@ -282,7 +280,7 @@ msgstr "Provides support for writing STL files."
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/STLWriter/__init__.py:25
 msgctxt "@item:inlistbox"
 msgid "STL File (Ascii)"
-msgstr "STL File (Ascii)"
+msgstr "STL File (ASCII)"
 
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/STLWriter/__init__.py:31
 msgctxt "@item:inlistbox"
@@ -312,7 +310,7 @@ msgstr "Wavefront OBJ Writer"
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:16
 msgctxt "@info:whatsthis"
 msgid "Makes it possbile to write Wavefront OBJ files."
-msgstr "Makes it possbile to write Wavefront OBJ files."
+msgstr "Makes it possible to write Wavefront OBJ files."
 
 #: /home/tamara/2.1/Uranium/plugins/UpdateChecker/UpdateChecker.py:27
 msgctxt "@item:inmenu"
@@ -400,9 +398,7 @@ msgctxt "@info:status"
 msgid ""
 "Failed to import profile from <filename>{0}</filename>: <message>{1}</"
 "message>"
-msgstr ""
-"Failed to import profile from <filename>{0}</filename>: <message>{1}</"
-"message>"
+msgstr "Failed to import profile from <filename>{0}</filename>: <message>{1}</message>"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/Bindings/ProfilesModel.py:106
 #, python-brace-format
@@ -427,8 +423,7 @@ msgstr "Profile {0} has an unknown file type."
 msgctxt "@info:status"
 msgid ""
 "Failed to export profile to <filename>{0}</filename>: <message>{1}</message>"
-msgstr ""
-"Failed to export profile to <filename>{0}</filename>: <message>{1}</message>"
+msgstr "Failed to export profile to <filename>{0}</filename>: <message>{1}</message>"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/Bindings/ProfilesModel.py:160
 #, python-brace-format
@@ -436,9 +431,7 @@ msgctxt "@info:status"
 msgid ""
 "Failed to export profile to <filename>{0}</filename>: Writer plugin reported "
 "failure."
-msgstr ""
-"Failed to export profile to <filename>{0}</filename>: Writer plugin reported "
-"failure."
+msgstr "Failed to export profile to <filename>{0}</filename>: Writer plugin reported failure."
 
 #: /home/tamara/2.1/Uranium/UM/Qt/Bindings/ProfilesModel.py:163
 #, python-brace-format
@@ -561,7 +554,7 @@ msgstr "Confirm Remove"
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:17
 msgctxt "@label (%1 is object name)"
 msgid "Are you sure you wish to remove %1? This cannot be undone!"
-msgstr "Are you sure you wish to remove %1? This cannot be undone!"
+msgstr "Are you sure you want to remove %1? This cannot be undone!"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:12
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:116
@@ -733,7 +726,7 @@ msgstr "Hide this setting"
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Settings/SettingView.qml:172
 msgctxt "@action:menu"
 msgid "Configure setting visiblity..."
-msgstr "Configure setting visiblity..."
+msgstr "Configure setting visibility..."
 
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Settings/SettingsConfigurationPage.qml:18
 msgctxt "@title:tab"

@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-18 11:15+0100\n"
-"PO-Revision-Date: 2015-09-29 15:50+0300\n"
+"PO-Revision-Date: 2016-01-26 13:21+0100\n"
 "Last-Translator: Tapio <info@tapimex.fi>\n"
 "Language-Team: \n"
 "Language: fi_FI\n"
@@ -122,18 +122,18 @@ msgstr "Kääntää kappaleen tiedot"
 #, fuzzy
 msgctxt "@label"
 msgid "Simple View"
-msgstr "Rautalankanäkymä"
+msgstr "Yksinkertainen näkymä"
 
 #: /home/tamara/2.1/Uranium/plugins/Views/SimpleView/__init__.py:15
 #, fuzzy
 msgctxt "@info:whatsthis"
 msgid "Provides a simple solid mesh view."
-msgstr "Näyttää normaalin kiinteän verkkonäkymän."
+msgstr "Näyttää yksinkertaisen kiinteän verkkonäkymän."
 
 #: /home/tamara/2.1/Uranium/plugins/Views/SimpleView/__init__.py:19
 msgctxt "@item:inmenu"
 msgid "Simple"
-msgstr ""
+msgstr "Yksinkertainen"
 
 #: /home/tamara/2.1/Uranium/plugins/Views/WireframeView/__init__.py:13
 msgctxt "@label"
@@ -176,7 +176,7 @@ msgstr "Tallenna tiedostoon"
 #: /home/tamara/2.1/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:46
 msgctxt "@info:tooltip"
 msgid "Save to File"
-msgstr "Tallentaa tiedostoon"
+msgstr "Tallenna tiedostoon"
 
 #: /home/tamara/2.1/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:56
 msgctxt "@title:window"
@@ -194,9 +194,7 @@ msgctxt "@label"
 msgid ""
 "The file <filename>{0}</filename> already exists. Are you sure you want to "
 "overwrite it?"
-msgstr ""
-"Tiedosto <filename>{0}</filename> on jo olemassa. Haluatko varmasti "
-"kirjoittaa sen päälle?"
+msgstr "Tiedosto <filename>{0}</filename> on jo olemassa. Haluatko varmasti kirjoittaa sen päälle?"
 
 #: /home/tamara/2.1/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:121
 #, python-brace-format
@@ -215,9 +213,7 @@ msgstr "Lupa evätty yritettäessä tallentaa tiedostoon <filename>{0}</filename
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
-msgstr ""
-"Ei voitu tallentaa tiedostoon <filename>{0}</filename>: <message>{1}</"
-"message>"
+msgstr "Ei voitu tallentaa tiedostoon <filename>{0}</filename>: <message>{1}</message>"
 
 #: /home/tamara/2.1/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:148
 #, python-brace-format
@@ -243,30 +239,30 @@ msgstr "Paikallisen tiedoston tulostusväline"
 #: /home/tamara/2.1/Uranium/plugins/LocalFileOutputDevice/__init__.py:13
 msgctxt "@info:whatsthis"
 msgid "Enables saving to local files"
-msgstr "Mahdollistaa tallennuksen paikallisiin tiedostoihin."
+msgstr "Mahdollistaa tallennuksen paikallisiin tiedostoihin"
 
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/OBJReader/__init__.py:13
 msgctxt "@label"
 msgid "Wavefront OBJ Reader"
-msgstr "Wavefront OBJ Reader"
+msgstr "Wavefront OBJ -lukija"
 
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/OBJReader/__init__.py:16
 #, fuzzy
 msgctxt "@info:whatsthis"
 msgid "Makes it possbile to read Wavefront OBJ files."
-msgstr "Mahdollistaa Wavefront OBJ-tiedostojen lukemisen."
+msgstr "Mahdollistaa Wavefront OBJ -tiedostojen lukemisen."
 
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/OBJReader/__init__.py:22
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:22
 #, fuzzy
 msgctxt "@item:inlistbox"
 msgid "Wavefront OBJ File"
-msgstr "Wavefront OBJ-tiedosto"
+msgstr "Wavefront OBJ -tiedosto"
 
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/STLReader/__init__.py:12
 msgctxt "@label"
 msgid "STL Reader"
-msgstr "STL Reader"
+msgstr "STL-lukija"
 
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/STLReader/__init__.py:15
 #, fuzzy
@@ -283,7 +279,7 @@ msgstr "STL-tiedosto"
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/STLWriter/__init__.py:13
 msgctxt "@label"
 msgid "STL Writer"
-msgstr "STL Writer"
+msgstr "STL-kirjoitin"
 
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/STLWriter/__init__.py:16
 #, fuzzy
@@ -299,35 +295,35 @@ msgstr "STL-tiedosto (ascii)"
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/STLWriter/__init__.py:31
 msgctxt "@item:inlistbox"
 msgid "STL File (Binary)"
-msgstr "STL-tiedosto (binääri)"
+msgstr "STL-tiedosto (binaari)"
 
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/3MFWriter/__init__.py:12
 #, fuzzy
 msgctxt "@label"
 msgid "3MF Writer"
-msgstr "STL Writer"
+msgstr "3MF-kirjoitin"
 
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/3MFWriter/__init__.py:15
 #, fuzzy
 msgctxt "@info:whatsthis"
 msgid "Provides support for writing 3MF files."
-msgstr "Tukee STL-tiedostojen kirjoittamista."
+msgstr "Tukee 3MF-tiedostojen kirjoittamista."
 
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/3MFWriter/__init__.py:21
 msgctxt "@item:inlistbox"
 msgid "3MF file"
-msgstr ""
+msgstr "3MF-tiedosto"
 
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:13
 msgctxt "@label"
 msgid "Wavefront OBJ Writer"
-msgstr "Wavefront OBJ Writer"
+msgstr "Wavefront OBJ -kirjoitin"
 
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:16
 #, fuzzy
 msgctxt "@info:whatsthis"
 msgid "Makes it possbile to write Wavefront OBJ files."
-msgstr "Mahdollistaa Wavefront OBJ-tiedostojen kirjoittamisen."
+msgstr "Mahdollistaa Wavefront OBJ -tiedostojen kirjoittamisen."
 
 #: /home/tamara/2.1/Uranium/plugins/UpdateChecker/UpdateChecker.py:27
 msgctxt "@item:inmenu"
@@ -347,12 +343,12 @@ msgstr "Lataa"
 #: /home/tamara/2.1/Uranium/plugins/UpdateChecker/__init__.py:12
 msgctxt "@label"
 msgid "Update Checker"
-msgstr "Päivitä tarkistin"
+msgstr "Päivitysten tarkistin"
 
 #: /home/tamara/2.1/Uranium/plugins/UpdateChecker/__init__.py:15
 msgctxt "@info:whatsthis"
 msgid "Checks for updates of the software."
-msgstr "Tarkistaa ohjelmistopäivityksiä."
+msgstr "Tarkistaa, onko ohjelmistopäivityksiä saatavilla."
 
 #: /home/tamara/2.1/Uranium/UM/Qt/Duration.py:91
 #, python-brace-format
@@ -400,7 +396,7 @@ msgstr "{0} (mukautettu)"
 #, fuzzy, python-brace-format
 msgctxt "@item:inlistbox"
 msgid "All Supported Types ({0})"
-msgstr "Kaikki tuetut tyypit {0}"
+msgstr "Kaikki tuetut tyypit ({0})"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:46
 #: /home/tamara/2.1/Uranium/UM/Qt/Bindings/ProfilesModel.py:179
@@ -416,15 +412,13 @@ msgctxt "@info:status"
 msgid ""
 "Failed to import profile from <filename>{0}</filename>: <message>{1}</"
 "message>"
-msgstr ""
-"Profiilin tuonti epäonnistui tiedostosta <filename>{0}</filename>: "
-"<message>{1}</message>"
+msgstr "Profiilin tuonti epäonnistui tiedostosta <filename>{0}</filename>: <message>{1}</message>"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/Bindings/ProfilesModel.py:106
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Profile was imported as {0}"
-msgstr ""
+msgstr "Profiili tuotiin nimellä {0}"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/Bindings/ProfilesModel.py:108
 #, python-brace-format
@@ -436,16 +430,14 @@ msgstr "Onnistuneesti tuotu profiili {0}"
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Profile {0} has an unknown file type."
-msgstr ""
+msgstr "Profiililla {0} on tuntematon tiedostotyyppi."
 
 #: /home/tamara/2.1/Uranium/UM/Qt/Bindings/ProfilesModel.py:155
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
 "Failed to export profile to <filename>{0}</filename>: <message>{1}</message>"
-msgstr ""
-"Profiilin vienti epäonnistui tiedostoon <filename>{0}</filename>: "
-"<message>{1}</message>"
+msgstr "Profiilin vienti epäonnistui tiedostoon <filename>{0}</filename>: <message>{1}</message>"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/Bindings/ProfilesModel.py:160
 #, fuzzy, python-brace-format
@@ -453,9 +445,7 @@ msgctxt "@info:status"
 msgid ""
 "Failed to export profile to <filename>{0}</filename>: Writer plugin reported "
 "failure."
-msgstr ""
-"Profiilin vienti epäonnistui tiedostoon <filename>{0}</filename>: "
-"<message>{1}</message>"
+msgstr "Profiilin vienti epäonnistui tiedostoon <filename>{0}</filename>: Kirjoitin-lisäosa ilmoitti virheestä."
 
 #: /home/tamara/2.1/Uranium/UM/Qt/Bindings/ProfilesModel.py:163
 #, python-brace-format
@@ -467,7 +457,7 @@ msgstr "Profiili viety tiedostoon <filename>{0}</filename>"
 #, fuzzy
 msgctxt "@item:inlistbox"
 msgid "All supported files"
-msgstr "Kaikki tuetut tyypit {0}"
+msgstr "Kaikki tuetut tiedostot"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/Bindings/ProfilesModel.py:201
 msgctxt "@item:inlistbox"
@@ -495,14 +485,14 @@ msgstr "Ladataan lisäasetuksia..."
 #, fuzzy, python-brace-format
 msgctxt "@info:status"
 msgid "Cannot open file type <filename>{0}</filename>"
-msgstr "Profiili viety tiedostoon <filename>{0}</filename>"
+msgstr "Ei voida avata tiedostotyyppiä <filename>{0}</filename>"
 
 #: /home/tamara/2.1/Uranium/UM/Mesh/ReadMeshJob.py:44
 #: /home/tamara/2.1/Uranium/UM/Mesh/ReadMeshJob.py:66
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Failed to load <filename>{0}</filename>"
-msgstr "<filename>{0}</filename> lataaminen epäonnistui"
+msgstr "Tiedoston <filename>{0}</filename> lataaminen epäonnistui"
 
 #: /home/tamara/2.1/Uranium/UM/Mesh/ReadMeshJob.py:48
 #, python-brace-format
@@ -536,7 +526,7 @@ msgstr "Palauta"
 #: /home/tamara/2.1/Uranium/plugins/Tools/RotateTool/RotateTool.qml:39
 msgctxt "@action:button"
 msgid "Lay flat"
-msgstr ""
+msgstr "Aseta latteaksi"
 
 #: /home/tamara/2.1/Uranium/plugins/Tools/RotateTool/RotateTool.qml:55
 #, fuzzy
@@ -576,7 +566,7 @@ msgstr "Peruuta"
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:53
 msgctxt "@action:button"
 msgid "Ok"
-msgstr ""
+msgstr "OK"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:16
 msgctxt "@title:window"
@@ -592,7 +582,7 @@ msgstr "Haluatko varmasti poistaa kappaleen %1? Tätä ei voida kumota!"
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:116
 msgctxt "@title:tab"
 msgid "Printers"
-msgstr ""
+msgstr "Tulostimet"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:32
 msgctxt "@label"
@@ -615,7 +605,7 @@ msgstr "Ei tekstiä saatavilla"
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:96
 msgctxt "@title:window"
 msgid "About %1"
-msgstr "Tietoja osasta %1"
+msgstr "Tietoja: %1"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:128
 #, fuzzy
@@ -660,17 +650,17 @@ msgstr "Tuo"
 #, fuzzy
 msgctxt "@label"
 msgid "Profile type"
-msgstr "Profiili"
+msgstr "Profiilin tyyppi"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:38
 msgctxt "@label"
 msgid "Starter profile (protected)"
-msgstr ""
+msgstr "Käynnistysprofiili (suojattu)"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:38
 msgctxt "@label"
 msgid "Custom profile"
-msgstr ""
+msgstr "Mukautettu profiili"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:57
 msgctxt "@action:button"
@@ -747,14 +737,14 @@ msgstr "Seuraava"
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Settings/SettingItem.qml:114
 msgctxt "@info:tooltip"
 msgid "Reset to Default"
-msgstr ""
+msgstr "Palauta oletukset"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Settings/SettingView.qml:80
 msgctxt "@label"
 msgid "{0} hidden setting uses a custom value"
 msgid_plural "{0} hidden settings use custom values"
 msgstr[0] "{0} piilotettu asetus käyttää mukautettua arvoa"
-msgstr[1] "{0} piilotetut asetukset käyttävät mukautettuja arvoja"
+msgstr[1] "{0} piilotettua asetusta käyttää mukautettuja arvoja"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Settings/SettingView.qml:166
 #, fuzzy
