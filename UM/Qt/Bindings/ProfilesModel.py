@@ -306,6 +306,10 @@ class ProfilesModel(ListModel):
         for index in range(len(self.items)):
             self.setProperty(index, "active", id(active_profile) == self.items[index]["id"])
 
+        if self._add_working_profile:
+            #Update working profile settings
+            self._onProfilesChanged();
+
     def _onProfileNameChanged(self, profile):
         index = self.find("id", id(profile))
         if index != -1:
