@@ -547,7 +547,7 @@ class MachineManager(SignalEmitter):
                 instance.getWorkingProfile().loadFromFile(Resources.getStoragePath(Resources.MachineInstanceProfiles, file_name))
             except Exception as e:
                 Logger.log("w", "Could not load working profile: %s: %s", file_name, str(e))
-                _setDefaultVariantMaterialProfile(instance)
+                self._setDefaultVariantMaterialProfile(instance)
 
         self._protect_working_profile = True
 
