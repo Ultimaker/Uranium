@@ -8,6 +8,7 @@ import copy
 
 from PyQt5.QtWidgets import QMessageBox
 
+import UM #For using UM.Message, which we cannot import here because that would lead to a circular import
 from UM.Signal import Signal, SignalEmitter
 from UM.Resources import Resources
 from UM.Logger import Logger
@@ -404,18 +405,34 @@ class MachineManager(SignalEmitter):
         if not self._protect_working_profile:
             working_profile = self._active_machine.getWorkingProfile()
             if working_profile.hasChangedSettings():
-                result = QMessageBox.question(None, catalog.i18nc("@title:window", "Replace profile"),
-                            catalog.i18nc("@label", "Selecting the {0} profile replaces your current settings. Do you want to save your settings in a custom profile?").format(profile.getName()),
-                            QMessageBox.Cancel | QMessageBox.Yes | QMessageBox.No)
-                if result == QMessageBox.Cancel:
-                    return
-                elif result == QMessageBox.Yes:
-                    #Message is imported here because importing it at the top leads to a circular import
-                    from UM.Message import Message
+                message_box = QMessageBox()
+                message_box.setIcon(QMessageBox.Question)
+                message_box.setWindowTitle(catalog.i18nc("@title:window", "Replace profile"))
+                message_box.setText(catalog.i18nc("@label", "Selecting the \"{0}\" profile replaces your current settings.").format(profile.getName()))
 
+                update_button = None
+                create_button = message_box.addButton(catalog.i18nc("@label", "Create profile"), QMessageBox.YesRole)
+                discard_button = message_box.addButton(catalog.i18nc("@label", "Discard changes"), QMessageBox.NoRole)
+                cancel_button = message_box.addButton(QMessageBox.Cancel)
+                if self._active_profile.isReadOnly():
+                    message_box.setInformativeText(catalog.i18nc("@label", "Do you want to save your settings in a custom profile?"))
+                else:
+                    message_box.setInformativeText(catalog.i18nc("@label", "Do you want to update profile \"{0}\" or save your settings in a new custom profile?".format(self._active_profile.getName())))
+                    update_button = message_box.addButton(catalog.i18nc("@label", "Update \"{0}\"".format(self._active_profile.getName())), QMessageBox.YesRole)
+                message_box.exec()
+                result = message_box.clickedButton()
+
+                if result == cancel_button:
+                    return
+                elif result == create_button:
                     profile_name = self.addProfileFromWorkingProfile()
-                    message = Message(catalog.i18nc("@info:status", "Added a new profile named {0}").format(profile_name))
+                    message = UM.Message.Message(catalog.i18nc("@info:status", "Added a new profile named \"{0}\"").format(profile_name))
                     message.show()
+                elif result == update_button:
+                    #Replace changed settings of the profile with the changed settings of the working profile
+                    self._active_profile.setChangedSettings(working_profile.getChangedSettings())
+                elif result == discard_button:
+                    pass
 
             #Replace working profile with a copy of the new profile
             working_profile.mergeSettingsFrom(profile, reset = True)

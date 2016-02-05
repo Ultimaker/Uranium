@@ -188,6 +188,11 @@ class Profile(SignalEmitter):
     def getChangedSettings(self):
         return self._changed_settings
 
+    ##  Reset the settings that have a value set in this profile to a new set.
+    def setChangedSettings(self, settings):
+        self._changed_settings = settings
+        self._dirty = True
+
     ##  Get a dictionary of all setting values.
     #
     #   \param kwargs Keyword arguments.
