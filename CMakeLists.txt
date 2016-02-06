@@ -6,15 +6,6 @@ include(GNUInstallDirs)
 
 find_package(PythonInterp 3.4.0 REQUIRED)
 
-####################
-subdirs( /plugins )
-subdirs( /resources )
-subdirs( /scripts )
-subdirs( /tests )
-subdirs( /UM )
-####################
-
-
 # Tests
 add_custom_target(tests)
 add_custom_command(TARGET tests POST_BUILD COMMAND "PYTHONPATH=${CMAKE_SOURCE_DIR}" ${PYTHON_EXECUTABLE} ARGS -m pytest -r a --junitxml=${CMAKE_BINARY_DIR}/junit.xml ${CMAKE_SOURCE_DIR})
