@@ -1,2 +1,0 @@
-subdirs( SimpleView )
-subdirs( WireframeView )
