@@ -19,6 +19,17 @@ class Matrix(object):
     _EPS = numpy.finfo(float).eps * 4.0
 
     # map axes strings to/from tuples of inner axis, parity, repetition, frame
+    # A triple of Euler angles can be applied/interpreted in 24 ways, which can
+    # be specified using a 4 character string or encoded 4-tuple:
+    # *Axes 4-string*: e.g. 'sxyz' or 'ryxy'
+    # - first character : rotations are applied to 's'tatic or 'r'otating frame
+    # - remaining characters : successive rotation axis 'x', 'y', or 'z'
+    # *Axes 4-tuple*: e.g. (0, 0, 0, 0) or (1, 1, 1, 1)
+    # - inner axis: code of axis ('x':0, 'y':1, 'z':2) of rightmost matrix.
+    # - parity : even (0) if inner axis 'x' is followed by 'y', 'y' is followed
+    # by 'z', or 'z' is followed by 'x'. Otherwise odd (1).
+    # - repetition : first and last axis are same (1) or different (0).
+    # - frame : rotations are applied to static (0) or rotating (1) frame.
     _AXES2TUPLE = {
     "sxyz": (0, 0, 0, 0), "sxyx": (0, 0, 1, 0), "sxzy": (0, 1, 0, 0),
     "sxzx": (0, 1, 1, 0), "syzx": (1, 0, 0, 0), "syzy": (1, 0, 1, 0),
@@ -80,7 +91,7 @@ class Matrix(object):
 
     def preMultiply(self, matrix, copy = False):
         if not copy:
-            self._data = numpy.dot(matrix.getData(),self._data)
+            self._data = numpy.dot(matrix.getData(), self._data)
             return self
         else:
             new_matrix = Matrix(data = self._data)
@@ -168,30 +179,14 @@ class Matrix(object):
             M[:3, 3] = point - numpy.dot(R, point)
         self._data = M
 
+    ##  Return transformation matrix from sequence of transformations.
+    #   This is the inverse of the decompose_matrix function.
+    #   @param scale : vector of 3 scaling factors
+    #   @param shear : list of shear factors for x-y, x-z, y-z axes
+    #   @param angles : list of Euler angles about static x, y, z axes
+    #   @param translate : translation vector along x, y, z axes
+    #   @param perspective : perspective partition of matrix
     def compose(self, scale = None, shear = None, angles = None, translate = None, perspective = None):
-        """Return transformation matrix from sequence of transformations.
-
-        This is the inverse of the decompose_matrix function.
-
-        Sequence of transformations:
-            scale : vector of 3 scaling factors
-            shear : list of shear factors for x-y, x-z, y-z axes
-            angles : list of Euler angles about static x, y, z axes
-            translate : translation vector along x, y, z axes
-            perspective : perspective partition of matrix
-
-        >>> scale = numpy.random.random(3) - 0.5
-        >>> shear = numpy.random.random(3) - 0.5
-        >>> angles = (numpy.random.random(3) - 0.5) * (2*math.pi)
-        >>> trans = numpy.random.random(3) - 0.5
-        >>> persp = numpy.random.random(4) - 0.5
-        >>> M0 = compose_matrix(scale, shear, angles, trans, persp)
-        >>> result = decompose_matrix(M0)
-        >>> M1 = compose_matrix(*result)
-        >>> is_same_transform(M0, M1)
-        True
-
-        """
         M = numpy.identity(4)
         if perspective is not None:
             P = numpy.identity(4)
@@ -220,25 +215,10 @@ class Matrix(object):
         M /= M[3, 3]
         self._data = M
 
+    ## Return Euler angles from rotation matrix for specified axis sequence.
+    #  axes : One of 24 axis sequences as string or encoded tuple
+    #  Note that many Euler angle triplets can describe one matrix.
     def getEuler(self, axes='sxyz'):
-        """Return Euler angles from rotation matrix for specified axis sequence.
-
-        axes : One of 24 axis sequences as string or encoded tuple
-
-        Note that many Euler angle triplets can describe one matrix.
-
-        >>> R0 = euler_matrix(1, 2, 3, 'syxz')
-        >>> al, be, ga = euler_from_matrix(R0, 'syxz')
-        >>> R1 = euler_matrix(al, be, ga, 'syxz')
-        >>> numpy.allclose(R0, R1)
-        True
-        >>> angles = (4*math.pi) * (numpy.random.random(3) - 0.5)
-        >>> for axes in _AXES2TUPLE.keys():
-        ...    R0 = euler_matrix(axes=axes, *angles)
-        ...    R1 = euler_matrix(axes=axes, *euler_from_matrix(R0, axes))
-        ...    if not numpy.allclose(R0, R1): print(axes, "failed")
-
-        """
         try:
             firstaxis, parity, repetition, frame = self._AXES2TUPLE[axes.lower()]
         except (AttributeError, KeyError):
@@ -277,26 +257,12 @@ class Matrix(object):
             ax, az = az, ax
         return Vector(ax, ay, az)
 
-
+    ## Return homogeneous rotation matrix from Euler angles and axis sequence.
+    #  @param ai Eulers roll
+    #  @param aj Eulers pitch
+    #  @param ak Eulers yaw
+    #  @param axes One of 24 axis sequences as string or encoded tuple
     def setByEuler(self, ai, aj, ak, axes = "sxyz"):
-        """Return homogeneous rotation matrix from Euler angles and axis sequence.
-
-        ai, aj, ak : Euler's roll, pitch and yaw angles
-        axes : One of 24 axis sequences as string or encoded tuple
-
-        >>> R = euler_matrix(1, 2, 3, 'syxz')
-        >>> numpy.allclose(numpy.sum(R[0]), -1.34786452)
-        True
-        >>> R = euler_matrix(1, 2, 3, (0, 1, 0, 1))
-        >>> numpy.allclose(numpy.sum(R[0]), -0.383436184)
-        True
-        >>> ai, aj, ak = (4*math.pi) * (numpy.random.random(3) - 0.5)
-        >>> for axes in _AXES2TUPLE.keys():
-        ...    R = euler_matrix(ai, aj, ak, axes)
-        >>> for axes in _TUPLE2AXES.keys():
-        ...    R = euler_matrix(ai, aj, ak, axes)
-
-        """
         try:
             firstaxis, parity, repetition, frame = self._AXES2TUPLE[axes]
         except (AttributeError, KeyError):
@@ -411,37 +377,10 @@ class Matrix(object):
         self._data[2, 3] = -1.
         self._data[3, 2] = (2. * far * near) / (near - far)
 
-
+    ##  Return sequence of transformations from transformation matrix.
+    #   @return Tuple containing scale (vector), shear (vector), angles (vector) and translation (vector)
+    #   It will raise a ValueError if matrix is of wrong type or degenerative.
     def decompose(self):
-        """Return sequence of transformations from transformation matrix.
-
-        matrix : array_like
-            Non-degenerative homogeneous transformation matrix
-
-        Return tuple of:
-            scale : vector of 3 scaling factors
-            shear : list of shear factors for x-y, x-z, y-z axes
-            angles : list of Euler angles about static x, y, z axes
-            translate : translation vector along x, y, z axes
-
-        Raise ValueError if matrix is of wrong type or degenerative.
-
-        >>> T0 = translation_matrix([1, 2, 3])
-        >>> scale, shear, angles, trans, persp = decompose_matrix(T0)
-        >>> T1 = translation_matrix(trans)
-        >>> numpy.allclose(T0, T1)
-        True
-        >>> S = scale_matrix(0.123)
-        >>> scale, shear, angles, trans, persp = decompose_matrix(S)
-        >>> scale[0]
-        0.123
-        >>> R0 = euler_matrix(1, 2, 3)
-        >>> scale, shear, angles, trans, persp = decompose_matrix(R0)
-        >>> R1 = euler_matrix(*angles)
-        >>> numpy.allclose(R0, R1)
-        True
-
-        """
         M = numpy.array(self._data, dtype = numpy.float64, copy = True).T
         if abs(M[3, 3]) < self._EPS:
             raise ValueError("M[3, 3] is zero")
@@ -454,12 +393,6 @@ class Matrix(object):
         scale = numpy.zeros((3, ))
         shear = [0.0, 0.0, 0.0]
         angles = [0.0, 0.0, 0.0]
-
-        #if any(abs(M[:3, 3]) > self._EPS):
-        #    perspective = numpy.dot(M[:, 3], numpy.linalg.inv(P.T))
-        #    M[:, 3] = 0.0, 0.0, 0.0, 1.0
-        #else:
-        #    perspective = numpy.array([0.0, 0.0, 0.0, 1.0])
 
         translate = M[3, :3].copy()
         M[3, :3] = 0.0
