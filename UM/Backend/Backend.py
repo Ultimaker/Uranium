@@ -38,6 +38,7 @@ class Backend(PluginObject, SignalEmitter):
     processingProgress = Signal()
     backendStateChange = Signal()
     backendConnected = Signal()
+    backendQuit = Signal()
 
     ##   \brief Start the backend / engine.
     #   Runs the engine, this is only called when the socket is fully opend & ready to accept connections
@@ -113,6 +114,7 @@ class Backend(PluginObject, SignalEmitter):
         while True:
             line = handle.readline()
             if line == b"":
+                self.backendQuit.emit()
                 break
             self._backend_log.append(line)
 
