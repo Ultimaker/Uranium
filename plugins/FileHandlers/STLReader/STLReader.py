@@ -34,7 +34,7 @@ class STLReader(MeshReader):
             try:
                 self._loadAscii(mesh, f)
             except UnicodeDecodeError:
-                pass
+                return None
             f.close()
 
         f.close()
