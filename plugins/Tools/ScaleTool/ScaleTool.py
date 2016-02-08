@@ -17,6 +17,7 @@ from UM.Operations.TranslateOperation import TranslateOperation
 
 from . import ScaleToolHandle
 import copy
+from copy import deepcopy
 
 class ScaleTool(Tool):
     def __init__(self):
@@ -108,47 +109,43 @@ class ScaleTool(Tool):
                     drag_change = (drag_length - self._drag_length) / 100 * self._scale_speed
 
                     if self._snap_scale:
-                        scale_factor = round(drag_change, 1)
+                        scale_delta = round(drag_change, 1)
                     else:
-                        scale_factor = drag_change
+                        scale_delta = drag_change
 
-                    scale_change = Vector(0.0, 0.0, 0.0)
-                    if self._non_uniform_scale:
+                    old_scale_vec = Selection.getSelectedObject(0).getScale()
+                    new_scale_vec = deepcopy(old_scale_vec)
+
+                    if not self._non_uniform_scale:
+                        ratio = None
                         if self.getLockedAxis() == ToolHandle.XAxis:
-                            scale_change.setX(scale_factor)
+                            ratio = (old_scale_vec.x + scale_delta) / old_scale_vec.x
                         elif self.getLockedAxis() == ToolHandle.YAxis:
-                            scale_change.setY(scale_factor)
+                            ratio = (old_scale_vec.y + scale_delta) / old_scale_vec.y
                         elif self.getLockedAxis() == ToolHandle.ZAxis:
-                            scale_change.setZ(scale_factor)
+                            ratio = (old_scale_vec.z + scale_delta) / old_scale_vec.z
+
+                        if ratio is not None and ratio > 0:
+                            new_scale_vec = old_scale_vec*ratio
+
                     else:
-                        scale_change.setX(scale_factor)
-                        scale_change.setY(scale_factor)
-                        scale_change.setZ(scale_factor)
+                        if self.getLockedAxis() == ToolHandle.XAxis:
+                            new_x = new_scale_vec.x + scale_delta
+                            if new_x > 0:
+                                new_scale_vec.setX( new_x )
 
-                    new_scale = Selection.getSelectedObject(0).getScale() + scale_change
-                    # Ensure that snap scaling is actually rounded.
-                    # We applyOperationneed to do this as scale to max and auto scale can cause objects to be scaled
-                    # in steps smaller then the snap.
-                    if self._snap_scale:
-                        new_scale.setX(round(new_scale.x, 1))
-                        new_scale.setY(round(new_scale.y, 1))
-                        new_scale.setZ(round(new_scale.z, 1))
+                        elif self.getLockedAxis() == ToolHandle.YAxis:
+                            new_y = new_scale_vec.y + scale_delta
+                            if new_y > 0:
+                                new_scale_vec.setY( new_y )
 
-                    #this part prevents the mesh being scaled to a size < 0.
-                    #This cannot be done before the operation (even though that would be more efficient)
-                    #because then the operation can distract more of the mesh then is remaining of its size
-                    if new_scale.x <= 0 or new_scale.y <= 0 or new_scale.z <= 0:
-                        minimum_scale = 0.01 #1% so the mesh never completely disapears for the user
-                        if self._snap_scale == True:
-                            minimum_scale = 0.1 #10% same reason as above
-                        if new_scale.x <= 0:
-                            new_scale.setX(minimum_scale)
-                        if new_scale.y <= 0:
-                            new_scale.setY(minimum_scale)
-                        if new_scale.z <= 0:
-                            new_scale.setZ(minimum_scale)
+                        elif self.getLockedAxis() == ToolHandle.ZAxis:
+                            new_z = new_scale_vec.z + scale_delta
+                            if new_z > 0:
+                                new_scale_vec.setZ( new_z )
 
-                    Selection.applyOperation(ScaleOperation, new_scale, set_scale = True)
+                    if new_scale_vec != old_scale_vec:
+                        Selection.applyOperation(ScaleOperation, new_scale_vec, set_scale = True)
 
                 self._drag_length = (handle_position - drag_position).length()
                 return True
@@ -227,12 +224,7 @@ class ScaleTool(Tool):
             obj_width = obj.getBoundingBox().width / obj_scale.x
             target_scale = float(width) / obj_width
             if obj_scale.x != target_scale:
-                obj_scale.setX(target_scale)
-                if not self._non_uniform_scale:
-                    obj_scale.setY(target_scale)
-                    obj_scale.setZ(target_scale)
-                operation = SetTransformOperation(obj, None, None, obj_scale)
-                operation.push()
+                self.setScaleX(target_scale)
 
     def setObjectHeight(self, height):
         obj = Selection.getSelectedObject(0)
@@ -241,12 +233,7 @@ class ScaleTool(Tool):
             obj_height = obj.getBoundingBox().height / obj_scale.y
             target_scale = float(height) / obj_height
             if obj_scale.y != target_scale:
-                obj_scale.setY(target_scale)
-                if not self._non_uniform_scale:
-                    obj_scale.setX(target_scale)
-                    obj_scale.setZ(target_scale)
-                operation = SetTransformOperation(obj, None, None, obj_scale)
-                operation.push()
+                self.setScaleY(target_scale)
 
     def setObjectDepth(self, depth):
         obj = Selection.getSelectedObject(0)
@@ -255,22 +242,18 @@ class ScaleTool(Tool):
             obj_depth = obj.getBoundingBox().depth / obj_scale.z
             target_scale = float(depth) / obj_depth
             if obj_scale.z != target_scale:
-                obj_scale.setZ(target_scale)
-                if not self._non_uniform_scale:
-                    obj_scale.setY(target_scale)
-                    obj_scale.setX(target_scale)
-                operation = SetTransformOperation(obj, None, None, obj_scale)
-                operation.push()
+                self.setScaleZ((target_scale))
 
     def setScaleX(self, scale):
         obj = Selection.getSelectedObject(0)
         if obj:
             obj_scale = obj.getScale()
             if obj_scale.x != scale:
+                ratio = scale/obj_scale.x
                 obj_scale.setX(scale)
                 if not self._non_uniform_scale:
-                    obj_scale.setY(scale)
-                    obj_scale.setZ(scale)
+                    obj_scale.setY( obj_scale.y * ratio)
+                    obj_scale.setZ( obj_scale.z * ratio)
                 operation = SetTransformOperation(obj, None, None, obj_scale)
                 operation.push()
 
@@ -279,10 +262,11 @@ class ScaleTool(Tool):
         if obj:
             obj_scale = obj.getScale()
             if obj_scale.y != scale:
+                ratio = scale/obj_scale.y
                 obj_scale.setY(scale)
                 if not self._non_uniform_scale:
-                    obj_scale.setX(scale)
-                    obj_scale.setZ(scale)
+                    obj_scale.setX( obj_scale.x * ratio)
+                    obj_scale.setZ( obj_scale.z * ratio)
                 operation = SetTransformOperation(obj, None, None, obj_scale)
                 operation.push()
 
@@ -291,9 +275,10 @@ class ScaleTool(Tool):
         if obj:
             obj_scale = obj.getScale()
             if obj_scale.z != scale:
+                ratio = scale/obj_scale.z
                 obj_scale.setZ(scale)
                 if not self._non_uniform_scale:
-                    obj_scale.setY(scale)
-                    obj_scale.setX(scale)
+                    obj_scale.setY( obj_scale.y * ratio)
+                    obj_scale.setX( obj_scale.x * ratio)
                 operation = SetTransformOperation(obj, None, None, obj_scale)
                 operation.push()
