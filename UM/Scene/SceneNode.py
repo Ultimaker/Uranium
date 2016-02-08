@@ -361,7 +361,6 @@ class SceneNode(SignalEmitter):
     ##  Set the local orientation of this scene node.
     #
     #   \param orientation \type{Quaternion} The new orientation of this scene node.
-    #   \param transform_space The space relative to which to rotate. Can be any one of the constants in SceneNode::TransformSpace.
     #   \param transform_space The space relative to which to rotate. Can be Local or World from SceneNode::TransformSpace.
     def setOrientation(self, orientation, transform_space = TransformSpace.Local):
         if not self._enabled or orientation == self._orientation:
