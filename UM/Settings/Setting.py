@@ -55,6 +55,7 @@ class Setting(SignalEmitter):
         self._unit = ""
         self._inherit = True
         self._inherit_function = None
+        self._prohibited = False
 
         self._dependent_settings = set()
 
@@ -137,6 +138,7 @@ class Setting(SignalEmitter):
 
         if "enabled" in data:
             self._enabled_function = self._createFunction(data["enabled"])
+            self._prohibited = data["enabled"] == "False" # Enabled can never be true, so this setting is prohibited.
 
         if "options" in data:
             self._options = {}
@@ -337,6 +339,11 @@ class Setting(SignalEmitter):
             return self._enabled_function() == True #Force check. 
 
         return True
+
+    ##  Check whether this setting is prohibited.
+    #   This value is true if in all cases of the enabled function the result is false.
+    def isProhibited(self):
+        return self._prohibited
 
     ##  Validate a value using this Setting
     #   \param value The value to validate

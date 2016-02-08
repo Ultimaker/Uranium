@@ -32,6 +32,7 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
     EnabledRole = Qt.UserRole + 14
     FilteredRole = Qt.UserRole + 15
     GlobalOnlyRole = Qt.UserRole + 16
+    ProhibitedRole = Qt.UserRole + 17 # This setting can never be enabled
 
     def __init__(self, category, parent = None, machine_manager = None):
         super().__init__(parent)
@@ -65,6 +66,7 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
         self.addRoleName(self.EnabledRole, "enabled")
         self.addRoleName(self.FilteredRole, "filtered")
         self.addRoleName(self.GlobalOnlyRole, "global_only")
+        self.addRoleName(self.ProhibitedRole, "prohibited")
 
     settingChanged = Signal()
 
@@ -157,7 +159,8 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
                 "overridden": (not self._profile.isReadOnly()) and self._profile.hasSettingValue(setting.getKey()),
                 "enabled": setting.isEnabled(),
                 "filtered": False,
-                "global_only": setting.getGlobalOnly()
+                "global_only": setting.getGlobalOnly(),
+                "prohibited": setting.isProhibited()
             })
             setting.visibleChanged.connect(self._onSettingVisibleChanged)
             setting.enabledChanged.connect(self._onSettingEnabledChanged)
