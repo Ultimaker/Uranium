@@ -49,7 +49,7 @@ class MachineDefinitionsModel(ListModel):
     def createInstance(self, name, definition_id):
         definition = self._manager.findMachineDefinition(definition_id)
 
-        instance = MachineInstance(self._manager, name = name, definition = definition)
+        instance = MachineInstance(self._manager, name = self._manager.makeUniqueMachineInstanceName(name, definition.getName()), definition = definition)
         self._manager.addMachineInstance(instance)
 
         # Workaround for an issue on OSX where directly calling setActiveMachineInstance would

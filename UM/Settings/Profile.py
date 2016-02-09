@@ -65,7 +65,7 @@ class Profile(SignalEmitter):
     def setName(self, name):
         if name != self._name:
             old_name = self._name
-            self._name = self._machine_manager.makeUniqueProfileName(name)
+            self._name = self._machine_manager.makeUniqueProfileName(name, old_name)
             self.nameChanged.emit(self, old_name)
 
     ##  Set whether this profile should be considered a read only profile.

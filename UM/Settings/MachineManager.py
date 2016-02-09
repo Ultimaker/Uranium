@@ -177,10 +177,26 @@ class MachineManager(SignalEmitter):
 
     def findMachineInstance(self, name):
         for instance in self._machine_instances:
-            if instance.getName() == name:
+            if instance.getName().lower() == name.lower():
                 return instance
 
         return None
+
+    def makeUniqueMachineInstanceName(self, base_name, machine_type_name, old_name = None):
+        base_name = base_name.strip()
+        if base_name == "":
+            base_name = machine_type_name
+        instance_name = base_name
+        i = 1
+        #Make sure there is no machine instance with the same name,
+        #except if it is the old name of the same instance we are renaming
+        while self.findMachineInstance(instance_name):
+            if instance_name == old_name:
+                break
+            i = i + 1
+            instance_name = "%s #%d" % (base_name, i)
+
+        return instance_name
 
     ##  Get the currently active machine instance
     #   \returns active_machine \type{MachineSettings}
@@ -376,13 +392,17 @@ class MachineManager(SignalEmitter):
 
         return None
 
-    def makeUniqueProfileName(self, base_name):
+    def makeUniqueProfileName(self, base_name, old_name = None):
+        base_name = base_name.strip()
         if base_name == "":
             base_name = catalog.i18nc("@item:profile name", "Custom profile")
         profile_name = base_name
         i = 1
-        #Make sure there is no profile for any instance/variant/material with the same name
+        #Make sure there is no profile for any instance/variant/material with the same name,
+        #except if it is the old name of the same profile we are renaming
         while self.findProfile(profile_name):
+            if profile_name == old_name:
+                break
             i = i + 1
             profile_name = "%s #%d" % (base_name, i)
 
