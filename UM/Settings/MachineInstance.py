@@ -41,7 +41,7 @@ class MachineInstance(SignalEmitter):
     def setName(self, name):
         if name != self._name:
             old_name = self._name
-            self._name = name
+            self._name = self._machine_manager.makeUniqueMachineInstanceName(name, self._machine_definition.getName(), old_name)
             self.nameChanged.emit(self, old_name)
 
     def getWorkingProfile(self):
