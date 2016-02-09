@@ -11,6 +11,9 @@ from UM.Logger import Logger
 from UM.Settings.Validators.ResultCodes import ResultCodes
 from UM.SaveFile import SaveFile
 
+from UM.i18n import i18nCatalog
+catalog = i18nCatalog("uranium")
+
 ##  Provides a collection of setting values
 #
 #   The profile class handles setting values for "user" settings. User settings are settings
@@ -18,10 +21,15 @@ from UM.SaveFile import SaveFile
 #   values of the machine, but which can optionally be overridden from MachineInstance.
 #
 #   The Profile class provides getters and setters for setting values, in addition to
-#   serialization and deserialization methods. There are two intrinsic properties for a profile,
-#   its name, which is used as a human-readable identifier and a read only property. Read only
-#   profiles are profiles that should not be modified because they are read from system locations
-#   that cannot be written to, for example /usr/share on Linux systems.
+#   serialization and deserialization methods. There are a couple of intrinsic properties for a
+#   profile eg a name, which is used as a human-readable identifier and a read only property.
+#   Read only profiles are profiles that should not be modified because they are read from system
+#   locations that cannot be written to, for example /usr/share on Linux systems.
+#
+#   Each machine instance has a single "working profile" which has the current settings for this
+#   machine instance. This working profile is different in that it can also stores the settings
+#   of the profile(s) it was based on. This is done so settings can be reset to the value of the
+#   profile the working profile was based on.
 class Profile(SignalEmitter):
     ProfileVersion = 1
 
@@ -30,8 +38,15 @@ class Profile(SignalEmitter):
         super().__init__()
         self._machine_manager = machine_manager
         self._changed_settings = {}
-        self._name = "Unknown Profile"
+        self._changed_settings_defaults = {}
+        self._name = catalog.i18nc("@label", "Current settings")
+        self._type = None
+        self._machine_type_id = None
+        self._machine_variant_name = None
+        self._machine_instance_name = None
+        self._material_name = None
         self._read_only = read_only
+        self._dirty = True
 
         self._active_instance = None
         self._machine_manager.activeMachineInstanceChanged.connect(self._onActiveInstanceChanged)
@@ -50,7 +65,7 @@ class Profile(SignalEmitter):
     def setName(self, name):
         if name != self._name:
             old_name = self._name
-            self._name = name
+            self._name = self._machine_manager.makeUniqueProfileName(name)
             self.nameChanged.emit(self, old_name)
 
     ##  Set whether this profile should be considered a read only profile.
@@ -60,6 +75,50 @@ class Profile(SignalEmitter):
     ##  Retrieve if this profile is a read only profile.
     def isReadOnly(self):
         return self._read_only
+
+    ##  Set the type of this profile.
+    def setType(self, type):
+        self._type = type
+
+    ##  Retrieve the type of this profile.
+    def getType(self):
+        return self._type
+
+    ##  Retrieve the name of the machine type.
+    def getMachineTypeId(self):
+        return self._machine_type_id
+
+    ##  Set the name of the machine type.
+    def setMachineTypeId(self, machine_type):
+        self._machine_type_id = machine_type
+
+    ##  Retrieve the name of the machine variant.
+    def getMachineVariantName(self):
+        return self._machine_variant_name
+
+    ##  Set the name of the machine type.
+    def setMachineVariantName(self, machine_variant):
+        self._machine_variant_name = machine_variant
+
+    ##  Retrieve the name of the machine instance.
+    def getMachineInstanceName(self):
+        return self._machine_instance_name
+
+    ##  Set the name of the machine type.
+    def setMachineInstanceName(self, machine_instance):
+        self._machine_instance_name = machine_instance
+
+    ##  Retrieve the name of the material.
+    def getMaterialName(self):
+        return self._material_name
+
+    ##  Set the name of the machine type.
+    def setMaterialName(self, material):
+        self._material_name = material
+
+    ##  Get whether the profile has unsaved changed
+    def hasUnsavedChanges(self):
+        return self._dirty
 
     ##  Emitted whenever a setting value changes.
     #
@@ -73,9 +132,17 @@ class Profile(SignalEmitter):
     #
     #   \note If the setting is not a user-settable setting, this method will do nothing.
     def setSettingValue(self, key, value):
-        Logger.log('d' , "Setting value of setting %s to %s",key,value)
+        Logger.log("d", "Setting value of %s to %s on profile %s", key, value, self._name)
 
-        if not self._active_instance or not self._active_instance.getMachineDefinition().isUserSetting(key):
+        self._dirty = True
+
+        if not self._active_instance:
+            #Active profile is not yet set, so we can't check against machine definition or default values.
+            #This happens when loading profiles on first start of Cura.
+            self._changed_settings[key] = value
+            return
+
+        if not self._active_instance.getMachineDefinition().isUserSetting(key):
             Logger.log("w", "Tried to set value of non-user setting %s", key)
             return
 
@@ -83,7 +150,8 @@ class Profile(SignalEmitter):
         if not setting:
             return
 
-        if value == setting.getDefaultValue() or value == str(setting.getDefaultValue()):
+        if value == setting.getDefaultValue() or value == str(setting.getDefaultValue()) and not self._type:
+            #Note: partial profiles can have values that equal the default setting
             if key in self._changed_settings:
                 del self._changed_settings[key]
                 self.settingValueChanged.emit(key)
@@ -119,6 +187,11 @@ class Profile(SignalEmitter):
     ##  Get a dictionary of all settings that have a value set in this profile.
     def getChangedSettings(self):
         return self._changed_settings
+
+    ##  Reset the settings that have a value set in this profile to a new set.
+    def setChangedSettings(self, settings):
+        self._changed_settings = settings
+        self._dirty = True
 
     ##  Get a dictionary of all setting values.
     #
@@ -179,24 +252,59 @@ class Profile(SignalEmitter):
     ##  Validate all settings and check if any setting has an error.
     def hasErrorValue(self):
         for key, value in self._changed_settings.items():
-            valid = self._active_instance.getMachineDefinition().getSetting(key).validate(value)
+            setting = self._active_instance.getMachineDefinition().getSetting(key)
+            if not setting:
+                return False
+            valid = setting.validate(value)
             if valid == ResultCodes.min_value_error or valid == ResultCodes.max_value_error or valid == ResultCodes.not_valid_error:
-                Logger.log("w", "The setting %s has an invalid value of %s",key,value)
+                Logger.log("w", "The setting %s has an invalid value of %s", key, value)
                 return True
 
         return False
 
     ##  Check whether this profile has a value for a certain setting.
-    def hasSettingValue(self, key):
-        return key in self._changed_settings
+    #   /param key The key for the setting to check
+    #   /param filter_defaults Don't include setting if its value equals the default setting for this profile
+    def hasSettingValue(self, key, filter_defaults = False):
+        if filter_defaults:
+            return key in self._changed_settings and ( key not in self._changed_settings_defaults or self._changed_settings[key] != self._changed_settings_defaults[key])
+        else:
+            return key in self._changed_settings
+
+    ## Check whether this profile has any changed settings that are different from the default.
+    def hasChangedSettings(self):
+        for key in self._changed_settings:
+            if self.hasSettingValue(key, filter_defaults = True):
+                return True
 
     ##  Remove a setting value from this profile, resetting it to its default value.
     def resetSettingValue(self, key):
         if key not in self._changed_settings:
             return
 
-        del self._changed_settings[key]
+        if key in self._changed_settings_defaults:
+            self._changed_settings[key] = self._changed_settings_defaults[key]
+        else:
+            del self._changed_settings[key]
+
         self.settingValueChanged.emit(key)
+
+    ## Merge settings from another profile
+    def mergeSettingsFrom(self, profile, reset = False):
+        if reset:
+            self._changed_settings = {}
+            self._changed_settings_defaults = {}
+
+        if not profile:
+            return
+
+        settings = profile.getChangedSettings()
+
+        for key, value in settings.items():
+            self._changed_settings[key] = value
+            self._changed_settings_defaults[key] = value
+
+        self._dirty = True
 
     ##  Load a serialised profile from a file.
     #
@@ -209,6 +317,7 @@ class Profile(SignalEmitter):
         f = open(path) #Open file for reading.
         serialised = f.read()
         self.unserialise(serialised, path) #Unserialise the serialised contents that we found in that file.
+        self._dirty = False
 
     ##  Load a serialized profile from a string.
     #
@@ -229,10 +338,27 @@ class Profile(SignalEmitter):
             raise SettingsError.InvalidVersionError(origin)
 
         self._name = parser.get("general", "name")
+        if "type" in parser["general"]:
+            self._type = parser.get("general", "type")
+        if "machine_type" in parser["general"]:
+            self._machine_type_id = parser.get("general", "machine_type")
+        if "machine_variant" in parser["general"]:
+            self._machine_variant_name = parser.get("general", "machine_variant")
+        if "machine_instance" in parser["general"]:
+            self._machine_instance_name = parser.get("general", "machine_instance")
+        if "material" in parser["general"]:
+            self._material_name = parser.get("general", "material")
+        elif self._type == "material" and "name" in parser["general"]:
+            self._material_name = parser.get("general", "name")
 
         if parser.has_section("settings"):
             for key, value in parser["settings"].items():
                 self.setSettingValue(key, value)
+
+        if parser.has_section("defaults"):
+            self._changed_settings_defaults = {}
+            for key, value in parser["defaults"].items():
+                self._changed_settings_defaults[key] = value
 
     ##  Store this profile in a file so it can be loaded later.
     #
@@ -245,8 +371,10 @@ class Profile(SignalEmitter):
         except Exception as e:
             Logger.log("e", "Failed to write profile to %s: %s", file, str(e))
             return str(e)
+
+        self._dirty = False
         return None
-    
+
     ##  Serialise this profile to a string.
     def serialise(self):
         stream = io.StringIO() #ConfigParser needs to write to a stream.
@@ -255,11 +383,26 @@ class Profile(SignalEmitter):
         parser.add_section("general") #Write a general section.
         parser.set("general", "version", str(self.ProfileVersion))
         parser.set("general", "name", self._name)
+        if self._type:
+            parser.set("general", "type", self._type)
+        if self._machine_type_id:
+            parser.set("general", "machine_type", self._machine_type_id)
+        if self._machine_variant_name:
+            parser.set("general", "machine_variant", self._machine_variant_name)
+        if self._machine_instance_name:
+            parser.set("general", "machine_instance", self._machine_instance_name)
+        if self._material_name and not self._type:
+            parser.set("general", "material", self._material_name)
 
         parser.add_section("settings") #Write each changed setting in a settings section.
         for setting_key in self._changed_settings:
             parser.set("settings", setting_key , str(self._changed_settings[setting_key]))
-        
+
+        if len(self._changed_settings_defaults) > 0:
+            parser.add_section("defaults") #Write each changed setting in a settings section.
+            for setting_key in self._changed_settings_defaults:
+                parser.set("defaults", setting_key , str(self._changed_settings_defaults[setting_key]))
+
         parser.write(stream) #Actually serialise it to the stream.
         return stream.getvalue()
 

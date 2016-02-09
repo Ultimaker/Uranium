@@ -32,11 +32,20 @@ class ActiveProfileProxy(QObject):
     def setSettingValue(self, key, value):
         self._active_profile.setSettingValue(key, value)
 
+    ## Show any settings that have a value in the current profile but are not visible.
+    @pyqtSlot(str)
+    def showHiddenValues(self, category_id):
+        category = Application.getInstance().getMachineManager().getActiveMachineInstance().getMachineDefinition().getSettingsCategory(category_id)
+        for setting in category.getAllSettings():
+            if not setting.isVisible() and self._active_profile.hasSettingValue(setting.getKey(), filter_defaults = False):
+                setting.setVisible(True)
+        category.visibleChanged.emit(category)
+
     def _onActiveProfileChanged(self):
         if self._active_profile:
             self._active_profile.settingValueChanged.disconnect(self._onSettingValuesChanged)
 
-        self._active_profile = Application.getInstance().getMachineManager().getActiveProfile()
+        self._active_profile = Application.getInstance().getMachineManager().getWorkingProfile()
         self.activeProfileChanged.emit()
 
         if self._active_profile:

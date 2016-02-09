@@ -64,6 +64,26 @@ class MachineManagerProxy(QObject):
     def setActiveMachineVariant(self, name):
         self._manager.setActiveMachineVariant(name)
 
+    @pyqtProperty(bool, notify = activeMachineInstanceChanged)
+    def hasMaterials(self):
+        instance = self._manager.getActiveMachineInstance()
+        if not instance:
+            return False
+
+        return instance.hasMaterials()
+
+    @pyqtProperty(str, notify = activeMachineInstanceChanged)
+    def activeMaterial(self):
+        instance = self._manager.getActiveMachineInstance()
+        if not instance:
+            return ""
+
+        return instance.getMaterialName()
+
+    @pyqtSlot(str)
+    def setActiveMaterial(self, name):
+        self._manager.setActiveMaterial(name)
+
     activeProfileChanged = pyqtSignal()
     @pyqtProperty(str, notify = activeProfileChanged)
     def activeProfile(self):
@@ -89,28 +109,15 @@ class MachineManagerProxy(QObject):
 
     @pyqtSlot(str, result = int)
     def getSettingValue(self, setting):
-        profile = self._manager.getActiveProfile()
+        profile = self._manager.getWorkingProfile()
         if not profile:
             return None
         return profile.getSettingValue(setting)
 
     @pyqtSlot(str, "QVariant")
     def setSettingValue(self, key, value):
-        profile = self._manager.getActiveProfile()
+        profile = self._manager.getWorkingProfile()
         if not profile:
-            return
-
-        if profile.isReadOnly():
-            custom_profile_name = catalog.i18nc("@item:intext appended to customised profiles ({0} is old profile name)", "{0} (Customised)", profile.getName())
-            custom_profile = self._manager.findProfile(custom_profile_name)
-            if not custom_profile:
-                custom_profile = deepcopy(profile)
-                custom_profile.setReadOnly(False)
-                custom_profile.setName(custom_profile_name)
-                self._manager.addProfile(custom_profile)
-
-            self._changed_setting = (key, value)
-            self._manager.setActiveProfile(custom_profile)
             return
 
         profile.setSettingValue(key, value)
@@ -122,6 +129,14 @@ class MachineManagerProxy(QObject):
             return
 
         instance.setMachineSettingValue(key, value)
+
+    @pyqtSlot(result = str)
+    def createProfile(self):
+        profile = self._manager.addProfileFromWorkingProfile()
+        #Hack to prevent "Replace profile?" dialog; working profile will get replaced by setActiveProfile()
+        self._manager.getWorkingProfile().setChangedSettings({})
+        self._manager.setActiveProfile(profile)
+        return profile.getName()
 
     def _onActiveMachineInstanceChanged(self):
         self.activeMachineInstanceChanged.emit()

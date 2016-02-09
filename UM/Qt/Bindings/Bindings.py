@@ -35,6 +35,7 @@ from . import MachineInstancesModel
 from . import ProfilesModel
 from . import MachineManagerProxy
 from . import MachineVariantsModel
+from . import MachineMaterialsModel
 from . import i18nCatalogProxy
 from . import ActiveProfileProxy
 
@@ -102,6 +103,7 @@ class Bindings:
         qmlRegisterType(MachineDefinitionsModel.MachineDefinitionsModel, "UM", 1, 1, "MachineDefinitionsModel")
         qmlRegisterType(MachineInstancesModel.MachineInstancesModel, "UM", 1, 1, "MachineInstancesModel")
         qmlRegisterType(MachineVariantsModel.MachineVariantsModel, "UM", 1, 1, "MachineVariantsModel")
+        qmlRegisterType(MachineMaterialsModel.MachineMaterialsModel, "UM", 1, 1, "MachineMaterialsModel")
         qmlRegisterType(ProfilesModel.ProfilesModel, "UM", 1, 1, "ProfilesModel")
 
         qmlRegisterSingletonType(OutputDeviceManagerProxy.OutputDeviceManagerProxy, "UM", 1, 1, "OutputDeviceManager", OutputDeviceManagerProxy.createOutputDeviceManagerProxy)

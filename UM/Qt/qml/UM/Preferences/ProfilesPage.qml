@@ -13,54 +13,79 @@ ManagementPage
 
     title: catalog.i18nc("@title:tab", "Profiles");
 
-    model: UM.ProfilesModel { }
+    model: UM.ProfilesModel { addWorkingProfile: true }
 
-    onAddObject: importDialog.open();
+    onAddObject: { var selectedProfile = UM.MachineManager.createProfile(); base.selectProfile(selectedProfile); }
     onRemoveObject: confirmDialog.open();
-    onRenameObject: renameDialog.open();
-
-    addText: catalog.i18nc("@action:button", "Import");
+    onRenameObject: { renameDialog.open(); renameDialog.selectText(); }
 
     removeEnabled: currentItem != null ? !currentItem.readOnly : false;
+    renameEnabled: currentItem != null ? !currentItem.readOnly : false;
 
-    Flow {
+    scrollviewCaption: catalog.i18nc("@label %1 is printer name","Printer: %1").arg(UM.MachineManager.activeMachineInstance)
+
+    signal selectProfile(string name)
+    onSelectProfile: {
+        objectList.currentIndex = objectList.model.find("name", name);
+    }
+
+    Item {
+        visible: base.currentItem != null
         anchors.fill: parent
-        spacing: UM.Theme.sizes.default_margin.height
 
-        Label { text: base.currentItem.name ? base.currentItem.name : ""; font: UM.Theme.fonts.large; width: parent.width; }
+        Label { id: profileName; text: base.currentItem ? base.currentItem.name : ""; font: UM.Theme.fonts.large; width: parent.width; }
 
-        Grid {
-            id: containerGrid
-            columns: 2
-            spacing: UM.Theme.sizes.default_margin.width
+        ScrollView {
+            anchors.left: parent.left
+            anchors.top: profileName.bottom
+            anchors.topMargin: UM.Theme.sizes.default_margin.height
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
 
-            Label { text: catalog.i18nc("@label", "Profile type"); width: 155}
-            Label { text: base.currentItem.readOnly ? catalog.i18nc("@label", "Starter profile (protected)") : catalog.i18nc("@label", "Custom profile"); }
+            Grid {
+                id: containerGrid
+                columns: 2
+                spacing: UM.Theme.sizes.default_margin.width
 
-            Column {
-                Repeater {
-                        model: base.currentItem.settings
-                        Label {
-                            text: modelData.name.toString();
-                            width: 155
-                            elide: Text.ElideMiddle;
-                        }
+                Label { text: catalog.i18nc("@label", "Profile type"); width: 155}
+                Label { text: base.currentItem == null ? "" :
+                              base.currentItem.id == -1 ? catalog.i18nc("@label", "Current settings") :
+                              base.currentItem.readOnly ? catalog.i18nc("@label", "Starter profile (protected)") : catalog.i18nc("@label", "Custom profile"); }
+
+                Column {
+                    Repeater {
+                            model: base.currentItem ? base.currentItem.settings : null
+                            Label {
+                                text: modelData.name.toString();
+                                width: 155
+                                elide: Text.ElideMiddle;
+                            }
+                    }
                 }
-            }
-            Column {
-                Repeater {
-                        model: base.currentItem.settings
-                        Label { text: modelData.value.toString(); }
+                Column {
+                    Repeater {
+                            model: base.currentItem ? base.currentItem.settings : null
+                            Label { text: modelData.value.toString(); }
+                    }
                 }
             }
         }
     }
 
-    buttons: Button
-    {
-        text: catalog.i18nc("@action:button", "Export");
-        iconName: "document-export";
-        onClicked: exportDialog.open();
+    buttons: Row {
+        Button
+        {
+            text: catalog.i18nc("@action:button", "Import");
+            iconName: "document-import";
+            onClicked: importDialog.open();
+        }
+
+        Button
+        {
+            text: catalog.i18nc("@action:button", "Export");
+            iconName: "document-export";
+            onClicked: exportDialog.open();
+        }
     }
 
     Item
@@ -77,9 +102,7 @@ ManagementPage
         {
             id: renameDialog;
             object: base.currentItem != null ? base.currentItem.name : "";
-            onTextChanged: validName = ((!base.model.checkProfileExists(newName.trim()) || base.currentItem.name == newName.trim()) && newName.length != 0);
             onAccepted: base.model.renameProfile(base.currentItem.name, newName.trim());
-            validationError: "A profile with that name already exists!";
         }
         MessageDialog
         {
@@ -123,7 +146,7 @@ ManagementPage
             selectExisting: false;
             nameFilters: base.model.getFileNameFiltersWrite()
 
-            onAccepted: base.model.exportProfile(base.currentItem.name, fileUrl, selectedNameFilter)
+            onAccepted: base.model.exportProfile(base.currentItem.id, base.currentItem.name, fileUrl, selectedNameFilter)
         }
     }
 }

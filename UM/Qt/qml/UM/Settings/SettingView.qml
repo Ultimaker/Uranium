@@ -39,6 +39,7 @@ ScrollView
 
                 visible: model.visible;
 
+                property string categoryId: model.id;
                 property variant settingsModel: model.settings;
 
                 SidebarCategoryHeader
@@ -69,27 +70,38 @@ ScrollView
                     }
                 }
 
-                Label
+                Button
                 {
-                    id: hiddenSettingsLabel;
+                    id: hiddenSettingsWarning
 
-                    anchors.top: categoryHeader.bottom;
-                    width: categoryHeader.width;
-                    horizontalAlignment: Text.AlignHCenter;
+                    anchors.top: categoryHeader.bottom
+                    width: categoryHeader.width
 
-                    text: catalog.i18ncp("@label", "{0} hidden setting uses a custom value", "{0} hidden settings use custom values", model.hiddenValuesCount);
+                    opacity: categoryHeader.checked && model.hiddenValuesCount > 0 ? 1 : 0
+                    height: categoryHeader.checked && model.hiddenValuesCount > 0 ? UM.Theme.sizes.lineHeight : 0
 
-                    opacity: model.hiddenValuesCount > 0 ? 1 : 0;
-                    height: model.hiddenValuesCount > 0 ? UM.Theme.sizes.lineHeight : 0;
+                    text: catalog.i18ncp("@label", "{0} hidden setting uses a custom value", "{0} hidden settings use custom values", model.hiddenValuesCount)
+                    onClicked: { UM.ActiveProfile.showHiddenValues(model.id) }
 
-                    font: UM.Theme.fonts.default;
+                    style: ButtonStyle
+                    {
+                        background: Rectangle {}
+                        label: Label
+                        {
+                            text: control.text
+
+                            horizontalAlignment: Text.AlignHCenter
+                            font: UM.Theme.fonts.default
+                            color: control.hovered? UM.Theme.colors.text_hover : UM.Theme.colors.text
+                        }
+                    }
                 }
 
                 Column
                 {
                     id: settings;
 
-                    anchors.top: hiddenSettingsLabel.bottom;
+                    anchors.top: hiddenSettingsWarning.bottom;
 
                     height: childrenHeight;
                     spacing: 0;
@@ -171,7 +183,11 @@ ScrollView
                                     //: Settings context menu action
                                     text: catalog.i18nc("@action:menu","Configure setting visiblity...");
 
-                                    onTriggered: if(base.configureSettings) base.configureSettings.trigger();
+                                    onTriggered: {
+                                        preferences.visible = true;
+                                        preferences.setPage(2);
+                                        preferences.getCurrentItem().scrollToSection(categoryId);
+                                    }
                                 }
                             }
                         }

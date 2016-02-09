@@ -38,6 +38,7 @@ class MachineDefinition(SignalEmitter):
         self._author = ""
         self._visible = True
         self._pages = []
+        self._profiles_machine_id = ""
 
         self._machine_settings = []
         self._categories = []
@@ -49,6 +50,9 @@ class MachineDefinition(SignalEmitter):
 
     def getId(self):
         return self._id
+
+    def getProfilesMachineId(self):
+        return self._profiles_machine_id
 
     def getName(self):
         return self._name
@@ -109,6 +113,10 @@ class MachineDefinition(SignalEmitter):
             self._json_data.update(app_data)
 
         self._id = self._json_data["id"]
+        if "profiles_machine" in self._json_data:
+            self._profiles_machine_id = self._json_data["profiles_machine"]
+        else:
+            self._profiles_machine_id = self._id
         self._name = self._json_data["name"]
         self._visible = self._json_data.get("visible", True)
         self._variant_name = self._json_data.get("variant", "")

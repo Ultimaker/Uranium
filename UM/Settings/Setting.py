@@ -441,7 +441,7 @@ class Setting(SignalEmitter):
 
         def local_function(profile = None):
             if not profile:
-                profile = self._machine_manager.getActiveProfile()
+                profile = self._machine_manager.getWorkingProfile()
 
             if not profile:
                 return None
@@ -471,7 +471,7 @@ class Setting(SignalEmitter):
         if self._profile:
             self._profile.settingValueChanged.disconnect(self._onSettingValueChanged)
 
-        self._profile = self._machine_manager.getActiveProfile()
+        self._profile = self._machine_manager.getWorkingProfile()
         if self._profile:
             self._profile.settingValueChanged.connect(self._onSettingValueChanged)
 

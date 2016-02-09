@@ -44,7 +44,7 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
 
         self._changed_setting = None
 
-        self._profile = self._machine_manager.getActiveProfile()
+        self._profile = self._machine_manager.getWorkingProfile()
         self._machine_manager.activeProfileChanged.connect(self._onProfileChanged)
         if self._profile is not None: # A profile is already set but we did not recieve the event.
             self._onProfileChanged()
@@ -76,19 +76,6 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
             return
         setting = self._category.getSetting(key)
         if setting:
-            if self._profile.isReadOnly():
-                custom_profile_name = catalog.i18nc("@item:intext appended to customised profiles ({0} is old profile name)", "{0} (Customised)", self._profile.getName())
-                custom_profile = self._machine_manager.findProfile(custom_profile_name)
-                if not custom_profile:
-                    custom_profile = deepcopy(self._profile)
-                    custom_profile.setReadOnly(False)
-                    custom_profile.setName(custom_profile_name)
-                    self._machine_manager.addProfile(custom_profile)
-
-                self._changed_setting = (key, value)
-                self._machine_manager.setActiveProfile(custom_profile)
-                return
-
             self._profile.setSettingValue(key, value)
             self.setProperty(index, "value", str(value))
             self.setProperty(index, "valid", setting.validate(setting.parseValue(value)))
@@ -154,7 +141,7 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
                 "depth": setting.getDepth(),
                 "warning_description": setting.getWarningDescription(),
                 "error_description": setting.getErrorDescription(),
-                "overridden": (not self._profile.isReadOnly()) and self._profile.hasSettingValue(setting.getKey()),
+                "overridden": (not self._profile.isReadOnly()) and self._profile.hasSettingValue(setting.getKey(), filter_defaults = True),
                 "enabled": setting.isEnabled(),
                 "filtered": False,
                 "global_only": setting.getGlobalOnly()
@@ -178,7 +165,7 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
         if self._profile:
             self._profile.settingValueChanged.disconnect(self._onSettingValueChanged)
 
-        self._profile = self._machine_manager.getActiveProfile()
+        self._profile = self._machine_manager.getWorkingProfile()
         if self._profile:
             self._profile.settingValueChanged.connect(self._onSettingValueChanged)
             self.updateSettings()
@@ -194,5 +181,5 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
             value = self._profile.getSettingValue(key)
 
             self.setProperty(index, "value", str(value))
-            self.setProperty(index, "overridden", self._profile.hasSettingValue(key))
+            self.setProperty(index, "overridden", self._profile.hasSettingValue(key, filter_defaults = True))
             self.setProperty(index, "valid", setting.validate(value))

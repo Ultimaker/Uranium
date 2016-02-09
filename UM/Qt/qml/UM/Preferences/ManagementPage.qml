@@ -15,7 +15,9 @@ PreferencesPage
     property string nameRole: "name";
     property bool detailsVisible: true;
 
+    property variant objectList: objectList;
     property variant currentItem: objectList.currentItem != null ? objectList.model.getItem(objectList.currentIndex) : null;
+    property string scrollviewCaption: "";
 
     default property alias details: detailsPane.children;
 
@@ -75,12 +77,25 @@ PreferencesPage
             bottom: parent.bottom;
         }
 
+        Label
+        {
+            id: captionLabel
+            anchors 
+            {
+                top: parent.top;
+                left: parent.left;
+            }
+            visible: scrollviewCaption != ""
+            text: scrollviewCaption
+        }
+
         ScrollView
         {
             id: objectListContainer
             anchors
             {
-                top: parent.top;
+                top: captionLabel.visible ? captionLabel.bottom : parent.top;
+                topMargin: captionLabel.visible ? UM.Theme.sizes.default_margin.height : 0;
                 bottom: parent.bottom;
                 left: parent.left;
             }

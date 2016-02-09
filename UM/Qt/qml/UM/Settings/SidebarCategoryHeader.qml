@@ -40,6 +40,7 @@ Button {
         onClicked: {
             preferences.visible = true;
             preferences.setPage(2);
+            preferences.getCurrentItem().scrollToSection(model.id);
         }
     }
 }

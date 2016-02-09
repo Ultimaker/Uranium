@@ -47,6 +47,7 @@ Window {
         focus: base.visible;
 
         Keys.onEscapePressed: base.reject();
+        Keys.onReturnPressed: base.accept();
 
         Item {
             id: contentItem;

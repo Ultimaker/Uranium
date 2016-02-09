@@ -7,6 +7,7 @@ from UM.Settings import SettingsError
 from UM.Logger import Logger
 from UM.Signal import Signal, SignalEmitter
 from UM.SaveFile import SaveFile
+from UM.Settings.Profile import Profile
 
 ##    A machine instance is a sort of wrapper for a machine definition.
 #     Where machine defintion defines base values of a machine
@@ -26,6 +27,12 @@ class MachineInstance(SignalEmitter):
             self._machine_definition.loadAll()
         self._machine_setting_overrides = {}
 
+        self._active_profile_name = None
+        self._active_material_name = None
+
+        self._working_profile = Profile(machine_manager)
+        self._working_profile.setType("machine_instance_profile")
+
     nameChanged = Signal()
 
     def getName(self):
@@ -36,6 +43,24 @@ class MachineInstance(SignalEmitter):
             old_name = self._name
             self._name = name
             self.nameChanged.emit(self, old_name)
+
+    def getWorkingProfile(self):
+        return self._working_profile
+
+    def getActiveProfileName(self):
+        return self._active_profile_name
+
+    def setActiveProfileName(self, active_profile_name):
+        self._active_profile_name = active_profile_name
+
+    def getMaterialName(self):
+        return self._active_material_name
+
+    def setMaterialName(self, material_name):
+        self._active_material_name = material_name
+
+    def hasMaterials(self):
+        return len(self._machine_manager.getAllMachineMaterials(self._name)) > 0
 
     def getMachineDefinition(self):
         return self._machine_definition
@@ -101,6 +126,9 @@ class MachineInstance(SignalEmitter):
 
         self._name = config.get("general", "name")
 
+        self._active_profile_name = config.get("general", "active_profile", fallback="")
+        self._active_material_name = config.get("general", "material", fallback = "")
+
         for key, value in config["machine_settings"].items():
             self._machine_setting_overrides[key] = value
 
@@ -110,9 +138,12 @@ class MachineInstance(SignalEmitter):
         config.add_section("general")
         config["general"]["name"] = self._name
         config["general"]["type"] = self._machine_definition.getId()
+        config["general"]["active_profile"] = str(self._active_profile_name)
         config["general"]["version"] = str(self.MachineInstanceVersion)
         if self._machine_definition.getVariantName():
             config["general"]["variant"] = self._machine_definition.getVariantName()
+        if self._active_material_name and self._active_material_name != "":
+            config["general"]["material"] = self._active_material_name
 
         config.add_section("machine_settings")
         for key, value in self._machine_setting_overrides.items():

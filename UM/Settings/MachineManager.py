@@ -4,7 +4,11 @@
 import urllib
 import os
 import json
+import copy
 
+from PyQt5.QtWidgets import QMessageBox
+
+import UM #For using UM.Message, which we cannot import here because that would lead to a circular import
 from UM.Signal import Signal, SignalEmitter
 from UM.Resources import Resources
 from UM.Logger import Logger
@@ -32,6 +36,8 @@ class MachineManager(SignalEmitter):
         self._active_machine = None
         self._active_profile = None
 
+        self._protect_working_profile = False
+
         self._profile_readers = {} #Plugins that read profiles from file.
         self._profile_writers = {} #Plugins that write profiles to file.
         PluginRegistry.addType("profile_reader", self.addProfileReader)
@@ -39,7 +45,6 @@ class MachineManager(SignalEmitter):
 
         Preferences.getInstance().addPreference("machines/setting_visibility", "")
         Preferences.getInstance().addPreference("machines/active_instance", "")
-        Preferences.getInstance().addPreference("machines/active_profile", "Normal Quality")
 
     def getApplicationName(self):
         return self._application_name
@@ -66,6 +71,47 @@ class MachineManager(SignalEmitter):
                 variants.append(definition)
 
         return variants
+
+    def getAllMachineMaterials(self, instance_id):
+        generic_materials = []
+        machine_materials = []
+
+        machine = self.findMachineInstance(instance_id)
+        if not machine:
+            return machine_materials
+
+        machine_type = machine.getMachineDefinition().getProfilesMachineId()
+        machine_variant = machine.getMachineDefinition().getVariantName()
+
+        for profile in self._profiles:
+            profile_type = profile.getType()
+            #Filter out "partial" profiles
+            if profile_type == "material":
+                generic_materials.append(profile.getName())
+                continue
+
+            material = profile.getMaterialName()
+            if not material or material in machine_materials:
+                continue
+
+            profile_machine_type = profile.getMachineTypeId()
+            profile_machine_variant = profile.getMachineVariantName()
+            profile_machine_instance = profile.getMachineInstanceName()
+
+            if profile_machine_instance and profile_machine_instance == instance_id:
+                machine_materials.append(material)
+            elif profile_machine_variant == machine_variant and profile_machine_type == machine_type:
+                machine_materials.append(material)
+
+        if len(machine_materials) > 0:
+            #This includes Ultigcode printers that have machine-specific material profiles (eg Ultimaker 2+)
+            return machine_materials
+        elif machine.getMachineDefinition().getSetting("machine_gcode_flavor").getDefaultValue() == "UltiGCode":
+            #UltiGCode printers don't use the generic set of generic materials (eg Ultimaker 2)
+            return []
+        else:
+            return generic_materials
+
 
     def findMachineDefinition(self, machine_id, variant_name = None):
         for definition in self._machine_definitions:
@@ -100,6 +146,9 @@ class MachineManager(SignalEmitter):
 
         self._machine_instances.append(instance)
         instance.nameChanged.connect(self._onInstanceNameChanged)
+
+        self._setDefaultVariantMaterialProfile(instance)
+
         self.machineInstancesChanged.emit()
 
     def removeMachineInstance(self, instance):
@@ -109,8 +158,11 @@ class MachineManager(SignalEmitter):
         self._machine_instances.remove(instance)
         instance.nameChanged.disconnect(self._onInstanceNameChanged)
 
+        file_name = urllib.parse.quote_plus(instance.getName())
         try:
-            path = Resources.getStoragePath(Resources.MachineInstances, urllib.parse.quote_plus(instance.getName()) + ".cfg")
+            path = Resources.getStoragePath(Resources.MachineInstances, file_name + ".cfg")
+            os.remove(path)
+            path = Resources.getStoragePath(Resources.MachineInstanceProfiles, file_name + ".cfg")
             os.remove(path)
         except FileNotFoundError:
             pass
@@ -150,7 +202,45 @@ class MachineManager(SignalEmitter):
 
         self._updateSettingVisibility(setting_visibility)
 
+        self._protect_working_profile = True
+        profile = self.findProfile(machine.getActiveProfileName(), instance = self._active_machine)
+        if profile:
+            self.setActiveProfile(profile)
+        else:
+            for profile in self._profiles:
+                self.setActiveProfile(profile) #default to first profile you can find
+                break
+
+        if self._active_machine.hasMaterials():
+            material = self._active_machine.getMaterialName()
+            available_materials = self.getAllMachineMaterials(self._active_machine.getName())
+            if not material or (len(available_materials) > 0 and material not in available_materials):
+                if "PLA" in available_materials:
+                    self._active_machine.setMaterialName("PLA")
+                else:
+                    self._active_machine.setMaterialName(available_materials[0])
+
         self.activeMachineInstanceChanged.emit()
+        self._protect_working_profile = False
+
+    def setActiveMaterial(self, material):
+        if not self._active_machine:
+            return
+
+        emit = False
+        if material != self._active_machine.getMaterialName():
+            self._active_machine.setMaterialName(material)
+            emit = True
+
+        material_profile = self.findProfile(material, type = "material", instance = self._active_machine)
+        #This finds only profiles of type "material", which are partial profiles
+        if material_profile:
+            self._active_machine.getWorkingProfile().mergeSettingsFrom(material_profile, reset = False)
+            #NB: Don't emit on behalf of this profile merge; that would result in an infinit loop
+
+        #Update the UI if the material selection and/or settings have changed
+        if emit:
+            self.activeMachineInstanceChanged.emit()
 
     def setActiveMachineVariant(self, variant):
         if not self._active_machine:
@@ -177,20 +267,81 @@ class MachineManager(SignalEmitter):
 
     profileNameChanged = Signal()
 
-    def getProfiles(self):
-        return self._profiles
+    def getProfiles(self, type = None, instance = None):
+        if not instance:
+            return self._profiles
+
+        active_machine_type = instance.getMachineDefinition().getProfilesMachineId()
+        active_machine_variant = instance.getMachineDefinition().getVariantName()
+        active_machine_instance = instance.getName()
+        active_machine_material = instance.getMaterialName()
+
+        generic_profiles = []
+        specific_profiles = []
+        add_generic_profiles = True;
+
+        for profile in self._profiles:
+            profile_type = profile.getType()
+            #Filter out "partial" profiles
+            if type != "all" and type != profile_type:
+                continue
+
+            machine_type = profile.getMachineTypeId()
+            machine_variant = profile.getMachineVariantName()
+            machine_instance = profile.getMachineInstanceName()
+            material = profile.getMaterialName()
+
+            if machine_type and machine_type == active_machine_type or machine_type == "all":
+                is_specific_profile = False
+                if (not machine_instance) and (not machine_variant):
+                    is_specific_profile = True
+                elif not material or material == active_machine_material:
+                    if machine_instance and (machine_instance == active_machine_instance):
+                        is_specific_profile = True
+                    elif machine_variant and (machine_variant == active_machine_variant):
+                        is_specific_profile = True
+
+                if is_specific_profile:
+                    specific_profiles.append(profile)
+                    if profile.isReadOnly():
+                        #There is at least one machine-specific starter-profile, so we don't need the generic profiles
+                        add_generic_profiles = False
+
+            elif not machine_type:
+                generic_profiles.append(profile)
+
+        if len(specific_profiles) == 0:
+            #Custom machine-specific profiles were found, but no starter-profiles
+            return generic_profiles
+
+        if add_generic_profiles:
+            specific_profiles.extend(generic_profiles)
+
+        return specific_profiles
 
     def addProfile(self, profile):
         if profile in self._profiles:
             return
 
-        for p in self._profiles:
+        profiles = self.getProfiles(instance = self._active_machine)
+        for p in profiles:
             if p.getName() == profile.getName():
                 raise SettingsError.DuplicateProfileError(profile.getName())
 
         self._profiles.append(profile)
         profile.nameChanged.connect(self._onProfileNameChanged)
         self.profilesChanged.emit()
+
+    def addProfileFromWorkingProfile(self):
+        profile = copy.deepcopy(self._active_machine.getWorkingProfile())
+        profile.setName(catalog.i18nc("@item:profile name", "Custom profile"))
+
+        #Make this profile available to all printers of the same type only
+        profile.setMachineTypeId(self._active_profile.getMachineTypeId())
+        self._profiles.append(profile)
+        self.profilesChanged.emit()
+
+        return profile
 
     def removeProfile(self, profile):
         if profile not in self._profiles:
@@ -199,8 +350,8 @@ class MachineManager(SignalEmitter):
         self._profiles.remove(profile)
         profile.nameChanged.disconnect(self._onProfileNameChanged)
 
+        path = Resources.getStoragePath(Resources.Profiles, urllib.parse.quote_plus(profile.getName()) + ".cfg")
         try:
-            path = Resources.getStoragePath(Resources.Profiles, urllib.parse.quote_plus(profile.getName()) + ".cfg")
             os.remove(path)
         except FileNotFoundError:
             pass
@@ -213,14 +364,36 @@ class MachineManager(SignalEmitter):
             except:
                 self.setActiveProfile(None)
 
-    def findProfile(self, name):
-        for profile in self._profiles:
-            if profile.getName() == name:
+    def findProfile(self, name, variant_name = None, material_name = None, type = None, instance = None):
+        profiles = self.getProfiles(type = type, instance = instance);
+
+        for profile in profiles:
+            if profile.getName().lower() == name.lower():
+                if (variant_name and not profile.getMachineVariantName() == variant_name) or \
+                        (material_name and not profile.getMaterialName() == material_name) or \
+                        (type and not profile.getType() == type):
+                    continue
                 return profile
 
         return None
 
+    def makeUniqueProfileName(self, base_name):
+        if base_name == "":
+            base_name = catalog.i18nc("@item:profile name", "Custom profile")
+        profile_name = base_name
+        i = 1
+        #Make sure there is no profile for any instance/variant/material with the same name
+        while self.findProfile(profile_name):
+            i = i + 1
+            profile_name = "%s #%d" % (base_name, i)
+
+        return profile_name
+
     activeProfileChanged = Signal()
+
+    def getWorkingProfile(self):
+        if self._active_machine:
+            return self._active_machine.getWorkingProfile()
 
     def getActiveProfile(self):
         return self._active_profile
@@ -229,7 +402,47 @@ class MachineManager(SignalEmitter):
         if profile not in self._profiles or self._active_profile == profile:
             return
 
+        if not self._protect_working_profile:
+            working_profile = self._active_machine.getWorkingProfile()
+            if working_profile.hasChangedSettings():
+                message_box = QMessageBox()
+                message_box.setIcon(QMessageBox.Question)
+                message_box.setWindowTitle(catalog.i18nc("@title:window", "Replace profile"))
+                message_box.setText(catalog.i18nc("@label", "Selecting the \"{0}\" profile replaces your current settings.").format(profile.getName()))
+
+                update_button = None
+                create_button = message_box.addButton(catalog.i18nc("@label", "Create profile"), QMessageBox.YesRole)
+                discard_button = message_box.addButton(catalog.i18nc("@label", "Discard changes"), QMessageBox.NoRole)
+                cancel_button = message_box.addButton(QMessageBox.Cancel)
+                if self._active_profile.isReadOnly():
+                    message_box.setInformativeText(catalog.i18nc("@label", "Do you want to save your settings in a custom profile?"))
+                else:
+                    message_box.setInformativeText(catalog.i18nc("@label", "Do you want to update profile \"{0}\" or save your settings in a new custom profile?".format(self._active_profile.getName())))
+                    update_button = message_box.addButton(catalog.i18nc("@label", "Update \"{0}\"".format(self._active_profile.getName())), QMessageBox.YesRole)
+                message_box.exec()
+                result = message_box.clickedButton()
+
+                if result == cancel_button:
+                    return
+                elif result == create_button:
+                    profile = self.addProfileFromWorkingProfile()
+                    message = UM.Message.Message(catalog.i18nc("@info:status", "Added a new profile named \"{0}\"").format(profile.getName()))
+                    message.show()
+                elif result == update_button:
+                    #Replace changed settings of the profile with the changed settings of the working profile
+                    self._active_profile.setChangedSettings(working_profile.getChangedSettings())
+                elif result == discard_button:
+                    pass
+
+            #Replace working profile with a copy of the new profile
+            working_profile.mergeSettingsFrom(profile, reset = True)
+
+            #Reapply previously selected partial material profile
+            if self._active_machine.hasMaterials():
+                self.setActiveMaterial(self._active_machine.getMaterialName())
+
         self._active_profile = profile
+        self._active_machine.setActiveProfileName(profile.getName())
 
         self.activeProfileChanged.emit()
 
@@ -310,32 +523,49 @@ class MachineManager(SignalEmitter):
 
             read_only = dir != storage_path
 
-            for file_name in os.listdir(dir):
-                path = os.path.join(dir, file_name)
+            for root, dirs, files in os.walk(dir):
+                for file_name in files:
+                    path = os.path.join(root, file_name)
 
-                if os.path.isdir(path):
-                    continue
+                    if os.path.isdir(path):
+                        continue
 
-                profile = Profile(self, read_only)
-                try:
-                    profile.loadFromFile(path)
-                except Exception as e:
-                    Logger.log("e", "An exception occurred loading Profile %s: %s", path, str(e))
-                    continue
+                    profile = Profile(self, read_only)
+                    try:
+                        profile.loadFromFile(path)
+                    except Exception as e:
+                        Logger.log("e", "An exception occurred loading Profile %s: %s", path, str(e))
+                        continue
 
-                if not self.findProfile(profile.getName()):
-                    self._profiles.append(profile)
-                    profile.nameChanged.connect(self._onProfileNameChanged)
+                    if not self.findProfile(profile.getName(), variant_name = profile.getMachineVariantName(), material_name = profile.getMaterialName(), instance = self._active_machine):
+                        self._profiles.append(profile)
+                        profile.nameChanged.connect(self._onProfileNameChanged)
 
-        profile = self.findProfile(Preferences.getInstance().getValue("machines/active_profile"))
-        if profile:
-            self.setActiveProfile(profile)
-        else:
-            if Preferences.getInstance().getValue("machines/active_profile") == "":
-                for profile in self._profiles:
-                    self.setActiveProfile(profile) #default to first profile you can find
-                    break
+        for instance in self._machine_instances:
+            try:
+                file_name = urllib.parse.quote_plus(instance.getName()) + ".curaprofile"
+                instance.getWorkingProfile().loadFromFile(Resources.getStoragePath(Resources.MachineInstanceProfiles, file_name))
+            except Exception as e:
+                Logger.log("w", "Could not load working profile: %s: %s", file_name, str(e))
+                self._setDefaultVariantMaterialProfile(instance)
+
+        self._protect_working_profile = True
+
+        if self._active_machine:
+            profile_name = self._active_machine.getActiveProfileName()
+            if profile_name == "":
+                profile_name = "Normal Quality"
+
+            profile = self.findProfile(self._active_machine.getActiveProfileName(), instance = self._active_machine)
+            if profile:
+                self.setActiveProfile(profile)
+            else:
+                profiles = self.getProfiles(instance = self._active_machine)
+                if len(profiles) > 0:
+                    self.setActiveProfile(profiles[0])
+
         self.profilesChanged.emit()
+        self._protect_working_profile = False
 
     def loadVisibility(self):
         preference = Preferences.getInstance().getValue("machines/setting_visibility")
@@ -356,12 +586,13 @@ class MachineManager(SignalEmitter):
         for instance in self._machine_instances:
             file_name = urllib.parse.quote_plus(instance.getName()) + ".cfg"
             instance.saveToFile(Resources.getStoragePath(Resources.MachineInstances, file_name))
+            file_name = urllib.parse.quote_plus(instance.getName()) + ".curaprofile"
+            instance.getWorkingProfile().saveToFile(Resources.getStoragePath(Resources.MachineInstanceProfiles, file_name))
 
     def saveProfiles(self):
         try:
-            Preferences.getInstance().setValue("machines/active_profile", self._active_profile.getName())
             for profile in self._profiles:
-                if profile.isReadOnly():
+                if profile.isReadOnly() or not profile.hasChangedSettings():
                     continue
 
                 file_name = urllib.parse.quote_plus(profile.getName()) + ".cfg"
@@ -451,21 +682,71 @@ class MachineManager(SignalEmitter):
                 setting.setVisible(False)
 
     def _onInstanceNameChanged(self, instance, old_name):
-        file_name = urllib.parse.quote_plus(old_name) + ".cfg"
+        file_name = urllib.parse.quote_plus(old_name)
         try:
-            path = Resources.getStoragePath(Resources.MachineInstances, file_name)
+            path = Resources.getStoragePath(Resources.MachineInstances, file_name + ".cfg")
+            os.remove(path)
+            path = Resources.getStoragePath(Resources.MachineInstanceProfiles, file_name + ".curaprofile")
             os.remove(path)
         except FileNotFoundError:
             pass
+
+        #Update machine instance name for all profiles attached to this machine instance
+        for profile in self._profiles:
+            if profile.isReadOnly() or profile.getMachineInstanceName() != old_name:
+                continue
+
+            file_name = urllib.parse.quote_plus(profile.getName()) + ".cfg"
+            try:
+                path = Resources.getStoragePath(Resources.Profiles, file_name)
+                os.remove(path)
+            except FileNotFoundError:
+                pass
+
+            profile.setMachineInstanceName(instance.getName())
 
         self.machineInstanceNameChanged.emit(instance)
 
     def _onProfileNameChanged(self, profile, old_name):
         file_name = urllib.parse.quote_plus(old_name) + ".cfg"
+        path = Resources.getStoragePath(Resources.Profiles, file_name)
         try:
-            path = Resources.getStoragePath(Resources.Profiles, file_name)
             os.remove(path)
         except FileNotFoundError:
             pass
 
         self.profileNameChanged.emit(profile)
+
+    def _setDefaultVariantMaterialProfile(self, instance):
+        materials = self.getAllMachineMaterials(instance.getName())
+        if len(materials) > 0:
+            instance.setMaterialName("PLA" if "PLA" in materials else material[0])
+
+        variants = self.getAllMachineVariants(instance.getMachineDefinition().getId())
+        for variant in variants:
+            if variant.getVariantName() == "0.4 mm":
+                instance.setMachineDefinition(variant)
+                break
+
+        profile = self.findProfile("Normal Quality", variant_name = instance.getMachineDefinition().getVariantName(), material_name = instance.getMaterialName(), instance = instance)
+        if not profile:
+            profile = self.findProfile("Normal Quality", material_name = instance.getMaterialName(), instance = instance)
+        if not profile:
+            profile = self.findProfile("Normal Quality", instance = instance)
+        if not profile:
+            profiles = self.getProfiles(instance = instance)
+            if len(profiles) > 0:
+                profile = profiles[0]
+
+        if profile:
+            instance.setActiveProfileName(profile.getName())
+            if profile.getMaterialName():
+                instance.setMaterialName(profile.getMaterialName())
+
+            #Set working profile to a copy of the new profile
+            instance.getWorkingProfile().mergeSettingsFrom(profile, reset = True)
+
+            if not profile.getMaterialName() and instance.hasMaterials():
+                #Apply partial material profile
+                material_profile = self.findProfile(instance.getMaterialName(), type = "material", instance = instance)
+                instance.getWorkingProfile().mergeSettingsFrom(material_profile, reset = False)
