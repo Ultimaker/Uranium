@@ -6,6 +6,7 @@ from UM.Event import Event, MouseEvent, KeyEvent
 from UM.Application import Application
 from UM.Scene.ToolHandle import ToolHandle
 from UM.Scene.Selection import Selection
+from UM.Scene.SceneNode import SceneNode
 from UM.Math.Plane import Plane
 from UM.Math.Vector import Vector
 
@@ -107,10 +108,7 @@ class ScaleTool(Tool):
                 if self._drag_length > 0:
                     drag_change = (drag_length - self._drag_length) / 100 * self._scale_speed
 
-                    if self._snap_scale:
-                        scale_factor = round(drag_change, 1)
-                    else:
-                        scale_factor = drag_change
+                    scale_factor = drag_change
 
                     scale_change = Vector(0.0, 0.0, 0.0)
                     if self._non_uniform_scale:
@@ -125,30 +123,7 @@ class ScaleTool(Tool):
                         scale_change.setY(scale_factor)
                         scale_change.setZ(scale_factor)
 
-                    new_scale = Selection.getSelectedObject(0).getScale() + scale_change
-                    # Ensure that snap scaling is actually rounded.
-                    # We applyOperationneed to do this as scale to max and auto scale can cause objects to be scaled
-                    # in steps smaller then the snap.
-                    if self._snap_scale:
-                        new_scale.setX(round(new_scale.x, 1))
-                        new_scale.setY(round(new_scale.y, 1))
-                        new_scale.setZ(round(new_scale.z, 1))
-
-                    #this part prevents the mesh being scaled to a size < 0.
-                    #This cannot be done before the operation (even though that would be more efficient)
-                    #because then the operation can distract more of the mesh then is remaining of its size
-                    if new_scale.x <= 0 or new_scale.y <= 0 or new_scale.z <= 0:
-                        minimum_scale = 0.01 #1% so the mesh never completely disapears for the user
-                        if self._snap_scale == True:
-                            minimum_scale = 0.1 #10% same reason as above
-                        if new_scale.x <= 0:
-                            new_scale.setX(minimum_scale)
-                        if new_scale.y <= 0:
-                            new_scale.setY(minimum_scale)
-                        if new_scale.z <= 0:
-                            new_scale.setZ(minimum_scale)
-
-                    Selection.applyOperation(ScaleOperation, new_scale, set_scale = True)
+                    Selection.applyOperation(ScaleOperation, scale_change, relative_scale = True, snap = self._snap_scale)
 
                 self._drag_length = (handle_position - drag_position).length()
                 return True
@@ -204,19 +179,22 @@ class ScaleTool(Tool):
 
     def getScaleX(self):
         if Selection.hasSelection():
-            return float(Selection.getSelectedObject(0).getScale().x)
+            ## Ensure that the returned value is positive (mirror causes scale to be negative)
+            return abs(round(float(Selection.getSelectedObject(0).getScale().x), 4))
 
         return 1.0
 
     def getScaleY(self):
         if Selection.hasSelection():
-            return float(Selection.getSelectedObject(0).getScale().y)
+            ## Ensure that the returned value is positive (mirror causes scale to be negative)
+            return abs(round(float(Selection.getSelectedObject(0).getScale().y), 4))
 
         return 1.0
 
     def getScaleZ(self):
         if Selection.hasSelection():
-            return float(Selection.getSelectedObject(0).getScale().z)
+            ## Ensure that the returned value is positive (mirror causes scale to be negative)
+            return abs(round(float(Selection.getSelectedObject(0).getScale().z), 4))
 
         return 1.0
 
