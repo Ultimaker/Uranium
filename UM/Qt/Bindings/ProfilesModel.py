@@ -262,7 +262,7 @@ class ProfilesModel(ListModel):
 
         active_machine = self._manager.getActiveMachineInstance()
 
-        if self._add_working_profile and active_machine:
+        if self._add_working_profile and self._working_profile:
             profile = self._working_profile
             settings_dict = profile.getChangedSettings()
             settings_list = []
