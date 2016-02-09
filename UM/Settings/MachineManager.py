@@ -192,7 +192,6 @@ class MachineManager(SignalEmitter):
     def setActiveMachineInstance(self, machine):
         if machine == self._active_machine:
             return
-
         setting_visibility = []
         if self._active_machine:
             setting_visibility = self._active_machine.getMachineDefinition().getAllSettings(visible_only = True)
@@ -444,6 +443,10 @@ class MachineManager(SignalEmitter):
         self._active_profile = profile
         self._active_machine.setActiveProfileName(profile.getName())
 
+        # This is called at this point, as this is the first point that we know
+        # there is a profile, which the update requires to run.
+        self._active_machine.getMachineDefinition().updateRequiredBySettings()
+
         self.activeProfileChanged.emit()
 
     def loadAll(self):
@@ -481,7 +484,6 @@ class MachineManager(SignalEmitter):
                 # We don't use addMachineDefinition to prevent signal spam.
                 if not self.findMachineDefinition(definition.getId(), definition.getVariantName()):
                     self._machine_definitions.append(definition)
-
         self.machineDefinitionsChanged.emit()
 
     def loadMachineInstances(self):

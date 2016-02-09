@@ -190,6 +190,15 @@ class MachineDefinition(SignalEmitter):
         #self._json_data = None
         self._loaded = True
 
+    # Ensure that the required by setting keys are set.
+    def updateRequiredBySettings(self):
+        for setting in self.getAllSettings(include_machine = True):
+            # Ensure that the function that defines the default value is called.
+            # This in turn ensures that the required setting keys are correctly set.
+            setting.getDefaultValue()
+            for key in setting.getRequiredSettingKeys():
+                self.getSetting(key).addRequiredBySettingKey(setting.getKey())
+
     ##  Get setting category by key
     #   \param key Category key to get.
     #   \return category or None if key was not found.
