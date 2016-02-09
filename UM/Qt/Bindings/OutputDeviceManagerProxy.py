@@ -4,7 +4,6 @@
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal, pyqtSlot
 
 from UM.Application import Application
-from UM.Event import CallFunctionEvent
 from UM.Scene.Selection import Selection
 from UM.Message import Message
 from UM.OutputDevice import OutputDeviceError
@@ -46,8 +45,7 @@ class OutputDeviceManagerProxy(QObject):
         # On Windows, calling requestWrite() on LocalFileOutputDevice crashes when called from a signal
         # handler attached to a QML MenuItem. So instead, defer the call to the next run of the event 
         # loop, since that does work.
-        event = CallFunctionEvent(self._writeToDevice, [Application.getInstance().getController().getScene().getRoot(), device_id, file_name], {})
-        Application.getInstance().functionEvent(event)
+        Application.getInstance().callLater(self._writeToDevice, [Application.getInstance().getController().getScene().getRoot(), device_id, file_name])
 
     @pyqtSlot(str, str)
     def requestWriteSelectionToDevice(self, device_id, file_name):
@@ -57,8 +55,7 @@ class OutputDeviceManagerProxy(QObject):
         # On Windows, calling requestWrite() on LocalFileOutputDevice crashes when called from a signal
         # handler attached to a QML MenuItem. So instead, defer the call to the next run of the event 
         # loop, since that does work.
-        event = CallFunctionEvent(self._writeToDevice, [Selection.getSelectedObject(0), device_id, file_name], {})
-        Application.getInstance().functionEvent(event)
+        Application.getInstance().callLater(self._writeToDevice, [Selection.getSelectedObject(0), device_id, file_name])
 
     def _onActiveDeviceChanged(self):
         self.activeDeviceChanged.emit()
