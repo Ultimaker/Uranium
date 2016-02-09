@@ -32,15 +32,23 @@ class ScaleOperation(Operation.Operation):
             scale_factor.setY(scale_factor.y / current_scale.y)
             scale_factor.setZ(scale_factor.z / current_scale.z)
             self._node.scale(scale_factor, SceneNode.TransformSpace.Parent)
+
+            new_scale = copy.deepcopy(self._node.getScale())
             if self._snap:
-                new_scale = copy.deepcopy(self._node.getScale())
                 if(scale_factor.x != 1.0):
                     new_scale.setX(round(new_scale.x, 1))
                 if(scale_factor.y != 1.0):
                     new_scale.setY(round(new_scale.y, 1))
                 if(scale_factor.z != 1.0):
                     new_scale.setZ(round(new_scale.z, 1))
-                self._node.setScale(new_scale, SceneNode.TransformSpace.World)
+            # Enforce min size.
+            if new_scale.x < 0.1:
+                new_scale.setX(0.1)
+            if new_scale.y < 0.1:
+                new_scale.setY(0.1)
+            if new_scale.z < 0.1:
+                new_scale.setZ(0.1)
+            self._node.setScale(new_scale, SceneNode.TransformSpace.World)
         else:
             self._node.scale(self._scale, SceneNode.TransformSpace.World)
 
