@@ -33,15 +33,15 @@ class SceneNode(SignalEmitter):
 
         self._position = Vector()
         self._scale = Vector(1.0, 1.0, 1.0)
-        self._mirror = Vector(1.0, 1.0, 1.0)
+        self._shear = Vector(0.0, 0.0, 0.0)
         self._orientation = Quaternion()
 
-        self._transformation = None
-        self._world_transformation = None
+        self._transformation = Matrix() #local transformation
+        self._world_transformation = Matrix()
 
-        self._derived_position = None
-        self._derived_orientation = None
-        self._derived_scale = None
+        self._derived_position = Vector()
+        self._derived_orientation = Quaternion()
+        self._derived_scale = Vector()
 
         self._inherit_orientation = True
         self._inherit_scale = True
@@ -77,7 +77,6 @@ class SceneNode(SignalEmitter):
             copy.addChild(deepcopy(child, memo))
         self.calculateBoundingBoxMesh()
         return copy
-
 
     def setCenterPosition(self, center):
         if self._mesh_data:
@@ -246,7 +245,6 @@ class SceneNode(SignalEmitter):
     ##  Emitted whenever the attached mesh data object changes.
     meshDataChanged = Signal()
 
-
     def _onMeshDataChanged(self):
         self.meshDataChanged.emit(self)
 
@@ -329,10 +327,16 @@ class SceneNode(SignalEmitter):
 
         return deepcopy(self._transformation)
 
+    def setTransformation(self, transformation):
+        self._transformation = transformation
+        self._transformChanged()
+
     ##  Get the local orientation value.
     def getOrientation(self):
         return deepcopy(self._orientation)
 
+    def getWorldOrientation(self):
+        return deepcopy(self._derived_orientation)
 
     ##  \brief Rotate the scene object (and thus its children) by given amount
     #
@@ -342,32 +346,46 @@ class SceneNode(SignalEmitter):
         if not self._enabled:
             return
 
+        orientation_matrix = rotation.toMatrix()
         if transform_space == SceneNode.TransformSpace.Local:
-            self._orientation = self._orientation * rotation
+            self._transformation.multiply(orientation_matrix)
         elif transform_space == SceneNode.TransformSpace.Parent:
-            self._orientation = rotation * self._orientation
+            self._transformation.preMultiply(orientation_matrix)
         elif transform_space == SceneNode.TransformSpace.World:
-            self._orientation = self._orientation * self._getDerivedOrientation().getInverse() * rotation * self._getDerivedOrientation()
-        else:
-            raise ValueError("Unknown transform space {0}".format(transform_space))
+            self._transformation.multiply(self._world_transformation.getInverse())
+            self._transformation.multiply(orientation_matrix)
+            self._transformation.multiply(self._world_transformation)
 
-        self._orientation.normalize()
         self._transformChanged()
 
     ##  Set the local orientation of this scene node.
     #
     #   \param orientation \type{Quaternion} The new orientation of this scene node.
-    def setOrientation(self, orientation):
+    #   \param transform_space The space relative to which to rotate. Can be Local or World from SceneNode::TransformSpace.
+    def setOrientation(self, orientation, transform_space = TransformSpace.Local):
         if not self._enabled or orientation == self._orientation:
             return
 
-        self._orientation = orientation
-        self._orientation.normalize()
+        new_transform_matrix = Matrix()
+        if transform_space == SceneNode.TransformSpace.Local:
+            orientation_matrix = orientation.toMatrix()
+        if transform_space == SceneNode.TransformSpace.World:
+            if self.getWorldOrientation() == orientation:
+                return
+            new_orientation = orientation * (self.getWorldOrientation() * self._orientation.getInverse()).getInverse()
+            orientation_matrix = new_orientation.toMatrix()
+        euler_angles = orientation_matrix.getEuler()
+
+        new_transform_matrix.compose(scale = self._scale, angles = euler_angles, translate = self._position, shear = self._shear)
+        self._transformation = new_transform_matrix
         self._transformChanged()
 
     ##  Get the local scaling value.
     def getScale(self):
         return deepcopy(self._scale)
+
+    def getWorldScale(self):
+        return deepcopy(self._derived_scale)
 
     ##  Scale the scene object (and thus its children) by given amount
     #
@@ -377,88 +395,33 @@ class SceneNode(SignalEmitter):
         if not self._enabled:
             return
 
+        scale_matrix = Matrix()
+        scale_matrix.setByScaleVector(scale)
         if transform_space == SceneNode.TransformSpace.Local:
-            self._scale = self._scale.scale(scale)
+            self._transformation.multiply(scale_matrix)
         elif transform_space == SceneNode.TransformSpace.Parent:
-            raise NotImplementedError()
+            self._transformation.preMultiply(scale_matrix)
         elif transform_space == SceneNode.TransformSpace.World:
-            if self._parent:
-                scale_change = Vector(1,1,1) - scale
-
-                if scale_change.x < 0 or scale_change.y < 0 or scale_change.z < 0:
-                    direction = -1
-                else:
-                    direction = 1
-                # Hackish way to do this, but this seems to correctly scale the object.
-                change_vector = self._scale.scale(self._getDerivedOrientation().getInverse().rotate(scale_change))
-
-                if change_vector.x < 0 and direction == 1:
-                    change_vector.setX(-change_vector.x)
-                if change_vector.x > 0 and direction == -1:
-                    change_vector.setX(-change_vector.x)
-
-                if change_vector.y < 0 and direction == 1:
-                    change_vector.setY(-change_vector.y)
-                if change_vector.y > 0 and direction == -1:
-                    change_vector.setY(-change_vector.y)
-
-                if change_vector.z < 0 and direction == 1:
-                    change_vector.setZ(-change_vector.z)
-                if change_vector.z > 0 and direction == -1:
-                    change_vector.setZ(-change_vector.z)
-
-                self._scale -= self._scale.scale(change_vector)
-        else:
-            raise ValueError("Unknown transform space {0}".format(transform_space))
+            self._transformation.multiply(self._world_transformation.getInverse())
+            self._transformation.multiply(scale_matrix)
+            self._transformation.multiply(self._world_transformation)
 
         self._transformChanged()
 
     ##  Set the local scale value.
     #
     #   \param scale \type{Vector} The new scale value of the scene node.
-    def setScale(self, scale):
+    #   \param transform_space The space relative to which to rotate. Can be Local or World from SceneNode::TransformSpace.
+    def setScale(self, scale, transform_space = TransformSpace.Local):
         if not self._enabled or scale == self._scale:
             return
-
-        self._scale = scale
-        self._transformChanged()
-
-    ##  Get the local mirror values.
-    #
-    #   \return The mirror values as vector of scaling values.
-    def getMirror(self):
-        return deepcopy(self._mirror)
-
-    ##  Mirror the scene object (and thus its children) in the given directions.
-    #
-    #   \param mirror \type{Vector} A vector of three scale values that is used
-    #   to mirror the node.
-    #   \param transform_space The space relative to which to scale. Can be any
-    #   one of the constants in SceneNode::TransformSpace.
-    def mirror(self, mirror, transform_space = TransformSpace.Local):
-        if not self._enabled:
-            return
-
         if transform_space == SceneNode.TransformSpace.Local:
-            self._mirror *= mirror
-        elif transform_space == SceneNode.TransformSpace.Parent:
-            self._mirror *= mirror
-        elif transform_space == SceneNode.TransformSpace.World:
-            self._mirror *= mirror
-        else:
-            raise ValueError("Unknown transform space {0}".format(transform_space))
-
-        self._transformChanged()
-
-    ##  Set the local mirror values.
-    #
-    #   \param mirror \type{Vector} The new mirror values as scale multipliers.
-    def setMirror(self, mirror):
-        if not self._enabled or mirror == self._mirror:
+            self.scale(scale / self._scale, SceneNode.TransformSpace.Local)
             return
-
-        self._mirror = mirror
-        self._transformChanged()
+        if transform_space == SceneNode.TransformSpace.World:
+            if self.getWorldScale() == scale:
+                return
+            self.scale(scale / self._scale, SceneNode.TransformSpace.World)
 
     ##  Get the local position.
     def getPosition(self):
@@ -466,9 +429,6 @@ class SceneNode(SignalEmitter):
 
     ##  Get the position of this scene node relative to the world.
     def getWorldPosition(self):
-        if not self._derived_position:
-            self._updateTransformation()
-
         return deepcopy(self._derived_position)
 
     ##  Translate the scene object (and thus its children) by given amount.
@@ -478,27 +438,40 @@ class SceneNode(SignalEmitter):
     def translate(self, translation, transform_space = TransformSpace.Local):
         if not self._enabled:
             return
-
+        translation_matrix = Matrix()
+        translation_matrix.setByTranslation(translation)
         if transform_space == SceneNode.TransformSpace.Local:
-            self._position += self._orientation.rotate(translation)
+            self._transformation.multiply(translation_matrix)
         elif transform_space == SceneNode.TransformSpace.Parent:
-            self._position += translation
+            self._transformation.preMultiply(translation_matrix)
         elif transform_space == SceneNode.TransformSpace.World:
-            if self._parent:
-                self._position += (1.0 / self._parent._getDerivedScale()).scale(self._parent._getDerivedOrientation().getInverse().rotate(translation))
-            else:
-                self._position += translation
-
+            self._transformation.multiply(self._world_transformation.getInverse())
+            self._transformation.multiply(translation_matrix)
+            self._transformation.multiply(self._world_transformation)
         self._transformChanged()
 
     ##  Set the local position value.
     #
     #   \param position The new position value of the SceneNode.
-    def setPosition(self, position):
+    #   \param transform_space The space relative to which to rotate. Can be Local or World from SceneNode::TransformSpace.
+    def setPosition(self, position, transform_space = TransformSpace.Local):
         if not self._enabled or position == self._position:
             return
 
-        self._position = position
+        new_transform_matrix = Matrix()
+        orientation_matrix = self._orientation.toMatrix()
+        euler_angles = orientation_matrix.getEuler()
+
+        if transform_space == SceneNode.TransformSpace.Local:
+            new_transform_matrix.compose(scale = self._scale, angles = euler_angles, translate = position, shear = self._shear)
+        if transform_space == SceneNode.TransformSpace.World:
+            if self.getWorldPosition() == position:
+                return
+
+            new_position = position - (self.getWorldPosition() - self._position)
+            new_transform_matrix.compose(scale = self._scale, angles = euler_angles, translate = new_position, shear = self._shear)
+
+        self._transformation = new_transform_matrix
         self._transformChanged()
 
     ##  Signal. Emitted whenever the transformation of this object or any child object changes.
@@ -526,11 +499,8 @@ class SceneNode(SignalEmitter):
             [ 0.0,  0.0,  0.0,  1.0]
         ])
 
-        if self._parent:
-            self._orientation = self._parent._getDerivedOrientation() * Quaternion.fromMatrix(m)
-        else:
-            self._orientation = Quaternion.fromMatrix(m)
-        self._transformChanged()
+
+        self.setOrientation(Quaternion.fromMatrix(m))
 
     ##  Can be overridden by child nodes if they need to perform special rendering.
     #   If you need to handle rendering in a special way, for example for tool handles,
@@ -590,72 +560,38 @@ class SceneNode(SignalEmitter):
     boundingBoxChanged = Signal()
 
     ##  private:
-    def _getDerivedPosition(self):
-        if not self._derived_position:
-            self._updateTransformation()
-
-        return self._derived_position
-
-    def _getDerivedOrientation(self):
-        if not self._derived_orientation:
-            self._updateTransformation()
-
-        # Sometimes the derived orientation can be None.
-        # I've not been able to locate the cause of this, but this prevents it being an issue.
-        if not self._derived_orientation:
-            self._derived_orientation = Quaternion()
-        return self._derived_orientation
-
-    def _getDerivedScale(self):
-        if not self._derived_scale:
-            self._updateTransformation()
-
-        return self._derived_scale
-
     def _transformChanged(self):
+        self._updateTransformation()
         self._resetAABB()
-        self._transformation = None
-        self._world_transformation = None
-        self._derived_position = None
-        self._derived_orientation = None
-        self._derived_scale = None
-
         self.transformationChanged.emit(self)
 
         for child in self._children:
             child._transformChanged()
 
     def _updateTransformation(self):
-        scale_and_mirror = self._scale * self._mirror
-        self._transformation = Matrix.fromPositionOrientationScale(self._position, self._orientation, scale_and_mirror)
-
+        scale, shear, euler_angles, translation = self._transformation.decompose()
+        self._position = translation
+        self._scale = scale
+        self._shear = shear
+        orientation = Quaternion()
+        euler_angle_matrix = Matrix()
+        euler_angle_matrix.setByEuler(euler_angles.x, euler_angles.y, euler_angles.z)
+        orientation.setByMatrix(euler_angle_matrix)
+        self._orientation = orientation
         if self._parent:
-            parent_orientation = self._parent._getDerivedOrientation()
-            if self._inherit_orientation:
-                self._derived_orientation = parent_orientation * self._orientation
-            else:
-                self._derived_orientation = self._orientation
-
-            # Sometimes the derived orientation can be None.
-            # I've not been able to locate the cause of this, but this prevents it being an issue.
-            if not self._derived_orientation:
-                self._derived_orientation = Quaternion()
-
-            parent_scale = self._parent._getDerivedScale()
-            if self._inherit_scale:
-                self._derived_scale = parent_scale.scale(scale_and_mirror)
-            else:
-                self._derived_scale = scale_and_mirror
-
-            self._derived_position = parent_orientation.rotate(parent_scale.scale(self._position))
-            self._derived_position += self._parent._getDerivedPosition()
-
-            self._world_transformation = Matrix.fromPositionOrientationScale(self._derived_position, self._derived_orientation, self._derived_scale)
+            self._world_transformation = self._parent.getWorldTransformation().multiply(self._transformation, copy = True)
         else:
-            self._derived_position = self._position
-            self._derived_orientation = self._orientation
-            self._derived_scale = scale_and_mirror
             self._world_transformation = self._transformation
+
+        world_scale, world_shear, world_euler_angles, world_translation = self._world_transformation.decompose()
+        self._derived_position = world_translation
+        self._derived_scale = world_scale
+
+        world_euler_angle_matrix = Matrix()
+        world_euler_angle_matrix.setByEuler(world_euler_angles.x, world_euler_angles.y, world_euler_angles.z)
+        self._derived_orientation.setByMatrix(world_euler_angle_matrix)
+
+        world_scale, world_shear, world_euler_angles, world_translation = self._world_transformation.decompose()
 
     def _resetAABB(self):
         if not self._calculate_aabb:

@@ -3,24 +3,44 @@
 
 from . import Operation
 from UM.Scene.SceneNode import SceneNode
-
+from UM.Math.Vector import Vector
+from UM.Math.Matrix import Matrix
+import copy
 class ScaleOperation(Operation.Operation):
     def __init__(self, node, scale, **kwargs):
         super().__init__()
         self._node = node
-        self._old_scale = node.getScale()
+        self._old_transformation = node.getLocalTransformation()
         self._set_scale = kwargs.get("set_scale", False)
         self._add_scale = kwargs.get("add_scale", False)
+        self._relative_scale = kwargs.get("relative_scale", False)
+        self._snap = kwargs.get("snap", False)
         self._scale = scale
 
     def undo(self):
-        self._node.setScale(self._old_scale)
+        self._node.setTransformation(self._old_transformation)
 
     def redo(self):
         if self._set_scale:
             self._node.setScale(self._scale)
         elif self._add_scale:
             self._node.setScale(self._node.getScale() + self._scale)
+        elif self._relative_scale:
+            scale_factor = self._node.getScale() + self._scale
+            current_scale = copy.deepcopy(self._node.getScale())
+            scale_factor.setX(scale_factor.x / current_scale.x)
+            scale_factor.setY(scale_factor.y / current_scale.y)
+            scale_factor.setZ(scale_factor.z / current_scale.z)
+            self._node.scale(scale_factor, SceneNode.TransformSpace.Parent)
+            if self._snap:
+                new_scale = copy.deepcopy(self._node.getScale())
+                if(scale_factor.x != 1.0):
+                    new_scale.setX(round(new_scale.x, 1))
+                if(scale_factor.y != 1.0):
+                    new_scale.setY(round(new_scale.y, 1))
+                if(scale_factor.z != 1.0):
+                    new_scale.setZ(round(new_scale.z, 1))
+                self._node.setScale(new_scale, SceneNode.TransformSpace.World)
         else:
             self._node.scale(self._scale, SceneNode.TransformSpace.World)
 
@@ -38,7 +58,7 @@ class ScaleOperation(Operation.Operation):
             return False
 
         op = ScaleOperation(self._node, self._scale)
-        op._old_scale = other._old_scale
+        op._old_transformation = other._old_transformation
         return op
 
     def __repr__(self):

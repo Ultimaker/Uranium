@@ -15,6 +15,34 @@ numpy.seterr(divide="ignore")
 # Heavily based (in most cases a straight copy with some refactoring) on the excellent
 # 'library' Transformations.py created by Christoph Gohlke.
 class Matrix(object):
+    # epsilon for testing whether a number is close to zero
+    _EPS = numpy.finfo(float).eps * 4.0
+
+    # map axes strings to/from tuples of inner axis, parity, repetition, frame
+    # A triple of Euler angles can be applied/interpreted in 24 ways, which can
+    # be specified using a 4 character string or encoded 4-tuple:
+    # *Axes 4-string*: e.g. 'sxyz' or 'ryxy'
+    # - first character : rotations are applied to 's'tatic or 'r'otating frame
+    # - remaining characters : successive rotation axis 'x', 'y', or 'z'
+    # *Axes 4-tuple*: e.g. (0, 0, 0, 0) or (1, 1, 1, 1)
+    # - inner axis: code of axis ('x':0, 'y':1, 'z':2) of rightmost matrix.
+    # - parity : even (0) if inner axis 'x' is followed by 'y', 'y' is followed
+    # by 'z', or 'z' is followed by 'x'. Otherwise odd (1).
+    # - repetition : first and last axis are same (1) or different (0).
+    # - frame : rotations are applied to static (0) or rotating (1) frame.
+    _AXES2TUPLE = {
+    "sxyz": (0, 0, 0, 0), "sxyx": (0, 0, 1, 0), "sxzy": (0, 1, 0, 0),
+    "sxzx": (0, 1, 1, 0), "syzx": (1, 0, 0, 0), "syzy": (1, 0, 1, 0),
+    "syxz": (1, 1, 0, 0), "syxy": (1, 1, 1, 0), "szxy": (2, 0, 0, 0),
+    "szxz": (2, 0, 1, 0), "szyx": (2, 1, 0, 0), "szyz": (2, 1, 1, 0),
+    "rzyx": (0, 0, 0, 1), "rxyx": (0, 0, 1, 1), "ryzx": (0, 1, 0, 1),
+    "rxzx": (0, 1, 1, 1), "rxzy": (1, 0, 0, 1), "ryzy": (1, 0, 1, 1),
+    "rzxy": (1, 1, 0, 1), "ryxy": (1, 1, 1, 1), "ryxz": (2, 0, 0, 1),
+    "rzxz": (2, 0, 1, 1), "rxyz": (2, 1, 0, 1), "rzyz": (2, 1, 1, 1)}
+
+    # axis sequences for Euler angles
+    _NEXT_AXIS = [1, 2, 0, 1]
+
     def __init__(self, data = None):
         if data is None:
             self._data = numpy.identity(4,dtype=numpy.float32)
@@ -52,13 +80,24 @@ class Matrix(object):
         else:
             self._data[index, 3] = 0
 
-    def multiply(self, matrix):
-        self._data = numpy.dot(self._data, matrix.getData())
-        return self
+    def multiply(self, matrix, copy = False):
+        if not copy:
+            self._data = numpy.dot(self._data, matrix.getData())
+            return self
+        else:
+            new_matrix = Matrix(data = self._data)
+            new_matrix.multiply(matrix)
+            return new_matrix
 
-    def preMultiply(self, matrix):
-        self._data = numpy.dot(matrix.getData(),self._data)
-        return self
+    def preMultiply(self, matrix, copy = False):
+        if not copy:
+            self._data = numpy.dot(matrix.getData(), self._data)
+            return self
+        else:
+            new_matrix = Matrix(data = self._data)
+            new_matrix.preMultiply(matrix)
+            return new_matrix
+
 
     ##  Get raw data.
     #   \returns 4x4 numpy array
@@ -140,6 +179,132 @@ class Matrix(object):
             M[:3, 3] = point - numpy.dot(R, point)
         self._data = M
 
+    ##  Return transformation matrix from sequence of transformations.
+    #   This is the inverse of the decompose_matrix function.
+    #   @param scale : vector of 3 scaling factors
+    #   @param shear : list of shear factors for x-y, x-z, y-z axes
+    #   @param angles : list of Euler angles about static x, y, z axes
+    #   @param translate : translation vector along x, y, z axes
+    #   @param perspective : perspective partition of matrix
+    def compose(self, scale = None, shear = None, angles = None, translate = None, perspective = None):
+        M = numpy.identity(4)
+        if perspective is not None:
+            P = numpy.identity(4)
+            P[3, :] = perspective.getData()[:4]
+            M = numpy.dot(M, P)
+        if translate is not None:
+            T = numpy.identity(4)
+            T[:3, 3] = translate.getData()[:3]
+            M = numpy.dot(M, T)
+        if angles is not None:
+            R = Matrix()
+            R.setByEuler(angles.x, angles.y, angles.z, 'sxyz')
+            M = numpy.dot(M, R.getData())
+        if shear is not None:
+            Z = numpy.identity(4)
+            Z[1, 2] = shear.x
+            Z[0, 2] = shear.y
+            Z[0, 1] = shear.z
+            M = numpy.dot(M, Z)
+        if scale is not None:
+            S = numpy.identity(4)
+            S[0, 0] = scale.x
+            S[1, 1] = scale.y
+            S[2, 2] = scale.z
+            M = numpy.dot(M, S)
+        M /= M[3, 3]
+        self._data = M
+
+    ## Return Euler angles from rotation matrix for specified axis sequence.
+    #  axes : One of 24 axis sequences as string or encoded tuple
+    #  Note that many Euler angle triplets can describe one matrix.
+    def getEuler(self, axes='sxyz'):
+        try:
+            firstaxis, parity, repetition, frame = self._AXES2TUPLE[axes.lower()]
+        except (AttributeError, KeyError):
+            self._TUPLE2AXES[axes]  # validation
+            firstaxis, parity, repetition, frame = axes
+
+        i = firstaxis
+        j = self._NEXT_AXIS[i + parity]
+        k = self._NEXT_AXIS[i - parity + 1]
+
+        M = numpy.array(self._data, dtype = numpy.float64, copy = False)[:3, :3]
+        if repetition:
+            sy = math.sqrt(M[i, j] * M[i, j] + M[i, k] * M[i, k])
+            if sy > self._EPS:
+                ax = math.atan2( M[i, j],  M[i, k])
+                ay = math.atan2( sy,       M[i, i])
+                az = math.atan2( M[j, i], -M[k, i])
+            else:
+                ax = math.atan2(-M[j, k],  M[j, j])
+                ay = math.atan2( sy,       M[i, i])
+                az = 0.0
+        else:
+            cy = math.sqrt(M[i, i] * M[i, i] + M[j, i] * M[j, i])
+            if cy > self._EPS:
+                ax = math.atan2( M[k, j],  M[k, k])
+                ay = math.atan2(-M[k, i],  cy)
+                az = math.atan2( M[j, i],  M[i, i])
+            else:
+                ax = math.atan2(-M[j, k],  M[j, j])
+                ay = math.atan2(-M[k, i],  cy)
+                az = 0.0
+
+        if parity:
+            ax, ay, az = -ax, -ay, -az
+        if frame:
+            ax, az = az, ax
+        return Vector(ax, ay, az)
+
+    ## Return homogeneous rotation matrix from Euler angles and axis sequence.
+    #  @param ai Eulers roll
+    #  @param aj Eulers pitch
+    #  @param ak Eulers yaw
+    #  @param axes One of 24 axis sequences as string or encoded tuple
+    def setByEuler(self, ai, aj, ak, axes = "sxyz"):
+        try:
+            firstaxis, parity, repetition, frame = self._AXES2TUPLE[axes]
+        except (AttributeError, KeyError):
+            self._TUPLE2AXES[axes]  # validation
+            firstaxis, parity, repetition, frame = axes
+        i = firstaxis
+        j = self._NEXT_AXIS[i + parity]
+        k = self._NEXT_AXIS[i - parity + 1]
+
+        if frame:
+            ai, ak = ak, ai
+        if parity:
+            ai, aj, ak = -ai, -aj, -ak
+
+        si, sj, sk = math.sin(ai), math.sin(aj), math.sin(ak)
+        ci, cj, ck = math.cos(ai), math.cos(aj), math.cos(ak)
+        cc, cs = ci * ck, ci * sk
+        sc, ss = si * ck, si * sk
+
+        M = numpy.identity(4)
+        if repetition:
+            M[i, i] = cj
+            M[i, j] = sj * si
+            M[i, k] = sj * ci
+            M[j, i] = sj * sk
+            M[j, j] = -cj * ss + cc
+            M[j, k] = -cj * cs - sc
+            M[k, i] = -sj * ck
+            M[k, j] = cj * sc + cs
+            M[k, k] = cj * cc - ss
+        else:
+            M[i, i] = cj * ck
+            M[i, j] = sj * sc - cs
+            M[i, k] = sj * cc + ss
+            M[j, i] = cj * sk
+            M[j, j] = sj * ss + cc
+            M[j, k] = sj * cs - sc
+            M[k, i] = -sj
+            M[k, j] = cj * si
+            M[k, k] = cj * ci
+        self._data = M
+
     ##  Scale the matrix by factor wrt origin & direction.
     #   \param factor The factor by which to scale
     #   \param origin From where does the scaling need to be done
@@ -169,6 +334,9 @@ class Matrix(object):
             if origin is not None:
                 M[:3, 3] = (factor * numpy.dot(origin[:3], direction_data)) * direction_data
         self._data = M
+
+    def setByScaleVector(self, scale):
+        self._data = numpy.diag([scale.x, scale.y, scale.z, 1.0])
 
     def getScale(self):
         x = numpy.linalg.norm(self._data[0,0:3])
@@ -208,6 +376,56 @@ class Matrix(object):
         self._data[2, 2] = (far + near) / (near - far)
         self._data[2, 3] = -1.
         self._data[3, 2] = (2. * far * near) / (near - far)
+
+    ##  Return sequence of transformations from transformation matrix.
+    #   @return Tuple containing scale (vector), shear (vector), angles (vector) and translation (vector)
+    #   It will raise a ValueError if matrix is of wrong type or degenerative.
+    def decompose(self):
+        M = numpy.array(self._data, dtype = numpy.float64, copy = True).T
+        if abs(M[3, 3]) < self._EPS:
+            raise ValueError("M[3, 3] is zero")
+        M /= M[3, 3]
+        P = M.copy()
+        P[:, 3] = 0.0, 0.0, 0.0, 1.0
+        if not numpy.linalg.det(P):
+            raise ValueError("matrix is singular")
+
+        scale = numpy.zeros((3, ))
+        shear = [0.0, 0.0, 0.0]
+        angles = [0.0, 0.0, 0.0]
+
+        translate = M[3, :3].copy()
+        M[3, :3] = 0.0
+
+        row = M[:3, :3].copy()
+        scale[0] = math.sqrt(numpy.dot(row[0], row[0]))
+        row[0] /= scale[0]
+        shear[0] = numpy.dot(row[0], row[1])
+        row[1] -= row[0] * shear[0]
+        scale[1] = math.sqrt(numpy.dot(row[1], row[1]))
+        row[1] /= scale[1]
+        shear[0] /= scale[1]
+        shear[1] = numpy.dot(row[0], row[2])
+        row[2] -= row[0] * shear[1]
+        shear[2] = numpy.dot(row[1], row[2])
+        row[2] -= row[1] * shear[2]
+        scale[2] = math.sqrt(numpy.dot(row[2], row[2]))
+        row[2] /= scale[2]
+        shear[1:] /= scale[2]
+
+        if numpy.dot(row[0], numpy.cross(row[1], row[2])) < 0:
+            numpy.negative(scale, scale)
+            numpy.negative(row, row)
+
+        angles[1] = math.asin(-row[0, 2])
+        if math.cos(angles[1]):
+            angles[0] = math.atan2(row[1, 2], row[2, 2])
+            angles[2] = math.atan2(row[0, 1], row[0, 0])
+        else:
+            angles[0] = math.atan2(-row[2, 1], row[1, 1])
+            angles[2] = 0.0
+
+        return Vector(data = scale), Vector(data = shear), Vector(data = angles), Vector(data = translate)
 
     def _unitVector(self, data, axis=None, out=None):
         """Return ndarray normalized by length, i.e. Euclidean norm, along axis.
