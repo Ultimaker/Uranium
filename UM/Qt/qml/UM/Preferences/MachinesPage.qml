@@ -3,7 +3,6 @@
 
 import QtQuick 2.1
 import QtQuick.Controls 1.1
-import QtQuick.Dialogs 1.1
 
 
 import UM 1.1 as UM
@@ -63,11 +62,9 @@ ManagementPage
         ConfirmRemoveDialog
         {
             id: confirmDialog
-            //object: base.currentItem.name ? base.currentItem.name : ""
             object: base.model.getItem( base.model_list.currentIndex ).name
             onYes:
             {
-                //base.model.removeMachineInstance(base.currentItem.name)
                 base.model.removeMachineInstance( base.model.getItem( base.model_list.currentIndex ).name )
                 base.model_list.forceLayout()
                 label_printer_type_text = ""
@@ -78,11 +75,9 @@ ManagementPage
         RenameDialog
         {
             id: renameDialog
-            //object: base.currentItem.name ? base.currentItem.name : ""
             object: base.model.getItem( base.model_list.currentIndex ).name
             onAccepted:
             {
-                //base.model.renameMachineInstance(base.currentItem.name, newName)
                 base.model.renameMachineInstance( base.model.getItem( base.model_list.currentIndex ).name, newName )
                 base.model_list.forceLayout()
                 label_printer_name_text = newName

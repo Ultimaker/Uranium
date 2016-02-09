@@ -16,7 +16,6 @@ PreferencesPage
     property string nameRole: "name";
     property bool detailsVisible: true;
 
-    // This property doesn't update properly, do not use, please. Use: base.model.getItem( base.model_list.currentIndex ).name instead
     property variant currentItem: objectList.currentItem != null ? objectList.model.getItem(objectList.currentIndex) : null;
 
     default property alias details: detailsPane.children;
