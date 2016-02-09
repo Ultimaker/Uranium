@@ -79,6 +79,9 @@ class LocalFileOutputDevice(OutputDevice):
                 if last_used_type == item["mime_type"]:
                     selected_filter = type_filter
                     file_name += "." + item["extension"]
+        if len(filters) == 0:
+            Logger.log("e", "No file formats that we can write are supported by this machine!")
+            raise OutputDeviceError.WriteRequestFailedError()
 
         dialog.setNameFilters(filters)
         if selected_filter != None:
