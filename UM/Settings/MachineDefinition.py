@@ -39,6 +39,7 @@ class MachineDefinition(SignalEmitter):
         self._visible = True
         self._pages = []
         self._profiles_machine_id = ""
+        self._file_types = "" #The file types that this type of machine can read, such as g-code.
 
         self._machine_settings = []
         self._categories = []
@@ -74,6 +75,14 @@ class MachineDefinition(SignalEmitter):
 
     def getPages(self):
         return self._pages
+
+    ##  Gets the list of file formats that this machine definition supports.
+    #
+    #   Every file format is identified by its MIME type.
+    #
+    #   \return A list of MIME types whose file formats this machine supports.
+    def getFileFormats(self):
+        return self._file_formats
 
     def hasVariants(self):
         return len(self._machine_manager.getAllMachineVariants(self._id)) > 1
@@ -123,6 +132,7 @@ class MachineDefinition(SignalEmitter):
         self._manufacturer = self._json_data.get("manufacturer", uranium_catalog.i18nc("@label", "Unknown Manufacturer"))
         self._author = self._json_data.get("author", uranium_catalog.i18nc("@label", "Unknown Author"))
         self._pages = self._json_data.get("pages", {})
+        self._file_formats = [file_type.strip() for file_type in self._json_data.get("file_formats", "").split(';')] #Split by semicolon, then strip all whitespace on both sides.
 
         if clean_json:
             self._json_data = None

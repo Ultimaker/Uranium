@@ -14,10 +14,10 @@ from UM.Preferences import Preferences
 from UM.Logger import Logger
 from UM.Mesh.MeshWriter import MeshWriter
 from UM.Mesh.WriteMeshJob import WriteMeshJob
+from UM.Message import Message
 from UM.OutputDevice.OutputDevicePlugin import OutputDevicePlugin
 from UM.OutputDevice.OutputDevice import OutputDevice
 from UM.OutputDevice import OutputDeviceError
-from UM.Message import Message
 
 from UM.i18n import i18nCatalog
 catalog = i18nCatalog("uranium")
@@ -69,14 +69,16 @@ class LocalFileOutputDevice(OutputDevice):
 
         file_types = Application.getInstance().getMeshFileHandler().getSupportedFileTypesWrite()
         file_types.sort(key = lambda k: k["description"])
+        machine_file_formats = Application.getInstance().getMachineManager().getActiveMachineInstance().getMachineDefinition().getFileFormats()
 
         for item in file_types:
-            type_filter = "{0} (*.{1})".format(item["description"], item["extension"])
-            filters.append(type_filter)
-            mime_types.append(item["mime_type"])
-            if last_used_type == item["mime_type"]:
-                selected_filter = type_filter
-                file_name += "." + item["extension"]
+            if item["mime_type"] in machine_file_formats: #File format is supported by the machine we're writing the output for.
+                type_filter = "{0} (*.{1})".format(item["description"], item["extension"])
+                filters.append(type_filter)
+                mime_types.append(item["mime_type"])
+                if last_used_type == item["mime_type"]:
+                    selected_filter = type_filter
+                    file_name += "." + item["extension"]
 
         dialog.setNameFilters(filters)
         if selected_filter != None:
