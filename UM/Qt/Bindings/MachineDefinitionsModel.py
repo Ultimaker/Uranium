@@ -53,7 +53,7 @@ class MachineDefinitionsModel(ListModel):
 
         # Workaround for an issue on OSX where directly calling setActiveMachineInstance would
         # crash in the QML garbage collector.
-        Application.getInstance().callLater(self._manager.setActiveMachineInstance, [instance])
+        Application.getInstance().callLater(self._manager.setActiveMachineInstance, instance)
 
     def _onMachinesChanged(self):
         self.clear()

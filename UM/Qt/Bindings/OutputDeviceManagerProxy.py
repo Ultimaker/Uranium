@@ -45,7 +45,7 @@ class OutputDeviceManagerProxy(QObject):
         # On Windows, calling requestWrite() on LocalFileOutputDevice crashes when called from a signal
         # handler attached to a QML MenuItem. So instead, defer the call to the next run of the event 
         # loop, since that does work.
-        Application.getInstance().callLater(self._writeToDevice, [Application.getInstance().getController().getScene().getRoot(), device_id, file_name])
+        Application.getInstance().callLater(self._writeToDevice, Application.getInstance().getController().getScene().getRoot(), device_id, file_name)
 
     @pyqtSlot(str, str)
     def requestWriteSelectionToDevice(self, device_id, file_name):
@@ -55,7 +55,7 @@ class OutputDeviceManagerProxy(QObject):
         # On Windows, calling requestWrite() on LocalFileOutputDevice crashes when called from a signal
         # handler attached to a QML MenuItem. So instead, defer the call to the next run of the event 
         # loop, since that does work.
-        Application.getInstance().callLater(self._writeToDevice, [Selection.getSelectedObject(0), device_id, file_name])
+        Application.getInstance().callLater(self._writeToDevice, Selection.getSelectedObject(0), device_id, file_name)
 
     def _onActiveDeviceChanged(self):
         self.activeDeviceChanged.emit()
