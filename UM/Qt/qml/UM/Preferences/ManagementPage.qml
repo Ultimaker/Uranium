@@ -12,6 +12,7 @@ PreferencesPage
     id: base;
 
     property alias model: objectList.model;
+    property alias model_list: objectList;
     property string nameRole: "name";
     property bool detailsVisible: true;
 
@@ -46,22 +47,32 @@ PreferencesPage
             id: addButton;
             text: catalog.i18nc("@action:button", "Add");
             iconName: "list-add";
-            onClicked: base.addObject();
+            onClicked:
+            {
+                base.addObject();
+            }
         }
         Button
         {
             id: removeButton;
             text: catalog.i18nc("@action:button", "Remove");
             iconName: "list-remove";
-            onClicked: base.removeObject();
+            onClicked:
+            {
+                base.removeObject();
+            }
         }
         Button
         {
             id: renameButton;
             text: catalog.i18nc("@action:button", "Rename");
             iconName: "edit-rename";
-            onClicked: base.renameObject();
+            onClicked:
+            {
+                base.renameObject();
+            }
         }
+
     }
 
     Item

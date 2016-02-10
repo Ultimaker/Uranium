@@ -4,12 +4,16 @@
 import QtQuick 2.1
 import QtQuick.Controls 1.1
 
+
 import UM 1.1 as UM
 
-ManagementPage {
-    id: base;
+ManagementPage
+{
+    id: base
+    property alias label_printer_name_text: label_printer_name.text
+    property alias label_printer_type_text: label_printer_type.text
 
-    title: catalog.i18nc("@title:tab", "Printers");
+    title: catalog.i18nc("@title:tab", "Printers")
 
     model: UM.MachineInstancesModel
     {
@@ -17,33 +21,68 @@ ManagementPage {
         onRowsRemoved: removeEnabled = model.rowCount() > 1
     }
 
-    onAddObject: model.requestAddMachine();
-    onRemoveObject: confirmDialog.open();
-    onRenameObject: renameDialog.open();
+    onAddObject: model.requestAddMachine()
+    onRemoveObject: confirmDialog.open()
+    onRenameObject: renameDialog.open()
 
     removeEnabled: model.rowCount() > 1
 
-    Flow {
-        anchors.fill: parent;
-        spacing: UM.Theme.sizes.default_margin.height;
+    Flow
+    {
+        anchors.fill: parent
+        spacing: UM.Theme.sizes.default_margin.height
 
-        Label { text: base.currentItem.name ? base.currentItem.name : ""; font: UM.Theme.fonts.large; width: parent.width; }
-
-        Label { text: catalog.i18nc("@label", "Type"); width: parent.width * 0.2; }
-        Label { text: base.currentItem.typeName ? base.currentItem.typeName : ""; width: parent.width * 0.7; }
-
-        UM.I18nCatalog { id: catalog; name: "uranium"; }
-
-        ConfirmRemoveDialog {
-            id: confirmDialog;
-            object: base.currentItem.name ? base.currentItem.name : "";
-            onYes: base.model.removeMachineInstance(base.currentItem.name);
+        Label
+        {
+                text: base.currentItem.name ? base.currentItem.name : ""
+                font: UM.Theme.fonts.large
+                width: parent.width
+                id: label_printer_name
         }
-        RenameDialog {
-            id: renameDialog;
-            object: base.currentItem.name ? base.currentItem.name : "";
-            onAccepted: base.model.renameMachineInstance(base.currentItem.name, newName);
-            onTextChanged: validName = (!base.model.checkInstanceNameExists(newName) || base.currentItem.name == newName);
+
+        Label
+        {
+                text: catalog.i18nc("@label", "Type")
+                width: parent.width * 0.2
+                id: label_type
         }
-    }
+        Label
+        {
+                text: base.currentItem.typeName ? base.currentItem.typeName : ""
+                width: parent.width * 0.7
+                id: label_printer_type
+        }
+
+        UM.I18nCatalog
+        {
+            id: catalog
+            name: "uranium"
+        }
+
+        ConfirmRemoveDialog
+        {
+            id: confirmDialog
+            object: base.model.getItem( base.model_list.currentIndex ).name
+            onYes:
+            {
+                base.model.removeMachineInstance( base.model.getItem( base.model_list.currentIndex ).name )
+                base.model_list.forceLayout()
+                label_printer_type_text = ""
+                label_printer_name_text = ""
+            }
+        }
+
+        RenameDialog
+        {
+            id: renameDialog
+            object: base.model.getItem( base.model_list.currentIndex ).name
+            onAccepted:
+            {
+                base.model.renameMachineInstance( base.model.getItem( base.model_list.currentIndex ).name, newName )
+                base.model_list.forceLayout()
+                label_printer_name_text = newName
+            }
+            onTextChanged: validName = (!base.model.checkInstanceNameExists(newName) || base.currentItem.name == newName).name
+        }
+     }
 }
