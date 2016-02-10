@@ -82,7 +82,8 @@ class LocalFileOutputDevice(OutputDevice):
                 mime_types.append(item["mime_type"])
                 if last_used_type == item["mime_type"]:
                     selected_filter = type_filter
-                    file_name += "." + item["extension"]
+                    if file_name:
+                        file_name += "." + item["extension"]
         if len(filters) == 0:
             Logger.log("e", "No file formats that we can write are supported by this machine!")
             raise OutputDeviceError.WriteRequestFailedError()
