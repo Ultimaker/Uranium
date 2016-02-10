@@ -111,7 +111,7 @@ ManagementPage
                 }
                 else
                 {
-                    messageDialog.icon = StandardIcon.Error
+                    messageDialog.icon = StandardIcon.Critical
                 }
                 messageDialog.open()
             }
@@ -124,7 +124,17 @@ ManagementPage
             selectExisting: false;
             nameFilters: base.model.getFileNameFiltersWrite()
 
-            onAccepted: base.model.exportProfile(base.currentItem.name, fileUrl, selectedNameFilter)
+            onAccepted:
+            {
+                var result =  base.model.exportProfile(base.currentItem.name, fileUrl, selectedNameFilter)
+                if(result.status == "error")
+                {
+                    messageDialog.icon = StandardIcon.Critical
+                    messageDialog.text = result.message
+                    messageDialog.open()
+                }
+                // else pop-up Message thing from python code
+            }
         }
     }
 }
