@@ -48,7 +48,16 @@ class LocalFileOutputDevice(OutputDevice):
 
         self._writing = False
 
-    def requestWrite(self, node, file_name = None):
+    ##  Request the specified node to be written to a file.
+    #
+    #   \param node \type{SceneNode} The root of a tree of scene nodes that
+    #   should be written to the device.
+    #   \param file_name \type{string} A suggestion for the file name to write
+    #   to. Can be freely ignored if providing a file name makes no sense.
+    #   \param filter_by_machine \type{bool} If the file name is ignored, should
+    #   the file format be limited to the formats that are supported by the
+    #   currently active machine?
+    def requestWrite(self, node, file_name = None, filter_by_machine = False):
         if self._writing:
             raise OutputDeviceError.DeviceBusyError()
 
@@ -73,19 +82,21 @@ class LocalFileOutputDevice(OutputDevice):
 
         file_types = Application.getInstance().getMeshFileHandler().getSupportedFileTypesWrite()
         file_types.sort(key = lambda k: k["description"])
-        machine_file_formats = Application.getInstance().getMachineManager().getActiveMachineInstance().getMachineDefinition().getFileFormats()
+        if filter_by_machine:
+            machine_file_formats = Application.getInstance().getMachineManager().getActiveMachineInstance().getMachineDefinition().getFileFormats()
+            file_types = list(filter(lambda file_type: file_type["mime_type"] in machine_file_formats, file_types)) #Take the intersection between file_types and machine_file_formats.
+        if len(file_types) == 0:
+            Logger.log("e", "There are no file types available to write with!")
+            raise OutputDeviceError.WriteRequestFailedError()
 
         for item in file_types:
-            if item["mime_type"] in machine_file_formats: #File format is supported by the machine we're writing the output for.
-                type_filter = "{0} (*.{1})".format(item["description"], item["extension"])
-                filters.append(type_filter)
-                mime_types.append(item["mime_type"])
-                if last_used_type == item["mime_type"]:
-                    selected_filter = type_filter
+            type_filter = "{0} (*.{1})".format(item["description"], item["extension"])
+            filters.append(type_filter)
+            mime_types.append(item["mime_type"])
+            if last_used_type == item["mime_type"]:
+                selected_filter = type_filter
+                if file_name:
                     file_name += "." + item["extension"]
-        if len(filters) == 0:
-            Logger.log("e", "No file formats that we can write are supported by this machine!")
-            raise OutputDeviceError.WriteRequestFailedError()
 
         dialog.setNameFilters(filters)
         if selected_filter != None:
