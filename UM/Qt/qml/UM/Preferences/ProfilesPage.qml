@@ -24,19 +24,38 @@ ManagementPage
     removeEnabled: currentItem != null ? !currentItem.readOnly : false;
     renameEnabled: currentItem != null ? !currentItem.readOnly : false;
 
+    property alias profile_name_label_text: profile_name_label.text
+    property alias profile_label_text: profile_label.text
+
     Flow {
         anchors.fill: parent
         spacing: UM.Theme.sizes.default_margin.height
 
-        Label { text: base.currentItem.name ? base.currentItem.name : ""; font: UM.Theme.fonts.large; width: parent.width; }
+        Label
+        {
+            id: profile_name_label
+            text: base.model.getItem( base.model_list.currentIndex ).name
+            font: UM.Theme.fonts.large;
+            width: parent.width;
+        }
 
         Grid {
             id: containerGrid
             columns: 2
             spacing: UM.Theme.sizes.default_margin.width
 
-            Label { text: catalog.i18nc("@label", "Profile type"); width: 155}
-            Label { text: base.currentItem.readOnly ? catalog.i18nc("@label", "Starter profile (protected)") : catalog.i18nc("@label", "Custom profile"); }
+            Label
+            {
+                id: profile_type_label
+                text: catalog.i18nc("@label", "Profile type");
+                width: 155
+            }
+
+            Label
+            {
+                id: profile_label
+                text: base.currentItem.readOnly ? catalog.i18nc("@label", "Starter profile (protected)") : catalog.i18nc("@label", "Custom profile");
+            }
 
             Column {
                 Repeater {
@@ -70,16 +89,27 @@ ManagementPage
 
         ConfirmRemoveDialog
         {
-            id: confirmDialog;
-            object: base.currentItem != null ? base.currentItem.name : "";
-            onYes: base.model.removeProfile(base.currentItem.name);
+            id: confirmDialog
+            object: base.currentItem != null ? base.currentItem.name : ""
+            onYes:
+            {
+                base.model.removeProfile( base.model.getItem( base.model_list.currentIndex ).name )
+                profile_name_label_text = ""
+                profile_name_label_text = ""
+                base.model_list.forceLayout()
+            }
         }
         RenameDialog
         {
             id: renameDialog;
             object: base.currentItem != null ? base.currentItem.name : "";
             onTextChanged: validName = !(base.model.checkProfileExists(text) && object != text);
-            onAccepted: base.model.renameProfile(base.currentItem.name, newName);
+            onAccepted:
+            {
+                base.model.renameProfile(base.model.getItem( base.model_list.currentIndex ).name, newName)
+                profile_name_label_text = newName
+                base.model_list.forceLayout()
+            }
             validationError: "A profile with that name already exists!";
         }
         MessageDialog

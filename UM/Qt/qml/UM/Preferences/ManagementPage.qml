@@ -12,6 +12,7 @@ PreferencesPage
     id: base;
 
     property alias model: objectList.model;
+    property alias model_list: objectList;
     property string nameRole: "name";
     property bool detailsVisible: true;
 
