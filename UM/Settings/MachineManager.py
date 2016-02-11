@@ -106,10 +106,13 @@ class MachineManager(SignalEmitter):
         if len(machine_materials) > 0:
             #This includes Ultigcode printers that have machine-specific material profiles (eg Ultimaker 2+)
             return machine_materials
-        elif machine.getMachineDefinition().getSetting("machine_gcode_flavor").getDefaultValue() == "UltiGCode":
-            #UltiGCode printers don't use the generic set of generic materials (eg Ultimaker 2)
-            return []
         else:
+            try:
+                if machine.getMachineDefinition().getSetting("machine_gcode_flavor").getDefaultValue() == "UltiGCode":
+                    #UltiGCode printers don't use the generic set of generic materials (eg Ultimaker 2)
+                    return []
+            except:
+                return []
             return generic_materials
 
 
