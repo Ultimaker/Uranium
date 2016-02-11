@@ -20,7 +20,7 @@ class MachineInstance(SignalEmitter):
         super().__init__()
 
         self._machine_manager = machine_manager
-
+        self._key = kwargs.get("key")
         self._name = kwargs.get("name", "")
         self._machine_definition = kwargs.get("definition", None)
         if self._machine_definition:
@@ -34,6 +34,20 @@ class MachineInstance(SignalEmitter):
         self._working_profile.setType("machine_instance_profile")
 
     nameChanged = Signal()
+
+    ##  Get key of this machine instance.
+    #   This is different from the name in respect that it need not be human readable
+    #   The difference is simmilar with that of key & label for the settings.
+    #   \sa setKey
+    def getKey(self):
+        return self._key
+
+    ##  Set key of this machine instance.
+    #   This is different from the name in respect that it need not be human readable
+    #   The difference is simmilar with that of key & label for the settings.
+    #   \sa getKey
+    def setKey(self, key):
+        self._key = key
 
     def getName(self):
         return self._name
