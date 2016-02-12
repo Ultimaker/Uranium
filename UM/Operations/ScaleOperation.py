@@ -26,7 +26,22 @@ class ScaleOperation(Operation.Operation):
         elif self._add_scale:
             self._node.setScale(self._node.getScale() + self._scale)
         elif self._relative_scale:
-            scale_factor = self._node.getScale() + self._scale
+            scale_factor = Vector()
+
+            ## Ensure that the direction is correctly applied (it can be flipped due to mirror)
+            if self._node.getScale().x > 0:
+                scale_factor.setX(self._node.getScale().x + self._scale.x)
+            else:
+                scale_factor.setX(self._node.getScale().x - self._scale.x)
+            if self._node.getScale().y > 0:
+                scale_factor.setY(self._node.getScale().y + self._scale.y)
+            else:
+                scale_factor.setY(self._node.getScale().y - self._scale.y)
+            if self._node.getScale().z > 0:
+                scale_factor.setZ(self._node.getScale().z + self._scale.z)
+            else:
+                scale_factor.setZ(self._node.getScale().z - self._scale.z)
+
             current_scale = copy.deepcopy(self._node.getScale())
             scale_factor.setX(scale_factor.x / current_scale.x)
             scale_factor.setY(scale_factor.y / current_scale.y)
