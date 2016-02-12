@@ -457,22 +457,12 @@ class SceneNode(SignalEmitter):
     def setPosition(self, position, transform_space = TransformSpace.Local):
         if not self._enabled or position == self._position:
             return
-
-        new_transform_matrix = Matrix()
-        orientation_matrix = self._orientation.toMatrix()
-        euler_angles = orientation_matrix.getEuler()
-
         if transform_space == SceneNode.TransformSpace.Local:
-            new_transform_matrix.compose(scale = self._scale, angles = euler_angles, translate = position, shear = self._shear)
+            self.translate(position - self._position, SceneNode.TransformSpace.Parent)
         if transform_space == SceneNode.TransformSpace.World:
             if self.getWorldPosition() == position:
                 return
-
-            new_position = position - (self.getWorldPosition() - self._position)
-            new_transform_matrix.compose(scale = self._scale, angles = euler_angles, translate = new_position, shear = self._shear)
-
-        self._transformation = new_transform_matrix
-        self._transformChanged()
+            self.translate(position - self._position, SceneNode.TransformSpace.World)
 
     ##  Signal. Emitted whenever the transformation of this object or any child object changes.
     #   \param object The object that caused the change.
