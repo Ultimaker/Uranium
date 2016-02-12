@@ -41,13 +41,22 @@ class ScaleOperation(Operation.Operation):
                     new_scale.setY(round(new_scale.y, 1))
                 if(scale_factor.z != 1.0):
                     new_scale.setZ(round(new_scale.z, 1))
+
             # Enforce min size.
-            if new_scale.x < 0.1:
+            if new_scale.x < 0.1 and new_scale.x >=0:
                 new_scale.setX(0.1)
-            if new_scale.y < 0.1:
+            if new_scale.y < 0.1 and new_scale.y >=0:
                 new_scale.setY(0.1)
-            if new_scale.z < 0.1:
+            if new_scale.z < 0.1 and new_scale.z >=0:
                 new_scale.setZ(0.1)
+
+            # Enforce min size (when mirrored)
+            if new_scale.x > -0.1 and new_scale.x <=0:
+                new_scale.setX(-0.1)
+            if new_scale.y > -0.1 and new_scale.y <=0:
+                new_scale.setY(-0.1)
+            if new_scale.z > -0.1 and new_scale.z <=0:
+                new_scale.setZ(-0.1)
             self._node.setScale(new_scale, SceneNode.TransformSpace.World)
         else:
             self._node.scale(self._scale, SceneNode.TransformSpace.World)
