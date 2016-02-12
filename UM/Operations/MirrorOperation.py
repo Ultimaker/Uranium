@@ -9,13 +9,19 @@ class MirrorOperation(Operation.Operation):
         super().__init__()
         self._node = node
         self._old_transformation = node.getLocalTransformation()
+        self._mirror_around_center = kwargs.get("mirror_around_center", False)
         self._mirror = mirror
 
     def undo(self):
         self._node.setTransformation(self._old_transformation)
 
     def redo(self):
+        if self._mirror_around_center:
+            center = self._node.getBoundingBox().center
+            self._node.setPosition(-center)
         self._node.scale(self._mirror, SceneNode.TransformSpace.World)
+        if self._mirror_around_center:
+            self._node.setPosition(center)
 
     def mergeWith(self, other):
         if type(other) is not MirrorOperation:

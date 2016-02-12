@@ -51,7 +51,7 @@ class MirrorTool(Tool):
                     elif self.getLockedAxis() == ToolHandle.ZAxis:
                         mirror.setZ(-1)
 
-                    op = MirrorOperation(node, mirror)
+                    op = MirrorOperation(node, mirror, mirror_around_center = True)
                 else:
                     op = GroupedOperation()
 
@@ -64,7 +64,7 @@ class MirrorTool(Tool):
                         elif self.getLockedAxis() == ToolHandle.ZAxis:
                             mirror.setZ(-1)
 
-                        op.addOperation(MirrorOperation(node, mirror))
+                        op.addOperation(MirrorOperation(node, mirror, mirror_around_center = True))
 
                 op.push()
 
