@@ -229,7 +229,7 @@ class Matrix(object):
         j = self._NEXT_AXIS[i + parity]
         k = self._NEXT_AXIS[i - parity + 1]
 
-        M = numpy.array(self._data, dtype = numpy.float64, copy = False)[:3, :3]
+        M = numpy.array(self._data, dtype = numpy.float32, copy = False)[:3, :3]
         if repetition:
             sy = math.sqrt(M[i, j] * M[i, j] + M[i, k] * M[i, k])
             if sy > self._EPS:
@@ -381,7 +381,7 @@ class Matrix(object):
     #   @return Tuple containing scale (vector), shear (vector), angles (vector) and translation (vector)
     #   It will raise a ValueError if matrix is of wrong type or degenerative.
     def decompose(self):
-        M = numpy.array(self._data, dtype = numpy.float64, copy = True).T
+        M = numpy.array(self._data, dtype = numpy.float32, copy = True).T
         if abs(M[3, 3]) < self._EPS:
             raise ValueError("M[3, 3] is zero")
         M /= M[3, 3]
