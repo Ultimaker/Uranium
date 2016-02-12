@@ -7,6 +7,9 @@ from UM.Logger import Logger
 from UM.Signal import Signal, SignalEmitter
 from UM.Application import Application
 from UM.PluginObject import PluginObject
+from UM.Platform import Platform
+
+import Arcus
 
 import struct
 import subprocess
@@ -27,12 +30,15 @@ class Backend(PluginObject, SignalEmitter):
 
         self._socket = None
         self._port = 49674
-        self._createSocket()
         self._process = None
         self._backend_log = []
 
+        Application.getInstance().callLater(self._createSocket)
+
     processingProgress = Signal()
+    backendStateChange = Signal()
     backendConnected = Signal()
+    backendQuit = Signal()
 
     ##   \brief Start the backend / engine.
     #   Runs the engine, this is only called when the socket is fully opend & ready to accept connections
@@ -108,15 +114,16 @@ class Backend(PluginObject, SignalEmitter):
         while True:
             line = handle.readline()
             if line == b"":
+                self.backendQuit.emit()
                 break
             self._backend_log.append(line)
 
     ##  Private socket state changed handler.
     def _onSocketStateChanged(self, state):
-        if state == SignalSocket.ListeningState:
+        if state == Arcus.SocketState.Listening:
             if not Application.getInstance().getCommandLineOption("external-backend", False):
                 self.startEngine()
-        elif state == SignalSocket.ConnectedState:
+        elif state == Arcus.SocketState.Connected:
             Logger.log("d", "Backend connected on port %s", self._port)
             self.backendConnected.emit()
     
@@ -124,36 +131,30 @@ class Backend(PluginObject, SignalEmitter):
     def _onMessageReceived(self):
         message = self._socket.takeNextMessage()
 
-        if type(message) not in self._message_handlers:
+        if message.getTypeName() not in self._message_handlers:
             Logger.log("e", "No handler defined for message of type %s", type(message))
             return
 
-        self._message_handlers[type(message)](message)
+        self._message_handlers[message.getTypeName()](message)
     
     ##  Private socket error handler   
     def _onSocketError(self, error):
-        try: 
-            if error.errno == 98 or error.errno == 48:# Socked in use error
-                self._port += 1
-            elif error.errno == 104 or error.errno == 32 or error.errno == 54 or error.errno == 41:
-                # 104 is connection reset by peer. 32 is broken pipe. 54 is also connection reset by peer.
-                # 41 is specific for MacOSX and happens when closing a socket.
-                # All these imply the connection to the backend was broken and we need to restart it.
-                Logger.log("i", "Backend crashed or closed. Restarting...")
-            elif platform.system() == "Windows":
-                if error.winerror == 10048:# Socked in use error
-                    self._port += 1
-                elif error.winerror == 10054:
-                    Logger.log("i", "Backend crashed or closed. Restarting...")
-            else:
-                Logger.log("e", str(error))
-        except Exception as e:
-            Logger.log("e", "Failed to parse socket error: %s" , str(e))
+        if error.getErrorCode() == Arcus.ErrorCode.BindFailedError:
+            self._port += 1
+        elif error.getErrorCode() == Arcus.ErrorCode.ConnectionResetError:
+            Logger.log("i", "Backend crashed or closed. Restarting...")
+        elif error.getErrorCode() == Arcus.ErrorCode.Debug:
+            Logger.log("d", str(error))
+            return
+        else:
+            Logger.log("w", str(error))
 
+        sleep(0.1) #Hack: Withouth a sleep this can deadlock the application spamming error messages.
         self._createSocket()
+
     
     ##  Creates a socket and attaches listeners.
-    def _createSocket(self):
+    def _createSocket(self, protocol_file):
         if self._socket:
             self._socket.stateChanged.disconnect(self._onSocketStateChanged)
             self._socket.messageReceived.disconnect(self._onMessageReceived)
@@ -163,9 +164,17 @@ class Backend(PluginObject, SignalEmitter):
         self._socket.stateChanged.connect(self._onSocketStateChanged)
         self._socket.messageReceived.connect(self._onMessageReceived)
         self._socket.error.connect(self._onSocketError)
-
-        self._socket.listen("127.0.0.1", self._port)
         
+        if Platform.isWindows():
+            # On Windows, the Protobuf DiskSourceTree does stupid things with paths.
+            # So convert to forward slashes here so it finds the proto file properly.
+            protocol_file = protocol_file.replace("\\", "/")
+
+        if not self._socket.registerAllMessageTypes(protocol_file):
+            Logger.log("e", "Could not register Cura protocol messages: %s", self._socket.getLastError())
+
         if Application.getInstance().getCommandLineOption("external-backend", False):
             Logger.log("i", "Listening for backend connections on %s", self._port)
+
+        self._socket.listen("127.0.0.1", self._port)
 

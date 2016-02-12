@@ -6,7 +6,6 @@ from PyQt5.QtCore import Qt, pyqtSlot, pyqtProperty, pyqtSignal
 from UM.Application import Application
 from UM.Qt.ListModel import ListModel
 from UM.OutputDevice import OutputDeviceError
-from UM.Event import CallFunctionEvent
 
 import time
 

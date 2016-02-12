@@ -14,10 +14,10 @@ from UM.Preferences import Preferences
 from UM.Logger import Logger
 from UM.Mesh.MeshWriter import MeshWriter
 from UM.Mesh.WriteMeshJob import WriteMeshJob
+from UM.Message import Message
 from UM.OutputDevice.OutputDevicePlugin import OutputDevicePlugin
 from UM.OutputDevice.OutputDevice import OutputDevice
 from UM.OutputDevice import OutputDeviceError
-from UM.Message import Message
 
 from UM.i18n import i18nCatalog
 catalog = i18nCatalog("uranium")
@@ -48,7 +48,16 @@ class LocalFileOutputDevice(OutputDevice):
 
         self._writing = False
 
-    def requestWrite(self, node, file_name = None):
+    ##  Request the specified node to be written to a file.
+    #
+    #   \param node \type{SceneNode} The root of a tree of scene nodes that
+    #   should be written to the device.
+    #   \param file_name \type{string} A suggestion for the file name to write
+    #   to. Can be freely ignored if providing a file name makes no sense.
+    #   \param filter_by_machine \type{bool} If the file name is ignored, should
+    #   the file format be limited to the formats that are supported by the
+    #   currently active machine?
+    def requestWrite(self, node, file_name = None, filter_by_machine = False):
         if self._writing:
             raise OutputDeviceError.DeviceBusyError()
 
@@ -56,6 +65,10 @@ class LocalFileOutputDevice(OutputDevice):
         dialog.setWindowTitle(catalog.i18nc("@title:window", "Save to File"))
         dialog.setFileMode(QFileDialog.AnyFile)
         dialog.setAcceptMode(QFileDialog.AcceptSave)
+
+        default_save_path = os.path.expanduser("~/")
+        dialog.setDirectory(default_save_path)
+
         # Ensure platform never ask for overwrite confirmation since we do this ourselves
         dialog.setOption(QFileDialog.DontConfirmOverwrite)
 
@@ -69,6 +82,12 @@ class LocalFileOutputDevice(OutputDevice):
 
         file_types = Application.getInstance().getMeshFileHandler().getSupportedFileTypesWrite()
         file_types.sort(key = lambda k: k["description"])
+        if filter_by_machine:
+            machine_file_formats = Application.getInstance().getMachineManager().getActiveMachineInstance().getMachineDefinition().getFileFormats()
+            file_types = list(filter(lambda file_type: file_type["mime_type"] in machine_file_formats, file_types)) #Take the intersection between file_types and machine_file_formats.
+        if len(file_types) == 0:
+            Logger.log("e", "There are no file types available to write with!")
+            raise OutputDeviceError.WriteRequestFailedError()
 
         for item in file_types:
             type_filter = "{0} (*.{1})".format(item["description"], item["extension"])
@@ -76,7 +95,8 @@ class LocalFileOutputDevice(OutputDevice):
             mime_types.append(item["mime_type"])
             if last_used_type == item["mime_type"]:
                 selected_filter = type_filter
-                file_name += "." + item["extension"]
+                if file_name:
+                    file_name += "." + item["extension"]
 
         dialog.setNameFilters(filters)
         if selected_filter != None:

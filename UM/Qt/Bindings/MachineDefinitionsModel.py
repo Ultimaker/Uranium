@@ -6,7 +6,6 @@ from PyQt5.QtCore import Qt, pyqtSlot, pyqtProperty, pyqtSignal
 from UM.Qt.ListModel import ListModel
 from UM.Application import Application
 from UM.Settings.MachineInstance import MachineInstance
-from UM.Event import CallFunctionEvent
 
 class MachineDefinitionsModel(ListModel):
     IdRole = Qt.UserRole + 1
@@ -49,13 +48,12 @@ class MachineDefinitionsModel(ListModel):
     def createInstance(self, name, definition_id):
         definition = self._manager.findMachineDefinition(definition_id)
 
-        instance = MachineInstance(self._manager, name = name, definition = definition)
+        instance = MachineInstance(self._manager, name = self._manager.makeUniqueMachineInstanceName(name, definition.getName()), definition = definition)
         self._manager.addMachineInstance(instance)
 
         # Workaround for an issue on OSX where directly calling setActiveMachineInstance would
         # crash in the QML garbage collector.
-        event = CallFunctionEvent(self._manager.setActiveMachineInstance, [instance], {})
-        Application.getInstance().functionEvent(event)
+        Application.getInstance().callLater(self._manager.setActiveMachineInstance, instance)
 
     def _onMachinesChanged(self):
         self.clear()

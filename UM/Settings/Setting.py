@@ -57,7 +57,20 @@ class Setting(SignalEmitter):
         self._inherit_function = None
         self._prohibited = False
 
-        self._dependent_settings = set()
+        # Keys of the settings that this setting requires to set certain values (As defined by inherit & enabled function)
+        self._required_setting_keys = set()
+
+        # Keys of the settings that require this setting to set certain vailes (As defined by inherit & enabled function)
+        self._required_by_setting_keys = set()
+
+    def addRequiredBySettingKey(self, key):
+        self._required_by_setting_keys.add(key)
+
+    def getRequiredBySettingKeys(self):
+        return self._required_by_setting_keys
+
+    def getRequiredSettingKeys(self):
+        return self._required_setting_keys
 
     ##  Bind new validator to object based on it's current type
     def bindValidator(self):
@@ -113,6 +126,7 @@ class Setting(SignalEmitter):
             self._hide_if_all_children_visible = not data["always_visible"]
 
         self._inherit = data.get("inherit", True)
+
         if "inherit_function" in data:
             self._inherit_function = self._createFunction(data["inherit_function"])
 
@@ -153,6 +167,8 @@ class Setting(SignalEmitter):
                     setting.setCategory(self._category)
                     setting.setParent(self)
                     setting.defaultValueChanged.connect(self.defaultValueChanged)
+                    # Pass visibility to parent, as the category needs to be notified when it changes.
+                    setting.visibleChanged.connect(self.visibleChanged)
                     self._children.append(setting)
 
                 setting.fillByDict(value)
@@ -446,7 +462,7 @@ class Setting(SignalEmitter):
 
         def local_function(profile = None):
             if not profile:
-                profile = self._machine_manager.getActiveProfile()
+                profile = self._machine_manager.getWorkingProfile()
 
             if not profile:
                 return None
@@ -455,20 +471,20 @@ class Setting(SignalEmitter):
                 "profile": profile
             }
 
-            if self.getParent():
+            if self.getParent() and isinstance(self.getParent(), Setting):
                 locals["parent_value"] = profile.getSettingValue(self.getParent().getKey())
-                self._dependent_settings.add(self.getParent().getKey())
+                self._required_setting_keys.add(self.getParent().getKey())
+                self.getParent().addRequiredBySettingKey(self._key)
 
             for name in names:
                 locals[name] = profile.getSettingValue(name)
-                self._dependent_settings.add(name)
-
+                self._required_setting_keys.add(name)
             return eval(compiled, globals(), locals)
 
         return local_function
 
     def _onSettingValueChanged(self, key):
-        if key in self._dependent_settings:
+        if key in self._required_setting_keys:
             self.enabledChanged.emit(self)
             self.defaultValueChanged.emit(self)
 
@@ -476,7 +492,7 @@ class Setting(SignalEmitter):
         if self._profile:
             self._profile.settingValueChanged.disconnect(self._onSettingValueChanged)
 
-        self._profile = self._machine_manager.getActiveProfile()
+        self._profile = self._machine_manager.getWorkingProfile()
         if self._profile:
             self._profile.settingValueChanged.connect(self._onSettingValueChanged)
 

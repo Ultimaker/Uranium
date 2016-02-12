@@ -23,9 +23,23 @@ TextField
 
     Binding
     {
+        //Rounds a floating point number to 4 decimals. This prevents floating
+        //point rounding errors.
+        //
+        //input:    The number to round.
+        //decimals: The number of decimals (digits after the radix) to round to.
+        //return:   The rounded number.
+        function roundFloat(input, decimals)
+        {
+            //First convert to fixed-point notation to round the number to 4 decimals and not introduce new floating point errors.
+            //Then convert to a string (is implicit). The fixed-point notation will be something like "3.200".
+            //Then remove any trailing zeroes and the radix.
+            return input.toFixed(decimals).replace(/\.?0*$/, ""); //Match on periods, if any ( \.? ), followed by any number of zeros ( 0* ), then the end of string ( $ ).
+        }
+
         target: base
         property: "text"
-        value: parseFloat(base.parentValue) ? parseFloat(base.parentValue).toFixed(4).replace(/\.?0*$/,"") : base.parentValue //If it's a float, round to four decimals.
+        value: parseFloat(base.parentValue) ? roundFloat(parseFloat(base.parentValue), 4) : base.parentValue //If it's a float, round to four decimals.
         when: !base.activeFocus
     }
 

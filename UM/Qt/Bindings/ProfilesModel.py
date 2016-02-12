@@ -1,6 +1,9 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
+import copy
+import os.path
+
 from UM.Qt.ListModel import ListModel
 from UM.Application import Application
 from UM.Logger import Logger
@@ -26,6 +29,7 @@ class ProfilesModel(ListModel):
         super().__init__(parent)
 
         self._add_use_global = False
+        self._add_working_profile = False
 
         self.addRoleName(self.IdRole, "id")
         self.addRoleName(self.NameRole, "name")
@@ -35,8 +39,12 @@ class ProfilesModel(ListModel):
         self.addRoleName(self.SettingsRole, "settings")
 
         self._manager = Application.getInstance().getMachineManager()
+        self._working_profile = self._manager.getWorkingProfile()
+        if self._working_profile:
+            self._working_profile.settingValueChanged.connect(self._onWorkingProfileValueChanged)
 
         self._manager.profilesChanged.connect(self._onProfilesChanged)
+        self._manager.activeMachineInstanceChanged.connect(self._onMachineInstanceChanged)
         self._manager.activeProfileChanged.connect(self._onActiveProfileChanged)
         self._manager.profileNameChanged.connect(self._onProfileNameChanged)
         self._onProfilesChanged()
@@ -54,9 +62,22 @@ class ProfilesModel(ListModel):
     def addUseGlobal(self):
         return self._add_use_global
 
+    addWorkingProfileChanged = pyqtSignal()
+
+    def setAddWorkingProfile(self, add):
+        if add != self._add_working_profile:
+            self._add_working_profile = add
+            self._onProfilesChanged()
+            self.addWorkingProfileChanged.emit()
+
+    ##  Whether to add a "Current Settings" entry.
+    @pyqtProperty(bool, fset = setAddWorkingProfile, notify = addWorkingProfileChanged)
+    def addWorkingProfile(self):
+        return self._add_working_profile
+
     @pyqtSlot(str)
     def removeProfile(self, name):
-        profile = self._manager.findProfile(name)
+        profile = self._manager.findProfile(name, instance = self._manager.getActiveMachineInstance())
         if not profile:
             return
 
@@ -64,15 +85,16 @@ class ProfilesModel(ListModel):
 
     @pyqtSlot(str, str)
     def renameProfile(self, old_name, new_name):
-        profile = self._manager.findProfile(old_name)
+        profile = self._manager.findProfile(old_name, instance = self._manager.getActiveMachineInstance())
         if not profile:
             return
 
         profile.setName(new_name)
+        self._manager.profilesChanged.emit()
 
     @pyqtSlot(str, result = bool)
     def checkProfileExists(self, name):
-        profile = self._manager.findProfile(name)
+        profile = self._manager.findProfile(name, instance = self._manager.getActiveMachineInstance())
         if profile:
             return True
 
@@ -82,9 +104,7 @@ class ProfilesModel(ListModel):
     def importProfile(self, url):
         path = url.toLocalFile()
         if not path:
-            error_str = "Not a valid path. If this problem persists, please report a bug."
-            error_str = i18nCatalog.i18nc("@info:status", error_str)
-            return {"status":"error", "message":error_str}
+            return { "status": "error", "message": catalog.i18nc("@info:status", "Failed to import profile from <filename>{0}</filename>: <message>{1}</message>", path, str(e)) }
 
         for profile_reader_id, profile_reader in self._manager.getProfileReaders():
             try:
@@ -95,25 +115,27 @@ class ProfilesModel(ListModel):
                 return { "status": "error", "message": catalog.i18nc("@info:status", "Failed to import profile from <filename>{0}</filename>: <message>{1}</message>", path, str(e)) }
             if profile: #Success!
                 profile.setReadOnly(False)
-                try:
-                    self._manager.addProfile(profile) #Add the new profile to the list of profiles.
-                except SettingsError.DuplicateProfileError as e:
-                    count = 2
-                    name = "{0} {1}".format(profile.getName(), count) #Try alternative profile names with a number appended to them.
-                    while self._manager.findProfile(name) != None:
-                        count += 1
-                        name = "{0} {1}".format(profile.getName(), count)
-                    profile.setName(name)
-                    self._manager.addProfile(profile)
-                    return { "status": "duplicate", "message": catalog.i18nc("@info:status", "Profile was imported as {0}", name) }
-                else:
-                    return { "status": "ok", "message": catalog.i18nc("@info:status", "Successfully imported profile {0}", profile.getName()) }
+
+                #File name (without extension) trumps the name stored in the profile
+                file_name = os.path.basename(os.path.splitext(path)[0])
+                profile.setName(self._manager.makeUniqueProfileName(file_name))
+
+                if profile.getMachineTypeId():
+                    #Make sure the profile is available for the currently selected printer
+                    profile.setMachineTypeId(self._manager.getActiveMachineInstance().getMachineDefinition().getProfilesMachineId())
+                self._manager.addProfile(profile) #Add the new profile to the list of profiles.
+                return { "status": "ok", "message": catalog.i18nc("@info:status", "Successfully imported profile {0}", profile.getName()) }
 
         #If it hasn't returned by now, none of the plugins loaded the profile successfully.
         return { "status": "error", "message": catalog.i18nc("@info:status", "Profile {0} has an unknown file type.", path) }
 
-    @pyqtSlot(str, QUrl, str, result="QVariantMap")
-    def exportProfile(self, name, url, fileType):
+    ##  Exports a profile to a file.
+    #   \param id: the id() added by the model. An id of -1 can be used to export the working profile of the active machine
+    #   \param name: the name of the profile to be exported, used to find the actual profile
+    #   \param url: the path returned from the FileDialog
+    #   \param fileType: the file type description ("<description> (*.<extension>)"), used to add an extension if the user did not enter one
+    @pyqtSlot(int, str, QUrl, str)
+    def exportProfile(self, id, name, url, fileType):
         #Input checking.
         path = url.toLocalFile()
         if not path:
@@ -121,7 +143,13 @@ class ProfilesModel(ListModel):
             error_str = i18nCatalog.i18nc("@info:status", error_str)
             return {"status":"error", "message":error_str}
 
-        profile = self._manager.findProfile(name)
+        if id == -1:
+            #id -1 references the "Current settings"/working profile
+            profile = copy.deepcopy(self._working_profile)
+            profile.setType(None)
+            profile.setMachineTypeId(self._manager.getActiveMachineInstance().getMachineDefinition().getProfilesMachineId())
+        else:
+            profile = self._manager.findProfile(name, instance = self._manager.getActiveMachineInstance())
         if not profile:
             error_str = "Profile not found. If this problem persists, please report a bug."
             error_str = i18nCatalog.i18nc("@info:status", error_str)
@@ -183,7 +211,7 @@ class ProfilesModel(ListModel):
         filters.insert(0, catalog.i18nc("@item:inlistbox", "All supported files") + "(" + " ".join(all_supported) + ")") #An entry to show all file extensions that are supported.
         filters.append(catalog.i18nc("@item:inlistbox", "All Files (*)")) #Also allow arbitrary files, if the user so prefers.
         return filters
-    
+
     ##  Gets a list of the possible file filters that the plugins have
     #   registered they can write.
     #
@@ -197,12 +225,37 @@ class ProfilesModel(ListModel):
         filters.append(catalog.i18nc("@item:inlistbox", "All Files (*)")) #Also allow arbitrary files, if the user so prefers.
         return filters
 
+    def _onMachineInstanceChanged(self):
+        if self._working_profile:
+            self._working_profile.settingValueChanged.disconnect(self._onWorkingProfileValueChanged)
+        self._working_profile = self._manager.getWorkingProfile()
+        if self._working_profile:
+            self._working_profile.settingValueChanged.connect(self._onWorkingProfileValueChanged)
+
+        self._onProfilesChanged()
+
+        #Restore active profile for this machine_instance.
+        active_instance_name = self._manager.getActiveMachineInstance().getActiveProfileName()
+        active_profile = self._manager.findProfile(active_instance_name, instance = self._manager.getActiveMachineInstance())
+
+        if not active_profile:
+            #A profile by this name is no longer in the filtered list of profiles.
+            profiles = self._manager.getProfiles(instance = self._manager.getActiveMachineInstance())
+            for profile in profiles:
+                active_profile = profile #Default to first profile you can find.
+                break
+
+        self._manager.setActiveProfile(active_profile)
+
+    def _onWorkingProfileValueChanged(self, setting):
+        self._onProfilesChanged()
+
     def _onProfilesChanged(self):
         self.clear()
 
         if self._add_use_global:
             self.appendItem({
-                "id": 1,
+                "id": -1, #-1 is used in order not to conflict with a normally created id()
                 "name": catalog.i18nc("@item:inlistbox", "- Use Global Profile -"),
                 "active": False,
                 "readOnly": True,
@@ -210,14 +263,37 @@ class ProfilesModel(ListModel):
                 "settings": None
             })
 
-        profiles = self._manager.getProfiles()
+        active_machine = self._manager.getActiveMachineInstance()
+
+        if self._add_working_profile and self._working_profile:
+            profile = self._working_profile
+            settings_dict = profile.getChangedSettings()
+            settings_list = []
+            if active_machine:
+                for key, value in settings_dict.items():
+                    setting = active_machine.getMachineDefinition().getSetting(key)
+                    if setting:
+                        settings_list.append({"name": setting.getLabel(), "value": value})
+                settings_list = sorted(settings_list, key = lambda setting:setting["name"])
+            self.appendItem({
+                "id": -1, #-1 is used in order not to conflict with a normally created id()
+                "name": catalog.i18nc("@item:inlistbox", "Current settings"),
+                "active": False,
+                "readOnly": True,
+                "value": "working",
+                "settings": settings_list
+            })
+
+
+        profiles = self._manager.getProfiles(instance = self._manager.getActiveMachineInstance())
         profiles.sort(key = lambda k: k.getName())
         for profile in profiles:
             settings_dict = profile.getChangedSettings()
             settings_list = []
-            for key, value in settings_dict.items():
-                setting = self._manager.getActiveMachineInstance().getMachineDefinition().getSetting(key)
-                settings_list.append({"name": setting.getLabel(), "value": value})
+            if active_machine:
+                for key, value in settings_dict.items():
+                    setting = self._manager.getActiveMachineInstance().getMachineDefinition().getSetting(key)
+                    settings_list.append({"name": setting.getLabel(), "value": value})
             settings_list = sorted(settings_list, key = lambda setting:setting["name"])
             self.appendItem({
                 "id": id(profile),
@@ -232,6 +308,10 @@ class ProfilesModel(ListModel):
         active_profile = self._manager.getActiveProfile()
         for index in range(len(self.items)):
             self.setProperty(index, "active", id(active_profile) == self.items[index]["id"])
+
+        if self._add_working_profile:
+            #Update working profile settings
+            self._onProfilesChanged();
 
     def _onProfileNameChanged(self, profile):
         index = self.find("id", id(profile))

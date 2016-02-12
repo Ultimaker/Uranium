@@ -98,8 +98,7 @@ class TranslateTool(Tool):
 
         if event.type == Event.MouseReleaseEvent:
             if self.getDragPlane():
-                if self._moved:
-                    self.operationStopped.emit(self)
+                self.operationStopped.emit(self)
 
                 self.setLockedAxis(None)
                 self.setDragPlane(None)

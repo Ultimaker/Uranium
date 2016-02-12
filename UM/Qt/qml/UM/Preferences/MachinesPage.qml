@@ -42,8 +42,13 @@ ManagementPage {
         RenameDialog {
             id: renameDialog;
             object: base.currentItem.name ? base.currentItem.name : "";
-            onAccepted: base.model.renameMachineInstance(base.currentItem.name, newName);
-            onTextChanged: validName = (!base.model.checkInstanceNameExists(newName) || base.currentItem.name == newName);
+            onAccepted: {
+                base.model.renameMachineInstance(base.currentItem.name, newName.trim());
+                //Reselect current item to update details panel
+                var index = objectList.currentIndex
+                objectList.currentIndex = -1
+                objectList.currentIndex = index
+            }
         }
     }
 }

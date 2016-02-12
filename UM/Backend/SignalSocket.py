@@ -10,14 +10,14 @@ class SignalSocket(SignalEmitter, Arcus.Socket):
     def __init__(self):
         super().__init__()
 
-        self.setStateChangedCallback(self._onStateChanged)
-        self.setMessageReceivedCallback(self._onMessageReceived)
-        self.setErrorCallback(self._onError)
+        self._listener = _SocketListener()
+        self._listener.stateChangedCallback = self._onStateChanged
+        self._listener.messageReceivedCallback = self._onMessageReceived
+        self._listener.errorCallback = self._onError
+        self.addListener(self._listener)
 
     stateChanged = Signal()
-
     messageReceived = Signal()
-
     error = Signal()
 
     def _onStateChanged(self, state):
@@ -29,3 +29,22 @@ class SignalSocket(SignalEmitter, Arcus.Socket):
     def _onError(self, error):
         self.error.emit(error)
 
+class _SocketListener(Arcus.SocketListener):
+    def __init__(self):
+        super().__init__()
+
+        self.stateChangedCallback = None
+        self.messageReceivedCallback = None
+        self.errorCallback = None
+
+    def stateChanged(self, state):
+        if self.stateChangedCallback:
+            self.stateChangedCallback(state)
+
+    def messageReceived(self):
+        if self.messageReceivedCallback:
+            self.messageReceivedCallback()
+
+    def error(self, error):
+        if self.errorCallback:
+            self.errorCallback(error)

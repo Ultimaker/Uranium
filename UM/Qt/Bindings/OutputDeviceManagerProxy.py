@@ -4,7 +4,6 @@
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal, pyqtSlot
 
 from UM.Application import Application
-from UM.Event import CallFunctionEvent
 from UM.Scene.Selection import Selection
 from UM.Message import Message
 from UM.OutputDevice import OutputDeviceError
@@ -41,35 +40,71 @@ class OutputDeviceManagerProxy(QObject):
     def activeDeviceDescription(self):
         return self._device_manager.getActiveDevice().getDescription()
 
-    @pyqtSlot(str, str)
-    def requestWriteToDevice(self, device_id, file_name):
+    ##  Request that the current scene is written to the output device.
+    #
+    #   The output device to write with will be selected based on the device_id.
+    #   A file format is chosen from the list of available file formats by the
+    #   output device.
+    #
+    #   \param device_id \type{string} The handle of the device to write to.
+    #   \param file_name \type{string} A suggestion for the file name to write
+    #   to. Can be freely ignored if providing a file name makes no sense.
+    #   \param filter_by_machine \type{bool} If the file name is ignored, should
+    #   the file format that the output device chooses be limited to the formats
+    #   that are supported by the currently active machine?
+    @pyqtSlot(str, str, bool)
+    def requestWriteToDevice(self, device_id, file_name, filter_by_machine = False):
         # On Windows, calling requestWrite() on LocalFileOutputDevice crashes when called from a signal
         # handler attached to a QML MenuItem. So instead, defer the call to the next run of the event 
         # loop, since that does work.
-        event = CallFunctionEvent(self._writeToDevice, [Application.getInstance().getController().getScene().getRoot(), device_id, file_name], {})
-        Application.getInstance().functionEvent(event)
+        Application.getInstance().callLater(self._writeToDevice, Application.getInstance().getController().getScene().getRoot(), device_id, file_name, filter_by_machine)
 
-    @pyqtSlot(str, str)
-    def requestWriteSelectionToDevice(self, device_id, file_name):
+    ##  Request that the current selection is written to the output device.
+    #
+    #   The output device to write with will be selected based on the device_id.
+    #   A file format is chosen from the list of available file formats by the
+    #   output device.
+    #
+    #   \param device_id \type{string} The handle of the device to write to.
+    #   \param file_name \type{string} A suggestion for the file name to write
+    #   to. Can be freely ignored if providing a file name makes no sense.
+    #   \param filter_by_machine \type{bool} If the file name is ignored, should
+    #   the file format that the output device chooses be limited to the formats
+    #   that are supported by the currently active machine?
+    @pyqtSlot(str, str, bool)
+    def requestWriteSelectionToDevice(self, device_id, file_name, filter_by_machine = False):
         if not Selection.hasSelection():
             return
 
         # On Windows, calling requestWrite() on LocalFileOutputDevice crashes when called from a signal
         # handler attached to a QML MenuItem. So instead, defer the call to the next run of the event 
         # loop, since that does work.
-        event = CallFunctionEvent(self._writeToDevice, [Selection.getSelectedObject(0), device_id, file_name], {})
-        Application.getInstance().functionEvent(event)
+        Application.getInstance().callLater(self._writeToDevice, Selection.getSelectedObject(0), device_id, file_name, filter_by_machine)
 
     def _onActiveDeviceChanged(self):
         self.activeDeviceChanged.emit()
 
-    def _writeToDevice(self, node, device_id, file_name):
+    ##  Writes the specified node to the output device.
+    #
+    #   The output device to write with will be selected based on the device_id.
+    #   A file format is chosen from the list of available file formats by the
+    #   output device.
+    #
+    #   \param node \type{SceneNode} The root of a tree of scene nodes that
+    #   should be written to the device.
+    #   \param device_id \type{string} The handle of the device to write to.
+    #   \param file_name \type{string} A suggestion for the file name to write
+    #   to. Can be freely ignored if providing a file name makes no sense.
+    #   \param filter_by_machine \type{bool} If the file name is ignored, should
+    #   the file format that the output device chooses be limited to the formats
+    #   that are supported by the currently active machine?
+    def _writeToDevice(self, node, device_id, file_name, filter_by_machine):
         device = self._device_manager.getOutputDevice(device_id)
         if not device:
             return
 
         try:
-            device.requestWrite(node, file_name)
+            device.requestWrite(node, file_name, filter_by_machine)
         except OutputDeviceError.UserCanceledError:
             pass
         except OutputDeviceError.DeviceBusyError:

@@ -10,6 +10,15 @@ import UM 1.1 as UM
 PreferencesPage {
     title: catalog.i18nc("@title:tab", "Setting Visibility");
 
+    property int scrollToIndex: 0
+
+    signal scrollToSection( string key )
+    onScrollToSection: {
+        scrollToIndex = Math.max(0, settingList.model.find("id", key));
+        //Delay finding the scroll offset until the scrollview has had time to fill up
+        scrollToTimer.start()
+    }
+
     function reset() {
     }
     resetEnabled: false;
@@ -17,6 +26,14 @@ PreferencesPage {
     Item {
         id: base;
         anchors.fill: parent;
+
+        Timer {
+            id: scrollToTimer
+            interval: 1
+            repeat: false
+            onTriggered: scrollView.flickableItem.contentY = settingList.itemAt(scrollToIndex).mapToItem(settingList, 0, 0).y 
+        }
+
         TextField {
             id: filter;
 
@@ -32,6 +49,8 @@ PreferencesPage {
         }
 
         ScrollView {
+            id: scrollView
+
             anchors {
                 top: filter.bottom;
                 left: parent.left;

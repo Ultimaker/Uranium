@@ -38,6 +38,8 @@ class MachineDefinition(SignalEmitter):
         self._author = ""
         self._visible = True
         self._pages = []
+        self._profiles_machine_id = ""
+        self._file_types = "" #The file types that this type of machine can read, such as g-code.
 
         self._machine_settings = []
         self._categories = []
@@ -49,6 +51,9 @@ class MachineDefinition(SignalEmitter):
 
     def getId(self):
         return self._id
+
+    def getProfilesMachineId(self):
+        return self._profiles_machine_id
 
     def getName(self):
         return self._name
@@ -70,6 +75,14 @@ class MachineDefinition(SignalEmitter):
 
     def getPages(self):
         return self._pages
+
+    ##  Gets the list of file formats that this machine definition supports.
+    #
+    #   Every file format is identified by its MIME type.
+    #
+    #   \return A list of MIME types whose file formats this machine supports.
+    def getFileFormats(self):
+        return self._file_formats
 
     def hasVariants(self):
         return len(self._machine_manager.getAllMachineVariants(self._id)) > 1
@@ -109,12 +122,17 @@ class MachineDefinition(SignalEmitter):
             self._json_data.update(app_data)
 
         self._id = self._json_data["id"]
+        if "profiles_machine" in self._json_data:
+            self._profiles_machine_id = self._json_data["profiles_machine"]
+        else:
+            self._profiles_machine_id = self._id
         self._name = self._json_data["name"]
         self._visible = self._json_data.get("visible", True)
         self._variant_name = self._json_data.get("variant", "")
         self._manufacturer = self._json_data.get("manufacturer", uranium_catalog.i18nc("@label", "Unknown Manufacturer"))
         self._author = self._json_data.get("author", uranium_catalog.i18nc("@label", "Unknown Author"))
         self._pages = self._json_data.get("pages", {})
+        self._file_formats = [file_type.strip() for file_type in self._json_data.get("file_formats", "").split(';')] #Split by semicolon, then strip all whitespace on both sides.
 
         if clean_json:
             self._json_data = None
@@ -181,6 +199,15 @@ class MachineDefinition(SignalEmitter):
 
         #self._json_data = None
         self._loaded = True
+
+    # Ensure that the required by setting keys are set.
+    def updateRequiredBySettings(self):
+        for setting in self.getAllSettings(include_machine = True):
+            # Ensure that the function that defines the default value is called.
+            # This in turn ensures that the required setting keys are correctly set.
+            setting.getDefaultValue()
+            for key in setting.getRequiredSettingKeys():
+                self.getSetting(key).addRequiredBySettingKey(setting.getKey())
 
     ##  Get setting category by key
     #   \param key Category key to get.

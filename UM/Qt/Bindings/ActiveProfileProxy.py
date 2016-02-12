@@ -6,10 +6,13 @@ from PyQt5.QtCore import pyqtSlot, pyqtProperty, pyqtSignal, QObject, QVariant, 
 from UM.Application import Application
 from UM.PluginRegistry import PluginRegistry
 
+from . import ContainerProxy
+
 class ActiveProfileProxy(QObject):
     def __init__(self, parent = None):
         super().__init__(parent)
-        self._setting_values = None
+        self._setting_values = {}
+        self._container_proxy = ContainerProxy.ContainerProxy(self._setting_values)
         self._active_profile = None
         Application.getInstance().getMachineManager().activeProfileChanged.connect(self._onActiveProfileChanged)
         self._onActiveProfileChanged()
@@ -21,22 +24,28 @@ class ActiveProfileProxy(QObject):
         return self._active_profile != None
 
     settingValuesChanges = pyqtSignal()
-    @pyqtProperty("QVariant", notify = settingValuesChanges)
+    @pyqtProperty(QObject, notify = settingValuesChanges)
     def settingValues(self):
-        return self._setting_values
+        return self._container_proxy
 
     @pyqtSlot(str, "QVariant")
     def setSettingValue(self, key, value):
-        if key in self._setting_values and self._setting_values[key] == value:
-            return
-
         self._active_profile.setSettingValue(key, value)
+
+    ## Show any settings that have a value in the current profile but are not visible.
+    @pyqtSlot(str)
+    def showHiddenValues(self, category_id):
+        category = Application.getInstance().getMachineManager().getActiveMachineInstance().getMachineDefinition().getSettingsCategory(category_id)
+        for setting in category.getAllSettings():
+            if not setting.isVisible() and self._active_profile.hasSettingValue(setting.getKey(), filter_defaults = False):
+                setting.setVisible(True)
+        category.visibleChanged.emit(category)
 
     def _onActiveProfileChanged(self):
         if self._active_profile:
             self._active_profile.settingValueChanged.disconnect(self._onSettingValuesChanged)
 
-        self._active_profile = Application.getInstance().getMachineManager().getActiveProfile()
+        self._active_profile = Application.getInstance().getMachineManager().getWorkingProfile()
         self.activeProfileChanged.emit()
 
         if self._active_profile:
@@ -44,7 +53,7 @@ class ActiveProfileProxy(QObject):
             self._onSettingValuesChanged()
 
     def _onSettingValuesChanged(self, setting = None):
-        self._setting_values = self._active_profile.getAllSettingValues()
+        self._setting_values.update(self._active_profile.getAllSettingValues())
         self.settingValuesChanges.emit()
 
 def createActiveProfileProxy(engine, script_engine):

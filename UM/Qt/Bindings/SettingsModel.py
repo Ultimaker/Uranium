@@ -22,6 +22,7 @@ class SettingsModel(ListModel):
     OptionsRole = Qt.UserRole + 11
     UnitRole = Qt.UserRole + 12
     DescriptionRole = Qt.UserRole + 13
+    GlobalOnlyRole = Qt.UserRole + 14
 
     def __init__(self, parent = None):
         super().__init__(parent)
@@ -42,6 +43,7 @@ class SettingsModel(ListModel):
         self.addRoleName(self.OptionsRole,"options")
         self.addRoleName(self.UnitRole,"unit")
         self.addRoleName(self.DescriptionRole, "description")
+        self.addRoleName(self.GlobalOnlyRole, "global_only")
 
     ##  Triggred by setting if it has a conditional activation
     def handleActiveChanged(self, setting):
@@ -171,6 +173,7 @@ class SettingsModel(ListModel):
                     "visibility": (setting.isVisible() and setting.isActive()),
                     "disabled": (setting.checkAllChildrenVisible() or not setting.isActive()),
                     "options": self.createOptionsModel(setting.getOptions()),
-                    "unit": setting.getUnit()
+                    "unit": setting.getUnit(),
+                    "global_only": setting.getGlobalOnly()
                 })
                 setting.activeChanged.connect(self.handleActiveChanged)

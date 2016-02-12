@@ -117,13 +117,16 @@ class OutputDevice(SignalEmitter):
     #   recommended to perform the actual writing asynchronously and rely on
     #   the write- signals to properly indicate state.
     #
-    #   \param node \type{SceneNode} The root of a tree of scene nodes that should be
-    #                                written to the device.
-    #   \param file_name \type{string} A suggestion for the file name to write to.
-    #                                  Can be freely ignored if providing a file name makes no sense.
+    #   \param node \type{SceneNode} The root of a tree of scene nodes that
+    #   should be written to the device.
+    #   \param file_name \type{string} A suggestion for the file name to write
+    #   to. Can be freely ignored if providing a file name makes no sense.
+    #   \param filter_by_machine \type{bool} If the file name is ignored, should
+    #   the file format that the output device chooses be limited to the formats
+    #   that are supported by the currently active machine?
     #
     #   \exception OutputDeviceError.WriteRequestFailedError
-    def requestWrite(self, node, file_name = None):
+    def requestWrite(self, node, file_name = None, filter_by_machine = False):
         raise NotImplementedError("requestWrite needs to be implemented")
 
     writeStarted = Signal()

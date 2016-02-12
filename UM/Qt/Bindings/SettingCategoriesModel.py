@@ -77,6 +77,9 @@ class SettingCategoriesModel(ListModel):
         self.setProperty(index, "hiddenValuesCount", category.getHiddenValuesCount())
 
     def _onActiveProfileChanged(self):
+        if not self._machine_instance:
+            return
+
         for category in self._machine_instance.getMachineDefinition().getAllCategories():
             index = self.find("id", category.getKey())
             self.setProperty(index, "hiddenValuesCount", category.getHiddenValuesCount())
