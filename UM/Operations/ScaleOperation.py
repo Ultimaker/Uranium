@@ -28,6 +28,7 @@ class ScaleOperation(Operation.Operation):
             self._node.setScale(self._node.getScale() + self._scale)
         elif self._relative_scale:
             scale_factor = Vector()
+
             ## Ensure that the direction is correctly applied (it can be flipped due to mirror)
             if self._node.getScale().x > 0:
                 scale_factor.setX(self._node.getScale().x + self._scale.x)
