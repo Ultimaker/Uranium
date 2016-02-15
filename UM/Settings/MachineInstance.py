@@ -139,6 +139,7 @@ class MachineInstance(SignalEmitter):
         self._machine_definition.loadAll()
 
         self._name = config.get("general", "name")
+        self._key = config.get("general", "key", fallback = None)
 
         self._active_profile_name = config.get("general", "active_profile", fallback="")
         self._active_material_name = config.get("general", "material", fallback = "")
@@ -154,6 +155,9 @@ class MachineInstance(SignalEmitter):
         config["general"]["type"] = self._machine_definition.getId()
         config["general"]["active_profile"] = str(self._active_profile_name)
         config["general"]["version"] = str(self.MachineInstanceVersion)
+
+        if self._key:
+            config["general"]["key"] = str(self._key)
         if self._machine_definition.getVariantName():
             config["general"]["variant"] = self._machine_definition.getVariantName()
         if self._active_material_name and self._active_material_name != "":
