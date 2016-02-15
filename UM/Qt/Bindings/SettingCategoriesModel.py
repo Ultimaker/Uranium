@@ -63,6 +63,8 @@ class SettingCategoriesModel(ListModel):
     def _onActiveMachineChanged(self):
         self._beginReset()
 
+        self._items = []
+
         if self._machine_instance:
             for category in self._machine_instance.getMachineDefinition().getAllCategories():
                 category.visibleChanged.disconnect(self._onCategoryVisibleChanged)
