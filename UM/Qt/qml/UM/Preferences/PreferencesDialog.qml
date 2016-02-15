@@ -49,8 +49,7 @@ Dialog
             {
                 if(base.currentPage != row)
                 {
-                    stackView.pop()
-                    stackView.push(configPagesModel.get(row).item);
+                    stackView.replace(configPagesModel.get(row).item);
                     base.currentPage = row;
                 }
             }
@@ -67,8 +66,32 @@ Dialog
 
             initialItem: Item { property bool resetEnabled: false; }
 
-            delegate: StackViewDelegate {
-                pushTransition: StackViewTransition { }
+            delegate: StackViewDelegate
+            {
+                function transitionFinished(properties)
+                {
+                    properties.exitItem.opacity = 1
+                }
+
+                pushTransition: StackViewTransition
+                {
+                    PropertyAnimation
+                    {
+                        target: enterItem
+                        property: "opacity"
+                        from: 0
+                        to: 1
+                        duration: 100
+                    }
+                    PropertyAnimation
+                    {
+                        target: exitItem
+                        property: "opacity"
+                        from: 1
+                        to: 0
+                        duration: 100
+                    }
+                }
             }
         }
 
@@ -94,8 +117,9 @@ Dialog
         pagesList.selection.clear();
         pagesList.selection.select(index);
 
-        stackView.pop()
-        stackView.push(configPagesModel.get(index).item);
+        stackView.replace(configPagesModel.get(index).item);
+
+        base.currentPage = index
     }
 
     function insertPage(index, name, item)
@@ -116,22 +140,12 @@ Dialog
     Component.onCompleted:
     {
         //This uses insertPage here because ListModel is stupid and does not allow using qsTr() on elements.
-        insertPage(0, catalog.i18nc("@title:tab", "General"), generalPage);
-        insertPage(1, catalog.i18nc("@title:tab", "Settings"), settingVisibilityPage);
-        insertPage(2, catalog.i18nc("@title:tab", "Printers"), machinesPage);
-        insertPage(3, catalog.i18nc("@title:tab", "Profiles"), profilesPage);
-        insertPage(4, catalog.i18nc("@title:tab", "Plugins"), pluginsPage);
+        insertPage(0, catalog.i18nc("@title:tab", "General"), Qt.resolvedUrl("GeneralPage.qml"));
+        insertPage(1, catalog.i18nc("@title:tab", "Settings"), Qt.resolvedUrl("SettingVisibilityPage.qml"));
+        insertPage(2, catalog.i18nc("@title:tab", "Printers"), Qt.resolvedUrl("MachinesPage.qml"));
+        insertPage(3, catalog.i18nc("@title:tab", "Profiles"), Qt.resolvedUrl("ProfilesPage.qml"));
+        insertPage(4, catalog.i18nc("@title:tab", "Plugins"), Qt.resolvedUrl("PluginsPage.qml"));
 
         setPage(0)
-    }
-
-    Item
-    {
-        visible: false
-        GeneralPage { id: generalPage }
-        SettingVisibilityPage { id: settingVisibilityPage }
-        MachinesPage { id: machinesPage }
-        ProfilesPage { id: profilesPage }
-        PluginsPage { id: pluginsPage }
     }
 }
