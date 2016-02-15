@@ -245,19 +245,21 @@ class MachineManager(SignalEmitter):
         if not self._active_machine:
             return
 
-        emit = False
-        if material != self._active_machine.getMaterialName():
-            self._active_machine.setMaterialName(material)
-            emit = True
-
         material_profile = self.findProfile(material, type = "material", instance = self._active_machine)
         #This finds only profiles of type "material", which are partial profiles
         if material_profile:
             self._active_machine.getWorkingProfile().mergeSettingsFrom(material_profile, reset = False)
-            #NB: Don't emit on behalf of this profile merge; that would result in an infinit loop
+        else:
+            #If there are unsaved current settings, confirm with the user before switching variants,
+            #because switching variants will load a new profile
+            working_profile = self._active_machine.getWorkingProfile()
+            if working_profile.hasChangedSettings() and not self._confirmReplaceCurrentSettings(material):
+                return
 
-        #Update the UI if the material selection and/or settings have changed
-        if emit:
+        if material != self._active_machine.getMaterialName():
+            self._active_machine.setMaterialName(material)
+
+            #Update the UI if the material selection and/or settings have changed
             self.activeMachineInstanceChanged.emit()
 
     def setActiveMachineVariant(self, variant):
@@ -266,6 +268,12 @@ class MachineManager(SignalEmitter):
 
         variant = self.findMachineDefinition(self._active_machine.getMachineDefinition().getId(), variant)
         if not variant:
+            return
+
+        #If there are unsaved current settings, confirm with the user before switching variants,
+        #because switching variants will load a new profile
+        working_profile = self._active_machine.getWorkingProfile()
+        if working_profile.hasChangedSettings() and not self._confirmReplaceCurrentSettings(variant.getVariantName()):
             return
 
         setting_visibility = []
@@ -296,7 +304,7 @@ class MachineManager(SignalEmitter):
 
         generic_profiles = []
         specific_profiles = []
-        add_generic_profiles = True;
+        add_generic_profiles = (type == None);
 
         for profile in self._profiles:
             profile_type = profile.getType()
@@ -328,8 +336,8 @@ class MachineManager(SignalEmitter):
             elif not machine_type:
                 generic_profiles.append(profile)
 
-        if len(specific_profiles) == 0:
-            #Custom machine-specific profiles were found, but no starter-profiles
+        if len(specific_profiles) == 0 and type == None:
+            #No starter-profiles were found
             return generic_profiles
 
         if add_generic_profiles:
@@ -413,6 +421,10 @@ class MachineManager(SignalEmitter):
 
     activeProfileChanged = Signal()
 
+    def clearWorkingProfileChanges(self):
+        if self._active_machine:
+            self._active_machine.getWorkingProfile().setChangedSettings({})
+
     def getWorkingProfile(self):
         if self._active_machine:
             return self._active_machine.getWorkingProfile()
@@ -426,35 +438,8 @@ class MachineManager(SignalEmitter):
 
         if not self._protect_working_profile:
             working_profile = self._active_machine.getWorkingProfile()
-            if working_profile.hasChangedSettings():
-                message_box = QMessageBox()
-                message_box.setIcon(QMessageBox.Question)
-                message_box.setWindowTitle(catalog.i18nc("@title:window", "Replace profile"))
-                message_box.setText(catalog.i18nc("@label", "Selecting the \"{0}\" profile replaces your current settings.").format(profile.getName()))
-
-                update_button = None
-                create_button = message_box.addButton(catalog.i18nc("@label", "Create profile"), QMessageBox.YesRole)
-                discard_button = message_box.addButton(catalog.i18nc("@label", "Discard changes"), QMessageBox.NoRole)
-                cancel_button = message_box.addButton(QMessageBox.Cancel)
-                if self._active_profile.isReadOnly():
-                    message_box.setInformativeText(catalog.i18nc("@label", "Do you want to save your settings in a custom profile?"))
-                else:
-                    message_box.setInformativeText(catalog.i18nc("@label", "Do you want to update profile \"{0}\" or save your settings in a new custom profile?".format(self._active_profile.getName())))
-                    update_button = message_box.addButton(catalog.i18nc("@label", "Update \"{0}\"".format(self._active_profile.getName())), QMessageBox.YesRole)
-                message_box.exec()
-                result = message_box.clickedButton()
-
-                if result == cancel_button:
-                    return
-                elif result == create_button:
-                    profile = self.addProfileFromWorkingProfile()
-                    message = UM.Message.Message(catalog.i18nc("@info:status", "Added a new profile named \"{0}\"").format(profile.getName()))
-                    message.show()
-                elif result == update_button:
-                    #Replace changed settings of the profile with the changed settings of the working profile
-                    self._active_profile.setChangedSettings(working_profile.getChangedSettings())
-                elif result == discard_button:
-                    pass
+            if working_profile.hasChangedSettings() and not self._confirmReplaceCurrentSettings(profile.getName()):
+                return
 
             #Replace working profile with a copy of the new profile
             working_profile.mergeSettingsFrom(profile, reset = True)
@@ -775,3 +760,36 @@ class MachineManager(SignalEmitter):
                 #Apply partial material profile
                 material_profile = self.findProfile(instance.getMaterialName(), type = "material", instance = instance)
                 instance.getWorkingProfile().mergeSettingsFrom(material_profile, reset = False)
+
+    def _confirmReplaceCurrentSettings(self, selection_name):
+        message_box = QMessageBox()
+        message_box.setIcon(QMessageBox.Question)
+        message_box.setWindowTitle(catalog.i18nc("@title:window", "Replace profile"))
+        message_box.setText(catalog.i18nc("@label", "Selecting \"{0}\" replaces your current settings.").format(selection_name))
+
+        update_button = None
+        create_button = message_box.addButton(catalog.i18nc("@label", "Create profile"), QMessageBox.YesRole)
+        discard_button = message_box.addButton(catalog.i18nc("@label", "Discard changes"), QMessageBox.NoRole)
+        cancel_button = message_box.addButton(QMessageBox.Cancel)
+        if self._active_profile.isReadOnly():
+            message_box.setInformativeText(catalog.i18nc("@label", "Do you want to save your settings in a custom profile?"))
+        else:
+            message_box.setInformativeText(catalog.i18nc("@label", "Do you want to update profile \"{0}\" or save your settings in a new custom profile?".format(self._active_profile.getName())))
+            update_button = message_box.addButton(catalog.i18nc("@label", "Update \"{0}\"".format(self._active_profile.getName())), QMessageBox.YesRole)
+        message_box.exec_()
+        result = message_box.clickedButton()
+
+        if result == cancel_button:
+            return False
+        elif result == create_button:
+            profile = self.addProfileFromWorkingProfile()
+            message = UM.Message.Message(catalog.i18nc("@info:status", "Added a new profile named \"{0}\"").format(profile.getName()))
+            message.show()
+        elif result == update_button:
+            #Replace changed settings of the profile with the changed settings of the working profile
+            self._active_profile.setChangedSettings(self.getWorkingProfile().getChangedSettings())
+        elif result == discard_button:
+            pass
+
+        self.clearWorkingProfileChanges()
+        return True
