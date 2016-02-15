@@ -149,7 +149,7 @@ class OutputDeviceManager(SignalEmitter):
     #   \note This does nothing if the device_id does not correspond to a registered device.
     #   \note This will override the default active device selection behaviour.
     def setActiveDevice(self, device_id):
-        if not device_id in self._output_devices:
+        if device_id not in self._output_devices:
             return
 
         if not self._active_device or self._active_device.getId() != device_id:

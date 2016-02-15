@@ -15,7 +15,7 @@ class SettingChangeListener():
         self._profile_change_count = { }
 
     def getProfileChangeCount(self, setting_name):
-        if not setting_name in self._profile_change_count:
+        if setting_name not in self._profile_change_count:
             return 0
 
         return self._profile_change_count[setting_name]
@@ -28,7 +28,7 @@ class SettingChangeListener():
         return count
 
     def _onSettingValueChanged(self, setting_name):
-        if not setting_name in self._profile_change_count:
+        if setting_name not in self._profile_change_count:
             self._profile_change_count[setting_name] = 0
 
         self._profile_change_count[setting_name] += 1

@@ -75,7 +75,7 @@ class MeshFileHandler(object):
 
     ##  Get an instance of a mesh writer by ID
     def getWriter(self, writer_id):
-        if not writer_id in self._mesh_writers:
+        if writer_id not in self._mesh_writers:
             return None
 
         return self._mesh_writers[writer_id]

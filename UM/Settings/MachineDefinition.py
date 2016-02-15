@@ -132,7 +132,7 @@ class MachineDefinition(SignalEmitter):
         self._manufacturer = self._json_data.get("manufacturer", uranium_catalog.i18nc("@label", "Unknown Manufacturer"))
         self._author = self._json_data.get("author", uranium_catalog.i18nc("@label", "Unknown Author"))
         self._pages = self._json_data.get("pages", {})
-        self._file_formats = [file_type.strip() for file_type in self._json_data.get("file_formats", "").split(';')] #Split by semicolon, then strip all whitespace on both sides.
+        self._file_formats = [file_type.strip() for file_type in self._json_data.get("file_formats", "").split(";")] #Split by semicolon, then strip all whitespace on both sides.
 
         if clean_json:
             self._json_data = None

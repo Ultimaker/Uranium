@@ -7,6 +7,8 @@ from UM.Math.AxisAlignedBox import AxisAlignedBox
 from UM.Signal import Signal, SignalEmitter
 from UM.Logger import Logger
 
+from enum import Enum
+
 import copy
 import numpy
 import numpy.linalg
@@ -15,7 +17,6 @@ from copy import deepcopy
 from time import time
 numpy.seterr(all="ignore") # Ignore warnings (dev by zero)
 
-from enum import Enum
 vertexBufferProperty = "__qtgl2_vertex_buffer"
 indexBufferProperty = "__qtgl2_index_buffer"
 

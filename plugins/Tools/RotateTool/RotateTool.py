@@ -122,7 +122,7 @@ class RotateTool(Tool):
                 self.propertyChanged.emit()
                 self._angle_update_time = new_time
 
-            Selection.applyOperation(RotateOperation, rotation)
+            Selection.applyOperation(RotateOperation, rotation, rotate_around_center = True)
 
             self.setDragStart(event.x, event.y)
 

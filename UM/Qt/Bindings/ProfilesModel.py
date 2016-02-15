@@ -81,6 +81,10 @@ class ProfilesModel(ListModel):
         if not profile:
             return
 
+        #Prevent warning when switching from the currently selected profile
+        if profile == self._manager.getActiveProfile():
+            self._manager.clearWorkingProfileChanges()
+
         self._manager.removeProfile(profile)
 
     @pyqtSlot(str, str)
@@ -224,6 +228,10 @@ class ProfilesModel(ListModel):
             filters.append(description + " (*." + extension + ")")
         filters.append(catalog.i18nc("@item:inlistbox", "All Files (*)")) #Also allow arbitrary files, if the user so prefers.
         return filters
+
+    @pyqtSlot(result = QUrl)
+    def getDefaultSavePath(self):
+        return QUrl.fromLocalFile(os.path.expanduser("~/"))
 
     def _onMachineInstanceChanged(self):
         if self._working_profile:

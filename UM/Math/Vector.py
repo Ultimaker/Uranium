@@ -47,32 +47,32 @@ class Vector(object):
     ##  Return the x component of this vector
     @property
     def x(self):
-        return self._data[0]
+        return numpy.float32(self._data[0])
 
     ##  Set the x component of this vector
     #   \param value The value for the x component
     def setX(self, value):
-        self._data[0] = value
+        self._data[0] = numpy.float32(value)
 
     ##  Return the y component of this vector
     @property
     def y(self):
-        return self._data[1]
+        return numpy.float32(self._data[1])
 
     ##  Set the y component of this vector
     #   \param value The value for the y component
     def setY(self, value):
-        self._data[1] = value
+        self._data[1] = numpy.float32(value)
 
     ## Return the z component of this vector
     @property
     def z(self):
-        return self._data[2]
+        return numpy.float32(self._data[2])
 
     ##  Set the z component of this vector
     #   \param value The value for the z component
     def setZ(self, value):
-        self._data[2] = value
+        self._data[2] = numpy.float32(value)
     
     ##  Get the angle from this vector to another
     def angleToVector(self, vector):
