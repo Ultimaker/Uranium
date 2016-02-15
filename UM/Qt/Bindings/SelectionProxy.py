@@ -12,6 +12,7 @@ class SelectionProxy(QObject):
         Selection.selectionChanged.connect(self._onSelectionChanged)
 
     selectionChanged = pyqtSignal()
+    
     @pyqtProperty(bool, notify = selectionChanged)
     def hasSelection(self):
         return Selection.hasSelection()

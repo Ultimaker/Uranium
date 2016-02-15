@@ -11,36 +11,36 @@ import math
 class RotateToolHandle(ToolHandle):
     def __init__(self, parent = None):
         super().__init__(parent)
-        self._innerRadius = 40
-        self._outerRadius = 40.5
-        self._lineWidth = 0.5
-        self._activeInnerRadius = 37
-        self._activeOuterRadius = 44
-        self._activeLineWidth = 3
+        self._inner_radius = 40
+        self._outer_radius = 40.5
+        self._line_width = 0.5
+        self._active_inner_radius = 37
+        self._active_outer_radius = 44
+        self._active_line_width = 3
 
         #SOLIDMESH
         mb = MeshBuilder()
 
         mb.addDonut(
-            inner_radius = self._innerRadius,
-            outer_radius = self._outerRadius,
-            width = self._lineWidth,
+            inner_radius = self._inner_radius,
+            outer_radius = self._outer_radius,
+            width = self._line_width,
             color = ToolHandle.ZAxisColor
         )
 
         mb.addDonut(
-            inner_radius = self._innerRadius,
-            outer_radius = self._outerRadius,
-            width = self._lineWidth,
+            inner_radius = self._inner_radius,
+            outer_radius = self._outer_radius,
+            width = self._line_width,
             axis = Vector.Unit_X,
             angle = math.pi / 2,
             color = ToolHandle.YAxisColor
         )
 
         mb.addDonut(
-            inner_radius = self._innerRadius,
-            outer_radius = self._outerRadius,
-            width = self._lineWidth,
+            inner_radius = self._inner_radius,
+            outer_radius = self._outer_radius,
+            width = self._line_width,
             axis = Vector.Unit_Y,
             angle = math.pi / 2,
             color = ToolHandle.XAxisColor
@@ -51,25 +51,25 @@ class RotateToolHandle(ToolHandle):
         mb = MeshBuilder()
 
         mb.addDonut(
-            inner_radius = self._activeInnerRadius,
-            outer_radius = self._activeOuterRadius,
-            width = self._activeLineWidth,
+            inner_radius = self._active_inner_radius,
+            outer_radius = self._active_outer_radius,
+            width = self._active_line_width,
             color = ToolHandle.ZAxisColor
         )
 
         mb.addDonut(
-            inner_radius = self._activeInnerRadius,
-            outer_radius = self._activeOuterRadius,
-            width = self._activeLineWidth,
+            inner_radius = self._active_inner_radius,
+            outer_radius = self._active_outer_radius,
+            width = self._active_line_width,
             axis = Vector.Unit_X,
             angle = math.pi / 2,
             color = ToolHandle.YAxisColor
         )
 
         mb.addDonut(
-            inner_radius = self._activeInnerRadius,
-            outer_radius = self._activeOuterRadius,
-            width = self._activeLineWidth,
+            inner_radius = self._active_inner_radius,
+            outer_radius = self._active_outer_radius,
+            width = self._active_line_width,
             axis = Vector.Unit_Y,
             angle = math.pi / 2,
             color = ToolHandle.XAxisColor

@@ -24,6 +24,7 @@ class ActiveProfileProxy(QObject):
         return self._active_profile != None
 
     settingValuesChanges = pyqtSignal()
+    
     @pyqtProperty(QObject, notify = settingValuesChanges)
     def settingValues(self):
         return self._container_proxy

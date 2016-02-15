@@ -45,7 +45,7 @@ class ThreeMFWriter(MeshWriter):
         if not len(nodes):
             return False
 
-        archive = zipfile.ZipFile(stream, 'w',compression=zipfile.ZIP_DEFLATED)
+        archive = zipfile.ZipFile(stream, "w", compression = zipfile.ZIP_DEFLATED)
         try:
             model_file = zipfile.ZipInfo("3D/3dmodel.model")
             content_types_file = zipfile.ZipInfo("[Content_Types].xml")

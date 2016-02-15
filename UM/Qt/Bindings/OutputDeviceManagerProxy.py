@@ -16,6 +16,7 @@ class OutputDeviceManagerProxy(QObject):
         self._onActiveDeviceChanged()
 
     activeDeviceChanged = pyqtSignal()
+    
     @pyqtProperty(str, notify = activeDeviceChanged)
     def activeDevice(self):
         return self._device_manager.getActiveDevice().getId()

@@ -6,6 +6,8 @@ from UM.Scene.SceneNode import SceneNode
 from UM.Math.Vector import Vector
 from UM.Math.Matrix import Matrix
 import copy
+
+
 class ScaleOperation(Operation.Operation):
     def __init__(self, node, scale, **kwargs):
         super().__init__()

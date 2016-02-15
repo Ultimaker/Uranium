@@ -75,6 +75,7 @@ class MainWindow(QQuickWindow):
     backgroundColor = pyqtProperty(QColor, fget=getBackgroundColor, fset=setBackgroundColor)
 
     mousePositionChanged = pyqtSignal()
+
     @pyqtProperty(int, notify = mousePositionChanged)
     def mouseX(self):
         return self._mouse_x
@@ -90,6 +91,7 @@ class MainWindow(QQuickWindow):
             self.viewportRectChanged.emit()
 
     viewportRectChanged = pyqtSignal()
+
     @pyqtProperty(QRectF, fset = setViewportRect, notify = viewportRectChanged)
     def viewportRect(self):
         return self._viewport_rect

@@ -198,7 +198,7 @@ class Matrix(object):
             M = numpy.dot(M, T)
         if angles is not None:
             R = Matrix()
-            R.setByEuler(angles.x, angles.y, angles.z, 'sxyz')
+            R.setByEuler(angles.x, angles.y, angles.z, "sxyz")
             M = numpy.dot(M, R.getData())
         if shear is not None:
             Z = numpy.identity(4)
@@ -218,7 +218,7 @@ class Matrix(object):
     ## Return Euler angles from rotation matrix for specified axis sequence.
     #  axes : One of 24 axis sequences as string or encoded tuple
     #  Note that many Euler angle triplets can describe one matrix.
-    def getEuler(self, axes='sxyz'):
+    def getEuler(self, axes = "sxyz"):
         try:
             firstaxis, parity, repetition, frame = self._AXES2TUPLE[axes.lower()]
         except (AttributeError, KeyError):
