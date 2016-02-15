@@ -222,6 +222,10 @@ class ProfilesModel(ListModel):
         filters.append(catalog.i18nc("@item:inlistbox", "All Files (*)")) #Also allow arbitrary files, if the user so prefers.
         return filters
 
+    @pyqtSlot(result = QUrl)
+    def getDefaultSavePath(self):
+        return QUrl.fromLocalFile(os.path.expanduser("~/"))
+
     def _onMachineInstanceChanged(self):
         if self._working_profile:
             self._working_profile.settingValueChanged.disconnect(self._onWorkingProfileValueChanged)

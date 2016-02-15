@@ -118,7 +118,8 @@ ManagementPage
             title: catalog.i18nc("@title:window", "Import Profile");
             selectExisting: true;
             nameFilters: base.model.getFileNameFiltersRead()
-
+            folder: base.model.getDefaultSavePath()
+            Component.onCompleted: console.log(folder)
             onAccepted:
             {
                 var result = base.model.importProfile(fileUrl)
@@ -145,7 +146,7 @@ ManagementPage
             title: catalog.i18nc("@title:window", "Export Profile");
             selectExisting: false;
             nameFilters: base.model.getFileNameFiltersWrite()
-
+            folder: base.model.getDefaultSavePath()
             onAccepted: base.model.exportProfile(base.currentItem.id, base.currentItem.name, fileUrl, selectedNameFilter)
         }
     }
