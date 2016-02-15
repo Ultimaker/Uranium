@@ -10,10 +10,11 @@ import os
 import os.path
 import sys
 
-from UM.Logger import Logger, deprecated
+from UM.Logger import Logger
 from UM.Resources import Resources
 from UM.Preferences import Preferences
 from UM.Application import Application
+from UM.Decorators import deprecated
 
 class Theme(QObject):
     def __init__(self, engine, parent = None):
