@@ -81,6 +81,10 @@ class ProfilesModel(ListModel):
         if not profile:
             return
 
+        #Prevent warning when switching from the currently selected profile
+        if profile == self._manager.getActiveProfile():
+            self._manager.clearWorkingProfileChanges()
+
         self._manager.removeProfile(profile)
 
     @pyqtSlot(str, str)
