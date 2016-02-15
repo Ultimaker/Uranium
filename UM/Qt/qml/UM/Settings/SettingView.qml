@@ -166,7 +166,6 @@ ScrollView
                                     item.options = model.options;
                                 }
 
-                                settings.itemsLoaded += 1;
                             }
 
                             Binding
