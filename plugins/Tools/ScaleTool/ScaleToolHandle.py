@@ -10,72 +10,72 @@ class ScaleToolHandle(ToolHandle):
     def __init__(self, parent = None):
         super().__init__(parent)
 
-        self._lineWidth = 0.5
-        self._lineLength= 40
-        self._handlePosition = 40
-        self._handleWidth = 4
+        self._line_width = 0.5
+        self._line_length= 40
+        self._handle_position = 40
+        self._handle_width = 4
 
-        self._activeLineWidth = 0.8
-        self._activeLineLength = 40
-        self._activeHandlePosition = 40
-        self._activeHandleWidth = 15
+        self._active_line_width = 0.8
+        self._active_line_length = 40
+        self._active_handle_position = 40
+        self._active_handle_width = 15
 
         #SOLIDMESH -> LINES
         mb = MeshBuilder()
 
         mb.addCube(
-            width = self._lineWidth,
-            height = self._lineLength,
-            depth = self._lineWidth,
-            center = Vector(0, self._handlePosition/2, 0),
+            width = self._line_width,
+            height = self._line_length,
+            depth = self._line_width,
+            center = Vector(0, self._handle_position/2, 0),
             color = ToolHandle.YAxisColor
         )
         mb.addCube(
-            width = self._lineLength,
-            height = self._lineWidth,
-            depth = self._lineWidth,
-            center = Vector(self._handlePosition/2, 0, 0),
+            width = self._line_length,
+            height = self._line_width,
+            depth = self._line_width,
+            center = Vector(self._handle_position/2, 0, 0),
             color = ToolHandle.XAxisColor
         )
 
         mb.addCube(
-            width = self._lineWidth,
-            height = self._lineWidth,
-            depth = self._lineLength,
-            center = Vector(0, 0, self._handlePosition/2),
+            width = self._line_width,
+            height = self._line_width,
+            depth = self._line_length,
+            center = Vector(0, 0, self._handle_position/2),
             color = ToolHandle.ZAxisColor
         )
 
         #SOLIDMESH -> HANDLES
         mb.addCube(
-            width = self._handleWidth,
-            height = self._handleWidth,
-            depth = self._handleWidth,
+            width = self._handle_width,
+            height = self._handle_width,
+            depth = self._handle_width,
             center = Vector(0, 0, 0),
             color = ToolHandle.AllAxisColor
         )
 
         mb.addCube(
-            width = self._handleWidth,
-            height = self._handleWidth,
-            depth = self._handleWidth,
-            center = Vector(0, self._handlePosition, 0),
+            width = self._handle_width,
+            height = self._handle_width,
+            depth = self._handle_width,
+            center = Vector(0, self._handle_position, 0),
             color = ToolHandle.YAxisColor
         )
 
         mb.addCube(
-            width = self._handleWidth,
-            height = self._handleWidth,
-            depth = self._handleWidth,
-            center = Vector(self._handlePosition, 0, 0),
+            width = self._handle_width,
+            height = self._handle_width,
+            depth = self._handle_width,
+            center = Vector(self._handle_position, 0, 0),
             color = ToolHandle.XAxisColor
         )
 
         mb.addCube(
-            width = self._handleWidth,
-            height = self._handleWidth,
-            depth = self._handleWidth,
-            center = Vector(0, 0, self._handlePosition),
+            width = self._handle_width,
+            height = self._handle_width,
+            depth = self._handle_width,
+            center = Vector(0, 0, self._handle_position),
             color = ToolHandle.ZAxisColor
         )
         self.setSolidMesh(mb.getData())
@@ -83,59 +83,59 @@ class ScaleToolHandle(ToolHandle):
         #SELECTIONMESH -> LINES
         mb = MeshBuilder()
         mb.addCube(
-            width = self._activeLineWidth,
-            height = self._activeLineLength,
-            depth = self._activeLineWidth,
-            center = Vector(0, self._activeHandlePosition/2, 0),
+            width = self._active_line_width,
+            height = self._active_line_length,
+            depth = self._active_line_width,
+            center = Vector(0, self._active_handle_position/2, 0),
             color = ToolHandle.YAxisColor
         )
 
         mb.addCube(
-            width = self._activeLineLength,
-            height = self._activeLineWidth,
-            depth = self._activeLineWidth,
-            center = Vector(self._activeHandlePosition/2, 0, 0),
+            width = self._active_line_length,
+            height = self._active_line_width,
+            depth = self._active_line_width,
+            center = Vector(self._active_handle_position/2, 0, 0),
             color = ToolHandle.XAxisColor
         )
 
         mb.addCube(
-            width = self._activeLineWidth,
-            height = self._activeLineWidth,
-            depth = self._activeLineLength,
-            center = Vector(0, 0, self._activeHandlePosition/2),
+            width = self._active_line_width,
+            height = self._active_line_width,
+            depth = self._active_line_length,
+            center = Vector(0, 0, self._active_handle_position/2),
             color = ToolHandle.ZAxisColor
         )
 
         #SELECTIONMESH -> HANDLES
         mb.addCube(
-            width = self._activeHandleWidth,
-            height = self._activeHandleWidth,
-            depth = self._activeHandleWidth,
+            width = self._active_handle_width,
+            height = self._active_handle_width,
+            depth = self._active_handle_width,
             center = Vector(0, 0, 0),
             color = ToolHandle.AllAxisColor
         )
 
         mb.addCube(
-            width = self._activeHandleWidth,
-            height = self._activeHandleWidth,
-            depth = self._activeHandleWidth,
-            center = Vector(0, self._activeHandlePosition, 0),
+            width = self._active_handle_width,
+            height = self._active_handle_width,
+            depth = self._active_handle_width,
+            center = Vector(0, self._active_handle_position, 0),
             color = ToolHandle.YAxisColor
         )
 
         mb.addCube(
-            width = self._activeHandleWidth,
-            height = self._activeHandleWidth,
-            depth = self._activeHandleWidth,
-            center = Vector(self._activeHandlePosition, 0, 0),
+            width = self._active_handle_width,
+            height = self._active_handle_width,
+            depth = self._active_handle_width,
+            center = Vector(self._active_handle_position, 0, 0),
             color = ToolHandle.XAxisColor
         )
 
         mb.addCube(
-            width = self._activeHandleWidth,
-            height = self._activeHandleWidth,
-            depth = self._activeHandleWidth,
-            center = Vector(0, 0, self._activeHandlePosition),
+            width = self._active_handle_width,
+            height = self._active_handle_width,
+            depth = self._active_handle_width,
+            center = Vector(0, 0, self._active_handle_position),
             color = ToolHandle.ZAxisColor
         )
 

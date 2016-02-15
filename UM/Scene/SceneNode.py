@@ -144,6 +144,7 @@ class SceneNode(SignalEmitter):
             child.parentChanged.emit(self)
 
     decoratorsChanged = Signal()
+    
     def addDecorator(self, decorator):
         decorator.setNode(self)
         self._decorators.append(decorator)

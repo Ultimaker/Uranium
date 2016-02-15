@@ -210,6 +210,7 @@ class Setting(SignalEmitter):
 
         if not self._inherit_function and self._inherit and self._parent and isinstance(self._parent, Setting):
             self._inherit_function = self._createFunction("parent_value")
+
     ##  Get the parent.
     #   \returns Setting
     def getParent(self):

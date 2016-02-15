@@ -30,6 +30,7 @@ class MachineManagerProxy(QObject):
         self._onActiveProfileChanged()
 
     activeMachineInstanceChanged = pyqtSignal()
+
     @pyqtProperty(str, notify = activeMachineInstanceChanged)
     def activeMachineInstance(self):
         instance = self._manager.getActiveMachineInstance()
@@ -85,6 +86,7 @@ class MachineManagerProxy(QObject):
         self._manager.setActiveMaterial(name)
 
     activeProfileChanged = pyqtSignal()
+
     @pyqtProperty(str, notify = activeProfileChanged)
     def activeProfile(self):
         profile = self._manager.getActiveProfile()

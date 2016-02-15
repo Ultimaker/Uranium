@@ -81,7 +81,7 @@ class OperationStack(SignalEmitter):
             op2 = self._operations[self._current_index - 1]
 
             if not op1._always_merge and not op2._always_merge:
-                if abs(op1._timestamp - op2._timestamp) > self._mergeWindow:
+                if abs(op1._timestamp - op2._timestamp) > self._merge_window:
                     return
 
             merged = op1.mergeWith(op2)
@@ -91,4 +91,4 @@ class OperationStack(SignalEmitter):
                 self._current_index -= 1
                 self._operations.append(merged)
 
-    _mergeWindow = 1.0
+    _merge_window = 1.0

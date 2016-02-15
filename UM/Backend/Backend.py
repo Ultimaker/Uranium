@@ -52,11 +52,11 @@ class Backend(PluginObject, SignalEmitter):
             self._backend_log = []
             self._process = self._runEngineProcess(command)
             Logger.log("i", "Started engine process: %s" % (self.getEngineCommand()[0]))
-            self._backend_log.append(bytes("Calling engine with: %s\n" % self.getEngineCommand(), 'utf-8'))
-            t = threading.Thread(target=self._storeOutputToLogThread, args=(self._process.stdout,))
+            self._backend_log.append(bytes("Calling engine with: %s\n" % self.getEngineCommand(), "utf-8"))
+            t = threading.Thread(target = self._storeOutputToLogThread, args = (self._process.stdout,))
             t.daemon = True
             t.start()
-            t = threading.Thread(target=self._storeOutputToLogThread, args=(self._process.stderr,))
+            t = threading.Thread(target = self._storeOutputToLogThread, args = (self._process.stderr,))
             t.daemon = True
             t.start()
         except FileNotFoundError as e:
@@ -77,7 +77,7 @@ class Backend(PluginObject, SignalEmitter):
         if not (len(data) % 12):
             if data is not None:
                 for index in range(0,int(len(data)/12)): #For each 12 bits (3 floats)
-                    result.append(struct.unpack("fff",data[index*12:index*12+12]))
+                    result.append(struct.unpack("fff", data[index * 12: index * 12 + 12]))
                 return result
         else:
             Logger.log("e", "Data length was incorrect for requested type")
@@ -89,7 +89,7 @@ class Backend(PluginObject, SignalEmitter):
         if not (len(data) % 24):
             if data is not None:
                 for index in range(0,int(len(data)/24)): #For each 24 bits (6 floats)
-                    result.append(struct.unpack("ffffff",data[index*24:index*24+24]))
+                    result.append(struct.unpack("ffffff",data[index * 24: index * 24 + 24]))
                 return result
         else:
             Logger.log("e", "Data length was incorrect for requested type")
@@ -108,7 +108,7 @@ class Backend(PluginObject, SignalEmitter):
             su.wShowWindow = subprocess.SW_HIDE
             kwargs["startupinfo"] = su
             kwargs["creationflags"] = 0x00004000 #BELOW_NORMAL_PRIORITY_CLASS
-        return subprocess.Popen(command_list, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.PIPE, **kwargs)
+        return subprocess.Popen(command_list, stdin = subprocess.DEVNULL, stdout = subprocess.PIPE, stderr = subprocess.PIPE, **kwargs)
 
     def _storeOutputToLogThread(self, handle):
         while True:

@@ -37,10 +37,10 @@ class ShaderProgram:
         parser.optionxform = lambda option: option
         parser.read(file_name)
 
-        if not "shaders" in parser:
+        if "shaders" not in parser:
             raise InvalidShaderProgramError("{0} is missing a vertex of fragment shader".format(file_name))
 
-        if not "vertex" in parser["shaders"] or not "fragment" in parser["shaders"]:
+        if "vertex" not in parser["shaders"] or "fragment" not in parser["shaders"]:
             raise InvalidShaderProgramError("{0} is missing a vertex of fragment shader".format(file_name))
 
         self.setVertexShader(parser["shaders"]["vertex"])
