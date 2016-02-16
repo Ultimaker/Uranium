@@ -15,6 +15,8 @@ Button {
 
     style: UM.Theme.styles.sidebar_category;
 
+    signal configureSettingVisibility()
+
     UM.SimpleButton {
         id: settingsButton
 
@@ -30,9 +32,7 @@ Button {
         iconSource: UM.Theme.getIcon("settings");
 
         onClicked: {
-            preferences.visible = true;
-            preferences.setPage(2);
-            preferences.getCurrentItem().scrollToSection(model.id);
+            base.configureSettingVisibility()
         }
     }
 }

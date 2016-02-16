@@ -19,7 +19,6 @@ ScrollView
     signal showTooltip(Item item, point location, string text);
     signal hideTooltip();
 
-
     property variant expandedCategories: []
 
     Column
@@ -53,6 +52,8 @@ ScrollView
                     iconSource: UM.Theme.getIcon(model.icon);
                     checkable: true;
 
+                    property string key: model.id;
+
                     property bool previousChecked: false
                     checked: base.expandedCategories.indexOf(model.id) != -1;
                     onClicked:
@@ -68,6 +69,8 @@ ScrollView
                         }
                         base.expandedCategories = categories;
                     }
+
+                    onConfigureSettingVisibility: if(base.configureSettings) base.configureSettings.trigger(categoryHeader);
                 }
 
                 UM.SimpleButton
@@ -195,7 +198,7 @@ ScrollView
                             {
                                 target: item;
                                 onItemValueChanged: delegateItem.settingsModel.setSettingValue(model.key, value);
-                                onContextMenuRequested: { contextMenu.key = model.key; contextMenu.popup(); }
+                                onContextMenuRequested: { contextMenu.key = delegateItem.categoryId; contextMenu.popup(); }
                                 onResetRequested: delegateItem.settingsModel.resetSettingValue(model.key);
                                 onShowTooltip: base.showTooltip(settingLoader, Qt.point(0, settingLoader.height / 2), "<b>"+model.name+"</b><br/>"+model.description)
                                 onHideTooltip: base.hideTooltip();
@@ -255,7 +258,7 @@ ScrollView
                 //: Settings context menu action
                 text: catalog.i18nc("@action:menu","Configure setting visiblity...");
 
-                onTriggered: if(base.configureSettings) base.configureSettings.trigger(key);
+                onTriggered: if(base.configureSettings) base.configureSettings.trigger(contextMenu);
             }
         }
     }
