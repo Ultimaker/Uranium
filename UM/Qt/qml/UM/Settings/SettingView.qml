@@ -70,30 +70,29 @@ ScrollView
                     }
                 }
 
-                Button
+                UM.SimpleButton
                 {
                     id: hiddenSettingsWarning
 
                     anchors.top: categoryHeader.bottom
                     width: categoryHeader.width
 
-                    opacity: categoryHeader.checked && model.hiddenValuesCount > 0 ? 1 : 0
-                    height: categoryHeader.checked && model.hiddenValuesCount > 0 ? UM.Theme.getSize("lineHeight").height : 0
+                    backgroundColor: UM.Theme.getColor("sidebar");
 
-                    text: catalog.i18ncp("@label", "{0} hidden setting uses a custom value", "{0} hidden settings use custom values", model.hiddenValuesCount)
+                    opacity: categoryHeader.checked && model.hiddenValuesCount > 0 ? 1 : 0
+                    height: categoryHeader.checked && model.hiddenValuesCount > 0 ? UM.Theme.getSize("setting").height : 0
+
                     onClicked: { UM.ActiveProfile.showHiddenValues(model.id) }
 
-                    style: ButtonStyle
-                    {
-                        background: Rectangle {}
-                        label: Label
-                        {
-                            text: control.text
+                    Label {
+                        anchors.fill: parent;
 
-                            horizontalAlignment: Text.AlignHCenter
-                            font: UM.Theme.getFont("default")
-                            color: control.hovered ? UM.Theme.getColor("text_hover") : UM.Theme.getColor("text")
-                        }
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+
+                        text: catalog.i18ncp("@label", "{0} hidden setting uses a custom value", "{0} hidden settings use custom values", model.hiddenValuesCount)
+                        font: UM.Theme.getFont("default")
+                        color: parent.hovered ? UM.Theme.getColor("text_hover") : UM.Theme.getColor("text")
                     }
                 }
 
