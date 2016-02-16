@@ -154,9 +154,7 @@ ScrollView
                             onLoaded:
                             {
                                 item.name = model.name;
-                                //item.description = model.description;
                                 item.unit = model.unit;
-                                item.value = model.valid;
                                 item.depth = model.depth;
                                 item.type = model.type;
                                 item.key = model.key;
