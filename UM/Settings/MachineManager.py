@@ -5,6 +5,7 @@ import urllib
 import os
 import json
 import copy
+import re
 
 from PyQt5.QtWidgets import QMessageBox
 
@@ -360,7 +361,16 @@ class MachineManager(SignalEmitter):
 
     def addProfileFromWorkingProfile(self):
         profile = copy.deepcopy(self._active_machine.getWorkingProfile())
-        profile.setName(catalog.i18nc("@item:intext appended to customised profiles ({0} is old profile name)", "{0} (Customised)").format(self._active_profile.getName()))
+
+        #Create regular expression from translated string to prevent (Customised) (Customised) names
+        active_profile_name = self._active_profile.getName()
+        custom_name_pattern = catalog.i18nc("@item:intext appended to customised profiles ({0} is old profile name)", "{0} (Customised)")
+        pattern = re.compile(custom_name_pattern.format(".*?").replace("(", "\(").replace(")", "\)"))
+        if not pattern.match(active_profile_name):
+            profile.setName(custom_name_pattern.format(active_profile_name))
+        else:
+            #setName will add "#2" as necessary
+            profile.setName(active_profile_name)
 
         #Make this profile available to all printers of the same type only
         profile.setMachineTypeId(self._active_profile.getMachineTypeId())
