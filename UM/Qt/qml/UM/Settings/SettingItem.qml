@@ -8,7 +8,7 @@ import QtQuick.Controls.Styles 1.1
 
 import UM 1.1 as UM
 
-Rectangle {
+Item {
     id: base;
 
     property string name;
@@ -109,6 +109,7 @@ Rectangle {
 
         anchors {
             right: controlContainer.left
+            rightMargin: UM.Theme.getSize("default_margin").width / 2;
             verticalCenter: parent.verticalCenter;
         }
         visible: base.overridden
