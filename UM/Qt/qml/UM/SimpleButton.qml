@@ -30,5 +30,7 @@ MouseArea
         sourceSize.height: width
 
         color: "black";
+
+        visible: source != "";
     }
 }
