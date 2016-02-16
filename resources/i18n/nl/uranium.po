@@ -715,8 +715,8 @@ msgstr "Standaardwaarden herstellen"
 msgctxt "@label"
 msgid "{0} hidden setting uses a custom value"
 msgid_plural "{0} hidden settings use custom values"
-msgstr[0] "{0} verborgen instelling gebruikt een aangepaste waarde"
-msgstr[1] "{0} verborgen instellingen gebruiken aangepaste waarden"
+msgstr[0] "{0} verborgen instelling heeft aangepaste waarde"
+msgstr[1] "{0} verborgen instellingen hebben aangepaste waarden"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Settings/SettingView.qml:166
 msgctxt "@action:menu"
