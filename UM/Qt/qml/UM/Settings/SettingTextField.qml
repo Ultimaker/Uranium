@@ -17,7 +17,7 @@ Rectangle
     border.width: itemStyle.controlBorderWidth;
     border.color: hovered ? itemStyle.controlBorderHighlightColor : itemStyle.controlBorderColor
 
-    property variant parentValue: value
+    property variant parentValue: value //From parent loader
 
     color: {
         switch(valid) //From parent loader
