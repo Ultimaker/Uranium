@@ -6,7 +6,7 @@ import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.1
 import QtQuick.Layouts 1.1
 
-import UM 1.0 as UM
+import UM 1.1 as UM
 
 Button {
     id: base;
@@ -15,7 +15,7 @@ Button {
 
     style: UM.Theme.styles.sidebar_category;
 
-    MouseArea {
+    UM.SimpleButton {
         id: settingsButton
 
         visible: base.hovered || settingsButton.hovered
@@ -26,15 +26,8 @@ Button {
         anchors.right: parent.right
         anchors.rightMargin: UM.Theme.getSize("setting_preferences_button_margin").width
 
-        UM.RecolorImage {
-            anchors.fill: parent;
-
-            sourceSize.width: width
-            sourceSize.height: width
-
-            color: parent.containsMouse ? UM.Theme.getColor("setting_control_button_hover") : UM.Theme.getColor("setting_control_button");
-            source: UM.Theme.getIcon("settings");
-        }
+        color: hovered ? UM.Theme.getColor("setting_control_button_hover") : UM.Theme.getColor("setting_control_button");
+        iconSource: UM.Theme.getIcon("settings");
 
         onClicked: {
             preferences.visible = true;
