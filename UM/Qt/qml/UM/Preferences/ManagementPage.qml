@@ -95,7 +95,7 @@ PreferencesPage
             anchors
             {
                 top: captionLabel.visible ? captionLabel.bottom : parent.top;
-                topMargin: captionLabel.visible ? UM.Theme.sizes.default_margin.height : 0;
+                topMargin: captionLabel.visible ? UM.Theme.getSize("default_margin").height : 0;
                 bottom: parent.bottom;
                 left: parent.left;
             }
