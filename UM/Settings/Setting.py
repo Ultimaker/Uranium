@@ -26,7 +26,7 @@ class IllegalMethodError(Exception):
 #   \note Currently there is still too much state embedded in a setting. All value functions
 #         and things like visibility should really be separated into a different class.
 #
-class Setting(SignalEmitter):    
+class Setting(SignalEmitter):
     def __init__(self, machine_manager, key, catalog, **kwargs):
         super().__init__()
         self._machine_manager = machine_manager
@@ -87,8 +87,8 @@ class Setting(SignalEmitter):
     def fillByDict(self, data):
         if "type" in data:
             self._type = data["type"]
-            if self._type not in ["int", "float", "string", "enum", "boolean", "polygon"]:
-                Logger.log("e", "Invalid type for Setting %s, ignoring", self._key)
+            if self._type not in ["int", "float", "string", "enum", "boolean", "polygon", "polygons"]:
+                Logger.log("e", "Invalid type %s for Setting %s, ignoring", self._type, self._key)
                 return
 
         if "default" in data:
