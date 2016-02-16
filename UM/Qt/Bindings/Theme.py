@@ -3,7 +3,7 @@
 
 from PyQt5.QtCore import QObject, pyqtSlot, pyqtProperty, pyqtSignal, QCoreApplication, QUrl, QSizeF
 from PyQt5.QtGui import QColor, QFont, QFontMetrics, QFontDatabase, QFontInfo
-from PyQt5.QtQml import QQmlComponent
+from PyQt5.QtQml import QQmlComponent, QQmlContext
 
 import json
 import os
@@ -162,15 +162,6 @@ class Theme(QObject):
 
                 self._sizes[name] = s
 
-        styles = os.path.join(self._path, "styles.qml")
-        if os.path.isfile(styles):
-            c = QQmlComponent(self._engine, styles)
-            self._styles = c.create()
-
-            if c.isError():
-                for error in c.errors():
-                    Logger.log("e", error.toString())
-
         iconsdir = os.path.join(self._path, "icons")
         if os.path.isdir(iconsdir):
             for icon in os.listdir(iconsdir):
@@ -182,6 +173,17 @@ class Theme(QObject):
             for image in os.listdir(imagesdir):
                 name = os.path.splitext(image)[0]
                 self._images[name] = QUrl.fromLocalFile(os.path.join(imagesdir, image))
+
+        styles = os.path.join(self._path, "styles.qml")
+        if os.path.isfile(styles):
+            c = QQmlComponent(self._engine, styles)
+            context = QQmlContext(self._engine, self._engine)
+            context.setContextProperty("Theme", self)
+            self._styles = c.create(context)
+
+            if c.isError():
+                for error in c.errors():
+                    Logger.log("e", error.toString())
 
         Logger.log("d", "Loaded theme %s", self._path)
         self.themeLoaded.emit()
