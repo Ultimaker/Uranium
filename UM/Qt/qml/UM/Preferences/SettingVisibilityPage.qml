@@ -70,7 +70,7 @@ PreferencesPage {
                     delegate: Item {
                         id: delegateItem;
 
-                        width: base.width - UM.Theme.sizes.default_margin.width * 2;
+                        width: base.width - UM.Theme.getSize("default_margin").width * 2;
                         height: childrenRect.height;
 
                         ToolButton {
@@ -89,11 +89,11 @@ PreferencesPage {
                                 }
                                 label: Row
                                 {
-                                    spacing: UM.Theme.sizes.default_margin.width;
+                                    spacing: UM.Theme.getSize("default_margin").width;
                                     Image
                                     {
                                         anchors.verticalCenter: parent.verticalCenter;
-                                        source: control.checked ? UM.Theme.icons.arrow_right : UM.Theme.icons.arrow_bottom;
+                                        source: control.checked ? UM.Theme.getIcon("arrow_right") : UM.Theme.getIcon("arrow_bottom")
                                     }
                                     Label
                                     {
@@ -139,7 +139,7 @@ PreferencesPage {
 
                                 delegate: UM.TooltipArea
                                 {
-                                    x: model.depth * UM.Theme.sizes.default_margin.width;
+                                    x: model.depth * UM.Theme.getSize("default_margin").width;
                                     text: model.description;
 
                                     width: childrenRect.width;

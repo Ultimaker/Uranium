@@ -25,9 +25,9 @@ ManagementPage {
 
     Flow {
         anchors.fill: parent;
-        spacing: UM.Theme.sizes.default_margin.height;
+        spacing: UM.Theme.getSize("default_margin").height;
 
-        Label { text: base.currentItem.name ? base.currentItem.name : ""; font: UM.Theme.fonts.large; width: parent.width; }
+        Label { text: base.currentItem.name ? base.currentItem.name : ""; font: UM.Theme.getFont("large"); width: parent.width; }
 
         Label { text: catalog.i18nc("@label", "Type"); width: parent.width * 0.2; }
         Label { text: base.currentItem.typeName ? base.currentItem.typeName : ""; width: parent.width * 0.7; }

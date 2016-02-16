@@ -50,7 +50,7 @@ PreferencesPage
                     text: model.name
                     onClicked: plugin_list.model.setEnabled(model.name, checked)
                     tooltip: model.description
-                    width: preferencesPage.width / 6 * 4 < UM.Theme.sizes.setting_text_maxwidth.width ? preferencesPage.width / 5 * 4 : UM.Theme.sizes.setting_text_maxwidth.width
+                    width: preferencesPage.width / 6 * 4 < UM.Theme.getSize("setting_text_maxwidth").width ? preferencesPage.width / 5 * 4 : UM.Theme.getSize("setting_text_maxwidth").width
                     style: ButtonStyle
                     {
                         background: Rectangle

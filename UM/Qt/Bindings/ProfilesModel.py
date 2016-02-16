@@ -40,8 +40,6 @@ class ProfilesModel(ListModel):
 
         self._manager = Application.getInstance().getMachineManager()
         self._working_profile = self._manager.getWorkingProfile()
-        if self._working_profile:
-            self._working_profile.settingValueChanged.connect(self._onWorkingProfileValueChanged)
 
         self._manager.profilesChanged.connect(self._onProfilesChanged)
         self._manager.activeMachineInstanceChanged.connect(self._onMachineInstanceChanged)
@@ -234,11 +232,7 @@ class ProfilesModel(ListModel):
         return QUrl.fromLocalFile(os.path.expanduser("~/"))
 
     def _onMachineInstanceChanged(self):
-        if self._working_profile:
-            self._working_profile.settingValueChanged.disconnect(self._onWorkingProfileValueChanged)
         self._working_profile = self._manager.getWorkingProfile()
-        if self._working_profile:
-            self._working_profile.settingValueChanged.connect(self._onWorkingProfileValueChanged)
 
         self._onProfilesChanged()
 
@@ -254,9 +248,6 @@ class ProfilesModel(ListModel):
                 break
 
         self._manager.setActiveProfile(active_profile)
-
-    def _onWorkingProfileValueChanged(self, setting):
-        self._onProfilesChanged()
 
     def _onProfilesChanged(self):
         self.clear()

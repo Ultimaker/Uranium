@@ -33,19 +33,19 @@ ManagementPage
         visible: base.currentItem != null
         anchors.fill: parent
 
-        Label { id: profileName; text: base.currentItem ? base.currentItem.name : ""; font: UM.Theme.fonts.large; width: parent.width; }
+        Label { id: profileName; text: base.currentItem ? base.currentItem.name : ""; font: UM.Theme.getFont("large"); width: parent.width; }
 
         ScrollView {
             anchors.left: parent.left
             anchors.top: profileName.bottom
-            anchors.topMargin: UM.Theme.sizes.default_margin.height
+            anchors.topMargin: UM.Theme.getSize("default_margin").height
             anchors.right: parent.right
             anchors.bottom: parent.bottom
 
             Grid {
                 id: containerGrid
                 columns: 2
-                spacing: UM.Theme.sizes.default_margin.width
+                spacing: UM.Theme.getSize("default_margin").width
 
                 Label { text: catalog.i18nc("@label", "Profile type"); width: 155}
                 Label { text: base.currentItem == null ? "" :

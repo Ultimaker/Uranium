@@ -1,7 +1,7 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-from PyQt5.QtCore import Qt, QCoreApplication, pyqtSlot
+from PyQt5.QtCore import Qt, QCoreApplication, pyqtSlot, pyqtProperty, pyqtSignal
 
 from UM.Qt.ListModel import ListModel
 from UM.Resources import Resources
@@ -32,17 +32,25 @@ class SettingCategoriesModel(ListModel):
         self.addRoleName(self.SettingsRole, "settings")
         self.addRoleName(self.HiddenValuesCountRole, "hiddenValuesCount") # Probably need a better name for this
 
+        self._resetting = False
+
     @pyqtSlot(str)
     def filter(self, text):
         for item in self.items:
             item["settings"].filter(text)
 
+    resettingChanged = pyqtSignal()
+    @pyqtProperty(bool, notify = resettingChanged)
+    def resetting(self):
+        return self._resetting;
+
     @pyqtSlot()
     def reload(self):
-        self.clear()
+        self._beginReset()
+        self._items = []
         if self._machine_instance:
             for category in self._machine_instance.getMachineDefinition().getAllCategories():
-                self.appendItem({
+                self._items.append({
                     "id": category.getKey(),
                     "name": category.getLabel(),
                     "icon": category.getIcon(),
@@ -50,9 +58,13 @@ class SettingCategoriesModel(ListModel):
                     "settings": SettingsFromCategoryModel.SettingsFromCategoryModel(category),
                     "hiddenValuesCount": category.getHiddenValuesCount()
                 })
+        self._endReset()
 
     def _onActiveMachineChanged(self):
-        self.clear()
+        self._beginReset()
+
+        self._items = []
+
         if self._machine_instance:
             for category in self._machine_instance.getMachineDefinition().getAllCategories():
                 category.visibleChanged.disconnect(self._onCategoryVisibleChanged)
@@ -71,6 +83,8 @@ class SettingCategoriesModel(ListModel):
                 })
                 category.visibleChanged.connect(self._onCategoryVisibleChanged)
 
+        self._endReset()
+
     def _onCategoryVisibleChanged(self, category):
         index = self.find("id", category.getKey())
         self.setProperty(index, "visible", category.isVisible())
@@ -83,3 +97,13 @@ class SettingCategoriesModel(ListModel):
         for category in self._machine_instance.getMachineDefinition().getAllCategories():
             index = self.find("id", category.getKey())
             self.setProperty(index, "hiddenValuesCount", category.getHiddenValuesCount())
+
+    def _beginReset(self):
+        self.beginResetModel()
+        self._resetting = True
+        self.resettingChanged.emit()
+
+    def _endReset(self):
+        self._resetting = False
+        self.resettingChanged.emit()
+        self.endResetModel()

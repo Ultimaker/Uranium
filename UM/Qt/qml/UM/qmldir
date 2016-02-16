@@ -15,3 +15,5 @@ SettingView 1.0 Settings/SettingView.qml
 SidebarCategoryHeader 1.0 Settings/SidebarCategoryHeader.qml
 
 TooltipArea 1.1 TooltipArea.qml
+
+SimpleButton 1.1 SimpleButton.qml

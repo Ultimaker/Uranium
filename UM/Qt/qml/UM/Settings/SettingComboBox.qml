@@ -71,9 +71,9 @@ ComboBox
                 anchors.rightMargin: itemStyle.controlBorderWidth * 2;
                 anchors.verticalCenter: parent.verticalCenter;
 
-                source: UM.Theme.icons.arrow_bottom
-                width: UM.Theme.sizes.standard_arrow.width
-                height: UM.Theme.sizes.standard_arrow.height
+                source: UM.Theme.getIcon("arrow_bottom")
+                width: UM.Theme.getSize("standard_arrow").width
+                height: UM.Theme.getSize("standard_arrow").height
                 sourceSize.width: width + 5
                 sourceSize.height: width + 5
 

@@ -21,15 +21,15 @@ ListView {
     delegate: Rectangle
     {
         id: message
-        width: UM.Theme.sizes.message.width
-        property int labelHeight: messageLabel.height + (UM.Theme.sizes.default_margin.height * 2)
-        property int progressBarHeight: totalProgressBar.height + UM.Theme.sizes.default_margin.height
+        width: UM.Theme.getSize("message").width
+        property int labelHeight: messageLabel.height + (UM.Theme.getSize("default_margin").height * 2)
+        property int progressBarHeight: totalProgressBar.height + UM.Theme.getSize("default_margin").height
         height: model.progress == null ? message.labelHeight : message.labelHeight + message.progressBarHeight
         anchors.horizontalCenter: parent.horizontalCenter;
 
-        color: UM.Theme.colors.message_background
-        border.width: UM.Theme.sizes.default_lining.width
-        border.color: UM.Theme.colors.lining
+        color: UM.Theme.getColor("message_background")
+        border.width: UM.Theme.getSize("default_lining").width
+        border.color: UM.Theme.getColor("lining")
 
         property variant actions: model.actions;
         property variant model_id: model.id
@@ -38,16 +38,16 @@ ListView {
             id: messageLabel
             anchors {
                 left: parent.left;
-                leftMargin: UM.Theme.sizes.default_margin.width;
+                leftMargin: UM.Theme.getSize("default_margin").width;
 
                 top: model.progress != null ? parent.top : undefined;
-                topMargin: UM.Theme.sizes.default_margin.width;
+                topMargin: UM.Theme.getSize("default_margin").width;
 
                 right: actionButtons.left;
-                rightMargin: UM.Theme.sizes.default_margin.width;
+                rightMargin: UM.Theme.getSize("default_margin").width;
 
                 verticalCenter: model.progress != null ? undefined : parent.verticalCenter;
-                bottomMargin: UM.Theme.sizes.default_margin.width;
+                bottomMargin: UM.Theme.getSize("default_margin").width;
             }
 
             function getProgressText(){
@@ -56,8 +56,8 @@ ListView {
             }
 
             text: model.progress > 0 ? messageLabel.getProgressText() : model.text == undefined ? '' : model.text
-            color: UM.Theme.colors.message_text;
-            font: UM.Theme.fonts.default;
+            color: UM.Theme.getColor("message_text")
+            font: UM.Theme.getFont("default")
             wrapMode: Text.Wrap;
 
             ProgressBar {
@@ -75,26 +75,26 @@ ListView {
                 style: UM.Theme.styles.progressbar
 
                 anchors.top: parent.bottom;
-                anchors.topMargin: UM.Theme.sizes.default_margin.width;
+                anchors.topMargin: UM.Theme.getSize("default_margin").width;
             }
         }
 
         Button {
             id: closeButton;
-            width: UM.Theme.sizes.message_close.width;
-            height: UM.Theme.sizes.message_close.height;
+            width: UM.Theme.getSize("message_close").width;
+            height: UM.Theme.getSize("message_close").height;
             anchors {
                 right: parent.right;
-                rightMargin: UM.Theme.sizes.default_margin.width / 2;
+                rightMargin: UM.Theme.getSize("default_margin").width / 2;
                 top: parent.top;
-                topMargin: UM.Theme.sizes.default_margin.width / 2;
+                topMargin: UM.Theme.getSize("default_margin").width / 2;
             }
             UM.RecolorImage {
                 anchors.fill: parent;
                 sourceSize.width: width
                 sourceSize.height: width
-                color: UM.Theme.colors.message_dismiss
-                source: UM.Theme.icons.cross2;
+                color: UM.Theme.getColor("message_dismiss")
+                source: UM.Theme.getIcon("cross2")
             }
 
             onClicked: UM.Models.visibleMessagesModel.hideMessage(model.id)
@@ -102,7 +102,7 @@ ListView {
             enabled: model.dismissable
             style: ButtonStyle {
                 background: Rectangle {
-                    color: UM.Theme.colors.message_background
+                    color: UM.Theme.getColor("message_background")
                 }
             }
         }
@@ -113,7 +113,7 @@ ListView {
 
             anchors {
                 right: parent.right;
-                rightMargin: UM.Theme.sizes.default_margin.width * 2;
+                rightMargin: UM.Theme.getSize("default_margin").width * 2;
                 verticalCenter: parent.verticalCenter;
             }
 
@@ -126,24 +126,24 @@ ListView {
                     text: model.name
                     style: ButtonStyle {
                         background: Item{
-                            property int standardWidth: UM.Theme.sizes.message_button.width
-                            property int responsiveWidth: messageStackButtonText.width + UM.Theme.sizes.default_margin.width
+                            property int standardWidth: UM.Theme.getSize("message_button").width
+                            property int responsiveWidth: messageStackButtonText.width + UM.Theme.getSize("default_margin").width
                             implicitWidth: responsiveWidth > standardWidth ? responsiveWidth : standardWidth
-                            implicitHeight: UM.Theme.sizes.message_button.height
+                            implicitHeight: UM.Theme.getSize("message_button").height
                             Rectangle {
                                 id: messageStackButtonBackground
                                 width: parent.width
                                 height: parent.height
-                                color: control.pressed ? UM.Theme.colors.button_active : 
-                                       control.hovered ? UM.Theme.colors.button_hover : UM.Theme.colors.button
+                                color: control.pressed ? UM.Theme.getColor("button_active") :
+                                       control.hovered ? UM.Theme.getColor("button_hover") : UM.Theme.getColor("button")
                                 Behavior on color { ColorAnimation { duration: 50; } }
                             }
                             Label {
                                 id: messageStackButtonText
                                 anchors.centerIn: parent
                                 text: control.text
-                                color: UM.Theme.colors.button_text
-                                font: UM.Theme.fonts.default
+                                color: UM.Theme.getColor("button_text")
+                                font: UM.Theme.getFont("default")
                             }
                         }
                         label: Label{
