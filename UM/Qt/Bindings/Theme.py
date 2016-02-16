@@ -72,7 +72,7 @@ class Theme(QObject):
     @pyqtSlot(str, result = "QUrl")
     def getImage(self, image_name):
         if image_name in self._images:
-            return self._sizes[image_name]
+            return self._images[image_name]
 
         Logger.log("w", "No image %s defined in Theme", image_name)
         return QUrl()
