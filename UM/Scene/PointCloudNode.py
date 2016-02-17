@@ -26,12 +26,12 @@ class PointCloudNode(SceneNode.SceneNode):
     def _onParentChanged(self, parent):
         num_scans = 12 #Hardcoded, change this!
         if parent.callDecoration("isGroup"):
-            if not hasattr(parent, 'color'):
+            if not hasattr(parent, "color"):
                 Application.getInstance().addColorIndex(parent)
                 color_hsv = ColorGenerator().getColor(Application.getInstance().getColorIndex(parent))
                 #r,g,b = colorsys.hsv_to_rgb(color_hsv[0], color_hsv[1], color_hsv[2])
-                setattr(parent, 'color', color_hsv) 
-            color_hsv = getattr(parent, 'color')
+                setattr(parent, "color", color_hsv)
+            color_hsv = getattr(parent, "color")
             if len(parent.getChildren()) > num_scans * 0.5:
                 color_hsv[1] = 0.4 + (0.6 / ((num_scans * 0.5) - 1) * (len(parent.getChildren()) - 1. - 0.5 * num_scans))
             else: 
