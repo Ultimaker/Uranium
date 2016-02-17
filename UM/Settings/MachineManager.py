@@ -246,7 +246,7 @@ class MachineManager(SignalEmitter):
         if not self._active_machine:
             return
 
-        material_profile = self.findProfile(material, profile_type = "material", instance = self._active_machine)
+        material_profile = self.findProfile(material, type_name = "material", instance = self._active_machine)
         #This finds only profiles of type "material", which are partial profiles
         if material_profile:
             self._active_machine.getWorkingProfile().mergeSettingsFrom(material_profile, reset = False)
@@ -294,7 +294,7 @@ class MachineManager(SignalEmitter):
 
     profileNameChanged = Signal()
 
-    def getProfiles(self, profile_type = None, instance = None):
+    def getProfiles(self, type_name = None, instance = None):
         if not instance:
             return self._profiles
 
@@ -305,12 +305,12 @@ class MachineManager(SignalEmitter):
 
         generic_profiles = []
         specific_profiles = []
-        add_generic_profiles = (profile_type == None);
+        add_generic_profiles = (type_name == None);
 
         for profile in self._profiles:
             profile_type = profile.getType()
             #Filter out "partial" profiles
-            if profile_type != "all" and profile_type != profile_type:
+            if type_name != "all" and type_name != profile_type:
                 continue
 
             machine_type = profile.getMachineTypeId()
@@ -337,7 +337,7 @@ class MachineManager(SignalEmitter):
             elif not machine_type:
                 generic_profiles.append(profile)
 
-        if len(specific_profiles) == 0 and profile_type == None:
+        if len(specific_profiles) == 0 and type_name == None:
             #No starter-profiles were found
             return generic_profiles
 
@@ -400,14 +400,14 @@ class MachineManager(SignalEmitter):
             except:
                 self.setActiveProfile(None)
 
-    def findProfile(self, name, variant_name = None, material_name = None, profile_type = None, instance = None):
-        profiles = self.getProfiles(profile_type = profile_type, instance = instance);
+    def findProfile(self, name, variant_name = None, material_name = None, type_name = None, instance = None):
+        profiles = self.getProfiles(type_name = type_name, instance = instance);
 
         for profile in profiles:
             if profile.getName().lower() == name.lower():
                 if (variant_name and not profile.getMachineVariantName() == variant_name) or \
                         (material_name and not profile.getMaterialName() == material_name) or \
-                        (profile_type and not profile.getType() == profile_type):
+                        (type_name and not profile.getType() == type_name):
                     continue
                 return profile
 
@@ -764,7 +764,7 @@ class MachineManager(SignalEmitter):
 
             if not profile.getMaterialName() and instance.hasMaterials():
                 #Apply partial material profile
-                material_profile = self.findProfile(instance.getMaterialName(), profile_type = "material", instance = instance)
+                material_profile = self.findProfile(instance.getMaterialName(), type_name = "material", instance = instance)
                 instance.getWorkingProfile().mergeSettingsFrom(material_profile, reset = False)
 
     def _confirmReplaceCurrentSettings(self, selection_name):
