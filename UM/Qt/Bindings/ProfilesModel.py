@@ -83,7 +83,7 @@ class ProfilesModel(ListModel):
 
         #Prevent warning when switching from the currently selected profile
         if profile == self._manager.getActiveProfile():
-            self._manager.clearWorkingProfileChanges()
+            self._manager.getWorkingProfile().setChangedSettings({})
 
         self._manager.removeProfile(profile)
 

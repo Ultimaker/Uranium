@@ -136,7 +136,7 @@ class MachineManagerProxy(QObject):
     def createProfile(self):
         profile = self._manager.addProfileFromWorkingProfile()
         #Prevent "Replace profile?" dialog; working profile will get replaced by setActiveProfile()
-        self._manager.clearWorkingProfileChanges()
+        self._manager.getWorkingProfile().setChangedSettings({})
         self._manager.setActiveProfile(profile)
         return profile.getName()
 

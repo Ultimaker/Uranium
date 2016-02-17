@@ -7,7 +7,7 @@ import json
 import copy
 import re
 
-from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtWidgets import QMessageBox #Used in _confirmReplaceCurrentSettings() by lack of a Uranium MessageBox API
 
 import UM #For using UM.Message, which we cannot import here because that would lead to a circular import
 from UM.Signal import Signal, SignalEmitter
@@ -246,7 +246,7 @@ class MachineManager(SignalEmitter):
         if not self._active_machine:
             return
 
-        material_profile = self.findProfile(material, type = "material", instance = self._active_machine)
+        material_profile = self.findProfile(material, profile_type = "material", instance = self._active_machine)
         #This finds only profiles of type "material", which are partial profiles
         if material_profile:
             self._active_machine.getWorkingProfile().mergeSettingsFrom(material_profile, reset = False)
@@ -294,7 +294,7 @@ class MachineManager(SignalEmitter):
 
     profileNameChanged = Signal()
 
-    def getProfiles(self, type = None, instance = None):
+    def getProfiles(self, profile_type = None, instance = None):
         if not instance:
             return self._profiles
 
@@ -305,12 +305,12 @@ class MachineManager(SignalEmitter):
 
         generic_profiles = []
         specific_profiles = []
-        add_generic_profiles = (type == None);
+        add_generic_profiles = (profile_type == None);
 
         for profile in self._profiles:
             profile_type = profile.getType()
             #Filter out "partial" profiles
-            if type != "all" and type != profile_type:
+            if profile_type != "all" and profile_type != profile_type:
                 continue
 
             machine_type = profile.getMachineTypeId()
@@ -337,7 +337,7 @@ class MachineManager(SignalEmitter):
             elif not machine_type:
                 generic_profiles.append(profile)
 
-        if len(specific_profiles) == 0 and type == None:
+        if len(specific_profiles) == 0 and profile_type == None:
             #No starter-profiles were found
             return generic_profiles
 
@@ -400,14 +400,14 @@ class MachineManager(SignalEmitter):
             except:
                 self.setActiveProfile(None)
 
-    def findProfile(self, name, variant_name = None, material_name = None, type = None, instance = None):
-        profiles = self.getProfiles(type = type, instance = instance);
+    def findProfile(self, name, variant_name = None, material_name = None, profile_type = None, instance = None):
+        profiles = self.getProfiles(profile_type = profile_type, instance = instance);
 
         for profile in profiles:
             if profile.getName().lower() == name.lower():
                 if (variant_name and not profile.getMachineVariantName() == variant_name) or \
                         (material_name and not profile.getMaterialName() == material_name) or \
-                        (type and not profile.getType() == type):
+                        (profile_type and not profile.getType() == profile_type):
                     continue
                 return profile
 
@@ -430,10 +430,6 @@ class MachineManager(SignalEmitter):
         return profile_name
 
     activeProfileChanged = Signal()
-
-    def clearWorkingProfileChanges(self):
-        if self._active_machine:
-            self._active_machine.getWorkingProfile().setChangedSettings({})
 
     def getWorkingProfile(self):
         if self._active_machine:
@@ -768,10 +764,11 @@ class MachineManager(SignalEmitter):
 
             if not profile.getMaterialName() and instance.hasMaterials():
                 #Apply partial material profile
-                material_profile = self.findProfile(instance.getMaterialName(), type = "material", instance = instance)
+                material_profile = self.findProfile(instance.getMaterialName(), profile_type = "material", instance = instance)
                 instance.getWorkingProfile().mergeSettingsFrom(material_profile, reset = False)
 
     def _confirmReplaceCurrentSettings(self, selection_name):
+        #TODO: Refactor to use a Uranium MessageBox API instead of introducing a dependency on PyQt5
         message_box = QMessageBox()
         message_box.setIcon(QMessageBox.Question)
         message_box.setWindowTitle(catalog.i18nc("@title:window", "Replace profile"))
@@ -801,5 +798,5 @@ class MachineManager(SignalEmitter):
         elif result == discard_button:
             pass
 
-        self.clearWorkingProfileChanges()
+        self.getWorkingProfile().setChangedSettings({})
         return True
