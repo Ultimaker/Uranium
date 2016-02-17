@@ -73,6 +73,14 @@ ManagementPage
     }
 
     buttons: Row {
+
+        Button
+        {
+            text: catalog.i18nc("@action:button", "Make Copy")
+            onClicked: makeCopyDialog.open()
+            enabled: currentItem != null
+        }
+
         Button
         {
             text: catalog.i18nc("@action:button", "Import");
@@ -92,6 +100,12 @@ ManagementPage
     {
         UM.I18nCatalog { id: catalog; name: "uranium"; }
 
+        MakeCopyDialog
+        {
+            id: makeCopyDialog
+            object: base.currentItem != null ? base.currentItem.name : ""
+            onAccepted: base.model.addCopyOfProfile(base.currentItem.name, newName.trim())
+        }
         ConfirmRemoveDialog
         {
             id: confirmDialog;
