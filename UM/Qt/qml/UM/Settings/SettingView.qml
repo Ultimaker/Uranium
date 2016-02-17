@@ -198,7 +198,7 @@ ScrollView
                                 onItemValueChanged: delegateItem.settingsModel.setSettingValue(model.key, value);
                                 onContextMenuRequested: { contextMenu.key = delegateItem.categoryId; contextMenu.popup(); }
                                 onResetRequested: delegateItem.settingsModel.resetSettingValue(model.key);
-                                onShowTooltip: base.showTooltip(settingLoader, Qt.point(0, settingLoader.height / 2), "<b>"+model.name+"</b><br/>"+model.description)
+                                onShowTooltip: base.showTooltip(settingLoader, Qt.point(0, settingLoader.height / 2), "<b>" + model.name + "</b><br/>" + model.description)
                                 onHideTooltip: base.hideTooltip();
                             }
                         }
@@ -248,13 +248,13 @@ ScrollView
             MenuItem
             {
                 //: Settings context menu action
-                text: catalog.i18nc("@action:menu","Hide this setting");
+                text: catalog.i18nc("@action:menu", "Hide this setting");
                 onTriggered: delegateItem.settingsModel.hideSetting(key);
             }
             MenuItem
             {
                 //: Settings context menu action
-                text: catalog.i18nc("@action:menu","Configure setting visiblity...");
+                text: catalog.i18nc("@action:menu", "Configure setting visiblity...");
 
                 onTriggered: if(base.configureSettings) base.configureSettings.trigger(contextMenu);
             }
