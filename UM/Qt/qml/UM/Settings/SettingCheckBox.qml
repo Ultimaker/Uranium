@@ -72,37 +72,3 @@ MouseArea
         }
     }
 }
-/*
-CheckBox
-{
-    signal valueChanged(bool value);
-    id: base
-    checked: boolCheck(value) //From parent loader
-
-    function boolCheck(value) //Hack to ensure a good match between python and qml.
-    {
-        if(value == "True")
-        {
-            return true
-        }else if(value == "False")
-        {
-            return false
-        }
-        else
-        {
-            return value
-        }
-    }
-
-    MouseArea {
-        anchors.fill: parent;
-        onClicked: valueChanged(!checked);
-    }
-
-    style: CheckBoxStyle
-    {
-        background: Item { }
-        label: Label{ }
-        indicator:
-    }
-}*/
