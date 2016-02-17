@@ -119,7 +119,6 @@ ManagementPage
             selectExisting: true;
             nameFilters: base.model.getFileNameFiltersRead()
             folder: base.model.getDefaultSavePath()
-            Component.onCompleted: console.log(folder)
             onAccepted:
             {
                 var result = base.model.importProfile(fileUrl)
