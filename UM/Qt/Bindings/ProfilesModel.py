@@ -297,7 +297,8 @@ class ProfilesModel(ListModel):
             if active_machine:
                 for key, value in settings_dict.items():
                     setting = self._manager.getActiveMachineInstance().getMachineDefinition().getSetting(key)
-                    settings_list.append({"name": setting.getLabel(), "value": value})
+                    if setting:
+                        settings_list.append({"name": setting.getLabel(), "value": value})
             settings_list = sorted(settings_list, key = lambda setting:setting["name"])
             self.appendItem({
                 "id": id(profile),
