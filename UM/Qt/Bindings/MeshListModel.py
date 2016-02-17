@@ -62,7 +62,7 @@ class MeshListModel(ListModel):
                 #print("dropped: ",dropped_data)
                 for parent_node in Application.getInstance().getController().getScene().getRoot().getAllChildren():
                     #print("parent id: " , id(parent_node) , " ", dropped_data['parent_key'], " moved: " , moved_data["parent_key"])
-                    if id(parent_node) == dropped_data['parent_key']:
+                    if id(parent_node) == dropped_data["parent_key"]:
                         if id(node.getParent()) != id(parent_node):
                             node.setParent(parent_node)
                             self.removeItem(old_index)
