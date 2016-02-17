@@ -35,6 +35,8 @@ class Theme(QObject):
         self._em_height = int(QFontMetrics(QCoreApplication.instance().font()).ascent())
         self._em_width = self._em_height;
 
+        self._initializeDefaults()
+
         Preferences.getInstance().addPreference("general/theme", Application.getInstance().getApplicationName())
 
         try:
