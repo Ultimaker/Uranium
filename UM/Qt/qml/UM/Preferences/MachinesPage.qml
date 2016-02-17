@@ -27,21 +27,21 @@ ManagementPage {
         anchors.fill: parent;
         spacing: UM.Theme.sizes.default_margin.height;
 
-        Label { text: base.currentItem.name ? base.currentItem.name : ""; font: UM.Theme.fonts.large; width: parent.width; }
+        Label { text: base.currentItem && base.currentItem.name ? base.currentItem.name : ""; font: UM.Theme.fonts.large; width: parent.width; }
 
         Label { text: catalog.i18nc("@label", "Type"); width: parent.width * 0.2; }
-        Label { text: base.currentItem.typeName ? base.currentItem.typeName : ""; width: parent.width * 0.7; }
+        Label { text: base.currentItem && base.currentItem.typeName ? base.currentItem.typeName : ""; width: parent.width * 0.7; }
 
         UM.I18nCatalog { id: catalog; name: "uranium"; }
 
         ConfirmRemoveDialog {
             id: confirmDialog;
-            object: base.currentItem.name ? base.currentItem.name : "";
+            object: base.currentItem && base.currentItem.name ? base.currentItem.name : "";
             onYes: base.model.removeMachineInstance(base.currentItem.name);
         }
         RenameDialog {
             id: renameDialog;
-            object: base.currentItem.name ? base.currentItem.name : "";
+            object: base.currentItem && base.currentItem.name ? base.currentItem.name : "";
             onAccepted: {
                 base.model.renameMachineInstance(base.currentItem.name, newName.trim());
                 //Reselect current item to update details panel
