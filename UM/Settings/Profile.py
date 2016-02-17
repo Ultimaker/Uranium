@@ -129,10 +129,11 @@ class Profile(SignalEmitter):
     #
     #   \param key The key of the setting to set.
     #   \param value The new value of the setting.
+    #   \param silent Make the call less verbose, used when loading profiles
     #
     #   \note If the setting is not a user-settable setting, this method will do nothing.
-    def setSettingValue(self, key, value, **kwargs):
-        if not kwargs.get("silent", False):
+    def setSettingValue(self, key, value, silent = False):
+        if not silent:
             Logger.log("d", "Setting value of %s to %s on profile %s", key, value, self._name)
 
         self._dirty = True
