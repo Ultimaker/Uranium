@@ -94,7 +94,8 @@ class Setting(SignalEmitter):
         if "default" in data:
             self._default_value = data["default"]
 
-        self.bindValidator()
+        if not self._validator:
+            self.bindValidator()
 
         if "label" in data:
             self._label = self._i18n_catalog.i18nc("{0} label".format(self._key), data["label"])
@@ -147,8 +148,14 @@ class Setting(SignalEmitter):
             max_value_warning = self._createFunction(data["max_value_warning"])
 
         if  self.getValidator() is not None: #Strings don"t have validators as of yet
-            self.getValidator().setRange(min_value,max_value,min_value_warning,max_value_warning)
-
+            if min_value:
+                self.getValidator().setMinValue(min_value)
+            if max_value:
+                self.getValidator().setMaxValue(max_value)
+            if max_value_warning:
+                self.getValidator().setMaxValueWarning(max_value_warning)
+            if min_value_warning:
+                self.getValidator().setMinValueWarning(min_value_warning)
         if "enabled" in data:
             self._enabled_function = self._createFunction(data["enabled"])
 
