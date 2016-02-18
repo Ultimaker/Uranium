@@ -50,11 +50,14 @@ class OutputDeviceManagerProxy(QObject):
     #   \param device_id \type{string} The handle of the device to write to.
     #   \param file_name \type{string} A suggestion for the file name to write
     #   to. Can be freely ignored if providing a file name makes no sense.
-    #   \param filter_by_machine \type{bool} If the file name is ignored, should
-    #   the file format that the output device chooses be limited to the formats
-    #   that are supported by the currently active machine?
-    @pyqtSlot(str, str, bool)
-    def requestWriteToDevice(self, device_id, file_name, filter_by_machine = False):
+    #   \param kwargs Key-word arguments:
+    #       filter_by_machine: If the file name is ignored, should the file
+    #                          format that the output device chooses be limited
+    #                          to the formats that are supported by the
+    #                          currently active machine?
+    @pyqtSlot(str, str, "QVariantMap")
+    def requestWriteToDevice(self, device_id, file_name, kwargs):
+        filter_by_machine = kwargs.get("filter_by_machine", False)
         # On Windows, calling requestWrite() on LocalFileOutputDevice crashes when called from a signal
         # handler attached to a QML MenuItem. So instead, defer the call to the next run of the event 
         # loop, since that does work.
@@ -69,14 +72,17 @@ class OutputDeviceManagerProxy(QObject):
     #   \param device_id \type{string} The handle of the device to write to.
     #   \param file_name \type{string} A suggestion for the file name to write
     #   to. Can be freely ignored if providing a file name makes no sense.
-    #   \param filter_by_machine \type{bool} If the file name is ignored, should
-    #   the file format that the output device chooses be limited to the formats
-    #   that are supported by the currently active machine?
-    @pyqtSlot(str, str, bool)
-    def requestWriteSelectionToDevice(self, device_id, file_name, filter_by_machine = False):
+    #   \param kwargs Key-word arguments:
+    #       filter_by_machine: If the file name is ignored, should the file
+    #                          format that the output device chooses be limited
+    #                          to the formats that are supported by the
+    #                          currently active machine?
+    @pyqtSlot(str, str, "QVariantMap")
+    def requestWriteSelectionToDevice(self, device_id, file_name, kwargs):
         if not Selection.hasSelection():
             return
 
+        filter_by_machine = kwargs.get("filter_by_machine", False)
         # On Windows, calling requestWrite() on LocalFileOutputDevice crashes when called from a signal
         # handler attached to a QML MenuItem. So instead, defer the call to the next run of the event 
         # loop, since that does work.
