@@ -32,6 +32,10 @@ class ScaleTool(Tool):
 
         self._maximum_bounds = None
         self._move_up = True
+        
+        # We use the position of the scale handle when the operation starts.
+        # This is done in order to prevent runaway reactions (drag changes of 100+)
+        self._saved_handle_position = None
 
         self.setExposedProperties(
             "ScaleSnap",
@@ -83,16 +87,16 @@ class ScaleTool(Tool):
             if ToolHandle.isAxis(id):
                 self.setLockedAxis(id)
 
-            handle_position = self._handle.getWorldPosition()
+            self._saved_handle_position = self._handle.getWorldPosition()
 
             if id == ToolHandle.XAxis:
-                self.setDragPlane(Plane(Vector(0, 0, 1), handle_position.z))
+                self.setDragPlane(Plane(Vector(0, 0, 1), self._saved_handle_position.z))
             elif id == ToolHandle.YAxis:
-                self.setDragPlane(Plane(Vector(0, 0, 1), handle_position.z))
+                self.setDragPlane(Plane(Vector(0, 0, 1), self._saved_handle_position.z))
             elif id == ToolHandle.ZAxis:
-                self.setDragPlane(Plane(Vector(0, 1, 0), handle_position.y))
+                self.setDragPlane(Plane(Vector(0, 1, 0), self._saved_handle_position.y))
             else:
-                self.setDragPlane(Plane(Vector(0, 1, 0), handle_position.y))
+                self.setDragPlane(Plane(Vector(0, 1, 0), self._saved_handle_position.y))
 
             self.setDragStart(event.x, event.y)
             self.operationStarted.emit(self)
@@ -101,10 +105,10 @@ class ScaleTool(Tool):
             if not self.getDragPlane():
                 return False
 
-            handle_position = self._handle.getWorldPosition()
+            #handle_position = self._handle.getWorldPosition()
             drag_position = self.getDragPosition(event.x, event.y)
             if drag_position:
-                drag_length = (drag_position - handle_position).length()
+                drag_length = (drag_position - self._saved_handle_position).length()
                 if self._drag_length > 0:
                     drag_change = (drag_length - self._drag_length) / 100 * self._scale_speed
 
@@ -125,7 +129,7 @@ class ScaleTool(Tool):
 
                     Selection.applyOperation(ScaleOperation, scale_change, relative_scale = True, snap = self._snap_scale)
 
-                self._drag_length = (handle_position - drag_position).length()
+                self._drag_length = (self._saved_handle_position - drag_position).length()
                 return True
 
         if event.type == Event.MouseReleaseEvent:
