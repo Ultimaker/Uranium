@@ -327,6 +327,9 @@ class Setting(SignalEmitter):
     def getErrorDescription(self):
         return self._error_description
 
+    ##  Emitted whenever this setting's global-only state changes.
+    globalOnlyChanged = Signal()
+
     ##  Get whether the setting is global only or not.
     #
     #   Global only means that this setting cannot be used as a per object setting.
@@ -488,6 +491,7 @@ class Setting(SignalEmitter):
         if key in self._required_setting_keys:
             self.enabledChanged.emit(self)
             self.defaultValueChanged.emit(self)
+            self.globalOnlyChanged.emit(self)
 
     def _onActiveProfileChanged(self):
         if self._profile:
