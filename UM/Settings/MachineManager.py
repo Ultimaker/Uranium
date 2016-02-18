@@ -396,7 +396,7 @@ class MachineManager(SignalEmitter):
 
         if profile == self._active_profile:
             try:
-                self.setActiveProfile(self._profiles[0])
+                self.setActiveProfile(self.getProfiles(instance = self._active_machine)[0])
             except:
                 self.setActiveProfile(None)
 
