@@ -76,7 +76,7 @@ ManagementPage
 
         Button
         {
-            text: catalog.i18nc("@action:button", "Make Copy")
+            text: catalog.i18nc("@action:button", "Copy")
             onClicked: makeCopyDialog.open()
             enabled: currentItem != null
         }
