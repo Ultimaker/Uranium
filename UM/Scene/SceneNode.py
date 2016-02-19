@@ -612,7 +612,7 @@ class _CalculateAABBJob(Job):
 
         for child in self._node._children:
             if aabb is None:
-                aabb = copy.deepcopy(child.getBoundingBox())
+                aabb = deepcopy(child.getBoundingBox())
             else:
                 aabb += child.getBoundingBox()
 

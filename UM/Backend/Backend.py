@@ -159,6 +159,8 @@ class Backend(PluginObject, SignalEmitter):
             self._socket.stateChanged.disconnect(self._onSocketStateChanged)
             self._socket.messageReceived.disconnect(self._onMessageReceived)
             self._socket.error.disconnect(self._onSocketError)
+            # If the error occured due to parsing, both connections believe that connection is okay. So we need to force a close.
+            self._socket.close()
 
         self._socket = SignalSocket()
         self._socket.stateChanged.connect(self._onSocketStateChanged)
