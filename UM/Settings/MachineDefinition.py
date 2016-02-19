@@ -44,6 +44,8 @@ class MachineDefinition(SignalEmitter):
         self._machine_settings = []
         self._categories = []
 
+        self._preferences = {}
+
         self._json_data = None
         self._loaded = False
 
@@ -69,6 +71,9 @@ class MachineDefinition(SignalEmitter):
 
     def getPath(self):
         return self._path
+
+    def getPreference(self, key):
+        return self._preferences[key] if key in self._preferences else None
 
     def isVisible(self):
         return self._visible
@@ -170,6 +175,7 @@ class MachineDefinition(SignalEmitter):
 
             self._machine_settings = inherits_from._machine_settings
             self._categories = inherits_from._categories
+            self._preferences = inherits_from._preferences
 
         if "machine_settings" in self._json_data:
             for key, value in self._json_data["machine_settings"].items():
@@ -194,6 +200,10 @@ class MachineDefinition(SignalEmitter):
                     continue
 
                 setting.fillByDict(value)
+
+        if "machine_preferences" in self._json_data:
+            for key, value in self._json_data["machine_preferences"].items():
+                self._preferences[key] = value
 
         self.settingsLoaded.emit()
 

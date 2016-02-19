@@ -234,8 +234,9 @@ class MachineManager(SignalEmitter):
             material = self._active_machine.getMaterialName()
             available_materials = self.getAllMachineMaterials(self._active_machine.getName())
             if not material or (len(available_materials) > 0 and material not in available_materials):
-                if "PLA" in available_materials:
-                    self._active_machine.setMaterialName("PLA")
+                prefered_material = instance.getMachineDefinition().getPreference("prefered_material")
+                if prefered_material and prefered_material in available_materials:
+                    self._active_machine.setMaterialName(prefered_material)
                 else:
                     self._active_machine.setMaterialName(available_materials[0])
 
@@ -570,7 +571,7 @@ class MachineManager(SignalEmitter):
         if self._active_machine:
             profile_name = self._active_machine.getActiveProfileName()
             if profile_name == "":
-                profile_name = "Normal Quality"
+                profile_name = self._active_machine.getMachineDefinition().getPreference("prefered_profile")
 
             profile = self.findProfile(self._active_machine.getActiveProfileName(), instance = self._active_machine)
             if profile:
@@ -735,20 +736,30 @@ class MachineManager(SignalEmitter):
 
     def _setDefaultVariantMaterialProfile(self, instance):
         materials = self.getAllMachineMaterials(instance.getName())
+
+        prefered_profile = instance.getMachineDefinition().getPreference("prefered_profile")
+        prefered_variant = instance.getMachineDefinition().getPreference("prefered_variant")
+        prefered_material = instance.getMachineDefinition().getPreference("prefered_material")
+
         if len(materials) > 0:
-            instance.setMaterialName("PLA" if "PLA" in materials else material[0])
+            instance.setMaterialName(prefered_material if prefered_material and prefered_material in materials else materials[0])
 
         variants = self.getAllMachineVariants(instance.getMachineDefinition().getId())
-        for variant in variants:
-            if variant.getVariantName() == "0.4 mm":
-                instance.setMachineDefinition(variant)
-                break
+        if prefered_variant:
+            for variant in variants:
+                if variant.getVariantName() == prefered_variant:
+                    instance.setMachineDefinition(variant)
+                    break
+        else:
+            instance.setMachineDefinition(variants[0])
 
-        profile = self.findProfile("Normal Quality", variant_name = instance.getMachineDefinition().getVariantName(), material_name = instance.getMaterialName(), instance = instance)
-        if not profile:
-            profile = self.findProfile("Normal Quality", material_name = instance.getMaterialName(), instance = instance)
-        if not profile:
-            profile = self.findProfile("Normal Quality", instance = instance)
+        profile = None
+        if prefered_profile:
+            profile = self.findProfile(prefered_profile, variant_name = instance.getMachineDefinition().getVariantName(), material_name = instance.getMaterialName(), instance = instance)
+            if not profile:
+                profile = self.findProfile(prefered_profile, material_name = instance.getMaterialName(), instance = instance)
+            if not profile:
+                profile = self.findProfile(prefered_profile, instance = instance)
         if not profile:
             profiles = self.getProfiles(instance = instance)
             if len(profiles) > 0:

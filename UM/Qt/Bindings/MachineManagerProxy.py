@@ -146,7 +146,9 @@ class MachineManagerProxy(QObject):
         if not instance:
             return
 
-        machine_definition = self._manager.findMachineDefinition(type_name, "0.4 mm")
+        prefered_variant = instance.getMachineDefinition().getPreference("prefered_variant")
+        if prefered_variant:
+            machine_definition = self._manager.findMachineDefinition(type_name, prefered_variant)
         if not machine_definition:
             variant_name = instance.getMachineDefinition().getVariantName()
             machine_definition = self._manager.findMachineDefinition(type_name, variant_name)
