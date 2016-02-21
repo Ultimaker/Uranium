@@ -107,7 +107,15 @@ class MeshListModel(ListModel):
                     self.appendItem(data)
 
             elif type(root_child) is SceneNode or type(root_child) is PointCloudNode: # Item is not a group node.
-                data = {"name":root_child.getName(), "visibility": root_child.isVisible(), "key": (id(root_child)), "selected": Selection.isSelected(root_child),"collapsed": root_child in self._collapsed_nodes,"parent_key": 0, "is_group":bool(root_child.callDecoration("isGroup"))}
+                data = {"name":root_child.getName(),
+                        "visibility": root_child.isVisible(),
+                        "key": (id(root_child)),
+                        "selected": Selection.isSelected(root_child),
+                        "collapsed": root_child in self._collapsed_nodes,
+                        "parent_key": 0,
+                        "is_group":bool(root_child.callDecoration("isGroup"))
+                        }
+
                 # Check if data exists, if yes, remove old and re-add.
                 index = self.find("key",(id(root_child)))
                 if index is not None and index >= 0:
