@@ -129,10 +129,12 @@ class Profile(SignalEmitter):
     #
     #   \param key The key of the setting to set.
     #   \param value The new value of the setting.
+    #   \param silent Make the call less verbose, used when loading profiles
     #
     #   \note If the setting is not a user-settable setting, this method will do nothing.
-    def setSettingValue(self, key, value):
-        Logger.log("d", "Setting value of %s to %s on profile %s", key, value, self._name)
+    def setSettingValue(self, key, value, silent = False):
+        if not silent:
+            Logger.log("d", "Setting value of %s to %s on profile %s", key, value, self._name)
 
         self._dirty = True
 
@@ -173,6 +175,9 @@ class Profile(SignalEmitter):
     #   \param key \type{string} The key of the setting to retrieve the value for.
     def getSettingValue(self, key):
         if not self._active_instance:
+            self._onActiveInstanceChanged()
+
+        if not self._active_instance:
             return None
 
         setting = self._active_instance.getMachineDefinition().getSetting(key)
@@ -200,6 +205,9 @@ class Profile(SignalEmitter):
     #                 - include_machine \type{bool} Include machine settings.
     def getAllSettingValues(self, **kwargs):
         values = { }
+
+        if not self._active_instance:
+            self._onActiveInstanceChanged()
 
         if not self._active_instance:
             return values
@@ -353,7 +361,7 @@ class Profile(SignalEmitter):
 
         if parser.has_section("settings"):
             for key, value in parser["settings"].items():
-                self.setSettingValue(key, value)
+                self.setSettingValue(key, value, silent = True)
 
         if parser.has_section("defaults"):
             self._changed_settings_defaults = {}

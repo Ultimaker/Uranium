@@ -4,6 +4,7 @@
 from PyQt5.QtCore import QObject, pyqtSlot, QUrl, Q_ENUMS
 
 import UM.Resources
+from UM.Logger import Logger
 
 class ResourcesProxy(QObject):
     class Type:
@@ -23,6 +24,10 @@ class ResourcesProxy(QObject):
     def __init__(self, parent = None):
         super().__init__(parent)
 
-    @pyqtSlot(int, str, result=str)
+    @pyqtSlot(int, str, result = str)
     def getPath(self, type, name):
-        return UM.Resources.Resources.getPath(type, name)
+        try:
+            return UM.Resources.Resources.getPath(type, name)
+        except:
+            Logger.log("w", "Could not find the requested resource: %s" % (name))
+            return ""

@@ -151,6 +151,7 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
             })
             setting.visibleChanged.connect(self._onSettingVisibleChanged)
             setting.enabledChanged.connect(self._onSettingEnabledChanged)
+            setting.globalOnlyChanged.connect(self._onSettingGlobalOnlyChanged)
 
     def _onSettingVisibleChanged(self, setting):
         if setting:
@@ -163,6 +164,16 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
             index = self.find("key", setting.getKey())
             if index != -1:
                 self.setProperty(index, "enabled", setting.isEnabled())
+
+    ##  Updates the global only property if any of its dependencies have its
+    #   value changed.
+    #
+    #   \param setting The setting whose value has changed.
+    def _onSettingGlobalOnlyChanged(self, setting):
+        if setting:
+            index = self.find("key", setting.getKey())
+            if index != -1:
+                self.setProperty(index, "global_only", setting.getGlobalOnly())
 
     def _onProfileChanged(self):
         if self._profile:

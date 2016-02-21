@@ -5,7 +5,7 @@ from PyQt5.QtCore import pyqtSlot, pyqtProperty, pyqtSignal, QObject, QUrl
 
 from UM.i18n import i18nCatalog
 
-class i18nCatalogProxy(QObject):
+class i18nCatalogProxy(QObject): # [CodeStyle: Ultimaker code style requires classes to start with a upper case. But i18n is lower case by convention.]
     def __init__(self, parent = None):
         super().__init__()
 
@@ -18,6 +18,7 @@ class i18nCatalogProxy(QObject):
             self.nameChanged.emit()
 
     nameChanged = pyqtSignal()
+    
     @pyqtProperty(str, fset = setName, notify = nameChanged)
     def name(self):
         return self._name

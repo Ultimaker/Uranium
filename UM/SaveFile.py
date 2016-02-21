@@ -9,10 +9,10 @@ import sys
 if sys.platform != "win32":
     import fcntl
 
-    def lock_file(file):
+    def lockFile(file):
         fcntl.flock(file, fcntl.LOCK_EX)
 else:
-    def lock_file(file):
+    def lockFile(file):
         pass
 
 ##  A class to handle atomic writes to a file.
@@ -34,7 +34,7 @@ class SaveFile:
         f = open(self._path, self._mode, *self._open_args, **self._open_kwargs)
         while True:
             # Try to acquire a lock. This will block if the file was already locked by a different process.
-            lock_file(f)
+            lockFile(f)
 
             # Once the lock is released it is possible the other instance already replaced the file we opened.
             # So try to open it again and check if we have the same file.

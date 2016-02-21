@@ -19,6 +19,18 @@ class FloatValidator(Validator):
         self._min_value_warning = min_value_warning
         self._max_value_warning = max_value_warning
     
+    def setMinValue(self, min_value):
+        self._min_value = min_value
+
+    def setMaxValue(self, max_value):
+        self._max_value = max_value
+
+    def setMaxValueWarning(self, max_value_warning):
+        self._max_value_warning = max_value_warning
+
+    def setMinValueWarning(self, min_value_warning):
+        self._min_value_warning = min_value_warning
+
     ## Validate the setting. 
     # \returns result Returns value as defined in ResultCodes.py
     # \returns message Message providing more detail about warning / error (if any)

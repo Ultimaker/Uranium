@@ -26,7 +26,7 @@ class IllegalMethodError(Exception):
 #   \note Currently there is still too much state embedded in a setting. All value functions
 #         and things like visibility should really be separated into a different class.
 #
-class Setting(SignalEmitter):    
+class Setting(SignalEmitter):
     def __init__(self, machine_manager, key, catalog, **kwargs):
         super().__init__()
         self._machine_manager = machine_manager
@@ -88,14 +88,15 @@ class Setting(SignalEmitter):
     def fillByDict(self, data):
         if "type" in data:
             self._type = data["type"]
-            if self._type not in ["int", "float", "string", "enum", "boolean", "polygon"]:
-                Logger.log("e", "Invalid type for Setting %s, ignoring", self._key)
+            if self._type not in ["int", "float", "string", "enum", "boolean", "polygon", "polygons"]:
+                Logger.log("e", "Invalid type %s for Setting %s, ignoring", self._type, self._key)
                 return
 
         if "default" in data:
             self._default_value = data["default"]
 
-        self.bindValidator()
+        if not self._validator:
+            self.bindValidator()
 
         if "label" in data:
             self._label = self._i18n_catalog.i18nc("{0} label".format(self._key), data["label"])
@@ -148,8 +149,14 @@ class Setting(SignalEmitter):
             max_value_warning = self._createFunction(data["max_value_warning"])
 
         if  self.getValidator() is not None: #Strings don"t have validators as of yet
-            self.getValidator().setRange(min_value,max_value,min_value_warning,max_value_warning)
-
+            if min_value:
+                self.getValidator().setMinValue(min_value)
+            if max_value:
+                self.getValidator().setMaxValue(max_value)
+            if max_value_warning:
+                self.getValidator().setMaxValueWarning(max_value_warning)
+            if min_value_warning:
+                self.getValidator().setMinValueWarning(min_value_warning)
         if "enabled" in data:
             self._enabled_function = self._createFunction(data["enabled"])
             self._prohibited = data["enabled"] == "False" # Enabled can never be true, so this setting is prohibited.
@@ -322,6 +329,9 @@ class Setting(SignalEmitter):
     def getErrorDescription(self):
         return self._error_description
 
+    ##  Emitted whenever this setting's global-only state changes.
+    globalOnlyChanged = Signal()
+
     ##  Get whether the setting is global only or not.
     #
     #   Global only means that this setting cannot be used as a per object setting.
@@ -488,6 +498,7 @@ class Setting(SignalEmitter):
         if key in self._required_setting_keys:
             self.enabledChanged.emit(self)
             self.defaultValueChanged.emit(self)
+            self.globalOnlyChanged.emit(self)
 
     def _onActiveProfileChanged(self):
         if self._profile:

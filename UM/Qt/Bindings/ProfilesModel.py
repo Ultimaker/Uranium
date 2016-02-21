@@ -83,7 +83,7 @@ class ProfilesModel(ListModel):
 
         #Prevent warning when switching from the currently selected profile
         if profile == self._manager.getActiveProfile():
-            self._manager.clearWorkingProfileChanges()
+            self._manager.getWorkingProfile().setChangedSettings({})
 
         self._manager.removeProfile(profile)
 
@@ -124,9 +124,8 @@ class ProfilesModel(ListModel):
                 file_name = os.path.basename(os.path.splitext(path)[0])
                 profile.setName(self._manager.makeUniqueProfileName(file_name))
 
-                if profile.getMachineTypeId():
-                    #Make sure the profile is available for the currently selected printer
-                    profile.setMachineTypeId(self._manager.getActiveMachineInstance().getMachineDefinition().getProfilesMachineId())
+                #Make sure the profile is available for the currently selected printer
+                profile.setMachineTypeId(self._manager.getActiveMachineInstance().getMachineDefinition().getProfilesMachineId())
                 self._manager.addProfile(profile) #Add the new profile to the list of profiles.
                 return { "status": "ok", "message": catalog.i18nc("@info:status", "Successfully imported profile {0}", profile.getName()) }
 
@@ -301,7 +300,8 @@ class ProfilesModel(ListModel):
             if active_machine:
                 for key, value in settings_dict.items():
                     setting = self._manager.getActiveMachineInstance().getMachineDefinition().getSetting(key)
-                    settings_list.append({"name": setting.getLabel(), "value": value})
+                    if setting:
+                        settings_list.append({"name": setting.getLabel(), "value": value})
             settings_list = sorted(settings_list, key = lambda setting:setting["name"])
             self.appendItem({
                 "id": id(profile),

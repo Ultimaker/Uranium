@@ -12,19 +12,16 @@ class RotateOperation(Operation.Operation):
         self._node = node
         self._old_transformation = node.getLocalTransformation()
         self._rotation = rotation
-
-        self._rotate_around_center = kwargs.get("rotate_around_center", False)
+        ## Around what point should the rotation be done?
+        self._rotate_around_point = kwargs.get("rotate_around_point" , Vector(0,0,0))
 
     def undo(self):
         self._node.setTransformation(self._old_transformation)
 
     def redo(self):
-        if self._rotate_around_center:
-            center = self._node.getBoundingBox().center
-            self._node.setPosition(-center)
+        self._node.setPosition(-self._rotate_around_point)
         self._node.rotate(self._rotation, SceneNode.TransformSpace.World)
-        if self._rotate_around_center:
-            self._node.setPosition(center)
+        self._node.setPosition(self._rotate_around_point)
 
     def mergeWith(self, other):
         if type(other) is not RotateOperation:

@@ -25,7 +25,7 @@ class SceneNode(SignalEmitter):
         Parent = 2
         World = 3
 
-    def __init__(self, parent = None, name = ""):
+    def __init__(self, parent = None, **kwargs):
         super().__init__() # Call super to make multiple inheritence work.
 
         self._children = []
@@ -52,8 +52,8 @@ class SceneNode(SignalEmitter):
         self._calculate_aabb = True
         self._aabb = None
         self._aabb_job = None
-        self._visible = True
-        self._name = name
+        self._visible = kwargs.get("visible", True)
+        self._name = kwargs.get("name", "")
         self._decorators = []
         self._bounding_box_mesh = None
         self.boundingBoxChanged.connect(self.calculateBoundingBoxMesh)
@@ -612,7 +612,7 @@ class _CalculateAABBJob(Job):
 
         for child in self._node._children:
             if aabb is None:
-                aabb = copy.deepcopy(child.getBoundingBox())
+                aabb = deepcopy(child.getBoundingBox())
             else:
                 aabb += child.getBoundingBox()
 
