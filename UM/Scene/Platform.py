@@ -15,6 +15,7 @@ class Platform(SceneNode.SceneNode):
     def __init__(self, parent):
         super().__init__(parent)
 
+        self._load_platform_job = None
         self._machine_instance = None
         self._shader = None
         self._texture = None
@@ -46,10 +47,14 @@ class Platform(SceneNode.SceneNode):
             if mesh_file:
                 path = Resources.getPath(Resources.Meshes, mesh_file)
 
+                if self._load_platform_job:
+                    #This prevents a previous load job from triggering texture loads.
+                    self._load_platform_job.finished.disconnect(self._onPlatformLoaded)
+
                 # Perform platform mesh loading in the background
-                job = _LoadPlatformJob(path)
-                job.finished.connect(self._onPlatformLoaded)
-                job.start()
+                self._load_platform_job = _LoadPlatformJob(path)
+                self._load_platform_job.finished.connect(self._onPlatformLoaded)
+                self._load_platform_job.start()
 
             offset = self._machine_instance.getSettingValue("machine_platform_offset")
             if offset:
@@ -74,6 +79,8 @@ class Platform(SceneNode.SceneNode):
                 self._shader.setTexture(0, None)
 
     def _onPlatformLoaded(self, job):
+        self._load_platform_job = None
+
         if not job.getResult():
             self.setMeshData(None)
             return
