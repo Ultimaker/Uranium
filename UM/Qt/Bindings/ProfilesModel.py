@@ -96,6 +96,9 @@ class ProfilesModel(ListModel):
         profile.setName(new_name)
         self._manager.profilesChanged.emit()
 
+        if profile == self._manager.getActiveProfile():
+            self._manager.profileNameChanged.emit(profile)
+
     @pyqtSlot(str, result = bool)
     def checkProfileExists(self, name):
         profile = self._manager.findProfile(name, instance = self._manager.getActiveMachineInstance())
