@@ -340,7 +340,7 @@ class MachineManager(SignalEmitter):
             elif not machine_type:
                 generic_profiles.append(profile)
 
-        if len(specific_profiles) == 0 and type_name == None:
+        if len(specific_profiles) == 0:
             #No starter-profiles were found
             return generic_profiles
 
