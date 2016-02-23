@@ -73,37 +73,11 @@ ScrollView
                     onConfigureSettingVisibility: if(base.configureSettings) base.configureSettings.trigger(categoryHeader);
                 }
 
-                UM.SimpleButton
-                {
-                    id: hiddenSettingsWarning
-
-                    anchors.top: categoryHeader.bottom
-                    width: categoryHeader.width
-
-                    backgroundColor: UM.Theme.getColor("sidebar");
-
-                    opacity: categoryHeader.checked && model.hiddenValuesCount > 0 ? 1 : 0
-                    height: categoryHeader.checked && model.hiddenValuesCount > 0 ? UM.Theme.getSize("setting").height : 0
-
-                    onClicked: { UM.ActiveProfile.showHiddenValues(model.id) }
-
-                    Label {
-                        anchors.fill: parent;
-
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-
-                        text: catalog.i18ncp("@label", "{0} hidden setting uses a custom value", "{0} hidden settings use custom values", model.hiddenValuesCount)
-                        font: UM.Theme.getFont("default")
-                        color: parent.hovered ? UM.Theme.getColor("text_hover") : UM.Theme.getColor("text")
-                    }
-                }
-
                 Column
                 {
                     id: settings;
 
-                    anchors.top: hiddenSettingsWarning.bottom;
+                    anchors.top: categoryHeader.bottom;
 
                     height: childrenHeight;
                     spacing: 0;
