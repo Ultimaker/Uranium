@@ -7,6 +7,7 @@ from UM.Application import Application
 from UM.View.Renderer import Renderer
 from UM.Resources import Resources
 from UM.Math.Vector import Vector
+from UM.Job import Job
 
 from UM.View.GL.OpenGL import OpenGL
 
@@ -14,6 +15,7 @@ class Platform(SceneNode.SceneNode):
     def __init__(self, parent):
         super().__init__(parent)
 
+        self._load_platform_job = None
         self._machine_instance = None
         self._shader = None
         self._texture = None
@@ -41,17 +43,18 @@ class Platform(SceneNode.SceneNode):
         app = Application.getInstance()
         self._machine_instance = app.getMachineManager().getActiveMachineInstance()
         if self._machine_instance:
-            meshData = None
-            mesh = self._machine_instance.getMachineDefinition().getPlatformMesh()
-            if mesh:
-                path = Resources.getPath(Resources.Meshes, mesh)
-                reader = app.getMeshFileHandler().getReaderForFile(path)
-                _meshData = app.getMeshFileHandler().readerRead(reader, path, center = False)
-                if _meshData:
-                    meshData = _meshData.getMeshData()
-            self.setMeshData(meshData)
+            mesh_file = self._machine_instance.getMachineDefinition().getPlatformMesh()
+            if mesh_file:
+                path = Resources.getPath(Resources.Meshes, mesh_file)
 
-            self._updateTexture()
+                if self._load_platform_job:
+                    #This prevents a previous load job from triggering texture loads.
+                    self._load_platform_job.finished.disconnect(self._onPlatformLoaded)
+
+                # Perform platform mesh loading in the background
+                self._load_platform_job = _LoadPlatformJob(path)
+                self._load_platform_job.finished.connect(self._onPlatformLoaded)
+                self._load_platform_job.start()
 
             offset = self._machine_instance.getSettingValue("machine_platform_offset")
             if offset:
@@ -74,3 +77,29 @@ class Platform(SceneNode.SceneNode):
             self._texture = None
             if self._shader:
                 self._shader.setTexture(0, None)
+
+    def _onPlatformLoaded(self, job):
+        self._load_platform_job = None
+
+        if not job.getResult():
+            self.setMeshData(None)
+            return
+
+        node = job.getResult()
+        if node.getMeshData():
+            self.setMeshData(node.getMeshData())
+
+            self._updateTexture()
+
+class _LoadPlatformJob(Job):
+    def __init__(self, file_name):
+        self._file_name = file_name
+        self._mesh_handler = Application.getInstance().getMeshFileHandler()
+
+    def run(self):
+        reader = self._mesh_handler.getReaderForFile(self._file_name)
+        if not reader:
+            self.setResult(None)
+            return
+
+        self.setResult(reader.read(self._file_name))

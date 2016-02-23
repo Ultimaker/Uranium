@@ -3,7 +3,6 @@
 
 from UM.PluginObject import PluginObject
 
-
 class Logger:
     ##  Add a logger to the list.
     #   \param logger \type{Logger}

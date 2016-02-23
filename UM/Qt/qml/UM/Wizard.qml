@@ -23,8 +23,8 @@ UM.Dialog
     signal nextClicked()
     signal backClicked()
 
-    minimumWidth: UM.Theme.sizes.modal_window_minimum.width
-    minimumHeight: UM.Theme.sizes.modal_window_minimum.height
+    minimumWidth: UM.Theme.getSize("modal_window_minimum").width
+    minimumHeight: UM.Theme.getSize("modal_window_minimum").height
 
     function appendPage(page, title)
     {
@@ -60,7 +60,7 @@ UM.Dialog
         {
             id: wizardProgress
             visible: pagesModel.count > 1 ? true : false
-            width: visible ? UM.Theme.sizes.wizard_progress.width : 0;
+            width: visible ? UM.Theme.getSize("wizard_progress").width : 0;
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             color: palette.light
@@ -117,12 +117,12 @@ UM.Dialog
                         visible: title != pagesModel.get(pagesModel.count - 1).title ? true : false
                         UM.RecolorImage {
                             id: downArrow
-                            width: UM.Theme.sizes.standard_arrow.width
-                            height: UM.Theme.sizes.standard_arrow.height
+                            width: UM.Theme.getSize("standard_arrow").width
+                            height: UM.Theme.getSize("standard_arrow").height
                             sourceSize.width: width
                             sourceSize.height: width
                             color: palette.mid
-                            source: UM.Theme.icons.arrow_bottom
+                            source: UM.Theme.getIcon("arrow_bottom")
                         }
                     }
                 }
@@ -132,7 +132,7 @@ UM.Dialog
                 model: ListModel { id: pagesModel; }
                 delegate: wizardDelegate
                 anchors.fill: parent
-                anchors.topMargin: UM.Theme.sizes.default_margin.height
+                anchors.topMargin: UM.Theme.getSize("default_margin").height
             }
         }
 
@@ -144,11 +144,11 @@ UM.Dialog
                 top: parent.top
                 bottom: parent.bottom;
                 left: wizardProgress.right;
-                leftMargin: UM.Theme.sizes.default_margin.width;
+                leftMargin: UM.Theme.getSize("default_margin").width;
                 right: parent.right;
             }
 
-            width: parent.width - wizardProgress.width - (2 *  UM.Theme.sizes.default_margin.width)
+            width: parent.width - wizardProgress.width - (2 *  UM.Theme.getSize("default_margin").width)
             source: pagesModel.get(base.currentPage).page;
 
             Binding {

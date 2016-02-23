@@ -71,7 +71,7 @@ PreferencesPage
         anchors
         {
             top: buttons.bottom;
-            topMargin: UM.Theme.sizes.default_margin.height;
+            topMargin: UM.Theme.getSize("default_margin").height;
             left: parent.left;
             right: parent.right;
             bottom: parent.bottom;
@@ -95,7 +95,7 @@ PreferencesPage
             anchors
             {
                 top: captionLabel.visible ? captionLabel.bottom : parent.top;
-                topMargin: captionLabel.visible ? UM.Theme.sizes.default_margin.height : 0;
+                topMargin: captionLabel.visible ? UM.Theme.getSize("default_margin").height : 0;
                 bottom: parent.bottom;
                 left: parent.left;
             }
@@ -122,7 +122,7 @@ PreferencesPage
                     Label
                     {
                         anchors.left: parent.left;
-                        anchors.leftMargin: UM.Theme.sizes.default_margin.width;
+                        anchors.leftMargin: UM.Theme.getSize("default_margin").width;
                         text: model.name
                         color: parent.ListView.isCurrentItem ? palette.highlightedText : palette.text;
                     }
@@ -150,7 +150,7 @@ PreferencesPage
             anchors
             {
                 left: objectListContainer.right;
-                leftMargin: UM.Theme.sizes.default_margin.width;
+                leftMargin: UM.Theme.getSize("default_margin").width;
                 top: parent.top;
                 bottom: parent.bottom;
                 right: parent.right;
