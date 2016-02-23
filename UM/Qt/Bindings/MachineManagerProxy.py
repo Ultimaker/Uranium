@@ -97,7 +97,7 @@ class MachineManagerProxy(QObject):
 
     @pyqtSlot(str)
     def setActiveProfile(self, name):
-        profile = self._manager.findProfile(name)
+        profile = self._manager.findProfile(name, instance = self._manager.getActiveMachineInstance())
         if profile:
             self._manager.setActiveProfile(profile)
 
