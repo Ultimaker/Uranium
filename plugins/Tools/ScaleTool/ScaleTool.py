@@ -212,7 +212,7 @@ class ScaleTool(Tool):
                 if not self._non_uniform_scale:
                     obj_scale.setY(target_scale)
                     obj_scale.setZ(target_scale)
-                operation = SetTransformOperation(obj, None, None, obj_scale)
+                operation = ScaleOperation(obj, obj_scale, set_scale = True)
                 operation.push()
 
     def setObjectHeight(self, height):
@@ -226,7 +226,7 @@ class ScaleTool(Tool):
                 if not self._non_uniform_scale:
                     obj_scale.setX(target_scale)
                     obj_scale.setZ(target_scale)
-                operation = SetTransformOperation(obj, None, None, obj_scale)
+                operation = ScaleOperation(obj, obj_scale, set_scale = True)
                 operation.push()
 
     def setObjectDepth(self, depth):
@@ -240,7 +240,7 @@ class ScaleTool(Tool):
                 if not self._non_uniform_scale:
                     obj_scale.setY(target_scale)
                     obj_scale.setX(target_scale)
-                operation = SetTransformOperation(obj, None, None, obj_scale)
+                operation = ScaleOperation(obj, obj_scale, set_scale = True)
                 operation.push()
 
     def setScaleX(self, scale):
@@ -252,7 +252,7 @@ class ScaleTool(Tool):
                 if not self._non_uniform_scale:
                     obj_scale.setY(scale)
                     obj_scale.setZ(scale)
-                operation = SetTransformOperation(obj, None, None, obj_scale)
+                operation = ScaleOperation(obj, obj_scale, set_scale = True)
                 operation.push()
 
     def setScaleY(self, scale):
@@ -264,7 +264,7 @@ class ScaleTool(Tool):
                 if not self._non_uniform_scale:
                     obj_scale.setX(scale)
                     obj_scale.setZ(scale)
-                operation = SetTransformOperation(obj, None, None, obj_scale)
+                operation = ScaleOperation(obj, obj_scale, set_scale = True)
                 operation.push()
 
     def setScaleZ(self, scale):
@@ -276,5 +276,5 @@ class ScaleTool(Tool):
                 if not self._non_uniform_scale:
                     obj_scale.setY(scale)
                     obj_scale.setX(scale)
-                operation = SetTransformOperation(obj, None, None, obj_scale)
+                operation = ScaleOperation(obj, obj_scale, set_scale = True)
                 operation.push()
