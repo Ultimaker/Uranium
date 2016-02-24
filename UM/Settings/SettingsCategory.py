@@ -65,7 +65,7 @@ class SettingsCategory(SignalEmitter):
 
     def isVisible(self):
         if self._visible:
-            return self._children_visible or self.getHiddenValuesCount() != 0
+            return self._children_visible
 
         return False
 
