@@ -113,7 +113,6 @@ class ScaleTool(Tool):
                     drag_change = (drag_length - self._drag_length) / 100 * self._scale_speed
 
                     scale_factor = drag_change
-
                     scale_change = Vector(0.0, 0.0, 0.0)
                     if self._non_uniform_scale:
                         if self.getLockedAxis() == ToolHandle.XAxis:
