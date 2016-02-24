@@ -122,7 +122,7 @@ Item
             height: UM.Theme.getSize("setting_control").height;
             text: "X";
             font: UM.Theme.getFont("default");
-            color: UM.Theme.getColor("text");
+            color: "red"
             verticalAlignment: Text.AlignVCenter;
         }
 
@@ -131,7 +131,7 @@ Item
             height: UM.Theme.getSize("setting_control").height;
             text: "Y";
             font: UM.Theme.getFont("default");
-            color: UM.Theme.getColor("text");
+            color: "green"
             verticalAlignment: Text.AlignVCenter;
         }
 
@@ -140,7 +140,7 @@ Item
             height: UM.Theme.getSize("setting_control").height;
             text: "Z";
             font: UM.Theme.getFont("default");
-            color: UM.Theme.getColor("text");
+            color: "blue"
             verticalAlignment: Text.AlignVCenter;
         }
 
