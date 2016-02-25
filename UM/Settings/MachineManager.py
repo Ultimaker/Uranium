@@ -32,7 +32,7 @@ class MachineManager(SignalEmitter):
 
         self._machine_definitions = []
         self._machine_instances = []
-        self._profiles = []
+        self._profiles = [] #All the profiles that are loaded from disk, for any machine instance
 
         self._active_machine = None
         self._active_profile = None
@@ -229,9 +229,9 @@ class MachineManager(SignalEmitter):
         if profile:
             self.setActiveProfile(profile)
         else:
-            for profile in self._profiles:
-                self.setActiveProfile(profile) #default to first profile you can find
-                break
+            profiles = self.getProfiles(instance = self._active_machine)
+            if len(profiles > 0):
+                self.setActiveProfile(profiles[0]) #default to first profile you can find
 
         if self._active_machine.hasMaterials():
             material = self._active_machine.getMaterialName()
@@ -560,9 +560,8 @@ class MachineManager(SignalEmitter):
                         Logger.log("e", "An exception occurred loading Profile %s: %s", path, str(e))
                         continue
 
-                    if not self.findProfile(profile.getName(), variant_name = profile.getMachineVariantName(), material_name = profile.getMaterialName(), instance = self._active_machine):
-                        self._profiles.append(profile)
-                        profile.nameChanged.connect(self._onProfileNameChanged)
+                    self._profiles.append(profile)
+                    profile.nameChanged.connect(self._onProfileNameChanged)
 
         for instance in self._machine_instances:
             try:
