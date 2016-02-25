@@ -19,9 +19,12 @@ class ToolModel(ListModel):
     def __init__(self, parent = None):
         super().__init__(parent)
 
+        self._persistent_enabled = {}
+
         self._controller = Application.getInstance().getController()
         self._controller.toolsChanged.connect(self._onToolsChanged)
         self._controller.toolEnabledChanged.connect(self._onToolEnabledChanged)
+        self._controller.toolEnabledStateRequest.emit()
         self._controller.activeToolChanged.connect(self._onActiveToolChanged)
         self._onToolsChanged()
 
@@ -48,12 +51,16 @@ class ToolModel(ListModel):
             iconName = toolMetaData.get("icon", "default.png")
             weight = toolMetaData.get("weight", 0)
 
+            enabled = True
+            if name in self._persistent_enabled:
+                enabled = self._persistent_enabled[name]
+
             self.appendItem({
                 "id": name,
                 "name": toolMetaData.get("name", name),
                 "icon": iconName,
                 "active": False,
-                "enabled": True,
+                "enabled": enabled,
                 "description": description,
                 "weight": weight
             })
@@ -70,6 +77,7 @@ class ToolModel(ListModel):
                 self.setProperty(index, "active", False)
 
     def _onToolEnabledChanged(self, tool_id, enabled):
+        self._persistent_enabled[tool_id] = enabled
         index = self.find("id", tool_id)
         if index >= 0:
             self.setProperty(index, "enabled", enabled)

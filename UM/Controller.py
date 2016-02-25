@@ -189,6 +189,9 @@ class Controller(SignalEmitter):
     ##  Emitted when the list of tools changes.
     toolsChanged = Signal()
 
+    ##  Emitted to request tools to emit their enabled state.
+    toolEnabledStateRequest = Signal()
+
     ##  Emitted when a tool changes its enabled state.
     toolEnabledChanged = Signal()
 
