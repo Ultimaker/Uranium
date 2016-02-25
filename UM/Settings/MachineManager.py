@@ -230,7 +230,7 @@ class MachineManager(SignalEmitter):
             self.setActiveProfile(profile)
         else:
             profiles = self.getProfiles(instance = self._active_machine)
-            if len(profiles > 0):
+            if len(profiles) > 0:
                 self.setActiveProfile(profiles[0]) #default to first profile you can find
 
         if self._active_machine.hasMaterials():
