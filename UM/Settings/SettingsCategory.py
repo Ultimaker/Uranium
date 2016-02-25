@@ -121,12 +121,13 @@ class SettingsCategory(SignalEmitter):
     def __repr__(self):
         return "<SettingCategory: %s %d>" % (self._key, self._order)
 
-    def _onSettingVisibleChanged(self, setting):
+    def _onSettingVisibleChanged(self, changed_setting):
         for setting in self.getAllSettings():
-            if setting.isVisible():
+            if setting.isVisible() and setting.isEnabled():
                 self._children_visible = True
                 break
+            else:
+                self._children_visible = False
         else:
             self._children_visible = False
-
         self.visibleChanged.emit(self)
