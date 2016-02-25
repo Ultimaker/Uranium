@@ -73,7 +73,19 @@ ComboBox
         }
     }
 
+    onActivated: {
+        valueChanged(options.getItem(index).value);
+    }
+
     onModelChanged: {
+        updateCurrentIndex();
+    }
+
+    Component.onCompleted: {
+        parent.parent.valueChanged.connect(updateCurrentIndex)
+    }
+
+    function updateCurrentIndex() {
         if (!options) {
             return;
         }
@@ -86,9 +98,5 @@ ComboBox
         }
 
         currentIndex = -1;
-    }
-
-    onActivated: {
-        valueChanged(options.getItem(index).value);
     }
 }
