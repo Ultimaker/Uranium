@@ -25,7 +25,7 @@ class ScaleOperation(Operation.Operation):
 
     def redo(self):
         if self._set_scale:
-            self._node.setScale(self._scale)
+            self._node.setScale(self._scale, SceneNode.TransformSpace.World)
         elif self._add_scale:
             self._node.setScale(self._node.getScale() + self._scale)
         elif self._relative_scale:
