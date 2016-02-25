@@ -13,6 +13,8 @@ class Tool(PluginObject, SignalEmitter):
     def __init__(self):
         super().__init__() # Call super to make multiple inheritence work.
         self._controller = UM.Application.Application.getInstance().getController() # Circular dependency blah
+        self._enabled = True
+
         self._handle = None
         self._locked_axis = None
         self._drag_plane = None
@@ -20,6 +22,8 @@ class Tool(PluginObject, SignalEmitter):
         self._exposed_properties = []
 
         self._selection_pass = None
+
+        self._controller.toolEnabledChanged.connect(self._onToolEnabledChanged)
 
     ##  Should be emitted whenever a longer running operation is started, like a drag to scale an object.
     #
@@ -64,17 +68,21 @@ class Tool(PluginObject, SignalEmitter):
             self._handle.setParent(None)
 
         return False
-    
-    ##  Convenience function 
+
+    ##  Convenience function
     def getController(self):
         return self._controller
-    
-    ##  Get the associated handle 
+
+    ##  Get the enabled state of the tool
+    def getEnabled(self):
+        return self._enabled
+
+    ##  Get the associated handle
     #   \return \type{ToolHandle}
     def getHandle(self):
         return self._handle
-    
-    ##  set the associated handle 
+
+    ##  set the associated handle
     #   \param \type{ToolHandle}
     def setHandle(self, handle):
         self._handle = handle
@@ -124,3 +132,7 @@ class Tool(PluginObject, SignalEmitter):
             return drag_end - self._drag_start
 
         return None
+
+    def _onToolEnabledChanged(self, tool_id, enabled):
+        if tool_id == self._plugin_id:
+            self._enabled = enabled

@@ -16,6 +16,16 @@ ComboBox
     model: options //From parent loader
     textRole: "name";
 
+    currentIndex: {
+        for(var i = 0; i < options.rowCount(); ++i) {
+            if(options.getItem(i).value == value /*From parent loader*/) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
     MouseArea
     {
         anchors.fill: parent;
@@ -71,17 +81,6 @@ ComboBox
 
             }
         }
-    }
-
-    onModelChanged: {
-        for(var i = 0; i < options.rowCount(); ++i) {
-            if(options.getItem(i).value == value /*From parent loader*/) {
-                currentIndex = i;
-                return;
-            }
-        }
-
-        currentIndex = -1;
     }
 
     onActivated: {
