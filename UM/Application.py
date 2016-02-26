@@ -172,6 +172,7 @@ class Application(SignalEmitter):
     def getCommandLineOption(self, name, default = None):
         if not self._parsed_command_line:
             self.parseCommandLine()
+            Logger.log("d", "Command line options: %s", str(self._parsed_command_line))
 
         return self._parsed_command_line.get(name, default)
 
