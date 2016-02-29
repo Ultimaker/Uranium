@@ -27,7 +27,7 @@ Item
 
         //: Reset scale tool button
         text: catalog.i18nc("@action:button","Reset")
-        iconSource: UM.Theme.icons.scale_reset;
+        iconSource: UM.Theme.getIcon("scale_reset");
 
         style: UM.Theme.styles.tool_button;
 
@@ -40,7 +40,7 @@ Item
 
         //: Scale to max tool button
         text: catalog.i18nc("@action:button","Scale to Max");
-        iconSource: UM.Theme.icons.scale_max;
+        iconSource: UM.Theme.getIcon("scale_max");
 
         anchors.top: parent.top;
         z: 1
