@@ -77,6 +77,8 @@ class QtApplication(QApplication, Application, SignalEmitter):
 
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Loading plugins..."))
         self._loadPlugins()
+        self.parseCommandLine()
+        Logger.log("i", "Command line arguments: %s", self._parsed_command_line)
         self._plugin_registry.checkRequiredPlugins(self.getRequiredPlugins())
 
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Loading machines..."))
