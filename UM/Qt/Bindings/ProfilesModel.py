@@ -227,7 +227,7 @@ class ProfilesModel(ListModel):
         return filters
 
     @pyqtSlot(result = QUrl)
-    def getDefaultSavePath(self):
+    def getDefaultPath(self):
         return QUrl.fromLocalFile(os.path.expanduser("~/"))
 
     def _onMachineInstanceChanged(self):
