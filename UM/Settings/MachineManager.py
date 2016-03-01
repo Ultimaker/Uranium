@@ -614,7 +614,7 @@ class MachineManager(SignalEmitter):
     def saveProfiles(self):
         try:
             for profile in self._profiles:
-                if profile.isReadOnly() or not profile.hasChangedSettings():
+                if (profile.isReadOnly() or not profile.hasChangedSettings()) and not profile.hasUnsavedChanges():
                     continue
 
                 file_name = urllib.parse.quote_plus(profile.getName()) + ".cfg"

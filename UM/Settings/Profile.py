@@ -195,6 +195,12 @@ class Profile(SignalEmitter):
     def getChangedSettings(self):
         return self._changed_settings
 
+    ##  Set the dirty flag of this profile.
+    #   If the profile is dirty, it is saved (regardless if the other tests think
+    #   this should happen or not)
+    def setDirty(self, dirty):
+        self._dirty = dirty
+
     ##  Reset the settings that have a value set in this profile to a new set.
     def setChangedSettings(self, settings):
         self._changed_settings = settings
