@@ -206,21 +206,25 @@ class MachineManager(SignalEmitter):
         return instance_name
 
     ##  Get the currently active machine instance
-    #   \returns active_machine \type{MachineSettings}
+    #   \returns active_machine \type{MachineInstance}
     def getActiveMachineInstance(self):
         return self._active_machine
 
     ##  Set the currently active machine
-    #   \param active_machine \type{MachineSettings}
+    #   \param active_machine \type{MachineInstance}
     def setActiveMachineInstance(self, machine):
-        if machine == self._active_machine:
+        if not machine or machine == self._active_machine:
             return
+
+        update_profile = False
+        if not self._active_machine or self._active_machine.getMachineDefinition() != machine.getMachineDefinition():
+            update_profile = True
+
+        self._active_machine = machine
         setting_visibility = []
         if self._active_machine:
             setting_visibility = self._active_machine.getMachineDefinition().getAllSettings(visible_only = True)
             setting_visibility = list(map(lambda s: s.getKey(), setting_visibility))
-
-        self._active_machine = machine
 
         self._updateSettingVisibility(setting_visibility)
 
@@ -244,6 +248,8 @@ class MachineManager(SignalEmitter):
                     self._active_machine.setMaterialName(available_materials[0])
 
         self.activeMachineInstanceChanged.emit()
+        if update_profile:
+            self.activeProfileChanged.emit()
         self._protect_working_profile = False
 
     def setActiveMaterial(self, material):
