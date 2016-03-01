@@ -152,13 +152,15 @@ class Profile(SignalEmitter):
         if not setting:
             return
 
-        if value == setting.getDefaultValue() or value == str(setting.getDefaultValue()) and not self._type:
-            #Note: partial profiles can have values that equal the default setting
-            if key in self._changed_settings:
-                del self._changed_settings[key]
-                self.settingValueChanged.emit(key)
+        if not key in self._changed_settings_defaults and not self._type:
+            #Note: partial profiles and profiles based that have stored default
+            #values can have values that equal the default setting
+            if value == setting.getDefaultValue() or value == str(setting.getDefaultValue()):
+                if key in self._changed_settings:
+                    del self._changed_settings[key]
+                    self.settingValueChanged.emit(key)
 
-            return
+                return
 
         if key in self._changed_settings and self._changed_settings[key] == value:
             return
@@ -287,12 +289,11 @@ class Profile(SignalEmitter):
 
     ##  Remove a setting value from this profile, resetting it to its default value.
     def resetSettingValue(self, key):
-        if key not in self._changed_settings:
-            return
-
         if key in self._changed_settings_defaults:
             self._changed_settings[key] = self._changed_settings_defaults[key]
         else:
+            if key not in self._changed_settings:
+                return
             del self._changed_settings[key]
 
         self.settingValueChanged.emit(key)
