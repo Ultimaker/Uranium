@@ -16,6 +16,7 @@ class ScaleOperation(Operation.Operation):
         self._set_scale = kwargs.get("set_scale", False)
         self._add_scale = kwargs.get("add_scale", False)
         self._relative_scale = kwargs.get("relative_scale", False)
+        self._scale_around_point = kwargs.get("scale_around_point" , Vector(0,0,0))
         self._snap = kwargs.get("snap", False)
         self._scale = scale
         self._min_scale = 0.01
@@ -51,8 +52,9 @@ class ScaleOperation(Operation.Operation):
                 scale_factor.setY(scale_factor.y / current_scale.y)
             if scale_factor.z != 0:
                 scale_factor.setZ(scale_factor.z / current_scale.z)
+            self._node.setPosition(-self._scale_around_point)
             self._node.scale(scale_factor, SceneNode.TransformSpace.Parent)
-
+            self._node.setPosition(self._scale_around_point)
             new_scale = copy.deepcopy(self._node.getScale())
             if self._snap:
                 if(scale_factor.x != 1.0):

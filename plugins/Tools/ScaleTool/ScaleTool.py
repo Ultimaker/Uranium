@@ -126,7 +126,7 @@ class ScaleTool(Tool):
                         scale_change.setY(scale_factor)
                         scale_change.setZ(scale_factor)
 
-                    Selection.applyOperation(ScaleOperation, scale_change, relative_scale = True, snap = self._snap_scale)
+                    Selection.applyOperation(ScaleOperation, scale_change, relative_scale = True, snap = self._snap_scale, scale_around_point = self._saved_handle_position)
 
                 self._drag_length = (self._saved_handle_position - drag_position).length()
                 return True
