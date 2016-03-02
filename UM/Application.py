@@ -4,7 +4,6 @@
 from UM.Controller import Controller
 from UM.PluginRegistry import PluginRegistry
 from UM.Mesh.MeshFileHandler import MeshFileHandler
-from UM.Settings.MachineSettings import MachineSettings
 from UM.Resources import Resources
 from UM.Operations.OperationStack import OperationStack
 from UM.Event import CallFunctionEvent

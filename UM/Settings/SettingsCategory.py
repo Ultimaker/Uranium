@@ -7,6 +7,10 @@ from UM.Logger import Logger
 
 ##  A Category containing a bunch of settings.
 class SettingsCategory(SignalEmitter):
+    ##  A Category containing a bunch of settings.
+    #   \param machine_manager What machine manager is responsible for this
+    #   \param key Unique identifier of this category
+    #   \param parent parent of this category (a machine definition)
     def __init__(self, machine_manager, key, catalog, parent, icon = None, order = 0):
         self._key = key
         self._i18n_catalog = catalog
@@ -20,7 +24,7 @@ class SettingsCategory(SignalEmitter):
         self._settings = []
         self._depth = 0 #Depth of category is 0 by definition (used for display purposes)
         self._machine_manager = machine_manager
-        
+
     ##  Set values of the setting by providing it with a dict object (as decoded by JSON parser)
     #   \param data Decoded JSON dict
     def fillByDict(self, data):
@@ -51,10 +55,10 @@ class SettingsCategory(SignalEmitter):
 
     def isActive(self):
         return True
-    
+
     def setLabel(self, label):
         self._label = label
-    
+
     def getDepth(self):
         return self._depth
 

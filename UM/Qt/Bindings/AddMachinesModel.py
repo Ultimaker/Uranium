@@ -7,7 +7,6 @@ from UM.Qt.ListModel import ListModel
 from UM.Resources import Resources
 from UM.Application import Application
 from UM.Logger import Logger
-from UM.Settings.MachineSettings import MachineSettings
 
 import os
 import os.path

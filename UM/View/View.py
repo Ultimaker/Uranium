@@ -4,20 +4,21 @@
 from UM.PluginObject import PluginObject
 import UM.Application
 
-
 ## Abstract base class for view objects.
 class View(PluginObject):
     def __init__(self):
         super().__init__()
         self._renderer = None
         self._controller = UM.Application.Application.getInstance().getController() # Circular dependency blah
-        
+
     ##  Get the controller object associated with this View.
+    #   \sa Controller
     def getController(self):
         return self._controller
 
     ##  Set the controller object associated with this View.
     #   \param controller The controller object to use.
+    #   \sa Controller
     def setController(self, controller):
         self._controller = controller
 
