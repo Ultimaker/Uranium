@@ -189,7 +189,7 @@ class Profile(SignalEmitter):
         if key in self._changed_settings:
             return setting.parseValue(self._changed_settings[key])
 
-        return self._active_instance.getSettingValue(key)
+        return setting.getDefaultValue(self)
 
     ##  Get a dictionary of all settings that have a value set in this profile.
     def getChangedSettings(self):
