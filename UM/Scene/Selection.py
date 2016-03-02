@@ -5,6 +5,10 @@ from UM.Signal import Signal
 from UM.Math.Vector import Vector
 from UM.Operations.GroupedOperation import GroupedOperation
 
+##    This class is responsible for keeping track of what objects are selected
+#     It uses signals to notify others of changes in the selection
+#     It also has a convenience function that allows it to apply a single operation
+#     to all selected objects.
 class Selection:
     @classmethod
     def add(cls, object):
@@ -23,6 +27,7 @@ class Selection:
             cls.selectionChanged.emit()
 
     @classmethod
+    ##  Get number of selected objects
     def getCount(cls):
         return len(cls.__selection)
 
@@ -31,6 +36,9 @@ class Selection:
         return cls.__selection
 
     @classmethod
+    ##  Get selected object by index
+    #   \param index index of the objectto return
+    #   \returns selected object or None if index was incorrect / not found
     def getSelectedObject(cls, index):
         try:
             return cls.__selection[index]
@@ -47,6 +55,7 @@ class Selection:
         cls.selectionChanged.emit()
 
     @classmethod
+    ##  Check if anything is selected at all.
     def hasSelection(cls):
         return bool(cls.__selection)
 
