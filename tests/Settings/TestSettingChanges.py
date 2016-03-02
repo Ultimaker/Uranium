@@ -40,6 +40,7 @@ class TestSettingChanges():
     def test_simple_change(self, application, machine_manager):
         definition, profile = self._createProfile(machine_manager, "setting_change_simple.json")
 
+        # Check if loading was succesfull
         assert definition.getId() == "test_setting_change_simple"
 
         assert definition.isSetting("test_setting_0")
@@ -54,12 +55,15 @@ class TestSettingChanges():
 
         profile.setSettingValue("test_setting_0", 20)
 
+        # Check if all children recieved a changed event
         assert listener.getProfileChangeCount("test_setting_0") == 1
         assert listener.getProfileChangeCount("test_setting_0_child_0") == 1
         assert listener.getProfileChangeCount("test_setting_0_child_1") == 1
 
+        # Check that only one setting was actually changed.
         assert len(profile.getChangedSettings()) == 1
 
+        # Check that the settings have right values
         assert profile.getSettingValue("test_setting_0") == 20
         assert profile.getSettingValue("test_setting_0_child_0") == 20
         assert profile.getSettingValue("test_setting_0_child_1") == 100
@@ -133,7 +137,7 @@ class TestSettingChanges():
         definition, profile = self._createProfile(machine_manager, "setting_change_noparent.json")
 
         listener = SettingChangeListener(profile)
-
+        # Check if loading of base data was succesfull
         assert definition.getId() == "test_setting_change_noparent"
 
         assert profile.getSettingValue("test_setting_0") == 10
@@ -141,11 +145,16 @@ class TestSettingChanges():
         assert profile.getSettingValue("test_setting_2") == 15
         assert profile.getSettingValue("test_setting_3") == 5
 
+        # Change the setting values based on the recieved data.
         for key, value in setting_changes.items():
             profile.setSettingValue(key, value)
 
+        # Check if number of changed settings matches expectation
         assert len(profile.getChangedSettings()) == expected.pop("changed_setting_count")
+
+        # Check if number of expected emitted signals matches
         assert listener.getTotalProfileChangeCount() == expected.pop("total_change_signals")
+
         for key, value in expected.items():
             assert listener.getProfileChangeCount(key) == value["change_signals"]
             assert profile.getSettingValue(key) == value["value"]
@@ -154,9 +163,11 @@ class TestSettingChanges():
         definition = MachineDefinition(machine_manager, os.path.join(os.path.dirname(os.path.abspath(__file__)), "definitions", definition_file))
         definition.loadAll()
         machine_manager.addMachineDefinition(definition)
+
         instance = MachineInstance(machine_manager, definition = definition)
         machine_manager.addMachineInstance(instance)
         machine_manager.setActiveMachineInstance(instance)
+
         profile = Profile(machine_manager)
         machine_manager.addProfile(profile)
         machine_manager.setActiveProfile(profile)
