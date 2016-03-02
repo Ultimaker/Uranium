@@ -3,7 +3,11 @@
 
 from UM.PluginObject import PluginObject
 
+##  Static class used for logging purposes. This class is only meant to be used as a static class.
 class Logger:
+    def __init__(self):
+        raise Exception("This class is static only")
+
     ##  Add a logger to the list.
     #   \param logger \type{Logger}
     @classmethod
@@ -19,7 +23,7 @@ class Logger:
     ##  Send a message of certain type to all loggers to be handled.
     #   \param log_type \type{string} Values must be; 'e' (error) , 'i'(info), 'd'(debug) or 'w'(warning).
     #   \param message \type{string} containing message to be logged
-    #   \param message \type{list} List of variables to be added to the message.
+    #   \param *args \type{list} List of variables to be added to the message.
     @classmethod
     def log(cls, log_type, message, *args):
         for logger in cls.__loggers:
@@ -37,11 +41,11 @@ class LogOutput(PluginObject):
     ##  Log a message.
     #
     #   The possible message types are:
-    #   - 'd', debug
-    #   - 'i', info
-    #   - 'w', warning
-    #   - 'e', error
-    #   - 'c', critical
+    #   - "d", debug
+    #   - "i", info
+    #   - "w", warning
+    #   - "e", error
+    #   - "c", critical
     #
     #   \param log_type \type{string} A value describing the type of message.
     #   \param message \type{string} The message to log.

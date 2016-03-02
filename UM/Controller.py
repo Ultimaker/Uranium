@@ -96,12 +96,13 @@ class Controller(SignalEmitter):
             Logger.log("e", "No view named %s found", name)
         except Exception as e:
             Logger.log("e", "An exception occured while switching views", str(e))
+
     ##  Emitted when the list of views changes.
     viewsChanged = Signal()
 
     ##  Emitted when the active view changes.
     activeViewChanged = Signal()
-        
+
     ##  Add an input device (eg; mouse, keyboard, etc) if it's not already addded.
     #   \param device The input device to be added
     def addInputDevice(self, device):
@@ -139,7 +140,7 @@ class Controller(SignalEmitter):
         except KeyError: #No such tool
             Logger.log("e", "Unable to find %s in tools",name)
             return None
-    
+
     ##  Get all tools
     #   \return tools \type{list}
     def getAllTools(self):
@@ -252,7 +253,6 @@ class Controller(SignalEmitter):
     #   \sa setActiveTool
     def setSelectionTool(self, tool):
         self._selection_tool = self.getTool(tool)
-
 
     def getToolsEnabled(self):
         return self._tools_enabled

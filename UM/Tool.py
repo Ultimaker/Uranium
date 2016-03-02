@@ -7,7 +7,7 @@ from UM.Event import Event
 from UM.Scene.Selection import Selection
 import UM.Application # Circular dependency blah
 
-##  Abstract base class for tools that manipulate the scene.
+##  Abstract base class for tools that manipulate (or otherwise interact with) the scene.
 #
 class Tool(PluginObject, SignalEmitter):
     def __init__(self):
@@ -29,6 +29,7 @@ class Tool(PluginObject, SignalEmitter):
     #
     #   \param tool The tool that started the operation.
     operationStarted = Signal()
+
     ## Should be emitted whenever a longer running operation is stopped.
     #
     #   \param tool The tool that stopped the operation.
