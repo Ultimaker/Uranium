@@ -89,7 +89,7 @@ class Platform(SceneNode.SceneNode):
         if node.getMeshData():
             self.setMeshData(node.getMeshData())
 
-            self._updateTexture()
+            Application.getInstance().callLater(self._updateTexture) #Calling later because for some reason the OpenGL context might be outdated on some computers.
 
 class _LoadPlatformJob(Job):
     def __init__(self, file_name):
