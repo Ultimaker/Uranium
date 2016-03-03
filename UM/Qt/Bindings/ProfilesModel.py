@@ -11,8 +11,10 @@ from UM.Message import Message
 from UM.PluginRegistry import PluginRegistry #For getting the possible profile writers to write with.
 from UM.Settings.Profile import Profile
 from UM.Settings import SettingsError
+from UM.Platform import Platform
 
 from PyQt5.QtCore import Qt, pyqtSlot, pyqtSignal, pyqtProperty, QUrl
+from PyQt5.QtWidgets import QMessageBox
 
 from UM.i18n import i18nCatalog
 catalog = i18nCatalog("uranium")
@@ -145,6 +147,13 @@ class ProfilesModel(ListModel):
         path = url.toLocalFile()
         if not path:
             return
+
+        # QML FileDialog only properly asks for overwrite confirm on Windows
+        if not Platform.isWindows():
+            if os.path.exists(path):
+                result = QMessageBox.question(None, catalog.i18nc("@title:window", "File Already Exists"), catalog.i18nc("@label", "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?").format(path))
+                if result == QMessageBox.No:
+                    return
 
         if id == -1:
             #id -1 references the "Current settings"/working profile
