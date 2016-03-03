@@ -56,7 +56,7 @@ class PointCloudNode(SceneNode.SceneNode):
     
     ##   \brief Create new material. 
     def createMaterial(self):
-        self._material = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "default.shader"))
+        self._material = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "object.shader"))
 
         self._material.setUniformValue("u_ambientColor", Color(0.3, 0.3, 0.3, 1.0))
         self._material.setUniformValue("u_diffuseColor", self._color)
