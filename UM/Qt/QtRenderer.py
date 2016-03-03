@@ -76,6 +76,12 @@ class QtRenderer(Renderer):
     def setBackgroundColor(self, color):
         self._background_color = color
 
+    def getViewportWidth(self):
+        return self._viewport_width
+
+    def getViewportHeight(self):
+        return self._viewport_height
+
     ##  Set the viewport size.
     #
     #   \param width The new width of the viewport.
