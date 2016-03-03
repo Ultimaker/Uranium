@@ -56,7 +56,7 @@ class MirrorTool(Tool):
                     op = GroupedOperation()
 
                     for node in Selection.getAllSelectedObjects():
-                        mirror = node.getMirror()
+                        mirror = Vector(1,1,1)
                         if self.getLockedAxis() == ToolHandle.XAxis:
                             mirror.setX(-1)
                         elif self.getLockedAxis() == ToolHandle.YAxis:
