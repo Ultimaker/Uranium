@@ -12,18 +12,24 @@ class QtTexture(Texture):
         super().__init__()
 
         self._qt_texture = QOpenGLTexture(QOpenGLTexture.Target2D)
-        self._qt_texture.setMinMagFilters(QOpenGLTexture.Linear, QOpenGLTexture.Linear)
         self._gl = OpenGL.getInstance().getBindingsObject()
+        self._file_name = None
 
     def getTextureId(self):
         return self._qt_texture.textureId()
 
     def bind(self, unit):
+        if self._file_name != None and not self._qt_texture.isCreated():
+            image = QImage(self._file_name).mirrored()
+            self._qt_texture.setData(image)
+            self._qt_texture.setMinMagFilters(QOpenGLTexture.Linear, QOpenGLTexture.Linear)
+
         self._qt_texture.bind(unit)
 
     def release(self, unit):
         self._qt_texture.release(unit)
 
     def load(self, file_name):
-        image = QImage(file_name).mirrored()
-        self._qt_texture.setData(image)
+        self._file_name = file_name
+        #Actually loading the texture is postponed until the next bind() call.
+        #This makes sure we are on the right thread and have a current context when trying to upload.
