@@ -123,7 +123,8 @@ class ProfilesModel(ListModel):
 
                 #File name (without extension) trumps the name stored in the profile
                 file_name = os.path.basename(os.path.splitext(path)[0])
-                profile.setName(self._manager.makeUniqueProfileName(file_name))
+                #profile.setName takes care of making sure the profile name is unique
+                profile.setName(file_name)
 
                 #Make sure the profile is available for the currently selected printer
                 profile.setMachineTypeId(self._manager.getActiveMachineInstance().getMachineDefinition().getProfilesMachineId())

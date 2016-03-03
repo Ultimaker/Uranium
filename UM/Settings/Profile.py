@@ -63,9 +63,13 @@ class Profile(SignalEmitter):
     #
     #   \param name \type{string} The new name of the profile.
     def setName(self, name):
-        if name != self._name:
+        old_name = None
+        if self in self._machine_manager.getProfiles():
+            #Only allow the current name of the profile if it is already in the list of profiles
             old_name = self._name
-            self._name = self._machine_manager.makeUniqueProfileName(name, old_name)
+        name = self._machine_manager.makeUniqueProfileName(name, old_name)
+        if name != self._name:
+            self._name = name
             self.nameChanged.emit(self, old_name)
 
     ##  Set whether this profile should be considered a read only profile.
