@@ -255,10 +255,19 @@ class ScaleTool(Tool):
         if obj:
             obj_scale = obj.getScale()
             if obj_scale.x != scale:
-                obj_scale.setX(scale)
+                if obj_scale.x < 0:
+                    obj_scale.setX(-scale)
+                else:
+                    obj_scale.setX(scale)
                 if not self._non_uniform_scale:
-                    obj_scale.setY(scale)
-                    obj_scale.setZ(scale)
+                    if obj_scale.y < 0:
+                        obj_scale.setY(-scale)
+                    else:
+                        obj_scale.setY(scale)
+                    if obj_scale.z < 0:
+                        obj_scale.setZ(-scale)
+                    else:
+                        obj_scale.setZ(scale)
                 Selection.applyOperation(ScaleOperation, obj_scale, set_scale = True)
 
     def setScaleY(self, scale):
@@ -266,10 +275,19 @@ class ScaleTool(Tool):
         if obj:
             obj_scale = obj.getScale()
             if obj_scale.y != scale:
-                obj_scale.setY(scale)
+                if obj_scale.y < 0:
+                    obj_scale.setY(-scale)
+                else:
+                    obj_scale.setY(scale)
                 if not self._non_uniform_scale:
-                    obj_scale.setX(scale)
-                    obj_scale.setZ(scale)
+                    if obj_scale.x < 0:
+                        obj_scale.setX(-scale)
+                    else:
+                        obj_scale.setX(scale)
+                    if obj_scale.z < 0:
+                        obj_scale.setZ(-scale)
+                    else:
+                        obj_scale.setZ(scale)
                 Selection.applyOperation(ScaleOperation, obj_scale, set_scale = True)
 
     def setScaleZ(self, scale):
@@ -277,8 +295,14 @@ class ScaleTool(Tool):
         if obj:
             obj_scale = obj.getScale()
             if obj_scale.z != scale:
-                obj_scale.setZ(scale)
+                if obj_scale.z < 0:
+                    obj_scale.setZ(-scale)
+                else:
+                    obj_scale.setZ(scale)
                 if not self._non_uniform_scale:
-                    obj_scale.setY(scale)
+                    if obj_scale.x < 0:
+                        obj_scale.setX(-scale)
+                    else:
+                        obj_scale.setX(scale)
                     obj_scale.setX(scale)
                 Selection.applyOperation(ScaleOperation, obj_scale, set_scale = True)
