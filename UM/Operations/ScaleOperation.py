@@ -52,6 +52,7 @@ class ScaleOperation(Operation.Operation):
                 scale_factor.setY(scale_factor.y / current_scale.y)
             if scale_factor.z != 0:
                 scale_factor.setZ(scale_factor.z / current_scale.z)
+                
             self._node.setPosition(-self._scale_around_point)
             self._node.scale(scale_factor, SceneNode.TransformSpace.Parent)
             self._node.setPosition(self._scale_around_point)

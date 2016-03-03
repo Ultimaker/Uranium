@@ -65,6 +65,11 @@ class RotateTool(Tool):
                 self.setLockedAxis(id)
                 handle_position = self._handle.getWorldPosition()
 
+                # Save the current positions of the node, as we want to rotate arround their current centres
+                self._saved_node_positions = []
+                for node in Selection.getAllSelectedObjects():
+                    self._saved_node_positions.append((node, node.getWorldPosition()))
+
                 if id == ToolHandle.XAxis:
                     self.setDragPlane(Plane(Vector(1, 0, 0), handle_position.x))
                 elif id == ToolHandle.YAxis:
@@ -122,7 +127,11 @@ class RotateTool(Tool):
                 self.propertyChanged.emit()
                 self._angle_update_time = new_time
 
-            Selection.applyOperation(RotateOperation, rotation, rotate_around_point = handle_position)
+            # Rotate around the saved centeres of all selected nodes
+            op = GroupedOperation()
+            for node, position in self._saved_node_positions:
+                op.addOperation(RotateOperation(node, rotation, rotate_around_point = position))
+            op.push()
 
             self.setDragStart(event.x, event.y)
 
