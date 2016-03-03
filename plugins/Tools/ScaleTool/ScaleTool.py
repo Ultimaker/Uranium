@@ -87,6 +87,11 @@ class ScaleTool(Tool):
             if ToolHandle.isAxis(id):
                 self.setLockedAxis(id)
 
+            # Save the current positions of the node, as we want to scale arround their current centres
+            self._saved_node_positions = []
+            for node in Selection.getAllSelectedObjects():
+                self._saved_node_positions.append((node, node.getWorldPosition()))
+
             self._saved_handle_position = self._handle.getWorldPosition()
 
             if id == ToolHandle.XAxis:
@@ -126,7 +131,12 @@ class ScaleTool(Tool):
                         scale_change.setY(scale_factor)
                         scale_change.setZ(scale_factor)
 
-                    Selection.applyOperation(ScaleOperation, scale_change, relative_scale = True, snap = self._snap_scale)
+                    # Scale around the saved centeres of all selected nodes
+                    op = GroupedOperation()
+                    for node, position in self._saved_node_positions:
+                        op.addOperation(ScaleOperation(node, scale_change, relative_scale = True, snap = self._snap_scale, scale_around_point = position))
+                    op.push()
+                    #Selection.applyOperation(ScaleOperation, scale_change, relative_scale = True, snap = self._snap_scale, scale_around_point = self._saved_handle_position)
 
                 self._drag_length = (self._saved_handle_position - drag_position).length()
                 return True
