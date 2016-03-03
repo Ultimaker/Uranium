@@ -11,8 +11,10 @@ from UM.Message import Message
 from UM.PluginRegistry import PluginRegistry #For getting the possible profile writers to write with.
 from UM.Settings.Profile import Profile
 from UM.Settings import SettingsError
+from UM.Platform import Platform
 
 from PyQt5.QtCore import Qt, pyqtSlot, pyqtSignal, pyqtProperty, QUrl
+from PyQt5.QtWidgets import QMessageBox
 
 from UM.i18n import i18nCatalog
 catalog = i18nCatalog("uranium")
@@ -109,7 +111,7 @@ class ProfilesModel(ListModel):
     def importProfile(self, url):
         path = url.toLocalFile()
         if not path:
-            return { "status": "error", "message": catalog.i18nc("@info:status", "Failed to import profile from <filename>{0}</filename>: <message>{1}</message>", path, str(e)) }
+            return { "status": "error", "message": catalog.i18nc("@info:status", "Failed to import profile from <filename>{0}</filename>: <message>{1}</message>", path, "Invalid path") }
 
         for profile_reader_id, profile_reader in self._manager.getProfileReaders():
             try:
@@ -145,6 +147,13 @@ class ProfilesModel(ListModel):
         path = url.toLocalFile()
         if not path:
             return
+
+        # On Windows, QML FileDialog properly asks for overwrite confirm, but not on other platforms, so handle those ourself.
+        if not Platform.isWindows():
+            if os.path.exists(path):
+                result = QMessageBox.question(None, catalog.i18nc("@title:window", "File Already Exists"), catalog.i18nc("@label", "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?").format(path))
+                if result == QMessageBox.No:
+                    return
 
         if id == -1:
             #id -1 references the "Current settings"/working profile
