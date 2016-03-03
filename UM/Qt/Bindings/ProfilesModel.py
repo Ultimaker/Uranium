@@ -148,7 +148,7 @@ class ProfilesModel(ListModel):
         if not path:
             return
 
-        # QML FileDialog only properly asks for overwrite confirm on Windows
+        # On Windows, QML FileDialog properly asks for overwrite confirm, but not on other platforms, so handle those ourself.
         if not Platform.isWindows():
             if os.path.exists(path):
                 result = QMessageBox.question(None, catalog.i18nc("@title:window", "File Already Exists"), catalog.i18nc("@label", "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?").format(path))
