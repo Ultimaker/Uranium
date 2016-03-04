@@ -63,9 +63,13 @@ class Profile(SignalEmitter):
     #
     #   \param name \type{string} The new name of the profile.
     def setName(self, name):
-        if name != self._name:
+        old_name = None
+        if self in self._machine_manager.getProfiles():
+            #Only allow the current name of the profile if it is already in the list of profiles
             old_name = self._name
-            self._name = self._machine_manager.makeUniqueProfileName(name, old_name)
+        name = self._machine_manager.makeUniqueProfileName(name, old_name)
+        if name != self._name:
+            self._name = name
             self.nameChanged.emit(self, old_name)
 
     ##  Set whether this profile should be considered a read only profile.
@@ -152,13 +156,15 @@ class Profile(SignalEmitter):
         if not setting:
             return
 
-        if value == setting.getDefaultValue() or value == str(setting.getDefaultValue()) and not self._type:
-            #Note: partial profiles can have values that equal the default setting
-            if key in self._changed_settings:
-                del self._changed_settings[key]
-                self.settingValueChanged.emit(key)
+        if not key in self._changed_settings_defaults and not self._type:
+            #Note: partial profiles and profiles based that have stored default
+            #values can have values that equal the default setting
+            if value == setting.getDefaultValue() or value == str(setting.getDefaultValue()):
+                if key in self._changed_settings:
+                    del self._changed_settings[key]
+                    self.settingValueChanged.emit(key)
 
-            return
+                return
 
         if key in self._changed_settings and self._changed_settings[key] == value:
             return
@@ -187,11 +193,17 @@ class Profile(SignalEmitter):
         if key in self._changed_settings:
             return setting.parseValue(self._changed_settings[key])
 
-        return self._active_instance.getSettingValue(key)
+        return setting.getDefaultValue(self)
 
     ##  Get a dictionary of all settings that have a value set in this profile.
     def getChangedSettings(self):
         return self._changed_settings
+
+    ##  Set the dirty flag of this profile.
+    #   If the profile is dirty, it is saved (regardless if the other tests think
+    #   this should happen or not)
+    def setDirty(self, dirty):
+        self._dirty = dirty
 
     ##  Reset the settings that have a value set in this profile to a new set.
     def setChangedSettings(self, settings):
@@ -263,7 +275,7 @@ class Profile(SignalEmitter):
             setting = self._active_instance.getMachineDefinition().getSetting(key)
             if not setting:
                 return False
-            valid = setting.validate(value)
+            valid = setting.validate(setting.parseValue(value))
             if valid == ResultCodes.min_value_error or valid == ResultCodes.max_value_error or valid == ResultCodes.not_valid_error:
                 Logger.log("w", "The setting %s has an invalid value of %s", key, value)
                 return True
@@ -287,12 +299,11 @@ class Profile(SignalEmitter):
 
     ##  Remove a setting value from this profile, resetting it to its default value.
     def resetSettingValue(self, key):
-        if key not in self._changed_settings:
-            return
-
         if key in self._changed_settings_defaults:
             self._changed_settings[key] = self._changed_settings_defaults[key]
         else:
+            if key not in self._changed_settings:
+                return
             del self._changed_settings[key]
 
         self.settingValueChanged.emit(key)

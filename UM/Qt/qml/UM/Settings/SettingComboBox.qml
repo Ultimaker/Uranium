@@ -16,16 +16,6 @@ ComboBox
     model: options //From parent loader
     textRole: "name";
 
-    currentIndex: {
-        for(var i = 0; i < options.rowCount(); ++i) {
-            if(options.getItem(i).value == value /*From parent loader*/) {
-                return i;
-            }
-        }
-
-        return -1;
-    }
-
     MouseArea
     {
         anchors.fill: parent;
@@ -71,9 +61,9 @@ ComboBox
                 anchors.rightMargin: itemStyle.controlBorderWidth * 2;
                 anchors.verticalCenter: parent.verticalCenter;
 
-                source: UM.Theme.icons.arrow_bottom
-                width: UM.Theme.sizes.standard_arrow.width
-                height: UM.Theme.sizes.standard_arrow.height
+                source: UM.Theme.getIcon("arrow_bottom")
+                width: UM.Theme.getSize("standard_arrow").width
+                height: UM.Theme.getSize("standard_arrow").height
                 sourceSize.width: width + 5
                 sourceSize.height: width + 5
 
@@ -85,5 +75,28 @@ ComboBox
 
     onActivated: {
         valueChanged(options.getItem(index).value);
+    }
+
+    onModelChanged: {
+        updateCurrentIndex();
+    }
+
+    Component.onCompleted: {
+        parent.parent.valueChanged.connect(updateCurrentIndex)
+    }
+
+    function updateCurrentIndex() {
+        if (!options) {
+            return;
+        }
+
+        for(var i = 0; i < options.rowCount(); ++i) {
+            if(options.getItem(i).value == value /*From parent loader*/) {
+                currentIndex = i;
+                return;
+            }
+        }
+
+        currentIndex = -1;
     }
 }

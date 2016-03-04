@@ -9,8 +9,8 @@ import UM 1.1 as UM
 Item
 {
     id: base
-    width: Math.max(23 * UM.Theme.sizes.line.width, childrenRect.width);
-    height: Math.max(9.5 * UM.Theme.sizes.line.height, childrenRect.height);
+    width: Math.max(23 * UM.Theme.getSize("line").width, childrenRect.width);
+    height: Math.max(9.5 * UM.Theme.getSize("line").height, childrenRect.height);
     UM.I18nCatalog { id: catalog; name:"uranium"}
 
     function getPercentage(scale){
@@ -22,12 +22,12 @@ Item
         id: resetScaleButton
 
         anchors.top: scaleToMaxButton.bottom;
-        anchors.topMargin: UM.Theme.sizes.default_margin.height;
+        anchors.topMargin: UM.Theme.getSize("default_margin").height;
         z: 1
 
         //: Reset scale tool button
         text: catalog.i18nc("@action:button","Reset")
-        iconSource: UM.Theme.icons.scale_reset;
+        iconSource: UM.Theme.getIcon("scale_reset");
 
         style: UM.Theme.styles.tool_button;
 
@@ -40,7 +40,7 @@ Item
 
         //: Scale to max tool button
         text: catalog.i18nc("@action:button","Scale to Max");
-        iconSource: UM.Theme.icons.scale_max;
+        iconSource: UM.Theme.getIcon("scale_max");
 
         anchors.top: parent.top;
         z: 1
@@ -53,12 +53,12 @@ Item
         id: checkboxes;
 
         anchors.left: resetScaleButton.right;
-        anchors.leftMargin: UM.Theme.sizes.default_margin.width;
+        anchors.leftMargin: UM.Theme.getSize("default_margin").width;
         anchors.right: parent.right;
         anchors.top: textfields.bottom;
-        anchors.topMargin: UM.Theme.sizes.default_margin.height;
+        anchors.topMargin: UM.Theme.getSize("default_margin").height;
 
-        spacing: UM.Theme.sizes.default_margin.height;
+        spacing: UM.Theme.getSize("default_margin").height;
 
         CheckBox
         {
@@ -110,44 +110,44 @@ Item
         }
 
         anchors.left: resetScaleButton.right;
-        anchors.leftMargin: UM.Theme.sizes.default_margin.width;
+        anchors.leftMargin: UM.Theme.getSize("default_margin").width;
         anchors.top: parent.top;
 
         columns: 3;
         flow: Grid.TopToBottom;
-        spacing: UM.Theme.sizes.default_margin.width / 2;
+        spacing: UM.Theme.getSize("default_margin").width / 2;
 
         Label
         {
-            height: UM.Theme.sizes.setting_control.height;
+            height: UM.Theme.getSize("setting_control").height;
             text: "X";
-            font: UM.Theme.fonts.default;
-            color: UM.Theme.colors.text;
+            font: UM.Theme.getFont("default");
+            color: "red"
             verticalAlignment: Text.AlignVCenter;
         }
 
         Label
         {
-            height: UM.Theme.sizes.setting_control.height;
+            height: UM.Theme.getSize("setting_control").height;
             text: "Y";
-            font: UM.Theme.fonts.default;
-            color: UM.Theme.colors.text;
+            font: UM.Theme.getFont("default");
+            color: "green"
             verticalAlignment: Text.AlignVCenter;
         }
 
         Label
         {
-            height: UM.Theme.sizes.setting_control.height;
+            height: UM.Theme.getSize("setting_control").height;
             text: "Z";
-            font: UM.Theme.fonts.default;
-            color: UM.Theme.colors.text;
+            font: UM.Theme.getFont("default");
+            color: "blue"
             verticalAlignment: Text.AlignVCenter;
         }
 
         TextField
         {
-            width: UM.Theme.sizes.setting_control.width;
-            height: UM.Theme.sizes.setting_control.height;
+            width: UM.Theme.getSize("setting_control").width;
+            height: UM.Theme.getSize("setting_control").height;
             property string unit: "mm";
             style: UM.Theme.styles.text_field;
             text: UM.ActiveTool.properties.getValue("ObjectWidth").toFixed(4).replace(/\.?0*$/, "")
@@ -162,8 +162,8 @@ Item
         }
         TextField
         {
-            width: UM.Theme.sizes.setting_control.width;
-            height: UM.Theme.sizes.setting_control.height;
+            width: UM.Theme.getSize("setting_control").width;
+            height: UM.Theme.getSize("setting_control").height;
             property string unit: "mm";
             style: UM.Theme.styles.text_field;
             text: parent.roundFloat(UM.ActiveTool.properties.getValue("ObjectDepth"), 4)
@@ -178,8 +178,8 @@ Item
         }
         TextField
         {
-            width: UM.Theme.sizes.setting_control.width;
-            height: UM.Theme.sizes.setting_control.height;
+            width: UM.Theme.getSize("setting_control").width;
+            height: UM.Theme.getSize("setting_control").height;
             property string unit: "mm";
             style: UM.Theme.styles.text_field;
             text: parent.roundFloat(UM.ActiveTool.properties.getValue("ObjectHeight"), 4)
@@ -196,8 +196,8 @@ Item
         TextField
         {
             id: xPercentage
-            width: UM.Theme.sizes.setting_control.width;
-            height: UM.Theme.sizes.setting_control.height;
+            width: UM.Theme.getSize("setting_control").width;
+            height: UM.Theme.getSize("setting_control").height;
             property string unit: "%";
             style: UM.Theme.styles.text_field;
             text: parent.roundFloat(base.getPercentage(UM.ActiveTool.properties.getValue("ScaleX")), 4)
@@ -212,8 +212,8 @@ Item
         TextField
         {
             id: zPercentage
-            width: UM.Theme.sizes.setting_control.width;
-            height: UM.Theme.sizes.setting_control.height;
+            width: UM.Theme.getSize("setting_control").width;
+            height: UM.Theme.getSize("setting_control").height;
             property string unit: "%";
             style: UM.Theme.styles.text_field;
             text: parent.roundFloat(base.getPercentage(UM.ActiveTool.properties.getValue("ScaleZ")), 4)
@@ -229,8 +229,8 @@ Item
         TextField
         {
             id: yPercentage
-            width: UM.Theme.sizes.setting_control.width;
-            height: UM.Theme.sizes.setting_control.height;
+            width: UM.Theme.getSize("setting_control").width;
+            height: UM.Theme.getSize("setting_control").height;
             property string unit: "%";
             style: UM.Theme.styles.text_field;
             text: parent.roundFloat(base.getPercentage(UM.ActiveTool.properties.getValue("ScaleY")), 4)

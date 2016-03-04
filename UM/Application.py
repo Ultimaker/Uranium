@@ -4,7 +4,6 @@
 from UM.Controller import Controller
 from UM.PluginRegistry import PluginRegistry
 from UM.Mesh.MeshFileHandler import MeshFileHandler
-from UM.Settings.MachineSettings import MachineSettings
 from UM.Resources import Resources
 from UM.Operations.OperationStack import OperationStack
 from UM.Event import CallFunctionEvent
@@ -172,6 +171,7 @@ class Application(SignalEmitter):
     def getCommandLineOption(self, name, default = None):
         if not self._parsed_command_line:
             self.parseCommandLine()
+            Logger.log("d", "Command line options: %s", str(self._parsed_command_line))
 
         return self._parsed_command_line.get(name, default)
 

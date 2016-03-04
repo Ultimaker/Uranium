@@ -11,8 +11,10 @@ from UM.Message import Message
 from UM.PluginRegistry import PluginRegistry #For getting the possible profile writers to write with.
 from UM.Settings.Profile import Profile
 from UM.Settings import SettingsError
+from UM.Platform import Platform
 
 from PyQt5.QtCore import Qt, pyqtSlot, pyqtSignal, pyqtProperty, QUrl
+from PyQt5.QtWidgets import QMessageBox
 
 from UM.i18n import i18nCatalog
 catalog = i18nCatalog("uranium")
@@ -40,8 +42,6 @@ class ProfilesModel(ListModel):
 
         self._manager = Application.getInstance().getMachineManager()
         self._working_profile = self._manager.getWorkingProfile()
-        if self._working_profile:
-            self._working_profile.settingValueChanged.connect(self._onWorkingProfileValueChanged)
 
         self._manager.profilesChanged.connect(self._onProfilesChanged)
         self._manager.activeMachineInstanceChanged.connect(self._onMachineInstanceChanged)
@@ -96,6 +96,9 @@ class ProfilesModel(ListModel):
         profile.setName(new_name)
         self._manager.profilesChanged.emit()
 
+        if profile == self._manager.getActiveProfile():
+            self._manager.profileNameChanged.emit(profile)
+
     @pyqtSlot(str, result = bool)
     def checkProfileExists(self, name):
         profile = self._manager.findProfile(name, instance = self._manager.getActiveMachineInstance())
@@ -108,7 +111,7 @@ class ProfilesModel(ListModel):
     def importProfile(self, url):
         path = url.toLocalFile()
         if not path:
-            return { "status": "error", "message": catalog.i18nc("@info:status", "Failed to import profile from <filename>{0}</filename>: <message>{1}</message>", path, str(e)) }
+            return { "status": "error", "message": catalog.i18nc("@info:status", "Failed to import profile from <filename>{0}</filename>: <message>{1}</message>", path, "Invalid path") }
 
         for profile_reader_id, profile_reader in self._manager.getProfileReaders():
             try:
@@ -122,7 +125,8 @@ class ProfilesModel(ListModel):
 
                 #File name (without extension) trumps the name stored in the profile
                 file_name = os.path.basename(os.path.splitext(path)[0])
-                profile.setName(self._manager.makeUniqueProfileName(file_name))
+                #profile.setName takes care of making sure the profile name is unique
+                profile.setName(file_name)
 
                 #Make sure the profile is available for the currently selected printer
                 profile.setMachineTypeId(self._manager.getActiveMachineInstance().getMachineDefinition().getProfilesMachineId())
@@ -145,6 +149,13 @@ class ProfilesModel(ListModel):
             error_str = "Not a valid path. If this problem persists, please report a bug."
             error_str = i18nCatalog.i18nc("@info:status", error_str)
             return {"status":"error", "message":error_str}
+
+        # On Windows, QML FileDialog properly asks for overwrite confirm, but not on other platforms, so handle those ourself.
+        if not Platform.isWindows():
+            if os.path.exists(path):
+                result = QMessageBox.question(None, catalog.i18nc("@title:window", "File Already Exists"), catalog.i18nc("@label", "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?").format(path))
+                if result == QMessageBox.No:
+                    return
 
         if id == -1:
             #id -1 references the "Current settings"/working profile
@@ -229,15 +240,11 @@ class ProfilesModel(ListModel):
         return filters
 
     @pyqtSlot(result = QUrl)
-    def getDefaultSavePath(self):
+    def getDefaultPath(self):
         return QUrl.fromLocalFile(os.path.expanduser("~/"))
 
     def _onMachineInstanceChanged(self):
-        if self._working_profile:
-            self._working_profile.settingValueChanged.disconnect(self._onWorkingProfileValueChanged)
         self._working_profile = self._manager.getWorkingProfile()
-        if self._working_profile:
-            self._working_profile.settingValueChanged.connect(self._onWorkingProfileValueChanged)
 
         self._onProfilesChanged()
 
@@ -253,9 +260,6 @@ class ProfilesModel(ListModel):
                 break
 
         self._manager.setActiveProfile(active_profile)
-
-    def _onWorkingProfileValueChanged(self, setting):
-        self._onProfilesChanged()
 
     def _onProfilesChanged(self):
         self.clear()

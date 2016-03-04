@@ -11,8 +11,7 @@ import ".." as UM
 Label {
     signal valueChanged(string value);
 
-    property variant value;
-    property string unit;
+    property bool hovered: false;
 
     text: value + " " + unit;
 }

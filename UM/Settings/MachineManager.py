@@ -32,7 +32,7 @@ class MachineManager(SignalEmitter):
 
         self._machine_definitions = []
         self._machine_instances = []
-        self._profiles = []
+        self._profiles = [] #All the profiles that are loaded from disk, for any machine instance
 
         self._active_machine = None
         self._active_profile = None
@@ -206,21 +206,25 @@ class MachineManager(SignalEmitter):
         return instance_name
 
     ##  Get the currently active machine instance
-    #   \returns active_machine \type{MachineSettings}
+    #   \returns active_machine \type{MachineInstance}
     def getActiveMachineInstance(self):
         return self._active_machine
 
     ##  Set the currently active machine
-    #   \param active_machine \type{MachineSettings}
+    #   \param active_machine \type{MachineInstance}
     def setActiveMachineInstance(self, machine):
-        if machine == self._active_machine:
+        if not machine or machine == self._active_machine:
             return
+
+        update_profile = False
+        if not self._active_machine or self._active_machine.getMachineDefinition() != machine.getMachineDefinition():
+            update_profile = True
+
+        self._active_machine = machine
         setting_visibility = []
         if self._active_machine:
             setting_visibility = self._active_machine.getMachineDefinition().getAllSettings(visible_only = True)
             setting_visibility = list(map(lambda s: s.getKey(), setting_visibility))
-
-        self._active_machine = machine
 
         self._updateSettingVisibility(setting_visibility)
 
@@ -229,20 +233,23 @@ class MachineManager(SignalEmitter):
         if profile:
             self.setActiveProfile(profile)
         else:
-            for profile in self._profiles:
-                self.setActiveProfile(profile) #default to first profile you can find
-                break
+            profiles = self.getProfiles(instance = self._active_machine)
+            if len(profiles) > 0:
+                self.setActiveProfile(profiles[0]) #default to first profile you can find
 
         if self._active_machine.hasMaterials():
             material = self._active_machine.getMaterialName()
             available_materials = self.getAllMachineMaterials(self._active_machine.getName())
             if not material or (len(available_materials) > 0 and material not in available_materials):
-                if "PLA" in available_materials:
-                    self._active_machine.setMaterialName("PLA")
+                prefered_material = instance.getMachineDefinition().getPreference("prefered_material")
+                if prefered_material and prefered_material in available_materials:
+                    self._active_machine.setMaterialName(prefered_material)
                 else:
                     self._active_machine.setMaterialName(available_materials[0])
 
         self.activeMachineInstanceChanged.emit()
+        if update_profile:
+            self.activeProfileChanged.emit()
         self._protect_working_profile = False
 
     def setActiveMaterial(self, material):
@@ -340,7 +347,7 @@ class MachineManager(SignalEmitter):
             elif not machine_type:
                 generic_profiles.append(profile)
 
-        if len(specific_profiles) == 0 and type_name == None:
+        if len(specific_profiles) == 0:
             #No starter-profiles were found
             return generic_profiles
 
@@ -559,9 +566,8 @@ class MachineManager(SignalEmitter):
                         Logger.log("e", "An exception occurred loading Profile %s: %s", path, str(e))
                         continue
 
-                    if not self.findProfile(profile.getName(), variant_name = profile.getMachineVariantName(), material_name = profile.getMaterialName(), instance = self._active_machine):
-                        self._profiles.append(profile)
-                        profile.nameChanged.connect(self._onProfileNameChanged)
+                    self._profiles.append(profile)
+                    profile.nameChanged.connect(self._onProfileNameChanged)
 
         for instance in self._machine_instances:
             try:
@@ -576,7 +582,7 @@ class MachineManager(SignalEmitter):
         if self._active_machine:
             profile_name = self._active_machine.getActiveProfileName()
             if profile_name == "":
-                profile_name = "Normal Quality"
+                profile_name = self._active_machine.getMachineDefinition().getPreference("prefered_profile")
 
             profile = self.findProfile(self._active_machine.getActiveProfileName(), instance = self._active_machine)
             if profile:
@@ -614,7 +620,7 @@ class MachineManager(SignalEmitter):
     def saveProfiles(self):
         try:
             for profile in self._profiles:
-                if profile.isReadOnly() or not profile.hasChangedSettings():
+                if (profile.isReadOnly() or not profile.hasChangedSettings()) and not profile.hasUnsavedChanges():
                     continue
 
                 file_name = urllib.parse.quote_plus(profile.getName()) + ".cfg"
@@ -741,20 +747,30 @@ class MachineManager(SignalEmitter):
 
     def _setDefaultVariantMaterialProfile(self, instance):
         materials = self.getAllMachineMaterials(instance.getName())
+
+        prefered_profile = instance.getMachineDefinition().getPreference("prefered_profile")
+        prefered_variant = instance.getMachineDefinition().getPreference("prefered_variant")
+        prefered_material = instance.getMachineDefinition().getPreference("prefered_material")
+
         if len(materials) > 0:
-            instance.setMaterialName("PLA" if "PLA" in materials else material[0])
+            instance.setMaterialName(prefered_material if prefered_material and prefered_material in materials else materials[0])
 
         variants = self.getAllMachineVariants(instance.getMachineDefinition().getId())
-        for variant in variants:
-            if variant.getVariantName() == "0.4 mm":
-                instance.setMachineDefinition(variant)
-                break
+        if prefered_variant:
+            for variant in variants:
+                if variant.getVariantName() == prefered_variant:
+                    instance.setMachineDefinition(variant)
+                    break
+        else:
+            instance.setMachineDefinition(variants[0])
 
-        profile = self.findProfile("Normal Quality", variant_name = instance.getMachineDefinition().getVariantName(), material_name = instance.getMaterialName(), instance = instance)
-        if not profile:
-            profile = self.findProfile("Normal Quality", material_name = instance.getMaterialName(), instance = instance)
-        if not profile:
-            profile = self.findProfile("Normal Quality", instance = instance)
+        profile = None
+        if prefered_profile:
+            profile = self.findProfile(prefered_profile, variant_name = instance.getMachineDefinition().getVariantName(), material_name = instance.getMaterialName(), instance = instance)
+            if not profile:
+                profile = self.findProfile(prefered_profile, material_name = instance.getMaterialName(), instance = instance)
+            if not profile:
+                profile = self.findProfile(prefered_profile, instance = instance)
         if not profile:
             profiles = self.getProfiles(instance = instance)
             if len(profiles) > 0:

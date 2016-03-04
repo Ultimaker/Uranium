@@ -54,6 +54,7 @@ class QtApplication(QApplication, Application, SignalEmitter):
         os.environ["QSG_RENDER_LOOP"] = "basic"
         super().__init__(sys.argv, **kwargs)
 
+        self._plugins_loaded = False #Used to determine when it's safe to use the plug-ins.
         self._main_qml = "main.qml"
         self._engine = None
         self._renderer = None
@@ -77,6 +78,8 @@ class QtApplication(QApplication, Application, SignalEmitter):
 
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Loading plugins..."))
         self._loadPlugins()
+        self.parseCommandLine()
+        Logger.log("i", "Command line arguments: %s", self._parsed_command_line)
         self._plugin_registry.checkRequiredPlugins(self.getRequiredPlugins())
 
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Loading machines..."))

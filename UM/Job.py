@@ -12,6 +12,7 @@ from UM.JobQueue import JobQueue
 #   The Job class provides a basic interface for a 'job', that is a
 #   self-contained task that should be performed in a thread. It makes
 #   use of the JobQueue for the actual threading.
+#   \sa JobQueue
 class Job(SignalEmitter):
     ##  Initialize.
     #

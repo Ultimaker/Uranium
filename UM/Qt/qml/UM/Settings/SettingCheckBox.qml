@@ -8,67 +8,67 @@ import QtQuick.Controls.Styles 1.1
 
 import UM 1.0 as UM
 
-CheckBox
+MouseArea
 {
-    signal valueChanged(bool value);
-    id: base
-    checked: boolCheck(value) //From parent loader
+    id: base;
 
-    function boolCheck(value) //Hack to ensure a good match between python and qml.
+    signal valueChanged(bool value);
+
+    property bool checked:
     {
         if(value == "True")
         {
-            return true
-        }else if(value == "False")
+            return true;
+        }
+        else if(value == "False")
         {
-            return false
+            return false;
         }
         else
         {
-            return value
+            return value;
         }
     }
 
-    MouseArea {
-        anchors.fill: parent;
-        onClicked: valueChanged(!checked);
-    }
+    onClicked: valueChanged(!checked);
 
-    style: CheckBoxStyle
+    hoverEnabled: true;
+
+    Rectangle
     {
-        background: Item { }
-        label: Label{ }
-        indicator: Rectangle
+        anchors
         {
-            implicitWidth:  control.height;
-            implicitHeight: control.height;
+            top: parent.top
+            bottom: parent.bottom
+            left: parent.left
+        }
+        width: height
 
-            color:
+        color:
+        {
+            if(base.containsMouse || base.activeFocus)
             {
-                if(control.hovered || base.activeFocus)
-                {
-                    return itemStyle.controlHighlightColor
-                }
-                else
-                {
-                    return itemStyle.controlColor
-                }
+                return itemStyle.controlHighlightColor
             }
-            border.width: itemStyle.controlBorderWidth;
-            border.color: control.hovered ? itemStyle.controlBorderHighlightColor : itemStyle.controlBorderColor;
+            else
+            {
+                return itemStyle.controlColor
+            }
+        }
+        border.width: itemStyle.controlBorderWidth;
+        border.color: base.containsMouse ? itemStyle.controlBorderHighlightColor : itemStyle.controlBorderColor;
 
-            UM.RecolorImage {
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.horizontalCenter: parent.horizontalCenter
-                width: parent.width/2.5
-                height: parent.height/2.5
-                sourceSize.width: width
-                sourceSize.height: width
-                color: UM.Theme.colors.checkbox_mark
-                source: UM.Theme.icons.check
-                opacity: control.checked
-                Behavior on opacity { NumberAnimation { duration: 100; } }
-            }
+        UM.RecolorImage {
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+            width: parent.width/2.5
+            height: parent.height/2.5
+            sourceSize.width: width
+            sourceSize.height: width
+            color: UM.Theme.getColor("checkbox_mark");
+            source: UM.Theme.getIcon("check")
+            opacity: base.checked
+            Behavior on opacity { NumberAnimation { duration: 100; } }
         }
     }
 }

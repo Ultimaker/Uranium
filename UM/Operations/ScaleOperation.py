@@ -16,6 +16,7 @@ class ScaleOperation(Operation.Operation):
         self._set_scale = kwargs.get("set_scale", False)
         self._add_scale = kwargs.get("add_scale", False)
         self._relative_scale = kwargs.get("relative_scale", False)
+        self._scale_around_point = kwargs.get("scale_around_point" , Vector(0,0,0))
         self._snap = kwargs.get("snap", False)
         self._scale = scale
         self._min_scale = 0.01
@@ -25,32 +26,36 @@ class ScaleOperation(Operation.Operation):
 
     def redo(self):
         if self._set_scale:
-            self._node.setScale(self._scale)
+            self._node.setScale(self._scale, SceneNode.TransformSpace.World)
         elif self._add_scale:
             self._node.setScale(self._node.getScale() + self._scale)
         elif self._relative_scale:
             scale_factor = Vector()
-
             ## Ensure that the direction is correctly applied (it can be flipped due to mirror)
             if self._node.getScale().x > 0:
-                scale_factor.setX(self._node.getScale().x + self._scale.x)
+                scale_factor.setX(abs(self._node.getScale().x + self._scale.x))
             else:
-                scale_factor.setX(self._node.getScale().x - self._scale.x)
+                scale_factor.setX(-abs(self._node.getScale().x - self._scale.x))
             if self._node.getScale().y > 0:
-                scale_factor.setY(self._node.getScale().y + self._scale.y)
+                scale_factor.setY(abs(self._node.getScale().y + self._scale.y))
             else:
-                scale_factor.setY(self._node.getScale().y - self._scale.y)
+                scale_factor.setY(-abs(self._node.getScale().y - self._scale.y))
             if self._node.getScale().z > 0:
-                scale_factor.setZ(self._node.getScale().z + self._scale.z)
+                scale_factor.setZ(abs(self._node.getScale().z + self._scale.z))
             else:
-                scale_factor.setZ(self._node.getScale().z - self._scale.z)
+                scale_factor.setZ(-abs(self._node.getScale().z - self._scale.z))
 
             current_scale = copy.deepcopy(self._node.getScale())
-            scale_factor.setX(scale_factor.x / current_scale.x)
-            scale_factor.setY(scale_factor.y / current_scale.y)
-            scale_factor.setZ(scale_factor.z / current_scale.z)
+            if scale_factor.x != 0:
+                scale_factor.setX(scale_factor.x / current_scale.x)
+            if scale_factor.y != 0:
+                scale_factor.setY(scale_factor.y / current_scale.y)
+            if scale_factor.z != 0:
+                scale_factor.setZ(scale_factor.z / current_scale.z)
+                
+            self._node.setPosition(-self._scale_around_point)
             self._node.scale(scale_factor, SceneNode.TransformSpace.Parent)
-
+            self._node.setPosition(self._scale_around_point)
             new_scale = copy.deepcopy(self._node.getScale())
             if self._snap:
                 if(scale_factor.x != 1.0):

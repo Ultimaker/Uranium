@@ -11,7 +11,6 @@ from . import MeshListModel
 from . import PluginsModel
 from . import ExtensionModel
 from . import DirectoryListModel
-from . import AvailableMachinesModel
 from . import AddMachinesModel
 from . import SettingCategoriesModel
 from . import VisibleMessagesModel
@@ -31,7 +30,6 @@ class Models(QObject):
         self._plugins_model = None
         self._extension_model = None
         self._directory_list_model = None
-        self._available_machines_model = None
         self._add_machines_model = None
         self._setting_categories_model = None
         self._visible_messages_model = None
@@ -93,12 +91,6 @@ class Models(QObject):
         if not self._directory_list_model:
             self._directory_list_model = DirectoryListModel.DirectoryListModel()
         return self._directory_list_model
-
-    @pyqtProperty(AvailableMachinesModel.AvailableMachinesModel, constant = True)
-    def availableMachinesModel(self):
-        if not self._available_machines_model:
-            self._available_machines_model = AvailableMachinesModel.AvailableMachinesModel()
-        return self._available_machines_model
 
     @pyqtProperty(AddMachinesModel.AddMachinesModel, constant = True)
     def addMachinesModel(self):

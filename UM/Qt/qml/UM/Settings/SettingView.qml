@@ -19,13 +19,12 @@ ScrollView
     signal showTooltip(Item item, point location, string text);
     signal hideTooltip();
 
-
     property variant expandedCategories: []
 
     Column
     {
         id: contents
-        spacing: UM.Theme.sizes.default_lining.height;
+        spacing: UM.Theme.getSize("default_lining").height;
 
         Repeater
         {
@@ -46,12 +45,14 @@ ScrollView
                 {
                     id: categoryHeader;
                     activeFocusOnTab: false
-                    width: UM.Theme.sizes.sidebar.width;
-                    height: UM.Theme.sizes.section.height;
+                    width: UM.Theme.getSize("sidebar").width;
+                    height: UM.Theme.getSize("section").height;
 
                     text: model.name;
-                    iconSource: UM.Theme.icons[model.icon];
+                    iconSource: UM.Theme.getIcon(model.icon);
                     checkable: true;
+
+                    property string key: model.id;
 
                     property bool previousChecked: false
                     checked: base.expandedCategories.indexOf(model.id) != -1;
@@ -68,40 +69,15 @@ ScrollView
                         }
                         base.expandedCategories = categories;
                     }
-                }
 
-                Button
-                {
-                    id: hiddenSettingsWarning
-
-                    anchors.top: categoryHeader.bottom
-                    width: categoryHeader.width
-
-                    opacity: categoryHeader.checked && model.hiddenValuesCount > 0 ? 1 : 0
-                    height: categoryHeader.checked && model.hiddenValuesCount > 0 ? UM.Theme.sizes.lineHeight : 0
-
-                    text: catalog.i18ncp("@label", "{0} hidden setting uses a custom value", "{0} hidden settings use custom values", model.hiddenValuesCount)
-                    onClicked: { UM.ActiveProfile.showHiddenValues(model.id) }
-
-                    style: ButtonStyle
-                    {
-                        background: Rectangle {}
-                        label: Label
-                        {
-                            text: control.text
-
-                            horizontalAlignment: Text.AlignHCenter
-                            font: UM.Theme.fonts.default
-                            color: control.hovered? UM.Theme.colors.text_hover : UM.Theme.colors.text
-                        }
-                    }
+                    onConfigureSettingVisibility: if(base.configureSettings) base.configureSettings.trigger(categoryHeader);
                 }
 
                 Column
                 {
                     id: settings;
 
-                    anchors.top: hiddenSettingsWarning.bottom;
+                    anchors.top: categoryHeader.bottom;
 
                     height: childrenHeight;
                     spacing: 0;
@@ -129,66 +105,75 @@ ScrollView
                     {
                         model: delegateItem.settingsModel;
 
-                        delegate: UM.SettingItem
+                        delegate: Loader
                         {
-                            id: item;
+                            id: settingLoader;
 
-                            width: UM.Theme.sizes.sidebar.width - UM.Theme.sizes.default_margin.width * 2
+                            width: UM.Theme.getSize("sidebar").width - UM.Theme.getSize("default_margin").width * 2
 
-                            height: settingVisible ? UM.Theme.sizes.setting.height + UM.Theme.sizes.default_lining.height : 0;
+                            property bool settingVisible: model.visible && model.enabled;
+                            height: settingVisible ? UM.Theme.getSize("setting").height + UM.Theme.getSize("default_lining").height : 0;
                             Behavior on height { NumberAnimation { duration: 75; } }
                             opacity: settingVisible ? 1 : 0;
                             Behavior on opacity { NumberAnimation { duration: 75; } }
 
                             enabled: categoryHeader.checked && settingVisible;
 
-                            property bool settingVisible: model.visible && model.enabled;
+                            property bool loadComplete: status == Loader.Ready
 
-                            name: model.name;
-                            description: model.description;
-                            value: model.value;
-                            unit: model.unit;
-                            valid: model.valid;
-                            depth: model.depth
-                            type: model.type;
-                            options: model.type == "enum" ? model.options : null;
-                            key: model.key;
-                            overridden: model.overridden;
+                            asynchronous: true;
 
-                            style: UM.Theme.styles.setting_item;
+                            source: Qt.resolvedUrl("SettingItem.qml");
 
-                            onItemValueChanged: delegateItem.settingsModel.setSettingValue(model.key, value);
-                            onContextMenuRequested: contextMenu.popup();
-                            onResetRequested: delegateItem.settingsModel.resetSettingValue(model.key)
-
-                            onShowTooltip:
+                            onLoaded:
                             {
-                                position = Qt.point(0, item.height);
-                                base.showTooltip(item, position, "<b>"+model.name+"</b><br/>"+model.description)
+                                item.name = model.name;
+                                item.unit = model.unit;
+                                item.depth = model.depth;
+                                item.type = model.type;
+                                item.key = model.key;
+
+                                item.style = UM.Theme.styles.setting_item;
+
+                                if(model.type == "enum")
+                                {
+                                    item.options = model.options;
+                                }
+
                             }
-                            onHideTooltip: base.hideTooltip()
 
-                            Menu
+                            Binding
                             {
-                                id: contextMenu;
+                                when: loadComplete
+                                target: item;
+                                property: "valid"
+                                value: model.valid
+                            }
 
-                                MenuItem
-                                {
-                                    //: Settings context menu action
-                                    text: catalog.i18nc("@action:menu","Hide this setting");
-                                    onTriggered: delegateItem.settingsModel.hideSetting(model.key);
-                                }
-                                MenuItem
-                                {
-                                    //: Settings context menu action
-                                    text: catalog.i18nc("@action:menu","Configure setting visiblity...");
+                            Binding
+                            {
+                                when: loadComplete
+                                target: item
+                                property: "value"
+                                value: model.value
+                            }
 
-                                    onTriggered: {
-                                        preferences.visible = true;
-                                        preferences.setPage(2);
-                                        preferences.getCurrentItem().scrollToSection(categoryId);
-                                    }
-                                }
+                            Binding
+                            {
+                                when: loadComplete
+                                target: item
+                                property: "overridden"
+                                value: model.overridden
+                            }
+
+                            Connections
+                            {
+                                target: item;
+                                onItemValueChanged: delegateItem.settingsModel.setSettingValue(model.key, value);
+                                onContextMenuRequested: { contextMenu.key = delegateItem.categoryId; contextMenu.popup(); }
+                                onResetRequested: delegateItem.settingsModel.resetSettingValue(model.key);
+                                onShowTooltip: base.showTooltip(settingLoader, Qt.point(0, settingLoader.height / 2), "<b>" + model.name + "</b><br/>" + model.description)
+                                onHideTooltip: base.hideTooltip();
                             }
                         }
                     }
@@ -227,5 +212,26 @@ ScrollView
         }
 
         UM.I18nCatalog { id: catalog; name: "uranium"; }
+
+        Menu
+        {
+            id: contextMenu;
+
+            property string key;
+
+            MenuItem
+            {
+                //: Settings context menu action
+                text: catalog.i18nc("@action:menu", "Hide this setting");
+                onTriggered: delegateItem.settingsModel.hideSetting(key);
+            }
+            MenuItem
+            {
+                //: Settings context menu action
+                text: catalog.i18nc("@action:menu", "Configure setting visiblity...");
+
+                onTriggered: if(base.configureSettings) base.configureSettings.trigger(contextMenu);
+            }
+        }
     }
 }

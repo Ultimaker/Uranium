@@ -6,9 +6,9 @@ import QtQuick.Layouts 1.1
 import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.1
 
-import UM 1.0 as UM
+import UM 1.1 as UM
 
-Rectangle {
+Item {
     id: base;
 
     property string name;
@@ -73,11 +73,11 @@ Rectangle {
     Rectangle{
         visible: base.depth > 1 ? true : false
         id: separationLine
-        width: UM.Theme.sizes.default_lining.width
+        width: UM.Theme.getSize("default_lining").width
         height: label.height
-        color: UM.Theme.colors.setting_control_depth_line
+        color: UM.Theme.getColor("setting_control_depth_line");
         anchors.right: label.left
-        anchors.rightMargin: UM.Theme.sizes.setting_control_depth_margin.width / 2
+        anchors.rightMargin: UM.Theme.getSize("setting_control_depth_margin").width / 2
         anchors.verticalCenter: parent.verticalCenter
         z: parent.z + 1
     }
@@ -88,12 +88,12 @@ Rectangle {
         property int depth: base.depth - 1
 
         anchors.left: parent.left;
-        anchors.leftMargin: base.indent ? (UM.Theme.sizes.section_icon_column.width + 5) + (label.depth * UM.Theme.sizes.setting_control_depth_margin.width) : 0
+        anchors.leftMargin: base.indent ? (UM.Theme.getSize("section_icon_column").width + 5) + (label.depth * UM.Theme.getSize("setting_control_depth_margin").width) : 0
         anchors.right: base.overridden? revertButton.left : controlContainer.left;
         anchors.rightMargin: base.style.spacing;
         anchors.verticalCenter: parent.verticalCenter
 
-        height: UM.Theme.sizes.section.height;
+        height: UM.Theme.getSize("section").height;
         verticalAlignment: Text.AlignVCenter;
 
         text: base.name
@@ -103,38 +103,28 @@ Rectangle {
         font: base.style.labelFont;
     }
 
-    Button {
-        id: revertButton
+    UM.SimpleButton
+    {
+        id: revertButton;
 
         anchors {
             right: controlContainer.left
+            rightMargin: UM.Theme.getSize("default_margin").width / 2;
             verticalCenter: parent.verticalCenter;
         }
         visible: base.overridden
-        tooltip: catalog.i18nc("@info:tooltip", "Reset to Default")
 
-        height: parent.height - base.style.controlBorderWidth;
+        height: parent.height / 2;
         width: height;
+
+        backgroundColor: hovered ? base.style.controlHighlightColor : base.style.controlColor;
+
+        color: hovered ? UM.Theme.getColor("setting_control_button_hover") : UM.Theme.getColor("setting_control_button")
+        iconSource: UM.Theme.getIcon("reset")
 
         onClicked: {
             base.resetRequested()
             controlContainer.notifyReset();
-        }
-
-        style: ButtonStyle {
-            background: Rectangle {
-                color: control.hovered ? base.style.controlHighlightColor : base.style.controlColor;
-                UM.RecolorImage {
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    width: parent.width/2
-                    height: parent.height/2
-                    sourceSize.width: width
-                    sourceSize.height: width
-                    color: control.hovered ? UM.Theme.colors.setting_control_button_hover : UM.Theme.colors.setting_control_button
-                    source: UM.Theme.icons.reset
-                }
-            }
         }
     }
 

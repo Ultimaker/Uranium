@@ -126,11 +126,13 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
                 self.setProperty(index, "filtered", True)
 
     def updateSettings(self):
-        self.clear()
+        self.beginResetModel()
+        self._items = []
+
         for setting in self._category.getAllSettings():
             value = self._profile.getSettingValue(setting.getKey())
 
-            self.appendItem({
+            self._items.append({
                 "name": setting.getLabel(),
                 "description": setting.getDescription(),
                 "type": setting.getType(),
@@ -152,6 +154,8 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
             setting.visibleChanged.connect(self._onSettingVisibleChanged)
             setting.enabledChanged.connect(self._onSettingEnabledChanged)
             setting.globalOnlyChanged.connect(self._onSettingGlobalOnlyChanged)
+
+        self.endResetModel()
 
     def _onSettingVisibleChanged(self, setting):
         if setting:
@@ -182,6 +186,7 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
         self._profile = self._machine_manager.getWorkingProfile()
         if self._profile:
             self._profile.settingValueChanged.connect(self._onSettingValueChanged)
+
             self.updateSettings()
 
             if self._changed_setting:
