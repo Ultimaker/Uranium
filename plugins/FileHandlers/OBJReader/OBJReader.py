@@ -14,13 +14,13 @@ class OBJReader(MeshReader):
     def __init__(self):
         super(OBJReader, self).__init__()
         self._supported_extensions = [".obj"]
-        
+
     def read(self, file_name):
         mesh = None
         scene_node = None
 
         extension = os.path.splitext(file_name)[1]
-        if extension.lower() == self._supported_extensions:
+        if extension.lower() in self._supported_extensions:
             vertex_list = []
             normal_list = []
             uv_list = []
