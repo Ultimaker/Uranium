@@ -559,6 +559,14 @@ class MachineManager(SignalEmitter):
                     if os.path.isdir(path):
                         continue
 
+                    # Bit of a hack, but we should only use cfg or curaprofile files in the profile folder.
+                    try:
+                        extension = path.split(".")[-1]
+                        if  extension != "cfg" and extension != "curaprofile":
+                            continue
+                    except:
+                        continue # profile has no extension
+
                     profile = Profile(self, read_only)
                     try:
                         profile.loadFromFile(path)
