@@ -72,7 +72,6 @@ Item
             text: UM.ActiveTool.properties.getValue("X").toFixed(4).replace(/\.?0*$/, "")
             validator: DoubleValidator
             {
-                bottom: 0.1
                 decimals: 4
                 locale: "en_US"
             }
@@ -88,7 +87,6 @@ Item
             text: parent.roundFloat(UM.ActiveTool.properties.getValue("Y"), 4)
             validator: DoubleValidator
             {
-                bottom: 0.1
                 decimals: 4
                 locale: "en_US"
             }
@@ -104,7 +102,6 @@ Item
             text: parent.roundFloat(UM.ActiveTool.properties.getValue("Z"), 4)
             validator: DoubleValidator
             {
-                bottom: 0.1
                 decimals: 4
                 locale: "en_US"
             }
