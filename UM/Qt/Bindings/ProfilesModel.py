@@ -99,15 +99,6 @@ class ProfilesModel(ListModel):
         if profile == self._manager.getActiveProfile():
             self._manager.profileNameChanged.emit(profile)
 
-
-    @pyqtSlot(str, str)
-    def addCopyOfProfile(self, original_name, new_name):
-        profile = self._manager.findProfile(original_name, instance = self._manager.getActiveMachineInstance())
-        if not profile:
-            return
-
-        self._manager.addCopyOfProfile(profile, new_name)
-
     @pyqtSlot(str, result = bool)
     def checkProfileExists(self, name):
         profile = self._manager.findProfile(name, instance = self._manager.getActiveMachineInstance())

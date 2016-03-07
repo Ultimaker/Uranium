@@ -166,6 +166,15 @@ class MachineManagerProxy(QObject):
         self._manager.setActiveProfile(profile)
         return profile.getName()
 
+    @pyqtSlot(str, result = str)
+    def duplicateProfile(self, profile_name):
+        original_profile = self._manager.findProfile(profile_name, instance = self._manager.getActiveMachineInstance())
+        if not original_profile:
+            return
+
+        profile = self._manager.duplicateProfile(original_profile, profile_name)
+        return profile.getName()
+
     def _onActiveMachineInstanceChanged(self):
         self.activeMachineInstanceChanged.emit()
 

@@ -12,13 +12,28 @@ ManagementPage
     id: base;
 
     title: catalog.i18nc("@title:tab", "Profiles");
+    addText: catalog.i18nc("@label", "Duplicate")
 
     model: UM.ProfilesModel { addWorkingProfile: true }
 
-    onAddObject: { var selectedProfile = UM.MachineManager.createProfile(); base.selectProfile(selectedProfile); }
-    onRemoveObject: confirmDialog.open();
-    onRenameObject: { renameDialog.open(); renameDialog.selectText(); }
+    onAddObject: {
+        var selectedProfile;
+        if (objectList.currentIndex == 0) {
+            // Current settings
+            selectedProfile = UM.MachineManager.createProfile();
+        } else {
+            selectedProfile = UM.MachineManager.duplicateProfile(currentItem.name);
+        }
+        base.selectProfile(selectedProfile);
 
+        renameDialog.removeWhenRejected = true;
+        renameDialog.open();
+        renameDialog.selectText();
+    }
+    onRemoveObject: confirmDialog.open();
+    onRenameObject: { renameDialog.removeWhenRejected = false; renameDialog.open(); renameDialog.selectText(); }
+
+    addEnabled: currentItem != null;
     removeEnabled: currentItem != null ? !currentItem.readOnly : false;
     renameEnabled: currentItem != null ? !currentItem.readOnly : false;
 
@@ -76,13 +91,6 @@ ManagementPage
 
         Button
         {
-            text: catalog.i18nc("@action:button", "Copy")
-            onClicked: makeCopyDialog.open()
-            enabled: currentItem != null
-        }
-
-        Button
-        {
             text: catalog.i18nc("@action:button", "Import");
             iconName: "document-import";
             onClicked: importDialog.open();
@@ -100,12 +108,6 @@ ManagementPage
     {
         UM.I18nCatalog { id: catalog; name: "uranium"; }
 
-        MakeCopyDialog
-        {
-            id: makeCopyDialog
-            object: base.currentItem != null ? base.currentItem.name : ""
-            onAccepted: base.model.addCopyOfProfile(base.currentItem.name, newName.trim())
-        }
         ConfirmRemoveDialog
         {
             id: confirmDialog;
@@ -116,7 +118,13 @@ ManagementPage
         {
             id: renameDialog;
             object: base.currentItem != null ? base.currentItem.name : "";
+            property bool removeWhenRejected: false;
             onAccepted: base.model.renameProfile(base.currentItem.name, newName.trim());
+            onRejected: {
+                if(removeWhenRejected) {
+                    base.model.removeProfile(base.currentItem.name)
+                }
+            }
         }
         MessageDialog
         {
