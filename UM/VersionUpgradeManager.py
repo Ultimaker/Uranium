@@ -2,6 +2,9 @@
 # Cura is released under the terms of the AGPLv3 or higher.
 
 from UM.PluginRegistry import PluginRegistry
+from UM.Preferences import Preferences
+from UM.Settings.MachineInstance import MachineInstance
+from UM.Settings.Profile import Profile
 
 ##  Regulates the upgrading of preferences from one application version to the
 #   next.
@@ -43,7 +46,17 @@ class VersionUpgradeManager:
     #   The upgrade plug-ins must all be loaded at this point, or no upgrades
     #   can be performed.
     def upgrade(self):
-        pass
+        paths = self._findShortestUpgradePaths("machine_instance", MachineInstance.MachineInstanceVersion)
+        #TODO: Find all machine instances.
+        #TODO: Upgrade all machine instances to the most recent version.
+        paths = self._findShortestUpgradePaths("preferences", Preferences.PreferencesVersion)
+        #TODO: Find all preference files.
+        #TODO: Upgrade all preference files to the most recent version.
+        paths = self._findShortestUpgradePaths("profile", Profile.ProfileVersion)
+        #TODO: Find all profiles.
+        #TODO: Upgrade all profiles to the most recent version.
+
+    # private:
 
     ##  Adds a version upgrade plug-in.
     #
@@ -51,3 +64,40 @@ class VersionUpgradeManager:
     #   plug-in.
     def _addVersionUpgrade(self, version_upgrade_plugin):
         self._versionUpgrades.append(version_upgrade_plugin)
+
+    ##  For each version of a preference type, finds the next step to take to
+    #   upgrade as quickly as possible to the most recent version.
+    #
+    #   The preference type should be either "machine_instance", "preferences"
+    #   or "profile", matching the types listed in the metadata of a plug-in.
+    #   This is abstracted to prevent having to maintain the same code in lots
+    #   of different functions that do basically the same.
+    #
+    #   This function basically executes Dijkstra's algorithm to compute all
+    #   single-destination shortest paths.
+    #
+    #   \param preference_type The type of preference to compute the shortest
+    #   upgrade paths of.
+    #   \param destination_version The version to compute the shortest paths to.
+    #   \return A dictionary with an entry each version number from which we can
+    #   reach the destination version, naming the version upgrade plug-in with
+    #   which to convert for the next step.
+    def _findShortestUpgradePaths(self, preference_type):
+        by_destination_version = self._sortByDestinationVersion(preference_type)
+        return {}
+
+    ##  Creates a look-up table to get plug-ins by what version they upgrade to.
+    #
+    #   \param preference_type The type of preference file the version number
+    #   applies to.
+    #   \return A dictionary with an entry for every version that the upgrade
+    #   plug-ins can convert to, and which plug-ins can convert to that version.
+    def _sortByDestinationVersion(self, preference_type):
+        result = {}
+        registry = PluginRegistry.getInstance()
+        for plugin in self._versionUpgrades:
+            destination = registry.getMetaData(plugin.getPluginId())["version_upgrade"][preference_type]["to"]
+            if not destination in result: #Entry doesn't exist yet.
+                result[destination] = []
+            result[destination].append(plugin) #Sort this plug-in under the correct entry.
+        return result
