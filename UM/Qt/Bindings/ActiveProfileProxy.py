@@ -14,7 +14,8 @@ class ActiveProfileProxy(QObject):
         self._setting_values = {}
         self._container_proxy = ContainerProxy.ContainerProxy(self._setting_values)
         self._active_profile = None
-        Application.getInstance().getMachineManager().activeProfileChanged.connect(self._onActiveProfileChanged)
+        self._manager = Application.getInstance().getMachineManager()
+        self._manager.activeProfileChanged.connect(self._onActiveProfileChanged)
         self._onActiveProfileChanged()
 
     activeProfileChanged = pyqtSignal()
@@ -24,7 +25,11 @@ class ActiveProfileProxy(QObject):
         return self._active_profile != None
 
     settingValuesChanges = pyqtSignal()
-    
+
+    @pyqtProperty(bool, notify = settingValuesChanges)
+    def hasCustomisedValues(self):
+        return self._manager.getWorkingProfile().hasChangedSettings() == True
+
     @pyqtProperty(QObject, notify = settingValuesChanges)
     def settingValues(self):
         return self._container_proxy
