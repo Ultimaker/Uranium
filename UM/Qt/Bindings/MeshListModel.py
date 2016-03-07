@@ -13,7 +13,7 @@ from UM.Scene.PointCloudNode import PointCloudNode
 import threading
 
 class MeshListModel(ListModel):
-    NameRole = Qt.UserRole + 1 #Label
+    NameRole = Qt.UserRole + 1 #Label 
     VisibilityRole = Qt.UserRole + 2
     UniqueKeyRole = Qt.UserRole + 3
     SelectedRole = Qt.UserRole + 4
