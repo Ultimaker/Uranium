@@ -18,7 +18,7 @@ class CameraTool(Tool):
         self._yaw = 0
         self._pitch = 0
         self._origin = Vector(0, 0, 0)
-        self._min_zoom = 10.0
+        self._min_zoom = 0
         self._max_zoom = 2000.0
         self._manual_zoom = 200
 
