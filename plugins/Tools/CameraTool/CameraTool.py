@@ -164,7 +164,7 @@ class CameraTool(Tool):
         self._scene.releaseLock()
 
     #   Zooms the camera in response to a mouse event.
-    def _zoomCamera(self, zoomRange):
+    def _zoomCamera(self, zoom_range):
         camera = self._scene.getActiveCamera()
         if not camera or not camera.isEnabled():
             return
@@ -172,7 +172,7 @@ class CameraTool(Tool):
         self._scene.acquireLock()
 
         r = (camera.getWorldPosition() - self._origin).length()
-        delta = r * (zoomRange / 128 / 10.0)
+        delta = r * (zoom_range / 128 / 10.0)
         r -= delta
         if delta > 0:
             if r > self._min_zoom:
