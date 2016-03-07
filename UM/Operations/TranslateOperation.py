@@ -6,17 +6,21 @@ from UM.Scene.SceneNode import SceneNode
 from . import Operation
 
 class TranslateOperation(Operation.Operation):
-    def __init__(self, node, translation):
+    def __init__(self, node, translation, **kwargs):
         super().__init__()
         self._node = node
-        self._old_position = node.getPosition()
+        self._old_transformation = node.getLocalTransformation()
         self._translation = translation
+        self._set_position = kwargs.get("set_position", False)
 
     def undo(self):
-        self._node.setPosition(self._old_position)
+        self._node.setTransformation(self._old_transformation)
 
     def redo(self):
-        self._node.translate(self._translation, SceneNode.TransformSpace.World)
+        if self._set_position:
+            self._node.setPosition(self._translation, SceneNode.TransformSpace.World)
+        else:
+            self._node.translate(self._translation, SceneNode.TransformSpace.World)
 
     def mergeWith(self, other):
         if type(other) is not TranslateOperation:
@@ -26,7 +30,7 @@ class TranslateOperation(Operation.Operation):
             return False
 
         op = TranslateOperation(self._node, self._translation + other._translation)
-        op._old_position = other._old_position
+        op._old_transformation = other._old_transformation
         return op
 
     def __repr__(self):

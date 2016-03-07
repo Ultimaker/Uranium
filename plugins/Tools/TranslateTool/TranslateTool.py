@@ -27,6 +27,50 @@ class TranslateTool(Tool):
         self._grid_snap = False
         self._grid_size = 10
         self._moved = False
+        self.setExposedProperties(
+            "X",
+            "Y",
+            "Z"
+        )
+
+    def getX(self):
+        if Selection.hasSelection():
+            return float(Selection.getSelectedObject(0).getWorldPosition().x)
+        return 0.0
+
+    def getY(self):
+        if Selection.hasSelection():
+            return float(Selection.getSelectedObject(0).getWorldPosition().z)
+        return 0.0
+
+    def getZ(self):
+        if Selection.hasSelection():
+            return float(Selection.getSelectedObject(0).getWorldPosition().y)
+        return 0.0
+
+    def setX(self, x):
+        obj = Selection.getSelectedObject(0)
+        if obj:
+            new_position = obj.getWorldPosition()
+            new_position.setX(x)
+            Selection.applyOperation(TranslateOperation, new_position, set_position = True)
+            self.operationStopped.emit(self)
+
+    def setY(self, y):
+        obj = Selection.getSelectedObject(0)
+        if obj:
+            new_position = obj.getWorldPosition()
+            new_position.setZ(y)
+            Selection.applyOperation(TranslateOperation, new_position, set_position = True)
+            self.operationStopped.emit(self)
+
+    def setZ(self, z):
+        obj = Selection.getSelectedObject(0)
+        if obj:
+            new_position = obj.getWorldPosition()
+            new_position.setY(z)
+            Selection.applyOperation(TranslateOperation, new_position, set_position = True)
+            self.operationStopped.emit(self)
 
     def setEnabledAxis(self, axis):
         self._enabled_axis = axis
@@ -34,6 +78,14 @@ class TranslateTool(Tool):
 
     def event(self, event):
         super().event(event)
+
+        if event.type == Event.ToolActivateEvent:
+            for node in Selection.getAllSelectedObjects():
+                node.boundingBoxChanged.connect(self.propertyChanged)
+
+        if event.type == Event.ToolDeactivateEvent:
+            for node in Selection.getAllSelectedObjects():
+                node.boundingBoxChanged.disconnect(self.propertyChanged)
 
         if event.type == Event.KeyPressEvent and event.key == KeyEvent.ShiftKey:
             self._grid_snap = True
