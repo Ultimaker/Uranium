@@ -137,8 +137,8 @@ class ProfilesModel(ListModel):
                 #profile.setName takes care of making sure the profile name is unique
                 profile.setName(file_name)
 
-                    #Make sure the profile is available for the currently selected printer
-                    profile.setMachineTypeId(self._manager.getActiveMachineInstance().getMachineDefinition().getProfilesMachineId())
+                #Make sure the profile is available for the currently selected printer
+                profile.setMachineTypeId(self._manager.getActiveMachineInstance().getMachineDefinition().getProfilesMachineId())
                 self._manager.addProfile(profile) #Add the new profile to the list of profiles.
                 return { "status": "ok", "message": catalog.i18nc("@info:status", "Successfully imported profile {0}", profile.getName()) }
 
@@ -314,7 +314,7 @@ class ProfilesModel(ListModel):
                 for key, value in settings_dict.items():
                     setting = self._manager.getActiveMachineInstance().getMachineDefinition().getSetting(key)
                     if setting:
-                    settings_list.append({"name": setting.getLabel(), "value": value})
+                        settings_list.append({"name": setting.getLabel(), "value": value})
             settings_list = sorted(settings_list, key = lambda setting:setting["name"])
             self.appendItem({
                 "id": id(profile),
