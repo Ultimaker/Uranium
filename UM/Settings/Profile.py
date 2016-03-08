@@ -305,7 +305,13 @@ class Profile(SignalEmitter):
         if filter_defaults:
             if key in self._disabled_settings_defaults:
                 return True
-            return key in self._changed_settings and ( key not in self._changed_settings_defaults or self._changed_settings[key] != self._changed_settings_defaults[key])
+            if not key in self._changed_settings:
+                return False
+            if key in self._changed_settings_defaults:
+                return self._changed_settings[key] != self._changed_settings_defaults[key]
+        else:
+                setting = self._active_instance.getMachineDefinition().getSetting(key)
+                return setting.parseValue(self._changed_settings[key]) != setting.getDefaultValue()
         else:
             return key in self._changed_settings
 
