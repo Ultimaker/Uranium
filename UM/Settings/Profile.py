@@ -46,6 +46,7 @@ class Profile(SignalEmitter):
         self._machine_instance_name = None
         self._material_name = None
         self._read_only = read_only
+        self._weight = 0
         self._dirty = True
 
         self._active_instance = None
@@ -120,7 +121,15 @@ class Profile(SignalEmitter):
     def setMaterialName(self, material):
         self._material_name = material
 
-    ##  Get whether the profile has unsaved changed
+    ## Get the weight of the profile, used for sorting.
+    def getWeight(self):
+        return self._weight
+
+    ## Set the weight of the profile, used for sorting.
+    def setWeight(self, weight):
+        self._weight = weight
+
+    ##  Get whether the profile has unsaved changed.
     def hasUnsavedChanges(self):
         return self._dirty
 
@@ -365,6 +374,8 @@ class Profile(SignalEmitter):
         self._name = parser.get("general", "name")
         if "type" in parser["general"]:
             self._type = parser.get("general", "type")
+        if "weight" in parser["general"]:
+            self._weight = int(parser.get("general", "weight"))
         if "machine_type" in parser["general"]:
             self._machine_type_id = parser.get("general", "machine_type")
         if "machine_variant" in parser["general"]:
@@ -408,6 +419,7 @@ class Profile(SignalEmitter):
         parser.add_section("general") #Write a general section.
         parser.set("general", "version", str(self.ProfileVersion))
         parser.set("general", "name", self._name)
+        parser.set("general", "weight", str(self._weight))
         if self._type:
             parser.set("general", "type", self._type)
         if self._machine_type_id:
@@ -437,6 +449,7 @@ class Profile(SignalEmitter):
 
         copy._changed_settings = deepcopy(self._changed_settings, memo)
         copy.setName(self._name)
+        copy.setWeight(self._weight)
 
         return copy
 
