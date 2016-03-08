@@ -116,29 +116,33 @@ class ScaleTool(Tool):
                 drag_length = (drag_position - self._saved_handle_position).length()
                 if self._drag_length > 0:
                     drag_change = (drag_length - self._drag_length) / 100 * self._scale_speed
-
-                    scale_factor = drag_change
-                    scale_change = Vector(0.0, 0.0, 0.0)
-                    if self._non_uniform_scale:
-                        if self.getLockedAxis() == ToolHandle.XAxis:
-                            scale_change.setX(scale_factor)
-                        elif self.getLockedAxis() == ToolHandle.YAxis:
-                            scale_change.setY(scale_factor)
-                        elif self.getLockedAxis() == ToolHandle.ZAxis:
-                            scale_change.setZ(scale_factor)
+                    if self._snap_scale:
+                        scale_factor = round(drag_change, 1)
                     else:
-                        scale_change.setX(scale_factor)
-                        scale_change.setY(scale_factor)
-                        scale_change.setZ(scale_factor)
+                        scale_factor = drag_change
+                    if scale_factor:
+                        scale_change = Vector(0.0, 0.0, 0.0)
+                        if self._non_uniform_scale:
+                            if self.getLockedAxis() == ToolHandle.XAxis:
+                                scale_change.setX(scale_factor)
+                            elif self.getLockedAxis() == ToolHandle.YAxis:
+                                scale_change.setY(scale_factor)
+                            elif self.getLockedAxis() == ToolHandle.ZAxis:
+                                scale_change.setZ(scale_factor)
+                        else:
+                            scale_change.setX(scale_factor)
+                            scale_change.setY(scale_factor)
+                            scale_change.setZ(scale_factor)
 
-                    # Scale around the saved centeres of all selected nodes
-                    op = GroupedOperation()
-                    for node, position in self._saved_node_positions:
-                        op.addOperation(ScaleOperation(node, scale_change, relative_scale = True, snap = self._snap_scale, scale_around_point = position))
-                    op.push()
-                    #Selection.applyOperation(ScaleOperation, scale_change, relative_scale = True, snap = self._snap_scale, scale_around_point = self._saved_handle_position)
-
-                self._drag_length = (self._saved_handle_position - drag_position).length()
+                        # Scale around the saved centeres of all selected nodes
+                        op = GroupedOperation()
+                        for node, position in self._saved_node_positions:
+                            op.addOperation(ScaleOperation(node, scale_change, relative_scale = True, scale_around_point = position))
+                        op.push()
+                        #Selection.applyOperation(ScaleOperation, scale_change, relative_scale = True, snap = self._snap_scale, scale_around_point = self._saved_handle_position)
+                        self._drag_length = (self._saved_handle_position - drag_position).length()
+                else:
+                    self._drag_length = (self._saved_handle_position - drag_position).length() #First move, do nothing but set right length.
                 return True
 
         if event.type == Event.MouseReleaseEvent:
@@ -288,7 +292,6 @@ class ScaleTool(Tool):
                         obj_scale.setZ(-scale)
                     else:
                         obj_scale.setZ(scale)
-                print(obj_scale)
                 Selection.applyOperation(ScaleOperation, obj_scale, set_scale = True)
 
     def setScaleZ(self, scale):
