@@ -84,7 +84,6 @@ Rectangle
 
         Keys.onReleased: if(text != base.parentValue) base.valueChanged(text);
         onEditingFinished: if(text != base.parentValue) base.valueChanged(text);
-        //onTextChanged: console.log(
 
         color: itemStyle.controlTextColor;
         font: itemStyle.controlFont;
