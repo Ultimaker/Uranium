@@ -18,6 +18,9 @@ Rectangle
     border.color: hovered ? itemStyle.controlBorderHighlightColor : itemStyle.controlBorderColor
 
     property variant parentValue: value //From parent loader
+    function notifyReset() {
+        input.text = parentValue
+    }
 
     color: {
         switch(valid) //From parent loader
