@@ -22,6 +22,8 @@ from UM.View.GL.OpenGL import OpenGL
 from UM.View.RenderBatch import RenderBatch
 from UM.Qt.GL.QtOpenGL import QtOpenGL
 
+from UM.Signal import Signal, SignalEmitter
+
 import numpy
 import copy
 from ctypes import c_void_p
@@ -30,7 +32,7 @@ vertexBufferProperty = "__qtgl2_vertex_buffer"
 indexBufferProperty = "__qtgl2_index_buffer"
 
 ##  A Renderer implementation using PyQt's OpenGL implementation to render.
-class QtRenderer(Renderer):
+class QtRenderer(Renderer, SignalEmitter):
     def __init__(self):
         super().__init__()
 
@@ -54,6 +56,8 @@ class QtRenderer(Renderer):
         self._quad_buffer = None
 
         self._camera = None
+
+    initialized = Signal()
 
     ##  Get an integer multiplier that can be used to correct for screen DPI.
     def getPixelMultiplier(self):
@@ -193,3 +197,4 @@ class QtRenderer(Renderer):
         self._quad_buffer = buffer
 
         self._initialized = True
+        self.initialized.emit()
