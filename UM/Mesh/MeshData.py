@@ -9,6 +9,8 @@ from UM.Logger import Logger
 
 from enum import Enum
 
+from UM.View.GL.OpenGL import OpenGL
+
 import copy
 import numpy
 import numpy.linalg
@@ -16,9 +18,6 @@ import hashlib
 from copy import deepcopy
 from time import time
 numpy.seterr(all="ignore") # Ignore warnings (dev by zero)
-
-vertexBufferProperty = "__qtgl2_vertex_buffer"
-indexBufferProperty = "__qtgl2_index_buffer"
 
 
 class MeshType(Enum):
@@ -68,7 +67,7 @@ class MeshData(SignalEmitter):
 
     def _resetIndexBuffer(self):
         try:
-            delattr(self, indexBufferProperty)
+            delattr(self, OpenGL.IndexBufferProperty)
         except:
             pass
     
@@ -85,7 +84,7 @@ class MeshData(SignalEmitter):
     
     def _resetVertexBuffer(self):
         try:
-            delattr(self, vertexBufferProperty)
+            delattr(self, OpenGL.VertexBufferProperty)
         except:
             pass
     

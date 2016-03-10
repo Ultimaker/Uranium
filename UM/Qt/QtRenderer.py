@@ -132,7 +132,7 @@ class QtRenderer(Renderer, SignalEmitter):
         batch.addItem(node.getWorldTransformation(), kwargs.get("mesh", node.getMeshData()))
 
         self._batches.append(batch)
-    
+
     ##  Overrides Renderer::render()
     def render(self):
         self._batches.sort()
