@@ -151,6 +151,7 @@ PreferencesPage {
 
                                         text: model.name;
                                         checked: model.visible;
+                                        enabled: !model.prohibited;
 
                                         onClicked: delegateItem.settingsModel.setSettingVisible(model.key, checked);
 

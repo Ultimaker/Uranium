@@ -55,6 +55,7 @@ class Setting(SignalEmitter):
         self._unit = ""
         self._inherit = True
         self._inherit_function = None
+        self._prohibited = False
 
         # Keys of the settings that this setting requires to set certain values (As defined by inherit & enabled function)
         self._required_setting_keys = set()
@@ -158,6 +159,7 @@ class Setting(SignalEmitter):
                 self.getValidator().setMinValueWarning(min_value_warning)
         if "enabled" in data:
             self._enabled_function = self._createFunction(data["enabled"])
+            self._prohibited = data["enabled"] == "False" # Enabled can never be true, so this setting is prohibited.
 
         if "options" in data:
             self._options = {}
@@ -337,6 +339,11 @@ class Setting(SignalEmitter):
         if not isinstance(self._global_only, bool):
             return self._global_only()
         return self._global_only
+
+    ##  Check whether this setting is prohibited.
+    #   This value is true if in all cases of the enabled function the result is false.
+    def isProhibited(self):
+        return self._prohibited
 
     ##  Get the identifier of the setting
     def getKey(self):
