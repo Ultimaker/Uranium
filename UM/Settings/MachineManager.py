@@ -216,6 +216,9 @@ class MachineManager(SignalEmitter):
         if not machine or machine == self._active_machine:
             return
 
+        # Force save the current visibility (just to be on the safe side)
+        self.saveVisibility()
+
         update_profile = False
         if not self._active_machine or self._active_machine.getMachineDefinition() != machine.getMachineDefinition():
             update_profile = True
