@@ -80,7 +80,7 @@ PreferencesPage
         Label
         {
             id: captionLabel
-            anchors 
+            anchors
             {
                 top: parent.top;
                 left: parent.left;
@@ -117,19 +117,21 @@ PreferencesPage
                 {
                     width: objectListContainer.viewport.width;
                     height: childrenRect.height;
-                    color: ListView.isCurrentItem ? palette.highlight : index % 2 ? palette.light : palette.midlight
+                    color: model.separator ? palette.light : ListView.isCurrentItem ? palette.highlight : index % 2 ? palette.light : palette.midlight
 
                     Label
                     {
                         anchors.left: parent.left;
                         anchors.leftMargin: UM.Theme.getSize("default_margin").width;
-                        text: model.name
+                        text: model.separator ? "" : model.name
+                        font.italic: model.active
                         color: parent.ListView.isCurrentItem ? palette.highlightedText : palette.text;
                     }
 
                     MouseArea
                     {
                         anchors.fill: parent;
+                        enabled: !model.separator
                         onClicked:
                         {
                             if(!parent.ListView.isCurrentItem)

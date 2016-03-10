@@ -26,12 +26,14 @@ class ProfilesModel(ListModel):
     ReadOnlyRole = Qt.UserRole + 4
     ValueRole = Qt.UserRole + 5
     SettingsRole = Qt.UserRole + 6
+    SeparatorRole = Qt.UserRole + 7
 
     def __init__(self, parent = None):
         super().__init__(parent)
 
         self._add_use_global = False
         self._add_working_profile = False
+        self._add_separators = False
 
         self.addRoleName(self.IdRole, "id")
         self.addRoleName(self.NameRole, "name")
@@ -39,6 +41,7 @@ class ProfilesModel(ListModel):
         self.addRoleName(self.ReadOnlyRole, "readOnly")
         self.addRoleName(self.ValueRole, "value")
         self.addRoleName(self.SettingsRole, "settings")
+        self.addRoleName(self.SeparatorRole, "separator")
 
         self._manager = Application.getInstance().getMachineManager()
         self._working_profile = self._manager.getWorkingProfile()
@@ -74,6 +77,19 @@ class ProfilesModel(ListModel):
     @pyqtProperty(bool, fset = setAddWorkingProfile, notify = addWorkingProfileChanged)
     def addWorkingProfile(self):
         return self._add_working_profile
+
+    addSeparatorsChanged = pyqtSignal()
+
+    def setAddSeparators(self, add):
+        if add != self._add_separators:
+            self._add_separators = add
+            self._onProfilesChanged()
+            self.addSeparatorsChanged.emit()
+
+    ##  Whether to add separator entries.
+    @pyqtProperty(bool, fset = setAddSeparators, notify = addSeparatorsChanged)
+    def addSeparators(self):
+        return self._add_separators
 
     @pyqtSlot(str)
     def removeProfile(self, name):
@@ -271,7 +287,8 @@ class ProfilesModel(ListModel):
                 "active": False,
                 "readOnly": True,
                 "value": "global",
-                "settings": None
+                "settings": None,
+                "separator": False
             })
 
         active_machine = self._manager.getActiveMachineInstance()
@@ -292,12 +309,20 @@ class ProfilesModel(ListModel):
                 "active": False,
                 "readOnly": True,
                 "value": "working",
-                "settings": settings_list
+                "settings": settings_list,
+                "separator": False
             })
+            if self._add_separators:
+                self.appendItem({
+                    "id": None,
+                    "separator": True
+                })
 
 
         profiles = self._manager.getProfiles(instance = self._manager.getActiveMachineInstance())
         profiles.sort(key = lambda k: (-k.isReadOnly(), k.getWeight(), k.getName()))
+        if self._add_separators and len(profiles) > 0:
+            last_readonly = profiles[0].isReadOnly()
         for profile in profiles:
             settings_dict = profile.getChangedSettings()
             settings_list = []
@@ -307,13 +332,22 @@ class ProfilesModel(ListModel):
                     if setting:
                         settings_list.append({"name": setting.getLabel(), "value": value})
             settings_list = sorted(settings_list, key = lambda setting:setting["name"])
+            if(self._add_separators):
+                readonly = profile.isReadOnly()
+                if readonly != last_readonly:
+                    last_readonly = readonly
+                    self.appendItem({
+                        "id": None,
+                        "separator": True
+                    })
             self.appendItem({
                 "id": id(profile),
                 "name": profile.getName(),
                 "active": self._manager.getActiveProfile() == profile,
                 "readOnly": profile.isReadOnly(),
                 "value": profile.getName(),
-                "settings": settings_list
+                "settings": settings_list,
+                "separator": False
             })
 
     def _onActiveProfileChanged(self):

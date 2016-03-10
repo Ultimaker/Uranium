@@ -13,7 +13,7 @@ ManagementPage
 
     title: catalog.i18nc("@title:tab", "Profiles");
 
-    model: UM.ProfilesModel { addWorkingProfile: true }
+    model: UM.ProfilesModel { addWorkingProfile: true; addSeparators: true }
 
     onAddObject: { var selectedProfile = UM.MachineManager.createProfile(); base.selectProfile(selectedProfile); }
     onRemoveObject: confirmDialog.open();
@@ -47,10 +47,10 @@ ManagementPage
                 columns: 2
                 spacing: UM.Theme.getSize("default_margin").width
 
-                Label { text: catalog.i18nc("@label", "Profile type"); width: 155}
+                Label { text: base.currentItem.id == -1 ? catalog.i18nc("@label", "Based on") : catalog.i18nc("@label", "Profile type"); width: 155}
                 Label { text: base.currentItem == null ? "" :
-                              base.currentItem.id == -1 ? catalog.i18nc("@label", "Current settings") :
-                              base.currentItem.readOnly ? catalog.i18nc("@label", "Starter profile (protected)") : catalog.i18nc("@label", "Custom profile"); }
+                              base.currentItem.id == -1 ? UM.MachineManager.activeProfile :
+                              base.currentItem.readOnly ? catalog.i18nc("@label", "Protected profile") : catalog.i18nc("@label", "Custom profile"); }
 
                 Column {
                     Repeater {
