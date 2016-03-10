@@ -221,6 +221,11 @@ class MachineManager(SignalEmitter):
             update_profile = True
 
         self._active_machine = machine
+
+        # Keep existing visibility
+        self.loadVisibility()
+
+        # Check if any setting visibility needs to be added (due to defaults)
         setting_visibility = []
         if self._active_machine:
             setting_visibility = self._active_machine.getMachineDefinition().getAllSettings(visible_only = True)
