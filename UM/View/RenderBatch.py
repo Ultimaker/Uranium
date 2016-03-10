@@ -138,8 +138,11 @@ class RenderBatch():
     #   \param uniforms A dict of additional uniform bindings to set when rendering the item.
     #                   Note these are set specifically for this item.
     def addItem(self, transformation, mesh, uniforms = None):
-        if not transformation or not mesh:
-            Logger.log("w", "Tried to add an item to batch without transformation or mesh")
+        if not transformation:
+            Logger.log("w", "Tried to add an item to batch without transformation")
+            return
+        if not mesh:
+            Logger.log("w", "Tried to add an item to batch without mesh")
             return
 
         self._items.append({ "transformation": transformation, "mesh": mesh, "uniforms": uniforms})
