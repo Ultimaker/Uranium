@@ -33,8 +33,8 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
     FilteredRole = Qt.UserRole + 15
     GlobalOnlyRole = Qt.UserRole + 16
     ProhibitedRole = Qt.UserRole + 17 # This setting can never be enabled
-    InheritedRole = Qt.UserRole + 18 # Can this setting have a inherited value?
-    HasProfileValue = Qt.UserRole + 19 # Does this setting have a profile value, regardless of state of profile
+    HasInheritFunctionRole = Qt.UserRole + 18 # Can this setting have a inherited value?
+    HasProfileValueRole = Qt.UserRole + 19 # Does this setting have a profile value, regardless of state of profile
 
     def __init__(self, category, parent = None, machine_manager = None):
         super().__init__(parent)
@@ -69,8 +69,8 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
         self.addRoleName(self.FilteredRole, "filtered")
         self.addRoleName(self.GlobalOnlyRole, "global_only")
         self.addRoleName(self.ProhibitedRole, "prohibited")
-        self.addRoleName(self.InheritedRole, "inherited")
-        self.addRoleName(self.HasProfileValue, "has_profile_value")
+        self.addRoleName(self.HasInheritFunctionRole, "has_inherit_function")
+        self.addRoleName(self.HasProfileValueRole, "has_profile_value")
 
     settingChanged = Signal()
 
@@ -163,7 +163,7 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
                 "filtered": False,
                 "global_only": setting.getGlobalOnly,
                 "prohibited": setting.isProhibited(),
-                "inherited": setting.getInherit(),
+                "has_inherit_function": setting.hasInheritFunction(),
                 "has_profile_value": self._profile.hasSettingValue(setting.getKey())
             })
             setting.visibleChanged.connect(self._onSettingVisibleChanged)

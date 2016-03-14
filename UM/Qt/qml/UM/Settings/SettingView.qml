@@ -170,8 +170,8 @@ ScrollView
                             {
                                 when: loadComplete
                                 target: item
-                                property: "inherited"
-                                value: model.inherited
+                                property: "has_inherit_function"
+                                value: model.has_inherit_function
                             }
 
                             Binding

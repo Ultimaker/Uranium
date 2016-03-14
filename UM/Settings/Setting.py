@@ -64,7 +64,7 @@ class Setting(SignalEmitter):
         self._required_by_setting_keys = set()
 
     # Should this setting inherit from its parent or by it's inherit function
-    def getInherit(self):
+    def hasInheritFunction(self):
         return self._inherit and self._inherit_function != None
 
     def addRequiredBySettingKey(self, key):

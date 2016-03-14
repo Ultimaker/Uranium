@@ -40,7 +40,7 @@ class SettingCategoriesModel(ListModel):
         for category in self._machine_instance.getMachineDefinition().getAllCategories():
             if category.getKey() == category_key:
                 for setting in category.getAllSettings():
-                    if not setting.isVisible() and Application.getInstance().getMachineManager().getWorkingProfile().hasSettingValue(setting.getKey()) and setting.getInherit():
+                    if not setting.isVisible() and Application.getInstance().getMachineManager().getWorkingProfile().hasSettingValue(setting.getKey()) and setting.hasInheritFunction():
                         setting.setVisible(True)
 
     @pyqtSlot(str)

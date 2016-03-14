@@ -24,7 +24,7 @@ Item {
     property variant key;
 
     property bool overridden;
-    property bool inherited;
+    property bool has_inherit_function;
     property bool has_profile_value;
     property bool indent: true;
     property variant default_value;
@@ -90,7 +90,7 @@ Item {
     Label
     {
         id: label;
-        property int depth: base.depth - 1
+        property int depth: base.depth - 1;
 
         anchors.left: parent.left;
         anchors.leftMargin: base.indent ? (UM.Theme.getSize("section_icon_column").width + 5) + (label.depth * UM.Theme.getSize("setting_control_depth_margin").width) : 0
@@ -145,24 +145,24 @@ Item {
             verticalCenter: parent.verticalCenter;
         }
 
-        visible: has_profile_value && base.inherited
+        visible: has_profile_value && base.has_inherit_function;
         height: parent.height / 2;
         width: height;
 
         onClicked: {
-            base.resetToDefaultRequested()
+            base.resetToDefaultRequested();
             controlContainer.notifyReset();
         }
         backgroundColor: hovered ? base.style.controlHighlightColor : base.style.controlColor;
-        color: UM.Theme.getColor("primary")
-        iconSource: UM.Theme.getIcon("warning")
+        color: UM.Theme.getColor("primary");
+        iconSource: UM.Theme.getIcon("warning");
         MouseArea
         {
             id: inheritanceButtonMouseArea;
 
             anchors.fill: parent;
 
-            acceptedButtons: Qt.NoButton
+            acceptedButtons: Qt.NoButton;
             hoverEnabled: true;
 
             onEntered: {
@@ -185,11 +185,11 @@ Item {
         id: controlContainer;
 
         anchors.right: parent.right;
-        anchors.verticalCenter: parent.verticalCenter
+        anchors.verticalCenter: parent.verticalCenter;
         width: base.style.controlWidth;
         height: base.style.fixedHeight > 0 ? base.style.fixedHeight : parent.height;
         property variant itemStyle: base.style
-        visible: status == Loader.Ready
+        visible: status == Loader.Ready;
 
         function notifyReset()
         {
