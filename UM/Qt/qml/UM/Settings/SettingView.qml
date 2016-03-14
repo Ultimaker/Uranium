@@ -189,7 +189,26 @@ ScrollView
                                 onContextMenuRequested: { contextMenu.key = delegateItem.categoryId; contextMenu.popup(); }
                                 onResetRequested: delegateItem.settingsModel.resetSettingValue(model.key);
                                 onResetToDefaultRequested: delegateItem.settingsModel.forceSettingValueToDefault(model.key);
-                                onShowTooltip: base.showTooltip(settingLoader, Qt.point(0, settingLoader.height / 2), "<b>" + model.name + "</b><br/>" + model.description)
+                                onShowTooltip:
+                                {
+                                    var content = "<b>" + model.name + "</b><br/>" + model.description
+                                    if(model.has_inherit_function)
+                                    {
+                                        var content = "<b>" + model.name + "</b><br/>" + model.description;
+                                        var required_by_content = delegateItem.settingsModel.getRequiredBySettingString(model.key);
+                                        if(required_by_content.length > 0)
+                                        {
+                                            content += catalog.i18nc("@label", "<i><br/>Affects:<br/></i>") + required_by_content
+                                        }
+                                        var required_content = delegateItem.settingsModel.getRequiredSettingString(model.key);
+                                        if (required_content.length > 0)
+                                        {
+                                            content += catalog.i18nc("@label", "<i><br/>Is affected by:<br/></i>") + required_content
+                                        }
+                                        //base.showTooltip(settingLoader, Qt.point(0, settingLoader.height / 2), content + "<br/>Affects:<br/>" + delegateItem.settingsModel.getRequiredBySettingString(model.key) + "Is affected by: <br/>" + delegateItem.settingsModel.getRequiredSettingString(model.key));
+                                    }
+                                    base.showTooltip(settingLoader, Qt.point(0, settingLoader.height / 2), content);
+                                }
                                 onHideTooltip: base.hideTooltip();
                                 onShowInheritanceTooltip: base.showTooltip(settingLoader, Qt.point(0, settingLoader.height / 2),  catalog.i18nc("@label","This setting is normally calculated, but it currently has an absolute value set.\n\nClick to restore the calculated value."))
                             }

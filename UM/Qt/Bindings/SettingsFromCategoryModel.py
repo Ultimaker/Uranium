@@ -74,6 +74,38 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
 
     settingChanged = Signal()
 
+    @pyqtSlot(str, result = str)
+    ##  Get all settings required by setting indentified by key as a string list
+    #   Used to show extra information in the tooltips
+    def getRequiredBySettingString(self, key):
+        index = self.find("key", key)
+        if index == -1:
+            return
+        setting = self._category.getSetting(key)
+        result = ""
+        if setting:
+            for temp_key in setting.getRequiredBySettingKeys():
+                temp_setting = self._machine_manager.getActiveMachineInstance().getMachineDefinition().getSetting(temp_key)
+                result += "- " + temp_setting.getLabel() + "<br/>"
+            result = result[:-5] # Remove last endline.
+        return result
+
+    @pyqtSlot(str, result = str)
+    ##  Get all settings required setting indentified by key as a string list.
+    #   Used to show extra information in the tooltips
+    def getRequiredSettingString(self, key):
+        index = self.find("key", key)
+        if index == -1:
+            return
+        setting = self._category.getSetting(key)
+        result = ""
+        if setting:
+            for temp_key in setting.getRequiredSettingKeys():
+                temp_setting = self._machine_manager.getActiveMachineInstance().getMachineDefinition().getSetting(temp_key)
+                result += "- " + temp_setting.getLabel() + "<br/>"
+            result = result[:-5] # Remove last endline.
+        return result
+
     @pyqtSlot(str, "QVariant")
     ##  Notification that setting has changed.  
     def setSettingValue(self, key, value):
