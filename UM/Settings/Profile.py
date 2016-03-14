@@ -164,7 +164,6 @@ class Profile(SignalEmitter):
         setting = self._active_instance.getMachineDefinition().getSetting(key)
         if not setting:
             return
-
         if not key in self._changed_settings_defaults and not self._type:
             #Note: partial profiles and profiles based that have stored default
             #values can have values that equal the default setting
@@ -174,9 +173,11 @@ class Profile(SignalEmitter):
                     self.settingValueChanged.emit(key)
 
                 return
-
         if key in self._changed_settings and self._changed_settings[key] == value:
             return
+        if setting.getType() == "float":
+            if setting.getDefaultValue() == float(value):
+                return
 
         self._changed_settings[key] = value
         self.settingValueChanged.emit(key)
