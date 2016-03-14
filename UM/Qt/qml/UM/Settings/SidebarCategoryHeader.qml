@@ -58,8 +58,8 @@ Button {
             base.showAllHidenInheritedSettings()
         }
 
-        color: "blue"
-        iconSource: UM.Theme.getIcon("reset")
+        color: UM.Theme.getColor("primary")
+        iconSource: UM.Theme.getIcon("warning")
 
         MouseArea
         {

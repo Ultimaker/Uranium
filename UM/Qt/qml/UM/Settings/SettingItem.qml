@@ -153,8 +153,8 @@ Item {
             controlContainer.notifyReset();
         }
         backgroundColor: hovered ? base.style.controlHighlightColor : base.style.controlColor;
-        color: "blue"
-        iconSource: UM.Theme.getIcon("reset")
+        color: UM.Theme.getColor("primary")
+        iconSource: UM.Theme.getIcon("warning")
         MouseArea
         {
             id: inheritanceButtonMouseArea;
