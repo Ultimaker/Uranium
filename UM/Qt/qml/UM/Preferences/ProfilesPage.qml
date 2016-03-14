@@ -148,8 +148,8 @@ ManagementPage
             folder: base.model.getDefaultPath()
             onAccepted:
             {
-                var result =  base.model.exportProfile(base.currentItem.name, fileUrl, selectedNameFilter)
-                if(result.status == "error")
+                var result =  base.model.exportProfile(base.currentItem.id, base.currentItem.name, fileUrl, selectedNameFilter)
+                if(result && result.status == "error")
                 {
                     messageDialog.icon = StandardIcon.Critical
                     messageDialog.text = result.message
