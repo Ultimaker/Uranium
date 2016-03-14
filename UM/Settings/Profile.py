@@ -191,18 +191,18 @@ class Profile(SignalEmitter):
     def getSettingValue(self, key):
         if not self._active_instance:
             self._onActiveInstanceChanged()
-
         if not self._active_instance:
             return None
 
         setting = self._active_instance.getMachineDefinition().getSetting(key)
+
         if not setting:
             return None
 
         if key in self._changed_settings:
             return setting.parseValue(self._changed_settings[key])
 
-        return setting.getDefaultValue(self)
+        return self._active_instance.getSettingValue(key)
 
     ##  Get a dictionary of all settings that have a value set in this profile.
     def getChangedSettings(self):
