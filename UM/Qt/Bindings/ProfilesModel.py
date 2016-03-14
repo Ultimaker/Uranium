@@ -315,6 +315,11 @@ class ProfilesModel(ListModel):
             if self._add_separators:
                 self.appendItem({
                     "id": None,
+                    "name": "",
+                    "active": False,
+                    "readOnly": True,
+                    "value": "",
+                    "settings": None,
                     "separator": True
                 })
 
@@ -338,6 +343,11 @@ class ProfilesModel(ListModel):
                     last_readonly = readonly
                     self.appendItem({
                         "id": None,
+                        "name": "",
+                        "active": False,
+                        "readOnly": True,
+                        "value": "",
+                        "settings": None,
                         "separator": True
                     })
             self.appendItem({
