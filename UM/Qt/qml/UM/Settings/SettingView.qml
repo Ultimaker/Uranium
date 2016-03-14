@@ -71,6 +71,7 @@ ScrollView
                     }
 
                     onConfigureSettingVisibility: if(base.configureSettings) base.configureSettings.trigger(categoryHeader);
+                    onShowAllHidenInheritedSettings: categoriesModel.showAllHidenInheritedSettings(key)
                 }
 
                 Column
@@ -165,6 +166,21 @@ ScrollView
                                 property: "overridden"
                                 value: model.overridden
                             }
+                            Binding
+                            {
+                                when: loadComplete
+                                target: item
+                                property: "inherited"
+                                value: model.inherited
+                            }
+
+                            Binding
+                            {
+                                when: loadComplete
+                                target: item
+                                property: "has_profile_value"
+                                value: model.has_profile_value
+                            }
 
                             Connections
                             {
@@ -172,12 +188,19 @@ ScrollView
                                 onItemValueChanged: delegateItem.settingsModel.setSettingValue(model.key, value);
                                 onContextMenuRequested: { contextMenu.key = delegateItem.categoryId; contextMenu.popup(); }
                                 onResetRequested: delegateItem.settingsModel.resetSettingValue(model.key);
+                                onResetToDefaultRequested: delegateItem.settingsModel.forceSettingValueToDefault(model.key);
                                 onShowTooltip: base.showTooltip(settingLoader, Qt.point(0, settingLoader.height / 2), "<b>" + model.name + "</b><br/>" + model.description)
                                 onHideTooltip: base.hideTooltip();
+                                onShowInheritanceTooltip: base.showTooltip(settingLoader, Qt.point(0, settingLoader.height / 2),  catalog.i18nc("@label","This setting is normally calculated, but it currently has an absolute value set.\n\nClick to restore the calculated value."))
                             }
                         }
                     }
-
+                    Connections
+                    {
+                        target: categoryHeader
+                        onHideTooltip: base.hideTooltip();
+                        onShowTooltip: base.showTooltip(categoryHeader, Qt.point(0, categoryHeader.height / 2),  catalog.i18nc("@label","Some hidden settings use values different from their normal calculated value.\n\nClick to make these settings visible."))
+                    }
                     states: State
                     {
                         name: "collapsed";

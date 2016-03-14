@@ -34,6 +34,15 @@ class SettingCategoriesModel(ListModel):
 
         self._resetting = False
 
+    #   Show all settings that have an inherited value but are overriden.
+    @pyqtSlot(str)
+    def showAllHidenInheritedSettings(self, category_key):
+        for category in self._machine_instance.getMachineDefinition().getAllCategories():
+            if category.getKey() == category_key:
+                for setting in category.getAllSettings():
+                    if not setting.isVisible() and Application.getInstance().getMachineManager().getWorkingProfile().hasSettingValue(setting.getKey()) and setting.getInherit():
+                        setting.setVisible(True)
+
     @pyqtSlot(str)
     def filter(self, text):
         for item in self.items:

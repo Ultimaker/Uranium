@@ -16,6 +16,10 @@ Button {
     style: UM.Theme.styles.sidebar_category;
 
     signal configureSettingVisibility()
+    signal showAllHidenInheritedSettings()
+
+    signal showTooltip();
+    signal hideTooltip();
 
     UM.SimpleButton {
         id: settingsButton
@@ -33,6 +37,46 @@ Button {
 
         onClicked: {
             base.configureSettingVisibility()
+        }
+    }
+    UM.SimpleButton
+    {
+        // This button shows when the setting has an inherited function, but is overriden by profile.
+        id: inheritButton;
+
+        anchors {
+            right: settingsButton.left
+            rightMargin: UM.Theme.getSize("default_margin").width / 2;
+            verticalCenter: parent.verticalCenter;
+        }
+
+        visible: hiddenValuesCount > 0
+        height: parent.height / 2;
+        width: height;
+
+        onClicked: {
+            base.showAllHidenInheritedSettings()
+        }
+
+        color: "blue"
+        iconSource: UM.Theme.getIcon("reset")
+
+        MouseArea
+        {
+            id: inheritButtonMouseArea;
+
+            anchors.fill: parent;
+
+            acceptedButtons: Qt.NoButton
+            hoverEnabled: true;
+
+            onEntered: {
+                base.showTooltip()
+            }
+
+            onExited: {
+                base.hideTooltip();
+            }
         }
     }
 }

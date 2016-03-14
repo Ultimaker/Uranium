@@ -33,6 +33,8 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
     FilteredRole = Qt.UserRole + 15
     GlobalOnlyRole = Qt.UserRole + 16
     ProhibitedRole = Qt.UserRole + 17 # This setting can never be enabled
+    InheritedRole = Qt.UserRole + 18 # Can this setting have a inherited value?
+    HasProfileValue = Qt.UserRole + 19 # Does this setting have a profile value, regardless of state of profile
 
     def __init__(self, category, parent = None, machine_manager = None):
         super().__init__(parent)
@@ -67,6 +69,8 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
         self.addRoleName(self.FilteredRole, "filtered")
         self.addRoleName(self.GlobalOnlyRole, "global_only")
         self.addRoleName(self.ProhibitedRole, "prohibited")
+        self.addRoleName(self.InheritedRole, "inherited")
+        self.addRoleName(self.HasProfileValue, "has_profile_value")
 
     settingChanged = Signal()
 
@@ -81,6 +85,7 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
             self._profile.setSettingValue(key, value)
             self.setProperty(index, "value", str(value))
             self.setProperty(index, "valid", setting.validate(setting.parseValue(value)))
+            self.setProperty(index, "has_profile_value", self._profile.hasSettingValue(setting.getKey()))
 
     @pyqtSlot(str, bool)
     def setSettingVisible(self, key, visible):
@@ -89,11 +94,19 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
             setting.setVisible(visible);
 
     @pyqtSlot(str)
+    def forceSettingValueToDefault(self, key):
+        setting = self._category.getSetting(key)
+        if setting:
+            self._profile.forceSettingValueToDefault(key)
+        self.setProperty(self.find("key", key), "has_profile_value", False)
+
+    @pyqtSlot(str)
     def resetSettingValue(self, key):
         setting = self._category.getSetting(key)
         if setting:
             self._profile.resetSettingValue(key)
         self.setProperty(self.find("key", key), "overridden", False)
+        self.setProperty(self.find("key", key), "has_profile_value", self._profile.hasSettingValue(setting.getKey()))
 
     ##  Create model for combo box (used by enum type setting) 
     #   \param options List of strings
@@ -149,11 +162,14 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
                 "enabled": setting.isEnabled(),
                 "filtered": False,
                 "global_only": setting.getGlobalOnly,
-                "prohibited": setting.isProhibited()
+                "prohibited": setting.isProhibited(),
+                "inherited": setting.getInherit(),
+                "has_profile_value": self._profile.hasSettingValue(setting.getKey())
             })
             setting.visibleChanged.connect(self._onSettingVisibleChanged)
             setting.enabledChanged.connect(self._onSettingEnabledChanged)
             setting.globalOnlyChanged.connect(self._onSettingGlobalOnlyChanged)
+            setting.defaultValueChanged.connect(self._onSettingDefaultValueChanged)
 
         self.endResetModel()
 
@@ -162,6 +178,12 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
             index = self.find("key", setting.getKey())
             if index != -1:
                 self.setProperty(index, "visible", setting.isVisible())
+
+    def _onSettingDefaultValueChanged(self, setting):
+        if setting:
+            index = self.find("key", setting.getKey())
+            if index != -1:
+                self.setProperty(index, "has_profile_value", self._profile.hasSettingValue(setting.getKey()))
 
     def _onSettingEnabledChanged(self, setting):
         if setting:

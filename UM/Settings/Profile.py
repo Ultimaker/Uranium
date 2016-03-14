@@ -306,6 +306,12 @@ class Profile(SignalEmitter):
             if self.hasSettingValue(key, filter_defaults = True):
                 return True
 
+    ## Force a setting value to be it's default. Regardless what the profile says
+    def forceSettingValueToDefault(self, key):
+        if key in self._changed_settings_defaults:
+            del self._changed_settings_defaults[key]
+        self.resetSettingValue(key)
+
     ##  Remove a setting value from this profile, resetting it to its default value.
     def resetSettingValue(self, key):
         if key in self._changed_settings_defaults:

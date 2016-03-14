@@ -24,13 +24,18 @@ Item {
     property variant key;
 
     property bool overridden;
+    property bool inherited;
+    property bool has_profile_value;
     property bool indent: true;
+    property variant default_value;
 
     signal contextMenuRequested();
     signal itemValueChanged(variant value);
     signal showTooltip(variant position);
     signal hideTooltip();
+    signal showInheritanceTooltip(variant position);
     signal resetRequested();
+    signal resetToDefaultRequested();
 
     property bool hovered: false;
 
@@ -126,6 +131,53 @@ Item {
             base.resetRequested()
             controlContainer.notifyReset();
         }
+    }
+
+    UM.SimpleButton
+    {
+        // This button shows when the setting has an inherited function, but is overriden by profile.
+        id: inheritButton;
+
+        anchors {
+            right: revertButton.left
+            rightMargin: UM.Theme.getSize("default_margin").width / 2;
+            verticalCenter: parent.verticalCenter;
+        }
+
+        visible: has_profile_value && base.inherited
+        height: parent.height / 2;
+        width: height;
+
+        onClicked: {
+            base.resetToDefaultRequested()
+            controlContainer.notifyReset();
+        }
+        backgroundColor: hovered ? base.style.controlHighlightColor : base.style.controlColor;
+        color: "blue"
+        iconSource: UM.Theme.getIcon("reset")
+        MouseArea
+        {
+            id: inheritanceButtonMouseArea;
+
+            anchors.fill: parent;
+
+            acceptedButtons: Qt.NoButton
+            hoverEnabled: true;
+
+            onEntered: {
+                base.showInheritanceTooltip({ x: mouse.mouseX, y: mouse.mouseY })
+            }
+
+            onExited: {
+                if(controlContainer.item && controlContainer.item.hovered) {
+                    return;
+                }
+
+                base.hovered = false;
+                base.hideTooltip();
+            }
+        }
+
     }
 
     Loader {
