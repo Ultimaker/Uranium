@@ -100,6 +100,7 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
         setting = self._category.getSetting(key)
         result = ""
         if setting:
+            print(setting.getLabel())
             for temp_key in setting.getRequiredSettingKeys():
                 temp_setting = self._machine_manager.getActiveMachineInstance().getMachineDefinition().getSetting(temp_key)
                 result += "- " + temp_setting.getLabel() + "<br/>"
