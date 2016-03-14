@@ -113,10 +113,11 @@ Item {
         id: revertButton;
 
         anchors {
-            right: controlContainer.left
+            right: inheritButton.left
             rightMargin: UM.Theme.getSize("default_margin").width / 2;
             verticalCenter: parent.verticalCenter;
         }
+
         visible: base.overridden
 
         height: parent.height / 2;
@@ -139,7 +140,7 @@ Item {
         id: inheritButton;
 
         anchors {
-            right: revertButton.left
+            right: controlContainer.left
             rightMargin: UM.Theme.getSize("default_margin").width / 2;
             verticalCenter: parent.verticalCenter;
         }

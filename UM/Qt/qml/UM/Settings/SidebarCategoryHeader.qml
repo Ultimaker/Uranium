@@ -28,9 +28,11 @@ Button {
         height: base.height * 0.6
         width: base.height * 0.6
 
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.right: parent.right
-        anchors.rightMargin: UM.Theme.getSize("setting_preferences_button_margin").width
+        anchors {
+            right: inheritButton.left
+            rightMargin: UM.Theme.getSize("default_margin").width / 2;
+            verticalCenter: parent.verticalCenter;
+        }
 
         color: hovered ? UM.Theme.getColor("setting_control_button_hover") : UM.Theme.getColor("setting_control_button");
         iconSource: UM.Theme.getIcon("settings");
@@ -44,11 +46,9 @@ Button {
         // This button shows when the setting has an inherited function, but is overriden by profile.
         id: inheritButton;
 
-        anchors {
-            right: settingsButton.left
-            rightMargin: UM.Theme.getSize("default_margin").width / 2;
-            verticalCenter: parent.verticalCenter;
-        }
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.right: parent.right
+        anchors.rightMargin: UM.Theme.getSize("setting_preferences_button_margin").width
 
         visible: hiddenValuesCount > 0
         height: parent.height / 2;
