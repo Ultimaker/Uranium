@@ -46,6 +46,10 @@ MouseArea
 
         color:
         {
+            if (!enabled)
+            {
+                return itemStyle.controlDisabledColor
+            }
             if(base.containsMouse || base.activeFocus)
             {
                 return itemStyle.controlHighlightColor
@@ -56,7 +60,7 @@ MouseArea
             }
         }
         border.width: itemStyle.controlBorderWidth;
-        border.color: base.containsMouse ? itemStyle.controlBorderHighlightColor : itemStyle.controlBorderColor;
+        border.color: !enabled ? itemStyle.controlDisabledBorderColor : base.containsMouse ? itemStyle.controlBorderHighlightColor : itemStyle.controlBorderColor;
 
         UM.RecolorImage {
             anchors.verticalCenter: parent.verticalCenter
@@ -65,7 +69,7 @@ MouseArea
             height: parent.height/2.5
             sourceSize.width: width
             sourceSize.height: width
-            color: UM.Theme.getColor("checkbox_mark");
+            color: !enabled ? itemStyle.controlDisabledTextColor : itemStyle.controlTextColor;
             source: UM.Theme.getIcon("check")
             opacity: base.checked
             Behavior on opacity { NumberAnimation { duration: 100; } }

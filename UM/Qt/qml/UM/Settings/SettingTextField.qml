@@ -15,11 +15,15 @@ Rectangle
     property alias hovered: mouseArea.containsMouse;
 
     border.width: itemStyle.controlBorderWidth;
-    border.color: hovered ? itemStyle.controlBorderHighlightColor : itemStyle.controlBorderColor
+    border.color: !enabled ? itemStyle.controlDisabledBorderColor : hovered ? itemStyle.controlBorderHighlightColor : itemStyle.controlBorderColor
 
     property variant parentValue: value //From parent loader
 
     color: {
+        if (!enabled)
+        {
+            return itemStyle.controlDisabledColor
+        }
         switch(valid) //From parent loader
         {
             case 0:
@@ -82,7 +86,7 @@ Rectangle
         Keys.onReleased: if(text != base.parentValue) base.valueChanged(text);
         onEditingFinished: if(text != base.parentValue) base.valueChanged(text);
 
-        color: itemStyle.controlTextColor;
+        color: !enabled ? itemStyle.controlDisabledTextColor : itemStyle.controlTextColor;
         font: itemStyle.controlFont;
 
         selectByMouse: true;

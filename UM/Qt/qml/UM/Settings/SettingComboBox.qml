@@ -27,6 +27,10 @@ ComboBox
         background: Rectangle {
             color:
             {
+                if (!enabled)
+                {
+                    return itemStyle.controlDisabledColor
+                }
                 if(control.hovered || base.activeFocus)
                 {
                     return itemStyle.controlHighlightColor
@@ -37,7 +41,7 @@ ComboBox
                 }
             }
             border.width: itemStyle.controlBorderWidth;
-            border.color: control.hovered ? itemStyle.controlBorderHighlightColor : itemStyle.controlBorderColor;
+            border.color: !enabled ? itemStyle.controlDisabledBorderColor : control.hovered ? itemStyle.controlBorderHighlightColor : itemStyle.controlBorderColor;
         }
         label: Item {
             Label {
@@ -49,7 +53,7 @@ ComboBox
 
                 text: control.currentText;
                 font: itemStyle.controlFont;
-                color: itemStyle.controlTextColor;
+                color: !enabled ? itemStyle.controlDisabledTextColor : itemStyle.controlTextColor;
 
                 elide: Text.ElideRight;
                 verticalAlignment: Text.AlignVCenter;
