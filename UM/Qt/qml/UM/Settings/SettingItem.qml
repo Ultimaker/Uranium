@@ -18,6 +18,7 @@ Item {
     property int valid;
     property string type;
     property int depth;
+    property int visible_depth;
 
     property variant options;
     property int index;
@@ -76,7 +77,7 @@ Item {
     property variant style: SettingItemStyle { }
 
     Rectangle{
-        visible: base.depth > 1 ? true : false
+        visible: base.visible_depth > 1 ? true : false
         id: separationLine
         width: UM.Theme.getSize("default_lining").width
         height: label.height
@@ -90,7 +91,7 @@ Item {
     Label
     {
         id: label;
-        property int depth: base.depth - 1;
+        property int depth: base.visible_depth - 1;
 
         anchors.left: parent.left;
         anchors.leftMargin: base.indent ? (UM.Theme.getSize("section_icon_column").width + 5) + (label.depth * UM.Theme.getSize("setting_control_depth_margin").width) : 0

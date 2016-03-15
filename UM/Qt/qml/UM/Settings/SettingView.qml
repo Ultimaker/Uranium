@@ -133,7 +133,7 @@ ScrollView
                                 item.depth = model.depth;
                                 item.type = model.type;
                                 item.key = model.key;
-
+                                item.visible_depth = model.visible_depth
                                 item.style = UM.Theme.styles.setting_item;
 
                                 if(model.type == "enum")
@@ -149,6 +149,14 @@ ScrollView
                                 target: item;
                                 property: "valid"
                                 value: model.valid
+                            }
+
+                            Binding
+                            {
+                                when: loadComplete
+                                target: item;
+                                property: "visible_depth"
+                                value: model.visible_depth
                             }
 
                             Binding

@@ -35,6 +35,7 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
     ProhibitedRole = Qt.UserRole + 17 # This setting can never be enabled
     HasInheritFunctionRole = Qt.UserRole + 18 # Can this setting have a inherited value?
     HasProfileValueRole = Qt.UserRole + 19 # Does this setting have a profile value, regardless of state of profile
+    VisibleDepth = Qt.UserRole + 20
 
     def __init__(self, category, parent = None, machine_manager = None):
         super().__init__(parent)
@@ -71,6 +72,7 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
         self.addRoleName(self.ProhibitedRole, "prohibited")
         self.addRoleName(self.HasInheritFunctionRole, "has_inherit_function")
         self.addRoleName(self.HasProfileValueRole, "has_profile_value")
+        self.addRoleName(self.VisibleDepth, "visible_depth")
 
     settingChanged = Signal()
 
@@ -199,7 +201,8 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
                 "global_only": setting.getGlobalOnly,
                 "prohibited": setting.isProhibited(),
                 "has_inherit_function": setting.hasInheritFunction(),
-                "has_profile_value": self._profile.hasSettingValue(setting.getKey())
+                "has_profile_value": self._profile.hasSettingValue(setting.getKey()),
+                "visible_depth": setting.getVisibleDepth()
             })
             setting.visibleChanged.connect(self._onSettingVisibleChanged)
             setting.enabledChanged.connect(self._onSettingEnabledChanged)
@@ -213,6 +216,11 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
             index = self.find("key", setting.getKey())
             if index != -1:
                 self.setProperty(index, "visible", setting.isVisible())
+                self.setProperty(index, "visible_depth", setting.getVisibleDepth())
+                for child in setting.getAllChildren():
+                    child_index = self.find("key", child.getKey())
+                    if child_index != -1:
+                        self.setProperty(child_index, "visible_depth", child.getVisibleDepth())
 
     def _onSettingDefaultValueChanged(self, setting):
         if setting:

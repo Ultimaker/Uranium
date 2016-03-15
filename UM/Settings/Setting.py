@@ -87,6 +87,13 @@ class Setting(SignalEmitter):
     def getDepth(self):
         return self._parent.getDepth() + 1
 
+    ##  Get the visible depth of this setting (how many steps of visible settings is it 'away' from its category)
+    def getVisibleDepth(self):
+        try:
+            return self._parent.getVisibleDepth() + int(self._parent.isVisible())
+        except:
+            return self._parent.getDepth() + 1
+
     ##  Set values of the setting by providing it with a dict object (as decoded by JSON parser)
     #   \param data Decoded JSON dict
     def fillByDict(self, data):
