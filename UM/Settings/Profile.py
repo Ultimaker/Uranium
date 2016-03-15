@@ -327,8 +327,8 @@ class Profile(SignalEmitter):
     def forceSettingValueToDefault(self, key):
         if key in self._changed_settings_defaults:
             self._disabled_settings_defaults.append(key)
-            self._dirty = True
-            del self._changed_settings[key]
+        self._dirty = True
+        del self._changed_settings[key]
         self.settingValueChanged.emit(key)
 
     ##  Remove a setting value from this profile, resetting it to its default value.
