@@ -198,7 +198,7 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
                 "overridden": (not self._profile.isReadOnly()) and self._profile.hasSettingValue(setting.getKey(), filter_defaults = True),
                 "enabled": setting.isEnabled(),
                 "filtered": False,
-                "global_only": setting.getGlobalOnly,
+                "global_only": setting.getGlobalOnly(),
                 "prohibited": setting.isProhibited(),
                 "has_inherit_function": setting.hasInheritFunction(),
                 "has_profile_value": self._profile.hasSettingValue(setting.getKey()),
