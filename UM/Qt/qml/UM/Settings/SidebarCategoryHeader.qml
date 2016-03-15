@@ -29,8 +29,8 @@ Button {
         width: base.height * 0.6
 
         anchors {
-            right: inheritButton.left
-            rightMargin: UM.Theme.getSize("default_margin").width / 2;
+            right: inheritButton.visible ? inheritButton.left : parent.right
+            rightMargin: inheritButton.visible? UM.Theme.getSize("default_margin").width / 2 : UM.Theme.getSize("setting_preferences_button_margin").width
             verticalCenter: parent.verticalCenter;
         }
 

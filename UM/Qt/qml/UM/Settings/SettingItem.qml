@@ -113,7 +113,7 @@ Item {
         id: revertButton;
 
         anchors {
-            right: inheritButton.left
+            right: inheritButton.visible ? inheritButton.left : controlContainer.left
             rightMargin: UM.Theme.getSize("default_margin").width / 2;
             verticalCenter: parent.verticalCenter;
         }
