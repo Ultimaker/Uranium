@@ -154,7 +154,7 @@ Item {
             controlContainer.notifyReset();
         }
         backgroundColor: hovered ? base.style.controlHighlightColor : base.style.controlColor;
-        color: hovered ? UM.Theme.getColor("primary_hover"): UM.Theme.getColor("primary");
+        color: hovered ? UM.Theme.getColor("primary_hover") : UM.Theme.getColor("primary");
         iconSource: UM.Theme.getIcon("warning");
         MouseArea
         {
