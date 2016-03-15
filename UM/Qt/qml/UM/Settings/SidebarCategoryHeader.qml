@@ -58,8 +58,8 @@ Button {
             base.showAllHidenInheritedSettings()
         }
 
-        color: hovered ? UM.Theme.getColor("primary_hover") : UM.Theme.getColor("primary");
-        iconSource: UM.Theme.getIcon("warning")
+        color: hovered ? UM.Theme.getColor("setting_control_button_hover") : UM.Theme.getColor("setting_control_button")
+        iconSource: UM.Theme.getIcon("notice")
 
         MouseArea
         {
