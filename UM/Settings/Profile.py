@@ -306,6 +306,8 @@ class Profile(SignalEmitter):
 
     ## Check whether this profile has any changed settings that are different from the default.
     def hasChangedSettings(self):
+        if len(self._disabled_settings_defaults):
+            return True
         for key in self._changed_settings:
             if self.hasSettingValue(key, filter_defaults = True):
                 return True
@@ -341,6 +343,7 @@ class Profile(SignalEmitter):
         if reset:
             self._changed_settings = {}
             self._changed_settings_defaults = {}
+            self._disabled_settings_defaults = []
 
         if not profile:
             return
@@ -350,8 +353,11 @@ class Profile(SignalEmitter):
         for key, value in settings.items():
             self._changed_settings[key] = value
             self._changed_settings_defaults[key] = value
-
+        self._disabled_settings_defaults = deepcopy(profile.getDisabledSettingDefaults())
         self._dirty = True
+
+    def getDisabledSettingDefaults(self):
+        return self._disabled_settings_defaults
 
     ##  Load a serialised profile from a file.
     #
@@ -408,7 +414,7 @@ class Profile(SignalEmitter):
             self._changed_settings_defaults = {}
             for key, value in parser["defaults"].items():
                 self._changed_settings_defaults[key] = value
-
+        self._disabled_settings_defaults = []
         if parser.has_section("disabled_defaults"):
             disabled_defaults_string = parser.get("disabled_defaults", "values")
             for item in disabled_defaults_string.split(","):
