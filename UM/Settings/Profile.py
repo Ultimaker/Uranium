@@ -312,6 +312,16 @@ class Profile(SignalEmitter):
             if self.hasSettingValue(key, filter_defaults = True):
                 return True
 
+    ## Check whether all child settings of a setting have a setting value
+    def checkAllChildrenHaveSetting(self, setting):
+        children = setting.getChildren()
+        if len(children) < 1:
+            return False
+        for child in children:
+            if not self.hasSettingValue(child.getKey()) and not self.checkAllChildrenHaveSetting(child):
+                return False
+        return True
+
     ##  Remove a setting value from this profile, resetting it to its default value.
     def resetSettingValue(self, key):
         if key in self._changed_settings_defaults:
