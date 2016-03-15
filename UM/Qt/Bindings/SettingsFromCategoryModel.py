@@ -146,7 +146,7 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
                 "warning_description": setting.getWarningDescription(),
                 "error_description": setting.getErrorDescription(),
                 "overridden": (not self._profile.isReadOnly()) and self._profile.hasSettingValue(setting.getKey(), filter_defaults = True),
-                "enabled": setting.isEnabled(),
+                "enabled": setting.isEnabled() and (not setting.checkAllChildrenVisible()),
                 "filtered": False,
                 "global_only": setting.getGlobalOnly(),
                 "prohibited": setting.isProhibited()
@@ -162,12 +162,18 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
             index = self.find("key", setting.getKey())
             if index != -1:
                 self.setProperty(index, "visible", setting.isVisible())
+                parent_setting = setting.getParent()
+                while parent_setting and type(parent_setting) == type(setting):
+                    parent_index = self.find("key", parent_setting.getKey())
+                    if parent_index != -1:
+                        self.setProperty(parent_index, "enabled", parent_setting.isEnabled() and (not parent_setting.checkAllChildrenVisible()))
+                    parent_setting = parent_setting.getParent()
 
     def _onSettingEnabledChanged(self, setting):
         if setting:
             index = self.find("key", setting.getKey())
             if index != -1:
-                self.setProperty(index, "enabled", setting.isEnabled())
+                self.setProperty(index, "enabled", setting.isEnabled() and (not setting.checkAllChildrenVisible()))
 
     ##  Updates the global only property if any of its dependencies have its
     #   value changed.
