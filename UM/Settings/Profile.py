@@ -132,7 +132,7 @@ class Profile(SignalEmitter):
 
     ##  Get whether the profile has unsaved changed.
     def hasUnsavedChanges(self):
-        return self._dirty or len(self._changed_settings_defaults)
+        return self._dirty
 
     ##  Emitted whenever a setting value changes.
     #
@@ -314,6 +314,7 @@ class Profile(SignalEmitter):
     def forceSettingValueToDefault(self, key):
         if key in self._changed_settings_defaults:
             self._disabled_settings_defaults.append(key)
+            self._dirty = True
             del self._changed_settings[key]
             #del self._changed_settings_defaults[key]
         self.settingValueChanged.emit(key)
