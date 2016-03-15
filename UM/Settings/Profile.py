@@ -185,7 +185,10 @@ class Profile(SignalEmitter):
         if key in self._changed_settings and self._changed_settings[key] == value:
             return
         if setting.getType() == "float":
-            if setting.getDefaultValue() == float(value):
+            try:
+                if setting.getDefaultValue() == float(value):
+                    return
+            except ValueError:
                 return
 
         self._changed_settings[key] = value
