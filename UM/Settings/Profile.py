@@ -39,6 +39,7 @@ class Profile(SignalEmitter):
         self._machine_manager = machine_manager
         self._changed_settings = {}
         self._changed_settings_defaults = {}
+        self._disabled_settings_defaults = []
         self._name = catalog.i18nc("@label", "Current settings")
         self._type = None
         self._machine_type_id = None
@@ -131,7 +132,7 @@ class Profile(SignalEmitter):
 
     ##  Get whether the profile has unsaved changed.
     def hasUnsavedChanges(self):
-        return self._dirty
+        return self._dirty or len(self._changed_settings_defaults)
 
     ##  Emitted whenever a setting value changes.
     #
@@ -297,6 +298,8 @@ class Profile(SignalEmitter):
     #   /param filter_defaults Don't include setting if its value equals the default setting for this profile
     def hasSettingValue(self, key, filter_defaults = False):
         if filter_defaults:
+            if key in self._disabled_settings_defaults:
+                return True
             return key in self._changed_settings and ( key not in self._changed_settings_defaults or self._changed_settings[key] != self._changed_settings_defaults[key])
         else:
             return key in self._changed_settings
@@ -310,14 +313,22 @@ class Profile(SignalEmitter):
     ## Force a setting value to be it's default. Regardless what the profile says
     def forceSettingValueToDefault(self, key):
         if key in self._changed_settings_defaults:
-            del self._changed_settings_defaults[key]
-        self.resetSettingValue(key)
+            self._disabled_settings_defaults.append(key)
+            del self._changed_settings[key]
+            #del self._changed_settings_defaults[key]
+        self.settingValueChanged.emit(key)
+        #self.resetSettingValue(key)
 
     ##  Remove a setting value from this profile, resetting it to its default value.
     def resetSettingValue(self, key):
-        if key in self._changed_settings_defaults:
+        if key in self._changed_settings_defaults and key not in self._disabled_settings_defaults:
             self._changed_settings[key] = self._changed_settings_defaults[key]
         else:
+            if key in self._disabled_settings_defaults:
+                self._disabled_settings_defaults.remove(key)
+                self._changed_settings[key] = self._changed_settings_defaults[key]
+                self.settingValueChanged.emit(key)
+                return
             if key not in self._changed_settings:
                 return
             del self._changed_settings[key]
@@ -397,6 +408,12 @@ class Profile(SignalEmitter):
             for key, value in parser["defaults"].items():
                 self._changed_settings_defaults[key] = value
 
+        if parser.has_section("disabled_defaults"):
+            disabled_defaults_string = parser.get("disabled_defaults", "values")
+            for item in disabled_defaults_string.split(","):
+                if item != "":
+                    self._disabled_settings_defaults.append(item)
+
     ##  Store this profile in a file so it can be loaded later.
     #
     #   \param file The file to save the profile to.
@@ -440,6 +457,13 @@ class Profile(SignalEmitter):
             parser.add_section("defaults") #Write each changed setting in a settings section.
             for setting_key in self._changed_settings_defaults:
                 parser.set("defaults", setting_key , str(self._changed_settings_defaults[setting_key]))
+            if len(self._disabled_settings_defaults) > 0:
+                disabled_setting_string = ""
+                parser.add_section("disabled_defaults")
+                for item in self._disabled_settings_defaults:
+                    disabled_setting_string += item + ","
+                disabled_setting_string[:-1]
+                parser.set("disabled_defaults", "values", disabled_setting_string)
 
         parser.write(stream) #Actually serialise it to the stream.
         return stream.getvalue()

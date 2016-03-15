@@ -131,6 +131,7 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
         if setting:
             self._profile.forceSettingValueToDefault(key)
         self.setProperty(self.find("key", key), "has_profile_value", False)
+        self.setProperty(self.find("key", key),"overridden", (not self._profile.isReadOnly()) and self._profile.hasSettingValue(setting.getKey(), filter_defaults = True))
 
     @pyqtSlot(str)
     def resetSettingValue(self, key):
