@@ -3,6 +3,7 @@
 
 from UM.Tool import Tool
 from UM.Job import Job
+from UM.Logger import Logger
 from UM.Event import Event, MouseEvent, KeyEvent
 from UM.Application import Application
 from UM.Message import Message
@@ -174,6 +175,10 @@ class RotateTool(Tool):
         self._iterations = 0
         self._total_iterations = 0
         for selected_object in Selection.getAllSelectedObjects():
+            if selected_object.callDecoration("isGroup"):
+                self.operationStopped.emit(self)
+                Logger.log("w","Layflat is not supported for grouped objects")
+                return
             self._total_iterations += len(selected_object.getMeshDataTransformed().getVertices()) * 2
 
         self._progress_message.show()
