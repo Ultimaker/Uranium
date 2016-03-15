@@ -186,7 +186,12 @@ ScrollView
                             {
                                 target: item;
                                 onItemValueChanged: delegateItem.settingsModel.setSettingValue(model.key, value);
-                                onContextMenuRequested: { contextMenu.key = delegateItem.categoryId; contextMenu.popup(); }
+                                onContextMenuRequested: {
+                                    contextMenu.key = model.key;
+                                    contextMenu.settingsModel = delegateItem.settingsModel;
+                                    contextMenu.popup();
+
+                                }
                                 onResetRequested: delegateItem.settingsModel.resetSettingValue(model.key);
                                 onResetToDefaultRequested: delegateItem.settingsModel.forceSettingValueToDefault(model.key);
                                 onShowTooltip:
@@ -257,12 +262,13 @@ ScrollView
             id: contextMenu;
 
             property string key;
+            property variant settingsModel;
 
             MenuItem
             {
                 //: Settings context menu action
                 text: catalog.i18nc("@action:menu", "Hide this setting");
-                onTriggered: delegateItem.settingsModel.hideSetting(key);
+                onTriggered: contextMenu.settingsModel.hideSetting(contextMenu.key);
             }
             MenuItem
             {
