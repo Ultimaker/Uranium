@@ -21,6 +21,15 @@ MouseArea {
         onTriggered: Tooltip.showText(_root, Qt.point(_root.mouseX, _root.mouseY), wrapText(_root.text, 80))
     }
 
+    /**
+     * Manually wrap a line of text to a certain maximum line length.
+     *
+     * This method will introduce newlines so that the length of each string
+     * will be equal or less than a certain maximum line length.
+     *
+     * \param text The text to wrap.
+     * \param line_length The maximum line length to wrap to.
+     */
     function wrapText(text, line_length)
     {
         var words = text.split(" ");
