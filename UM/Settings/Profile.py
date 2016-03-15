@@ -38,8 +38,16 @@ class Profile(SignalEmitter):
         super().__init__()
         self._machine_manager = machine_manager
         self._changed_settings = {}
+
+        # Default values for the settings stored in the profile
         self._changed_settings_defaults = {}
+
+        # List of settings which were restored their inherited value, so the (profile) defaults don't apply anymore.
+        # We do this because we want the default of the profile to be removable so inheritance can kick back in again.
+        # We could also remove the setting from changed_setting_defaults, but this would making resetting back to
+        # "profile default" impossible.
         self._disabled_settings_defaults = []
+
         self._name = catalog.i18nc("@label", "Current settings")
         self._type = None
         self._machine_type_id = None
@@ -318,9 +326,7 @@ class Profile(SignalEmitter):
             self._disabled_settings_defaults.append(key)
             self._dirty = True
             del self._changed_settings[key]
-            #del self._changed_settings_defaults[key]
         self.settingValueChanged.emit(key)
-        #self.resetSettingValue(key)
 
     ##  Remove a setting value from this profile, resetting it to its default value.
     def resetSettingValue(self, key):
