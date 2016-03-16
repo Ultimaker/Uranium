@@ -175,7 +175,7 @@ class RotateTool(Tool):
         self._iterations = 0
         self._total_iterations = 0
         for selected_object in Selection.getAllSelectedObjects():
-            if selected_object.callDecoration("isGroup"):
+            if selected_object.callDecoration("isGroup"): # 2.1 hack. TODO: fix this properly
                 self.operationStopped.emit(self)
                 Logger.log("w","Layflat is not supported for grouped objects")
                 return
