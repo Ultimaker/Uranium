@@ -90,8 +90,10 @@ class Setting(SignalEmitter):
     ##  Get the visible depth of this setting (how many steps of visible settings is it 'away' from its category)
     def getVisibleDepth(self):
         try:
+            # Add 1 or 0 to the depth of the parent, based on it's visibility
             return self._parent.getVisibleDepth() + int(self._parent.isVisible())
-        except:
+        except AttributeError:
+            # Parent has no get visible depth (and is most likely a settingsCategory). We simply add one to that depth.
             return self._parent.getDepth() + 1
 
     ##  Set values of the setting by providing it with a dict object (as decoded by JSON parser)
