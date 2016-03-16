@@ -86,12 +86,12 @@ class MachineInstance(SignalEmitter):
         definition.loadAll()
         self._machine_definition = definition
 
-    def setMachineSettingValue(self, setting, value):
-        if not self._machine_definition.isMachineSetting(setting):
-            Logger.log("w", "Tried to override setting %s that is not a machine setting", setting)
+    def setMachineSettingValue(self, key, value):
+        if not self._machine_definition.isMachineSetting(key):
+            Logger.log("w", "Tried to override setting %s that is not a machine setting", key)
             return
-
-        self._machine_setting_overrides[setting] = value
+        self._machine_setting_overrides[key] = value
+        self._working_profile.settingValueChanged.emit(key)
 
     def getMachineSettingValue(self, setting):
         if not self._machine_definition.isMachineSetting(setting):
