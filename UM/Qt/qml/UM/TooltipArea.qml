@@ -18,37 +18,21 @@ MouseArea {
     Timer {
         interval: 1000
         running: _root.enabled && _root.containsMouse && _root.text.length
-        onTriggered: Tooltip.showText(_root, Qt.point(_root.mouseX, _root.mouseY), wrapText(_root.text, 80))
+        onTriggered: Tooltip.showText(_root, Qt.point(_root.mouseX, _root.mouseY), wrapText(_root.text))
     }
 
     /**
-     * Manually wrap a line of text to a certain maximum line length.
+     * Wrap a line of text automatically to a readable width.
      *
-     * This method will introduce newlines so that the length of each string
-     * will be equal or less than a certain maximum line length.
+     * This automatically wraps the line around if it is too wide.
      *
      * \param text The text to wrap.
-     * \param line_length The maximum line length to wrap to.
      */
-    function wrapText(text, line_length)
+    function wrapText(text)
     {
-        var words = text.split(" ");
-        var lines = [];
-        var line = "";
-        var word = "";
-
-        for(var i = 0; i < words.length; i++)
-        {
-            word = words[i];
-            if((line.length + word.length + 1) > line_length)
-            {
-                lines.push(line);
-                line = "";
-            }
-            line += " "
-            line += word
-        }
-        lines.push(line);
-        return lines.join("\n");
+        /* The divider automatically adapts to 100% of the parent width and
+        wraps properly, so this causes the tooltips to be wrapped to the width
+        of the tooltip as set by the operating system. */
+        return "<div>" + text + "</div>"
     }
 }
