@@ -24,7 +24,7 @@ class ScaleTool(Tool):
         super().__init__()
         self._handle = ScaleToolHandle.ScaleToolHandle()
 
-        self._snap_scale = True
+        self._snap_scale = False
         self._non_uniform_scale = False
         self._scale_speed = 10
 

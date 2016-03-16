@@ -67,7 +67,7 @@ Item
             text: catalog.i18nc("@option:check","Snap Scaling");
 
             style: UM.Theme.styles.checkbox;
-
+            visible:false
             checked: UM.ActiveTool.properties.getValue("ScaleSnap");
             onClicked: {
                 UM.ActiveTool.setProperty("ScaleSnap", checked);
