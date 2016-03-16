@@ -42,7 +42,7 @@ PreferencesPage
                     id: pluginCheckbox
                     checked: model.enabled
                     onClicked: plugin_list.model.setEnabled(model.name, checked)
-                    enabled: !model.required
+                    enabled: false
                 }
                 Button
                 {
