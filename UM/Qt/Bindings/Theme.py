@@ -28,7 +28,7 @@ class Theme(QObject):
 
         # Workaround for incorrect default font on Windows
         if sys.platform == "win32":
-            default_font = QFont("Segoe UI")
+            default_font = QFont()
             default_font.setPointSize(9)
             QCoreApplication.instance().setFont(default_font)
 
@@ -142,10 +142,7 @@ class Theme(QObject):
         if "fonts" in data:
             for name, font in data["fonts"].items():
                 f = QFont()
-
-                if not sys.platform == "win32":
-                    # Excluding windows here as a workaround for bad font rendering
-                    f.setFamily(font.get("family", QCoreApplication.instance().font().family()))
+                f.setFamily(font.get("family", QCoreApplication.instance().font().family()))
 
                 f.setStyleName(font.get("style", "Regular"))
                 f.setBold(font.get("bold", False))
