@@ -309,7 +309,7 @@ class Profile(SignalEmitter):
                 return False
             if key in self._changed_settings_defaults:
                 return self._changed_settings[key] != self._changed_settings_defaults[key]
-        else:
+            else:
                 setting = self._active_instance.getMachineDefinition().getSetting(key)
                 return setting.parseValue(self._changed_settings[key]) != setting.getDefaultValue()
         else:
