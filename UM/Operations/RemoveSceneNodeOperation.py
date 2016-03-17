@@ -23,6 +23,9 @@ class RemoveSceneNodeOperation(Operation.Operation):
         # Hack to ensure that the _onchanged is triggered correctly.
         # We can't do it the right way as most remove changes don't need to trigger
         # a reslice (eg; removing hull nodes don't need to trigger reslice).
-        Application.getInstance().getBackend().forceSlice()
+        try:
+            Application.getInstance().getBackend().forceSlice()
+        except:
+            pass
         if Selection.isSelected(self._node):
             Selection.remove(self._node)
