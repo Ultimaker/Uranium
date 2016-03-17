@@ -184,14 +184,6 @@ class Profile(SignalEmitter):
                 return
         if key in self._changed_settings and self._changed_settings[key] == value:
             return
-        if setting.getType() == "float":
-            try:
-                if setting.getDefaultValue() == float(value) and setting.getDefaultValue() != value:
-                    # This ensures that (for example) setting 10.0 on a setting that has the value 10 doesn't
-                    # trigger an update, but setting 10 on a setting that has the default value of 10 does.
-                    return
-            except ValueError:
-                return
 
         self._changed_settings[key] = value
         self.settingValueChanged.emit(key)

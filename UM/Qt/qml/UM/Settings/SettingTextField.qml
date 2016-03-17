@@ -82,8 +82,8 @@ Rectangle
             verticalCenter: parent.verticalCenter
         }
 
-        Keys.onReleased: if(text != base.parentValue) base.valueChanged(text);
-        onEditingFinished: if(text != base.parentValue) base.valueChanged(text);
+        Keys.onReleased: if(parseFloat(text) != base.parentValue) base.valueChanged(parseFloat(text));
+        onEditingFinished: if(parseFloat(text) != base.parentValue) base.valueChanged(parseFloat(text));
 
         color: itemStyle.controlTextColor;
         font: itemStyle.controlFont;
