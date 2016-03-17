@@ -33,6 +33,7 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
     FilteredRole = Qt.UserRole + 15
     GlobalOnlyRole = Qt.UserRole + 16
     ProhibitedRole = Qt.UserRole + 17 # This setting can never be enabled
+    ValueUnusedRole = Qt.UserRole + 18 # The value of this setting is not used because all settings basing values on this setting have been overridden
 
     def __init__(self, category, parent = None, machine_manager = None):
         super().__init__(parent)
@@ -67,11 +68,12 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
         self.addRoleName(self.FilteredRole, "filtered")
         self.addRoleName(self.GlobalOnlyRole, "global_only")
         self.addRoleName(self.ProhibitedRole, "prohibited")
+        self.addRoleName(self.ValueUnusedRole, "value_unused")
 
     settingChanged = Signal()
 
     @pyqtSlot(str, "QVariant")
-    ##  Notification that setting has changed.  
+    ##  Notification that setting has changed.
     def setSettingValue(self, key, value):
         index = self.find("key", key)
         if index == -1:
@@ -95,7 +97,7 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
             self._profile.resetSettingValue(key)
         self.setProperty(self.find("key", key), "overridden", False)
 
-    ##  Create model for combo box (used by enum type setting) 
+    ##  Create model for combo box (used by enum type setting)
     #   \param options List of strings
     #   \return ListModel with "text":value pairs
     def createOptionsModel(self, options):
@@ -146,10 +148,11 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
                 "warning_description": setting.getWarningDescription(),
                 "error_description": setting.getErrorDescription(),
                 "overridden": (not self._profile.isReadOnly()) and self._profile.hasSettingValue(setting.getKey(), filter_defaults = True),
-                "enabled": setting.isEnabled() and (not self._profile.checkAllChildrenHaveSetting(setting)),
+                "enabled": setting.isEnabled(),
                 "filtered": False,
                 "global_only": setting.getGlobalOnly(),
-                "prohibited": setting.isProhibited()
+                "prohibited": setting.isProhibited(),
+                "value_unused": self._profile.checkValueUnused(setting),
             })
             setting.visibleChanged.connect(self._onSettingVisibleChanged)
             setting.enabledChanged.connect(self._onSettingEnabledChanged)
@@ -167,7 +170,7 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
         if setting:
             index = self.find("key", setting.getKey())
             if index != -1:
-                self.setProperty(index, "enabled", setting.isEnabled() and (not self._profile.checkAllChildrenHaveSetting(setting)))
+                self.setProperty(index, "enabled", setting.isEnabled())
 
     ##  Updates the global only property if any of its dependencies have its
     #   value changed.
@@ -207,5 +210,6 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
             while parent_setting and type(parent_setting) == type(setting):
                 parent_index = self.find("key", parent_setting.getKey())
                 if parent_index != -1:
-                    self.setProperty(parent_index, "enabled", parent_setting.isEnabled() and (not self._profile.checkAllChildrenHaveSetting(parent_setting)))
+                    self.setProperty(parent_index, "value_unused", self._profile.checkValueUnused(parent_setting))
+
                 parent_setting = parent_setting.getParent()

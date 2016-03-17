@@ -111,13 +111,13 @@ ScrollView
 
                             width: UM.Theme.getSize("sidebar").width - UM.Theme.getSize("default_margin").width * 2
 
-                            property bool settingVisible: model.visible;
+                            property bool settingVisible: model.visible && model.enabled;
                             height: settingVisible ? UM.Theme.getSize("setting").height + UM.Theme.getSize("default_lining").height : 0;
                             Behavior on height { NumberAnimation { duration: 75; } }
                             opacity: settingVisible ? 1 : 0;
                             Behavior on opacity { NumberAnimation { duration: 75; } }
 
-                            enabled: categoryHeader.checked && settingVisible && model.enabled;
+                            enabled: categoryHeader.checked && settingVisible && model.enabled && !model.value_unused;
 
                             property bool loadComplete: status == Loader.Ready
 

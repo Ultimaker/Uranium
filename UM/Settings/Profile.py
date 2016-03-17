@@ -312,13 +312,16 @@ class Profile(SignalEmitter):
             if self.hasSettingValue(key, filter_defaults = True):
                 return True
 
-    ## Check whether all child settings of a setting have a setting value
-    def checkAllChildrenHaveSetting(self, setting):
-        children = setting.getChildren()
-        if len(children) < 1:
+    ## Check whether the value of a setting in this profile is unused because all settings that depend on it have a setting value
+    def checkValueUnused(self, setting):
+        if not setting:
+            return True
+
+        dependant_settings = setting.getRequiredBySettingKeys()
+        if len(dependant_settings) < 1:
             return False
-        for child in children:
-            if not self.hasSettingValue(child.getKey()) and not self.checkAllChildrenHaveSetting(child):
+        for key in dependant_settings:
+            if not self.hasSettingValue(key) and not self.checkValueUnused(self._active_instance.getMachineDefinition().getSetting(key)):
                 return False
         return True
 
