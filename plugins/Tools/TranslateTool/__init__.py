@@ -21,7 +21,7 @@ def getMetaData():
             "description": i18n_catalog.i18nc("@info:tooltip", "Translate Object"),
             "icon": "translate",
             "tool_panel": "TranslateTool.qml",
-	    "weight": 3
+            "weight": -1
         }
     }
 
