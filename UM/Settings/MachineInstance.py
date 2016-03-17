@@ -32,6 +32,7 @@ class MachineInstance(SignalEmitter):
 
         self._working_profile = Profile(machine_manager)
         self._working_profile.setType("machine_instance_profile")
+        self._machine_manager.activeMachineInstanceChanged.connect(self._onActiveMachineInstanceChanged)
 
     nameChanged = Signal()
 
@@ -48,6 +49,10 @@ class MachineInstance(SignalEmitter):
     #   \sa getKey
     def setKey(self, key):
         self._key = key
+
+    def _onActiveMachineInstanceChanged(self):
+        for key in self._machine_setting_overrides:
+            self._working_profile.settingValueChanged.emit(key)
 
     def getName(self):
         return self._name
