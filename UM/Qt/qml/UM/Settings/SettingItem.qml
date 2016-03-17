@@ -18,19 +18,25 @@ Item {
     property int valid;
     property string type;
     property int depth;
+    property int visible_depth;
 
     property variant options;
     property int index;
     property variant key;
 
     property bool overridden;
+    property bool has_inherit_function;
+    property bool has_profile_value;
     property bool indent: true;
+    property variant default_value;
 
     signal contextMenuRequested();
     signal itemValueChanged(variant value);
     signal showTooltip(variant position);
     signal hideTooltip();
+    signal showInheritanceTooltip(variant position);
     signal resetRequested();
+    signal resetToDefaultRequested();
 
     property bool hovered: false;
 
@@ -71,7 +77,7 @@ Item {
     property variant style: SettingItemStyle { }
 
     Rectangle{
-        visible: base.depth > 1 ? true : false
+        visible: base.visible_depth > 1 ? true : false
         id: separationLine
         width: UM.Theme.getSize("default_lining").width
         height: label.height
@@ -85,7 +91,7 @@ Item {
     Label
     {
         id: label;
-        property int depth: base.depth - 1
+        property int depth: base.visible_depth - 1;
 
         anchors.left: parent.left;
         anchors.leftMargin: base.indent ? (UM.Theme.getSize("section_icon_column").width + 5) + (label.depth * UM.Theme.getSize("setting_control_depth_margin").width) : 0
@@ -108,10 +114,11 @@ Item {
         id: revertButton;
 
         anchors {
-            right: controlContainer.left
+            right: inheritButton.visible ? inheritButton.left : controlContainer.left
             rightMargin: UM.Theme.getSize("default_margin").width / 2;
             verticalCenter: parent.verticalCenter;
         }
+
         visible: base.overridden
 
         height: parent.height / 2;
@@ -128,15 +135,62 @@ Item {
         }
     }
 
+    UM.SimpleButton
+    {
+        // This button shows when the setting has an inherited function, but is overriden by profile.
+        id: inheritButton;
+
+        anchors {
+            right: controlContainer.left
+            rightMargin: UM.Theme.getSize("default_margin").width / 2;
+            verticalCenter: parent.verticalCenter;
+        }
+
+        visible: has_profile_value && base.has_inherit_function;
+        height: parent.height / 2;
+        width: height;
+
+        onClicked: {
+            base.resetToDefaultRequested();
+            controlContainer.notifyReset();
+        }
+        backgroundColor: hovered ? base.style.controlHighlightColor : base.style.controlColor;
+        color: hovered ? UM.Theme.getColor("setting_control_button_hover") : UM.Theme.getColor("setting_control_button")
+        iconSource: UM.Theme.getIcon("notice");
+        MouseArea
+        {
+            id: inheritanceButtonMouseArea;
+
+            anchors.fill: parent;
+
+            acceptedButtons: Qt.NoButton;
+            hoverEnabled: true;
+
+            onEntered: {
+                base.showInheritanceTooltip({ x: mouse.mouseX, y: mouse.mouseY })
+            }
+
+            onExited: {
+                if(controlContainer.item && controlContainer.item.hovered) {
+                    return;
+                }
+
+                base.hovered = false;
+                base.hideTooltip();
+            }
+        }
+
+    }
+
     Loader {
         id: controlContainer;
 
         anchors.right: parent.right;
-        anchors.verticalCenter: parent.verticalCenter
+        anchors.verticalCenter: parent.verticalCenter;
         width: base.style.controlWidth;
         height: base.style.fixedHeight > 0 ? base.style.fixedHeight : parent.height;
         property variant itemStyle: base.style
-        visible: status == Loader.Ready
+        visible: status == Loader.Ready;
 
         function notifyReset()
         {

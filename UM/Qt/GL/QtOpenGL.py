@@ -38,7 +38,10 @@ class QtOpenGL(OpenGL):
         self._gl.initializeOpenGLFunctions()
 
         self._gpu_vendor = OpenGL.Vendor.Other
-        vendor_string = self._gl.glGetString(self._gl.GL_VENDOR).lower()
+        vendor_string = self._gl.glGetString(self._gl.GL_VENDOR)
+        if vendor_string is None:
+            vendor_string = "Unknown"
+        vendor_string = vendor_string.lower()
         if "nvidia" in vendor_string:
             self._gpu_vendor = OpenGL.Vendor.NVidia
         elif "amd" in vendor_string or "ati" in vendor_string:

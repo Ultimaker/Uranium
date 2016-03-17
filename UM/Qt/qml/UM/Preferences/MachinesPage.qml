@@ -10,18 +10,18 @@ ManagementPage {
     id: base;
 
     title: catalog.i18nc("@title:tab", "Printers");
-
+    property int numInstances: model.rowCount();
     model: UM.MachineInstancesModel
     {
-        onRowsInserted: removeEnabled = model.rowCount() > 1
-        onRowsRemoved: removeEnabled = model.rowCount() > 1
+        onDataChanged: numInstances = model.rowCount()
     }
 
     onAddObject: model.requestAddMachine();
     onRemoveObject: confirmDialog.open();
     onRenameObject: renameDialog.open();
 
-    removeEnabled: model.rowCount() > 1
+    removeEnabled: numInstances > 1
+    renameEnabled: numInstances > 0
 
     Flow {
         anchors.fill: parent;

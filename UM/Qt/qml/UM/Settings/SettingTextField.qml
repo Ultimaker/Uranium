@@ -18,6 +18,9 @@ Rectangle
     border.color: !enabled ? itemStyle.controlDisabledBorderColor : hovered ? itemStyle.controlBorderHighlightColor : itemStyle.controlBorderColor
 
     property variant parentValue: value //From parent loader
+    function notifyReset() {
+        input.text = parentValue
+    }
 
     color: {
         if (!enabled)
@@ -83,8 +86,8 @@ Rectangle
             verticalCenter: parent.verticalCenter
         }
 
-        Keys.onReleased: if(text != base.parentValue) base.valueChanged(text);
-        onEditingFinished: if(text != base.parentValue) base.valueChanged(text);
+        Keys.onReleased: if(parseFloat(text) != base.parentValue) base.valueChanged(parseFloat(text));
+        onEditingFinished: if(parseFloat(text) != base.parentValue) base.valueChanged(parseFloat(text));
 
         color: !enabled ? itemStyle.controlDisabledTextColor : itemStyle.controlTextColor;
         font: itemStyle.controlFont;
@@ -98,7 +101,7 @@ Rectangle
             target: input
             property: "text"
             value: parseFloat(base.parentValue) ? roundFloat(parseFloat(base.parentValue), 4) : base.parentValue //If it's a float, round to four decimals.
-            when: !activeFocus
+            when: !input.activeFocus
         }
     }
 

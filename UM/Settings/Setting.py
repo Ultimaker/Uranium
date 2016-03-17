@@ -63,6 +63,10 @@ class Setting(SignalEmitter):
         # Keys of the settings that require this setting to set certain vailes (As defined by inherit & enabled function)
         self._required_by_setting_keys = set()
 
+    # Should this setting inherit from its parent or by it's inherit function
+    def hasInheritFunction(self):
+        return self._inherit and self._inherit_function != None
+
     def addRequiredBySettingKey(self, key):
         self._required_by_setting_keys.add(key)
 
@@ -82,6 +86,15 @@ class Setting(SignalEmitter):
     ##  Get the depth of this setting (how many steps is it 'away' from its category)
     def getDepth(self):
         return self._parent.getDepth() + 1
+
+    ##  Get the visible depth of this setting (how many steps of visible settings is it 'away' from its category)
+    def getVisibleDepth(self):
+        try:
+            # Add 1 or 0 to the depth of the parent, based on it's visibility
+            return self._parent.getVisibleDepth() + int(self._parent.isVisible())
+        except AttributeError:
+            # Parent has no get visible depth (and is most likely a settingsCategory). We simply add one to that depth.
+            return self._parent.getDepth() + 1
 
     ##  Set values of the setting by providing it with a dict object (as decoded by JSON parser)
     #   \param data Decoded JSON dict
@@ -340,6 +353,11 @@ class Setting(SignalEmitter):
             return self._global_only()
         return self._global_only
 
+    ##  Check whether this setting is prohibited.
+    #   This value is true if in all cases of the enabled function the result is false.
+    def isProhibited(self):
+        return self._prohibited
+
     ##  Get the identifier of the setting
     def getKey(self):
         return self._key
@@ -363,7 +381,7 @@ class Setting(SignalEmitter):
     #   Enabled settings can be displayed and used. Disabled settings should be ignored.
     def isEnabled(self):
         if self._enabled_function:
-            return self._enabled_function() == True #Force check. 
+            return bool(self._enabled_function()) == True #Force check.
 
         return True
 

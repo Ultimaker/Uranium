@@ -216,11 +216,19 @@ class MachineManager(SignalEmitter):
         if not machine or machine == self._active_machine:
             return
 
+        # Force save the current visibility (just to be on the safe side)
+        self.saveVisibility()
+
         update_profile = False
         if not self._active_machine or self._active_machine.getMachineDefinition() != machine.getMachineDefinition():
             update_profile = True
 
         self._active_machine = machine
+
+        # Keep existing visibility
+        self.loadVisibility()
+
+        # Check if any setting visibility needs to be added (due to defaults)
         setting_visibility = []
         if self._active_machine:
             setting_visibility = self._active_machine.getMachineDefinition().getAllSettings(visible_only = True)
@@ -558,6 +566,14 @@ class MachineManager(SignalEmitter):
 
                     if os.path.isdir(path):
                         continue
+
+                    # Bit of a hack, but we should only use cfg or curaprofile files in the profile folder.
+                    try:
+                        extension = path.split(".")[-1]
+                        if  extension != "cfg" and extension != "curaprofile":
+                            continue
+                    except:
+                        continue # profile has no extension
 
                     profile = Profile(self, read_only)
                     try:

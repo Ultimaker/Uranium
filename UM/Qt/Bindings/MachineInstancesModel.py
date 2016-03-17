@@ -77,8 +77,8 @@ class MachineInstancesModel(ListModel):
 
     def _onActiveMachineChanged(self):
         active_machine = self._manager.getActiveMachineInstance()
-        for index in range(len(self.items)):
-            self.setProperty(index, "active", id(active_machine) == self.items[index]["id"])
+        for index in range(len(self._items)):
+            self.setProperty(index, "active", id(active_machine) == self._items[index]["id"])
 
     def _onInstanceNameChanged(self, machine):
         index = self.find("id", id(machine))

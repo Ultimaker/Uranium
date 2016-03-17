@@ -34,6 +34,9 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
     GlobalOnlyRole = Qt.UserRole + 16
     ProhibitedRole = Qt.UserRole + 17 # This setting can never be enabled
     ValueUnusedRole = Qt.UserRole + 18 # The value of this setting is not used because all settings basing values on this setting have been overridden
+    HasInheritFunctionRole = Qt.UserRole + 19 # Can this setting have a inherited value?
+    HasProfileValueRole = Qt.UserRole + 20 # Does this setting have a profile value, regardless of state of profile
+    VisibleDepth = Qt.UserRole + 21
 
     def __init__(self, category, parent = None, machine_manager = None):
         super().__init__(parent)
@@ -69,8 +72,45 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
         self.addRoleName(self.GlobalOnlyRole, "global_only")
         self.addRoleName(self.ProhibitedRole, "prohibited")
         self.addRoleName(self.ValueUnusedRole, "value_unused")
+        self.addRoleName(self.HasInheritFunctionRole, "has_inherit_function")
+        self.addRoleName(self.HasProfileValueRole, "has_profile_value")
+        self.addRoleName(self.VisibleDepth, "visible_depth")
 
     settingChanged = Signal()
+
+    @pyqtSlot(str, result = str)
+    ##  Get all settings required by setting indentified by key as a string list
+    #   Used to show extra information in the tooltips
+    def getRequiredBySettingString(self, key):
+        index = self.find("key", key)
+        if index == -1:
+            return
+        setting = self._category.getSetting(key)
+        result = ""
+        if setting:
+            machine_definition = self._machine_manager.getActiveMachineInstance().getMachineDefinition()
+            for temp_key in setting.getRequiredBySettingKeys():
+                temp_setting = machine_definition.getSetting(temp_key)
+                result += "- " + temp_setting.getLabel() + "<br/>"
+            result = result[:-5] # Remove last endline.
+        return result
+
+    @pyqtSlot(str, result = str)
+    ##  Get all settings required setting indentified by key as a string list.
+    #   Used to show extra information in the tooltips
+    def getRequiredSettingString(self, key):
+        index = self.find("key", key)
+        if index == -1:
+            return
+        setting = self._category.getSetting(key)
+        result = ""
+        if setting:
+            machine_definition = self._machine_manager.getActiveMachineInstance().getMachineDefinition()
+            for temp_key in setting.getRequiredSettingKeys():
+                temp_setting = machine_definition.getSetting(temp_key)
+                result += "- " + temp_setting.getLabel() + "<br/>"
+            result = result[:-5] # Remove last endline.
+        return result
 
     @pyqtSlot(str, "QVariant")
     ##  Notification that setting has changed.
@@ -83,6 +123,7 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
             self._profile.setSettingValue(key, value)
             self.setProperty(index, "value", str(value))
             self.setProperty(index, "valid", setting.validate(setting.parseValue(value)))
+            self.setProperty(index, "has_profile_value", self._profile.hasSettingValue(setting.getKey()))
 
     @pyqtSlot(str, bool)
     def setSettingVisible(self, key, visible):
@@ -91,11 +132,20 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
             setting.setVisible(visible);
 
     @pyqtSlot(str)
+    def forceSettingValueToDefault(self, key):
+        setting = self._category.getSetting(key)
+        if setting:
+            self._profile.forceSettingValueToDefault(key)
+        self.setProperty(self.find("key", key), "has_profile_value", False)
+        self.setProperty(self.find("key", key), "overridden", (not self._profile.isReadOnly()) and self._profile.hasSettingValue(setting.getKey(), filter_defaults = True))
+
+    @pyqtSlot(str)
     def resetSettingValue(self, key):
         setting = self._category.getSetting(key)
         if setting:
             self._profile.resetSettingValue(key)
         self.setProperty(self.find("key", key), "overridden", False)
+        self.setProperty(self.find("key", key), "has_profile_value", self._profile.hasSettingValue(setting.getKey()))
 
     ##  Create model for combo box (used by enum type setting)
     #   \param options List of strings
@@ -153,10 +203,14 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
                 "global_only": setting.getGlobalOnly(),
                 "prohibited": setting.isProhibited(),
                 "value_unused": self._profile.checkValueUnused(setting),
+                "has_inherit_function": setting.hasInheritFunction(),
+                "has_profile_value": self._profile.hasSettingValue(setting.getKey()),
+                "visible_depth": setting.getVisibleDepth()
             })
             setting.visibleChanged.connect(self._onSettingVisibleChanged)
             setting.enabledChanged.connect(self._onSettingEnabledChanged)
             setting.globalOnlyChanged.connect(self._onSettingGlobalOnlyChanged)
+            setting.defaultValueChanged.connect(self._onSettingDefaultValueChanged)
 
         self.endResetModel()
 
@@ -165,6 +219,17 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
             index = self.find("key", setting.getKey())
             if index != -1:
                 self.setProperty(index, "visible", setting.isVisible())
+                self.setProperty(index, "visible_depth", setting.getVisibleDepth())
+                for child in setting.getAllChildren():
+                    child_index = self.find("key", child.getKey())
+                    if child_index != -1:
+                        self.setProperty(child_index, "visible_depth", child.getVisibleDepth())
+
+    def _onSettingDefaultValueChanged(self, setting):
+        if setting:
+            index = self.find("key", setting.getKey())
+            if index != -1:
+                self.setProperty(index, "has_profile_value", self._profile.hasSettingValue(setting.getKey()))
 
     def _onSettingEnabledChanged(self, setting):
         if setting:

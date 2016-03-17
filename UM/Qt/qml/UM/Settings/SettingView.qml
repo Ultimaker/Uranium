@@ -71,6 +71,7 @@ ScrollView
                     }
 
                     onConfigureSettingVisibility: if(base.configureSettings) base.configureSettings.trigger(categoryHeader);
+                    onShowAllHidenInheritedSettings: categoriesModel.showAllHidenInheritedSettings(key)
                 }
 
                 Column
@@ -132,7 +133,7 @@ ScrollView
                                 item.depth = model.depth;
                                 item.type = model.type;
                                 item.key = model.key;
-
+                                item.visible_depth = model.visible_depth
                                 item.style = UM.Theme.styles.setting_item;
 
                                 if(model.type == "enum")
@@ -153,6 +154,14 @@ ScrollView
                             Binding
                             {
                                 when: loadComplete
+                                target: item;
+                                property: "visible_depth"
+                                value: model.visible_depth
+                            }
+
+                            Binding
+                            {
+                                when: loadComplete
                                 target: item
                                 property: "value"
                                 value: model.value
@@ -165,19 +174,62 @@ ScrollView
                                 property: "overridden"
                                 value: model.overridden
                             }
+                            Binding
+                            {
+                                when: loadComplete
+                                target: item
+                                property: "has_inherit_function"
+                                value: model.has_inherit_function
+                            }
+
+                            Binding
+                            {
+                                when: loadComplete
+                                target: item
+                                property: "has_profile_value"
+                                value: model.has_profile_value
+                            }
 
                             Connections
                             {
                                 target: item;
                                 onItemValueChanged: delegateItem.settingsModel.setSettingValue(model.key, value);
-                                onContextMenuRequested: { contextMenu.key = delegateItem.categoryId; contextMenu.popup(); }
+                                onContextMenuRequested: {
+                                    contextMenu.key = model.key;
+                                    contextMenu.settingsModel = delegateItem.settingsModel;
+                                    contextMenu.popup();
+
+                                }
                                 onResetRequested: delegateItem.settingsModel.resetSettingValue(model.key);
-                                onShowTooltip: base.showTooltip(settingLoader, Qt.point(0, settingLoader.height / 2), "<b>" + model.name + "</b><br/>" + model.description)
+                                onResetToDefaultRequested: delegateItem.settingsModel.forceSettingValueToDefault(model.key);
+                                onShowTooltip:
+                                {
+                                    var content = "<b>" + model.name + "</b><br/>" + model.description
+
+                                    var required_by_content = delegateItem.settingsModel.getRequiredBySettingString(model.key);
+                                    if(required_by_content.length > 0)
+                                    {
+                                        content += catalog.i18nc("@label", "<i><br/>Affects:<br/></i>") + required_by_content
+                                    }
+                                    var required_content = delegateItem.settingsModel.getRequiredSettingString(model.key);
+                                    if (required_content.length > 0)
+                                    {
+                                        content += catalog.i18nc("@label", "<i><br/>Is affected by:<br/></i>") + required_content
+                                    }
+
+                                    base.showTooltip(settingLoader, Qt.point(0, settingLoader.height / 2), content);
+                                }
                                 onHideTooltip: base.hideTooltip();
+                                onShowInheritanceTooltip: base.showTooltip(settingLoader, Qt.point(0, settingLoader.height / 2),  catalog.i18nc("@label","This setting is normally calculated, but it currently has an absolute value set.\n\nClick to restore the calculated value."))
                             }
                         }
                     }
-
+                    Connections
+                    {
+                        target: categoryHeader
+                        onHideTooltip: base.hideTooltip();
+                        onShowTooltip: base.showTooltip(categoryHeader, Qt.point(0, categoryHeader.height / 2),  catalog.i18nc("@label","Some hidden settings use values different from their normal calculated value.\n\nClick to make these settings visible."))
+                    }
                     states: State
                     {
                         name: "collapsed";
@@ -218,12 +270,13 @@ ScrollView
             id: contextMenu;
 
             property string key;
+            property variant settingsModel;
 
             MenuItem
             {
                 //: Settings context menu action
                 text: catalog.i18nc("@action:menu", "Hide this setting");
-                onTriggered: delegateItem.settingsModel.hideSetting(key);
+                onTriggered: contextMenu.settingsModel.hideSetting(contextMenu.key);
             }
             MenuItem
             {
