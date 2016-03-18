@@ -2,6 +2,7 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 import traceback
+import inspect
 
 from UM.PluginObject import PluginObject
 
