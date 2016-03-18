@@ -30,7 +30,12 @@ class Logger:
     @classmethod
     def log(cls, log_type, message, *args):
         function = inspect.currentframe().f_back.f_code
-        address = "%s (%s [%s]): " %(function.co_filename, function.co_name, function.co_firstlineno)
+        filename = function.co_filename
+        for path in sys.path:
+            if filename.startswith(path):
+                filename = filename.replace(path, "<PATH>")
+                continue
+        address = "%s (%s [%s]): " %(filename, function.co_name, function.co_firstlineno)
         for logger in cls.__loggers:
             filled_message = address + message % args # Replace all the %s with the variables. Python formating is magic.
             logger.log(log_type, filled_message)
