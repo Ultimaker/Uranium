@@ -29,8 +29,8 @@ class Logger:
     #   \param *args \type{list} List of variables to be added to the message.
     @classmethod
     def log(cls, log_type, message, *args):
-        func = inspect.currentframe().f_back.f_code
-        address = "%s (%s [%s]): " %(func.co_filename, func.co_name, func.co_firstlineno)
+        function = inspect.currentframe().f_back.f_code
+        address = "%s (%s [%s]): " %(function.co_filename, function.co_name, function.co_firstlineno)
         for logger in cls.__loggers:
             filled_message = address + message % args # Replace all the %s with the variables. Python formating is magic.
             logger.log(log_type, filled_message)
