@@ -271,6 +271,7 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
             self.setProperty(index, "overridden", self._profile.hasSettingValue(key, filter_defaults = True))
             self.setProperty(index, "valid", setting.validate(value))
 
+            # Traverse up the setting tree to check if the parent values are used or overridden
             parent_setting = setting.getParent()
             while parent_setting and type(parent_setting) == type(setting):
                 parent_index = self.find("key", parent_setting.getKey())
