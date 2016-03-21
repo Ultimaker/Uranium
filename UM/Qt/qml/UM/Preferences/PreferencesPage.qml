@@ -54,6 +54,7 @@ Item {
             right: parent.right;
             bottom: parent.bottom;
             margins: 5;
+            bottomMargin: 0;
         }
 
         clip: true;

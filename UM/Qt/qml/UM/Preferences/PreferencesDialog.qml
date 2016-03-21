@@ -59,6 +59,7 @@ Dialog
             id: stackView
             anchors {
                 left: pagesList.right;
+                leftMargin: UM.Theme.getSize("default_margin").width / 2;
                 top: parent.top;
                 bottom: parent.bottom;
                 right: parent.right;
