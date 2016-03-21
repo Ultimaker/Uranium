@@ -40,6 +40,39 @@ MACRO(SUBDIRLIST result curdir)
   SET(${result} ${dirlist})
 ENDMACRO()
 
+MACRO(TARGETS_FOR_PO_FILES language)
+    if(DEFINED GETTEXT_MSGINIT_EXECUTABLE)
+        message(STATUS "Creating target i18n-create-po-${language}")
+        add_custom_target(i18n-create-po-${language})
+        add_dependencies(i18n-create-po i18n-create-po-${language})
+    endif()
+    message(STATUS "Creating target i18n-update-po-${language}")
+    add_custom_target(i18n-update-po-${language})
+    add_dependencies(i18n-update-po i18n-update-po-${language})
+    foreach(pot_file ${pot_files})
+        string(REGEX REPLACE ".*/(.*).pot" "${CMAKE_BINARY_DIR}/resources/i18n/${language}/\\1.po" po_file ${pot_file})
+        if(DEFINED GETTEXT_MSGINIT_EXECUTABLE)
+            add_custom_command(TARGET i18n-create-po-${language} POST_BUILD
+                               COMMAND ${GETTEXT_MSGINIT_EXECUTABLE} ARGS --no-translator -l ${language} -i ${pot_file} -o ${po_file})
+        endif()
+        add_custom_command(TARGET i18n-update-po-${language} POST_BUILD
+                           COMMAND ${GETTEXT_MSGMERGE_EXECUTABLE} ARGS -o ${po_file} ${po_file} ${po_file})
+    endforeach()
+ENDMACRO()
+
+MACRO(TARGETS_FOR_MO_FILES language)
+    message(STATUS "Creating target i18n-create-mo-${language}")
+    add_custom_target(i18n-create-mo-${language})
+    add_dependencies(i18n-create-mo i18n-create-mo-${language})
+    file(GLOB po_files ${CMAKE_SOURCE_DIR}/resources/i18n/${language}/*.po)
+    foreach(po_file ${po_files})
+        string(REGEX REPLACE ".*/(.*).po" "${CMAKE_BINARY_DIR}/resources/i18n/${language}/LC_MESSAGES/\\1.mo" mo_file ${po_file})
+        add_custom_command(TARGET i18n-create-mo-${language} POST_BUILD
+                           COMMAND mkdir ARGS -p ${CMAKE_BINARY_DIR}/resources/i18n/${language}/LC_MESSAGES/
+                           COMMAND ${GETTEXT_MSGFMT_EXECUTABLE} ARGS ${po_file} -o ${mo_file} -f)
+    endforeach()
+ENDMACRO()
+
 find_package(Doxygen)
 if(${DOXYGEN_FOUND})
     add_custom_target(doc ${DOXYGEN_EXECUTABLE} ${CMAKE_SOURCE_DIR}/Doxyfile WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
@@ -55,42 +88,22 @@ if(GETTEXT_FOUND)
     # translations target will convert .po files into .mo and .qm as needed.
     # The files are checked for a _qt suffix and if it is found, converted to
     # qm, otherwise they are converted to .po.
-    add_custom_target(i18n-create-po)
+    if(DEFINED GETTEXT_MSGINIT_EXECUTABLE)
+        message(STATUS "Creating target i18n-create-po")
+        add_custom_target(i18n-create-po)
+    else()
+        message(WARNING "GETTEXT_MSGINIT_EXECUTABLE is undefined!\nSkipping to create i18n-create-po* targets...")
+    endif()
+    message(STATUS "Creating target i18n-update-po")
     add_custom_target(i18n-update-po)
+    message(STATUS "Creating target i18n-update-mo")
     add_custom_target(i18n-create-mo ALL)
 
     SUBDIRLIST(languages ${CMAKE_SOURCE_DIR}/resources/i18n/)
     file(GLOB pot_files ${CMAKE_SOURCE_DIR}/resources/i18n/*.pot)
     foreach(language ${languages})
-        # *.po files
-        add_custom_target(i18n-create-po-${language})
-        add_dependencies(i18n-create-po i18n-create-po-${language})
-        add_custom_target(i18n-update-po-${language})
-        add_dependencies(i18n-update-po i18n-update-po-${language})
-
-        foreach(pot_file ${pot_files})
-            string(REGEX REPLACE ".*/(.*).pot" "${CMAKE_BINARY_DIR}/resources/i18n/${language}/\\1.po" po_file ${pot_file})
-            if(DEFINED GETTEXT_MSGINIT_EXECUTABLE)
-                add_custom_command(TARGET i18n-create-po-${language} POST_BUILD
-                                   COMMAND ${GETTEXT_MSGINIT_EXECUTABLE} ARGS --no-translator -l ${language} -i ${pot_file} -o ${po_file})
-            else()
-                message("GETTEXT_MSGINIT_EXECUTABLE not found!")
-            endif()
-            add_custom_command(TARGET i18n-update-po-${language} POST_BUILD
-                               COMMAND ${GETTEXT_MSGMERGE_EXECUTABLE} ARGS -o ${po_file} ${po_file} ${po_file})
-        endforeach()
-
-        # *.mo files
-        add_custom_target(i18n-create-mo-${language})
-        add_dependencies(i18n-create-mo i18n-create-mo-${language})
-
-        file(GLOB po_files ${CMAKE_SOURCE_DIR}/resources/i18n/${language}/*.po)
-        foreach(po_file ${po_files})
-            string(REGEX REPLACE ".*/(.*).po" "${CMAKE_BINARY_DIR}/resources/i18n/${language}/LC_MESSAGES/\\1.mo" mo_file ${po_file})
-            add_custom_command(TARGET i18n-create-mo-${language} POST_BUILD
-                               COMMAND mkdir ARGS -p ${CMAKE_BINARY_DIR}/resources/i18n/${language}/LC_MESSAGES/
-                               COMMAND ${GETTEXT_MSGFMT_EXECUTABLE} ARGS ${po_file} -o ${mo_file} -f)
-        endforeach()
+        TARGETS_FOR_PO_FILES(${language})
+        TARGETS_FOR_MO_FILES(${language})
     endforeach()
     install(DIRECTORY ${CMAKE_BINARY_DIR}/resources DESTINATION ${CMAKE_INSTALL_DATADIR}/uranium/)
 endif()
