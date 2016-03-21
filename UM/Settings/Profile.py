@@ -326,10 +326,10 @@ class Profile(SignalEmitter):
         if not setting:
             return True
 
-        dependant_settings = setting.getRequiredBySettingKeys()
-        if len(dependant_settings) < 1:
+        dependent_settings = setting.getRequiredBySettingKeys()
+        if len(dependent_settings) < 1:
             return False
-        for key in dependant_settings:
+        for key in dependent_settings:
             if not self.hasSettingValue(key) and not self.checkValueUnused(self._active_instance.getMachineDefinition().getSetting(key)):
                 return False
         return True
