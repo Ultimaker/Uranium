@@ -246,6 +246,11 @@ class Controller(SignalEmitter):
     def setCameraTool(self, tool):
         self._camera_tool = self.getTool(tool)
 
+    ##  Get the camera tool (if any)
+    #   \returns camera tool (or none)
+    def getCameraTool(self):
+        return self._camera_tool
+
     ##  Set the tool used for performing selections.
     #   Selection tool recieves its events after camera tool and active tool.
     #   \param tool \type{Tool}
