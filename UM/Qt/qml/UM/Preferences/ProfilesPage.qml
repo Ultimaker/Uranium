@@ -47,10 +47,16 @@ ManagementPage
                 columns: 2
                 spacing: UM.Theme.getSize("default_margin").width
 
-                Label { text: base.currentItem.id == -1 ? catalog.i18nc("@label", "Based on") : catalog.i18nc("@label", "Profile type"); width: 155}
-                Label { text: base.currentItem == null ? "" :
-                              base.currentItem.id == -1 ? UM.MachineManager.activeProfile :
-                              base.currentItem.readOnly ? catalog.i18nc("@label", "Protected profile") : catalog.i18nc("@label", "Custom profile"); }
+                Label {
+                    text: base.currentItem == null ? "" :
+                        base.currentItem.id == -1 ? catalog.i18nc("@label", "Based on") : catalog.i18nc("@label", "Profile type")
+                    width: 155
+                }
+                Label {
+                    text: base.currentItem == null ? "" :
+                        base.currentItem.id == -1 ? UM.MachineManager.activeProfile :
+                        base.currentItem.readOnly ? catalog.i18nc("@label", "Protected profile") : catalog.i18nc("@label", "Custom profile")
+                }
 
                 Column {
                     Repeater {
