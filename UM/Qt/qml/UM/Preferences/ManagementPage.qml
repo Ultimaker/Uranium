@@ -113,17 +113,35 @@ PreferencesPage
             {
                 id: objectList;
 
+                section.property: "group"
+                section.criteria: ViewSection.FullString
+                section.delegate: Rectangle
+                {
+                    width: objectListContainer.viewport.width;
+                    height: childrenRect.height;
+                    color: palette.light
+
+                    Label
+                    {
+                        anchors.left: parent.left;
+                        anchors.leftMargin: UM.Theme.getSize("default_lining").width;
+                        text: section
+                        font.bold: true
+                        color: palette.text;
+                    }
+                }
+
                 delegate: Rectangle
                 {
                     width: objectListContainer.viewport.width;
                     height: childrenRect.height;
-                    color: model.separator ? palette.light : ListView.isCurrentItem ? palette.highlight : index % 2 ? palette.light : palette.midlight
+                    color: ListView.isCurrentItem ? palette.highlight : index % 2 ? palette.light : palette.midlight
 
                     Label
                     {
                         anchors.left: parent.left;
                         anchors.leftMargin: UM.Theme.getSize("default_margin").width;
-                        text: model.separator ? "" : model.name
+                        text: model.name
                         font.italic: model.active
                         color: parent.ListView.isCurrentItem ? palette.highlightedText : palette.text;
                     }
@@ -131,7 +149,6 @@ PreferencesPage
                     MouseArea
                     {
                         anchors.fill: parent;
-                        enabled: !model.separator
                         onClicked:
                         {
                             if(!parent.ListView.isCurrentItem)

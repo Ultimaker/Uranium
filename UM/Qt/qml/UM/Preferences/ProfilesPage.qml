@@ -13,7 +13,7 @@ ManagementPage
 
     title: catalog.i18nc("@title:tab", "Profiles");
 
-    model: UM.ProfilesModel { addWorkingProfile: true; addSeparators: true }
+    model: UM.ProfilesModel { addWorkingProfile: true; }
 
     onAddObject: { var selectedProfile = UM.MachineManager.createProfile(); base.selectProfile(selectedProfile); }
     onRemoveObject: confirmDialog.open();
