@@ -8,6 +8,7 @@ Wizard 1.0 Wizard.qml
 
 PreferencesDialog 1.0 Preferences/PreferencesDialog.qml
 PreferencesPage 1.0 Preferences/PreferencesPage.qml
+ManagementPage 1.0 Preferences/ManagementPage.qml
 
 SettingItem 1.0 Settings/SettingItem.qml
 SettingItemStyle 1.0 Settings/SettingItemStyle.qml
