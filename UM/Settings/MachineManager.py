@@ -459,8 +459,11 @@ class MachineManager(SignalEmitter):
     def getActiveProfile(self):
         return self._active_profile
 
-    def setActiveProfile(self, profile):
-        if profile not in self._profiles or self._active_profile == profile:
+    ##  Load a profile into the working profile
+    #   \param profile \type{Profile}
+    #   \param force \type{bool} If set to true, load the profile even if it is already the active profile
+    def setActiveProfile(self, profile, force = False):
+        if profile not in self._profiles or (self._active_profile == profile and not force):
             return
 
         if not self._protect_working_profile:
@@ -813,14 +816,14 @@ class MachineManager(SignalEmitter):
         message_box.setText(catalog.i18nc("@label", "Selecting \"{0}\" replaces your current settings.").format(selection_name))
 
         update_button = None
-        create_button = message_box.addButton(catalog.i18nc("@label", "Create profile"), QMessageBox.YesRole)
-        discard_button = message_box.addButton(catalog.i18nc("@label", "Discard changes"), QMessageBox.NoRole)
+        create_button = message_box.addButton(catalog.i18nc("@action", "Create profile"), QMessageBox.YesRole)
+        discard_button = message_box.addButton(catalog.i18nc("@action:button", "Discard changes"), QMessageBox.NoRole)
         cancel_button = message_box.addButton(QMessageBox.Cancel)
         if self._active_profile.isReadOnly():
             message_box.setInformativeText(catalog.i18nc("@label", "Do you want to save your settings in a custom profile?"))
         else:
             message_box.setInformativeText(catalog.i18nc("@label", "Do you want to update profile \"{0}\" or save your settings in a new custom profile?".format(self._active_profile.getName())))
-            update_button = message_box.addButton(catalog.i18nc("@label", "Update \"{0}\"".format(self._active_profile.getName())), QMessageBox.YesRole)
+            update_button = message_box.addButton(catalog.i18nc("@action:button", "Update \"{0}\"".format(self._active_profile.getName())), QMessageBox.YesRole)
         message_box.exec_()
         result = message_box.clickedButton()
 

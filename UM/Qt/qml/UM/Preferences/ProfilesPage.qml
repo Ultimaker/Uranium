@@ -4,6 +4,7 @@
 import QtQuick 2.1
 import QtQuick.Controls 1.1
 import QtQuick.Dialogs 1.2
+import QtQuick.Layouts 1.2
 
 import UM 1.1 as UM
 
@@ -42,15 +43,15 @@ ManagementPage
             anchors.right: parent.right
             anchors.bottom: parent.bottom
 
-            Grid {
+            GridLayout {
                 id: containerGrid
                 columns: 2
-                spacing: UM.Theme.getSize("default_margin").width
+                rowSpacing: UM.Theme.getSize("default_margin").width
+                columnSpacing: UM.Theme.getSize("default_margin").width
 
                 Label {
                     text: base.currentItem == null ? "" :
                         base.currentItem.id == -1 ? catalog.i18nc("@label", "Based on") : catalog.i18nc("@label", "Profile type")
-                    width: 155
                 }
                 Label {
                     text: base.currentItem == null ? "" :
@@ -58,12 +59,30 @@ ManagementPage
                         base.currentItem.readOnly ? catalog.i18nc("@label", "Protected profile") : catalog.i18nc("@label", "Custom profile")
                 }
 
+                Row
+                {
+                    Layout.columnSpan: 2
+                    visible: base.currentItem.id == -1 || base.currentItem.active
+                    Button
+                    {
+                        text: catalog.i18nc("@action:button", "Update \"%1\"".arg(UM.MachineManager.activeProfile));
+                        enabled: UM.ActiveProfile.hasCustomisedValues && !UM.ActiveProfile.readOnly
+                        onClicked: UM.ActiveProfile.updateProfile()
+                    }
+
+                    Button
+                    {
+                        text: catalog.i18nc("@action:button", "Discard changes");
+                        enabled: UM.ActiveProfile.hasCustomisedValues
+                        onClicked: UM.ActiveProfile.discardChanges()
+                    }
+                }
+
                 Column {
                     Repeater {
                             model: base.currentItem ? base.currentItem.settings : null
                             Label {
                                 text: modelData.name.toString();
-                                width: 155
                                 elide: Text.ElideMiddle;
                             }
                     }

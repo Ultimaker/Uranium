@@ -8,6 +8,8 @@ from UM.PluginRegistry import PluginRegistry
 
 from . import ContainerProxy
 
+import copy
+
 class ActiveProfileProxy(QObject):
     def __init__(self, parent = None):
         super().__init__(parent)
@@ -24,13 +26,18 @@ class ActiveProfileProxy(QObject):
     def valid(self):
         return self._active_profile != None
 
+    ## Check if the currently selected profile (not the working profile) is readonly
+    @pyqtProperty(bool, notify = activeProfileChanged)
+    def readOnly(self):
+        profile = self._manager.getActiveProfile()
+        if profile:
+            return profile.isReadOnly()
+
     settingValuesChanges = pyqtSignal()
 
     @pyqtProperty(bool, notify = settingValuesChanges)
     def hasCustomisedValues(self):
-        profile = self._manager.getWorkingProfile()
-        if profile:
-            return profile.hasChangedSettings() == True
+        return self._active_profile.hasChangedSettings() == True
 
     @pyqtProperty(QObject, notify = settingValuesChanges)
     def settingValues(self):
@@ -48,6 +55,20 @@ class ActiveProfileProxy(QObject):
             if not setting.isVisible() and self._active_profile.hasSettingValue(setting.getKey(), filter_defaults = False):
                 setting.setVisible(True)
         category.visibleChanged.emit(category)
+
+    ## Reload a clean copy of the currently selected profile.
+    @pyqtSlot()
+    def discardChanges(self):
+        self._active_profile.setChangedSettings({})
+        self._manager.setActiveProfile(self._manager.getActiveProfile(), force = True)
+
+    ## Update the currently selected profile with the settings from the working profile and reselect it.
+    @pyqtSlot()
+    def updateProfile(self):
+        changed_settings = copy.deepcopy(self._active_profile.getChangedSettings())
+        self._manager.getActiveProfile().setChangedSettings(changed_settings)
+        self._active_profile.setChangedSettings({})
+        self._manager.setActiveProfile(self._manager.getActiveProfile(), force = True)
 
     def _onActiveProfileChanged(self):
         if self._active_profile:
