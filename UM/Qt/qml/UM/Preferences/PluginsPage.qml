@@ -20,9 +20,10 @@ PreferencesPage
     contents: ScrollView
     {
         anchors.fill:parent
-        ListView 
+        frameVisible: true
+        ListView
         {
-            id:plugin_list
+            id:pluginList
             delegate: pluginDelegate
             model: UM.Models.pluginsModel
             section.delegate: Label { text: section }
@@ -32,25 +33,33 @@ PreferencesPage
     }
     Item
     {
+        SystemPalette { id: palette }
+
         Component
         {
             id: pluginDelegate
-            Row
+            Rectangle
             {
+                width: pluginList.width;
+                height: childrenRect.height;
+                color: index % 2 ? palette.light : palette.midlight
+
                 CheckBox
                 {
                     id: pluginCheckbox
                     checked: model.enabled
-                    onClicked: plugin_list.model.setEnabled(model.name, checked)
+                    onClicked: pluginList.model.setEnabled(model.name, checked)
                     enabled: !model.required
+                    visible: false
                 }
                 Button
                 {
                     id: pluginText //is a button so the user doesn't have te click inconvenientley precise to enable or disable the checkbox
                     text: model.name
-                    onClicked: plugin_list.model.setEnabled(model.name, checked)
+                    onClicked: pluginList.model.setEnabled(model.name, checked)
                     tooltip: model.description
-                    width: preferencesPage.width / 6 * 4 < UM.Theme.getSize("setting_text_maxwidth").width ? preferencesPage.width / 5 * 4 : UM.Theme.getSize("setting_text_maxwidth").width
+                    anchors.left: pluginCheckbox.visible ? pluginCheckbox.right : parent.left
+                    anchors.right: pluginIcon.left
                     style: ButtonStyle
                     {
                         background: Rectangle
@@ -69,7 +78,9 @@ PreferencesPage
                 Button
                 {
                     id: pluginIcon
-                    iconName: "help-about";
+                    text: catalog.i18nc("@label", "Info...")
+                    anchors.right: parent.right
+                    iconName: "help-about"
                     onClicked:
                     {
                         about_window.about_text = model.description
