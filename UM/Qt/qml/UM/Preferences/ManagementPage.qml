@@ -142,7 +142,7 @@ PreferencesPage
                         anchors.left: parent.left;
                         anchors.leftMargin: UM.Theme.getSize("default_margin").width;
                         text: model.name
-                        font.italic: model.active
+                        font.italic: model.active == true
                         color: parent.ListView.isCurrentItem ? palette.highlightedText : palette.text;
                     }
 
