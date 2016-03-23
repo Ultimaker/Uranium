@@ -35,6 +35,7 @@ Item {
     signal showTooltip(variant position);
     signal hideTooltip();
     signal showInheritanceTooltip(variant position);
+    signal showResetTooltip(variant position);
     signal resetRequested();
     signal resetToDefaultRequested();
 
@@ -132,6 +133,28 @@ Item {
         onClicked: {
             base.resetRequested()
             controlContainer.notifyReset();
+        }
+        MouseArea
+        {
+            id: resetButtonMouseArea
+            anchors.fill: parent
+            acceptedButtons: Qt.NoButton
+            hoverEnabled: true
+            onEntered:
+            {
+                base.showResetTooltip({ x: mouse.mouseX, y: mouse.mouseY })
+            }
+
+            onExited:
+            {
+                if(controlContainer.item && controlContainer.item.hovered)
+                {
+                    return;
+                }
+
+                base.hovered = false;
+                base.hideTooltip();
+            }
         }
     }
 

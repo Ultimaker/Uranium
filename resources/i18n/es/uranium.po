@@ -518,7 +518,7 @@ msgstr "Ajustar rotación"
 #: /home/tamara/2.1/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:42
 msgctxt "@action:button"
 msgid "Scale to Max"
-msgstr "Escalar al máx."
+msgstr "Escalar al máx"
 
 #: /home/tamara/2.1/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:67
 msgctxt "@option:check"

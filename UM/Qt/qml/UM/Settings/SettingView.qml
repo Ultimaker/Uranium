@@ -220,7 +220,8 @@ ScrollView
                                     base.showTooltip(settingLoader, Qt.point(0, settingLoader.height / 2), content);
                                 }
                                 onHideTooltip: base.hideTooltip();
-                                onShowInheritanceTooltip: base.showTooltip(settingLoader, Qt.point(0, settingLoader.height / 2),  catalog.i18nc("@label","This setting is normally calculated, but it currently has an absolute value set.\n\nClick to restore the calculated value."))
+                                onShowResetTooltip: base.showTooltip(settingLoader, Qt.point(0, settingLoader.height / 2), catalog.i18nc("@label", "This setting has a value that is different from the profile.\n\nClick to restore the value of the profile."))
+                                onShowInheritanceTooltip: base.showTooltip(settingLoader, Qt.point(0, settingLoader.height / 2), catalog.i18nc("@label", "This setting is normally calculated, but it currently has an absolute value set.\n\nClick to restore the calculated value."))
                             }
                         }
                     }
