@@ -511,7 +511,8 @@ class Setting(SignalEmitter):
         if key in self._required_setting_keys:
             self.enabledChanged.emit(self)
             self.defaultValueChanged.emit(self)
-            self.globalOnlyChanged.emit(self)
+            # Global only never changes in 2.1, so there is no reason to emit this event (it does cause some slowdown)
+            # self.globalOnlyChanged.emit(self)
 
     def _onActiveProfileChanged(self):
         if self._profile:
