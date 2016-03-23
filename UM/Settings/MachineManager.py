@@ -188,7 +188,7 @@ class MachineManager(SignalEmitter):
 
     def makeUniqueMachineInstanceName(self, base_name, machine_type_name, old_name = None):
         base_name = base_name.strip()
-        num_check = re.compile("(.*?)\s*#\d$").match(base_name)
+        num_check = re.compile("(.*?)\s*#\d*$").match(base_name)
         if(num_check):
             base_name = num_check.group(1)
         if base_name == "":
@@ -433,7 +433,7 @@ class MachineManager(SignalEmitter):
 
     def makeUniqueProfileName(self, base_name, old_name = None):
         base_name = base_name.strip()
-        num_check = re.compile("(.*?)\s*#\d$").match(base_name)
+        num_check = re.compile("(.*?)\s*#\d*$").match(base_name)
         if(num_check):
             base_name = num_check.group(1)
         if base_name == "":
