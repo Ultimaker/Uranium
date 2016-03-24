@@ -35,12 +35,11 @@ class MeshBuilder:
     #   \param v1 The other endpoint of the line to add.
     #   \param color (Optional) The colour of the line, if any. If no colour is
     #   provided, the colour is determined by the shader.
-    def addLine(self, v0, v1, **kwargs):
+    def addLine(self, v0, v1, color = None):
         self._mesh_data.addVertex(v0.x, v0.y, v0.z)
         self._mesh_data.addVertex(v1.x, v1.y, v1.z)
 
-        color = kwargs.get("color", None) #Add colours to the vertices, if we have them.
-        if color:
+        if color: #Add colours to the vertices, if we have them.
             self._mesh_data.setVertexColor(self._mesh_data.getVertexCount() - 2, color)
             self._mesh_data.setVertexColor(self._mesh_data.getVertexCount() - 1, color)
 
@@ -53,8 +52,7 @@ class MeshBuilder:
     #   normal vector is provided, it will be calculated automatically.
     #   \param color (Optional) The colour for the triangle. If no colour is
     #   provided, the colour is determined by the shader.
-    def addFace(self, v0, v1, v2, **kwargs):
-        normal = kwargs.get("normal", None)
+    def addFace(self, v0, v1, v2, normal = None, color = None):
         if normal:
             self._mesh_data.addFaceWithNormals(
                                 v0.x, v0.y, v0.z,
@@ -67,8 +65,7 @@ class MeshBuilder:
         else:
             self._mesh_data.addFace(v0.x, v0.y, v0.z, v1.x, v1.y, v1.z, v2.x, v2.y, v2.z) #Computes the normal by itself.
 
-        color = kwargs.get("color", None) #Add colours to the vertices if we have them.
-        if color:
+        if color: #Add colours to the vertices if we have them.
             self._mesh_data.setVertexColor(self._mesh_data.getVertexCount() - 3, color)
             self._mesh_data.setVertexColor(self._mesh_data.getVertexCount() - 2, color)
             self._mesh_data.setVertexColor(self._mesh_data.getVertexCount() - 1, color)
@@ -88,14 +85,14 @@ class MeshBuilder:
     #   automatically.
     #   \param color (Optional) The colour for the quadrilateral. If no colour
     #   is provided, the colour is determined by the shader.
-    def addQuad(self, v0, v1, v2, v3, **kwargs):
+    def addQuad(self, v0, v1, v2, v3, normal = None, color = None):
         self.addFace(v0, v2, v1,
-            color = kwargs.get("color"),
-            normal = kwargs.get("normal")
+            color = color,
+            normal = normal
         )
         self.addFace(v0, v3, v2, #v0 and v2 are shared with the other triangle!
-            color = kwargs.get("color"),
-            normal = kwargs.get("normal")
+            color = color,
+            normal = normal
         )
 
     ##  Add a rectangular cuboid to the mesh of this mesh builder.
@@ -111,13 +108,7 @@ class MeshBuilder:
     #   origin.
     #   \param color (Optional) The colour for the rectangular cuboid. If no
     #   colour is provided, the colour is determined by the shader.
-    def addCube(self, **kwargs):
-        width = kwargs["width"]
-        height = kwargs["height"]
-        depth = kwargs["depth"]
-
-        center = kwargs.get("center", Vector(0, 0, 0))
-
+    def addCube(self, width, height, depth, center = Vector(0, 0, 0), color = None):
         #Compute the actual positions of the planes.
         minW = -width / 2 + center.x
         maxW = width / 2 + center.x
@@ -161,8 +152,7 @@ class MeshBuilder:
         ], dtype=numpy.int32)
         self._mesh_data.addIndices(indices)
 
-        color = kwargs.get("color", None) #If we have a colour, add a colour to all of the vertices.
-        if color:
+        if color: #If we have a colour, add a colour to all of the vertices.
             vertex_count = self._mesh_data.getVertexCount()
             for i in range(1, 9):
                 self._mesh_data.setVertexColor(vertex_count - i, color)
@@ -182,15 +172,7 @@ class MeshBuilder:
     #   approximated by this number of line segments.
     #   \param color (Optional) The colour for the arc. If no colour is
     #   provided, the colour is determined by the shader.
-    def addArc(self, **kwargs):
-        radius = kwargs["radius"]
-        axis = kwargs["axis"]
-
-        max_angle = kwargs.get("angle", math.pi * 2)
-        center = kwargs.get("center", Vector(0, 0, 0))
-        sections = kwargs.get("sections", 32)
-        color = kwargs.get("color", None)
-
+    def addArc(self, radius, axis, angle = math.pi * 2, center = Vector(0, 0, 0), sections = 32, color = None):
         #We'll compute the vertices of the arc by computing an initial point and
         #rotating the initial point with a rotation matrix.
         if axis == Vector.Unit_Y:
@@ -198,15 +180,15 @@ class MeshBuilder:
         else:
             start = axis.cross(Vector.Unit_Y).normalize() * radius
 
-        angle_increment = max_angle / sections
-        angle = 0
+        angle_increment = angle / sections
+        current_angle = 0
 
         point = start + center
         m = Matrix()
-        while angle <= max_angle: #Add each of the vertices.
+        while current_angle <= angle: #Add each of the vertices.
             self._mesh_data.addVertex(point.x, point.y, point.z)
-            angle += angle_increment
-            m.setByRotationAxis(angle, axis)
+            current_angle += angle_increment
+            m.setByRotationAxis(current_angle, axis)
             point = start.multiply(m) + center #Get the next vertex by rotating the start position with a matrix.
             self._mesh_data.addVertex(point.x, point.y, point.z)
 
@@ -238,18 +220,7 @@ class MeshBuilder:
     #   \param axis (Optional) An axis of rotation to rotate the torus around.
     #   If no axis is provided and the angle of rotation is nonzero, the torus
     #   will be rotated around the Y-axis.
-    def addDonut(self, **kwargs):
-        inner_radius = kwargs["inner_radius"]
-        outer_radius = kwargs["outer_radius"]
-        width = kwargs["width"]
-
-        center = kwargs.get("center", Vector(0, 0, 0))
-        sections = kwargs.get("sections", 32)
-        color = kwargs.get("color", None)
-
-        angle = kwargs.get("angle", 0)
-        axis = kwargs.get("axis", Vector.Unit_Y)
-
+    def addDonut(self, inner_radius, outer_radius, width, center = Vector(0, 0, 0), sections = 32, color = None, angle = 0, axis = Vector.Unit_Y):
         vertices = []
         indices = []
         colors = []
@@ -319,15 +290,8 @@ class MeshBuilder:
     #   origin.
     #   \param color (Optional) The colour of the pyramid. If no colour is
     #   provided, a colour will be determined by the shader.
-    def addPyramid(self, **kwargs):
-        width = kwargs["width"]
-        height = kwargs["height"]
-        depth = kwargs["depth"]
-
-        angle = math.radians(kwargs.get("angle", 0))
-        axis = kwargs.get("axis", Vector.Unit_Y)
-
-        center = kwargs.get("center", Vector(0, 0, 0))
+    def addPyramid(self, width, height, depth, angle = 0, axis = Vector.Unit_Y, center = Vector(0, 0, 0), color = None):
+        angle = math.radians(angle)
 
         minW = -width / 2
         maxW = width / 2
@@ -359,8 +323,7 @@ class MeshBuilder:
         ], dtype=numpy.int32)
         self._mesh_data.addIndices(indices)
 
-        color = kwargs.get("color", None) #If we have a colour, add the colour to each of the vertices.
-        if color:
+        if color: #If we have a colour, add the colour to each of the vertices.
             vertex_count = self._mesh_data.getVertexCount()
             for i in range(1, 6):
                 self._mesh_data.setVertexColor(vertex_count - i, color)
