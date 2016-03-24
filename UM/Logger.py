@@ -34,7 +34,7 @@ class Logger:
         filename = function.co_filename
         for path in sys.path:
             if filename.startswith(path):
-                filename = filename.replace(path, "<PATH>")
+                filename = filename.replace(path, "...")
                 continue
         address = "%s (%s [%s]): " %(filename, function.co_name, function.co_firstlineno)
         for logger in cls.__loggers:
