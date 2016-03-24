@@ -39,7 +39,7 @@ class MeshBuilder:
         self._mesh_data.addVertex(v0.x, v0.y, v0.z)
         self._mesh_data.addVertex(v1.x, v1.y, v1.z)
 
-        color = kwargs.get("color", None)
+        color = kwargs.get("color", None) #Add colours to the vertices, if we have them.
         if color:
             self._mesh_data.setVertexColor(self._mesh_data.getVertexCount() - 2, color)
             self._mesh_data.setVertexColor(self._mesh_data.getVertexCount() - 1, color)
@@ -65,9 +65,9 @@ class MeshBuilder:
                                 normal.x, normal.y, normal.z
                             )
         else:
-            self._mesh_data.addFace(v0.x, v0.y, v0.z, v1.x, v1.y, v1.z, v2.x, v2.y, v2.z)
+            self._mesh_data.addFace(v0.x, v0.y, v0.z, v1.x, v1.y, v1.z, v2.x, v2.y, v2.z) #Computes the normal by itself.
 
-        color = kwargs.get("color", None)
+        color = kwargs.get("color", None) #Add colours to the vertices if we have them.
         if color:
             self._mesh_data.setVertexColor(self._mesh_data.getVertexCount() - 3, color)
             self._mesh_data.setVertexColor(self._mesh_data.getVertexCount() - 2, color)
@@ -93,7 +93,7 @@ class MeshBuilder:
             color = kwargs.get("color"),
             normal = kwargs.get("normal")
         )
-        self.addFace(v0, v3, v2,
+        self.addFace(v0, v3, v2, #v0 and v2 are shared with the other triangle!
             color = kwargs.get("color"),
             normal = kwargs.get("normal")
         )
@@ -118,6 +118,7 @@ class MeshBuilder:
 
         center = kwargs.get("center", Vector(0, 0, 0))
 
+        #Compute the actual positions of the planes.
         minW = -width / 2 + center.x
         maxW = width / 2 + center.x
         minH = -height / 2 + center.y
@@ -127,7 +128,7 @@ class MeshBuilder:
 
         start = self._mesh_data.getVertexCount()
 
-        verts = numpy.asarray([
+        verts = numpy.asarray([ #All 8 corners.
             [minW, minH, maxD],
             [minW, maxH, maxD],
             [maxW, maxH, maxD],
@@ -139,7 +140,7 @@ class MeshBuilder:
         ], dtype=numpy.float32)
         self._mesh_data.addVertices(verts)
 
-        indices = numpy.asarray([
+        indices = numpy.asarray([ #All 6 quads (12 triangles).
             [start, start + 2, start + 1],
             [start, start + 3, start + 2],
 
@@ -160,7 +161,7 @@ class MeshBuilder:
         ], dtype=numpy.int32)
         self._mesh_data.addIndices(indices)
 
-        color = kwargs.get("color", None)
+        color = kwargs.get("color", None) #If we have a colour, add a colour to all of the vertices.
         if color:
             vertex_count = self._mesh_data.getVertexCount()
             for i in range(1, 9):
@@ -190,6 +191,8 @@ class MeshBuilder:
         sections = kwargs.get("sections", 32)
         color = kwargs.get("color", None)
 
+        #We'll compute the vertices of the arc by computing an initial point and
+        #rotating the initial point with a rotation matrix.
         if axis == Vector.Unit_Y:
             start = axis.cross(Vector.Unit_X).normalize() * radius
         else:
@@ -200,14 +203,14 @@ class MeshBuilder:
 
         point = start + center
         m = Matrix()
-        while angle <= max_angle:
+        while angle <= max_angle: #Add each of the vertices.
             self._mesh_data.addVertex(point.x, point.y, point.z)
             angle += angle_increment
             m.setByRotationAxis(angle, axis)
-            point = start.multiply(m) + center
+            point = start.multiply(m) + center #Get the next vertex by rotating the start position with a matrix.
             self._mesh_data.addVertex(point.x, point.y, point.z)
 
-            if color:
+            if color: #If we have a colour, add that colour to the new vertex.
                 self._mesh_data.setVertexColor(self._mesh_data.getVertexCount() - 2, color)
                 self._mesh_data.setVertexColor(self._mesh_data.getVertexCount() - 1, color)
 
@@ -220,8 +223,8 @@ class MeshBuilder:
     #   smaller than outer_radius.
     #   \param outer_radius The radius of the outside of the torus. Must be
     #   larger than inner_radius.
-    #   \param width The size of the torus in perpendicular direction to its
-    #   circles. This is the "thickness".
+    #   \param width The radius of the torus in perpendicular direction to its
+    #   perimeter. This is the "thickness".
     #   \param center (Optional) The position of the centre of the torus. If no
     #   position is provided, the torus will be centred around the coordinate
     #   origin.
@@ -230,7 +233,8 @@ class MeshBuilder:
     #   changed.
     #   \param color (Optional) The colour of the torus. If no colour is
     #   provided, a colour will be determined by the shader.
-    #   \param angle (Optional) An angle of rotation to rotate the torus by.
+    #   \param angle (Optional) An angle of rotation to rotate the torus by, in
+    #   radians.
     #   \param axis (Optional) An axis of rotation to rotate the torus around.
     #   If no axis is provided and the angle of rotation is nonzero, the torus
     #   will be rotated around the Y-axis.
@@ -250,10 +254,10 @@ class MeshBuilder:
         indices = []
         colors = []
 
-        start = self._mesh_data.getVertexCount()
+        start = self._mesh_data.getVertexCount() #Starting index.
 
         for i in range(sections):
-            v1 = start + i * 3
+            v1 = start + i * 3 #Indices for each of the vertices we'll add for this section.
             v2 = v1 + 1
             v3 = v1 + 2
             v4 = v1 + 3
@@ -265,14 +269,16 @@ class MeshBuilder:
                 v5 = start + 1
                 v6 = start + 2
 
-            theta = i * math.pi / (sections / 2)
-            c = math.cos(theta)
-            s = math.sin(theta)
+            theta = i * math.pi / (sections / 2) #Angle of this piece around torus perimeter.
+            c = math.cos(theta) #X-coordinate around torus perimeter.
+            s = math.sin(theta) #Y-coordinate around torus perimeter.
 
+            #One vertex on the inside perimeter, two on the outside perimiter (up and down).
             vertices.append( [inner_radius * c, inner_radius * s, 0] )
             vertices.append( [outer_radius * c, outer_radius * s, width] )
             vertices.append( [outer_radius * c, outer_radius * s, -width] )
 
+            #Connect the vertices to the next segment.
             indices.append( [v1, v4, v5] )
             indices.append( [v2, v1, v5] )
 
@@ -282,18 +288,19 @@ class MeshBuilder:
             indices.append( [v3, v6, v4] )
             indices.append( [v1, v3, v4] )
 
-            if color:
+            if color: #If we have a colour, add it to the vertices.
                 colors.append( [color.r, color.g, color.b, color.a] )
                 colors.append( [color.r, color.g, color.b, color.a] )
                 colors.append( [color.r, color.g, color.b, color.a] )
 
+        #Rotate the resulting torus around the specified axis.
         matrix = Matrix()
         matrix.setByRotationAxis(angle, axis)
         vertices = numpy.asarray(vertices, dtype = numpy.float32)
-        vertices = vertices.dot(matrix.getData()[0:3,0:3])
-        vertices[:] += center.getData()
-        self._mesh_data.addVertices(vertices)
+        vertices = vertices.dot(matrix.getData()[0:3, 0:3])
+        vertices[:] += center.getData() #And translate to the desired position.
 
+        self._mesh_data.addVertices(vertices)
         self._mesh_data.addIndices(numpy.asarray(indices, dtype = numpy.int32))
         self._mesh_data.addColors(numpy.asarray(colors, dtype = numpy.float32))
 
@@ -302,7 +309,8 @@ class MeshBuilder:
     #   \param width The width of the base of the pyramid.
     #   \param height The height of the pyramid (from base to notch).
     #   \param depth The depth of the base of the pyramid.
-    #   \param angle (Optional) An angle of rotation to rotate the pyramid by.
+    #   \param angle (Optional) An angle of rotation to rotate the pyramid by,
+    #   in degrees.
     #   \param axis (Optional) An axis of rotation to rotate the pyramid around.
     #   If no axis is provided and the angle of rotation is nonzero, the pyramid
     #   will be rotated around the Y-axis.
@@ -326,32 +334,32 @@ class MeshBuilder:
         minD = -depth / 2
         maxD = depth / 2
 
-        start = self._mesh_data.getVertexCount()
+        start = self._mesh_data.getVertexCount() #Starting index.
 
         matrix = Matrix()
         matrix.setByRotationAxis(angle, axis)
-        verts = numpy.asarray([
+        verts = numpy.asarray([ #All 5 vertices of the pyramid.
             [minW, 0, maxD],
             [maxW, 0, maxD],
             [minW, 0, minD],
             [maxW, 0, minD],
             [0, height, 0]
         ], dtype=numpy.float32)
-        verts = verts.dot(matrix.getData()[0:3,0:3])
+        verts = verts.dot(matrix.getData()[0:3,0:3]) #Rotate the pyramid around the axis.
         verts[:] += center.getData()
         self._mesh_data.addVertices(verts)
 
-        indices = numpy.asarray([
-            [start, start + 1, start + 4],
+        indices = numpy.asarray([ #Connect the vertices to each other (6 triangles).
+            [start, start + 1, start + 4], #The four sides of the pyramid.
             [start + 1, start + 3, start + 4],
             [start + 3, start + 2, start + 4],
             [start + 2, start, start + 4],
-            [start, start + 3, start + 1],
+            [start, start + 3, start + 1], #The base of the pyramid.
             [start, start + 2, start + 3]
         ], dtype=numpy.int32)
         self._mesh_data.addIndices(indices)
 
-        color = kwargs.get("color", None)
+        color = kwargs.get("color", None) #If we have a colour, add the colour to each of the vertices.
         if color:
             vertex_count = self._mesh_data.getVertexCount()
             for i in range(1, 6):
