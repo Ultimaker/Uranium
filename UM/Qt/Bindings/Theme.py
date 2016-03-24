@@ -38,12 +38,11 @@ class Theme(QObject):
         self._initializeDefaults()
 
         Preferences.getInstance().addPreference("general/theme", Application.getInstance().getApplicationName())
-
         try:
             theme_path = Resources.getPath(Resources.Themes, Preferences.getInstance().getValue("general/theme"))
             self.load(theme_path)
         except FileNotFoundError:
-            pass
+            Logger.log("e", "Could not find theme file.")
 
     themeLoaded = pyqtSignal()
 
