@@ -124,6 +124,7 @@ class Theme(QObject):
         self._path = path
 
         with open(os.path.join(self._path, "theme.json")) as f:
+            Logger.log("d", "Loading theme file: %s", os.path.join(self._path, "theme.json"))
             data = json.load(f)
 
         self._initializeDefaults()
