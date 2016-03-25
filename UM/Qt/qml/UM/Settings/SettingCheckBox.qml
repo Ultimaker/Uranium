@@ -32,7 +32,6 @@ MouseArea
 
     onClicked: valueChanged(!checked);
 
-    hoverEnabled: true;
 
     Rectangle
     {
