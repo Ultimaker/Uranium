@@ -157,7 +157,11 @@ Item
                 locale: "en_US"
             }
 
-            onEditingFinished: UM.ActiveTool.setProperty("ObjectWidth", text);
+            onEditingFinished:
+            {
+                text = text.replace(",", ".") // User convenience. We use dots for decimal values
+                UM.ActiveTool.setProperty("ObjectWidth", text);
+            }
         }
         TextField
         {
@@ -173,7 +177,11 @@ Item
                 locale: "en_US"
             }
 
-            onEditingFinished: UM.ActiveTool.setProperty("ObjectDepth", text);
+            onEditingFinished:
+            {
+                text = text.replace(",", ".") // User convenience. We use dots for decimal values
+                UM.ActiveTool.setProperty("ObjectDepth", text);
+            }
         }
         TextField
         {
@@ -189,7 +197,11 @@ Item
                 locale: "en_US"
             }
 
-            onEditingFinished: UM.ActiveTool.setProperty("ObjectHeight", text);
+            onEditingFinished:
+            {
+                text = text.replace(",", ".") // User convenience. We use dots for decimal values
+                UM.ActiveTool.setProperty("ObjectHeight", text);
+            }
         }
 
         TextField
@@ -206,7 +218,11 @@ Item
                 locale: "en_US"
             }
 
-            onEditingFinished: UM.ActiveTool.setProperty("ScaleX", parseFloat(text) / 100);
+            onEditingFinished:
+            {
+                text = text.replace(",", ".") // User convenience. We use dots for decimal values
+                UM.ActiveTool.setProperty("ScaleX", parseFloat(text) / 100);
+            }
         }
         TextField
         {
@@ -223,7 +239,11 @@ Item
                 locale: "en_US"
             }
 
-            onEditingFinished: UM.ActiveTool.setProperty("ScaleZ", parseFloat(text) / 100);
+            onEditingFinished:
+            {
+                text = text.replace(",", ".") // User convenience. We use dots for decimal values
+                UM.ActiveTool.setProperty("ScaleZ", parseFloat(text) / 100);
+            }
         }
         TextField
         {
@@ -240,7 +260,11 @@ Item
                 locale: "en_US"
             }
 
-            onEditingFinished: UM.ActiveTool.setProperty("ScaleY", parseFloat(text) / 100);
+            onEditingFinished:
+            {
+                text = text.replace(",", ".") // User convenience. We use dots for decimal values
+                UM.ActiveTool.setProperty("ScaleY", parseFloat(text) / 100);
+            }
         }
     }
 }
