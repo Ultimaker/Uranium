@@ -53,10 +53,10 @@ MACRO(TARGETS_FOR_PO_FILES language)
         string(REGEX REPLACE ".*/(.*).pot" "${CMAKE_BINARY_DIR}/resources/i18n/${language}/\\1.po" po_file ${pot_file})
         if(DEFINED GETTEXT_MSGINIT_EXECUTABLE)
             add_custom_command(TARGET i18n-create-po-${language} POST_BUILD
-                               COMMAND ${GETTEXT_MSGINIT_EXECUTABLE} ARGS --no-translator -l ${language} -i ${pot_file} -o ${po_file})
+                               COMMAND ${GETTEXT_MSGINIT_EXECUTABLE} ARGS --no-wrap --no-translator -l ${language} -i ${pot_file} -o ${po_file})
         endif()
         add_custom_command(TARGET i18n-update-po-${language} POST_BUILD
-                           COMMAND ${GETTEXT_MSGMERGE_EXECUTABLE} ARGS -o ${po_file} ${po_file} ${po_file})
+                           COMMAND ${GETTEXT_MSGMERGE_EXECUTABLE} ARGS --no-wrap -o ${po_file} ${po_file} ${po_file})
     endforeach()
 ENDMACRO()
 
