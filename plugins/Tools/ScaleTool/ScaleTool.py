@@ -18,6 +18,7 @@ from UM.Operations.TranslateOperation import TranslateOperation
 
 from . import ScaleToolHandle
 import copy
+from UM.Math.Matrix import Matrix
 
 class ScaleTool(Tool):
     def __init__(self):
@@ -193,28 +194,28 @@ class ScaleTool(Tool):
     def getScaleX(self):
         if Selection.hasSelection():
             ## Ensure that the returned value is positive (mirror causes scale to be negative)
-            return abs(round(float(Selection.getSelectedObject(0).getScale().x), 4))
+            return abs(round(float(self._getScaleInWorldCoordinates(Selection.getSelectedObject(0)).x), 4))
 
         return 1.0
 
     def getScaleY(self):
         if Selection.hasSelection():
             ## Ensure that the returned value is positive (mirror causes scale to be negative)
-            return abs(round(float(Selection.getSelectedObject(0).getScale().y), 4))
+            return abs(round(float(self._getScaleInWorldCoordinates(Selection.getSelectedObject(0)).y), 4))
 
         return 1.0
 
     def getScaleZ(self):
         if Selection.hasSelection():
             ## Ensure that the returned value is positive (mirror causes scale to be negative)
-            return abs(round(float(Selection.getSelectedObject(0).getScale().z), 4))
+            return abs(round(float(self._getScaleInWorldCoordinates(Selection.getSelectedObject(0)).z), 4))
 
         return 1.0
 
     def setObjectWidth(self, width):
         obj = Selection.getSelectedObject(0)
         if obj:
-            obj_scale = obj.getScale()
+            obj_scale = self._getScaleInWorldCoordinates(obj)
             obj_width = obj.getBoundingBox().width / obj_scale.x
             target_scale = float(width) / obj_width
             if obj_scale.x != target_scale:
@@ -227,7 +228,7 @@ class ScaleTool(Tool):
     def setObjectHeight(self, height):
         obj = Selection.getSelectedObject(0)
         if obj:
-            obj_scale = obj.getScale()
+            obj_scale = self._getScaleInWorldCoordinates(obj)
             obj_height = obj.getBoundingBox().height / obj_scale.y
             target_scale = float(height) / obj_height
             if obj_scale.y != target_scale:
@@ -240,7 +241,7 @@ class ScaleTool(Tool):
     def setObjectDepth(self, depth):
         obj = Selection.getSelectedObject(0)
         if obj:
-            obj_scale = obj.getScale()
+            obj_scale = self._getScaleInWorldCoordinates(obj)
             obj_depth = obj.getBoundingBox().depth / obj_scale.z
             target_scale = float(depth) / obj_depth
             if obj_scale.z != target_scale:
@@ -253,8 +254,8 @@ class ScaleTool(Tool):
     def setScaleX(self, scale):
         obj = Selection.getSelectedObject(0)
         if obj:
-            obj_scale = obj.getScale()
-            if obj_scale.x != scale:
+            obj_scale = self._getScaleInWorldCoordinates(obj)
+            if round(float(obj_scale.x), 4) != scale:
                 if obj_scale.x < 0:
                     obj_scale.setX(-scale)
                 else:
@@ -273,8 +274,8 @@ class ScaleTool(Tool):
     def setScaleY(self, scale):
         obj = Selection.getSelectedObject(0)
         if obj:
-            obj_scale = obj.getScale()
-            if obj_scale.y != scale:
+            obj_scale = self._getScaleInWorldCoordinates(obj)
+            if round(float(obj_scale.y), 4) != scale:
                 if obj_scale.y < 0:
                     obj_scale.setY(-scale)
                 else:
@@ -294,8 +295,8 @@ class ScaleTool(Tool):
     def setScaleZ(self, scale):
         obj = Selection.getSelectedObject(0)
         if obj:
-            obj_scale = obj.getScale()
-            if obj_scale.z != scale:
+            obj_scale = self._getScaleInWorldCoordinates(obj)
+            if round(float(obj_scale.z), 4) != scale:
                 if obj_scale.z < 0:
                     obj_scale.setZ(-scale)
                 else:
@@ -310,3 +311,15 @@ class ScaleTool(Tool):
                     else:
                         obj_scale.setY(scale)
                 Selection.applyOperation(ScaleOperation, obj_scale, set_scale = True)
+
+    ##  Convenience function that gives the scale of an object in the coordinate space of the world.
+    #   (it simply rotates it back)
+    def _getScaleInWorldCoordinates(self, node):
+        transformation = node.getWorldTransformation()
+        orientation_quaternion = node.getOrientation()
+        rotation_matrix = orientation_quaternion.toMatrix()
+        rotation_matrix = rotation_matrix.getInverse()
+        new_transformation = rotation_matrix.preMultiply(transformation)
+
+        scale, shear, euler_angles, translation = new_transformation.decompose()
+        return scale
