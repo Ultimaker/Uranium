@@ -36,31 +36,19 @@ class ScaleOperation(Operation.Operation):
                 ratio = (1 / (self._node.getScale().x + self._node.getScale().y + self._node.getScale().z)) * 3
                 ratio_vector = ratio * copy.deepcopy(self._node.getScale())
                 self._scale = ratio_vector * self._scale
-                if self._node.getScale().x > 0:
-                    scale_factor.setX(abs(self._node.getScale().x + self._scale.x))
-                else:
-                    scale_factor.setX(-abs(self._node.getScale().x - self._scale.x))
-                if self._node.getScale().y > 0:
-                    scale_factor.setY(abs(self._node.getScale().y + self._scale.y))
-                else:
-                    scale_factor.setY(-abs(self._node.getScale().y - self._scale.y))
-                if self._node.getScale().z > 0:
-                    scale_factor.setZ(abs(self._node.getScale().z + self._scale.z))
-                else:
-                    scale_factor.setZ(-abs(self._node.getScale().z - self._scale.z))
+            if self._node.getScale().x > 0:
+                scale_factor.setX(abs(self._node.getScale().x + self._scale.x))
             else:
-                if self._node.getScale().x > 0:
-                    scale_factor.setX(abs(self._node.getScale().x + self._scale.x))
-                else:
-                    scale_factor.setX(-abs(self._node.getScale().x - self._scale.x))
-                if self._node.getScale().y > 0:
-                    scale_factor.setY(abs(self._node.getScale().y + self._scale.y))
-                else:
-                    scale_factor.setY(-abs(self._node.getScale().y - self._scale.y))
-                if self._node.getScale().z > 0:
-                    scale_factor.setZ(abs(self._node.getScale().z + self._scale.z))
-                else:
-                    scale_factor.setZ(-abs(self._node.getScale().z - self._scale.z))
+                scale_factor.setX(-abs(self._node.getScale().x - self._scale.x))
+            if self._node.getScale().y > 0:
+                scale_factor.setY(abs(self._node.getScale().y + self._scale.y))
+            else:
+                scale_factor.setY(-abs(self._node.getScale().y - self._scale.y))
+            if self._node.getScale().z > 0:
+                scale_factor.setZ(abs(self._node.getScale().z + self._scale.z))
+            else:
+                scale_factor.setZ(-abs(self._node.getScale().z - self._scale.z))
+
             current_scale = copy.deepcopy(self._node.getScale())
 
             if scale_factor.x != 0:
