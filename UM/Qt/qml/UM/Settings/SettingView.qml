@@ -209,12 +209,12 @@ ScrollView
                                     var required_by_content = delegateItem.settingsModel.getRequiredBySettingString(model.key);
                                     if(required_by_content.length > 0)
                                     {
-                                        content += catalog.i18nc("@label", "<i><br/>Affects:<br/></i>") + required_by_content
+                                        content += "<i><br/>" + catalog.i18nc("@label", "Affects:") + "<br/></i>" + required_by_content
                                     }
                                     var required_content = delegateItem.settingsModel.getRequiredSettingString(model.key);
                                     if (required_content.length > 0)
                                     {
-                                        content += catalog.i18nc("@label", "<i><br/>Is affected by:<br/></i>") + required_content
+                                        content += "<i><br/>" + catalog.i18nc("@label", "Is affected by:") + "<br/></i>" + required_content
                                     }
 
                                     base.showTooltip(settingLoader, Qt.point(0, settingLoader.height / 2), content);
