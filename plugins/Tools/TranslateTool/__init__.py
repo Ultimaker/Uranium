@@ -17,8 +17,8 @@ def getMetaData():
             "api": 2
         },
         "tool": {
-            "name": i18n_catalog.i18nc("@action:button", "Translate"),
-            "description": i18n_catalog.i18nc("@info:tooltip", "Translate Object"),
+            "name": i18n_catalog.i18nc("@action:button", "Move"),
+            "description": i18n_catalog.i18nc("@info:tooltip", "Move Object"),
             "icon": "translate",
             "tool_panel": "TranslateTool.qml",
             "weight": -1
