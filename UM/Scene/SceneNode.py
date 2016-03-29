@@ -46,6 +46,8 @@ class SceneNode(SignalEmitter):
         self._inherit_orientation = True
         self._inherit_scale = True
 
+        self._center_position = Vector(0.0, 0.0, 0.0)
+
         self._parent = parent
         self._enabled = True
         self._selectable = False

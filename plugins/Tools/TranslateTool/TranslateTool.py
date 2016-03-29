@@ -40,12 +40,19 @@ class TranslateTool(Tool):
 
     def getY(self):
         if Selection.hasSelection():
+            # Note; The switching of z & y is intentional. We display z as up for the user,
+            # But store the data in openGL space.
             return float(Selection.getSelectedObject(0).getWorldPosition().z)
         return 0.0
 
     def getZ(self):
         if Selection.hasSelection():
-            return float(Selection.getSelectedObject(0).getWorldPosition().y)
+            selected_node = Selection.getSelectedObject(0)
+            center = selected_node.getMeshData().getCenterPosition()
+
+            # Note; The switching of z & y is intentional. We display z as up for the user,
+            # But store the data in openGL space.
+            return float(Selection.getSelectedObject(0).getWorldPosition().y - center.y)
         return 0.0
 
     def setX(self, x):
@@ -60,6 +67,9 @@ class TranslateTool(Tool):
         obj = Selection.getSelectedObject(0)
         if obj:
             new_position = obj.getWorldPosition()
+
+            # Note; The switching of z & y is intentional. We display z as up for the user,
+            # But store the data in openGL space.
             new_position.setZ(y)
             Selection.applyOperation(TranslateOperation, new_position, set_position = True)
             self.operationStopped.emit(self)
@@ -68,7 +78,12 @@ class TranslateTool(Tool):
         obj = Selection.getSelectedObject(0)
         if obj:
             new_position = obj.getWorldPosition()
-            new_position.setY(z)
+            selected_node = Selection.getSelectedObject(0)
+            center = selected_node.getMeshData().getCenterPosition()
+
+            # Note; The switching of z & y is intentional. We display z as up for the user,
+            # But store the data in openGL space.
+            new_position.setY(float(z) + center.y)
             Selection.applyOperation(TranslateOperation, new_position, set_position = True)
             self.operationStopped.emit(self)
 
