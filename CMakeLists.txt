@@ -4,7 +4,12 @@ cmake_minimum_required(VERSION 2.8.12)
 
 include(GNUInstallDirs)
 
-option(CURA_BINARY_DATA_DIRECTORY "Directory to the cura-binary-data repository" "")
+option(CURA_BINARY_DATA_DIRECTORY "Directory to the cura-binary-data repository")
+
+if(NOT CURA_BINARY_DATA_DIRECTORY AND NOT $ENV{CURA_BINARY_DATA_DIRECTORY} EQUAL "")
+    message(STATUS "Using CURA_BINARY_DATA_DIRECTORY from set of environment variables...")
+    SET(CURA_BINARY_DATA_DIRECTORY $ENV{CURA_BINARY_DATA_DIRECTORY})
+endif()
 
 find_package(PythonInterp 3.4.0 REQUIRED)
 
@@ -109,7 +114,7 @@ if(GETTEXT_FOUND)
     else()
         message(WARNING "GETTEXT_MSGINIT_EXECUTABLE is undefined!\nSkipping to create i18n-create-po* targets...")
     endif()
-    if(NOT CURA_BINARY_DATA_DIRECTORY EQUAL "")
+    if(CURA_BINARY_DATA_DIRECTORY)
         if(EXISTS ${CURA_BINARY_DATA_DIRECTORY})
             message(STATUS "CURA_BINARY_DATA_DIRECTORY: ${CURA_BINARY_DATA_DIRECTORY}")
             message(STATUS "Creating target i18n-copy-mo")
