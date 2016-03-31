@@ -256,61 +256,36 @@ class ScaleTool(Tool):
         if obj:
             obj_scale = self._getScaleInWorldCoordinates(obj)
             if round(float(obj_scale.x), 4) != scale:
-                if obj_scale.x < 0:
-                    obj_scale.setX(-scale)
+                scale_factor = abs(scale / obj_scale.x)
+                if self._non_uniform_scale:
+                    scale_vector = Vector(scale_factor, 1, 1)
                 else:
-                    obj_scale.setX(scale)
-                if not self._non_uniform_scale:
-                    if obj_scale.y < 0:
-                        obj_scale.setY(-scale)
-                    else:
-                        obj_scale.setY(scale)
-                    if obj_scale.z < 0:
-                        obj_scale.setZ(-scale)
-                    else:
-                        obj_scale.setZ(scale)
-                Selection.applyOperation(ScaleOperation, obj_scale, set_scale = True)
+                    scale_vector = Vector(scale_factor, scale_factor, scale_factor)
+                Selection.applyOperation(ScaleOperation, scale_vector)
 
     def setScaleY(self, scale):
         obj = Selection.getSelectedObject(0)
         if obj:
             obj_scale = self._getScaleInWorldCoordinates(obj)
             if round(float(obj_scale.y), 4) != scale:
-                if obj_scale.y < 0:
-                    obj_scale.setY(-scale)
+                scale_factor = abs(scale / obj_scale.y)
+                if self._non_uniform_scale:
+                    scale_vector = Vector(scale_factor, 1, 1)
                 else:
-                    obj_scale.setY(scale)
-                if not self._non_uniform_scale:
-                    if obj_scale.x < 0:
-                        obj_scale.setX(-scale)
-                    else:
-                        obj_scale.setX(scale)
-                    if obj_scale.z < 0:
-                        obj_scale.setZ(-scale)
-                    else:
-                        obj_scale.setZ(scale)
-                print(obj_scale)
-                Selection.applyOperation(ScaleOperation, obj_scale, set_scale = True)
+                    scale_vector = Vector(scale_factor, scale_factor, scale_factor)
+                Selection.applyOperation(ScaleOperation, scale_vector)
 
     def setScaleZ(self, scale):
         obj = Selection.getSelectedObject(0)
         if obj:
             obj_scale = self._getScaleInWorldCoordinates(obj)
             if round(float(obj_scale.z), 4) != scale:
-                if obj_scale.z < 0:
-                    obj_scale.setZ(-scale)
+                scale_factor = abs(scale / obj_scale.y)
+                if self._non_uniform_scale:
+                    scale_vector = Vector(scale_factor, 1, 1)
                 else:
-                    obj_scale.setZ(scale)
-                if not self._non_uniform_scale:
-                    if obj_scale.x < 0:
-                        obj_scale.setX(-scale)
-                    else:
-                        obj_scale.setX(scale)
-                    if obj_scale.y < 0:
-                        obj_scale.setY(-scale)
-                    else:
-                        obj_scale.setY(scale)
-                Selection.applyOperation(ScaleOperation, obj_scale, set_scale = True)
+                    scale_vector = Vector(scale_factor, scale_factor, scale_factor)
+                Selection.applyOperation(ScaleOperation, scale_vector)
 
     ##  Convenience function that gives the scale of an object in the coordinate space of the world.
     #   (it simply rotates it back)
