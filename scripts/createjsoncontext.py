@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 """
@@ -80,29 +80,31 @@ def potheader():
     return headertxt
 
 if len(sys.argv) < 3:
-    print("wrong number of args: %s" %sys.argv)
-    print("\nUsage: python %s jsonfilenamelist basedir" %os.path.basename(sys.argv[0]))
+    print("wrong number of args: %s" % sys.argv)
+    print("\nUsage: python %s jsonfilenamelist basedir" % os.path.basename(sys.argv[0]))
 else:
-    jsonfilenamelist = sys.argv[1:-1]
+    jsonfilename = sys.argv[1]
+    basedir = sys.argv[2]
+    outputfilename = sys.argv[3]
 
-    for jsonfilename in jsonfilenamelist:
-        with open(jsonfilename, "r") as data_file:
-            error = False
-            try:
-                jsondatadict = json.load(data_file, object_pairs_hook=collections.OrderedDict)
-                if "categories" not in jsondatadict:
-                    continue
+    with open(jsonfilename, "r") as data_file:
+        error = False
 
-                for name, value in jsondatadict["categories"].items():
-                    appendMessage(jsonfilename.replace(basedir,""), name, "label", value["label"])
-                    if "description" in value:
-                        appendMessage(jsonfilename.replace(basedir,""), name, "description", value["description"])
+        jsondatadict = json.load(data_file, object_pairs_hook=collections.OrderedDict)
+        if "categories" not in jsondatadict:
+            exit(1)
 
-                    if "settings" in value:
-                        processSettings(jsonfilename.replace(basedir,""), value["settings"])
-            except Exception as e:
-                if debugoutput:
-                    print(e)
+        for name, value in jsondatadict["categories"].items():
+            if "label" in value:
+                appendMessage(jsonfilename.replace(basedir, ""), name, "label", value["label"])
 
-    if pottxt!="":
-        print(potheader() + pottxt)
+            if "description" in value:
+                appendMessage(jsonfilename.replace(basedir, ""), name, "description", value["description"])
+
+            if "settings" in value:
+                processSettings(jsonfilename.replace(basedir, ""), value["settings"])
+
+    if pottxt != "":
+        with open(outputfilename, "w") as output_file:
+            output_file.write(potheader())
+            output_file.write(pottxt)

@@ -19,7 +19,11 @@ extract() {
     dest=$2
     file=$3
 
-    python $scriptdir/createjsoncontext.py $file $basedir > json.$$.tmp
+    python3 $scriptdir/createjsoncontext.py $file $basedir json.$$.tmp
+    if test $? -eq 1; then
+        return
+    fi
+
     msguniq --to-code=UTF-8 -o json.$$ json.$$.tmp
     if test -f json.$$; then
         destfile="$dest/$(basename $file).pot"
