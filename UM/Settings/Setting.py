@@ -319,6 +319,15 @@ class Setting(SignalEmitter):
 
         return self._label
 
+    ##  Does the setting have a label at all?
+    def hasLabel(self):
+        if self._label is None:
+            return False
+
+        if self._label == self._key:
+            return False
+        return True
+
     ##  Set the label (display name) of setting.
     #   \param label 
     def setLabel(self, label):
