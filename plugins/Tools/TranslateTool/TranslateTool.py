@@ -48,7 +48,10 @@ class TranslateTool(Tool):
     def getZ(self):
         if Selection.hasSelection():
             selected_node = Selection.getSelectedObject(0)
-            center = selected_node.getMeshData().getCenterPosition()
+            try:
+                center = selected_node.getMeshData().getCenterPosition()
+            except AttributeError:
+                center = Vector(0,0,0)
 
             # Note; The switching of z & y is intentional. We display z as up for the user,
             # But store the data in openGL space.
