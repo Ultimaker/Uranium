@@ -42,6 +42,7 @@ class TranslateTool(Tool):
             self._grid_snap = False
 
         if event.type == Event.MousePressEvent and self._controller.getToolsEnabled():
+
             if MouseEvent.LeftButton not in event.buttons:
                 return False
 
@@ -99,7 +100,11 @@ class TranslateTool(Tool):
         if event.type == Event.MouseReleaseEvent:
             if self.getDragPlane():
                 self.operationStopped.emit(self)
-
+                # Force scene changed event. Some plugins choose to ignore move events when operation is in progress.
+                if self._moved:
+                    for node in Selection.getAllSelectedObjects():
+                        Application.getInstance().getController().getScene().sceneChanged.emit(node)
+                    self._moved = False
                 self.setLockedAxis(None)
                 self.setDragPlane(None)
                 self.setDragStart(None, None)
