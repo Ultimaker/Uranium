@@ -46,16 +46,15 @@ class TranslateTool(Tool):
         return 0.0
 
     def getZ(self):
+        # We want to display based on the bottom instead of the actual coordinate.
         if Selection.hasSelection():
             selected_node = Selection.getSelectedObject(0)
             try:
-                center = selected_node.getMeshData().getCenterPosition()
-            except AttributeError:
-                center = Vector(0,0,0)
+                bottom = selected_node.getBoundingBox().bottom
+            except AttributeError: #It can happen that there is no bounding box yet.
+                bottom = 0
 
-            # Note; The switching of z & y is intentional. We display z as up for the user,
-            # But store the data in openGL space.
-            return float(Selection.getSelectedObject(0).getWorldPosition().y - center.y)
+            return float(bottom)
         return 0.0
 
     def setX(self, x):
@@ -82,11 +81,12 @@ class TranslateTool(Tool):
         if obj:
             new_position = obj.getWorldPosition()
             selected_node = Selection.getSelectedObject(0)
-            center = selected_node.getMeshData().getCenterPosition()
-
+            center = selected_node.getBoundingBox().center
+            bottom = selected_node.getBoundingBox().bottom
             # Note; The switching of z & y is intentional. We display z as up for the user,
             # But store the data in openGL space.
-            new_position.setY(float(z) + center.y)
+
+            new_position.setY(float(z) + (center.y - bottom))
             Selection.applyOperation(TranslateOperation, new_position, set_position = True)
             self.operationStopped.emit(self)
 
