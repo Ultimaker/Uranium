@@ -103,19 +103,32 @@ Creating the PO files
 
 [extract-messages] Has already created the PO files it can automatically create (English and x-test). The other PO files are created by merging the old PO file with the new POT file. If you don't merge them; you have to get completely new translations with every new release. An added bonus is that translations that are no longer used don't get thrown away, but are commented out and placed in the bottom of the page for later use. Use the terminal to create the new PO files:
 ```
-msgmerge -o [target.po] [old_translations.po] [reference.pot]
+make i18n-create-po
+```
+For a specific language code use:
+```
+make i18n-create-po-<code>
 ```
 msgmerge Does such a great job that I usually just rewrite the old PO file. 
 ```
-msgmerge -o cura.po cura.po ../cura.pot
+make i18n-update-po
 ```
+Same here for a specific language:
+```
+make i18n-update-po-<code>
+```
+
 Creating the MO files & testing
 -------------------------------
 In the building process; the MO files are automatically created. So you only manually create the MO files that you want to test. A great example is x-test. The PO files for x-test are automatically created by [extract-messages]. It is basically an English translation with two X's before and after each string. You use it to test whether all strings are being properly translated.  
 
 Create a directory in the directory of the language (x-test is this example). The name of the new directory has to be [LC_MESSAGES]. Create the MO file with the terminal: 
 ```
-msgfmt xxx.po -o LC_MESSAGES/xxx.mo
+make i18n-update-mo
+```
+Or for your language:
+```
+make i18n-update-mo-<code>
 ```
 Setting the environment variable doesn't function. So for now you need to edit the language default in: Uranium/UM/i18n.py
 ~~def __init__(self, name = None, language = "default"):~~
