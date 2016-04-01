@@ -26,6 +26,10 @@ class ActiveProfileProxy(QObject):
         self._setting_change_timer.timeout.connect(self._onSettingChangeTimer)
 
         Application.getInstance().getMachineManager().activeProfileChanged.connect(self._onActiveProfileChanged)
+
+        # When there are current settings and machine instance is changed, there is no profile changed event. We should
+        # pretend there is though.
+        Application.getInstance().getMachineManager().activeMachineInstanceChanged.connect(self._onActiveProfileChanged)
         self._onActiveProfileChanged()
 
     activeProfileChanged = pyqtSignal()
