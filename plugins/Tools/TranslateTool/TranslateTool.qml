@@ -69,7 +69,7 @@ Item
             height: UM.Theme.getSize("setting_control").height;
             property string unit: "mm";
             style: UM.Theme.styles.text_field;
-            text: UM.ActiveTool.properties.getValue("X").toFixed(4).replace(/\.?0*$/, "")
+            text: parent.roundFloat(UM.ActiveTool.properties.getValue("X"), 4)
             validator: DoubleValidator
             {
                 decimals: 4
