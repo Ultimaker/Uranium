@@ -8,7 +8,7 @@ from UM.PluginRegistry import PluginRegistry
 
 from . import ContainerProxy
 
-import copy
+from copy import deepcopy
 
 class ActiveProfileProxy(QObject):
     def __init__(self, parent = None):
@@ -65,7 +65,7 @@ class ActiveProfileProxy(QObject):
     ## Update the currently selected profile with the settings from the working profile and reselect it.
     @pyqtSlot()
     def updateProfile(self):
-        changed_settings = copy.deepcopy(self._active_profile.getChangedSettings())
+        changed_settings = deepcopy(self._active_profile.getChangedSettings())
         self._manager.getActiveProfile().setChangedSettings(changed_settings)
         self._active_profile.setChangedSettings({})
         self._manager.setActiveProfile(self._manager.getActiveProfile(), force = True)
