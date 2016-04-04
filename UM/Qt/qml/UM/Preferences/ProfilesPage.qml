@@ -65,7 +65,11 @@ ManagementPage
                     visible: base.currentItem.id == -1 || base.currentItem.active
                     Button
                     {
-                        text: catalog.i18nc("@action:button", "Update \"%1\"".arg(UM.MachineManager.activeProfile));
+                        text: {
+                            var profileName = UM.MachineManager.activeProfile;
+                            profileName = (profileName.length > 20) ? profileName.substring(0, 20) + '...' : profileName;
+                            return catalog.i18nc("@action:button", "Update \"%1\"".arg(profileName));
+                        }
                         enabled: UM.ActiveProfile.hasCustomisedValues && !UM.ActiveProfile.readOnly
                         onClicked: UM.ActiveProfile.updateProfile()
                     }
