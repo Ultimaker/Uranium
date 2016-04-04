@@ -224,6 +224,7 @@ class Profile(SignalEmitter):
     ##  Reset the settings that have a value set in this profile to a new set.
     def setChangedSettings(self, settings):
         self._changed_settings = settings
+        self._disabled_settings_defaults = []
         self._dirty = True
 
     ##  Get a dictionary of all setting values.
