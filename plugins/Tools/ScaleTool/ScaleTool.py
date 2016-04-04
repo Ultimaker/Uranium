@@ -270,7 +270,7 @@ class ScaleTool(Tool):
             if round(float(obj_scale.y), 4) != scale:
                 scale_factor = abs(scale / obj_scale.y)
                 if self._non_uniform_scale:
-                    scale_vector = Vector(scale_factor, 1, 1)
+                    scale_vector = Vector(1, scale_factor, 1)
                 else:
                     scale_vector = Vector(scale_factor, scale_factor, scale_factor)
                 Selection.applyOperation(ScaleOperation, scale_vector)
@@ -280,9 +280,9 @@ class ScaleTool(Tool):
         if obj:
             obj_scale = self._getScaleInWorldCoordinates(obj)
             if round(float(obj_scale.z), 4) != scale:
-                scale_factor = abs(scale / obj_scale.y)
+                scale_factor = abs(scale / obj_scale.z)
                 if self._non_uniform_scale:
-                    scale_vector = Vector(scale_factor, 1, 1)
+                    scale_vector = Vector(1, 1, scale_factor)
                 else:
                     scale_vector = Vector(scale_factor, scale_factor, scale_factor)
                 Selection.applyOperation(ScaleOperation, scale_vector)
