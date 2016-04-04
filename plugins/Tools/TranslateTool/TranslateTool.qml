@@ -76,7 +76,11 @@ Item
                 locale: "en_US"
             }
 
-            onEditingFinished: UM.ActiveTool.setProperty("X", text);
+            onEditingFinished:
+            {
+                text = text.replace(",", ".") // User convenience. We use dots for decimal values
+                UM.ActiveTool.setProperty("X", text);
+            }
         }
         TextField
         {
@@ -91,7 +95,11 @@ Item
                 locale: "en_US"
             }
 
-            onEditingFinished: UM.ActiveTool.setProperty("Y", text);
+            onEditingFinished:
+            {
+                text = text.replace(",", ".") // User convenience. We use dots for decimal values
+                UM.ActiveTool.setProperty("Y", text);
+            }
         }
         TextField
         {
@@ -106,7 +114,11 @@ Item
                 locale: "en_US"
             }
 
-            onEditingFinished: UM.ActiveTool.setProperty("Z", text);
+            onEditingFinished:
+            {
+                text = text.replace(",", ".") // User convenience. We use dots for decimal values
+                UM.ActiveTool.setProperty("Z", text);
+            }
         }
     }
 }
