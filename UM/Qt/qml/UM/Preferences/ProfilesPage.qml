@@ -4,7 +4,6 @@
 import QtQuick 2.1
 import QtQuick.Controls 1.1
 import QtQuick.Dialogs 1.2
-import QtQuick.Layouts 1.1
 
 import UM 1.1 as UM
 
@@ -43,25 +42,12 @@ ManagementPage
             anchors.right: parent.right
             anchors.bottom: parent.bottom
 
-            GridLayout {
-                id: containerGrid
-                columns: 2
-                rowSpacing: UM.Theme.getSize("default_margin").width
-                columnSpacing: UM.Theme.getSize("default_margin").width
-
-                Label {
-                    text: base.currentItem == null ? "" :
-                        base.currentItem.id == -1 ? catalog.i18nc("@label", "Based on") : catalog.i18nc("@label", "Profile type")
-                }
-                Label {
-                    text: base.currentItem == null ? "" :
-                        base.currentItem.id == -1 ? UM.MachineManager.activeProfile :
-                        base.currentItem.readOnly ? catalog.i18nc("@label", "Protected profile") : catalog.i18nc("@label", "Custom profile")
-                }
+            Column
+            {
+                spacing: UM.Theme.getSize("default_margin").height
 
                 Row
                 {
-                    Layout.columnSpan: 2
                     visible: base.currentItem.id == -1 || base.currentItem.active
                     Button
                     {
@@ -82,19 +68,36 @@ ManagementPage
                     }
                 }
 
-                Column {
-                    Repeater {
-                            model: base.currentItem ? base.currentItem.settings : null
-                            Label {
-                                text: modelData.name.toString();
-                                elide: Text.ElideMiddle;
-                            }
+                Grid
+                {
+                    id: containerGrid
+                    columns: 2
+                    spacing: UM.Theme.getSize("default_margin").width
+
+                    Label {
+                        text: base.currentItem == null ? "" :
+                            base.currentItem.id == -1 ? catalog.i18nc("@label", "Based on") : catalog.i18nc("@label", "Profile type")
                     }
-                }
-                Column {
-                    Repeater {
-                            model: base.currentItem ? base.currentItem.settings : null
-                            Label { text: modelData.value.toString(); }
+                    Label {
+                        text: base.currentItem == null ? "" :
+                            base.currentItem.id == -1 ? UM.MachineManager.activeProfile :
+                            base.currentItem.readOnly ? catalog.i18nc("@label", "Protected profile") : catalog.i18nc("@label", "Custom profile")
+                    }
+
+                    Column {
+                        Repeater {
+                                model: base.currentItem ? base.currentItem.settings : null
+                                Label {
+                                    text: modelData.name.toString();
+                                    elide: Text.ElideMiddle;
+                                }
+                        }
+                    }
+                    Column {
+                        Repeater {
+                                model: base.currentItem ? base.currentItem.settings : null
+                                Label { text: modelData.value.toString(); }
+                        }
                     }
                 }
             }
