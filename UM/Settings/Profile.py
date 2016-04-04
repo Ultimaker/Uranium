@@ -304,6 +304,8 @@ class Profile(SignalEmitter):
     #   /param filter_defaults Don't include setting if its value equals the default setting for this profile
     def hasSettingValue(self, key, filter_defaults = False):
         if filter_defaults:
+            if key in self._disabled_settings_defaults:
+                return True
             if not key in self._changed_settings:
                 return False
             if key in self._changed_settings_defaults:

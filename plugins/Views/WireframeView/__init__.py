@@ -13,7 +13,7 @@ def getMetaData():
             "name": i18n_catalog.i18nc("@label", "Wireframe View"),
             "author": "Ultimaker",
             "version": "1.0",
-            "description": i18n_catalog.i18nc("@info:whatsthis", "Provides a simple wireframe view"),
+            "description": i18n_catalog.i18nc("@info:whatsthis", "Provides a simple wireframe view."),
             "api": 2
         },
         "view": {

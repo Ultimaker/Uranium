@@ -91,7 +91,8 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
             machine_definition = self._machine_manager.getActiveMachineInstance().getMachineDefinition()
             for temp_key in setting.getRequiredBySettingKeys():
                 temp_setting = machine_definition.getSetting(temp_key)
-                result += "- " + temp_setting.getLabel() + "<br/>"
+                if temp_setting.hasLabel():
+                    result += "- " + temp_setting.getLabel() + "<br/>"
             result = result[:-5] # Remove last endline.
         return result
 
@@ -108,7 +109,8 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
             machine_definition = self._machine_manager.getActiveMachineInstance().getMachineDefinition()
             for temp_key in setting.getRequiredSettingKeys():
                 temp_setting = machine_definition.getSetting(temp_key)
-                result += "- " + temp_setting.getLabel() + "<br/>"
+                if temp_setting.hasLabel():
+                    result += "- " + temp_setting.getLabel() + "<br/>"
             result = result[:-5] # Remove last endline.
         return result
 

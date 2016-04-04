@@ -1,7 +1,7 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-from PyQt5.QtCore import pyqtSlot, pyqtProperty, pyqtSignal, QObject, QVariant, QUrl
+from PyQt5.QtCore import pyqtSlot, pyqtProperty, pyqtSignal, QObject, QVariant, QUrl, QTimer
 
 from UM.Application import Application
 from UM.PluginRegistry import PluginRegistry
@@ -18,6 +18,22 @@ class ActiveProfileProxy(QObject):
         self._active_profile = None
         self._manager = Application.getInstance().getMachineManager()
         self._manager.activeProfileChanged.connect(self._onActiveProfileChanged)
+
+        # Workaround for flooding the UI with change notifications when setting
+        # values change.
+        #
+        # Rather than react to each individual change notification, we start a
+        # timer that will trigger once when all change notification ends.
+        self._setting_change_timer = QTimer()
+        self._setting_change_timer.setInterval(50)
+        self._setting_change_timer.setSingleShot(True)
+        self._setting_change_timer.timeout.connect(self._onSettingChangeTimer)
+
+        Application.getInstance().getMachineManager().activeProfileChanged.connect(self._onActiveProfileChanged)
+
+        # When there are current settings and machine instance is changed, there is no profile changed event. We should
+        # pretend there is though.
+        Application.getInstance().getMachineManager().activeMachineInstanceChanged.connect(self._onActiveProfileChanged)
         self._onActiveProfileChanged()
 
     activeProfileChanged = pyqtSignal()
@@ -82,6 +98,9 @@ class ActiveProfileProxy(QObject):
             self._onSettingValuesChanged()
 
     def _onSettingValuesChanged(self, setting = None):
+        self._setting_change_timer.start()
+
+    def _onSettingChangeTimer(self):
         self._setting_values.update(self._active_profile.getAllSettingValues())
         self.settingValuesChanges.emit()
 

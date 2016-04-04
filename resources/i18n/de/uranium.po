@@ -19,25 +19,21 @@ msgstr ""
 "X-Generator: Poedit 1.8.7\n"
 
 #: /home/tamara/2.1/Uranium/plugins/Tools/RotateTool/__init__.py:12
-#, fuzzy
 msgctxt "@label"
 msgid "Rotate Tool"
 msgstr "Drehungstool"
 
 #: /home/tamara/2.1/Uranium/plugins/Tools/RotateTool/__init__.py:15
-#, fuzzy
 msgctxt "@info:whatsthis"
 msgid "Provides the Rotate tool."
 msgstr "Stellt das Drehungstool bereit."
 
 #: /home/tamara/2.1/Uranium/plugins/Tools/RotateTool/__init__.py:19
-#, fuzzy
 msgctxt "@label"
 msgid "Rotate"
 msgstr "Drehen"
 
 #: /home/tamara/2.1/Uranium/plugins/Tools/RotateTool/__init__.py:20
-#, fuzzy
 msgctxt "@info:tooltip"
 msgid "Rotate Object"
 msgstr "Objekt drehen"
@@ -48,103 +44,86 @@ msgid "Camera Tool"
 msgstr "Kameratool"
 
 #: /home/tamara/2.1/Uranium/plugins/Tools/CameraTool/__init__.py:15
-#, fuzzy
 msgctxt "@info:whatsthis"
 msgid "Provides the tool to manipulate the camera."
 msgstr "Stellt das Tool zur Bedienung der Kamera bereit."
 
 #: /home/tamara/2.1/Uranium/plugins/Tools/SelectionTool/__init__.py:13
-#, fuzzy
 msgctxt "@label"
 msgid "Selection Tool"
 msgstr "Auswahltool"
 
 #: /home/tamara/2.1/Uranium/plugins/Tools/SelectionTool/__init__.py:16
-#, fuzzy
 msgctxt "@info:whatsthis"
 msgid "Provides the Selection tool."
 msgstr "Stellt das Auswahltool breit."
 
 #: /home/tamara/2.1/Uranium/plugins/Tools/ScaleTool/__init__.py:13
-#, fuzzy
 msgctxt "@label"
 msgid "Scale Tool"
 msgstr "Skaliertool"
 
 #: /home/tamara/2.1/Uranium/plugins/Tools/ScaleTool/__init__.py:16
-#, fuzzy
 msgctxt "@info:whatsthis"
 msgid "Provides the Scale tool."
 msgstr "Stellt das Skaliertool bereit."
 
 #: /home/tamara/2.1/Uranium/plugins/Tools/ScaleTool/__init__.py:20
-#, fuzzy
 msgctxt "@label"
 msgid "Scale"
 msgstr "Skalieren"
 
 #: /home/tamara/2.1/Uranium/plugins/Tools/ScaleTool/__init__.py:21
-#, fuzzy
 msgctxt "@info:tooltip"
 msgid "Scale Object"
 msgstr "Objekt skalieren"
 
 #: /home/tamara/2.1/Uranium/plugins/Tools/MirrorTool/__init__.py:12
-#, fuzzy
 msgctxt "@label"
 msgid "Mirror Tool"
 msgstr "Spiegelungstool"
 
 #: /home/tamara/2.1/Uranium/plugins/Tools/MirrorTool/__init__.py:15
-#, fuzzy
 msgctxt "@info:whatsthis"
 msgid "Provides the Mirror tool."
 msgstr "Stellt das Spiegelungstool bereit."
 
 #: /home/tamara/2.1/Uranium/plugins/Tools/MirrorTool/__init__.py:19
-#, fuzzy
 msgctxt "@label"
 msgid "Mirror"
 msgstr "Spiegeln"
 
 #: /home/tamara/2.1/Uranium/plugins/Tools/MirrorTool/__init__.py:20
-#, fuzzy
 msgctxt "@info:tooltip"
 msgid "Mirror Object"
 msgstr "Objekt spiegeln"
 
 #: /home/tamara/2.1/Uranium/plugins/Tools/TranslateTool/__init__.py:13
-#, fuzzy
 msgctxt "@label"
 msgid "Translate Tool"
 msgstr "Übersetzungstool"
 
 #: /home/tamara/2.1/Uranium/plugins/Tools/TranslateTool/__init__.py:16
-#, fuzzy
 msgctxt "@info:whatsthis"
 msgid "Provides the Translate tool."
 msgstr "Stellt das Übersetzungstool bereit."
 
 #: /home/tamara/2.1/Uranium/plugins/Tools/TranslateTool/__init__.py:20
-#, fuzzy
 msgctxt "@action:button"
 msgid "Translate"
 msgstr "Übersetzen"
 
 #: /home/tamara/2.1/Uranium/plugins/Tools/TranslateTool/__init__.py:21
-#, fuzzy
 msgctxt "@info:tooltip"
 msgid "Translate Object"
 msgstr "Objekt übersetzen"
 
 #: /home/tamara/2.1/Uranium/plugins/Views/SimpleView/__init__.py:12
-#, fuzzy
 msgctxt "@label"
 msgid "Simple View"
 msgstr "Einfache Ansicht"
 
 #: /home/tamara/2.1/Uranium/plugins/Views/SimpleView/__init__.py:15
-#, fuzzy
 msgctxt "@info:whatsthis"
 msgid "Provides a simple solid mesh view."
 msgstr "Bietet eine einfache, solide Netzansicht."
@@ -155,38 +134,32 @@ msgid "Simple"
 msgstr "Einfach"
 
 #: /home/tamara/2.1/Uranium/plugins/Views/WireframeView/__init__.py:13
-#, fuzzy
 msgctxt "@label"
 msgid "Wireframe View"
 msgstr "Drahtgitteransicht"
 
 #: /home/tamara/2.1/Uranium/plugins/Views/WireframeView/__init__.py:16
-#, fuzzy
 msgctxt "@info:whatsthis"
 msgid "Provides a simple wireframe view"
 msgstr "Bietet eine einfache Drahtgitteransicht"
 
 #: /home/tamara/2.1/Uranium/plugins/ConsoleLogger/__init__.py:13
-#, fuzzy
 msgctxt "@label"
 msgid "Console Logger"
 msgstr "Konsolen-Protokolleinrichtung"
 
 #: /home/tamara/2.1/Uranium/plugins/ConsoleLogger/__init__.py:16
 #: /home/tamara/2.1/Uranium/plugins/FileLogger/__init__.py:16
-#, fuzzy
 msgctxt "@info:whatsthis"
 msgid "Outputs log information to the console."
 msgstr "Gibt Protokoll-Informationen an die Konsole weiter."
 
 #: /home/tamara/2.1/Uranium/plugins/FileLogger/__init__.py:13
-#, fuzzy
 msgctxt "@label"
 msgid "File Logger"
 msgstr "Datei-Protokolleinrichtung"
 
 #: /home/tamara/2.1/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:44
-#, fuzzy
 msgctxt "@item:inmenu"
 msgid "Local File"
 msgstr "Lokale Datei"
@@ -197,13 +170,11 @@ msgid "Save to File"
 msgstr "Speichern in Datei"
 
 #: /home/tamara/2.1/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:46
-#, fuzzy
 msgctxt "@info:tooltip"
 msgid "Save to File"
 msgstr "In Datei speichern"
 
 #: /home/tamara/2.1/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:56
-#, fuzzy
 msgctxt "@title:window"
 msgid "Save to File"
 msgstr "In Datei speichern"
@@ -245,44 +216,37 @@ msgid "Saved to <filename>{0}</filename>"
 msgstr "Wurde als <filename>{0}</filename> gespeichert"
 
 #: /home/tamara/2.1/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:149
-#, fuzzy
 msgctxt "@action:button"
 msgid "Open Folder"
 msgstr "Ordner öffnen"
 
 #: /home/tamara/2.1/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:149
-#, fuzzy
 msgctxt "@info:tooltip"
 msgid "Open the folder containing the file"
 msgstr "Öffnet den Ordner, der die gespeicherte Datei enthält"
 
 #: /home/tamara/2.1/Uranium/plugins/LocalFileOutputDevice/__init__.py:12
-#, fuzzy
 msgctxt "@label"
 msgid "Local File Output Device"
 msgstr "Lokales Dateiausgabegerät"
 
 #: /home/tamara/2.1/Uranium/plugins/LocalFileOutputDevice/__init__.py:13
-#, fuzzy
 msgctxt "@info:whatsthis"
 msgid "Enables saving to local files"
 msgstr "Ermöglicht das Speichern als lokale Dateien."
 
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/OBJReader/__init__.py:13
-#, fuzzy
 msgctxt "@label"
 msgid "Wavefront OBJ Reader"
 msgstr "Wavefront OBJ-Reader"
 
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/OBJReader/__init__.py:16
-#, fuzzy
 msgctxt "@info:whatsthis"
 msgid "Makes it possbile to read Wavefront OBJ files."
 msgstr "Ermöglicht das Lesen von Wavefront OBJ-Dateien."
 
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/OBJReader/__init__.py:22
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:22
-#, fuzzy
 msgctxt "@item:inlistbox"
 msgid "Wavefront OBJ File"
 msgstr "Wavefront OBJ-Datei"
@@ -293,49 +257,41 @@ msgid "STL Reader"
 msgstr "STL-Reader"
 
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/STLReader/__init__.py:15
-#, fuzzy
 msgctxt "@info:whatsthis"
 msgid "Provides support for reading STL files."
 msgstr "Bietet Unterstützung für das Lesen von STL-Dateien."
 
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/STLReader/__init__.py:21
-#, fuzzy
 msgctxt "@item:inlistbox"
 msgid "STL File"
 msgstr "STL-Datei"
 
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/STLWriter/__init__.py:13
-#, fuzzy
 msgctxt "@label"
 msgid "STL Writer"
 msgstr "STL-Writer"
 
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/STLWriter/__init__.py:16
-#, fuzzy
 msgctxt "@info:whatsthis"
 msgid "Provides support for writing STL files."
 msgstr "Bietet Unterstützung für das Schreiben von STL-Dateien."
 
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/STLWriter/__init__.py:25
-#, fuzzy
 msgctxt "@item:inlistbox"
 msgid "STL File (Ascii)"
 msgstr "STL-Datei (ASCII)"
 
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/STLWriter/__init__.py:31
-#, fuzzy
 msgctxt "@item:inlistbox"
 msgid "STL File (Binary)"
 msgstr "STL-Datei (Binär)"
 
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/3MFWriter/__init__.py:12
-#, fuzzy
 msgctxt "@label"
 msgid "3MF Writer"
 msgstr "3MF-Writer"
 
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/3MFWriter/__init__.py:15
-#, fuzzy
 msgctxt "@info:whatsthis"
 msgid "Provides support for writing 3MF files."
 msgstr "Bietet Unterstützung für das Schreiben von 3MF-Dateien."
@@ -346,25 +302,21 @@ msgid "3MF file"
 msgstr "3MF-Datei"
 
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:13
-#, fuzzy
 msgctxt "@label"
 msgid "Wavefront OBJ Writer"
 msgstr "Wavefront OBJ-Writer"
 
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:16
-#, fuzzy
 msgctxt "@info:whatsthis"
 msgid "Makes it possbile to write Wavefront OBJ files."
 msgstr "Ermöglicht das Schreiben von Wavefront OBJ-Dateien."
 
 #: /home/tamara/2.1/Uranium/plugins/UpdateChecker/UpdateChecker.py:27
-#, fuzzy
 msgctxt "@item:inmenu"
 msgid "Check for Updates"
 msgstr "Nach Updates suchen"
 
 #: /home/tamara/2.1/Uranium/plugins/UpdateChecker/UpdateChecker.py:73
-#, fuzzy
 msgctxt "@info"
 msgid "A new version is available!"
 msgstr "Eine neue Version ist verfügbar!"
@@ -380,7 +332,6 @@ msgid "Update Checker"
 msgstr "Update-Prüfer"
 
 #: /home/tamara/2.1/Uranium/plugins/UpdateChecker/__init__.py:15
-#, fuzzy
 msgctxt "@info:whatsthis"
 msgid "Checks for updates of the software."
 msgstr "Sucht nach Software-Updates."
@@ -431,7 +382,6 @@ msgstr "Alle unterstützten Typen ({0})"
 #: /home/tamara/2.1/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:46
 #: /home/tamara/2.1/Uranium/UM/Qt/Bindings/ProfilesModel.py:179
 #: /home/tamara/2.1/Uranium/UM/Qt/Bindings/ProfilesModel.py:192
-#, fuzzy
 msgctxt "@item:inlistbox"
 msgid "All Files (*)"
 msgstr "Alle Dateien (*)"
@@ -479,7 +429,6 @@ msgid "Exported profile to <filename>{0}</filename>"
 msgstr "Profil wurde nach <filename>{0}</filename> exportiert"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/Bindings/ProfilesModel.py:178
-#, fuzzy
 msgctxt "@item:inlistbox"
 msgid "All supported files"
 msgstr "Alle unterstützten Dateien"
@@ -490,25 +439,22 @@ msgid "- Use Global Profile -"
 msgstr "- Globales Profil verwenden -"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/QtApplication.py:78
-#, fuzzy
 msgctxt "@info:progress"
 msgid "Loading plugins..."
 msgstr "Plugins werden geladen..."
 
 #: /home/tamara/2.1/Uranium/UM/Qt/QtApplication.py:82
-#, fuzzy
 msgctxt "@info:progress"
 msgid "Loading machines..."
 msgstr "Geräte werden geladen..."
 
 #: /home/tamara/2.1/Uranium/UM/Qt/QtApplication.py:86
-#, fuzzy
 msgctxt "@info:progress"
 msgid "Loading preferences..."
 msgstr "Einstellungen werden geladen..."
 
 #: /home/tamara/2.1/Uranium/UM/Mesh/ReadMeshJob.py:35
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgctxt "@info:status"
 msgid "Cannot open file type <filename>{0}</filename>"
 msgstr "Kann Dateityp <filename>{0}</filename> nicht öffnen"
@@ -543,7 +489,6 @@ msgstr "Unbekannter Autor"
 
 #: /home/tamara/2.1/Uranium/plugins/Tools/RotateTool/RotateTool.qml:22
 #: /home/tamara/2.1/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:29
-#, fuzzy
 msgctxt "@action:button"
 msgid "Reset"
 msgstr "Zurücksetzen"
@@ -554,25 +499,21 @@ msgid "Lay flat"
 msgstr "Flach"
 
 #: /home/tamara/2.1/Uranium/plugins/Tools/RotateTool/RotateTool.qml:55
-#, fuzzy
 msgctxt "@action:checkbox"
 msgid "Snap Rotation"
 msgstr "Snap-Drehung"
 
 #: /home/tamara/2.1/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:42
-#, fuzzy
 msgctxt "@action:button"
 msgid "Scale to Max"
 msgstr "Auf Maximum skalieren"
 
 #: /home/tamara/2.1/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:67
-#, fuzzy
 msgctxt "@option:check"
 msgid "Snap Scaling"
 msgstr "Snap-Skalierung"
 
 #: /home/tamara/2.1/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:85
-#, fuzzy
 msgctxt "@option:check"
 msgid "Uniform Scaling"
 msgstr "Einheitliche Skalierung"
@@ -599,7 +540,6 @@ msgid "Confirm Remove"
 msgstr "Entfernen bestätigen"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:17
-#, fuzzy
 msgctxt "@label (%1 is object name)"
 msgid "Are you sure you wish to remove %1? This cannot be undone!"
 msgstr "Möchten Sie %1 wirklich entfernen? Dies kann nicht rückgängig gemacht werden!"
@@ -617,44 +557,37 @@ msgstr "Typ"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:19
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:118
-#, fuzzy
 msgctxt "@title:tab"
 msgid "Plugins"
 msgstr "Plugins"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:90
-#, fuzzy
 msgctxt "@label"
 msgid "No text available"
 msgstr "Kein Text verfügbar"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:96
-#, fuzzy
 msgctxt "@title:window"
 msgid "About %1"
 msgstr "Über %1"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:128
-#, fuzzy
 msgctxt "@label"
 msgid "Author:"
 msgstr "Autor:"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:150
-#, fuzzy
 msgctxt "@label"
 msgid "Version:"
 msgstr "Version:"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:168
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:87
-#, fuzzy
 msgctxt "@action:button"
 msgid "Close"
 msgstr "Schließen"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityPage.qml:11
-#, fuzzy
 msgctxt "@title:tab"
 msgid "Setting Visibility"
 msgstr "Sichtbarkeit einstellen"
@@ -676,7 +609,6 @@ msgid "Import"
 msgstr "Import"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:37
-#, fuzzy
 msgctxt "@label"
 msgid "Profile type"
 msgstr "Profiltyp"
@@ -697,7 +629,6 @@ msgid "Export"
 msgstr "Export"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:83
-#, fuzzy
 msgctxt "@window:title"
 msgid "Import Profile"
 msgstr "Profil importieren"
@@ -719,7 +650,6 @@ msgstr "Hinzufügen"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Preferences/ManagementPage.qml:54
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Settings/SettingsConfigurationPage.qml:52
-#, fuzzy
 msgctxt "@action:button"
 msgid "Remove"
 msgstr "Entfernen"
@@ -730,19 +660,16 @@ msgid "Rename"
 msgstr "Umbenennen"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:18
-#, fuzzy
 msgctxt "@title:window"
 msgid "Preferences"
 msgstr "Einstellungen"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:80
-#, fuzzy
 msgctxt "@action:button"
 msgid "Defaults"
 msgstr "Standardeinstellungen"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:114
-#, fuzzy
 msgctxt "@title:tab"
 msgid "General"
 msgstr "Allgemein"
@@ -758,7 +685,6 @@ msgid "Back"
 msgstr "Zurück"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Wizard.qml:195
-#, fuzzy
 msgctxt "@action:button"
 msgid "Finish"
 msgstr "Beenden"
@@ -781,117 +707,111 @@ msgstr[0] "{0} ausgeblendete Einstellung verwendet einen benutzerdefinierten Wer
 msgstr[1] "{0} ausgeblendete Einstellungen verwenden benutzerdefinierte Werte"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Settings/SettingView.qml:166
-#, fuzzy
 msgctxt "@action:menu"
 msgid "Hide this setting"
 msgstr "Diese Einstellung ausblenden"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Settings/SettingView.qml:172
-#, fuzzy
 msgctxt "@action:menu"
 msgid "Configure setting visiblity..."
 msgstr "Sichtbarkeit der Einstellung wird konfiguriert..."
 
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Settings/SettingsConfigurationPage.qml:18
-#, fuzzy
 msgctxt "@title:tab"
 msgid "Machine"
 msgstr "Gerät"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Settings/SettingsConfigurationPage.qml:29
-#, fuzzy
 msgctxt "@label:listbox"
 msgid "Active Machine:"
 msgstr "Aktives Gerät:"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Settings/SettingsConfigurationPage.qml:112
-#, fuzzy
 msgctxt "@title:window"
 msgid "Confirm Machine Deletion"
 msgstr "Löschen des Geräts bestätigen"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Settings/SettingsConfigurationPage.qml:114
-#, fuzzy
 msgctxt "@label"
 msgid "Are you sure you wish to remove the machine?"
 msgstr "Möchten Sie das Gerät wirklich entfernen?"
 
-#~ msgctxt "@info:status"
-#~ msgid "Loaded <filename>{0}</filename>"
-#~ msgstr "<filename>{0}</filename> wurde geladen"
+msgctxt "@info:status"
+msgid "Loaded <filename>{0}</filename>"
+msgstr "<filename>{0}</filename> wurde geladen"
 
-#~ msgctxt "@label"
-#~ msgid "Per Object Settings Tool"
-#~ msgstr "Werkzeug „Einstellungen für einzelne Objekte“"
+msgctxt "@label"
+msgid "Per Object Settings Tool"
+msgstr "Werkzeug „Einstellungen für einzelne Objekte“"
 
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Provides the Per Object Settings."
-#~ msgstr "Stellt das Werkzeug „Einstellungen für einzelne Objekte“ zur Verfügung."
+msgctxt "@info:whatsthis"
+msgid "Provides the Per Object Settings."
+msgstr "Stellt das Werkzeug „Einstellungen für einzelne Objekte“ zur Verfügung."
 
-#~ msgctxt "@label"
-#~ msgid "Per Object Settings"
-#~ msgstr "Einstellungen für einzelne Objekte"
+msgctxt "@label"
+msgid "Per Object Settings"
+msgstr "Einstellungen für einzelne Objekte"
 
-#~ msgctxt "@info:tooltip"
-#~ msgid "Configure Per Object Settings"
-#~ msgstr "Per Objekteinstellungen konfigurieren"
+msgctxt "@info:tooltip"
+msgid "Configure Per Object Settings"
+msgstr "Per Objekteinstellungen konfigurieren"
 
-#~ msgctxt "@label"
-#~ msgid "Mesh View"
-#~ msgstr "Mesh-Ansicht"
+msgctxt "@label"
+msgid "Mesh View"
+msgstr "Mesh-Ansicht"
 
-#~ msgctxt "@item:inmenu"
-#~ msgid "Solid"
-#~ msgstr "Solide"
+msgctxt "@item:inmenu"
+msgid "Solid"
+msgstr "Solide"
 
-#~ msgctxt "@title:tab"
-#~ msgid "Machines"
-#~ msgstr "Maschinen"
+msgctxt "@title:tab"
+msgid "Machines"
+msgstr "Maschinen"
 
-#~ msgctxt "@label"
-#~ msgid "Variant"
-#~ msgstr "Variante"
+msgctxt "@label"
+msgid "Variant"
+msgstr "Variante"
 
-#~ msgctxt "@item:inlistbox"
-#~ msgid "Cura Profiles (*.curaprofile)"
-#~ msgstr "Cura-Profile (*.curaprofile)"
+msgctxt "@item:inlistbox"
+msgid "Cura Profiles (*.curaprofile)"
+msgstr "Cura-Profile (*.curaprofile)"
 
-#~ msgctxt "@action:button"
-#~ msgid "Customize Settings"
-#~ msgstr "Einstellungen anpassen"
+msgctxt "@action:button"
+msgid "Customize Settings"
+msgstr "Einstellungen anpassen"
 
-#~ msgctxt "@info:tooltip"
-#~ msgid "Customise settings for this object"
-#~ msgstr "Einstellungen für dieses Objekt anpassen"
+msgctxt "@info:tooltip"
+msgid "Customise settings for this object"
+msgstr "Einstellungen für dieses Objekt anpassen"
 
-#~ msgctxt "@title:window"
-#~ msgid "Pick a Setting to Customize"
-#~ msgstr "Wähle eine Einstellung zum Anpassen"
+msgctxt "@title:window"
+msgid "Pick a Setting to Customize"
+msgstr "Wähle eine Einstellung zum Anpassen"
 
-#~ msgctxt "@info:tooltip"
-#~ msgid "Reset the rotation of the current selection."
-#~ msgstr "Drehung der aktuellen Auswahl zurücksetzen."
+msgctxt "@info:tooltip"
+msgid "Reset the rotation of the current selection."
+msgstr "Drehung der aktuellen Auswahl zurücksetzen."
 
-#~ msgctxt "@info:tooltip"
-#~ msgid "Reset the scaling of the current selection."
-#~ msgstr "Skalierung der aktuellen Auswahl zurücksetzen."
+msgctxt "@info:tooltip"
+msgid "Reset the scaling of the current selection."
+msgstr "Skalierung der aktuellen Auswahl zurücksetzen."
 
-#~ msgctxt "@info:tooltip"
-#~ msgid "Scale to maximum size"
-#~ msgstr "Auf Maximalgröße skalieren"
+msgctxt "@info:tooltip"
+msgid "Scale to maximum size"
+msgstr "Auf Maximalgröße skalieren"
 
-#~ msgctxt "OBJ Writer file format"
-#~ msgid "Wavefront OBJ File"
-#~ msgstr "Wavefront OBJ-Datei"
+msgctxt "OBJ Writer file format"
+msgid "Wavefront OBJ File"
+msgstr "Wavefront OBJ-Datei"
 
-#~ msgctxt "Loading mesh message, {0} is file name"
-#~ msgid "Loading {0}"
-#~ msgstr "Wird geladen {0}"
+msgctxt "Loading mesh message, {0} is file name"
+msgid "Loading {0}"
+msgstr "Wird geladen {0}"
 
-#~ msgctxt "Finished loading mesh message, {0} is file name"
-#~ msgid "Loaded {0}"
-#~ msgstr "Geladen {0}"
+msgctxt "Finished loading mesh message, {0} is file name"
+msgid "Loaded {0}"
+msgstr "Geladen {0}"
 
-#~ msgctxt "Splash screen message"
-#~ msgid "Loading translations..."
-#~ msgstr "Übersetzungen werden geladen..."
+msgctxt "Splash screen message"
+msgid "Loading translations..."
+msgstr "Übersetzungen werden geladen..."

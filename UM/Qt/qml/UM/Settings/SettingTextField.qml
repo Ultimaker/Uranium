@@ -86,8 +86,22 @@ Rectangle
             verticalCenter: parent.verticalCenter
         }
 
-        Keys.onReleased: if(parseFloat(text) != base.parentValue) base.valueChanged(parseFloat(text));
-        onEditingFinished: if(parseFloat(text) != base.parentValue) base.valueChanged(parseFloat(text));
+        Keys.onReleased:
+        {
+            text = text.replace(",", ".") // User convenience. We use dots for decimal values
+            if(parseFloat(text) != base.parentValue)
+            {
+                base.valueChanged(parseFloat(text));
+            }
+        }
+
+        onEditingFinished:
+        {
+            if(parseFloat(text) != base.parentValue)
+            {
+                base.valueChanged(parseFloat(text));
+            }
+        }
 
         color: !enabled ? itemStyle.controlDisabledTextColor : itemStyle.controlTextColor;
         font: itemStyle.controlFont;

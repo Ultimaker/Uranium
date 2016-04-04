@@ -42,7 +42,7 @@ class MeshFileHandlerProxy(QObject):
                 all_types.append("*.{0}".format(ext))
 
         file_types.sort()
-        file_types.insert(0, i18n_catalog.i18nc("@item:inlistbox", "All Supported Types ({0})".format(" ".join(all_types))))
+        file_types.insert(0, i18n_catalog.i18nc("@item:inlistbox", "All Supported Types ({0})", " ".join(all_types)))
         file_types.append(i18n_catalog.i18nc("@item:inlistbox", "All Files (*)"))
 
         return file_types

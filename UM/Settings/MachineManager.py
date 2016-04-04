@@ -312,6 +312,13 @@ class MachineManager(SignalEmitter):
 
     profileNameChanged = Signal()
 
+    ##  Get all loaded profiles, or profiles filtered by type or instance
+    #   \param type_name \type{string} only return profiles of this type
+    #   \param instance \type{MachineInstance} only return profiles for this instance
+    #   \returns profiles \type{Profile}
+    #
+    #   Profiles with type="material" are only ever used for printers that don't have printer-specific profiles,
+    #   ie printers like the UMO. The UM2 would also apply, but it does not use materials at all due to UltiGCode.
     def getProfiles(self, type_name = None, instance = None):
         if not instance:
             return self._profiles
@@ -323,18 +330,25 @@ class MachineManager(SignalEmitter):
 
         generic_profiles = []
         specific_profiles = []
-        add_generic_profiles = (type_name == None);
+        add_generic_profiles = (type_name == None)
+        add_generic_material_profiles = True
 
         for profile in self._profiles:
             profile_type = profile.getType()
-            #Filter out "partial" profiles
-            if type_name != "all" and type_name != profile_type:
-                continue
 
             machine_type = profile.getMachineTypeId()
             machine_variant = profile.getMachineVariantName()
             machine_instance = profile.getMachineInstanceName()
             material = profile.getMaterialName()
+
+            #Filter out "partial" profiles
+            if type_name != "all" and type_name != profile_type:
+                if material:
+                    if machine_instance and (machine_instance == active_machine_instance):
+                        add_generic_material_profiles = False
+                    elif machine_variant and (machine_variant == active_machine_variant):
+                        add_generic_material_profiles = False
+                continue
 
             if machine_type and machine_type == active_machine_type or machine_type == "all":
                 is_specific_profile = False
@@ -355,9 +369,14 @@ class MachineManager(SignalEmitter):
             elif not machine_type:
                 generic_profiles.append(profile)
 
-        if len(specific_profiles) == 0:
-            #No starter-profiles were found
-            return generic_profiles
+        if not type_name:
+            if len(specific_profiles) == 0:
+                #No starter-profiles were found
+                return generic_profiles
+        else:
+            if add_generic_material_profiles:
+                #Only add generic material profiles if no machine-specific profiles with material are found
+                return generic_profiles
 
         if add_generic_profiles:
             specific_profiles.extend(generic_profiles)
@@ -419,7 +438,7 @@ class MachineManager(SignalEmitter):
                 self.setActiveProfile(None)
 
     def findProfile(self, name, variant_name = None, material_name = None, type_name = None, instance = None):
-        profiles = self.getProfiles(type_name = type_name, instance = instance);
+        profiles = self.getProfiles(type_name = type_name, instance = instance)
 
         for profile in profiles:
             if profile.getName().lower() == name.lower():
