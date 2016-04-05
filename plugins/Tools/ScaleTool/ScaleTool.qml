@@ -13,8 +13,32 @@ Item
     height: Math.max(9.5 * UM.Theme.getSize("line").height, childrenRect.height);
     UM.I18nCatalog { id: catalog; name:"uranium"}
 
+    // We use properties for the text as doing the bindings indirectly doesn't cause any breaks
+    // Javascripts don't seem to play well with the bindings (and sometimes break em)
+    property string xPercentageText;
+    property string yPercentageText;
+    property string zPercentageText;
+
+    property string heightText
+    property string depthText
+    property string widthText
+
     function getPercentage(scale){
         return scale * 100;
+    }
+
+    //Rounds a floating point number to 4 decimals. This prevents floating
+    //point rounding errors.
+    //
+    //input:    The number to round.
+    //decimals: The number of decimals (digits after the radix) to round to.
+    //return:   The rounded number.
+    function roundFloat(input, decimals)
+    {
+        //First convert to fixed-point notation to round the number to 4 decimals and not introduce new floating point errors.
+        //Then convert to a string (is implicit). The fixed-point notation will be something like "3.200".
+        //Then remove any trailing zeroes and the radix.
+        return input.toFixed(decimals).replace(/\.?0*$/, ""); //Match on periods, if any ( \.? ), followed by any number of zeros ( 0* ), then the end of string ( $ ).
     }
 
     Button
@@ -94,20 +118,6 @@ Item
     {
         id: textfields;
 
-        //Rounds a floating point number to 4 decimals. This prevents floating
-        //point rounding errors.
-        //
-        //input:    The number to round.
-        //decimals: The number of decimals (digits after the radix) to round to.
-        //return:   The rounded number.
-        function roundFloat(input, decimals)
-        {
-            //First convert to fixed-point notation to round the number to 4 decimals and not introduce new floating point errors.
-            //Then convert to a string (is implicit). The fixed-point notation will be something like "3.200".
-            //Then remove any trailing zeroes and the radix.
-            return input.toFixed(decimals).replace(/\.?0*$/, ""); //Match on periods, if any ( \.? ), followed by any number of zeros ( 0* ), then the end of string ( $ ).
-        }
-
         anchors.left: resetScaleButton.right;
         anchors.leftMargin: UM.Theme.getSize("default_margin").width;
         anchors.top: parent.top;
@@ -145,11 +155,12 @@ Item
 
         TextField
         {
+            id: widthTextField
             width: UM.Theme.getSize("setting_control").width;
             height: UM.Theme.getSize("setting_control").height;
             property string unit: "mm";
             style: UM.Theme.styles.text_field;
-            text: UM.ActiveTool.properties.getValue("ObjectWidth").toFixed(4).replace(/\.?0*$/, "")
+            text: widthText
             validator: DoubleValidator
             {
                 bottom: 0.1
@@ -159,17 +170,18 @@ Item
 
             onEditingFinished:
             {
-                text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                UM.ActiveTool.setProperty("ObjectWidth", text);
+                var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
+                UM.ActiveTool.setProperty("ObjectWidth", modified_text);
             }
         }
         TextField
         {
+            id: depthTextField
             width: UM.Theme.getSize("setting_control").width;
             height: UM.Theme.getSize("setting_control").height;
             property string unit: "mm";
             style: UM.Theme.styles.text_field;
-            text: parent.roundFloat(UM.ActiveTool.properties.getValue("ObjectDepth"), 4)
+            text: depthText
             validator: DoubleValidator
             {
                 bottom: 0.1
@@ -179,17 +191,18 @@ Item
 
             onEditingFinished:
             {
-                text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                UM.ActiveTool.setProperty("ObjectDepth", text);
+                var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
+                UM.ActiveTool.setProperty("ObjectDepth", modified_text);
             }
         }
         TextField
         {
+            id: heightTextField
             width: UM.Theme.getSize("setting_control").width;
             height: UM.Theme.getSize("setting_control").height;
             property string unit: "mm";
             style: UM.Theme.styles.text_field;
-            text: parent.roundFloat(UM.ActiveTool.properties.getValue("ObjectHeight"), 4)
+            text: heightText
             validator: DoubleValidator
             {
                 bottom: 0.1
@@ -199,8 +212,8 @@ Item
 
             onEditingFinished:
             {
-                text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                UM.ActiveTool.setProperty("ObjectHeight", text);
+                var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
+                UM.ActiveTool.setProperty("ObjectHeight", modified_text);
             }
         }
 
@@ -211,17 +224,19 @@ Item
             height: UM.Theme.getSize("setting_control").height;
             property string unit: "%";
             style: UM.Theme.styles.text_field;
-            text: parent.roundFloat(base.getPercentage(UM.ActiveTool.properties.getValue("ScaleX")), 4)
+            text: xPercentageText
             validator: DoubleValidator
             {
+                // Validate to 0.1 mm
                 bottom: 100 * (0.1 / (UM.ActiveTool.properties.getValue("ObjectWidth") / UM.ActiveTool.properties.getValue("ScaleX")));
+                decimals: 4
                 locale: "en_US"
             }
 
             onEditingFinished:
             {
-                text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                UM.ActiveTool.setProperty("ScaleX", parseFloat(text) / 100);
+                var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
+                UM.ActiveTool.setProperty("ScaleX", parseFloat(modified_text) / 100);
             }
         }
         TextField
@@ -231,18 +246,19 @@ Item
             height: UM.Theme.getSize("setting_control").height;
             property string unit: "%";
             style: UM.Theme.styles.text_field;
-            text: parent.roundFloat(base.getPercentage(UM.ActiveTool.properties.getValue("ScaleZ")), 4)
+            text: zPercentageText
             validator: DoubleValidator
             {
+                // Validate to 0.1 mm
                 bottom: 100 * (0.1 / (UM.ActiveTool.properties.getValue("ObjectDepth") / UM.ActiveTool.properties.getValue("ScaleZ")));
-		decimals: 4
+		        decimals: 4
                 locale: "en_US"
             }
 
             onEditingFinished:
             {
-                text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                UM.ActiveTool.setProperty("ScaleZ", parseFloat(text) / 100);
+                var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
+                UM.ActiveTool.setProperty("ScaleZ", parseFloat(modified_text) / 100);
             }
         }
         TextField
@@ -252,19 +268,67 @@ Item
             height: UM.Theme.getSize("setting_control").height;
             property string unit: "%";
             style: UM.Theme.styles.text_field;
-            text: parent.roundFloat(base.getPercentage(UM.ActiveTool.properties.getValue("ScaleY")), 4)
+
+            text: yPercentageText
             validator: DoubleValidator
             {
+                // Validate to 0.1 mm
                 bottom: 100 * (0.1 / (UM.ActiveTool.properties.getValue("ObjectHeight") / UM.ActiveTool.properties.getValue("ScaleY")))
-		decimals: 4
+		        decimals: 4
                 locale: "en_US"
             }
 
             onEditingFinished:
             {
-                text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                UM.ActiveTool.setProperty("ScaleY", parseFloat(text) / 100);
+                var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
+                UM.ActiveTool.setProperty("ScaleY", parseFloat(modified_text) / 100);
             }
+
+        }
+
+        // We have to use indirect bindings, as the values can be changed from the outside, which could cause breaks
+        // (for instance, a value would be set, but it would be impossible to change it).
+        // Doing it indirectly does not break these.
+        Binding
+        {
+            target: base
+            property: "heightText"
+            value: base.roundFloat(UM.ActiveTool.properties.getValue("ObjectHeight"), 4)
+        }
+
+        Binding
+        {
+            target: base
+            property: "widthText"
+            value: base.roundFloat(UM.ActiveTool.properties.getValue("ObjectWidth"), 4)
+        }
+
+        Binding
+        {
+            target: base
+            property: "depthText"
+            value:base.roundFloat(UM.ActiveTool.properties.getValue("ObjectDepth"), 4)
+        }
+
+        Binding
+        {
+            target: base
+            property: "xPercentageText"
+            value: 100 * base.roundFloat(UM.ActiveTool.properties.getValue("ScaleX"), 4)
+        }
+
+        Binding
+        {
+            target: base
+            property: "yPercentageText"
+            value: 100 * base.roundFloat(UM.ActiveTool.properties.getValue("ScaleY"), 4)
+        }
+
+        Binding
+        {
+            target: base
+            property: "zPercentageText"
+            value: 100 * base.roundFloat(UM.ActiveTool.properties.getValue("ScaleZ"), 4)
         }
     }
 }
