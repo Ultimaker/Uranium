@@ -8,27 +8,32 @@ import UM 1.1 as UM
 
 Item
 {
+    id: base
     width: Math.max(14 * UM.Theme.getSize("line").width, childrenRect.width);
     height: Math.max(4.5 * UM.Theme.getSize("line").height, childrenRect.height);
     UM.I18nCatalog { id: catalog; name:"uranium"}
 
+    property string xText
+    property string yText
+    property string zText
+
+    //Rounds a floating point number to 4 decimals. This prevents floating
+    //point rounding errors.
+    //
+    //input:    The number to round.
+    //decimals: The number of decimals (digits after the radix) to round to.
+    //return:   The rounded number.
+    function roundFloat(input, decimals)
+    {
+        //First convert to fixed-point notation to round the number to 4 decimals and not introduce new floating point errors.
+        //Then convert to a string (is implicit). The fixed-point notation will be something like "3.200".
+        //Then remove any trailing zeroes and the radix.
+        return input.toFixed(decimals).replace(/\.?0*$/, ""); //Match on periods, if any ( \.? ), followed by any number of zeros ( 0* ), then the end of string ( $ ).
+    }
+
     Grid
     {
         id: textfields;
-
-        //Rounds a floating point number to 4 decimals. This prevents floating
-        //point rounding errors.
-        //
-        //input:    The number to round.
-        //decimals: The number of decimals (digits after the radix) to round to.
-        //return:   The rounded number.
-        function roundFloat(input, decimals)
-        {
-            //First convert to fixed-point notation to round the number to 4 decimals and not introduce new floating point errors.
-            //Then convert to a string (is implicit). The fixed-point notation will be something like "3.200".
-            //Then remove any trailing zeroes and the radix.
-            return input.toFixed(decimals).replace(/\.?0*$/, ""); //Match on periods, if any ( \.? ), followed by any number of zeros ( 0* ), then the end of string ( $ ).
-        }
 
         anchors.leftMargin: UM.Theme.getSize("default_margin").width;
         anchors.top: parent.top;
@@ -69,7 +74,7 @@ Item
             height: UM.Theme.getSize("setting_control").height;
             property string unit: "mm";
             style: UM.Theme.styles.text_field;
-            text: parent.roundFloat(UM.ActiveTool.properties.getValue("X"), 4)
+            text: xText
             validator: DoubleValidator
             {
                 decimals: 4
@@ -88,7 +93,7 @@ Item
             height: UM.Theme.getSize("setting_control").height;
             property string unit: "mm";
             style: UM.Theme.styles.text_field;
-            text: parent.roundFloat(UM.ActiveTool.properties.getValue("Y"), 4)
+            text: yText
             validator: DoubleValidator
             {
                 decimals: 4
@@ -107,7 +112,7 @@ Item
             height: UM.Theme.getSize("setting_control").height;
             property string unit: "mm";
             style: UM.Theme.styles.text_field;
-            text: parent.roundFloat(UM.ActiveTool.properties.getValue("Z"), 4)
+            text: zText
             validator: DoubleValidator
             {
                 decimals: 4
@@ -120,5 +125,29 @@ Item
                 UM.ActiveTool.setProperty("Z", text);
             }
         }
+    }
+
+    // We have to use indirect bindings, as the values can be changed from the outside, which could cause breaks
+    // (for instance, a value would be set, but it would be impossible to change it).
+    // Doing it indirectly does not break these.
+    Binding
+    {
+        target: base
+        property: "xText"
+        value: base.roundFloat(UM.ActiveTool.properties.getValue("X"), 4)
+    }
+
+    Binding
+    {
+        target: base
+        property: "yText"
+        value: base.roundFloat(UM.ActiveTool.properties.getValue("Y"), 4)
+    }
+
+    Binding
+    {
+        target: base
+        property: "zText"
+        value:base.roundFloat(UM.ActiveTool.properties.getValue("Z"), 4)
     }
 }
