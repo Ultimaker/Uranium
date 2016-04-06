@@ -114,7 +114,7 @@ Rectangle
         {
             target: input
             property: "text"
-            value: format(base.parentValue)
+            value: parseFloat(input.text) != parseFloat(base.parentValue) ? format(base.parentValue) : input.text
             when: !input.activeFocus
         }
     }
