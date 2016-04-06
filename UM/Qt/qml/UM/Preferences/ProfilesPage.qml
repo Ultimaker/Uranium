@@ -86,17 +86,17 @@ ManagementPage
 
                     Column {
                         Repeater {
-                                model: base.currentItem ? base.currentItem.settings : null
-                                Label {
-                                    text: modelData.name.toString();
-                                    elide: Text.ElideMiddle;
-                                }
+                            model: base.currentItem ? base.currentItem.settings : null
+                            Label {
+                                text: modelData.name.toString();
+                                elide: Text.ElideMiddle;
+                            }
                         }
                     }
                     Column {
                         Repeater {
-                                model: base.currentItem ? base.currentItem.settings : null
-                                Label { text: modelData.value.toString(); }
+                            model: base.currentItem ? base.currentItem.settings : null
+                            Label { text: modelData.value.toString(); }
                         }
                     }
                 }
