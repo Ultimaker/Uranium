@@ -314,21 +314,21 @@ Item
         {
             target: base
             property: "xPercentageText"
-            value: 100 * base.roundFloat(UM.ActiveTool.properties.getValue("ScaleX"), 4)
+            value: base.roundFloat(100 * UM.ActiveTool.properties.getValue("ScaleX"), 4)
         }
 
         Binding
         {
             target: base
             property: "yPercentageText"
-            value: 100 * base.roundFloat(UM.ActiveTool.properties.getValue("ScaleY"), 4)
+            value: base.roundFloat(100 * UM.ActiveTool.properties.getValue("ScaleY"), 4)
         }
 
         Binding
         {
             target: base
             property: "zPercentageText"
-            value: 100 * base.roundFloat(UM.ActiveTool.properties.getValue("ScaleZ"), 4)
+            value: base.roundFloat(100 * UM.ActiveTool.properties.getValue("ScaleZ"), 4)
         }
     }
 }
