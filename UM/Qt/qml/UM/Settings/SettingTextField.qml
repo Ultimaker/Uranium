@@ -108,7 +108,7 @@ Rectangle
 
         selectByMouse: true;
 
-        validator: RegExpValidator { regExp: /[0-9.,-]+/ }
+        validator: RegExpValidator { regExp: /[0-9.,-]{0,10}/ }
 
         Binding
         {
