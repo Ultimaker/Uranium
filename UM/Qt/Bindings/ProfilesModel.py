@@ -131,7 +131,13 @@ class ProfilesModel(ListModel):
                 profile.setName(file_name)
 
                 #Make sure the profile is available for the currently selected printer
-                profile.setMachineTypeId(self._manager.getActiveMachineInstance().getMachineDefinition().getProfilesMachineId())
+                active_machine = self._manager.getActiveMachineInstance()
+                profile.setMachineTypeId(active_machine.getMachineDefinition().getProfilesMachineId())
+                #If the profile defines a variant or material, but the printer does not, the profile would be filtered out
+                if not active_machine.getMachineDefinition().hasVariants():
+                    profile.setMachineVariantName(None)
+                if not active_machine.hasMaterials():
+                    profile.setMaterialName(None)
                 self._manager.addProfile(profile) #Add the new profile to the list of profiles.
                 return { "status": "ok", "message": catalog.i18nc("@info:status", "Successfully imported profile {0}", profile.getName()) }
 
