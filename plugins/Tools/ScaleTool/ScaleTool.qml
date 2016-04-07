@@ -274,7 +274,7 @@ Item
             {
                 // Validate to 0.1 mm
                 bottom: 100 * (0.1 / (UM.ActiveTool.properties.getValue("ObjectHeight") / UM.ActiveTool.properties.getValue("ScaleY")))
-		        decimals: 4
+                decimals: 4
                 locale: "en_US"
             }
 
