@@ -25,6 +25,8 @@ UM.Dialog
 
     minimumWidth: UM.Theme.getSize("modal_window_minimum").width
     minimumHeight: UM.Theme.getSize("modal_window_minimum").height
+    width: minimumWidth
+    height: minimumHeight
 
     function appendPage(page, title)
     {
