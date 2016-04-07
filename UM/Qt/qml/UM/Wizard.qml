@@ -28,6 +28,8 @@ UM.Dialog
     width: minimumWidth
     height: minimumHeight
 
+    onAccepted: nextClicked()
+
     function appendPage(page, title)
     {
         pagesModel.append({"page": page, "title": title})
