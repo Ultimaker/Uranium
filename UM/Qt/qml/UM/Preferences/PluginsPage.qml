@@ -95,10 +95,10 @@ PreferencesPage
 
             title: catalog.i18nc("@title:window", "About %1").arg(plugin_name)
 
-            width: Screen.devicePixelRatio * 320;
-            height: Screen.devicePixelRatio * 240;
-            minimumWidth: 320
-            minimumHeight: 240
+            minimumWidth: Screen.devicePixelRatio * 320
+            minimumHeight: Screen.devicePixelRatio * 240
+            width: minimumWidth
+            height: minimumHeight
 
             Label
             {

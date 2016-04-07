@@ -19,8 +19,8 @@ UM.Dialog
 
     title: catalog.i18nc("@title:window", "Rename");
 
-    minimumWidth: 400 * Screen.devicePixelRatio;
-    minimumHeight: 120 * Screen.devicePixelRatio;
+    minimumWidth: 400 * Screen.devicePixelRatio
+    minimumHeight: 120 * Screen.devicePixelRatio
     width: minimumWidth
     height: minimumHeight
 
