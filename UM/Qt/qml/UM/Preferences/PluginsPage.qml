@@ -42,7 +42,7 @@ PreferencesPage
             {
                 width: pluginList.width;
                 height: childrenRect.height;
-                color: index % 2 ? palette.light : palette.midlight
+                color: index % 2 ? palette.base : palette.alternateBase
 
                 CheckBox
                 {

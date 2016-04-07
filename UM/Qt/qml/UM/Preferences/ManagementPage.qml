@@ -137,7 +137,7 @@ PreferencesPage
                 {
                     width: objectListContainer.viewport.width;
                     height: childrenRect.height;
-                    color: ListView.isCurrentItem ? palette.highlight : index % 2 ? palette.light : palette.midlight
+                    color: ListView.isCurrentItem ? palette.highlight : index % 2 ? palette.base : palette.alternateBase
 
                     Label
                     {
