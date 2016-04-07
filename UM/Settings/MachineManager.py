@@ -416,6 +416,16 @@ class MachineManager(SignalEmitter):
 
         return profile
 
+    def duplicateProfile(self, profile, new_name):
+        profile = copy.deepcopy(profile)
+
+        profile.setName(new_name)
+        profile.setReadOnly(False)
+        self._profiles.append(profile)
+        self.profilesChanged.emit()
+
+        return profile
+
     def removeProfile(self, profile):
         if profile not in self._profiles:
             return
