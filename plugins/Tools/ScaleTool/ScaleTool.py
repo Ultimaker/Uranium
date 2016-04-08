@@ -216,6 +216,7 @@ class ScaleTool(Tool):
         obj = Selection.getSelectedObject(0)
         if obj:
             obj_scale = self._getScaleInWorldCoordinates(obj)
+            print(obj_scale)
             obj_width = obj.getBoundingBox().width / obj_scale.x
             target_scale = float(width) / obj_width
             if obj_scale.x != target_scale:
@@ -288,13 +289,10 @@ class ScaleTool(Tool):
                 Selection.applyOperation(ScaleOperation, scale_vector)
 
     ##  Convenience function that gives the scale of an object in the coordinate space of the world.
-    #   (it simply rotates it back)
     def _getScaleInWorldCoordinates(self, node):
-        transformation = node.getWorldTransformation()
-        orientation_quaternion = node.getOrientation()
-        rotation_matrix = orientation_quaternion.toMatrix()
-        rotation_matrix = rotation_matrix.getInverse()
-        new_transformation = rotation_matrix.preMultiply(transformation)
+        original_aabb = node.getOriginalBoundingBox()
+        aabb = node.getBoundingBox()
 
-        scale, shear, euler_angles, translation = new_transformation.decompose()
+        scale = Vector(aabb.width / original_aabb.width, aabb.height / original_aabb.height, aabb.depth / original_aabb.depth)
+
         return scale
