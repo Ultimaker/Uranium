@@ -170,8 +170,8 @@ Item
 
             onEditingFinished:
             {
-                text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                UM.ActiveTool.setProperty("ObjectWidth", text);
+                var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
+                UM.ActiveTool.setProperty("ObjectWidth", modified_text);
             }
         }
         TextField
@@ -191,8 +191,8 @@ Item
 
             onEditingFinished:
             {
-                text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                UM.ActiveTool.setProperty("ObjectDepth", text);
+                var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
+                UM.ActiveTool.setProperty("ObjectDepth", modified_text);
             }
         }
         TextField
@@ -212,8 +212,8 @@ Item
 
             onEditingFinished:
             {
-                text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                UM.ActiveTool.setProperty("ObjectHeight", text);
+                var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
+                UM.ActiveTool.setProperty("ObjectHeight", modified_text);
             }
         }
 
@@ -235,8 +235,8 @@ Item
 
             onEditingFinished:
             {
-                text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                UM.ActiveTool.setProperty("ScaleX", parseFloat(text) / 100);
+                var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
+                UM.ActiveTool.setProperty("ScaleX", parseFloat(modified_text) / 100);
             }
         }
         TextField
@@ -257,8 +257,8 @@ Item
 
             onEditingFinished:
             {
-                text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                UM.ActiveTool.setProperty("ScaleZ", parseFloat(text) / 100);
+                var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
+                UM.ActiveTool.setProperty("ScaleZ", parseFloat(modified_text) / 100);
             }
         }
         TextField
@@ -280,12 +280,11 @@ Item
 
             onEditingFinished:
             {
-                text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                UM.ActiveTool.setProperty("ScaleY", parseFloat(text) / 100);
+                var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
+                UM.ActiveTool.setProperty("ScaleY", parseFloat(modified_text) / 100);
             }
 
         }
-
 
         // We have to use indirect bindings, as the values can be changed from the outside, which could cause breaks
         // (for instance, a value would be set, but it would be impossible to change it).
@@ -315,22 +314,21 @@ Item
         {
             target: base
             property: "xPercentageText"
-            value: 100 * base.roundFloat(UM.ActiveTool.properties.getValue("ScaleX"), 4)
+            value: base.roundFloat(100 * UM.ActiveTool.properties.getValue("ScaleX"), 4)
         }
 
         Binding
         {
             target: base
             property: "yPercentageText"
-            value: 100 * base.roundFloat(UM.ActiveTool.properties.getValue("ScaleY"), 4)
+            value: base.roundFloat(100 * UM.ActiveTool.properties.getValue("ScaleY"), 4)
         }
 
         Binding
         {
             target: base
             property: "zPercentageText"
-            value: 100 * base.roundFloat(UM.ActiveTool.properties.getValue("ScaleZ"), 4)
+            value: base.roundFloat(100 * UM.ActiveTool.properties.getValue("ScaleZ"), 4)
         }
-
     }
 }

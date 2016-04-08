@@ -222,7 +222,12 @@ class ScaleTool(Tool):
             obj_scale = self._getScaleInWorldCoordinates(obj)
             obj_width = obj.getBoundingBox().width / obj_scale.x
             target_scale = float(width) / obj_width
-            self.setScaleX(target_scale)
+            if obj_scale.x != target_scale:
+                obj_scale.setX(target_scale)
+                if not self._non_uniform_scale:
+                    obj_scale.setY(target_scale)
+                    obj_scale.setZ(target_scale)
+                Selection.applyOperation(ScaleOperation, obj_scale, set_scale = True)
 
     def setObjectHeight(self, height):
         obj = Selection.getSelectedObject(0)
@@ -230,7 +235,12 @@ class ScaleTool(Tool):
             obj_scale = self._getScaleInWorldCoordinates(obj)
             obj_height = obj.getBoundingBox().height / obj_scale.y
             target_scale = float(height) / obj_height
-            self.setScaleY(target_scale)
+            if obj_scale.y != target_scale:
+                obj_scale.setY(target_scale)
+                if not self._non_uniform_scale:
+                    obj_scale.setX(target_scale)
+                    obj_scale.setZ(target_scale)
+                Selection.applyOperation(ScaleOperation, obj_scale, set_scale = True)
 
     def setObjectDepth(self, depth):
         obj = Selection.getSelectedObject(0)
@@ -238,7 +248,12 @@ class ScaleTool(Tool):
             obj_scale = self._getScaleInWorldCoordinates(obj)
             obj_depth = obj.getBoundingBox().depth / obj_scale.z
             target_scale = float(depth) / obj_depth
-            self.setScaleZ(target_scale)
+            if obj_scale.z != target_scale:
+                obj_scale.setZ(target_scale)
+                if not self._non_uniform_scale:
+                    obj_scale.setY(target_scale)
+                    obj_scale.setX(target_scale)
+                Selection.applyOperation(ScaleOperation, obj_scale, set_scale = True)
 
     def setScaleX(self, scale):
         obj = Selection.getSelectedObject(0)
@@ -277,13 +292,10 @@ class ScaleTool(Tool):
                 Selection.applyOperation(ScaleOperation, scale_vector)
 
     ##  Convenience function that gives the scale of an object in the coordinate space of the world.
-    #   (it simply rotates it back)
     def _getScaleInWorldCoordinates(self, node):
-        transformation = node.getWorldTransformation()
-        orientation_quaternion = node.getOrientation()
-        rotation_matrix = orientation_quaternion.toMatrix()
-        rotation_matrix = rotation_matrix.getInverse()
-        new_transformation = rotation_matrix.preMultiply(transformation)
+        original_aabb = node.getOriginalBoundingBox()
+        aabb = node.getBoundingBox()
 
-        scale, shear, euler_angles, translation = new_transformation.decompose()
+        scale = Vector(aabb.width / original_aabb.width, aabb.height / original_aabb.height, aabb.depth / original_aabb.depth)
+
         return scale

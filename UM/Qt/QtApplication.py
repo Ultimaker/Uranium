@@ -176,10 +176,27 @@ class QtApplication(QApplication, Application, SignalEmitter):
         return super().event(event)
 
     def windowClosed(self):
-        self.getMachineManager().saveAll()
-        Preferences.getInstance().writeToFile(Resources.getStoragePath(Resources.Preferences, self.getApplicationName() + ".cfg"))
-        self.applicationShuttingDown.emit()
-        self.getBackend().close()
+        Logger.log("d", "Shutting down %s", self.getApplicationName())
+        try:
+            self.getMachineManager().saveAll()
+        except Exception as e:
+            Logger.log("e", "Exception while saving machines: %s", repr(e))
+
+        try:
+            Preferences.getInstance().writeToFile(Resources.getStoragePath(Resources.Preferences, self.getApplicationName() + ".cfg"))
+        except Exception as e:
+            Logger.log("e", "Exception while saving preferences: %s", repr(e))
+
+        try:
+            self.applicationShuttingDown.emit()
+        except Exception as e:
+            Logger.log("e", "Exception while emitting shutdown signal: %s", repr(e))
+
+        try:
+            self.getBackend().close()
+        except Exception as e:
+            Logger.log("e", "Exception while closing backend: %s", repr(e))
+
         self.quit()
 
     ##  Load a Qt translation catalog.

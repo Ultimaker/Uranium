@@ -176,7 +176,10 @@ class OutputDeviceManager(SignalEmitter):
             return
 
         self._plugins[plugin.getPluginId()] = plugin
-        plugin.start()
+        try:
+            plugin.start()
+        except Exception as e:
+            Logger.log("e", "Exception starting plugin %s: %s", plugin.getPluginId(), repr(e))
 
     ##  Remove an OutputDevicePlugin by ID.
     #
@@ -184,10 +187,15 @@ class OutputDeviceManager(SignalEmitter):
     #
     #   \note This does nothing if the specified plugin_id was not found.
     def removeOutputDevicePlugin(self, plugin_id):
+        Logger.log("d", "Remove output device plugin %s", plugin_id)
         if plugin_id not in self._plugins:
             return
 
-        self._plugins[plugin_id].stop()
+        try:
+            self._plugins[plugin_id].stop()
+        except Exception as e:
+            Logger.log("e", "Exception stopping plugin %s: %s", plugin_id, repr(e))
+
         del self._plugins[plugin_id]
 
     ##  Get an OutputDevicePlugin by plugin ID

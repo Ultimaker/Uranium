@@ -523,4 +523,6 @@ class Profile(SignalEmitter):
 
     def _onDefaultValueChanged(self, setting):
         if setting.getKey() not in self._changed_settings:
-            self.settingValueChanged.emit(setting.getKey())
+            # Only emit  setting change events for settings that are part of the active instance.
+            if setting in self._active_instance.getMachineDefinition().getAllSettings(include_machine = True):
+                self.settingValueChanged.emit(setting.getKey())

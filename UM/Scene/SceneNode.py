@@ -53,6 +53,7 @@ class SceneNode(SignalEmitter):
         self._selectable = False
         self._calculate_aabb = True
         self._aabb = None
+        self._original_aabb = None
         self._aabb_job = None
         self._visible = kwargs.get("visible", True)
         self._name = kwargs.get("name", "")
@@ -544,6 +545,16 @@ class SceneNode(SignalEmitter):
 
         return AxisAlignedBox()
 
+    ##  Get the bounding box of this node and its children. Without taking any transformation into account
+    def getOriginalBoundingBox(self):
+        if self._original_aabb:
+            return self._original_aabb
+
+        if not self._aabb_job:
+            self._resetAABB()
+
+        return AxisAlignedBox()
+
     ##  Set whether or not to calculate the bounding box for this node.
     #
     #   \param calculate True if the bounding box should be calculated, False if not.
@@ -607,18 +618,21 @@ class _CalculateAABBJob(Job):
 
     def run(self):
         aabb = None
+        original_aabb = None
         if self._node._mesh_data:
             aabb = self._node._mesh_data.getExtents(self._node.getWorldTransformation())
-        else:
-            aabb = None
+            original_aabb = self._node._mesh_data.getExtents()
 
         for child in self._node._children:
             if aabb is None:
                 aabb = deepcopy(child.getBoundingBox())
+                original_aabb = deepcopy(child.getOriginalBoundingBox())
             else:
                 aabb += child.getBoundingBox()
+                original_aabb += child.getOriginalBoundingBox()
 
         self._node._aabb = aabb
+        self._node._original_aabb = original_aabb
         self._node._aabb_job = None
         if self._node.getParent():
             self._node.getParent()._resetAABB()
