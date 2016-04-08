@@ -1,7 +1,6 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-from UM.Mesh.Vertex import Vertex
 from UM.Math.Vector import Vector
 from UM.Math.AxisAlignedBox import AxisAlignedBox
 from UM.Signal import Signal, SignalEmitter
@@ -11,14 +10,12 @@ from enum import Enum
 
 from UM.View.GL.OpenGL import OpenGL
 
-import copy
 import numpy
 import numpy.linalg
 import hashlib
 from copy import deepcopy
 from time import time
 numpy.seterr(all="ignore") # Ignore warnings (dev by zero)
-
 
 class MeshType(Enum):
     faces = 1 # Start at one, as 0 is false (so if this is used in a if statement, it's always true)
