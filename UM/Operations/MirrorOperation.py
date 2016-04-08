@@ -4,6 +4,7 @@
 from . import Operation
 from UM.Scene.SceneNode import SceneNode
 
+
 class MirrorOperation(Operation.Operation):
     def __init__(self, node, mirror, **kwargs):
         super().__init__()

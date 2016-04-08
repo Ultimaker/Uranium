@@ -7,6 +7,7 @@ from UM.Logger import Logger
 import multiprocessing
 import threading
 
+
 ##  A thread pool and queue manager for Jobs.
 #
 #   The JobQueue class manages a queue of Job objects and a set of threads that
@@ -30,7 +31,7 @@ class JobQueue(SignalEmitter):
                 thread_count = 0
 
         if thread_count <= 0:
-            thread_count = 2 #Assume we can run at least two threads in parallel.
+            thread_count = 2  # Assume we can run at least two threads in parallel.
 
         self._threads = [_Worker(self) for t in range(thread_count)]
 
@@ -93,6 +94,7 @@ class JobQueue(SignalEmitter):
         return cls._instance
 
     _instance = None
+
 
 ##  Internal
 #

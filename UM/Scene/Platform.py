@@ -4,12 +4,12 @@
 from . import SceneNode
 
 from UM.Application import Application
-from UM.View.Renderer import Renderer
 from UM.Resources import Resources
 from UM.Math.Vector import Vector
 from UM.Job import Job
 
 from UM.View.GL.OpenGL import OpenGL
+
 
 class Platform(SceneNode.SceneNode):
     def __init__(self, parent):

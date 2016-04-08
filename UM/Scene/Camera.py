@@ -11,6 +11,7 @@ import numpy
 import numpy.linalg
 import copy
 
+
 ##  A SceneNode subclass that provides a camera object.
 #
 #   The camera provides a projection matrix and its transformation matrix

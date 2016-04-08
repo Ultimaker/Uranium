@@ -4,7 +4,7 @@
 from . import Operation
 
 from UM.Scene.Selection import Selection
-from UM.Scene.SceneNode import SceneNode
+
 
 class AddSceneNodeOperation(Operation.Operation):
     def __init__(self, node, parent):

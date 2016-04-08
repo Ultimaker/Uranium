@@ -9,8 +9,9 @@ from UM.Signal import Signal, SignalEmitter
 from UM.SaveFile import SaveFile
 from UM.Settings.Profile import Profile
 
+
 ##    A machine instance is a sort of wrapper for a machine definition.
-#     Where machine defintion defines base values of a machine
+#     Where machine definition defines base values of a machine
 #     The machine instance defines specific overrides of certain settings that are only
 #     valid for this -single instance- of the machine (eg; Some after market modification)
 class MachineInstance(SignalEmitter):
@@ -38,14 +39,14 @@ class MachineInstance(SignalEmitter):
 
     ##  Get key of this machine instance.
     #   This is different from the name in respect that it need not be human readable
-    #   The difference is simmilar with that of key & label for the settings.
+    #   The difference is similar with that of key & label for the settings.
     #   \sa setKey
     def getKey(self):
         return self._key
 
     ##  Set key of this machine instance.
     #   This is different from the name in respect that it need not be human readable
-    #   The difference is simmilar with that of key & label for the settings.
+    #   The difference is similar with that of key & label for the settings.
     #   \sa getKey
     def setKey(self, key):
         self._key = key

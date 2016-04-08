@@ -1,5 +1,6 @@
 from UM.Scene.SceneNodeDecorator import SceneNodeDecorator
 
+
 class GroupDecorator(SceneNodeDecorator):
     def __init__(self):
         super().__init__()

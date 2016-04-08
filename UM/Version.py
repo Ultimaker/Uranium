@@ -1,6 +1,7 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
+
 class Version(object):
     def __init__(self, version):
         super().__init__()

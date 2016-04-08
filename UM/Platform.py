@@ -3,6 +3,7 @@
 
 import sys
 
+
 ##  Convenience class to simplify OS checking and similar platform-specific handling.
 class Platform:
     class PlatformType:

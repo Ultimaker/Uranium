@@ -4,6 +4,7 @@
 from UM.Settings.Validators.Validator import Validator
 from UM.Settings.Validators.ResultCodes import ResultCodes
 
+
 ## Validates if a setting is within two possible ranges (error range & warning range) and if setting is integer.
 class IntValidator(Validator):
     def __init__(self, setting, min_value = None, max_value = None, min_value_warning = None, max_value_warning = None):

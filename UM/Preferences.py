@@ -3,12 +3,11 @@
 
 from UM.Signal import Signal, SignalEmitter
 from UM.Logger import Logger
-from UM.Resources import Resources
 
 from UM.SaveFile import SaveFile
 
-import os
 import configparser
+
 
 ##      Preferences are application based settings that are saved for future use. 
 #       Typical preferences would be window size, standard machine, etc.

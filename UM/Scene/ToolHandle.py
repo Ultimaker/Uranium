@@ -3,8 +3,6 @@
 
 from . import SceneNode
 
-from UM.View.Renderer import Renderer
-from UM.Mesh.MeshData import MeshData
 from UM.Resources import Resources
 from UM.Application import Application
 from UM.Math.Color import Color
@@ -14,6 +12,7 @@ from UM.Scene.Selection import Selection
 
 from UM.View.GL.OpenGL import OpenGL
 from UM.View.RenderBatch import RenderBatch
+
 
 ##    A tool handle is a object in the scene that gives queues for what the tool it is
 #     'paired' with can do. ToolHandles are used for translation, rotation & scale handles.

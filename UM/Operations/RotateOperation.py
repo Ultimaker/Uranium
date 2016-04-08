@@ -6,6 +6,7 @@ from UM.Math.Vector import Vector
 
 from . import Operation
 
+
 class RotateOperation(Operation.Operation):
     def __init__(self, node, rotation, **kwargs):
         super().__init__()

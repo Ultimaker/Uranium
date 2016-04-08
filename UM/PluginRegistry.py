@@ -7,6 +7,7 @@ from UM.Logger import Logger
 import imp
 import os
 
+
 ##  A central object to dynamically load modules as plugins.
 #
 #   The PluginRegistry class can load modules dynamically and use
@@ -20,7 +21,7 @@ class PluginRegistry(object):
     APIVersion = 2
 
     def __init__(self):
-        super(PluginRegistry,self).__init__() # Call super to make multiple inheritence work.
+        super(PluginRegistry,self).__init__()  # Call super to make multiple inheritence work.
         self._plugins = {}
         self._meta_data = {}
         self._plugin_locations = []

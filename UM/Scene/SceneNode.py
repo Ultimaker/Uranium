@@ -9,9 +9,8 @@ from UM.Signal import Signal, SignalEmitter
 from UM.Job import Job
 from UM.Mesh.MeshData import MeshData
 from UM.Logger import Logger
-from copy import copy, deepcopy
+from copy import deepcopy
 
-import math
 
 ##  A scene node object.
 #

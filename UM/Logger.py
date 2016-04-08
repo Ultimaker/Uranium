@@ -5,6 +5,7 @@ import traceback
 
 from UM.PluginObject import PluginObject
 
+
 ##  Static class used for logging purposes. This class is only meant to be used as a static class.
 class Logger:
     def __init__(self):

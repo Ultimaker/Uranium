@@ -1,14 +1,10 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-import sys
-import ctypes
-
-from UM.Application import Application
 from UM.Logger import Logger
-from UM.Platform import Platform
 
 from UM.View.GL.OpenGL import OpenGL
+
 
 ##  Base class for a rendering pass.
 #

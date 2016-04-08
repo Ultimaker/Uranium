@@ -2,7 +2,6 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 
-
 ##  Class containing helper functions for dealing with IEEE-754 floating point numbers.
 #
 #

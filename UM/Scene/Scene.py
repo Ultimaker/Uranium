@@ -8,6 +8,7 @@ from UM.Scene.Iterator.BreadthFirstIterator import BreadthFirstIterator
 
 import threading
 
+
 ##  Container object for the scene graph.
 #
 #   The main purpose of this class is to provide the root SceneNode.

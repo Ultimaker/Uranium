@@ -3,6 +3,7 @@
 
 from UM.PluginObject import PluginObject
 
+
 ##  Base class for mesh writer objects
 class MeshWriter(PluginObject):
     class OutputMode:

@@ -4,18 +4,18 @@
 from UM.Settings.Validators.IntValidator import IntValidator
 from UM.Settings.Validators.FloatValidator import FloatValidator
 from UM.Settings.Validators.ResultCodes import ResultCodes
-from PyQt5.QtCore import QCoreApplication
 from UM.Signal import Signal, SignalEmitter
 from UM.Logger import Logger
 
-import math
 import ast
 import collections
 from copy import deepcopy
 
+
 ##  Raised when an inheritance function tries to use a blacklisted method.
 class IllegalMethodError(Exception):
     pass
+
 
 ##  A setting object contains the definition of a (single) configuration setting.
 #

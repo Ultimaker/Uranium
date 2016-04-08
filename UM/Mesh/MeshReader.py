@@ -5,6 +5,7 @@ import os
 from enum import Enum
 from UM.PluginObject import PluginObject
 
+
 class MeshReader(PluginObject):
     ##  Used as the return value of MeshReader.preRead.
     class PreReadResult(Enum):

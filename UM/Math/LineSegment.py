@@ -1,7 +1,8 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-from UM.Math.Float import Float #For fuzzy comparison of edge cases.
+from UM.Math.Float import Float  # For fuzzy comparison of edge cases.
+
 
 ##  Represents a line segment in 2D.
 #

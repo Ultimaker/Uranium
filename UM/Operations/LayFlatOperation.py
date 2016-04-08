@@ -8,7 +8,6 @@ from UM.Math.Vector import Vector
 from UM.Math.Quaternion import Quaternion
 
 from UM.Signal import Signal
-from UM.Job import Job
 
 import math
 import time

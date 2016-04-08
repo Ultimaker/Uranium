@@ -1,7 +1,8 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-##      Abstact iterator class. 
+
+##    Abstract iterator class.
 class Iterator(object):
     def __init__(self, scene_node):
         super(Iterator, self).__init__() # Call super to make multiple inheritence work.

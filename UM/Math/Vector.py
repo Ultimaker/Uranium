@@ -10,6 +10,7 @@ from UM.Math.Float import Float
 # Disable divide-by-zero warnings so that 1.0 / (1.0, 0.0, 0.0) returns (1.0, Inf, Inf) without complaining
 numpy.seterr(divide="ignore")
 
+
 ##  Simple 3D-vector class based on numpy arrays.
 #
 #   This class represents a 3-dimensional vector.

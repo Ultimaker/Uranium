@@ -4,13 +4,15 @@
 import os
 import os.path
 import platform
-import sys
+
 
 class TypeError(Exception):
     pass
 
+
 class UnsupportedStorageTypeError(Exception):
     pass
+
 
 ##  Class to look up any form of resource used by Uranium or an application using Uranium
 class Resources:
@@ -66,7 +68,6 @@ class Resources:
             return paths[0]
 
         raise FileNotFoundError("Could not find resource {0} in {1}".format(args, type))
-
 
     ##  Get the path that can be used to write a certain resource file.
     #

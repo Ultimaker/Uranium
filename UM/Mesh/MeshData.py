@@ -17,6 +17,7 @@ from copy import deepcopy
 from time import time
 numpy.seterr(all="ignore") # Ignore warnings (dev by zero)
 
+
 class MeshType(Enum):
     faces = 1 # Start at one, as 0 is false (so if this is used in a if statement, it's always true)
     pointcloud = 2

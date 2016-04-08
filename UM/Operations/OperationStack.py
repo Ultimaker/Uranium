@@ -5,6 +5,7 @@ from UM.Signal import Signal, SignalEmitter
 
 import threading
 
+
 ##  A stack of operations
 class OperationStack(SignalEmitter):
     def __init__(self):

@@ -3,6 +3,7 @@
 
 from UM.Signal import Signal, SignalEmitter
 
+
 ##  Base class for output devices.
 #
 #   This class provides a base class for output devices. An output device can be

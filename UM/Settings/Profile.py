@@ -3,7 +3,7 @@
 
 import configparser
 from copy import deepcopy
-import io #For serialising the profile to strings.
+import io  # For serialising the profile to strings.
 
 from UM.Signal import Signal, SignalEmitter
 from UM.Settings import SettingsError
@@ -13,6 +13,7 @@ from UM.SaveFile import SaveFile
 
 from UM.i18n import i18nCatalog
 catalog = i18nCatalog("uranium")
+
 
 ##  Provides a collection of setting values
 #
@@ -75,7 +76,7 @@ class Profile(SignalEmitter):
     def setName(self, name):
         old_name = None
         if self in self._machine_manager.getProfiles():
-            #Only allow the current name of the profile if it is already in the list of profiles
+            # Only allow the current name of the profile if it is already in the list of profiles
             old_name = self._name
         name = self._machine_manager.makeUniqueProfileName(name, old_name)
         if name != self._name:
@@ -161,8 +162,8 @@ class Profile(SignalEmitter):
         self._dirty = True
 
         if not self._active_instance:
-            #Active profile is not yet set, so we can't check against machine definition or default values.
-            #This happens when loading profiles on first start of Cura.
+            # Active profile is not yet set, so we can't check against machine definition or default values.
+            # This happens when loading profiles on first start of Cura.
             self._changed_settings[key] = value
             return
 
@@ -174,8 +175,8 @@ class Profile(SignalEmitter):
         if not setting:
             return
         if not key in self._changed_settings_defaults and not self._type:
-            #Note: partial profiles and profiles based that have stored default
-            #values can have values that equal the default setting
+            # Note: partial profiles and profiles based that have stored default
+            # values can have values that equal the default setting
             if value == setting.getDefaultValue() or value == str(setting.getDefaultValue()):
                 if key in self._changed_settings:
                     del self._changed_settings[key]
@@ -392,7 +393,7 @@ class Profile(SignalEmitter):
     def loadFromFile(self, path):
         f = open(path) #Open file for reading.
         serialised = f.read()
-        self.unserialise(serialised, path) #Unserialise the serialised contents that we found in that file.
+        self.unserialise(serialised, path)  # Unserialise the serialised contents that we found in that file.
         self._dirty = False
 
     ##  Load a serialized profile from a string.
@@ -403,7 +404,7 @@ class Profile(SignalEmitter):
     #   \param origin A string representing the origin of this serialised
     #   string. This is only used when an error occurs.
     def unserialise(self, serialised, origin = "(unknown)"):
-        stream = io.StringIO(serialised) #ConfigParser needs to read from a stream.
+        stream = io.StringIO(serialised)  # ConfigParser needs to read from a stream.
         parser = configparser.ConfigParser(interpolation = None)
         parser.readfp(stream)
 
@@ -450,7 +451,7 @@ class Profile(SignalEmitter):
     def saveToFile(self, file):
         serialised = self.serialise() #Serialise this profile instance to a string.
         try:
-            with SaveFile(file, "wt", -1, "utf-8") as f: #Open the specified file.
+            with SaveFile(file, "wt", -1, "utf-8") as f:  # Open the specified file.
                 f.write(serialised)
         except Exception as e:
             Logger.log("e", "Failed to write profile to %s: %s", file, str(e))
@@ -461,10 +462,10 @@ class Profile(SignalEmitter):
 
     ##  Serialise this profile to a string.
     def serialise(self):
-        stream = io.StringIO() #ConfigParser needs to write to a stream.
+        stream = io.StringIO()  # ConfigParser needs to write to a stream.
         parser = configparser.ConfigParser(interpolation = None)
 
-        parser.add_section("general") #Write a general section.
+        parser.add_section("general")  # Write a general section.
         parser.set("general", "version", str(self.ProfileVersion))
         parser.set("general", "name", self._name)
         parser.set("general", "weight", str(self._weight))
@@ -479,12 +480,12 @@ class Profile(SignalEmitter):
         if self._material_name and not self._type:
             parser.set("general", "material", self._material_name)
 
-        parser.add_section("settings") #Write each changed setting in a settings section.
+        parser.add_section("settings")  # Write each changed setting in a settings section.
         for setting_key in self._changed_settings:
             parser.set("settings", setting_key , str(self._changed_settings[setting_key]))
 
         if len(self._changed_settings_defaults) > 0:
-            parser.add_section("defaults") #Write each changed setting in a settings section.
+            parser.add_section("defaults")  # Write each changed setting in a settings section.
             for setting_key in self._changed_settings_defaults:
                 parser.set("defaults", setting_key , str(self._changed_settings_defaults[setting_key]))
             if len(self._disabled_settings_defaults) > 0:
@@ -495,7 +496,7 @@ class Profile(SignalEmitter):
                 disabled_setting_string[:-1]
                 parser.set("disabled_defaults", "values", disabled_setting_string)
 
-        parser.write(stream) #Actually serialise it to the stream.
+        parser.write(stream)  # Actually serialise it to the stream.
         return stream.getvalue()
 
     ##  Reimplemented deepcopy that makes sure we do not copy the machine instance.

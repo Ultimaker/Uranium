@@ -14,7 +14,6 @@ import Arcus
 import struct
 import subprocess
 import threading
-import platform
 import sys
 from time import sleep
 

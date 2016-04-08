@@ -16,6 +16,7 @@ from UM.View.RenderPass import RenderPass
 from UM.View.RenderBatch import RenderBatch
 from UM.View.GL.OpenGL import OpenGL
 
+
 ##  A RenderPass subclass responsible for rendering selectable objects to a texture.
 #
 #   This pass performs the rendering of selectable objects to a texture that can be

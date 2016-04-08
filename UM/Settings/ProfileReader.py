@@ -3,6 +3,7 @@
 
 from UM.PluginObject import PluginObject
 
+
 class ProfileReader(PluginObject):
     def __init__(self):
         super().__init__()

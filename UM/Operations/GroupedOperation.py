@@ -3,6 +3,7 @@
 
 from . import Operation
 
+
 class GroupedOperation(Operation.Operation):
     def __init__(self):
         super().__init__()

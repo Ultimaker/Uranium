@@ -5,6 +5,7 @@ from UM.Scene.SceneNode import SceneNode
 
 from . import Operation
 
+
 class TranslateOperation(Operation.Operation):
     def __init__(self, node, translation, **kwargs):
         super().__init__()

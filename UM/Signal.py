@@ -10,6 +10,7 @@ import inspect
 import threading
 from weakref import WeakSet, WeakKeyDictionary
 
+
 ##  Simple implementation of signals and slots.
 #
 #   Signals and slots can be used as a light weight event system. A class can
@@ -31,7 +32,6 @@ from weakref import WeakSet, WeakKeyDictionary
 #
 #   Loosely based on http://code.activestate.com/recipes/577980-improved-signalsslots-implementation-in-python/
 #   \sa SignalEmitter
-
 class Signal:
     ##  Signal types.
     #   These indicate the type of a signal, that is, how the signal handles calling the connected

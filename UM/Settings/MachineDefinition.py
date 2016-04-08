@@ -4,9 +4,8 @@
 import json
 import collections
 import os.path
-from copy import deepcopy
 
-## Python 3.4 work arround (3.4 -> 3.5 added json.decoder.JSONDecodeError)
+## Python 3.4 work around (3.4 -> 3.5 added json.decoder.JSONDecodeError)
 try:
     JSONDecodeError = json.decoder.JSONDecodeError
 except:
@@ -20,6 +19,7 @@ from UM.Settings.SettingsCategory import SettingsCategory
 
 from UM.i18n import i18nCatalog
 uranium_catalog = i18nCatalog("uranium")
+
 
 class MachineDefinition(SignalEmitter):
     MachineDefinitionVersion = 1
@@ -39,7 +39,7 @@ class MachineDefinition(SignalEmitter):
         self._visible = True
         self._pages = []
         self._profiles_machine_id = ""
-        self._file_types = "" #The file types that this type of machine can read, such as g-code.
+        self._file_types = ""  # The file types that this type of machine can read, such as g-code.
 
         self._machine_settings = []
         self._categories = []
@@ -207,7 +207,6 @@ class MachineDefinition(SignalEmitter):
 
         self.settingsLoaded.emit()
 
-        #self._json_data = None
         self._loaded = True
 
     # Ensure that the required by setting keys are set.

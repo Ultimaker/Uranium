@@ -5,6 +5,7 @@ import time
 
 from UM.Application import Application
 
+
 ##  Base class for operations that should support undo and redo.
 class Operation:
     def __init__(self):

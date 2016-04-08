@@ -5,6 +5,7 @@ from UM.Signal import Signal, SignalEmitter
 from UM.Logger import Logger
 from UM.PluginRegistry import PluginRegistry
 
+
 ##  Manages all available output devices and the plugin objects used to create them.
 #
 #   This class is intended as the main entry point for anything relating to file saving.
