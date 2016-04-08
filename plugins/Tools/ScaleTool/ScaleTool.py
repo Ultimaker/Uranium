@@ -3,10 +3,8 @@
 
 from UM.Tool import Tool
 from UM.Event import Event, MouseEvent, KeyEvent
-from UM.Application import Application
 from UM.Scene.ToolHandle import ToolHandle
 from UM.Scene.Selection import Selection
-from UM.Scene.SceneNode import SceneNode
 from UM.Math.Plane import Plane
 from UM.Math.Vector import Vector
 
@@ -14,11 +12,9 @@ from UM.Operations.ScaleOperation import ScaleOperation
 from UM.Operations.GroupedOperation import GroupedOperation
 from UM.Operations.SetTransformOperation import SetTransformOperation
 from UM.Operations.ScaleToBoundsOperation import ScaleToBoundsOperation
-from UM.Operations.TranslateOperation import TranslateOperation
 
 from . import ScaleToolHandle
-import copy
-from UM.Math.Matrix import Matrix
+
 
 class ScaleTool(Tool):
     def __init__(self):
