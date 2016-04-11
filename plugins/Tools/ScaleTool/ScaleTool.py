@@ -216,7 +216,6 @@ class ScaleTool(Tool):
         obj = Selection.getSelectedObject(0)
         if obj:
             obj_scale = self._getScaleInWorldCoordinates(obj)
-            print(obj_scale)
             obj_width = obj.getBoundingBox().width / obj_scale.x
             target_scale = float(width) / obj_width
             if obj_scale.x != target_scale:
