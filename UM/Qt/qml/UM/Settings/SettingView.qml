@@ -118,7 +118,7 @@ ScrollView
                             opacity: settingVisible ? 1 : 0;
                             Behavior on opacity { NumberAnimation { duration: 75; } }
 
-                            enabled: categoryHeader.checked && settingVisible && model.enabled && !model.value_unused;
+                            property bool settingEnabled: categoryHeader.checked && settingVisible && model.enabled && !model.value_unused;
 
                             property bool loadComplete: status == Loader.Ready
 
