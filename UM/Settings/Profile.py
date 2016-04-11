@@ -326,17 +326,58 @@ class Profile(SignalEmitter):
                 return True
 
     ## Check whether the value of a setting in this profile is unused because all settings that depend on it have a setting value
+    #
+    #   \param setting \type{Setting} The setting which affected setting are checked.
     def checkValueUnused(self, setting):
         if not setting:
+            # Returncode irrelevant
             return True
 
-        dependent_settings = setting.getRequiredBySettingKeys()
-        if len(dependent_settings) < 1:
+        setting_type = setting.getType()
+        machine_definition = self._active_instance.getMachineDefinition()
+        all_affected_settings_disabled = True
+
+        # Check all settings that depend on this setting
+        affected_setting_keys = setting.getRequiredBySettingKeys()
+        if len(affected_setting_keys) < 1:
             return False
-        for key in dependent_settings:
-            if not self.hasSettingValue(key) and not self.checkValueUnused(self._active_instance.getMachineDefinition().getSetting(key)):
-                return False
+
+        for key in affected_setting_keys:
+            affected_setting = machine_definition.getSetting(key)
+            if not self.hasSettingValue(key):
+                # Make sure a numeric value is not counted as "overriding" a boolean value
+                if affected_setting.getType() != setting_type:
+                    return False
+
+                if affected_setting.isEnabled():
+                    all_affected_settings_disabled = False
+                    if not self.checkValueUnused(affected_setting):
+                        return False
+            elif affected_setting.isEnabled():
+                all_affected_settings_disabled = False
+
+        # If all affected settings are disabled, mark this setting as used
+        if all_affected_settings_disabled:
+            return False
+
         return True
+
+    ##  Emitted whenever a the value-unused of a setting changes.
+    #
+    #   \param key \type{string} The key of the setting that changed.
+    #   \param unused \type(boolean) The value-unused state of the setting.
+    settingValueUnusedChanged = Signal()
+
+    ##  Update the value-unused states of all settings that depend on a setting
+    #
+    #   \param setting \type(Setting) The setting of which the value_unused state should be checked
+    def updateUnusedValues(self, setting):
+        affecting_setting_keys = setting.getRequiredSettingKeys()
+        machine_definition = self._active_instance.getMachineDefinition()
+
+        for key in affecting_setting_keys:
+            unused = self.checkValueUnused(machine_definition.getSetting(key))
+            self.settingValueUnusedChanged.emit(key, unused)
 
     ## Force a setting value to be it's default. Regardless what the profile says
     def forceSettingValueToDefault(self, key):
