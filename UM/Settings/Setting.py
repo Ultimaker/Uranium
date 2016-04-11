@@ -7,6 +7,7 @@ from UM.Settings.Validators.ResultCodes import ResultCodes
 from UM.Signal import Signal, SignalEmitter
 from UM.Logger import Logger
 
+import math # This import is required for use in inherit functions
 import ast
 import collections
 from copy import deepcopy
