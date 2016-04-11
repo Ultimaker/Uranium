@@ -40,7 +40,7 @@ UM.Dialog
             id: nameField;
             width: parent.width;
             text: base.object;
-            maximumLength: 120;
+            maximumLength: 40;
             onTextChanged: base.textChanged(text);
         }
 
