@@ -138,10 +138,10 @@ msgctxt "@label"
 msgid "Wireframe View"
 msgstr "Rautalankanäkymä"
 
-#: /home/tamara/2.1/Uranium/plugins/Views/WireframeView/__init__.py:16
+#: /home/ruben/Projects/Uranium/plugins/Views/WireframeView/__init__.py:16
 msgctxt "@info:whatsthis"
-msgid "Provides a simple wireframe view"
-msgstr "Näyttää yksinkertaisen rautalankanäkymän"
+msgid "Provides a simple wireframe view."
+msgstr "Näyttää yksinkertaisen rautalankanäkymän."
 
 #: /home/tamara/2.1/Uranium/plugins/ConsoleLogger/__init__.py:13
 msgctxt "@label"
@@ -232,10 +232,10 @@ msgctxt "@label"
 msgid "Local File Output Device"
 msgstr "Paikallisen tiedoston tulostusväline"
 
-#: /home/tamara/2.1/Uranium/plugins/LocalFileOutputDevice/__init__.py:13
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/__init__.py:13
 msgctxt "@info:whatsthis"
-msgid "Enables saving to local files"
-msgstr "Mahdollistaa tallennuksen paikallisiin tiedostoihin"
+msgid "Enables saving to local files."
+msgstr "Mahdollistaa tallennuksen paikallisiin tiedostoihin."
 
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/OBJReader/__init__.py:13
 msgctxt "@label"
@@ -748,6 +748,31 @@ msgstr "Vahvista laitteen poisto"
 msgctxt "@label"
 msgid "Are you sure you wish to remove the machine?"
 msgstr "Haluatko varmasti poistaa laitteen?"
+
+#: /home/ruben/Projects/Uranium/UM/Settings/Profile.py:51
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:52
+msgctxt "@label"
+msgid "Current settings"
+msgstr "Nykyiset asetukset"
+
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Settings/SettingView.qml:223
+msgctxt "@label"
+msgid ""
+"This setting is normally calculated, but it currently has an absolute value "
+"set.\n"
+"\n"
+"Click to restore the calculated value."
+msgstr "Tämä asetus on normaalisti laskettu, mutta sillä on tällä hetkellä absoluuttinen arvo.\n\nPalauta laskettu arvo napsauttamalla."
+
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Settings/SettingView.qml:212
+msgctxt "@label"
+msgid "Affects:"
+msgstr "Koskee malleja:"
+
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Settings/SettingView.qml:217
+msgctxt "@label"
+msgid "Is affected by:"
+msgstr "Tähän vaikuttaa:"
 
 msgctxt "@info:status"
 msgid "Loaded <filename>{0}</filename>"
