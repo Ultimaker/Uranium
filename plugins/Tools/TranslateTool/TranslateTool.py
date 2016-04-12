@@ -17,6 +17,8 @@ from UM.Scene.ToolHandle import ToolHandle
 
 from . import TranslateToolHandle
 
+import time
+
 class TranslateTool(Tool):
     def __init__(self):
         super().__init__()
@@ -27,7 +29,12 @@ class TranslateTool(Tool):
         self._grid_snap = False
         self._grid_size = 10
         self._moved = False
+
+        self._distance_update_time = None
+        self._distance = None
+
         self.setExposedProperties(
+            "ToolHint",
             "X",
             "Y",
             "Z"
@@ -160,16 +167,30 @@ class TranslateTool(Tool):
 
                 if not self._moved:
                     self._moved = True
+                    self._distance = Vector(0, 0, 0)
                     self.operationStarted.emit(self)
 
                 Selection.applyOperation(TranslateOperation, drag)
+                self._distance += drag
+
 
             self.setDragStart(event.x, event.y)
+
+            # Rate-limit the angle change notification
+            # This is done to prevent the UI from being flooded with property change notifications,
+            # which in turn would trigger constant repaints.
+            new_time = time.monotonic()
+            if not self._distance_update_time or new_time - self._distance_update_time > 0.1:
+                self.propertyChanged.emit()
+                self._distance_update_time = new_time
+
             return True
 
         if event.type == Event.MouseReleaseEvent:
             if self.getDragPlane():
                 self.operationStopped.emit(self)
+                self._distance = None
+                self.propertyChanged.emit()
                 # Force scene changed event. Some plugins choose to ignore move events when operation is in progress.
                 if self._moved:
                     for node in Selection.getAllSelectedObjects():
@@ -181,3 +202,6 @@ class TranslateTool(Tool):
                 return True
 
         return False
+
+    def getToolHint(self):
+        return "%.2f mm" % self._distance.length() if self._distance else None

@@ -41,7 +41,7 @@ class RotateTool(Tool):
         self._iterations = 0
         self._total_iterations = 0
 
-        self.setExposedProperties("Rotation", "RotationSnap", "RotationSnapAngle")
+        self.setExposedProperties("ToolHint", "RotationSnap", "RotationSnapAngle")
 
     def event(self, event):
         super().event(event)
@@ -124,7 +124,7 @@ class RotateTool(Tool):
             # This is done to prevent the UI from being flooded with property change notifications,
             # which in turn would trigger constant repaints.
             new_time = time.monotonic()
-            if not self._angle_update_time or new_time - self._angle_update_time > 0.01:
+            if not self._angle_update_time or new_time - self._angle_update_time > 0.1:
                 self.propertyChanged.emit()
                 self._angle_update_time = new_time
 
@@ -145,8 +145,8 @@ class RotateTool(Tool):
                 self.operationStopped.emit(self)
                 return True
 
-    def getRotation(self):
-        return round(math.degrees(self._angle)) if self._angle else None
+    def getToolHint(self):
+        return "%d°" % round(math.degrees(self._angle)) if self._angle else None
 
     def getRotationSnap(self):
         return self._snap_rotation
