@@ -53,7 +53,7 @@ class ActiveProfileProxy(QObject):
 
     @pyqtProperty(bool, notify = settingValuesChanges)
     def hasCustomisedValues(self):
-        return self._active_profile.hasChangedSettings() == True
+        return self._active_profile.hasChangedSettings() == True if self._active_profile else False
 
     @pyqtProperty(QObject, notify = settingValuesChanges)
     def settingValues(self):
