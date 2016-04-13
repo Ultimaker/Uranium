@@ -73,8 +73,8 @@ class VersionUpgradeManager:
     #   This is abstracted to prevent having to maintain the same code in lots
     #   of different functions that do basically the same.
     #
-    #   This function basically executes Dijkstra's algorithm to compute all
-    #   single-destination shortest paths.
+    #   This function uses a breadth-first search to get the fewest number of
+    #   steps required to upgrade to the destination version.
     #
     #   \param preference_type The type of preference to compute the shortest
     #   upgrade paths of.
@@ -82,22 +82,24 @@ class VersionUpgradeManager:
     #   \return A dictionary with an entry each version number from which we can
     #   reach the destination version, naming the version upgrade plug-in with
     #   which to convert for the next step.
-    def _findShortestUpgradePaths(self, preference_type):
-        by_destination_version = self._sortByDestinationVersion(preference_type)
+    def _findShortestUpgradePaths(self, preference_type, destination_version):
+        by_source_version = self._sortBySourceVersion(preference_type)
         return {}
 
-    ##  Creates a look-up table to get plug-ins by what version they upgrade to.
+    ##  Creates a look-up table to get plug-ins by what version they upgrade
+    #   from.
     #
     #   \param preference_type The type of preference file the version number
     #   applies to.
     #   \return A dictionary with an entry for every version that the upgrade
-    #   plug-ins can convert to, and which plug-ins can convert to that version.
-    def _sortByDestinationVersion(self, preference_type):
+    #   plug-ins can convert from, and which plug-ins can convert from that
+    #   version.
+    def _sortBySourceVersion(self, preference_type):
         result = {}
         registry = PluginRegistry.getInstance()
         for plugin in self._versionUpgrades:
-            destination = registry.getMetaData(plugin.getPluginId())["version_upgrade"][preference_type]["to"]
-            if not destination in result: #Entry doesn't exist yet.
-                result[destination] = []
-            result[destination].append(plugin) #Sort this plug-in under the correct entry.
+            source = registry.getMetaData(plugin.getPluginId())["version_upgrade"][preference_type]["from"]
+            if not source in result: #Entry doesn't exist yet.
+                result[source] = []
+            result[source].append(plugin) #Sort this plug-in under the correct entry.
         return result
