@@ -34,7 +34,7 @@ msgstr "Pivoter"
 #: /home/tamara/2.1/Uranium/plugins/Tools/RotateTool/__init__.py:20
 msgctxt "@info:tooltip"
 msgid "Rotate Object"
-msgstr "Pivoter l’objet"
+msgstr "Pivoter l'objet"
 
 #: /home/tamara/2.1/Uranium/plugins/Tools/CameraTool/__init__.py:12
 msgctxt "@label"
@@ -59,7 +59,7 @@ msgstr "Accès à l'outil de sélection."
 #: /home/tamara/2.1/Uranium/plugins/Tools/ScaleTool/__init__.py:13
 msgctxt "@label"
 msgid "Scale Tool"
-msgstr "Outil de mise à l’échelle"
+msgstr "Outil de mise à l'échelle"
 
 #: /home/tamara/2.1/Uranium/plugins/Tools/ScaleTool/__init__.py:16
 msgctxt "@info:whatsthis"
@@ -69,12 +69,12 @@ msgstr "Accès à l'outil de mise à l'échelle"
 #: /home/tamara/2.1/Uranium/plugins/Tools/ScaleTool/__init__.py:20
 msgctxt "@label"
 msgid "Scale"
-msgstr "Mettre à l’échelle"
+msgstr "Mettre à l'échelle"
 
 #: /home/tamara/2.1/Uranium/plugins/Tools/ScaleTool/__init__.py:21
 msgctxt "@info:tooltip"
 msgid "Scale Object"
-msgstr "Mettre l’objet à l’échelle"
+msgstr "Mettre l'objet à l'échelle"
 
 #: /home/tamara/2.1/Uranium/plugins/Tools/MirrorTool/__init__.py:12
 msgctxt "@label"
@@ -136,10 +136,10 @@ msgctxt "@label"
 msgid "Wireframe View"
 msgstr "Vue filaire"
 
-#: /home/tamara/2.1/Uranium/plugins/Views/WireframeView/__init__.py:16
+#: /home/ruben/Projects/Uranium/plugins/Views/WireframeView/__init__.py:16
 msgctxt "@info:whatsthis"
-msgid "Provides a simple wireframe view"
-msgstr "Fournit une vue filaire simple"
+msgid "Provides a simple wireframe view."
+msgstr "Fournit une vue filaire simple."
 
 #: /home/tamara/2.1/Uranium/plugins/ConsoleLogger/__init__.py:13
 msgctxt "@label"
@@ -230,10 +230,10 @@ msgctxt "@label"
 msgid "Local File Output Device"
 msgstr "Fichier local Périphérique de sortie"
 
-#: /home/tamara/2.1/Uranium/plugins/LocalFileOutputDevice/__init__.py:13
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/__init__.py:13
 msgctxt "@info:whatsthis"
-msgid "Enables saving to local files"
-msgstr "Active la sauvegarde vers des fichiers locaux"
+msgid "Enables saving to local files."
+msgstr "Active la sauvegarde vers des fichiers locaux."
 
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/OBJReader/__init__.py:13
 msgctxt "@label"
@@ -747,83 +747,27 @@ msgctxt "@label"
 msgid "Are you sure you wish to remove the machine?"
 msgstr "Êtes-vous sûr de vouloir supprimer cette machine ?"
 
-#~ msgctxt "@info:status"
-#~ msgid "Loaded <filename>{0}</filename>"
-#~ msgstr "<filename>{0}</filename> wurde geladen"
+#: /home/ruben/Projects/Uranium/UM/Settings/Profile.py:51
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:52
+msgctxt "@label"
+msgid "Current settings"
+msgstr "Paramètres actuels"
 
-#~ msgctxt "@label"
-#~ msgid "Per Object Settings Tool"
-#~ msgstr "Werkzeug „Einstellungen für einzelne Objekte“"
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Settings/SettingView.qml:223
+msgctxt "@label"
+msgid ""
+"This setting is normally calculated, but it currently has an absolute value "
+"set.\n"
+"\n"
+"Click to restore the calculated value."
+msgstr "Ce paramètre est normalement calculé mais il possède actuellement une valeur absolue définie.\n\nCliquez pour restaurer la valeur calculée."
 
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Provides the Per Object Settings."
-#~ msgstr ""
-#~ "Stellt das Werkzeug „Einstellungen für einzelne Objekte“ zur Verfügung."
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Settings/SettingView.qml:212
+msgctxt "@label"
+msgid "Affects:"
+msgstr "Touche :"
 
-#~ msgctxt "@label"
-#~ msgid "Per Object Settings"
-#~ msgstr "Einstellungen für einzelne Objekte"
-
-#~ msgctxt "@info:tooltip"
-#~ msgid "Configure Per Object Settings"
-#~ msgstr "Per Objekteinstellungen konfigurieren"
-
-#~ msgctxt "@label"
-#~ msgid "Mesh View"
-#~ msgstr "Mesh-Ansicht"
-
-#~ msgctxt "@item:inmenu"
-#~ msgid "Solid"
-#~ msgstr "Solide"
-
-#~ msgctxt "@title:tab"
-#~ msgid "Machines"
-#~ msgstr "Maschinen"
-
-#~ msgctxt "@label"
-#~ msgid "Variant"
-#~ msgstr "Variante"
-
-#~ msgctxt "@item:inlistbox"
-#~ msgid "Cura Profiles (*.curaprofile)"
-#~ msgstr "Cura-Profile (*.curaprofile)"
-
-#~ msgctxt "@action:button"
-#~ msgid "Customize Settings"
-#~ msgstr "Einstellungen anpassen"
-
-#~ msgctxt "@info:tooltip"
-#~ msgid "Customise settings for this object"
-#~ msgstr "Einstellungen für dieses Objekt anpassen"
-
-#~ msgctxt "@title:window"
-#~ msgid "Pick a Setting to Customize"
-#~ msgstr "Wähle eine Einstellung zum Anpassen"
-
-#~ msgctxt "@info:tooltip"
-#~ msgid "Reset the rotation of the current selection."
-#~ msgstr "Drehung der aktuellen Auswahl zurücksetzen."
-
-#~ msgctxt "@info:tooltip"
-#~ msgid "Reset the scaling of the current selection."
-#~ msgstr "Skalierung der aktuellen Auswahl zurücksetzen."
-
-#~ msgctxt "@info:tooltip"
-#~ msgid "Scale to maximum size"
-#~ msgstr "Auf Maximalgröße skalieren"
-
-#~ msgctxt "OBJ Writer file format"
-#~ msgid "Wavefront OBJ File"
-#~ msgstr "Wavefront OBJ-Datei"
-
-#~ msgctxt "Loading mesh message, {0} is file name"
-#~ msgid "Loading {0}"
-#~ msgstr "Wird geladen {0}"
-
-#~ msgctxt "Finished loading mesh message, {0} is file name"
-#~ msgid "Loaded {0}"
-#~ msgstr "Geladen {0}"
-
-#~ msgctxt "Splash screen message"
-#~ msgid "Loading translations..."
-#~ msgstr "Übersetzungen werden geladen..."
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Settings/SettingView.qml:217
+msgctxt "@label"
+msgid "Is affected by:"
+msgstr "Est touché par :"
