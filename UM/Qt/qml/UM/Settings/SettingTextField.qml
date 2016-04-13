@@ -108,6 +108,8 @@ Rectangle
 
         selectByMouse: true;
 
+        maximumLength: 10;
+
         validator: RegExpValidator { regExp: /[0-9.,-]{0,10}/ }
 
         Binding
