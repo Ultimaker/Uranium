@@ -305,6 +305,9 @@ class ProfilesModel(ListModel):
                 "group": ""
             })
 
+        if not active_machine:
+            return
+
         profiles = self._manager.getProfiles(instance = self._manager.getActiveMachineInstance())
         profiles.sort(key = lambda k: (-k.isReadOnly(), k.getWeight(), k.getName()))
         for profile in profiles:
