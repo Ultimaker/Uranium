@@ -6,6 +6,8 @@ from UM.Preferences import Preferences
 from UM.Settings.MachineInstance import MachineInstance
 from UM.Settings.Profile import Profile
 
+import collections.deque
+
 ##  Regulates the upgrading of preferences from one application version to the
 #   next.
 #
@@ -79,27 +81,51 @@ class VersionUpgradeManager:
     #   \param preference_type The type of preference to compute the shortest
     #   upgrade paths of.
     #   \param destination_version The version to compute the shortest paths to.
-    #   \return A dictionary with an entry each version number from which we can
-    #   reach the destination version, naming the version upgrade plug-in with
-    #   which to convert for the next step.
+    #   \return A dictionary with an entry for each version number from which we
+    #   can reach the destination version, naming the version upgrade plug-in
+    #   with which to convert for the next step.
     def _findShortestUpgradePaths(self, preference_type, destination_version):
-        by_source_version = self._sortBySourceVersion(preference_type)
-        return {}
+        by_destination_version = self._sortByDestinationVersion(preference_type)
+        todo = {} #Set of undiscovered nodes.
+        for upgrade in self._versionUpgrades: #Copy to set.
+            todo.add(upgrade)
+
+        result = {}
+
+        #Perform a breadth-first search.
+        registry = PluginRegistry.getInstance()
+        front = collections.deque() #Use as a queue for breadth-first iteration: Append right, pop left.
+        done = {} #Flag explored upgrades as done.
+        for neighbour in by_destination_version(destination_version):
+            front.append(neighbour)
+            source_version = registry.getMetaData(neighbour.getPluginId())["version_upgrade"][preference_type]["from"]
+            if source_version not in result: #First time we encounter this version. Due to breadth-first search, this must be part of the shortest path then.
+                result[source_version] = neighbour
+        while len(front) > 0:
+            upgrade = front.popleft() #To make it a queue, pop on the opposite side of where you append!
+            for neighbour in by_destination_version(registry.getMetaData(upgrade.getPluginId())["version_upgrade"][preference_type]["to"]):
+                if neighbour in done: #Already encountered elsewhere. No need to re-compute.
+                    continue
+                front.append(neighbour)
+                source_version = registry.getMetaData(neighbour.getPluginId())["version_upgrade"][preference_type]["from"]
+                if source_version not in result: #First time we encounter this version. Due to breadth-first search, this must be part of the shortest path then.
+                    result[source_version] = neighbour
+
+        return result
 
     ##  Creates a look-up table to get plug-ins by what version they upgrade
-    #   from.
+    #   to.
     #
     #   \param preference_type The type of preference file the version number
     #   applies to.
     #   \return A dictionary with an entry for every version that the upgrade
-    #   plug-ins can convert from, and which plug-ins can convert from that
-    #   version.
-    def _sortBySourceVersion(self, preference_type):
+    #   plug-ins can convert to, and which plug-ins can convert to that version.
+    def _sortByDestinationVersion(self, preference_type):
         result = {}
         registry = PluginRegistry.getInstance()
         for plugin in self._versionUpgrades:
-            source = registry.getMetaData(plugin.getPluginId())["version_upgrade"][preference_type]["from"]
-            if not source in result: #Entry doesn't exist yet.
-                result[source] = []
-            result[source].append(plugin) #Sort this plug-in under the correct entry.
+            destination = registry.getMetaData(plugin.getPluginId())["version_upgrade"][preference_type]["to"]
+            if not destination in result: #Entry doesn't exist yet.
+                result[destination] = []
+            result[destination].append(plugin) #Sort this plug-in under the correct entry.
         return result
