@@ -16,6 +16,7 @@ from UM.Signal import Signal, SignalEmitter
 from UM.Settings import SettingsError
 from UM.Settings.Setting import Setting
 from UM.Settings.SettingsCategory import SettingsCategory
+from UM.Logger import Logger
 
 from UM.i18n import i18nCatalog
 uranium_catalog = i18nCatalog("uranium")
@@ -215,8 +216,13 @@ class MachineDefinition(SignalEmitter):
             # Ensure that the function that defines the default value is called.
             # This in turn ensures that the required setting keys are correctly set.
             setting.getDefaultValue()
-            for key in setting.getRequiredSettingKeys():
-                self.getSetting(key).addRequiredBySettingKey(setting.getKey())
+            required_setting_keys = setting.getRequiredSettingKeys()
+            for key in required_setting_keys:
+                required_setting = self.getSetting(key)
+                if required_setting:
+                    required_setting.addRequiredBySettingKey(setting.getKey())
+                else:
+                    Logger.log("w" ,"Trying to use non-existing setting from key %s for setting %s" , key, setting.getKey())
 
     ##  Get setting category by key
     #   \param key Category key to get.
