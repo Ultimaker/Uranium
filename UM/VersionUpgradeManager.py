@@ -86,10 +86,6 @@ class VersionUpgradeManager:
     #   with which to convert for the next step.
     def _findShortestUpgradePaths(self, preference_type, destination_version):
         by_destination_version = self._sortByDestinationVersion(preference_type)
-        todo = {} #Set of undiscovered nodes.
-        for upgrade in self._versionUpgrades: #Copy to set.
-            todo.add(upgrade)
-
         result = {}
 
         #Perform a breadth-first search.
