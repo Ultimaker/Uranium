@@ -26,10 +26,6 @@ class GroupedOperation(Operation.Operation):
     def addOperation(self, op):
         self._children.append(op)
 
-    ##  Removes an operation from this group.
-    def removeOperation(self, index):
-        del self._children[index]
-
     ##  Undo all operations in this group.
     #
     #   The operations are undone in reverse order as the order in which they
