@@ -26,6 +26,10 @@ from . import RotateToolHandle
 import math
 import time
 
+##  Provides the tool to rotate meshes and groups
+#
+#   The tool exposes a ToolHint to show the rotation angle of the current operation
+
 class RotateTool(Tool):
     def __init__(self):
         super().__init__()
@@ -43,18 +47,24 @@ class RotateTool(Tool):
 
         self.setExposedProperties("ToolHint", "RotationSnap", "RotationSnapAngle")
 
+    ##  Handle mouse and keyboard events
+    #
+    #   \param event type(Event)
     def event(self, event):
         super().event(event)
 
         if event.type == Event.KeyPressEvent and event.key == KeyEvent.ShiftKey:
+            # Snap is toggled when pressing the shift button
             self._snap_rotation = (not self._snap_rotation)
             self.propertyChanged.emit()
 
         if event.type == Event.KeyReleaseEvent and event.key == KeyEvent.ShiftKey:
+            # Snap is "toggled back" when releasing the shift button
             self._snap_rotation = (not self._snap_rotation)
             self.propertyChanged.emit()
 
         if event.type == Event.MousePressEvent and self._controller.getToolsEnabled():
+            # Start a rotate operation
             if MouseEvent.LeftButton not in event.buttons:
                 return False
 
@@ -83,6 +93,7 @@ class RotateTool(Tool):
                 self.operationStarted.emit(self)
 
         if event.type == Event.MouseMoveEvent:
+            # Perform a rotate operation
             if not self.getDragPlane():
                 return False
 
@@ -137,6 +148,7 @@ class RotateTool(Tool):
             self.setDragStart(event.x, event.y)
 
         if event.type == Event.MouseReleaseEvent:
+            # Finish a rotate operation
             if self.getDragPlane():
                 self.setDragPlane(None)
                 self.setLockedAxis(None)
@@ -145,28 +157,47 @@ class RotateTool(Tool):
                 self.operationStopped.emit(self)
                 return True
 
+    ##  Return a formatted angle of the current rotate operation
+    #
+    #   \return type(String) fully formatted string showing the angle by which the mesh(es) are rotated
     def getToolHint(self):
         return "%d°" % round(math.degrees(self._angle)) if self._angle else None
 
+    ##  Get the state of the "snap rotation to N-degree increments" option
+    #
+    #   \return type(Boolean)
     def getRotationSnap(self):
         return self._snap_rotation
 
+    ##  Set the state of the "snap rotation to N-degree increments" option
+    #
+    #   \param snap type(Boolean)
     def setRotationSnap(self, snap):
         if snap != self._snap_rotation:
             self._snap_rotation = snap
             self.propertyChanged.emit()
 
+    ##  Get the number of degrees used in the "snap rotation to N-degree increments" option
+    #
+    #   \return type(Number)
     def getRotationSnapAngle(self):
         return self._snap_angle
 
+    ##  Set the number of degrees used in the "snap rotation to N-degree increments" option
+    #
+    #   \param snap type(Number)
     def setRotationSnapAngle(self, angle):
         if angle != self._snap_angle:
             self._snap_angle = angle
             self.propertyChanged.emit()
 
+    ##  Reset the orientation of the mesh(es) to their original orientation(s)
     def resetRotation(self):
         Selection.applyOperation(SetTransformOperation, None, Quaternion(), None)
 
+    ##  Initialise and start a LayFlatOperation
+    #
+    #   Note: The LayFlat functionality is mostly used for 3d printing and should probably be moved into the Cura project
     def layFlat(self):
         self.operationStarted.emit(self)
         self._progress_message = Message("Laying object flat on buildplate...", lifetime = 0, dismissable = False)
@@ -191,10 +222,17 @@ class RotateTool(Tool):
         job.finished.connect(self._layFlatFinished)
         job.start()
 
+    ##  Called while performing the LayFlatOperation so progress can be shown
+    #
+    #   Note that the LayFlatOperation rate-limits these callbacks to prevent the UI from being flooded with property change notifications,
+    #   \param iterations type(int) number of iterations performed since the last callback
     def _layFlatProgress(self, iterations):
         self._iterations += iterations
         self._progress_message.setProgress(100 * self._iterations / self._total_iterations)
 
+    ##  Called when the LayFlatJob is done running all of its LayFlatOperations
+    #
+    #   \param job type(LayFlatJob)
     def _layFlatFinished(self, job):
         if self._progress_message:
             self._progress_message.hide()
@@ -202,6 +240,9 @@ class RotateTool(Tool):
 
         self.operationStopped.emit(self)
 
+##  A LayFlatJob bundles multiple LayFlatOperations for multiple selected objects
+#
+#   The job is executed on its own thread, processing each operation in order, so it does not lock up the GUI.
 class LayFlatJob(Job):
     def __init__(self, operations):
         super().__init__()

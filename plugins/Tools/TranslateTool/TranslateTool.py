@@ -19,6 +19,10 @@ from . import TranslateToolHandle
 
 import time
 
+##  Provides the tool to move meshes and groups
+#
+#   The tool exposes a ToolHint to show the distance of the current operation
+
 class TranslateTool(Tool):
     def __init__(self):
         super().__init__()
@@ -33,12 +37,7 @@ class TranslateTool(Tool):
         self._distance_update_time = None
         self._distance = None
 
-        self.setExposedProperties(
-            "ToolHint",
-            "X",
-            "Y",
-            "Z"
-        )
+        self.setExposedProperties("ToolHint", "X", "Y", "Z")
 
     def getX(self):
         if Selection.hasSelection():
@@ -97,13 +96,20 @@ class TranslateTool(Tool):
             Selection.applyOperation(TranslateOperation, new_position, set_position = True)
             self.operationStopped.emit(self)
 
+    ##  Set which axis/axes are enabled for the current translate operation
+    #
+    #   \param axis type(list) list of axes (expressed as ToolHandle enum)
     def setEnabledAxis(self, axis):
         self._enabled_axis = axis
         self._handle.setEnabledAxis(axis)
 
+    ##  Handle mouse and keyboard events
+    #
+    #   \param event type(Event)
     def event(self, event):
         super().event(event)
 
+        # Make sure the displayed values are updated if the boundingbox of the selected mesh(es) changes
         if event.type == Event.ToolActivateEvent:
             for node in Selection.getAllSelectedObjects():
                 node.boundingBoxChanged.connect(self.propertyChanged)
@@ -113,12 +119,15 @@ class TranslateTool(Tool):
                 node.boundingBoxChanged.disconnect(self.propertyChanged)
 
         if event.type == Event.KeyPressEvent and event.key == KeyEvent.ShiftKey:
+            # Snap-to-grid is turned on when pressing the shift button
             self._grid_snap = True
 
         if event.type == Event.KeyReleaseEvent and event.key == KeyEvent.ShiftKey:
+            # Snap-to-grid is turned off when releasing the shift button
             self._grid_snap = False
 
         if event.type == Event.MousePressEvent and self._controller.getToolsEnabled():
+            # Start a translate operation
 
             if MouseEvent.LeftButton not in event.buttons:
                 return False
@@ -143,6 +152,8 @@ class TranslateTool(Tool):
                 self.setDragPlane(Plane(Vector(0, 1, 0), 0))
 
         if event.type == Event.MouseMoveEvent:
+            # Perform a translate operation
+
             if not self.getDragPlane():
                 return False
 
@@ -173,7 +184,6 @@ class TranslateTool(Tool):
                 Selection.applyOperation(TranslateOperation, drag)
                 self._distance += drag
 
-
             self.setDragStart(event.x, event.y)
 
             # Rate-limit the angle change notification
@@ -187,6 +197,7 @@ class TranslateTool(Tool):
             return True
 
         if event.type == Event.MouseReleaseEvent:
+            # Finish a translate operation
             if self.getDragPlane():
                 self.operationStopped.emit(self)
                 self._distance = None
@@ -203,5 +214,8 @@ class TranslateTool(Tool):
 
         return False
 
+    ##  Return a formatted distance of the current translate operation
+    #
+    #   \return type(String) fully formatted string showing the distance by which the mesh(es) are dragged
     def getToolHint(self):
         return "%.2f mm" % self._distance.length() if self._distance else None

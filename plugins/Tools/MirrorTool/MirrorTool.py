@@ -17,16 +17,22 @@ from UM.Scene.ToolHandle import ToolHandle
 
 from . import MirrorToolHandle
 
+##  Provides the tool to mirror meshes and groups
+
 class MirrorTool(Tool):
     def __init__(self):
         super().__init__()
 
         self._handle = MirrorToolHandle.MirrorToolHandle()
 
+    ##  Handle mouse and keyboard events
+    #
+    #   \param event type(Event)
     def event(self, event):
         super().event(event)
 
         if event.type == Event.MousePressEvent and self._controller.getToolsEnabled():
+            # Initialise a mirror operation
             if MouseEvent.LeftButton not in event.buttons:
                 return False
 
@@ -39,6 +45,7 @@ class MirrorTool(Tool):
                 return True
 
         if event.type == Event.MouseReleaseEvent:
+            # Perform a mirror operation
             if self.getLockedAxis():
                 op = None
                 if Selection.getCount() == 1:
