@@ -6,7 +6,7 @@ from UM.Preferences import Preferences
 from UM.Settings.MachineInstance import MachineInstance
 from UM.Settings.Profile import Profile
 
-import collections.deque
+import collections.deque #For breadth-first search.
 
 ##  Regulates the upgrading of preferences from one application version to the
 #   next.
