@@ -97,6 +97,7 @@ class VersionUpgradeManager:
             source_version = registry.getMetaData(neighbour.getPluginId())["version_upgrade"][preference_type]["from"]
             if source_version not in result: #First time we encounter this version. Due to breadth-first search, this must be part of the shortest path then.
                 result[source_version] = neighbour
+            done += neighbour
         while len(front) > 0:
             upgrade = front.popleft() #To make it a queue, pop on the opposite side of where you append!
             for neighbour in by_destination_version(registry.getMetaData(upgrade.getPluginId())["version_upgrade"][preference_type]["to"]):
@@ -106,6 +107,7 @@ class VersionUpgradeManager:
                 source_version = registry.getMetaData(neighbour.getPluginId())["version_upgrade"][preference_type]["from"]
                 if source_version not in result: #First time we encounter this version. Due to breadth-first search, this must be part of the shortest path then.
                     result[source_version] = neighbour
+                done += neighbour
 
         return result
 
