@@ -21,6 +21,8 @@ class GroupedOperation(Operation.Operation):
     #
     #   The operation will be undone together with the rest of the operations in
     #   this group.
+    #   Note that when the order matters, the operations are undone in reverse
+    #   order as the order in which they are added.
     def addOperation(self, op):
         self._children.append(op)
 
@@ -29,8 +31,11 @@ class GroupedOperation(Operation.Operation):
         del self._children[index]
 
     ##  Undo all operations in this group.
+    #
+    #   The operations are undone in reverse order as the order in which they
+    #   were added.
     def undo(self):
-        for op in self._children:
+        for op in reversed(self._children):
             op.undo()
 
     ##  Redoes all operations in this group.
