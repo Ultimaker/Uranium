@@ -23,10 +23,10 @@ class TestVersionUpgradeManager():
     #   Each entry contains a list of possible upgrades. Each upgrade has a
     #   from_version, a to_version and a preference_type field. Each entry also
     #   has a destination version to upgrade to and a preference type to filter
-    #   on. Each entry has a list of possible answers, each of which is a list
-    #   of indices in the list of possible upgrades. Lastly, each entry has a
-    #   name for debugging.
-    test_shortest_path_data = [
+    #   on. Each entry has a list of possible answers, each of which is a
+    #   mapping of version numbers to indices referring to upgrades in the input
+    #   list. Lastly, each entry has a name for debugging.
+    test_shortest_paths_data = [
         ({
             "name": "two-step",
             "upgrades": [
@@ -36,7 +36,7 @@ class TestVersionUpgradeManager():
             "destination": 2,
             "preference_type": "a",
             "answers": [
-                [0, 1]
+                { 0: 0, 1: 1 }
             ]
         }),
         ({
@@ -48,8 +48,8 @@ class TestVersionUpgradeManager():
             "destination": 2,
             "preference_type": "a",
             "answers": [
-                [0],
-                [1]
+                { 0: 0 },
+                { 0: 1 }
             ]
         }),
         ({
@@ -62,7 +62,7 @@ class TestVersionUpgradeManager():
             "destination": 2,
             "preference_type": "a",
             "answers": [
-                [2]
+                { 0: 2, 1: 1 }
             ]
         }),
         ({
@@ -75,40 +75,40 @@ class TestVersionUpgradeManager():
             "destination": 2,
             "preference_type": "a",
             "answers": [
-                [1, 2]
+                { 0: 2, 1: 1 }
             ]
         })
     ]
 
-    @pytest.mark.parametrize("data", test_shortest_path_data)
-    def test_shortest_path(self, data):
+    @pytest.mark.parametrize("data", test_shortest_paths_data)
+    def test_shortest_paths(self, data):
         registry = Application.getInstance().getPluginRegistry()
         self._loadUpgrades(data["upgrades"])
-        shortest_path = self._upgrade_manager._findShortestUpgradePaths(data["preference_type"], data["destination"]) #Find the shortest path.
+        shortest_paths = self._upgrade_manager._findShortestUpgradePaths(data["preference_type"], data["destination"]) #Find the shortest path.
 
         #Convert the upgrades in the path to indices in our original data.
-        to_indices = []
-        for upgrade in shortest_path:
+        to_indices = {}
+        for version, upgrade in shortest_paths.items():
             metadata = registry.getMetaData(upgrade.getPluginId())["version_upgrade"]
-            for key, value in metadata.items(): #Get just the first element of the dict.
+            for key, value in metadata.items(): #Get just the first element of the dict. There is always only one.
                 preference_type = key
                 from_version = metadata[preference_type]["from"]
                 to_version = metadata[preference_type]["to"]
                 break
             for i in range(0, len(data["upgrades"])): #Which index does it have?
                 if data["upgrades"][i]["from_version"] == from_version and data["upgrades"][i]["to_version"] == to_version and data["upgrades"][i]["preference_type"] == preference_type:
-                    to_indices.append(i)
+                    to_indices[from_version] = i
                     break
-            else:
-                to_indices.append(-1)
 
         #Compare with the answers.
         for answer in data["answers"]:
-            if len(answer) != len(to_indices): #Not the same path length.
+            if len(answer) != len(to_indices): #Not the same amount of source versions.
                 continue #Incorrect answer.
-            for i in range(0, len(answer)):
-                if answer[i] != to_indices[i]:
-                    break
+            for version, upgrade in answer.items():
+                if version not in shortest_paths: #Key is missing!
+                    break #Incorrect answer.
+                if answer[version] != shortest_paths[version]: #Different plug-in for this version!
+                    break #Incorrect answer.
             else: #No indices were different. Answer is correct.
                 break
         else: #No answers were correct.
