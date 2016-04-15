@@ -136,3 +136,4 @@ class TestVersionUpgradeManager():
             plugin_object.setPluginId(id)
             registry._plugins[id] = plugin_object
             registry._meta_data[id] = metadata
+            self._upgrade_manager._addVersionUpgrade(plugin_object)
