@@ -105,9 +105,9 @@ class TestVersionUpgradeManager():
             if len(answer) != len(to_indices): #Not the same amount of source versions.
                 continue #Incorrect answer.
             for version, upgrade in answer.items():
-                if version not in shortest_paths: #Key is missing!
+                if version not in to_indices: #Key is missing!
                     break #Incorrect answer.
-                if answer[version] != shortest_paths[version]: #Different plug-in for this version!
+                if answer[version] != to_indices[version]: #Different plug-in for this version!
                     break #Incorrect answer.
             else: #No indices were different. Answer is correct.
                 break
