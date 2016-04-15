@@ -42,7 +42,7 @@ PreferencesPage
             {
                 width: pluginList.width;
                 height: childrenRect.height;
-                color: index % 2 ? palette.light : palette.midlight
+                color: index % 2 ? palette.base : palette.alternateBase
 
                 CheckBox
                 {
@@ -67,7 +67,7 @@ PreferencesPage
                             border.width: 0
                             color: "transparent"
                         }
-                        label: Text
+                        label: Label
                         {
                             renderType: Text.NativeRendering
                             horizontalAlignment: Text.AlignLeft
@@ -106,10 +106,10 @@ PreferencesPage
 
             title: catalog.i18nc("@title:window", "About %1").arg(plugin_name)
 
-            width: Screen.devicePixelRatio * 320;
-            height: Screen.devicePixelRatio * 240;
-            minimumWidth: 320
-            minimumHeight: 240
+            minimumWidth: Screen.devicePixelRatio * 320
+            minimumHeight: Screen.devicePixelRatio * 240
+            width: minimumWidth
+            height: minimumHeight
 
             Label
             {

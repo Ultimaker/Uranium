@@ -5,6 +5,7 @@ from UM.Settings.Setting import Setting
 from UM.Signal import Signal, SignalEmitter
 from UM.Logger import Logger
 
+
 ##  A Category containing a bunch of settings.
 class SettingsCategory(SignalEmitter):
     ##  A Category containing a bunch of settings.
@@ -22,7 +23,7 @@ class SettingsCategory(SignalEmitter):
         self._visible = True
         self._children_visible = False
         self._settings = []
-        self._depth = 0 #Depth of category is 0 by definition (used for display purposes)
+        self._depth = 0  # Depth of category is 0 by definition (used for display purposes)
         self._machine_manager = machine_manager
 
     ##  Set values of the setting by providing it with a dict object (as decoded by JSON parser)
@@ -95,7 +96,7 @@ class SettingsCategory(SignalEmitter):
             ret = s.getSetting(key)
             if ret is not None:
                 return ret
-        return None # No setting was found
+        return None  # No setting was found
 
     def getLabel(self):
         return self._label

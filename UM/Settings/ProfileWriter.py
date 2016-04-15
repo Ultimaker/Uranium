@@ -3,6 +3,7 @@
 
 from UM.PluginObject import PluginObject
 
+
 ##  Base class for profile writer plugins.
 #
 #   This class defines a write() function to write profiles to files with.

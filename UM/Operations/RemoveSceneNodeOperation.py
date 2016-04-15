@@ -3,9 +3,9 @@
 
 from . import Operation
 
-from UM.Scene.SceneNode import SceneNode
 from UM.Scene.Selection import Selection
 from UM.Application import Application
+
 
 ##  An operation that removes an list of SceneNode from the scene.
 class RemoveSceneNodeOperation(Operation.Operation):

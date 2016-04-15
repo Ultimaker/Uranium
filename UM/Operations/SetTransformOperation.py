@@ -3,6 +3,7 @@
 
 from . import Operation
 
+
 class SetTransformOperation(Operation.Operation):
     def __init__(self, node, translation = None, orientation = None, scale = None):
         super().__init__()

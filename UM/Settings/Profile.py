@@ -3,7 +3,7 @@
 
 import configparser
 from copy import deepcopy
-import io #For serialising the profile to strings.
+import io  # For serialising the profile to strings.
 
 from UM.Signal import Signal, SignalEmitter
 from UM.Settings import SettingsError
@@ -13,6 +13,7 @@ from UM.SaveFile import SaveFile
 
 from UM.i18n import i18nCatalog
 catalog = i18nCatalog("uranium")
+
 
 ##  Provides a collection of setting values
 #
@@ -75,7 +76,7 @@ class Profile(SignalEmitter):
     def setName(self, name):
         old_name = None
         if self in self._machine_manager.getProfiles():
-            #Only allow the current name of the profile if it is already in the list of profiles
+            # Only allow the current name of the profile if it is already in the list of profiles
             old_name = self._name
         name = self._machine_manager.makeUniqueProfileName(name, old_name)
         if name != self._name:
@@ -161,8 +162,8 @@ class Profile(SignalEmitter):
         self._dirty = True
 
         if not self._active_instance:
-            #Active profile is not yet set, so we can't check against machine definition or default values.
-            #This happens when loading profiles on first start of Cura.
+            # Active profile is not yet set, so we can't check against machine definition or default values.
+            # This happens when loading profiles on first start of Cura.
             self._changed_settings[key] = value
             return
 
@@ -174,8 +175,8 @@ class Profile(SignalEmitter):
         if not setting:
             return
         if not key in self._changed_settings_defaults and not self._type:
-            #Note: partial profiles and profiles based that have stored default
-            #values can have values that equal the default setting
+            # Note: partial profiles and profiles based that have stored default
+            # values can have values that equal the default setting
             if value == setting.getDefaultValue() or value == str(setting.getDefaultValue()):
                 if key in self._changed_settings:
                     del self._changed_settings[key]
@@ -224,6 +225,7 @@ class Profile(SignalEmitter):
     ##  Reset the settings that have a value set in this profile to a new set.
     def setChangedSettings(self, settings):
         self._changed_settings = settings
+        self._disabled_settings_defaults = []
         self._dirty = True
 
     ##  Get a dictionary of all setting values.
@@ -303,6 +305,8 @@ class Profile(SignalEmitter):
     #   /param filter_defaults Don't include setting if its value equals the default setting for this profile
     def hasSettingValue(self, key, filter_defaults = False):
         if filter_defaults:
+            if key in self._disabled_settings_defaults:
+                return True
             if not key in self._changed_settings:
                 return False
             if key in self._changed_settings_defaults:
@@ -322,17 +326,58 @@ class Profile(SignalEmitter):
                 return True
 
     ## Check whether the value of a setting in this profile is unused because all settings that depend on it have a setting value
+    #
+    #   \param setting \type{Setting} The setting which affected setting are checked.
     def checkValueUnused(self, setting):
         if not setting:
+            # Returncode irrelevant
             return True
 
-        dependent_settings = setting.getRequiredBySettingKeys()
-        if len(dependent_settings) < 1:
+        setting_type = setting.getType()
+        machine_definition = self._active_instance.getMachineDefinition()
+        all_affected_settings_disabled = True
+
+        # Check all settings that depend on this setting
+        affected_setting_keys = setting.getRequiredBySettingKeys()
+        if len(affected_setting_keys) < 1:
             return False
-        for key in dependent_settings:
-            if not self.hasSettingValue(key) and not self.checkValueUnused(self._active_instance.getMachineDefinition().getSetting(key)):
-                return False
+
+        for key in affected_setting_keys:
+            affected_setting = machine_definition.getSetting(key)
+            if not self.hasSettingValue(key):
+                # Make sure a numeric value is not counted as "overriding" a boolean value
+                if affected_setting.getType() != setting_type:
+                    return False
+
+                if affected_setting.isEnabled():
+                    all_affected_settings_disabled = False
+                    if not self.checkValueUnused(affected_setting):
+                        return False
+            elif affected_setting.isEnabled():
+                all_affected_settings_disabled = False
+
+        # If all affected settings are disabled, mark this setting as used
+        if all_affected_settings_disabled:
+            return False
+
         return True
+
+    ##  Emitted whenever a the value-unused of a setting changes.
+    #
+    #   \param key \type{string} The key of the setting that changed.
+    #   \param unused \type(boolean) The value-unused state of the setting.
+    settingValueUnusedChanged = Signal()
+
+    ##  Update the value-unused states of all settings that depend on a setting
+    #
+    #   \param setting \type(Setting) The setting of which the value_unused state should be checked
+    def updateUnusedValues(self, setting):
+        affecting_setting_keys = setting.getRequiredSettingKeys()
+        machine_definition = self._active_instance.getMachineDefinition()
+
+        for key in affecting_setting_keys:
+            unused = self.checkValueUnused(machine_definition.getSetting(key))
+            self.settingValueUnusedChanged.emit(key, unused)
 
     ## Force a setting value to be it's default. Regardless what the profile says
     def forceSettingValueToDefault(self, key):
@@ -389,7 +434,7 @@ class Profile(SignalEmitter):
     def loadFromFile(self, path):
         f = open(path) #Open file for reading.
         serialised = f.read()
-        self.unserialise(serialised, path) #Unserialise the serialised contents that we found in that file.
+        self.unserialise(serialised, path)  # Unserialise the serialised contents that we found in that file.
         self._dirty = False
 
     ##  Load a serialized profile from a string.
@@ -400,7 +445,7 @@ class Profile(SignalEmitter):
     #   \param origin A string representing the origin of this serialised
     #   string. This is only used when an error occurs.
     def unserialise(self, serialised, origin = "(unknown)"):
-        stream = io.StringIO(serialised) #ConfigParser needs to read from a stream.
+        stream = io.StringIO(serialised)  # ConfigParser needs to read from a stream.
         parser = configparser.ConfigParser(interpolation = None)
         parser.readfp(stream)
 
@@ -447,7 +492,7 @@ class Profile(SignalEmitter):
     def saveToFile(self, file):
         serialised = self.serialise() #Serialise this profile instance to a string.
         try:
-            with SaveFile(file, "wt", -1, "utf-8") as f: #Open the specified file.
+            with SaveFile(file, "wt", -1, "utf-8") as f:  # Open the specified file.
                 f.write(serialised)
         except Exception as e:
             Logger.log("e", "Failed to write profile to %s: %s", file, str(e))
@@ -458,10 +503,10 @@ class Profile(SignalEmitter):
 
     ##  Serialise this profile to a string.
     def serialise(self):
-        stream = io.StringIO() #ConfigParser needs to write to a stream.
+        stream = io.StringIO()  # ConfigParser needs to write to a stream.
         parser = configparser.ConfigParser(interpolation = None)
 
-        parser.add_section("general") #Write a general section.
+        parser.add_section("general")  # Write a general section.
         parser.set("general", "version", str(self.ProfileVersion))
         parser.set("general", "name", self._name)
         parser.set("general", "weight", str(self._weight))
@@ -476,12 +521,12 @@ class Profile(SignalEmitter):
         if self._material_name and not self._type:
             parser.set("general", "material", self._material_name)
 
-        parser.add_section("settings") #Write each changed setting in a settings section.
+        parser.add_section("settings")  # Write each changed setting in a settings section.
         for setting_key in self._changed_settings:
             parser.set("settings", setting_key , str(self._changed_settings[setting_key]))
 
         if len(self._changed_settings_defaults) > 0:
-            parser.add_section("defaults") #Write each changed setting in a settings section.
+            parser.add_section("defaults")  # Write each changed setting in a settings section.
             for setting_key in self._changed_settings_defaults:
                 parser.set("defaults", setting_key , str(self._changed_settings_defaults[setting_key]))
             if len(self._disabled_settings_defaults) > 0:
@@ -492,7 +537,7 @@ class Profile(SignalEmitter):
                 disabled_setting_string[:-1]
                 parser.set("disabled_defaults", "values", disabled_setting_string)
 
-        parser.write(stream) #Actually serialise it to the stream.
+        parser.write(stream)  # Actually serialise it to the stream.
         return stream.getvalue()
 
     ##  Reimplemented deepcopy that makes sure we do not copy the machine instance.
@@ -520,4 +565,6 @@ class Profile(SignalEmitter):
 
     def _onDefaultValueChanged(self, setting):
         if setting.getKey() not in self._changed_settings:
-            self.settingValueChanged.emit(setting.getKey())
+            # Only emit  setting change events for settings that are part of the active instance.
+            if setting in self._active_instance.getMachineDefinition().getAllSettings(include_machine = True):
+                self.settingValueChanged.emit(setting.getKey())

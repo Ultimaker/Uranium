@@ -144,7 +144,6 @@ class Theme(QObject):
                 f = QFont()
                 f.setFamily(font.get("family", QCoreApplication.instance().font().family()))
 
-                f.setStyleName(font.get("style", "Regular"))
                 f.setBold(font.get("bold", False))
                 f.setLetterSpacing(QFont.AbsoluteSpacing, font.get("letterSpacing", 0))
                 f.setItalic(font.get("italic", False))

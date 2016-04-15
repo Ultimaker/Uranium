@@ -19,7 +19,7 @@ Rectangle
 
     property variant parentValue: value //From parent loader
     function notifyReset() {
-        input.text = parentValue
+        input.text = format(parentValue)
     }
 
     color: {
@@ -86,21 +86,37 @@ Rectangle
             verticalCenter: parent.verticalCenter
         }
 
-        Keys.onReleased: if(parseFloat(text) != base.parentValue) base.valueChanged(parseFloat(text));
-        onEditingFinished: if(parseFloat(text) != base.parentValue) base.valueChanged(parseFloat(text));
+        Keys.onReleased:
+        {
+            text = text.replace(",", ".") // User convenience. We use dots for decimal values
+            if(parseFloat(text) != base.parentValue)
+            {
+                base.valueChanged(parseFloat(text));
+            }
+        }
+
+        onEditingFinished:
+        {
+            if(parseFloat(text) != base.parentValue)
+            {
+                base.valueChanged(parseFloat(text));
+            }
+        }
 
         color: !enabled ? itemStyle.controlDisabledTextColor : itemStyle.controlTextColor;
         font: itemStyle.controlFont;
 
         selectByMouse: true;
 
-        validator: RegExpValidator { regExp: /[0-9.,-]+/ }
+        maximumLength: 10;
+
+        validator: RegExpValidator { regExp: /[0-9.,-]{0,10}/ }
 
         Binding
         {
             target: input
             property: "text"
-            value: parseFloat(base.parentValue) ? roundFloat(parseFloat(base.parentValue), 4) : base.parentValue //If it's a float, round to four decimals.
+            value: format(base.parentValue)
             when: !input.activeFocus
         }
     }
@@ -117,5 +133,15 @@ Rectangle
         //Then convert to a string (is implicit). The fixed-point notation will be something like "3.200".
         //Then remove any trailing zeroes and the radix.
         return input.toFixed(decimals).replace(/\.?0*$/, ""); //Match on periods, if any ( \.? ), followed by any number of zeros ( 0* ), then the end of string ( $ ).
+    }
+
+    //Formats a value for display in the text field.
+    //
+    //This correctly handles formatting of float values.
+    //
+    //input:  The string value to format.
+    //return: The formatted string.
+    function format(inputValue) {
+      return parseFloat(inputValue) ? roundFloat(parseFloat(inputValue), 4) : inputValue //If it's a float, round to four decimals.
     }
 }

@@ -17,8 +17,8 @@ from UM.i18n import i18nCatalog
 import threading
 import argparse
 import os
-import urllib.parse
 import sys
+
 
 ##  Central object responsible for running the main event loop and creating other central objects.
 #
@@ -41,7 +41,7 @@ class Application(SignalEmitter):
         self._application_name = name
         self._version = version
         
-        os.putenv("UBUNTU_MENUPROXY","0") #For Ubuntu Unity this makes Qt use its own menu bar rather than pass it on to Unity.
+        os.putenv("UBUNTU_MENUPROXY","0")  # For Ubuntu Unity this makes Qt use its own menu bar rather than pass it on to Unity.
 
         Signal._app = self
         Resources.ApplicationIdentifier = name
@@ -56,7 +56,7 @@ class Application(SignalEmitter):
 
         self._main_thread = threading.current_thread()
 
-        super().__init__(**kwargs) # Call super to make multiple inheritence work.
+        super().__init__(**kwargs)  # Call super to make multiple inheritence work.
 
         self._renderer = None
 

@@ -4,7 +4,7 @@
 from UM.Resources import Resources
 
 import gettext
-import os
+
 
 ##  Wraps a gettext translation catalog for simplified use.
 #

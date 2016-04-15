@@ -15,6 +15,7 @@ else:
     def lockFile(file):
         pass
 
+
 ##  A class to handle atomic writes to a file.
 #
 #   This class can be used to perform atomic writes to a file. Atomic writes ensure

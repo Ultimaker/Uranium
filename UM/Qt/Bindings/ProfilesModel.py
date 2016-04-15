@@ -131,7 +131,13 @@ class ProfilesModel(ListModel):
                 profile.setName(file_name)
 
                 #Make sure the profile is available for the currently selected printer
-                profile.setMachineTypeId(self._manager.getActiveMachineInstance().getMachineDefinition().getProfilesMachineId())
+                active_machine = self._manager.getActiveMachineInstance()
+                profile.setMachineTypeId(active_machine.getMachineDefinition().getProfilesMachineId())
+                #If the profile defines a variant or material, but the printer does not, the profile would be filtered out
+                if not active_machine.getMachineDefinition().hasVariants():
+                    profile.setMachineVariantName(None)
+                if not active_machine.hasMaterials():
+                    profile.setMaterialName(None)
                 self._manager.addProfile(profile) #Add the new profile to the list of profiles.
                 return { "status": "ok", "message": catalog.i18nc("@info:status", "Successfully imported profile {0}", profile.getName()) }
 
@@ -224,7 +230,7 @@ class ProfilesModel(ListModel):
         for extension, description in self._manager.getSupportedProfileTypesRead().items(): #Format the file types that can be read correctly for the open file dialog.
             all_supported.append("*." + extension)
             filters.append(description + " (*." + extension + ")")
-        filters.insert(0, catalog.i18nc("@item:inlistbox", "All supported files") + "(" + " ".join(all_supported) + ")") #An entry to show all file extensions that are supported.
+        filters.insert(0, catalog.i18nc("@item:inlistbox", "All supported files") + " (" + " ".join(all_supported) + ")") #An entry to show all file extensions that are supported.
         filters.append(catalog.i18nc("@item:inlistbox", "All Files (*)")) #Also allow arbitrary files, if the user so prefers.
         return filters
 
@@ -298,6 +304,9 @@ class ProfilesModel(ListModel):
                 "settings": settings_list,
                 "group": ""
             })
+
+        if not active_machine:
+            return
 
         profiles = self._manager.getProfiles(instance = self._manager.getActiveMachineInstance())
         profiles.sort(key = lambda k: (-k.isReadOnly(), k.getWeight(), k.getName()))

@@ -4,10 +4,9 @@
 from UM.Application import Application
 from UM.Resources import Resources
 
-from UM.Math.Matrix import Matrix
-
 from UM.View.RenderPass import RenderPass
 from UM.View.GL.OpenGL import OpenGL
+
 
 ##  A RenderPass subclass providing the final composition render.
 #

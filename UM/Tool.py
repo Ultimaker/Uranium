@@ -5,7 +5,8 @@ from UM.Signal import Signal, SignalEmitter
 from UM.PluginObject import PluginObject
 from UM.Event import Event
 from UM.Scene.Selection import Selection
-import UM.Application # Circular dependency blah
+import UM.Application  # Circular dependency blah
+
 
 ##  Abstract base class for tools that manipulate (or otherwise interact with) the scene.
 #

@@ -1,11 +1,9 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-import copy
 import numpy
 import time
 
-from UM.Job import Job
 from UM.Math.Float import Float #For fuzzy comparison of edge cases.
 from UM.Math.LineSegment import LineSegment #For line-line intersections for computing polygon intersections.
 from UM.Math.Vector2 import Vector2 #For constructing line segments for polygon intersections.
@@ -15,6 +13,7 @@ try:
     has_scipy = True
 except ImportError:
     has_scipy = False
+
 
 ##  A class representing an arbitrary 2-dimensional polygon.
 class Polygon:

@@ -3,17 +3,16 @@
 
 import urllib
 import os
-import json
 import copy
 import re
 
-from PyQt5.QtWidgets import QMessageBox #Used in _confirmReplaceCurrentSettings() by lack of a Uranium MessageBox API
+from PyQt5.QtWidgets import QMessageBox  # Used in _confirmReplaceCurrentSettings() by lack of a Uranium MessageBox API
 
-import UM #For using UM.Message, which we cannot import here because that would lead to a circular import
+import UM  # For using UM.Message, which we cannot import here because that would lead to a circular import
 from UM.Signal import Signal, SignalEmitter
 from UM.Resources import Resources
 from UM.Logger import Logger
-from UM.PluginRegistry import PluginRegistry #For registering profile reader plugins.
+from UM.PluginRegistry import PluginRegistry  # For registering profile reader plugins.
 from UM.Preferences import Preferences
 
 from UM.Settings.MachineDefinition import MachineDefinition
@@ -24,6 +23,7 @@ from UM.Settings import SettingsError
 from UM.i18n import i18nCatalog
 catalog = i18nCatalog("uranium")
 
+
 class MachineManager(SignalEmitter):
     def __init__(self, app_name):
         super().__init__()
@@ -32,15 +32,15 @@ class MachineManager(SignalEmitter):
 
         self._machine_definitions = []
         self._machine_instances = []
-        self._profiles = [] #All the profiles that are loaded from disk, for any machine instance
+        self._profiles = []  # All the profiles that are loaded from disk, for any machine instance
 
         self._active_machine = None
         self._active_profile = None
 
         self._protect_working_profile = False
 
-        self._profile_readers = {} #Plugins that read profiles from file.
-        self._profile_writers = {} #Plugins that write profiles to file.
+        self._profile_readers = {}  # Plugins that read profiles from file.
+        self._profile_writers = {}  # Plugins that write profiles to file.
         PluginRegistry.addType("profile_reader", self.addProfileReader)
         PluginRegistry.addType("profile_writer", self.addProfileWriter)
 
@@ -86,7 +86,7 @@ class MachineManager(SignalEmitter):
 
         for profile in self._profiles:
             profile_type = profile.getType()
-            #Filter out "partial" profiles
+            # Filter out "partial" profiles
             if profile_type == "material":
                 generic_materials.append(profile.getName())
                 continue
@@ -105,12 +105,12 @@ class MachineManager(SignalEmitter):
                 machine_materials.append(material)
 
         if len(machine_materials) > 0:
-            #This includes Ultigcode printers that have machine-specific material profiles (eg Ultimaker 2+)
+            # This includes Ultigcode printers that have machine-specific material profiles (eg Ultimaker 2+)
             return machine_materials
         else:
             try:
                 if machine.getMachineDefinition().getSetting("machine_gcode_flavor").getDefaultValue() == "UltiGCode":
-                    #UltiGCode printers don't use the generic set of generic materials (eg Ultimaker 2)
+                    # UltiGCode printers don't use the generic set of generic materials (eg Ultimaker 2)
                     return []
             except:
                 return []
@@ -188,15 +188,15 @@ class MachineManager(SignalEmitter):
 
     def makeUniqueMachineInstanceName(self, base_name, machine_type_name, old_name = None):
         base_name = base_name.strip()
-        num_check = re.compile("(.*?)\s*#\d*$").match(base_name)
+        num_check = re.compile("(.*?)\s*#\d+$").match(base_name)
         if(num_check):
             base_name = num_check.group(1)
         if base_name == "":
             base_name = machine_type_name
-        instance_name = base_name
+        instance_name = base_name[0:40]
         i = 1
-        #Make sure there is no machine instance with the same name,
-        #except if it is the old name of the same instance we are renaming
+        # Make sure there is no machine instance with the same name,
+        # except if it is the old name of the same instance we are renaming
         while self.findMachineInstance(instance_name):
             if instance_name == old_name:
                 break
@@ -265,12 +265,12 @@ class MachineManager(SignalEmitter):
             return
 
         material_profile = self.findProfile(material, type_name = "material", instance = self._active_machine)
-        #This finds only profiles of type "material", which are partial profiles
+        # This finds only profiles of type "material", which are partial profiles
         if material_profile:
             self._active_machine.getWorkingProfile().mergeSettingsFrom(material_profile, reset = False)
         else:
-            #If there are unsaved current settings, confirm with the user before switching variants,
-            #because switching variants will load a new profile
+            # If there are unsaved current settings, confirm with the user before switching variants,
+            # because switching variants will load a new profile
             working_profile = self._active_machine.getWorkingProfile()
             if working_profile.hasChangedSettings() and not self._confirmReplaceCurrentSettings(material):
                 return
@@ -278,7 +278,7 @@ class MachineManager(SignalEmitter):
         if material != self._active_machine.getMaterialName():
             self._active_machine.setMaterialName(material)
 
-            #Update the UI if the material selection and/or settings have changed
+            # Update the UI if the material selection and/or settings have changed
             self.activeMachineInstanceChanged.emit()
 
     def setActiveMachineVariant(self, variant):
@@ -289,8 +289,8 @@ class MachineManager(SignalEmitter):
         if not variant:
             return
 
-        #If there are unsaved current settings, confirm with the user before switching variants,
-        #because switching variants will load a new profile
+        # If there are unsaved current settings, confirm with the user before switching variants,
+        # because switching variants will load a new profile
         working_profile = self._active_machine.getWorkingProfile()
         if working_profile.hasChangedSettings() and not self._confirmReplaceCurrentSettings(variant.getVariantName()):
             return
@@ -312,6 +312,13 @@ class MachineManager(SignalEmitter):
 
     profileNameChanged = Signal()
 
+    ##  Get all loaded profiles, or profiles filtered by type or instance
+    #   \param type_name \type{string} only return profiles of this type
+    #   \param instance \type{MachineInstance} only return profiles for this instance
+    #   \returns profiles \type{Profile}
+    #
+    #   Profiles with type="material" are only ever used for printers that don't have printer-specific profiles,
+    #   ie printers like the UMO. The UM2 would also apply, but it does not use materials at all due to UltiGCode.
     def getProfiles(self, type_name = None, instance = None):
         if not instance:
             return self._profiles
@@ -323,18 +330,25 @@ class MachineManager(SignalEmitter):
 
         generic_profiles = []
         specific_profiles = []
-        add_generic_profiles = (type_name == None);
+        add_generic_profiles = (type_name == None)
+        add_generic_material_profiles = True
 
         for profile in self._profiles:
             profile_type = profile.getType()
-            #Filter out "partial" profiles
-            if type_name != "all" and type_name != profile_type:
-                continue
 
             machine_type = profile.getMachineTypeId()
             machine_variant = profile.getMachineVariantName()
             machine_instance = profile.getMachineInstanceName()
             material = profile.getMaterialName()
+
+            # Filter out "partial" profiles
+            if type_name != "all" and type_name != profile_type:
+                if material:
+                    if machine_instance and (machine_instance == active_machine_instance):
+                        add_generic_material_profiles = False
+                    elif machine_variant and (machine_variant == active_machine_variant):
+                        add_generic_material_profiles = False
+                continue
 
             if machine_type and machine_type == active_machine_type or machine_type == "all":
                 is_specific_profile = False
@@ -349,15 +363,20 @@ class MachineManager(SignalEmitter):
                 if is_specific_profile:
                     specific_profiles.append(profile)
                     if profile.isReadOnly():
-                        #There is at least one machine-specific starter-profile, so we don't need the generic profiles
+                        # There is at least one machine-specific starter-profile, so we don't need the generic profiles
                         add_generic_profiles = False
 
             elif not machine_type:
                 generic_profiles.append(profile)
 
-        if len(specific_profiles) == 0:
-            #No starter-profiles were found
-            return generic_profiles
+        if not type_name:
+            if len(specific_profiles) == 0:
+                # No starter-profiles were found
+                return generic_profiles
+        else:
+            if add_generic_material_profiles:
+                # Only add generic material profiles if no machine-specific profiles with material are found
+                return generic_profiles
 
         if add_generic_profiles:
             specific_profiles.extend(generic_profiles)
@@ -380,18 +399,28 @@ class MachineManager(SignalEmitter):
     def addProfileFromWorkingProfile(self):
         profile = copy.deepcopy(self._active_machine.getWorkingProfile())
 
-        #Create regular expression from translated string to prevent (Customised) (Customised) names
+        # Create regular expression from translated string to prevent (Customised) (Customised) names
         active_profile_name = self._active_profile.getName()
         custom_name_pattern = catalog.i18nc("@item:intext appended to customised profiles ({0} is old profile name)", "{0} (Customised)")
         pattern = re.compile(custom_name_pattern.format(".*?").replace("(", "\(").replace(")", "\)"))
         if not pattern.match(active_profile_name):
             profile.setName(custom_name_pattern.format(active_profile_name))
         else:
-            #setName will add "#2" as necessary
+            # setName will add "#2" as necessary
             profile.setName(active_profile_name)
 
-        #Make this profile available to all printers of the same type only
+        # Make this profile available to all printers of the same type only
         profile.setMachineTypeId(self._active_profile.getMachineTypeId())
+        self._profiles.append(profile)
+        self.profilesChanged.emit()
+
+        return profile
+
+    def duplicateProfile(self, profile, new_name):
+        profile = copy.deepcopy(profile)
+
+        profile.setName(new_name)
+        profile.setReadOnly(False)
         self._profiles.append(profile)
         self.profilesChanged.emit()
 
@@ -419,7 +448,7 @@ class MachineManager(SignalEmitter):
                 self.setActiveProfile(None)
 
     def findProfile(self, name, variant_name = None, material_name = None, type_name = None, instance = None):
-        profiles = self.getProfiles(type_name = type_name, instance = instance);
+        profiles = self.getProfiles(type_name = type_name, instance = instance)
 
         for profile in profiles:
             if profile.getName().lower() == name.lower():
@@ -433,15 +462,15 @@ class MachineManager(SignalEmitter):
 
     def makeUniqueProfileName(self, base_name, old_name = None):
         base_name = base_name.strip()
-        num_check = re.compile("(.*?)\s*#\d*$").match(base_name)
+        num_check = re.compile("(.*?)\s*#\d+$").match(base_name)
         if(num_check):
             base_name = num_check.group(1)
         if base_name == "":
             base_name = catalog.i18nc("@item:profile name", "Custom profile")
-        profile_name = base_name
+        profile_name = base_name[0:40]
         i = 1
-        #Make sure there is no profile for any instance/variant/material with the same name,
-        #except if it is the old name of the same profile we are renaming
+        # Make sure there is no profile for any instance/variant/material with the same name,
+        # except if it is the old name of the same profile we are renaming
         while self.findProfile(profile_name):
             if profile_name == old_name:
                 break
@@ -471,10 +500,10 @@ class MachineManager(SignalEmitter):
             if working_profile.hasChangedSettings() and not self._confirmReplaceCurrentSettings(profile.getName()):
                 return
 
-            #Replace working profile with a copy of the new profile
+            # Replace working profile with a copy of the new profile
             working_profile.mergeSettingsFrom(profile, reset = True)
 
-            #Reapply previously selected partial material profile
+            # Re-apply previously selected partial material profile
             if self._active_machine.hasMaterials():
                 self.setActiveMaterial(self._active_machine.getMaterialName())
 
@@ -738,7 +767,7 @@ class MachineManager(SignalEmitter):
         except FileNotFoundError:
             pass
 
-        #Update machine instance name for all profiles attached to this machine instance
+        # Update machine instance name for all profiles attached to this machine instance
         for profile in self._profiles:
             if profile.isReadOnly() or profile.getMachineInstanceName() != old_name:
                 continue
@@ -800,7 +829,7 @@ class MachineManager(SignalEmitter):
             if profile.getMaterialName():
                 instance.setMaterialName(profile.getMaterialName())
 
-            #Set working profile to a copy of the new profile
+            # Set working profile to a copy of the new profile
             instance.getWorkingProfile().mergeSettingsFrom(profile, reset = True)
 
             if not profile.getMaterialName() and instance.hasMaterials():
@@ -809,7 +838,7 @@ class MachineManager(SignalEmitter):
                 instance.getWorkingProfile().mergeSettingsFrom(material_profile, reset = False)
 
     def _confirmReplaceCurrentSettings(self, selection_name):
-        #TODO: Refactor to use a Uranium MessageBox API instead of introducing a dependency on PyQt5
+        # TODO: Refactor to use a Uranium MessageBox API instead of introducing a dependency on PyQt5
         message_box = QMessageBox()
         message_box.setIcon(QMessageBox.Question)
         message_box.setWindowTitle(catalog.i18nc("@title:window", "Replace profile"))
@@ -834,7 +863,7 @@ class MachineManager(SignalEmitter):
             message = UM.Message.Message(catalog.i18nc("@info:status", "Added a new profile named \"{0}\"").format(profile.getName()))
             message.show()
         elif result == update_button:
-            #Replace changed settings of the profile with the changed settings of the working profile
+            # Replace changed settings of the profile with the changed settings of the working profile
             self._active_profile.setChangedSettings(self.getWorkingProfile().getChangedSettings())
         elif result == discard_button:
             pass

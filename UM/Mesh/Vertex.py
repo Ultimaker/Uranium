@@ -4,8 +4,8 @@
 from UM.Math.Vector import Vector
 import numpy
 
-##  A vertex with a position and a normal.
 
+##  A vertex with a position and a normal.
 class Vertex(object):
     ##  Construct a vertex.
     #

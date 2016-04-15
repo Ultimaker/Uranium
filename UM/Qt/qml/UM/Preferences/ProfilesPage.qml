@@ -4,7 +4,6 @@
 import QtQuick 2.1
 import QtQuick.Controls 1.1
 import QtQuick.Dialogs 1.2
-import QtQuick.Layouts 1.2
 
 import UM 1.1 as UM
 
@@ -13,13 +12,28 @@ ManagementPage
     id: base;
 
     title: catalog.i18nc("@title:tab", "Profiles");
+    addText: catalog.i18nc("@label", "Duplicate")
 
     model: UM.ProfilesModel { addWorkingProfile: true; }
 
-    onAddObject: { var selectedProfile = UM.MachineManager.createProfile(); base.selectProfile(selectedProfile); }
-    onRemoveObject: confirmDialog.open();
-    onRenameObject: { renameDialog.open(); renameDialog.selectText(); }
+    onAddObject: {
+        var selectedProfile;
+        if (objectList.currentIndex == 0) {
+            // Current settings
+            selectedProfile = UM.MachineManager.createProfile();
+        } else {
+            selectedProfile = UM.MachineManager.duplicateProfile(currentItem.name);
+        }
+        base.selectProfile(selectedProfile);
 
+        renameDialog.removeWhenRejected = true;
+        renameDialog.open();
+        renameDialog.selectText();
+    }
+    onRemoveObject: confirmDialog.open();
+    onRenameObject: { renameDialog.removeWhenRejected = false; renameDialog.open(); renameDialog.selectText(); }
+
+    addEnabled: currentItem != null;
     removeEnabled: currentItem != null ? !currentItem.readOnly : false;
     renameEnabled: currentItem != null ? !currentItem.readOnly : false;
 
@@ -43,29 +57,20 @@ ManagementPage
             anchors.right: parent.right
             anchors.bottom: parent.bottom
 
-            GridLayout {
-                id: containerGrid
-                columns: 2
-                rowSpacing: UM.Theme.getSize("default_margin").width
-                columnSpacing: UM.Theme.getSize("default_margin").width
-
-                Label {
-                    text: base.currentItem == null ? "" :
-                        base.currentItem.id == -1 ? catalog.i18nc("@label", "Based on") : catalog.i18nc("@label", "Profile type")
-                }
-                Label {
-                    text: base.currentItem == null ? "" :
-                        base.currentItem.id == -1 ? UM.MachineManager.activeProfile :
-                        base.currentItem.readOnly ? catalog.i18nc("@label", "Protected profile") : catalog.i18nc("@label", "Custom profile")
-                }
+            Column
+            {
+                spacing: UM.Theme.getSize("default_margin").height
 
                 Row
                 {
-                    Layout.columnSpan: 2
                     visible: base.currentItem.id == -1 || base.currentItem.active
                     Button
                     {
-                        text: catalog.i18nc("@action:button", "Update \"%1\"".arg(UM.MachineManager.activeProfile));
+                        text: {
+                            var profileName = UM.MachineManager.activeProfile;
+                            profileName = (profileName.length > 20) ? profileName.substring(0, 20) + '...' : profileName;
+                            return catalog.i18nc("@action:button", "Update \"%1\"".arg(profileName));
+                        }
                         enabled: UM.ActiveProfile.hasCustomisedValues && !UM.ActiveProfile.readOnly
                         onClicked: UM.ActiveProfile.updateProfile()
                     }
@@ -78,19 +83,36 @@ ManagementPage
                     }
                 }
 
-                Column {
-                    Repeater {
+                Grid
+                {
+                    id: containerGrid
+                    columns: 2
+                    spacing: UM.Theme.getSize("default_margin").width
+
+                    Label {
+                        text: base.currentItem == null ? "" :
+                            base.currentItem.id == -1 ? catalog.i18nc("@label", "Based on") : catalog.i18nc("@label", "Profile type")
+                    }
+                    Label {
+                        text: base.currentItem == null ? "" :
+                            base.currentItem.id == -1 ? UM.MachineManager.activeProfile :
+                            base.currentItem.readOnly ? catalog.i18nc("@label", "Protected profile") : catalog.i18nc("@label", "Custom profile")
+                    }
+
+                    Column {
+                        Repeater {
                             model: base.currentItem ? base.currentItem.settings : null
                             Label {
                                 text: modelData.name.toString();
                                 elide: Text.ElideMiddle;
                             }
+                        }
                     }
-                }
-                Column {
-                    Repeater {
+                    Column {
+                        Repeater {
                             model: base.currentItem ? base.currentItem.settings : null
                             Label { text: modelData.value.toString(); }
+                        }
                     }
                 }
             }
@@ -98,6 +120,7 @@ ManagementPage
     }
 
     buttons: Row {
+
         Button
         {
             text: catalog.i18nc("@action:button", "Import");
@@ -127,7 +150,13 @@ ManagementPage
         {
             id: renameDialog;
             object: base.currentItem != null ? base.currentItem.name : "";
+            property bool removeWhenRejected: false;
             onAccepted: base.model.renameProfile(base.currentItem.name, newName.trim());
+            onRejected: {
+                if(removeWhenRejected) {
+                    base.model.removeProfile(base.currentItem.name)
+                }
+            }
         }
         MessageDialog
         {

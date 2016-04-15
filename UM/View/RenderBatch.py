@@ -12,6 +12,7 @@ from UM.View.GL.OpenGL import OpenGL
 vertexBufferProperty = "__gl_vertex_buffer"
 indexBufferProperty = "__gl_index_buffer"
 
+
 ##  The RenderBatch class represent a batch of objects that should be rendered.
 #
 #   Each RenderBatch contains a list of objects to render and all state related

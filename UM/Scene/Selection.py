@@ -5,6 +5,7 @@ from UM.Signal import Signal
 from UM.Math.Vector import Vector
 from UM.Operations.GroupedOperation import GroupedOperation
 
+
 ##    This class is responsible for keeping track of what objects are selected
 #     It uses signals to notify others of changes in the selection
 #     It also has a convenience function that allows it to apply a single operation

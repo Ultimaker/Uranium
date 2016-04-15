@@ -4,6 +4,7 @@
 from UM.Application import Application
 from UM.View.RenderPass import RenderPass
 
+
 ##  A render pass subclass that renders everything with the default parameters.
 #
 #   This class provides the basic rendering of the objects in the scene.

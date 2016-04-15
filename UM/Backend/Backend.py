@@ -14,7 +14,6 @@ import Arcus
 import struct
 import subprocess
 import threading
-import platform
 import sys
 from time import sleep
 
@@ -132,7 +131,7 @@ class Backend(PluginObject, SignalEmitter):
         message = self._socket.takeNextMessage()
 
         if message.getTypeName() not in self._message_handlers:
-            Logger.log("e", "No handler defined for message of type %s", type(message))
+            Logger.log("e", "No handler defined for message of type %s", message.getTypeName())
             return
 
         self._message_handlers[message.getTypeName()](message)

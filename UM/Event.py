@@ -4,6 +4,7 @@
 ##  \file Event.py
 #   Contains the Event class and important subclasses used throughout UM.
 
+
 ##  Base event class.
 #   Defines the most basic interface for events and several constants to identify event types.
 class Event:
@@ -28,6 +29,7 @@ class Event:
     @property
     def type(self):
         return self._type
+
 
 ##  Mouse Event class.
 #   This class represents a mouse event. It has properties corresponding to important mouse
@@ -94,6 +96,7 @@ class MouseEvent(Event):
     def buttons(self):
         return self._buttons
 
+
 class WheelEvent(Event):
     def __init__(self, horizontal, vertical):
         super().__init__(Event.MouseWheelEvent)
@@ -107,6 +110,7 @@ class WheelEvent(Event):
     @property
     def vertical(self):
         return self._vertical
+
 
 ##  Key Event class.
 class KeyEvent(Event):
@@ -134,10 +138,12 @@ class KeyEvent(Event):
     def key(self):
         return self._key
 
+
 ##  Tool related event class.
 class ToolEvent(Event):
     def __init__(self, type):
         super().__init__(type)
+
 
 ##  Event used to call a function.
 class CallFunctionEvent(Event):
@@ -149,6 +155,7 @@ class CallFunctionEvent(Event):
 
     def call(self):
         self._function(*self._args, **self._kwargs)
+
 
 ##  View related event class.
 class ViewEvent(Event):

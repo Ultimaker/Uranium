@@ -119,13 +119,11 @@ msgid "Translate Object"
 msgstr "Kääntää kappaleen tiedot"
 
 #: /home/tamara/2.1/Uranium/plugins/Views/SimpleView/__init__.py:12
-#, fuzzy
 msgctxt "@label"
 msgid "Simple View"
 msgstr "Yksinkertainen näkymä"
 
 #: /home/tamara/2.1/Uranium/plugins/Views/SimpleView/__init__.py:15
-#, fuzzy
 msgctxt "@info:whatsthis"
 msgid "Provides a simple solid mesh view."
 msgstr "Näyttää yksinkertaisen kiinteän verkkonäkymän."
@@ -140,10 +138,10 @@ msgctxt "@label"
 msgid "Wireframe View"
 msgstr "Rautalankanäkymä"
 
-#: /home/tamara/2.1/Uranium/plugins/Views/WireframeView/__init__.py:16
+#: /home/ruben/Projects/Uranium/plugins/Views/WireframeView/__init__.py:16
 msgctxt "@info:whatsthis"
-msgid "Provides a simple wireframe view"
-msgstr "Näyttää yksinkertaisen rautalankanäkymän"
+msgid "Provides a simple wireframe view."
+msgstr "Näyttää yksinkertaisen rautalankanäkymän."
 
 #: /home/tamara/2.1/Uranium/plugins/ConsoleLogger/__init__.py:13
 msgctxt "@label"
@@ -152,13 +150,11 @@ msgstr "Konsolin tiedonkeruu"
 
 #: /home/tamara/2.1/Uranium/plugins/ConsoleLogger/__init__.py:16
 #: /home/tamara/2.1/Uranium/plugins/FileLogger/__init__.py:16
-#, fuzzy
 msgctxt "@info:whatsthis"
 msgid "Outputs log information to the console."
 msgstr "Lähettää lokitiedot konsoliin."
 
 #: /home/tamara/2.1/Uranium/plugins/FileLogger/__init__.py:13
-#, fuzzy
 msgctxt "@label"
 msgid "File Logger"
 msgstr "Tiedonkeruuohjelma"
@@ -236,10 +232,10 @@ msgctxt "@label"
 msgid "Local File Output Device"
 msgstr "Paikallisen tiedoston tulostusväline"
 
-#: /home/tamara/2.1/Uranium/plugins/LocalFileOutputDevice/__init__.py:13
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/__init__.py:13
 msgctxt "@info:whatsthis"
-msgid "Enables saving to local files"
-msgstr "Mahdollistaa tallennuksen paikallisiin tiedostoihin"
+msgid "Enables saving to local files."
+msgstr "Mahdollistaa tallennuksen paikallisiin tiedostoihin."
 
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/OBJReader/__init__.py:13
 msgctxt "@label"
@@ -247,14 +243,12 @@ msgid "Wavefront OBJ Reader"
 msgstr "Wavefront OBJ -lukija"
 
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/OBJReader/__init__.py:16
-#, fuzzy
 msgctxt "@info:whatsthis"
 msgid "Makes it possbile to read Wavefront OBJ files."
 msgstr "Mahdollistaa Wavefront OBJ -tiedostojen lukemisen."
 
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/OBJReader/__init__.py:22
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:22
-#, fuzzy
 msgctxt "@item:inlistbox"
 msgid "Wavefront OBJ File"
 msgstr "Wavefront OBJ -tiedosto"
@@ -265,13 +259,11 @@ msgid "STL Reader"
 msgstr "STL-lukija"
 
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/STLReader/__init__.py:15
-#, fuzzy
 msgctxt "@info:whatsthis"
 msgid "Provides support for reading STL files."
 msgstr "Tukee STL-tiedostojen lukemista."
 
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/STLReader/__init__.py:21
-#, fuzzy
 msgctxt "@item:inlistbox"
 msgid "STL File"
 msgstr "STL-tiedosto"
@@ -282,7 +274,6 @@ msgid "STL Writer"
 msgstr "STL-kirjoitin"
 
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/STLWriter/__init__.py:16
-#, fuzzy
 msgctxt "@info:whatsthis"
 msgid "Provides support for writing STL files."
 msgstr "Tukee STL-tiedostojen kirjoittamista."
@@ -298,13 +289,11 @@ msgid "STL File (Binary)"
 msgstr "STL-tiedosto (binaari)"
 
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/3MFWriter/__init__.py:12
-#, fuzzy
 msgctxt "@label"
 msgid "3MF Writer"
 msgstr "3MF-kirjoitin"
 
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/3MFWriter/__init__.py:15
-#, fuzzy
 msgctxt "@info:whatsthis"
 msgid "Provides support for writing 3MF files."
 msgstr "Tukee 3MF-tiedostojen kirjoittamista."
@@ -320,7 +309,6 @@ msgid "Wavefront OBJ Writer"
 msgstr "Wavefront OBJ -kirjoitin"
 
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:16
-#, fuzzy
 msgctxt "@info:whatsthis"
 msgid "Makes it possbile to write Wavefront OBJ files."
 msgstr "Mahdollistaa Wavefront OBJ -tiedostojen kirjoittamisen."
@@ -365,7 +353,7 @@ msgid "{0:0>2}h {1:0>2}min"
 msgstr "{0:0>2} h {1:0>2} min"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/Duration.py:96
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgctxt ""
 "@label Days-hours-minutes duration format. {0} is days, {1} is hours, {2} is "
 "minutes"
@@ -373,13 +361,13 @@ msgid "{0} days {1} hours {2} minutes"
 msgstr "{0} päivää {1} tuntia {2} minuuttia"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/Duration.py:98
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgctxt "@label Hours-minutes duration fromat. {0} is hours, {1} is minutes"
 msgid "{0} hours {1} minutes"
 msgstr "{0} tuntia {1} minuuttia"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/Duration.py:100
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgctxt "@label Minutes only duration format, {0} is minutes"
 msgid "{0} minutes"
 msgstr "{0} minuuttia"
@@ -393,7 +381,7 @@ msgid "{0} (Customised)"
 msgstr "{0} (mukautettu)"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:45
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgctxt "@item:inlistbox"
 msgid "All Supported Types ({0})"
 msgstr "Kaikki tuetut tyypit ({0})"
@@ -401,13 +389,12 @@ msgstr "Kaikki tuetut tyypit ({0})"
 #: /home/tamara/2.1/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:46
 #: /home/tamara/2.1/Uranium/UM/Qt/Bindings/ProfilesModel.py:179
 #: /home/tamara/2.1/Uranium/UM/Qt/Bindings/ProfilesModel.py:192
-#, fuzzy
 msgctxt "@item:inlistbox"
 msgid "All Files (*)"
 msgstr "Kaikki tiedostot (*)"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/Bindings/ProfilesModel.py:93
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgctxt "@info:status"
 msgid ""
 "Failed to import profile from <filename>{0}</filename>: <message>{1}</"
@@ -440,7 +427,7 @@ msgid ""
 msgstr "Profiilin vienti epäonnistui tiedostoon <filename>{0}</filename>: <message>{1}</message>"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/Bindings/ProfilesModel.py:160
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgctxt "@info:status"
 msgid ""
 "Failed to export profile to <filename>{0}</filename>: Writer plugin reported "
@@ -454,7 +441,6 @@ msgid "Exported profile to <filename>{0}</filename>"
 msgstr "Profiili viety tiedostoon <filename>{0}</filename>"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/Bindings/ProfilesModel.py:178
-#, fuzzy
 msgctxt "@item:inlistbox"
 msgid "All supported files"
 msgstr "Kaikki tuetut tiedostot"
@@ -465,13 +451,11 @@ msgid "- Use Global Profile -"
 msgstr "- Käytä yleisprofiilia -"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/QtApplication.py:78
-#, fuzzy
 msgctxt "@info:progress"
 msgid "Loading plugins..."
 msgstr "Ladataan lisäosia..."
 
 #: /home/tamara/2.1/Uranium/UM/Qt/QtApplication.py:82
-#, fuzzy
 msgctxt "@info:progress"
 msgid "Loading machines..."
 msgstr "Ladataan laitteita..."
@@ -482,7 +466,7 @@ msgid "Loading preferences..."
 msgstr "Ladataan lisäasetuksia..."
 
 #: /home/tamara/2.1/Uranium/UM/Mesh/ReadMeshJob.py:35
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgctxt "@info:status"
 msgid "Cannot open file type <filename>{0}</filename>"
 msgstr "Ei voida avata tiedostotyyppiä <filename>{0}</filename>"
@@ -518,7 +502,6 @@ msgstr "Tuntematon tekijä"
 
 #: /home/tamara/2.1/Uranium/plugins/Tools/RotateTool/RotateTool.qml:22
 #: /home/tamara/2.1/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:29
-#, fuzzy
 msgctxt "@action:button"
 msgid "Reset"
 msgstr "Palauta"
@@ -529,25 +512,21 @@ msgid "Lay flat"
 msgstr "Aseta latteaksi"
 
 #: /home/tamara/2.1/Uranium/plugins/Tools/RotateTool/RotateTool.qml:55
-#, fuzzy
 msgctxt "@action:checkbox"
 msgid "Snap Rotation"
 msgstr "Kohdista pyöritys"
 
 #: /home/tamara/2.1/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:42
-#, fuzzy
 msgctxt "@action:button"
 msgid "Scale to Max"
 msgstr "Skaalaa maksimiin"
 
 #: /home/tamara/2.1/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:67
-#, fuzzy
 msgctxt "@option:check"
 msgid "Snap Scaling"
 msgstr "Kohdista skaalaus"
 
 #: /home/tamara/2.1/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:85
-#, fuzzy
 msgctxt "@option:check"
 msgid "Uniform Scaling"
 msgstr "Tasainen skaalaus"
@@ -591,13 +570,11 @@ msgstr "Tyyppi"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:19
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:118
-#, fuzzy
 msgctxt "@title:tab"
 msgid "Plugins"
 msgstr "Lisäosat"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:90
-#, fuzzy
 msgctxt "@label"
 msgid "No text available"
 msgstr "Ei tekstiä saatavilla"
@@ -608,13 +585,11 @@ msgid "About %1"
 msgstr "Tietoja: %1"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:128
-#, fuzzy
 msgctxt "@label"
 msgid "Author:"
 msgstr "Tekijä:"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:150
-#, fuzzy
 msgctxt "@label"
 msgid "Version:"
 msgstr "Versio:"
@@ -647,7 +622,6 @@ msgid "Import"
 msgstr "Tuo"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:37
-#, fuzzy
 msgctxt "@label"
 msgid "Profile type"
 msgstr "Profiilin tyyppi"
@@ -668,7 +642,6 @@ msgid "Export"
 msgstr "Vie"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:83
-#, fuzzy
 msgctxt "@window:title"
 msgid "Import Profile"
 msgstr "Profiilin tuonti"
@@ -747,117 +720,136 @@ msgstr[0] "{0} piilotettu asetus käyttää mukautettua arvoa"
 msgstr[1] "{0} piilotettua asetusta käyttää mukautettuja arvoja"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Settings/SettingView.qml:166
-#, fuzzy
 msgctxt "@action:menu"
 msgid "Hide this setting"
 msgstr "Piilota tämä asetus"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Settings/SettingView.qml:172
-#, fuzzy
 msgctxt "@action:menu"
 msgid "Configure setting visiblity..."
 msgstr "Määritä asetusten näkyvyys..."
 
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Settings/SettingsConfigurationPage.qml:18
-#, fuzzy
 msgctxt "@title:tab"
 msgid "Machine"
 msgstr "Laite"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Settings/SettingsConfigurationPage.qml:29
-#, fuzzy
 msgctxt "@label:listbox"
 msgid "Active Machine:"
 msgstr "Aktiivinen laite:"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Settings/SettingsConfigurationPage.qml:112
-#, fuzzy
 msgctxt "@title:window"
 msgid "Confirm Machine Deletion"
 msgstr "Vahvista laitteen poisto"
 
 #: /home/tamara/2.1/Uranium/UM/Qt/qml/UM/Settings/SettingsConfigurationPage.qml:114
-#, fuzzy
 msgctxt "@label"
 msgid "Are you sure you wish to remove the machine?"
 msgstr "Haluatko varmasti poistaa laitteen?"
 
-#~ msgctxt "@info:status"
-#~ msgid "Loaded <filename>{0}</filename>"
-#~ msgstr "Ladattu <filename>{0}</filename>"
+#: /home/ruben/Projects/Uranium/UM/Settings/Profile.py:51
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:52
+msgctxt "@label"
+msgid "Current settings"
+msgstr "Nykyiset asetukset"
 
-#~ msgctxt "@label"
-#~ msgid "Per Object Settings Tool"
-#~ msgstr "Kappalekohtaisten asetusten työkalu"
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Settings/SettingView.qml:223
+msgctxt "@label"
+msgid ""
+"This setting is normally calculated, but it currently has an absolute value "
+"set.\n"
+"\n"
+"Click to restore the calculated value."
+msgstr "Tämä asetus on normaalisti laskettu, mutta sillä on tällä hetkellä absoluuttinen arvo.\n\nPalauta laskettu arvo napsauttamalla."
 
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Provides the Per Object Settings."
-#~ msgstr "Näyttää kappalekohtaiset asetukset."
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Settings/SettingView.qml:212
+msgctxt "@label"
+msgid "Affects:"
+msgstr "Koskee malleja:"
 
-#~ msgctxt "@label"
-#~ msgid "Per Object Settings"
-#~ msgstr "Kappalekohtaiset asetukset"
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Settings/SettingView.qml:217
+msgctxt "@label"
+msgid "Is affected by:"
+msgstr "Tähän vaikuttaa:"
 
-#~ msgctxt "@info:tooltip"
-#~ msgid "Configure Per Object Settings"
-#~ msgstr "Määrittää kappalekohtaiset asetukset"
+msgctxt "@info:status"
+msgid "Loaded <filename>{0}</filename>"
+msgstr "Ladattu <filename>{0}</filename>"
 
-#~ msgctxt "@label"
-#~ msgid "Mesh View"
-#~ msgstr "Verkkonäkymä"
+msgctxt "@label"
+msgid "Per Object Settings Tool"
+msgstr "Kappalekohtaisten asetusten työkalu"
 
-#~ msgctxt "@item:inmenu"
-#~ msgid "Solid"
-#~ msgstr "Kiinteä"
+msgctxt "@info:whatsthis"
+msgid "Provides the Per Object Settings."
+msgstr "Näyttää kappalekohtaiset asetukset."
 
-#~ msgctxt "@title:tab"
-#~ msgid "Machines"
-#~ msgstr "Laitteet"
+msgctxt "@label"
+msgid "Per Object Settings"
+msgstr "Kappalekohtaiset asetukset"
 
-#~ msgctxt "@label"
-#~ msgid "Variant"
-#~ msgstr "Variantti"
+msgctxt "@info:tooltip"
+msgid "Configure Per Object Settings"
+msgstr "Määrittää kappalekohtaiset asetukset"
 
-#~ msgctxt "@item:inlistbox"
-#~ msgid "Cura Profiles (*.curaprofile)"
-#~ msgstr "Cura-profiilit (*.curaprofile)"
+msgctxt "@label"
+msgid "Mesh View"
+msgstr "Verkkonäkymä"
 
-#~ msgctxt "@action:button"
-#~ msgid "Customize Settings"
-#~ msgstr "Mukauta asetuksia"
+msgctxt "@item:inmenu"
+msgid "Solid"
+msgstr "Kiinteä"
 
-#~ msgctxt "@info:tooltip"
-#~ msgid "Customise settings for this object"
-#~ msgstr "Mukauta asetuksia tälle kappaleelle"
+msgctxt "@title:tab"
+msgid "Machines"
+msgstr "Laitteet"
 
-#~ msgctxt "@title:window"
-#~ msgid "Pick a Setting to Customize"
-#~ msgstr "Poimi mukautettava asetus"
+msgctxt "@label"
+msgid "Variant"
+msgstr "Variantti"
 
-#~ msgctxt "@info:tooltip"
-#~ msgid "Reset the rotation of the current selection."
-#~ msgstr "Palauta nykyisen valinnan pyöritys takaisin."
+msgctxt "@item:inlistbox"
+msgid "Cura Profiles (*.curaprofile)"
+msgstr "Cura-profiilit (*.curaprofile)"
 
-#~ msgctxt "@info:tooltip"
-#~ msgid "Reset the scaling of the current selection."
-#~ msgstr "Palauta nykyisen valinnan skaalaus takaisin."
+msgctxt "@action:button"
+msgid "Customize Settings"
+msgstr "Mukauta asetuksia"
 
-#~ msgctxt "@info:tooltip"
-#~ msgid "Scale to maximum size"
-#~ msgstr "Skaalaa maksimikokoon"
+msgctxt "@info:tooltip"
+msgid "Customise settings for this object"
+msgstr "Mukauta asetuksia tälle kappaleelle"
 
-#~ msgctxt "OBJ Writer file format"
-#~ msgid "Wavefront OBJ File"
-#~ msgstr "Wavefront OBJ-tiedosto"
+msgctxt "@title:window"
+msgid "Pick a Setting to Customize"
+msgstr "Poimi mukautettava asetus"
 
-#~ msgctxt "Loading mesh message, {0} is file name"
-#~ msgid "Loading {0}"
-#~ msgstr "Ladataan {0}"
+msgctxt "@info:tooltip"
+msgid "Reset the rotation of the current selection."
+msgstr "Palauta nykyisen valinnan pyöritys takaisin."
 
-#~ msgctxt "Finished loading mesh message, {0} is file name"
-#~ msgid "Loaded {0}"
-#~ msgstr "Ladattu {0}"
+msgctxt "@info:tooltip"
+msgid "Reset the scaling of the current selection."
+msgstr "Palauta nykyisen valinnan skaalaus takaisin."
 
-#~ msgctxt "Splash screen message"
-#~ msgid "Loading translations..."
-#~ msgstr "Ladataan käännöksiä..."
+msgctxt "@info:tooltip"
+msgid "Scale to maximum size"
+msgstr "Skaalaa maksimikokoon"
+
+msgctxt "OBJ Writer file format"
+msgid "Wavefront OBJ File"
+msgstr "Wavefront OBJ-tiedosto"
+
+msgctxt "Loading mesh message, {0} is file name"
+msgid "Loading {0}"
+msgstr "Ladataan {0}"
+
+msgctxt "Finished loading mesh message, {0} is file name"
+msgid "Loaded {0}"
+msgstr "Ladattu {0}"
+
+msgctxt "Splash screen message"
+msgid "Loading translations..."
+msgstr "Ladataan käännöksiä..."

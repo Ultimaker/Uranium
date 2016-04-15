@@ -4,14 +4,15 @@
 from UM.Application import Application
 from UM.Signal import Signal
 
+
 ## Class for displaying messages in the application. 
 #
-class Message():
+class Message:
     ##  Class for displaying messages in the application
     #   \param text Text that needs to be displayed in the message
     #   \param lifetime How long should the message be displayed (in seconds).
-    #                   if lifetime is 0, it will never automatically be distroyed.
-    #   \param dismissiable Can the user dismiss the message?
+    #                   if lifetime is 0, it will never automatically be destroyed.
+    #   \param dismissible Can the user dismiss the message?
     #   \progress Is there nay progress to be displayed? if -1, it's seen as interdeterminate
     def __init__(self, text = "", lifetime = 10, dismissable = True, progress = None):
         super().__init__()

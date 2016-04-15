@@ -10,6 +10,11 @@ from PyQt5 import QtCore, QtWidgets
 
 import math
 
+##  Provides the tool to manipulate the camera: moving, zooming and rotating
+#
+#   Note that zooming is performed by moving closer to or further away from the origin ("dolly")
+#   instead of changing the field of view of the camera ("zoom")
+
 class CameraTool(Tool):
     def __init__(self):
         super().__init__()
@@ -35,19 +40,32 @@ class CameraTool(Tool):
 
         self._drag_distance = 0.05
 
+    ##  Set the minumum and maximum distance from the origin used for "zooming" the camera
+    #
+    #   \param min type(float) distance from the origin when fully zoomed in
+    #   \param max type(float) distance from the origin when fully zoomed out
     def setZoomRange(self, min, max):
         self._min_zoom = min
         self._max_zoom = max
 
+    ##  Set the point around which the camera rotates
+    #
+    #   \param origin type(Vector) origin point
     def setOrigin(self, origin):
         translation = origin - self._origin
         self._origin = origin
         self._scene.getActiveCamera().translate(translation)
         self._rotateCamera(0.0, 0.0)
 
+    ##  Get the point around which the camera rotates
+    #
+    #   \return type(Vector) origin point
     def getOrigin(self):
         return self._origin
 
+    ##  Prepare modifier-key variables on each event
+    #
+    #   \param event type(Event) event passed from event handler
     def checkModifierKeys(self, event):
         modifiers = QtWidgets.QApplication.keyboardModifiers()
         self._shift_is_active = modifiers == QtCore.Qt.ShiftModifier
@@ -60,8 +78,11 @@ class CameraTool(Tool):
             if event.key == KeyEvent.SpaceKey:
                 self._space_is_active = False
 
+    ##  Check if the event warrants a call off the _moveCamera method
+    #
+    #   \param event type(Event) event passed from event handler
+    #   \return type(boolean)
     def moveEvent(self, event):
-        #defines at which events the _moveCamera method is called
         if MouseEvent.MiddleButton in event.buttons: #mousewheel
             return True
         elif MouseEvent.LeftButton in event.buttons and self._shift_is_active is True: #shift -> leftbutton
@@ -69,15 +90,21 @@ class CameraTool(Tool):
         elif MouseEvent.RightButton in event.buttons and self._shift_is_active is True: #shift -> rightbutton
             return True
 
+    ##  Check if the event warrants a call off the _rotateCamera method
+    #
+    #   \param event type(Event) event passed from event handler
+    #   \return type(boolean)
     def rotateEvent(self, event):
-        #defines at which events the _rotateCamera method is called
         if MouseEvent.RightButton in event.buttons: #rightbutton
             return True
         elif MouseEvent.LeftButton in event.buttons and self._space_is_active is True: #shift -> leftbutton
             return True
 
+    ##  Calls the zoomaction method for the mousewheel event, mouseMoveEvent (in combo with alt or space) and when the plus or minus keys are used
+    #
+    #   \param event type(Event) event passed from event handler
+    #   \return type(boolean)
     def initiateZoom(self, event):
-        #calls the zoomaction method for the mousewheel event, mouseMoveEvent (in combo with alt or space) and when the plus or minus keys are used
         if event.type is event.MousePressEvent:
             return False
         elif event.type is Event.MouseMoveEvent and self._space_is_active is True: #space -> mousemove
@@ -99,10 +126,15 @@ class CameraTool(Tool):
                 self._zoomCamera(self._manual_zoom)
                 return True
 
+    ##  Handle mouse and keyboard events
+    #
+    #   \param event type(Event)
     def event(self, event):
         self.checkModifierKeys(event)
+        # handle mouse- and keyboard-initiated zoom-events
         self.initiateZoom(event)
 
+        # handle keyboard-initiated rotate-events
         if event.type is event.KeyPressEvent and not self._ctrl_is_active:
             if event.key == KeyEvent.UpKey:
                 self._rotateCamera(0, 0.01)
@@ -113,6 +145,7 @@ class CameraTool(Tool):
             if event.key == KeyEvent.LeftKey:
                 self._rotateCamera(0.01, 0)
 
+        # handle mouse-initiated rotate- and move-events
         if event.type is Event.MousePressEvent:
             if self.moveEvent(event) == True:
                 self._move = True
@@ -137,6 +170,7 @@ class CameraTool(Tool):
                         self._moveCamera(event)
                         self._dragged = True
                         return True
+
         elif event.type is Event.MouseReleaseEvent:
             if self._rotate or self._move:
                 self._rotate = False
@@ -148,7 +182,9 @@ class CameraTool(Tool):
 
         return False
 
-    #   Moves the camera in response to a mouse event.
+    ##  Move the camera in response to a mouse event.
+    #
+    #   \param event type(Event) event passed from event handler
     def _moveCamera(self, event):
         camera = self._scene.getActiveCamera()
         if not camera or not camera.isEnabled():
@@ -163,7 +199,10 @@ class CameraTool(Tool):
 
         self._scene.releaseLock()
 
-    #   Zooms the camera in response to a mouse event.
+    ##  "Zoom" the camera in response to a mouse event.
+    #
+    #   Note that the camera field of view is left unaffected, but instead the camera moves closer to the origin
+    #   \param zoom_range type(int) factor by which the distance to the origin is multiplied, multiplied by 1280
     def _zoomCamera(self, zoom_range):
         camera = self._scene.getActiveCamera()
         if not camera or not camera.isEnabled():
@@ -183,8 +222,10 @@ class CameraTool(Tool):
 
         self._scene.releaseLock()
 
-
-    #   Rotates the camera in response to a mouse event.
+    ##  Rotate the camera in response to a mouse event.
+    #
+    #   \param x type(int) amount by which the camera should be rotated horizontally, expressed in pixelunits
+    #   \param y type(int) amount by which the camera should be rotated vertically, expressed in pixelunits
     def _rotateCamera(self, x, y):
         camera = self._scene.getActiveCamera()
         if not camera or not camera.isEnabled():

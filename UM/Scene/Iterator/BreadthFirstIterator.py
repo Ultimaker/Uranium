@@ -3,6 +3,7 @@
 
 from . import Iterator
 
+
 class BreadthFirstIterator(Iterator.Iterator):
     def __init__(self, scene_node):
         super(BreadthFirstIterator, self).__init__(scene_node) # Call super to make multiple inheritence work.

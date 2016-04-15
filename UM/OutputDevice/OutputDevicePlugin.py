@@ -4,6 +4,7 @@
 from UM.PluginObject import PluginObject
 from UM.Application import Application
 
+
 ##  Base class for output device plugins.
 #
 #   This class provides the base for any output device plugin that should be

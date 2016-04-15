@@ -2,7 +2,6 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 
-
 ##  An RGBA color value.
 #
 #   This class represents an RGBA color value, in the range of 0.0 to 1.0.

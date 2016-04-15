@@ -6,6 +6,7 @@ import warnings
 
 from UM.Logger import Logger
 
+
 ##  Decorator that can be used to indicate a method has been deprecated
 #
 #   \param message The message to display when the method is called. Should include a suggestion about what to use.
@@ -19,6 +20,7 @@ def deprecated(message, since = "Unknown"):
             return function(*args, **kwargs)
         return deprecated_function
     return deprecated_decorator
+
 
 ##  Decorator to ensure the returned value is always a copy and never a direct reference
 #

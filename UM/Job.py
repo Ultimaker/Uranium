@@ -7,6 +7,7 @@ from UM.Signal import Signal, SignalEmitter
 
 from UM.JobQueue import JobQueue
 
+
 ##  Base class for things that should be performed in a thread.
 #
 #   The Job class provides a basic interface for a 'job', that is a
@@ -121,4 +122,4 @@ class Job(SignalEmitter):
     #   if it is waiting.
     @staticmethod
     def yieldThread():
-        time.sleep(0) #Sleeping for 0 introduces no delay but does allow context switching.
+        time.sleep(0)  # Sleeping for 0 introduces no delay but does allow context switching.

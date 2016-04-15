@@ -118,7 +118,7 @@ ScrollView
                             opacity: settingVisible ? 1 : 0;
                             Behavior on opacity { NumberAnimation { duration: 75; } }
 
-                            enabled: categoryHeader.checked && settingVisible && model.enabled && !model.value_unused;
+                            property bool settingEnabled: categoryHeader.checked && settingVisible && model.enabled && !model.value_unused;
 
                             property bool loadComplete: status == Loader.Ready
 
@@ -209,18 +209,19 @@ ScrollView
                                     var required_by_content = delegateItem.settingsModel.getRequiredBySettingString(model.key);
                                     if(required_by_content.length > 0)
                                     {
-                                        content += catalog.i18nc("@label", "<i><br/>Affects:<br/></i>") + required_by_content
+                                        content += "<i><br/>" + catalog.i18nc("@label", "Affects:") + "<br/></i>" + required_by_content
                                     }
                                     var required_content = delegateItem.settingsModel.getRequiredSettingString(model.key);
                                     if (required_content.length > 0)
                                     {
-                                        content += catalog.i18nc("@label", "<i><br/>Is affected by:<br/></i>") + required_content
+                                        content += "<i><br/>" + catalog.i18nc("@label", "Is affected by:") + "<br/></i>" + required_content
                                     }
 
                                     base.showTooltip(settingLoader, Qt.point(0, settingLoader.height / 2), content);
                                 }
                                 onHideTooltip: base.hideTooltip();
-                                onShowInheritanceTooltip: base.showTooltip(settingLoader, Qt.point(0, settingLoader.height / 2),  catalog.i18nc("@label","This setting is normally calculated, but it currently has an absolute value set.\n\nClick to restore the calculated value."))
+                                onShowResetTooltip: base.showTooltip(settingLoader, Qt.point(0, settingLoader.height / 2), catalog.i18nc("@label", "This setting has a value that is different from the profile.\n\nClick to restore the value of the profile."))
+                                onShowInheritanceTooltip: base.showTooltip(settingLoader, Qt.point(0, settingLoader.height / 2), catalog.i18nc("@label", "This setting is normally calculated, but it currently has an absolute value set.\n\nClick to restore the calculated value."))
                             }
                         }
                     }

@@ -4,9 +4,8 @@
 import json
 import collections
 import os.path
-from copy import deepcopy
 
-## Python 3.4 work arround (3.4 -> 3.5 added json.decoder.JSONDecodeError)
+## Python 3.4 work around (3.4 -> 3.5 added json.decoder.JSONDecodeError)
 try:
     JSONDecodeError = json.decoder.JSONDecodeError
 except:
@@ -17,9 +16,11 @@ from UM.Signal import Signal, SignalEmitter
 from UM.Settings import SettingsError
 from UM.Settings.Setting import Setting
 from UM.Settings.SettingsCategory import SettingsCategory
+from UM.Logger import Logger
 
 from UM.i18n import i18nCatalog
 uranium_catalog = i18nCatalog("uranium")
+
 
 class MachineDefinition(SignalEmitter):
     MachineDefinitionVersion = 1
@@ -39,7 +40,7 @@ class MachineDefinition(SignalEmitter):
         self._visible = True
         self._pages = []
         self._profiles_machine_id = ""
-        self._file_types = "" #The file types that this type of machine can read, such as g-code.
+        self._file_types = ""  # The file types that this type of machine can read, such as g-code.
 
         self._machine_settings = []
         self._categories = []
@@ -207,7 +208,6 @@ class MachineDefinition(SignalEmitter):
 
         self.settingsLoaded.emit()
 
-        #self._json_data = None
         self._loaded = True
 
     # Ensure that the required by setting keys are set.
@@ -216,8 +216,13 @@ class MachineDefinition(SignalEmitter):
             # Ensure that the function that defines the default value is called.
             # This in turn ensures that the required setting keys are correctly set.
             setting.getDefaultValue()
-            for key in setting.getRequiredSettingKeys():
-                self.getSetting(key).addRequiredBySettingKey(setting.getKey())
+            required_setting_keys = setting.getRequiredSettingKeys()
+            for key in required_setting_keys:
+                required_setting = self.getSetting(key)
+                if required_setting:
+                    required_setting.addRequiredBySettingKey(setting.getKey())
+                else:
+                    Logger.log("w" ,"Trying to use non-existing setting from key %s for setting %s" , key, setting.getKey())
 
     ##  Get setting category by key
     #   \param key Category key to get.

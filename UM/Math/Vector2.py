@@ -4,6 +4,7 @@
 import numpy
 import numpy.linalg
 
+
 ##  Simple 2D-vector class based on numpy arrays.
 #
 #   This class represents a 2-dimensional vector.

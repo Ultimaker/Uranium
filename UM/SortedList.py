@@ -43,6 +43,7 @@ else:
     except ImportError:
         from _dummy_thread import get_ident
 
+
 def recursive_repr(func):
     """Decorator to prevent infinite repr recursion."""
     repr_running = set()
@@ -62,6 +63,7 @@ def recursive_repr(func):
             repr_running.discard(key)
 
     return wrapper
+
 
 class SortedList(MutableSequence):
     """

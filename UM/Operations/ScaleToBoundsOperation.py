@@ -3,7 +3,7 @@
 
 from UM.Operations.Operation import Operation
 from UM.Math.Vector import Vector
-from UM.Application import Application
+
 
 ##  Operation subclass that will scale a node to fit within the bounds provided.
 class ScaleToBoundsOperation(Operation):

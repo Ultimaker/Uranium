@@ -2,11 +2,7 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 from UM.Job import Job
-from UM.Application import Application
-from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator
-from UM.Message import Message
 
-import os.path
 
 ##  A Job subclass that performs mesh writing.
 #

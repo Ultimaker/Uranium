@@ -3,10 +3,8 @@
 
 from UM.Tool import Tool
 from UM.Event import Event, MouseEvent, KeyEvent
-from UM.Application import Application
 from UM.Scene.ToolHandle import ToolHandle
 from UM.Scene.Selection import Selection
-from UM.Scene.SceneNode import SceneNode
 from UM.Math.Plane import Plane
 from UM.Math.Vector import Vector
 
@@ -14,10 +12,9 @@ from UM.Operations.ScaleOperation import ScaleOperation
 from UM.Operations.GroupedOperation import GroupedOperation
 from UM.Operations.SetTransformOperation import SetTransformOperation
 from UM.Operations.ScaleToBoundsOperation import ScaleToBoundsOperation
-from UM.Operations.TranslateOperation import TranslateOperation
 
 from . import ScaleToolHandle
-import copy
+
 
 class ScaleTool(Tool):
     def __init__(self):
@@ -197,107 +194,107 @@ class ScaleTool(Tool):
     def getScaleX(self):
         if Selection.hasSelection():
             ## Ensure that the returned value is positive (mirror causes scale to be negative)
-            return abs(round(float(Selection.getSelectedObject(0).getScale().x), 4))
+            return abs(round(float(self._getScaleInWorldCoordinates(Selection.getSelectedObject(0)).x), 4))
 
         return 1.0
 
     def getScaleY(self):
         if Selection.hasSelection():
             ## Ensure that the returned value is positive (mirror causes scale to be negative)
-            return abs(round(float(Selection.getSelectedObject(0).getScale().y), 4))
+            return abs(round(float(self._getScaleInWorldCoordinates(Selection.getSelectedObject(0)).y), 4))
 
         return 1.0
 
     def getScaleZ(self):
         if Selection.hasSelection():
             ## Ensure that the returned value is positive (mirror causes scale to be negative)
-            return abs(round(float(Selection.getSelectedObject(0).getScale().z), 4))
+            return abs(round(float(self._getScaleInWorldCoordinates(Selection.getSelectedObject(0)).z), 4))
 
         return 1.0
 
     def setObjectWidth(self, width):
         obj = Selection.getSelectedObject(0)
         if obj:
-            obj_scale = obj.getScale()
+            obj_scale = self._getScaleInWorldCoordinates(obj)
             obj_width = obj.getBoundingBox().width / obj_scale.x
             target_scale = float(width) / obj_width
-            self.setScaleX(target_scale)
+            if obj_scale.x != target_scale:
+                scale_factor = abs(target_scale / obj_scale.x)
+                if self._non_uniform_scale:
+                    scale_vector = Vector(scale_factor, 1, 1)
+                else:
+                    scale_vector = Vector(scale_factor, scale_factor, scale_factor)
+                Selection.applyOperation(ScaleOperation, scale_vector)
 
     def setObjectHeight(self, height):
         obj = Selection.getSelectedObject(0)
         if obj:
-            obj_scale = obj.getScale()
+            obj_scale = self._getScaleInWorldCoordinates(obj)
             obj_height = obj.getBoundingBox().height / obj_scale.y
             target_scale = float(height) / obj_height
-            self.setScaleY(target_scale)
+            if obj_scale.y != target_scale:
+                scale_factor = abs(target_scale / obj_scale.y)
+                if self._non_uniform_scale:
+                    scale_vector = Vector(1, scale_factor, 1)
+                else:
+                    scale_vector = Vector(scale_factor, scale_factor, scale_factor)
+                Selection.applyOperation(ScaleOperation, scale_vector)
 
     def setObjectDepth(self, depth):
         obj = Selection.getSelectedObject(0)
         if obj:
-            obj_scale = obj.getScale()
+            obj_scale = self._getScaleInWorldCoordinates(obj)
             obj_depth = obj.getBoundingBox().depth / obj_scale.z
             target_scale = float(depth) / obj_depth
-            self.setScaleZ(target_scale)
+            if obj_scale.z != target_scale:
+                scale_factor = abs(target_scale / obj_scale.z)
+                if self._non_uniform_scale:
+                    scale_vector = Vector(1, 1, scale_factor)
+                else:
+                    scale_vector = Vector(scale_factor, scale_factor, scale_factor)
+                Selection.applyOperation(ScaleOperation, scale_vector)
 
     def setScaleX(self, scale):
         obj = Selection.getSelectedObject(0)
         if obj:
-            obj_scale = obj.getScale()
-            if obj_scale.x != scale:
-                if obj_scale.x < 0:
-                    obj_scale.setX(-scale)
+            obj_scale = self._getScaleInWorldCoordinates(obj)
+            if round(float(obj_scale.x), 4) != scale:
+                scale_factor = abs(scale / obj_scale.x)
+                if self._non_uniform_scale:
+                    scale_vector = Vector(scale_factor, 1, 1)
                 else:
-                    obj_scale.setX(scale)
-                if not self._non_uniform_scale:
-                    factor = scale / obj.getScale().x
-                    if obj_scale.y < 0:
-                        obj_scale.setY(-(factor * obj_scale.y))
-                    else:
-                        obj_scale.setY(factor * obj_scale.y)
-                    if obj_scale.z < 0:
-                        obj_scale.setZ(-(factor * obj_scale.z))
-                    else:
-                        obj_scale.setZ(factor * obj_scale.z)
-                Selection.applyOperation(ScaleOperation, obj_scale, set_scale = True)
+                    scale_vector = Vector(scale_factor, scale_factor, scale_factor)
+                Selection.applyOperation(ScaleOperation, scale_vector)
 
     def setScaleY(self, scale):
         obj = Selection.getSelectedObject(0)
         if obj:
-            obj_scale = obj.getScale()
-            if obj_scale.y != scale:
-                if obj_scale.y < 0:
-                    obj_scale.setY(-scale)
+            obj_scale = self._getScaleInWorldCoordinates(obj)
+            if round(float(obj_scale.y), 4) != scale:
+                scale_factor = abs(scale / obj_scale.y)
+                if self._non_uniform_scale:
+                    scale_vector = Vector(1, scale_factor, 1)
                 else:
-                    obj_scale.setY(scale)
-                if not self._non_uniform_scale:
-                    factor = scale / obj.getScale().y
-                    if obj_scale.x < 0:
-                        obj_scale.setX(-(factor * obj_scale.y))
-                    else:
-                        obj_scale.setX(factor * obj_scale.y)
-                    if obj_scale.z < 0:
-                        obj_scale.setZ(-(factor * obj_scale.z))
-                    else:
-                        obj_scale.setZ(factor * obj_scale.z)
-                Selection.applyOperation(ScaleOperation, obj_scale, set_scale = True)
+                    scale_vector = Vector(scale_factor, scale_factor, scale_factor)
+                Selection.applyOperation(ScaleOperation, scale_vector)
 
     def setScaleZ(self, scale):
         obj = Selection.getSelectedObject(0)
         if obj:
-            obj_scale = obj.getScale()
-            if obj_scale.z != scale:
-                if obj_scale.z < 0:
-                    obj_scale.setZ(-scale)
+            obj_scale = self._getScaleInWorldCoordinates(obj)
+            if round(float(obj_scale.z), 4) != scale:
+                scale_factor = abs(scale / obj_scale.z)
+                if self._non_uniform_scale:
+                    scale_vector = Vector(1, 1, scale_factor)
                 else:
-                    obj_scale.setZ(scale)
-                if not self._non_uniform_scale:
-                    factor = scale / obj.getScale().y
-                    if obj_scale.x < 0:
-                        obj_scale.setX(-(factor * obj_scale.y))
-                    else:
-                        obj_scale.setX(factor * obj_scale.y)
-                    if obj_scale.y < 0:
-                        obj_scale.setY(-(factor * obj_scale.y))
-                    else:
-                        obj_scale.setY(factor * obj_scale.y)
-                Selection.applyOperation(ScaleOperation, obj_scale, set_scale = True)
+                    scale_vector = Vector(scale_factor, scale_factor, scale_factor)
+                Selection.applyOperation(ScaleOperation, scale_vector)
+
+    ##  Convenience function that gives the scale of an object in the coordinate space of the world.
+    def _getScaleInWorldCoordinates(self, node):
+        original_aabb = node.getOriginalBoundingBox()
+        aabb = node.getBoundingBox()
+
+        scale = Vector(aabb.width / original_aabb.width, aabb.height / original_aabb.height, aabb.depth / original_aabb.depth)
+
+        return scale

@@ -3,6 +3,7 @@
 
 from UM.Math.Vector import Vector
 
+
 class Ray:
     def __init__(self, origin = Vector(), direction = Vector()):
         self._origin = origin

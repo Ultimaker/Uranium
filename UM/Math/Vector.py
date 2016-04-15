@@ -10,6 +10,7 @@ from UM.Math.Float import Float
 # Disable divide-by-zero warnings so that 1.0 / (1.0, 0.0, 0.0) returns (1.0, Inf, Inf) without complaining
 numpy.seterr(divide="ignore")
 
+
 ##  Simple 3D-vector class based on numpy arrays.
 #
 #   This class represents a 3-dimensional vector.
@@ -20,18 +21,18 @@ class Vector(object):
 
     def __init__(self, *args, **kwargs):
         if len(args) == 3:
-            self._data = numpy.array([args[0], args[1], args[2]],dtype=numpy.float32)
+            self._data = numpy.array([args[0], args[1], args[2]],dtype = numpy.float64)
         elif "data" in kwargs:
             self._data = kwargs["data"].copy()
         else:
-            self._data = numpy.zeros(3, dtype=numpy.float32)
+            self._data = numpy.zeros(3, dtype = numpy.float64)
     
     ##  Set the data of the vector
     #   \param x X coordinate of vector.
     #   \param y Y coordinate of vector.
     #   \param z Z coordinate of vector.
     def setData(self, x = 0,y = 0,z = 0):
-        self._data = numpy.array([x,y,z],dtype=numpy.float32)
+        self._data = numpy.array([x,y,z],dtype = numpy.float64)
     
     def flip(self):
         self._data[0] = -1 * self._data[0]
@@ -42,42 +43,42 @@ class Vector(object):
     ##  Get numpy array with the data
     #   \returns numpy array of length 3 holding xyz data.
     def getData(self):
-        return self._data
+        return self._data.astype(numpy.float64)
 
     ##  Return the x component of this vector
     @property
     def x(self):
-        return numpy.float32(self._data[0])
+        return numpy.float64(self._data[0])
 
     ##  Set the x component of this vector
     #   \param value The value for the x component
     def setX(self, value):
-        self._data[0] = numpy.float32(value)
+        self._data[0] = numpy.float64(value)
 
     ##  Return the y component of this vector
     @property
     def y(self):
-        return numpy.float32(self._data[1])
+        return numpy.float64(self._data[1])
 
     ##  Set the y component of this vector
     #   \param value The value for the y component
     def setY(self, value):
-        self._data[1] = numpy.float32(value)
+        self._data[1] = numpy.float64(value)
 
     ## Return the z component of this vector
     @property
     def z(self):
-        return numpy.float32(self._data[2])
+        return numpy.float64(self._data[2])
 
     ##  Set the z component of this vector
     #   \param value The value for the z component
     def setZ(self, value):
-        self._data[2] = numpy.float32(value)
+        self._data[2] = numpy.float64(value)
     
     ##  Get the angle from this vector to another
     def angleToVector(self, vector):
-        v0 = numpy.array(self._data, dtype=numpy.float32, copy=False)
-        v1 = numpy.array(vector.getData(), dtype = numpy.float32, copy=False)
+        v0 = numpy.array(self._data, dtype = numpy.float64, copy=False)
+        v1 = numpy.array(vector.getData(), dtype = numpy.float64, copy=False)
         dot = numpy.sum(v0 * v1)
         dot /= self._normalizeVector(v0) * self._normalizeVector(v1)
         return numpy.arccos(numpy.fabs(dot))
@@ -94,7 +95,7 @@ class Vector(object):
     
     ##  Return length, i.e. Euclidean norm, of ndarray along axis.
     def _normalizeVector(self, data):
-        data = numpy.array(data, dtype=numpy.float32, copy=True)
+        data = numpy.array(data, dtype = numpy.float64, copy=True)
         if data.ndim == 1:
             return math.sqrt(numpy.dot(data, data))
         data *= data
@@ -113,7 +114,7 @@ class Vector(object):
         return Vector(result[0], result[1], result[2])
 
     def multiply(self, matrix):
-        d = numpy.empty(4, dtype=numpy.float32)
+        d = numpy.empty(4, dtype=numpy.float64)
         d[0] = self._data[0]
         d[1] = self._data[1]
         d[2] = self._data[2]
@@ -124,7 +125,7 @@ class Vector(object):
         return Vector(d[0], d[1], d[2])
 
     def preMultiply(self, matrix):
-        d = numpy.empty(4, dtype=numpy.float32)
+        d = numpy.empty(4, dtype = numpy.float64)
         d[0] = self._data[0]
         d[1] = self._data[1]
         d[2] = self._data[2]
@@ -221,7 +222,7 @@ class Vector(object):
 
     def __rtruediv__(self, other):
         if type(other) is float:
-            v = numpy.float32(other) / self._data
+            v = numpy.float64(other) / self._data
             return Vector(v[0], v[1], v[2])
         else:
             raise NotImplementedError()

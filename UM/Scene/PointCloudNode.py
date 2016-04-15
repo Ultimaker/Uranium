@@ -2,7 +2,6 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 from . import SceneNode
-from UM.View.Renderer import Renderer
 from UM.Application import Application
 from UM.Resources import Resources
 from UM.Math.Color import Color
@@ -11,6 +10,7 @@ from UM.View.GL.OpenGL import OpenGL
 from UM.View.RenderBatch import RenderBatch
 import numpy
 import colorsys
+
 
 class PointCloudNode(SceneNode.SceneNode):
     def __init__(self, parent = None):

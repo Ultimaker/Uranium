@@ -42,6 +42,9 @@ class MachineInstancesModel(ListModel):
             return
 
         self._manager.removeMachineInstance(instance)
+        # dataChanged does not always get emitted when removing an item from a ListModel, so we emit it 
+        # once more to be sure the Remove button gets properly disabled when there is only 1 machine left.
+        self.dataChanged.emit(self.index(0,0), self.index(self.rowCount()-1,0))
 
     @pyqtSlot(str, result = bool)
     def checkInstanceNameExists(self, name):

@@ -137,10 +137,10 @@ msgctxt "@label"
 msgid "Wireframe View"
 msgstr "Vista de estructura de alambre"
 
-#: /home/tamara/2.1/Uranium/plugins/Views/WireframeView/__init__.py:16
+#: /home/ruben/Projects/Uranium/plugins/Views/WireframeView/__init__.py:16
 msgctxt "@info:whatsthis"
-msgid "Provides a simple wireframe view"
-msgstr "Proporciona una vista básica de estructura de alambre"
+msgid "Provides a simple wireframe view."
+msgstr "Proporciona una vista básica de la estructura de alambre."
 
 #: /home/tamara/2.1/Uranium/plugins/ConsoleLogger/__init__.py:13
 msgctxt "@label"
@@ -231,10 +231,10 @@ msgctxt "@label"
 msgid "Local File Output Device"
 msgstr "Dispositivo de salida del archivo local"
 
-#: /home/tamara/2.1/Uranium/plugins/LocalFileOutputDevice/__init__.py:13
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/__init__.py:13
 msgctxt "@info:whatsthis"
-msgid "Enables saving to local files"
-msgstr "Permite guardar en archivos locales"
+msgid "Enables saving to local files."
+msgstr "Permite guardar en archivos locales."
 
 #: /home/tamara/2.1/Uranium/plugins/FileHandlers/OBJReader/__init__.py:13
 msgctxt "@label"
@@ -518,7 +518,7 @@ msgstr "Ajustar rotación"
 #: /home/tamara/2.1/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:42
 msgctxt "@action:button"
 msgid "Scale to Max"
-msgstr "Escalar al máx."
+msgstr "Escalar al máx"
 
 #: /home/tamara/2.1/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:67
 msgctxt "@option:check"
@@ -747,3 +747,28 @@ msgstr "Confirme confirmar eliminación de la máquina"
 msgctxt "@label"
 msgid "Are you sure you wish to remove the machine?"
 msgstr "¿Seguro que desea eliminar la máquina?"
+
+#: /home/ruben/Projects/Uranium/UM/Settings/Profile.py:51
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:52
+msgctxt "@label"
+msgid "Current settings"
+msgstr "Ajustes actuales"
+
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Settings/SettingView.qml:223
+msgctxt "@label"
+msgid ""
+"This setting is normally calculated, but it currently has an absolute value "
+"set.\n"
+"\n"
+"Click to restore the calculated value."
+msgstr "Este ajuste se calcula normalmente pero actualmente tiene un valor absoluto establecido.\n\nHaga clic para restaurar el valor calculado."
+
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Settings/SettingView.qml:212
+msgctxt "@label"
+msgid "Affects:"
+msgstr "Afecta a:"
+
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Settings/SettingView.qml:217
+msgctxt "@label"
+msgid "Is affected by:"
+msgstr "Se ve afectado por:"

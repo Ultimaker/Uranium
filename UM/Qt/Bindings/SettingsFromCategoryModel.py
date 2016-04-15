@@ -91,7 +91,8 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
             machine_definition = self._machine_manager.getActiveMachineInstance().getMachineDefinition()
             for temp_key in setting.getRequiredBySettingKeys():
                 temp_setting = machine_definition.getSetting(temp_key)
-                result += "- " + temp_setting.getLabel() + "<br/>"
+                if temp_setting.hasLabel():
+                    result += "- " + temp_setting.getLabel() + "<br/>"
             result = result[:-5] # Remove last endline.
         return result
 
@@ -108,7 +109,8 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
             machine_definition = self._machine_manager.getActiveMachineInstance().getMachineDefinition()
             for temp_key in setting.getRequiredSettingKeys():
                 temp_setting = machine_definition.getSetting(temp_key)
-                result += "- " + temp_setting.getLabel() + "<br/>"
+                if temp_setting.hasLabel():
+                    result += "- " + temp_setting.getLabel() + "<br/>"
             result = result[:-5] # Remove last endline.
         return result
 
@@ -237,6 +239,9 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
             if index != -1:
                 self.setProperty(index, "enabled", setting.isEnabled())
 
+                # Update the value-unused state of all settings that depend on this setting
+                self._profile.updateUnusedValues(setting)
+
     ##  Updates the global only property if any of its dependencies have its
     #   value changed.
     #
@@ -250,10 +255,12 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
     def _onProfileChanged(self):
         if self._profile:
             self._profile.settingValueChanged.disconnect(self._onSettingValueChanged)
+            self._profile.settingValueUnusedChanged.disconnect(self._onSettingValueUnusedChanged)
 
         self._profile = self._machine_manager.getWorkingProfile()
         if self._profile:
             self._profile.settingValueChanged.connect(self._onSettingValueChanged)
+            self._profile.settingValueUnusedChanged.connect(self._onSettingValueUnusedChanged)
 
             self.updateSettings()
 
@@ -271,11 +278,10 @@ class SettingsFromCategoryModel(ListModel, SignalEmitter):
             self.setProperty(index, "overridden", self._profile.hasSettingValue(key, filter_defaults = True))
             self.setProperty(index, "valid", setting.validate(value))
 
-            # Traverse up the setting tree to check if the parent values are used or overridden
-            parent_setting = setting.getParent()
-            while parent_setting and type(parent_setting) == type(setting):
-                parent_index = self.find("key", parent_setting.getKey())
-                if parent_index != -1:
-                    self.setProperty(parent_index, "value_unused", self._profile.checkValueUnused(parent_setting))
+            # Update the value-unused state of all settings that depend on this setting
+            self._profile.updateUnusedValues(setting)
 
-                parent_setting = parent_setting.getParent()
+    def _onSettingValueUnusedChanged(self, key, unused):
+        index = self.find("key", key)
+        if index != -1:
+            self.setProperty(index, "value_unused", unused)
