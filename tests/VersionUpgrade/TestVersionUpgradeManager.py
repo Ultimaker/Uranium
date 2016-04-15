@@ -45,7 +45,7 @@ class TestVersionUpgradeManager():
                 { "from_version": 0, "to_version": 1, "preference_type": "a" },
                 { "from_version": 0, "to_version": 1, "preference_type": "a" }
             ],
-            "destination": 2,
+            "destination": 1,
             "preference_type": "a",
             "answers": [
                 { 0: 0 },
