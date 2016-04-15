@@ -8,6 +8,7 @@ from UM.Settings.MachineInstance import MachineInstance #To get the current mach
 from UM.Settings.Profile import Profile #To get the current profile version.
 
 import collections #For deque, for breadth-first search.
+import configparser #To read config files to get the version number from them.
 import os #To get the setting filenames.
 
 ##  Regulates the upgrading of preferences from one application version to the
@@ -51,14 +52,34 @@ class VersionUpgradeManager:
     #   can be performed.
     def upgrade(self):
         paths = self._findShortestUpgradePaths("machine_instance", MachineInstance.MachineInstanceVersion)
-        #TODO: Find all machine instances.
-        #TODO: Upgrade all machine instances to the most recent version.
+        for machine_instance in self._readFilesInDirectory(Resources.getStoragePath(Resources.MachineInstances)):
+            try:
+                version = self._getMachineInstanceVersion(machine_instance)
+            except: #Not a valid file. Can't upgrade it then.
+                continue
+            if version not in paths: #No upgrade to bring this up to the most recent version.
+                continue
+            #TODO: Upgrade all machine instances to the most recent version.
+
         paths = self._findShortestUpgradePaths("preferences", Preferences.PreferencesVersion)
-        #TODO: Find all preference files.
-        #TODO: Upgrade all preference files to the most recent version.
+        for preferences in self._readFilesInDirectory(Resources.getStoragePath(Resources.Preferences)):
+            try:
+                version = self._getPreferencesVersion(preferences)
+            except: #Not a valid file. Can't upgrade it then.
+                continue
+            if version not in paths: #No upgrade to bring this up to the most recent version.
+                continue
+            #TODO: Upgrade all preference files to the most recent version.
+
         paths = self._findShortestUpgradePaths("profile", Profile.ProfileVersion)
-        #TODO: Find all profiles.
-        #TODO: Upgrade all profiles to the most recent version.
+        for profile in self._readFilesInDirectory(Resources.getStoragePath(Resources.Profiles)):
+            try:
+                version = self._getProfileVersion(profile)
+            except: #Not a valid file. Can't upgrade it then.
+                continue
+            if version not in paths: #No upgrade to bring this up to the most recent version.
+                continue
+            #TODO: Upgrade all profiles to the most recent version.
 
     # private:
 
@@ -68,6 +89,45 @@ class VersionUpgradeManager:
     #   plug-in.
     def _addVersionUpgrade(self, version_upgrade_plugin):
         self._versionUpgrades.append(version_upgrade_plugin)
+
+    ##  Gets a single item out of a config file.
+    #
+    #   This uses the config parser to read the entire file, then gets the
+    #   requested property from it. That makes it hella inefficient! But if you
+    #   only need one item, it is convenient to use this function.
+    #
+    #   This function does not do any error checking. If the config file is not
+    #   well-formed, an exception will be raised.
+    #
+    #   \param config_file The contents of a config file.
+    #   \param section The section to get the item from.
+    #   \param item The item to read from the specified section.
+    #   \return The value of the specified item, as a string.
+    def _getCfgItem(self, config_file, section, item):
+        config = configparser.ConfigParser(interpolation = None)
+        config.read_string(config_file)
+        return config.get(section, item)
+
+    ##  Gets the version of a machine instance file.
+    #
+    #   \param machine_instance The contents of a machine_instance file.
+    #   \return The version of the machine instance.
+    def _getMachineInstanceVersion(self, machine_instance):
+        return self._getCfgItem(machine_instance, section = "General", item = "version")
+
+    ##  Gets the version of a preferences file.
+    #
+    #   \param preferences The contents of a preferences file.
+    #   \return The version of the preferences.
+    def _getPreferencesVersion(self, preferences):
+        return self._getCfgItem(preferences, section = "General", item = "version")
+
+    ##  Gets the version of a profile file.
+    #
+    #   \param profile The contents of a profile file.
+    #   \return The version of the profile.
+    def _getProfileVersion(self, profile):
+        return self._getCfgItem(profile, section = "General", item = "version")
 
     ##  For each version of a preference type, finds the next step to take to
     #   upgrade as quickly as possible to the most recent version.
