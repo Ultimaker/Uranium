@@ -219,11 +219,12 @@ class ScaleTool(Tool):
             obj_width = obj.getBoundingBox().width / obj_scale.x
             target_scale = float(width) / obj_width
             if obj_scale.x != target_scale:
-                obj_scale.setX(target_scale)
-                if not self._non_uniform_scale:
-                    obj_scale.setY(target_scale)
-                    obj_scale.setZ(target_scale)
-                Selection.applyOperation(ScaleOperation, obj_scale, set_scale = True)
+                scale_factor = abs(target_scale / obj_scale.x)
+                if self._non_uniform_scale:
+                    scale_vector = Vector(scale_factor, 1, 1)
+                else:
+                    scale_vector = Vector(scale_factor, scale_factor, scale_factor)
+                Selection.applyOperation(ScaleOperation, scale_vector)
 
     def setObjectHeight(self, height):
         obj = Selection.getSelectedObject(0)
@@ -232,11 +233,12 @@ class ScaleTool(Tool):
             obj_height = obj.getBoundingBox().height / obj_scale.y
             target_scale = float(height) / obj_height
             if obj_scale.y != target_scale:
-                obj_scale.setY(target_scale)
-                if not self._non_uniform_scale:
-                    obj_scale.setX(target_scale)
-                    obj_scale.setZ(target_scale)
-                Selection.applyOperation(ScaleOperation, obj_scale, set_scale = True)
+                scale_factor = abs(target_scale / obj_scale.y)
+                if self._non_uniform_scale:
+                    scale_vector = Vector(1, scale_factor, 1)
+                else:
+                    scale_vector = Vector(scale_factor, scale_factor, scale_factor)
+                Selection.applyOperation(ScaleOperation, scale_vector)
 
     def setObjectDepth(self, depth):
         obj = Selection.getSelectedObject(0)
@@ -245,11 +247,12 @@ class ScaleTool(Tool):
             obj_depth = obj.getBoundingBox().depth / obj_scale.z
             target_scale = float(depth) / obj_depth
             if obj_scale.z != target_scale:
-                obj_scale.setZ(target_scale)
-                if not self._non_uniform_scale:
-                    obj_scale.setY(target_scale)
-                    obj_scale.setX(target_scale)
-                Selection.applyOperation(ScaleOperation, obj_scale, set_scale = True)
+                scale_factor = abs(target_scale / obj_scale.z)
+                if self._non_uniform_scale:
+                    scale_vector = Vector(1, 1, scale_factor)
+                else:
+                    scale_vector = Vector(scale_factor, scale_factor, scale_factor)
+                Selection.applyOperation(ScaleOperation, scale_vector)
 
     def setScaleX(self, scale):
         obj = Selection.getSelectedObject(0)
