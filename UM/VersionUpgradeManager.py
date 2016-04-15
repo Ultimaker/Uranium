@@ -3,10 +3,12 @@
 
 from UM.PluginRegistry import PluginRegistry
 from UM.Preferences import Preferences
+from UM.Resources import Resources
 from UM.Settings.MachineInstance import MachineInstance
 from UM.Settings.Profile import Profile
 
 import collections #For deque, for breadth-first search.
+import os #To get the setting filenames.
 
 ##  Regulates the upgrading of preferences from one application version to the
 #   next.
@@ -106,6 +108,22 @@ class VersionUpgradeManager:
             done.add(version)
 
         return result
+
+    ##  Reads all files in a specified directory.
+    #
+    #   Each file is returned as a string. The result is iterable, so it doesn't
+    #   need to keep each string in memory at the same time, making this process
+    #   a bit faster.
+    #
+    #   \param directory The directory to read the files from.
+    #   \return For each file, returns a string representing the content of the
+    #   file.
+    def _readFilesInDirectory(self, directory):
+        filenames = [filename for filename in os.listdir(directory) if os.path.isfile(os.path.join(directory, filename))] #All files in machine instance directory.
+        for filename in filenames:
+            with file(filename) as file_handle:
+                content = file_handle.read()
+            yield content
 
     ##  Creates a look-up table to get plug-ins by what version they upgrade
     #   to.
