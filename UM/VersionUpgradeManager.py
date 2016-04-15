@@ -122,7 +122,10 @@ class VersionUpgradeManager:
         result = {}
         registry = PluginRegistry.getInstance()
         for plugin in self._versionUpgrades:
-            destination = registry.getMetaData(plugin.getPluginId())["version_upgrade"][preference_type]["to"]
+            metadata = registry.getMetaData(plugin.getPluginId())["version_upgrade"]
+            if preference_type not in metadata: #Filter by preference_type.
+                continue
+            destination = metadata[preference_type]["to"]
             if not destination in result: #Entry doesn't exist yet.
                 result[destination] = []
             result[destination].append(plugin) #Sort this plug-in under the correct entry.
