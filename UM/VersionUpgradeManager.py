@@ -1,11 +1,11 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Cura is released under the terms of the AGPLv3 or higher.
 
-from UM.PluginRegistry import PluginRegistry
-from UM.Preferences import Preferences
-from UM.Resources import Resources
-from UM.Settings.MachineInstance import MachineInstance
-from UM.Settings.Profile import Profile
+from UM.PluginRegistry import PluginRegistry #To find plug-ins.
+from UM.Preferences import Preferences #To get the current preferences version.
+from UM.Resources import Resources #To load old versions from.
+from UM.Settings.MachineInstance import MachineInstance #To get the current machine instance version.
+from UM.Settings.Profile import Profile #To get the current profile version.
 
 import collections #For deque, for breadth-first search.
 import os #To get the setting filenames.
