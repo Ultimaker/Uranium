@@ -84,7 +84,7 @@ MACRO(TARGETS_FOR_MO_FILES language)
                            COMMAND mkdir ARGS -p ${CMAKE_BINARY_DIR}/resources/i18n/${language}/LC_MESSAGES/
                            COMMAND ${GETTEXT_MSGFMT_EXECUTABLE} ARGS ${po_file} -o ${mo_file} -f)
         if(TARGET i18n-copy-mo-${language})
-             string(REGEX REPLACE ".*/(.*).po" "${CURA_BINARY_DATA_DIRECTORY}/resources/i18n/${language}/LC_MESSAGES/\\1.mo" mo_file_binary_copy ${po_file})
+             string(REGEX REPLACE ".*/(.*).po" "${CURA_BINARY_DATA_DIRECTORY}/${PROJECT_NAME}/resources/i18n/${language}/LC_MESSAGES/\\1.mo" mo_file_binary_copy ${po_file})
              add_custom_command(TARGET i18n-copy-mo-${language} POST_BUILD
                                 COMMAND mkdir ARGS -p ${CURA_BINARY_DATA_DIRECTORY}/resources/i18n/${language}/LC_MESSAGES/
                                 COMMAND cp ARGS -fv ${mo_file} ${mo_file_binary_copy})
