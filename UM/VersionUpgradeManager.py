@@ -91,23 +91,18 @@ class VersionUpgradeManager:
         #Perform a breadth-first search.
         registry = PluginRegistry.getInstance()
         front = collections.deque() #Use as a queue for breadth-first iteration: Append right, pop left.
-        done = set() #Flag explored upgrades as done.
-        for neighbour in by_destination_version[destination_version]:
-            front.append(neighbour)
-            source_version = registry.getMetaData(neighbour.getPluginId())["version_upgrade"][preference_type]["from"]
-            if source_version not in result: #First time we encounter this version. Due to breadth-first search, this must be part of the shortest path then.
-                result[source_version] = neighbour
-            done.add(neighbour)
+        front.append(destination_version)
+        done = set() #Flag explored versions as done.
         while len(front) > 0:
-            upgrade = front.popleft() #To make it a queue, pop on the opposite side of where you append!
-            for neighbour in by_destination_version[registry.getMetaData(upgrade.getPluginId())["version_upgrade"][preference_type]["to"]]:
-                if neighbour in done: #Already encountered elsewhere. No need to re-compute.
-                    continue
-                front.append(neighbour)
+            version = front.popleft() #To make it a queue, pop on the opposite side of where you append!
+            for neighbour in by_destination_version[version]:
                 source_version = registry.getMetaData(neighbour.getPluginId())["version_upgrade"][preference_type]["from"]
+                if source_version in done: #Already encountered elsewhere. No need to re-compute.
+                    continue
+                front.append(source_version)
                 if source_version not in result: #First time we encounter this version. Due to breadth-first search, this must be part of the shortest path then.
                     result[source_version] = neighbour
-                done.add(neighbour)
+            done.add(version)
 
         return result
 
