@@ -52,7 +52,7 @@ class VersionUpgradeManager:
     #   can be performed.
     def upgrade(self):
         paths = self._findShortestUpgradePaths("machine_instance", MachineInstance.MachineInstanceVersion)
-        for machine_instance in self._readFilesInDirectory(Resources.getStoragePath(Resources.MachineInstances)):
+        for machine_instance in self._readFilesInDirectory(Resources.getStoragePath(Resources.MachineInstances), exclude_paths = ["old"]):
             try:
                 version = self._getMachineInstanceVersion(machine_instance)
             except: #Not a valid file. Can't upgrade it then.
@@ -62,7 +62,7 @@ class VersionUpgradeManager:
             #TODO: Upgrade all machine instances to the most recent version.
 
         paths = self._findShortestUpgradePaths("preferences", Preferences.PreferencesVersion)
-        for preferences in self._readFilesInDirectory(Resources.getStoragePath(Resources.Preferences)):
+        for preferences in self._readFilesInDirectory(Resources.getStoragePath(Resources.Preferences), exclude_paths = ["old"]):
             try:
                 version = self._getPreferencesVersion(preferences)
             except: #Not a valid file. Can't upgrade it then.
@@ -72,7 +72,7 @@ class VersionUpgradeManager:
             #TODO: Upgrade all preference files to the most recent version.
 
         paths = self._findShortestUpgradePaths("profile", Profile.ProfileVersion)
-        for profile in self._readFilesInDirectory(Resources.getStoragePath(Resources.Profiles)):
+        for profile in self._readFilesInDirectory(Resources.getStoragePath(Resources.Profiles), exclude_paths = ["old"]):
             try:
                 version = self._getProfileVersion(profile)
             except: #Not a valid file. Can't upgrade it then.
@@ -169,21 +169,29 @@ class VersionUpgradeManager:
 
         return result
 
-    ##  Reads all files in a specified directory.
+    ##  Reads all files in a specified directory and its subdirectories.
     #
     #   Each file is returned as a string. The result is iterable, so it doesn't
     #   need to keep each string in memory at the same time, making this process
     #   a bit faster.
     #
+    #   If an exclude path is given, the specified path is ignored (relative to
+    #   the specified directory).
+    #
     #   \param directory The directory to read the files from.
+    #   \param exclude_paths (Optional) A list of paths, relative to the
+    #   specified directory, to directories which must be excluded from the
+    #   result.
     #   \return For each file, returns a string representing the content of the
     #   file.
-    def _readFilesInDirectory(self, directory):
-        filenames = [filename for filename in os.listdir(directory) if os.path.isfile(os.path.join(directory, filename))] #All files in machine instance directory.
-        for filename in filenames:
-            with file(filename) as file_handle:
-                content = file_handle.read()
-            yield content
+    def _readFilesInDirectory(self, directory, exclude_paths = []):
+        exclude_paths = [os.path.join(directory, exclude_path) for exclude_path in exclude_paths] #Prepend the specified directory before each exclude path.
+        for (path, directory_names, filenames) in os.walk(directory):
+            directory_names[:] = [directory_name for directory_name in directory_names if os.path.join(path, directory_name) not in exclude_paths] #Prune the exclude paths.
+            for filename in filenames:
+                with file(filename) as file_handle:
+                    content = file_handle.read()
+                yield content
 
     ##  Creates a look-up table to get plug-ins by what version they upgrade
     #   to.
