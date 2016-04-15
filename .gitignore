@@ -36,3 +36,7 @@ _eric6project/Uranium.e4t
 
 ## IntelliJ projects
 .idea
+
+#Test results.
+tests/Settings/instances/machine_settings_with_overrides_test.cfg
+tests/Settings/profiles/simple_machine_with_overrides_test.cfg
