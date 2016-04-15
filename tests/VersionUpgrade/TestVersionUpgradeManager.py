@@ -119,7 +119,6 @@ class TestVersionUpgradeManager():
         registry = Application.getInstance().getPluginRegistry()
         for upgrade in upgrades: #Artificially fill the plug-in registry with my own metadata!
             plugin_object = PluginObject()
-            assert plugin_object
             metadata = { #Correctly fill the metadata for this plug-in.
                 "plugin": {
                     "name": "Upgrade Test", #Note: Don't use internationalisation here, lest it be grabbed by gettext.
