@@ -80,6 +80,14 @@ class TestVersionUpgradeManager():
         })
     ]
 
+    ##  Tests the algorithm to find shortest paths to update plug-ins.
+    #
+    #   This function is normally not "exposed" (though Python puts no
+    #   limitations on that). However, since the accuracy of this function
+    #   should only affect the execution speed, it is wise to test this function
+    #   nonetheless.
+    #
+    #   \param data The data containing individual tests.
     @pytest.mark.parametrize("data", test_shortest_paths_data)
     def test_shortest_paths(self, data):
         registry = Application.getInstance().getPluginRegistry()
@@ -115,6 +123,9 @@ class TestVersionUpgradeManager():
             assert False #Incorrect path.
 
     ##  Create a plug-in registry with the specified upgrade plug-ins in it.
+    #
+    #   \param upgrades Metadata of upgrades to fill the registry with, as
+    #   obtained from test_shortest_paths_data.
     def _loadUpgrades(self, upgrades):
         registry = Application.getInstance().getPluginRegistry()
         for upgrade in upgrades: #Artificially fill the plug-in registry with my own metadata!
