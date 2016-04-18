@@ -44,6 +44,7 @@ class VersionUpgradeManager:
         self._profile_upgrade_paths = {} #The shortest paths to upgrade profiles to the current version.
 
         self._versionUpgrades = [] #All upgrade plug-ins.
+        self._registry = PluginRegistry.getInstance()
         PluginRegistry.addType("version_upgrade", self._addVersionUpgrade)
 
     ##  Performs the version upgrades of all preference files to the most recent
@@ -52,8 +53,6 @@ class VersionUpgradeManager:
     #   The upgrade plug-ins must all be loaded at this point, or no upgrades
     #   can be performed.
     def upgrade(self):
-        registry = PluginRegistry.getInstance()
-
         paths = self._findShortestUpgradePaths("machine_instance", MachineInstance.MachineInstanceVersion)
         base_directory = Resources.getStoragePathForType(Resources.MachineInstances)
         for machine_instance_file in self._getFilesInDirectory(base_directory, exclude_paths = ["old"]):
@@ -73,7 +72,7 @@ class VersionUpgradeManager:
                 except Exception as e:
                     Logger.log("w", "Exception in machine instance upgrade with " + upgrade.getPluginId() + ": " + str(e))
                     break #Continue with next file.
-                version = registry.getMetaData(upgrade.getPluginId())["version_upgrade"]["machine_instance"]["to"]
+                version = self._registry.getMetaData(upgrade.getPluginId())["version_upgrade"]["machine_instance"]["to"]
             if version != old_version:
                 self._storeOldFile(base_directory, machine_instance_file, old_version)
                 with open(os.path.join(base_directory, machine_instance_file), "a") as file_handle:
@@ -98,7 +97,7 @@ class VersionUpgradeManager:
                 except Exception as e:
                     Logger.log("w", "Exception in preferences upgrade with " + upgrade.getPluginId() + ": " + str(e))
                     break #Continue with next file.
-                version = registry.getMetaData(upgrade.getPluginId())["version_upgrade"]["preferences"]["to"]
+                version = self._registry.getMetaData(upgrade.getPluginId())["version_upgrade"]["preferences"]["to"]
             if version != old_version:
                 self._storeOldFile(base_directory, preferences_file, old_version)
                 with open(os.path.join(base_directory, preferences_file), "a") as file_handle:
@@ -123,7 +122,7 @@ class VersionUpgradeManager:
                 except Exception as e:
                     Logger.log("w", "Exception in profile upgrade with " + upgrade.getPluginId() + ": " + str(e))
                     break #Continue with next file.
-                version = registry.getMetaData(upgrade.getPluginId())["version_upgrade"]["profile"]["to"]
+                version = self._registry.getMetaData(upgrade.getPluginId())["version_upgrade"]["profile"]["to"]
             if version != old_version:
                 self._storeOldFile(base_directory, profile_file, old_version)
                 with open(os.path.join(base_directory, profile_file), "a") as file_handle:
@@ -244,9 +243,8 @@ class VersionUpgradeManager:
     #   plug-ins can convert to, and which plug-ins can convert to that version.
     def _sortByDestinationVersion(self, preference_type):
         result = {}
-        registry = PluginRegistry.getInstance()
         for plugin in self._versionUpgrades:
-            metadata = registry.getMetaData(plugin.getPluginId())["version_upgrade"]
+            metadata = self._registry.getMetaData(plugin.getPluginId())["version_upgrade"]
             if preference_type not in metadata: #Filter by preference_type.
                 continue
             destination = metadata[preference_type]["to"]
