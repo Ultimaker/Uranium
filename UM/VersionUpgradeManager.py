@@ -53,80 +53,23 @@ class VersionUpgradeManager:
     #   The upgrade plug-ins must all be loaded at this point, or no upgrades
     #   can be performed.
     def upgrade(self):
-        paths = self._findShortestUpgradePaths("machine_instance", MachineInstance.MachineInstanceVersion)
-        base_directory = Resources.getStoragePathForType(Resources.MachineInstances)
-        for machine_instance_file in self._getFilesInDirectory(base_directory, exclude_paths = ["old"]):
-            with open(os.path.join(base_directory, machine_instance_file)) as file_handle:
-                machine_instance = file_handle.read()
-            try:
-                version = self._getMachineInstanceVersion(machine_instance)
-            except: #Not a valid file. Can't upgrade it then.
-                continue
-            if version not in paths: #No upgrade to bring this up to the most recent version.
-                continue
-            old_version = version
-            while version != MachineInstance.MachineInstanceVersion:
-                upgrade = paths[version] #Get the upgrade to apply from this place.
-                try:
-                    machine_instance = upgrade.upgradeMachineInstance(machine_instance) #Do the actual upgrade.
-                except Exception as e:
-                    Logger.log("w", "Exception in machine instance upgrade with " + upgrade.getPluginId() + ": " + str(e))
-                    break #Continue with next file.
-                version = self._registry.getMetaData(upgrade.getPluginId())["version_upgrade"]["machine_instance"]["to"]
-            if version != old_version:
-                self._storeOldFile(base_directory, machine_instance_file, old_version)
-                with open(os.path.join(base_directory, machine_instance_file), "a") as file_handle:
-                    file_handle.write(machine_instance) #Save the new file.
+        self._upgradePreferenceType(new_version = MachineInstance.MachineInstanceVersion,
+                                    preference_type = "machine_instance",
+                                    resource_type = Resources.MachineInstances,
+                                    upgrade_method_name = "upgradeMachineInstance",
+                                    get_old_version = self._getMachineInstanceVersion)
 
-        paths = self._findShortestUpgradePaths("preferences", Preferences.PreferencesVersion)
-        base_directory = Resources.getStoragePathForType(Resources.Preferences)
-        for preferences_file in self._getFilesInDirectory(base_directory, exclude_paths = ["old"]):
-            with open(os.path.join(base_directory, preferences_file)) as file_handle:
-                preferences = file_handle.read()
-            try:
-                version = self._getPreferencesVersion(preferences)
-            except: #Not a valid file. Can't upgrade it then.
-                continue
-            if version not in paths: #No upgrade to bring this up to the most recent version.
-                continue
-            old_version = version
-            while version != Preferences.PreferencesVersion:
-                upgrade = paths[version] #Get the upgrade to apply from this place.
-                try:
-                    preferences = upgrade.upgradePreferences(preferences) #Do the actual upgrade.
-                except Exception as e:
-                    Logger.log("w", "Exception in preferences upgrade with " + upgrade.getPluginId() + ": " + str(e))
-                    break #Continue with next file.
-                version = self._registry.getMetaData(upgrade.getPluginId())["version_upgrade"]["preferences"]["to"]
-            if version != old_version:
-                self._storeOldFile(base_directory, preferences_file, old_version)
-                with open(os.path.join(base_directory, preferences_file), "a") as file_handle:
-                    file_handle.write(preferences) #Save the new file.
+        self._upgradePreferenceType(new_version = Preferences.PreferencesVersion,
+                                    preference_type = "preferences",
+                                    resource_type = Resources.Preferences,
+                                    upgrade_method_name = "upgradePreferences",
+                                    get_old_version = self._getPreferencesVersion)
 
-        paths = self._findShortestUpgradePaths("profile", Profile.ProfileVersion)
-        base_directory = Resources.getStoragePathForType(Resources.Profiles)
-        for profile_file in self._getFilesInDirectory(base_directory, exclude_paths = ["old"]):
-            with open(os.path.join(base_directory, profile_file)) as file_handle:
-                profile = file_handle.read()
-            try:
-                version = self._getProfileVersion(profile)
-            except: #Not a valid file. Can't upgrade it then.
-                continue
-            if version not in paths: #No upgrade to bring this up to the most recent version.
-                continue
-            old_version = version
-            while version != Profile.ProfileVersion:
-                upgrade = paths[version] #Get the upgrade to apply from this place.
-                try:
-                    profile = upgrade.upgradeProfile(profile) #Do the actual upgrade.
-                except Exception as e:
-                    Logger.log("w", "Exception in profile upgrade with " + upgrade.getPluginId() + ": " + str(e))
-                    break #Continue with next file.
-                version = self._registry.getMetaData(upgrade.getPluginId())["version_upgrade"]["profile"]["to"]
-            if version != old_version:
-                self._storeOldFile(base_directory, profile_file, old_version)
-                with open(os.path.join(base_directory, profile_file), "a") as file_handle:
-                    file_handle.write(profile) #Save the new file.
+        self._upgradePreferenceType(new_version = Profile.ProfileVersion,
+                                    preference_type = "profile",
+                                    resource_type = Resources.Profiles,
+                                    upgrade_method_name = "upgradeProfile",
+                                    get_old_version = self._getProfileVersion)
 
     # private:
 
@@ -276,3 +219,41 @@ class VersionUpgradeManager:
                 pass
             os.rename(os.path.join(resource_directory,                          relative_path),
                       os.path.join(resource_directory, "old", str(old_version), relative_path)) #Try again!
+
+    ##  Performs the upgrade process of a single preference type.
+    #
+    #   \param new_version The version to upgrade to.
+    #   \param preference_type The preference type to upgrade, as specified by
+    #   the upgrade plug-ins.
+    #   \param resource_type The resource type of the files to upgrade. This is
+    #   required to know where the preference files are stored.
+    #   \param upgrade_function_name The name of the method to upgrade the file
+    #   with. This is the name of the function that is called on the version
+    #   upgrade plug-in.
+    #   \param get_old_version A function pointer to indicate how to get the
+    #   version number of this file.
+    def _upgradePreferenceType(self, new_version, preference_type, resource_type, upgrade_method_name, get_old_version):
+        paths = self._findShortestUpgradePaths(preference_type, new_version)
+        base_directory = Resources.getStoragePathForType(resource_type)
+        for preference_file in self._getFilesInDirectory(base_directory, exclude_paths = ["old"]):
+            with open(os.path.join(base_directory, preference_file)) as file_handle:
+                preference = file_handle.read()
+            try:
+                old_version = get_old_version(preference)
+            except: #Not a valid file. Can't upgrade it then.
+                continue
+            if old_version not in paths: #No upgrade to bring this up to the most recent version.
+                continue
+            version = old_version
+            while version != new_version:
+                upgrade = paths[version] #Get the upgrade to apply from this place.
+                try:
+                    preference = getattr(upgrade, upgrade_method_name)(preference) #Do the actual upgrade.
+                except Exception as e:
+                    Logger.log("w", "Exception in " + preference_type + " upgrade with " + upgrade.getPluginId() + ": " + str(e))
+                    break #Continue with next file.
+                version = self._registry.getMetaData(upgrade.getPluginId())["version_upgrade"][preference_type]["to"]
+            if version != old_version:
+                self._storeOldFile(base_directory, preference_file, old_version)
+                with open(os.path.join(base_directory, preference_file), "a") as file_handle:
+                    file_handle.write(preference) #Save the new file.
