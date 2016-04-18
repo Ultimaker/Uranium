@@ -54,7 +54,9 @@ class VersionUpgradeManager:
         registry = PluginRegistry.getInstance()
 
         paths = self._findShortestUpgradePaths("machine_instance", MachineInstance.MachineInstanceVersion)
-        for machine_instance in self._readFilesInDirectory(Resources.getStoragePath(Resources.MachineInstances), exclude_paths = ["old"]):
+        for machine_instance_file in self._getFilesInDirectory(Resources.getStoragePath(Resources.MachineInstances), exclude_paths = ["old"]):
+            with file(machine_instance_file) as file_handle:
+                machine_instance = file_handle.read()
             try:
                 version = self._getMachineInstanceVersion(machine_instance)
             except: #Not a valid file. Can't upgrade it then.
@@ -67,7 +69,9 @@ class VersionUpgradeManager:
                 version = registry.getMetaData(upgrade.getPluginId())["version_upgrade"]["machine_instance"]["to"]
 
         paths = self._findShortestUpgradePaths("preferences", Preferences.PreferencesVersion)
-        for preferences in self._readFilesInDirectory(Resources.getStoragePath(Resources.Preferences), exclude_paths = ["old"]):
+        for preferences_file in self._getFilesInDirectory(Resources.getStoragePath(Resources.Preferences), exclude_paths = ["old"]):
+            with file(preferences_file) as file_handle:
+                preferences = file_handle.read()
             try:
                 version = self._getPreferencesVersion(preferences)
             except: #Not a valid file. Can't upgrade it then.
@@ -80,7 +84,9 @@ class VersionUpgradeManager:
                 version = registry.getMetaData(upgrade.getPluginId())["version_upgrade"]["preferences"]["to"]
 
         paths = self._findShortestUpgradePaths("profile", Profile.ProfileVersion)
-        for profile in self._readFilesInDirectory(Resources.getStoragePath(Resources.Profiles), exclude_paths = ["old"]):
+        for profile_file in self._getFilesInDirectory(Resources.getStoragePath(Resources.Profiles), exclude_paths = ["old"]):
+            with file(profile_file) as file_handle:
+                profile = file_handle.read()
             try:
                 version = self._getProfileVersion(profile)
             except: #Not a valid file. Can't upgrade it then.
@@ -180,11 +186,8 @@ class VersionUpgradeManager:
 
         return result
 
-    ##  Reads all files in a specified directory and its subdirectories.
-    #
-    #   Each file is returned as a string. The result is iterable, so it doesn't
-    #   need to keep each string in memory at the same time, making this process
-    #   a bit faster.
+    ##  Get the filenames of all files in a specified directory and its
+    #   subdirectories.
     #
     #   If an exclude path is given, the specified path is ignored (relative to
     #   the specified directory).
@@ -193,16 +196,13 @@ class VersionUpgradeManager:
     #   \param exclude_paths (Optional) A list of paths, relative to the
     #   specified directory, to directories which must be excluded from the
     #   result.
-    #   \return For each file, returns a string representing the content of the
-    #   file.
-    def _readFilesInDirectory(self, directory, exclude_paths = []):
+    #   \return The filename of each file in the specified directory.
+    def _getFilesInDirectory(self, directory, exclude_paths = []):
         exclude_paths = [os.path.join(directory, exclude_path) for exclude_path in exclude_paths] #Prepend the specified directory before each exclude path.
         for (path, directory_names, filenames) in os.walk(directory):
             directory_names[:] = [directory_name for directory_name in directory_names if os.path.join(path, directory_name) not in exclude_paths] #Prune the exclude paths.
             for filename in filenames:
-                with file(filename) as file_handle:
-                    content = file_handle.read()
-                yield content
+                yield filename
 
     ##  Creates a look-up table to get plug-ins by what version they upgrade
     #   to.
