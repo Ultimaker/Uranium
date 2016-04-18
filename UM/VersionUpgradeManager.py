@@ -1,6 +1,7 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Cura is released under the terms of the AGPLv3 or higher.
 
+from UM.Logger import Logger
 from UM.PluginRegistry import PluginRegistry #To find plug-ins.
 from UM.Preferences import Preferences #To get the current preferences version.
 from UM.Resources import Resources #To load old versions from.
@@ -65,7 +66,11 @@ class VersionUpgradeManager:
                 continue
             while version != MachineInstance.MachineInstanceVersion:
                 upgrade = paths[version] #Get the upgrade to apply from this place.
-                machine_instance = upgrade.upgradeMachineInstance(machine_instance) #Do the actual upgrade.
+                try:
+                    machine_instance = upgrade.upgradeMachineInstance(machine_instance) #Do the actual upgrade.
+                except Exception as e:
+                    Logger.log("w", "Exception in machine instance upgrade with " + upgrade.getPluginId() + ": " + str(e))
+                    break #Continue with next file.
                 version = registry.getMetaData(upgrade.getPluginId())["version_upgrade"]["machine_instance"]["to"]
 
         paths = self._findShortestUpgradePaths("preferences", Preferences.PreferencesVersion)
@@ -80,7 +85,11 @@ class VersionUpgradeManager:
                 continue
             while version != Preferences.PreferencesVersion:
                 upgrade = paths[version] #Get the upgrade to apply from this place.
-                preferences = upgrade.upgradePreferences(preferences) #Do the actual upgrade.
+                try:
+                    preferences = upgrade.upgradePreferences(preferences) #Do the actual upgrade.
+                except Exception as e:
+                    Logger.log("w", "Exception in preferences upgrade with " + upgrade.getPluginId() + ": " + str(e))
+                    break #Continue with next file.
                 version = registry.getMetaData(upgrade.getPluginId())["version_upgrade"]["preferences"]["to"]
 
         paths = self._findShortestUpgradePaths("profile", Profile.ProfileVersion)
@@ -95,7 +104,11 @@ class VersionUpgradeManager:
                 continue
             while version != Profile.ProfileVersion:
                 upgrade = paths[version] #Get the upgrade to apply from this place.
-                profile = upgrade.upgradeProfile(profile) #Do the actual upgrade.
+                try:
+                    profile = upgrade.upgradeProfile(profile) #Do the actual upgrade.
+                except Exception as e:
+                    Logger.log("w", "Exception in profile upgrade with " + upgrade.getPluginId() + ": " + str(e))
+                    break #Continue with next file.
                 version = registry.getMetaData(upgrade.getPluginId())["version_upgrade"]["profile"]["to"]
 
     # private:
