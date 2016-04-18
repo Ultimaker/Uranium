@@ -55,8 +55,9 @@ class VersionUpgradeManager:
         registry = PluginRegistry.getInstance()
 
         paths = self._findShortestUpgradePaths("machine_instance", MachineInstance.MachineInstanceVersion)
-        for machine_instance_file in self._getFilesInDirectory(Resources.getStoragePathForType(Resources.MachineInstances), exclude_paths = ["old"]):
-            with open(os.path.join(Resources.getStoragePathForType(Resources.MachineInstances), machine_instance_file)) as file_handle:
+        base_directory = Resources.getStoragePathForType(Resources.MachineInstances)
+        for machine_instance_file in self._getFilesInDirectory(base_directory, exclude_paths = ["old"]):
+            with open(os.path.join(base_directory, machine_instance_file)) as file_handle:
                 machine_instance = file_handle.read()
             try:
                 version = self._getMachineInstanceVersion(machine_instance)
@@ -74,13 +75,14 @@ class VersionUpgradeManager:
                     break #Continue with next file.
                 version = registry.getMetaData(upgrade.getPluginId())["version_upgrade"]["machine_instance"]["to"]
             if version != old_version:
-                self._storeOldFile(Resources.getStoragePathForType(Resources.MachineInstances), machine_instance_file, old_version)
-                with open(os.path.join(Resources.getStoragePathForType(Resources.MachineInstances), machine_instance_file), "a") as file_handle:
+                self._storeOldFile(base_directory, machine_instance_file, old_version)
+                with open(os.path.join(base_directory, machine_instance_file), "a") as file_handle:
                     file_handle.write(machine_instance) #Save the new file.
 
         paths = self._findShortestUpgradePaths("preferences", Preferences.PreferencesVersion)
-        for preferences_file in self._getFilesInDirectory(Resources.getStoragePathForType(Resources.Preferences), exclude_paths = ["old"]):
-            with open(os.path.join(Resources.getStoragePathForType(Resources.Preferences), preferences_file)) as file_handle:
+        base_directory = Resources.getStoragePathForType(Resources.Preferences)
+        for preferences_file in self._getFilesInDirectory(base_directory, exclude_paths = ["old"]):
+            with open(os.path.join(base_directory, preferences_file)) as file_handle:
                 preferences = file_handle.read()
             try:
                 version = self._getPreferencesVersion(preferences)
@@ -98,13 +100,14 @@ class VersionUpgradeManager:
                     break #Continue with next file.
                 version = registry.getMetaData(upgrade.getPluginId())["version_upgrade"]["preferences"]["to"]
             if version != old_version:
-                self._storeOldFile(Resources.getStoragePathForType(Resources.Preferences), preferences_file, old_version)
-                with open(os.path.join(Resources.getStoragePathForType(Resources.Preferences), preferences_file), "a") as file_handle:
+                self._storeOldFile(base_directory, preferences_file, old_version)
+                with open(os.path.join(base_directory, preferences_file), "a") as file_handle:
                     file_handle.write(preferences) #Save the new file.
 
         paths = self._findShortestUpgradePaths("profile", Profile.ProfileVersion)
-        for profile_file in self._getFilesInDirectory(Resources.getStoragePathForType(Resources.Profiles), exclude_paths = ["old"]):
-            with open(os.path.join(Resources.getStoragePathForType(Resources.Profiles), profile_file)) as file_handle:
+        base_directory = Resources.getStoragePathForType(Resources.Profiles)
+        for profile_file in self._getFilesInDirectory(base_directory, exclude_paths = ["old"]):
+            with open(os.path.join(base_directory, profile_file)) as file_handle:
                 profile = file_handle.read()
             try:
                 version = self._getProfileVersion(profile)
@@ -122,8 +125,8 @@ class VersionUpgradeManager:
                     break #Continue with next file.
                 version = registry.getMetaData(upgrade.getPluginId())["version_upgrade"]["profile"]["to"]
             if version != old_version:
-                self._storeOldFile(Resources.getStoragePathForType(Resources.Profiles), profile_file, old_version)
-                with open(os.path.join(Resources.getStoragePathForType(Resources.Profiles), profile_file), "a") as file_handle:
+                self._storeOldFile(base_directory, profile_file, old_version)
+                with open(os.path.join(base_directory, profile_file), "a") as file_handle:
                     file_handle.write(profile) #Save the new file.
 
     # private:
