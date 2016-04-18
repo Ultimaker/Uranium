@@ -48,7 +48,13 @@ ManagementPage
         visible: base.currentItem != null
         anchors.fill: parent
 
-        Label { id: profileName; text: base.currentItem ? base.currentItem.name : ""; font: UM.Theme.getFont("large"); width: parent.width; }
+        Label {
+            id: profileName
+            text: base.currentItem ? base.currentItem.name : ""
+            font: UM.Theme.getFont("large")
+            width: parent.width
+            elide: Text.ElideRight
+        }
 
         ScrollView {
             anchors.left: parent.left

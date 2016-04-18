@@ -87,6 +87,8 @@ PreferencesPage
             }
             visible: scrollviewCaption != ""
             text: scrollviewCaption
+            width: objectListContainer.width
+            elide: Text.ElideRight
         }
 
         ScrollView
