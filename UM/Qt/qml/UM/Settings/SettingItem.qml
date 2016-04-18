@@ -25,7 +25,7 @@ Item {
     property variant key;
 
     property bool overridden;
-    property bool is_enabled: parent.settingEnabled;
+    property bool is_enabled: parent.settingEnabled != false; // allow cases where parent.settingEnabled is not defined
     property bool has_inherit_function;
     property bool has_profile_value;
     property bool indent: true;
