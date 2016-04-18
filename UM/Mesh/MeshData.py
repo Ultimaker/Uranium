@@ -217,6 +217,10 @@ class MeshData(SignalEmitter):
     #
     #   \param num_faces Number of faces for which memory must be reserved.
     def reserveFaceCount(self, num_faces):
+        if type(num_faces) == float:
+            Logger.log("w", "Had to convert 'num_faces' with int(): %s -> %s ", num_faces, int(num_faces))
+            num_faces = int(num_faces)
+
         self._vertices = numpy.zeros((num_faces * 3, 3), dtype=numpy.float32)
         self._normals = numpy.zeros((num_faces * 3, 3), dtype=numpy.float32)
         self._indices = numpy.zeros((num_faces, 3), dtype=numpy.int32)
