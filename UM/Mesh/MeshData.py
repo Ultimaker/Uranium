@@ -217,7 +217,7 @@ class MeshData(SignalEmitter):
     #
     #   \param num_faces Number of faces for which memory must be reserved.
     def reserveFaceCount(self, num_faces):
-        if (type(num_faces) == float):
+        if type(num_faces) == float:
             Logger.log("w", "Had to convert 'num_faces' with int(): %s -> %s ", num_faces, int(num_faces))
             num_faces = int(num_faces)
 
