@@ -16,8 +16,8 @@ class ColorGenerator():
         while index >= len(self._color_list):
             index -= len(self._color_list)
         return self._color_list[index]
-    
+
     def getDistinctColor(self, index):
         while index >= len(self._rgb_color_list):
             index -= len(self._rgb_color_list)
-        return self._rgb_color_list[index] 
+        return self._rgb_color_list[index]

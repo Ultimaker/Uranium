@@ -8,8 +8,8 @@ from UM.Logger import Logger
 
 from UM.SaveFile import SaveFile
 
-##      Preferences are application based settings that are saved for future use. 
-#       Typical preferences would be window size, standard machine, etc.
+##  Preferences are application based settings that are saved for future use.
+#   Typical preferences would be window size, standard machine, etc.
 class Preferences(SignalEmitter):
     def __init__(self):
         super().__init__()
@@ -149,7 +149,7 @@ class Preferences(SignalEmitter):
                 self._parser = None
                 return
         except Exception as e:
-            Logger.log("e" ,"An exception occured while trying to read preferences file: %s" , e)
+            Logger.log("e", "An exception occured while trying to read preferences file: %s", e)
             self._parser = None
             return
 

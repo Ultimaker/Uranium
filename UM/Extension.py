@@ -6,7 +6,7 @@ from UM.PluginObject import PluginObject
 
 ##  Base class for plugins that extend the functionality of Uranium.
 #   Every extension adds a (sub) menu to the extension menu with one or
-#   more menu items. 
+#   more menu items.
 class Extension(PluginObject):
     def __init__(self):
         super().__init__()
@@ -29,13 +29,13 @@ class Extension(PluginObject):
     def getMenuName(self):
         return self._menu_name
 
-    ##  Call function associated with option 
+    ##  Call function associated with option
     #   \param name \type{string}
     def activateMenuItem(self, name):
         if name in self._menu_function_dict:
-            self._menu_function_dict[name]() 
+            self._menu_function_dict[name]()
 
-    ##  Get list of all menu item names 
+    ##  Get list of all menu item names
     #   \return \type{list}
     def getMenuItemList(self):
         return list(self._menu_function_dict.keys())

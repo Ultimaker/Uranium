@@ -50,7 +50,7 @@ class LogOutput(PluginObject):
     def __init__(self):
         super().__init__() # Call super to make multiple inheritence work.
         self._name = type(self).__name__ # Set name of the logger to it's class name
-    
+
     ##  Log a message.
     #
     #   The possible message types are:

@@ -34,10 +34,10 @@ from UM.Event import CallFunctionEvent
 class Signal:
     ##  Signal types.
     #   These indicate the type of a signal, that is, how the signal handles calling the connected
-    #   slots. 
-    #   - Direct connections immediately call the connected slots from the thread that called emit(). 
+    #   slots.
+    #   - Direct connections immediately call the connected slots from the thread that called emit().
     #   - Auto connections will push the call onto the event loop if the current thread is
-    #     not the main thread, but make a direct call if it is. 
+    #     not the main thread, but make a direct call if it is.
     #   - Queued connections will always push
     #     the call on to the event loop.
     Direct = 1
@@ -58,11 +58,11 @@ class Signal:
         self.__emitting = False
         self.__connect_queue = []
         self.__disconnect_queue = []
-    
+
     ##  \exception NotImplementedError
     def __call__(self):
         raise NotImplementedError("Call emit() to emit a signal")
-    
+
     ##  Get type of the signal
     #   \return \type{int} Direct(1), Auto(2) or Queued(3)
     def getType(self):

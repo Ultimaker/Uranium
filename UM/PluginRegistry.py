@@ -208,7 +208,7 @@ class PluginRegistry(object):
             del cls._type_register_map[type]
 
     ##  Get the singleton instance of this class.
-    ##  \return instance \type{PluginRegistry}  
+    ##  \return instance \type{PluginRegistry}
     @classmethod
     def getInstance(self):
         if not self._instance:

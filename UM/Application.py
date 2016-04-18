@@ -32,15 +32,15 @@ class Application(SignalEmitter):
     def __init__(self, name, version,  **kwargs):
         if(Application._instance != None):
             raise ValueError("Duplicate singleton creation")
-        
-        # If the constructor is called and there is no instance, set the instance to self. 
+
+        # If the constructor is called and there is no instance, set the instance to self.
         # This is done because we can't make constructor private
         Application._instance = self
 
         self._application_name = name
         self._version = version
-        
-        os.putenv("UBUNTU_MENUPROXY","0")  # For Ubuntu Unity this makes Qt use its own menu bar rather than pass it on to Unity.
+
+        os.putenv("UBUNTU_MENUPROXY", "0")  # For Ubuntu Unity this makes Qt use its own menu bar rather than pass it on to Unity.
 
         Signal._app = self
         Resources.ApplicationIdentifier = name
@@ -115,15 +115,15 @@ class Application(SignalEmitter):
     def showMessage(self, message):
         raise NotImplementedError
 
-    ##  Get the version of the application  
-    #   \returns version \type{string} 
+    ##  Get the version of the application
+    #   \returns version \type{string}
     def getVersion(self):
         return self._version
 
     ##  Add a message to the visible message list so it will be displayed.
-    #   This should only be called by message object itself. 
+    #   This should only be called by message object itself.
     #   To show a message, simply create it and call its .show() function.
-    #   \param message \type{Message} message object 
+    #   \param message \type{Message} message object
     #   \sa Message::show()
     #def showMessage(self, message):
     #    with self._message_lock:
@@ -134,9 +134,9 @@ class Application(SignalEmitter):
     visibleMessageAdded = Signal()
 
     ##  Remove a message from the visible message list so it will no longer be displayed.
-    #   This should only be called by message object itself. 
+    #   This should only be called by message object itself.
     #   in principle, this should only be called by the message itself (hide)
-    #   \param message \type{Message} message object 
+    #   \param message \type{Message} message object
     #   \sa Message::hide()
     #def hideMessage(self, message):
     #    with self._message_lock:
@@ -154,8 +154,8 @@ class Application(SignalEmitter):
                     found_message = message
         if found_message is not None:
             self.hideMessageSignal.emit(found_message)
-            
-    visibleMessageRemoved = Signal()            
+
+    visibleMessageRemoved = Signal()
 
     ##  Get list of all visible messages
     #   \returns visible_messages \type{list}
