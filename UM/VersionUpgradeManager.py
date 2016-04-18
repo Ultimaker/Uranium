@@ -10,7 +10,7 @@ from UM.Settings.Profile import Profile #To get the current profile version.
 
 import collections #For deque, for breadth-first search.
 import configparser #To read config files to get the version number from them.
-import os #To get the setting filenames.
+import os #To get the preference filenames and to rename files.
 
 ##  Regulates the upgrading of preferences from one application version to the
 #   next.
@@ -56,7 +56,7 @@ class VersionUpgradeManager:
 
         paths = self._findShortestUpgradePaths("machine_instance", MachineInstance.MachineInstanceVersion)
         for machine_instance_file in self._getFilesInDirectory(Resources.getStoragePathForType(Resources.MachineInstances), exclude_paths = ["old"]):
-            with open(os.path.join(Resources.getStoragePathForType(Resources.MachineInstances),machine_instance_file)) as file_handle:
+            with open(os.path.join(Resources.getStoragePathForType(Resources.MachineInstances), machine_instance_file)) as file_handle:
                 machine_instance = file_handle.read()
             try:
                 version = self._getMachineInstanceVersion(machine_instance)
@@ -64,6 +64,7 @@ class VersionUpgradeManager:
                 continue
             if version not in paths: #No upgrade to bring this up to the most recent version.
                 continue
+            old_version = version
             while version != MachineInstance.MachineInstanceVersion:
                 upgrade = paths[version] #Get the upgrade to apply from this place.
                 try:
@@ -72,10 +73,12 @@ class VersionUpgradeManager:
                     Logger.log("w", "Exception in machine instance upgrade with " + upgrade.getPluginId() + ": " + str(e))
                     break #Continue with next file.
                 version = registry.getMetaData(upgrade.getPluginId())["version_upgrade"]["machine_instance"]["to"]
+            if version != old_version:
+                self._storeOldFile(Resources.getStoragePathForType(Resources.MachineInstances), machine_instance_file, old_version)
 
         paths = self._findShortestUpgradePaths("preferences", Preferences.PreferencesVersion)
         for preferences_file in self._getFilesInDirectory(Resources.getStoragePathForType(Resources.Preferences), exclude_paths = ["old"]):
-            with open(os.path.join(Resources.getStoragePathForType(Resources.Preferences),preferences_file)) as file_handle:
+            with open(os.path.join(Resources.getStoragePathForType(Resources.Preferences), preferences_file)) as file_handle:
                 preferences = file_handle.read()
             try:
                 version = self._getPreferencesVersion(preferences)
@@ -83,6 +86,7 @@ class VersionUpgradeManager:
                 continue
             if version not in paths: #No upgrade to bring this up to the most recent version.
                 continue
+            old_version = version
             while version != Preferences.PreferencesVersion:
                 upgrade = paths[version] #Get the upgrade to apply from this place.
                 try:
@@ -91,10 +95,12 @@ class VersionUpgradeManager:
                     Logger.log("w", "Exception in preferences upgrade with " + upgrade.getPluginId() + ": " + str(e))
                     break #Continue with next file.
                 version = registry.getMetaData(upgrade.getPluginId())["version_upgrade"]["preferences"]["to"]
+            if version != old_version:
+                self._storeOldFile(Resources.getStoragePathForType(Resources.Preferences), preferences_file, old_version)
 
         paths = self._findShortestUpgradePaths("profile", Profile.ProfileVersion)
         for profile_file in self._getFilesInDirectory(Resources.getStoragePathForType(Resources.Profiles), exclude_paths = ["old"]):
-            with open(os.path.join(Resources.getStoragePathForType(Resources.Profiles),profile_file)) as file_handle:
+            with open(os.path.join(Resources.getStoragePathForType(Resources.Profiles), profile_file)) as file_handle:
                 profile = file_handle.read()
             try:
                 version = self._getProfileVersion(profile)
@@ -102,6 +108,7 @@ class VersionUpgradeManager:
                 continue
             if version not in paths: #No upgrade to bring this up to the most recent version.
                 continue
+            old_version = version
             while version != Profile.ProfileVersion:
                 upgrade = paths[version] #Get the upgrade to apply from this place.
                 try:
@@ -110,6 +117,8 @@ class VersionUpgradeManager:
                     Logger.log("w", "Exception in profile upgrade with " + upgrade.getPluginId() + ": " + str(e))
                     break #Continue with next file.
                 version = registry.getMetaData(upgrade.getPluginId())["version_upgrade"]["profile"]["to"]
+            if version != old_version:
+                self._storeOldFile(Resources.getStoragePathForType(Resources.Profiles), profile_file, old_version)
 
     # private:
 
@@ -236,3 +245,27 @@ class VersionUpgradeManager:
                 result[destination] = []
             result[destination].append(plugin) #Sort this plug-in under the correct entry.
         return result
+
+    ##  Stores an old version of a preferences file away.
+    #
+    #   This old file is intended as a back-up. It will be stored in the ./old
+    #   directory in the resource directory, in a subdirectory made specifically
+    #   for the version of the old file. The subdirectory will mirror the
+    #   directory structure of the original directory.
+    #
+    #   \param resource_directory The resource directory of the preference type
+    #   of the file in question.
+    #   \param relative_path The path relative to the resource directory to the
+    #   file in question.
+    #   \param old_version The version number in the file in question.
+    def _storeOldFile(self, resource_directory, relative_path, old_version):
+        try: #For speed, first just try to rename the file without checking if the directory exists and stuff.
+            os.rename(os.path.join(resource_directory,                          relative_path),
+                      os.path.join(resource_directory, "old", str(old_version), relative_path)) #Store the old file away.
+        except FileNotFoundError: #Assume the target directory doesn't exist yet. The other case is that the file itself doesn't exist, but that's a coding error anyway.
+            try:
+                os.makedirs(os.path.join(resource_directory, "old", str(old_version)))
+            except OSError: #Assume that the directory already existed. Otherwise it's probably a permission error or OS-internal error, in which case we can't write anyway.
+                pass
+            os.rename(os.path.join(resource_directory,                          relative_path),
+                      os.path.join(resource_directory, "old", str(old_version), relative_path)) #Try again!
