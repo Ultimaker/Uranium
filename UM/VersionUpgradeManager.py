@@ -51,6 +51,8 @@ class VersionUpgradeManager:
     #   The upgrade plug-ins must all be loaded at this point, or no upgrades
     #   can be performed.
     def upgrade(self):
+        registry = PluginRegistry.getInstance()
+
         paths = self._findShortestUpgradePaths("machine_instance", MachineInstance.MachineInstanceVersion)
         for machine_instance in self._readFilesInDirectory(Resources.getStoragePath(Resources.MachineInstances), exclude_paths = ["old"]):
             try:
@@ -59,7 +61,10 @@ class VersionUpgradeManager:
                 continue
             if version not in paths: #No upgrade to bring this up to the most recent version.
                 continue
-            #TODO: Upgrade all machine instances to the most recent version.
+            while version != MachineInstance.MachineInstanceVersion:
+                upgrade = paths[version] #Get the upgrade to apply from this place.
+                machine_instance = upgrade.upgradeMachineInstance(machine_instance) #Do the actual upgrade.
+                version = registry.getMetaData(upgrade.getPluginId())["version_upgrade"]["machine_instance"]["to"]
 
         paths = self._findShortestUpgradePaths("preferences", Preferences.PreferencesVersion)
         for preferences in self._readFilesInDirectory(Resources.getStoragePath(Resources.Preferences), exclude_paths = ["old"]):
@@ -69,7 +74,10 @@ class VersionUpgradeManager:
                 continue
             if version not in paths: #No upgrade to bring this up to the most recent version.
                 continue
-            #TODO: Upgrade all preference files to the most recent version.
+            while version != Preferences.PreferencesVersion:
+                upgrade = paths[version] #Get the upgrade to apply from this place.
+                preferences = upgrade.upgradePreferences(preferences) #Do the actual upgrade.
+                version = registry.getMetaData(upgrade.getPluginId())["version_upgrade"]["preferences"]["to"]
 
         paths = self._findShortestUpgradePaths("profile", Profile.ProfileVersion)
         for profile in self._readFilesInDirectory(Resources.getStoragePath(Resources.Profiles), exclude_paths = ["old"]):
@@ -79,7 +87,10 @@ class VersionUpgradeManager:
                 continue
             if version not in paths: #No upgrade to bring this up to the most recent version.
                 continue
-            #TODO: Upgrade all profiles to the most recent version.
+            while version != Profile.ProfileVersion:
+                upgrade = paths[version] #Get the upgrade to apply from this place.
+                profile = upgrade.upgradeProfile(profile) #Do the actual upgrade.
+                version = registry.getMetaData(upgrade.getPluginId())["version_upgrade"]["profile"]["to"]
 
     # private:
 
