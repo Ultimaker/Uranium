@@ -1,12 +1,11 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-from UM.PluginError import PluginError, PluginNotFoundError, InvalidMetaDataError
-from UM.Logger import Logger
-
 import imp
 import os
 
+from UM.PluginError import PluginNotFoundError, InvalidMetaDataError
+from UM.Logger import Logger
 
 ##  A central object to dynamically load modules as plugins.
 #

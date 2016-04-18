@@ -1,10 +1,9 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-from UM.Resources import Resources
-
 import gettext
 
+from UM.Resources import Resources
 
 ##  Wraps a gettext translation catalog for simplified use.
 #

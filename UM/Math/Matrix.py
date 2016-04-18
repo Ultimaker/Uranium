@@ -1,12 +1,12 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-import numpy
 import math
+from copy import deepcopy
+
+import numpy
 
 from UM.Math.Vector import Vector
-
-from copy import deepcopy
 
 numpy.seterr(divide="ignore")
 

@@ -4,12 +4,11 @@
 # Copyright (c) David H. Bronke
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-from UM.Event import CallFunctionEvent
-
 import inspect
 import threading
 from weakref import WeakSet, WeakKeyDictionary
 
+from UM.Event import CallFunctionEvent
 
 ##  Simple implementation of signals and slots.
 #

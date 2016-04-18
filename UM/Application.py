@@ -1,6 +1,11 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
+import threading
+import argparse
+import os
+import sys
+
 from UM.Controller import Controller
 from UM.PluginRegistry import PluginRegistry
 from UM.Mesh.MeshFileHandler import MeshFileHandler
@@ -13,12 +18,6 @@ from UM.Preferences import Preferences
 from UM.OutputDevice.OutputDeviceManager import OutputDeviceManager
 from UM.Settings.MachineManager import MachineManager
 from UM.i18n import i18nCatalog
-
-import threading
-import argparse
-import os
-import sys
-
 
 ##  Central object responsible for running the main event loop and creating other central objects.
 #
