@@ -20,7 +20,7 @@ from UM.Signal import Signal, SignalEmitter
 #   acceptable to show a login dialog when calling requestWrite() if there are no saved
 #   login credentials.
 class OutputDevice(SignalEmitter):
-    def __init__(self, device_id):
+    def __init__(self, device_id, **kwargs):
         super().__init__()
 
         self._id = device_id
