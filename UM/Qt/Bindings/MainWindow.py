@@ -45,7 +45,12 @@ class MainWindow(QQuickWindow):
         self.setHeight(int(self._preferences.getValue("general/window_height")))
         self.setPosition(int(self._preferences.getValue("general/window_left")), int(self._preferences.getValue("general/window_top")))
         # Make sure restored geometry is not outside the currently available screens
-        if not self.geometry().intersects(self.screen().availableGeometry()):
+        screen_found = False
+        for s in range(0, self._app.desktop().screenCount()):
+            if self.geometry().intersects(self._app.desktop().availableGeometry(s)):
+                screen_found = True
+                break
+        if not screen_found:
             self.setPosition(50,50)
 
         self.setWindowState(int(self._preferences.getValue("general/window_state")))
