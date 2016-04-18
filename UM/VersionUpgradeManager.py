@@ -113,21 +113,21 @@ class VersionUpgradeManager:
     #   \param machine_instance The contents of a machine_instance file.
     #   \return The version of the machine instance.
     def _getMachineInstanceVersion(self, machine_instance):
-        return self._getCfgItem(machine_instance, section = "General", item = "version")
+        return self._getCfgItem(machine_instance, section = "general", item = "version")
 
     ##  Gets the version of a preferences file.
     #
     #   \param preferences The contents of a preferences file.
     #   \return The version of the preferences.
     def _getPreferencesVersion(self, preferences):
-        return self._getCfgItem(preferences, section = "General", item = "version")
+        return self._getCfgItem(preferences, section = "general", item = "version")
 
     ##  Gets the version of a profile file.
     #
     #   \param profile The contents of a profile file.
     #   \return The version of the profile.
     def _getProfileVersion(self, profile):
-        return self._getCfgItem(profile, section = "General", item = "version")
+        return self._getCfgItem(profile, section = "general", item = "version")
 
     ##  For each version of a preference type, finds the next step to take to
     #   upgrade as quickly as possible to the most recent version.
