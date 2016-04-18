@@ -55,7 +55,7 @@ class VersionUpgradeManager:
 
         paths = self._findShortestUpgradePaths("machine_instance", MachineInstance.MachineInstanceVersion)
         for machine_instance_file in self._getFilesInDirectory(Resources.getStoragePath(Resources.MachineInstances), exclude_paths = ["old"]):
-            with file(machine_instance_file) as file_handle:
+            with open(machine_instance_file) as file_handle:
                 machine_instance = file_handle.read()
             try:
                 version = self._getMachineInstanceVersion(machine_instance)
@@ -70,7 +70,7 @@ class VersionUpgradeManager:
 
         paths = self._findShortestUpgradePaths("preferences", Preferences.PreferencesVersion)
         for preferences_file in self._getFilesInDirectory(Resources.getStoragePath(Resources.Preferences), exclude_paths = ["old"]):
-            with file(preferences_file) as file_handle:
+            with open(preferences_file) as file_handle:
                 preferences = file_handle.read()
             try:
                 version = self._getPreferencesVersion(preferences)
@@ -85,7 +85,7 @@ class VersionUpgradeManager:
 
         paths = self._findShortestUpgradePaths("profile", Profile.ProfileVersion)
         for profile_file in self._getFilesInDirectory(Resources.getStoragePath(Resources.Profiles), exclude_paths = ["old"]):
-            with file(profile_file) as file_handle:
+            with open(profile_file) as file_handle:
                 profile = file_handle.read()
             try:
                 version = self._getProfileVersion(profile)
@@ -202,7 +202,7 @@ class VersionUpgradeManager:
         for (path, directory_names, filenames) in os.walk(directory):
             directory_names[:] = [directory_name for directory_name in directory_names if os.path.join(path, directory_name) not in exclude_paths] #Prune the exclude paths.
             for filename in filenames:
-                yield filename
+                yield os.path.join(directory, filename)
 
     ##  Creates a look-up table to get plug-ins by what version they upgrade
     #   to.
