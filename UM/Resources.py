@@ -100,7 +100,7 @@ class Resources:
             pass
 
         for path in cls.__paths:
-            paths.append(os.path.join(path, "resources", cls.__types[type]))
+            paths.append(os.path.join(path, cls.__types[type]))
 
         return paths
 
@@ -197,7 +197,7 @@ class Resources:
 
         files = []
         for path in cls.__paths:
-            file_path = os.path.join(path, "resources", suffix, *args)
+            file_path = os.path.join(path, suffix, *args)
             if os.path.exists(file_path):
                 files.append(file_path)
         return files

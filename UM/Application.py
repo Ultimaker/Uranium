@@ -47,12 +47,12 @@ class Application(SignalEmitter):
         Resources.ApplicationIdentifier = name
         i18nCatalog.setApplication(self)
 
-        Resources.addSearchPath(os.path.dirname(sys.executable))
-        Resources.addSearchPath(os.path.join(Application.getInstallPrefix(), "share", "uranium"))
-        Resources.addSearchPath(os.path.join(Application.getInstallPrefix(), "Resources", "uranium"))
-        Resources.addSearchPath(os.path.join(Application.getInstallPrefix(), "Resources", self.getApplicationName()))
+        Resources.addSearchPath(os.path.join(os.path.dirname(sys.executable), "resources"))
+        Resources.addSearchPath(os.path.join(Application.getInstallPrefix(), "share", "uranium", "resources"))
+        Resources.addSearchPath(os.path.join(Application.getInstallPrefix(), "Resources", "uranium", "resources"))
+        Resources.addSearchPath(os.path.join(Application.getInstallPrefix(), "Resources", self.getApplicationName(), "resources"))
         if not hasattr(sys, "frozen"):
-            Resources.addSearchPath(os.path.join(os.path.abspath(os.path.dirname(__file__)), ".."))
+            Resources.addSearchPath(os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "resources"))
 
         self._main_thread = threading.current_thread()
 
