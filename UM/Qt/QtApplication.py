@@ -88,8 +88,7 @@ class QtApplication(QApplication, Application):
         self._plugin_registry.checkRequiredPlugins(self.getRequiredPlugins())
 
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Updating configuration..."))
-        self.version_upgrade_manager = VersionUpgradeManager()
-        self.version_upgrade_manager.upgrade()
+        self._version_upgrade_manager.upgrade()
 
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Loading preferences..."))
         try:
