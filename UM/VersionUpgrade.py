@@ -13,7 +13,7 @@ from UM.PluginObject import PluginObject
 class VersionUpgrade(PluginObject):
     ##  Initialises a version upgrade plugin instance.
     def __init__(self):
-        super().__init__(self)
+        super().__init__()
 
     ##  Upgrades a machine instance file from one file format to another.
     #
