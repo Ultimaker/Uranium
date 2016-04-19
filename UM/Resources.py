@@ -192,7 +192,7 @@ class Resources:
     @classmethod
     def __find(cls, type, *args):
         suffix = cls.__types.get(type, None)
-        if not suffix:
+        if suffix is None:
             return None
 
         files = []
@@ -234,7 +234,7 @@ class Resources:
     __paths = []
     __types = {
         Resources: "",
-        Preferences: "preferences",
+        Preferences: "",
         Meshes: "meshes",
         Shaders: "shaders",
         i18n: "i18n",
