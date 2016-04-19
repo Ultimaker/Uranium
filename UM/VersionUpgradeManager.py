@@ -10,9 +10,9 @@ from UM.Settings.Profile import Profile #To get the current profile version.
 
 import collections #For deque, for breadth-first search.
 import configparser #To read config files to get the version number from them.
-import os #To get the preference filenames and to rename files.
+import os #To get the configuration filenames and to rename files.
 
-##  Regulates the upgrading of preferences from one application version to the
+##  Regulates the upgrading of configuration from one application version to the
 #   next.
 #
 #   The process of upgrading will take a look at all profiles, preferences and
@@ -27,8 +27,8 @@ import os #To get the preference filenames and to rename files.
 #   for all nodes along this path. This minimises the extra start-up time
 #   required for the conversions.
 #
-#   Old versions of the preferences are not deleted, but put in a folder next to
-#   the current (upgraded) versions, where they are never loaded again unless
+#   Old versions of the configuration are not deleted, but put in a folder next
+#   to the current (upgraded) versions, where they are never loaded again unless
 #   the user manually retrieves the files.
 class VersionUpgradeManager:
     ##  Initialises the version upgrade manager.
@@ -47,29 +47,29 @@ class VersionUpgradeManager:
         self._registry = PluginRegistry.getInstance()
         PluginRegistry.addType("version_upgrade", self._addVersionUpgrade)
 
-    ##  Performs the version upgrades of all preference files to the most recent
-    #   version.
+    ##  Performs the version upgrades of all configuration files to the most
+    #   recent version.
     #
     #   The upgrade plug-ins must all be loaded at this point, or no upgrades
     #   can be performed.
     def upgrade(self):
-        self._upgradePreferenceType(new_version = MachineInstance.MachineInstanceVersion,
-                                    preference_type = "machine_instance",
-                                    resource_type = Resources.MachineInstances,
-                                    upgrade_method_name = "upgradeMachineInstance",
-                                    get_old_version = self._getMachineInstanceVersion)
+        self._upgradeConfigurationType(new_version = MachineInstance.MachineInstanceVersion,
+                                       configuration_type = "machine_instance",
+                                       resource_type = Resources.MachineInstances,
+                                       upgrade_method_name = "upgradeMachineInstance",
+                                       get_old_version = self._getMachineInstanceVersion)
 
-        self._upgradePreferenceType(new_version = Preferences.PreferencesVersion,
-                                    preference_type = "preferences",
-                                    resource_type = Resources.Preferences,
-                                    upgrade_method_name = "upgradePreferences",
-                                    get_old_version = self._getPreferencesVersion)
+        self._upgradeConfigurationType(new_version = Preferences.PreferencesVersion,
+                                       configuration_type = "preferences",
+                                       resource_type = Resources.Preferences,
+                                       upgrade_method_name = "upgradePreferences",
+                                       get_old_version = self._getPreferencesVersion)
 
-        self._upgradePreferenceType(new_version = Profile.ProfileVersion,
-                                    preference_type = "profile",
-                                    resource_type = Resources.Profiles,
-                                    upgrade_method_name = "upgradeProfile",
-                                    get_old_version = self._getProfileVersion)
+        self._upgradeConfigurationType(new_version = Profile.ProfileVersion,
+                                       configuration_type = "profile",
+                                       resource_type = Resources.Profiles,
+                                       upgrade_method_name = "upgradeProfile",
+                                       get_old_version = self._getProfileVersion)
 
     # private:
 
@@ -80,25 +80,25 @@ class VersionUpgradeManager:
     def _addVersionUpgrade(self, version_upgrade_plugin):
         self._versionUpgrades.append(version_upgrade_plugin)
 
-    ##  For each version of a preference type, finds the next step to take to
+    ##  For each version of a configuration type, finds the next step to take to
     #   upgrade as quickly as possible to the most recent version.
     #
-    #   The preference type should be either "machine_instance", "preferences"
-    #   or "profile", matching the types listed in the metadata of a plug-in.
-    #   This is abstracted to prevent having to maintain the same code in lots
-    #   of different functions that do basically the same.
+    #   The configuration type should be either "machine_instance",
+    #   "preferences" or "profile", matching the types listed in the metadata of
+    #   a plug-in. This is abstracted to prevent having to maintain the same
+    #   code in lots of different functions that do basically the same.
     #
     #   This function uses a breadth-first search to get the fewest number of
     #   steps required to upgrade to the destination version.
     #
-    #   \param preference_type The type of preference to compute the shortest
-    #   upgrade paths of.
+    #   \param configuration_type The type of configuration to compute the
+    #   shortest upgrade paths of.
     #   \param destination_version The version to compute the shortest paths to.
     #   \return A dictionary with an entry for each version number from which we
     #   can reach the destination version, naming the version upgrade plug-in
     #   with which to convert for the next step.
-    def _findShortestUpgradePaths(self, preference_type, destination_version):
-        by_destination_version = self._sortByDestinationVersion(preference_type)
+    def _findShortestUpgradePaths(self, configuration_type, destination_version):
+        by_destination_version = self._sortByDestinationVersion(configuration_type)
         result = {}
 
         #Perform a breadth-first search.
@@ -110,7 +110,7 @@ class VersionUpgradeManager:
             version = front.popleft() #To make it a queue, pop on the opposite side of where you append!
             if version in by_destination_version: #We can upgrade to this version.
                 for neighbour in by_destination_version[version]:
-                    source_version = registry.getMetaData(neighbour.getPluginId())["version_upgrade"][preference_type]["from"]
+                    source_version = registry.getMetaData(neighbour.getPluginId())["version_upgrade"][configuration_type]["from"]
                     if source_version in done: #Already encountered elsewhere. No need to re-compute.
                         continue
                     front.append(source_version)
@@ -180,31 +180,31 @@ class VersionUpgradeManager:
     ##  Creates a look-up table to get plug-ins by what version they upgrade
     #   to.
     #
-    #   \param preference_type The type of preference file the version number
-    #   applies to.
+    #   \param configuration_type The type of configuration file the version
+    #   number applies to.
     #   \return A dictionary with an entry for every version that the upgrade
     #   plug-ins can convert to, and which plug-ins can convert to that version.
-    def _sortByDestinationVersion(self, preference_type):
+    def _sortByDestinationVersion(self, configuration_type):
         result = {}
         for plugin in self._versionUpgrades:
             metadata = self._registry.getMetaData(plugin.getPluginId())["version_upgrade"]
-            if preference_type not in metadata: #Filter by preference_type.
+            if configuration_type not in metadata: #Filter by configuration_type.
                 continue
-            destination = metadata[preference_type]["to"]
+            destination = metadata[configuration_type]["to"]
             if not destination in result: #Entry doesn't exist yet.
                 result[destination] = []
             result[destination].append(plugin) #Sort this plug-in under the correct entry.
         return result
 
-    ##  Stores an old version of a preferences file away.
+    ##  Stores an old version of a configuration file away.
     #
     #   This old file is intended as a back-up. It will be stored in the ./old
     #   directory in the resource directory, in a subdirectory made specifically
     #   for the version of the old file. The subdirectory will mirror the
     #   directory structure of the original directory.
     #
-    #   \param resource_directory The resource directory of the preference type
-    #   of the file in question.
+    #   \param resource_directory The resource directory of the configuration
+    #   type of the file in question.
     #   \param relative_path The path relative to the resource directory to the
     #   file in question.
     #   \param old_version The version number in the file in question.
@@ -220,26 +220,26 @@ class VersionUpgradeManager:
             os.rename(os.path.join(resource_directory,                          relative_path),
                       os.path.join(resource_directory, "old", str(old_version), relative_path)) #Try again!
 
-    ##  Performs the upgrade process of a single preference type.
+    ##  Performs the upgrade process of a single configuration type.
     #
     #   \param new_version The version to upgrade to.
-    #   \param preference_type The preference type to upgrade, as specified by
-    #   the upgrade plug-ins.
+    #   \param configuration_type The configuration type to upgrade, as
+    #   specified by the upgrade plug-ins.
     #   \param resource_type The resource type of the files to upgrade. This is
-    #   required to know where the preference files are stored.
+    #   required to know where the configuration files are stored.
     #   \param upgrade_function_name The name of the method to upgrade the file
     #   with. This is the name of the function that is called on the version
     #   upgrade plug-in.
     #   \param get_old_version A function pointer to indicate how to get the
     #   version number of this file.
-    def _upgradePreferenceType(self, new_version, preference_type, resource_type, upgrade_method_name, get_old_version):
-        paths = self._findShortestUpgradePaths(preference_type, new_version)
+    def _upgradeConfigurationType(self, new_version, configuration_type, resource_type, upgrade_method_name, get_old_version):
+        paths = self._findShortestUpgradePaths(configuration_type, new_version)
         base_directory = Resources.getStoragePathForType(resource_type)
-        for preference_file in self._getFilesInDirectory(base_directory, exclude_paths = ["old"]):
-            with open(os.path.join(base_directory, preference_file)) as file_handle:
-                preference = file_handle.read()
+        for configuration_file in self._getFilesInDirectory(base_directory, exclude_paths = ["old"]):
+            with open(os.path.join(base_directory, configuration_file)) as file_handle:
+                configuration = file_handle.read()
             try:
-                old_version = get_old_version(preference)
+                old_version = get_old_version(configuration)
             except: #Not a valid file. Can't upgrade it then.
                 continue
             if old_version not in paths: #No upgrade to bring this up to the most recent version.
@@ -248,12 +248,12 @@ class VersionUpgradeManager:
             while version != new_version:
                 upgrade = paths[version] #Get the upgrade to apply from this place.
                 try:
-                    preference = getattr(upgrade, upgrade_method_name)(preference) #Do the actual upgrade.
+                    configuration = getattr(upgrade, upgrade_method_name)(configuration) #Do the actual upgrade.
                 except Exception as e:
-                    Logger.log("w", "Exception in " + preference_type + " upgrade with " + upgrade.getPluginId() + ": " + str(e))
+                    Logger.log("w", "Exception in " + configuration_type + " upgrade with " + upgrade.getPluginId() + ": " + str(e))
                     break #Continue with next file.
-                version = self._registry.getMetaData(upgrade.getPluginId())["version_upgrade"][preference_type]["to"]
+                version = self._registry.getMetaData(upgrade.getPluginId())["version_upgrade"][configuration_type]["to"]
             if version != old_version:
-                self._storeOldFile(base_directory, preference_file, old_version)
-                with open(os.path.join(base_directory, preference_file), "a") as file_handle:
-                    file_handle.write(preference) #Save the new file.
+                self._storeOldFile(base_directory, configuration_file, old_version)
+                with open(os.path.join(base_directory, configuration_file), "a") as file_handle:
+                    file_handle.write(configuration) #Save the new file.

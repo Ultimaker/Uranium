@@ -4,7 +4,7 @@
 from UM.Logger import Logger
 from UM.PluginObject import PluginObject
 
-##  A type of plug-in that upgrades the preferences from an old file format to
+##  A type of plug-in that upgrades the configuration from an old file format to
 #   a newer one.
 #
 #   Each version upgrade plug-in can convert machine instances, preferences and
