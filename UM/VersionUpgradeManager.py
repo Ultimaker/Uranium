@@ -36,13 +36,6 @@ class VersionUpgradeManager:
     #   This initialises the cache for shortest upgrade paths, and registers the
     #   version upgrade plug-ins.
     def __init__(self):
-        #Initialise the caches for shortest upgrade paths.
-        #These dictionaries are keyed by the version number for which it is the shortest path.
-        #The value indicates the version upgrade plug-in to use to upgrade to the next version.
-        self._machine_instance_upgrade_paths = {} #The shortest paths to upgrade machine instances to the current version.
-        self._preferences_upgrade_paths = {} #The shortest paths to upgrade preferences to the current version.
-        self._profile_upgrade_paths = {} #The shortest paths to upgrade profiles to the current version.
-
         self._versionUpgrades = [] #All upgrade plug-ins.
         self._registry = PluginRegistry.getInstance()
         PluginRegistry.addType("version_upgrade", self._addVersionUpgrade)
