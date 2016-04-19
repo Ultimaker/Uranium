@@ -62,6 +62,8 @@ class QtApplication(QApplication, Application, SignalEmitter):
         self._renderer = None
         self._main_window = None
 
+        self._shutting_down = False
+
         self.setAttribute(Qt.AA_UseDesktopOpenGL)
 
         try:
@@ -132,6 +134,9 @@ class QtApplication(QApplication, Application, SignalEmitter):
         self.engineCreatedSignal.emit()
     
     engineCreatedSignal = Signal()
+
+    def isShuttingDown(self):
+        return self._shutting_down
     
     def registerObjects(self, engine):
         pass
@@ -177,6 +182,7 @@ class QtApplication(QApplication, Application, SignalEmitter):
 
     def windowClosed(self):
         Logger.log("d", "Shutting down %s", self.getApplicationName())
+        self._shutting_down = True
         try:
             self.getMachineManager().saveAll()
         except Exception as e:
