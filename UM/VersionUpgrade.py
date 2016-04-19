@@ -10,7 +10,7 @@ from UM.PluginObject import PluginObject
 #   Each version upgrade plug-in can convert machine instances, preferences and
 #   profiles from one version to one other version. Which versions that are is
 #   specified in the metadata of the plug-in.
-def VersionUpgrade(PluginObject):
+class VersionUpgrade(PluginObject):
     ##  Initialises a version upgrade plugin instance.
     def __init__(self):
         super().__init__(self)
