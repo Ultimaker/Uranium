@@ -87,7 +87,7 @@ class QtApplication(QApplication, Application):
         Logger.log("i", "Command line arguments: %s", self._parsed_command_line)
         self._plugin_registry.checkRequiredPlugins(self.getRequiredPlugins())
 
-        self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Updating preferences..."))
+        self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Updating configuration..."))
         self.version_upgrade_manager = VersionUpgradeManager()
         self.version_upgrade_manager.upgrade()
 
