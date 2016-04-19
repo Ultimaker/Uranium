@@ -620,7 +620,7 @@ class MachineManager(SignalEmitter):
         for instance in self._machine_instances:
             try:
                 file_name = urllib.parse.quote_plus(instance.getName()) + ".curaprofile"
-                instance.getWorkingProfile().loadFromFile(Resources.getStoragePath(Resources.MachineInstanceProfiles, file_name))
+                instance.getWorkingProfile().loadFromFile(Resources.getPath(Resources.MachineInstanceProfiles, file_name))
             except Exception as e:
                 Logger.log("w", "Could not load working profile: %s: %s", file_name, str(e))
                 self._setDefaultVariantMaterialProfile(instance)
