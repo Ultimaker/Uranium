@@ -207,7 +207,9 @@ class Resources:
         if platform.system() == "Windows":
             cls.__config_storage_path = os.path.join(os.path.expanduser("~/AppData/Local/"), cls.ApplicationIdentifier)
         elif platform.system() == "Darwin":
-            cls.__config_storage_path = os.path.expanduser("~/.{0}".format(cls.ApplicationIdentifier))
+            cls.__config_storage_path = os.path.join(os.path.expanduser("~/Library/Application Support"), cls.ApplicationIdentifier)
+            # For backward compatibility, support loading files from the old storage location
+            cls.addSearchPath(os.path.expanduser("~/.{0}".format(cls.ApplicationIdentifier)))
         elif platform.system() == "Linux":
             xdg_config_home = ""
             try:
