@@ -3,9 +3,9 @@
 
 import copy
 import warnings
+import inspect
 
 from UM.Logger import Logger
-
 
 ##  Decorator that can be used to indicate a method has been deprecated
 #
@@ -32,3 +32,26 @@ def ascopy(function):
         return copy.deepcopy(function(*args, **kwargs))
 
     return copy_function
+
+##  Class decorator that check to see if all methods of the base class have been reimplemented
+#
+#   This is meant as a simple sanity check. An interface here is defined as a class with
+#   only functions. Any subclass is expected to reimplement all functions defined in the class,
+#   excluding builtin functions like __getattr__.
+def interface(cls):
+    # First, sanity check the interface declaration to make sure it only contains methods
+    non_functions = list(filter(lambda i: not i[0].startswith("__") and not inspect.isfunction(i[1]), inspect.getmembers(cls)))
+    if non_functions:
+        raise TypeError("Class {0} is declared as interface but includes non-method properties: {1}".format(cls, non_functions))
+
+    # Then, replace the new method with a method that checks if all methods have been reimplemented
+    old_new = cls.__new__
+    def new_new(subclass, *args, **kwargs):
+        for method in filter(lambda i: inspect.isfunction(i[1]) and not i[0].startswith("__"), inspect.getmembers(cls)):
+            if getattr(subclass, method[0]) == method[1]:
+                raise NotImplementedError("Class {0} does not implement the complete interface of {1}".format(subclass, cls))
+
+        return old_new(subclass, *args, **kwargs)
+
+    cls.__new__ = new_new
+    return cls
