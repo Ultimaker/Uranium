@@ -122,12 +122,10 @@ class OutputDevice(SignalEmitter):
     #   should be written to the device.
     #   \param file_name \type{string} A suggestion for the file name to write
     #   to. Can be freely ignored if providing a file name makes no sense.
-    #   \param filter_by_machine \type{bool} If the file name is ignored, should
-    #   the file format that the output device chooses be limited to the formats
-    #   that are supported by the currently active machine?
+    #   \param limit_mimetype \type{list} Limit output to these mime types
     #
     #   \exception OutputDeviceError.WriteRequestFailedError
-    def requestWrite(self, node, file_name = None, filter_by_machine = False):
+    def requestWrite(self, node, file_name = None, limit_mimetypes = False):
         raise NotImplementedError("requestWrite needs to be implemented")
 
     writeStarted = Signal()
