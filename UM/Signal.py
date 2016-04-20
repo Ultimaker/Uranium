@@ -5,6 +5,8 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 from UM.Event import CallFunctionEvent
+from UM.Decorators import deprecated, call_if_enabled
+from UM.Logger import Logger
 
 import inspect
 import threading
@@ -182,7 +184,35 @@ class Signal:
 #   that is an instance of Signal.
 class SignalEmitter:
     ##  Initialize method.
+    @deprecated("Please use the new @signalemitter decorator", "2.2")
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         for name, signal in inspect.getmembers(self, lambda i: isinstance(i, Signal)):
             setattr(self, name, Signal(type = signal.getType()))
+
+##  Class decorator that ensures a class has unique instances of signals.
+#
+#   Since signals need to be instance variables, normally you would need to create all
+#   signals in the class" `__init__` method. However, this makes them rather awkward to
+#   document. This decorator instead makes it possible to declare them as class variables,
+#   which makes documenting them near the function they are used possible. This decorator
+#   adjusts the class' __new__ method to create new signal instances for all class signals.
+def signalemitter(cls):
+    # First, check if the base class has any signals defined
+    signals = inspect.getmembers(cls, lambda i: isinstance(i, Signal))
+    if not signals:
+        raise TypeError("Class {0} is marked as signal emitter but no signal were found".format(cls))
+
+    # Then, replace the class' new method with one that modifies the created instance to have
+    # unique signals.
+    old_new = cls.__new__
+    def new_new(subclass, *args, **kwargs):
+        sub = old_new(subclass, *args, **kwargs)
+
+        for key, value in inspect.getmembers(cls, lambda i: isinstance(i, Signal)):
+            setattr(sub, key, Signal(type = value.getType()))
+
+        return sub
+
+    cls.__new__ = new_new
+    return cls
