@@ -11,7 +11,6 @@ from UM.Signal import Signal, SignalEmitter
 from UM.Logger import Logger
 from UM.Preferences import Preferences
 from UM.OutputDevice.OutputDeviceManager import OutputDeviceManager
-from UM.Settings.MachineManager import MachineManager
 from UM.i18n import i18nCatalog
 
 import threading
@@ -76,7 +75,6 @@ class Application(SignalEmitter):
         self._extensions = []
         self._backend = None
         self._output_device_manager = OutputDeviceManager()
-        self._machine_manager = MachineManager(self._application_name)
 
         self._required_plugins = []
 
@@ -216,9 +214,6 @@ class Application(SignalEmitter):
     def setBackend(self, backend):
         self._backend = backend
 
-    def getMachineManager(self):
-        return self._machine_manager
-
     ##  Get the backend of the application (the program that does the heavy lifting).
     #   \returns Backend \type{Backend}
     def getBackend(self):
@@ -292,7 +287,6 @@ class Application(SignalEmitter):
                             dest="external-backend",
                             action="store_true", default=False,
                             help="Use an externally started backend instead of starting it automatically.")
-
         self.addCommandLineOptions(parser)
 
         self._parsed_command_line = vars(parser.parse_args())
