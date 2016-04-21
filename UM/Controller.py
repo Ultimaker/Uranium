@@ -102,7 +102,7 @@ class Controller(SignalEmitter):
     #   \param device The input device to be added
     def addInputDevice(self, device):
         name = device.getPluginId()
-        if(name not in self._input_devices):
+        if name not in self._input_devices:
             self._input_devices[name] = device
             device.event.connect(self.event)
         else:

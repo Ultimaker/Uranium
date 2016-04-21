@@ -29,8 +29,8 @@ class Application(SignalEmitter):
     #
     #   \param name \type{string} The name of the application.
     #   \param version \type{string} Version, formatted as major.minor.rev
-    def __init__(self, name, version,  **kwargs):
-        if(Application._instance != None):
+    def __init__(self, name, version, **kwargs):
+        if Application._instance != None:
             raise ValueError("Duplicate singleton creation")
 
         # If the constructor is called and there is no instance, set the instance to self.
