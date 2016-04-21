@@ -24,6 +24,8 @@ class JobQueue(SignalEmitter):
         else:
             raise RuntimeError("Attempted to create multiple instances of JobQueue")
 
+        super().__init__()
+
         if thread_count == "auto":
             try:
                 thread_count = multiprocessing.cpu_count()

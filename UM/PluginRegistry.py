@@ -20,7 +20,7 @@ class PluginRegistry(object):
     APIVersion = 2
 
     def __init__(self):
-        super(PluginRegistry,self).__init__()  # Call super to make multiple inheritence work.
+        super().__init__()
         self._plugins = {}
         self._meta_data = {}
         self._plugin_locations = []

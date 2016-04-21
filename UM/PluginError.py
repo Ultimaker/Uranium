@@ -8,6 +8,7 @@
 ##  A general class for any error raised by a plugin.
 class PluginError(Exception):
     def __init__(self, error = None): #pylint: disable=bad-whitespace
+        super().__init__()
         self._error = error
 
     def __str__(self):
@@ -17,6 +18,7 @@ class PluginError(Exception):
 ##  Raised when a plugin could not be found.
 class PluginNotFoundError(Exception):
     def __init__(self, name):
+        super().__init__()
         self._name = name
 
     def __str__(self):
@@ -26,6 +28,7 @@ class PluginNotFoundError(Exception):
 ##  Raised when a plugin provides incorrect metadata.
 class InvalidMetaDataError(Exception):
     def __init__(self, name):
+        super().__init__()
         self._name = name
 
     def __str__(self):

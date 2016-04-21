@@ -12,7 +12,7 @@ import UM.Application  # Circular dependency blah
 #
 class Tool(PluginObject, SignalEmitter):
     def __init__(self):
-        super().__init__() # Call super to make multiple inheritence work.
+        super().__init__()
         self._controller = UM.Application.Application.getInstance().getController() # Circular dependency blah
         self._enabled = True
 
