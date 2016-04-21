@@ -17,14 +17,13 @@ class MirrorOperation(Operation.Operation):
     #   \param mirror A transformation matrix that mirrors the object. This
     #   should only define values on the diagonal of the matrix, and only the
     #   values 1 or -1.
-    #   \param kwargs Additional key-word arguments:
-    #      - mirror_around_center: Whether to mirror the object around its own
-    #        centre (True) or around the axis origin (False).
-    def __init__(self, node, mirror, **kwargs):
+    #   \param mirror_around_center Whether to mirror the object around its own
+    #   centre (True) or around the axis origin (False).
+    def __init__(self, node, mirror, mirror_around_center = False):
         super().__init__()
         self._node = node
         self._old_transformation = node.getLocalTransformation()
-        self._mirror_around_center = kwargs.get("mirror_around_center", False)
+        self._mirror_around_center = mirror_around_center
         self._mirror = mirror
 
     ##  Undo the operation.
