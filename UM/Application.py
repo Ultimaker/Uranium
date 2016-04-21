@@ -167,7 +167,7 @@ class Application(SignalEmitter):
     def _loadPlugins(self):
         pass
 
-    def getCommandLineOption(self, name, default = None):
+    def getCommandLineOption(self, name, default = None): #pylint: disable=bad-whitespace
         if not self._parsed_command_line:
             self.parseCommandLine()
             Logger.log("d", "Command line options: %s", str(self._parsed_command_line))
@@ -285,7 +285,7 @@ class Application(SignalEmitter):
         return Application._instance
 
     def parseCommandLine(self):
-        parser = argparse.ArgumentParser(prog = self.getApplicationName())
+        parser = argparse.ArgumentParser(prog = self.getApplicationName()) #pylint: disable=bad-whitespace
         parser.add_argument("--version", action="version", version="%(prog)s {0}".format(self.getVersion()))
         parser.add_argument("--external-backend",
                             dest="external-backend",

@@ -11,7 +11,7 @@ from UM.Logger import Logger
 #
 #   \param message The message to display when the method is called. Should include a suggestion about what to use.
 #   \param since A version since when this method has been deprecated.
-def deprecated(message, since = "Unknown"):
+def deprecated(message, since = "Unknown"): #pylint: disable=bad-whitespace
     def deprecated_decorator(function):
         def deprecated_function(*args, **kwargs):
             warning = "{0} is deprecated (since {1}): {2}".format(function, since, message)

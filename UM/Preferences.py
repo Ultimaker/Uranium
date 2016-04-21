@@ -93,7 +93,7 @@ class Preferences(SignalEmitter):
                 self.preferenceChanged.emit("{0}/{1}".format(group, key))
 
     def writeToFile(self, file):
-        parser = configparser.ConfigParser(interpolation = None)
+        parser = configparser.ConfigParser(interpolation = None) #pylint: disable=bad-whitespace
         for group, group_entries in self._preferences.items():
             parser[group] = {}
             for key, pref in group_entries.items():
@@ -141,7 +141,7 @@ class Preferences(SignalEmitter):
         if self._file and self._file == file:
             return self._parser
         try:
-            self._parser = configparser.ConfigParser(interpolation = None)
+            self._parser = configparser.ConfigParser(interpolation = None) #pylint: disable=bad-whitespace
             self._parser.read(file)
 
             if self._parser["general"]["version"] != "2":
@@ -158,7 +158,7 @@ class Preferences(SignalEmitter):
     _instance = None
 
 class _Preference:
-    def __init__(self, name, default = None, value = None):
+    def __init__(self, name, default = None, value = None): #pylint: disable=bad-whitespace
         self._name = name
         self._default = default
         self._value = default if value == None else value

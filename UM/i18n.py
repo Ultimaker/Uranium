@@ -32,7 +32,7 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
     #
     #   \note When `language` is `default`, the language to load can be overridden
     #   using the "LANGUAGE" environment variable.
-    def __init__(self, name = None, language = "default"):
+    def __init__(self, name = None, language = "default"): #pylint: disable=bad-whitespace
         self.__name = name
         self.__language = language
         self.__translation = None
@@ -171,7 +171,7 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
             self.__language = self.__application.getApplicationLanguage()
 
         for path in Resources.getAllPathsForType(Resources.i18n):
-            if gettext.find(self.__name, path, languages = [self.__language]):
+            if gettext.find(self.__name, path, languages = [self.__language]): # pylint: disable=bad-whitespace
                 self.__translation = gettext.translation(self.__name, path, languages=[self.__language])
 
         self.__require_update = False

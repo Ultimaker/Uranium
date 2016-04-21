@@ -100,7 +100,7 @@ class PluginRegistry(object):
     ##  Load all plugins matching a certain set of metadata
     #   \param metaData \type{dict} The metaData that needs to be matched.
     #   \sa loadPlugin
-    def loadPlugins(self, meta_data = None):
+    def loadPlugins(self, meta_data = None): #pylint: disable=bad-whitespace
         plugins = self._findAllPlugins()
 
         for id in plugins:
@@ -276,7 +276,7 @@ class PluginRegistry(object):
         return module
 
     #   Returns a list of all possible plugin ids in the plugin locations
-    def _findAllPlugins(self, paths = None):
+    def _findAllPlugins(self, paths = None): #pylint: disable=bad-whitespace
         ids = []
 
         if not paths:

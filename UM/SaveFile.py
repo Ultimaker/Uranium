@@ -12,7 +12,7 @@ if sys.platform != "win32":
     def lockFile(file):
         fcntl.flock(file, fcntl.LOCK_EX)
 else:
-    def lockFile(file):
+    def lockFile(file): #pylint: disable=unused-argument
         pass
 
 
@@ -52,7 +52,7 @@ class SaveFile:
         # Remember the locked file.
         self._file = f
         # Create a temporary file that we can write to.
-        self._temp_file = tempfile.NamedTemporaryFile(self._mode, dir = os.path.dirname(self._path), delete = False)
+        self._temp_file = tempfile.NamedTemporaryFile(self._mode, dir = os.path.dirname(self._path), delete = False) #pylint: disable=bad-whitespace
         return self._temp_file
 
     def __exit__(self, exc_type, exc_value, traceback):

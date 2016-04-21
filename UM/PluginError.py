@@ -7,7 +7,7 @@
 
 ##  A general class for any error raised by a plugin.
 class PluginError(Exception):
-    def __init__(self, error = None):
+    def __init__(self, error = None): #pylint: disable=bad-whitespace
         self._error = error
 
     def __str__(self):
