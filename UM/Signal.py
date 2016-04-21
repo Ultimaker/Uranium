@@ -122,7 +122,7 @@ class Signal:
             self.__connect_queue.append(connector)
             return
 
-        if type(connector) == Signal:
+        if isinstance(connector, Signal):
             if connector == self:
                 return
             self.__signals.add(connector)
