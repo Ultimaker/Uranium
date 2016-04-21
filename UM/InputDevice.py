@@ -5,7 +5,7 @@ from UM.Signal import Signal, SignalEmitter
 from UM.PluginObject import PluginObject
 
 
-##  Abstract base class for all input devices (HMI devices)
+##  Abstract base class for all input devices (Human Input Devices)
 #   Examples of this are mouse & keyboard
 class InputDevice(PluginObject, SignalEmitter):
     def __init__(self):

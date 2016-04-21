@@ -98,7 +98,7 @@ class Controller(SignalEmitter):
     ##  Emitted when the active view changes.
     activeViewChanged = Signal()
 
-    ##  Add an input device (eg; mouse, keyboard, etc) if it's not already addded.
+    ##  Add an input device (e.g. mouse, keyboard, etc) if it's not already added.
     #   \param device The input device to be added
     def addInputDevice(self, device):
         name = device.getPluginId()

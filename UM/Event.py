@@ -70,7 +70,7 @@ class MouseEvent(Event):
     def lastX(self):
         return self._last_x
 
-    ##  The Y coordiante of the previous event.
+    ##  The Y coordinate of the previous event.
     @property
     def lastY(self):
         return self._last_y

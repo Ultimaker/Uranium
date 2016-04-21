@@ -55,7 +55,7 @@ class Application(SignalEmitter):
 
         self._main_thread = threading.current_thread()
 
-        super().__init__(**kwargs)  # Call super to make multiple inheritence work.
+        super().__init__(**kwargs)  # Call super to make multiple inheritance work.
 
         self._renderer = None
 
@@ -163,7 +163,7 @@ class Application(SignalEmitter):
         with self._message_lock:
             return self._visible_messages
 
-    ##  Function that needs to be overriden by child classes with a list of plugin it needs.
+    ##  Function that needs to be overridden by child classes with a list of plugin it needs.
     def _loadPlugins(self):
         pass
 
@@ -244,8 +244,8 @@ class Application(SignalEmitter):
     def getOutputDeviceManager(self):
         return self._output_device_manager
 
-    ##  Run the main eventloop.
-    #   This method should be reimplemented by subclasses to start the main event loop.
+    ##  Run the main event loop.
+    #   This method should be re-implemented by subclasses to start the main event loop.
     #   \exception NotImplementedError
     def run(self):
         raise NotImplementedError("Run must be implemented by application")

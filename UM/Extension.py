@@ -13,7 +13,7 @@ class Extension(PluginObject):
         self._menu_function_dict = {}
         self._menu_name = None
 
-    ##  Add an item to the submenu of the extention
+    ##  Add an item to the sub-menu of the extension
     #   \param name \type{string}
     #   \param function \type{function}
     def addMenuItem(self, name, function):

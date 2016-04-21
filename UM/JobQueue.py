@@ -17,7 +17,7 @@ class JobQueue(SignalEmitter):
     ##  Initialize.
     #
     #   \param thread_count The amount of threads to use. Can be a positive integer or 'auto'.
-    #                       When 'auto', the number of threads is based on the number of cpus on the machine.
+    #                       When 'auto', the number of threads is based on the number of processors and cores on the machine.
     def __init__(self, thread_count = "auto"): #pylint: disable=bad-whitespace
         if JobQueue._instance is None:
             JobQueue._instance = self

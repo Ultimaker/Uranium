@@ -17,10 +17,10 @@ from UM.Event import CallFunctionEvent
 #   Whenever the signal is called, it will proceed to call the connected slots.
 #
 #   To create a signal, create an instance variable of type Signal. Other objects can then
-#   use that variable"s `connect()` method to connect methods, callables or signals to the
-#   signal. To emit the signal, call `emit()` on the signal. Arguments can be passed along
-#   to the signal, but slots will be required to handle them. When connecting signals to
-#   other signals, the connected signal will be emitted whenever the signal is emitted.
+#   use that variable's `connect()` method to connect methods, callable objects or signals
+#   to the signal. To emit the signal, call `emit()` on the signal. Arguments can be passed
+#   along to the signal, but slots will be required to handle them. When connecting signals
+#   to other signals, the connected signal will be emitted whenever the signal is emitted.
 #
 #   Signal-slot connections are weak references and as such will not prevent objects
 #   from being destroyed. In addition, all slots will be implicitly disconnected when
@@ -29,7 +29,7 @@ from UM.Event import CallFunctionEvent
 #   \warning It is imperative that the signals are created as instance variables, otherwise
 #   emitting signals will get confused. To help with this, see the SignalEmitter class.
 #
-#   Loosely based on http://code.activestate.com/recipes/577980-improved-signalsslots-implementation-in-python/
+#   Loosely based on http://code.activestate.com/recipes/577980-improved-signalsslots-implementation-in-python/ #pylint: disable=wrong-spelling-in-comment
 #   \sa SignalEmitter
 class Signal:
     ##  Signal types.
@@ -175,9 +175,9 @@ class Signal:
 #   need to be instance variables, normally you would need to create all signals
 #   in the class" `__init__` method. However, this makes them rather awkward to
 #   document. This class instead makes it possible to declare them as class variables,
-#   which makes documenting them near the function they are used possible. 
-#   During the call to `__init__()`, this class will then search through all the 
-#   properties of the instance and create instance variables for each class variable 
+#   which makes documenting them near the function they are used possible.
+#   During the call to `__init__()`, this class will then search through all the
+#   properties of the instance and create instance variables for each class variable
 #   that is an instance of Signal.
 class SignalEmitter:
     ##  Initialize method.
