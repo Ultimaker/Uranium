@@ -59,10 +59,10 @@ class Tool(PluginObject, SignalEmitter):
             if self._locked_axis:
                 return
 
-            id = self._selection_pass.getIdAtPosition(event.x, event.y)
+            tool_id = self._selection_pass.getIdAtPosition(event.x, event.y)
 
-            if self._handle.isAxis(id):
-                self._handle.setActiveAxis(id)
+            if self._handle.isAxis(tool_id):
+                self._handle.setActiveAxis(tool_id)
             else:
                 self._handle.setActiveAxis(None)
 
