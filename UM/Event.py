@@ -53,7 +53,9 @@ class MouseEvent(Event):
         self._y = y
         self._last_x = last_x
         self._last_y = last_y
-        self._buttons = buttons
+        self._buttons = []
+        if buttons:
+            self._buttons = buttons
 
     ##  The X coordinate of the event.
     @property
