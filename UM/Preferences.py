@@ -161,7 +161,7 @@ class _Preference:
     def __init__(self, name, default = None, value = None): #pylint: disable=bad-whitespace
         self._name = name
         self._default = default
-        self._value = default if value == None else value
+        self._value = default if value is None else value
 
     def getName(self):
         return self._name
