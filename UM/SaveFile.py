@@ -27,7 +27,7 @@ class SaveFile:
         self._mode = mode
         self._open_args = args
         self._open_kwargs = kwargs
-
+        self._file = None
         self._temp_file = None
 
     def __enter__(self):
