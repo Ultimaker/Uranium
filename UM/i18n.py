@@ -22,7 +22,7 @@ from UM.Resources import Resources
 #   translation tags. Please see the [translation guide](docs/translations.md)
 #   for details.
 #
-class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start with a upper case. But i18n is lower case by convention.]
+class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start with a upper case. But i18n is lower case by convention.] pylint: disable=invalid-name
     ##  Constructor.
     #
     #   \param name The name of the catalog to load.
