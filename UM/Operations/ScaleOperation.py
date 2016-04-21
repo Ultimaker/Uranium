@@ -13,25 +13,24 @@ class ScaleOperation(Operation.Operation):
     #   \param node The scene node to scale.
     #   \param scale A matrix to scale the node with. This matrix should only be
     #   non-zero on the diagonal.
-    #   \param kwargs Key-word arguments, including:
-    #     - set_scale: Whether to simply replace the old scale with the new one
-    #       (True) or modify the old scale (False).
-    #     - add_scale: Whether to add to the old scale (True) or multiply with
-    #       it (False).
-    #     - relative_scale: Whether to multiply the scale relative to the
-    #       current scale (True) or simply multiply it with a constant (False).
-    #     - scale_around_point: All coordinates are moved away from or towards
-    #       this point.
-    #     - snap: Whether to use snap scaling (True) or not (False).
-    def __init__(self, node, scale, **kwargs):
+    #   \param set_scale Whether to simply replace the old scale with the new
+    #   one (True) or modify the old scale (False).
+    #   \param add_scale Whether to add to the old scale (True) or multiply with
+    #   it (False).
+    #   \param relative_scale Whether to multiply the scale relative to the
+    #   current scale (True) or simply multiply it with a constant (False).
+    #   \param scale_around_point All coordinates are moved away from or towards
+    #   this point.
+    #   \param snap Whether to use snap scaling (True) or not (False).
+    def __init__(self, node, scale, set_scale = False, add_scale = False, relative_scale = False, scale_around_point = Vector(0, 0, 0), snap = False):
         super().__init__()
         self._node = node #The scene node to scale.
         self._old_transformation = node.getLocalTransformation() #The transformation of the node before scaling.
-        self._set_scale = kwargs.get("set_scale", False) #Whether to simply change the scale.
-        self._add_scale = kwargs.get("add_scale", False) #Whether to add to the old scale.
-        self._relative_scale = kwargs.get("relative_scale", False) #Whether to multiply relatively.
-        self._scale_around_point = kwargs.get("scale_around_point" , Vector(0, 0, 0)) #The origin of the scale operation.
-        self._snap = kwargs.get("snap", False) #Use snap scaling?
+        self._set_scale = set_scale #Whether to simply change the scale.
+        self._add_scale = add_scale #Whether to add to the old scale.
+        self._relative_scale = relative_scale #Whether to multiply relatively.
+        self._scale_around_point = scale_around_point #The origin of the scale operation.
+        self._snap = snap #Use snap scaling?
         self._scale = scale #The transformation matrix that scales space correctly.
         self._min_scale = 0.01 #A minimum scale factor. Much lower would introduce rounding errors.
 
