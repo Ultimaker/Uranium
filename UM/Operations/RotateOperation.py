@@ -15,12 +15,12 @@ class RotateOperation(Operation.Operation):
     #   rotation is applied on the node.
     #   \param kwargs Key-word arguments, including:
     #     - rotate_around_point: A point around which to rotate the node.
-    def __init__(self, node, rotation, **kwargs):
+    def __init__(self, node, rotation, rotate_around_point = Vector(0, 0, 0)):
         super().__init__()
         self._node = node #The node to rotate.
         self._old_transformation = node.getLocalTransformation() #The transformation matrix before rotating, which must be restored if we undo.
         self._rotation = rotation #A rotation matrix to rotate the node with.
-        self._rotate_around_point = kwargs.get("rotate_around_point" , Vector(0,0,0)) #Around what point should the rotation be done?
+        self._rotate_around_point = rotate_around_point #Around what point should the rotation be done?
 
     ##  Undoes the rotation, rotating the node back.
     def undo(self):
