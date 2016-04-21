@@ -210,10 +210,10 @@ class PluginRegistry(object):
     ##  Get the singleton instance of this class.
     ##  \return instance \type{PluginRegistry}
     @classmethod
-    def getInstance(self):
-        if not self._instance:
-            self._instance = PluginRegistry()
-        return self._instance
+    def getInstance(cls):
+        if not cls._instance:
+            cls._instance = PluginRegistry()
+        return cls._instance
 
     ##  private:
     #   Populate the list of metadata
