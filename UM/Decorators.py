@@ -33,6 +33,25 @@ def ascopy(function):
 
     return copy_function
 
+##  Decorator to conditionally call an extra function before calling the actual function.
+#
+#   This is primarily intended for conditional debugging.
+def call_if_enabled(function, condition):
+    if condition:
+        def call_decorated(decorated_function):
+            def call_function(*args, **kwargs):
+                if hasattr(decorated_function, "__self__"):
+                    function(decorated_function.__self__, *args, **kwargs)
+                else:
+                    function(*args, **kwargs)
+                return decorated_function(*args, **kwargs)
+            return call_function
+        return call_decorated
+    else:
+        def call_direct(decorated_function):
+            return decorated_function
+        return call_direct
+
 ##  Class decorator that check to see if all methods of the base class have been reimplemented
 #
 #   This is meant as a simple sanity check. An interface here is defined as a class with
