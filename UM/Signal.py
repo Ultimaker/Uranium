@@ -48,7 +48,7 @@ class Signal:
     #
     #   \param kwargs Keyword arguments.
     #                 Possible keywords:
-    #                 - type: The signal type. Defaults to Direct.
+    #                 - type: The signal type. Defaults to Auto.
     def __init__(self, **kwargs):
         self.__functions = WeakSet()
         self.__methods = WeakKeyDictionary()
@@ -71,20 +71,20 @@ class Signal:
     ##  Emit the signal which indirectly calls all of the connected slots.
     #
     #   \param args The positional arguments to pass along.
-    #   \param kargs The keyword arguments to pass along.
+    #   \param kwargs The keyword arguments to pass along.
     #
     #   \note If the Signal type is Queued and this is not called from the application thread
     #   the call will be posted as an event to the application main thread, which means the
     #   function will be called on the next application event loop tick.
-    def emit(self, *args, **kargs):
+    def emit(self, *args, **kwargs):
         try:
             if self.__type == Signal.Queued:
-                Signal._app.functionEvent(CallFunctionEvent(self.emit, args, kargs))
+                Signal._app.functionEvent(CallFunctionEvent(self.emit, args, kwargs))
                 return
 
             if self.__type == Signal.Auto:
                 if threading.current_thread() is not Signal._app.getMainThread():
-                    Signal._app.functionEvent(CallFunctionEvent(self.emit, args, kargs))
+                    Signal._app.functionEvent(CallFunctionEvent(self.emit, args, kwargs))
                     return
         except AttributeError: # If Signal._app is not set
             return
@@ -93,16 +93,16 @@ class Signal:
 
         # Call handler functions
         for func in self.__functions:
-            func(*args, **kargs)
+            func(*args, **kwargs)
 
         # Call handler methods
         for dest, funcs in self.__methods.items():
             for func in funcs:
-                func(dest, *args, **kargs)
+                func(dest, *args, **kwargs)
 
         # Emit connected signals
         for signal in self.__signals:
-            signal.emit(*args, **kargs)
+            signal.emit(*args, **kwargs)
 
         self.__emitting = False
         for connector in self.__connect_queue:
