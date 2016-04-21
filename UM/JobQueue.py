@@ -39,9 +39,9 @@ class JobQueue(SignalEmitter):
         self._jobs = []
         self._jobs_lock = threading.Lock()
 
-        for t in self._threads:
-            t.daemon = True
-            t.start()
+        for thread in self._threads:
+            thread.daemon = True
+            thread.start()
 
     ##  Add a Job to the queue.
     #

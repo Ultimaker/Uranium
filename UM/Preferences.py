@@ -103,8 +103,8 @@ class Preferences(SignalEmitter):
         parser["general"]["version"] = "2"
 
         try:
-            with SaveFile(file, "wt") as f:
-                parser.write(f)
+            with SaveFile(file, "wt") as save_file:
+                parser.write(save_file)
         except Exception as e:
             Logger.log("e", "Failed to write preferences to %s: %s", file, str(e))
 

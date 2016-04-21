@@ -32,25 +32,25 @@ class SaveFile:
 
     def __enter__(self):
         # First, try to acquire a file lock on the file we want to write to.
-        f = open(self._path, self._mode, *self._open_args, **self._open_kwargs)
+        file = open(self._path, self._mode, *self._open_args, **self._open_kwargs)
         while True:
             # Try to acquire a lock. This will block if the file was already locked by a different process.
-            lockFile(f)
+            lockFile(file)
 
             # Once the lock is released it is possible the other instance already replaced the file we opened.
             # So try to open it again and check if we have the same file.
             # If we do, that means the file did not get replaced in the mean time and we properly acquired a lock on the right file.
-            fnew = open(self._path, self._mode, *self._open_args, **self._open_kwargs)
-            if os.path.sameopenfile(f.fileno(), fnew.fileno()):
-                fnew.close()
+            file_new = open(self._path, self._mode, *self._open_args, **self._open_kwargs)
+            if os.path.sameopenfile(file.fileno(), file_new.fileno()):
+                file_new.close()
                 break
             else:
                 # Otherwise, retry the entire procedure.
-                f.close()
-                f = fnew
+                file.close()
+                file = file_new
 
         # Remember the locked file.
-        self._file = f
+        self._file = file
         # Create a temporary file that we can write to.
         self._temp_file = tempfile.NamedTemporaryFile(self._mode, dir = os.path.dirname(self._path), delete = False) #pylint: disable=bad-whitespace
         return self._temp_file
