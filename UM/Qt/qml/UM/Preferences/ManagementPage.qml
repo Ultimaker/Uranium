@@ -143,7 +143,9 @@ PreferencesPage
                     {
                         anchors.left: parent.left;
                         anchors.leftMargin: UM.Theme.getSize("default_margin").width;
+                        anchors.right: parent.right;
                         text: model.name
+                        elide: Text.ElideRight
                         font.italic: model.active == true
                         color: parent.ListView.isCurrentItem ? palette.highlightedText : palette.text;
                     }
