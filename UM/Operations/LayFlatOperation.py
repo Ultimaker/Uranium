@@ -11,6 +11,7 @@ from UM.Signal import Signal
 
 import math
 import time
+import numpy
 
 ##  Operation that lays a mesh flat on the scene.
 class LayFlatOperation(Operation.Operation):
@@ -46,7 +47,18 @@ class LayFlatOperation(Operation.Operation):
         # Based on https://github.com/daid/Cura/blob/SteamEngine/Cura/util/printableObject.py#L207
         # Note: Y & Z axis are swapped
 
-        transformed_vertices = self._node.getMeshDataTransformed().getVertices() #Transform mesh first to get the current positions of the vertices.
+        #Transform mesh first to get the current positions of the vertices.
+        transformed_vertices = None
+        if not self._node.callDecoration("isGroup"):
+            transformed_vertices = self._node.getMeshDataTransformed().getVertices()
+        else:
+            #For groups, get the vertices of all children and process them as a single mesh
+            for child in self._node.getChildren():
+                if transformed_vertices is None:
+                    transformed_vertices = child.getMeshDataTransformed().getVertices()
+                else:
+                    transformed_vertices = numpy.concatenate((transformed_vertices, child.getMeshDataTransformed().getVertices()), axis = 0)
+
         min_y_vertex = transformed_vertices[transformed_vertices.argmin(0)[1]]
         dot_min = 1.0 #Minimum y-component of direction vector.
         dot_v = None
@@ -74,7 +86,16 @@ class LayFlatOperation(Operation.Operation):
         self._node.rotate(Quaternion.fromAngleAxis(rad, Vector.Unit_Z), SceneNode.TransformSpace.Parent)
 
         #Apply the transformation so we get new vertex coordinates.
-        transformed_vertices = self._node.getMeshDataTransformed().getVertices()
+        transformed_vertices = None
+        if not self._node.callDecoration("isGroup"):
+            transformed_vertices = self._node.getMeshDataTransformed().getVertices()
+        else:
+            #For groups, get the vertices of all children and process them as a single mesh
+            for child in self._node.getChildren():
+                if transformed_vertices is None:
+                    transformed_vertices = child.getMeshDataTransformed().getVertices()
+                else:
+                    transformed_vertices = numpy.concatenate((transformed_vertices, child.getMeshDataTransformed().getVertices()), axis = 0)
         min_y_vertex = transformed_vertices[transformed_vertices.argmin(0)[1]]
         dot_min = 1.0
         dot_v = None
