@@ -67,8 +67,12 @@ def interface(cls):
     old_new = cls.__new__
     def new_new(subclass, *args, **kwargs):
         for method in filter(lambda i: inspect.isfunction(i[1]) and not i[0].startswith("__"), inspect.getmembers(cls)):
-            if getattr(subclass, method[0]) == method[1]:
+            sub_method = getattr(subclass, method[0])
+            if sub_method == method[1]:
                 raise NotImplementedError("Class {0} does not implement the complete interface of {1}".format(subclass, cls))
+
+            if inspect.signature(sub_method) != inspect.signature(method[1]):
+                raise NotImplementedError("Method {0} of class {1} does not have the same signature as method {2} in interface {3}: {4} vs {5}".format(sub_method, subclass, method[1], cls, inspect.signature(sub_method), inspect.signature(method[1])))
 
         return old_new(subclass, *args, **kwargs)
 
