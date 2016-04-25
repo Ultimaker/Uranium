@@ -121,6 +121,7 @@ class OutputDeviceManager(SignalEmitter):
     #   \note This does nothing if the device_id does not correspond to a registered device.
     def removeOutputDevice(self, device_id):
         if device_id not in self._output_devices:
+            Logger.log("w", "Could not find output device with id %s to remove", device_id)
             return
 
         device = self._output_devices[device_id]
