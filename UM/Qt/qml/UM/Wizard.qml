@@ -15,6 +15,7 @@ UM.Dialog
 
     property int currentPage: -1;
     property bool lastPage: currentPage == pagesModel.count - 1;
+    closeOnAccept: false; // Do not automatically close the window when the window is "accepted"
 
     property bool firstRun: false
 
@@ -28,7 +29,25 @@ UM.Dialog
     width: minimumWidth
     height: minimumHeight
 
-    onAccepted: nextClicked()
+    onAccepted: base.nextPage()
+
+    // Provides a single mechanism for going to the next page or closing the wizard on the last page
+    // Pages can use the nextClicked signal to extend this event
+    function nextPage()
+    {
+        base.nextClicked()
+
+        if (!base.lastPage)
+        {
+            base.currentPage += 1
+        }
+        else
+        {
+            base.visible = false
+            base.resetPages()
+            currentPage = 0
+        }
+    }
 
     function appendPage(page, title)
     {
@@ -43,6 +62,18 @@ UM.Dialog
     function removePage(index)
     {
         pagesModel.remove(index)
+    }
+
+    // Removes all but the first page
+    function resetPages()
+    {
+            var old_page_count = getPageCount()
+            // Delete old pages (if any)
+            for (var i = old_page_count - 1; i > 0; i--)
+            {
+                removePage(i)
+            }
+            currentPage = 0
     }
 
     function getPageSource(index)
@@ -200,24 +231,7 @@ UM.Dialog
             iconName: base.lastPage ? "dialog-ok" : "go-next";
             height: backButton.height
 
-            onClicked: {
-                base.nextClicked()
-
-                if (!base.lastPage)
-                {
-                    base.currentPage += 1
-                }
-                else
-                {
-                    var old_page_count = getPageCount()
-                    // Delete old pages (if any)
-                    for (var i = old_page_count - 1; i > 0; i--)
-                    {
-                        removePage(i)
-                    }
-                    currentPage = 0
-                }
-            }
+            onClicked: base.nextPage()
         },
         Button
         {
@@ -228,26 +242,11 @@ UM.Dialog
             onClicked:
             {
                 base.visible = false;
-                var old_page_count = getPageCount()
-                // Delete old pages (if any)
-                for (var i = old_page_count - 1; i > 0; i--)
-                {
-                    removePage(i)
-                }
-                currentPage = 0
+                base.resetPages()
             }
             visible: base.firstRun ? false : true
         }
     ]
 
-    onClosing:
-    {
-        var old_page_count = getPageCount()
-        // Delete old pages (if any)
-        for (var i = old_page_count - 1; i > 0; i--)
-        {
-            removePage(i)
-        }
-        currentPage = 0
-    }
+    onClosing: base.resetPages()
 }
