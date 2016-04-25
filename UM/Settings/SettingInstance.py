@@ -9,6 +9,12 @@ class SettingInstance:
         self._definition = definition
         self._container = container
 
+    def getDefinition(self):
+        return self._definition
+
+    def getContainer(self):
+        return self._container
+
     def getValue(self):
         pass
 
