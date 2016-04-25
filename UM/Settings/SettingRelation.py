@@ -36,6 +36,9 @@ class SettingRelation:
     #   \param type \type{RelationType} The type of the relation.
     #   \param role \type{RelationRole} The role of the relation.
     def __init__(self, owner, target, relation_type, role):
+        if owner is None or target is None:
+            raise ValueError("owner or target cannot be None")
+
         self._owner = owner
         self._target = target
         self._type = relation_type
