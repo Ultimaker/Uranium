@@ -67,10 +67,32 @@ def test_interface():
     with pytest.raises(NotImplementedError):
         declare_bad_subclass()
 
+    def declare_good_signature():
+        @interface
+        class TestInterface:
+            def test(self, one, two, three = None):
+                pass
 
+        class TestSubclass(TestInterface):
+            def test(self, one, two, three = None):
+                pass
 
+        return TestSubclass()
 
+    sub = declare_good_signature()
+    assert sub is not None
 
+    def declare_bad_signature():
+        @interface
+        class TestInterface:
+            def test(self, one, two, three = None):
+                pass
 
+        class TestSubclass(TestInterface):
+            def test(self, one):
+                pass
 
+        return TestSubclass()
 
+    with pytest.raises(NotImplementedError):
+        declare_bad_signature()
