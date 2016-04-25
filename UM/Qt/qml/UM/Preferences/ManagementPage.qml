@@ -115,9 +115,7 @@ PreferencesPage
             {
                 id: objectList;
 
-                //This code below is temporarily commented-out because it triggers a deadlock in PyQt
-                //The issue has been fixed in PyQt upstream but we are waiting for a release before reenabling this code
-/*                section.property: "group"
+                section.property: "group"
                 section.criteria: ViewSection.FullString
                 section.delegate: Rectangle
                 {
@@ -134,7 +132,7 @@ PreferencesPage
                         color: palette.text;
                     }
                 }
-*/
+
                 delegate: Rectangle
                 {
                     width: objectListContainer.viewport.width;
@@ -146,9 +144,7 @@ PreferencesPage
                         anchors.left: parent.left;
                         anchors.leftMargin: UM.Theme.getSize("default_margin").width;
                         text: model.name
-                        //This code below is temporarily commented-out because it triggers a deadlock in PyQt
-                        //The issue has been fixed in PyQt upstream but we are waiting for a release before reenabling this code
-                        //font.italic: model.active == true
+                        font.italic: model.active == true
                         color: parent.ListView.isCurrentItem ? palette.highlightedText : palette.text;
                     }
 
