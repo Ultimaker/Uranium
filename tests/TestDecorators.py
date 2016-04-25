@@ -67,29 +67,10 @@ def test_interface():
     with pytest.raises(NotImplementedError):
         declare_bad_subclass()
 
-def test_signalemitter():
-    def declare_signalemitter():
-        @signalemitter
-        class Test:
-            testSignal = Signal()
 
-        return Test
 
-    cls = declare_signalemitter()
-    assert cls is not None
 
-    inst = cls()
-    assert cls is not None
 
-    assert hasattr(inst, "testSignal")
-    assert inst.testSignal != cls.testSignal
 
-    def declare_bad_signalemitter():
-        @signalemitter
-        class Test:
-            pass
 
-        return Test
 
-    with pytest.raises(TypeError):
-        declare_bad_signalemitter()
