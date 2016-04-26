@@ -1,19 +1,166 @@
 # Copyright (c) 2016 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
+import json
+import enum
+import collections
+
+from UM.Logger import Logger
+
+from . import SettingFunction
+
+class SettingType(enum.IntEnum):
+    Unknown = 1
+    Boolean = 2
+    Integer = 3
+    Float = 4
+    Enum = 5
+    String = 6
+    List = 7
+    Dictionary = 8
+    Polygon = 9
+    Other = 10
+
+class SettingPropertyType(enum.IntEnum):
+    Any = 1
+    String = 2
+    TranslatedString = 3
+    Function = 4
+
 class SettingDefinition:
-    def __init__(self, key, container):
+    def __init__(self, key, container, parent = None, i18n_catalog = None, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
         self._key = key
         self._container = container
+        self._parent = parent
 
-    def getKey(self):
+        self._i18n_catalog = i18n_catalog
+
+        self._children = {}
+        self._relations = {}
+
+        self._type = SettingType.Unknown
+
+        self.__property_values = {}
+
+    def __getattr__(self, name):
+        if name in self.__property_definitions:
+            return self.__property_values[name]
+
+        raise AttributeError("'SettingDefinition' object has no attribute '{0}'".format(name))
+
+    def __setattr__(self, name, value):
+        if name in self.__property_definitions:
+            raise NotImplementedError("Setting of property {0} not supported".format(name))
+
+        super().__setattr__(name, value)
+
+    @property
+    def key(self):
         return self._key
 
-    def getContainer(self):
+    @property
+    def container(self):
         return self._container
+
+    @property
+    def parent(self):
+        return self._parent
+
+    @property
+    def type(self):
+        return self._type
+
+    @property
+    def children(self):
+        return self._children
+
+    @property
+    def relations(self):
+        return self._relations
 
     def serialize(self):
         pass
 
     def deserialize(self, serialized):
-        pass
+        if isinstance(serialized, dict):
+            self._deserialize_dict(serialized)
+        else:
+            parsed = json.loads(serialized, object_pairs_hook=collections.OrderedDict)
+            self._deserialize_dict(parsed)
+
+    def findChildren(self, filter):
+        return []
+
+    @classmethod
+    def addPropertyDefinition(cls, name, type, required = False):
+        cls.__property_definitions[name] = { "type": type, "required": required }
+
+    ## protected:
+
+    def _deserialize_dict(self, serialized):
+        self._children = {}
+        self._relations = {}
+        self._type = SettingType.Unknown
+
+        for key, value in serialized.items():
+            if key == "children":
+                for child_key, child_dict in value.items():
+                    child = SettingDefinition(child_key, self._container, self, self._i18n_catalog)
+                    child.deserialize(child_dict)
+                    self._children[child_key] = child
+
+            if key == "type":
+                if value in self.__setting_type_map:
+                    self._type = self.__setting_type_map[value]
+                else:
+                    Logger.log("w", "Unrecognised type %s for setting %s", value, self._key)
+                    self._type = SettingType.Unknown
+                continue
+
+            if key not in self.__property_definitions:
+                Logger.log("w", "Unrecognised property %s in setting %s", key, self._key)
+                continue
+
+            if self.__property_definitions[key]["type"] == SettingPropertyType.Any:
+                self.__property_values[key] = value
+            elif self.__property_definitions[key]["type"] == SettingPropertyType.String:
+                self.__property_values[key] = str(value)
+            elif self.__property_definitions[key]["type"] == SettingPropertyType.TranslatedString:
+                self.__property_values[key] = self._i18n_catalog.i18n(value) if self._i18n_catalog is not None else value
+            elif self.__property_definitions[key]["type"] == SettingPropertyType.Function:
+                self.__property_values[key] = SettingFunction.SettingFunction(value)
+
+        for key in filter(lambda i: self.__property_definitions[i]["required"], self.__property_definitions):
+            if not key in self.__property_values:
+                raise AttributeError("Setting {0} is missing required property {1}".format(self._key, key))
+
+    __property_definitions = {
+        "label": { "type": SettingPropertyType.TranslatedString, "required": True },
+        "icon": { "type": SettingPropertyType.String, "required": False },
+        "unit": { "type": SettingPropertyType.String, "required": False },
+        "description": { "type": SettingPropertyType.TranslatedString, "required": True },
+        "warning_description": { "type": SettingPropertyType.TranslatedString, "required": False },
+        "error_description": { "type": SettingPropertyType.TranslatedString, "required": False },
+        "default_value": { "type": SettingPropertyType.Any, "required": True },
+        "value": { "type": SettingPropertyType.Function, "required": False },
+        "enabled": { "type": SettingPropertyType.Function, "required": False },
+        "minimum": { "type": SettingPropertyType.Function, "required": False },
+        "maximum": { "type": SettingPropertyType.Function, "required": False },
+        "minimum_warning": { "type": SettingPropertyType.Function, "required": False },
+        "maximum_warning": { "type": SettingPropertyType.Function, "required": False },
+        "options": { "type": SettingPropertyType.Any, "required": False },
+    }
+
+    __setting_type_map = {
+        "bool": SettingType.Boolean,
+        "int": SettingType.Integer,
+        "float": SettingType.Float,
+        "enum": SettingType.Enum,
+        "string": SettingType.String,
+        "list": SettingType.List,
+        "dict": SettingType.Dictionary,
+        "polygon": SettingType.Polygon,
+        "other": SettingType.Other,
+    }
