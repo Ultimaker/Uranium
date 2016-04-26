@@ -7,7 +7,9 @@ class SettingFunction:
     ##  Constructor.
     #
     #   \param code The Python code this function should evaluate.
-    def __init__(self, code):
+    def __init__(self, code, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
         self._code = code
 
     ##  Call the actual function to calculate the value.

@@ -8,9 +8,11 @@ class Validator:
     ##  Constructor
     #
     #   \param instance The instance this Validator validates.
-    def __init__(self, instance):
+    def __init__(self, instance, *args, **kwargs):
         if instance is None:
             raise ValueError("Instance should not be None")
+
+        super().__init__(*args, **kwargs)
 
         self._instance = instance
 

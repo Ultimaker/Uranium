@@ -5,7 +5,9 @@ from UM.Signal import Signal, signalemitter
 
 @signalemitter
 class SettingInstance:
-    def __init__(self, definition, container):
+    def __init__(self, definition, container, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
         self._definition = definition
         self._container = container
 
