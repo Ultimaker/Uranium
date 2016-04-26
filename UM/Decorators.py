@@ -35,7 +35,9 @@ def ascopy(function):
 
 ##  Decorator to conditionally call an extra function before calling the actual function.
 #
-#   This is primarily intended for conditional debugging.
+#   This is primarily intended for conditional debugging, to make it possible to add extra
+#   debugging before calling a function that is only enabled when you actually want to
+#   debug things.
 def call_if_enabled(function, condition):
     if condition:
         def call_decorated(decorated_function):
@@ -52,11 +54,12 @@ def call_if_enabled(function, condition):
             return decorated_function
         return call_direct
 
-##  Class decorator that check to see if all methods of the base class have been reimplemented
+##  Class decorator that checks to see if all methods of the base class have been reimplemented
 #
 #   This is meant as a simple sanity check. An interface here is defined as a class with
 #   only functions. Any subclass is expected to reimplement all functions defined in the class,
-#   excluding builtin functions like __getattr__.
+#   excluding builtin functions like __getattr__. It is also expected to match the signature of
+#   those functions.
 def interface(cls):
     # First, sanity check the interface declaration to make sure it only contains methods
     non_functions = list(filter(lambda i: not i[0].startswith("__") and not inspect.isfunction(i[1]), inspect.getmembers(cls)))
