@@ -11,11 +11,18 @@ class SettingFunction:
         super().__init__(*args, **kwargs)
 
         self._code = code
+        self._settings = []
 
     ##  Call the actual function to calculate the value.
     def __call__(self, *args, **kwargs):
         pass
 
+    def __eq__(self, other):
+        if not isinstance(other, SettingFunction):
+            return False
+
+        return self._code == other._code
+
     ##  Retrieve a list of the keys of all the settings used in this function.
     def getUsedSettings(self):
-        pass
+        return self._settings
