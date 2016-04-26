@@ -110,7 +110,7 @@ Rectangle
 
         maximumLength: 10;
 
-        validator: RegExpValidator { regExp: /[0-9.,-]{0,10}/ }
+        validator: RegExpValidator { regExp: (type == "int") ? /[0-9-]{0,10}/ : /[0-9.,-]{0,10}/ } //"type" property from parent loader used to disallow fractional number entry
 
         Binding
         {
