@@ -18,7 +18,7 @@ import os
 #
 #   [plugins]: docs/plugins.md
 class PluginRegistry(object):
-    APIVersion = 2
+    APIVersion = 3
 
     def __init__(self):
         super(PluginRegistry,self).__init__()  # Call super to make multiple inheritence work.
