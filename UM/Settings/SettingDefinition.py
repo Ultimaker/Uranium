@@ -21,7 +21,7 @@ class SettingType(enum.IntEnum):
     Polygon = 9
     Other = 10
 
-class SettingPropertyType(enum.IntEnum):
+class DefinitionPropertyType(enum.IntEnum):
     Any = 1
     String = 2
     TranslatedString = 3
@@ -151,9 +151,20 @@ class SettingDefinition:
             definitions.extend(child.findDefinitions(criteria))
 
         return definitions
+
+    ##  Define a new supported property for SettingDefinitions.
+    #
+    #   Since applications may want custom properties in their definitions, most properties are handled
+    #   dynamically. This allows the application to define what extra properties it wants to support.
+    #   Additionally, it can indicate whether a properties should be considered "required". When a
+    #   required property is not missing during deserialization, an AttributeError will be raised.
+    #
+    #   \param name \type{string} The name of the property to define.
+    #   \param property_type \type{DefinitionPropertyType} The type of property.
+    #   \param required \type{boolean} Whether or not this is a required property.
     @classmethod
-    def addPropertyDefinition(cls, name, type, required = False):
-        cls.__property_definitions[name] = { "type": type, "required": required }
+    def addPropertyDefinition(cls, name, property_type, required = False):
+        cls.__property_definitions[name] = {"type": property_type, "required": required}
 
     ## protected:
 
@@ -181,13 +192,13 @@ class SettingDefinition:
                 Logger.log("w", "Unrecognised property %s in setting %s", key, self._key)
                 continue
 
-            if self.__property_definitions[key]["type"] == SettingPropertyType.Any:
+            if self.__property_definitions[key]["type"] == DefinitionPropertyType.Any:
                 self.__property_values[key] = value
-            elif self.__property_definitions[key]["type"] == SettingPropertyType.String:
+            elif self.__property_definitions[key]["type"] == DefinitionPropertyType.String:
                 self.__property_values[key] = str(value)
-            elif self.__property_definitions[key]["type"] == SettingPropertyType.TranslatedString:
+            elif self.__property_definitions[key]["type"] == DefinitionPropertyType.TranslatedString:
                 self.__property_values[key] = self._i18n_catalog.i18n(value) if self._i18n_catalog is not None else value
-            elif self.__property_definitions[key]["type"] == SettingPropertyType.Function:
+            elif self.__property_definitions[key]["type"] == DefinitionPropertyType.Function:
                 self.__property_values[key] = SettingFunction.SettingFunction(value)
 
         for key in filter(lambda i: self.__property_definitions[i]["required"], self.__property_definitions):
@@ -195,20 +206,20 @@ class SettingDefinition:
                 raise AttributeError("Setting {0} is missing required property {1}".format(self._key, key))
 
     __property_definitions = {
-        "label": { "type": SettingPropertyType.TranslatedString, "required": True },
-        "icon": { "type": SettingPropertyType.String, "required": False },
-        "unit": { "type": SettingPropertyType.String, "required": False },
-        "description": { "type": SettingPropertyType.TranslatedString, "required": True },
-        "warning_description": { "type": SettingPropertyType.TranslatedString, "required": False },
-        "error_description": { "type": SettingPropertyType.TranslatedString, "required": False },
-        "default_value": { "type": SettingPropertyType.Any, "required": True },
-        "value": { "type": SettingPropertyType.Function, "required": False },
-        "enabled": { "type": SettingPropertyType.Function, "required": False },
-        "minimum": { "type": SettingPropertyType.Function, "required": False },
-        "maximum": { "type": SettingPropertyType.Function, "required": False },
-        "minimum_warning": { "type": SettingPropertyType.Function, "required": False },
-        "maximum_warning": { "type": SettingPropertyType.Function, "required": False },
-        "options": { "type": SettingPropertyType.Any, "required": False },
+        "label": {"type": DefinitionPropertyType.TranslatedString, "required": True},
+        "icon": {"type": DefinitionPropertyType.String, "required": False},
+        "unit": {"type": DefinitionPropertyType.String, "required": False},
+        "description": {"type": DefinitionPropertyType.TranslatedString, "required": True},
+        "warning_description": {"type": DefinitionPropertyType.TranslatedString, "required": False},
+        "error_description": {"type": DefinitionPropertyType.TranslatedString, "required": False},
+        "default_value": {"type": DefinitionPropertyType.Any, "required": True},
+        "value": {"type": DefinitionPropertyType.Function, "required": False},
+        "enabled": {"type": DefinitionPropertyType.Function, "required": False},
+        "minimum": {"type": DefinitionPropertyType.Function, "required": False},
+        "maximum": {"type": DefinitionPropertyType.Function, "required": False},
+        "minimum_warning": {"type": DefinitionPropertyType.Function, "required": False},
+        "maximum_warning": {"type": DefinitionPropertyType.Function, "required": False},
+        "options": {"type": DefinitionPropertyType.Any, "required": False},
     }
 
     __setting_type_map = {
