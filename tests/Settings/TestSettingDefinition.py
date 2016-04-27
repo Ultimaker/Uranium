@@ -45,11 +45,37 @@ def test_children():
         "children": {
             "test_child_1": {
                 "label": "Test Child 1",
-                "default_value": 10,
+                "default_value": 20,
                 "description": "Test Child Setting 1"
+            },
+            "test_child_2": {
+                "label": "Test Child 2",
+                "default_value": 20,
+                "description": "Test Child Setting 2"
             }
         }
     })
 
-    assert len(definition.children) == 1
-    assert len(definition.findChildren({ "key": "test_child_1" })) == 1
+    assert len(definition.children) == 2
+
+    child_1 = definition.getChild("test_child_1")
+    assert child_1 is not None
+    assert child_1.key == "test_child_1"
+    assert child_1.label == "Test Child 1"
+    assert child_1.default_value == 20
+    assert child_1.description == "Test Child Setting 1"
+
+    definitions = definition.findDefinitions({"default_value": 20})
+    assert len(definitions) == 2
+
+    has_child_1 = False
+    has_child_2 = False
+    for definition in definitions:
+        if definition.key == "test_child_1":
+            has_child_1 = True
+        elif definition.key == "test_child_2":
+            has_child_2 = True
+
+    assert has_child_1
+    assert has_child_2
+
