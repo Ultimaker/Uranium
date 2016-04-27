@@ -47,8 +47,8 @@ class SettingDefinition:
 
         self._i18n_catalog = i18n_catalog
 
-        self._children = {}
-        self._relations = {}
+        self._children = []
+        self._relations = []
 
         self._type = SettingType.Unknown
 
@@ -169,8 +169,8 @@ class SettingDefinition:
     ## protected:
 
     def _deserialize_dict(self, serialized):
-        self._children = {}
-        self._relations = {}
+        self._children = []
+        self._relations = []
         self._type = SettingType.Unknown
 
         for key, value in serialized.items():
@@ -178,7 +178,7 @@ class SettingDefinition:
                 for child_key, child_dict in value.items():
                     child = SettingDefinition(child_key, self._container, self, self._i18n_catalog)
                     child.deserialize(child_dict)
-                    self._children[child_key] = child
+                    self._children.append(child)
 
             if key == "type":
                 if value in self.__setting_type_map:
