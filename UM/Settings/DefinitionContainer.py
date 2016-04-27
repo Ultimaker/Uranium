@@ -68,6 +68,10 @@ class DefinitionContainer(ContainerInterface.ContainerInterface):
 
     ##  Find definitions matching certain criteria.
     #
-    #   \param filter \type{dict} A dictionary containing key-value pairs which should match properties of the definition.
-    def findDefinitions(self, filter):
-        return []
+    #   \param criteria \type{dict} A dictionary containing key-value pairs which should match properties of the definition.
+    def findDefinitions(self, criteria):
+        definitions = []
+        for definition in self._definitions:
+            definitions.extend(definition.findDefinitions(criteria))
+
+        return definitions
