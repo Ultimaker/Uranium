@@ -32,8 +32,10 @@ ManagementPage
     }
     onRemoveObject: confirmDialog.open();
     onRenameObject: { renameDialog.removeWhenRejected = false; renameDialog.open(); renameDialog.selectText(); }
+    onActivateObject: if (activateEnabled) { UM.MachineManager.setActiveProfile(currentItem.name) }
 
     addEnabled: currentItem != null;
+    activateEnabled: currentItem != null && currentItem.id != -1 && !currentItem.active
     removeEnabled: currentItem != null ? !currentItem.readOnly : false;
     renameEnabled: currentItem != null ? !currentItem.readOnly : false;
 

@@ -344,6 +344,9 @@ class Profile(SignalEmitter):
 
         for key in affected_setting_keys:
             affected_setting = machine_definition.getSetting(key)
+            if not affected_setting:
+                Logger.log("w", "Tried to access unknown affected setting %s for %s", key, setting.getKey())
+                return False
 
             # Make sure a numeric value is not counted as "overriding" a boolean or enum value
             affected_setting_type = affected_setting.getType() if affected_setting.getType() not in ["int", "float"] else "numeric"
