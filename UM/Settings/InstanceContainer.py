@@ -5,6 +5,9 @@ from UM.Signal import Signal, signalemitter
 
 from . import ContainerInterface
 
+##  A container for SettingInstance objects.
+#
+#
 @signalemitter
 class InstanceContainer(ContainerInterface.ContainerInterface):
     Version = 1
@@ -50,8 +53,13 @@ class InstanceContainer(ContainerInterface.ContainerInterface):
     def getValue(self, key):
         return None
 
+    ##  Emitted whenever the value of an instance in this container changes.
     valueChanged = Signal()
 
+    ##  Set the value of an instance in this container.
+    #
+    #   \param key \type{string} The key of the instance to set the value of.
+    #   \param value The new value of the instance.
     def setValue(self, key, value):
         pass
 

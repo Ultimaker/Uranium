@@ -27,8 +27,18 @@ class SettingPropertyType(enum.IntEnum):
     TranslatedString = 3
     Function = 4
 
+##  Defines a single Setting with its properties.
+#
+#   This class defines a single Setting with all its properties. This class is considered invariant,
+#   the only way to change it is using deserialize().
 class SettingDefinition:
-    def __init__(self, key, container, parent = None, i18n_catalog = None, *args, **kwargs):
+    ##  Construcutor
+    #
+    #   \param key \type{string} The unique, machine readable/writable key to use for this setting.
+    #   \param container \type{DefinitionContainer} The container of this setting. Defaults to None.
+    #   \param parent \type{SettingDefinition} The parent of this setting. Defaults to None.
+    #   \param i18n_catalog \type{i18nCatalog} The translation catalog to use for this setting. Defaults to None.
+    def __init__(self, key, container = None, parent = None, i18n_catalog = None, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self._key = key
@@ -44,45 +54,59 @@ class SettingDefinition:
 
         self.__property_values = {}
 
+    ##  Override __getattr__ to provide access to definition properties.
     def __getattr__(self, name):
         if name in self.__property_definitions:
             return self.__property_values[name]
 
         raise AttributeError("'SettingDefinition' object has no attribute '{0}'".format(name))
 
+    ##  Override __setattr__ to enforce invariant status of definition properties.
     def __setattr__(self, name, value):
         if name in self.__property_definitions:
             raise NotImplementedError("Setting of property {0} not supported".format(name))
 
         super().__setattr__(name, value)
 
+    ##  The key of this setting.
     @property
     def key(self):
         return self._key
 
+    ##  The container of this setting.
     @property
     def container(self):
         return self._container
 
+    ##  The parent of this setting.
     @property
     def parent(self):
         return self._parent
 
+    ##  The type of this setting.
     @property
     def type(self):
         return self._type
 
+    ##  A list of children of this setting.
     @property
     def children(self):
         return self._children
 
+    ##  A list of SettingRelation objects of this setting.
     @property
     def relations(self):
         return self._relations
 
+    ##  Serialize this setting to a string.
+    #
+    #   \return \type{string} A serialized representation of this setting.
     def serialize(self):
         pass
 
+    ##  Deserialize this setting from a string or dict.
+    #
+    #   \param serialized \type{string or dict} A serialized representation of this setting.
     def deserialize(self, serialized):
         if isinstance(serialized, dict):
             self._deserialize_dict(serialized)
@@ -92,6 +116,11 @@ class SettingDefinition:
 
     def findChildren(self, filter):
         return []
+    ##  Get a child by key
+    #
+    #   \param key \type{string} The key of the child to get.
+    #
+    #   \return \type{SettingDefinition} The child with the specified key or None if not found.
 
     @classmethod
     def addPropertyDefinition(cls, name, type, required = False):
