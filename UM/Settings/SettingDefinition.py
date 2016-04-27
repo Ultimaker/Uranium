@@ -114,14 +114,43 @@ class SettingDefinition:
             parsed = json.loads(serialized, object_pairs_hook=collections.OrderedDict)
             self._deserialize_dict(parsed)
 
-    def findChildren(self, filter):
-        return []
     ##  Get a child by key
     #
     #   \param key \type{string} The key of the child to get.
     #
     #   \return \type{SettingDefinition} The child with the specified key or None if not found.
+    def getChild(self, key):
+        for child in self._children:
+            if child.key == key:
+                return child
 
+        return None
+
+    ##  Find all definitions matching certain criteria.
+    #
+    #   This will search this definition and its children for definitions matching the search criteria.
+    #
+    #   \param criteria \type{dict} A dictionary with key-value pairs that need to match properties of the children.
+    #
+    #   \return \type{list} A list of children matching the search criteria. The list will be empty if no children were found.
+    def findDefinitions(self, criteria):
+        definitions = []
+
+        has_properties = True
+        for key, value in criteria.items():
+            try:
+                if getattr(self, key) != value:
+                    has_properties = False
+            except AttributeError:
+                continue
+
+        if has_properties:
+            definitions.append(self)
+
+        for child in self._children:
+            definitions.extend(child.findDefinitions(criteria))
+
+        return definitions
     @classmethod
     def addPropertyDefinition(cls, name, type, required = False):
         cls.__property_definitions[name] = { "type": type, "required": required }
