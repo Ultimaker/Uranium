@@ -34,8 +34,12 @@ class ContainerStack(ContainerInterface.ContainerInterface):
     def getName(self):
         return self._name
 
+    ##  Emitted whenver the name of this stack changes.
     nameChanged = Signal()
 
+    ##  Set the name of this stack.
+    #
+    #   \param name \type{string} The new name of the stack.
     def setName(self, name):
         if name != self._name:
             self._name = name
