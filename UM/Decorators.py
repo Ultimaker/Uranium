@@ -77,7 +77,10 @@ def interface(cls):
             if inspect.signature(sub_method) != inspect.signature(method[1]):
                 raise NotImplementedError("Method {0} of class {1} does not have the same signature as method {2} in interface {3}: {4} vs {5}".format(sub_method, subclass, method[1], cls, inspect.signature(sub_method), inspect.signature(method[1])))
 
-        return old_new(subclass, *args, **kwargs)
+        if old_new == object.__new__:
+            return object.__new__(subclass) # Because object.__new__() complains if we pass it *args and **kwargs
+        else:
+            return old_new(*args, **kwargs)
 
     cls.__new__ = new_new
     return cls
