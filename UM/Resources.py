@@ -30,14 +30,12 @@ class Resources:
     Images = 6
     ## Location of themes. Equal to $resources/themes.
     Themes = 7
-    ## Location of machine definition files. Equal to $resources/machines
-    MachineDefinitions = 8
-    ## Location of machine instance files. Equal to $resources/machine_instances
-    MachineInstances = 9
-    ## Location of setting profile files. Equal to $resources/profiles
-    Profiles = 10
-    ## Location of working profiles for each machine instance. Equal to $resources/instance_profiles
-    MachineInstanceProfiles = 11
+    ## Location of definition container files. Equal to $resources/definitions
+    DefinitionContainers = 8
+    ## Location of instance container files. Equal to $resources/instances
+    InstanceContainers = 9
+    ## Location of container stack files. Equal to $resources/stacks
+    ContainerStacks = 10
 
     ## Any custom resource types should be greater than this to prevent collisions with standard types.
     UserType = 128
@@ -242,16 +240,13 @@ class Resources:
         i18n: "i18n",
         Images: "images",
         Themes: "themes",
-        MachineDefinitions: "machines",
-        MachineInstances: "machine_instances",
-        Profiles: "profiles",
-        MachineInstanceProfiles: "instance_profiles"
+        DefinitionContainers: "definitions",
+        InstanceContainers: "instances",
+        ContainerStacks: "stacks",
     }
     __types_storage = {
         Resources: "",
         Preferences: "",
-        MachineDefinitions: "machines",
-        MachineInstances: "machine_instances",
-        Profiles: "profiles",
-        MachineInstanceProfiles: "instance_profiles"
+        InstanceContainers: "instances",
+        ContainerStacks: "stacks",
     }
