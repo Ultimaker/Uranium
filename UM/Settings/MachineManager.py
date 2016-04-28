@@ -846,12 +846,12 @@ class MachineManager(SignalEmitter):
 
         update_button = None
         create_button = message_box.addButton(catalog.i18nc("@action", "Create profile"), QMessageBox.YesRole)
-        discard_button = message_box.addButton(catalog.i18nc("@action:button", "Discard changes"), QMessageBox.NoRole)
+        discard_button = message_box.addButton(catalog.i18nc("@action:button", "Discard current settings"), QMessageBox.NoRole)
         cancel_button = message_box.addButton(QMessageBox.Cancel)
         if self._active_profile.isReadOnly():
-            message_box.setInformativeText(catalog.i18nc("@label", "Do you want to save your settings in a custom profile?"))
+            message_box.setInformativeText(catalog.i18nc("@label", "Do you want to create a custom profile from your current settings?"))
         else:
-            message_box.setInformativeText(catalog.i18nc("@label", "Do you want to update profile \"{0}\" or save your settings in a new custom profile?".format(self._active_profile.getName())))
+            message_box.setInformativeText(catalog.i18nc("@label", "Do you want to update profile \"{0}\" or create a custom profile?".format(self._active_profile.getName())))
             update_button = message_box.addButton(catalog.i18nc("@action:button", "Update \"{0}\"".format(self._active_profile.getName())), QMessageBox.YesRole)
         message_box.exec_()
         result = message_box.clickedButton()
