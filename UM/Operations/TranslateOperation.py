@@ -14,15 +14,14 @@ class TranslateOperation(Operation.Operation):
     #
     #   \param node The node to translate.
     #   \param translation A translation matrix to transform the node by.
-    #   \param kwargs Key-word arguments, including:
-    #    - set_position: Whether to change the position (True) or add the
-    #      positions, making a relative move (False).
-    def __init__(self, node, translation, **kwargs):
+    #   \param set_position: Whether to change the position (True) or add the
+    #   positions, making a relative move (False).
+    def __init__(self, node, translation, set_position = False):
         super().__init__()
         self._node = node
         self._old_transformation = node.getLocalTransformation() # To restore the transformation to in case of an undo.
         self._translation = translation
-        self._set_position = kwargs.get("set_position", False)
+        self._set_position = set_position
 
     ##  Undoes the translate operation, restoring the old transformation.
     def undo(self):
