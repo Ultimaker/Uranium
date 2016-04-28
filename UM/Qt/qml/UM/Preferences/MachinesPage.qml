@@ -21,7 +21,7 @@ ManagementPage {
     onRenameObject: renameDialog.open();
     onActivateObject: if (activateEnabled) { UM.MachineManager.setActiveMachineInstance(currentItem.name) }
 
-    activateEnabled: currentItem != null
+    activateEnabled: currentItem != null && !currentItem.active
     removeEnabled: numInstances > 1
     renameEnabled: numInstances > 0
 
