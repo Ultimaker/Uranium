@@ -115,7 +115,7 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
         self._metadata = parsed["metadata"]
 
         for key, value in parsed["settings"].items():
-            definition = SettingDefinition(key, self, None, self._i18n_catalog)
+            definition = SettingDefinition.SettingDefinition(key, self, None, self._i18n_catalog)
             definition.deserialize(value)
             self._definitions.append(definition)
 
