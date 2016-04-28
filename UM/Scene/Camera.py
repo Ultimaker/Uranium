@@ -82,17 +82,17 @@ class Camera(SceneNode.SceneNode):
         view_x = (window_x / self._viewport_width) * 2 - 1
         view_y = (window_y / self._viewport_height) * 2 - 1
 
-        invp = numpy.linalg.inv(self._projection_matrix.getData().copy())
-        invv = self.getWorldTransformation().getData()
+        inverted_projection = numpy.linalg.inv(self._projection_matrix.getData().copy())
+        transformation = self.getWorldTransformation().getData()
 
-        near = numpy.array([view_x, -view_y, -1.0, 1.0], dtype=numpy.float32)
-        near = numpy.dot(invp, near)
-        near = numpy.dot(invv, near)
+        near = numpy.array([view_x, -view_y, -1.0, 1.0], dtype = numpy.float32)
+        near = numpy.dot(inverted_projection, near)
+        near = numpy.dot(transformation, near)
         near = near[0:3] / near[3]
 
         far = numpy.array([view_x, -view_y, 1.0, 1.0], dtype = numpy.float32)
-        far = numpy.dot(invp, far)
-        far = numpy.dot(invv, far)
+        far = numpy.dot(inverted_projection, far)
+        far = numpy.dot(transformation, far)
         far = far[0:3] / far[3]
 
         dir = far - near
@@ -108,4 +108,4 @@ class Camera(SceneNode.SceneNode):
         position = position.preMultiply(view)
         position = position.preMultiply(projection)
 
-        return (position.x / position.z / 2.0, position.y / position.z / 2.0)
+        return position.x / position.z / 2.0, position.y / position.z / 2.0
