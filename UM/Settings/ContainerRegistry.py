@@ -57,7 +57,25 @@ class ContainerRegistry:
     #
     #   \param filter \type{dict} A dictionary containing keys and values that need to match the metadata of the DefinitionContainer.
     def findDefinitionContainers(self, filter):
-        return []
+        containers = []
+        for container in self._containers:
+            if not isinstance(container, DefinitionContainer.DefinitionContainer):
+                continue
+
+            matches_container = True
+            for key, value in filter.items():
+                if key == "id":
+                    if container.getId() != value:
+                        matches_container = False
+                    continue
+
+                if container.getMetaDataEntry(key) != value:
+                    matches_container = False
+
+            if matches_container:
+                containers.append(container)
+
+        return containers
 
     ##  Find all InstanceContainer objects matching certain criteria.
     #
