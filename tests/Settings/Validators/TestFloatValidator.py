@@ -26,7 +26,7 @@ def validator():
     return FloatValidator(setting_instance)
 
 ##  Tests the creation of a float validator.
-def test_createFloatValidator(self, validator):
+def test_createFloatValidator(validator):
     assert validator.state == ValidatorState.Unknown
 
 ##  The individual test cases for validate().
