@@ -93,7 +93,11 @@ class ContainerRegistry:
     #
     #   \param container An instance of the container type to add.
     def addContainerType(self, container):
-        pass
+        plugin_id = container.getPluginId()
+        self._container_types[plugin_id] = container.__class__
+
+        metadata = PluginRegistry.getInstance().getMetaData(plugin_id)
+        self._mime_type_map[metadata["settings_container"]["mimetype"]] = container.__class_
 
     ##  Load all available definition containers, instance containers and container stacks.
     def load(self):
