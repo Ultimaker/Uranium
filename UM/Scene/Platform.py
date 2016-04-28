@@ -11,6 +11,10 @@ from UM.Job import Job
 from UM.View.GL.OpenGL import OpenGL
 
 
+##  Platform is a special case of Scene node. It renders a specific model as the platform of the machine.
+#   A specialised class is used due to the differences in how it needs to rendered and the fact that a platform
+#   can have a Texture.
+#   It also handles the re-loading of the mesh when the active machine is changed.
 class Platform(SceneNode.SceneNode):
     def __init__(self, parent):
         super().__init__(parent)
@@ -48,7 +52,7 @@ class Platform(SceneNode.SceneNode):
                 path = Resources.getPath(Resources.Meshes, mesh_file)
 
                 if self._load_platform_job:
-                    #This prevents a previous load job from triggering texture loads.
+                    # This prevents a previous load job from triggering texture loads.
                     self._load_platform_job.finished.disconnect(self._onPlatformLoaded)
 
                 # Perform platform mesh loading in the background
@@ -89,8 +93,11 @@ class Platform(SceneNode.SceneNode):
         if node.getMeshData():
             self.setMeshData(node.getMeshData())
 
-            Application.getInstance().callLater(self._updateTexture) #Calling later because for some reason the OpenGL context might be outdated on some computers.
+            # Calling later because for some reason the OpenGL context might be outdated on some computers.
+            Application.getInstance().callLater(self._updateTexture)
 
+
+##  Protected class that ensures that the mesh for the machine platform is loaded.
 class _LoadPlatformJob(Job):
     def __init__(self, file_name):
         self._file_name = file_name

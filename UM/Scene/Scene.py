@@ -14,7 +14,7 @@ import threading
 #   The main purpose of this class is to provide the root SceneNode.
 class Scene(SignalEmitter):
     def __init__(self):
-        super().__init__() # Call super to make multiple inheritence work.
+        super().__init__() # Call super to make multiple inheritance work.
 
         self._root = SceneNode()
         self._root.setCalculateBoundingBox(False)

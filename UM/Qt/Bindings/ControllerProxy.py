@@ -4,14 +4,9 @@
 from PyQt5.QtCore import QObject, QCoreApplication, pyqtSlot, QUrl, pyqtSignal, pyqtProperty
 
 from UM.Application import Application
-from UM.Scene.SceneNode import SceneNode
-from UM.Scene.BoxRenderer import BoxRenderer
-from UM.Operations.AddSceneNodeOperation import AddSceneNodeOperation
 from UM.Scene.Selection import Selection
 from UM.Operations.RemoveSceneNodeOperation import RemoveSceneNodeOperation
 from UM.Operations.GroupedOperation import GroupedOperation
-
-import os.path
 
 class ControllerProxy(QObject):
     def __init__(self, parent = None):
