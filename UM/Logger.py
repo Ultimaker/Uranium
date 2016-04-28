@@ -39,7 +39,7 @@ class Logger:
                 continue
         address = "%s (%s [%s]): " %(filename, function.co_name, function.co_firstlineno)
         for logger in cls.__loggers:
-            filled_message = address + message % args # Replace all the %s with the variables. Python formating is magic.
+            filled_message = address + message % args # Replace all the %s with the variables. Python formatting is magic.
             logger.log(log_type, filled_message)
 
     ##
@@ -57,9 +57,9 @@ class Logger:
 ##  Abstract base class for log output classes.
 class LogOutput(PluginObject):
     def __init__(self):
-        super().__init__() # Call super to make multiple inheritence work.
+        super().__init__() # Call super to make multiple inheritance work.
         self._name = type(self).__name__ # Set name of the logger to it's class name
-    
+
     ##  Log a message.
     #
     #   The possible message types are:

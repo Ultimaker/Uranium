@@ -1,11 +1,11 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-from UM.Signal import Signal, SignalEmitter
-from UM.Logger import Logger
-
 import multiprocessing
 import threading
+
+from UM.Signal import Signal, SignalEmitter
+from UM.Logger import Logger
 
 
 ##  A thread pool and queue manager for Jobs.
@@ -17,12 +17,14 @@ class JobQueue(SignalEmitter):
     ##  Initialize.
     #
     #   \param thread_count The amount of threads to use. Can be a positive integer or 'auto'.
-    #                       When 'auto', the number of threads is based on the number of cpus on the machine.
-    def __init__(self, thread_count = "auto"):
+    #                       When 'auto', the number of threads is based on the number of processors and cores on the machine.
+    def __init__(self, thread_count = "auto"): #pylint: disable=bad-whitespace
         if JobQueue._instance is None:
             JobQueue._instance = self
         else:
             raise RuntimeError("Attempted to create multiple instances of JobQueue")
+
+        super().__init__()
 
         if thread_count == "auto":
             try:
@@ -39,9 +41,9 @@ class JobQueue(SignalEmitter):
         self._jobs = []
         self._jobs_lock = threading.Lock()
 
-        for t in self._threads:
-            t.daemon = True
-            t.start()
+        for thread in self._threads:
+            thread.daemon = True
+            thread.start()
 
     ##  Add a Job to the queue.
     #

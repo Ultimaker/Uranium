@@ -1,6 +1,11 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
+import threading
+import argparse
+import os
+import sys
+
 from UM.Controller import Controller
 from UM.PluginRegistry import PluginRegistry
 from UM.Mesh.MeshFileHandler import MeshFileHandler
@@ -14,12 +19,6 @@ from UM.OutputDevice.OutputDeviceManager import OutputDeviceManager
 from UM.Settings.MachineManager import MachineManager
 from UM.i18n import i18nCatalog
 
-import threading
-import argparse
-import os
-import sys
-
-
 ##  Central object responsible for running the main event loop and creating other central objects.
 #
 #   The Application object is a central object for accessing other important objects. It is also
@@ -30,18 +29,18 @@ class Application(SignalEmitter):
     #
     #   \param name \type{string} The name of the application.
     #   \param version \type{string} Version, formatted as major.minor.rev
-    def __init__(self, name, version,  **kwargs):
-        if(Application._instance != None):
+    def __init__(self, name, version, **kwargs):
+        if Application._instance != None:
             raise ValueError("Duplicate singleton creation")
-        
-        # If the constructor is called and there is no instance, set the instance to self. 
+
+        # If the constructor is called and there is no instance, set the instance to self.
         # This is done because we can't make constructor private
         Application._instance = self
 
         self._application_name = name
         self._version = version
-        
-        os.putenv("UBUNTU_MENUPROXY","0")  # For Ubuntu Unity this makes Qt use its own menu bar rather than pass it on to Unity.
+
+        os.putenv("UBUNTU_MENUPROXY", "0")  # For Ubuntu Unity this makes Qt use its own menu bar rather than pass it on to Unity.
 
         Signal._app = self
         Resources.ApplicationIdentifier = name
@@ -56,7 +55,7 @@ class Application(SignalEmitter):
 
         self._main_thread = threading.current_thread()
 
-        super().__init__(**kwargs)  # Call super to make multiple inheritence work.
+        super().__init__(**kwargs)  # Call super to make multiple inheritance work.
 
         self._renderer = None
 
@@ -116,15 +115,15 @@ class Application(SignalEmitter):
     def showMessage(self, message):
         raise NotImplementedError
 
-    ##  Get the version of the application  
-    #   \returns version \type{string} 
+    ##  Get the version of the application
+    #   \returns version \type{string}
     def getVersion(self):
         return self._version
 
     ##  Add a message to the visible message list so it will be displayed.
-    #   This should only be called by message object itself. 
+    #   This should only be called by message object itself.
     #   To show a message, simply create it and call its .show() function.
-    #   \param message \type{Message} message object 
+    #   \param message \type{Message} message object
     #   \sa Message::show()
     #def showMessage(self, message):
     #    with self._message_lock:
@@ -135,9 +134,9 @@ class Application(SignalEmitter):
     visibleMessageAdded = Signal()
 
     ##  Remove a message from the visible message list so it will no longer be displayed.
-    #   This should only be called by message object itself. 
+    #   This should only be called by message object itself.
     #   in principle, this should only be called by the message itself (hide)
-    #   \param message \type{Message} message object 
+    #   \param message \type{Message} message object
     #   \sa Message::hide()
     #def hideMessage(self, message):
     #    with self._message_lock:
@@ -155,8 +154,8 @@ class Application(SignalEmitter):
                     found_message = message
         if found_message is not None:
             self.hideMessageSignal.emit(found_message)
-            
-    visibleMessageRemoved = Signal()            
+
+    visibleMessageRemoved = Signal()
 
     ##  Get list of all visible messages
     #   \returns visible_messages \type{list}
@@ -164,11 +163,11 @@ class Application(SignalEmitter):
         with self._message_lock:
             return self._visible_messages
 
-    ##  Function that needs to be overriden by child classes with a list of plugin it needs.
+    ##  Function that needs to be overridden by child classes with a list of plugin it needs.
     def _loadPlugins(self):
         pass
 
-    def getCommandLineOption(self, name, default = None):
+    def getCommandLineOption(self, name, default = None): #pylint: disable=bad-whitespace
         if not self._parsed_command_line:
             self.parseCommandLine()
             Logger.log("d", "Command line options: %s", str(self._parsed_command_line))
@@ -245,8 +244,8 @@ class Application(SignalEmitter):
     def getOutputDeviceManager(self):
         return self._output_device_manager
 
-    ##  Run the main eventloop.
-    #   This method should be reimplemented by subclasses to start the main event loop.
+    ##  Run the main event loop.
+    #   This method should be re-implemented by subclasses to start the main event loop.
     #   \exception NotImplementedError
     def run(self):
         raise NotImplementedError("Run must be implemented by application")
@@ -286,7 +285,7 @@ class Application(SignalEmitter):
         return Application._instance
 
     def parseCommandLine(self):
-        parser = argparse.ArgumentParser(prog = self.getApplicationName())
+        parser = argparse.ArgumentParser(prog = self.getApplicationName()) #pylint: disable=bad-whitespace
         parser.add_argument("--version", action="version", version="%(prog)s {0}".format(self.getVersion()))
         parser.add_argument("--external-backend",
                             dest="external-backend",
