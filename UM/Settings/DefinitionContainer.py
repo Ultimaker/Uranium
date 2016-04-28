@@ -7,9 +7,11 @@ import copy
 
 from UM.Resources import Resources
 from UM.PluginObject import PluginObject
+from UM.Logger import Logger
 
 from . import ContainerInterface
 from . import SettingDefinition
+from . import SettingRelation
 
 class InvalidDefinitionError(Exception):
     pass
@@ -117,6 +119,8 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
             definition.deserialize(value)
             self._definitions.append(definition)
 
+        for definition in self._definitions:
+            self._updateRelations(definition)
 
     ##  Find definitions matching certain criteria.
     #
@@ -187,3 +191,27 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
                 result[key] = value
 
         return result
+
+    def _updateRelations(self, definition):
+        for property in SettingDefinition.SettingDefinition.getFunctionProperties():
+            if hasattr(definition, property):
+                self._processFunction(definition, property)
+
+        for child in definition.children:
+            self._updateRelations(child)
+
+    def _processFunction(self, definition, property):
+        function = getattr(definition, property)
+        for setting in function.getUsedSettings():
+            other = self.findDefinitions({ "key": setting })
+            if not other:
+                Logger.log("w", "Function for definition %s references unknown definition %s", definition.key, setting)
+                continue
+
+            other = other[0]
+
+            relation = SettingRelation.SettingRelation(definition, other, SettingRelation.SettingRelation.RelationType.RequiresTarget, property)
+            definition.relations.append(relation)
+
+            relation = SettingRelation.SettingRelation(other, definition, SettingRelation.SettingRelation.RelationType.RequiredByTarget, property)
+            other.relations.append(relation)
