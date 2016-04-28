@@ -1,8 +1,15 @@
 # Copyright (c) 2016 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
+import os
+
 from UM.PluginRegistry import PluginRegistry
+from UM.Resources import Resources
 from UM.MimeTypeDatabase import MimeType, MimeTypeDatabase
+
+from . import DefinitionContainer
+from . import InstanceContainer
+from . import ContainerStack
 
 ##  Central class to manage all Setting containers.
 #
@@ -32,6 +39,18 @@ class ContainerRegistry:
 
         self._containers = []
 
+        self._container_types = {
+            "definition": DefinitionContainer.DefinitionContainer,
+            "instance": InstanceContainer.InstanceContainer,
+            "stack": ContainerStack.ContainerStack,
+        }
+
+        self._mime_type_map = {
+            "application/x-uranium-definitioncontainer": DefinitionContainer.DefinitionContainer,
+            "application/x-uranium-instancecontainer": InstanceContainer.InstanceContainer,
+            "application/x-uranium-containerstack": ContainerStack.ContainerStack,
+        }
+
         PluginRegistry.getInstance().addType("settings_container", self.addContainerType)
 
     ##  Find all DefinitionContainer objects matching certain criteria.
@@ -57,6 +76,22 @@ class ContainerRegistry:
     #   \param container An instance of the container type to add.
     def addContainerType(self, container):
         pass
+
+    ##  Load all available definition containers, instance containers and container stacks.
+    def load(self):
+        files = Resources.getAllResourcesOfType(Resources.DefinitionContainers)
+        files.extend(Resources.getAllResourcesOfType(Resources.InstanceContainers))
+        files.extend(Resources.getAllResourcesOfType(Resources.ContainerStacks))
+
+        for file_path in files:
+            mime = MimeTypeDatabase.getMimeTypeForFile(file_path)
+            container_type = self._mime_type_map.get(mime.name)
+            container_id = mime.stripExtension(os.path.basename(file_path))
+
+            new_container = container_type(container_id)
+            with open(file_path) as f:
+                new_container.deserialize(f.read())
+            self._containers.append(new_container)
 
     ##  Get the singleton instance for this class.
     @classmethod
