@@ -38,6 +38,16 @@ PreferencesPage
 
     resetEnabled: false;
 
+    function activeIndex() 
+    {
+        for(var i = 0; i < objectList.model.rowCount(); i++) {
+            if (objectList.model.getItem(i).active) {
+                return i;
+            }
+        }
+    }
+
+
     Row
     {
         id: buttons;
@@ -123,6 +133,7 @@ PreferencesPage
             ListView
             {
                 id: objectList;
+                currentIndex: activeIndex()
 
                 section.property: "group"
                 section.criteria: ViewSection.FullString

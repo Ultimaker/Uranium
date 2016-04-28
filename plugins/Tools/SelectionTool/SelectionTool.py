@@ -79,33 +79,41 @@ class SelectionTool(Tool):
 
         for node in BreadthFirstIterator(self._scene.getRoot()):
             if id(node) == item_id:
+                if self._isNodeInGroup(node):
+                    is_selected = Selection.isSelected(self._findTopGroupNode(node))
+                else:
+                    is_selected = Selection.isSelected(node)
+
                 if self._ctrl_is_active:
-                    if Selection.isSelected(node):
+                    if is_selected:
                         if node.getParent():
-                            group_node = node.getParent()
-                            if not group_node.callDecoration("isGroup"):
+                            if not self._isNodeInGroup(node):
                                 Selection.remove(node)
                             else:
-                                while group_node.getParent().callDecoration("isGroup"):
-                                    group_node = group_node.getParent()
-                                Selection.remove(group_node)
+                                Selection.remove(self._findTopGroupNode(node))
                     else:
                         if node.getParent():
-                            group_node = node.getParent()
-                            if not group_node.callDecoration("isGroup"):
+                            if not self._isNodeInGroup(node):
                                 Selection.add(node)
                             else:
-                                while group_node.getParent().callDecoration("isGroup"):
-                                    group_node = group_node.getParent()
-                                Selection.add(group_node)
+                                Selection.add(self._findTopGroupNode(node))
                 else:
-                    if not Selection.isSelected(node) or Selection.getCount() > 1:
+                    if not is_selected or Selection.getCount() > 1:
                         Selection.clear()
                         if node.getParent():
-                            group_node = node.getParent()
-                            if not group_node.callDecoration("isGroup"):
+                            if not self._isNodeInGroup(node):
                                 Selection.add(node)
                             else:
-                                while group_node.getParent().callDecoration("isGroup"):
-                                    group_node = group_node.getParent()
-                                Selection.add(group_node)
+                                Selection.add(self._findTopGroupNode(node))
+
+    def _isNodeInGroup(self, node):
+        parent_node = node.getParent()
+        if not parent_node:
+            return False
+        return parent_node.callDecoration("isGroup")
+
+    def _findTopGroupNode(self, node):
+        group_node = node
+        while group_node.getParent().callDecoration("isGroup"):
+            group_node = group_node.getParent()
+        return group_node
