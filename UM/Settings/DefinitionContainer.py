@@ -136,7 +136,7 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
 
     # Load a file from disk, used to handle inheritance and includes
     def _loadFile(self, file_name):
-        path = Resources.getPath(Resources.Definitions, file_name + ".json")
+        path = Resources.getPath(Resources.DefinitionContainers, file_name + ".def.json")
         contents = {}
         with open(path) as f:
             contents = json.load(f, object_pairs_hook=collections.OrderedDict)
