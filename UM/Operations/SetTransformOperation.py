@@ -57,16 +57,12 @@ class SetTransformOperation(Operation.Operation):
     def mergeWith(self, other):
         if type(other) is not SetTransformOperation:
             return False
-
-        if other._node != self._node:
+        if other._node != self._node: # Must be on the same node.
             return False
-
-        if other._new_translation is None or self._new_translation is None:
+        if other._new_translation is None or self._new_translation is None: #Must have valid transformations in each of the operations.
             return False
-
         if other._new_orientation is None or self._new_orientation is None:
             return False
-
         if other._new_scale is None or self._new_scale is None:
             return False
 
