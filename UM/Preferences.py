@@ -1,16 +1,15 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
+import configparser
+
 from UM.Signal import Signal, SignalEmitter
 from UM.Logger import Logger
 
 from UM.SaveFile import SaveFile
 
-import configparser
-
-
-##      Preferences are application based settings that are saved for future use. 
-#       Typical preferences would be window size, standard machine, etc.
+##  Preferences are application based settings that are saved for future use.
+#   Typical preferences would be window size, standard machine, etc.
 class Preferences(SignalEmitter):
     def __init__(self):
         super().__init__()
@@ -94,7 +93,7 @@ class Preferences(SignalEmitter):
                 self.preferenceChanged.emit("{0}/{1}".format(group, key))
 
     def writeToFile(self, file):
-        parser = configparser.ConfigParser(interpolation = None)
+        parser = configparser.ConfigParser(interpolation = None) #pylint: disable=bad-whitespace
         for group, group_entries in self._preferences.items():
             parser[group] = {}
             for key, pref in group_entries.items():
@@ -104,8 +103,8 @@ class Preferences(SignalEmitter):
         parser["general"]["version"] = "2"
 
         try:
-            with SaveFile(file, "wt") as f:
-                parser.write(f)
+            with SaveFile(file, "wt") as save_file:
+                parser.write(save_file)
         except Exception as e:
             Logger.log("e", "Failed to write preferences to %s: %s", file, str(e))
 
@@ -142,7 +141,7 @@ class Preferences(SignalEmitter):
         if self._file and self._file == file:
             return self._parser
         try:
-            self._parser = configparser.ConfigParser(interpolation = None)
+            self._parser = configparser.ConfigParser(interpolation = None) #pylint: disable=bad-whitespace
             self._parser.read(file)
 
             if self._parser["general"]["version"] != "2":
@@ -150,7 +149,7 @@ class Preferences(SignalEmitter):
                 self._parser = None
                 return
         except Exception as e:
-            Logger.log("e" ,"An exception occured while trying to read preferences file: %s" , e)
+            Logger.log("e", "An exception occured while trying to read preferences file: %s", e)
             self._parser = None
             return
 
@@ -159,10 +158,10 @@ class Preferences(SignalEmitter):
     _instance = None
 
 class _Preference:
-    def __init__(self, name, default = None, value = None):
+    def __init__(self, name, default = None, value = None): #pylint: disable=bad-whitespace
         self._name = name
         self._default = default
-        self._value = default if value == None else value
+        self._value = default if value is None else value
 
     def getName(self):
         return self._name

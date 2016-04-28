@@ -22,10 +22,12 @@ PreferencesPage
     default property alias details: detailsPane.children;
 
     signal itemActivated();
+    signal activateObject();
     signal addObject();
     signal removeObject();
     signal renameObject();
 
+    property alias activateEnabled: activateButton.enabled;
     property alias addEnabled: addButton.enabled;
     property alias removeEnabled: removeButton.enabled;
     property alias renameEnabled: renameButton.enabled;
@@ -43,6 +45,13 @@ PreferencesPage
         width: childrenRect.width;
         height: childrenRect.height;
 
+        Button
+        {
+            id: activateButton;
+            text: catalog.i18nc("@action:button", "Activate");
+            iconName: "list-activate";
+            onClicked: base.activateObject();
+        }
         Button
         {
             id: addButton;

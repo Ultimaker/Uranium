@@ -21,9 +21,9 @@ class Event:
     ViewActivateEvent = 11
     ViewDeactivateEvent = 12
 
-    def __init__(self, type):
+    def __init__(self, event_type):
         super().__init__()
-        self._type = type
+        self._type = event_type
 
     ##  The type of event.
     @property
@@ -47,13 +47,15 @@ class MouseEvent(Event):
     #   \param last_x The X coordinate of the previous mouse event. Can be None. It is used to calculate deltaX.
     #   \param last_y The Y coordinate of the previous mouse event. Cam be None. It is used to calculate deltaY.
     #   \param buttons The buttons that are associated with this event.
-    def __init__(self, type, x = 0, y = 0, last_x = None, last_y = None, buttons = []):
-        super().__init__(type)
+    def __init__(self, event_type, x = 0, y = 0, last_x = None, last_y = None, buttons = None): #pylint: disable=bad-whitespace
+        super().__init__(event_type)
         self._x = x
         self._y = y
         self._last_x = last_x
         self._last_y = last_y
-        self._buttons = buttons
+        self._buttons = []
+        if buttons:
+            self._buttons = buttons
 
     ##  The X coordinate of the event.
     @property
@@ -70,7 +72,7 @@ class MouseEvent(Event):
     def lastX(self):
         return self._last_x
 
-    ##  The Y coordiante of the previous event.
+    ##  The Y coordinate of the previous event.
     @property
     def lastY(self):
         return self._last_y
@@ -130,8 +132,8 @@ class KeyEvent(Event):
     PlusKey = 14
     EqualKey = 15
 
-    def __init__(self, type, key):
-        super().__init__(type)
+    def __init__(self, event_type, key):
+        super().__init__(event_type)
         self._key = key
 
     @property
@@ -141,9 +143,7 @@ class KeyEvent(Event):
 
 ##  Tool related event class.
 class ToolEvent(Event):
-    def __init__(self, type):
-        super().__init__(type)
-
+    pass
 
 ##  Event used to call a function.
 class CallFunctionEvent(Event):

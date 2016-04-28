@@ -51,7 +51,7 @@ class Controller(SignalEmitter):
             view.setRenderer(self._application.getRenderer())
             self.viewsChanged.emit()
         else:
-            Logger.log("w", "%s was already added to view list. Unable to add it again.",name)
+            Logger.log("w", "%s was already added to view list. Unable to add it again.", name)
 
     ##  Request view by name. Returns None if no view is found.
     #   \param name \type{string} Unique identifier of view (usually the plugin name)
@@ -60,7 +60,7 @@ class Controller(SignalEmitter):
         try:
             return self._views[name]
         except KeyError:  # No such view
-            Logger.log("e", "Unable to find %s in view list",name)
+            Logger.log("e", "Unable to find %s in view list", name)
             return None
 
     ##  Return all views.
@@ -98,11 +98,11 @@ class Controller(SignalEmitter):
     ##  Emitted when the active view changes.
     activeViewChanged = Signal()
 
-    ##  Add an input device (eg; mouse, keyboard, etc) if it's not already addded.
+    ##  Add an input device (e.g. mouse, keyboard, etc) if it's not already added.
     #   \param device The input device to be added
     def addInputDevice(self, device):
         name = device.getPluginId()
-        if(name not in self._input_devices):
+        if name not in self._input_devices:
             self._input_devices[name] = device
             device.event.connect(self.event)
         else:
@@ -115,7 +115,7 @@ class Controller(SignalEmitter):
         try:
             return self._input_devices[name]
         except KeyError: #No such device
-            Logger.log("e", "Unable to find %s in input devices",name)
+            Logger.log("e", "Unable to find %s in input devices", name)
             return None
 
     ##  Remove an input device from the list of input devices.
@@ -133,7 +133,7 @@ class Controller(SignalEmitter):
         try:
             return self._tools[name]
         except KeyError: #No such tool
-            Logger.log("e", "Unable to find %s in tools",name)
+            Logger.log("e", "Unable to find %s in tools", name)
             return None
 
     ##  Get all tools
@@ -142,7 +142,7 @@ class Controller(SignalEmitter):
         return self._tools
 
     ##  Add a Tool (transform object, translate object) if its not already added.
-    #   \param tool \type{Tool} Tool to be added  
+    #   \param tool \type{Tool} Tool to be added
     def addTool(self, tool):
         name = tool.getPluginId()
         if name not in self._tools:
@@ -150,7 +150,7 @@ class Controller(SignalEmitter):
             tool.operationStarted.connect(self.toolOperationStarted)
             tool.operationStopped.connect(self.toolOperationStopped)
             self.toolsChanged.emit()
-        else: 
+        else:
             Logger.log("w", "%s was already added to tool list. Unable to add it again.", name)
 
     ##  Request active tool. Returns None if there is no active tool
@@ -227,7 +227,7 @@ class Controller(SignalEmitter):
 
         if self._active_view:
             self._active_view.event(event)
-            
+
         if event.type == Event.MouseReleaseEvent and MouseEvent.RightButton in event.buttons:
             self.contextMenuRequested.emit(event.x, event.y)
 
