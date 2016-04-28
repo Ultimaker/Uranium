@@ -246,7 +246,8 @@ class VersionUpgradeManager:
                     Logger.log("w", "Exception in " + configuration_type + " upgrade with " + upgrade.getPluginId() + ": " + str(e))
                     break # Continue with next file.
                 version = self._registry.getMetaData(upgrade.getPluginId())["version_upgrade"][configuration_type]["to"]
-            if version != old_version:
-                self._storeOldFile(base_directory, configuration_file, old_version)
-                with open(os.path.join(base_directory, configuration_file), "a") as file_handle:
-                    file_handle.write(configuration) # Save the new file.
+            else:
+                if version != old_version:
+                    self._storeOldFile(base_directory, configuration_file, old_version)
+                    with open(os.path.join(base_directory, configuration_file), "a") as file_handle:
+                        file_handle.write(configuration) # Save the new file.
