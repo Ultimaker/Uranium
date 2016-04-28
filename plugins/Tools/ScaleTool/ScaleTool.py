@@ -15,6 +15,7 @@ from UM.Operations.ScaleToBoundsOperation import ScaleToBoundsOperation
 
 from . import ScaleToolHandle
 
+##  Provides the tool to scale meshes and groups
 
 class ScaleTool(Tool):
     def __init__(self):
@@ -29,7 +30,7 @@ class ScaleTool(Tool):
 
         self._maximum_bounds = None
         self._move_up = True
-        
+
         # We use the position of the scale handle when the operation starts.
         # This is done in order to prevent runaway reactions (drag changes of 100+)
         self._saved_handle_position = None
@@ -45,6 +46,9 @@ class ScaleTool(Tool):
             "ScaleZ"
         )
 
+    ##  Handle mouse and keyboard events
+    #
+    #   \param event type(Event)
     def event(self, event):
         super().event(event)
 
@@ -57,6 +61,7 @@ class ScaleTool(Tool):
             for node in Selection.getAllSelectedObjects():
                 node.boundingBoxChanged.disconnect(self.propertyChanged)
 
+        # Handle modifier keys: Shift toggles snap, Control toggles uniform scaling
         if event.type == Event.KeyPressEvent:
             if event.key == KeyEvent.ShiftKey:
                 self._snap_scale = False
@@ -74,6 +79,7 @@ class ScaleTool(Tool):
                 self.propertyChanged.emit()
 
         if event.type == Event.MousePressEvent and self._controller.getToolsEnabled():
+            # Initialise a scale operation
             if MouseEvent.LeftButton not in event.buttons:
                 return False
 
@@ -104,10 +110,10 @@ class ScaleTool(Tool):
             self.operationStarted.emit(self)
 
         if event.type == Event.MouseMoveEvent:
+            # Perform a scale operation
             if not self.getDragPlane():
                 return False
 
-            #handle_position = self._handle.getWorldPosition()
             drag_position = self.getDragPosition(event.x, event.y)
             if drag_position:
                 drag_length = (drag_position - self._saved_handle_position).length()
@@ -136,13 +142,13 @@ class ScaleTool(Tool):
                         for node, position in self._saved_node_positions:
                             op.addOperation(ScaleOperation(node, scale_change, relative_scale = True, scale_around_point = position))
                         op.push()
-                        #Selection.applyOperation(ScaleOperation, scale_change, relative_scale = True, snap = self._snap_scale, scale_around_point = self._saved_handle_position)
                         self._drag_length = (self._saved_handle_position - drag_position).length()
                 else:
                     self._drag_length = (self._saved_handle_position - drag_position).length() #First move, do nothing but set right length.
                 return True
 
         if event.type == Event.MouseReleaseEvent:
+            # Finish a scale operation
             if self.getDragPlane():
                 self.setDragPlane(None)
                 self.setLockedAxis(None)
@@ -150,47 +156,73 @@ class ScaleTool(Tool):
                 self.operationStopped.emit(self)
                 return True
 
+    ##  Reset scale of the selected objects
     def resetScale(self):
         Selection.applyOperation(SetTransformOperation, None, None, Vector(1.0, 1.0, 1.0))
 
+    ##  Initialise and start a ScaleToBoundsOperation on the selected objects
     def scaleToMax(self):
         if hasattr(self.getController().getScene(), "_maximum_bounds"):
             Selection.applyOperation(ScaleToBoundsOperation, self.getController().getScene()._maximum_bounds)
 
+    ##  Get non-uniform scaling flag
+    #
+    #   \return scale type(boolean)
     def getNonUniformScale(self):
         return self._non_uniform_scale
 
+    ##  Set non-uniform scaling flag
+    #
+    #   \param scale type(boolean)
     def setNonUniformScale(self, scale):
         if scale != self._non_uniform_scale:
             self._non_uniform_scale = scale
             self.propertyChanged.emit()
 
+    ##  Get snap scaling flag
+    #
+    #   \return snap type(boolean)
     def getScaleSnap(self):
         return self._snap_scale
 
+    ##  Set snap scaling flag
+    #
+    #   \param snap type(boolean)
     def setScaleSnap(self, snap):
         if self._snap_scale != snap:
             self._snap_scale = snap
             self.propertyChanged.emit()
 
+    ##  Get the width of the boundingbox of the selected object(s)
+    #
+    #   \return width type(float) Width in mm
     def getObjectWidth(self):
         if Selection.hasSelection():
             return float(Selection.getSelectedObject(0).getBoundingBox().width)
 
         return 0.0
 
+    ##  Get the height of the boundingbox of the selected object(s)
+    #
+    #   \return height type(float) height in mm
     def getObjectHeight(self):
         if Selection.hasSelection():
             return float(Selection.getSelectedObject(0).getBoundingBox().height)
 
         return 0.0
 
+    ##  Get the depth of the boundingbox of the first selected object
+    #
+    #   \return depth type(float) depth in mm
     def getObjectDepth(self):
         if Selection.hasSelection():
             return float(Selection.getSelectedObject(0).getBoundingBox().depth)
 
         return 0.0
 
+    ##  Get the x-axis scale of the first selected object
+    #
+    #   \return scale type(float) scale factor (1.0 = normal scale)
     def getScaleX(self):
         if Selection.hasSelection():
             ## Ensure that the returned value is positive (mirror causes scale to be negative)
@@ -198,6 +230,9 @@ class ScaleTool(Tool):
 
         return 1.0
 
+    ##  Get the y-axis scale of the first selected object
+    #
+    #   \return scale type(float) scale factor (1.0 = normal scale)
     def getScaleY(self):
         if Selection.hasSelection():
             ## Ensure that the returned value is positive (mirror causes scale to be negative)
@@ -205,6 +240,9 @@ class ScaleTool(Tool):
 
         return 1.0
 
+    ##  Get the z-axis scale of the of the first selected object
+    #
+    #   \return scale type(float) scale factor (1.0 = normal scale)
     def getScaleZ(self):
         if Selection.hasSelection():
             ## Ensure that the returned value is positive (mirror causes scale to be negative)
@@ -212,6 +250,9 @@ class ScaleTool(Tool):
 
         return 1.0
 
+    ##  Set the width of the selected object(s) by scaling the first selected object to a certain width
+    #
+    #   \param width type(float) width in mm
     def setObjectWidth(self, width):
         obj = Selection.getSelectedObject(0)
         if obj:
@@ -226,6 +267,9 @@ class ScaleTool(Tool):
                     scale_vector = Vector(scale_factor, scale_factor, scale_factor)
                 Selection.applyOperation(ScaleOperation, scale_vector)
 
+    ##  Set the height of the selected object(s) by scaling the first selected object to a certain height
+    #
+    #   \param height type(float) height in mm
     def setObjectHeight(self, height):
         obj = Selection.getSelectedObject(0)
         if obj:
@@ -240,6 +284,9 @@ class ScaleTool(Tool):
                     scale_vector = Vector(scale_factor, scale_factor, scale_factor)
                 Selection.applyOperation(ScaleOperation, scale_vector)
 
+    ##  Set the depth of the selected object(s) by scaling the first selected object to a certain depth
+    #
+    #   \param depth type(float) depth in mm
     def setObjectDepth(self, depth):
         obj = Selection.getSelectedObject(0)
         if obj:
@@ -254,6 +301,9 @@ class ScaleTool(Tool):
                     scale_vector = Vector(scale_factor, scale_factor, scale_factor)
                 Selection.applyOperation(ScaleOperation, scale_vector)
 
+    ##  Set the x-scale of the selected object(s) by scaling the first selected object to a certain factor
+    #
+    #   \param scale type(float) scale factor (1.0 = normal scale)
     def setScaleX(self, scale):
         obj = Selection.getSelectedObject(0)
         if obj:
@@ -266,6 +316,9 @@ class ScaleTool(Tool):
                     scale_vector = Vector(scale_factor, scale_factor, scale_factor)
                 Selection.applyOperation(ScaleOperation, scale_vector)
 
+    ##  Set the y-scale of the selected object(s) by scaling the first selected object to a certain factor
+    #
+    #   \param scale type(float) scale factor (1.0 = normal scale)
     def setScaleY(self, scale):
         obj = Selection.getSelectedObject(0)
         if obj:
@@ -278,6 +331,9 @@ class ScaleTool(Tool):
                     scale_vector = Vector(scale_factor, scale_factor, scale_factor)
                 Selection.applyOperation(ScaleOperation, scale_vector)
 
+    ##  Set the z-scale of the selected object(s) by scaling the first selected object to a certain factor
+    #
+    #   \param scale type(float) scale factor (1.0 = normal scale)
     def setScaleZ(self, scale):
         obj = Selection.getSelectedObject(0)
         if obj:
@@ -291,6 +347,9 @@ class ScaleTool(Tool):
                 Selection.applyOperation(ScaleOperation, scale_vector)
 
     ##  Convenience function that gives the scale of an object in the coordinate space of the world.
+    #
+    #   \param node type(SceneNode)
+    #   \return scale type(float) scale factor (1.0 = normal scale)
     def _getScaleInWorldCoordinates(self, node):
         original_aabb = node.getOriginalBoundingBox()
         aabb = node.getBoundingBox()

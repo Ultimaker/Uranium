@@ -8,6 +8,8 @@ from UM.Math.Vector import Vector
 
 import math
 
+##  Provides the circular toolhandles for each axis for the rotate tool
+
 class RotateToolHandle(ToolHandle):
     def __init__(self, parent = None):
         super().__init__(parent)

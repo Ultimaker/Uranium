@@ -7,6 +7,8 @@ from UM.Mesh.MeshData import MeshData
 from UM.Mesh.MeshBuilder import MeshBuilder
 from UM.Math.Vector import Vector
 
+##  Provides the two block-shaped toolhandles connected with a line for each axis for the translate tool
+
 class TranslateToolHandle(ToolHandle):
     def __init__(self, parent = None):
         super().__init__(parent)

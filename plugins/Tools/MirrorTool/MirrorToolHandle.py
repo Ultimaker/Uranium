@@ -7,6 +7,8 @@ from UM.Mesh.MeshData import MeshData
 from UM.Mesh.MeshBuilder import MeshBuilder
 from UM.Math.Vector import Vector
 
+##  Provides the two pyramid-shaped toolhandles for each axis for the mirror tool
+
 class MirrorToolHandle(ToolHandle):
     def __init__(self, parent = None):
         super().__init__(parent)

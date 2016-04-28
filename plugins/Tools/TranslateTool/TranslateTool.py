@@ -39,11 +39,17 @@ class TranslateTool(Tool):
 
         self.setExposedProperties("ToolHint", "X", "Y", "Z")
 
+    ##  Get the x-location of the first selected object
+    #
+    #   \param x type(float) location in mm
     def getX(self):
         if Selection.hasSelection():
             return float(Selection.getSelectedObject(0).getWorldPosition().x)
         return 0.0
 
+    ##  Get the y-location of the first selected object
+    #
+    #   \param y type(float) location in mm
     def getY(self):
         if Selection.hasSelection():
             # Note; The switching of z & y is intentional. We display z as up for the user,
@@ -51,6 +57,9 @@ class TranslateTool(Tool):
             return float(Selection.getSelectedObject(0).getWorldPosition().z)
         return 0.0
 
+    ##  Get the z-location of the first selected object
+    #
+    #   \param z type(float) location in mm
     def getZ(self):
         # We want to display based on the bottom instead of the actual coordinate.
         if Selection.hasSelection():
@@ -63,6 +72,9 @@ class TranslateTool(Tool):
             return float(bottom)
         return 0.0
 
+    ##  Set the x-location of the selected object(s) by translating the first selected object
+    #
+    #   \param x type(float) location in mm
     def setX(self, x):
         obj = Selection.getSelectedObject(0)
         if obj:
@@ -71,6 +83,9 @@ class TranslateTool(Tool):
             Selection.applyOperation(TranslateOperation, new_position, set_position = True)
             self.operationStopped.emit(self)
 
+    ##  Set the y-location of the selected object(s) by translating the first selected object
+    #
+    #   \param y type(float) location in mm
     def setY(self, y):
         obj = Selection.getSelectedObject(0)
         if obj:
@@ -82,6 +97,9 @@ class TranslateTool(Tool):
             Selection.applyOperation(TranslateOperation, new_position, set_position = True)
             self.operationStopped.emit(self)
 
+    ##  Set the z-location of the selected object(s) by translating the first selected object
+    #
+    #   \param z type(float) location in mm
     def setZ(self, z):
         obj = Selection.getSelectedObject(0)
         if obj:
