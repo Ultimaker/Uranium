@@ -19,7 +19,7 @@ ManagementPage {
     onAddObject: model.requestAddMachine();
     onRemoveObject: confirmDialog.open();
     onRenameObject: renameDialog.open();
-    onActivateObject: if (activateEnabled) { UM.MachineManager.setActiveMachineInstance(currentItem.name) };
+    onActivateObject: if (activateEnabled) { UM.MachineManager.setActiveMachineInstance(currentItem.name) }
 
     activateEnabled: currentItem != null
     removeEnabled: numInstances > 1
