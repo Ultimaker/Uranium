@@ -166,6 +166,14 @@ class SettingDefinition:
     def addPropertyDefinition(cls, name, property_type, required = False):
         cls.__property_definitions[name] = {"type": property_type, "required": required}
 
+    @classmethod
+    def getFunctionProperties(cls):
+        result = []
+        for key, value in cls.__property_definitions.items():
+            if value["type"] == DefinitionPropertyType.Function:
+                result.append(key)
+        return result
+
     ## protected:
 
     def _deserialize_dict(self, serialized):
