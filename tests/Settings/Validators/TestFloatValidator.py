@@ -27,7 +27,7 @@ def validator():
 
 ##  Tests the creation of a float validator.
 def test_createFloatValidator(validator):
-    assert validator.state == ValidatorState.Unknown
+    assert validator.getState() == ValidatorState.Unknown
 
 ##  The individual test cases for validate().
 #
@@ -68,4 +68,4 @@ def test_validate(data):
 
     validator.validate() #Execute the test.
 
-    assert validator.state == data["answer"]
+    assert validator.getState() == data["answer"]

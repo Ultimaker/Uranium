@@ -39,6 +39,15 @@ class Validator:
     def getMaximumWarning(self):
         pass
 
+    ##  Gets the current state of the validation.
+    #
+    #   After changing any minimum, maximum or warning value and before calling
+    #   the validate function, this should return Unknown. After calling the
+    #   validate function and before changing any minimum, maximum or warning
+    #   value, this should return the result of the validation.
+    def getState(self):
+        pass
+
     ##  Changes the maximum allowed value for this validator.
     #
     #   If the value of the setting instance exceeds this value, the state of
