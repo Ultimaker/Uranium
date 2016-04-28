@@ -22,7 +22,7 @@ class MockSettingInstance:
 ##  Called before the first test function is executed.
 @pytest.fixture
 def validator():
-    setting_instance = TestFloatValidator.MockSettingInstance(0)
+    setting_instance = MockSettingInstance(0)
     return FloatValidator(setting_instance)
 
 ##  Tests the creation of a float validator.
@@ -59,7 +59,7 @@ test_validate_data = [
 
 @pytest.mark.parametrize("data", test_validate_data)
 def test_validate(data):
-    setting_instance = TestFloatValidator.MockSettingInstance(data["current"])
+    setting_instance = MockSettingInstance(data["current"])
     validator = FloatValidator(setting_instance)
     validator.setMinimum(data["minimum"])
     validator.setMaximum(data["maximum"])
