@@ -6,6 +6,7 @@ import collections
 import copy
 
 from UM.Resources import Resources
+from UM.PluginObject import PluginObject
 
 from . import ContainerInterface
 from . import SettingDefinition
@@ -22,7 +23,7 @@ class InvalidOverrideError(Exception):
 ##  A container for SettingDefinition objects.
 #
 #
-class DefinitionContainer(ContainerInterface.ContainerInterface):
+class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
     Version = 1
 
     ##  Constructor

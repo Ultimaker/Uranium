@@ -2,12 +2,13 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 from UM.Signal import Signal, signalemitter
+from UM.PluginObject import PluginObject
 
 from . import ContainerInterface
 
 ##  A stack of setting containers to handle setting value retrieval.
 @signalemitter
-class ContainerStack(ContainerInterface.ContainerInterface):
+class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     Version = 1
 
     ##  Constructor

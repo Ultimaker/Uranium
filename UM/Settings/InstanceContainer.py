@@ -2,6 +2,7 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 from UM.Signal import Signal, signalemitter
+from UM.PluginObject import PluginObject
 
 from . import ContainerInterface
 
@@ -9,7 +10,7 @@ from . import ContainerInterface
 #
 #
 @signalemitter
-class InstanceContainer(ContainerInterface.ContainerInterface):
+class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
     Version = 1
 
     ##  Constructor
