@@ -1,6 +1,13 @@
 # Copyright (c) 2016 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
+import ast
+
+from UM.Logger import Logger
+
+class IllegalMethodError(Exception):
+    pass
+
 ##  Encapsulates Python code that provides a simple value calculation function.
 #
 class SettingFunction:
@@ -12,10 +19,29 @@ class SettingFunction:
 
         self._code = code
         self._settings = []
+        self._compiled = None
+
+        try:
+            tree = ast.parse(self._code, "eval")
+            self._settings = _SettingExpressionVisitor().visit(tree)
+            self._compiled = compile(self._code, repr(self), "eval")
+        except (SyntaxError, TypeError) as e:
+            Logger.log("e", "Parse error in function ({1}) for setting: {0}".format(str(e), self._code))
+        except IllegalMethodError as e:
+            Logger.log("e", "Use of illegal method {0} in function ({2}) for setting".format(str(e), self._code))
+        except Exception as e:
+            Logger.log("e", "Exception in function ({1}) for setting: {1}".format(str(e), self._code))
 
     ##  Call the actual function to calculate the value.
-    def __call__(self, *args, **kwargs):
-        pass
+    def __call__(self, value_provider, *args, **kwargs):
+        if not value_provider:
+            return None
+
+        locals = { }
+        for name in self._settings:
+            locals[name] = value_provider.getValue(name)
+
+        return eval(self._compiled, globals(), locals)
 
     def __eq__(self, other):
         if not isinstance(other, SettingFunction):
@@ -26,3 +52,31 @@ class SettingFunction:
     ##  Retrieve a list of the keys of all the settings used in this function.
     def getUsedSettings(self):
         return self._settings
+
+class _SettingExpressionVisitor(ast.NodeVisitor):
+    def __init__(self):
+        super().__init__()
+        self.names = []
+
+    def visit(self, node):
+        super().visit(node)
+        return self.names
+
+    def visit_Name(self, node): # [CodeStyle: ast.NodeVisitor requires this function name]
+        if node.id in self._blacklist:
+            raise IllegalMethodError(node.id)
+
+        if node.id not in self._knownNames and node.id not in __builtins__:
+            self.names.append(node.id)
+
+    _knownNames = [
+        "math"
+    ]
+
+    _blacklist = [
+        "sys",
+        "os",
+        "import",
+        "__import__"
+    ]
+
