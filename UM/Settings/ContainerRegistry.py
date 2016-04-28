@@ -2,6 +2,7 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 from UM.PluginRegistry import PluginRegistry
+from UM.MimeTypeDatabase import MimeType, MimeTypeDatabase
 
 ##  Central class to manage all Setting containers.
 #
@@ -9,6 +10,25 @@ from UM.PluginRegistry import PluginRegistry
 class ContainerRegistry:
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        mime = MimeType(
+            name = "application/x-uranium-definitioncontainer",
+            comment = "Uranium Definition Container",
+            suffixes = [ "def.json" ]
+        )
+        MimeTypeDatabase.addMimeType(mime)
+        mime = MimeType(
+            name = "application/x-uranium-instancecontainer",
+            comment = "Uranium Instance Container",
+            suffixes = [ "inst.cfg" ]
+        )
+        MimeTypeDatabase.addMimeType(mime)
+        mime = MimeType(
+            name = "application/x-uranium-containerstack",
+            comment = "Uranium Container Stack",
+            suffixes = [ "stack.cfg" ]
+        )
+        MimeTypeDatabase.addMimeType(mime)
 
         self._containers = []
 
