@@ -1,10 +1,9 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-from UM.Resources import Resources
-
 import gettext
 
+from UM.Resources import Resources
 
 ##  Wraps a gettext translation catalog for simplified use.
 #
@@ -23,7 +22,7 @@ import gettext
 #   translation tags. Please see the [translation guide](docs/translations.md)
 #   for details.
 #
-class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start with a upper case. But i18n is lower case by convention.]
+class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start with a upper case. But i18n is lower case by convention.] pylint: disable=invalid-name
     ##  Constructor.
     #
     #   \param name The name of the catalog to load.
@@ -33,7 +32,7 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
     #
     #   \note When `language` is `default`, the language to load can be overridden
     #   using the "LANGUAGE" environment variable.
-    def __init__(self, name = None, language = "default"):
+    def __init__(self, name = None, language = "default"): #pylint: disable=bad-whitespace
         self.__name = name
         self.__language = language
         self.__translation = None
@@ -172,7 +171,7 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
             self.__language = self.__application.getApplicationLanguage()
 
         for path in Resources.getAllPathsForType(Resources.i18n):
-            if gettext.find(self.__name, path, languages = [self.__language]):
+            if gettext.find(self.__name, path, languages = [self.__language]): # pylint: disable=bad-whitespace
                 self.__translation = gettext.translation(self.__name, path, languages=[self.__language])
 
         self.__require_update = False

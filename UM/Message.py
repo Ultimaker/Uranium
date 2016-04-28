@@ -5,7 +5,7 @@ from UM.Application import Application
 from UM.Signal import Signal
 
 
-## Class for displaying messages in the application. 
+## Class for displaying messages in the application.
 #
 class Message:
     ##  Class for displaying messages in the application
@@ -13,15 +13,15 @@ class Message:
     #   \param lifetime How long should the message be displayed (in seconds).
     #                   if lifetime is 0, it will never automatically be destroyed.
     #   \param dismissible Can the user dismiss the message?
-    #   \progress Is there nay progress to be displayed? if -1, it's seen as interdeterminate
-    def __init__(self, text = "", lifetime = 10, dismissable = True, progress = None):
+    #   \progress Is there nay progress to be displayed? if -1, it's seen as indeterminate
+    def __init__(self, text = "", lifetime = 10, dismissable = True, progress = None): #pylint: disable=bad-whitespace
         super().__init__()
         self._application = Application.getInstance()
         self._visible = False
         self._text = text
         self._progress = progress # If progress is set to -1, the progress is seen as indeterminate
         self._max_progress = 100
-        self._lifetime = lifetime 
+        self._lifetime = lifetime
         self._lifetime_timer = None
         self._dismissable = dismissable # Can the message be closed by user?
         self._actions = []
@@ -51,11 +51,11 @@ class Message:
                 self._lifetime_timer.start()
 
     ##  Add an action to the message
-    #   Actions are usefull for making messages that require input from the user.
+    #   Actions are useful for making messages that require input from the user.
     #   \param action_id
     #   \param name The displayed name of the action
     #   \param icon Source of the icon to be used
-    #   \param description Description of the item (used for mouseover, etc)
+    #   \param description Description of the item (used for mouse over, etc)
     def addAction(self, action_id, name, icon, description):
         self._actions.append({"action_id": action_id, "name": name, "icon": icon, "description": description})
 
