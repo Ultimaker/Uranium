@@ -5,10 +5,12 @@ from UM.Math.Matrix import Matrix
 from UM.Math.Vector import Vector
 from UM.Math.Quaternion import Quaternion
 from UM.Math.AxisAlignedBox import AxisAlignedBox
+
 from UM.Signal import Signal, SignalEmitter
 from UM.Job import Job
 from UM.Mesh.MeshData import MeshData
 from UM.Logger import Logger
+
 from copy import deepcopy
 
 
@@ -17,6 +19,9 @@ from copy import deepcopy
 #   These objects can hold a mesh and multiple children. Each node has a transformation matrix
 #   that maps it it's parents space to the local space (it's inverse maps local space to parent).
 #
+#   SceneNodes can be "Decorated" by adding SceneNodeDecorator objects.
+#   These decorators can add functionality to scene nodes.
+#   \sa SceneNodeDecorator
 #   \todo Add unit testing
 class SceneNode(SignalEmitter):
     class TransformSpace:
@@ -24,40 +29,50 @@ class SceneNode(SignalEmitter):
         Parent = 2
         World = 3
 
+    ##  Construct a scene node.
+    #   \param parent The parent of this node (if any). Only a root node should have None as a parent.
+    #   \param kwargs Keyword arguments.
+    #                 Possible keywords:
+    #                 - visible \type{bool} Is the SceneNode (and thus, all it's children) visible? Defaults to True
+    #                 - name \type{string} Name of the SceneNode. Defaults to empty string.
     def __init__(self, parent = None, **kwargs):
-        super().__init__() # Call super to make multiple inheritence work.
+        super().__init__()  # Call super to make multiple inheritance work.
 
         self._children = []
         self._mesh_data = None
 
+        # Local transformation (from parent to local)
+        self._transformation = Matrix()
+
+        # Convenience "components" of the transformation
         self._position = Vector()
         self._scale = Vector(1.0, 1.0, 1.0)
         self._shear = Vector(0.0, 0.0, 0.0)
         self._orientation = Quaternion()
 
-        self._transformation = Matrix() #local transformation
+        # World transformation (from root to local)
         self._world_transformation = Matrix()
 
+        # Convenience "components" of the world_transformation
         self._derived_position = Vector()
         self._derived_orientation = Quaternion()
         self._derived_scale = Vector()
 
-        self._inherit_orientation = True
-        self._inherit_scale = True
-
-        self._center_position = Vector(0.0, 0.0, 0.0)
-
         self._parent = parent
-        self._enabled = True
-        self._selectable = False
-        self._calculate_aabb = True
-        self._aabb = None
-        self._original_aabb = None
-        self._aabb_job = None
+        self._enabled = True  # Can this SceneNode be modified in any way?
+        self._selectable = False  # Can this SceneNode be selected in any way?
+
+        self._calculate_aabb = True  # Should the AxisAlignedBounxingBox be re-calculated?
+        self._aabb = None  # The AxisAligned bounding box.
+        self._original_aabb = None  # The AxisAligned bounding box, without transformations.
+        self._aabb_job = None  # The job used to (re) calculate the AABB
+        self._bounding_box_mesh = None
+
         self._visible = kwargs.get("visible", True)
         self._name = kwargs.get("name", "")
         self._decorators = []
-        self._bounding_box_mesh = None
+
+        ## Signals
         self.boundingBoxChanged.connect(self.calculateBoundingBoxMesh)
         self.parentChanged.connect(self._onParentChanged)
 
@@ -80,6 +95,9 @@ class SceneNode(SignalEmitter):
         self.calculateBoundingBoxMesh()
         return copy
 
+    ##  Set the center position of this node.
+    #   This is used to modify it's mesh data (and it's children) in such a way that they are centered.
+    #   In most cases this means that we use the center of mass as center (which most objects don't use)
     def setCenterPosition(self, center):
         if self._mesh_data:
             m = Matrix()
@@ -94,76 +112,92 @@ class SceneNode(SignalEmitter):
     def getParent(self):
         return self._parent
 
+    ##  Get the MeshData of the bounding box
+    #   \returns \type{MeshData} Bounding box mesh.
     def getBoundingBoxMesh(self):
         return self._bounding_box_mesh
 
+    ##  (re)Calculate the bounding box mesh.
     def calculateBoundingBoxMesh(self):
         if self._aabb:
             self._bounding_box_mesh = MeshData()
             rtf = self._aabb.maximum
             lbb = self._aabb.minimum
 
-            self._bounding_box_mesh.addVertex(rtf.x, rtf.y, rtf.z) #Right - Top - Front
-            self._bounding_box_mesh.addVertex(lbb.x, rtf.y, rtf.z) #Left - Top - Front
+            self._bounding_box_mesh.addVertex(rtf.x, rtf.y, rtf.z)  # Right - Top - Front
+            self._bounding_box_mesh.addVertex(lbb.x, rtf.y, rtf.z)  # Left - Top - Front
 
-            self._bounding_box_mesh.addVertex(lbb.x, rtf.y, rtf.z) #Left - Top - Front
-            self._bounding_box_mesh.addVertex(lbb.x, lbb.y, rtf.z) #Left - Bottom - Front
+            self._bounding_box_mesh.addVertex(lbb.x, rtf.y, rtf.z)  # Left - Top - Front
+            self._bounding_box_mesh.addVertex(lbb.x, lbb.y, rtf.z)  # Left - Bottom - Front
 
-            self._bounding_box_mesh.addVertex(lbb.x, lbb.y, rtf.z) #Left - Bottom - Front
-            self._bounding_box_mesh.addVertex(rtf.x, lbb.y, rtf.z) #Right - Bottom - Front
+            self._bounding_box_mesh.addVertex(lbb.x, lbb.y, rtf.z)  # Left - Bottom - Front
+            self._bounding_box_mesh.addVertex(rtf.x, lbb.y, rtf.z)  # Right - Bottom - Front
 
-            self._bounding_box_mesh.addVertex(rtf.x, lbb.y, rtf.z) #Right - Bottom - Front
-            self._bounding_box_mesh.addVertex(rtf.x, rtf.y, rtf.z) #Right - Top - Front
+            self._bounding_box_mesh.addVertex(rtf.x, lbb.y, rtf.z)  # Right - Bottom - Front
+            self._bounding_box_mesh.addVertex(rtf.x, rtf.y, rtf.z)  # Right - Top - Front
 
-            self._bounding_box_mesh.addVertex(rtf.x, rtf.y, lbb.z) #Right - Top - Back
-            self._bounding_box_mesh.addVertex(lbb.x, rtf.y, lbb.z) #Left - Top - Back
+            self._bounding_box_mesh.addVertex(rtf.x, rtf.y, lbb.z)  # Right - Top - Back
+            self._bounding_box_mesh.addVertex(lbb.x, rtf.y, lbb.z)  # Left - Top - Back
 
-            self._bounding_box_mesh.addVertex(lbb.x, rtf.y, lbb.z) #Left - Top - Back
-            self._bounding_box_mesh.addVertex(lbb.x, lbb.y, lbb.z) #Left - Bottom - Back
+            self._bounding_box_mesh.addVertex(lbb.x, rtf.y, lbb.z)  # Left - Top - Back
+            self._bounding_box_mesh.addVertex(lbb.x, lbb.y, lbb.z)  # Left - Bottom - Back
 
-            self._bounding_box_mesh.addVertex(lbb.x, lbb.y, lbb.z) #Left - Bottom - Back
-            self._bounding_box_mesh.addVertex(rtf.x, lbb.y, lbb.z) #Right - Bottom - Back
+            self._bounding_box_mesh.addVertex(lbb.x, lbb.y, lbb.z)  # Left - Bottom - Back
+            self._bounding_box_mesh.addVertex(rtf.x, lbb.y, lbb.z)  # Right - Bottom - Back
 
-            self._bounding_box_mesh.addVertex(rtf.x, lbb.y, lbb.z) #Right - Bottom - Back
-            self._bounding_box_mesh.addVertex(rtf.x, rtf.y, lbb.z) #Right - Top - Back
+            self._bounding_box_mesh.addVertex(rtf.x, lbb.y, lbb.z)  # Right - Bottom - Back
+            self._bounding_box_mesh.addVertex(rtf.x, rtf.y, lbb.z)  # Right - Top - Back
 
-            self._bounding_box_mesh.addVertex(rtf.x, rtf.y, rtf.z) #Right - Top - Front
-            self._bounding_box_mesh.addVertex(rtf.x, rtf.y, lbb.z) #Right - Top - Back
+            self._bounding_box_mesh.addVertex(rtf.x, rtf.y, rtf.z)  # Right - Top - Front
+            self._bounding_box_mesh.addVertex(rtf.x, rtf.y, lbb.z)  # Right - Top - Back
 
-            self._bounding_box_mesh.addVertex(lbb.x, rtf.y, rtf.z) #Left - Top - Front
-            self._bounding_box_mesh.addVertex(lbb.x, rtf.y, lbb.z) #Left - Top - Back
+            self._bounding_box_mesh.addVertex(lbb.x, rtf.y, rtf.z)  # Left - Top - Front
+            self._bounding_box_mesh.addVertex(lbb.x, rtf.y, lbb.z)  # Left - Top - Back
 
-            self._bounding_box_mesh.addVertex(lbb.x, lbb.y, rtf.z) #Left - Bottom - Front
-            self._bounding_box_mesh.addVertex(lbb.x, lbb.y, lbb.z) #Left - Bottom - Back
+            self._bounding_box_mesh.addVertex(lbb.x, lbb.y, rtf.z)  # Left - Bottom - Front
+            self._bounding_box_mesh.addVertex(lbb.x, lbb.y, lbb.z)  # Left - Bottom - Back
 
-            self._bounding_box_mesh.addVertex(rtf.x, lbb.y, rtf.z) #Right - Bottom - Front
-            self._bounding_box_mesh.addVertex(rtf.x, lbb.y, lbb.z) #Right - Bottom - Back
+            self._bounding_box_mesh.addVertex(rtf.x, lbb.y, rtf.z)  # Right - Bottom - Front
+            self._bounding_box_mesh.addVertex(rtf.x, lbb.y, lbb.z)  # Right - Bottom - Back
         else:
             self._resetAABB()
 
+    ##  Handler for the ParentChanged signal
+    #   \param node Node from which this event was triggered.
     def _onParentChanged(self, node):
         for child in self.getChildren():
             child.parentChanged.emit(self)
 
+    ##  Signal for when a \type{SceneNodeDecorator} is added / removed.
     decoratorsChanged = Signal()
-    
+
+    ##  Add a SceneNodeDecorator to this SceneNode.
+    #   \param \type{SceneNodeDecorator} decorator The decorator to add.
+    #   TODO: GetDecorator seems to imply that a scne node can only have a single decorator of a type, but we never enforce this.
     def addDecorator(self, decorator):
         decorator.setNode(self)
         self._decorators.append(decorator)
         self.decoratorsChanged.emit(self)
 
+    ##  Get all SceneNodeDecorators that decorate this SceneNode.
+    #   \return list of all SceneNodeDecorators.
     def getDecorators(self):
         return self._decorators
 
+    ##  Get SceneNodeDecorators by type.
+    #   \param dec_type type of decorator to return.
     def getDecorator(self, dec_type):
         for decorator in self._decorators:
             if type(decorator) == dec_type:
                 return decorator
 
+    ##  Remove all decorators
     def removeDecorators(self):
         self._decorators = []
         self.decoratorsChanged.emit(self)
 
+    ##  Remove decorator by type.
+    #   \param dec_type type of the decorator to remove.
     def removeDecorator(self, dec_type):
         for decorator in self._decorators:
             if type(decorator) == dec_type:
@@ -171,6 +205,11 @@ class SceneNode(SignalEmitter):
                 self.decoratorsChanged.emit(self)
                 break
 
+    ##  Call a decoration of this SceneNode.
+    #   SceneNodeDecorators add Decorations, which are calable functions.
+    #   \param \type{string} function The function to be called.
+    #   \param *args
+    #   \param **kwargs
     def callDecoration(self, function, *args, **kwargs):
         for decorator in self._decorators:
             if hasattr(decorator, function):
@@ -180,6 +219,8 @@ class SceneNode(SignalEmitter):
                     Logger.log("e", "Exception calling decoration %s: %s", str(function), str(e))
                     return None
 
+    ##  Does this SceneNode have a certain Decoration (as defined by a Decorator)
+    #   \param \type{string} function the function to check for.
     def hasDecoration(self, function):
         for decorator in self._decorators:
             if hasattr(decorator, function):
@@ -192,7 +233,8 @@ class SceneNode(SignalEmitter):
     def setName(self, name):
         self._name = name
 
-    ##  How many nodes is this node removed from the root
+    ##  How many nodes is this node removed from the root?
+    #   \return |tupe{int} Steps from root (0 means it -is- the root).
     def getDepth(self):
         if self._parent is None:
             return 0
@@ -203,7 +245,6 @@ class SceneNode(SignalEmitter):
     def setParent(self, scene_node):
         if self._parent:
             self._parent.removeChild(self)
-        #self._parent = scene_node
 
         if scene_node:
             scene_node.addChild(self)
@@ -212,13 +253,14 @@ class SceneNode(SignalEmitter):
     parentChanged = Signal()
 
     ##  \brief Get the visibility of this node. The parents visibility overrides the visibility.
-    #   TODO: Let renderer actually use the visibility to decide wether to render or not.
+    #   TODO: Let renderer actually use the visibility to decide whether to render or not.
     def isVisible(self):
         if self._parent != None and self._visible:
             return self._parent.isVisible()
         else:
             return self._visible
 
+    ##  Set the visibility of this SceneNode.
     def setVisible(self, visible):
         self._visible = visible
 
@@ -230,8 +272,6 @@ class SceneNode(SignalEmitter):
     ##  \brief Get the transformed mesh data from the scene node/object, based on the transformation of scene nodes wrt root.
     #   \returns MeshData
     def getMeshDataTransformed(self):
-        #transformed_mesh = deepcopy(self._mesh_data)
-        #transformed_mesh.transform(self.getWorldTransformation())
         return self._mesh_data.getTransformed(self.getWorldTransformation())
 
     ##  \brief Set the mesh of this node/object
