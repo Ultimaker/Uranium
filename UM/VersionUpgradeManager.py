@@ -36,7 +36,7 @@ class VersionUpgradeManager:
     #   This initialises the cache for shortest upgrade paths, and registers the
     #   version upgrade plug-ins.
     def __init__(self):
-        self._versionUpgrades = [] #All upgrade plug-ins.
+        self._versionUpgrades = [] # All upgrade plug-ins.
         self._registry = PluginRegistry.getInstance()
         PluginRegistry.addType("version_upgrade", self._addVersionUpgrade)
 
@@ -94,20 +94,20 @@ class VersionUpgradeManager:
         by_destination_version = self._sortByDestinationVersion(configuration_type)
         result = {}
 
-        #Perform a breadth-first search.
+        # Perform a breadth-first search.
         registry = PluginRegistry.getInstance()
-        front = collections.deque() #Use as a queue for breadth-first iteration: Append right, pop left.
+        front = collections.deque() # Use as a queue for breadth-first iteration: Append right, pop left.
         front.append(destination_version)
-        done = set() #Flag explored versions as done.
+        done = set() # Flag explored versions as done.
         while len(front) > 0:
-            version = front.popleft() #To make it a queue, pop on the opposite side of where you append!
-            if version in by_destination_version: #We can upgrade to this version.
+            version = front.popleft() # To make it a queue, pop on the opposite side of where you append!
+            if version in by_destination_version: # We can upgrade to this version.
                 for neighbour in by_destination_version[version]:
                     source_version = registry.getMetaData(neighbour.getPluginId())["version_upgrade"][configuration_type]["from"]
-                    if source_version in done: #Already encountered elsewhere. No need to re-compute.
+                    if source_version in done: # Already encountered elsewhere. No need to re-compute.
                         continue
                     front.append(source_version)
-                    if source_version not in result: #First time we encounter this version. Due to breadth-first search, this must be part of the shortest path then.
+                    if source_version not in result: # First time we encounter this version. Due to breadth-first search, this must be part of the shortest path then.
                         result[source_version] = neighbour
             done.add(version)
 
@@ -143,9 +143,9 @@ class VersionUpgradeManager:
     #   result.
     #   \return The filename of each file in the specified directory.
     def _getFilesInDirectory(self, directory, exclude_paths = []):
-        exclude_paths = [os.path.join(directory, exclude_path) for exclude_path in exclude_paths] #Prepend the specified directory before each exclude path.
+        exclude_paths = [os.path.join(directory, exclude_path) for exclude_path in exclude_paths] # Prepend the specified directory before each exclude path.
         for (path, directory_names, filenames) in os.walk(directory):
-            directory_names[:] = [directory_name for directory_name in directory_names if os.path.join(path, directory_name) not in exclude_paths] #Prune the exclude paths.
+            directory_names[:] = [directory_name for directory_name in directory_names if os.path.join(path, directory_name) not in exclude_paths] # Prune the exclude paths.
             for filename in filenames:
                 yield os.path.join(os.path.relpath(path, directory), filename)
 
@@ -181,12 +181,12 @@ class VersionUpgradeManager:
         result = {}
         for plugin in self._versionUpgrades:
             metadata = self._registry.getMetaData(plugin.getPluginId())["version_upgrade"]
-            if configuration_type not in metadata: #Filter by configuration_type.
+            if configuration_type not in metadata: # Filter by configuration_type.
                 continue
             destination = metadata[configuration_type]["to"]
-            if not destination in result: #Entry doesn't exist yet.
+            if not destination in result: # Entry doesn't exist yet.
                 result[destination] = []
-            result[destination].append(plugin) #Sort this plug-in under the correct entry.
+            result[destination].append(plugin) # Sort this plug-in under the correct entry.
         return result
 
     ##  Stores an old version of a configuration file away.
@@ -202,16 +202,16 @@ class VersionUpgradeManager:
     #   file in question.
     #   \param old_version The version number in the file in question.
     def _storeOldFile(self, resource_directory, relative_path, old_version):
-        try: #For speed, first just try to rename the file without checking if the directory exists and stuff.
+        try: # For speed, first just try to rename the file without checking if the directory exists and stuff.
             os.rename(os.path.join(resource_directory,                          relative_path),
-                      os.path.join(resource_directory, "old", str(old_version), relative_path)) #Store the old file away.
-        except FileNotFoundError: #Assume the target directory doesn't exist yet. The other case is that the file itself doesn't exist, but that's a coding error anyway.
+                      os.path.join(resource_directory, "old", str(old_version), relative_path)) # Store the old file away.
+        except FileNotFoundError: # Assume the target directory doesn't exist yet. The other case is that the file itself doesn't exist, but that's a coding error anyway.
             try:
                 os.makedirs(os.path.join(resource_directory, "old", str(old_version)))
-            except OSError: #Assume that the directory already existed. Otherwise it's probably a permission error or OS-internal error, in which case we can't write anyway.
+            except OSError: # Assume that the directory already existed. Otherwise it's probably a permission error or OS-internal error, in which case we can't write anyway.
                 pass
             os.rename(os.path.join(resource_directory,                          relative_path),
-                      os.path.join(resource_directory, "old", str(old_version), relative_path)) #Try again!
+                      os.path.join(resource_directory, "old", str(old_version), relative_path)) # Try again!
 
     ##  Performs the upgrade process of a single configuration type.
     #
@@ -233,20 +233,20 @@ class VersionUpgradeManager:
                 configuration = file_handle.read()
             try:
                 old_version = get_old_version(configuration)
-            except: #Not a valid file. Can't upgrade it then.
+            except: # Not a valid file. Can't upgrade it then.
                 continue
-            if old_version not in paths: #No upgrade to bring this up to the most recent version.
+            if old_version not in paths: # No upgrade to bring this up to the most recent version.
                 continue
             version = old_version
             while version != new_version:
-                upgrade = paths[version] #Get the upgrade to apply from this place.
+                upgrade = paths[version] # Get the upgrade to apply from this place.
                 try:
-                    configuration = getattr(upgrade, upgrade_method_name)(configuration) #Do the actual upgrade.
+                    configuration = getattr(upgrade, upgrade_method_name)(configuration) # Do the actual upgrade.
                 except Exception as e:
                     Logger.log("w", "Exception in " + configuration_type + " upgrade with " + upgrade.getPluginId() + ": " + str(e))
-                    break #Continue with next file.
+                    break # Continue with next file.
                 version = self._registry.getMetaData(upgrade.getPluginId())["version_upgrade"][configuration_type]["to"]
             if version != old_version:
                 self._storeOldFile(base_directory, configuration_file, old_version)
                 with open(os.path.join(base_directory, configuration_file), "a") as file_handle:
-                    file_handle.write(configuration) #Save the new file.
+                    file_handle.write(configuration) # Save the new file.

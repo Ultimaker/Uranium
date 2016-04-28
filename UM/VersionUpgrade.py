@@ -23,7 +23,7 @@ class VersionUpgrade(PluginObject):
     #   \param serialised A machine instance, serialised in an old file format.
     #   \return A machine instance, serialised in a newer file format.
     def upgradeMachineInstance(self, serialised):
-        Logger.log("w", "This version upgrade plug-in defines no way to upgrade machine instances.") #A subclass should implement this.
+        Logger.log("w", "This version upgrade plug-in defines no way to upgrade machine instances.") # A subclass should implement this.
 
     ##  Upgrades a preferences file from one file format to another.
     #
@@ -33,7 +33,7 @@ class VersionUpgrade(PluginObject):
     #   \param serialised A preferences file, serialised in an old file format.
     #   \return A preferences file, serialised in a newer file format.
     def upgradePreferences(self, serialised):
-        Logger.log("w", "This version upgrade plug-in defines no way to upgrade preferences.") #A subclass should implement this.
+        Logger.log("w", "This version upgrade plug-in defines no way to upgrade preferences.") # A subclass should implement this.
 
     ##  Upgrades a profile from one file format to another.
     #
@@ -43,4 +43,4 @@ class VersionUpgrade(PluginObject):
     #   \param serialised A profile, serialised in an old file format.
     #   \return A profile, serialised in a newer file format.
     def upgradeProfile(self, serialised):
-        Logger.log("w", "This version upgrade plug-in defines no way to upgrade profiles.") #A subclass should implement this.
+        Logger.log("w", "This version upgrade plug-in defines no way to upgrade profiles.") # A subclass should implement this.

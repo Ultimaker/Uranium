@@ -1,8 +1,8 @@
 # Copyright (c) 2016 Ultimaker B.V.
 # Cura is released under the terms of the AGPLv3 or higher.
 
-from UM.Application import Application #To use the plug-in manager.
-from UM.PluginObject import PluginObject #To create artificial plug-ins.
+from UM.Application import Application # To use the plug-in manager.
+from UM.PluginObject import PluginObject # To create artificial plug-ins.
 from UM.VersionUpgrade import VersionUpgrade
 from UM.VersionUpgradeManager import VersionUpgradeManager
 
@@ -92,35 +92,35 @@ class TestVersionUpgradeManager():
     def test_shortest_paths(self, data):
         registry = Application.getInstance().getPluginRegistry()
         self._loadUpgrades(data["upgrades"])
-        shortest_paths = self._upgrade_manager._findShortestUpgradePaths(data["preference_type"], data["destination"]) #Find the shortest path.
+        shortest_paths = self._upgrade_manager._findShortestUpgradePaths(data["preference_type"], data["destination"]) # Find the shortest path.
 
-        #Convert the upgrades in the path to indices in our original data.
+        # Convert the upgrades in the path to indices in our original data.
         to_indices = {}
         for version, upgrade in shortest_paths.items():
             metadata = registry.getMetaData(upgrade.getPluginId())["version_upgrade"]
-            for key, value in metadata.items(): #Get just the first element of the dict. There is always only one.
+            for key, value in metadata.items(): # Get just the first element of the dict. There is always only one.
                 preference_type = key
                 from_version = metadata[preference_type]["from"]
                 to_version = metadata[preference_type]["to"]
                 break
-            for i in range(0, len(data["upgrades"])): #Which index does it have?
+            for i in range(0, len(data["upgrades"])): # Which index does it have?
                 if data["upgrades"][i]["from_version"] == from_version and data["upgrades"][i]["to_version"] == to_version and data["upgrades"][i]["preference_type"] == preference_type:
                     to_indices[from_version] = i
                     break
 
-        #Compare with the answers.
+        # Compare with the answers.
         for answer in data["answers"]:
-            if len(answer) != len(to_indices): #Not the same amount of source versions.
-                continue #Incorrect answer.
+            if len(answer) != len(to_indices): # Not the same amount of source versions.
+                continue # Incorrect answer.
             for version, upgrade in answer.items():
-                if version not in to_indices: #Key is missing!
-                    break #Incorrect answer.
-                if answer[version] != to_indices[version]: #Different plug-in for this version!
-                    break #Incorrect answer.
-            else: #No indices were different. Answer is correct.
+                if version not in to_indices: # Key is missing!
+                    break # Incorrect answer.
+                if answer[version] != to_indices[version]: # Different plug-in for this version!
+                    break # Incorrect answer.
+            else: # No indices were different. Answer is correct.
                 break
-        else: #No answers were correct.
-            assert False #Incorrect path.
+        else: # No answers were correct.
+            assert False # Incorrect path.
 
     ##  Create a plug-in registry with the specified upgrade plug-ins in it.
     #
@@ -128,11 +128,11 @@ class TestVersionUpgradeManager():
     #   obtained from test_shortest_paths_data.
     def _loadUpgrades(self, upgrades):
         registry = Application.getInstance().getPluginRegistry()
-        for upgrade in upgrades: #Artificially fill the plug-in registry with my own metadata!
+        for upgrade in upgrades: # Artificially fill the plug-in registry with my own metadata!
             plugin_object = PluginObject()
-            metadata = { #Correctly fill the metadata for this plug-in.
+            metadata = { # Correctly fill the metadata for this plug-in.
                 "plugin": {
-                    "name": "Upgrade Test", #Note: Don't use internationalisation here, lest it be grabbed by gettext.
+                    "name": "Upgrade Test", # Note: Don't use internationalisation here, lest it be grabbed by gettext.
                     "author": "Ultimaker",
                     "version": "1.0",
                     "description": "Upgrade plug-in to test with.",
@@ -143,7 +143,7 @@ class TestVersionUpgradeManager():
             metadata["version_upgrade"][upgrade["preference_type"]] = {}
             metadata["version_upgrade"][upgrade["preference_type"]]["from"] = upgrade["from_version"]
             metadata["version_upgrade"][upgrade["preference_type"]]["to"] = upgrade["to_version"]
-            id = upgrade["preference_type"] + "-from-" + str(upgrade["from_version"]) + "-to-" + str(upgrade["to_version"]) #ID becomes "type-from-#-to-#".
+            id = upgrade["preference_type"] + "-from-" + str(upgrade["from_version"]) + "-to-" + str(upgrade["to_version"]) # ID becomes "type-from-#-to-#".
             plugin_object.setPluginId(id)
             registry._plugins[id] = plugin_object
             registry._meta_data[id] = metadata
