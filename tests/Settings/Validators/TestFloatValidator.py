@@ -57,7 +57,7 @@ test_validate_data = [
     ({"description": "Maximum < Minimum",    "minimum": 15.0, "maximum": 10.0,         "min_warning": 1.0,          "max_warning": 9.0,  "current": 12.5,         "answer": ValidatorState.Exception})
 ]
 
-@pytest.mark.parameterize("data", test_validate_data)
+@pytest.mark.parametrize("data", test_validate_data)
 def test_validate(self, data):
     setting_instance = TestFloatValidator.MockSettingInstance(data["current"])
     validator = FloatValidator(setting_instance)
