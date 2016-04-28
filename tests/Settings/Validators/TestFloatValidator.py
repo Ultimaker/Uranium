@@ -58,7 +58,7 @@ test_validate_data = [
 ]
 
 @pytest.mark.parametrize("data", test_validate_data)
-def test_validate(self, data):
+def test_validate(data):
     setting_instance = TestFloatValidator.MockSettingInstance(data["current"])
     validator = FloatValidator(setting_instance)
     validator.setMinimum(data["minimum"])
