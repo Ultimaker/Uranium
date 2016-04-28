@@ -71,7 +71,11 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
     #
     #   Reimplemented from ContainerInterface
     def getValue(self, key):
-        return None
+        definitions = self.findDefinitions({"key": key})
+        if not definitions:
+            return None
+
+        return definitions[0].default_value
 
     ##  \copydoc ContainerInterface::serialize
     #
