@@ -56,7 +56,7 @@ class SettingDefinition:
 
     ##  Override __getattr__ to provide access to definition properties.
     def __getattr__(self, name):
-        if name in self.__property_definitions:
+        if name in self.__property_definitions and name in self.__property_values:
             return self.__property_values[name]
 
         raise AttributeError("'SettingDefinition' object has no attribute '{0}'".format(name))
