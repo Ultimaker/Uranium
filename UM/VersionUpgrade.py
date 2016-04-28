@@ -24,6 +24,7 @@ class VersionUpgrade(PluginObject):
     #   \return A machine instance, serialised in a newer file format.
     def upgradeMachineInstance(self, serialised):
         Logger.log("w", "This version upgrade plug-in defines no way to upgrade machine instances.") # A subclass should implement this.
+        raise Exception("Machine instance upgrade is not implemented in this plug-in.")
 
     ##  Upgrades a preferences file from one file format to another.
     #
@@ -34,6 +35,7 @@ class VersionUpgrade(PluginObject):
     #   \return A preferences file, serialised in a newer file format.
     def upgradePreferences(self, serialised):
         Logger.log("w", "This version upgrade plug-in defines no way to upgrade preferences.") # A subclass should implement this.
+        raise Exception("Preferences upgrade is not implemented in this plug-in.")
 
     ##  Upgrades a profile from one file format to another.
     #
@@ -44,3 +46,4 @@ class VersionUpgrade(PluginObject):
     #   \return A profile, serialised in a newer file format.
     def upgradeProfile(self, serialised):
         Logger.log("w", "This version upgrade plug-in defines no way to upgrade profiles.") # A subclass should implement this.
+        raise Exception("Profile upgrade is not implemented in this plug-in.")
