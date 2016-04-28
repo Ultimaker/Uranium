@@ -234,6 +234,7 @@ class VersionUpgradeManager:
             try:
                 old_version = get_old_version(configuration)
             except: # Not a valid file. Can't upgrade it then.
+                Logger.log("w", "Invalid %s file: %s", configuration_type, configuration_file)
                 continue
             if old_version not in paths: # No upgrade to bring this up to the most recent version.
                 continue
