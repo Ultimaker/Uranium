@@ -4,8 +4,6 @@
 from UM.Event import MouseEvent, KeyEvent
 from UM.Tool import Tool
 from UM.Application import Application
-from UM.Scene.BoxRenderer import BoxRenderer
-from UM.Scene.RayRenderer import RayRenderer
 from UM.Scene.Selection import Selection
 from UM.Scene.Iterator.BreadthFirstIterator import BreadthFirstIterator
 
