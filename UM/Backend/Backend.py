@@ -17,12 +17,13 @@ import threading
 import sys
 from time import sleep
 
-##      Base class for any backend communication (seperate piece of software).
+
+##      Base class for any backend communication (separate piece of software).
 #       It makes use of the Socket class from libArcus for the actual communication bits.
-#       The message_handler dict should be filled with message class, function pairs.
+#       The message_handlers dict should be filled with string (full name of proto message), function pairs.
 class Backend(PluginObject, SignalEmitter):
     def __init__(self):
-        super().__init__() # Call super to make multiple inheritence work.
+        super().__init__()  # Call super to make multiple inheritance work.
         self._supported_commands = {}
 
         self._message_handlers = {}
@@ -40,7 +41,7 @@ class Backend(PluginObject, SignalEmitter):
     backendQuit = Signal()
 
     ##   \brief Start the backend / engine.
-    #   Runs the engine, this is only called when the socket is fully opend & ready to accept connections
+    #   Runs the engine, this is only called when the socket is fully opened & ready to accept connections
     def startEngine(self):
         try:
             command = self.getEngineCommand()
@@ -75,7 +76,7 @@ class Backend(PluginObject, SignalEmitter):
         result = []
         if not (len(data) % 12):
             if data is not None:
-                for index in range(0,int(len(data)/12)): #For each 12 bits (3 floats)
+                for index in range(0, int(len(data) / 12)):  # For each 12 bits (3 floats)
                     result.append(struct.unpack("fff", data[index * 12: index * 12 + 12]))
                 return result
         else:
@@ -87,8 +88,8 @@ class Backend(PluginObject, SignalEmitter):
         result = []
         if not (len(data) % 24):
             if data is not None:
-                for index in range(0,int(len(data)/24)): #For each 24 bits (6 floats)
-                    result.append(struct.unpack("ffffff",data[index * 24: index * 24 + 24]))
+                for index in range(0,int(len(data)/24)):  # For each 24 bits (6 floats)
+                    result.append(struct.unpack("ffffff", data[index * 24: index * 24 + 24]))
                 return result
         else:
             Logger.log("e", "Data length was incorrect for requested type")
@@ -106,7 +107,7 @@ class Backend(PluginObject, SignalEmitter):
             su.dwFlags |= subprocess.STARTF_USESHOWWINDOW
             su.wShowWindow = subprocess.SW_HIDE
             kwargs["startupinfo"] = su
-            kwargs["creationflags"] = 0x00004000 #BELOW_NORMAL_PRIORITY_CLASS
+            kwargs["creationflags"] = 0x00004000  # BELOW_NORMAL_PRIORITY_CLASS
         return subprocess.Popen(command_list, stdin = subprocess.DEVNULL, stdout = subprocess.PIPE, stderr = subprocess.PIPE, **kwargs)
 
     def _storeOutputToLogThread(self, handle):
@@ -148,17 +149,17 @@ class Backend(PluginObject, SignalEmitter):
         else:
             Logger.log("w", str(error))
 
-        sleep(0.1) #Hack: Withouth a sleep this can deadlock the application spamming error messages.
+        sleep(0.1)  # Hack: Without a sleep this can deadlock the application spamming error messages.
         self._createSocket()
 
-    
     ##  Creates a socket and attaches listeners.
     def _createSocket(self, protocol_file):
         if self._socket:
             self._socket.stateChanged.disconnect(self._onSocketStateChanged)
             self._socket.messageReceived.disconnect(self._onMessageReceived)
             self._socket.error.disconnect(self._onSocketError)
-            # If the error occured due to parsing, both connections believe that connection is okay. So we need to force a close.
+            # If the error occured due to parsing, both connections believe that connection is okay.
+            # So we need to force a close.
             self._socket.close()
 
         self._socket = SignalSocket()
