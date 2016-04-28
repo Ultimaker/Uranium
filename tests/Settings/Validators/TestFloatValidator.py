@@ -4,7 +4,7 @@
 import pytest
 
 from UM.Settings.Validators.FloatValidator import FloatValidator
-from UM.Settings.Validators.ValidatorState import ValidatorState
+from UM.Settings.Validator import ValidatorState
 
 ##  Fake setting instance that stands in for the real setting instance.
 #

@@ -1,6 +1,17 @@
 # Copyright (c) 2016 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
+from enum import Enum
+
+class ValidatorState(Enum):
+    Exception = "Exception"
+    Unknown = "Unknown"
+    Valid = "Valid"
+    MinimumError = "MinimumError"
+    MinimumWarning = "MinimumWarning"
+    MaximumError = "MaximumError"
+    MaximumWarning = "MaximumWarning"
+
 ##  Validates that a SettingInstance's value is within a certain minimum and maximum value.
 #
 #
