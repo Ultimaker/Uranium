@@ -333,7 +333,7 @@ class Profile(SignalEmitter):
             # Returncode irrelevant
             return True
 
-        setting_type = setting.getType()
+        setting_type = setting.getType() if setting.getType() not in ["int", "float"] else "numeric"
         machine_definition = self._active_instance.getMachineDefinition()
         all_affected_settings_disabled = True
 
@@ -344,11 +344,16 @@ class Profile(SignalEmitter):
 
         for key in affected_setting_keys:
             affected_setting = machine_definition.getSetting(key)
-            if not self.hasSettingValue(key):
-                # Make sure a numeric value is not counted as "overriding" a boolean value
-                if affected_setting.getType() != setting_type:
-                    return False
+            if not affected_setting:
+                Logger.log("w", "Tried to access unknown affected setting %s for %s", key, setting.getKey())
+                return False
 
+            # Make sure a numeric value is not counted as "overriding" a boolean or enum value
+            affected_setting_type = affected_setting.getType() if affected_setting.getType() not in ["int", "float"] else "numeric"
+            if affected_setting_type != setting_type:
+                return False
+
+            if not self.hasSettingValue(key):
                 if affected_setting.isEnabled():
                     all_affected_settings_disabled = False
                     if not self.checkValueUnused(affected_setting):

@@ -83,8 +83,8 @@ Item
 
             onEditingFinished:
             {
-                text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                UM.ActiveTool.setProperty("X", text);
+                var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
+                UM.ActiveTool.setProperty("X", modified_text);
             }
         }
         TextField
@@ -102,8 +102,8 @@ Item
 
             onEditingFinished:
             {
-                text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                UM.ActiveTool.setProperty("Y", text);
+                var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
+                UM.ActiveTool.setProperty("Y", modified_text);
             }
         }
         TextField
@@ -121,8 +121,8 @@ Item
 
             onEditingFinished:
             {
-                text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                UM.ActiveTool.setProperty("Z", text);
+                var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
+                UM.ActiveTool.setProperty("Z", modified_text);
             }
         }
     }

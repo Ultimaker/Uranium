@@ -22,10 +22,12 @@ PreferencesPage
     default property alias details: detailsPane.children;
 
     signal itemActivated();
+    signal activateObject();
     signal addObject();
     signal removeObject();
     signal renameObject();
 
+    property alias activateEnabled: activateButton.enabled;
     property alias addEnabled: addButton.enabled;
     property alias removeEnabled: removeButton.enabled;
     property alias renameEnabled: renameButton.enabled;
@@ -43,6 +45,13 @@ PreferencesPage
         width: childrenRect.width;
         height: childrenRect.height;
 
+        Button
+        {
+            id: activateButton;
+            text: catalog.i18nc("@action:button", "Activate");
+            iconName: "list-activate";
+            onClicked: base.activateObject();
+        }
         Button
         {
             id: addButton;
@@ -115,9 +124,7 @@ PreferencesPage
             {
                 id: objectList;
 
-                //This code below is temporarily commented-out because it triggers a deadlock in PyQt
-                //The issue has been fixed in PyQt upstream but we are waiting for a release before reenabling this code
-/*                section.property: "group"
+                section.property: "group"
                 section.criteria: ViewSection.FullString
                 section.delegate: Rectangle
                 {
@@ -134,7 +141,7 @@ PreferencesPage
                         color: palette.text;
                     }
                 }
-*/
+
                 delegate: Rectangle
                 {
                     width: objectListContainer.viewport.width;
@@ -145,10 +152,10 @@ PreferencesPage
                     {
                         anchors.left: parent.left;
                         anchors.leftMargin: UM.Theme.getSize("default_margin").width;
+                        anchors.right: parent.right;
                         text: model.name
-                        //This code below is temporarily commented-out because it triggers a deadlock in PyQt
-                        //The issue has been fixed in PyQt upstream but we are waiting for a release before reenabling this code
-                        //font.italic: model.active == true
+                        elide: Text.ElideRight
+                        font.italic: model.active == true
                         color: parent.ListView.isCurrentItem ? palette.highlightedText : palette.text;
                     }
 

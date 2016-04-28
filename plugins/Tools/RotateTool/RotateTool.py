@@ -206,11 +206,11 @@ class RotateTool(Tool):
         self._iterations = 0
         self._total_iterations = 0
         for selected_object in Selection.getAllSelectedObjects():
-            if selected_object.callDecoration("isGroup"): # 2.1 hack. TODO: fix this properly
-                self.operationStopped.emit(self)
-                Logger.log("w","Layflat is not supported for grouped objects")
-                return
-            self._total_iterations += len(selected_object.getMeshDataTransformed().getVertices()) * 2
+            if not selected_object.callDecoration("isGroup"):
+                self._total_iterations += len(selected_object.getMeshDataTransformed().getVertices()) * 2
+            else:
+                for child in selected_object.getChildren():
+                    self._total_iterations += len(child.getMeshDataTransformed().getVertices()) * 2
 
         self._progress_message.show()
 

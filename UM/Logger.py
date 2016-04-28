@@ -1,7 +1,9 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
+import sys
 import traceback
+import inspect
 
 from UM.PluginObject import PluginObject
 
@@ -29,8 +31,15 @@ class Logger:
     #   \param *args \type{list} List of variables to be added to the message.
     @classmethod
     def log(cls, log_type, message, *args):
+        function = inspect.currentframe().f_back.f_code
+        filename = function.co_filename
+        for path in sys.path:
+            if filename.startswith(path):
+                filename = filename.replace(path, "...")
+                continue
+        address = "%s (%s [%s]): " %(filename, function.co_name, function.co_firstlineno)
         for logger in cls.__loggers:
-            filled_message = message % args # Replace all the %s with the variables. Python formatting is magic.
+            filled_message = address + message % args # Replace all the %s with the variables. Python formatting is magic.
             logger.log(log_type, filled_message)
 
     ##

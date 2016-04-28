@@ -5,19 +5,21 @@ from UM.Signal import Signal, SignalEmitter
 
 import threading
 
-
-##  A stack of operations
+##  A stack of operations.
+#
+#   This maintains the history of operations, which allows for undoing and
+#   re-doing these operations.
 class OperationStack(SignalEmitter):
     def __init__(self):
-        self._operations = []
-        self._current_index = -1
-        self._lock = threading.Lock()
+        self._operations = [] #List of operations.
+        self._current_index = -1 #Index of the most recently executed operation.
+        self._lock = threading.Lock() #Lock to make sure only one thread can modify the operation stack at a time.
 
     ##  Push an operation on the stack.
     #
-    #   This will perform the follwing things in sequence:
-    #   - If the current index is pointing to an item lower in the stack than the top,
-    #     remove all operations from the current index to the top.
+    #   This will perform the following things in sequence:
+    #   - If the current index is pointing to an item lower in the stack than
+    #     the top, remove all operations from the current index to the top.
     #   - Append the operation to the stack.
     #   - Call redo() on the operation.
     #   - Perform merging of operations.
@@ -62,34 +64,51 @@ class OperationStack(SignalEmitter):
                 self._current_index += 1
                 self.changed.emit()
 
+    ##  Get the list of operations in the stack.
+    #
+    #   The end of the list represents the more recent operations.
+    #
+    #   \return A list of the operations on the stack, in order.
     def getOperations(self):
         with self._lock:
             return self._operations
 
+    ##  Whether we can undo any more operations.
+    #
+    #   \return True if we can undo any more operations, or False otherwise.
     def canUndo(self):
         return self._current_index >= 0
 
+    ##  Whether we can redo any more operations.
+    #
+    #   \return True if we can redo any more operations, or False otherwise.
     def canRedo(self):
         return self._current_index < len(self._operations) - 1
 
+    ##  Signal for when the operation stack changes.
     changed = Signal()
 
     ## private:
 
+    ##  Merges two operations at the current position in the stack.
+    #
+    #   This merges the "most recent" operation with the one before it. The
+    #   "most recent" operation is the one that would be undone if the user
+    #   would trigger an undo, i.e. the one at _current_index.
     def _doMerge(self):
         if len(self._operations) >= 2:
             op1 = self._operations[self._current_index]
             op2 = self._operations[self._current_index - 1]
 
             if not op1._always_merge and not op2._always_merge:
-                if abs(op1._timestamp - op2._timestamp) > self._merge_window:
+                if abs(op1._timestamp - op2._timestamp) > self._merge_window: #For normal operations, only merge if the operations were very quickly after each other.
                     return
 
             merged = op1.mergeWith(op2)
-            if merged:
+            if merged: #Replace the merged operations in the stack with the new one.
                 del self._operations[self._current_index]
                 del self._operations[self._current_index - 1]
                 self._current_index -= 1
                 self._operations.append(merged)
 
-    _merge_window = 1.0
+    _merge_window = 1.0 #Don't merge operations that were longer than this amount of seconds apart.
