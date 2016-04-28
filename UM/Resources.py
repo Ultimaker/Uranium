@@ -67,6 +67,32 @@ class Resources:
 
         raise FileNotFoundError("Could not find resource {0} in {1}".format(args, type))
 
+    ##  Get a list of paths to all resources of a certain resource type.
+    #
+    #   \param type The resource type to get the paths for.
+    #
+    #   \return A list of absolute paths to resources of the specified type.
+    @classmethod
+    def getAllResourcesOfType(cls, type):
+        files = {}
+        search_dirs = cls.getAllPathsForType(type)
+
+        for directory in search_dirs:
+            if not os.path.isdir(directory):
+                continue
+
+            for entry in os.scandir(directory):
+                if not entry.name.startswith('.') and entry.is_file():
+                    if not entry.name in files:
+                        files[entry.name] = []
+                    files[entry.name].append(entry.path)
+
+        result = []
+        for name, paths in files.items():
+            result.append(paths[0])
+
+        return result
+
     ##  Get the path that can be used to write a certain resource file.
     #
     #   \param type The type of resource to retrieve a path for.
