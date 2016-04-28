@@ -44,7 +44,10 @@ ManagementPage {
         ConfirmRemoveDialog {
             id: confirmDialog;
             object: base.currentItem && base.currentItem.name ? base.currentItem.name : "";
-            onYes: base.model.removeMachineInstance(base.currentItem.name);
+            onYes: {
+                base.model.removeMachineInstance(base.currentItem.name);
+                base.objectList.currentIndex = base.activeIndex();
+            }
         }
         RenameDialog {
             id: renameDialog;

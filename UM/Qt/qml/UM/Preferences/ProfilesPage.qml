@@ -16,6 +16,9 @@ ManagementPage
 
     model: UM.ProfilesModel { addWorkingProfile: true; }
 
+    signal showProfileNameDialog()
+    onShowProfileNameDialog: { renameDialog.removeWhenRejected = true; renameDialog.open(); renameDialog.selectText(); }
+
     onAddObject: {
         var selectedProfile;
         if (objectList.currentIndex == 0) {
@@ -152,14 +155,21 @@ ManagementPage
         {
             id: confirmDialog;
             object: base.currentItem != null ? base.currentItem.name : "";
-            onYes: base.model.removeProfile(base.currentItem.name);
+            onYes: {
+                base.model.removeProfile(base.currentItem.name);
+                base.objectList.currentIndex = base.activeIndex();
+            }
         }
         RenameDialog
         {
             id: renameDialog;
             object: base.currentItem != null ? base.currentItem.name : "";
             property bool removeWhenRejected: false;
-            onAccepted: base.model.renameProfile(base.currentItem.name, newName.trim());
+            onAccepted: {
+                var i = base.objectList.currentIndex
+                base.model.renameProfile(base.currentItem.name, newName.trim());
+                base.objectList.currentIndex = i;
+            }
             onRejected: {
                 if(removeWhenRejected) {
                     base.model.removeProfile(base.currentItem.name)
