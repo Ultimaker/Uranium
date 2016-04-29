@@ -16,3 +16,27 @@ def container_stack():
 def test_container_stack(container_stack):
     assert container_stack != None
 
+##  Tests whether changing the name of the stack has the proper effects.
+def test_setName(container_stack):
+    name_change_counter = 0
+    def increment_name_change_counter():
+        nonlocal name_change_counter
+        name_change_counter += 1
+    container_stack.nameChanged.connect(increment_name_change_counter) # To make sure it emits the signal.
+
+    different_name = "test"
+    if container_stack.getName() == different_name:
+        different_name = "tast" #Make sure it is actually different!
+
+    container_stack.setName(different_name)
+    assert container_stack.getName() == different_name # Name is correct.
+    assert name_change_counter == 1 # Correctly signalled once.
+
+    different_name += "_new" # Make it different again.
+    container_stack.setName(different_name)
+    assert container_stack.getName() == different_name # Name is updated again.
+    assert name_change_counter == 2 # Correctly signalled once again.
+
+    container_stack.setName(different_name) # Not different this time.
+    assert container_stack.getName() == different_name
+    assert name_change_counter == 2 # Didn't signal.
