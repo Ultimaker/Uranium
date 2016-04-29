@@ -13,11 +13,15 @@ import UM.Settings.ContainerInterface
 #   implementation of the containers. If something were to go wrong in the
 #   actual implementations, the tests in this suite are unaffected.
 class MockContainer(UM.Settings.ContainerInterface.ContainerInterface):
-    ##  Gets an arbitrary ID.
+    ##  Creates a mock container with a new unique ID.
+    def __init__(self):
+        self._id = uuid.uuid4().int
+
+    ##  Gets the unique ID of the container.
     #
-    #   \return Some integer.
+    #   \return A unique identifier for this container.
     def getId(self):
-        return 42
+        return self._id
 
     ##  Gives an arbitrary name.
     #
@@ -55,21 +59,21 @@ class MockContainer(UM.Settings.ContainerInterface.ContainerInterface):
 
     ##  Serialises this container.
     #
-    #   Since the container is always the same, a constant string suffices. For
-    #   a functional serialisation, please use an actual implementation rather
-    #   than this mock, because this container can't contain any items. This
-    #   choice was made because making this work for the mock container would
-    #   have a high risk of bugs, which would distract development time.
+    #   The only different data for this container is the ID, so that is
+    #   serialised. For a functional serialisation, please use an actual
+    #   implementation rather than this mock, because this container can't
+    #   contain any items. This choice was made because making this work for the
+    #   mock container would have a high risk of bugs, which would distract
+    #   development time.
     #
     #   \return A static string representing a container.
     def serialize(self):
-        return "x"
+        return str(self._id)
 
     ##  Deserialises a string to a container.
     #
-    #   Since this mock container is always the same, no deserialising can be
-    #   done and it only checks if the serialized string "has the proper
-    #   format". For a functional deserialisation, please use an actual
+    #   Since the only different data can be the ID, the string is parsed as an
+    #   integer ID. For a functional deserialisation, please use an actual
     #   implementation rather than this mock, because this container can't
     #   contain any items. This choice was made because making this work for the
     #   mock container would have a high risk of bugs, which would distract
@@ -77,8 +81,7 @@ class MockContainer(UM.Settings.ContainerInterface.ContainerInterface):
     #
     #   \param serialized A serialised mock container.
     def deserialize(self, serialized):
-        if serialized != "x":
-            raise Exception("This serialisation doesn't have the correct format.")
+        self._id = int(serialized)
 
 ##  Creates a brand new container stack to test with.
 #
