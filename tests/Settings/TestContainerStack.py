@@ -13,10 +13,17 @@ import UM.Settings
 def container_stack():
     return UM.Settings.ContainerStack(uuid.uuid4().int)
 
+##  Tests the creation of a container stack.
+#
+#   The actual creation is done in a fixture though.
+#
+#   \param container_stack A new container stack from a fixture.
 def test_container_stack(container_stack):
     assert container_stack != None
 
 ##  Tests whether changing the name of the stack has the proper effects.
+#
+#   \param container_stack A new container stack from a fixture.
 def test_setName(container_stack):
     name_change_counter = 0
     def increment_name_change_counter():
