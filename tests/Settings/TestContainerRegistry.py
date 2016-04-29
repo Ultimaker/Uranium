@@ -16,7 +16,7 @@ from UM.MimeTypeDatabase import MimeType, MimeTypeDatabase
 #   This allows us to test the container registry without testing the container
 #   class. If something is wrong in the container class it won't influence this
 #   test.
-class MockContainer(UM.Settings.DefinitionContainer.DefinitionContainer):
+class MockContainer(UM.Settings.DefinitionContainer):
     ##  Initialise a new definition container.
     #
     #   The container will have the specified ID and all metadata in the
