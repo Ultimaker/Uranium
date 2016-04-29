@@ -5,6 +5,7 @@ import pytest
 import os.path
 
 import UM.Settings
+import UM.PluginRegistry
 
 from UM.Resources import Resources
 from UM.MimeTypeDatabase import MimeType, MimeTypeDatabase
@@ -13,7 +14,18 @@ from UM.MimeTypeDatabase import MimeType, MimeTypeDatabase
 def container_registry():
     Resources.addSearchPath(os.path.dirname(os.path.abspath(__file__)))
     UM.Settings.ContainerRegistry._ContainerRegistry__instance = None # Reset the private instance variable every time
+    UM.PluginRegistry.PluginRegistry.getInstance().removeType("settings_container")
+
     return UM.Settings.ContainerRegistry.getInstance()
+
+##  Tests the creation of the container registry.
+#
+#   This is tested using the fixture to create a container registry.
+#
+#   \param container_registry A newly created container registry instance, from
+#   a fixture.
+def test_create(container_registry):
+    assert container_registry != None
 
 def test_load(container_registry):
     container_registry.load()
