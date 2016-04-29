@@ -32,7 +32,7 @@ class TestPluginRegistry():
     def test_metaData(self, registry):
         metaData = registry.getMetaData("TestPlugin")
 
-        assert metaData == { "id": "TestPlugin", "plugin": { "name": "TestPlugin", "api": 2 } }
+        assert metaData == { "id": "TestPlugin", "plugin": { "name": "TestPlugin", "api": 3 } }
 
     def test_load(self, registry):
         registry.loadPlugin("TestPlugin")
