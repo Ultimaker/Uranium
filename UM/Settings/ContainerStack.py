@@ -35,7 +35,7 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     def getName(self):
         return self._name
 
-    ##  Emitted whenver the name of this stack changes.
+    ##  Emitted whenever the name of this stack changes.
     nameChanged = Signal()
 
     ##  Set the name of this stack.
