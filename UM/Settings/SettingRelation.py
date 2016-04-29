@@ -3,6 +3,11 @@
 
 import enum
 
+##  The type of relation, i.e. what direction does this relation have.
+class RelationType(enum.IntEnum):
+    RequiresTarget = 1 # The relation represents that the owner requires the target.
+    RequiredByTarget = 2 # The relation represents that the target requires the owner.
+
 ##  A representation of a relationship between two settings.
 #
 #   This is a simple class representing a relationship between two settings.
@@ -14,11 +19,6 @@ import enum
 #   \note SettingRelation objects are usually created by DefinitionContainer after
 #   constructing SettingDefinition objects.
 class SettingRelation:
-    ##  The type of relation, i.e. what direction does this relation have.
-    class RelationType(enum.IntEnum):
-        RequiresTarget = 1 # The relation represents that the owner requires the target.
-        RequiredByTarget = 2 # The relation represents that the target requires the owner.
-
     ##  Constructor.
     #
     #   \param owner \type{SettingDefinition} The object that owns this relation.

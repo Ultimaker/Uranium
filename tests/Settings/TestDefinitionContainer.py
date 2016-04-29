@@ -81,12 +81,12 @@ def test_setting_function():
 
     assert relation_0.owner == setting_0
     assert relation_0.target == setting_1
-    assert relation_0.type == UM.Settings.SettingRelation.SettingRelation.RelationType.RequiredByTarget
+    assert relation_0.type == UM.Settings.SettingRelation.RelationType.RequiredByTarget
     assert relation_0.role == "value"
 
     assert relation_1.owner == setting_1
     assert relation_1.target == setting_0
-    assert relation_1.type == UM.Settings.SettingRelation.SettingRelation.RelationType.RequiresTarget
+    assert relation_1.type == UM.Settings.SettingRelation.RelationType.RequiresTarget
     assert relation_1.role == "value"
 
     assert isinstance(function, UM.Settings.SettingFunction.SettingFunction)

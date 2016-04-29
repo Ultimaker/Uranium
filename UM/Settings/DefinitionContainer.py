@@ -210,8 +210,8 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
 
             other = other[0]
 
-            relation = SettingRelation.SettingRelation(definition, other, SettingRelation.SettingRelation.RelationType.RequiresTarget, property)
+            relation = SettingRelation.SettingRelation(definition, other, SettingRelation.RelationType.RequiresTarget, property)
             definition.relations.append(relation)
 
-            relation = SettingRelation.SettingRelation(other, definition, SettingRelation.SettingRelation.RelationType.RequiredByTarget, property)
+            relation = SettingRelation.SettingRelation(other, definition, SettingRelation.RelationType.RequiredByTarget, property)
             other.relations.append(relation)
