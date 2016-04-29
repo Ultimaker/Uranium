@@ -104,6 +104,16 @@ def test_addContainer(container_stack):
     container_stack.addContainer(container)
     assert container_stack.getContainers() == [container] # Then something!
 
+##  Tests getting and changing the metadata of the container stack.
+#
+#   \param container_stack A new container stack from a fixture.
+def test_getMetaData(container_stack):
+    meta_data = container_stack.getMetaData()
+    assert meta_data != None
+
+    meta_data["foo"] = "bar" #Try adding an entry.
+    assert container_stack.getMetaDataEntry("foo") == "bar"
+
 ##  Tests whether changing the name of the stack has the proper effects.
 #
 #   \param container_stack A new container stack from a fixture.
@@ -130,13 +140,3 @@ def test_setName(container_stack):
     container_stack.setName(different_name) # Not different this time.
     assert container_stack.getName() == different_name
     assert name_change_counter == 2 # Didn't signal.
-
-##  Tests getting and changing the metadata of the container stack.
-#
-#   \param container_stack A new container stack from a fixture.
-def test_getMetaData(container_stack):
-    meta_data = container_stack.getMetaData()
-    assert meta_data != None
-
-    meta_data["foo"] = "bar" #Try adding an entry.
-    assert container_stack.getMetaDataEntry("foo") == "bar"
