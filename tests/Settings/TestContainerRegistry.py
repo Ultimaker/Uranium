@@ -145,10 +145,14 @@ def test_findDefinitionContainers(container_registry, data):
         # Each of these required results must appear somewhere in the result.
         for observed_result in range(0, len(result)): # Need to iterate by index so we can delete the item if we found it.
             for key, value in required_result.items():
-                if key not in result[observed_result]:
-                    break # No match.
-                if result[observed_result][key] != required_result[key]:
-                    break # No match.
+                if key == "id":
+                    if result[observed_result].getId() != value:
+                        break # No match.
+                else:
+                    if not result[observed_result].getMetaDataEntry(key):
+                        break # No match.
+                    if result[observed_result].getMetaDataEntry(key) != value:
+                        break # No match.
             else: # Not exited via a break, so it's a match!
                 del result[observed_result] # Delete it so we won't find it again.
                 break
