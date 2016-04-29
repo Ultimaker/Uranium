@@ -134,31 +134,31 @@ test_findDefinitionContainers_data = [
 @pytest.mark.parametrize("data", test_findDefinitionContainers_data)
 def test_findDefinitionContainers(container_registry, data):
     for container in data["containers"]: # Fill the registry with mock containers.
-        id = container["id"]
+        container_id = container["id"]
         del container["id"]
-        mock_container = MockContainer(id, container)
+        mock_container = MockContainer(container_id, container)
         container_registry._containers.append(mock_container) # TODO: This is a private field we're adding to here...
 
-    result = container_registry.findDefinitionContainers(data["filter"]) # The actual function call we're testing.
+    results = container_registry.findDefinitionContainers(data["filter"]) # The actual function call we're testing.
 
-    for required_result in data["result"]:
-        # Each of these required results must appear somewhere in the result.
-        for observed_result in range(0, len(result)): # Need to iterate by index so we can delete the item if we found it.
-            for key, value in required_result.items():
-                if key == "id":
-                    if result[observed_result].getId() != value:
-                        break # No match.
-                else:
-                    if not result[observed_result].getMetaDataEntry(key):
-                        break # No match.
-                    if result[observed_result].getMetaDataEntry(key) != value:
-                        break # No match.
-            else: # Not exited via a break, so it's a match!
-                del result[observed_result] # Delete it so we won't find it again.
-                break
-        else:
-            assert False # Didn't find any match.
-    assert len(result) == 0 # We've deleted all containers that were a match. There can be none left over.
+    assert len(results) == len(data["result"]) # Verify we do not get more or less results than expected
+
+    matches = 0
+    for result in results: # Go through all results and match them with our expected data
+        for required in list(data["result"]): # Iterate over a copy of the list so we do not modify the original data
+            if "id" in required:
+                # Special casing for id since that is not in the metadata
+                if result.getId() != required["id"]:
+                    continue
+                del required["id"] # Remove id from the expected metadata since it is not part of metadata
+
+            if result.getMetaData() == required:
+                # If the metadata matches, we know this entry is valid.
+                # Note that this requires specifying all metadata in the expected results.
+                matches += 1
+                break # Break out of the loop since we have a valid match
+
+    assert matches == len(data["result"])
 
 def test_load(container_registry):
     container_registry.load()
