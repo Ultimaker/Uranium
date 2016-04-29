@@ -104,6 +104,29 @@ def test_addContainer(container_stack):
     container_stack.addContainer(container)
     assert container_stack.getContainers() == [container] # Then something!
 
+##  Tests getting a container by index.
+#
+#   \param container_stack A new container stack from a fixture.
+def test_getContainer(container_stack):
+    with pytest.raises(IndexError):
+        container_stack.getContainer(0)
+
+    # Fill with data.
+    container1 = MockContainer()
+    container_stack.addContainer(container1)
+    container2 = MockContainer()
+    container_stack.addContainer(container2)
+    container3 = MockContainer()
+    container_stack.addContainer(container3)
+
+    assert container_stack.getContainer(0) == container1
+    assert container_stack.getContainer(1) == container2
+    assert container_stack.getContainer(2) == container3
+    with pytest.raises(IndexError):
+        container_stack.getContainer(3)
+    with pytest.raises(IndexError):
+        container_stack.getContainer(-1)
+
 ##  Tests getting and changing the metadata of the container stack.
 #
 #   \param container_stack A new container stack from a fixture.
