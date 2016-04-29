@@ -36,10 +36,10 @@ class MockContainer(UM.Settings.DefinitionContainer):
     #   \param key The key of the metadata entry.
     #   \return The value of the metadata entry, or None if there is no such
     #   entry.
-    def getMetaDataEntry(self, key):
-        if key in self._metadata:
-            return self._metadata[key]
-        return None
+    def getMetaDataEntry(self, entry, default = None):
+        if entry in self._metadata:
+            return self._metadata[entry]
+        return default
 
 @pytest.fixture
 def container_registry():
