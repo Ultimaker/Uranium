@@ -133,6 +133,9 @@ class SettingDefinition:
 
         return definitions
 
+    def __repr__(self):
+        return "<SettingDefinition (0x{0:x}) key={1} container={2}>".format(id(self), self._key, self._container)
+
     ##  Define a new supported property for SettingDefinitions.
     #
     #   Since applications may want custom properties in their definitions, most properties are handled
