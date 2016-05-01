@@ -151,10 +151,10 @@ class SettingDefinition:
         cls.__property_definitions[name] = {"type": property_type, "required": required}
 
     @classmethod
-    def getFunctionProperties(cls):
+    def getPropertyNames(cls, type = None):
         result = []
         for key, value in cls.__property_definitions.items():
-            if value["type"] == DefinitionPropertyType.Function:
+            if not type or value["type"] == type:
                 result.append(key)
         return result
 

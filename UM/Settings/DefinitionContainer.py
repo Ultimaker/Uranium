@@ -194,7 +194,7 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
 
     # Recursively update relations of settings
     def _updateRelations(self, definition):
-        for property in SettingDefinition.SettingDefinition.getFunctionProperties():
+        for property in SettingDefinition.SettingDefinition.getPropertyNames(SettingDefinition.DefinitionPropertyType.Function):
             if hasattr(definition, property):
                 self._processFunction(definition, property)
 
