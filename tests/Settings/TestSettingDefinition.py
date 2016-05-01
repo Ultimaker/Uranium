@@ -16,9 +16,9 @@ def test_create():
 
 
 test_basic_properties_data = [
-    ({"label": "Test", "default_value": 1, "description": "Test Setting"}, {"label": "Test", "default_value": 1, "description": "Test Setting"}),
-    ({"label": "Test", "default_value": 1, "description": "Test Setting", "unit": "mm"}, {"unit": "mm"}),
-    ({"label": "Test", "default_value": 1, "description": "Test Setting", "value": "10" }, {"value": SettingFunction("10")}),
+    ({"label": "Test", "default_value": 1, "description": "Test Setting", "type": "int"}, {"label": "Test", "default_value": 1, "description": "Test Setting"}),
+    ({"label": "Test", "default_value": 1, "description": "Test Setting", "type": "int", "unit": "mm"}, {"unit": "mm"}),
+    ({"label": "Test", "default_value": 1, "description": "Test Setting", "type": "int", "value": "10" }, {"value": SettingFunction("10")}),
 ]
 @pytest.mark.parametrize("data,expected", test_basic_properties_data)
 def test_basic_properties(data, expected):
@@ -40,16 +40,19 @@ def test_children():
 
     definition.deserialize({
         "label": "Test",
+        "type": "int",
         "default_value": 10,
         "description": "Test Setting",
         "children": {
             "test_child_1": {
                 "label": "Test Child 1",
+                "type": "int",
                 "default_value": 20,
                 "description": "Test Child Setting 1"
             },
             "test_child_2": {
                 "label": "Test Child 2",
+                "type": "int",
                 "default_value": 20,
                 "description": "Test Child Setting 2"
             }
