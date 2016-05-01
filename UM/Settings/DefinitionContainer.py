@@ -192,6 +192,7 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
 
         return result
 
+    # Recursively update relations of settings
     def _updateRelations(self, definition):
         for property in SettingDefinition.SettingDefinition.getFunctionProperties():
             if hasattr(definition, property):
@@ -200,6 +201,7 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
         for child in definition.children:
             self._updateRelations(child)
 
+    # Create relation objects for all settings used by a certain function
     def _processFunction(self, definition, property):
         function = getattr(definition, property)
         for setting in function.getUsedSettings():
