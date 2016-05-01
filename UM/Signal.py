@@ -242,7 +242,10 @@ def signalemitter(cls):
     # unique signals.
     old_new = cls.__new__
     def new_new(subclass, *args, **kwargs):
-        sub = old_new(subclass, *args, **kwargs)
+        if old_new == object.__new__:
+            sub = object.__new__(subclass)
+        else:
+            sub = old_new(subclass, *args, **kwargs)
 
         for key, value in inspect.getmembers(cls, lambda i: isinstance(i, Signal)):
             setattr(sub, key, Signal(type = value.getType()))
