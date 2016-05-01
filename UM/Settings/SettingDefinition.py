@@ -145,10 +145,12 @@ class SettingDefinition:
     #
     #   \param name \type{string} The name of the property to define.
     #   \param property_type \type{DefinitionPropertyType} The type of property.
-    #   \param required \type{boolean} Whether or not this is a required property.
+    #   \param kwargs Keyword arguments. Possible values:
+    #                 required \type{bool} True if missing the property indicates an error should be raised. Defaults to False.
+    #                 read_only \type{bool} True if the property should never be set on a SettingInstance. Defaults to False. Note that for Function properties this indicates whether the result of the function should be stored.
     @classmethod
-    def addPropertyDefinition(cls, name, property_type, required = False):
-        cls.__property_definitions[name] = {"type": property_type, "required": required}
+    def addPropertyDefinition(cls, name, property_type, **kwargs):
+        cls.__property_definitions[name] = {"type": property_type, "required": kwargs.get("required", False), "read_only": kwargs.get("read_only", False)}
 
     @classmethod
     def getPropertyNames(cls, type = None):
@@ -157,6 +159,22 @@ class SettingDefinition:
             if not type or value["type"] == type:
                 result.append(key)
         return result
+
+    @classmethod
+    def hasProperty(cls, name):
+        return name in cls.__property_definitions
+
+    @classmethod
+    def isRequiredProperty(cls, name):
+        if name in cls.__property_definitions:
+            return cls.__property_definitions[name]["required"]
+        return False
+
+    @classmethod
+    def isReadOnlyProperty(cls, name):
+        if name in cls.__property_definitions:
+            return cls.__property_definitions[name]["read_only"]
+        return False
 
     ## protected:
 
