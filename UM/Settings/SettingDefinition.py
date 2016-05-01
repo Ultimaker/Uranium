@@ -9,18 +9,6 @@ from UM.Logger import Logger
 
 from . import SettingFunction
 
-class SettingType(enum.IntEnum):
-    Unknown = 1
-    Boolean = 2
-    Integer = 3
-    Float = 4
-    Enum = 5
-    String = 6
-    List = 7
-    Dictionary = 8
-    Polygon = 9
-    Other = 10
-
 class DefinitionPropertyType(enum.IntEnum):
     Any = 1
     String = 2
@@ -49,8 +37,6 @@ class SettingDefinition:
 
         self._children = []
         self._relations = []
-
-        self._type = SettingType.Unknown
 
         self.__property_values = {}
 
@@ -82,11 +68,6 @@ class SettingDefinition:
     @property
     def parent(self):
         return self._parent
-
-    ##  The type of this setting.
-    @property
-    def type(self):
-        return self._type
 
     ##  A list of children of this setting.
     @property
@@ -179,7 +160,7 @@ class SettingDefinition:
     def _deserialize_dict(self, serialized):
         self._children = []
         self._relations = []
-        self._type = SettingType.Unknown
+        self._type = "unknown"
 
         for key, value in serialized.items():
             if key == "children":
@@ -187,13 +168,6 @@ class SettingDefinition:
                     child = SettingDefinition(child_key, self._container, self, self._i18n_catalog)
                     child.deserialize(child_dict)
                     self._children.append(child)
-
-            if key == "type":
-                if value in self.__setting_type_map:
-                    self._type = self.__setting_type_map[value]
-                else:
-                    Logger.log("w", "Unrecognised type %s for setting %s", value, self._key)
-                    self._type = SettingType.Unknown
                 continue
 
             if key not in self.__property_definitions:
@@ -214,30 +188,19 @@ class SettingDefinition:
                 raise AttributeError("Setting {0} is missing required property {1}".format(self._key, key))
 
     __property_definitions = {
-        "label": {"type": DefinitionPropertyType.TranslatedString, "required": True},
-        "icon": {"type": DefinitionPropertyType.String, "required": False},
-        "unit": {"type": DefinitionPropertyType.String, "required": False},
-        "description": {"type": DefinitionPropertyType.TranslatedString, "required": True},
-        "warning_description": {"type": DefinitionPropertyType.TranslatedString, "required": False},
-        "error_description": {"type": DefinitionPropertyType.TranslatedString, "required": False},
-        "default_value": {"type": DefinitionPropertyType.Any, "required": True},
-        "value": {"type": DefinitionPropertyType.Function, "required": False},
-        "enabled": {"type": DefinitionPropertyType.Function, "required": False},
-        "minimum": {"type": DefinitionPropertyType.Function, "required": False},
-        "maximum": {"type": DefinitionPropertyType.Function, "required": False},
-        "minimum_warning": {"type": DefinitionPropertyType.Function, "required": False},
-        "maximum_warning": {"type": DefinitionPropertyType.Function, "required": False},
-        "options": {"type": DefinitionPropertyType.Any, "required": False},
-    }
-
-    __setting_type_map = {
-        "bool": SettingType.Boolean,
-        "int": SettingType.Integer,
-        "float": SettingType.Float,
-        "enum": SettingType.Enum,
-        "string": SettingType.String,
-        "list": SettingType.List,
-        "dict": SettingType.Dictionary,
-        "polygon": SettingType.Polygon,
-        "other": SettingType.Other,
+        "label": {"type": DefinitionPropertyType.TranslatedString, "required": True, "read_only": True},
+        "type": {"type": DefinitionPropertyType.String, "required": True, "read_only": True},
+        "icon": {"type": DefinitionPropertyType.String, "required": False, "read_only": True},
+        "unit": {"type": DefinitionPropertyType.String, "required": False, "read_only": True},
+        "description": {"type": DefinitionPropertyType.TranslatedString, "required": True, "read_only": True},
+        "warning_description": {"type": DefinitionPropertyType.TranslatedString, "required": False, "read_only": True},
+        "error_description": {"type": DefinitionPropertyType.TranslatedString, "required": False, "read_only": True},
+        "default_value": {"type": DefinitionPropertyType.Any, "required": True, "read_only": True},
+        "value": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False},
+        "enabled": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False},
+        "minimum": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False},
+        "maximum": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False},
+        "minimum_warning": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False},
+        "maximum_warning": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False},
+        "options": {"type": DefinitionPropertyType.Any, "required": False, "read_only": True},
     }
