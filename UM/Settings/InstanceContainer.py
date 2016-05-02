@@ -55,11 +55,28 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
     def getName(self):
         return self._name
 
+    name = property(getName)
+
+    nameChanged = Signal()
+
+    def setName(self, name):
+        if name != self._name:
+            self._name = name
+            self.nameChanged.emit()
+
     ##  \copydoc ContainerInterface::getMetaData
     #
     #   Reimplemented from ContainerInterface
     def getMetaData(self):
         return self._metadata
+
+    metaData = property(getMetaData)
+    metaDataChanged = Signal()
+
+    def setMetaData(self, metadata):
+        if metadata != self._metadata:
+            self._metadata = metadata
+            self.metaDataChanged.emit()
 
     ##  \copydoc ContainerInterface::getMetaDataEntry
     #
