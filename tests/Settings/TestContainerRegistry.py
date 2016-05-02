@@ -180,8 +180,8 @@ def test_findDefinitionContainers(container_registry, data):
     for container in data["containers"]: # Fill the registry with mock containers.
         container_id = container["id"]
         del container["id"]
-        mock_container = UM.Settings.DefinitionContainer(container_id, container)
-        container_registry.addContainer(mock_container)
+        definition_container = UM.Settings.DefinitionContainer(container_id, container)
+        container_registry.addContainer(definition_container)
 
     results = container_registry.findDefinitionContainers(**data["filter"]) # The actual function call we're testing.
 
@@ -196,8 +196,8 @@ def test_findInstanceContainers(container_registry, data):
     for container in data["containers"]: # Fill the registry with mock containers.
         container_id = container["id"]
         del container["id"]
-        mock_container = UM.Settings.InstanceContainer(container_id, container)
-        container_registry.addContainer(mock_container)
+        instance_container = UM.Settings.InstanceContainer(container_id, container)
+        container_registry.addContainer(instance_container)
 
     results = container_registry.findInstanceContainers(**data["filter"]) # The actual function call we're testing.
 
