@@ -107,6 +107,10 @@ def test_addContainer(container_stack):
     container_stack.addContainer(container)
     assert container_stack.getContainers() == [container] # Then something!
 
+    with pytest.raises(Exception):
+        container_stack.addContainer(container_stack) # Adding itself gives an exception.
+    assert container_stack.getContainers() == [container] # Make sure that adding itself didn't change the state, even if it raises an exception.
+
 ##  Tests getting a container by index.
 #
 #   \param container_stack A new container stack from a fixture.
@@ -140,6 +144,35 @@ def test_getMetaData(container_stack):
     meta_data["foo"] = "bar" #Try adding an entry.
     assert container_stack.getMetaDataEntry("foo") == "bar"
 
+##  Tests serialising and deserialising the container stack.
+def test_serialize(container_stack):
+    # First test the empty container stack.
+    _test_serialize_cycle(container_stack)
+
+    # Case with one subcontainer.
+    container_stack.addContainer(MockContainer())
+    _test_serialize_cycle(container_stack)
+
+    # Case with two subcontainers.
+    container_stack.addContainer(MockContainer()) #Already had one, if all previous assertions were correct.
+    _test_serialize_cycle(container_stack)
+
+    # With some metadata.
+    container_stack.getMetaData()["foo"] = "bar"
+    _test_serialize_cycle(container_stack)
+
+    # With a changed name.
+    container_stack.setName("Fred")
+    _test_serialize_cycle(container_stack)
+
+    # A name with special characters, to test the encoding.
+    container_stack.setName("ルベン")
+    _test_serialize_cycle(container_stack)
+
+    # Just to bully the one who implements this, a name with special characters in JSON and CFG.
+    container_stack.setName("=,\"")
+    _test_serialize_cycle(container_stack)
+
 ##  Tests whether changing the name of the stack has the proper effects.
 #
 #   \param container_stack A new container stack from a fixture.
@@ -166,3 +199,18 @@ def test_setName(container_stack):
     container_stack.setName(different_name) # Not different this time.
     assert container_stack.getName() == different_name
     assert name_change_counter == 2 # Didn't signal.
+
+##  Tests a single cycle of serialising and deserialising a container stack.
+def _test_serialize_cycle(container_stack):
+    name = container_stack.getName()
+    metadata = container_stack.getMetaData()
+    containers = container_stack.getContainers()
+
+    serialised = container_stack.serialize()
+    container_stack = UM.Settings.ContainerStack(uuid.uuid4().int) # Completely fresh container stack.
+    container_stack.deserialize(serialised)
+
+    #ID and nextStack are allowed to be different.
+    assert name == container_stack.getName()
+    assert metadata == container_stack.getMetaData()
+    assert containers == container_stack.getContainers()
