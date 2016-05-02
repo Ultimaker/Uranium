@@ -8,6 +8,8 @@ from UM.Signal import Signal, signalemitter
 from UM.PluginObject import PluginObject
 from UM.Logger import Logger
 
+import UM.Settings.ContainerRegistry
+
 from . import ContainerInterface
 from . import SettingInstance
 
@@ -15,6 +17,9 @@ class InvalidInstanceError(Exception):
     pass
 
 class IncorrectInstanceVersionError(Exception):
+    pass
+
+class DefinitionNotFoundError(Exception):
     pass
 
 ##  A container for SettingInstance objects.
@@ -32,6 +37,7 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
 
         self._id = container_id
         self._name = container_id
+        self._definition = None
         self._metadata = {}
         self._instances = {}
 
@@ -86,21 +92,25 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
     ##  \copydoc ContainerInterface::serialize
     #
     #   Reimplemented from ContainerInterface
-    def serialize(self, definition):
+    def serialize(self):
         parser = configparser.ConfigParser(interpolation = None, empty_lines_in_values = False)
 
+        if not self._definition:
+            Logger.log("e", "Tried to serialize an instance container without definition, this is not supported")
+            return ""
+
         parser["general"] = {}
-        parser["general"]["version"] = self.Version
-        parser["general"]["name"] = self._name
-        parser["general"]["definition"] = definition.getId()
+        parser["general"]["version"] = str(self.Version)
+        parser["general"]["name"] = str(self._name)
+        parser["general"]["definition"] = str(self._definition.getId())
 
         parser["metadata"] = {}
         for key, value in self._metadata.items():
-            parser["metadata"][key] = value
+            parser["metadata"][key] = str(value)
 
         parser["values"] = {}
         for key, instance in self._instances:
-            parser["values"][key] = instance.value
+            parser["values"][key] = str(instance.value)
 
         stream = io.StringIO()
         parser.write(stream)
@@ -121,14 +131,20 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
 
         self._name = parser["general"].get("name", self._id)
 
+        definition_id = parser["general"]["definition"]
+        definitions = UM.Settings.ContainerRegistry.getInstance().findDefinitionContainers({"id": definition_id})
+        if not definitions:
+            raise DefinitionNotFoundError("Could not find definition {0} required for instance {1}".format(definition_id, self._id))
+        self._definition = definitions[0]
+
         if "metadata" in parser:
-            self._metadata = parser["metadata"].copy()
+            self._metadata = dict(parser["metadata"])
 
         if "values" in parser:
             for key, value in parser["values"].items():
                 if not key in self._instances:
-
-                    self._instances[key] = SettingInstance.SettingInstance(definition, )
+                    self._instances[key] = SettingInstance.SettingInstance(self._definition, self)
+                self._instances[key].setProperty("value", value)
 
     ##  Find instances matching certain criteria.
     #
@@ -148,3 +164,9 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
             return
 
         self._instances[key] = instance
+
+    def getDefinition(self):
+        return self._definition
+
+    def setDefinition(self, definition):
+        self._definition = definition
