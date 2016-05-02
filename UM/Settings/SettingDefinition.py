@@ -195,6 +195,11 @@ class SettingDefinition:
                 Logger.log("w", "Unrecognised property %s in setting %s", key, self._key)
                 continue
 
+            if key == "type":
+                if value not in self.__type_definitions:
+                    raise ValueError("Type {0} is not a correct setting type".format(value))
+
+
             if self.__property_definitions[key]["type"] == DefinitionPropertyType.Any:
                 self.__property_values[key] = value
             elif self.__property_definitions[key]["type"] == DefinitionPropertyType.String:
@@ -225,3 +230,5 @@ class SettingDefinition:
         "maximum_warning": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False},
         "options": {"type": DefinitionPropertyType.Any, "required": False, "read_only": True},
     }
+
+    __type_definitions = ["int", "bool", "category", "str"]
