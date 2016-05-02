@@ -15,11 +15,16 @@ def container_registry():
     UM.Settings.ContainerRegistry.getInstance().load()
     return UM.Settings.ContainerRegistry.getInstance()
 
-def test_instance_container():
+def test_create():
     container = UM.Settings.InstanceContainer("test")
     assert container.getId() == "test"
 
-def test_advanced_setProperty():
+##  Test whether setting a property on an instance correctly updates dependencies.
+#
+#   This test primarily tests the SettingInstance but requires some functionality
+#   from InstanceContainer that is not easily captured in a Mock object. Therefore
+#   it is included here.
+def test_instance_setProperty():
     instance_container = UM.Settings.InstanceContainer("test")
 
     definition1 = UM.Settings.SettingDefinition("test_0", None)
