@@ -231,4 +231,13 @@ class SettingDefinition:
         "options": {"type": DefinitionPropertyType.Any, "required": False, "read_only": True},
     }
 
-    __type_definitions = ["int", "bool", "category", "str", "float"]
+    __type_definitions = ["int",
+                          "bool",
+                          "category",   # Special case setting; Doesn't have a value. Display purposes only.
+                          "str",
+                          "enum",
+                          "float",
+                          "polygon",    # A list of 2D points
+                          "polygons",   # A list of polygons
+                          "vec3"       # A 3D point
+                          ]
