@@ -7,12 +7,14 @@
         "test_setting_0": {
             "label": "Test 0",
             "description": "A Test Setting",
-            "default_value": 10
+            "default_value": 10,
+            "type": "int"
         },
         "test_setting_1": {
             "label": "Test 1",
             "description": "A Test Setting",
             "default_value": 10,
+            "type": "int",
             "value": "test_setting_0 * 10"
         }
     }

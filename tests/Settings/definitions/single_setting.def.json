@@ -10,7 +10,8 @@
         "test_setting": {
             "label": "Test",
             "description": "A Test Setting",
-            "default_value": 10
+            "default_value": 10,
+            "type": "int"
         }
     }
 }
