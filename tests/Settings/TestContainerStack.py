@@ -107,6 +107,9 @@ def test_addContainer(container_stack):
     container_stack.addContainer(container)
     assert container_stack.getContainers() == [container] # Then something!
 
+    with pytest.raises(Exception):
+        container_stack.addContainer(container_stack) # Adding itself gives an exception.
+
 ##  Tests getting a container by index.
 #
 #   \param container_stack A new container stack from a fixture.
