@@ -7,6 +7,8 @@ import os.path
 import UM.Settings
 import UM.PluginRegistry
 import UM.Settings.DefinitionContainer
+import UM.Settings.InstanceContainer
+import UM.Settings.ContainerStack
 
 from UM.Resources import Resources
 from UM.MimeTypeDatabase import MimeType, MimeTypeDatabase
