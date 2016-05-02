@@ -47,6 +47,8 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
     def getId(self):
         return self._id
 
+    id = property(getId)
+
     ##  \copydoc ContainerInterface::getName
     #
     #   Reimplemented from ContainerInterface
