@@ -51,17 +51,23 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
     def getId(self):
         return self._id
 
+    id = property(getId)
+
     ##  \copydoc ContainerInterface::getName
     #
     #   Reimplemented from ContainerInterface
     def getName(self):
         return self._name
 
+    name = property(getName)
+
     ##  \copydoc ContainerInterface::getMetaData
     #
     #   Reimplemented from ContainerInterface
     def getMetaData(self):
         return self._metadata
+
+    metaData = property(getMetaData)
 
     ##  \copydoc ContainerInterface::getMetaDataEntry
     #
