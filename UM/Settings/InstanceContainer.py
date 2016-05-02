@@ -1,7 +1,7 @@
 # Copyright (c) 2016 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
-import configparser
 
+import configparser
 import io
 
 from UM.Signal import Signal, signalemitter
@@ -148,9 +148,17 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
 
     ##  Find instances matching certain criteria.
     #
-    #   \param filter \type{dict} A dictionary with key-value pairs that should match properties of the instances.
-    def findInstances(self, filter):
-        return []
+    #   \param criteria \type{dict} A dictionary with key-value pairs that should match properties of the instances.
+    def findInstances(self, criteria):
+        result = []
+        for instance in self._instances:
+            for key, value in criteria.items():
+                if not hasattr(instance, key) or getattr(instance, key) != value:
+                    break
+            else:
+                result.append(instance)
+
+        return result
 
     def getInstance(self, key):
         if key in self._instances:
