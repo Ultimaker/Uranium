@@ -202,6 +202,9 @@ def test_findDefinitionContainers(container_registry, data):
 
     assert matches == len(data["result"])
 
+##  Tests the loading of containers into the registry.
+#
+#   \param container_registry A new container registry from a fixture.
 def test_load(container_registry):
     container_registry.load()
 
