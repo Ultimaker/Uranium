@@ -16,6 +16,7 @@ class MockContainer(UM.Settings.ContainerInterface.ContainerInterface):
     ##  Creates a mock container with a new unique ID.
     def __init__(self):
         self._id = uuid.uuid4().int
+        self._metadata = {}
 
     ##  Gets the unique ID of the container.
     #
@@ -29,20 +30,21 @@ class MockContainer(UM.Settings.ContainerInterface.ContainerInterface):
     def getName(self):
         return "Fred"
 
-    ##  Gives empty metadata.
+    ##  Returns the metadata dictionary.
     #
-    #   \return An empty dictionary representing the metadata.
+    #   \return A dictionary containing metadata for this container stack.
     def getMetaData(self):
-        return {}
+        return self._metadata
 
     ##  Gets an entry from the metadata.
     #
-    #   Since the metadata is empty, this always returns the default.
-    #
     #   \param entry The entry to get from the metadata.
     #   \param default The default value in case the entry is missing.
-    #   \return The provided default value (None by default).
+    #   \return The value belonging to the requested entry, or the default if no
+    #   such key exists.
     def getMetaDataEntry(self, entry, default = None):
+        if entry in self._metadata:
+            return self._metadata["entry"]
         return default
 
     ##  Gets the value of a container item.
@@ -110,6 +112,71 @@ def test_addContainer(container_stack):
     with pytest.raises(Exception):
         container_stack.addContainer(container_stack) # Adding itself gives an exception.
     assert container_stack.getContainers() == [container] # Make sure that adding itself didn't change the state, even if it raises an exception.
+
+##  Individual test cases for test_findContainer.
+#
+#   Each test case has:
+#   * A description for debugging.
+#   * A list of dictionaries for containers to search in.
+#   * A filter to search with.
+#   * A required result.
+test_findContainer_data = [
+    {
+        "description": "Search empty",
+        "containers": [
+            { },
+            { }
+        ],
+        "filter": { },
+        "result": { }
+    },
+    {
+        "description": "Not found",
+        "containers": [
+            { "foo": "baz" }
+        ],
+        "filter": { "foo": "bar" },
+        "result": None
+    },
+    {
+        "description": "Key not found",
+        "containers": [
+            { "loo": "bar" }
+        ],
+        "filter": { "foo": "bar" },
+        "result": None
+    },
+    {
+        "description": "Multiple constraints",
+        "containers": [
+            { "id": "a", "number": 1, "string": "foo", "mixed": 10 },
+            { "id": "b", "number": 2, "string": "foo", "mixed": "bar" },
+            { "id": "c", "number": 1, "string": "loo", "mixed": 10 }
+        ],
+        "filter": { "number": 1, "string": "foo", "mixed": 10 },
+        "result": { "id": "a", "number": 1, "string": "foo", "mixed": 10 }
+    }
+]
+
+##  Tests finding a container by a filter.
+#
+#   \param container_stack A new container stack from a fixture.
+#   \param data Individual test cases, provided from test_findContainer_data.
+@pytest.mark.parametrize("data", test_findContainer_data)
+def test_findContainer(container_stack, data):
+    for container in data["containers"]: # Add all containers.
+        mockup = MockContainer()
+        for key, value in container.items(): # Copy the data to the metadata of the mock-up.
+            mockup.getMetaData()[key] = value
+        container_stack.addContainer(mockup)
+
+    answer = container_stack.findContainer(data["filter"]) # The actual method to test.
+
+    if data["result"] == None:
+        assert answer == None
+    else:
+        assert answer != None
+    assert data["result"] == answer.getMetaData()
 
 ##  Tests getting a container by index.
 #
