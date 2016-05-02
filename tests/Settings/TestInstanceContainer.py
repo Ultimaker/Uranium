@@ -88,7 +88,9 @@ definition = basic
 """
 
 test_deserialize_data = [
-    ("basic.inst.cfg", {"name": "Test"}),
+    ("basic.inst.cfg", {"name": "Basic"}),
+    ("metadata.inst.cfg", {"name": "Metadata", "metaData": { "author": "Ultimaker", "bool": "False", "integer": "6" } }),
+    ("setting_values.inst.cfg", {"name": "Setting Values", "values": { "test_setting_0": 20 } }),
 ]
 @pytest.mark.parametrize("filename,expected", test_deserialize_data)
 def test_deserialize(filename, expected, container_registry):
@@ -99,7 +101,10 @@ def test_deserialize(filename, expected, container_registry):
         instance_container.deserialize(data.read())
 
     for key, value in expected.items():
-        if key == "name":
-            assert instance_container.getName() == value
+        if key != "values":
+            assert getattr(instance_container, key) == value
+            continue
 
+        for key, value in value.items():
+            assert instance_container.getValue(key) == value
 
