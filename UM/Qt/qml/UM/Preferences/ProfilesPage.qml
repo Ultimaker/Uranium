@@ -79,8 +79,8 @@ ManagementPage
                     {
                         text: {
                             var profileName = UM.MachineManager.activeProfile;
-                            profileName = (profileName.length > 20) ? profileName.substring(0, 20) + '...' : profileName;
-                            return (base.currentItem.id == -1) ? catalog.i18nc("@action:button", "Update \"%1\"").arg(profileName) :
+                            profileName = profileName.length > 20 ? profileName.substring(0, 20) + '...' : profileName;
+                            return base.currentItem.id == -1 ? catalog.i18nc("@action:button", "Update \"%1\"").arg(profileName) :
                                     catalog.i18nc("@action:button", "Update profile");
                         }
                         enabled: UM.ActiveProfile.hasCustomisedValues && !UM.ActiveProfile.readOnly
@@ -89,7 +89,7 @@ ManagementPage
 
                     Button
                     {
-                        text: (base.currentItem.id == -1) ? catalog.i18nc("@action:button", "Discard current settings") :
+                        text: base.currentItem.id == -1 ? catalog.i18nc("@action:button", "Discard current settings") :
                                 catalog.i18nc("@action:button", "Reset profile");
                         enabled: UM.ActiveProfile.hasCustomisedValues
                         onClicked: UM.ActiveProfile.discardChanges()
