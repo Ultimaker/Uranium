@@ -62,17 +62,17 @@ def call_if_enabled(function, condition):
 #   those functions.
 def interface(cls):
     # First, sanity check the interface declaration to make sure it only contains methods
-    non_functions = list(filter(lambda i: not i[0].startswith("__") and not inspect.isfunction(i[1]), inspect.getmembers(cls)))
-    if non_functions:
-        raise TypeError("Class {0} is declared as interface but includes non-method properties: {1}".format(cls, non_functions))
+    invalid_properties = list(filter(lambda i: not i[0].startswith("__") and not inspect.isfunction(i[1]), inspect.getmembers(cls)))
+    if invalid_properties:
+        raise TypeError("Class {0} is declared as interface but includes non-method properties: {1}".format(cls, invalid_properties))
 
     # Then, replace the new method with a method that checks if all methods have been reimplemented
     old_new = cls.__new__
     def new_new(subclass, *args, **kwargs):
-        for method in filter(lambda i: inspect.isfunction(i[1]) and not i[0].startswith("__"), inspect.getmembers(cls)):
+        for method in filter(lambda i: not i[0].startswith("__") and inspect.isfunction(i[1]), inspect.getmembers(cls)):
             sub_method = getattr(subclass, method[0])
             if sub_method == method[1]:
-                raise NotImplementedError("Class {0} does not implement the complete interface of {1}".format(subclass, cls))
+                raise NotImplementedError("Class {0} does not implement the complete interface of {1}: Missing method {2}".format(subclass, cls, method[0]))
 
             if inspect.signature(sub_method) != inspect.signature(method[1]):
                 raise NotImplementedError("Method {0} of class {1} does not have the same signature as method {2} in interface {3}: {4} vs {5}".format(sub_method, subclass, method[1], cls, inspect.signature(sub_method), inspect.signature(method[1])))
