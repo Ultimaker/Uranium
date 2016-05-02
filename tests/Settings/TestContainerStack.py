@@ -109,6 +109,7 @@ def test_addContainer(container_stack):
 
     with pytest.raises(Exception):
         container_stack.addContainer(container_stack) # Adding itself gives an exception.
+    assert container_stack.getContainers() == [container] # Make sure that adding itself didn't change the state, even if it raises an exception.
 
 ##  Tests getting a container by index.
 #
