@@ -144,33 +144,6 @@ def test_getMetaData(container_stack):
     meta_data["foo"] = "bar" #Try adding an entry.
     assert container_stack.getMetaDataEntry("foo") == "bar"
 
-##  Tests whether changing the name of the stack has the proper effects.
-#
-#   \param container_stack A new container stack from a fixture.
-def test_setName(container_stack):
-    name_change_counter = 0
-    def increment_name_change_counter():
-        nonlocal name_change_counter
-        name_change_counter += 1
-    container_stack.nameChanged.connect(increment_name_change_counter) # To make sure it emits the signal.
-
-    different_name = "test"
-    if container_stack.getName() == different_name:
-        different_name = "tast" #Make sure it is actually different!
-
-    container_stack.setName(different_name)
-    assert container_stack.getName() == different_name # Name is correct.
-    assert name_change_counter == 1 # Correctly signalled once.
-
-    different_name += "_new" # Make it different again.
-    container_stack.setName(different_name)
-    assert container_stack.getName() == different_name # Name is updated again.
-    assert name_change_counter == 2 # Correctly signalled once again.
-
-    container_stack.setName(different_name) # Not different this time.
-    assert container_stack.getName() == different_name
-    assert name_change_counter == 2 # Didn't signal.
-
 ##  Tests serialising and deserialising the container stack.
 def test_serialize(container_stack):
     # First test the empty container stack.
@@ -199,6 +172,33 @@ def test_serialize(container_stack):
     # Just to bully the one who implements this, a name with special characters in JSON and CFG.
     container_stack.setName("=,\"")
     _test_serialize_cycle(container_stack)
+
+##  Tests whether changing the name of the stack has the proper effects.
+#
+#   \param container_stack A new container stack from a fixture.
+def test_setName(container_stack):
+    name_change_counter = 0
+    def increment_name_change_counter():
+        nonlocal name_change_counter
+        name_change_counter += 1
+    container_stack.nameChanged.connect(increment_name_change_counter) # To make sure it emits the signal.
+
+    different_name = "test"
+    if container_stack.getName() == different_name:
+        different_name = "tast" #Make sure it is actually different!
+
+    container_stack.setName(different_name)
+    assert container_stack.getName() == different_name # Name is correct.
+    assert name_change_counter == 1 # Correctly signalled once.
+
+    different_name += "_new" # Make it different again.
+    container_stack.setName(different_name)
+    assert container_stack.getName() == different_name # Name is updated again.
+    assert name_change_counter == 2 # Correctly signalled once again.
+
+    container_stack.setName(different_name) # Not different this time.
+    assert container_stack.getName() == different_name
+    assert name_change_counter == 2 # Didn't signal.
 
 ##  Tests a single cycle of serialising and deserialising a container stack.
 def _test_serialize_cycle(container_stack):
