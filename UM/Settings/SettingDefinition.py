@@ -260,9 +260,9 @@ class SettingDefinition:
             elif self.__property_definitions[key]["type"] == DefinitionPropertyType.String:
                 self.__property_values[key] = str(value)
             elif self.__property_definitions[key]["type"] == DefinitionPropertyType.TranslatedString:
-                self.__property_values[key] = self._i18n_catalog.i18n(value) if self._i18n_catalog is not None else value
+                self.__property_values[key] = self._i18n_catalog.i18n(str(value)) if self._i18n_catalog is not None else value
             elif self.__property_definitions[key]["type"] == DefinitionPropertyType.Function:
-                self.__property_values[key] = SettingFunction.SettingFunction(value)
+                self.__property_values[key] = SettingFunction.SettingFunction(str(value))
 
         for key in filter(lambda i: self.__property_definitions[i]["required"], self.__property_definitions):
             if not key in self.__property_values:
