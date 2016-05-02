@@ -55,39 +55,21 @@ class ContainerRegistry:
 
     ##  Find all DefinitionContainer objects matching certain criteria.
     #
-    #   \param filter \type{dict} A dictionary containing keys and values that need to match the metadata of the DefinitionContainer.
-    def findDefinitionContainers(self, filter):
-        containers = []
-        for container in self._containers:
-            if not isinstance(container, DefinitionContainer.DefinitionContainer):
-                continue
-
-            matches_container = True
-            for key, value in filter.items():
-                if key == "id":
-                    if container.getId() != value:
-                        matches_container = False
-                    continue
-
-                if container.getMetaDataEntry(key) != value:
-                    matches_container = False
-
-            if matches_container:
-                containers.append(container)
-
-        return containers
+    #   \param criteria \type{dict} A dictionary containing keys and values that need to match the metadata of the DefinitionContainer.
+    def findDefinitionContainers(self, criteria):
+        return self._findContainers(DefinitionContainer.DefinitionContainer, criteria)
 
     ##  Find all InstanceContainer objects matching certain criteria.
     #
-    #   \param filter \type{dict} A dictionary containing keys and values that need to match the metadata of the InstanceContainer.
-    def findInstanceContainers(self, filter):
-        return []
+    #   \param criteria \type{dict} A dictionary containing keys and values that need to match the metadata of the InstanceContainer.
+    def findInstanceContainers(self, criteria):
+        return self._findContainers(InstanceContainer.InstanceContainer, criteria)
 
     ##  Find all ContainerStack objects matching certain criteria.
     #
-    #   \param filter \type{dict} A dictionary containing keys and values that need to match the metadata of the ContainerStack.
-    def findContainerStacks(self, filter):
-        return []
+    #   \param criteria \type{dict} A dictionary containing keys and values that need to match the metadata of the ContainerStack.
+    def findContainerStacks(self, criteria):
+        return self._findContainers(ContainerStack.ContainerStack, criteria)
 
     ##  Add a container type that will be used to serialize/deserialize containers.
     #
@@ -114,6 +96,27 @@ class ContainerRegistry:
             with open(file_path) as f:
                 new_container.deserialize(f.read())
             self._containers.append(new_container)
+
+    def _findContainers(self, container_type, criteria):
+        containers = []
+        for container in self._containers:
+            if container_type and not isinstance(container, container_type):
+                continue
+
+            matches_container = True
+            for key, value in criteria.items():
+                if key == "id":
+                    if container.getId() != value:
+                        matches_container = False
+                    continue
+
+                if container.getMetaDataEntry(key) != value:
+                    matches_container = False
+
+            if matches_container:
+                containers.append(container)
+
+        return containers
 
     ##  Get the singleton instance for this class.
     @classmethod
