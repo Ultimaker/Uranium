@@ -90,7 +90,7 @@ ManagementPage
                     Button
                     {
                         text: base.currentItem.id == -1 ? catalog.i18nc("@action:button", "Discard current settings") :
-                                catalog.i18nc("@action:button", "Reset profile");
+                                catalog.i18nc("@action:button", "Reload profile");
                         enabled: UM.ActiveProfile.hasCustomisedValues
                         onClicked: UM.ActiveProfile.discardChanges()
                     }
