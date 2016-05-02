@@ -70,7 +70,7 @@ def test_advanced_setProperty():
 
 def test_serialize(container_registry):
     instance_container = UM.Settings.InstanceContainer("test")
-    definition = container_registry.findDefinitionContainers({"id": "basic"})[0]
+    definition = container_registry.findDefinitionContainers(id = container_data["definition"])[0]
     instance_container.setDefinition(definition)
 
     result = instance_container.serialize()

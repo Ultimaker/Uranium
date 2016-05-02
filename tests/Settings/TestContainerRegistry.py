@@ -181,7 +181,7 @@ def test_findDefinitionContainers(container_registry, data):
         mock_container = MockContainer(container_id, container)
         container_registry._containers.append(mock_container) # TODO: This is a private field we're adding to here...
 
-    results = container_registry.findDefinitionContainers(data["filter"]) # The actual function call we're testing.
+    results = container_registry.findDefinitionContainers(**data["filter"]) # The actual function call we're testing.
 
     assert len(results) == len(data["result"]) # Verify we do not get more or less results than expected
 
@@ -208,13 +208,13 @@ def test_findDefinitionContainers(container_registry, data):
 def test_load(container_registry):
     container_registry.load()
 
-    definitions = container_registry.findDefinitionContainers({ "id": "single_setting" })
+    definitions = container_registry.findDefinitionContainers(id = "single_setting")
     assert len(definitions) == 1
 
     definition = definitions[0]
     assert definition.getId() == "single_setting"
 
-    definitions = container_registry.findDefinitionContainers({ "author": "Ultimaker" })
+    definitions = container_registry.findDefinitionContainers(author = "Ultimaker")
     assert len(definitions) == 3
 
     ids_found = []

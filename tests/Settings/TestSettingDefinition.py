@@ -68,7 +68,7 @@ def test_children():
     assert child_1.default_value == 20
     assert child_1.description == "Test Child Setting 1"
 
-    definitions = definition.findDefinitions({"default_value": 20})
+    definitions = definition.findDefinitions(default_value = 20)
     assert len(definitions) == 2
 
     has_child_1 = False

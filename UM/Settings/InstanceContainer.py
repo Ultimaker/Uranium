@@ -132,7 +132,7 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
         self._name = parser["general"].get("name", self._id)
 
         definition_id = parser["general"]["definition"]
-        definitions = UM.Settings.ContainerRegistry.getInstance().findDefinitionContainers({"id": definition_id})
+        definitions = UM.Settings.ContainerRegistry.getInstance().findDefinitionContainers(id = definition_id)
         if not definitions:
             raise DefinitionNotFoundError("Could not find definition {0} required for instance {1}".format(definition_id, self._id))
         self._definition = definitions[0]
@@ -143,16 +143,17 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
         if "values" in parser:
             for key, value in parser["values"].items():
                 if not key in self._instances:
-                    self._instances[key] = SettingInstance.SettingInstance(self._definition, self)
+                    setting_definition = self._definition.findDefinitions(key = key)[0]
+                    self._instances[key] = SettingInstance.SettingInstance(setting_definition, self)
                 self._instances[key].setProperty("value", value)
 
     ##  Find instances matching certain criteria.
     #
-    #   \param criteria \type{dict} A dictionary with key-value pairs that should match properties of the instances.
-    def findInstances(self, criteria):
+    #   \param kwargs \type{dict} A dictionary of keyword arguments with key-value pairs that should match properties of the instances.
+    def findInstances(self, **kwargs):
         result = []
-        for instance in self._instances:
-            for key, value in criteria.items():
+        for setting_key, instance in self._instances.items():
+            for key, value in kwargs.items():
                 if not hasattr(instance, key) or getattr(instance, key) != value:
                     break
             else:

@@ -55,21 +55,21 @@ class ContainerRegistry:
 
     ##  Find all DefinitionContainer objects matching certain criteria.
     #
-    #   \param criteria \type{dict} A dictionary containing keys and values that need to match the metadata of the DefinitionContainer.
-    def findDefinitionContainers(self, criteria):
-        return self._findContainers(DefinitionContainer.DefinitionContainer, criteria)
+    #   \param kwargs \type{dict} A dictionary of keyword arguments containing keys and values that need to match the metadata of the DefinitionContainer.
+    def findDefinitionContainers(self, **kwargs):
+        return self._findContainers(DefinitionContainer.DefinitionContainer, **kwargs)
 
     ##  Find all InstanceContainer objects matching certain criteria.
     #
-    #   \param criteria \type{dict} A dictionary containing keys and values that need to match the metadata of the InstanceContainer.
-    def findInstanceContainers(self, criteria):
-        return self._findContainers(InstanceContainer.InstanceContainer, criteria)
+    #   \param kwargs \type{dict} A dictionary of keyword arguments containing keys and values that need to match the metadata of the InstanceContainer.
+    def findInstanceContainers(self, **kwargs):
+        return self._findContainers(InstanceContainer.InstanceContainer, **kwargs)
 
     ##  Find all ContainerStack objects matching certain criteria.
     #
-    #   \param criteria \type{dict} A dictionary containing keys and values that need to match the metadata of the ContainerStack.
-    def findContainerStacks(self, criteria):
-        return self._findContainers(ContainerStack.ContainerStack, criteria)
+    #   \param kwargs \type{dict} A dictionary of keyword arguments containing keys and values that need to match the metadata of the ContainerStack.
+    def findContainerStacks(self, **kwargs):
+        return self._findContainers(ContainerStack.ContainerStack, **kwargs)
 
     ##  Add a container type that will be used to serialize/deserialize containers.
     #
@@ -107,14 +107,14 @@ class ContainerRegistry:
 
         self._containers.append(container)
 
-    def _findContainers(self, container_type, criteria):
+    def _findContainers(self, container_type, **kwargs):
         containers = []
         for container in self._containers:
             if container_type and not isinstance(container, container_type):
                 continue
 
             matches_container = True
-            for key, value in criteria.items():
+            for key, value in kwargs.items():
                 if key == "id":
                     if container.getId() != value:
                         matches_container = False

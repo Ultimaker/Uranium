@@ -53,7 +53,7 @@ def test_definition_container(file, expected):
         assert container.getMetaDataEntry(key) == value
 
     for key, value in expected["settings"].items():
-        settings = container.findDefinitions({"key": key})
+        settings = container.findDefinitions(key = key)
 
         assert len(settings) == 1
 
@@ -68,8 +68,8 @@ def test_setting_function():
     with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "definitions", "functions.def.json")) as data:
         container.deserialize(data.read())
 
-    setting_0 = container.findDefinitions({"key": "test_setting_0"})[0]
-    setting_1 = container.findDefinitions({"key": "test_setting_1"})[0]
+    setting_0 = container.findDefinitions(key = "test_setting_0")[0]
+    setting_1 = container.findDefinitions(key = "test_setting_1")[0]
 
     function = setting_1.value
 

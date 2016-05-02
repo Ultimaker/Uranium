@@ -111,14 +111,14 @@ class SettingDefinition:
     #
     #   This will search this definition and its children for definitions matching the search criteria.
     #
-    #   \param criteria \type{dict} A dictionary with key-value pairs that need to match properties of the children.
+    #   \param kwargs \type{dict} A dictionary of keyword arguments that need to match properties of the children.
     #
     #   \return \type{list} A list of children matching the search criteria. The list will be empty if no children were found.
-    def findDefinitions(self, criteria):
+    def findDefinitions(self, **kwargs):
         definitions = []
 
         has_properties = True
-        for key, value in criteria.items():
+        for key, value in kwargs.items():
             try:
                 if getattr(self, key) != value:
                     has_properties = False
@@ -129,7 +129,7 @@ class SettingDefinition:
             definitions.append(self)
 
         for child in self._children:
-            definitions.extend(child.findDefinitions(criteria))
+            definitions.extend(child.findDefinitions(**kwargs))
 
         return definitions
 
