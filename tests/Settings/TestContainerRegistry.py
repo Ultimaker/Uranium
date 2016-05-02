@@ -178,8 +178,8 @@ def test_findDefinitionContainers(container_registry, data):
     for container in data["containers"]: # Fill the registry with mock containers.
         container_id = container["id"]
         del container["id"]
-        mock_container = MockContainer(container_id, container)
-        container_registry._containers.append(mock_container) # TODO: This is a private field we're adding to here...
+        mock_container = UM.Settings.DefinitionContainer(container_id, container)
+        container_registry.addContainer(mock_container)
 
     results = container_registry.findDefinitionContainers(**data["filter"]) # The actual function call we're testing.
 
