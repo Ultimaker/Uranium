@@ -12,7 +12,6 @@ from UM.Logger import Logger
 from copy import copy, deepcopy
 
 import math
-import threading
 
 ##  A scene node object.
 #
@@ -50,15 +49,10 @@ class SceneNode(SignalEmitter):
         self._parent = parent
         self._enabled = True
         self._selectable = False
-
         self._calculate_aabb = True
         self._aabb = None
         self._original_aabb = None
-        self._mesh_aabb = None
-        self._mesh_original_aabb = None
-        self._aabb_job_lock = threading.Condition()
         self._aabb_job = None
-
         self._visible = kwargs.get("visible", True)
         self._name = kwargs.get("name", "")
         self._decorators = []
@@ -541,21 +535,23 @@ class SceneNode(SignalEmitter):
     #   Note that the AABB is calculated in a separate thread. This method will return an invalid (size 0) AABB
     #   while the calculation happens.
     def getBoundingBox(self):
-        aabb = self._aabb   # Private ref to _aabb, self._aabb could
-        if aabb:            # change between the 'if' and the 'return'.
-            return aabb
+        if self._aabb:
+            return self._aabb
 
-        aabb, original_aabb = self._waitOnAABBJob()
-        return aabb
+        if not self._aabb_job:
+            self._resetAABB()
+
+        return AxisAlignedBox()
 
     ##  Get the bounding box of this node and its children. Without taking any transformation into account
     def getOriginalBoundingBox(self):
-        original_aabb = self._original_aabb     # Private ref to _original_aabb, self._original_aabb could
-        if original_aabb:                       # change between the 'if' and the 'return'.
-            return original_aabb
+        if self._original_aabb:
+            return self._original_aabb
 
-        aabb, original_aabb = self._waitOnAABBJob()
-        return original_aabb
+        if not self._aabb_job:
+            self._resetAABB()
+
+        return AxisAlignedBox()
 
     ##  Set whether or not to calculate the bounding box for this node.
     #
@@ -603,26 +599,29 @@ class SceneNode(SignalEmitter):
         if not self._calculate_aabb:
             return
 
-        with self._aabb_job_lock:
-            self._aabb = None
-            if self._aabb_job:
-                self._aabb_job.cancel()
-            self._aabb_job = _CalculateMeshAABBJob(self)
-            self._aabb_job.finished.connect(self._meshAABBJobFinished)
-            self._aabb_job.start()
+        self._aabb = None
 
-    def _meshAABBJobFinished(self, job):
-        with self._aabb_job_lock:
-            if self._aabb is None:
-                self._computeAABB(job.getAABB(), job.getOriginalAABB())
-                self._aabb_job_lock.notify_all()
-        self.boundingBoxChanged.emit()
+        if self._aabb_job:
+            self._aabb_job.cancel()
 
-    # The _aabb_job_lock must be held when this is called.
-    def _computeAABB(self, mesh_aabb, mesh_original_aabb):
-        aabb = mesh_aabb
-        original_aabb = mesh_original_aabb
-        for child in self._children:
+        self._aabb_job = _CalculateAABBJob(self)
+        self._aabb_job.start()
+
+##  Internal
+#   Calculates the AABB of a node and its children.
+class _CalculateAABBJob(Job):
+    def __init__(self, node):
+        super().__init__()
+        self._node = node
+
+    def run(self):
+        aabb = None
+        original_aabb = None
+        if self._node._mesh_data:
+            aabb = self._node._mesh_data.getExtents(self._node.getWorldTransformation())
+            original_aabb = self._node._mesh_data.getExtents()
+
+        for child in self._node._children:
             if aabb is None:
                 aabb = deepcopy(child.getBoundingBox())
                 original_aabb = deepcopy(child.getOriginalBoundingBox())
@@ -630,57 +629,10 @@ class SceneNode(SignalEmitter):
                 aabb += child.getBoundingBox()
                 original_aabb += child.getOriginalBoundingBox()
 
-        self._aabb = aabb
-        self._original_aabb = original_aabb
-        self._aabb_job = None
-        if self.getParent():
-            self.getParent()._resetAABB()
+        self._node._aabb = aabb
+        self._node._original_aabb = original_aabb
+        self._node._aabb_job = None
+        if self._node.getParent():
+            self._node.getParent()._resetAABB()
 
-    def _waitOnAABBJob(self):
-        # Is the job even running? Or should we kick start it?
-        with self._aabb_job_lock:
-            kick_flag = self._aabb is None and not self._aabb_job
-        if kick_flag:
-            self._resetAABB()  # Release the lock before calling resetAABB()
-
-        with self._aabb_job_lock:
-            while self._aabb_job is not None and not self._aabb_job.isDone():
-                self._aabb_job_lock.wait()
-            if self._aabb_job is not None:
-                self._computeAABB(self._aabb_job.getAABB(), self._aabb_job.getOriginalAABB())
-                # You are probably thinking: "Doesn't _meshAABBJobFinished() do this after
-                # receiving a signal?" It does, but no signals can arrive when the thread is
-                # waiting on a lock. So once we see that the Job is done we can finish the
-                # computation now and return with the final result. If no one is waiting
-                # the the final computation will happen via the signal.
-
-            # Explicitly pass the values back. self._aabb and self._original_aabb could
-            # actually get stomped before the caller has time to read them.
-            return self._aabb, self._original_aabb
-
-##  Internal
-#   Calculates the AABB of a node's mesh.
-class _CalculateMeshAABBJob(Job):
-    def __init__(self, node):
-        super().__init__()
-        self._node = node
-        self._mesh_aabb = None
-        self._mesh_original_aabb = None
-        self._done = False
-
-    def run(self):
-        if self._node._mesh_data:
-            self._mesh_aabb = self._node._mesh_data.getExtents(self._node.getWorldTransformation())
-            self._mesh_original_aabb = self._node._mesh_data.getExtents()
-        with self._node._aabb_job_lock:
-            self._done = True   # Flag that the work is finished, even though the job is still running.
-            self._node._aabb_job_lock.notify_all()
-
-    def isDone(self):
-        return self._done
-
-    def getAABB(self):
-        return self._mesh_aabb
-
-    def getOriginalAABB(self):
-        return self._mesh_original_aabb
+        self._node.boundingBoxChanged.emit()
