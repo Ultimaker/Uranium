@@ -211,6 +211,36 @@ def test_getMetaData(container_stack):
     meta_data["foo"] = "bar" #Try adding an entry.
     assert container_stack.getMetaDataEntry("foo") == "bar"
 
+##  Tests removing containers from the stack.
+#
+#   \param container_stack A new container stack from a fixture.
+def test_removeContainer(container_stack):
+    # First test the empty case.
+    with pytest.raises(IndexError):
+        container_stack.removeContainer(0)
+
+    # Now add data.
+    container0 = MockContainer()
+    container_stack.addContainer(container0)
+    with pytest.raises(IndexError):
+        container_stack.removeContainer(1)
+    with pytest.raises(IndexError):
+        container_stack.removeContainer(-1)
+    with pytest.raises(IndexError): # Curveball!
+        container_stack.removeContainer("test")
+    container_stack.removeContainer(0)
+    assert container_stack.getContainers() == []
+
+    # Multiple subcontainers.
+    container0 = MockContainer()
+    container1 = MockContainer()
+    container2 = MockContainer()
+    container_stack.addContainer(container0)
+    container_stack.addContainer(container1)
+    container_stack.addContainer(container2)
+    container_stack.removeContainer(1)
+    assert container_stack.getContainers() == [container0, container2]
+
 ##  Tests replacing a container in the stack.
 #
 #   \param container_stack A new container stack from a fixture.
