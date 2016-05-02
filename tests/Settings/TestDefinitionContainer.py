@@ -34,7 +34,7 @@ test_definition_container_data = [
     ("functions.def.json", { "name": "Test", "metadata": {}, "settings": {
         "test_setting_0": { "label": "Test 0", "default_value": 10, "description": "A Test Setting" },
         "test_setting_1": { "label": "Test 1", "default_value": 10, "description": "A Test Setting", "value": UM.Settings.SettingFunction.SettingFunction("test_setting_0 * 10") },
-    }}),
+    }})
 ]
 @pytest.mark.parametrize("file,expected", test_definition_container_data)
 def test_definition_container(file, expected):
