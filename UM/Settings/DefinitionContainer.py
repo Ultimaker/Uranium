@@ -78,6 +78,8 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
     ##  \copydoc ContainerInterface::getValue
     #
     #   Reimplemented from ContainerInterface
+    #
+    #   This returns the default_value property of the specified SettingDefinition, or None if the setting cannot be found.
     def getValue(self, key):
         definitions = self.findDefinitions(key = key)
         if not definitions:
