@@ -216,7 +216,7 @@ class SettingDefinition:
         "description": {"type": DefinitionPropertyType.TranslatedString, "required": True, "read_only": True},
         "warning_description": {"type": DefinitionPropertyType.TranslatedString, "required": False, "read_only": True},
         "error_description": {"type": DefinitionPropertyType.TranslatedString, "required": False, "read_only": True},
-        "default_value": {"type": DefinitionPropertyType.Any, "required": True, "read_only": True},
+        "default_value": {"type": DefinitionPropertyType.Any, "required": False, "read_only": True},
         "value": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False},
         "enabled": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False},
         "minimum": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False},
