@@ -123,7 +123,7 @@ class SettingDefinition:
                 if getattr(self, key) != value:
                     has_properties = False
             except AttributeError:
-                continue
+                has_properties = False
 
         if has_properties:
             definitions.append(self)
