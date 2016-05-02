@@ -17,6 +17,7 @@ class MockContainer(UM.Settings.ContainerInterface.ContainerInterface):
     def __init__(self):
         self._id = uuid.uuid4().int
         self._metadata = {}
+        self.items = {}
 
     ##  Gets the unique ID of the container.
     #
@@ -49,24 +50,19 @@ class MockContainer(UM.Settings.ContainerInterface.ContainerInterface):
 
     ##  Gets the value of a container item.
     #
-    #   Since this container can't have any items, the result is always None. If
-    #   you wish to test something with actual items in it, please use an actual
-    #   implementation rather than this mock. This choice was made because
-    #   making this work for the mock container would have a high risk of bugs,
-    #   which would distract development time.
+    #   If the key doesn't exist, returns None.
     #
     #   \param key The key of the item to get.
     def getValue(self, key):
+        if key in self.items:
+            return self.items[key]
         return None
 
     ##  Serialises this container.
     #
-    #   The only different data for this container is the ID, so that is
-    #   serialised. For a functional serialisation, please use an actual
-    #   implementation rather than this mock, because this container can't
-    #   contain any items. This choice was made because making this work for the
-    #   mock container would have a high risk of bugs, which would distract
-    #   development time.
+    #   The serialisation of the mock needs to be kept simple, so it only
+    #   serialises the ID. This makes the tests succeed if the serialisation
+    #   creates different instances (which is desired).
     #
     #   \return A static string representing a container.
     def serialize(self):
@@ -74,12 +70,9 @@ class MockContainer(UM.Settings.ContainerInterface.ContainerInterface):
 
     ##  Deserialises a string to a container.
     #
-    #   Since the only different data can be the ID, the string is parsed as an
-    #   integer ID. For a functional deserialisation, please use an actual
-    #   implementation rather than this mock, because this container can't
-    #   contain any items. This choice was made because making this work for the
-    #   mock container would have a high risk of bugs, which would distract
-    #   development time.
+    #   The serialisation of the mock needs to be kept simple, so it only
+    #   deserialises the ID. This makes the tests succeed if the serialisation
+    #   creates different instances (which is desired).
     #
     #   \param serialized A serialised mock container.
     def deserialize(self, serialized):
@@ -210,6 +203,68 @@ def test_getMetaData(container_stack):
 
     meta_data["foo"] = "bar" #Try adding an entry.
     assert container_stack.getMetaDataEntry("foo") == "bar"
+
+##  Individual test cases for test_getValue.
+#
+#   Each test case has:
+#   * A description, for debugging.
+#   * A list of containers. Each container is a dictionary of the items that
+#     will be set in that container. Note that this list is ordered in the order
+#     of the stack. The first item should be referenced first.
+#   * A key to search for.
+#   * The expected result that should be returned when querying that key.
+test_getValue_data = [
+    {
+        "description": "Empty stack",
+        "containers": [
+        ],
+        "key": "foo",
+        "result": None
+    },
+    {
+        "description": "Nonexistent key",
+        "containers": [
+            { "boo": "bar" }
+        ],
+        "key": "foo",
+        "result": None
+    },
+    {
+        "description": "First hit",
+        "containers": [
+            { "foo": "bar" },
+            { "foo": "baz" }
+        ],
+        "key": "foo",
+        "result": "bar"
+    },
+    {
+        "description": "Third hit",
+        "containers": [
+            { "boo": "baz" },
+            { "zoo": "bam" },
+            { "foo": "bar" }
+        ],
+        "key": "foo",
+        "result": "bar"
+    }
+]
+
+##  Tests getting item values from the container stack.
+#
+#   \param container_stack A new container stack from a fixture.
+#   \param data Individual test cases as loaded from test_getValue_data.
+@pytest.mark.parametrize("data", test_getValue_data)
+def test_getValue(container_stack, data):
+    # Fill the container stack with the containers.
+    for container in reversed(data["containers"]): # Reverse order to make sure the last-added item is the top of the list.
+        mockup = MockContainer()
+        mockup.items = container
+        container_stack.addContainer(mockup)
+
+    answer = container_stack.getValue(data["key"]) # Do the actual query.
+
+    assert answer == data["result"]
 
 ##  Tests removing containers from the stack.
 #
