@@ -178,7 +178,7 @@ class SettingDefinition:
     #                 required \type{bool} True if missing the property indicates an error should be raised. Defaults to False.
     #                 read_only \type{bool} True if the property should never be set on a SettingInstance. Defaults to False. Note that for Function properties this indicates whether the result of the function should be stored.
     @classmethod
-    def addPropertyDefinition(cls, name, property_type, **kwargs):
+    def addSupportedProperty(cls, name, property_type, **kwargs):
         cls.__property_definitions[name] = {"type": property_type, "required": kwargs.get("required", False), "read_only": kwargs.get("read_only", False)}
 
     ##  Get the names of all supported properties.
