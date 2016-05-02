@@ -275,6 +275,8 @@ def test_replaceContainer(container_stack):
     assert container_stack.getContainers() == [container0_replacement, container1_replacement, container2]
 
 ##  Tests serialising and deserialising the container stack.
+#
+#   \param container_stack A new container stack from a fixture.
 def test_serialize(container_stack):
     # First test the empty container stack.
     _test_serialize_cycle(container_stack)
@@ -331,6 +333,11 @@ def test_setName(container_stack):
     assert name_change_counter == 2 # Didn't signal.
 
 ##  Tests a single cycle of serialising and deserialising a container stack.
+#
+#   This will serialise and then deserialise the container stack, and sees if
+#   the deserialised container stack is the same as the original one.
+#
+#   \param container_stack The container stack to serialise and deserialise.
 def _test_serialize_cycle(container_stack):
     name = container_stack.getName()
     metadata = container_stack.getMetaData()
