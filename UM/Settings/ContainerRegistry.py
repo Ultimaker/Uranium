@@ -79,7 +79,7 @@ class ContainerRegistry:
         self._container_types[plugin_id] = container.__class__
 
         metadata = PluginRegistry.getInstance().getMetaData(plugin_id)
-        self._mime_type_map[metadata["settings_container"]["mimetype"]] = container.__class_
+        self._mime_type_map[metadata["settings_container"]["mimetype"]] = container.__class__
 
     ##  Load all available definition containers, instance containers and container stacks.
     def load(self):
