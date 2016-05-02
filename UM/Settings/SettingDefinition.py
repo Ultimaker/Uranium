@@ -9,16 +9,35 @@ from UM.Logger import Logger
 
 from . import SettingFunction
 
+##  Type of definition property.
+#
+#   This enum describes the possible types for a supported definition property.
+#   For more information about supported definition properties see SettingDefinition
+#   and SettingDefinition::addSupportedProperty().
 class DefinitionPropertyType(enum.IntEnum):
-    Any = 1
-    String = 2
-    TranslatedString = 3
-    Function = 4
+    Any = 1 ## Any value.
+    String = 2 ## Value is always converted to string.
+    TranslatedString = 3 ## Value is converted to string then passed through an i18nCatalog object to get a translated version of that string.
+    Function = 4 ## Value is a python function. It is passed to SettingFunction's constructor which will parse and analyze it.
 
 ##  Defines a single Setting with its properties.
 #
-#   This class defines a single Setting with all its properties. This class is considered invariant,
-#   the only way to change it is using deserialize().
+#   This class defines a single Setting with all its properties. This class is considered immutable,
+#   the only way to change it is using deserialize(). Should any state need to be stored for a definition,
+#   create a SettingInstance pointing to the definition, then store the value in that instance.
+#
+#   == Supported Properties
+#
+#   The SettingDefinition class contains a concept of "supported properties". These are properties that
+#   are supported when serializing or deserializing the setting. These properties are defined through the
+#   addSupportedProperty() method. Each property needs a name and a type. In addition, there are two
+#   optional boolean value to indicate whether the property is "required" and whether it is "read only".
+#   Currently, four types of supported properties are defined. Please DefinitionPropertyType for a description
+#   of these types.
+#
+#   Required properties are properties that should be present when deserializing a setting. If the property
+#   is not present, an error will be raised. Read-only properties are properties that should never change
+#   after creating a SettingDefinition. This means they cannot be stored in a SettingInstance object.
 class SettingDefinition:
     ##  Construcutor
     #
@@ -55,26 +74,36 @@ class SettingDefinition:
         super().__setattr__(name, value)
 
     ##  The key of this setting.
+    #
+    #   \return \type{string}
     @property
     def key(self):
         return self._key
 
     ##  The container of this setting.
+    #
+    #   \return \type{DefinitionContainer}
     @property
     def container(self):
         return self._container
 
     ##  The parent of this setting.
+    #
+    #   \return \type{SettingDefinition}
     @property
     def parent(self):
         return self._parent
 
     ##  A list of children of this setting.
+    #
+    #   \return \type{list<SettingDefinition>}
     @property
     def children(self):
         return self._children
 
     ##  A list of SettingRelation objects of this setting.
+    #
+    #   \return \type{list<SettingRelation>}
     @property
     def relations(self):
         return self._relations
@@ -152,6 +181,11 @@ class SettingDefinition:
     def addPropertyDefinition(cls, name, property_type, **kwargs):
         cls.__property_definitions[name] = {"type": property_type, "required": kwargs.get("required", False), "read_only": kwargs.get("read_only", False)}
 
+    ##  Get the names of all supported properties.
+    #
+    #   \param type \type{DefinitionPropertyType} The type of property to get the name of. Defaults to None which means all properties.
+    #
+    #   \return A list of all the names of supported properties.
     @classmethod
     def getPropertyNames(cls, type = None):
         result = []
@@ -160,16 +194,36 @@ class SettingDefinition:
                 result.append(key)
         return result
 
+    ##  Check if a property with the specified name is defined as a supported property.
+    #
+    #   \param name \type{string} The name of the property to check if it is supported.
+    #
+    #   \return True if the property is supported, False if not.
     @classmethod
     def hasProperty(cls, name):
         return name in cls.__property_definitions
 
+    ##  Check if the specified property is considered a required property.
+    #
+    #   Required properties are checked when deserializing a SettingDefinition and if not present an error
+    #   will be reported.
+    #
+    #   \param name \type{string} The name of the property to check if it is required or not.
+    #
+    #   \return True if the property is supported and is required, False if it is not required or is not part of the list of supported properties.
     @classmethod
     def isRequiredProperty(cls, name):
         if name in cls.__property_definitions:
             return cls.__property_definitions[name]["required"]
         return False
 
+    ##  Check if the specified property is considered a read-only property.
+    #
+    #   Read-only properties are properties that cannot have their value set in SettingInstance objects.
+    #
+    #   \param name \type{string} The name of the property to check if it is read-only or not.
+    #
+    #   \return True if the property is supported and is read-only, False if it is not required or is not part of the list of supported properties.
     @classmethod
     def isReadOnlyProperty(cls, name):
         if name in cls.__property_definitions:
@@ -178,6 +232,7 @@ class SettingDefinition:
 
     ## protected:
 
+    # Deserialize from a dictionary
     def _deserialize_dict(self, serialized):
         self._children = []
         self._relations = []
