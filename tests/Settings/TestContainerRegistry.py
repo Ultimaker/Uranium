@@ -174,8 +174,7 @@ test_findContainers_data = [
 ##  Tests the findDefinitionContainers function.
 #
 #   \param container_registry A new container registry from a fixture.
-#   \param data The data for the tests. Loaded from
-#   test_findDefinitionContainers_data.
+#   \param data The data for the tests. Loaded from test_findContainers_data.
 @pytest.mark.parametrize("data", test_findContainers_data)
 def test_findDefinitionContainers(container_registry, data):
     for container in data["containers"]: # Fill the registry with mock containers.
@@ -191,8 +190,7 @@ def test_findDefinitionContainers(container_registry, data):
 ##  Tests the findInstanceContainers function.
 #
 #   \param container_registry A new container registry from a fixture.
-#   \param data The data for the tests. Loaded from
-#   test_findInstanceContainers_data.
+#   \param data The data for the tests. Loaded from test_findContainers_data.
 @pytest.mark.parametrize("data", test_findContainers_data)
 def test_findInstanceContainers(container_registry, data):
     for container in data["containers"]: # Fill the registry with mock containers.
