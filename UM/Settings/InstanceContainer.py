@@ -27,7 +27,7 @@ class DefinitionNotFoundError(Exception):
 #
 @signalemitter
 class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
-    Version = 1
+    Version = 2
 
     ##  Constructor
     #

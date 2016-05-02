@@ -26,7 +26,7 @@ class InvalidOverrideError(Exception):
 #
 #
 class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
-    Version = 1
+    Version = 2
 
     ##  Constructor
     #

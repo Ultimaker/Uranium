@@ -9,7 +9,7 @@ from . import ContainerInterface
 ##  A stack of setting containers to handle setting value retrieval.
 @signalemitter
 class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
-    Version = 1
+    Version = 2
 
     ##  Constructor
     #
