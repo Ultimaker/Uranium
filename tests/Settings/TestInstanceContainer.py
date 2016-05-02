@@ -1,12 +1,27 @@
 # Copyright (c) 2016 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
+import pytest
+import os
+
 import UM.Settings
 
-def test_instance_container():
-    container = UM.Settings.InstanceContainer()
+from UM.Resources import Resources
+Resources.addSearchPath(os.path.dirname(os.path.abspath(__file__)))
 
-def test_advanced_setProperty(instance_container):
+@pytest.fixture
+def container_registry():
+    UM.Settings.ContainerRegistry._ContainerRegistry__instance = None
+    UM.Settings.ContainerRegistry.getInstance().load()
+    return UM.Settings.ContainerRegistry.getInstance()
+
+def test_instance_container():
+    container = UM.Settings.InstanceContainer("test")
+    assert container.getId() == "test"
+
+def test_advanced_setProperty():
+    instance_container = UM.Settings.InstanceContainer("test")
+
     definition1 = UM.Settings.SettingDefinition("test_0", None)
     definition1.deserialize({
         "label": "Test 0",
@@ -52,4 +67,39 @@ def test_advanced_setProperty(instance_container):
 
     with pytest.raises(AttributeError):
         assert def2_instance.minimum == 10.0
+
+def test_serialize(container_registry):
+    instance_container = UM.Settings.InstanceContainer("test")
+    definition = container_registry.findDefinitionContainers({"id": "basic"})[0]
+    instance_container.setDefinition(definition)
+
+    result = instance_container.serialize()
+    print(result)
+
+    assert result == """[general]
+version = 1
+name = test
+definition = basic
+
+[metadata]
+
+[values]
+
+"""
+
+test_deserialize_data = [
+    ("basic.inst.cfg", {"name": "Test"}),
+]
+@pytest.mark.parametrize("filename,expected", test_deserialize_data)
+def test_deserialize(filename, expected, container_registry):
+    instance_container = UM.Settings.InstanceContainer(filename)
+
+    path = Resources.getPath(Resources.InstanceContainers, filename)
+    with open(path) as data:
+        instance_container.deserialize(data.read())
+
+    for key, value in expected.items():
+        if key == "name":
+            assert instance_container.getName() == value
+
 
