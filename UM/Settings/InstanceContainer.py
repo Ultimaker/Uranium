@@ -128,7 +128,7 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
             parser["metadata"][key] = str(value)
 
         parser["values"] = {}
-        for key, instance in self._instances:
+        for key, instance in self._instances.items():
             parser["values"][key] = str(instance.value)
 
         stream = io.StringIO()
