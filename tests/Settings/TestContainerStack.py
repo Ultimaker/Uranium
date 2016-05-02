@@ -211,6 +211,39 @@ def test_getMetaData(container_stack):
     meta_data["foo"] = "bar" #Try adding an entry.
     assert container_stack.getMetaDataEntry("foo") == "bar"
 
+##  Tests replacing a container in the stack.
+#
+#   \param container_stack A new container stack from a fixture.
+def test_replaceContainer(container_stack):
+    # First test the empty case.
+    with pytest.raises(IndexError):
+        container_stack.replaceContainer(0, MockContainer())
+
+    # Now add data.
+    container0 = MockContainer()
+    container_stack.addContainer(container0)
+    container0_replacement = MockContainer()
+    with pytest.raises(IndexError):
+        container_stack.replaceContainer(1, container0_replacement)
+    with pytest.raises(IndexError):
+        container_stack.replaceContainer(-1, container0_replacement)
+    container_stack.replaceContainer(0, container0_replacement)
+    assert container_stack.getContainers() == [container0_replacement]
+
+    # Add multiple containers.
+    container1 = MockContainer()
+    container_stack.addContainer(container1)
+    container2 = MockContainer()
+    container_stack.addContainer(container2)
+    container1_replacement = MockContainer()
+    container_stack.replaceContainer(1, container1_replacement)
+    assert container_stack.getContainers() == [container0_replacement, container1_replacement, container2]
+
+    # Try to replace a container with itself.
+    with pytest.raises(Exception):
+        container_stack.replaceContainer(2, container_stack)
+    assert container_stack.getContainers() == [container0_replacement, container1_replacement, container2]
+
 ##  Tests serialising and deserialising the container stack.
 def test_serialize(container_stack):
     # First test the empty container stack.
