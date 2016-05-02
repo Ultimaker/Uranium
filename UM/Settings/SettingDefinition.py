@@ -231,4 +231,4 @@ class SettingDefinition:
         "options": {"type": DefinitionPropertyType.Any, "required": False, "read_only": True},
     }
 
-    __type_definitions = ["int", "bool", "category", "str"]
+    __type_definitions = ["int", "bool", "category", "str", "float"]
