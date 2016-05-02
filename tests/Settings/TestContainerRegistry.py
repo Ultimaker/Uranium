@@ -184,24 +184,7 @@ def test_findDefinitionContainers(container_registry, data):
 
     results = container_registry.findDefinitionContainers(**data["filter"]) # The actual function call we're testing.
 
-    assert len(results) == len(data["result"]) # Verify we do not get more or less results than expected
-
-    matches = 0
-    for result in results: # Go through all results and match them with our expected data
-        for required in list(data["result"]): # Iterate over a copy of the list so we do not modify the original data
-            if "id" in required:
-                # Special casing for id since that is not in the metadata
-                if result.getId() != required["id"]:
-                    continue
-                del required["id"] # Remove id from the expected metadata since it is not part of metadata
-
-            if result.getMetaData() == required:
-                # If the metadata matches, we know this entry is valid.
-                # Note that this requires specifying all metadata in the expected results.
-                matches += 1
-                break # Break out of the loop since we have a valid match
-
-    assert matches == len(data["result"])
+    _verifyMetaDataMatches(results, data["result"])
 
 ##  Tests the findInstanceContainers function.
 #
@@ -218,22 +201,7 @@ def test_findInstanceContainers(container_registry, data):
 
     results = container_registry.findInstanceContainers(**data["filter"]) # The actual function call we're testing.
 
-    assert len(results) == len(data["result"]) # Verify we do not get more or less results than expected.
-
-    matches = 0
-    for result in results: # Go through all results and match them with our expected data.
-        for required in list(data["result"]): # Iterate over a copy of the list so we do not modify the original data.
-            if "id" in required: # Special casing for ID since that is not in the metadata.
-                if result.getId() != required["id"]:
-                    continue # No match.
-                del required["id"] # Remove ID from the expected metadata since it is not part of the metadata.
-
-            if result.getMetaData() == required:
-                # If the metadata matches, we know this entry is valid.
-                # Note that this requires specifying all metadata in the expected results.
-                matches += 1
-                break # We have a valid match.
-    assert matches == len(data["result"])
+    _verifyMetaDataMatches(results, data["result"])
 
 ##  Tests the loading of containers into the registry.
 #
@@ -257,3 +225,30 @@ def test_load(container_registry):
     assert "metadata" in ids_found
     assert "single_setting" in ids_found
     assert "inherits" in ids_found
+
+##  Helper function to verify if the metadata of the answers matches required
+#   metadata.
+#
+#   This basically compares two sets. They are provided as two lists, but the
+#   order doesn't matter.
+#
+#   \param answer A list of containers, each of which has metadata.
+#   \param ground_truth A list of dictionaries, describing the metadata of each
+#   required container.
+def _verifyMetaDataMatches(answer, ground_truth):
+    assert len(answer) == len(ground_truth)
+
+    matches = 0
+    for result in answer: # Go through all results and match them with our expected data.
+        for required in list(ground_truth): # Iterate over a copy of the list so we do not modify the original data.
+            if "id" in required: # Special casing for ID since that is not in the metadata.
+                if result.getId() != required["id"]:
+                    continue # No match.
+                del required["id"] # Remove ID from the expected metadata since it is not part of the metadata.
+
+            if result.getMetaData() == required:
+                # If the metadata matches, we know this entry is valid.
+                # Note that this requires specifying all metadata in the expected results.
+                matches += 1
+                break # We have a valid match.
+    assert matches == len(ground_truth)
