@@ -224,10 +224,10 @@ class SettingDefinition:
         "default_value": {"type": DefinitionPropertyType.Any, "required": False, "read_only": True},
         "value": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False},
         "enabled": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False},
-        "minimum": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False},
-        "maximum": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False},
-        "minimum_warning": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False},
-        "maximum_warning": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False},
+        "minimum_value": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False},
+        "maximum_value": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False},
+        "minimum_value_warning": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False},
+        "maximum_value_warning": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False},
         "options": {"type": DefinitionPropertyType.Any, "required": False, "read_only": True},
     }
 
