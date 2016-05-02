@@ -53,6 +53,7 @@ class SettingFunction:
     def getUsedSettings(self):
         return self._settings
 
+# Helper class used to analyze a parsed function
 class _SettingExpressionVisitor(ast.NodeVisitor):
     def __init__(self):
         super().__init__()
