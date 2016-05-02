@@ -203,6 +203,22 @@ def test_findInstanceContainers(container_registry, data):
 
     _verifyMetaDataMatches(results, data["result"])
 
+##  Tests the findContainerStacks function.
+#
+#   \param container_registry A new container registry from a fixture.
+#   \param data The data for the tests. Loaded from test_findContainers_data.
+@pytest.mark.parametrize("data", test_findContainers_data)
+def test_findContainerStacks(container_registry, data):
+    for container in data["containers"]: # Fill the registry with container stacks.
+        container_id = container["id"]
+        del container["id"]
+        container_stack = UM.Settings.ContainerStack(container_id, container)
+        container_registry.addContainer(container_stack)
+
+    results = container_registry.findContainerStacks(**data["filter"]) # The actual function call we're testing.
+
+    _verifyMetaDataMatches(results, data["result"])
+
 ##  Tests the loading of containers into the registry.
 #
 #   \param container_registry A new container registry from a fixture.
