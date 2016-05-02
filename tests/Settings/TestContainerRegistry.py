@@ -16,7 +16,7 @@ from UM.MimeTypeDatabase import MimeType, MimeTypeDatabase
 #   This allows us to test the container registry without testing the container
 #   class. If something is wrong in the container class it won't influence this
 #   test.
-class MockContainer(UM.Settings.DefinitionContainer):
+class MockContainer(UM.Settings.ContainerInterface.ContainerInterface):
     ##  Initialise a new definition container.
     #
     #   The container will have the specified ID and all metadata in the
@@ -31,6 +31,15 @@ class MockContainer(UM.Settings.DefinitionContainer):
     def getId(self):
         return self._id
 
+    ##  Gets all metadata of this container.
+    #
+    #   This returns the metadata dictionary that was provided in the
+    #   constructor of this mock container.
+    #
+    #   \return The metadata for this container.
+    def getMetaData(self):
+        return self._metadata
+
     ##  Gets a metadata entry from the metadata dictionary.
     #
     #   \param key The key of the metadata entry.
@@ -40,6 +49,33 @@ class MockContainer(UM.Settings.DefinitionContainer):
         if entry in self._metadata:
             return self._metadata[entry]
         return default
+
+    ##  Gets a human-readable name for this container.
+    #
+    #   \return Always returns "MockContainer".
+    def getName(self):
+        return "MockContainer"
+
+    ##  Get the value of a container item.
+    #
+    #   Since this mock container cannot contain any items, it always returns
+    #   None.
+    #
+    #   \return Always returns None.
+    def getValue(self, key):
+        pass
+
+    ##  Serializes the container to a string representation.
+    #
+    #   This method is not implemented in the mock container.
+    def serialize(self):
+        raise NotImplementedError()
+
+    ##  Deserializes the container from a string representation.
+    #
+    #   This method is not implemented in the mock container.
+    def deserialize(self, serialized):
+        raise NotImplementedError()
 
 @pytest.fixture
 def container_registry():
