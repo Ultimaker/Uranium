@@ -1,10 +1,21 @@
 # Copyright (c) 2016 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
+import configparser
+import io
 
 from UM.Signal import Signal, signalemitter
 from UM.PluginObject import PluginObject
 
 from . import ContainerInterface
+
+
+class IncorrectVersionError(Exception):
+    pass
+
+
+class InvalidContainerStackError(Exception):
+    pass
+
 
 ##  A stack of setting containers to handle setting value retrieval.
 @signalemitter
@@ -33,7 +44,7 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     #
     #   Reimplemented from ContainerInterface
     def getName(self):
-        return self._name
+        return str(self._name)
 
     ##  Emitted whenever the name of this stack changes.
     nameChanged = Signal()
@@ -82,13 +93,46 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     #
     #   Reimplemented from ContainerInterface
     def serialize(self):
-        return ""
+        parser = configparser.ConfigParser(interpolation = None, empty_lines_in_values = False)
+
+        parser["general"] = {}
+        parser["general"]["version"] = str(self.Version)
+        parser["general"]["name"] = str(self._name)
+        parser["general"]["id"] = str(self._id)
+
+        parser["metadata"] = {}
+        for key, value in self._metadata.items():
+            parser["metadata"][key] = str(value)
+
+        parser["containers"] = {}
+        parser["containers"]["length"] = str(len(self._containers))
+        for index, container in enumerate(self._containers):
+            parser["containers"][str(index)] = container.serialize()
+
+        stream = io.StringIO()
+        parser.write(stream)
+        return stream.getvalue()
 
     ##  \copydoc ContainerInterface::deserialize
     #
     #   Reimplemented from ContainerInterface
     def deserialize(self, serialized):
-        pass
+        parser = configparser.ConfigParser(interpolation=None, empty_lines_in_values=False)
+        parser.read_string(serialized)
+
+        if not "general" in parser or not "version" in parser["general"] or not "name" in parser["general"] or not "id" in parser["general"]:
+            raise InvalidContainerStackError("Missing required section 'general' or 'version' property")
+
+        if parser["general"].getint("version") != self.Version:
+            raise IncorrectVersionError
+
+        self._name = parser["general"].get("name")
+        self._id = parser["general"].get("id")
+
+        if "metadata" in parser:
+            self._metadata = dict(parser["metadata"])
+
+        ## TODO; Deserialize the containers.
 
     ##  Get a list of all containers in this stack.
     #
