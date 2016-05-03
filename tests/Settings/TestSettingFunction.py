@@ -12,10 +12,10 @@ import UM.Settings.SettingFunction
 setting_function_good_data = [
     "0",            # Number.
     "\"x\"",        # String.
+    "True",         # Boolean.
     "foo",          # Variable.
     "math.sqrt(4)", # Function call.
     "foo * zoo"     # Two variables.
-    "boo"           # Variable that's not provided by the value provider.
 ]
 
 ##  Fixture to create a setting function.
@@ -31,10 +31,10 @@ def setting_function_good(request):
 #   Each test will be executed with each of these functions. These functions are
 #   all bad and should not work.
 setting_function_bad_data = [
-    "",                                                       # Empty string.
-    "lambda i: os.open(/etc/passwd).read()",                  # Function that reads your passwords from your system.
-    "exec(\"lambda i: o\" + \"s.open(/etc/passwd).read()\")", # Obfuscated function that reads your passwords from your system.
-    "("                                                       # Syntax error.
+    "",                                                               # Empty string.
+    "lambda i: os.open(\"/etc/passwd\").read()",                      # Function that reads your passwords from your system.
+    "exec(\"lambda i: o\" + \"s.open(\\\"/etc/passwd\\\").read()\")", # Obfuscated function that reads your passwords from your system.
+    "("                                                               # Syntax error.
 ]
 
 ##  Fixture to create a setting function.
@@ -58,3 +58,43 @@ def test_init_good(setting_function_good):
 def test_init_bad(setting_function_bad):
     assert setting_function_bad is not None
     assert not setting_function_bad.isValid()
+
+class MockValueProvider:
+    ##  Creates a mock value provider.
+    #
+    #   This initialises a dictionary with key-value pairs.
+    def __init__(self):
+        self._values = {
+            "foo": 5,
+            "zoo": 7
+        }
+
+    ##  Provides a value.
+    #
+    #   \param name The key of the value to provide.
+    def getValue(self, name):
+        if not (name in self._values):
+            return None
+        return self._values[name]
+
+test_call_data = [
+    { "code": "0",            "result": 0 },
+    { "code": "\"x\"",        "result": "x" },
+    { "code": "True",         "result": True },
+    { "code": "foo",          "result": 8 },
+    { "code": "math.sqrt(4)", "result": 2 },
+    { "code": "foo * zoo",    "result": 35 }, # 5 * 7
+    { "code": "",             "result": None },
+    { "code": "lambda i: os.open(\"/etc/passwd\").read()", "result": None },
+    { "code": "exec(\"lambda i: o\" + \"s.open(\\\"/etc/passwd\\\").read()\")", "result": None },
+    { "code": "boo",          "result": None } # Variable doesn't exist.
+]
+
+##  Tests the calling of a valid setting function.
+#
+#   \param setting_function_good A valid setting function from a fixture.
+@pytest.mark.parametrize("data", test_call_data)
+def test_call(data):
+    value_provider = MockValueProvider()
+    function = UM.Settings.SettingFunction.SettingFunction(data["code"])
+    assert function(value_provider) == data["result"]
