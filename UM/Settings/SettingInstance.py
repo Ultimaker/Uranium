@@ -103,21 +103,7 @@ class SettingInstance:
     #   \param instance The instance that reported the validationState change.
     validationStateChanged = Signal()
 
-    ##  Check if this instance should be visible.
-    @property
-    def visible(self):
-        return self._visible
 
-    ##  Set if this instance should be visible.
-    def setVisible(self, visible):
-        if visible != self._visible:
-            self._visible = visible
-            self.visibleChanged.emit(self)
-
-    ##  Emitted whenever this instance's visible property changes.
-    #
-    #   \param instance The instance that reported the visibility change.
-    visibleChanged = Signal()
 
     def __repr__(self):
         return "<SettingInstance (0x{0:x}) definition={1} container={2}>".format(id(self), self._definition, self._container)
