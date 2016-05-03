@@ -83,7 +83,7 @@ class Signal:
     #
     #   \param kwargs Keyword arguments.
     #                 Possible keywords:
-    #                 - type: The signal type. Defaults to Direct.
+    #                 - type: The signal type. Defaults to Auto.
     def __init__(self, **kwargs):
         self.__functions = WeakSet()
         self.__methods = WeakKeyDictionary()
