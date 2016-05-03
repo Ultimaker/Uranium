@@ -7,6 +7,8 @@ import os.path
 import UM.Settings
 import UM.PluginRegistry
 import UM.Settings.DefinitionContainer
+import UM.Settings.InstanceContainer
+import UM.Settings.ContainerStack
 
 from UM.Resources import Resources
 from UM.MimeTypeDatabase import MimeType, MimeTypeDatabase
@@ -94,7 +96,8 @@ def container_registry():
 def test_create(container_registry):
     assert container_registry != None
 
-##  Individual test cases for test_findDefinitionContainers.
+##  Individual test cases for test_findDefinitionContainers as well as
+#   test_findInstanceContainers.
 #
 #   Each entry has a descriptive name for debugging.
 #   Each entry also has a list of "containers", each of which is an arbitrary
@@ -104,7 +107,7 @@ def test_create(container_registry):
 #   metadata of the containers.
 #   Each entry also has an "answer", which is a list of dictionaries again
 #   representing the containers that must be returned by the search.
-test_findDefinitionContainers_data = [
+test_findContainers_data = [
     {
         "name": "No containers",
         "containers": [
@@ -171,36 +174,50 @@ test_findDefinitionContainers_data = [
 ##  Tests the findDefinitionContainers function.
 #
 #   \param container_registry A new container registry from a fixture.
-#   \param data The data for the tests. Loaded from
-#   test_findDefinitionContainers_data.
-@pytest.mark.parametrize("data", test_findDefinitionContainers_data)
+#   \param data The data for the tests. Loaded from test_findContainers_data.
+@pytest.mark.parametrize("data", test_findContainers_data)
 def test_findDefinitionContainers(container_registry, data):
     for container in data["containers"]: # Fill the registry with mock containers.
         container_id = container["id"]
         del container["id"]
-        mock_container = MockContainer(container_id, container)
-        container_registry._containers.append(mock_container) # TODO: This is a private field we're adding to here...
+        definition_container = UM.Settings.DefinitionContainer(container_id, container)
+        container_registry.addContainer(definition_container)
 
-    results = container_registry.findDefinitionContainers(data["filter"]) # The actual function call we're testing.
+    results = container_registry.findDefinitionContainers(**data["filter"]) # The actual function call we're testing.
 
-    assert len(results) == len(data["result"]) # Verify we do not get more or less results than expected
+    _verifyMetaDataMatches(results, data["result"])
 
-    matches = 0
-    for result in results: # Go through all results and match them with our expected data
-        for required in list(data["result"]): # Iterate over a copy of the list so we do not modify the original data
-            if "id" in required:
-                # Special casing for id since that is not in the metadata
-                if result.getId() != required["id"]:
-                    continue
-                del required["id"] # Remove id from the expected metadata since it is not part of metadata
+##  Tests the findInstanceContainers function.
+#
+#   \param container_registry A new container registry from a fixture.
+#   \param data The data for the tests. Loaded from test_findContainers_data.
+@pytest.mark.parametrize("data", test_findContainers_data)
+def test_findInstanceContainers(container_registry, data):
+    for container in data["containers"]: # Fill the registry with mock containers.
+        container_id = container["id"]
+        del container["id"]
+        instance_container = UM.Settings.InstanceContainer(container_id, container)
+        container_registry.addContainer(instance_container)
 
-            if result.getMetaData() == required:
-                # If the metadata matches, we know this entry is valid.
-                # Note that this requires specifying all metadata in the expected results.
-                matches += 1
-                break # Break out of the loop since we have a valid match
+    results = container_registry.findInstanceContainers(**data["filter"]) # The actual function call we're testing.
 
-    assert matches == len(data["result"])
+    _verifyMetaDataMatches(results, data["result"])
+
+##  Tests the findContainerStacks function.
+#
+#   \param container_registry A new container registry from a fixture.
+#   \param data The data for the tests. Loaded from test_findContainers_data.
+@pytest.mark.parametrize("data", test_findContainers_data)
+def test_findContainerStacks(container_registry, data):
+    for container in data["containers"]: # Fill the registry with container stacks.
+        container_id = container["id"]
+        del container["id"]
+        container_stack = UM.Settings.ContainerStack(container_id, container)
+        container_registry.addContainer(container_stack)
+
+    results = container_registry.findContainerStacks(**data["filter"]) # The actual function call we're testing.
+
+    _verifyMetaDataMatches(results, data["result"])
 
 ##  Tests the loading of containers into the registry.
 #
@@ -208,13 +225,13 @@ def test_findDefinitionContainers(container_registry, data):
 def test_load(container_registry):
     container_registry.load()
 
-    definitions = container_registry.findDefinitionContainers({ "id": "single_setting" })
+    definitions = container_registry.findDefinitionContainers(id = "single_setting")
     assert len(definitions) == 1
 
     definition = definitions[0]
     assert definition.getId() == "single_setting"
 
-    definitions = container_registry.findDefinitionContainers({ "author": "Ultimaker" })
+    definitions = container_registry.findDefinitionContainers(author = "Ultimaker")
     assert len(definitions) == 3
 
     ids_found = []
@@ -224,3 +241,30 @@ def test_load(container_registry):
     assert "metadata" in ids_found
     assert "single_setting" in ids_found
     assert "inherits" in ids_found
+
+##  Helper function to verify if the metadata of the answers matches required
+#   metadata.
+#
+#   This basically compares two sets. They are provided as two lists, but the
+#   order doesn't matter.
+#
+#   \param answer A list of containers, each of which has metadata.
+#   \param ground_truth A list of dictionaries, describing the metadata of each
+#   required container.
+def _verifyMetaDataMatches(answer, ground_truth):
+    assert len(answer) == len(ground_truth)
+
+    matches = 0
+    for result in answer: # Go through all results and match them with our expected data.
+        for required in list(ground_truth): # Iterate over a copy of the list so we do not modify the original data.
+            if "id" in required: # Special casing for ID since that is not in the metadata.
+                if result.getId() != required["id"]:
+                    continue # No match.
+                del required["id"] # Remove ID from the expected metadata since it is not part of the metadata.
+
+            if result.getMetaData() == required:
+                # If the metadata matches, we know this entry is valid.
+                # Note that this requires specifying all metadata in the expected results.
+                matches += 1
+                break # We have a valid match.
+    assert matches == len(ground_truth)

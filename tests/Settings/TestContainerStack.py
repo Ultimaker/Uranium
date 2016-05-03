@@ -16,6 +16,8 @@ class MockContainer(UM.Settings.ContainerInterface.ContainerInterface):
     ##  Creates a mock container with a new unique ID.
     def __init__(self):
         self._id = uuid.uuid4().int
+        self._metadata = {}
+        self.items = {}
 
     ##  Gets the unique ID of the container.
     #
@@ -29,42 +31,38 @@ class MockContainer(UM.Settings.ContainerInterface.ContainerInterface):
     def getName(self):
         return "Fred"
 
-    ##  Gives empty metadata.
+    ##  Returns the metadata dictionary.
     #
-    #   \return An empty dictionary representing the metadata.
+    #   \return A dictionary containing metadata for this container stack.
     def getMetaData(self):
-        return {}
+        return self._metadata
 
     ##  Gets an entry from the metadata.
     #
-    #   Since the metadata is empty, this always returns the default.
-    #
     #   \param entry The entry to get from the metadata.
     #   \param default The default value in case the entry is missing.
-    #   \return The provided default value (None by default).
+    #   \return The value belonging to the requested entry, or the default if no
+    #   such key exists.
     def getMetaDataEntry(self, entry, default = None):
+        if entry in self._metadata:
+            return self._metadata["entry"]
         return default
 
     ##  Gets the value of a container item.
     #
-    #   Since this container can't have any items, the result is always None. If
-    #   you wish to test something with actual items in it, please use an actual
-    #   implementation rather than this mock. This choice was made because
-    #   making this work for the mock container would have a high risk of bugs,
-    #   which would distract development time.
+    #   If the key doesn't exist, returns None.
     #
     #   \param key The key of the item to get.
     def getValue(self, key):
+        if key in self.items:
+            return self.items[key]
         return None
 
     ##  Serialises this container.
     #
-    #   The only different data for this container is the ID, so that is
-    #   serialised. For a functional serialisation, please use an actual
-    #   implementation rather than this mock, because this container can't
-    #   contain any items. This choice was made because making this work for the
-    #   mock container would have a high risk of bugs, which would distract
-    #   development time.
+    #   The serialisation of the mock needs to be kept simple, so it only
+    #   serialises the ID. This makes the tests succeed if the serialisation
+    #   creates different instances (which is desired).
     #
     #   \return A static string representing a container.
     def serialize(self):
@@ -72,12 +70,9 @@ class MockContainer(UM.Settings.ContainerInterface.ContainerInterface):
 
     ##  Deserialises a string to a container.
     #
-    #   Since the only different data can be the ID, the string is parsed as an
-    #   integer ID. For a functional deserialisation, please use an actual
-    #   implementation rather than this mock, because this container can't
-    #   contain any items. This choice was made because making this work for the
-    #   mock container would have a high risk of bugs, which would distract
-    #   development time.
+    #   The serialisation of the mock needs to be kept simple, so it only
+    #   deserialises the ID. This makes the tests succeed if the serialisation
+    #   creates different instances (which is desired).
     #
     #   \param serialized A serialised mock container.
     def deserialize(self, serialized):
@@ -110,6 +105,71 @@ def test_addContainer(container_stack):
     with pytest.raises(Exception):
         container_stack.addContainer(container_stack) # Adding itself gives an exception.
     assert container_stack.getContainers() == [container] # Make sure that adding itself didn't change the state, even if it raises an exception.
+
+##  Individual test cases for test_findContainer.
+#
+#   Each test case has:
+#   * A description for debugging.
+#   * A list of dictionaries for containers to search in.
+#   * A filter to search with.
+#   * A required result.
+test_findContainer_data = [
+    {
+        "description": "Search empty",
+        "containers": [
+            { },
+            { }
+        ],
+        "filter": { },
+        "result": { }
+    },
+    {
+        "description": "Not found",
+        "containers": [
+            { "foo": "baz" }
+        ],
+        "filter": { "foo": "bar" },
+        "result": None
+    },
+    {
+        "description": "Key not found",
+        "containers": [
+            { "loo": "bar" }
+        ],
+        "filter": { "foo": "bar" },
+        "result": None
+    },
+    {
+        "description": "Multiple constraints",
+        "containers": [
+            { "id": "a", "number": 1, "string": "foo", "mixed": 10 },
+            { "id": "b", "number": 2, "string": "foo", "mixed": "bar" },
+            { "id": "c", "number": 1, "string": "loo", "mixed": 10 }
+        ],
+        "filter": { "number": 1, "string": "foo", "mixed": 10 },
+        "result": { "id": "a", "number": 1, "string": "foo", "mixed": 10 }
+    }
+]
+
+##  Tests finding a container by a filter.
+#
+#   \param container_stack A new container stack from a fixture.
+#   \param data Individual test cases, provided from test_findContainer_data.
+@pytest.mark.parametrize("data", test_findContainer_data)
+def test_findContainer(container_stack, data):
+    for container in data["containers"]: # Add all containers.
+        mockup = MockContainer()
+        for key, value in container.items(): # Copy the data to the metadata of the mock-up.
+            mockup.getMetaData()[key] = value
+        container_stack.addContainer(mockup)
+
+    answer = container_stack.findContainer(data["filter"]) # The actual method to test.
+
+    if data["result"] == None:
+        assert answer == None
+    else:
+        assert answer != None
+    assert data["result"] == answer.getMetaData()
 
 ##  Tests getting a container by index.
 #
@@ -144,7 +204,134 @@ def test_getMetaData(container_stack):
     meta_data["foo"] = "bar" #Try adding an entry.
     assert container_stack.getMetaDataEntry("foo") == "bar"
 
+##  Individual test cases for test_getValue.
+#
+#   Each test case has:
+#   * A description, for debugging.
+#   * A list of containers. Each container is a dictionary of the items that
+#     will be set in that container. Note that this list is ordered in the order
+#     of the stack. The first item should be referenced first.
+#   * A key to search for.
+#   * The expected result that should be returned when querying that key.
+test_getValue_data = [
+    {
+        "description": "Empty stack",
+        "containers": [
+        ],
+        "key": "foo",
+        "result": None
+    },
+    {
+        "description": "Nonexistent key",
+        "containers": [
+            { "boo": "bar" }
+        ],
+        "key": "foo",
+        "result": None
+    },
+    {
+        "description": "First hit",
+        "containers": [
+            { "foo": "bar" },
+            { "foo": "baz" }
+        ],
+        "key": "foo",
+        "result": "bar"
+    },
+    {
+        "description": "Third hit",
+        "containers": [
+            { "boo": "baz" },
+            { "zoo": "bam" },
+            { "foo": "bar" }
+        ],
+        "key": "foo",
+        "result": "bar"
+    }
+]
+
+##  Tests getting item values from the container stack.
+#
+#   \param container_stack A new container stack from a fixture.
+#   \param data Individual test cases as loaded from test_getValue_data.
+@pytest.mark.parametrize("data", test_getValue_data)
+def test_getValue(container_stack, data):
+    # Fill the container stack with the containers.
+    for container in reversed(data["containers"]): # Reverse order to make sure the last-added item is the top of the list.
+        mockup = MockContainer()
+        mockup.items = container
+        container_stack.addContainer(mockup)
+
+    answer = container_stack.getValue(data["key"]) # Do the actual query.
+
+    assert answer == data["result"]
+
+##  Tests removing containers from the stack.
+#
+#   \param container_stack A new container stack from a fixture.
+def test_removeContainer(container_stack):
+    # First test the empty case.
+    with pytest.raises(IndexError):
+        container_stack.removeContainer(0)
+
+    # Now add data.
+    container0 = MockContainer()
+    container_stack.addContainer(container0)
+    with pytest.raises(IndexError):
+        container_stack.removeContainer(1)
+    with pytest.raises(IndexError):
+        container_stack.removeContainer(-1)
+    with pytest.raises(IndexError): # Curveball!
+        container_stack.removeContainer("test")
+    container_stack.removeContainer(0)
+    assert container_stack.getContainers() == []
+
+    # Multiple subcontainers.
+    container0 = MockContainer()
+    container1 = MockContainer()
+    container2 = MockContainer()
+    container_stack.addContainer(container0)
+    container_stack.addContainer(container1)
+    container_stack.addContainer(container2)
+    container_stack.removeContainer(1)
+    assert container_stack.getContainers() == [container0, container2]
+
+##  Tests replacing a container in the stack.
+#
+#   \param container_stack A new container stack from a fixture.
+def test_replaceContainer(container_stack):
+    # First test the empty case.
+    with pytest.raises(IndexError):
+        container_stack.replaceContainer(0, MockContainer())
+
+    # Now add data.
+    container0 = MockContainer()
+    container_stack.addContainer(container0)
+    container0_replacement = MockContainer()
+    with pytest.raises(IndexError):
+        container_stack.replaceContainer(1, container0_replacement)
+    with pytest.raises(IndexError):
+        container_stack.replaceContainer(-1, container0_replacement)
+    container_stack.replaceContainer(0, container0_replacement)
+    assert container_stack.getContainers() == [container0_replacement]
+
+    # Add multiple containers.
+    container1 = MockContainer()
+    container_stack.addContainer(container1)
+    container2 = MockContainer()
+    container_stack.addContainer(container2)
+    container1_replacement = MockContainer()
+    container_stack.replaceContainer(1, container1_replacement)
+    assert container_stack.getContainers() == [container0_replacement, container1_replacement, container2]
+
+    # Try to replace a container with itself.
+    with pytest.raises(Exception):
+        container_stack.replaceContainer(2, container_stack)
+    assert container_stack.getContainers() == [container0_replacement, container1_replacement, container2]
+
 ##  Tests serialising and deserialising the container stack.
+#
+#   \param container_stack A new container stack from a fixture.
 def test_serialize(container_stack):
     # First test the empty container stack.
     _test_serialize_cycle(container_stack)
@@ -201,6 +388,11 @@ def test_setName(container_stack):
     assert name_change_counter == 2 # Didn't signal.
 
 ##  Tests a single cycle of serialising and deserialising a container stack.
+#
+#   This will serialise and then deserialise the container stack, and sees if
+#   the deserialised container stack is the same as the original one.
+#
+#   \param container_stack The container stack to serialise and deserialise.
 def _test_serialize_cycle(container_stack):
     name = container_stack.getName()
     metadata = container_stack.getMetaData()

@@ -51,17 +51,23 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
     def getId(self):
         return self._id
 
+    id = property(getId)
+
     ##  \copydoc ContainerInterface::getName
     #
     #   Reimplemented from ContainerInterface
     def getName(self):
         return self._name
 
+    name = property(getName)
+
     ##  \copydoc ContainerInterface::getMetaData
     #
     #   Reimplemented from ContainerInterface
     def getMetaData(self):
         return self._metadata
+
+    metaData = property(getMetaData)
 
     ##  \copydoc ContainerInterface::getMetaDataEntry
     #
@@ -72,8 +78,10 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
     ##  \copydoc ContainerInterface::getValue
     #
     #   Reimplemented from ContainerInterface
+    #
+    #   This returns the default_value property of the specified SettingDefinition, or None if the setting cannot be found.
     def getValue(self, key):
-        definitions = self.findDefinitions({"key": key})
+        definitions = self.findDefinitions(key = key)
         if not definitions:
             return None
 
@@ -124,11 +132,11 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
 
     ##  Find definitions matching certain criteria.
     #
-    #   \param criteria \type{dict} A dictionary containing key-value pairs which should match properties of the definition.
-    def findDefinitions(self, criteria):
+    #   \param kwargs \type{dict} A dictionary of keyword arguments containing key-value pairs which should match properties of the definition.
+    def findDefinitions(self, **kwargs):
         definitions = []
         for definition in self._definitions:
-            definitions.extend(definition.findDefinitions(criteria))
+            definitions.extend(definition.findDefinitions(**kwargs))
 
         return definitions
 
@@ -205,7 +213,7 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
     def _processFunction(self, definition, property):
         function = getattr(definition, property)
         for setting in function.getUsedSettings():
-            other = self.findDefinitions({ "key": setting })
+            other = self.findDefinitions(key = setting)
             if not other:
                 Logger.log("w", "Function for definition %s references unknown definition %s", definition.key, setting)
                 continue

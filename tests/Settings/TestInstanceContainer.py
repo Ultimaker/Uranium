@@ -15,11 +15,16 @@ def container_registry():
     UM.Settings.ContainerRegistry.getInstance().load()
     return UM.Settings.ContainerRegistry.getInstance()
 
-def test_instance_container():
+def test_create():
     container = UM.Settings.InstanceContainer("test")
     assert container.getId() == "test"
 
-def test_advanced_setProperty():
+##  Test whether setting a property on an instance correctly updates dependencies.
+#
+#   This test primarily tests the SettingInstance but requires some functionality
+#   from InstanceContainer that is not easily captured in a Mock object. Therefore
+#   it is included here.
+def test_instance_setProperty():
     instance_container = UM.Settings.InstanceContainer("test")
 
     definition1 = UM.Settings.SettingDefinition("test_0", None)
@@ -68,27 +73,40 @@ def test_advanced_setProperty():
     with pytest.raises(AttributeError):
         assert def2_instance.minimum == 10.0
 
-def test_serialize(container_registry):
+test_serialize_data = [
+    ({"definition": "basic", "name": "Basic"}, "basic.inst.cfg"),
+    ({"definition": "basic", "name": "Metadata", "metadata": {"author": "Ultimaker", "bool": False, "integer": 6 }}, "metadata.inst.cfg"),
+    ({"definition": "multiple_settings", "name": "Setting Values", "values": {
+        "test_setting_0": 20, "test_setting_1": 20, "test_setting_2": 20, "test_setting_3": 20, "test_setting_4": 20
+    }}, "setting_values.inst.cfg"),
+]
+@pytest.mark.parametrize("container_data,equals_file", test_serialize_data)
+def test_serialize(container_data, equals_file, container_registry):
     instance_container = UM.Settings.InstanceContainer("test")
-    definition = container_registry.findDefinitionContainers({"id": "basic"})[0]
+    definition = container_registry.findDefinitionContainers(id = container_data["definition"])[0]
     instance_container.setDefinition(definition)
 
+    instance_container.setName(container_data["name"])
+
+    if "metadata" in container_data:
+        instance_container.setMetaData(container_data["metadata"])
+
+    if "values" in container_data:
+        for key, value in container_data["values"].items():
+            instance = UM.Settings.SettingInstance(definition.findDefinitions(key = key)[0], instance_container)
+            instance_container.addInstance(instance)
+            instance_container.setValue(key, value)
+
     result = instance_container.serialize()
-    print(result)
 
-    assert result == """[general]
-version = 1
-name = test
-definition = basic
-
-[metadata]
-
-[values]
-
-"""
+    path = Resources.getPath(Resources.InstanceContainers, equals_file)
+    with open(path) as data:
+        assert data.readline() in result
 
 test_deserialize_data = [
-    ("basic.inst.cfg", {"name": "Test"}),
+    ("basic.inst.cfg", {"name": "Basic"}),
+    ("metadata.inst.cfg", {"name": "Metadata", "metaData": { "author": "Ultimaker", "bool": "False", "integer": "6" } }),
+    ("setting_values.inst.cfg", {"name": "Setting Values", "values": { "test_setting_0": 20 } }),
 ]
 @pytest.mark.parametrize("filename,expected", test_deserialize_data)
 def test_deserialize(filename, expected, container_registry):
@@ -99,7 +117,10 @@ def test_deserialize(filename, expected, container_registry):
         instance_container.deserialize(data.read())
 
     for key, value in expected.items():
-        if key == "name":
-            assert instance_container.getName() == value
+        if key != "values":
+            assert getattr(instance_container, key) == value
+            continue
 
+        for key, value in value.items():
+            assert instance_container.getValue(key) == value
 
