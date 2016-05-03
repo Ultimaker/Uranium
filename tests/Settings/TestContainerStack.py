@@ -6,6 +6,9 @@ import uuid # For creating unique ID's for each container stack.
 
 import UM.Settings
 import UM.Settings.ContainerInterface
+import UM.Settings.DefinitionContainer
+import UM.Settings.InstanceContainer
+import UM.Settings.ContainerStack
 
 ##  A fake container class that implements ContainerInterface.
 #
@@ -337,11 +340,16 @@ def test_serialize(container_stack):
     _test_serialize_cycle(container_stack)
 
     # Case with one subcontainer.
-    container_stack.addContainer(MockContainer())
+    container_stack.addContainer(UM.Settings.InstanceContainer(uuid.uuid4()))
     _test_serialize_cycle(container_stack)
 
     # Case with two subcontainers.
-    container_stack.addContainer(MockContainer()) #Already had one, if all previous assertions were correct.
+    container_stack.addContainer(UM.Settings.InstanceContainer(uuid.uuid4())) #Already had one, if all previous assertions were correct.
+    _test_serialize_cycle(container_stack)
+
+    # Case with all types of subcontainers.
+    container_stack.addContainer(UM.Settings.DefinitionContainer(uuid.uuid4()))
+    container_stack.addContainer(UM.Settings.ContainerStack(uuid.uuid4()))
     _test_serialize_cycle(container_stack)
 
     # With some metadata.
@@ -387,6 +395,24 @@ def test_setName(container_stack):
     assert container_stack.getName() == different_name
     assert name_change_counter == 2 # Didn't signal.
 
+##  Tests if two container lists are equal.
+#
+#   It doesn't test for the instances themselves to be equal, but for their data
+#   to be equal.
+#
+#   \param containers_1 The list of containers to be checked for equality
+#   against containers_2.
+#   \param containers_2 The list of containers to be checked for equality
+#   against containers_1.
+def _test_deep_container_equality(containers_1, containers_2):
+    assert len(containers_1) == len(containers_2)
+    for i in range(0, len(containers_1)):
+        assert containers_1[i].getId() == containers_2[i].getId()
+        assert containers_1[i].getName() == containers_2[i].getName()
+        assert containers_1[i].getMetaData() == containers_2[i].getMetaData()
+        _test_deep_container_equality(containers_1[i].getContainers(), containers_2[i].getContainers())
+        # Not checking the next container... That'd complicate the test a whole lot more!
+
 ##  Tests a single cycle of serialising and deserialising a container stack.
 #
 #   This will serialise and then deserialise the container stack, and sees if
@@ -405,4 +431,5 @@ def _test_serialize_cycle(container_stack):
     #ID and nextStack are allowed to be different.
     assert name == container_stack.getName()
     assert metadata == container_stack.getMetaData()
-    assert containers == container_stack.getContainers()
+    new_containers = container_stack.getContainers()
+    _test_deep_container_equality(containers, new_containers)
