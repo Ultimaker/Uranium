@@ -88,6 +88,30 @@ def container_registry():
 
     return UM.Settings.ContainerRegistry.getInstance()
 
+##  Tests adding a container to the registry.
+#
+#   \param container_registry A new container registry from a fixture.
+def test_addContainer(container_registry):
+    definition_container_0 = UM.Settings.DefinitionContainer("a", {})
+    container_registry.addContainer(definition_container_0)
+    assert container_registry.findDefinitionContainers() == [definition_container_0]
+
+    # Add a second one of the same type.
+    definition_container_1 = UM.Settings.DefinitionContainer("b", {})
+    container_registry.addContainer(definition_container_1)
+    assert container_registry.findDefinitionContainers(id = "b") == [definition_container_1] # Test in two queries, since the list order doesn't matter.
+    assert container_registry.findDefinitionContainers(id = "a") == [definition_container_0]
+
+    # Add a container with the same type and same ID.
+    definition_container_1_clone = UM.Settings.DefinitionContainer("b", {})
+    container_registry.addContainer(definition_container_1_clone)
+    assert container_registry.findDefinitionContainers(id = "b") == [definition_container_1] # Didn't get added!
+
+    # For good measure, add a container with a different type too.
+    instance_container_1 = UM.Settings.InstanceContainer("a", {})
+    container_registry.addContainer(instance_container_1)
+    assert container_registry.findInstanceContainers() == [instance_container_1]
+
 ##  Tests adding a container type to the registry.
 #
 #   \param container_registry A new container registry from a fixture.
