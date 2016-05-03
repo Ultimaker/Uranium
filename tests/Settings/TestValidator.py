@@ -2,9 +2,11 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 import pytest
+import sys
 
-from UM.Settings.Validators.FloatValidator import FloatValidator
-from UM.Settings.Validator import ValidatorState
+#from UM.Settings.Validators.FloatValidator import FloatValidator
+from UM.Settings.Validator import Validator, ValidatorState
+from UM.Signal import Signal
 
 ##  Fake setting instance that stands in for the real setting instance.
 #
@@ -13,59 +15,61 @@ from UM.Settings.Validator import ValidatorState
 class MockSettingInstance:
     ##  Creates the mock setting instance.
     def __init__(self, value):
+        self.minimum_value = sys.float_info.min
+        self.maximum_value = sys.float_info.max
+        self.minimum_value_warning = sys.float_info.min
+        self.maximum_value_warning = sys.float_info.max
         self.value = value
 
-    ##  Gets the value of this setting instance.
-    def getValue(self):
-        return self.value
+    propertyChanged = Signal()
 
 ##  Called before the first test function is executed.
 @pytest.fixture
 def validator():
     setting_instance = MockSettingInstance(0)
-    return FloatValidator(setting_instance)
+    return Validator(setting_instance)
 
 ##  Tests the creation of a float validator.
 #
 #   \param validator A new validator from a fixture.
-def test_createFloatValidator(validator):
-    assert validator.getState() == ValidatorState.Unknown
+def test_create(validator):
+    assert validator.state == ValidatorState.Unknown
 
-##  Tests the changing of the maximum value.
-#
-#   \param validator A new validator from a fixture.
-def test_setMaximum(validator):
-    validator.validate() # To set the state to something else than Unknown.
-    validator.setMaximum(3.14156)
-    assert validator.getState() == ValidatorState.Unknown
-    assert validator.getMaximum() == 3.14156
+###  Tests the changing of the maximum value.
+##
+##   \param validator A new validator from a fixture.
+#def test_setMaximum(validator):
+    #validator.validate() # To set the state to something else than Unknown.
+    #validator.setMaximum(3.14156)
+    #assert validator.getState() == ValidatorState.Unknown
+    #assert validator.getMaximum() == 3.14156
 
-##  Tests the changing of the maximum warning value.
-#
-#   \param validator A new validator from a fixture.
-def test_setMaximumWarning(validator):
-    validator.validate() # To set the state to something else than Unknown.
-    validator.setMaximumWarning(3.14156)
-    assert validator.getState() == ValidatorState.Unknown
-    assert validator.getMaximumWarning() == 3.14156
+###  Tests the changing of the maximum warning value.
+##
+##   \param validator A new validator from a fixture.
+#def test_setMaximumWarning(validator):
+    #validator.validate() # To set the state to something else than Unknown.
+    ##validator.setMaximumWarning(3.14156)
+    #assert validator.getState() == ValidatorState.Unknown
+    ##assert validator.getMaximumWarning() == 3.14156
 
-##  Tests the changing of the minimum value.
-#
-#   \param validator A new validator from a fixture.
-def test_setMinimum(validator):
-    validator.validate() # To set the state to something else than Unknown.
-    validator.setMinimum(3.14156)
-    assert validator.getState() == ValidatorState.Unknown
-    assert validator.getMinimum() == 3.14156
+###  Tests the changing of the minimum value.
+##
+##   \param validator A new validator from a fixture.
+#def test_setMinimum(validator):
+    #validator.validate() # To set the state to something else than Unknown.
+    ##validator.setMinimum(3.14156)
+    #assert validator.state == ValidatorState.Unknown
+    ##assert validator.getMinimum() == 3.14156
 
-##  Tests the changing of the minimum warning value.
-#
-#   \param validator A new validator from a fixture.
-def test_setMinimumWarning(validator):
-    validator.validate() # To set the state to something else than Unknown.
-    validator.setMinimumWarning(3.14156)
-    assert validator.getState() == ValidatorState.Unknown
-    assert validator.getMinimumWarning() == 3.14156
+###  Tests the changing of the minimum warning value.
+##
+##   \param validator A new validator from a fixture.
+#def test_setMinimumWarning(validator):
+    ##validator.validate() # To set the state to something else than Unknown.
+    ##validator.setMinimumWarning(3.14156)
+    #assert validator.state == ValidatorState.Unknown
+    ##assert validator.getMinimumWarning() == 3.14156
 
 ##  The individual test cases for validate().
 #
@@ -98,12 +102,12 @@ test_validate_data = [
 @pytest.mark.parametrize("data", test_validate_data)
 def test_validate(data):
     setting_instance = MockSettingInstance(data["current"])
-    validator = FloatValidator(setting_instance)
-    validator.setMinimum(data["minimum"])
-    validator.setMaximum(data["maximum"])
-    validator.setMinimumWarning(data["min_warning"])
-    validator.setMaximumWarning(data["max_warning"])
+    validator = Validator(setting_instance)
+    setting_instance.minimum_value = data["minimum"]
+    setting_instance.maximum_value = data["maximum"]
+    setting_instance.minimum_value_warning = data["min_warning"]
+    setting_instance.maximum_value_warning = data["max_warning"]
 
     validator.validate() #Execute the test.
 
-    assert validator.getState() == data["answer"]
+    assert validator.state == data["answer"]
