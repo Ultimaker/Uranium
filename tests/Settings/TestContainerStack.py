@@ -371,7 +371,10 @@ def test_serialize(container_stack):
 ##  Tests whether changing the name of the stack has the proper effects.
 #
 #   \param container_stack A new container stack from a fixture.
-def test_setName(container_stack):
+#   \param application An application containing the thread handle for signals.
+#   Must be included for the signal to check against the main thread in
+#   auto-mode.
+def test_setName(container_stack, application):
     name_change_counter = 0
     def increment_name_change_counter():
         nonlocal name_change_counter
