@@ -186,9 +186,9 @@ def test_getContainer(container_stack):
     container3 = MockContainer()
     container_stack.addContainer(container3)
 
-    assert container_stack.getContainer(0) == container1
+    assert container_stack.getContainer(2) == container1
     assert container_stack.getContainer(1) == container2
-    assert container_stack.getContainer(2) == container3
+    assert container_stack.getContainer(0) == container3
     with pytest.raises(IndexError):
         container_stack.getContainer(3)
     with pytest.raises(IndexError):
