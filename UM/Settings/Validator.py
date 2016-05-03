@@ -26,65 +26,45 @@ class Validator:
         super().__init__(*args, **kwargs)
 
         self._instance = instance
+        self._instance.propertyChanged.connect(self.validate)
 
-    def getMinimum(self):
-        pass
+        self._state = ValidatorState.Unknown
 
-    def getMaximum(self):
-        pass
-
-    def getMinimumWarning(self):
-        pass
-
-    def getMaximumWarning(self):
-        pass
-
-    ##  Gets the current state of the validation.
-    #
-    #   After changing any minimum, maximum or warning value and before calling
-    #   the validate function, this should return Unknown. After calling the
-    #   validate function and before changing any minimum, maximum or warning
-    #   value, this should return the result of the validation.
-    def getState(self):
-        pass
-
-    ##  Changes the maximum allowed value for this validator.
-    #
-    #   If the value of the setting instance exceeds this value, the state of
-    #   the validator should become MaximumError.
-    #
-    #   \param maximum The new maximum value.
-    def setMaximum(self, maximum):
-        pass
-
-    ##  Changes the maximum value before a warning is given for this validator.
-    #
-    #   If the value of the setting instance exceeds this value, the state of
-    #   the validator should become MaximumWarning, unless it exceeds the
-    #   maximum value too.
-    #
-    #   \param maximum_warning The new maximum warning value.
-    def setMaximumWarning(self, maximum_warning):
-        pass
-
-    ##  Changes the minimum allowed value for this validator.
-    #
-    #   If the value of the setting instance is lower than this value, the state
-    #   of the validator should become MinimumError.
-    #
-    #   \param minimum The new minimum value.
-    def setMinimum(self, minimum):
-        pass
-
-    ##  Changes the minimum value before a warning is given for this validator.
-    #
-    #   If the value of the setting instance is lower than this value, the state
-    #   of the validator should become MinimumWarning, unless it exceeds the
-    #   minimum value too.
-    #
-    #   \param minimum_warning The new minimum warning value.
-    def setMinimumWarning(self, minimum_warning):
-        pass
+    @property
+    def state(self):
+        return self._state
 
     def validate(self):
-        pass
+        self._state = ValidatorState.Unknown
+        try:
+            minimum = None
+            if hasattr(self._instance, "minimum_value"):
+                minimum = self._instance.minimum_value
+            maximum = None
+            if hasattr(self._instance, "maximum_value"):
+                maximum = self._instance.maximum_value
+            minimum_warning = None
+            if hasattr(self._instance, "minimum_value_warning"):
+                minimum_warning = self._instance.minimum_value_warning
+            maximum_warning = None
+            if hasattr(self._instance, "maximum_value_warning"):
+                maximum_warning = self._instance.maximum_value_warning
+
+            if minimum > maximum:
+                raise ValueError("Cannot validate a state with minimum > maximum")
+
+            value = self._instance.value
+
+            if minimum is not None and value < minimum:
+                self._state = ValidatorState.MinimumError
+            elif maximum is not None and value > maximum:
+                self._state = ValidatorState.MaximumError
+            elif minimum_warning is not None and value < minimum_warning:
+                self._state = ValidatorState.MinimumWarning
+            elif maximum_warning is not None and value > maximum_warning:
+                self._state = ValidatorState.MaximumWarning
+            else:
+                self._state = ValidatorState.Valid
+        except Exception as e:
+            print(e)
+            self._state = ValidatorState.Exception
