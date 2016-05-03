@@ -92,6 +92,8 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     ##  \copydoc ContainerInterface::serialize
     #
     #   Reimplemented from ContainerInterface
+    #
+    #   TODO: Expand documentation here, include the fact that this should _not_ include all containers
     def serialize(self):
         parser = configparser.ConfigParser(interpolation = None, empty_lines_in_values = False)
 
@@ -116,6 +118,8 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     ##  \copydoc ContainerInterface::deserialize
     #
     #   Reimplemented from ContainerInterface
+    #
+    #   TODO: Expand documentation here, include the fact that this should _not_ include all containers
     def deserialize(self, serialized):
         parser = configparser.ConfigParser(interpolation=None, empty_lines_in_values=False)
         parser.read_string(serialized)
