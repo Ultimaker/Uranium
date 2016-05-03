@@ -30,14 +30,17 @@ class SelectionTool(Tool):
 
         self._selection_mode = self.PixelSelectionMode
         self._ctrl_is_active = None # Control modifier key is used for multi-selection
+        self._alt_is_active = None  # Alt modifier key is used for sub-selection
 
     ##  Prepare modifier-key variables on each event
     #
     #   \param event type(Event) event passed from event handler
     def checkModifierKeys(self, event):
-        # Control modifier key is used for multi-selection
         modifiers = QtWidgets.QApplication.keyboardModifiers()
-        self._ctrl_is_active = modifiers == QtCore.Qt.ControlModifier
+        # Control modifier key is used for multi-selection
+        self._ctrl_is_active = modifiers & QtCore.Qt.ControlModifier
+        # Alt modifier key is used for sub-selection
+        self._alt_is_active = modifiers & QtCore.Qt.AltModifier
 
     ##  Set the selection mode
     #
@@ -114,14 +117,14 @@ class SelectionTool(Tool):
                     if is_selected:
                         # Deselect the scenenode and its sibblings in a group
                         if node.getParent():
-                            if not self._isNodeInGroup(node):
+                            if self._alt_is_active or not self._isNodeInGroup(node):
                                 Selection.remove(node)
                             else:
                                 Selection.remove(self._findTopGroupNode(node))
                     else:
                         # Select the scenenode and its sibblings in a group
                         if node.getParent():
-                            if not self._isNodeInGroup(node):
+                            if self._alt_is_active or not self._isNodeInGroup(node):
                                 Selection.add(node)
                             else:
                                 Selection.add(self._findTopGroupNode(node))
@@ -130,7 +133,7 @@ class SelectionTool(Tool):
                         # Select only the scenenode and its sibblings in a group
                         Selection.clear()
                         if node.getParent():
-                            if not self._isNodeInGroup(node):
+                            if self._alt_is_active or not self._isNodeInGroup(node):
                                 Selection.add(node)
                             else:
                                 Selection.add(self._findTopGroupNode(node))
