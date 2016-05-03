@@ -31,10 +31,10 @@ def setting_function_good(request):
 #   Each test will be executed with each of these functions. These functions are
 #   all bad and should not work.
 setting_function_bad_data = [
-    "",                                                               # Empty string.
-    "lambda i: os.open(\"/etc/passwd\").read()",                      # Function that reads your passwords from your system.
-    "exec(\"lambda i: o\" + \"s.open(\\\"/etc/passwd\\\").read()\")", # Obfuscated function that reads your passwords from your system.
-    "("                                                               # Syntax error.
+    "",                                                                 # Empty string.
+    "os.read(os.open(\"/etc/passwd\", os.O_RDONLY), 10)",               # Function that reads your passwords from your system.
+    "exec(\"os.read(os.open(\\\"/etc/passwd\\\", os.O_RDONLY), 10)\")", # Obfuscated function that reads your passwords from your system.
+    "("                                                                 # Syntax error.
 ]
 
 ##  Fixture to create a setting function.
@@ -85,8 +85,8 @@ test_call_data = [
     { "code": "math.sqrt(4)", "result": 2 },
     { "code": "foo * zoo",    "result": 35 }, # 5 * 7
     { "code": "",             "result": None },
-    { "code": "lambda i: os.open(\"/etc/passwd\").read()", "result": None },
-    { "code": "exec(\"lambda i: o\" + \"s.open(\\\"/etc/passwd\\\").read()\")", "result": None },
+    { "code": "os.read(os.open(\"/etc/passwd\", os.O_RDONLY), 10)", "result": None },
+    { "code": "exec(\"os.read(os.open(\\\"/etc/passwd\\\", os.O_RDONLY), 10)\")", "result": None },
     { "code": "boo",          "result": None } # Variable doesn't exist.
 ]
 
