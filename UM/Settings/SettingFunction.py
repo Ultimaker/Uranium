@@ -20,11 +20,13 @@ class SettingFunction:
         self._code = code
         self._settings = []
         self._compiled = None
+        self._valid = False
 
         try:
             tree = ast.parse(self._code, "eval")
             self._settings = _SettingExpressionVisitor().visit(tree)
             self._compiled = compile(self._code, repr(self), "eval")
+            self._valid = True
         except (SyntaxError, TypeError) as e:
             Logger.log("e", "Parse error in function ({1}) for setting: {0}".format(str(e), self._code))
         except IllegalMethodError as e:
@@ -35,6 +37,9 @@ class SettingFunction:
     ##  Call the actual function to calculate the value.
     def __call__(self, value_provider, *args, **kwargs):
         if not value_provider:
+            return None
+
+        if not self._valid:
             return None
 
         locals = { }
@@ -48,6 +53,12 @@ class SettingFunction:
             return False
 
         return self._code == other._code
+
+    ##  Returns whether the function is ready to be executed.
+    #
+    #   \return True if the function is valid, or False if it's not.
+    def isValid(self):
+        return self._valid
 
     ##  Retrieve a list of the keys of all the settings used in this function.
     def getUsedSettings(self):
