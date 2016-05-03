@@ -68,7 +68,15 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     #   If a next stack is defined for this stack it will then try to get the
     #   value from that stack. If no next stack is defined, None will be returned.
     def getValue(self, key):
-        return None
+        for container in self._containers:
+            value = container.getValue(key)
+            if value is not None:
+                return value
+
+        if self._next_stack:
+            return self._next_stack.getValue(key)
+        else:
+            return None
 
     ##  \copydoc ContainerInterface::serialize
     #
@@ -96,7 +104,9 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     #
     #   \exception IndexError Raised when the specified index is out of bounds.
     def getContainer(self, index):
-        return None
+        if index == -1:
+            raise IndexError
+        return self._containers[index]
 
     ##  Find a container matching certain criteria.
     #
@@ -104,13 +114,34 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     #
     #   \return The first container that matches the filter criteria or None if not found.
     def findContainer(self, filter):
+        for container in self._containers:
+            meta_data = container.getMetaData()
+            match = True
+            print(filter, meta_data)
+            for key in filter:
+                try:
+                    if meta_data[key] == filter[key]:
+                        continue
+                    else:
+                        match = False
+                        break
+                except KeyError:
+                    match = False
+                    break
+
+            if match:
+                return container
+
         return None
 
     ##  Add a container to the top of the stack.
     #
     #   \param container The container to add to the stack.
     def addContainer(self, container):
-        pass
+        if container is not self:
+            self._containers.insert(0, container)
+        else:
+            raise Exception("Unable to add stack to itself.")
 
     ##  Replace a container in the stack.
     #
@@ -118,8 +149,13 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     #   \param container The container to replace the existing entry with.
     #
     #   \exception IndexError Raised when the specified index is out of bounds.
+    #   \exception Exception when trying to replace container ContainerStack.
     def replaceContainer(self, index, container):
-        pass
+        if index == -1:
+            raise IndexError
+        if container == self:
+            raise Exception("Unable to replace container with ContainerStack (self) ")
+        self._containers[index] = container
 
     ##  Remove a container from the stack.
     #
@@ -127,7 +163,12 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     #
     #   \exception IndexError Raised when the specified index is out of bounds.
     def removeContainer(self, index = 0):
-        pass
+        if index == -1:
+            raise IndexError
+        try:
+            del self._containers[index]
+        except TypeError:
+            raise IndexError("Can't delete container with intex %s" % index)
 
     ##  Get the next stack
     #
