@@ -22,7 +22,7 @@ class InstanceState(enum.IntEnum):
 
 ##  Encapsulates all state of a setting.
 #
-#
+#   The SettingInstance class contains all state related to a setting.
 @signalemitter
 class SettingInstance:
     ##  Constructor.
@@ -74,6 +74,10 @@ class SettingInstance:
     def updateProperty(self, name):
         if not self._definition.hasProperty(name):
             Logger.log("e", "Trying to update unknown property %s", name)
+            return
+
+        if name == "value" and self._state == InstanceState.User:
+            Logger.log("d", "Ignoring update of value for setting %s since it has been set by the user.", self._definition.key)
             return
 
         Logger.log("d", "Update property %s of instance %s", name, self)
