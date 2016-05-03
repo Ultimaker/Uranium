@@ -47,7 +47,11 @@ class SettingInstance:
 
     def __getattr__(self, name):
         if name in self.__property_values:
-            return self.__property_values[name]
+            value = self.__property_values[name]
+            if isinstance(value, str):
+                return self._definition.settingValueFromString(self._definition.type, value)
+            else:
+                return value
 
         raise AttributeError("'SettingInstance' object has no attribute '{0}'".format(name))
 
@@ -141,7 +145,7 @@ class SettingInstance:
 
     def _update(self):
         property_names = self._definition.getPropertyNames()
-        property_names.remove("value") # Move "value" to the front of the list so we always update that first.
+        property_names.remove("value")  # Move "value" to the front of the list so we always update that first.
         property_names.insert(0, "value")
 
         for property_name in property_names:
