@@ -78,6 +78,8 @@ class _SettingExpressionVisitor(ast.NodeVisitor):
         "sys",
         "os",
         "import",
-        "__import__"
+        "__import__",
+        "eval",
+        "exec",
+        "subprocess",
     ]
-
