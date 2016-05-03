@@ -284,6 +284,7 @@ class SettingDefinition:
         "minimum_value_warning": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False},
         "maximum_value_warning": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False},
         "options": {"type": DefinitionPropertyType.Any, "required": False, "read_only": True},
+        "comments": {"type": DefinitionPropertyType.String, "required": False, "read_only": True}
     }
 
     __type_definitions = ["int",
