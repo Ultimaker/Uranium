@@ -1,11 +1,24 @@
 # Copyright (c) 2016 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
+import enum
+
 from UM.Signal import Signal, signalemitter
 from UM.Logger import Logger
 
 from . import SettingRelation
 from . import Validator
+
+
+##  The state of the instance
+#
+#   This enum describes which state the instance is in. The state describes
+#   how the instance got its value.
+class InstanceState(enum.IntEnum):
+    Default = 1  ## Default state, no value has been set.
+    Calculated = 2  ## Value is the result of calculations in a SettingFunction object.
+    User = 3  ## Value is the result of direct user interaction.
+
 
 ##  Encapsulates all state of a setting.
 #
@@ -28,6 +41,8 @@ class SettingInstance:
         self._visible = True
         self._validator = None
 
+        self._state = InstanceState.Default
+
         self.__property_values = {}
 
     def __getattr__(self, name):
@@ -48,6 +63,9 @@ class SettingInstance:
                 self.__property_values[name] = value
                 if name == "value":
                     self._update()
+
+                    self._state = InstanceState.User
+                    self.stateChanged.emit(self)
 
                 self.propertyChanged.emit(self, name)
         else:
@@ -71,6 +89,9 @@ class SettingInstance:
             self.__property_values[name] = function(self._container)
             if name == "value":
                 self._update()
+
+                self._state = InstanceState.Calculated
+                self.stateChanged.emit(self)
 
             self.propertyChanged.emit(self, name)
 
@@ -103,7 +124,11 @@ class SettingInstance:
     #   \param instance The instance that reported the validationState change.
     validationStateChanged = Signal()
 
+    @property
+    def state(self):
+        return self._state
 
+    stateChanged = Signal()
 
     def __repr__(self):
         return "<SettingInstance (0x{0:x}) definition={1} container={2}>".format(id(self), self._definition, self._container)
