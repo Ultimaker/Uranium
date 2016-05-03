@@ -5,6 +5,7 @@ import pytest
 import os.path
 
 import UM.Settings
+import UM.PluginObject
 import UM.PluginRegistry
 import UM.Settings.DefinitionContainer
 import UM.Settings.InstanceContainer
@@ -18,7 +19,7 @@ from UM.MimeTypeDatabase import MimeType, MimeTypeDatabase
 #   This allows us to test the container registry without testing the container
 #   class. If something is wrong in the container class it won't influence this
 #   test.
-class MockContainer(UM.Settings.ContainerInterface.ContainerInterface):
+class MockContainer(UM.Settings.ContainerInterface.ContainerInterface, UM.PluginObject.PluginObject):
     ##  Initialise a new definition container.
     #
     #   The container will have the specified ID and all metadata in the
@@ -86,6 +87,13 @@ def container_registry():
     UM.PluginRegistry.PluginRegistry.getInstance().removeType("settings_container")
 
     return UM.Settings.ContainerRegistry.getInstance()
+
+##  Tests adding a container type to the registry.
+#
+#   \param container_registry A new container registry from a fixture.
+def test_addContainerType(container_registry):
+    container_registry.addContainer(MockContainer()) # Test if it doesn't crash.
+    # Actually testing the result can only be done with the load function, so refer to test_load for that.
 
 ##  Tests the creation of the container registry.
 #
