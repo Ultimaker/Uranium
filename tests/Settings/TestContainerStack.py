@@ -165,11 +165,11 @@ def test_findContainer(container_stack, data):
 
     answer = container_stack.findContainer(data["filter"]) # The actual method to test.
 
-    if data["result"] == None:
-        assert answer == None
+    if data["result"] is None:
+        assert answer is None
     else:
-        assert answer != None
-    assert data["result"] == answer.getMetaData()
+        assert answer is not None
+        assert data["result"] == answer.getMetaData()
 
 ##  Tests getting a container by index.
 #
