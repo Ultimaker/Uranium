@@ -15,6 +15,7 @@ setting_function_good_data = [
     "foo",          # Variable.
     "math.sqrt(4)", # Function call.
     "foo * zoo"     # Two variables.
+    "boo"           # Variable that's not provided by the value provider.
 ]
 
 ##  Fixture to create a setting function.
@@ -30,10 +31,10 @@ def setting_function_good(request):
 #   Each test will be executed with each of these functions. These functions are
 #   all bad and should not work.
 setting_function_bad_data = [
-    "" # Empty string.
-    "lambda i: os.open(/etc/passwd).read()", # Function that reads your passwords from your system.
+    "",                                                       # Empty string.
+    "lambda i: os.open(/etc/passwd).read()",                  # Function that reads your passwords from your system.
     "exec(\"lambda i: o\" + \"s.open(/etc/passwd).read()\")", # Obfuscated function that reads your passwords from your system.
-    "(" # Syntax error.
+    "("                                                       # Syntax error.
 ]
 
 ##  Fixture to create a setting function.
