@@ -10,16 +10,18 @@ from UM.Logger import Logger
 
 from . import SettingFunction
 
+
 ##  Type of definition property.
 #
 #   This enum describes the possible types for a supported definition property.
 #   For more information about supported definition properties see SettingDefinition
 #   and SettingDefinition::addSupportedProperty().
 class DefinitionPropertyType(enum.IntEnum):
-    Any = 1 ## Any value.
-    String = 2 ## Value is always converted to string.
-    TranslatedString = 3 ## Value is converted to string then passed through an i18nCatalog object to get a translated version of that string.
-    Function = 4 ## Value is a python function. It is passed to SettingFunction's constructor which will parse and analyze it.
+    Any = 1  ## Any value.
+    String = 2  ## Value is always converted to string.
+    TranslatedString = 3  ## Value is converted to string then passed through an i18nCatalog object to get a translated version of that string.
+    Function = 4  ## Value is a python function. It is passed to SettingFunction's constructor which will parse and analyze it.
+
 
 ##  Defines a single Setting with its properties.
 #
@@ -303,7 +305,6 @@ class SettingDefinition:
                 if value not in self.__type_definitions:
                     raise ValueError("Type {0} is not a correct setting type".format(value))
 
-
             if self.__property_definitions[key]["type"] == DefinitionPropertyType.Any:
                 self.__property_values[key] = value
             elif self.__property_definitions[key]["type"] == DefinitionPropertyType.String:
@@ -314,7 +315,7 @@ class SettingDefinition:
                 self.__property_values[key] = SettingFunction.SettingFunction(str(value))
 
         for key in filter(lambda i: self.__property_definitions[i]["required"], self.__property_definitions):
-            if not key in self.__property_values:
+            if key not in self.__property_values:
                 raise AttributeError("Setting {0} is missing required property {1}".format(self._key, key))
 
     __property_definitions = {
