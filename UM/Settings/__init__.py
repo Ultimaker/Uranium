@@ -4,7 +4,7 @@
 from .ContainerRegistry import ContainerRegistry
 
 from .SettingDefinition import SettingDefinition
-from .SettingInstance import SettingInstance
+from .SettingInstance import SettingInstance, InstanceState
 
 from .DefinitionContainer import DefinitionContainer
 from .InstanceContainer import InstanceContainer

@@ -36,6 +36,7 @@ def test_setProperty(setting_definition, instance_container):
 
     instance.setProperty("value", 20.0)
     assert instance.value == 20.0
+    assert instance.state == UM.Settings.InstanceState.User
 
     with pytest.raises(AttributeError):
         instance.setProperty("something", 10)
@@ -46,3 +47,6 @@ def test_updateProperty(setting_definition, instance_container):
     instance.updateProperty("maximum")
 
     assert instance.maximum == 100
+    # We are updating a property that is not value, so state should not change.
+    assert instance.state == UM.Settings.InstanceState.Default
+
