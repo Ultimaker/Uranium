@@ -1,6 +1,7 @@
 # Copyright (c) 2016 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
+import ast
 import json
 import enum
 import collections
@@ -230,6 +231,54 @@ class SettingDefinition:
             return cls.__property_definitions[name]["read_only"]
         return False
 
+    ##  Add a new setting type to the list of accepted setting types.
+    #
+    #   \param type_name The name of the new setting type.
+    #   \param from_string A function to call that converts to a proper value of this type from a string.
+    #   \param to_string A function that converts a value of this type to a string.
+    #
+    @classmethod
+    def addSettingType(cls, type_name, from_string, to_string):
+        cls.__type_definitions[type_name] = { "from": from_string, "to": to_string }
+
+    ##  Convert a string to a value according to a setting type.
+    #
+    #   \param type_name \type{string} The name of the type to convert to.
+    #   \param string_value \type{string} The string to convert.
+    #
+    #   \return The string converted to a proper value.
+    #
+    #   \exception ValueError Raised when the specified type does not exist.
+    @classmethod
+    def settingValueFromString(cls, type_name, string_value):
+        if type_name not in cls.__type_definitions:
+            raise ValueError("Unknown setting type {0}".format(type_name))
+
+        convert_function = cls.__type_definitions[type_name]["to"]
+        if convert_function:
+            return convert_function(string_value)
+
+        return string_value
+
+    ##  Convert a setting value to a string according to a setting type.
+    #
+    #   \param type_name \type{string} The name of the type to convert from.
+    #   \param value The value to convert.
+    #
+    #   \return \type{string} The specified value converted to a string.
+    #
+    #   \exception ValueError Raised when the specified type does not exist.
+    @classmethod
+    def settingValueToString(cls, type_name, value):
+        if type_name not in cls.__type_definitions:
+            raise ValueError("Unknown setting type {0}".format(type_name))
+
+        convert_function = cls.__type_definitions[type_name]["from"]
+        if convert_function:
+            return convert_function(value)
+
+        return value
+
     ## protected:
 
     # Deserialize from a dictionary
@@ -302,13 +351,23 @@ class SettingDefinition:
         "comments": {"type": DefinitionPropertyType.String, "required": False, "read_only": True}
     }
 
-    __type_definitions = ["int",
-                          "bool",
-                          "category",   # Special case setting; Doesn't have a value. Display purposes only.
-                          "str",
-                          "enum",
-                          "float",
-                          "polygon",    # A list of 2D points
-                          "polygons",   # A list of polygons
-                          "vec3"       # A 3D point
-                          ]
+    __type_definitions = {
+        # An integer value
+        "int": {"from": str, "to": ast.literal_eval},
+        # A boolean value
+        "bool": {"from": str, "to": ast.literal_eval},
+        # Special case setting; Doesn't have a value. Display purposes only.
+        "category": {"from": None, "to": None},
+        # A string value
+        "str": {"from": None, "to": None},
+        # An enumeration
+        "enum": {"from": None, "to": None},
+        # A floating point value
+        "float": {"from": str, "to": lambda v: ast.literal_eval(v.replace(",", "."))},
+        # A list of 2D points
+        "polygon": {"from": None, "to": None},
+        # A list of polygons
+        "polygons": {"from": None, "to": None},
+        # A 3D point
+        "vec3": {"from": None, "to": None},
+    }
