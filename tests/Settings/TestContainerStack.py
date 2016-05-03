@@ -294,7 +294,7 @@ def test_removeContainer(container_stack):
     container_stack.addContainer(container1)
     container_stack.addContainer(container2)
     container_stack.removeContainer(1)
-    assert container_stack.getContainers() == [container0, container2]
+    assert container_stack.getContainers() == [container2, container0]
 
 ##  Tests replacing a container in the stack.
 #
