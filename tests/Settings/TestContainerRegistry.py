@@ -94,6 +94,8 @@ def container_registry():
 def test_addContainerType(container_registry):
     container_registry.addContainer(MockContainer()) # Test if it doesn't crash.
     # Actually testing the result can only be done with the load function, so refer to test_load for that.
+    with pytest.raises(Exception):
+        container_registry.addContainer(None)
 
 ##  Tests the creation of the container registry.
 #
