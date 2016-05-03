@@ -407,6 +407,7 @@ def test_setName(container_stack):
 def _test_deep_container_equality(containers_1, containers_2):
     assert len(containers_1) == len(containers_2)
     for i in range(0, len(containers_1)):
+        assert containers_1[i].__class__ == containers_2[i].__class__
         assert containers_1[i].getId() == containers_2[i].getId()
         assert containers_1[i].getName() == containers_2[i].getName()
         assert containers_1[i].getMetaData() == containers_2[i].getMetaData()
