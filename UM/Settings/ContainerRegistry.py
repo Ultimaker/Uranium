@@ -101,10 +101,8 @@ class ContainerRegistry:
     def addContainer(self, container):
         containers = self._findContainers(None, kwargs = {"id": container.getId()})
         if containers:
-            same_type = list(filter(lambda i: isinstance(i, container.__class__), containers))
-            if same_type:
-                Logger.log("w", "Container of type %s and id %s already added", repr(container.__class__), container.getId())
-                return
+            Logger.log("w", "Container with id %s already added", container.getId())
+            return
 
         self._containers.append(container)
 
