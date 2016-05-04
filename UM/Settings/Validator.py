@@ -3,6 +3,8 @@
 
 from enum import Enum
 
+from UM.Logger import Logger
+
 class ValidatorState(Enum):
     Exception = "Exception"
     Unknown = "Unknown"
@@ -66,5 +68,5 @@ class Validator:
             else:
                 self._state = ValidatorState.Valid
         except Exception as e:
-            print(e)
+            Logger.logException("w", "Could not validate, an exception was raised")
             self._state = ValidatorState.Exception
