@@ -381,7 +381,7 @@ def test_serialize(container_stack):
     # A container that is not in the registry.
     container_stack.addContainer(UM.Settings.DefinitionContainer(uuid.uuid4().int))
     serialised = container_stack.serialize()
-    container_stack = UM.Settings.ContainerStack(uuid.uuid4.int) # Completely fresh container stack.
+    container_stack = UM.Settings.ContainerStack(uuid.uuid4().int) # Completely fresh container stack.
     with pytest.raises(Exception):
         container_stack.deserialize(serialised)
 
