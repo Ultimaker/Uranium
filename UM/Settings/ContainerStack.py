@@ -141,7 +141,7 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
         # The containers are saved in a single coma separated list.
         container_id_list = parser["general"].get("containers", "").split(",")
         for container_id in container_id_list:
-            if id != "":
+            if container_id != "":
                 definition_containers = UM.Settings.ContainerRegistry.getInstance().findDefinitionContainers(id = container_id)
                 if definition_containers:
                     self._containers.append(definition_containers[0])  # ID's are unique, so we should only get one hit
