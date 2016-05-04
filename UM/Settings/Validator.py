@@ -26,8 +26,6 @@ class Validator:
         super().__init__(*args, **kwargs)
 
         self._instance = instance
-        self._instance.propertyChanged.connect(self.validate)
-
         self._state = ValidatorState.Unknown
 
     @property

@@ -75,6 +75,10 @@ class SettingInstance:
                     self._state = InstanceState.User
                     self.stateChanged.emit(self)
 
+                if self._validator:
+                    self._validator.validate()
+                    self.validationStateChanged.emit()
+
                 self.propertyChanged.emit(self, name)
         else:
             raise AttributeError("No property {0} defined".format(name))
@@ -105,6 +109,10 @@ class SettingInstance:
                 self._state = InstanceState.Calculated
                 self.stateChanged.emit(self)
 
+            if self._validator:
+                self._validator.validate()
+                self.validationStateChanged.emit()
+
             self.propertyChanged.emit(self, name)
 
     ##  Emitted whenever a property of this instance changes.
@@ -127,7 +135,7 @@ class SettingInstance:
     @property
     def validationState(self):
         if self._validator:
-            return self._validator.getValidationState()
+            return self._validator.state
 
         return Validator.ValidatorState.Unknown
 
