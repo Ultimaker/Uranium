@@ -5,6 +5,7 @@ import io
 
 from UM.Signal import Signal, signalemitter
 from UM.PluginObject import PluginObject
+import UM.Settings.ContainerRegistry
 
 from . import ContainerInterface
 
@@ -106,10 +107,11 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
         for key, value in self._metadata.items():
             parser["metadata"][key] = str(value)
 
-        parser["containers"] = {}
-        parser["containers"]["length"] = str(len(self._containers))
-        for index, container in enumerate(self._containers):
-            parser["containers"][str(index)] = container.serialize()
+        container_id_string = ""
+        for container in self._containers:
+            container_id_string += str(container.getId()) + ","
+
+        parser["general"]["containers"] = container_id_string
 
         stream = io.StringIO()
         parser.write(stream)
@@ -135,6 +137,22 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
 
         if "metadata" in parser:
             self._metadata = dict(parser["metadata"])
+
+        # The containers are saved in a single coma separated list.
+        container_id_list = parser["general"].get("containers", "").split(",")
+        for container_id in container_id_list:
+            if id != "":
+                definition_containers = UM.Settings.ContainerRegistry.getInstance().findDefinitionContainers(id = container_id)
+                if definition_containers:
+                    self._containers.append(definition_containers[0])  # ID's are unique, so we should only get one hit
+                    continue
+
+                instance_containers = UM.Settings.ContainerRegistry.getInstance().findInstanceContainers(id = container_id)
+                if instance_containers:
+                    self._containers.append(instance_containers[0])  # ID's are unique, so we should only get one hit
+                    continue
+
+                raise Exception("When trying to deserialize, we recieved an unknown ID for container")
 
         ## TODO; Deserialize the containers.
 
