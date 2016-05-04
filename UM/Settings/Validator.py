@@ -52,10 +52,17 @@ class Validator:
             if hasattr(self._instance, "maximum_value_warning"):
                 maximum_warning = self._instance.maximum_value_warning
 
-            if minimum > maximum:
+            if minimum is not None and maximum is not None and minimum > maximum:
                 raise ValueError("Cannot validate a state with minimum > maximum")
 
+            # If we have no value property, just do nothing
+            if not hasattr(self._instance, "value"):
+                self._state = ValidatorState.Unknown
+                return
+
             value = self._instance.value
+            if value is None or value != value:
+                raise ValueError("Cannot validate None, NaN or similar values")
 
             if minimum is not None and value < minimum:
                 self._state = ValidatorState.MinimumError
