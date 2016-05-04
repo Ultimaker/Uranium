@@ -9,6 +9,8 @@ import UM.Settings.ContainerInterface
 import UM.Settings.DefinitionContainer
 import UM.Settings.InstanceContainer
 import UM.Settings.ContainerStack
+from UM.Settings.ContainerStack import IncorrectVersionError
+from UM.Settings.ContainerStack import InvalidContainerStackError
 
 ##  A fake container class that implements ContainerInterface.
 #
