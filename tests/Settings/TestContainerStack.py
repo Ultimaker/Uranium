@@ -136,14 +136,14 @@ def test_deserialize_missing_items(container_stack):
     serialised_no_name = """[general]
 id = testid
 containers = a
-version = """ + str(ContainerStack.Version)
+version = """ + str(UM.Settings.ContainerStack.Version)
     with pytest.raises(InvalidContainerStackError):
         container_stack.deserialize(serialised_no_name)
 
     serialised_no_id = """[general]
 name = Test
 containers = a
-version = """ + str(ContainerStack.Version)
+version = """ + str(UM.Settings.ContainerStack.Version)
     with pytest.raises(InvalidContainerStackError):
         container_stack.deserialize(serialised_no_id)
 
@@ -157,7 +157,7 @@ containers = a"""
     serialised_no_containers = """[general]
 name = Test
 id = testid
-version = """ + str(ContainerStack.Version)
+version = """ + str(UM.Settings.ContainerStack.Version)
     container_stack.deserialize(serialised_no_containers) # Missing containers is allowed.
 
     serialised_no_general = """[metadata]
@@ -176,7 +176,7 @@ def test_deserialize_containers(container_stack):
 name = Test
 id = testid
 containers = a
-version = """ + str(ContainerStack.Version) # Test case where there is a container.
+version = """ + str(UM.Settings.ContainerStack.Version) # Test case where there is a container.
     container_stack.deserialize(serialised)
     assert container_stack.getContainers() == [container]
 
@@ -184,7 +184,7 @@ version = """ + str(ContainerStack.Version) # Test case where there is a contain
 name = Test
 id = testid
 containers =
-version = """ + str(ContainerStack.Version) # Test case where there is no container.
+version = """ + str(UM.Settings.ContainerStack.Version) # Test case where there is no container.
     container_stack.deserialize(serialised)
     assert container_stack.getContainers() == []
 
@@ -192,7 +192,7 @@ version = """ + str(ContainerStack.Version) # Test case where there is no contai
 name = Test
 id = testid
 containers = a,a
-version = """ + str(ContainerStack.Version) # Test case where there are two of the same containers.
+version = """ + str(UM.Settings.ContainerStack.Version) # Test case where there are two of the same containers.
     container_stack.deserialize(serialised)
     assert container_stack.getContainers() == [container]
 
@@ -200,7 +200,7 @@ version = """ + str(ContainerStack.Version) # Test case where there are two of t
 name = Test
 id = testid
 containers = a,b
-version = """ + str(ContainerStack.Version) # Test case where a container doesn't exist.
+version = """ + str(UM.Settings.ContainerStack.Version) # Test case where a container doesn't exist.
     with pytest.raises(Exception):
         container_stack.deserialize(serialised)
 
