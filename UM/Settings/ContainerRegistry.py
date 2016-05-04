@@ -99,9 +99,9 @@ class ContainerRegistry:
             self._containers.append(new_container)
 
     def addContainer(self, container):
-        containers = self._findContainers(None, kwargs = {"id": container.getId()})
+        containers = self._findContainers(None, id = container.getId())
         if containers:
-            Logger.log("w", "Container with id %s already added", container.getId())
+            Logger.log("w", "Container of type %s and id %s already added", repr(container.__class__), container.getId())
             return
 
         self._containers.append(container)
