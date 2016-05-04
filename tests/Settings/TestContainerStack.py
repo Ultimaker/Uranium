@@ -121,7 +121,7 @@ def test_deserialize_syntax_error(container_stack):
 def test_deserialize_wrong_version(container_stack):
     UM.Settings.ContainerRegistry.getInstance().addContainer(UM.Settings.InstanceContainer("a")) # Make sure this container isn't the one it complains about.
 
-    serialised = """"[general]
+    serialised = """[general]
 name = Test
 id = testid
 containers = a
