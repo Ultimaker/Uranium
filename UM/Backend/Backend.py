@@ -56,7 +56,7 @@ class Backend(PluginObject, SignalEmitter):
             t = threading.Thread(target = self._storeOutputToLogThread, args = (self._process.stdout,))
             t.daemon = True
             t.start()
-            t = threading.Thread(target = self._storeOutputToLogThread, args = (self._process.stderr,))
+            t = threading.Thread(target = self._storeStderrToLogThread, args = (self._process.stderr,))
             t.daemon = True
             t.start()
         except FileNotFoundError as e:
@@ -115,6 +115,13 @@ class Backend(PluginObject, SignalEmitter):
             line = handle.readline()
             if line == b"":
                 self.backendQuit.emit()
+                break
+            self._backend_log.append(line)
+
+    def _storeStderrToLogThread(self, handle):
+        while True:
+            line = handle.readline()
+            if line == b"":
                 break
             self._backend_log.append(line)
 

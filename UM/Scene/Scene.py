@@ -33,12 +33,22 @@ class Scene(SignalEmitter):
     #   This will prevent any read or write actions on the scene from other threads,
     #   assuming those threads also properly acquire the lock. Most notably, this
     #   prevents the rendering thread from rendering the scene while it is changing.
+    #   Deprecated, use getSceneLock() instead.
     def acquireLock(self):
         self._lock.acquire()
 
     ##  Release the global scene lock.
+    #   Deprecated, use getSceneLock() instead.
     def releaseLock(self):
         self._lock.release()
+
+    ##  Gets the global scene lock.
+    #
+    #   Use this lock to prevent any read or write actions on the scene from other threads,
+    #   assuming those threads also properly acquire the lock. Most notably, this
+    #   prevents the rendering thread from rendering the scene while it is changing.
+    def getSceneLock(self):
+        return self._lock
 
     ##  Get the root node of the scene.
     def getRoot(self):
