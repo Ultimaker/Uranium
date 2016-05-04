@@ -34,7 +34,7 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
     def __init__(self, container_id, i18n_catalog = None, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self._id = container_id
+        self._id = str(container_id)
         self._name = container_id
         self._metadata = {}
         self._definitions = []

@@ -29,7 +29,7 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     def __init__(self, stack_id, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self._id = stack_id
+        self._id = str(stack_id)
         self._name = stack_id
         self._metadata = {}
         self._containers = []
