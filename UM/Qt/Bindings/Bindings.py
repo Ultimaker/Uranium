@@ -1,7 +1,7 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-from PyQt5.QtQml import qmlRegisterType, qmlRegisterSingletonType, qmlRegisterUncreatableType, qmlRegisterTypeNotAvailable
+from PyQt5.QtQml import qmlRegisterType, qmlRegisterSingletonType, qmlRegisterUncreatableType #, qmlRegisterTypeNotAvailable
 
 from UM.Qt.Duration import Duration, DurationFormat
 
@@ -20,20 +20,12 @@ from . import PreferencesProxy
 from . import Theme
 from . import AngledCornerRectangle
 from . import PointingRectangle
-from . import SettingCategoriesModel
 from . import ActiveToolProxy
 from . import ActiveViewProxy
 from . import OutputDevicesModel
 from . import SelectionProxy
 from . import OutputDeviceManagerProxy
-from . import MachineDefinitionsModel
-from . import MachineInstancesModel
-from . import ProfilesModel
-from . import MachineManagerProxy
-from . import MachineVariantsModel
-from . import MachineMaterialsModel
 from . import i18nCatalogProxy
-from . import ActiveProfileProxy
 
 class Bindings:
     @classmethod
@@ -66,7 +58,6 @@ class Bindings:
         qmlRegisterType(ViewModel, "UM", 1, 0, "ViewModel")
         qmlRegisterType(ToolModel, "UM", 1, 0, "ToolModel")
         qmlRegisterType(JobsModel.JobsModel, "UM", 1, 0, "JobsModel")
-        qmlRegisterType(SettingCategoriesModel.SettingCategoriesModel, "UM", 1, 0, "SettingCategoriesModel")
         qmlRegisterType(AngledCornerRectangle.AngledCornerRectangle, "UM", 1, 0, "AngledCornerRectangle")
         qmlRegisterType(PointingRectangle.PointingRectangle, "UM", 1, 0, "PointingRectangle")
 
@@ -92,11 +83,11 @@ class Bindings:
         qmlRegisterType(OutputDevicesModel.OutputDevicesModel, "UM", 1, 1, "OutputDevicesModel")
         qmlRegisterType(i18nCatalogProxy.i18nCatalogProxy, "UM", 1, 1, "I18nCatalog")
 
-        qmlRegisterTypeNotAvailable("UM", 1, 1, "MachineDefinitionsModel", "MachineDefinitionsModel has been replaced by Settings.DefinitionContainerModel")
-        qmlRegisterTypeNotAvailabel("UM", 1, 1, "MachineInstancesModel", "MachineInstancesModel has been replaced by Settings.InstanceStackModel")
-        qmlRegisterTypeNotAvailabel("UM", 1, 1, "MachineVariantsModel", "MachineVariantsModel has been replaced by Settings.InstanceContainerModel")
-        qmlRegisterTypeNotAvailabel("UM", 1, 1, "MachineMaterialsModel", "MachineMaterialsModel has been replaced by Settings.InstanceContainerModel")
-        qmlRegisterTypeNotAvailabel("UM", 1, 1, "ProfilesModel", "ProfilesModel has been replaced by Settings.InstanceContainerModel")
+        #qmlRegisterTypeNotAvailable("UM", 1, 1, "MachineDefinitionsModel", "MachineDefinitionsModel has been replaced by Settings.DefinitionContainerModel")
+        #qmlRegisterTypeNotAvailabel("UM", 1, 1, "MachineInstancesModel", "MachineInstancesModel has been replaced by Settings.InstanceStackModel")
+        #qmlRegisterTypeNotAvailabel("UM", 1, 1, "MachineVariantsModel", "MachineVariantsModel has been replaced by Settings.InstanceContainerModel")
+        #qmlRegisterTypeNotAvailabel("UM", 1, 1, "MachineMaterialsModel", "MachineMaterialsModel has been replaced by Settings.InstanceContainerModel")
+        #qmlRegisterTypeNotAvailabel("UM", 1, 1, "ProfilesModel", "ProfilesModel has been replaced by Settings.InstanceContainerModel")
 
         qmlRegisterSingletonType(OutputDeviceManagerProxy.OutputDeviceManagerProxy, "UM", 1, 1, "OutputDeviceManager", OutputDeviceManagerProxy.createOutputDeviceManagerProxy)
         qmlRegisterTypeNotAvailable("UM", 1, 1, "MachineManager", "MachineManager has been replaced by ...")
