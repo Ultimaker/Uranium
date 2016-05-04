@@ -10,4 +10,4 @@ from .DefinitionContainer import DefinitionContainer
 from .InstanceContainer import InstanceContainer
 from .ContainerStack import ContainerStack
 
-from .Validator import Validator
+from .Validator import Validator, ValidatorState
