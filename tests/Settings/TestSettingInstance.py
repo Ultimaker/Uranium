@@ -17,7 +17,7 @@ def setting_definition():
         "type": "float",
         "description": "A Test Setting",
         "default_value": 10.0,
-        "maximum": "mock_test * 10"
+        "maximum_value": "mock_test * 10"
     })
     return definition
 
@@ -44,9 +44,9 @@ def test_setProperty(setting_definition, instance_container):
 def test_updateProperty(setting_definition, instance_container):
     instance = UM.Settings.SettingInstance(setting_definition, instance_container)
 
-    instance.updateProperty("maximum")
+    instance.updateProperty("maximum_value")
 
-    assert instance.maximum == 100
+    assert instance.maximum_value == 100
     # We are updating a property that is not value, so state should not change.
     assert instance.state == UM.Settings.InstanceState.Default
 
