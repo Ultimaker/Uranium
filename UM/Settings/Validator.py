@@ -14,7 +14,8 @@ class ValidatorState(Enum):
 
 ##  Validates that a SettingInstance's value is within a certain minimum and maximum value.
 #
-#
+#   This class performs validation of any value that has __lt__ and __gt__ implemented, but
+#   it is primarily used for numerical values like integers and floats.
 class Validator:
     ##  Constructor
     #
@@ -32,6 +33,7 @@ class Validator:
     def state(self):
         return self._state
 
+    ##  Perform the actual validation.
     def validate(self):
         self._state = ValidatorState.Unknown
         try:
