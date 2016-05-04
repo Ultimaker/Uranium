@@ -99,7 +99,7 @@ class ContainerRegistry:
             self._containers.append(new_container)
 
     def addContainer(self, container):
-        containers = self._findContainers(None, { "id": container.getId() })
+        containers = self._findContainers(None, kwargs = {"id": container.getId()})
         if containers:
             same_type = list(filter(lambda i: isinstance(i, container.__class__), containers))
             if same_type:
