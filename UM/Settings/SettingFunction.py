@@ -64,6 +64,9 @@ class SettingFunction:
     def getUsedSettings(self):
         return self._settings
 
+    def __str__(self):
+        return "SettingFunction({0})".format(self._code)
+
 # Helper class used to analyze a parsed function
 class _SettingExpressionVisitor(ast.NodeVisitor):
     def __init__(self):
