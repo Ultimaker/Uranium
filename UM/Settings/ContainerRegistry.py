@@ -6,6 +6,7 @@ import os
 from UM.PluginRegistry import PluginRegistry
 from UM.Resources import Resources
 from UM.MimeTypeDatabase import MimeType, MimeTypeDatabase
+from UM.Logger import Logger
 
 from . import DefinitionContainer
 from . import InstanceContainer
