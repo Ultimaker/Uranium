@@ -109,6 +109,106 @@ def test_addContainer(container_stack):
         container_stack.addContainer(container_stack) # Adding itself gives an exception.
     assert container_stack.getContainers() == [container] # Make sure that adding itself didn't change the state, even if it raises an exception.
 
+##  Tests deserialising a container stack from a corrupted string.
+def test_deserialize_syntax_error(container_stack):
+    serialised = "["
+    with pytest.raises(Exception):
+        container_stack.deserialize(serialised)
+
+##  Tests deserialising a container stack when the version number is wrong.
+def test_deserialize_wrong_version(container_stack):
+    UM.Settings.ContainerRegistry.getInstance().addContainer(UM.Settings.InstanceContainer("a")) # Make sure this container isn't the one it complains about.
+
+    serialised = """"[general]
+name = Test
+id = testid
+containers = a
+version = -1""" # -1 should always be wrong.
+    with pytest.raises(IncorrectVersionError):
+        container_stack.deserialize(serialised)
+
+##  Tests deserialising a container stack from files that are missing entries.
+#
+#   Sorry for the indenting.
+def test_deserialize_missing_items(container_stack):
+    UM.Settings.ContainerRegistry.getInstance().addContainer(UM.Settings.InstanceContainer("a")) # Make sure this container isn't the one it complains about.
+
+    serialised_no_name = """[general]
+id = testid
+containers = a
+version = """ + str(ContainerStack.Version)
+    with pytest.raises(InvalidContainerStackError):
+        container_stack.deserialize(serialised_no_name)
+
+    serialised_no_id = """[general]
+name = Test
+containers = a
+version = """ + str(ContainerStack.Version)
+    with pytest.raises(InvalidContainerStackError):
+        container_stack.deserialize(serialised_no_id)
+
+    serialised_no_version = """[general]
+name = Test
+id = testid
+containers = a"""
+    with pytest.raises(InvalidContainerStackError):
+        container_stack.deserialize(serialised_no_version)
+
+    serialised_no_containers = """[general]
+name = Test
+id = testid
+version = """ + str(ContainerStack.Version)
+    container_stack.deserialize(serialised_no_containers) # Missing containers is allowed.
+
+    serialised_no_general = """[metadata]
+foo = bar"""
+    with pytest.raises(InvalidContainerStackError):
+        container_stack.deserialize(serialised_no_general)
+
+##  Tests deserialising a container stack with various subcontainers.
+#
+#   Sorry for the indenting.
+def test_deserialize_containers(container_stack):
+    container = UM.Settings.InstanceContainer("a")
+    UM.Settings.ContainerRegistry.getInstance().addContainer(container)
+
+    serialised = """[general]
+name = Test
+id = testid
+containers = a
+version = """ + str(ContainerStack.Version) # Test case where there is a container.
+    container_stack.deserialize(serialised)
+    assert container_stack.getContainers() == [container]
+
+    serialised = """[general]
+name = Test
+id = testid
+containers =
+version = """ + str(ContainerStack.Version) # Test case where there is no container.
+    container_stack.deserialize(serialised)
+    assert container_stack.getContainers() == []
+
+    serialised = """[general]
+name = Test
+id = testid
+containers = a,a
+version = """ + str(ContainerStack.Version) # Test case where there are two of the same containers.
+    container_stack.deserialize(serialised)
+    assert container_stack.getContainers() == [container]
+
+    serialised = """[general]
+name = Test
+id = testid
+containers = a,b
+version = """ + str(ContainerStack.Version) # Test case where a container doesn't exist.
+    with pytest.raises(Exception):
+        container_stack.deserialize(serialised)
+
+    container_b = UM.Settings.InstanceContainer("b") # Add the missing container and try again.
+    UM.Settings.ContainerRegistry.getInstance().addContainer(container_b)
+    container_stack.deserialize(serialised)
+    assert container_stack.getContainers() == [container, container_b]
+
 ##  Individual test cases for test_findContainer.
 #
 #   Each test case has:
