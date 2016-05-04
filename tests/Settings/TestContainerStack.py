@@ -336,20 +336,30 @@ def test_replaceContainer(container_stack):
 #
 #   \param container_stack A new container stack from a fixture.
 def test_serialize(container_stack):
+    registry = UM.Settings.ContainerRegistry.getInstance() # All containers need to be registered in order to be recovered again after deserialising.
+
     # First test the empty container stack.
     _test_serialize_cycle(container_stack)
 
     # Case with one subcontainer.
-    container_stack.addContainer(UM.Settings.InstanceContainer(uuid.uuid4()))
+    container = UM.Settings.InstanceContainer(uuid.uuid4().int)
+    registry.addContainer(container)
+    container_stack.addContainer(container)
     _test_serialize_cycle(container_stack)
 
     # Case with two subcontainers.
-    container_stack.addContainer(UM.Settings.InstanceContainer(uuid.uuid4())) #Already had one, if all previous assertions were correct.
+    container = UM.Settings.InstanceContainer(uuid.uuid4().int)
+    registry.addContainer(container)
+    container_stack.addContainer(container) # Already had one, if all previous assertions were correct.
     _test_serialize_cycle(container_stack)
 
     # Case with all types of subcontainers.
-    container_stack.addContainer(UM.Settings.DefinitionContainer(uuid.uuid4()))
-    container_stack.addContainer(UM.Settings.ContainerStack(uuid.uuid4()))
+    container = UM.Settings.DefinitionContainer(uuid.uuid4().int)
+    registry.addContainer(container)
+    container_stack.addContainer(container)
+    container = UM.Settings.ContainerStack(uuid.uuid4().int)
+    registry.addContainer(container)
+    container_stack.addContainer(container)
     _test_serialize_cycle(container_stack)
 
     # With some metadata.
@@ -367,6 +377,13 @@ def test_serialize(container_stack):
     # Just to bully the one who implements this, a name with special characters in JSON and CFG.
     container_stack.setName("=,\"")
     _test_serialize_cycle(container_stack)
+
+    # A container that is not in the registry.
+    container_stack.addContainer(UM.Settings.DefinitionContainer(uuid.uuid4().int))
+    serialised = container_stack.serialize()
+    container_stack = UM.Settings.ContainerStack(uuid.uuid4.int) # Completely fresh container stack.
+    with pytest.raises(Exception):
+        container_stack.deserialize(serialised)
 
 ##  Tests whether changing the name of the stack has the proper effects.
 #
@@ -397,25 +414,6 @@ def test_setName(container_stack, application):
     assert container_stack.getName() == different_name
     assert name_change_counter == 2 # Didn't signal.
 
-##  Tests if two container lists are equal.
-#
-#   It doesn't test for the instances themselves to be equal, but for their data
-#   to be equal.
-#
-#   \param containers_1 The list of containers to be checked for equality
-#   against containers_2.
-#   \param containers_2 The list of containers to be checked for equality
-#   against containers_1.
-def _test_deep_container_equality(containers_1, containers_2):
-    assert len(containers_1) == len(containers_2)
-    for i in range(0, len(containers_1)):
-        assert containers_1[i].__class__ == containers_2[i].__class__
-        assert containers_1[i].getId() == containers_2[i].getId()
-        assert containers_1[i].getName() == containers_2[i].getName()
-        assert containers_1[i].getMetaData() == containers_2[i].getMetaData()
-        _test_deep_container_equality(containers_1[i].getContainers(), containers_2[i].getContainers())
-        # Not checking the next container... That'd complicate the test a whole lot more!
-
 ##  Tests a single cycle of serialising and deserialising a container stack.
 #
 #   This will serialise and then deserialise the container stack, and sees if
@@ -434,5 +432,4 @@ def _test_serialize_cycle(container_stack):
     #ID and nextStack are allowed to be different.
     assert name == container_stack.getName()
     assert metadata == container_stack.getMetaData()
-    new_containers = container_stack.getContainers()
-    _test_deep_container_equality(containers, new_containers)
+    assert containers == container_stack.getContainers()
