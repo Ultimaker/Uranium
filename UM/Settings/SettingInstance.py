@@ -41,6 +41,9 @@ class SettingInstance:
 
         self._visible = True
         self._validator = None
+        validator_type = SettingDefinition.getValidatorForType(self._definition.type)
+        if validator_type:
+            self._validator = validator_type(self)
 
         self._state = InstanceState.Default
 
