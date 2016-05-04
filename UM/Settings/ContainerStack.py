@@ -152,6 +152,11 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
                     self._containers.append(instance_containers[0])  # ID's are unique, so we should only get one hit
                     continue
 
+                container_stack = UM.Settings.ContainerRegistry.getInstance().findContainerStacks(id = container_id)
+                if container_stack:
+                    self._containers.append(container_stack[0])  # ID's are unique, so we should only get one hit
+                    continue
+
                 raise Exception("When trying to deserialize, we recieved an unknown ID for container")
 
         ## TODO; Deserialize the containers.
