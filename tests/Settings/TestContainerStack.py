@@ -90,6 +90,20 @@ class MockContainer(UM.Settings.ContainerInterface.ContainerInterface):
 def container_stack():
     return UM.Settings.ContainerStack(uuid.uuid4().int)
 
+##  Creates a brand new container registry.
+#
+#   To force a new container registry, the registry is first set to None and
+#   then re-requested.
+#
+#   \return A brand new container registry.
+@pytest.fixture
+def container_registry():
+    Resources.addSearchPath(os.path.dirname(os.path.abspath(__file__)))
+    UM.Settings.ContainerRegistry._ContainerRegistry__instance = None # Reset the private instance variable every time
+    UM.PluginRegistry.PluginRegistry.getInstance().removeType("settings_container")
+
+    return UM.Settings.ContainerRegistry.getInstance()
+
 ##  Tests the creation of a container stack.
 #
 #   The actual creation is done in a fixture though.
@@ -118,8 +132,11 @@ def test_deserialize_syntax_error(container_stack):
         container_stack.deserialize(serialised)
 
 ##  Tests deserialising a container stack when the version number is wrong.
-def test_deserialize_wrong_version(container_stack):
-    UM.Settings.ContainerRegistry.getInstance().addContainer(UM.Settings.InstanceContainer("a")) # Make sure this container isn't the one it complains about.
+#
+#   \param container_stack A new container stack from a fixture.
+#   \param container_registry A new container registry from a fixture.
+def test_deserialize_wrong_version(container_stack, container_registry):
+    container_registry.addContainer(UM.Settings.InstanceContainer("a")) # Make sure this container isn't the one it complains about.
 
     serialised = """[general]
 name = Test
@@ -132,8 +149,11 @@ version = -1""" # -1 should always be wrong.
 ##  Tests deserialising a container stack from files that are missing entries.
 #
 #   Sorry for the indenting.
-def test_deserialize_missing_items(container_stack):
-    UM.Settings.ContainerRegistry.getInstance().addContainer(UM.Settings.InstanceContainer("a")) # Make sure this container isn't the one it complains about.
+#
+#   \param container_stack A new container stack from a fixture.
+#   \param container_registry A new container registry from a fixture.
+def test_deserialize_missing_items(container_stack, container_registry):
+    container_registry.addContainer(UM.Settings.InstanceContainer("a")) # Make sure this container isn't the one it complains about.
 
     serialised_no_name = """[general]
 id = testid
@@ -170,9 +190,12 @@ foo = bar"""
 ##  Tests deserialising a container stack with various subcontainers.
 #
 #   Sorry for the indenting.
-def test_deserialize_containers(container_stack):
+#
+#   \param container_stack A new container stack from a fixture.
+#   \param container_registry A new container registry from a fixture.
+def test_deserialize_containers(container_stack, container_registry):
     container = UM.Settings.InstanceContainer("a")
-    UM.Settings.ContainerRegistry.getInstance().addContainer(container)
+    container_registry.addContainer(container)
 
     serialised = """[general]
 name = Test
@@ -263,7 +286,7 @@ test_findContainer_data = [
 @pytest.mark.parametrize("data", test_findContainer_data)
 def test_findContainer(container_stack, data):
     for container in data["containers"]: # Add all containers.
-        mockup = MockContainer()
+        mockup = ()
         for key, value in container.items(): # Copy the data to the metadata of the mock-up.
             mockup.getMetaData()[key] = value
         container_stack.addContainer(mockup)
