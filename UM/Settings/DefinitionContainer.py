@@ -69,6 +69,10 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
 
     metaData = property(getMetaData)
 
+    @property
+    def definitions(self):
+        return self._definitions
+
     ##  \copydoc ContainerInterface::getMetaDataEntry
     #
     #   Reimplemented from ContainerInterface
