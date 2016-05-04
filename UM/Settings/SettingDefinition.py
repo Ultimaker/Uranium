@@ -9,6 +9,7 @@ import collections
 from UM.Logger import Logger
 
 from . import SettingFunction
+from . import Validator
 
 
 ##  Type of definition property.
@@ -240,8 +241,8 @@ class SettingDefinition:
     #   \param to_string A function that converts a value of this type to a string.
     #
     @classmethod
-    def addSettingType(cls, type_name, from_string, to_string):
-        cls.__type_definitions[type_name] = { "from": from_string, "to": to_string }
+    def addSettingType(cls, type_name, from_string, to_string, validator = None):
+        cls.__type_definitions[type_name] = { "from": from_string, "to": to_string, "validator": validator }
 
     ##  Convert a string to a value according to a setting type.
     #
@@ -280,6 +281,14 @@ class SettingDefinition:
             return convert_function(value)
 
         return value
+
+    ##  Get the validator type for a certain setting type.
+    @classmethod
+    def getValidatorForType(cls, type_name):
+        if type_name not in cls.__type_definitions:
+            raise ValueError("Unknown setting type {0}".format(type_name))
+
+        return cls.__type_definitions[type_name]["validator"]
 
     ## protected:
 
@@ -354,21 +363,21 @@ class SettingDefinition:
 
     __type_definitions = {
         # An integer value
-        "int": {"from": str, "to": ast.literal_eval},
+        "int": {"from": str, "to": ast.literal_eval, "validator": Validator.Validator},
         # A boolean value
-        "bool": {"from": str, "to": ast.literal_eval},
+        "bool": {"from": str, "to": ast.literal_eval, "validator": None},
         # Special case setting; Doesn't have a value. Display purposes only.
-        "category": {"from": None, "to": None},
+        "category": {"from": None, "to": None, "validator": None},
         # A string value
-        "str": {"from": None, "to": None},
+        "str": {"from": None, "to": None, "validator": None},
         # An enumeration
-        "enum": {"from": None, "to": None},
+        "enum": {"from": None, "to": None, "validator": None},
         # A floating point value
-        "float": {"from": str, "to": lambda v: ast.literal_eval(v.replace(",", "."))},
+        "float": {"from": str, "to": lambda v: ast.literal_eval(v.replace(",", ".")), "validator": Validator.Validator},
         # A list of 2D points
-        "polygon": {"from": None, "to": None},
+        "polygon": {"from": None, "to": None, "validator": None},
         # A list of polygons
-        "polygons": {"from": None, "to": None},
+        "polygons": {"from": None, "to": None, "validator": None},
         # A 3D point
-        "vec3": {"from": None, "to": None},
+        "vec3": {"from": None, "to": None, "validator": None},
     }
