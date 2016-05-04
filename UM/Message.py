@@ -14,7 +14,7 @@ class Message:
     #                   if lifetime is 0, it will never automatically be destroyed.
     #   \param dismissible Can the user dismiss the message?
     #   \progress Is there nay progress to be displayed? if -1, it's seen as indeterminate
-    def __init__(self, text = "", lifetime = 10, dismissable = True, progress = None): #pylint: disable=bad-whitespace
+    def __init__(self, text = "", lifetime = 30, dismissable = True, progress = None): #pylint: disable=bad-whitespace
         super().__init__()
         self._application = Application.getInstance()
         self._visible = False
