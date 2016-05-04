@@ -325,12 +325,12 @@ def test_replaceContainer(container_stack):
     container_stack.addContainer(container2)
     container1_replacement = MockContainer()
     container_stack.replaceContainer(1, container1_replacement)
-    assert container_stack.getContainers() == [container0_replacement, container1_replacement, container2]
+    assert container_stack.getContainers() == [container2, container1_replacement, container0_replacement]
 
     # Try to replace a container with itself.
     with pytest.raises(Exception):
         container_stack.replaceContainer(2, container_stack)
-    assert container_stack.getContainers() == [container0_replacement, container1_replacement, container2]
+    assert container_stack.getContainers() == [container2, container1_replacement, container0_replacement]
 
 ##  Tests serialising and deserialising the container stack.
 #
@@ -384,7 +384,6 @@ def test_setName(container_stack, application):
     different_name = "test"
     if container_stack.getName() == different_name:
         different_name = "tast" #Make sure it is actually different!
-
     container_stack.setName(different_name)
     assert container_stack.getName() == different_name # Name is correct.
     assert name_change_counter == 1 # Correctly signalled once.
