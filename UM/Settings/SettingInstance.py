@@ -8,6 +8,7 @@ from UM.Logger import Logger
 
 from . import SettingRelation
 from . import Validator
+from .SettingDefinition import SettingDefinition
 
 
 ##  The state of the instance
@@ -49,15 +50,15 @@ class SettingInstance:
         if name in self.__property_values:
             value = self.__property_values[name]
             if isinstance(value, str):
-                return self._definition.settingValueFromString(self._definition.type, value)
+                return SettingDefinition.settingValueFromString(self._definition.type, value)
             else:
                 return value
 
         raise AttributeError("'SettingInstance' object has no attribute '{0}'".format(name))
 
     def setProperty(self, name, value):
-        if self._definition.hasProperty(name):
-            if self._definition.isReadOnlyProperty(name):
+        if SettingDefinition.hasProperty(name):
+            if SettingDefinition.isReadOnlyProperty(name):
                 Logger.log("e", "Tried to set property %s which is a read-only property", name)
                 return
 
@@ -76,7 +77,7 @@ class SettingInstance:
             raise AttributeError("No property {0} defined".format(name))
 
     def updateProperty(self, name):
-        if not self._definition.hasProperty(name):
+        if not SettingDefinition.hasProperty(name):
             Logger.log("e", "Trying to update unknown property %s", name)
             return
 
@@ -144,12 +145,12 @@ class SettingInstance:
     ## protected:
 
     def _update(self):
-        property_names = self._definition.getPropertyNames()
+        property_names = SettingDefinition.getPropertyNames()
         property_names.remove("value")  # Move "value" to the front of the list so we always update that first.
         property_names.insert(0, "value")
 
         for property_name in property_names:
-            if self._definition.isReadOnlyProperty(property_name):
+            if SettingDefinition.isReadOnlyProperty(property_name):
                 continue
 
             for relation in filter(lambda r: r.role == property_name, self._definition.relations):
