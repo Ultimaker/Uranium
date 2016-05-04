@@ -6,7 +6,7 @@ class Version(object):
     def __init__(self, version):
         super().__init__()
         try:
-            version_list = version.split(".")
+            version_list = version.replace("-", ".").replace("_", ".").split(".")
         except AttributeError:
             version_list = version
         else:
