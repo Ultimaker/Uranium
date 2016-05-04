@@ -80,6 +80,12 @@ class MockContainer(UM.Settings.ContainerInterface.ContainerInterface, UM.Plugin
     def deserialize(self, serialized):
         raise NotImplementedError()
 
+##  Creates a brand new container registry.
+#
+#   To force a new container registry, the registry is first set to None and
+#   then re-requested.
+#
+#   \return A brand new container registry.
 @pytest.fixture
 def container_registry():
     Resources.addSearchPath(os.path.dirname(os.path.abspath(__file__)))
