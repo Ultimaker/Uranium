@@ -5,11 +5,19 @@ import pytest
 import os.path
 import json
 import collections
+import uuid
 
 import UM.Settings
 from UM.Resources import Resources
 
 Resources.addSearchPath(os.path.dirname(os.path.abspath(__file__)))
+
+##  A fixture to create new definition containers with.
+#
+#   The container will have a unique ID.
+@pytest.fixture
+def definition_container():
+    return UM.Settings.DefinitionContainer(uuid.uuid4().int)
 
 test_definition_container_data = [
     ("basic.def.json", { "name": "Test", "metadata": {}, "settings": {} }),
@@ -62,6 +70,18 @@ def test_definition_container(file, expected):
 
         for property, property_value in value.items():
             assert getattr(setting, property) == property_value
+
+##  Tests getting metadata entries.
+#
+#   \param definition_container A new definition container from a fixture.
+def test_getMetaDataEntry(definition_container):
+    metadata = definition_container.getMetaData()
+
+    with pytest.raises(Exception): # Any exception.
+        definition_container.getMetaDataEntry("foo") # Non-existent entry.
+
+    metadata["foo"] = "bar" # Normal case.
+    assert definition_container.getMetaDataEntry("foo") == "bar"
 
 def test_setting_function():
     container = UM.Settings.DefinitionContainer("test")
