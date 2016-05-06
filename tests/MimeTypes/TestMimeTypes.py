@@ -111,6 +111,8 @@ def test_stripExtension(mime_database):
     assert mime.stripExtension("file.test") == "file"
     assert mime.stripExtension("file.long.test") == "file.long"
     assert mime.stripExtension("some.random.file.txt") == "some.random.file.txt"
+    assert mime.stripExtension("filetest") == "filetest"
+    assert mime.stripExtension("file.test.cfg.test") == "file.test.cfg"
 
     mime = mime_database.getMimeTypeForFile(os.path.join(os.path.dirname(os.path.abspath(__file__)), "file.long.test"))
     assert mime.stripExtension("file.test") == "file.test"
