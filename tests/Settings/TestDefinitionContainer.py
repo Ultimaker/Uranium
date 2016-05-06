@@ -77,11 +77,10 @@ def test_definition_container(file, expected):
 def test_getMetaDataEntry(definition_container):
     metadata = definition_container.getMetaData()
 
-    with pytest.raises(Exception): # Any exception.
-        definition_container.getMetaDataEntry("foo") # Non-existent entry.
-
     metadata["foo"] = "bar" # Normal case.
     assert definition_container.getMetaDataEntry("foo") == "bar"
+
+    assert definition_container.getMetaDataEntry("zoo", 42) == 42 # Non-existent entry must return the default.
 
 def test_setting_function():
     container = UM.Settings.DefinitionContainer("test")
