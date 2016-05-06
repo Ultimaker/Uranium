@@ -139,6 +139,30 @@ def test_getMimeType(mime_database):
     with pytest.raises(MimeTypeNotFoundError):
         mime_database.getMimeType("archive/x-file-that-your-mom-would-fit-in") # Try to fetch some non-existing MIME type.
 
+##  Tests the querying for MIME types for opening a specific file.
+#
+#   \param mime_database A MIME type database from a fixture.
+def test_getMimeTypeForFile(mime_database):
+    path_base = os.path.dirname(os.path.abspath(__file__))
+
+    mime = mime_database.getMimeTypeForFile(os.path.join(path_base, "test.jpg"))
+    assert mime.comment == "Custom JPEG MIME Type" # We must get the custom one, not Qt's MIME type.
+
+    mime = mime_database.getMimeTypeForFile(os.path.join(path_base, "test.png"))
+    assert mime.name == "image/png" # Getting a file type from the system.
+
+    mime = mime_database.getMimeTypeForFile(os.path.join(path_base, "file.test"))
+    assert mime.name == "application/x-test"
+
+    with pytest.raises(MimeTypeNotFoundError):
+        mime_database.getMimeTypeForFile(os.path.join(path_base, "pink.unicorn")) # Non-existent file type.
+
+    with pytest.raises(MimeTypeNotFoundError):
+        mime_database.getMimeTypeForFile(os.path.join(path_base, "filetest")) # File that happens to end in the extension without being an extension.
+
+    mime = mime_database.getMimeTypeForFile(os.path.join(path_base, "file.long.test")) # Should prefer the longer extension.
+    assert mime.name == "application/x-long-test"
+
 ##  Tests the utility function that strips a MIME type's extension from a
 #   filename.
 #
