@@ -129,7 +129,12 @@ def test_fromQMimeType():
     assert mime.preferredSuffix == qmime.preferredSuffix()
 
 ##  Tests the querying for MIME types by name.
+#
+#   \param mime_database A MIME type database from a fixture.
 def test_getMimeType(mime_database):
+    mime = mime_database.getMimeType("application/x-test") # Easy case.
+    assert mime.comment == "Test Mimetype"
+
     mime = mime_database.getMimeType("image/jpeg")
     assert mime.comment == "Custom JPEG MIME Type" # We must get the custom one, not Qt's MIME type.
 
