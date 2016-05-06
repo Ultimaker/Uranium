@@ -21,6 +21,13 @@ def mime_database():
         suffixes = [ "long.test" ]
     )
     MimeTypeDatabase.addMimeType(mime)
+    mime = MimeType(
+        name = "application/x-multiple-test",
+        comment = "Multiple Extension MIME type",
+        suffixes = [ "tost", "ost" ],
+        preferred_suffix = "ost"
+    )
+    MimeTypeDatabase.addMimeType(mime)
     return MimeTypeDatabase
 
 def test_system_mimetypes(mime_database):
@@ -101,14 +108,16 @@ def test_custom_mimetypes(mime_database):
 
 def test_stripExtension(mime_database):
     mime = mime_database.getMimeTypeForFile(os.path.join(os.path.dirname(os.path.abspath(__file__)), "file.test"))
-
     assert mime.stripExtension("file.test") == "file"
     assert mime.stripExtension("file.long.test") == "file.long"
     assert mime.stripExtension("some.random.file.txt") == "some.random.file.txt"
 
     mime = mime_database.getMimeTypeForFile(os.path.join(os.path.dirname(os.path.abspath(__file__)), "file.long.test"))
-
     assert mime.stripExtension("file.test") == "file.test"
     assert mime.stripExtension("file.long.test") == "file"
     assert mime.stripExtension("some.random.file.txt") == "some.random.file.txt"
 
+    mime = mime_database.getMimeTypeForFile(os.path.join(os.path.dirname(os.path.abspath(__file__)), "file.tost"))
+    assert mime.stripExtension("file.tost") == "file"
+    assert mime.stripExtension("file.ost") == "file"
+    assert mime.stripExtension("file.tost.png") == "file.tost.png"
