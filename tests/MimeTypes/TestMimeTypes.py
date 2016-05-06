@@ -100,6 +100,14 @@ def test_createMimeType():
             preferred_suffix = "bee" # Not in the list of suffixes.
         )
 
+
+def test_custom_mimetypes(mime_database):
+    mime = mime_database.getMimeTypeForFile(os.path.join(os.path.dirname(os.path.abspath(__file__)), "file.test"))
+    assert mime.name == "application/x-test"
+
+    mime = mime_database.getMimeTypeForFile(os.path.join(os.path.dirname(os.path.abspath(__file__)), "file.long.test"))
+    assert mime.name == "application/x-long-test"
+
 ##  Tests creating a MIME type from a QMimeType object.
 def test_fromQMimeType():
     database = PyQt5.QtCore.QMimeDatabase()
@@ -111,14 +119,6 @@ def test_fromQMimeType():
     for suffix in qmime.suffixes():
         assert suffix in mime.suffixes
     assert mime.preferredSuffix == qmime.preferredSuffix()
-
-
-def test_custom_mimetypes(mime_database):
-    mime = mime_database.getMimeTypeForFile(os.path.join(os.path.dirname(os.path.abspath(__file__)), "file.test"))
-    assert mime.name == "application/x-test"
-
-    mime = mime_database.getMimeTypeForFile(os.path.join(os.path.dirname(os.path.abspath(__file__)), "file.long.test"))
-    assert mime.name == "application/x-long-test"
 
 ##  Tests the utility function that strips a MIME type's extension from a
 #   filename.
