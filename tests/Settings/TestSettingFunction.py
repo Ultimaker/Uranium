@@ -140,3 +140,11 @@ def test_getUsedSettings(data):
     assert len(answer) == len(data["variables"])
     for variable in data["variables"]: # Check for set equality regardless of the order.
         assert variable in answer
+
+##  Tests the conversion of a setting function to string.
+def test_str():
+    # Due to the simplicity of the function, it's not really necessary to make a full-blown parametrised test for this. Just two simple tests:
+    function = UM.Settings.SettingFunction.SettingFunction("3.14156") # Simple test case.
+    assert str(function) == "SettingFunction(3.14156)"
+    function = UM.Settings.SettingFunction.SettingFunction("") # Also the edge case.
+    assert str(function) == "SettingFunction()"
