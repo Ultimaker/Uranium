@@ -114,3 +114,29 @@ def test_eq():
     same_answer = UM.Settings.SettingFunction.SettingFunction("9") # Different code but the result is the same. Should NOT be equal!
     assert not (setting_function == same_answer)
     assert setting_function != same_answer
+
+##  The individual test cases for test_getUsedSettings.
+#
+#   This is a list where each item is a test case. Each test case consists of a
+#   dictionary with two elements: The code that represents a function, and the
+#   true variables in that function (the answer).
+test_getUsedSettings_data = [
+    { "code": "0",       "variables": [] },
+    { "code": "\"x\"",   "variables": [] },
+    { "code": "x",       "variables": ["x"] },
+    { "code": "x * y",   "variables": ["x", "y"] },
+    { "code": "sqrt(4)", "variables": ["sqrt"] },
+    { "code": "sqrt(x)", "variables": ["sqrt", "x"] },
+    { "code": "x * x",   "variables": ["x"] } # Use the same variable twice.
+]
+
+##  Tests if the function finds correctly which settings are used.
+#
+#   \param data A test case to test.
+@pytest.mark.parametrize("data", test_getUsedSettings_data)
+def test_getUsedSettings(data):
+    function = UM.Settings.SettingFunction.SettingFunction(data["code"])
+    answer = function.getUsedSettings()
+    assert len(answer) == len(data["variables"])
+    for variable in data["variables"]: # Check for set equality regardless of the order.
+        assert variable in answer
