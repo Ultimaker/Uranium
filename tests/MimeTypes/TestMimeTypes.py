@@ -106,6 +106,11 @@ def test_custom_mimetypes(mime_database):
     mime = mime_database.getMimeTypeForFile(os.path.join(os.path.dirname(os.path.abspath(__file__)), "file.long.test"))
     assert mime.name == "application/x-long-test"
 
+##  Tests the utility function that strips a MIME type's extension from a
+#   filename.
+#
+#   \param mime_database A new MIME type database from a fixture, which is
+#   already filled with a few MIME types.
 def test_stripExtension(mime_database):
     mime = mime_database.getMimeTypeForFile(os.path.join(os.path.dirname(os.path.abspath(__file__)), "file.test"))
     assert mime.stripExtension("file.test") == "file"
