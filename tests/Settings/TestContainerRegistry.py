@@ -219,7 +219,6 @@ test_findContainers_data = [
 def test_findDefinitionContainers(container_registry, data):
     for container in data["containers"]: # Fill the registry with mock containers.
         container_id = container["id"]
-        del container["id"]
         definition_container = UM.Settings.DefinitionContainer(container_id, container)
         container_registry.addContainer(definition_container)
 
