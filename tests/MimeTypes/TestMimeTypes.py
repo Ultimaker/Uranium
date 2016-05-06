@@ -37,6 +37,60 @@ def test_compare(mime_database):
     assert id(mime1) != id(mime2)
     assert mime1 == mime2
 
+def test_createMimeType():
+    # Normal MIME type
+    mime = MimeType(
+        name = "application/x-test",
+        comment = "Normal MIME type",
+        suffixes = [ "tst" ]
+    )
+    assert mime.name == "application/x-test"
+    assert mime.comment == "Normal MIME type"
+    assert "tst" in mime.suffixes
+
+    # No name.
+    with pytest.raises(ValueError):
+        mime = MimeType(
+            name = None,
+            comment = "Missing name",
+            suffixes = [ "non" ]
+        )
+
+    # No suffixes.
+    mime = MimeType(
+        name = "application/x-no-suffixes",
+        comment = "No Suffixes",
+        suffixes = []
+    )
+    assert len(mime.suffixes) == 0
+
+    # Multiple suffixes.
+    mime = MimeType(
+        name = "application/x-multiple",
+        comment = "Multiple suffixes",
+        suffixes = [ "boo", "baa" ]
+    )
+    assert "boo" in mime.suffixes
+    assert "baa" in mime.suffixes
+
+    # A preferred suffix.
+    mime = MimeType(
+        name = "application/x-preferred",
+        comment = "Preferred suffix",
+        suffixes = [ "boo", "baa" ],
+        preferred_suffix = "baa"
+    )
+    assert mime.preferredSuffix == "baa"
+
+    # Nonexistent preference.
+    with pytest.raises(ValueError):
+        mime = MimeType(
+            name = "application/x-nonexistent-pref",
+            comment = "Nonexistent preferred suffix",
+            suffixes = [ "boo", "baa" ],
+            preferred_suffix = "bee" # Not in the list of suffixes.
+        )
+
 def test_custom_mimetypes(mime_database):
     mime = mime_database.getMimeTypeForFile(os.path.join(os.path.dirname(os.path.abspath(__file__)), "file.test"))
     assert mime.name == "application/x-test"
