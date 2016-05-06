@@ -5,7 +5,7 @@ import pytest
 import os.path
 import PyQt5.QtCore # For the test of converting QMimeType to MimeType.
 
-from UM.MimeTypeDatabase import MimeType, MimeTypeDatabase
+from UM.MimeTypeDatabase import MimeType, MimeTypeDatabase, MimeTypeNotFoundError
 
 @pytest.fixture
 def mime_database():
@@ -24,11 +24,19 @@ def mime_database():
     MimeTypeDatabase.addMimeType(mime)
     mime = MimeType(
         name = "application/x-multiple-test",
-        comment = "Multiple Extension MIME type",
+        comment = "Multiple Extension MIME Type",
         suffixes = [ "tost", "ost" ],
         preferred_suffix = "ost"
     )
     MimeTypeDatabase.addMimeType(mime)
+    mime = MimeType(
+        name = "image/jpeg",
+        comment = "Custom JPEG MIME Type",
+        suffixes = [ "jpg", "jpeg" ],
+        preferred_suffix = "jpg"
+    )
+    MimeTypeDatabase.addMimeType(mime)
+
     return MimeTypeDatabase
 
 def test_system_mimetypes(mime_database):
@@ -119,6 +127,17 @@ def test_fromQMimeType():
     for suffix in qmime.suffixes():
         assert suffix in mime.suffixes
     assert mime.preferredSuffix == qmime.preferredSuffix()
+
+##  Tests the querying for MIME types by name.
+def test_getMimeType(mime_database):
+    mime = mime_database.getMimeType("image/jpeg")
+    assert mime.comment == "Custom JPEG MIME Type" # We must get the custom one, not Qt's MIME type.
+
+    mime = mime_database.getMimeType("image/png")
+    assert mime.comment == "PNG image" # Qt's MIME type (at least on my system).
+
+    with pytest.raises(MimeTypeNotFoundError):
+        mime_database.getMimeType("archive/x-file-that-your-mom-would-fit-in") # Try to fetch some non-existing MIME type.
 
 ##  Tests the utility function that strips a MIME type's extension from a
 #   filename.
