@@ -539,6 +539,17 @@ def test_setName(container_stack, application):
     assert container_stack.getName() == different_name
     assert name_change_counter == 2 # Didn't signal.
 
+##  Tests the next stack functionality.
+#
+#   \param container_stack A new container stack from a fixture.
+def test_setNextStack(container_stack):
+    container = MockContainer()
+    container_stack.setNextStack(container)
+    assert container_stack.getNextStack() == container
+
+    with pytest.raises(Exception):
+        container_stack.setNextStack(container_stack) # Can't set itself as next stack.
+
 ##  Tests a single cycle of serialising and deserialising a container stack.
 #
 #   This will serialise and then deserialise the container stack, and sees if
