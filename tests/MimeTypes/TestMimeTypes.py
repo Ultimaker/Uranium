@@ -116,8 +116,8 @@ def test_stripExtension(mime_database):
     assert mime.stripExtension("file.test") == "file"
     assert mime.stripExtension("file.long.test") == "file.long"
     assert mime.stripExtension("some.random.file.txt") == "some.random.file.txt"
-    assert mime.stripExtension("filetest") == "filetest"
-    assert mime.stripExtension("file.test.cfg.test") == "file.test.cfg"
+    assert mime.stripExtension("filetest") == "filetest" # Filename happens to end with the extension, but it's not the file's extension since there is no period before it.
+    assert mime.stripExtension("file.test.cfg.test") == "file.test.cfg" # Extension and period occurs earlier in the filename as well.
 
     mime = mime_database.getMimeTypeForFile(os.path.join(os.path.dirname(os.path.abspath(__file__)), "file.long.test"))
     assert mime.stripExtension("file.test") == "file.test"
