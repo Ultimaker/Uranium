@@ -286,7 +286,7 @@ test_findContainer_data = [
 @pytest.mark.parametrize("data", test_findContainer_data)
 def test_findContainer(container_stack, data):
     for container in data["containers"]: # Add all containers.
-        mockup = ()
+        mockup = MockContainer()
         for key, value in container.items(): # Copy the data to the metadata of the mock-up.
             mockup.getMetaData()[key] = value
         container_stack.addContainer(mockup)
