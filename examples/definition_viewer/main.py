@@ -61,7 +61,7 @@ class DefinitionLoader(QObject):
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 file_name = None
-if len(sys.argv) >= 1:
+if len(sys.argv) > 1:
     file_name = sys.argv[1]
     del sys.argv[1]
 
