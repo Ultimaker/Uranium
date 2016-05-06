@@ -98,3 +98,19 @@ def test_call(data):
     value_provider = MockValueProvider()
     function = UM.Settings.SettingFunction.SettingFunction(data["code"])
     assert function(value_provider) == data["result"]
+
+##  Tests the equality operator on setting functions.
+def test_eq():
+    setting_function = UM.Settings.SettingFunction.SettingFunction("3 * 3")
+    assert not (setting_function == "some string") # Equality against something of a different type.
+    assert setting_function != "some string"
+    assert setting_function == setting_function # Equality against itself.
+    assert not (setting_function != setting_function)
+
+    duplicate = UM.Settings.SettingFunction.SettingFunction("3 * 3") # Different instance with the same code. Should be equal!
+    assert setting_function == duplicate
+    assert not (setting_function != duplicate)
+
+    same_answer = UM.Settings.SettingFunction.SettingFunction("9") # Different code but the result is the same. Should NOT be equal!
+    assert not (setting_function == same_answer)
+    assert setting_function != same_answer
