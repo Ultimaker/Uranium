@@ -37,6 +37,7 @@ def test_compare(mime_database):
     assert id(mime1) != id(mime2)
     assert mime1 == mime2
 
+##  Tests the creation of new MIME types.
 def test_createMimeType():
     # Normal MIME type
     mime = MimeType(
