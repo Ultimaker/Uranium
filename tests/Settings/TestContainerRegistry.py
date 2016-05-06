@@ -114,7 +114,7 @@ def test_addContainer(container_registry):
     assert container_registry.findDefinitionContainers(id = "b") == [definition_container_1] # Didn't get added!
 
     # For good measure, add a container with a different type too.
-    instance_container_1 = UM.Settings.InstanceContainer("a", {})
+    instance_container_1 = UM.Settings.InstanceContainer("a")
     container_registry.addContainer(instance_container_1)
     assert container_registry.findInstanceContainers() == [instance_container_1]
 
@@ -122,7 +122,7 @@ def test_addContainer(container_registry):
 #
 #   \param container_registry A new container registry from a fixture.
 def test_addContainerType(container_registry):
-    container_registry.addContainerType(MockContainer()) # Test if it doesn't crash.
+    container_registry.addContainerType(MockContainer("a", {} )) # Test if it doesn't crash.
     # Actually testing the result can only be done with the load function, so refer to test_load for that.
     with pytest.raises(Exception):
         container_registry.addContainerType(None)
