@@ -13,6 +13,8 @@ from UM.Preferences import Preferences
 from UM.OutputDevice.OutputDeviceManager import OutputDeviceManager
 from UM.i18n import i18nCatalog
 
+from UM.Settings.ContainerStack import ContainerStack
+
 import threading
 import argparse
 import os
@@ -101,12 +103,23 @@ class Application(SignalEmitter):
         self.showMessageSignal.connect(self.showMessage)
         self.hideMessageSignal.connect(self.hideMessage)
 
+        self._active_container_stack = ContainerStack("empty")
+
     ##  Emitted when the application window was closed and we need to shut down the application
     applicationShuttingDown = Signal()
 
     showMessageSignal = Signal()
 
     hideMessageSignal = Signal()
+
+    activeContainerStackChanged = Signal()
+
+    def setActiveContainerStack(self, stack):
+        self._active_container_stack = stack
+        self.activeContainerStackChanged.emit()
+
+    def getActiveContainerStack(self):
+        return self._active_container_stack
 
     def hideMessage(self, message):
         raise NotImplementedError
