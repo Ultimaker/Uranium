@@ -46,23 +46,22 @@ test_deserialize_data = [
     }})
 ]
 @pytest.mark.parametrize("file,expected", test_deserialize_data)
-def test_deserialize(file, expected):
-    container = UM.Settings.DefinitionContainer("test")
-    assert container.getId() == "test"
+def test_deserialize(file, definition_container):
+    assert definition_container.getId() == "test"
 
     json = ""
     with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "definitions", file)) as data:
         json = data.read()
 
-    container.deserialize(json)
+    definition_container.deserialize(json)
 
-    assert container.getName() == expected["name"]
+    assert definition_container.getName() == expected["name"]
 
     for key, value in expected["metadata"].items():
-        assert container.getMetaDataEntry(key) == value
+        assert definition_container.getMetaDataEntry(key) == value
 
     for key, value in expected["settings"].items():
-        settings = container.findDefinitions(key = key)
+        settings = definition_container.findDefinitions(key = key)
 
         assert len(settings) == 1
 
