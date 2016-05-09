@@ -88,7 +88,7 @@ class QtApplication(QApplication, Application, SignalEmitter):
 
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Loading machines..."))
 
-        self.getMachineManager().loadAll()
+        #self.getMachineManager().loadAll()
 
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Loading preferences..."))
         try:

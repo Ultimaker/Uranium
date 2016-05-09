@@ -28,7 +28,7 @@ ScrollView
 
         Repeater
         {
-            model: UM.SettingCategoriesModel { id: categoriesModel; }
+//             model: UM.SettingCategoriesModel { id: categoriesModel; }
 
             delegate: Item
             {
