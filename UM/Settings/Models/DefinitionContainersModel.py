@@ -8,10 +8,13 @@ from UM.Settings.ContainerRegistry import ContainerRegistry
 #   changed.
 class DefinitionContainersModel(ListModel):
     NameRole = Qt.UserRole + 1
+    ManufacturerRole = Qt.UserRole + 2
+
 
     def __init__(self, parent = None):
         super().__init__(parent)
         self.addRoleName(self.NameRole, "name")
+        self.addRoleName(self.ManufacturerRole, "manufacturer")
         self._definition_containers = ContainerRegistry.getInstance().findDefinitionContainers()
         self._update()
 
@@ -19,7 +22,8 @@ class DefinitionContainersModel(ListModel):
     def _update(self):
         self.clear()
         for container in self._definition_containers:
-            self.appendItem({"name": container.getName()})
+            self.appendItem({"name": container.getName(),
+                             "manufacturer": container.getMetaDataEntry("manufacturer", "")})
 
     ##  Set the filter of this model based on a string.
     #   \param filter_dict Dictionary to do the filtering by.
