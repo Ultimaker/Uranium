@@ -2,7 +2,6 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 from PyQt5.QtQml import qmlRegisterType, qmlRegisterSingletonType, qmlRegisterUncreatableType
-from PyQt5.QtQuick import QQuickItem
 
 from UM.Qt.Duration import Duration, DurationFormat
 
@@ -27,6 +26,11 @@ from . import OutputDevicesModel
 from . import SelectionProxy
 from . import OutputDeviceManagerProxy
 from . import i18nCatalogProxy
+
+from UM.Settings.Models.DefinitionContainersModel import DefinitionContainersModel
+from UM.Settings.Models.InstanceContainersModel import InstanceContainersModel
+from UM.Settings.Models.SettingDefinitionsModel import SettingDefinitionsModel
+
 
 class Bindings:
     @classmethod
@@ -61,6 +65,9 @@ class Bindings:
         qmlRegisterType(JobsModel.JobsModel, "UM", 1, 0, "JobsModel")
         qmlRegisterType(AngledCornerRectangle.AngledCornerRectangle, "UM", 1, 0, "AngledCornerRectangle")
         qmlRegisterType(PointingRectangle.PointingRectangle, "UM", 1, 0, "PointingRectangle")
+        qmlRegisterType(SettingDefinitionsModel, "UM", 1, 0, "SettingDefinitionsModel")
+        qmlRegisterType(DefinitionContainersModel, "UM", 1, 0, "DefinitionContainersModel")
+        qmlRegisterType(InstanceContainersModel, "UM", 1, 0, "InstanceContainersModel")
 
         # Singleton proxy objects
         qmlRegisterSingletonType(ControllerProxy.ControllerProxy, "UM", 1, 0, "Controller", Bindings.createControllerProxy)
