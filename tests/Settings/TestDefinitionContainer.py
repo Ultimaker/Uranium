@@ -18,7 +18,10 @@ Resources.addSearchPath(os.path.dirname(os.path.abspath(__file__)))
 #   The container will have a unique ID.
 @pytest.fixture
 def definition_container():
-    return UM.Settings.DefinitionContainer(uuid.uuid4().int)
+    uid = str(uuid.uuid4().int)
+    result = UM.Settings.DefinitionContainer(uid)
+    assert result.getId() == uid
+    return result
 
 test_deserialize_data = [
     ("basic.def.json", { "name": "Test", "metadata": {}, "settings": {} }),
@@ -47,8 +50,6 @@ test_deserialize_data = [
 ]
 @pytest.mark.parametrize("file,expected", test_deserialize_data)
 def test_deserialize(file, expected, definition_container):
-    assert definition_container.getId() == "test"
-
     json = ""
     with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "definitions", file)) as data:
         json = data.read()
