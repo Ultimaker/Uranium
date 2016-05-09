@@ -1,7 +1,8 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-from PyQt5.QtQml import qmlRegisterType, qmlRegisterSingletonType, qmlRegisterUncreatableType #, qmlRegisterTypeNotAvailable
+from PyQt5.QtQml import qmlRegisterType, qmlRegisterSingletonType, qmlRegisterUncreatableType
+from PyQt5.QtQuick import QQuickItem
 
 from UM.Qt.Duration import Duration, DurationFormat
 
@@ -30,23 +31,23 @@ from . import i18nCatalogProxy
 class Bindings:
     @classmethod
     def createControllerProxy(self, engine, script_engine):
-        return ControllerProxy()
+        return ControllerProxy.ControllerProxy()
 
     @classmethod
     def createApplicationProxy(self, engine, script_engine):
-        return ApplicationProxy()
+        return ApplicationProxy.ApplicationProxy()
 
     @classmethod
     def createBackendProxy(self, engine, script_engine):
-        return BackendProxy()
+        return BackendProxy.BackendProxy()
 
     @classmethod
     def createSceneProxy(self, engine, script_engine):
-        return SceneProxy()
+        return SceneProxy.SceneProxy()
 
     @classmethod
     def createResourcesProxy(cls, engine, script_engine):
-        return ResourcesProxy()
+        return ResourcesProxy.ResourcesProxy()
 
     @classmethod
     def createOperationStackProxy(cls, engine, script_engine):
@@ -54,19 +55,19 @@ class Bindings:
 
     @classmethod
     def register(self):
-        qmlRegisterType(MainWindow, "UM", 1, 0, "MainWindow")
-        qmlRegisterType(ViewModel, "UM", 1, 0, "ViewModel")
-        qmlRegisterType(ToolModel, "UM", 1, 0, "ToolModel")
+        qmlRegisterType(MainWindow.MainWindow, "UM", 1, 0, "MainWindow")
+        qmlRegisterType(ViewModel.ViewModel, "UM", 1, 0, "ViewModel")
+        qmlRegisterType(ToolModel.ToolModel, "UM", 1, 0, "ToolModel")
         qmlRegisterType(JobsModel.JobsModel, "UM", 1, 0, "JobsModel")
         qmlRegisterType(AngledCornerRectangle.AngledCornerRectangle, "UM", 1, 0, "AngledCornerRectangle")
         qmlRegisterType(PointingRectangle.PointingRectangle, "UM", 1, 0, "PointingRectangle")
 
         # Singleton proxy objects
-        qmlRegisterSingletonType(ControllerProxy, "UM", 1, 0, "Controller", Bindings.createControllerProxy)
-        qmlRegisterSingletonType(ApplicationProxy, "UM", 1, 0, "Application", Bindings.createApplicationProxy)
-        qmlRegisterSingletonType(BackendProxy, "UM", 1, 0, "Backend", Bindings.createBackendProxy)
-        qmlRegisterSingletonType(SceneProxy, "UM", 1, 0, "Scene", Bindings.createSceneProxy)
-        qmlRegisterSingletonType(ResourcesProxy, "UM", 1, 0, "Resources", Bindings.createResourcesProxy)
+        qmlRegisterSingletonType(ControllerProxy.ControllerProxy, "UM", 1, 0, "Controller", Bindings.createControllerProxy)
+        qmlRegisterSingletonType(ApplicationProxy.ApplicationProxy, "UM", 1, 0, "Application", Bindings.createApplicationProxy)
+        qmlRegisterSingletonType(BackendProxy.BackendProxy, "UM", 1, 0, "Backend", Bindings.createBackendProxy)
+        qmlRegisterSingletonType(SceneProxy.SceneProxy, "UM", 1, 0, "Scene", Bindings.createSceneProxy)
+        qmlRegisterSingletonType(ResourcesProxy.ResourcesProxy, "UM", 1, 0, "Resources", Bindings.createResourcesProxy)
         qmlRegisterSingletonType(OperationStackProxy.OperationStackProxy, "UM", 1, 0, "OperationStack", Bindings.createOperationStackProxy)
         qmlRegisterSingletonType(MeshFileHandlerProxy.MeshFileHandlerProxy, "UM", 1, 0, "MeshFileHandler", MeshFileHandlerProxy.createMeshFileHandlerProxy)
         qmlRegisterSingletonType(PreferencesProxy.PreferencesProxy, "UM", 1, 0, "Preferences", PreferencesProxy.createPreferencesProxy)
@@ -74,7 +75,6 @@ class Bindings:
         qmlRegisterSingletonType(ActiveToolProxy.ActiveToolProxy, "UM", 1, 0, "ActiveTool", ActiveToolProxy.createActiveToolProxy)
         qmlRegisterSingletonType(ActiveViewProxy.ActiveViewProxy, "UM", 1, 0, "ActiveView", ActiveViewProxy.createActiveViewProxy)
         qmlRegisterSingletonType(SelectionProxy.SelectionProxy, "UM", 1, 0, "Selection", SelectionProxy.createSelectionProxy)
-        qmlRegisterTypeNotAvailable("UM", 1, 0, "Models", "Models object has been removed in favor of instantiating the model from QML directly")
 
         qmlRegisterUncreatableType(Duration, "UM", 1, 0, "Duration", "")
         qmlRegisterUncreatableType(DurationFormat, "UM", 1, 0, "DurationFormat", "")
@@ -83,15 +83,7 @@ class Bindings:
         qmlRegisterType(OutputDevicesModel.OutputDevicesModel, "UM", 1, 1, "OutputDevicesModel")
         qmlRegisterType(i18nCatalogProxy.i18nCatalogProxy, "UM", 1, 1, "I18nCatalog")
 
-        #qmlRegisterTypeNotAvailable("UM", 1, 1, "MachineDefinitionsModel", "MachineDefinitionsModel has been replaced by Settings.DefinitionContainerModel")
-        #qmlRegisterTypeNotAvailabel("UM", 1, 1, "MachineInstancesModel", "MachineInstancesModel has been replaced by Settings.InstanceStackModel")
-        #qmlRegisterTypeNotAvailabel("UM", 1, 1, "MachineVariantsModel", "MachineVariantsModel has been replaced by Settings.InstanceContainerModel")
-        #qmlRegisterTypeNotAvailabel("UM", 1, 1, "MachineMaterialsModel", "MachineMaterialsModel has been replaced by Settings.InstanceContainerModel")
-        #qmlRegisterTypeNotAvailabel("UM", 1, 1, "ProfilesModel", "ProfilesModel has been replaced by Settings.InstanceContainerModel")
-
         qmlRegisterSingletonType(OutputDeviceManagerProxy.OutputDeviceManagerProxy, "UM", 1, 1, "OutputDeviceManager", OutputDeviceManagerProxy.createOutputDeviceManagerProxy)
-        qmlRegisterTypeNotAvailable("UM", 1, 1, "MachineManager", "MachineManager has been replaced by ...")
-        qmlRegisterTypeNotAvailable("UM", 1, 1, "ActiveProfile", "ActiveProfile has been replaced by ...")
 
         # Additions after 2.1. Uses API version 1.2
 
