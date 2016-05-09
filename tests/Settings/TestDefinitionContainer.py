@@ -3,12 +3,10 @@
 
 import pytest
 import os.path
-import json
-import collections
 import uuid
 
 import UM.Settings
-from UM.Settings.SettingDefinition import DefinitionPropertyType, SettingDefinition
+from UM.Settings.SettingDefinition import SettingDefinition
 from UM.Resources import Resources
 
 Resources.addSearchPath(os.path.dirname(os.path.abspath(__file__)))
@@ -181,7 +179,7 @@ def test_setting_function():
     assert result == (setting_0.default_value * 10)
 
 def _createSettingDefinition(properties):
-    result = UM.Settings.SettingDefinition(properties["key"]) # Key MUST be present.
+    result = SettingDefinition(properties["key"]) # Key MUST be present.
     for key, value in properties.items():
         if key == "default_value":
             result._SettingDefinition__property_values["default_value"] = value # Nota bene: Setting a private value depends on implementation, but changing a property is not currently exposed.
