@@ -6,6 +6,7 @@ import os.path
 import uuid
 
 import UM.Settings
+from UM.Settings.DefinitionContainer import IncorrectDefinitionVersionError, InvalidDefinitionError
 from UM.Settings.SettingDefinition import SettingDefinition
 from UM.Resources import Resources
 
@@ -69,6 +70,85 @@ def test_deserialize(file, expected, definition_container):
 
         for property, property_value in value.items():
             assert getattr(setting, property) == property_value
+
+##  Tests deserialising bad definition container JSONs.
+#
+#   \param definition_container A definition container from a fixture.
+def test_deserialize_bad(definition_container):
+    json = """{""" # Syntax error: No closing bracket!
+    with pytest.raises(Exception):
+        definition_container.deserialize(json)
+
+    json = """{
+    "version":
+}""" # Syntax error: Missing value.
+    with pytest.raises(Exception):
+        definition_container.deserialize(json)
+
+    json = """{
+    "version": 2,
+    "name": "Test",
+    "settings": {}
+}""" # Missing metadata.
+    with pytest.raises(InvalidDefinitionError):
+        definition_container.deserialize(json)
+
+    json = """{
+    "version": 2,
+    "name": "Test",
+    "metadata": {}
+}""" # Missing settings.
+    with pytest.raises(InvalidDefinitionError):
+        definition_container.deserialize(json)
+
+    json = """{
+    "version": 2,
+    "metadata": {},
+    "settings": {}
+}""" # Missing name.
+    with pytest.raises(InvalidDefinitionError):
+        definition_container.deserialize(json)
+
+    json = """{
+    "name": "Test",
+    "metadata": {},
+    "settings": {}
+}""" # Missing version.
+    with pytest.raises(InvalidDefinitionError):
+        definition_container.deserialize(json)
+
+    json = """{
+    "version": 1,
+    "name": "Test",
+    "metadata": {},
+    "settings": {}
+}""" # Wrong version.
+    with pytest.raises(IncorrectDefinitionVersionError):
+        definition_container.deserialize(json)
+
+    json = """{
+    "version": 2,
+    "name": "Test",
+    "metadata": {},
+    "settings": {},
+    "inherits": "non-existent_file"
+}""" # Faulty inheritance.
+    with pytest.raises(OSError):
+        definition_container.deserialize(json)
+
+    json = """{
+    "version": 2,
+    "name": "Test",
+    "metadata": {},
+    "settings": {
+        "layer_height": {
+            "label": "Testiness of your print.",
+            "description": "How testy your print should be."
+        }
+    }
+}""" # Type missing from a setting.
+    with pytest.raises(AttributeError):
+        definition_container.deserialize(json)
 
 ##  Tests getting metadata entries.
 #
