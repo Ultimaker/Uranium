@@ -150,6 +150,58 @@ def test_deserialize_bad(definition_container):
     with pytest.raises(AttributeError):
         definition_container.deserialize(json)
 
+##  Individual test cases for test_findDefinitions.
+#
+#   Each test case is a tuple consisting of:
+#   * A description for debugging.
+#   * A query to filter the definitions by.
+#   * The expected result of the query.
+#   * The data to build a definition container. The data is a list of
+#     dictionaries, each dictionary representing one SettingDefinition instance.
+#     When a dictionary has a "children" element, the contents of that element
+#     will be created as children of the SettingDefinition.
+test_findDefinitions_data = [
+    # Description        Query                      Expected result                                 Data
+    ("Empty input",      { "key": "foo" },          [ ],                                            [ ]),
+    ("Empty query",      { },                       [ ],                                            [ { "key": "foo", "default_value": "bar" } ]),
+    ("Single hit",       { "key": "foo" },          [ { "key": "foo", "default_value": "bar" } ],   [ { "key": "foo", "default_value": "bar" } ]),
+    ("Search child",     { "key": "child" },        [ { "key": "child", "default_value": "bah" } ], [ { "key": "foo", "default_value": "bar", "children": [ { "key": "child", "default_value": "bah" } ] } ]),
+    ("Choice",           { "key": "zoo" },          [ { "key": "zoo", "default_value": "baz" } ],   [ { "key": "foo", "default_value": "bar" },
+                                                                                                      { "key": "zoo", "default_value": "baz" } ]),
+    ("Multiple answers", { "default_value": "bar"}, [ { "key": "foo", "default_value": "bar" },
+                                                      { "key": "boo", "default_value": "bar" } ],   [ { "key": "foo", "default_value": "bar" }, { "key": "boo", "default_value": "bar" } ]),
+    ("Multiple filters", { "key": "foo",
+                           "default_value": "bar"}, [ { "key": "foo", "default_value": "bar" } ],   [ { "key": "foo", "default_value": "boo" },
+                                                                                                      { "key": "foo", "default_value": "bar" },
+                                                                                                      { "key": "zoo", "default_value": "bar" } ])
+]
+
+##  Tests the filtering of definitions.
+#
+#   \param description A description of the test case (unused).
+#   \param query The query to filter by.
+#   \param result The expected result of the query.
+#   \param data The data to build a definition container.
+@pytest.mark.parametrize("description,query,result,data", test_findDefinitions_data)
+def test_findDefinitions(description, query, result, data, definition_container):
+    # Construct the data in the definition container.
+    for definition in data:
+        definition_container.definitions.append(_createSettingDefinition(definition))
+
+    answers = definition_container.findDefinitions(kwargs = query) # Perform the actual query.
+
+    assert len(result) == len(answers)
+    for expected in result: # Each expected result must be present in the answer.
+        for answer in answers:
+            for key, value in expected.items():
+                if getattr(answer, key) != value:
+                    break
+            else: # Match!
+                break
+        else: # No match!
+            assert False
+    # All expected answers had a match, so it's a good answer.
+
 ##  Tests getting metadata entries.
 #
 #   \param definition_container A new definition container from a fixture.
