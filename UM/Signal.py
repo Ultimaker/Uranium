@@ -150,7 +150,7 @@ class Signal:
 
     ##  Connect to this signal.
     #   \param connector The signal or slot (function) to connect.
-    @call_if_enabled(_traceConnect, _isTraceEnabled)
+    @call_if_enabled(_traceConnect, _isTraceEnabled())
     def connect(self, connector):
         if self.__emitting:
             # When we try to connect to a signal we change the dictionary of connectors.
@@ -173,7 +173,7 @@ class Signal:
 
     ##  Disconnect from this signal.
     #   \param connector The signal or slot (function) to disconnect.
-    @call_if_enabled(_traceDisconnect, _isTraceEnabled)
+    @call_if_enabled(_traceDisconnect, _isTraceEnabled())
     def disconnect(self, connector):
         if self.__emitting:
             # See above.
