@@ -253,7 +253,9 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     ##  Set the next stack
     #
     #   \param stack \type{ContainerStack} The next stack to set. Can be None.
-    #
+    #   Raises Exception when trying to set itself as next stack (to prevent infinite loops)
     #   \sa getNextStack
     def setNextStack(self, stack):
+        if self == stack:
+            raise Exception("Next stack can not be itself")
         self._next_stack = stack
