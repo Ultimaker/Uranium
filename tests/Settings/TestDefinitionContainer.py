@@ -20,7 +20,7 @@ Resources.addSearchPath(os.path.dirname(os.path.abspath(__file__)))
 def definition_container():
     return UM.Settings.DefinitionContainer(uuid.uuid4().int)
 
-test_definition_container_data = [
+test_deserialize_data = [
     ("basic.def.json", { "name": "Test", "metadata": {}, "settings": {} }),
     ("metadata.def.json", { "name": "Test", "metadata": { "author": "Ultimaker", "category": "Test" }, "settings": {} }),
     ("single_setting.def.json", { "name": "Test", "metadata": {}, "settings": { "test_setting": { "label": "Test", "default_value": 10, "description": "A Test Setting" } } }),
@@ -45,8 +45,8 @@ test_definition_container_data = [
         "test_setting_1": { "label": "Test 1", "default_value": 10, "description": "A Test Setting", "value": UM.Settings.SettingFunction.SettingFunction("test_setting_0 * 10") },
     }})
 ]
-@pytest.mark.parametrize("file,expected", test_definition_container_data)
-def test_definition_container(file, expected):
+@pytest.mark.parametrize("file,expected", test_deserialize_data)
+def test_deserialize(file, expected):
     container = UM.Settings.DefinitionContainer("test")
     assert container.getId() == "test"
 
