@@ -3,3 +3,4 @@
 
 from .SettingDefinitionsModel import SettingDefinitionsModel
 from .DefinitionContainersModel import DefinitionContainersModel
+from .InstanceContainersModel import InstanceContainersModel
