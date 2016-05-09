@@ -28,6 +28,7 @@ class DefinitionContainersModel(ListModel):
     #   \sa _stringToDict
     def setFilter(self, filter_string):
         filter = self._stringToDict(filter_string)
+        self._definition_containers = ContainerRegistry.getInstance().findDefinitionContainers(**filter)
         self._update()
 
     @pyqtProperty(str, fset = setFilter)
