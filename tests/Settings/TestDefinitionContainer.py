@@ -8,6 +8,7 @@ import collections
 import uuid
 
 import UM.Settings
+from UM.Settings.SettingDefinition import DefinitionPropertyType, SettingDefinition
 from UM.Resources import Resources
 
 Resources.addSearchPath(os.path.dirname(os.path.abspath(__file__)))
@@ -82,6 +83,47 @@ def test_getMetaDataEntry(definition_container):
 
     assert definition_container.getMetaDataEntry("zoo", 42) == 42 # Non-existent entry must return the default.
 
+##  The individual test cases for test_getValue.
+#
+#   The first entry is a description for debugging.
+#
+#   The second entry is a key to search for in the definitions.
+#
+#   The third entry is the value that is expected to be returned.
+#
+#   The fourth entry is the data structure that is constructed to search in. The
+#   data is a list of dictionaries, each dictionary representing one
+#   SettingDefinition instance. When a dictionary has a "children" element, the
+#   contents of that element will be created as children of the
+#   SettingDefinition.
+test_getValue_data = [
+    # Description     Key    Value  Data
+    ("Simple get",    "foo", "bar",   [ { "key": "foo", "default_value": "bar" } ]),
+    ("Missing entry", "zoo", None,    [ { "key": "foo", "default_value": "bar" } ]),
+    ("Get int",       "who", 42,      [ { "key": "foo", "default_value": "bar" }, { "key": "who", "default_value": 42 } ]),
+    ("Subsetting",    "child", "bar", [ { "key": "boo", "default_value": "zar" }, { "key": "parent", "default_value": 1, "children": [ { "key": "child", "default_value": "bar" } ] } ]),
+    ("Subsubsetting", "foo", "bar",   [ { "key": "boo", "default_value": "zar" }, { "key": "parent", "default_value": 1, "children": [ { "key": "child", "default_value": 2, "children": [ { "key": "foo", "default_value": "bar" } ] } ] } ]),
+    ("Two options",   "foo", "bar",   [ { "key": "foo", "default_value": "bar" }, { "key": "foo", "default_value": "bar" } ])
+]
+
+##  Tests the getting of default values in the definition container.
+#
+#   \param description A description for the test case.
+#   \param key The key to search for in the definitions.
+#   \param value The value that is expected to be returned.
+#   \param data The data structure that is constructed to search in.
+#   \param definition_container A new definition container from a fixture.
+@pytest.mark.parametrize("description,key,value,data", test_getValue_data)
+def test_getValue(description, key, value, data, definition_container):
+    # First build the data structure in the definition container.
+    for item in data:
+        definition_container.definitions.append(_createSettingDefinition(item))
+
+    # Now perform the request that we're testing.
+    answer = definition_container.getValue(key)
+
+    assert answer == value
+
 def test_setting_function():
     container = UM.Settings.DefinitionContainer("test")
     with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "definitions", "functions.def.json")) as data:
@@ -112,3 +154,13 @@ def test_setting_function():
 
     result = function(container)
     assert result == (setting_0.default_value * 10)
+
+def _createSettingDefinition(properties):
+    result = UM.Settings.SettingDefinition(properties["key"]) # Key MUST be present.
+    for key, value in properties.items():
+        if key == "default_value":
+            result._SettingDefinition__property_values["default_value"] = value # Nota bene: Setting a private value depends on implementation, but changing a property is not currently exposed.
+        if key == "children":
+            for child in value:
+                result.children.append(_createSettingDefinition(child))
+    return result
