@@ -81,8 +81,8 @@ test_call_data = [
     { "code": "0",            "result": 0 },
     { "code": "\"x\"",        "result": "x" },
     { "code": "True",         "result": True },
-    { "code": "foo",          "result": 8 },
-    { "code": "math.sqrt(4)", "result": 2 },
+    { "code": "foo",          "result": 5 },
+    { "code": "sqrt(4)",      "result": 2 },
     { "code": "foo * zoo",    "result": 35 }, # 5 * 7
     { "code": "",             "result": None },
     { "code": "os.read(os.open(\"/etc/passwd\", os.O_RDONLY), 10)", "result": None },
@@ -98,3 +98,53 @@ def test_call(data):
     value_provider = MockValueProvider()
     function = UM.Settings.SettingFunction.SettingFunction(data["code"])
     assert function(value_provider) == data["result"]
+
+##  Tests the equality operator on setting functions.
+def test_eq():
+    setting_function = UM.Settings.SettingFunction.SettingFunction("3 * 3")
+    assert not (setting_function == "some string") # Equality against something of a different type.
+    assert setting_function != "some string"
+    assert setting_function == setting_function # Equality against itself.
+    assert not (setting_function != setting_function)
+
+    duplicate = UM.Settings.SettingFunction.SettingFunction("3 * 3") # Different instance with the same code. Should be equal!
+    assert setting_function == duplicate
+    assert not (setting_function != duplicate)
+
+    same_answer = UM.Settings.SettingFunction.SettingFunction("9") # Different code but the result is the same. Should NOT be equal!
+    assert not (setting_function == same_answer)
+    assert setting_function != same_answer
+
+##  The individual test cases for test_getUsedSettings.
+#
+#   This is a list where each item is a test case. Each test case consists of a
+#   dictionary with two elements: The code that represents a function, and the
+#   true variables in that function (the answer).
+test_getUsedSettings_data = [
+    { "code": "0",       "variables": [] },
+    { "code": "\"x\"",   "variables": [] },
+    { "code": "x",       "variables": ["x"] },
+    { "code": "x * y",   "variables": ["x", "y"] },
+    { "code": "sqrt(4)", "variables": ["sqrt"] },
+    { "code": "sqrt(x)", "variables": ["sqrt", "x"] },
+    { "code": "x * x",   "variables": ["x"] } # Use the same variable twice.
+]
+
+##  Tests if the function finds correctly which settings are used.
+#
+#   \param data A test case to test.
+@pytest.mark.parametrize("data", test_getUsedSettings_data)
+def test_getUsedSettings(data):
+    function = UM.Settings.SettingFunction.SettingFunction(data["code"])
+    answer = function.getUsedSettings()
+    assert len(answer) == len(data["variables"])
+    for variable in data["variables"]: # Check for set equality regardless of the order.
+        assert variable in answer
+
+##  Tests the conversion of a setting function to string.
+def test_str():
+    # Due to the simplicity of the function, it's not really necessary to make a full-blown parametrised test for this. Just two simple tests:
+    function = UM.Settings.SettingFunction.SettingFunction("3.14156") # Simple test case.
+    assert str(function) == "SettingFunction(3.14156)"
+    function = UM.Settings.SettingFunction.SettingFunction("") # Also the edge case.
+    assert str(function) == "SettingFunction()"

@@ -286,7 +286,7 @@ test_findContainer_data = [
 @pytest.mark.parametrize("data", test_findContainer_data)
 def test_findContainer(container_stack, data):
     for container in data["containers"]: # Add all containers.
-        mockup = ()
+        mockup = MockContainer()
         for key, value in container.items(): # Copy the data to the metadata of the mock-up.
             mockup.getMetaData()[key] = value
         container_stack.addContainer(mockup)
@@ -538,6 +538,17 @@ def test_setName(container_stack, application):
     container_stack.setName(different_name) # Not different this time.
     assert container_stack.getName() == different_name
     assert name_change_counter == 2 # Didn't signal.
+
+##  Tests the next stack functionality.
+#
+#   \param container_stack A new container stack from a fixture.
+def test_setNextStack(container_stack):
+    container = MockContainer()
+    container_stack.setNextStack(container)
+    assert container_stack.getNextStack() == container
+
+    with pytest.raises(Exception):
+        container_stack.setNextStack(container_stack) # Can't set itself as next stack.
 
 ##  Tests a single cycle of serialising and deserialising a container stack.
 #
