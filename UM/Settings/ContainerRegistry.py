@@ -53,6 +53,7 @@ class ContainerRegistry:
         }
 
         PluginRegistry.getInstance().addType("settings_container", self.addContainerType)
+        self.load()
 
     ##  Find all DefinitionContainer objects matching certain criteria.
     #
