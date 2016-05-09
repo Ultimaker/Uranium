@@ -46,7 +46,7 @@ test_deserialize_data = [
     }})
 ]
 @pytest.mark.parametrize("file,expected", test_deserialize_data)
-def test_deserialize(file, definition_container):
+def test_deserialize(file, expected, definition_container):
     assert definition_container.getId() == "test"
 
     json = ""
