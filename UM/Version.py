@@ -4,14 +4,13 @@
 class Version(object):
     def __init__(self, version):
         super().__init__()
-        try:
+        if isinstance(version, str):
             version_list = version.replace("-", ".").replace("_", ".").split(".")
-        except AttributeError:
-            version_list = version
         else:
-            self._major = int(version_list[0])
-            self._minor = int(version_list[1])
-            self._revision = int(version_list[2])
+            version_list = version
+        self._major = int(version_list[0])
+        self._minor = int(version_list[1])
+        self._revision = int(version_list[2])
 
     def getMajor(self):
         return self._major
