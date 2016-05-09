@@ -124,6 +124,31 @@ def test_getValue(description, key, value, data, definition_container):
 
     assert answer == value
 
+##  Tests the serialisation and deserialisation process.
+#
+#   \param definition_container A new definition container from a fixture.
+def test_serialize(definition_container):
+    # First test with an empty container.
+    _test_serialize_cycle(definition_container)
+
+    # Change the name.
+    definition_container._name = "Bla!"
+    _test_serialize_cycle(definition_container)
+    definition_container._name = "[\"\n{':" # Some characters that might need to be escaped.
+    _test_serialize_cycle(definition_container)
+    definition_container._name = "ルベン" # From a different character set (UTF-8 test).
+    _test_serialize_cycle(definition_container)
+
+    # Add some metadata.
+    definition_container.getMetaData()["author"] = "Testy McTesticle"
+    definition_container.getMetaData()["escape_test"] = "[\"\n{':"
+    _test_serialize_cycle(definition_container)
+
+    # Add some subsettings.
+    subsetting = _createSettingDefinition({ "key": "parent", "default_value": 1, "children": [ { "key": "child", "default_value": 2, "children": [ { "key": "foo", "default_value": "bar" } ] } ] })
+    definition_container.definitions.append(subsetting)
+    _test_serialize_cycle(definition_container)
+
 def test_setting_function():
     container = UM.Settings.DefinitionContainer("test")
     with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "definitions", "functions.def.json")) as data:
@@ -164,3 +189,26 @@ def _createSettingDefinition(properties):
             for child in value:
                 result.children.append(_createSettingDefinition(child))
     return result
+
+##  Tests one cycle of serialising and deserialising.
+#
+#   This makes a copy of all properties of the definition container, then
+#   serialises the container to a string and deserialises it again from that
+#   string. Then it verifies that all properties are still the same.
+#
+#   \param definition_container A defintion container to test the serialisation
+#   of.
+def _test_serialize_cycle(definition_container):
+    # Don't verify the ID. It must be unique, so it must be different.
+    name = definition_container.getName()
+    metadata = definition_container.getMetaData()
+    definitions = definition_container.definitions
+    # No need to verify the internationalisation catalogue.
+
+    serialised = definition_container.serialize()
+    deserialised = UM.Settings.DefinitionContainer(uuid.uuid4().int)
+    deserialised.deserialize(serialised)
+
+    assert name == deserialised.getName()
+    assert metadata == deserialised.getMetaData()
+    assert definitions == deserialised.definitions
