@@ -27,9 +27,9 @@ ApplicationWindow
 
         TextArea
         {
+            id: metaDataText
             readOnly: true
 
-            text: "<h2>Metadata</h2>\n" + loader.metaDataText
             textFormat: TextEdit.RichText
         }
         TreeView
@@ -51,68 +51,31 @@ ApplicationWindow
             }
             TableViewColumn
             {
-                title: "Description"
-                role: "description"
-            }
-            TableViewColumn
-            {
                 title: "Default Value"
                 role: "default_value"
             }
-            TableViewColumn
-            {
-                title: "Warning Description"
-                role: "warning_description"
-            }
-            TableViewColumn
-            {
-                title: "Error Description"
-                role: "error_description"
-            }
-            TableViewColumn
-            {
-                title: "Value"
-                role: "value"
-            }
-            TableViewColumn
-            {
-                title: "Minimum"
-                role: "minimum_value"
-            }
-            TableViewColumn
-            {
-                title: "Maximum"
-                role: "maximum_value"
-            }
-            TableViewColumn
-            {
-                title: "Minimum Warning"
-                role: "minimum_value_warning"
-            }
-            TableViewColumn
-            {
-                title: "Maximum Warning"
-                role: "maximum_value_warning"
-            }
-            TableViewColumn
-            {
-                title: "Enabled"
-                role: "enabled"
-            }
-
-
-
-
-
 
             Layout.fillHeight: true;
-            model: Example.SettingDefinitionsModel { id: model }
+            model: Example.DefinitionTreeModel { id: model; }
+
+            onActivated:
+            {
+                var setting = model.get(index)
+                detailsText.text = "<h2>%1</h2><ul>".arg(setting["key"])
+
+                for(var i in setting)
+                {
+                    detailsText.text += "<li><b>%1:</b> %2".arg(i).arg(setting[i])
+                }
+
+                detailsText.text += "</ul>"
+            }
         }
         TextArea
         {
+            id: detailsText
             readOnly: true
-
-            text: loader.errorText
+            textFormat: TextEdit.AutoText
         }
     }
 
@@ -122,17 +85,40 @@ ApplicationWindow
 
         onAccepted:
         {
-            model.containerId = loader.load(fileUrl)
+            loader.load(fileUrl)
         }
     }
 
-    Example.DefinitionLoader { id: loader }
+    Example.DefinitionLoader
+    {
+        id: loader;
+
+        onLoaded:
+        {
+            detailsText.text = ""
+            metaDataText.text = ""
+
+            var text = ""
+            for(var i in loader.metaData)
+            {
+                text += "<li><b>%1:</b> %2</li>".arg(i).arg(loader.metaData[i])
+            }
+
+            if(text != "")
+            {
+                metaDataText.text = "<h2>Metadata</h2><ul>%1</ul>".arg(text)
+            }
+
+            model.containerId = loader.definitionId
+        }
+        onError: detailsText.text = errorText
+    }
 
     Component.onCompleted:
     {
-        if(open_file != "")
+        if(open_file != undefined && open_file != "")
         {
-            model.containerId = loader.load(open_file)
+            loader.load(open_file)
         }
     }
 }
