@@ -182,16 +182,17 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     ##  Find a container matching certain criteria.
     #
     #   \param filter \type{dict} A dictionary containing key and value pairs that need to match the container.
+    #                   Note that the value of "*" can be used as a wild card.
+    #                   This will ensure that any container that has the specified key in the meta data is found.
     #
     #   \return The first container that matches the filter criteria or None if not found.
     def findContainer(self, filter):
         for container in self._containers:
             meta_data = container.getMetaData()
             match = True
-            print(filter, meta_data)
             for key in filter:
                 try:
-                    if meta_data[key] == filter[key]:
+                    if meta_data[key] == filter[key] or filter[key] == "*":
                         continue
                     else:
                         match = False
