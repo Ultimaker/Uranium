@@ -19,9 +19,8 @@ class Platform(SceneNode.SceneNode):
         self._shader = None
         self._texture = None
         self._global_container_stack = None
-        Application.getInstance().globalContainerChanged.connect(self._onGlobalContainerStackChanged)
+        Application.getInstance().globalContainerStackChanged.connect(self._onGlobalContainerStackChanged)
         self._onGlobalContainerStackChanged()
-
         self.setCalculateBoundingBox(False)
 
     def render(self, renderer):
@@ -68,12 +67,13 @@ class Platform(SceneNode.SceneNode):
 
         container = self._global_container_stack.findContainer({"platform_texture":"*"})
         if container:
-            texture_file = container.getMetaDataEntry("platfom_texture")
-            self._texture = OpenGL.getInstance().createTexture()
-            self._texture.load(Resources.getPath(Resources.Images, texture_file))
+            texture_file = container.getMetaDataEntry("platform_texture")
+            if texture_file:
+                self._texture = OpenGL.getInstance().createTexture()
+                self._texture.load(Resources.getPath(Resources.Images, texture_file))
 
-            if self._shader:
-                self._shader.setTexture(0, self._texture)
+                if self._shader:
+                    self._shader.setTexture(0, self._texture)
         else:
             self._texture = None
             if self._shader:
