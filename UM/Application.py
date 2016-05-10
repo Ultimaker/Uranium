@@ -103,7 +103,7 @@ class Application(SignalEmitter):
         self.showMessageSignal.connect(self.showMessage)
         self.hideMessageSignal.connect(self.hideMessage)
 
-        self._active_container_stack = ContainerStack("empty")
+        self._global_container_stack = ContainerStack("empty")
 
     ##  Emitted when the application window was closed and we need to shut down the application
     applicationShuttingDown = Signal()
@@ -112,14 +112,14 @@ class Application(SignalEmitter):
 
     hideMessageSignal = Signal()
 
-    activeContainerStackChanged = Signal()
+    globalContainerStackChanged = Signal()
 
-    def setActiveContainerStack(self, stack):
-        self._active_container_stack = stack
-        self.activeContainerStackChanged.emit()
+    def setGlobalContainerStack(self, stack):
+        self._global_container_stack = stack
+        self.globalContainerStackChanged.emit()
 
-    def getActiveContainerStack(self):
-        return self._active_container_stack
+    def getGlobalContainerStack(self):
+        return self._global_container_stack
 
     def hideMessage(self, message):
         raise NotImplementedError
