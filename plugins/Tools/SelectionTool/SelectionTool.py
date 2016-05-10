@@ -137,6 +137,9 @@ class SelectionTool(Tool):
                                 Selection.add(node)
                             else:
                                 Selection.add(self._findTopGroupNode(node))
+                    elif self._isNodeInGroup(node) and self._alt_is_active:
+                        Selection.clear()
+                        Selection.add(node)
 
     ##  Check whether a node is in a group
     #
