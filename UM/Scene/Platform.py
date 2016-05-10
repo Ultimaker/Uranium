@@ -16,11 +16,11 @@ class Platform(SceneNode.SceneNode):
         super().__init__(parent)
 
         self._load_platform_job = None
-        self._machine_instance = None
         self._shader = None
         self._texture = None
-        Application.getInstance().getMachineManager().activeMachineInstanceChanged.connect(self._onActiveMachineChanged)
-        self._onActiveMachineChanged()
+        self._global_container_stack = None
+        Application.getInstance().globalContainerChanged.connect(self._onGlobalContainerStackChanged)
+        self._onGlobalContainerStackChanged()
 
         self.setCalculateBoundingBox(False)
 
@@ -36,19 +36,19 @@ class Platform(SceneNode.SceneNode):
             renderer.queueNode(self, shader = self._shader, transparent = True, backface_cull = True, sort = -10)
             return True
 
-    def _onActiveMachineChanged(self):
-        if self._machine_instance:
+    def _onGlobalContainerStackChanged(self):
+        if self._global_container_stack:
             self.setMeshData(None)
 
-        app = Application.getInstance()
-        self._machine_instance = app.getMachineManager().getActiveMachineInstance()
-        if self._machine_instance:
-            mesh_file = self._machine_instance.getMachineDefinition().getPlatformMesh()
-            if mesh_file:
+        self._global_container_stack = Application.getInstance().getGlobalContainerStack()
+        if self._global_container_stack:
+            container = self._global_container_stack.findContainer({"platform_mesh":"*"})
+            if container:
+                mesh_file = container.getMetaDataEntry("platform_mesh")
                 path = Resources.getPath(Resources.Meshes, mesh_file)
 
                 if self._load_platform_job:
-                    #This prevents a previous load job from triggering texture loads.
+                    # This prevents a previous load job from triggering texture loads.
                     self._load_platform_job.finished.disconnect(self._onPlatformLoaded)
 
                 # Perform platform mesh loading in the background
@@ -56,18 +56,19 @@ class Platform(SceneNode.SceneNode):
                 self._load_platform_job.finished.connect(self._onPlatformLoaded)
                 self._load_platform_job.start()
 
-            offset = self._machine_instance.getSettingValue("machine_platform_offset")
-            if offset:
-                self.setPosition(Vector(offset[0], offset[1], offset[2]))
-            else:
-                self.setPosition(Vector(0.0, 0.0, 0.0))
+                offset = container.getMetaDataEntry("platform_mesh_offset")
+                if offset:
+                    self.setPosition(Vector(offset[0], offset[1], offset[2]))
+                else:
+                    self.setPosition(Vector(0.0, 0.0, 0.0))
 
     def _updateTexture(self):
-        if not self._machine_instance or not OpenGL.getInstance():
+        if not self._global_container_stack or not OpenGL.getInstance():
             return
 
-        texture_file = self._machine_instance.getMachineDefinition().getPlatformTexture()
-        if texture_file:
+        container = self._global_container_stack.findContainer({"platform_texture":"*"})
+        if container:
+            texture_file = container.getMetaDataEntry("platfom_texture")
             self._texture = OpenGL.getInstance().createTexture()
             self._texture.load(Resources.getPath(Resources.Images, texture_file))
 
