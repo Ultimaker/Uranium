@@ -16,6 +16,7 @@ class SettingDefinitionsModel(QAbstractListModel):
     KeyRole = Qt.UserRole + 1
     DepthRole = Qt.UserRole + 2
     VisibleRole = Qt.UserRole + 3
+    ExpandedRole = Qt.UserRole + 4
 
     def __init__(self, parent = None, *args, **kwargs):
         super().__init__(parent = parent, *args, **kwargs)
@@ -36,9 +37,10 @@ class SettingDefinitionsModel(QAbstractListModel):
         self._role_names = {
             self.KeyRole: b"key",
             self.DepthRole: b"depth",
-            self.VisibleRole: b"visible"
+            self.VisibleRole: b"visible",
+            self.ExpandedRole: b"expanded",
         }
-        index = self.VisibleRole + 1
+        index = self.ExpandedRole + 1
         for name in UM.Settings.SettingDefinition.getPropertyNames():
             self._role_names[index] = name.encode()
             index += 1
@@ -226,6 +228,8 @@ class SettingDefinitionsModel(QAbstractListModel):
                 return True
             else:
                 return definition.key in self._visible
+        elif role == self.ExpandedRole:
+            return definition.key in self._expanded
 
         role_name = self._role_names[role]
         try:
