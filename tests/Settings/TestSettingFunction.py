@@ -82,7 +82,7 @@ test_call_data = [
     { "code": "\"x\"",        "result": "x" },
     { "code": "True",         "result": True },
     { "code": "foo",          "result": 5 },
-    { "code": "sqrt(4)",      "result": 2 },
+    { "code": "math.sqrt(4)", "result": 2 },
     { "code": "foo * zoo",    "result": 35 }, # 5 * 7
     { "code": "",             "result": None },
     { "code": "os.read(os.open(\"/etc/passwd\", os.O_RDONLY), 10)", "result": None },
