@@ -30,7 +30,7 @@ class SettingFunction:
         except (SyntaxError, TypeError) as e:
             Logger.log("e", "Parse error in function ({1}) for setting: {0}".format(str(e), self._code))
         except IllegalMethodError as e:
-            Logger.log("e", "Use of illegal method {0} in function ({2}) for setting".format(str(e), self._code))
+            Logger.log("e", "Use of illegal method {0} in function ({1}) for setting".format(str(e), self._code))
         except Exception as e:
             Logger.log("e", "Exception in function ({1}) for setting: {1}".format(str(e), self._code))
 
