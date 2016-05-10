@@ -12,14 +12,15 @@ from PyQt5.QtWidgets import QApplication
 
 import UM.Resources
 import UM.Settings
-import UM.Settings.Models
+
+import DefinitionTreeModel
 
 class DefinitionLoader(QObject):
     def __init__(self, parent = None):
         super().__init__(parent)
 
-        self._error_text = ""
-        self._metadata_text = ""
+        self._metadata = {}
+        self._definition_id = ""
 
     @pyqtSlot("QUrl", result = str)
     def load(self, file_path):
@@ -33,30 +34,29 @@ class DefinitionLoader(QObject):
             with open(file_path.toLocalFile()) as data:
                 definition.deserialize(data.read())
 
-            self._metadata_text = ""
-            for key, value in definition.metaData.items():
-                self._metadata_text += "<b>{0}:</b> {1}<br/>".format(key, value)
-            self.metaDataTextChanged.emit()
+            self._metadata = dict(definition.metaData)
+            self.metaDataChanged.emit()
 
             UM.Settings.ContainerRegistry.getInstance().addContainer(definition)
-            return definition.id
+            self._definition_id = definition.id
+            self.loaded.emit()
         except Exception as e:
-            self._error_text = "An exception occurred loading file {0}:\n".format(file_path)
-            self._error_text += str(e)
-            self._error_text += traceback.format_exc()
-            self.errorTextChanged.emit()
-            return None
+            error_text = "An exception occurred loading file {0}:\n".format(file_path)
+            error_text += str(e)
+            error_text += traceback.format_exc()
+            self.error.emit(error_text)
 
+    loaded = pyqtSignal()
+    error = pyqtSignal(str, arguments=["errorText"])
 
-    errorTextChanged = pyqtSignal()
-    @pyqtProperty(str, notify=errorTextChanged)
-    def errorText(self):
-        return self._error_text
+    metaDataChanged = pyqtSignal()
+    @pyqtProperty("QVariantMap", notify=metaDataChanged)
+    def metaData(self):
+        return self._metadata
 
-    metaDataTextChanged = pyqtSignal()
-    @pyqtProperty(str, notify=metaDataTextChanged)
-    def metaDataText(self):
-        return self._metadata_text
+    @pyqtProperty(str, notify=loaded)
+    def definitionId(self):
+        return self._definition_id
 
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
@@ -69,7 +69,7 @@ app = QApplication(sys.argv)
 engine = QQmlApplicationEngine()
 
 qmlRegisterType(DefinitionLoader, "Example", 1, 0, "DefinitionLoader")
-qmlRegisterType(UM.Settings.Models.SettingDefinitionsModel, "Example", 1, 0, "SettingDefinitionsModel")
+qmlRegisterType(DefinitionTreeModel.DefinitionTreeModel, "Example", 1, 0, "DefinitionTreeModel")
 
 if file_name:
     engine.rootContext().setContextProperty("open_file", QUrl.fromLocalFile(file_name))
