@@ -9,8 +9,10 @@ MouseArea
 
     hoverEnabled: true;
 
-    property alias color: image.color;
-    property alias backgroundColor: background.color;
+    property color color: "black";
+    property color hoverColor: color;
+    property color backgroundColor: "transparent";
+    property color hoverBackgroundColor: backgroundColor;
     property alias iconSource: image.source;
 
     property alias hovered: base.containsMouse;
@@ -18,7 +20,7 @@ MouseArea
     Rectangle {
         id: background;
         anchors.fill: parent;
-        color: "transparent";
+        color: base.containsMouse ? base.hoverBackgroundColor : base.backgroundColor;
     }
 
     RecolorImage {
@@ -29,7 +31,7 @@ MouseArea
         sourceSize.width: width
         sourceSize.height: width
 
-        color: "black";
+        color: base.containsMouse ? base.hoverColor : base.color;
 
         visible: source != "";
     }
