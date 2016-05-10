@@ -2,11 +2,13 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 import os
+import urllib
 
 from UM.PluginRegistry import PluginRegistry
 from UM.Resources import Resources
 from UM.MimeTypeDatabase import MimeType, MimeTypeDatabase
 from UM.Logger import Logger
+from UM.SaveFile import SaveFile
 
 from . import DefinitionContainer
 from . import InstanceContainer
@@ -106,6 +108,29 @@ class ContainerRegistry:
             return
 
         self._containers.append(container)
+
+    def saveAll(self):
+
+        for instance in self.findInstanceContainers():
+            data = instance.serialize()
+            file_name = urllib.parse.quote_plus(instance.getId()) + ".inst.cfg"
+            path = Resources.getStoragePath(Resources.DefinitionContainers, file_name)
+            with SaveFile(path, "wt", -1, "utf-8") as f:
+                f.write(data)
+
+        for stack in self.findContainerStacks():
+            data = stack.serialize()
+            file_name = urllib.parse.quote_plus(stack.getId()) + ".stack.cfg"
+            path = Resources.getStoragePath(Resources.ContainerStacks, file_name)
+            with SaveFile(path, "wt", -1, "utf-8") as f:
+                f.write(data)
+
+        for definition in self.findDefinitionContainers():
+            data = definition.serialize()
+            file_name = urllib.parse.quote_plus(definition.getId()) + ".def.cfg"
+            path = Resources.getStoragePath(Resources.DefinitionContainers, file_name)
+            with SaveFile(path, "wt", -1, "utf-8") as f:
+                f.write(data)
 
     def _findContainers(self, container_type, **kwargs):
         containers = []

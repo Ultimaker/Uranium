@@ -24,6 +24,8 @@ from UM.Logger import Logger
 from UM.Preferences import Preferences
 from UM.i18n import i18nCatalog
 
+from UM.Settings.ContainerRegistry import ContainerRegistry
+
 # Raised when we try to use an unsupported version of a dependency.
 class UnsupportedVersionError(Exception):
     pass
@@ -184,7 +186,7 @@ class QtApplication(QApplication, Application, SignalEmitter):
         Logger.log("d", "Shutting down %s", self.getApplicationName())
         self._shutting_down = True
         try:
-            self.getMachineManager().saveAll()
+            ContainerRegistry.getInstance().saveAll()
         except Exception as e:
             Logger.log("e", "Exception while saving machines: %s", repr(e))
 

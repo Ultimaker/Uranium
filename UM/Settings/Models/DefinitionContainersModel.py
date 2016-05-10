@@ -44,7 +44,8 @@ class DefinitionContainersModel(ListModel):
     def setNewGlobalStackFromDefinition(self, name, definition_id):
         definitions = ContainerRegistry.getInstance().findDefinitionContainers(id = definition_id)
         if definitions:
-            new_global_stack = ContainerStack("global")
+            new_global_stack = ContainerStack(name)
+            ContainerRegistry.getInstance().addContainer(new_global_stack)
             # If a definition is found, its a list. Should only have one item.
             new_global_stack.addContainer(definitions[0])
             Application.getInstance().setGlobalContainerStack(new_global_stack)
