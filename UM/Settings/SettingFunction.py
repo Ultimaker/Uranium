@@ -18,13 +18,13 @@ class SettingFunction:
         super().__init__(*args, **kwargs)
 
         self._code = code
-        self._settings = []
+        self._settings = set() # Keys of all settings that are referenced to in this function.
         self._compiled = None
         self._valid = False
 
         try:
             tree = ast.parse(self._code, "eval")
-            self._settings = _SettingExpressionVisitor().visit(tree)
+            self._settings = set(_SettingExpressionVisitor().visit(tree))
             self._compiled = compile(self._code, repr(self), "eval")
             self._valid = True
         except (SyntaxError, TypeError) as e:
@@ -60,7 +60,9 @@ class SettingFunction:
     def isValid(self):
         return self._valid
 
-    ##  Retrieve a list of the keys of all the settings used in this function.
+    ##  Retrieve a set of the keys of all the settings used in this function.
+    #
+    #   \return A set of the keys of all the settings used in this functions.
     def getUsedSettings(self):
         return self._settings
 
