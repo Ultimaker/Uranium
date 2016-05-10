@@ -81,11 +81,11 @@ class Resources:
             if not os.path.isdir(directory):
                 continue
 
-            for entry in os.scandir(directory):
-                if not entry.name.startswith('.') and entry.is_file():
-                    if not entry.name in files:
-                        files[entry.name] = []
-                    files[entry.name].append(entry.path)
+            for file in os.listdir(directory):
+                if not file.startswith('.') and os.path.isfile(file):
+                    if not file in files:
+                        files[file] = []
+                    files[file].append(os.path.abspath(file))
 
         result = []
         for name, paths in files.items():
