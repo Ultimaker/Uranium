@@ -191,6 +191,15 @@ class MachineManagerProxy(QObject):
     def _onProfileNameChanged(self, profile):
         self.activeProfileChanged.emit()
 
+    @pyqtSlot()
+    def resetSettingVisibility(self):
+        active_machine = self._manager.getActiveMachineInstance()
+        if not active_machine:
+            return
+
+        for category in active_machine.getMachineDefinition().getAllCategories():
+            for setting in category.getAllSettings():
+                setting.resetDefaultVisibility()
 
 def createMachineManagerProxy(engine, script_engine):
     return MachineManagerProxy()

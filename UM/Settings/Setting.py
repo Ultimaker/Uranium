@@ -47,6 +47,7 @@ class Setting(SignalEmitter):
         self._global_only = False
         self._default_value = None
         self._visible = True
+        self._visible_by_default = True # Used to keep track of visibility as defined by the machine definition
         self._validator = None
         self._parent = None
         self._hide_if_all_children_visible = True
@@ -129,6 +130,7 @@ class Setting(SignalEmitter):
 
         if "visible" in data:
             self.setVisible(data["visible"])
+            self._visible_by_default = data["visible"]
 
         if "global_only" in data:
             #if the data contains global_only; it can contain a boolean value or a function that returns a boolean value
@@ -302,6 +304,10 @@ class Setting(SignalEmitter):
 
     ##  Emitted when visible is changed either due to explicitly setting it or due to children visibility changing.
     visibleChanged = Signal()
+
+    ##  Reset visibility of this setting to the value set in the machine definition.
+    def resetDefaultVisibility(self):
+        self.setVisible(self._visible_by_default)
 
     ##  Check if all children are visible.
     #   \returns bool True if all children are visible. False otherwise

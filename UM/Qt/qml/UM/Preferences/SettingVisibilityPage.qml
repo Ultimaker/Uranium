@@ -20,8 +20,9 @@ PreferencesPage {
     }
 
     function reset() {
+        UM.MachineManager.resetSettingVisibility()
     }
-    resetEnabled: false;
+    resetEnabled: true;
 
     Item {
         id: base;
