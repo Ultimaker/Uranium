@@ -2,6 +2,7 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 import ast
+import math # Imported here so it can be used easily by the setting functions.
 
 from UM.Logger import Logger
 
