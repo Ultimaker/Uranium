@@ -65,9 +65,6 @@ class Bindings:
         qmlRegisterType(JobsModel.JobsModel, "UM", 1, 0, "JobsModel")
         qmlRegisterType(AngledCornerRectangle.AngledCornerRectangle, "UM", 1, 0, "AngledCornerRectangle")
         qmlRegisterType(PointingRectangle.PointingRectangle, "UM", 1, 0, "PointingRectangle")
-        qmlRegisterType(SettingDefinitionsModel, "UM", 1, 0, "SettingDefinitionsModel")
-        qmlRegisterType(DefinitionContainersModel, "UM", 1, 0, "DefinitionContainersModel")
-        qmlRegisterType(InstanceContainersModel, "UM", 1, 0, "InstanceContainersModel")
 
         # Singleton proxy objects
         qmlRegisterSingletonType(ControllerProxy.ControllerProxy, "UM", 1, 0, "Controller", Bindings.createControllerProxy)
@@ -93,4 +90,6 @@ class Bindings:
         qmlRegisterSingletonType(OutputDeviceManagerProxy.OutputDeviceManagerProxy, "UM", 1, 1, "OutputDeviceManager", OutputDeviceManagerProxy.createOutputDeviceManagerProxy)
 
         # Additions after 2.1. Uses API version 1.2
-
+        qmlRegisterType(SettingDefinitionsModel, "UM", 1, 2, "SettingDefinitionsModel")
+        qmlRegisterType(DefinitionContainersModel, "UM", 1, 2, "DefinitionContainersModel")
+        qmlRegisterType(InstanceContainersModel, "UM", 1, 2, "InstanceContainersModel")
