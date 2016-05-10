@@ -8,9 +8,15 @@ class Version(object):
             version_list = version.replace("-", ".").replace("_", ".").split(".")
         else:
             version_list = version
-        self._major = int(version_list[0])
-        self._minor = int(version_list[1])
-        self._revision = int(version_list[2])
+        self._major = 0
+        self._minor = 0
+        self._revision = 0
+        try:
+            self._major = int(version_list[0])
+            self._minor = int(version_list[1])
+            self._revision = int(version_list[2])
+        except IndexError:
+            pass
 
     def getMajor(self):
         return self._major
