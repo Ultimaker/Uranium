@@ -310,14 +310,21 @@ def test_setting_function():
     result = function(container)
     assert result == (setting_0.default_value * 10)
 
+##  Creates a setting definition from a dictionary of properties.
+#
+#   The key must be present in the properties. It will be the key of the setting
+#   definition. The default value and children will be added if they are present
+#   in the dictionary.
+#
+#   \param properties A dictionary of properties for the setting definition.
+#   Only the key, default value and children are used.
 def _createSettingDefinition(properties):
     result = SettingDefinition(properties["key"]) # Key MUST be present.
-    for key, value in properties.items():
-        if key == "default_value":
-            result._SettingDefinition__property_values["default_value"] = value # Nota bene: Setting a private value depends on implementation, but changing a property is not currently exposed.
-        if key == "children":
-            for child in value:
-                result.children.append(_createSettingDefinition(child))
+    if "default_value" in properties:
+        result._SettingDefinition__property_values["default_value"] = properties["default_value"] # Nota bene: Setting a private value depends on implementation, but changing a property is not currently exposed.
+    if "children" in properties:
+        for child in properties["children"]:
+            result.children.append(_createSettingDefinition(child))
     return result
 
 ##  Tests one cycle of serialising and deserialising.
