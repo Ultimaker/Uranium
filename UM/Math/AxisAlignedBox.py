@@ -54,16 +54,10 @@ class AxisAlignedBox:
         if not other.isValid():
             return self
 
-        new_min = Vector()
-        new_min.setX(min(self._min.x, other.left))
-        new_min.setY(min(self._min.y, other.bottom))
-        new_min.setZ(min(self._min.z, other.back))
-
-        new_max = Vector()
-        new_max.setX(max(self._max.x, other.right))
-        new_max.setY(max(self._max.y, other.top))
-        new_max.setZ(max(self._max.z, other.front))
-
+        new_min = Vector(min(self._min.x, other.left), min(self._min.y, other.bottom),
+                         min(self._min.z, other.back))
+        new_max = Vector(max(self._max.x, other.right), max(self._max.y, other.top),
+                         max(self._max.z, other.front))
         self._min = new_min
         self._max = new_max
 
@@ -101,7 +95,7 @@ class AxisAlignedBox:
         return self._min.x
 
     def setLeft(self, value):
-        self._min.setX(value)
+        self._min = self._min.set(x=value)
         self._ensureMinMax()
 
     @property
@@ -109,7 +103,7 @@ class AxisAlignedBox:
         return self._max.x
 
     def setRight(self, value):
-        self._max.setX(value)
+        self._max = self._max.set(x=value)
         self._ensureMinMax()
 
     @property
@@ -117,7 +111,7 @@ class AxisAlignedBox:
         return self._min.y
 
     def setBottom(self, value):
-        self._min.setY(value)
+        self._min = self._min.set(y=value)
         self._ensureMinMax()
 
     @property
@@ -125,7 +119,7 @@ class AxisAlignedBox:
         return self._max.y
 
     def setTop(self, value):
-        self._max.setY(value)
+        self._max = self._max.set(y=value)
         self._ensureMinMax()
 
     @property
@@ -133,7 +127,7 @@ class AxisAlignedBox:
         return self._min.z
 
     def setBack(self, value):
-        self._min.setZ(value)
+        self._min = self._min.set(z=value)
         self._ensureMinMax()
 
     @property
@@ -141,7 +135,7 @@ class AxisAlignedBox:
         return self._max.z
 
     def setFront(self, value):
-        self._max.setZ(value)
+        self._max = self._max.set(z=value)
         self._ensureMinMax()
 
     @property

@@ -102,11 +102,11 @@ class RotateTool(Tool):
 
             handle_position = self._handle.getWorldPosition()
 
-            drag_start = (self.getDragStart() - handle_position).normalize()
+            drag_start = (self.getDragStart() - handle_position).normalized()
             drag_position = self.getDragPosition(event.x, event.y)
             if not drag_position:
                 return
-            drag_end = (drag_position - handle_position).normalize()
+            drag_end = (drag_position - handle_position).normalized()
 
             try:
                 angle = math.acos(drag_start.dot(drag_end))

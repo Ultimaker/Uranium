@@ -127,15 +127,13 @@ class ScaleTool(Tool):
                         scale_change = Vector(0.0, 0.0, 0.0)
                         if self._non_uniform_scale:
                             if self.getLockedAxis() == ToolHandle.XAxis:
-                                scale_change.setX(scale_factor)
+                                scale_change = scale_change.set(x=scale_factor)
                             elif self.getLockedAxis() == ToolHandle.YAxis:
-                                scale_change.setY(scale_factor)
+                                scale_change = scale_change.set(y=scale_factor)
                             elif self.getLockedAxis() == ToolHandle.ZAxis:
-                                scale_change.setZ(scale_factor)
+                                scale_change = scale_change.set(z=scale_factor)
                         else:
-                            scale_change.setX(scale_factor)
-                            scale_change.setY(scale_factor)
-                            scale_change.setZ(scale_factor)
+                            scale_change = Vector(x=scale_factor, y=scale_factor, z=scale_factor)
 
                         # Scale around the saved centeres of all selected nodes
                         op = GroupedOperation()

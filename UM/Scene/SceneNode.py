@@ -428,10 +428,10 @@ class SceneNode(SignalEmitter):
 
     ##  Get the local scaling value.
     def getScale(self):
-        return deepcopy(self._scale)
+        return self._scale
 
     def getWorldScale(self):
-        return deepcopy(self._derived_scale)
+        return self._derived_scale
 
     ##  Scale the scene object (and thus its children) by given amount
     #
@@ -471,11 +471,11 @@ class SceneNode(SignalEmitter):
 
     ##  Get the local position.
     def getPosition(self):
-        return deepcopy(self._position)
+        return self._position
 
     ##  Get the position of this scene node relative to the world.
     def getWorldPosition(self):
-        return deepcopy(self._derived_position)
+        return self._derived_position
 
     ##  Translate the scene object (and thus its children) by given amount.
     #
@@ -523,10 +523,10 @@ class SceneNode(SignalEmitter):
             return
 
         eye = self.getWorldPosition()
-        f = (target - eye).normalize()
-        up.normalize()
-        s = f.cross(up).normalize()
-        u = s.cross(f).normalize()
+        f = (target - eye).normalized()
+        up = up.normalized()
+        s = f.cross(up).normalized()
+        u = s.cross(f).normalized()
 
         m = Matrix([
             [ s.x,  u.x,  -f.x, 0.0],

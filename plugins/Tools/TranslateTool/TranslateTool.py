@@ -78,8 +78,7 @@ class TranslateTool(Tool):
     def setX(self, x):
         obj = Selection.getSelectedObject(0)
         if obj:
-            new_position = obj.getWorldPosition()
-            new_position.setX(x)
+            new_position = obj.getWorldPosition().set(x=x)
             Selection.applyOperation(TranslateOperation, new_position, set_position = True)
             self.operationStopped.emit(self)
 
@@ -89,11 +88,10 @@ class TranslateTool(Tool):
     def setY(self, y):
         obj = Selection.getSelectedObject(0)
         if obj:
-            new_position = obj.getWorldPosition()
+            new_position = obj.getWorldPosition().set(z=y)
 
             # Note; The switching of z & y is intentional. We display z as up for the user,
             # But store the data in openGL space.
-            new_position.setZ(y)
             Selection.applyOperation(TranslateOperation, new_position, set_position = True)
             self.operationStopped.emit(self)
 
@@ -103,14 +101,13 @@ class TranslateTool(Tool):
     def setZ(self, z):
         obj = Selection.getSelectedObject(0)
         if obj:
-            new_position = obj.getWorldPosition()
             selected_node = Selection.getSelectedObject(0)
             center = selected_node.getBoundingBox().center
             bottom = selected_node.getBoundingBox().bottom
             # Note; The switching of z & y is intentional. We display z as up for the user,
             # But store the data in openGL space.
 
-            new_position.setY(float(z) + (center.y - bottom))
+            new_position = obj.getWorldPosition().set(y=(float(z) + (center.y - bottom)))
             Selection.applyOperation(TranslateOperation, new_position, set_position = True)
             self.operationStopped.emit(self)
 
@@ -185,14 +182,11 @@ class TranslateTool(Tool):
                     return False
 
                 if self.getLockedAxis() == ToolHandle.XAxis:
-                    drag.setY(0)
-                    drag.setZ(0)
+                    drag = drag.set(y=0, z=0)
                 elif self.getLockedAxis() == ToolHandle.YAxis:
-                    drag.setX(0)
-                    drag.setZ(0)
+                    drag = drag.set(x=0, z=0)
                 elif self.getLockedAxis() == ToolHandle.ZAxis:
-                    drag.setX(0)
-                    drag.setY(0)
+                    drag = drag.set(x=0, y=0)
 
                 if not self._moved:
                     self._moved = True
