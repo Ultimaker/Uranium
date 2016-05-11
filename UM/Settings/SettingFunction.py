@@ -33,7 +33,7 @@ class SettingFunction:
         except IllegalMethodError as e:
             Logger.log("e", "Use of illegal method {0} in function ({1}) for setting".format(str(e), self._code))
         except Exception as e:
-            Logger.log("e", "Exception in function ({1}) for setting: {1}".format(str(e), self._code))
+            Logger.log("e", "Exception in function ({0}) for setting: {1}".format(str(e), self._code))
 
     ##  Call the actual function to calculate the value.
     def __call__(self, value_provider, *args, **kwargs):
