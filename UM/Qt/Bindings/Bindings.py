@@ -30,6 +30,7 @@ from . import i18nCatalogProxy
 from UM.Settings.Models.DefinitionContainersModel import DefinitionContainersModel
 from UM.Settings.Models.InstanceContainersModel import InstanceContainersModel
 from UM.Settings.Models.SettingDefinitionsModel import SettingDefinitionsModel
+from UM.Settings.Models.ContainerStacksModel import ContainerStacksModel
 
 
 class Bindings:
@@ -93,3 +94,4 @@ class Bindings:
         qmlRegisterType(SettingDefinitionsModel, "UM", 1, 2, "SettingDefinitionsModel")
         qmlRegisterType(DefinitionContainersModel, "UM", 1, 2, "DefinitionContainersModel")
         qmlRegisterType(InstanceContainersModel, "UM", 1, 2, "InstanceContainersModel")
+        qmlRegisterType(ContainerStacksModel, "UM", 1, 2, "ContainerStacksModel")

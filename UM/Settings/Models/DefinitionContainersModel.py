@@ -45,6 +45,7 @@ class DefinitionContainersModel(ListModel):
         definitions = ContainerRegistry.getInstance().findDefinitionContainers(id = definition_id)
         if definitions:
             new_global_stack = ContainerStack(name)
+            new_global_stack.addMetaDataEntry("type", "machine")
             ContainerRegistry.getInstance().addContainer(new_global_stack)
             # If a definition is found, its a list. Should only have one item.
             new_global_stack.addContainer(definitions[0])

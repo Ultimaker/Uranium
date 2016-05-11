@@ -70,6 +70,9 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     def getMetaDataEntry(self, entry, default = None):
         return self._metadata.get(entry, default)
 
+    def addMetaDataEntry(self, key, value):
+        self._metadata[key] = value
+
     ##  \copydoc ContainerInterface::getValue
     #
     #   Reimplemented from ContainerInterface.
