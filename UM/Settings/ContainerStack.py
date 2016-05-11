@@ -105,6 +105,19 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
         else:
             return None
 
+    def getProperty(self, key, property_name):
+        for container in self._containers:
+            value = container.getProperty(key, property_name)
+            if value is not None:
+                return value
+
+        if self._next_stack:
+            return self._next_stack.getProperty(key)
+        else:
+            return None
+
+    propertyChanged = Signal()
+
     ##  \copydoc ContainerInterface::serialize
     #
     #   Reimplemented from ContainerInterface
