@@ -9,6 +9,7 @@ from UM.Resources import Resources
 from UM.MimeTypeDatabase import MimeType, MimeTypeDatabase
 from UM.Logger import Logger
 from UM.SaveFile import SaveFile
+from UM.Signal import Signal, signalemitter
 
 from . import DefinitionContainer
 from . import InstanceContainer
@@ -17,6 +18,7 @@ from . import ContainerStack
 ##  Central class to manage all Setting containers.
 #
 #
+@signalemitter
 class ContainerRegistry:
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -56,6 +58,7 @@ class ContainerRegistry:
 
         PluginRegistry.getInstance().addType("settings_container", self.addContainerType)
 
+    containerAdded = Signal()
 
     ##  Find all DefinitionContainer objects matching certain criteria.
     #
@@ -108,6 +111,7 @@ class ContainerRegistry:
             return
 
         self._containers.append(container)
+        self.containerAdded.emit(container)
 
     def saveAll(self):
 
