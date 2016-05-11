@@ -1,6 +1,8 @@
 # Copyright (c) 2016 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
+import collections
+
 from PyQt5.QtCore import Qt, QAbstractListModel, QVariant, QModelIndex, pyqtProperty, pyqtSignal, pyqtSlot
 
 from UM.Logger import Logger
@@ -237,7 +239,13 @@ class SettingDefinitionsModel(QAbstractListModel):
         except AttributeError:
             data = ""
 
-        return QVariant(data)
+        if isinstance(data, collections.OrderedDict):
+            result = []
+            for key, value in data.items():
+                result.append({"key": key, "value": value})
+            return result
+
+        return data
 
     ##  Reimplemented from QAbstractListModel
     def roleNames(self):
