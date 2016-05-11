@@ -26,12 +26,12 @@ from . import OutputDevicesModel
 from . import SelectionProxy
 from . import OutputDeviceManagerProxy
 from . import i18nCatalogProxy
+from . import ExtensionModel
 
 from UM.Settings.Models.DefinitionContainersModel import DefinitionContainersModel
 from UM.Settings.Models.InstanceContainersModel import InstanceContainersModel
 from UM.Settings.Models.SettingDefinitionsModel import SettingDefinitionsModel
 from UM.Settings.Models.ContainerStacksModel import ContainerStacksModel
-
 
 class Bindings:
     @classmethod
@@ -66,6 +66,7 @@ class Bindings:
         qmlRegisterType(JobsModel.JobsModel, "UM", 1, 0, "JobsModel")
         qmlRegisterType(AngledCornerRectangle.AngledCornerRectangle, "UM", 1, 0, "AngledCornerRectangle")
         qmlRegisterType(PointingRectangle.PointingRectangle, "UM", 1, 0, "PointingRectangle")
+        qmlRegisterType(ExtensionModel.ExtensionModel, "UM", 1, 0, "ExtensionModel")
 
         # Singleton proxy objects
         qmlRegisterSingletonType(ControllerProxy.ControllerProxy, "UM", 1, 0, "Controller", Bindings.createControllerProxy)
