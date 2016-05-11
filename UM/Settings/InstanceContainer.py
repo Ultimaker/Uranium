@@ -114,6 +114,36 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
 
         self._instances[key].setProperty("value", value)
 
+
+    def getProperty(self, key, property_name):
+        if key in self._instances:
+            try:
+                return getattr(self._instances[key], property_name)
+            except AttributeError:
+                pass
+
+        Logger.log("w", "Tried to get value of setting %s that has no instance in container %s", key, repr(self))
+        return None
+
+    def setProperty(self, key, property_name, property_value):
+        if key not in self._instances:
+            if not self._definition:
+                Logger.log("w", "Tried to set value of setting %s that has no instance in container %s and unable to create a new instance", key, repr(self))
+                return
+
+            setting_definition = self._definition.findDefinitions(key = key)
+            if not setting_definition:
+                Logger.log("w", "Tried to set value of setting %s that has no instance in container %s and unable to create a new instance", key, repr(self))
+                return
+
+            instance = SettingInstance(setting_definition[0], self)
+            instance.propertyChanged.connect(self.propertyChanged)
+            self._instances[instance.definition.key] = instance
+
+        self._instances[key].setProperty(property_name, property_value)
+
+    propertyChanged = Signal()
+
     ##  \copydoc ContainerInterface::serialize
     #
     #   Reimplemented from ContainerInterface
@@ -167,10 +197,7 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
 
         if "values" in parser:
             for key, value in parser["values"].items():
-                if not key in self._instances:
-                    setting_definition = self._definition.findDefinitions(key = key)[0]
-                    self._instances[key] = SettingInstance.SettingInstance(setting_definition, self)
-                self._instances[key].setProperty("value", value)
+                self.setProperty(key, "value", value)
 
     ##  Find instances matching certain criteria.
     #
@@ -197,6 +224,7 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
         if key in self._instances:
             return
 
+        instance.propertyChanged.connect(self.propertyChanged)
         self._instances[key] = instance
 
     def getDefinition(self):
