@@ -315,7 +315,6 @@ class SettingDefinition:
     def _deserialize_dict(self, serialized):
         self._children = []
         self._relations = []
-        self._type = "unknown"
 
         for key, value in serialized.items():
             if key == "children":
