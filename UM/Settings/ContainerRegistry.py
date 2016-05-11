@@ -55,7 +55,7 @@ class ContainerRegistry:
         }
 
         PluginRegistry.getInstance().addType("settings_container", self.addContainerType)
-        self.load()
+
 
     ##  Find all DefinitionContainer objects matching certain criteria.
     #
@@ -158,7 +158,7 @@ class ContainerRegistry:
     def getInstance(cls):
         if not cls.__instance:
             cls.__instance = ContainerRegistry()
-
+            cls.__instance.load()
         return cls.__instance
 
     __instance = None
