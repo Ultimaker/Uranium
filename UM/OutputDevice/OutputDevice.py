@@ -1,7 +1,7 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-from UM.Signal import Signal, SignalEmitter
+from UM.Signal import Signal, signalemitter
 
 
 ##  Base class for output devices.
@@ -19,7 +19,8 @@ from UM.Signal import Signal, SignalEmitter
 #   For example, when implementing a web service as output device, it would be completely
 #   acceptable to show a login dialog when calling requestWrite() if there are no saved
 #   login credentials.
-class OutputDevice(SignalEmitter):
+@signalemitter
+class OutputDevice():
     def __init__(self, device_id, **kwargs):
         super().__init__()
 

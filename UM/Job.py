@@ -3,7 +3,7 @@
 
 import time
 
-from UM.Signal import Signal, SignalEmitter
+from UM.Signal import Signal, signalemitter
 
 from UM.JobQueue import JobQueue
 
@@ -14,7 +14,8 @@ from UM.JobQueue import JobQueue
 #   self-contained task that should be performed in a thread. It makes
 #   use of the JobQueue for the actual threading.
 #   \sa JobQueue
-class Job(SignalEmitter):
+@signalemitter
+class Job():
     ##  Initialize.
     #
     #   \param kwargs Keyword arguments.

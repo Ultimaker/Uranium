@@ -7,7 +7,7 @@ from UM.Mesh.MeshFileHandler import MeshFileHandler
 from UM.Resources import Resources
 from UM.Operations.OperationStack import OperationStack
 from UM.Event import CallFunctionEvent
-from UM.Signal import Signal, SignalEmitter
+from UM.Signal import Signal, signalemitter
 from UM.Logger import Logger
 from UM.Preferences import Preferences
 from UM.OutputDevice.OutputDeviceManager import OutputDeviceManager
@@ -26,7 +26,8 @@ import sys
 #   The Application object is a central object for accessing other important objects. It is also
 #   responsible for starting the main event loop. It is passed on to plugins so it can be easily
 #   used to access objects required for those plugins.
-class Application(SignalEmitter):
+@signalemitter
+class Application():
     ##  Init method
     #
     #   \param name \type{string} The name of the application.

@@ -18,7 +18,7 @@ from UM.Application import Application
 from UM.Qt.QtRenderer import QtRenderer
 from UM.Qt.Bindings.Bindings import Bindings
 from UM.JobQueue import JobQueue
-from UM.Signal import Signal, SignalEmitter
+from UM.Signal import Signal, signalemitter
 from UM.Resources import Resources
 from UM.Logger import Logger
 from UM.Preferences import Preferences
@@ -36,7 +36,8 @@ if int(major) < 5 or int(minor) < 4:
     raise UnsupportedVersionError("This application requires at least PyQt 5.4.0")
 
 ##  Application subclass that provides a Qt application object.
-class QtApplication(QApplication, Application, SignalEmitter):
+@signalemitter
+class QtApplication(QApplication, Application):
     def __init__(self, **kwargs):
         plugin_path = ""
         if sys.platform == "win32":

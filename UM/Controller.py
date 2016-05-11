@@ -3,7 +3,7 @@
 
 from UM.Scene.Scene import Scene
 from UM.Event import Event, MouseEvent, ToolEvent, ViewEvent
-from UM.Signal import Signal, SignalEmitter
+from UM.Signal import Signal, signalemitter
 from UM.Logger import Logger
 from UM.PluginRegistry import PluginRegistry
 
@@ -14,7 +14,8 @@ from UM.PluginRegistry import PluginRegistry
 #       \sa View
 #       \sa Tool
 #       \sa Scene
-class Controller(SignalEmitter):
+@signalemitter
+class Controller():
     def __init__(self, application):
         super().__init__()  # Call super to make multiple inheritance work.
         self._active_tool = None

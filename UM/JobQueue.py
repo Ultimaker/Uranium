@@ -1,7 +1,7 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-from UM.Signal import Signal, SignalEmitter
+from UM.Signal import Signal, signalemitter
 from UM.Logger import Logger
 
 import multiprocessing
@@ -13,7 +13,8 @@ import threading
 #   The JobQueue class manages a queue of Job objects and a set of threads that
 #   can take things from this queue to process them.
 #   \sa Job
-class JobQueue(SignalEmitter):
+@signalemitter
+class JobQueue():
     ##  Initialize.
     #
     #   \param thread_count The amount of threads to use. Can be a positive integer or 'auto'.
