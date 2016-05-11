@@ -123,7 +123,7 @@ class SettingDefinition:
     #   \return \type{dict} A representation of this setting definition.
     def serialize_to_dict(self):
         result = {}
-        result["key"] = self.key
+        result["label"] = self.key
 
         result["children"] = []
         for child in self.children:
