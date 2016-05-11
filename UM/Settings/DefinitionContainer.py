@@ -93,9 +93,21 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
 
     ##  \copydoc ContainerInterface::serialize
     #
+    #   TODO: This implementation flattens the definition container, since the
+    #   data about inheritance and overrides was lost when deserialising.
+    #
     #   Reimplemented from ContainerInterface
     def serialize(self):
-        return ""
+        data = { } # The data to write to a JSON file.
+        data["name"] = self.getName()
+        data["version"] = DefinitionContainer.Version
+        data["metadata"] = self.getMetaData()
+
+        data["settings"] = { }
+        for definition in self.definitions:
+            data["settings"][definition.key] = definition.serialize_to_dict()
+
+        return json.dumps(data, separators = (", ", ": "), indent = 4) # Pretty print the JSON.
 
     ##  \copydoc ContainerInterface::deserialize
     #

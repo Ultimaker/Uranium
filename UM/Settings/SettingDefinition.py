@@ -118,6 +118,22 @@ class SettingDefinition:
     def serialize(self):
         pass
 
+    ##  Serialize this setting to a dict.
+    #
+    #   \return \type{dict} A representation of this setting definition.
+    def serialize_to_dict(self):
+        result = {}
+        result["key"] = self.key
+
+        result["children"] = []
+        for child in self.children:
+            result["children"].append(child.serialize_to_dict())
+
+        for key, value in self.__property_values.items():
+            result[key] = str(value)
+
+        return result
+
     ##  Deserialize this setting from a string or dict.
     #
     #   \param serialized \type{string or dict} A serialized representation of this setting.
