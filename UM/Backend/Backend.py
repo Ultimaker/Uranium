@@ -4,7 +4,7 @@
 from UM.Backend.SignalSocket import SignalSocket
 from UM.Preferences import Preferences
 from UM.Logger import Logger
-from UM.Signal import Signal, SignalEmitter
+from UM.Signal import Signal, signalemitter
 from UM.Application import Application
 from UM.PluginObject import PluginObject
 from UM.Platform import Platform
@@ -20,7 +20,8 @@ from time import sleep
 ##      Base class for any backend communication (seperate piece of software).
 #       It makes use of the Socket class from libArcus for the actual communication bits.
 #       The message_handler dict should be filled with message class, function pairs.
-class Backend(PluginObject, SignalEmitter):
+@signalemitter
+class Backend(PluginObject):
     def __init__(self):
         super().__init__() # Call super to make multiple inheritence work.
         self._supported_commands = {}

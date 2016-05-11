@@ -1,7 +1,7 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-from UM.Signal import Signal, SignalEmitter
+from UM.Signal import Signal, signalemitter
 from UM.Logger import Logger
 from UM.PluginRegistry import PluginRegistry
 
@@ -38,7 +38,8 @@ from UM.PluginRegistry import PluginRegistry
 #   OutputDevicePlugin is expected to call removeOutputDevice() to remove the proper
 #   device.
 #
-class OutputDeviceManager(SignalEmitter):
+@signalemitter
+class OutputDeviceManager():
     def __init__(self):
         super().__init__()
 
