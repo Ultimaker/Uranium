@@ -12,10 +12,12 @@ from UM.View.GL.OpenGL import OpenGL
 
 import numpy
 import numpy.linalg
+import scipy.spatial
 import hashlib
 from copy import deepcopy
 from time import time
 numpy.seterr(all="ignore") # Ignore warnings (dev by zero)
+# from UM.Logger import timeIt
 
 
 class MeshType(Enum):
@@ -43,12 +45,18 @@ class MeshData(SignalEmitter):
         self._type = MeshType.faces
         self._file_name = None
         # original center position
-        self._center_position = None 
-        self.dataChanged.connect(self._resetVertexBuffer)
-        self.dataChanged.connect(self._resetIndexBuffer)
-    
+        self._center_position = None
+        self._convex_hull = None    # type: scipy.spatial.qhull.ConvexHull
+        self._convex_hull_vertices = None
+
     dataChanged = Signal()
-    
+
+    def _dataChanged(self):
+        self._resetVertexBuffer()
+        self._resetIndexBuffer()
+        self._resetConvexHull()
+        self.dataChanged.emit()
+
     def __deepcopy__(self, memo):
         copy = MeshData()
         copy._vertices = deepcopy(self._vertices, memo)
@@ -68,7 +76,7 @@ class MeshData(SignalEmitter):
             delattr(self, OpenGL.IndexBufferProperty)
         except:
             pass
-    
+
     def setCenterPosition(self, position):
         self._center_position = position
 
@@ -79,32 +87,32 @@ class MeshData(SignalEmitter):
 
     def getCenterPosition(self):
         return self._center_position
-    
+
     def _resetVertexBuffer(self):
         try:
             delattr(self, OpenGL.VertexBufferProperty)
         except:
             pass
-    
+
     ##  Set the type of the mesh 
     #   \param mesh_type MeshType enum 
     def setType(self, mesh_type):
         if isinstance(mesh_type, MeshType):
             self._type = mesh_type
-    
+
     def getType(self):
         return self._type
 
     def getFaceCount(self):
         return self._face_count
-    
+
     ##  Get the array of vertices
     def getVertices(self):
         if self._vertices is None:
             return None
 
         return self._vertices[0 : self._vertex_count] #Only return up until point where data was filled
-    
+
     ##  Get the number of vertices
     def getVertexCount(self):
         return self._vertex_count
@@ -115,22 +123,22 @@ class MeshData(SignalEmitter):
             return self._vertices[index]
         except IndexError:
             return None
-    
+
     #   Remove vertex by index or list of indices
     #   \param index Either a single index or a list of indices to be removed.
     def removeVertex(self, index):
-        try: 
+        try:
             #print("deleting ", index)
-            #print( self._vertices) 
+            #print( self._vertices)
             self._vertices = numpy.delete(self._vertices, index,0)
             if self.hasNormals():
                self._normals = numpy.delete(self._normals,index,0)
-            #print( self._vertices)    
+            #print( self._vertices)
             self._vertex_count = len(self._vertices)
         except IndexError:
             pass
-        self.dataChanged.emit()
-        
+        self._dataChanged()
+
     ##  Return whether this mesh has vertex normals.
     def hasNormals(self):
         return self._normals is not None
@@ -182,8 +190,17 @@ class MeshData(SignalEmitter):
     #
     #   \param matrix The transformation matrix from model to world coordinates.
     def getExtents(self, matrix = None):
+        old = self._old_getExtents(matrix)
+        new = self._new_getExtents(matrix)
+
+        # Logger.log('d','Old getExtents() ' + repr(old))
+        # Logger.log('d','New getExtents() ' + repr(new))
+        return old
+
+    # @timeIt
+    def _old_getExtents(self, matrix = None):
         if self._vertices is None:
-            return AxisAlignedBox()
+            return None
 
         data = numpy.pad(self._vertices[0:self._vertex_count], ((0,0), (0,1)), "constant", constant_values=(0.0, 1.0))
 
@@ -192,6 +209,24 @@ class MeshData(SignalEmitter):
             data = data.dot(transposed)
             data += transposed[:,3]
             data = data[:,0:3]
+
+        min = data.min(axis=0)
+        max = data.max(axis=0)
+
+        return AxisAlignedBox(minimum=Vector(min[0], min[1], min[2]), maximum=Vector(max[0], max[1], max[2]))
+
+    # @timeIt
+    def _new_getExtents(self, matrix = None):
+        if self._vertices is None:
+            return None
+
+        data = numpy.pad(self.getConvexHullVertices(), ((0, 0), (0, 1)), "constant", constant_values=(0.0, 1.0))
+
+        if matrix is not None:
+            transposed = matrix.getTransposed().getData()
+            data = data.dot(transposed)
+            data += transposed[:, 3]
+            data = data[:, 0:3]
 
         min = data.min(axis=0)
         max = data.max(axis=0)
@@ -208,6 +243,7 @@ class MeshData(SignalEmitter):
         self._uvs = None
         self._vertex_count = 0
         self._face_count = 0
+        self._resetConvexHull()
 
     ##  Set the amount of faces before loading data to the mesh.
     #
@@ -227,7 +263,7 @@ class MeshData(SignalEmitter):
 
         self._vertex_count = 0
         self._face_count = 0
-    
+
     ##  Set the amount of verts before loading data to the mesh.
     #
     #   This way we can create the array before we fill it. This method will reserve
@@ -242,7 +278,7 @@ class MeshData(SignalEmitter):
 
         self._vertex_count = 0
         self._face_count = 0
-    
+
     ##  Add a vertex to the mesh.
     #   \param x x coordinate of vertex.
     #   \param y y coordinate of vertex.
@@ -258,7 +294,7 @@ class MeshData(SignalEmitter):
         self._vertices[self._vertex_count, 1] = y
         self._vertices[self._vertex_count, 2] = z
         self._vertex_count += 1
-    
+
     ##  Add a vertex to the mesh.
     #   \param x x coordinate of vertex.
     #   \param y y coordinate of vertex.
@@ -288,7 +324,7 @@ class MeshData(SignalEmitter):
         self._normals[self._vertex_count, 1] = ny
         self._normals[self._vertex_count, 2] = nz
         self._vertex_count += 1
-    
+
     ##  Add a face by providing three verts.
     #   \param x0 x coordinate of first vertex.
     #   \param y0 y coordinate of first vertex.
@@ -305,7 +341,7 @@ class MeshData(SignalEmitter):
 
         if len(self._indices) == self._face_count:
             self._indices.resize((self._face_count * 2, 3))
-        
+
         self._indices[self._face_count, 0] = self._vertex_count
         self._indices[self._face_count, 1] = self._vertex_count + 1
         self._indices[self._face_count, 2] = self._vertex_count + 2
@@ -396,12 +432,12 @@ class MeshData(SignalEmitter):
             self._colors = colors
         else:
             self._colors = numpy.concatenate((self._colors[0:self._vertex_count], colors))
-    
+
     ## 
     # /param colors is a vertexCount by 4 numpy array with floats in range of 0 to 1.
     def setColors(self, colors):
         self._colors = colors
-    
+
     ##  Get all vertices of this mesh as a bytearray
     #
     #   \return A bytearray object with 3 floats per vertex.
@@ -473,3 +509,34 @@ class MeshData(SignalEmitter):
             self._normals = n.repeat(3, axis=0)
         end_time = time()
         Logger.log("d", "Calculating normals took %s seconds", end_time - start_time)
+
+    #######################################################################
+
+    def _resetConvexHull(self):
+        self._convex_hull = None
+        self._convex_hull_vertices = None
+
+    def _computeConvexHull(self):
+        points = self.getVertices()
+        if points is None:
+            return
+
+        start_time = time()
+        self._convex_hull = scipy.spatial.ConvexHull(points)
+        end_time = time()
+        Logger.log("d", "Calculating 3D convex hull took %s seconds. %s input vertices. %s output vertices.",
+                   end_time - start_time, len(points), len(self._convex_hull.vertices))
+
+    ##  Gets the Convex Hull points
+    #
+    def getConvexHull(self):
+        # Returns type: scipy.spatial.qhull.ConvexHull
+        if self._convex_hull is None:
+            self._computeConvexHull()
+        return self._convex_hull
+
+    def getConvexHullVertices(self):
+        if self._convex_hull_vertices is None:
+            convex_hull = self.getConvexHull()
+            self._convex_hull_vertices = numpy.take(convex_hull.points, convex_hull.vertices, axis=0)
+        return self._convex_hull_vertices
