@@ -28,10 +28,7 @@ from . import OutputDeviceManagerProxy
 from . import i18nCatalogProxy
 from . import ExtensionModel
 
-from UM.Settings.Models.DefinitionContainersModel import DefinitionContainersModel
-from UM.Settings.Models.InstanceContainersModel import InstanceContainersModel
-from UM.Settings.Models.SettingDefinitionsModel import SettingDefinitionsModel
-from UM.Settings.Models.ContainerStacksModel import ContainerStacksModel
+import UM.Settings.Models
 
 class Bindings:
     @classmethod
@@ -92,7 +89,8 @@ class Bindings:
         qmlRegisterSingletonType(OutputDeviceManagerProxy.OutputDeviceManagerProxy, "UM", 1, 1, "OutputDeviceManager", OutputDeviceManagerProxy.createOutputDeviceManagerProxy)
 
         # Additions after 2.1. Uses API version 1.2
-        qmlRegisterType(SettingDefinitionsModel, "UM", 1, 2, "SettingDefinitionsModel")
-        qmlRegisterType(DefinitionContainersModel, "UM", 1, 2, "DefinitionContainersModel")
-        qmlRegisterType(InstanceContainersModel, "UM", 1, 2, "InstanceContainersModel")
-        qmlRegisterType(ContainerStacksModel, "UM", 1, 2, "ContainerStacksModel")
+        qmlRegisterType(UM.Settings.Models.SettingDefinitionsModel, "UM", 1, 2, "SettingDefinitionsModel")
+        qmlRegisterType(UM.Settings.Models.DefinitionContainersModel, "UM", 1, 2, "DefinitionContainersModel")
+        qmlRegisterType(UM.Settings.Models.InstanceContainersModel, "UM", 1, 2, "InstanceContainersModel")
+        qmlRegisterType(UM.Settings.Models.ContainerStacksModel, "UM", 1, 2, "ContainerStacksModel")
+        qmlRegisterType(UM.Settings.Models.SettingPropertyProvider, "UM", 1, 2, "SettingPropertyProvider")
