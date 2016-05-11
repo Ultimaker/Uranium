@@ -38,13 +38,14 @@ PreferencesPage
 
     resetEnabled: false;
 
-    function activeIndex() 
+    function activeIndex()
     {
         for(var i = 0; i < objectList.model.rowCount(); i++) {
             if (objectList.model.getItem(i).active) {
                 return i;
             }
         }
+        return -1
     }
 
 
