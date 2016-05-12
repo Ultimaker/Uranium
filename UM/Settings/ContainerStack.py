@@ -51,6 +51,8 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     ##  Emitted whenever the name of this stack changes.
     nameChanged = Signal()
 
+    containersChanged = Signal()
+
     ##  Set the name of this stack.
     #
     #   \param name \type{string} The new name of the stack.
@@ -225,6 +227,7 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     def addContainer(self, container):
         if container is not self:
             self._containers.insert(0, container)
+            self.containersChanged.emit(container)
         else:
             raise Exception("Unable to add stack to itself.")
 
@@ -241,6 +244,7 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
         if container == self:
             raise Exception("Unable to replace container with ContainerStack (self) ")
         self._containers[index] = container
+        self.containersChanged.emit(container)
 
     ##  Remove a container from the stack.
     #
@@ -251,7 +255,9 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
         if index == -1:
             raise IndexError
         try:
+            container = self._containers[index]
             del self._containers[index]
+            self.containersChanged.emit(container)
         except TypeError:
             raise IndexError("Can't delete container with intex %s" % index)
 
