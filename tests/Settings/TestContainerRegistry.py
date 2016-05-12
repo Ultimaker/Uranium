@@ -218,7 +218,9 @@ test_findContainers_data = [
 @pytest.mark.parametrize("data", test_findContainers_data)
 def test_findDefinitionContainers(container_registry, data):
     for container in data["containers"]: # Fill the registry with mock containers.
+        container = container.copy()
         container_id = container["id"]
+        del container["id"]
         definition_container = UM.Settings.DefinitionContainer(container_id, container)
         container_registry.addContainer(definition_container)
 
@@ -233,6 +235,7 @@ def test_findDefinitionContainers(container_registry, data):
 @pytest.mark.parametrize("data", test_findContainers_data)
 def test_findInstanceContainers(container_registry, data):
     for container in data["containers"]: # Fill the registry with mock containers.
+        container = container.copy()
         container_id = container["id"]
         del container["id"]
         instance_container = UM.Settings.InstanceContainer(container_id, container)
@@ -249,6 +252,7 @@ def test_findInstanceContainers(container_registry, data):
 @pytest.mark.parametrize("data", test_findContainers_data)
 def test_findContainerStacks(container_registry, data):
     for container in data["containers"]: # Fill the registry with container stacks.
+        container = container.copy()
         container_id = container["id"]
         del container["id"]
         container_stack = UM.Settings.ContainerStack(container_id, container)
