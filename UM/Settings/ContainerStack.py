@@ -5,6 +5,7 @@ import io
 
 from UM.Signal import Signal, signalemitter
 from UM.PluginObject import PluginObject
+from UM.Logger import Logger
 import UM.Settings.ContainerRegistry
 
 from . import ContainerInterface
@@ -71,7 +72,16 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
         return self._metadata.get(entry, default)
 
     def addMetaDataEntry(self, key, value):
-        self._metadata[key] = value
+        if key not in self._metadata:
+            self._metadata[key] = value
+        else:
+            Logger.log("w", "Meta data with key %s was already added.", key)
+
+    def setMetaDataEntry(self, key, value):
+        if key in self._metadata:
+            self._metadata[key] = value
+        else:
+            Logger.log("w", "Meta data with key %s was not found. Unable to change.", key)
 
     ##  \copydoc ContainerInterface::getValue
     #
