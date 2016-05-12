@@ -121,7 +121,20 @@ class Vector(object):
         return Vector(self.x * other.x, self.y * other.y, self.z * other.z)
 
     def __eq__(self, other):
-        return Float.fuzzyCompare(self.x, other.x, 1e-6) and Float.fuzzyCompare(self.y, other.y, 1e-6) and Float.fuzzyCompare(self.z, other.z, 1e-6)
+        if self is other:
+            return True
+        if other is None:
+            return False
+        return self.equals(other)
+
+    ## Compares this vector to another vector.
+    #
+    #   \param epsilon optional tolerance value for the comparision.
+    #   \returns True if the two vectors are the same.
+    def equals(self, other, epsilon=1e-6):
+        return Float.fuzzyCompare(self.x, other.x, epsilon) and \
+               Float.fuzzyCompare(self.y, other.y, epsilon) and \
+               Float.fuzzyCompare(self.z, other.z, epsilon)
 
     def __add__(self, other):
         if type(other) is Vector:
@@ -198,7 +211,7 @@ class Vector(object):
 def isNumber(value):
     return type(value) in [float, int, numpy.float32, numpy.float64]
 
-
+Vector.Null = Vector()
 Vector.Unit_X = Vector(1, 0, 0)
 Vector.Unit_Y = Vector(0, 1, 0)
 Vector.Unit_Z = Vector(0, 0, 1)
