@@ -199,7 +199,11 @@ class TranslateTool(Tool):
                     self._distance = Vector(0, 0, 0)
                     self.operationStarted.emit(self)
 
-                Selection.applyOperation(TranslateOperation, drag)
+                op = GroupedOperation()
+                for node in Selection.getAllSelectedObjects():
+                    op.addOperation(TranslateOperation(node, drag))
+                op.push()
+
                 self._distance += drag
 
             self.setDragStart(event.x, event.y)
