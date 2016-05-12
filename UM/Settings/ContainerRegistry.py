@@ -127,7 +127,7 @@ class ContainerRegistry:
         for instance in self.findInstanceContainers():
             data = instance.serialize()
             file_name = urllib.parse.quote_plus(instance.getId()) + ".inst.cfg"
-            path = Resources.getStoragePath(Resources.DefinitionContainers, file_name)
+            path = Resources.getStoragePath(Resources.InstanceContainers, file_name)
             with SaveFile(path, "wt", -1, "utf-8") as f:
                 f.write(data)
 
