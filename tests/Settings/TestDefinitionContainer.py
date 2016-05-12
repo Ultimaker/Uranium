@@ -7,7 +7,7 @@ import uuid
 
 import UM.Settings
 from UM.Settings.DefinitionContainer import IncorrectDefinitionVersionError, InvalidDefinitionError
-from UM.Settings.SettingDefinition import SettingDefinition
+from UM.Settings.SettingDefinition import SettingDefinition, DefinitionPropertyType
 from UM.Resources import Resources
 
 Resources.addSearchPath(os.path.dirname(os.path.abspath(__file__)))
@@ -275,7 +275,22 @@ def test_serialize(definition_container):
     _test_serialize_cycle(definition_container)
 
     # Add some subsettings.
-    subsetting = _createSettingDefinition({ "key": "parent", "default_value": 1, "children": [ { "key": "child", "default_value": 2, "children": [ { "key": "foo", "default_value": "bar" } ] } ] })
+    subsetting = _createSettingDefinition({
+        "key": "parent",
+        "default_value": "newspaper",
+        "children": [
+            {
+                "key": "child",
+                "default_value": "tv",
+                "children": [
+                    {
+                        "key": "grandchild",
+                        "default_value": "Nintendo"
+                    }
+                ]
+            }
+        ]
+    })
     definition_container.definitions.append(subsetting)
     _test_serialize_cycle(definition_container)
 
@@ -322,6 +337,8 @@ def _createSettingDefinition(properties):
     result = SettingDefinition(properties["key"]) # Key MUST be present.
     if "default_value" in properties:
         result._SettingDefinition__property_values["default_value"] = properties["default_value"] # Nota bene: Setting a private value depends on implementation, but changing a property is not currently exposed.
+    result._SettingDefinition__property_values["description"] = "Test setting definition"
+    result._SettingDefinition__property_values["type"] = "str"
     if "children" in properties:
         for child in properties["children"]:
             result.children.append(_createSettingDefinition(child))
