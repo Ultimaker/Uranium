@@ -170,16 +170,16 @@ test_findContainers_data = [
         ]
     },
     {
-        "name": "Double ID match",
+        "name": "Double match",
         "containers": [
-            { "id": "a" },
-            { "id": "b" },
-            { "id": "a" }
+            { "id": "a", "number": 1 },
+            { "id": "b", "number": 2 },
+            { "id": "c", "number": 1 }
         ],
-        "filter": { "id": "a" },
+        "filter": { "number": 1 },
         "result": [
-            { "id": "a" },
-            { "id": "a" }
+            { "id": "a", "number": 1 },
+            { "id": "c", "number": 1 }
         ]
     },
     {
