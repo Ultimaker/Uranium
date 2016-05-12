@@ -121,11 +121,16 @@ def test_addContainer(container_registry):
 
 ##  Tests adding a container type to the registry.
 #
+#   This adds the path to this file to the search paths for plug-ins, then lets
+#   the plug-ins load. There is a plug-in in the relative path to this. Then it
+#   checks if that plug-in gets added (by checking the length of
+#   _container_types).
+#
 #   \param container_registry A new container registry from a fixture.
 def test_addContainerType(container_registry):
     old_container_type_count = len(container_registry._container_types)
     plugin_registry = UM.PluginRegistry.PluginRegistry.getInstance()
-    plugin_registry.addPluginLocation(os.path.dirname(os.path.abspath(__file__))) # Load plug-ins from here.
+    plugin_registry.addPluginLocation(os.path.dirname(os.path.abspath(__file__))) # Load plug-ins relative to this file.
     plugin_registry.loadPlugins()
     # The __init__ script now adds itself to the container registry.
     assert len(container_registry._container_types) == old_container_type_count + 1
