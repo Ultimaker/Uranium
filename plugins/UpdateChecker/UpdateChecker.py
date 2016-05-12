@@ -8,6 +8,7 @@ from UM.i18n import i18nCatalog
 from UM.Application import Application
 from UM.Message import Message
 from UM.Version import Version
+from UM.Preferences import Preferences
 
 import urllib.request
 import platform
@@ -27,9 +28,11 @@ class UpdateChecker(Extension):
         self.addMenuItem(i18n_catalog.i18nc("@item:inmenu", "Check for Updates"), self.checkNewVersion)
         self._url = None
 
-        thread = Thread(target = self.checkNewVersion, args = (True,))
-        thread.daemon = True
-        thread.start()
+        Preferences.getInstance().addPreference("info/automatic_update_check", True)
+        if Preferences.getInstance().getValue("info/automatic_update_check"):
+            thread = Thread(target = self.checkNewVersion, args = (True,))
+            thread.daemon = True
+            thread.start()
 
     ##  Callback for the message that is spawned when there is a new version.
     def actionTriggered(self, message, action):

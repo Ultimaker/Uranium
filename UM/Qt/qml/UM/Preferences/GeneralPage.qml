@@ -13,6 +13,8 @@ PreferencesPage
 
     function reset() {
         UM.Preferences.resetPreference("general/language")
+        UM.Preferences.resetPreference("info/automatic_update_check")
+        checkUpdatesCheckbox.checked = boolCheck(UM.Preferences.getValue("info/automatic_update_check"))
     }
 
     Column
@@ -52,6 +54,20 @@ PreferencesPage
             text: "You will need to restart the application for language changes to have effect."
             wrapMode: Text.WordWrap
             font.italic: true
+        }
+
+        UM.TooltipArea {
+            width: childrenRect.width
+            height: childrenRect.height
+            text: catalog.i18nc("@info:tooltip","Should Cura check for updates when the program is started?")
+
+            CheckBox
+            {
+                id: checkUpdatesCheckbox
+                text: catalog.i18nc("@option:check","Check for updates on start")
+                checked: boolCheck(UM.Preferences.getValue("info/automatic_update_check"))
+                onCheckedChanged: UM.Preferences.setValue("info/automatic_update_check", checked)
+            }
         }
     }
 }
