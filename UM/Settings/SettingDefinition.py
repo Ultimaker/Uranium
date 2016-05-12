@@ -125,9 +125,9 @@ class SettingDefinition:
         result = {}
         result["label"] = self.key
 
-        result["children"] = []
+        result["children"] = {}
         for child in self.children:
-            result["children"].append(child.serialize_to_dict())
+            result["children"][child.key] = child.serialize_to_dict()
 
         for key, value in self.__property_values.items():
             result[key] = str(value)
