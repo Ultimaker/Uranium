@@ -28,11 +28,21 @@ class ContainerStacksModel(ListModel):
         if isinstance(container, ContainerStack):
             self._update()
 
+    def _onContainerNameChanged(self):
+        self._update()
+
     ##  Private convenience function to reset & repopulate the model.
     def _update(self):
         self.clear()
-        self._container_stacks = ContainerRegistry.getInstance().findContainerStacks(**self._filter_dict)
+
+        # Remove all connections
         for container in self._container_stacks:
+            container.nameChanged.disconnect(self._onContainerNameChanged)
+
+        self._container_stacks = ContainerRegistry.getInstance().findContainerStacks(**self._filter_dict)
+
+        for container in self._container_stacks:
+            container.nameChanged.connect(self._onContainerNameChanged)
             self.appendItem({"name": container.getName(),
                              "id": container.getId()})
 
