@@ -188,7 +188,7 @@ def test_findDefinitions(description, query, result, data, definition_container)
     for definition in data:
         definition_container.definitions.append(_createSettingDefinition(definition))
 
-    answers = definition_container.findDefinitions(kwargs = query) # Perform the actual query.
+    answers = definition_container.findDefinitions(**query) # Perform the actual query.
 
     assert len(result) == len(answers)
     for expected in result: # Each expected result must be present in the answer.
