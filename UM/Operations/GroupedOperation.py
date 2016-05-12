@@ -43,3 +43,29 @@ class GroupedOperation(Operation.Operation):
         for op in self._children:
             op.redo()
         self._finalised = True
+
+    ##  Merges this operation with another GroupOperation.
+    #
+    #   This prevents the user from having to undo multiple operations if they
+    #   were not his operations.
+    #
+    #   The older operation must have the same number of child operations, and
+    #   each pair of operations must succesfully merge, or the merge of the
+    #   groupOperation will fail.
+    #
+    #   \param other The older GroupOperation to merge this with.
+    #   \return A combination of the two group operations, or False if the operations
+    #           can not be merged.
+    def mergeWith(self, other):
+        if type(other) is not GroupedOperation:
+            return False
+        if len(other._children) != len(self._children): #Must be operations on the same number of children.
+            return False
+
+        op = GroupedOperation()
+        for (op1, op2) in zip(self._children, other._children):
+            child_op = op1.mergeWith(op2)
+            if not child_op:
+                return False
+            op.addOperation(child_op)
+        return op
