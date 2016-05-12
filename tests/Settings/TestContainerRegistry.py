@@ -27,6 +27,7 @@ class MockContainer(UM.Settings.ContainerInterface.ContainerInterface, UM.Plugin
     def __init__(self, id, metadata):
         self._id = id
         self._metadata = metadata
+        self._plugin_id = "MockContainerPlugin"
 
     ##  Gets the ID that was provided at initialisation.
     #
@@ -122,8 +123,13 @@ def test_addContainer(container_registry):
 #
 #   \param container_registry A new container registry from a fixture.
 def test_addContainerType(container_registry):
-    container_registry.addContainerType(MockContainer("a", {} )) # Test if it doesn't crash.
-    # Actually testing the result can only be done with the load function, so refer to test_load for that.
+    old_container_type_count = len(container_registry._container_types)
+    plugin_registry = UM.PluginRegistry.PluginRegistry.getInstance()
+    plugin_registry.addPluginLocation(os.path.dirname(os.path.abspath(__file__))) # Load plug-ins from here.
+    plugin_registry.loadPlugins()
+    # The __init__ script now adds itself to the container registry.
+    assert len(container_registry._container_types) == old_container_type_count + 1
+
     with pytest.raises(Exception):
         container_registry.addContainerType(None)
 
