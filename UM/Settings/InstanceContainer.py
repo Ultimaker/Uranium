@@ -84,6 +84,12 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
     def getMetaDataEntry(self, entry, default = None):
         return self._metadata.get(entry, default)
 
+    def addMetaDataEntry(self, key, value):
+        if key not in self._metadata:
+            self._metadata[key] = value
+        else:
+            Logger.log("w", "Meta data with key %s was already added.", key)
+
     ##  \copydoc ContainerInterface::getValue
     #
     #   Reimplemented from ContainerInterface
@@ -91,7 +97,7 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
         if key in self._instances:
             return self._instances[key].value
 
-        Logger.log("w", "Tried to get value of setting %s that has no instance in container %s", key, repr(self))
+        #Logger.log("w", "Tried to get value of setting %s that has no instance in container %s", key, repr(self))
         return None
 
     ##  Emitted whenever the value of an instance in this container changes.
