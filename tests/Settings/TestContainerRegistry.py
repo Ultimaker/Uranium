@@ -221,7 +221,9 @@ def test_findDefinitionContainers(container_registry, data):
         container = container.copy()
         container_id = container["id"]
         del container["id"]
-        definition_container = UM.Settings.DefinitionContainer(container_id, container)
+        definition_container = UM.Settings.DefinitionContainer(container_id)
+        for key, value in container.items(): # Copy data into metadata.
+            definition_container.getMetaData()[key] = value
         container_registry.addContainer(definition_container)
 
     results = container_registry.findDefinitionContainers(**data["filter"]) # The actual function call we're testing.
@@ -238,7 +240,9 @@ def test_findInstanceContainers(container_registry, data):
         container = container.copy()
         container_id = container["id"]
         del container["id"]
-        instance_container = UM.Settings.InstanceContainer(container_id, container)
+        instance_container = UM.Settings.InstanceContainer(container_id)
+        for key, value in container.items(): # Copy data into metadata.
+            instance_container.getMetaData()[key] = value
         container_registry.addContainer(instance_container)
 
     results = container_registry.findInstanceContainers(**data["filter"]) # The actual function call we're testing.
@@ -255,7 +259,9 @@ def test_findContainerStacks(container_registry, data):
         container = container.copy()
         container_id = container["id"]
         del container["id"]
-        container_stack = UM.Settings.ContainerStack(container_id, container)
+        container_stack = UM.Settings.ContainerStack(container_id)
+        for key, value in container.items(): # Copy data into metadata.
+            container_stack.getMetaData()[key] = value
         container_registry.addContainer(container_stack)
 
     results = container_registry.findContainerStacks(**data["filter"]) # The actual function call we're testing.
