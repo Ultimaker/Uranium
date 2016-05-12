@@ -59,6 +59,7 @@ class ContainerRegistry:
         PluginRegistry.getInstance().addType("settings_container", self.addContainerType)
 
     containerAdded = Signal()
+    containerRemoved = Signal()
 
     ##  Find all DefinitionContainer objects matching certain criteria.
     #
@@ -112,6 +113,14 @@ class ContainerRegistry:
 
         self._containers.append(container)
         self.containerAdded.emit(container)
+
+    def removeContainer(self, container_id):
+        containers = self._findContainers(None, id = container_id)
+        if containers:
+            self._containers.remove(containers[0])
+            self.containerRemoved.emit(containers[0])
+        else:
+            Logger.log("w", "Could not remove container with id %s, as no container with that ID is known")
 
     def saveAll(self):
 

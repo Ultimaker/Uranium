@@ -19,12 +19,19 @@ class ContainerStacksModel(ListModel):
 
         # Listen to changes
         ContainerRegistry.getInstance().containerAdded.connect(self._onContainerAdded)
+        ContainerRegistry.getInstance().containerRemoved.connect(self._onContainerRemoved)
         self._filter_dict = {}
         self._update()
 
     ##  Handler for container added events from registry
     def _onContainerAdded(self, container):
         # We only need to update when the added container is a stack.
+        if isinstance(container, ContainerStack):
+            self._update()
+
+    ##  Handler for container removed events from registry
+    def _onContainerRemoved(self, container):
+        # We only need to update when the removed container is a stack.
         if isinstance(container, ContainerStack):
             self._update()
 
