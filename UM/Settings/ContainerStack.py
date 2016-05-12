@@ -182,6 +182,9 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     def getContainers(self):
         return self._containers
 
+    def getContainerIndex(self, container):
+        return self._containers.index(container)
+
     ##  Get a container by index.
     #
     #   \param index \type{int} The index of the container to get.
