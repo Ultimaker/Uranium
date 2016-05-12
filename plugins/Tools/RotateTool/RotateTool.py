@@ -16,7 +16,6 @@ from UM.Math.Quaternion import Quaternion
 from UM.Math.Float import Float
 
 from UM.Operations.RotateOperation import RotateOperation
-from UM.Operations.TranslateOperation import TranslateOperation
 from UM.Operations.GroupedOperation import GroupedOperation
 from UM.Operations.SetTransformOperation import SetTransformOperation
 from UM.Operations.LayFlatOperation import LayFlatOperation
