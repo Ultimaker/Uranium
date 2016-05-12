@@ -163,7 +163,7 @@ def test_deserialize_bad(definition_container):
 test_findDefinitions_data = [
     # Description        Query                      Expected result                                 Data
     ("Empty input",      { "key": "foo" },          [ ],                                            [ ]),
-    ("Empty query",      { },                       [ ],                                            [ { "key": "foo", "default_value": "bar" } ]),
+    ("Empty query",      { },                       [ { "key": "foo", "default_value": "bar" } ],   [ { "key": "foo", "default_value": "bar" } ]),
     ("Single hit",       { "key": "foo" },          [ { "key": "foo", "default_value": "bar" } ],   [ { "key": "foo", "default_value": "bar" } ]),
     ("Search child",     { "key": "child" },        [ { "key": "child", "default_value": "bah" } ], [ { "key": "foo", "default_value": "bar", "children": [ { "key": "child", "default_value": "bah" } ] } ]),
     ("Choice",           { "key": "zoo" },          [ { "key": "zoo", "default_value": "baz" } ],   [ { "key": "foo", "default_value": "bar" },
