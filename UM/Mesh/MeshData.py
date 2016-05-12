@@ -190,33 +190,6 @@ class MeshData(SignalEmitter):
     #
     #   \param matrix The transformation matrix from model to world coordinates.
     def getExtents(self, matrix = None):
-        old = self._old_getExtents(matrix)
-        new = self._new_getExtents(matrix)
-
-        # Logger.log('d','Old getExtents() ' + repr(old))
-        # Logger.log('d','New getExtents() ' + repr(new))
-        return old
-
-    # @timeIt
-    def _old_getExtents(self, matrix = None):
-        if self._vertices is None:
-            return None
-
-        data = numpy.pad(self._vertices[0:self._vertex_count], ((0,0), (0,1)), "constant", constant_values=(0.0, 1.0))
-
-        if matrix is not None:
-            transposed = matrix.getTransposed().getData()
-            data = data.dot(transposed)
-            data += transposed[:,3]
-            data = data[:,0:3]
-
-        min = data.min(axis=0)
-        max = data.max(axis=0)
-
-        return AxisAlignedBox(minimum=Vector(min[0], min[1], min[2]), maximum=Vector(max[0], max[1], max[2]))
-
-    # @timeIt
-    def _new_getExtents(self, matrix = None):
         if self._vertices is None:
             return None
 
@@ -510,6 +483,8 @@ class MeshData(SignalEmitter):
         end_time = time()
         Logger.log("d", "Calculating normals took %s seconds", end_time - start_time)
 
+    #######################################################################
+    # Convex hull handling
     #######################################################################
 
     def _resetConvexHull(self):
