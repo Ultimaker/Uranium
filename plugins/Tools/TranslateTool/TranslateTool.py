@@ -39,80 +39,87 @@ class TranslateTool(Tool):
 
         self.setExposedProperties("ToolHint", "X", "Y", "Z")
 
-    ##  Get the x-location of the first selected object
+    ##  Get the x-location of the selection boundingbox center
     #
     #   \param x type(float) location in mm
     def getX(self):
         if Selection.hasSelection():
-            return float(Selection.getSelectedObject(0).getWorldPosition().x)
+            return float(Selection.getBoundingBox().center.x)
         return 0.0
 
-    ##  Get the y-location of the first selected object
+    ##  Get the y-location of the selection boundingbox center
     #
     #   \param y type(float) location in mm
     def getY(self):
         if Selection.hasSelection():
             # Note; The switching of z & y is intentional. We display z as up for the user,
             # But store the data in openGL space.
-            return float(Selection.getSelectedObject(0).getWorldPosition().z)
+            return float(Selection.getBoundingBox().center.z)
         return 0.0
 
-    ##  Get the z-location of the first selected object
+    ##  Get the z-location of the selection boundingbox bottom
+    #   The bottom is used as opposed to the center, because the biggest usecase is to push the selection into the buildplate
     #
     #   \param z type(float) location in mm
     def getZ(self):
         # We want to display based on the bottom instead of the actual coordinate.
         if Selection.hasSelection():
-            selected_node = Selection.getSelectedObject(0)
-            try:
-                bottom = selected_node.getBoundingBox().bottom
-            except AttributeError: #It can happen that there is no bounding box yet.
-                bottom = 0
-
-            return float(bottom)
+            # Note; The switching of z & y is intentional. We display z as up for the user,
+            # But store the data in openGL space.
+            return float(Selection.getBoundingBox().bottom)
         return 0.0
 
-    ##  Set the x-location of the selected object(s) by translating the first selected object
+    ##  Set the x-location of the selected object(s) by translating relative to the selection boundingbox center
     #
     #   \param x type(float) location in mm
     def setX(self, x):
-        obj = Selection.getSelectedObject(0)
-        if obj:
-            new_position = obj.getWorldPosition()
-            new_position.setX(x)
-            Selection.applyOperation(TranslateOperation, new_position, set_position = True)
-            self.operationStopped.emit(self)
+        boundingbox = Selection.getBoundingBox()
 
-    ##  Set the y-location of the selected object(s) by translating the first selected object
+        op = GroupedOperation()
+        for selected_node in Selection.getAllSelectedObjects():
+            new_position = selected_node.getWorldPosition()
+            new_position.setY(float(y) + (new_position.x - boundingbox.center.x))
+
+            node_op = TranslateOperation(selected_node, new_position, set_position = True)
+            op.addOperation(node_op)
+        op.push()
+        self.operationStopped.emit(self)
+
+    ##  Set the y-location of the selected object(s) by translating relative to the selection boundingbox center
     #
     #   \param y type(float) location in mm
     def setY(self, y):
-        obj = Selection.getSelectedObject(0)
-        if obj:
-            new_position = obj.getWorldPosition()
+        boundingbox = Selection.getBoundingBox()
 
+        op = GroupedOperation()
+        for selected_node in Selection.getAllSelectedObjects():
             # Note; The switching of z & y is intentional. We display z as up for the user,
             # But store the data in openGL space.
-            new_position.setZ(y)
-            Selection.applyOperation(TranslateOperation, new_position, set_position = True)
-            self.operationStopped.emit(self)
+            new_position = selected_node.getWorldPosition()
+            new_position.setY(float(y) + (new_position.z - boundingbox.center.z))
 
-    ##  Set the z-location of the selected object(s) by translating the first selected object
+            node_op = TranslateOperation(selected_node, new_position, set_position = True)
+            op.addOperation(node_op)
+        op.push()
+        self.operationStopped.emit(self)
+
+    ##  Set the y-location of the selected object(s) by translating relative to the selection boundingbox bottom
     #
     #   \param z type(float) location in mm
     def setZ(self, z):
-        obj = Selection.getSelectedObject(0)
-        if obj:
-            new_position = obj.getWorldPosition()
-            selected_node = Selection.getSelectedObject(0)
-            center = selected_node.getBoundingBox().center
-            bottom = selected_node.getBoundingBox().bottom
+        boundingbox = Selection.getBoundingBox()
+
+        op = GroupedOperation()
+        for selected_node in Selection.getAllSelectedObjects():
             # Note; The switching of z & y is intentional. We display z as up for the user,
             # But store the data in openGL space.
+            new_position = selected_node.getWorldPosition()
+            new_position.setY(float(z) + (new_position.y - boundingbox.bottom))
 
-            new_position.setY(float(z) + (center.y - bottom))
-            Selection.applyOperation(TranslateOperation, new_position, set_position = True)
-            self.operationStopped.emit(self)
+            node_op = TranslateOperation(selected_node, new_position, set_position = True)
+            op.addOperation(node_op)
+        op.push()
+        self.operationStopped.emit(self)
 
     ##  Set which axis/axes are enabled for the current translate operation
     #
