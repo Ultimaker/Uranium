@@ -27,6 +27,7 @@ class MockContainer(UM.Settings.ContainerInterface.ContainerInterface, UM.Plugin
     def __init__(self, id, metadata):
         self._id = id
         self._metadata = metadata
+        self._plugin_id = "MockContainerPlugin"
 
     ##  Gets the ID that was provided at initialisation.
     #
@@ -120,10 +121,20 @@ def test_addContainer(container_registry):
 
 ##  Tests adding a container type to the registry.
 #
+#   This adds the path to this file to the search paths for plug-ins, then lets
+#   the plug-ins load. There is a plug-in in the relative path to this. Then it
+#   checks if that plug-in gets added (by checking the length of
+#   _container_types).
+#
 #   \param container_registry A new container registry from a fixture.
 def test_addContainerType(container_registry):
-    container_registry.addContainerType(MockContainer("a", {} )) # Test if it doesn't crash.
-    # Actually testing the result can only be done with the load function, so refer to test_load for that.
+    old_container_type_count = len(container_registry._container_types)
+    plugin_registry = UM.PluginRegistry.PluginRegistry.getInstance()
+    plugin_registry.addPluginLocation(os.path.dirname(os.path.abspath(__file__))) # Load plug-ins relative to this file.
+    plugin_registry.loadPlugins()
+    # The __init__ script now adds itself to the container registry.
+    assert len(container_registry._container_types) == old_container_type_count + 1
+
     with pytest.raises(Exception):
         container_registry.addContainerType(None)
 
@@ -170,16 +181,16 @@ test_findContainers_data = [
         ]
     },
     {
-        "name": "Double ID match",
+        "name": "Double match",
         "containers": [
-            { "id": "a" },
-            { "id": "b" },
-            { "id": "a" }
+            { "id": "a", "number": 1 },
+            { "id": "b", "number": 2 },
+            { "id": "c", "number": 1 }
         ],
-        "filter": { "id": "a" },
+        "filter": { "number": 1 },
         "result": [
-            { "id": "a" },
-            { "id": "a" }
+            { "id": "a", "number": 1 },
+            { "id": "c", "number": 1 }
         ]
     },
     {
@@ -218,8 +229,12 @@ test_findContainers_data = [
 @pytest.mark.parametrize("data", test_findContainers_data)
 def test_findDefinitionContainers(container_registry, data):
     for container in data["containers"]: # Fill the registry with mock containers.
+        container = container.copy()
         container_id = container["id"]
-        definition_container = UM.Settings.DefinitionContainer(container_id, container)
+        del container["id"]
+        definition_container = UM.Settings.DefinitionContainer(container_id)
+        for key, value in container.items(): # Copy data into metadata.
+            definition_container.getMetaData()[key] = value
         container_registry.addContainer(definition_container)
 
     results = container_registry.findDefinitionContainers(**data["filter"]) # The actual function call we're testing.
@@ -233,9 +248,12 @@ def test_findDefinitionContainers(container_registry, data):
 @pytest.mark.parametrize("data", test_findContainers_data)
 def test_findInstanceContainers(container_registry, data):
     for container in data["containers"]: # Fill the registry with mock containers.
+        container = container.copy()
         container_id = container["id"]
         del container["id"]
-        instance_container = UM.Settings.InstanceContainer(container_id, container)
+        instance_container = UM.Settings.InstanceContainer(container_id)
+        for key, value in container.items(): # Copy data into metadata.
+            instance_container.getMetaData()[key] = value
         container_registry.addContainer(instance_container)
 
     results = container_registry.findInstanceContainers(**data["filter"]) # The actual function call we're testing.
@@ -249,9 +267,12 @@ def test_findInstanceContainers(container_registry, data):
 @pytest.mark.parametrize("data", test_findContainers_data)
 def test_findContainerStacks(container_registry, data):
     for container in data["containers"]: # Fill the registry with container stacks.
+        container = container.copy()
         container_id = container["id"]
         del container["id"]
-        container_stack = UM.Settings.ContainerStack(container_id, container)
+        container_stack = UM.Settings.ContainerStack(container_id)
+        for key, value in container.items(): # Copy data into metadata.
+            container_stack.getMetaData()[key] = value
         container_registry.addContainer(container_stack)
 
     results = container_registry.findContainerStacks(**data["filter"]) # The actual function call we're testing.

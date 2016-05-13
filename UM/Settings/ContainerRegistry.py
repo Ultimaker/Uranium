@@ -89,8 +89,12 @@ class ContainerRegistry:
         metadata = PluginRegistry.getInstance().getMetaData(plugin_id)
         self._mime_type_map[metadata["settings_container"]["mimetype"]] = container.__class__
 
-    ##  Load all available definition containers, instance containers and container stacks.
+    ##  Load all available definition containers, instance containers and
+    #   container stacks.
+    #
+    #   If this function is called again, it will clear the old data and reload.
     def load(self):
+        self._containers = [] # Clear the old containers, if any.
         files = Resources.getAllResourcesOfType(Resources.DefinitionContainers)
         files.extend(Resources.getAllResourcesOfType(Resources.InstanceContainers))
         files.extend(Resources.getAllResourcesOfType(Resources.ContainerStacks))
