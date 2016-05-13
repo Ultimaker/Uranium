@@ -29,6 +29,7 @@ class ContainerStacksModel(ListModel):
         if isinstance(container, ContainerStack):
             self._update()
 
+    ##  Handler for container name change events.
     def _onContainerNameChanged(self):
         self._update()
 
