@@ -104,6 +104,10 @@ class ContainerRegistry:
             container_type = self._mime_type_map.get(mime.name)
             container_id = mime.stripExtension(os.path.basename(file_path))
 
+            if container_type is None:
+                Logger.log("w", "Unable to detect container type for %s", mime.name)
+                continue
+
             new_container = container_type(container_id)
             with open(file_path) as f:
                 new_container.deserialize(f.read())
