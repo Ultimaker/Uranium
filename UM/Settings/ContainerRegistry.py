@@ -157,7 +157,13 @@ class ContainerRegistry:
                     if container.getId() != value:
                         matches_container = False
                     continue
-
+                if key == "definition":
+                    try:
+                        if container.getDefinition().getId() != value:
+                            matches_container = False
+                        continue
+                    except AttributeError:  # Only instanceContainers have a get definition. We can ignore all others.
+                        pass
                 if container.getMetaDataEntry(key) != value:
                     matches_container = False
 

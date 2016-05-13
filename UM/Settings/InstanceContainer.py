@@ -64,6 +64,9 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
             self._name = name
             self.nameChanged.emit()
 
+    def getDefinition(self):
+        return self._definition
+
     ##  \copydoc ContainerInterface::getMetaData
     #
     #   Reimplemented from ContainerInterface
