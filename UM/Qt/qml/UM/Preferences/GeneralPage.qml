@@ -59,7 +59,7 @@ PreferencesPage
         UM.TooltipArea {
             width: childrenRect.width
             height: childrenRect.height
-            text: catalog.i18nc("@info:tooltip","Should Cura check for updates when the program is started?")
+            text: catalog.i18nc("@info:tooltip","Should the program check for updates when it is started?")
 
             CheckBox
             {
