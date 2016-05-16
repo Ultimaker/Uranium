@@ -254,6 +254,7 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     #   \param container The container to add to the stack.
     def addContainer(self, container):
         if container is not self:
+            container.propertyChanged.connect(self.propertyChanged)
             self._containers.insert(0, container)
             self.containersChanged.emit(container)
         else:
@@ -271,6 +272,9 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
             raise IndexError
         if container == self:
             raise Exception("Unable to replace container with ContainerStack (self) ")
+
+        self._containers[index].propertyChanged.disconnect(self.propertyChanged)
+        container.propertyChanged.connect(self.propertyChanged)
         self._containers[index] = container
         self.containersChanged.emit(container)
 
@@ -284,6 +288,7 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
             raise IndexError
         try:
             container = self._containers[index]
+            container.propertyChanged.disconnect(self.propertyChanged)
             del self._containers[index]
             self.containersChanged.emit(container)
         except TypeError:
