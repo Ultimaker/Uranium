@@ -200,6 +200,28 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
             raise IndexError
         return self._containers[index]
 
+    ##  Get the container at the top of the stack.
+    #
+    #   This is a convenience method that will always return the top of the stack.
+    #
+    #   \return The container at the top of the stack, or None if no containers have been added.
+    def getTop(self):
+        if self._containers:
+            return self._containers[0]
+
+        return None
+
+    ##  Get the container at the bottom of the stack.
+    #
+    #   This is a convenience method that will always return the bottom of the stack.
+    #
+    #   \return The container at the bottom of the stack, or None if no containers have been added.
+    def getBottom(self):
+        if self._containers:
+            return self._containers[-1]
+
+        return None
+
     ##  Find a container matching certain criteria.
     #
     #   \param filter \type{dict} A dictionary containing key and value pairs that need to match the container.
