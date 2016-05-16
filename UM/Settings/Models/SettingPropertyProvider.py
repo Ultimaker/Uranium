@@ -3,6 +3,8 @@
 
 from PyQt5.QtCore import QObject, QVariant, pyqtProperty, pyqtSlot, pyqtSignal
 
+from UM.Logger import Logger
+
 import UM.Settings
 
 ##  This class provides the value and change notifications for the properties of a single setting
@@ -18,10 +20,10 @@ class SettingPropertyProvider(QObject):
 
         self._stack_id = ""
         self._stack = None
-
         self._key = ""
-
         self._watched_properties = []
+        self._property_values = {}
+        self._store_index = 0
 
     ##  Set the containerStackId property.
     def setContainerStackId(self, stack_id):
@@ -79,52 +81,85 @@ class SettingPropertyProvider(QObject):
     def key(self):
         return self._key
 
+    propertiesChanged = pyqtSignal()
+    @pyqtProperty("QVariantMap", notify = propertiesChanged)
+    def properties(self):
+        return self._property_values
+
+    def setStoreIndex(self, index):
+        if index != self._store_index:
+            self._store_index = index
+            self.indexChanged.emit()
+
+    storeIndexChanged = pyqtSignal()
+    @pyqtProperty(int, fset = setStoreIndex, notify = storeIndexChanged)
+    def storeIndex(self):
+        return self._store_index
+
     ##  Set the value of a property.
     #
     #   \param stack_index At which level in the stack should this property be set?
     #   \param property_name The name of the property to set.
     #   \param property_value The value of the property to set.
-    @pyqtSlot(int, str, "QVariant")
-    def setPropertyValue(self, stack_index, property_name, property_value):
+    @pyqtSlot(str, "QVariant")
+    def setPropertyValue(self, property_name, property_value):
         if not self._stack or not self._key:
             return
 
-        container = self._stack.getContainer(stack_index)
-        container.setProperty(self._key, property_name, property_value)
+        if property_name not in self._watched_properties:
+            Logger.log("w", "Tried to set a property that is not being watched")
+            return
+
+        if self._property_values[property_name] == property_value:
+            return
+
+        container = self._stack.getContainer(self._store_index)
+        if isinstance(container, UM.Settings.DefinitionContainer):
+            return
+
+        container.setProperty(self._key, property_name, property_value, self._stack)
 
     # protected:
 
-    def _onPropertyChanged(self, key, property_name):
-        if key != self._key:
+    def _onPropertyChanged(self, instance, property_name):
+        if instance.definition.key != self._key:
             return
 
         if property_name not in self._watched_properties:
             return
 
-        self.setProperty(property_name, self._stack.getPropertyValue(property_name))
+        value = self._getPropertyValue(property_name)
+
+        print("property changed", instance.definition.key, property_name, value)
+
+        #property_value = self._stack.getProperty(self._key, property_name)
+        #if isinstance(property_value, UM.Settings.SettingFunction):
+            #property_value = property_value(self._stack)
+
+        self._property_values[property_name] = value
+        self.propertiesChanged.emit()
 
     def _update(self):
-        #if not self._stack or not self._watched_properties or not self._key:
-            #return
+        if not self._stack or not self._watched_properties or not self._key:
+            return
 
-        dynamic_property_names = self.dynamicPropertyNames()
-
+        new_properties = {}
         for property_name in self._watched_properties:
-            try:
-                index = dynamic_property_names.index(property_name)
-                del dynamic_property_names[index]
-            except ValueError:
-                pass
+            new_properties[property_name] = self._getPropertyValue(property_name)
 
-            self.setProperty(property_name, "unknown")
+        if new_properties != self._property_values:
+            print(new_properties)
+            self._property_values = new_properties
+            self.propertiesChanged.emit()
 
-            print(self.property(property_name))
+    def _getPropertyValue(self, property_name):
+        property_value = self._stack.getProperty(self._key, property_name)
+        if isinstance(property_value, UM.Settings.SettingFunction):
+            property_value = property_value(self._stack)
 
-            #value = self._stack.getProperty(self._key, property_name)
-            #if value:
-                #self.setProperty(property_name, value)
-            #else:
-                #self.setProperty(property_name, "unknown")
+        #if property_value is None:
 
-        #for name in dynamic_property_names:
-            #self.setProperty(name, QVariant())
+        if property_name == "value":
+            property_value = UM.Settings.SettingDefinition.settingValueToString(self._stack.getProperty(self._key, "type"), property_value)
+
+        return property_value
