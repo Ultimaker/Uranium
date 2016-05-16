@@ -45,7 +45,7 @@ class SettingFunction:
 
         locals = { }
         for name in self._settings:
-            locals[name] = value_provider.getValue(name)
+            locals[name] = value_provider.getProperty(name, "value")
 
         try:
             return eval(self._compiled, globals(), locals)
