@@ -59,7 +59,7 @@ class SettingInstance:
 
         raise AttributeError("'SettingInstance' object has no attribute '{0}'".format(name))
 
-    def setProperty(self, name, value):
+    def setProperty(self, name, value, container = None):
         if SettingDefinition.hasProperty(name):
             if SettingDefinition.isReadOnlyProperty(name):
                 Logger.log("e", "Tried to set property %s which is a read-only property", name)
@@ -70,10 +70,13 @@ class SettingInstance:
 
                 self.__property_values[name] = value
                 if name == "value":
-                    self._update()
+                    if not container:
+                        container = self._container
 
                     self._state = InstanceState.User
                     self.stateChanged.emit(self)
+
+                    self._update(container)
 
                 if self._validator:
                     self._validator.validate()
@@ -83,7 +86,7 @@ class SettingInstance:
         else:
             raise AttributeError("No property {0} defined".format(name))
 
-    def updateProperty(self, name):
+    def updateProperty(self, name, container = None):
         if not SettingDefinition.hasProperty(name):
             Logger.log("e", "Trying to update unknown property %s", name)
             return
@@ -99,12 +102,14 @@ class SettingInstance:
         except AttributeError:
             return
 
-        result = function(self._container)
+        if not container:
+            container = self._container
 
+        result = function(container)
         if name not in self.__property_values or result != self.__property_values[name]:
-            self.__property_values[name] = function(self._container)
+            self.__property_values[name] = result
             if name == "value":
-                self._update()
+                self._update(container)
 
                 self._state = InstanceState.Calculated
                 self.stateChanged.emit(self)
@@ -155,7 +160,7 @@ class SettingInstance:
 
     ## protected:
 
-    def _update(self):
+    def _update(self, container):
         property_names = SettingDefinition.getPropertyNames()
         property_names.remove("value")  # Move "value" to the front of the list so we always update that first.
         property_names.insert(0, "value")
@@ -173,4 +178,4 @@ class SettingInstance:
                     instance = SettingInstance(relation.target, self._container)
                     self._container.addInstance(instance)
 
-                instance.updateProperty(property_name)
+                instance.updateProperty(property_name, container)
