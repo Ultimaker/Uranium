@@ -47,7 +47,10 @@ class SettingFunction:
         for name in self._settings:
             locals[name] = value_provider.getValue(name)
 
-        return eval(self._compiled, globals(), locals)
+        try:
+            return eval(self._compiled, globals(), locals)
+        except Exception as e:
+            Logger.logException("d", "An exception occurred in inherit function %s", self)
 
     def __eq__(self, other):
         if not isinstance(other, SettingFunction):
