@@ -65,8 +65,11 @@ class SettingDefinition:
 
     ##  Override __getattr__ to provide access to definition properties.
     def __getattr__(self, name):
-        if name in self.__property_definitions and name in self.__property_values:
-            return self.__property_values[name]
+        if name in self.__property_definitions:
+            if name in self.__property_values:
+                return self.__property_values[name]
+            else:
+                return self.__property_definitions[name]["default"]
 
         raise AttributeError("'SettingDefinition' object has no attribute '{0}'".format(name))
 
@@ -200,9 +203,10 @@ class SettingDefinition:
     #   \param kwargs Keyword arguments. Possible values:
     #                 required \type{bool} True if missing the property indicates an error should be raised. Defaults to False.
     #                 read_only \type{bool} True if the property should never be set on a SettingInstance. Defaults to False. Note that for Function properties this indicates whether the result of the function should be stored.
+    #                 default The default value for this property. This will be returned when the specified property is not defined for this definition.
     @classmethod
     def addSupportedProperty(cls, name, property_type, **kwargs):
-        cls.__property_definitions[name] = {"type": property_type, "required": kwargs.get("required", False), "read_only": kwargs.get("read_only", False)}
+        cls.__property_definitions[name] = {"type": property_type, "required": kwargs.get("required", False), "read_only": kwargs.get("read_only", False), "default": kwargs.get("default", None)}
 
     ##  Get the names of all supported properties.
     #
@@ -347,36 +351,37 @@ class SettingDefinition:
 
     __property_definitions = {
         # The name of the setting. Only used for display purposes.
-        "label": {"type": DefinitionPropertyType.TranslatedString, "required": True, "read_only": True},
+        "label": {"type": DefinitionPropertyType.TranslatedString, "required": True, "read_only": True, "default": ""},
         # The type of setting. Can be any one of the types defined.
-        "type": {"type": DefinitionPropertyType.String, "required": True, "read_only": True},
+        "type": {"type": DefinitionPropertyType.String, "required": True, "read_only": True, "default": ""},
         # An optional icon that can be displayed for the setting.
-        "icon": {"type": DefinitionPropertyType.String, "required": False, "read_only": True},
+        "icon": {"type": DefinitionPropertyType.String, "required": False, "read_only": True, "default": ""},
         # A string describing the unit used for the setting. This is only used for display purposes at the moment.
-        "unit": {"type": DefinitionPropertyType.String, "required": False, "read_only": True},
+        "unit": {"type": DefinitionPropertyType.String, "required": False, "read_only": True, "default": ""},
         # A description of what the setting does. Used for display purposes.
-        "description": {"type": DefinitionPropertyType.TranslatedString, "required": True, "read_only": True},
+        "description": {"type": DefinitionPropertyType.TranslatedString, "required": True, "read_only": True, "default": ""},
         # A description of what is wrong when the setting has a warning validation state. Used for display purposes.
-        "warning_description": {"type": DefinitionPropertyType.TranslatedString, "required": False, "read_only": True},
+        "warning_description": {"type": DefinitionPropertyType.TranslatedString, "required": False, "read_only": True, "default": ""},
         # A description of what is wrong when the setting has an error validation state. Used for display purposes.
-        "error_description": {"type": DefinitionPropertyType.TranslatedString, "required": False, "read_only": True},
+        "error_description": {"type": DefinitionPropertyType.TranslatedString, "required": False, "read_only": True, "default": ""},
         # The default value of the setting. Used when no value function is defined.
-        "default_value": {"type": DefinitionPropertyType.Any, "required": False, "read_only": True},
+        "default_value": {"type": DefinitionPropertyType.Any, "required": False, "read_only": True,  "default": 0},
         # A function used to calculate the value of the setting.
-        "value": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False},
+        "value": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False,  "default": 0},
         # A function that should evaluate to a boolean to indicate whether or not the setting is enabled.
-        "enabled": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False},
+        "enabled": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False, "default": True},
         # A function that calculates the minimum value for this setting. If the value is less than this, validation will indicate an error.
-        "minimum_value": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False},
+        "minimum_value": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False, "default": None},
         # A function that calculates the maximum value for this setting. If the value is more than this, validation will indicate an error.
-        "maximum_value": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False},
+        "maximum_value": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False, "default": None},
         # A function that calculates the minimum warning value for this setting. If the value is less than this, validation will indicate a warning.
-        "minimum_value_warning": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False},
+        "minimum_value_warning": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False, "default": None},
         # A function that calculates the maximum warning value for this setting. If the value is more than this, validation will indicate a warning.
-        "maximum_value_warning": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False},
+        "maximum_value_warning": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False, "default": None},
         # A dictionary of key-value pairs that provide the options for an enum type setting. The key is the actual value, the value is a translated display string.
-        "options": {"type": DefinitionPropertyType.Any, "required": False, "read_only": True},
-        "comments": {"type": DefinitionPropertyType.String, "required": False, "read_only": True}
+        "options": {"type": DefinitionPropertyType.Any, "required": False, "read_only": True, "default": {} },
+        # Optional comments that apply to the setting. Will be ignored.
+        "comments": {"type": DefinitionPropertyType.String, "required": False, "read_only": True, "default": ""}
     }
 
     __type_definitions = {
