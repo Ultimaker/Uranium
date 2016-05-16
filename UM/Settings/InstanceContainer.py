@@ -127,7 +127,7 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
 
         return None
 
-    def setProperty(self, key, property_name, property_value):
+    def setProperty(self, key, property_name, property_value, container = None):
         if key not in self._instances:
             if not self._definition:
                 Logger.log("w", "Tried to set value of setting %s that has no instance in container %s and unable to create a new instance", key, repr(self))
@@ -138,11 +138,12 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
                 Logger.log("w", "Tried to set value of setting %s that has no instance in container %s and unable to create a new instance", key, repr(self))
                 return
 
-            instance = SettingInstance(setting_definition[0], self)
+            instance = SettingInstance.SettingInstance(setting_definition[0], self)
             instance.propertyChanged.connect(self.propertyChanged)
             self._instances[instance.definition.key] = instance
 
-        self._instances[key].setProperty(property_name, property_value)
+        Logger.log("d", "Set property %s of setting %s in container %s to value %s", property_name, key, self._id, property_value)
+        self._instances[key].setProperty(property_name, property_value, container)
 
     propertyChanged = Signal()
 
