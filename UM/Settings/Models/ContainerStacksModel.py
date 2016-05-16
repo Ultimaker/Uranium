@@ -1,6 +1,6 @@
 from UM.Qt.ListModel import ListModel
 
-from PyQt5.QtCore import pyqtSlot, pyqtProperty, Qt
+from PyQt5.QtCore import pyqtSlot, pyqtProperty, Qt, pyqtSignal
 
 from UM.Settings.ContainerRegistry import ContainerRegistry
 from UM.Settings.ContainerStack import ContainerStack
@@ -54,6 +54,7 @@ class ContainerStacksModel(ListModel):
         self._filter_dict = filter_dict
         self._update()
 
-    @pyqtProperty("QVariantMap", fset = setFilter)
-    def filter(self, filter):
-        pass
+    filterChanged = pyqtSignal()
+    @pyqtProperty("QVariantMap", fset = setFilter, notify = filterChanged)
+    def filter(self):
+        return self._filter_dict
