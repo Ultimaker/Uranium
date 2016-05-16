@@ -6,6 +6,8 @@ from .ContainerRegistry import ContainerRegistry
 from .SettingDefinition import SettingDefinition
 from .SettingInstance import SettingInstance, InstanceState
 
+from .SettingFunction import SettingFunction
+
 from .DefinitionContainer import DefinitionContainer
 from .InstanceContainer import InstanceContainer
 from .ContainerStack import ContainerStack
