@@ -170,20 +170,10 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
         container_id_list = parser["general"].get("containers", "").split(",")
         for container_id in container_id_list:
             if container_id != "":
-                definition_containers = UM.Settings.ContainerRegistry.getInstance().findDefinitionContainers(id = container_id)
-                if definition_containers:
-                    self._containers.append(definition_containers[0])  # ID's are unique, so we should only get one hit
-                    continue
-
-                instance_containers = UM.Settings.ContainerRegistry.getInstance().findInstanceContainers(id = container_id)
-                if instance_containers:
-                    self._containers.append(instance_containers[0])  # ID's are unique, so we should only get one hit
-                    continue
-
-                container_stack = UM.Settings.ContainerRegistry.getInstance().findContainerStacks(id = container_id)
-                if container_stack:
-                    self._containers.append(container_stack[0])  # ID's are unique, so we should only get one hit
-                    continue
+                containers = UM.Settings.ContainerRegistry.getInstance().findContainers(id = container_id)
+                if containers:
+                    containers[0].propertyChanged.connect(self.propertyChanged)
+                    self._containers.append(containers[0])
 
                 raise Exception("When trying to deserialize, we recieved an unknown ID for container")
 
