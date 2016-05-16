@@ -91,6 +91,19 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
 
         return definitions[0].default_value
 
+    def getProperty(self, key, property_name):
+        definitions = self.findDefinitions(key = key)
+        if not definitions:
+            return None
+
+        try:
+            if property_name == "value":
+                return getattr(definitions[0], "default_value")
+
+            return getattr(definitions[0], property_name)
+        except AttributeError:
+            return None
+
     ##  \copydoc ContainerInterface::serialize
     #
     #   TODO: This implementation flattens the definition container, since the
