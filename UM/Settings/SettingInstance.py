@@ -74,13 +74,13 @@ class SettingInstance:
                         container = self._container
 
                     self._state = InstanceState.User
-                    self.stateChanged.emit(self)
+                    self.propertyChanged.emit(self, "state")
 
                     self._update(container)
 
                 if self._validator:
                     self._validator.validate()
-                    self.validationStateChanged.emit()
+                    self.propertyChanged.emit(self, "validationState")
 
                 self.propertyChanged.emit(self, name)
         else:
@@ -112,11 +112,11 @@ class SettingInstance:
                 self._update(container)
 
                 self._state = InstanceState.Calculated
-                self.stateChanged.emit(self)
+                self.propertyChanged.emit(self, "state")
 
             if self._validator:
                 self._validator.validate()
-                self.validationStateChanged.emit()
+                self.propertyChanged.emit(self, "validationState")
 
             self.propertyChanged.emit(self, name)
 
@@ -144,16 +144,9 @@ class SettingInstance:
 
         return Validator.ValidatorState.Unknown
 
-    ##  Emitted whenever this instance's validationState property changes.
-    #
-    #   \param instance The instance that reported the validationState change.
-    validationStateChanged = Signal()
-
     @property
     def state(self):
         return self._state
-
-    stateChanged = Signal()
 
     def __repr__(self):
         return "<SettingInstance (0x{0:x}) definition={1} container={2}>".format(id(self), self._definition, self._container)
