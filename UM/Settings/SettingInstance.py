@@ -8,6 +8,7 @@ from UM.Logger import Logger
 
 from . import SettingRelation
 from . import Validator
+from . import SettingFunction
 from .SettingDefinition import SettingDefinition
 
 
@@ -161,6 +162,9 @@ class SettingInstance:
         for property_name in property_names:
             if SettingDefinition.isReadOnlyProperty(property_name):
                 continue
+
+            if isinstance(getattr(self._definition, property_name), SettingFunction.SettingFunction) and not property_name in self.__property_values:
+                self.updateProperty(property_name, container)
 
             for relation in filter(lambda r: r.role == property_name, self._definition.relations):
                 if relation.type == SettingRelation.RelationType.RequiresTarget:
