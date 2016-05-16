@@ -125,7 +125,6 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
             except AttributeError:
                 pass
 
-        Logger.log("w", "Tried to get value of setting %s that has no instance in container %s", key, repr(self))
         return None
 
     def setProperty(self, key, property_name, property_value):
