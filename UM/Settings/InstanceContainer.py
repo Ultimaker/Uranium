@@ -95,7 +95,10 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
     #   Reimplemented from ContainerInterface
     def getValue(self, key):
         if key in self._instances:
-            return self._instances[key].value
+            try:
+                return self._instances[key].value
+            except AttributeError:
+                pass
 
         #Logger.log("w", "Tried to get value of setting %s that has no instance in container %s", key, repr(self))
         return None
