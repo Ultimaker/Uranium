@@ -8,10 +8,12 @@ import copy
 from UM.Resources import Resources
 from UM.PluginObject import PluginObject
 from UM.Logger import Logger
+from UM.Signal import Signal
 
 from . import ContainerInterface
 from . import SettingDefinition
 from . import SettingRelation
+from . import SettingFunction
 
 class InvalidDefinitionError(Exception):
     pass
@@ -103,6 +105,9 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
             return getattr(definitions[0], property_name)
         except AttributeError:
             return None
+
+    ##  This signal is unused since the definition container is immutable, but is provided for API consistency.
+    propertyChanged = Signal()
 
     ##  \copydoc ContainerInterface::serialize
     #
