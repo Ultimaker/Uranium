@@ -36,6 +36,9 @@ class SettingDefinitionsModel(QAbstractListModel):
 
         self._show_all = False
 
+        Preferences.getInstance().preferenceChanged.connect(self._onPreferencesChanged)
+        self._onPreferencesChanged("general/visible_settings")
+
         self._role_names = {
             self.KeyRole: b"key",
             self.DepthRole: b"depth",
@@ -124,6 +127,9 @@ class SettingDefinitionsModel(QAbstractListModel):
         if key in self._expanded:
             return
 
+        if key not in self._visible:
+            return
+
         definitions = self._container.findDefinitions(key = key)
         if not definitions:
             return
@@ -138,9 +144,16 @@ class SettingDefinitionsModel(QAbstractListModel):
         start_index = parent_index + 1
         end_index = parent_index + len(definition.children)
 
+        visible_children = []
+        for child in definition.children:
+            if not self._show_all and child.key not in self._visible:
+                end_index -= 1
+            else:
+                visible_children.append(child)
+
         self.beginInsertRows(QModelIndex(), start_index, end_index)
 
-        self._definitions[start_index:start_index] = definition.children.copy()
+        self._definitions[start_index:start_index] = visible_children
 
         self.endInsertRows()
 
@@ -176,7 +189,7 @@ class SettingDefinitionsModel(QAbstractListModel):
 
         definition = definitions[0]
 
-        start_index = self._definitions.index(definition.children[0])
+        start_index = self._definitions.index(self._getFirstVisibleChild(definition))
         end_index = start_index + self._getVisibleChildCount(definition) - 1
 
         self.beginRemoveRows(QModelIndex(), start_index, end_index)
@@ -264,7 +277,8 @@ class SettingDefinitionsModel(QAbstractListModel):
             children_list = self._root.children
 
         for child in children_list:
-            self._definitions.append(child)
+            if self._show_all or child.key in self._visible:
+                self._definitions.append(child)
 
     def _countParents(self, definition):
         if definition.parent is None:
@@ -272,10 +286,36 @@ class SettingDefinitionsModel(QAbstractListModel):
 
         return 1 + self._countParents(definition.parent)
 
-    def _getVisibleChildCount(self, definition):
-        count = len(definition.children)
+    def _getFirstVisibleChild(self, definition):
+        for child in definition.children:
+            if child.key in self._visible:
+                return child
 
-        for child in filter(lambda i: i.key in self._expanded, definition.children):
-            count += self._getVisibleChildCount(child)
+        return None
+
+    def _getVisibleChildCount(self, definition):
+        count = 0
+
+        for child in filter(lambda i: self._show_all or i.key in self._visible, definition.children):
+            count += 1
+            if child.key in self._expanded:
+                count += self._getVisibleChildCount(child)
 
         return count
+
+    def _onPreferencesChanged(self, name):
+        if name != "general/visible_settings":
+            return
+
+        new_visible = set()
+        for key in Preferences.getInstance().getValue("general/visible_settings").replace("\n", ";").split(";"):
+            new_visible.add(key.strip())
+
+        if new_visible == self._visible:
+            return
+
+        print(new_visible)
+
+        self.beginResetModel()
+        self._visible = new_visible
+        self.endResetModel()

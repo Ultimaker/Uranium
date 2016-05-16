@@ -73,6 +73,8 @@ class Application():
         except FileNotFoundError:
             pass
 
+        preferences.addPreference("general/visible_settings", "")
+
         self._controller = Controller(self)
         self._mesh_file_handler = MeshFileHandler()
         self._extensions = []
