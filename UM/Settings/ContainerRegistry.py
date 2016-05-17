@@ -138,18 +138,21 @@ class ContainerRegistry:
             files.extend(Resources.getAllResourcesOfType(type))
 
         for file_path in files:
-            mime = MimeTypeDatabase.getMimeTypeForFile(file_path)
-            container_type = self._mime_type_map.get(mime.name)
-            container_id = mime.stripExtension(os.path.basename(file_path))
+            try:
+                mime = MimeTypeDatabase.getMimeTypeForFile(file_path)
+                container_type = self._mime_type_map.get(mime.name)
+                container_id = mime.stripExtension(os.path.basename(file_path))
 
-            if container_type is None:
-                Logger.log("w", "Unable to detect container type for %s", mime.name)
-                continue
+                if container_type is None:
+                    Logger.log("w", "Unable to detect container type for %s", mime.name)
+                    continue
 
-            new_container = container_type(container_id)
-            with open(file_path) as f:
-                new_container.deserialize(f.read())
-            self._containers.append(new_container)
+                new_container = container_type(container_id)
+                with open(file_path) as f:
+                    new_container.deserialize(f.read())
+                self._containers.append(new_container)
+            except Exception as e:
+                Logger.logException("Could not deserialize container %s", container_id)
 
     def addContainer(self, container):
         containers = self.findContainers(None, id = container.getId())
