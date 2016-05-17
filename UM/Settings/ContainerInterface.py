@@ -45,12 +45,13 @@ class ContainerInterface:
     def getMetaDataEntry(self, entry, default = None):
         pass
 
-    ##  Get the value of a container item.
+    ##  Get the value of a property of the container item.
     #
-    #   \param key \type{string} The key of the item to retrieve.
+    #   \param key \type{string} The key of the item to retrieve a property from.
+    #   \param name \type{string} The name of the property to retrieve.
     #
-    #   \return The value of the container item corresponding to key, or None if not found.
-    def getValue(self, key):
+    #   \return The specified property value of the container item corresponding to key, or None if not found.
+    def getProperty(self, key, property_name):
         pass
 
     ##  Serialize this container to a string.
