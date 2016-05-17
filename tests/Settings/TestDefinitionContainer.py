@@ -44,7 +44,7 @@ test_deserialize_data = [
     }}),
     ("functions.def.json", { "name": "Test", "metadata": {}, "settings": {
         "test_setting_0": { "label": "Test 0", "default_value": 10, "description": "A Test Setting" },
-        "test_setting_1": { "label": "Test 1", "default_value": 10, "description": "A Test Setting", "value": UM.Settings.SettingFunction.SettingFunction("test_setting_0 * 10") },
+        "test_setting_1": { "label": "Test 1", "default_value": 10, "description": "A Test Setting", "value": UM.Settings.SettingFunction("test_setting_0 * 10") },
     }})
 ]
 @pytest.mark.parametrize("file,expected", test_deserialize_data)
@@ -320,7 +320,7 @@ def test_setting_function():
     assert relation_1.type == UM.Settings.SettingRelation.RelationType.RequiresTarget
     assert relation_1.role == "value"
 
-    assert isinstance(function, UM.Settings.SettingFunction.SettingFunction)
+    assert isinstance(function, UM.Settings.SettingFunction)
 
     result = function(container)
     assert result == (setting_0.default_value * 10)
