@@ -143,7 +143,10 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
         if "overrides" in parsed:
             for key, value in parsed["overrides"].items():
                 setting = self._findInDict(parsed["settings"], key)
-                setting.update(value)
+                if setting is None:
+                    Logger.log("w","Unable to override setting %s", key)
+                else:
+                    setting.update(value)
 
         # If we do not have metadata or settings the file is invalid
         if not "metadata" in parsed:
@@ -209,16 +212,14 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
         if json["version"] != self.Version:
             raise IncorrectDefinitionVersionError("Definition uses version {0} but expected version {1}".format(json["version"], self.Version))
 
-    # Recursively find a key in a dicationary
-    def _findInDict(self, dict, key):
-        if key in dict:
-            return dict
-
-        result = None
-        for dict_key, value in dict.items():
-            self._findInDict(value, key)
-
-        return result
+    # Recursively find a key in a dictionary
+    def _findInDict(self, dictionary, key):
+        if key in dictionary: return dictionary[key]
+        for k, v in dictionary.items():
+            if isinstance(v, dict):
+                item = self._findInDict(v, key)
+                if item is not None:
+                    return item
 
     # Recursively merge two dictionaries, returning a new dictionary
     def _mergeDicts(self, first, second):
