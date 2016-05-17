@@ -168,7 +168,10 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
 
         parser["values"] = {}
         for key, instance in self._instances.items():
-            parser["values"][key] = str(instance.value)
+            try:
+                parser["values"][key] = str(instance.value)
+            except AttributeError:
+                pass
 
         stream = io.StringIO()
         parser.write(stream)
