@@ -15,5 +15,11 @@
             "default_value": 10,
             "type": "int"
         }
+    },
+    "overrides":
+    {
+        "test_setting": {
+            "default_value": 11
+        }
     }
 }
