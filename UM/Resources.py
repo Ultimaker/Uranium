@@ -193,8 +193,8 @@ class Resources:
     def addStorageType(cls, type, path):
         if type in cls.__types:
             raise TypeError("Type {0} already exists".format(type))
-
         cls.__types[type] = path
+        cls.__types_storage[type] = path
 
     ##  Remove a custom resource type.
     @classmethod
