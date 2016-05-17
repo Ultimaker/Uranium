@@ -186,10 +186,6 @@ class QtApplication(QApplication, Application):
     def windowClosed(self):
         Logger.log("d", "Shutting down %s", self.getApplicationName())
         self._shutting_down = True
-        try:
-            ContainerRegistry.getInstance().saveAll()
-        except Exception as e:
-            Logger.log("e", "Exception while saving machines: %s", repr(e))
 
         try:
             Preferences.getInstance().writeToFile(Resources.getStoragePath(Resources.Preferences, self.getApplicationName() + ".cfg"))

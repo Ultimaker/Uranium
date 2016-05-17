@@ -58,8 +58,13 @@ class ContainerRegistry:
 
         PluginRegistry.getInstance().addType("settings_container", self.addContainerType)
 
+        self._resource_types = [Resources.DefinitionContainers]
+
     containerAdded = Signal()
     containerRemoved = Signal()
+
+    def addResourceType(self, type):
+        self._resource_types.append(type)
 
     ##  Find all DefinitionContainer objects matching certain criteria.
     #
@@ -128,9 +133,9 @@ class ContainerRegistry:
     #   If this function is called again, it will clear the old data and reload.
     def load(self):
         self._containers = [] # Clear the old containers, if any.
-        files = Resources.getAllResourcesOfType(Resources.DefinitionContainers)
-        files.extend(Resources.getAllResourcesOfType(Resources.InstanceContainers))
-        files.extend(Resources.getAllResourcesOfType(Resources.ContainerStacks))
+        files = []
+        for type in self._resource_types:
+            files.extend(Resources.getAllResourcesOfType(type))
 
         for file_path in files:
             mime = MimeTypeDatabase.getMimeTypeForFile(file_path)
