@@ -100,24 +100,27 @@ def container_registry():
 #   \param container_registry A new container registry from a fixture.
 def test_addContainer(container_registry):
     definition_container_0 = UM.Settings.DefinitionContainer("a", {})
+    assert definition_container_0 not in container_registry.findDefinitionContainers() # Sanity check.
     container_registry.addContainer(definition_container_0)
-    assert container_registry.findDefinitionContainers() == [definition_container_0]
+    assert definition_container_0 in container_registry.findDefinitionContainers()
 
     # Add a second one of the same type.
     definition_container_1 = UM.Settings.DefinitionContainer("b", {})
+    assert definition_container_1 not in container_registry.findDefinitionContainers() # Sanity check.
     container_registry.addContainer(definition_container_1)
-    assert container_registry.findDefinitionContainers(id = "b") == [definition_container_1] # Test in two queries, since the list order doesn't matter.
-    assert container_registry.findDefinitionContainers(id = "a") == [definition_container_0]
+    assert definition_container_1 in container_registry.findDefinitionContainers()
+    assert definition_container_0 in container_registry.findDefinitionContainers()
 
     # Add a container with the same type and same ID.
     definition_container_1_clone = UM.Settings.DefinitionContainer("b", {})
     container_registry.addContainer(definition_container_1_clone)
-    assert container_registry.findDefinitionContainers(id = "b") == [definition_container_1] # Didn't get added!
+    assert definition_container_1_clone not in container_registry.findDefinitionContainers() # Didn't get added!
 
     # For good measure, add a container with a different type too.
     instance_container_1 = UM.Settings.InstanceContainer("a")
+    assert instance_container_1 not in container_registry.findDefinitionContainers() # Sanity check.
     container_registry.addContainer(instance_container_1)
-    assert container_registry.findInstanceContainers() == [instance_container_1]
+    assert instance_container_1 in container_registry.findDefinitionContainers()
 
 ##  Tests adding a container type to the registry.
 #
