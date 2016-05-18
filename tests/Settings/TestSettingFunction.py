@@ -72,10 +72,10 @@ class MockValueProvider:
     ##  Provides a value.
     #
     #   \param name The key of the value to provide.
-    def getValue(self, name):
-        if not (name in self._values):
+    def getProperty(self, key, property_name):
+        if not (key in self._values):
             return None
-        return self._values[name]
+        return self._values[key]
 
 test_call_data = [
     { "code": "0",            "result": 0 },
