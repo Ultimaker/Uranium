@@ -145,7 +145,7 @@ class SettingPropertyProvider(QObject):
 
         new_properties = {}
         for property_name in self._watched_properties:
-            new_properties[property_name] = self._getPropertyValue(property_name)
+            new_properties[property_name] = str(self._getPropertyValue(property_name))
 
         if new_properties != self._property_values:
             print(new_properties)
