@@ -5,6 +5,7 @@ import pytest
 
 from UM.Application import Application
 from UM.Signal import Signal
+from UM.PluginRegistry import PluginRegistry
 
 class FixtureApplication(Application):
     def __init__(self):
@@ -21,4 +22,11 @@ class FixtureApplication(Application):
 @pytest.fixture()
 def application():
     return FixtureApplication()
+
+@pytest.fixture()
+def plugin_registry(application):
+    PluginRegistry._PluginRegistry__instance = None
+    plugin_registry = PluginRegistry.getInstance()
+    plugin_registry.setApplication(application)
+    return plugin_registry
 
