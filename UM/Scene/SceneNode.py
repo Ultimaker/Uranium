@@ -59,18 +59,12 @@ class SceneNode(SignalEmitter):
         self._derived_scale = Vector()
 
         self._parent = parent
-        self._enabled = True  # Can this SceneNode be modified in any way?
-        self._selectable = False  # Can this SceneNode be selected in any way?
-
-        self._calculate_aabb = True  # Should the AxisAlignedBounxingBox be re-calculated?
-        self._aabb = None  # The AxisAligned bounding box.
-        self._original_aabb = None  # The AxisAligned bounding box, without transformations.
-        self._aabb_job = None  # The job used to (re) calculate the AABB
-        self._bounding_box_mesh = None
-
-        self._last_aabb = None          # These two are just temporary work arounds.
-        self._last_original_aabb = None #
-
+        self._enabled = True
+        self._selectable = False
+        self._calculate_aabb = True
+        self._aabb = None
+        self._original_aabb = None
+        self._aabb_job = None
         self._visible = kwargs.get("visible", True)
         self._name = kwargs.get("name", "")
         self._decorators = []
@@ -585,8 +579,7 @@ class SceneNode(SignalEmitter):
         if not self._aabb_job:
             self._resetAABB()
 
-        # FIXME This is a nasty hack which returns out of date data
-        return self._last_aabb if self._last_aabb is not None else AxisAlignedBox()
+        return AxisAlignedBox()
 
     ##  Get the bounding box of this node and its children. Without taking any transformation into account
     def getOriginalBoundingBox(self):
@@ -596,8 +589,7 @@ class SceneNode(SignalEmitter):
         if not self._aabb_job:
             self._resetAABB()
 
-        # FIXME This is a nasty hack which returns out of date data
-        return self._last_original_aabb if self._last_original_aabb is not None else AxisAlignedBox()
+        return AxisAlignedBox()
 
     ##  Set whether or not to calculate the bounding box for this node.
     #
@@ -676,11 +668,7 @@ class _CalculateAABBJob(Job):
                 original_aabb += child.getOriginalBoundingBox()
 
         self._node._aabb = aabb
-        self._node._last_aabb = aabb
-
         self._node._original_aabb = original_aabb
-        self._node._last_original_aabb = original_aabb
-
         self._node._aabb_job = None
         if self._node.getParent():
             self._node.getParent()._resetAABB()

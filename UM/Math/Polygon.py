@@ -257,7 +257,13 @@ class Polygon:
     #   \return \type{Polygon} The convex hull around the points of this polygon.
     if has_scipy:
         def getConvexHull(self):
-            hull = scipy.spatial.ConvexHull(self._points)
+            points = self._points
+
+            if len(points) < 1:
+                return Polygon(numpy.zeros((0, 2), numpy.float64))
+            if len(points) <= 2:
+                return Polygon(numpy.array(points, numpy.float64))
+            hull = scipy.spatial.ConvexHull(points)
             return Polygon(numpy.flipud(self._points[hull.vertices]))
     else:
         def getConvexHull(self):
