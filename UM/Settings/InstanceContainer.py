@@ -155,6 +155,9 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
 
         parser["values"] = {}
         for key, instance in self._instances.items():
+            if instance.state != SettingInstance.InstanceState.User:
+                continue
+
             try:
                 parser["values"][key] = str(instance.value)
             except AttributeError:
@@ -206,12 +209,15 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
 
         return result
 
+    ##  Get an instance by key
+    #
     def getInstance(self, key):
         if key in self._instances:
             return self._instances[key]
 
         return None
 
+    ##  Add a new instance to this container.
     def addInstance(self, instance):
         key = instance.definition.key
         if key in self._instances:
@@ -220,8 +226,13 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
         instance.propertyChanged.connect(self.propertyChanged)
         self._instances[key] = instance
 
+    ##  Get the DefinitionContainer used for new instance creation.
     def getDefinition(self):
         return self._definition
 
+    ##  Set the DefinitionContainer to use for new instance creation.
+    #
+    #   Since SettingInstance needs a SettingDefinition to work properly, we need some
+    #   way of figuring out what SettingDefinition to use when creating a new SettingInstance.
     def setDefinition(self, definition):
         self._definition = definition
