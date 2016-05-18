@@ -85,26 +85,15 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
         else:
             Logger.log("w", "Meta data with key %s was not found. Unable to change.", key)
 
-    ##  \copydoc ContainerInterface::getValue
+    ##  \copydoc ContainerInterface::getProperty
     #
     #   Reimplemented from ContainerInterface.
     #
-    #   getValue will start at the top of the stack and try to get the value
+    #   getProperty will start at the top of the stack and try to get the property
     #   specified. If that container returns no value, the next container on the
     #   stack will be tried and so on until the bottom of the stack is reached.
     #   If a next stack is defined for this stack it will then try to get the
     #   value from that stack. If no next stack is defined, None will be returned.
-    def getValue(self, key):
-        for container in self._containers:
-            value = container.getValue(key)
-            if value is not None:
-                return value
-
-        if self._next_stack:
-            return self._next_stack.getValue(key)
-        else:
-            return None
-
     def getProperty(self, key, property_name):
         for container in self._containers:
             value = container.getProperty(key, property_name)
@@ -112,7 +101,7 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
                 return value
 
         if self._next_stack:
-            return self._next_stack.getProperty(key)
+            return self._next_stack.getProperty(key, property_name)
         else:
             return None
 

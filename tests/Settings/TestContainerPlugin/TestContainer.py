@@ -48,13 +48,13 @@ class TestContainer(ContainerInterface, PluginObject):
     def getName(self):
         return "TestContainer"
 
-    ##  Get the value of a container item.
+    ##  Get the value of a property of a container item.
     #
     #   Since this test container cannot contain any items, it always returns
     #   None.
     #
     #   \return Always returns None.
-    def getValue(self, key):
+    def getProperty(self, key, property_name):
         pass
 
     ##  Serializes the container to a string representation.
