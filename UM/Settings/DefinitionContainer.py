@@ -197,7 +197,6 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
         if "inherits" in json:
             inherited = self._resolveInheritance(json["inherits"])
             json = self._mergeDicts(inherited, json)
-            print(json)
 
         return json
 
