@@ -90,34 +90,9 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
         else:
             Logger.log("w", "Meta data with key %s was already added.", key)
 
-    ##  \copydoc ContainerInterface::getValue
+    ##  \copydoc ContainerInterface::getProperty
     #
     #   Reimplemented from ContainerInterface
-    def getValue(self, key):
-        if key in self._instances:
-            try:
-                return self._instances[key].value
-            except AttributeError:
-                pass
-
-        #Logger.log("w", "Tried to get value of setting %s that has no instance in container %s", key, repr(self))
-        return None
-
-    ##  Emitted whenever the value of an instance in this container changes.
-    valueChanged = Signal()
-
-    ##  Set the value of an instance in this container.
-    #
-    #   \param key \type{string} The key of the instance to set the value of.
-    #   \param value The new value of the instance.
-    def setValue(self, key, value):
-        if key not in self._instances:
-            Logger.log("w", "Tried to set value of setting %s that has no instance in container %s", key, repr(self))
-            return
-
-        self._instances[key].setProperty("value", value)
-
-
     def getProperty(self, key, property_name):
         if key in self._instances:
             try:
@@ -127,6 +102,18 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
 
         return None
 
+    ##  Set the value of a property of a SettingInstance.
+    #
+    #   This will set the value of the specified property on the SettingInstance corresponding to key.
+    #   If no instance has been created for the specified key, a new one will be created and inserted
+    #   into this instance.
+    #
+    #   \param key \type{string} The key of the setting to set a property of.
+    #   \param property_name \type{string} The name of the property to set.
+    #   \param property_value The new value of the property.
+    #   \param container The container to use for retrieving values when changing the property triggers property updates. Defaults to None, which means use the current container.
+    #
+    #   \note If no definition container is set for this container, new instances cannot be created and this method will do nothing.
     def setProperty(self, key, property_name, property_value, container = None):
         if key not in self._instances:
             if not self._definition:
@@ -168,6 +155,9 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
 
         parser["values"] = {}
         for key, instance in self._instances.items():
+            if instance.state != SettingInstance.InstanceState.User:
+                continue
+
             try:
                 parser["values"][key] = str(instance.value)
             except AttributeError:
@@ -219,12 +209,15 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
 
         return result
 
+    ##  Get an instance by key
+    #
     def getInstance(self, key):
         if key in self._instances:
             return self._instances[key]
 
         return None
 
+    ##  Add a new instance to this container.
     def addInstance(self, instance):
         key = instance.definition.key
         if key in self._instances:
@@ -233,8 +226,13 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
         instance.propertyChanged.connect(self.propertyChanged)
         self._instances[key] = instance
 
+    ##  Get the DefinitionContainer used for new instance creation.
     def getDefinition(self):
         return self._definition
 
+    ##  Set the DefinitionContainer to use for new instance creation.
+    #
+    #   Since SettingInstance needs a SettingDefinition to work properly, we need some
+    #   way of figuring out what SettingDefinition to use when creating a new SettingInstance.
     def setDefinition(self, definition):
         self._definition = definition

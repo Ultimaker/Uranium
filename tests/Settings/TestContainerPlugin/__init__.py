@@ -13,6 +13,5 @@ def getMetaData():
     }
 
 def register(app):
+    ContainerRegistry.getInstance().addContainerType(TestContainer())
     return { "test": TestContainer() }
-
-ContainerRegistry.getInstance().addContainerType(TestContainer())

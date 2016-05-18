@@ -93,9 +93,7 @@ def test_serialize(container_data, equals_file, container_registry):
 
     if "values" in container_data:
         for key, value in container_data["values"].items():
-            instance = UM.Settings.SettingInstance(definition.findDefinitions(key = key)[0], instance_container)
-            instance_container.addInstance(instance)
-            instance_container.setValue(key, value)
+            instance_container.setProperty(key, "value", value)
 
     result = instance_container.serialize()
 
@@ -122,5 +120,5 @@ def test_deserialize(filename, expected, container_registry):
             continue
 
         for key, value in value.items():
-            assert instance_container.getValue(key) == value
+            assert instance_container.getProperty(key, "value") == value
 

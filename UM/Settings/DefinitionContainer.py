@@ -85,14 +85,8 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
     #
     #   Reimplemented from ContainerInterface
     #
-    #   This returns the default_value property of the specified SettingDefinition, or None if the setting cannot be found.
-    def getValue(self, key):
-        definitions = self.findDefinitions(key = key)
-        if not definitions:
-            return None
-
-        return definitions[0].default_value
-
+    #   This returns the value of the property specified. Note that when property_name is "value" it will instead
+    #   return the value of the "default_value" property.
     def getProperty(self, key, property_name):
         definitions = self.findDefinitions(key = key)
         if not definitions:

@@ -250,7 +250,7 @@ def test_getValue(description, key, value, data, definition_container):
         definition_container.definitions.append(_createSettingDefinition(item))
 
     # Now perform the request that we're testing.
-    answer = definition_container.getValue(key)
+    answer = definition_container.getProperty(key, "value")
 
     assert answer == value
 

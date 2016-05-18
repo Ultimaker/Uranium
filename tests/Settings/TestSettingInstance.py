@@ -6,7 +6,7 @@ import pytest
 import UM.Settings
 
 class MockContainer():
-    def getValue(self, key): # Called by SettingInstance::updateProperty
+    def getProperty(self, key, property_name): # Called by SettingInstance::updateProperty
         return 10.0
 
 @pytest.fixture
