@@ -152,7 +152,7 @@ class ContainerRegistry:
                     new_container.deserialize(f.read())
                 self._containers.append(new_container)
             except Exception as e:
-                Logger.logException("Could not deserialize container %s", container_id)
+                Logger.logException("e", "Could not deserialize container %s", container_id)
 
     def addContainer(self, container):
         containers = self.findContainers(None, id = container.getId())
