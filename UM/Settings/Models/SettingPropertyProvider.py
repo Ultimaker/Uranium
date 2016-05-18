@@ -84,6 +84,7 @@ class SettingPropertyProvider(QObject):
     propertiesChanged = pyqtSignal()
     @pyqtProperty("QVariantMap", notify = propertiesChanged)
     def properties(self):
+        print(self._property_values)
         return self._property_values
 
     def setStoreIndex(self, index):
@@ -145,7 +146,7 @@ class SettingPropertyProvider(QObject):
 
         new_properties = {}
         for property_name in self._watched_properties:
-            new_properties[property_name] = str(self._getPropertyValue(property_name))
+            new_properties[property_name] = self._getPropertyValue(property_name)
 
         if new_properties != self._property_values:
             print(new_properties)
@@ -162,4 +163,4 @@ class SettingPropertyProvider(QObject):
         if property_name == "value":
             property_value = UM.Settings.SettingDefinition.settingValueToString(self._stack.getProperty(self._key, "type"), property_value)
 
-        return property_value
+        return str(property_value)
