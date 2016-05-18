@@ -130,9 +130,8 @@ def test_addContainer(container_registry):
 #   _container_types).
 #
 #   \param container_registry A new container registry from a fixture.
-def test_addContainerType(container_registry):
+def test_addContainerType(container_registry, plugin_registry):
     old_container_type_count = len(container_registry._container_types)
-    plugin_registry = UM.PluginRegistry.PluginRegistry.getInstance()
     plugin_registry.addPluginLocation(os.path.dirname(os.path.abspath(__file__))) # Load plug-ins relative to this file.
     plugin_registry.loadPlugins()
     # The __init__ script now adds itself to the container registry.
