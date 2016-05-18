@@ -3,6 +3,10 @@
 
 import pytest
 import uuid # For creating unique ID's for each container stack.
+import os
+
+from UM.Signal import Signal
+from UM.Resources import Resources
 
 import UM.Settings
 import UM.Settings.ContainerInterface
@@ -53,15 +57,17 @@ class MockContainer(UM.Settings.ContainerInterface.ContainerInterface):
             return self._metadata["entry"]
         return default
 
-    ##  Gets the value of a container item.
+    ##  Gets the value of a container item property.
     #
     #   If the key doesn't exist, returns None.
     #
     #   \param key The key of the item to get.
-    def getValue(self, key):
+    def getProperty(self, key, property_name):
         if key in self.items:
             return self.items[key]
         return None
+
+    propertyChanged = Signal()
 
     ##  Serialises this container.
     #
@@ -205,6 +211,7 @@ version = """ + str(UM.Settings.ContainerStack.Version) # Test case where there 
     container_stack.deserialize(serialised)
     assert container_stack.getContainers() == [container]
 
+    container_stack = UM.Settings.ContainerStack(uuid.uuid4().int)
     serialised = """[general]
 name = Test
 id = testid
@@ -213,14 +220,16 @@ version = """ + str(UM.Settings.ContainerStack.Version) # Test case where there 
     container_stack.deserialize(serialised)
     assert container_stack.getContainers() == []
 
+    container_stack = UM.Settings.ContainerStack(uuid.uuid4().int)
     serialised = """[general]
 name = Test
 id = testid
 containers = a,a
 version = """ + str(UM.Settings.ContainerStack.Version) # Test case where there are two of the same containers.
     container_stack.deserialize(serialised)
-    assert container_stack.getContainers() == [container]
+    assert container_stack.getContainers() == [container, container]
 
+    container_stack = UM.Settings.ContainerStack(uuid.uuid4().int)
     serialised = """[general]
 name = Test
 id = testid
@@ -229,6 +238,7 @@ version = """ + str(UM.Settings.ContainerStack.Version) # Test case where a cont
     with pytest.raises(Exception):
         container_stack.deserialize(serialised)
 
+    container_stack = UM.Settings.ContainerStack(uuid.uuid4().int)
     container_b = UM.Settings.InstanceContainer("b") # Add the missing container and try again.
     UM.Settings.ContainerRegistry.getInstance().addContainer(container_b)
     container_stack.deserialize(serialised)
@@ -390,7 +400,7 @@ def test_getValue(container_stack, data):
         mockup.items = container
         container_stack.addContainer(mockup)
 
-    answer = container_stack.getValue(data["key"]) # Do the actual query.
+    answer = container_stack.getProperty(data["key"], "value") # Do the actual query.
 
     assert answer == data["result"]
 
