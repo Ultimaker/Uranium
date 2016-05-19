@@ -17,7 +17,6 @@ import hashlib
 from copy import deepcopy
 from time import time
 numpy.seterr(all="ignore") # Ignore warnings (dev by zero)
-# from UM.Logger import timeIt
 
 
 class MeshType(Enum):
@@ -50,14 +49,6 @@ class MeshData(SignalEmitter):
         self._convex_hull = None    # type: scipy.spatial.qhull.ConvexHull
         self._convex_hull_vertices = None
 
-    dataChanged = Signal()
-
-    def _dataChanged(self):
-        self._resetVertexBuffer()
-        self._resetIndexBuffer()
-        self._resetConvexHull()
-        self.dataChanged.emit()
-
     def __deepcopy__(self, memo):
         copy = MeshData()
         copy._vertices = deepcopy(self._vertices, memo)
@@ -72,12 +63,6 @@ class MeshData(SignalEmitter):
         self._center_position = deepcopy (self._center_position, memo)
         return copy
 
-    def _resetIndexBuffer(self):
-        try:
-            delattr(self, OpenGL.IndexBufferProperty)
-        except:
-            pass
-
     def setCenterPosition(self, position):
         self._center_position = position
 
@@ -88,12 +73,6 @@ class MeshData(SignalEmitter):
 
     def getCenterPosition(self):
         return self._center_position
-
-    def _resetVertexBuffer(self):
-        try:
-            delattr(self, OpenGL.VertexBufferProperty)
-        except:
-            pass
 
     def getType(self):
         return self._type
@@ -273,10 +252,6 @@ class MeshData(SignalEmitter):
     #######################################################################
     # Convex hull handling
     #######################################################################
-
-    def _resetConvexHull(self):
-        self._convex_hull = None
-        self._convex_hull_vertices = None
 
     def _computeConvexHull(self):
         points = self.getVertices()
