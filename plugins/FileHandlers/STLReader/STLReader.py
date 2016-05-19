@@ -39,7 +39,6 @@ class STLReader(MeshReader):
 
         mesh = mesh_builder.build()
         Logger.log("d", "Loaded a mesh with %s vertices", mesh_builder.getVertexCount())
-        Logger.log('d', 'Loaded mesh: ' + mesh.toString())
         scene_node.setMeshData(mesh)
         return scene_node
 
