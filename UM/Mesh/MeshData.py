@@ -81,10 +81,7 @@ class MeshData:
 
     ##  Get the array of vertices
     def getVertices(self):
-        if self._vertices is None:
-            return None
-
-        return self._vertices[0 : self._vertex_count] #Only return up until point where data was filled
+        return self._vertices
 
     ##  Get the number of vertices
     def getVertexCount(self):
@@ -112,7 +109,7 @@ class MeshData:
     ##  Get the array of indices
     #   \return \type{numpy.ndarray}
     def getIndices(self):
-        return self._indices[0:self._face_count]
+        return self._indices
 
     def hasColors(self):
         return self._colors is not None
@@ -130,7 +127,7 @@ class MeshData:
     #   \param transformation 4x4 homogenous transformation matrix
     def getTransformed(self, transformation):
         if self._vertices is not None:
-            data = numpy.pad(self._vertices[0:self._vertex_count], ((0,0), (0,1)), "constant", constant_values=(0.0, 0.0))
+            data = numpy.pad(self._vertices, ((0,0), (0,1)), "constant", constant_values=(0.0, 0.0))
             data = data.dot(transformation.getTransposed().getData())
             data += transformation.getData()[:,3]
             data = data[:,0:3]
@@ -180,26 +177,34 @@ class MeshData:
     #
     #   \return A bytearray object with 3 floats per vertex.
     def getVerticesAsByteArray(self):
-        if self._vertices is not None:
-            return self._vertices[0 : self._vertex_count].tostring()
+        if self._vertices is None:
+            return None
+        # FIXME cache result
+        return self._vertices.tostring()
 
     ##  Get all normals of this mesh as a bytearray
     #
     #   \return A bytearray object with 3 floats per normal.
     def getNormalsAsByteArray(self):
-        if self._normals is not None:
-            return self._normals[0 : self._vertex_count].tostring()
+        if self._normals is None:
+            return None
+        # FIXME cache result
+        return self._normals.tostring()
 
     ##  Get all indices as a bytearray
     #
     #   \return A bytearray object with 3 ints per face.
     def getIndicesAsByteArray(self):
-        if self._indices is not None:
-            return self._indices[0:self._face_count].tostring()
+        if self._indices is None:
+            return None
+        # FIXME cache result
+        return self._indices.tostring()
 
     def getColorsAsByteArray(self):
-        if self._colors is not None:
-            return self._colors[0 : self._vertex_count].tostring()
+        if self._colors is None:
+            return None
+        # FIXME cache result
+        return self._colors.tostring()
 
     def getUVCoordinatesAsByteArray(self):
         if self._uvs is not None:
