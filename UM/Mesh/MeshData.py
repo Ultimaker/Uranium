@@ -22,6 +22,7 @@ class MeshType(Enum):
     faces = 1 # Start at one, as 0 is false (so if this is used in a if statement, it's always true)
     pointcloud = 2
 
+Reuse = object()    # A 'symbol' used to mark parameters which were not explicitly given.
 
 ##  Class to hold a list of verts and possibly how (and if) they are connected.
 #
@@ -62,15 +63,15 @@ class MeshData:
         self._center_position = deepcopy (self._center_position, memo)
         return copy
 
-    def set(self, vertices=None, normals=None, indices=None, colors=None, uvs=None, file_name=None,
-            center_position=None):
-        vertices = vertices if vertices is not None else self._vertices
-        normals = normals if normals is not None else self._normals
-        indices = indices if indices is not None else self._indices
-        colors = colors if colors is not None else self._colors
-        uvs = uvs if uvs is not None else self._uvs
-        file_name = file_name if file_name is not None else self._file_name
-        center_position = center_position if center_position is not None else self._center_position
+    def set(self, vertices=Reuse, normals=Reuse, indices=Reuse, colors=Reuse, uvs=Reuse, file_name=Reuse,
+            center_position=Reuse):
+        vertices = vertices if vertices is not Reuse else self._vertices
+        normals = normals if normals is not Reuse else self._normals
+        indices = indices if indices is not Reuse else self._indices
+        colors = colors if colors is not Reuse else self._colors
+        uvs = uvs if uvs is not Reuse else self._uvs
+        file_name = file_name if file_name is not Reuse else self._file_name
+        center_position = center_position if center_position is not Reuse else self._center_position
 
         return MeshData(vertices=vertices, normals=normals, indices=indices, colors=colors, uvs=uvs,
                         file_name=file_name, center_position=center_position)
