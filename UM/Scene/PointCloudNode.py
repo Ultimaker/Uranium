@@ -73,7 +73,6 @@ class PointCloudNode(SceneNode.SceneNode):
     ##  \brief Set the mesh of this node/object
     #   \param mesh_data MeshData object
     def setMeshData(self, mesh_data):
-        self._mesh_data = mesh_data
         id = Application.getInstance().getCloudNodeIndex(self)
         
         # Create a unique color for each vert. First 3 uint 8  represent index in this cloud, final uint8 gives cloud ID.
@@ -87,6 +86,6 @@ class PointCloudNode(SceneNode.SceneNode):
         colors = numpy.resize(data,(mesh_data.getVertexCount(), 4))
         colors = colors.astype(numpy.float32)
         colors /= 255
-        self._mesh_data.setColors(colors)
+        self._mesh_data = mesh_data.set(colors=colors)
         self._resetAABB()
         self.meshDataChanged.emit(self)

@@ -62,6 +62,19 @@ class MeshData:
         self._center_position = deepcopy (self._center_position, memo)
         return copy
 
+    def set(self, vertices=None, normals=None, indices=None, colors=None, uvs=None, file_name=None,
+            center_position=None):
+        vertices = vertices if vertices is not None else self._vertices
+        normals = normals if normals is not None else self._normals
+        indices = indices if indices is not None else self._indices
+        colors = colors if colors is not None else self._colors
+        uvs = uvs if uvs is not None else self._uvs
+        file_name = file_name if file_name is not None else self._file_name
+        center_position = center_position if center_position is not None else self._center_position
+
+        return MeshData(vertices=vertices, normals=normals, indices=indices, colors=colors, uvs=uvs,
+                        file_name=file_name, center_position=center_position)
+
     def setCenterPosition(self, position):
         self._center_position = position
 
@@ -115,7 +128,7 @@ class MeshData:
         return self._colors is not None
 
     def getColors(self):
-        return self._colors[0:self._vertex_count]
+        return self._colors
 
     def hasUVCoordinates(self):
         return self._uvs is not None
@@ -167,11 +180,6 @@ class MeshData:
 
         self._uvs[index, 0] = u
         self._uvs[index, 1] = v
-
-    ## 
-    # /param colors is a vertexCount by 4 numpy array with floats in range of 0 to 1.
-    def setColors(self, colors):
-        self._colors = colors
 
     ##  Get all vertices of this mesh as a bytearray
     #
