@@ -34,18 +34,19 @@ class MeshType(Enum):
 #   are stored as a two-dimensional array of integers with the rows being the individual
 #   faces and the three columns being the indices that refer to the individual vertices.
 class MeshData(SignalEmitter):
-    def __init__(self, **kwargs):
-        self._vertices = kwargs.get("vertices", None)
-        self._normals = kwargs.get("normals", None)
-        self._indices = kwargs.get("indices", None)
-        self._colors = kwargs.get("colors", None)
-        self._uvs = kwargs.get("uvs", None)
+    def __init__(self, vertices=None, normals=None, indices=None, colors=None, uvs=None, file_name=None,
+                 center_position=None):
+        self._vertices = immutableNDArray(vertices)
+        self._normals = immutableNDArray(normals)
+        self._indices = immutableNDArray(indices)
+        self._colors = immutableNDArray(colors)
+        self._uvs = immutableNDArray(uvs)
         self._vertex_count = len(self._vertices) if self._vertices is not None else 0
         self._face_count = len(self._indices) if self._indices is not None else 0
         self._type = MeshType.faces
         self._file_name = None
         # original center position
-        self._center_position = None
+        self._center_position = center_position
         self._convex_hull = None    # type: scipy.spatial.qhull.ConvexHull
         self._convex_hull_vertices = None
 
@@ -94,12 +95,6 @@ class MeshData(SignalEmitter):
         except:
             pass
 
-    ##  Set the type of the mesh 
-    #   \param mesh_type MeshType enum 
-    def setType(self, mesh_type):
-        if isinstance(mesh_type, MeshType):
-            self._type = mesh_type
-
     def getType(self):
         return self._type
 
@@ -123,21 +118,6 @@ class MeshData(SignalEmitter):
             return self._vertices[index]
         except IndexError:
             return None
-
-    #   Remove vertex by index or list of indices
-    #   \param index Either a single index or a list of indices to be removed.
-    def removeVertex(self, index):
-        try:
-            #print("deleting ", index)
-            #print( self._vertices)
-            self._vertices = numpy.delete(self._vertices, index,0)
-            if self.hasNormals():
-               self._normals = numpy.delete(self._normals,index,0)
-            #print( self._vertices)
-            self._vertex_count = len(self._vertices)
-        except IndexError:
-            pass
-        self._dataChanged()
 
     ##  Return whether this mesh has vertex normals.
     def hasNormals(self):
@@ -167,9 +147,6 @@ class MeshData(SignalEmitter):
 
     def getFileName(self):
         return self._file_name
-
-    def setFileName(self, file_name):
-        self._file_name = file_name
 
     ##  Transform the meshdata by given Matrix
     #   \param transformation 4x4 homogenous transformation matrix
@@ -206,174 +183,6 @@ class MeshData(SignalEmitter):
 
         return AxisAlignedBox(minimum=Vector(min[0], min[1], min[2]), maximum=Vector(max[0], max[1], max[2]))
 
-    def clear(self):
-        setattr(self, "__qtgl2_vertex_buffer", None)
-        setattr(self, "__qtgl2_index_buffer", None)
-        self._vertices = None
-        self._normals = None
-        self._indices = None
-        self._colors = None
-        self._uvs = None
-        self._vertex_count = 0
-        self._face_count = 0
-        self._resetConvexHull()
-
-    ##  Set the amount of faces before loading data to the mesh.
-    #
-    #   This way we can create the array before we fill it. This method will reserve
-    #   `(num_faces * 3)` amount of space for vertices, `(num_faces * 3)` amount of space
-    #   for normals and `num_faces` amount of space for indices.
-    #
-    #   \param num_faces Number of faces for which memory must be reserved.
-    def reserveFaceCount(self, num_faces):
-        if type(num_faces) == float:
-            Logger.log("w", "Had to convert 'num_faces' with int(): %s -> %s ", num_faces, int(num_faces))
-            num_faces = int(num_faces)
-
-        self._vertices = numpy.zeros((num_faces * 3, 3), dtype=numpy.float32)
-        self._normals = numpy.zeros((num_faces * 3, 3), dtype=numpy.float32)
-        self._indices = numpy.zeros((num_faces, 3), dtype=numpy.int32)
-
-        self._vertex_count = 0
-        self._face_count = 0
-
-    ##  Set the amount of verts before loading data to the mesh.
-    #
-    #   This way we can create the array before we fill it. This method will reserve
-    #   `num_vertices` amount of space for vertices. It will not reserve space for
-    #   normals or indices.
-    #
-    #   \param num_vertices Number of verts to be reserved.
-    def reserveVertexCount(self, num_vertices):
-        self._vertices = numpy.zeros((num_vertices, 3), dtype=numpy.float32)
-        self._normals = None
-        self._indices = None
-
-        self._vertex_count = 0
-        self._face_count = 0
-
-    ##  Add a vertex to the mesh.
-    #   \param x x coordinate of vertex.
-    #   \param y y coordinate of vertex.
-    #   \param z z coordinate of vertex.
-    def addVertex(self,x,y,z):
-        if self._vertices is None:
-            self._vertices = numpy.zeros((10, 3), dtype=numpy.float32)
-
-        if len(self._vertices) == self._vertex_count:
-            self._vertices.resize((self._vertex_count * 2, 3))
-
-        self._vertices[self._vertex_count, 0] = x
-        self._vertices[self._vertex_count, 1] = y
-        self._vertices[self._vertex_count, 2] = z
-        self._vertex_count += 1
-
-    ##  Add a vertex to the mesh.
-    #   \param x x coordinate of vertex.
-    #   \param y y coordinate of vertex.
-    #   \param z z coordinate of vertex.
-    #   \param nx x part of normal.
-    #   \param ny y part of normal.
-    #   \param nz z part of normal.
-    def addVertexWithNormal(self,x,y,z,nx,ny,nz):
-        if self._vertices is None:
-            self._vertices = numpy.zeros((10, 3), dtype=numpy.float32)
-        if self._normals is None: #Specific case, reserve vert count does not reservere size for normals
-            self._normals = numpy.zeros((10, 3), dtype=numpy.float32)
-
-        if len(self._vertices) == self._vertex_count:
-            self._vertices.resize((self._vertex_count * 2, 3))
-
-        if self._normals is None:
-            self._normals = numpy.zeros((self._vertex_count, 3), dtype=numpy.float32)
-
-        if len(self._normals) == self._vertex_count:
-            self._normals.resize((self._vertex_count * 2, 3))
-
-        self._vertices[self._vertex_count, 0] = x
-        self._vertices[self._vertex_count, 1] = y
-        self._vertices[self._vertex_count, 2] = z
-        self._normals[self._vertex_count, 0] = nx
-        self._normals[self._vertex_count, 1] = ny
-        self._normals[self._vertex_count, 2] = nz
-        self._vertex_count += 1
-
-    ##  Add a face by providing three verts.
-    #   \param x0 x coordinate of first vertex.
-    #   \param y0 y coordinate of first vertex.
-    #   \param z0 z coordinate of first vertex.
-    #   \param x1 x coordinate of second vertex.
-    #   \param y1 y coordinate of second vertex.
-    #   \param z1 z coordinate of second vertex.
-    #   \param x2 x coordinate of third vertex.
-    #   \param y2 y coordinate of third vertex.
-    #   \param z2 z coordinate of third vertex.
-    def addFace(self, x0, y0, z0, x1, y1, z1, x2, y2, z2):
-        if self._indices is None:
-            self._indices = numpy.zeros((10, 3), dtype=numpy.int32)
-
-        if len(self._indices) == self._face_count:
-            self._indices.resize((self._face_count * 2, 3))
-
-        self._indices[self._face_count, 0] = self._vertex_count
-        self._indices[self._face_count, 1] = self._vertex_count + 1
-        self._indices[self._face_count, 2] = self._vertex_count + 2
-        self._face_count += 1
-
-        self.addVertex(x0, y0, z0)
-        self.addVertex(x1, y1, z1)
-        self.addVertex(x2, y2, z2)
-
-    ##  Add a face by providing three vertices and the normals that go with those vertices.
-    #
-    #   \param x0 The X coordinate of the first vertex.
-    #   \param y0 The Y coordinate of the first vertex.
-    #   \param z0 The Z coordinate of the first vertex.
-    #   \param nx0 The X coordinate of the normal of the first vertex.
-    #   \param ny0 The Y coordinate of the normal of the first vertex.
-    #   \param nz0 The Z coordinate of the normal of the first vertex.
-    #
-    #   \param x1 The X coordinate of the second vertex.
-    #   \param y1 The Y coordinate of the second vertex.
-    #   \param z1 The Z coordinate of the second vertex.
-    #   \param nx1 The X coordinate of the normal of the second vertex.
-    #   \param ny1 The Y coordinate of the normal of the second vertex.
-    #   \param nz1 The Z coordinate of the normal of the second vertex.
-    #
-    #   \param x2 The X coordinate of the third vertex.
-    #   \param y2 The Y coordinate of the third vertex.
-    #   \param z2 The Z coordinate of the third vertex.
-    #   \param nx2 The X coordinate of the normal of the third vertex.
-    #   \param ny2 The Y coordinate of the normal of the third vertex.
-    #   \param nz2 The Z coordinate of the normal of the third vertex.
-    def addFaceWithNormals(self,x0, y0, z0, nx0, ny0, nz0, x1, y1, z1, nx1, ny1, nz1, x2, y2, z2, nx2, ny2, nz2):
-        if self._indices is None:
-            self._indices = numpy.zeros((10, 3), dtype=numpy.int32)
-
-        if len(self._indices) == self._face_count:
-            self._indices.resize((self._face_count * 2, 3))
-
-        self._indices[self._face_count, 0] = self._vertex_count
-        self._indices[self._face_count, 1] = self._vertex_count + 1
-        self._indices[self._face_count, 2] = self._vertex_count + 2
-        self._face_count += 1
-
-        self.addVertexWithNormal(x0, y0, z0, nx0, ny0, nz0)
-        self.addVertexWithNormal(x1, y1, z1, nx1, ny1, nz1)
-        self.addVertexWithNormal(x2, y2, z2, nx2, ny2, nz2)
-
-    def setVertexColor(self, index, color):
-        if self._colors is None:
-            self._colors = numpy.zeros((10, 4), dtype=numpy.float32)
-
-        if len(self._colors) < len(self._vertices):
-            self._colors.resize((len(self._vertices), 4))
-
-        self._colors[index, 0] = color.r
-        self._colors[index, 1] = color.g
-        self._colors[index, 2] = color.b
-        self._colors[index, 3] = color.a
-
     def setVertexUVCoordinates(self, index, u, v):
         if self._uvs is None:
             self._uvs = numpy.zeros((10, 2), dtype=numpy.float32)
@@ -383,28 +192,6 @@ class MeshData(SignalEmitter):
 
         self._uvs[index, 0] = u
         self._uvs[index, 1] = v
-
-    def addVertices(self, vertices):
-        if self._vertices is None:
-            self._vertices = vertices
-            self._vertex_count = len(vertices)
-        else:
-            self._vertices = numpy.concatenate((self._vertices[0:self._vertex_count], vertices))
-            self._vertex_count  += len(vertices)
-
-    def addIndices(self, indices):
-        if self._indices is None:
-            self._indices = indices
-            self._face_count = len(indices)
-        else:
-            self._indices = numpy.concatenate((self._indices[0:self._face_count], indices))
-            self._face_count += len(indices)
-
-    def addColors(self, colors):
-        if self._colors is None:
-            self._colors = colors
-        else:
-            self._colors = numpy.concatenate((self._colors[0:self._vertex_count], colors))
 
     ## 
     # /param colors is a vertexCount by 4 numpy array with floats in range of 0 to 1.
@@ -515,3 +302,18 @@ class MeshData(SignalEmitter):
             convex_hull = self.getConvexHull()
             self._convex_hull_vertices = numpy.take(convex_hull.points, convex_hull.vertices, axis=0)
         return self._convex_hull_vertices
+
+
+    def toString(self):
+        return "MeshData(_vertices=" + str(self._vertices) + ", _normals=" + str(self._normals) + ", _indices=" + \
+               str(self._indices) + ", _colors=" + str(self._colors) + ", _uvs=" + str(self._uvs) + ") "
+##
+#
+def immutableNDArray(nda):
+    if nda is None:
+        return None
+    if not nda.flags.writeable:
+        return nda
+    copy = deepcopy(nda)
+    copy.flags.writeable = False
+    return copy
