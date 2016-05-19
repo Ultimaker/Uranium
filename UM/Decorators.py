@@ -84,3 +84,8 @@ def interface(cls):
 
     cls.__new__ = new_new
     return cls
+
+def immutable(cls):
+    property_names = list(filter(lambda i: isinstance(i, property), inspect.getmembers(cls)))
+    cls.__slots__ = property_names
+    return cls

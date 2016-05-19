@@ -18,10 +18,25 @@ class MimeType:
     #   \param suffixes A list of possible suffixes for the type.
     #   \param preferred_suffix The preferred suffix for the type. Defaults to suffixes[0] if not specified.
     def __init__(self, name, comment, suffixes, preferred_suffix = None):
-        self._name = name
-        self._comment = comment
-        self._suffixes = suffixes
-        self._preferred_suffix = preferred_suffix if preferred_suffix else suffixes[0]
+        if name is None:
+            raise ValueError("Name cannot be None")
+
+        if comment is None:
+            raise ValueError("Comment cannot be None")
+
+        self.__name = name
+        self.__comment = comment
+        self.__suffixes = suffixes if isinstance(suffixes, list) else []
+
+        if self.__suffixes:
+            if preferred_suffix:
+                if not preferred_suffix in self.__suffixes:
+                    raise ValueError("Preferred suffix is not a valid suffix")
+                self.__preferred_suffix = preferred_suffix
+            else:
+                self.__preferred_suffix = self.__suffixes[0]
+        else:
+            self.__preferred_suffix = ""
 
     ##  The name of the mime type.
     @property
@@ -55,16 +70,14 @@ class MimeType:
     #
     #   \return file_name without extension or file_name when it does not match.
     def stripExtension(self, file_name):
-        candidates = []
-        for suffix in self._suffixes:
-            if file_name.endswith(suffix):
-                candidates.append(suffix)
+        suffixes = sorted(self.__suffixes.copy(), key = lambda i: len(i), reverse = True)
+        for suffix in self.__suffixes:
+            if file_name.endswith(suffix, file_name.find(".")):
+                index = file_name.rfind("." + suffix)
+                return file_name[0:index]
 
-        if candidates:
-            longest_suffix = max(candidates)
-            return file_name.replace("." + longest_suffix, "")
-        else:
-            return file_name
+        return file_name
+
 
     ##  Create a MimeType object from a QMimeType object.
     #
@@ -97,7 +110,6 @@ class MimeTypeDatabase:
     #
     #   \exception MimeTypeNotFoundError Raised when the specified mime type cannot be found.
     @classmethod
-    @ascopy
     def getMimeType(cls, name):
         for mime in cls.__custom_mimetypes:
             if mime.name == name:
@@ -117,11 +129,12 @@ class MimeTypeDatabase:
     #
     #   \exception MimeTypeNotFoundError Raised when no mime type can be found for the specified file.
     @classmethod
-    @ascopy
     def getMimeTypeForFile(cls, file_name):
         matches = []
         for mime_type in cls.__custom_mimetypes:
-            if file_name.endswith(tuple(mime_type.suffixes)):
+            # Check if the file name ends with the suffixes, starting at the first . encountered.
+            # This means that "suffix" will not match, ".suffix" will and "suffix.something.suffix" will also match
+            if file_name.endswith(tuple(mime_type.suffixes), file_name.find(".")):
                 matches.append(mime_type)
 
         if len(matches) > 1:

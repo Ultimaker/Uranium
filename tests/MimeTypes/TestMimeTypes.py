@@ -159,6 +159,12 @@ def test_getMimeTypeForFile(mime_database):
     mime = mime_database.getMimeTypeForFile(os.path.join(path_base, "file.test"))
     assert mime.name == "application/x-test"
 
+    mime = mime_database.getMimeTypeForFile(os.path.join(path_base, "filetest.test.test")) # Double extension should still match
+    assert mime.name == "application/x-test"
+
+    mime = mime_database.getMimeTypeForFile(os.path.join(path_base, ".test")) # Only extension should still match
+    assert mime.name == "application/x-test"
+
     with pytest.raises(MimeTypeNotFoundError):
         mime_database.getMimeTypeForFile(os.path.join(path_base, "pink.unicorn")) # Non-existent file type.
 
