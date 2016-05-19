@@ -6,7 +6,7 @@ from UM.Math.Vector import Vector
 from UM.Math.Quaternion import Quaternion
 
 from UM.Signal import Signal, SignalEmitter
-from UM.Mesh.MeshData import MeshData
+from UM.Mesh.MeshBuilder import MeshBuilder
 from UM.Logger import Logger
 
 from copy import deepcopy
@@ -117,7 +117,7 @@ class SceneNode(SignalEmitter):
     def calculateBoundingBoxMesh(self):
         aabb = self.getBoundingBox()
         if aabb:
-            bounding_box_mesh = MeshData()
+            bounding_box_mesh = MeshBuilder()
             rtf = aabb.maximum
             lbb = aabb.minimum
 
@@ -157,7 +157,7 @@ class SceneNode(SignalEmitter):
             bounding_box_mesh.addVertex(rtf.x, lbb.y, rtf.z)  # Right - Bottom - Front
             bounding_box_mesh.addVertex(rtf.x, lbb.y, lbb.z)  # Right - Bottom - Back
 
-            self._bounding_box_mesh = bounding_box_mesh
+            self._bounding_box_mesh = bounding_box_mesh.build()
 
     ##  Handler for the ParentChanged signal
     #   \param node Node from which this event was triggered.
