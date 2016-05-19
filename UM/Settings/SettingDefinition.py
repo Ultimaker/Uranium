@@ -5,6 +5,7 @@ import ast
 import json
 import enum
 import collections
+import re
 
 from UM.Logger import Logger
 
@@ -384,6 +385,22 @@ class SettingDefinition:
         "comments": {"type": DefinitionPropertyType.String, "required": False, "read_only": True, "default": ""}
     }
 
+    ## Conversion of string to float.
+    def _toFloatConversion(value):
+        ## Ensure that all , are replaced with . (so they are seen as floats)
+        value = value.replace(",", ".")
+
+        def stripLeading0(matchobj):
+            return matchobj.group(0).lstrip("0")
+
+        ## Literal eval does not like "02" as a value, but users see this as "2".
+        ## We therefore look numbers with leading "0", provided they are not used in variable names
+        ## example: "test02 * 20" should not be changed, but "test * 02 * 20" should be changed (into "test * 2 * 20")
+        regex_pattern = '(?<!\.|\w|\d)0+(\d+)'
+        value = re.sub(regex_pattern, stripLeading0 ,value)
+
+        return ast.literal_eval(value)
+
     __type_definitions = {
         # An integer value
         "int": {"from": str, "to": ast.literal_eval, "validator": Validator.Validator},
@@ -396,7 +413,7 @@ class SettingDefinition:
         # An enumeration
         "enum": {"from": None, "to": None, "validator": None},
         # A floating point value
-        "float": {"from": str, "to": lambda v: ast.literal_eval(v.replace(",", ".")), "validator": Validator.Validator},
+        "float": {"from": str, "to": _toFloatConversion, "validator": Validator.Validator},
         # A list of 2D points
         "polygon": {"from": None, "to": None, "validator": None},
         # A list of polygons
@@ -404,3 +421,5 @@ class SettingDefinition:
         # A 3D point
         "vec3": {"from": None, "to": None, "validator": None},
     }
+
+
