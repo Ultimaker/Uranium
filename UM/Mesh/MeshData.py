@@ -3,7 +3,6 @@
 
 from UM.Math.Vector import Vector
 from UM.Math.AxisAlignedBox import AxisAlignedBox
-from UM.Signal import Signal, SignalEmitter
 from UM.Logger import Logger
 
 from enum import Enum
@@ -32,7 +31,7 @@ class MeshType(Enum):
 #   Normals are stored in the same manner and kept in sync with the vertices. Indices
 #   are stored as a two-dimensional array of integers with the rows being the individual
 #   faces and the three columns being the indices that refer to the individual vertices.
-class MeshData(SignalEmitter):
+class MeshData:
     def __init__(self, vertices=None, normals=None, indices=None, colors=None, uvs=None, file_name=None,
                  center_position=None):
         self._vertices = immutableNDArray(vertices)
@@ -206,49 +205,6 @@ class MeshData(SignalEmitter):
         if self._uvs is not None:
             return self._uvs[0 : self._vertex_count].tostring()
 
-    ##  Calculate the normals of this mesh, assuming it was created by using addFace (eg; the verts are connected)
-    #
-    #   Keyword arguments:
-    #   - fast: A boolean indicating whether or not to use a fast method of normal calculation that assumes each triangle
-    #           is stored as a set of three unique vertices.
-    def calculateNormals(self, **kwargs):
-        if self._vertices is None:
-            return
-        start_time = time()
-        # Numpy magic!
-        # First, reset the normals
-        self._normals = numpy.zeros((self._vertex_count, 3), dtype=numpy.float32)
-
-        if self.hasIndices() and not kwargs.get("fast", False):
-            for face in self._indices[0:self._face_count]:
-                #print(self._vertices[face[0]])
-                #print(self._vertices[face[1]])
-                #print(self._vertices[face[2]])
-                self._normals[face[0]] = numpy.cross(self._vertices[face[0]] - self._vertices[face[1]], self._vertices[face[0]] - self._vertices[face[2]])
-                length = numpy.linalg.norm(self._normals[face[0]])
-                self._normals[face[0]] /= length
-                self._normals[face[1]] = self._normals[face[0]]
-                self._normals[face[2]] = self._normals[face[0]]
-        else: #Old way of doing it, asuming that each face has 3 unique verts
-            # Then, take the cross product of each pair of vectors formed from a set of three vertices.
-            # The [] operator on a numpy array returns itself a numpy array. The slicing syntax is [begin:end:step],
-            # so in this case we perform the cross over a two arrays. The first array is built from the difference
-            # between every second item in the array starting at two and every third item in the array starting at
-            # zero. The second array is built from the difference between every third item in the array starting at
-            # two and every third item in the array starting at zero. The cross operation then returns an array of
-            # the normals of each set of three vertices.
-            n = numpy.cross(self._vertices[1:self._vertex_count:3] - self._vertices[:self._vertex_count:3], self._vertices[2:self._vertex_count:3] - self._vertices[:self._vertex_count:3])
-            # We then calculate the length for each normal and perform normalization on the normals.
-            l = numpy.linalg.norm(n, axis=1)
-            n[:, 0] /= l
-            n[:, 1] /= l
-            n[:, 2] /= l
-            # Finally, we store the normals per vertex, with each face normal being repeated three times, once for
-            # every vertex.
-            self._normals = n.repeat(3, axis=0)
-        end_time = time()
-        Logger.log("d", "Calculating normals took %s seconds", end_time - start_time)
-
     #######################################################################
     # Convex hull handling
     #######################################################################
@@ -277,7 +233,6 @@ class MeshData(SignalEmitter):
             convex_hull = self.getConvexHull()
             self._convex_hull_vertices = numpy.take(convex_hull.points, convex_hull.vertices, axis=0)
         return self._convex_hull_vertices
-
 
     def toString(self):
         return "MeshData(_vertices=" + str(self._vertices) + ", _normals=" + str(self._normals) + ", _indices=" + \
