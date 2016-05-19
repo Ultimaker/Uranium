@@ -98,8 +98,7 @@ class SceneNode(SignalEmitter):
         if self._mesh_data:
             m = Matrix()
             m.setByTranslation(-center)
-            self._mesh_data = self._mesh_data.getTransformed(m)
-            self._mesh_data.setCenterPosition(center)
+            self._mesh_data = self._mesh_data.getTransformed(m).set(center_position=center)
         for child in self._children:
             child.setCenterPosition(center)
 

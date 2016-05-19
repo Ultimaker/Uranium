@@ -76,9 +76,6 @@ class MeshData:
         return MeshData(vertices=vertices, normals=normals, indices=indices, colors=colors, uvs=uvs,
                         file_name=file_name, center_position=center_position)
 
-    def setCenterPosition(self, position):
-        self._center_position = position
-
     def getHash(self):
         m = hashlib.sha256()
         m.update(self.getVerticesAsByteArray())
@@ -171,16 +168,6 @@ class MeshData:
         max = data.max(axis=0)
 
         return AxisAlignedBox(minimum=Vector(min[0], min[1], min[2]), maximum=Vector(max[0], max[1], max[2]))
-
-    def setVertexUVCoordinates(self, index, u, v):
-        if self._uvs is None:
-            self._uvs = numpy.zeros((10, 2), dtype=numpy.float32)
-
-        if len(self._uvs) < len(self._vertices):
-            self._uvs.resize((len(self._vertices), 2))
-
-        self._uvs[index, 0] = u
-        self._uvs[index, 1] = v
 
     ##  Get all vertices of this mesh as a bytearray
     #
