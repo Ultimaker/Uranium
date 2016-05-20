@@ -50,6 +50,8 @@ class SettingDefinitionsModel(QAbstractListModel):
             self._role_names[index] = name.encode()
             index += 1
 
+        self._filter_dict = {}
+
     ##  Set the containerId property.
     def setContainerId(self, container_id):
         if container_id != self._container_id:
@@ -221,6 +223,18 @@ class SettingDefinitionsModel(QAbstractListModel):
 
         return len(self._definitions)
 
+    ##  Set the filter of this model based on a string.
+    #   \param filter_dict Dictionary to do the filtering by.
+    def setFilter(self, filter_dict):
+        self._filter_dict = filter_dict
+        self._update()
+
+    filterChanged = pyqtSignal()
+
+    @pyqtProperty("QVariantMap", fset=setFilter, notify=filterChanged)
+    def filter(self):
+        return self._filter_dict
+
     ##  Reimplemented from QAbstractListModel
     def data(self, index, role):
         if not self._container:
@@ -233,6 +247,13 @@ class SettingDefinitionsModel(QAbstractListModel):
             return QVariant()
 
         definition = self._definitions[index.row()]
+
+        # Chceck if the definition matches the filter.
+        # If it does not matches the filter, we can ignore it.
+        matches_filter = definition.findDefinitions(**self._filter_dict)
+
+        if not matches_filter:
+            return False
 
         if role == self.KeyRole:
             return definition.key
