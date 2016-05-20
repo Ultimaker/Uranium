@@ -173,7 +173,6 @@ class SettingDefinitionsModel(QAbstractListModel):
         definitions = self._container.findDefinitions(key = key)
         if not definitions:
             return
-
         self.expand(key)
 
         for child in definitions[0].children:
@@ -304,7 +303,7 @@ class SettingDefinitionsModel(QAbstractListModel):
             if self._show_all or child.key in self._visible:
                 self._definitions.append(child)
                 if self._expanded_by_default:
-                    self.expand(child.key)
+                    self.expandAll(child.key)
 
     def _countParents(self, definition):
         if definition.parent is None:
