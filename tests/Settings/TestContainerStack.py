@@ -286,6 +286,26 @@ test_findContainer_data = [
         ],
         "filter": { "number": 1, "string": "foo", "mixed": 10 },
         "result": { "id": "a", "number": 1, "string": "foo", "mixed": 10 }
+    },
+    {
+        "description": "Wildcard Number",
+        "containers": [
+            { "id": "a", "string": "foo" },
+            { "id": "b", "number": 1 },
+            { "id": "c", "number": 2 },
+        ],
+        "filter": { "number": "*" },
+        "result": { "id": "c", "number": 2 }
+    },
+    {
+        "description": "Wildcard String",
+        "containers": [
+            { "id": "a", "number": 1 },
+            { "id": "b", "string": "foo" },
+            { "id": "c", "string": "boo" }
+        ],
+        "filter": { "string": "*" },
+        "result": { "id": "c", "string": "boo" }
     }
 ]
 
