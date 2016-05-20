@@ -39,9 +39,20 @@ class DefinitionContainersModel(ListModel):
         self.clear()
         self._definition_containers = ContainerRegistry.getInstance().findDefinitionContainers(**self._filter_dict)
         for container in self._definition_containers:
-            self.appendItem({"name": container.getName(),
-                             "manufacturer": container.getMetaDataEntry("manufacturer", ""),
-                             "id": container.getId()})
+            # Use insertion sort to keep the list sorted by manufacturer.
+            # The view doesn't support sorting.
+            item = { # Prepare an item for insertion.
+                "name": container.getName(),
+                "manufacturer": container.getMetaDataEntry("manufacturer", ""),
+                "id": container.getId()
+            }
+            manufacturer = item["manufacturer"]
+            for i, other_item in enumerate(self.items):
+                if manufacturer < other_item["manufacturer"]: # Need to insert it before this one.
+                    self.insertItem(i, item)
+                    break
+            else: # No existing manufacturer was greater, so put it at the end.
+                self.appendItem(item)
 
     ##  Set the filter of this model based on a string.
     #   \param filter_dict Dictionary to do the filtering by.
