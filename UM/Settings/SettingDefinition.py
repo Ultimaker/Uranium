@@ -166,7 +166,6 @@ class SettingDefinition:
         for key, value in kwargs.items():
             try:
                 if getattr(self, key) != value:
-                    matches = False
                     return False
             except AttributeError:
                 return False
@@ -349,6 +348,8 @@ class SettingDefinition:
                 self.__property_values[key] = self._i18n_catalog.i18n(str(value)) if self._i18n_catalog is not None else value
             elif self.__property_definitions[key]["type"] == DefinitionPropertyType.Function:
                 self.__property_values[key] = SettingFunction.SettingFunction(str(value))
+            else:
+                Logger.log("w", "Unknown DefinitionPropertyType (%s) for key %s", key, self.__property_definitions[key]["type"])
 
         for key in filter(lambda i: self.__property_definitions[i]["required"], self.__property_definitions):
             if key not in self.__property_values:
