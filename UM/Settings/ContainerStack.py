@@ -213,18 +213,20 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
 
     ##  Find a container matching certain criteria.
     #
-    #   \param filter \type{dict} A dictionary containing key and value pairs that need to match the container.
-    #                   Note that the value of "*" can be used as a wild card.
-    #                   This will ensure that any container that has the specified key in the meta data is found.
-    #
+    #   \param filter \type{dict} A dictionary containing key and value pairs
+    #   that need to match the container. Note that the value of "*" can be used
+    #   as a wild card. This will ensure that any container that has the
+    #   specified key in the meta data is found.
+    #   \param container_type \type{class} An optional type of container to
+    #   filter on.
     #   \return The first container that matches the filter criteria or None if not found.
-    def findContainer(self, filter):
+    def findContainer(self, filter, container_type = None):
         for container in self._containers:
             meta_data = container.getMetaData()
             match = True
             for key in filter:
                 try:
-                    if meta_data[key] == filter[key] or filter[key] == "*":
+                    if (meta_data[key] == filter[key] or filter[key] == "*") and (container.__class__ == container_type or container_type == None):
                         continue
                     else:
                         match = False

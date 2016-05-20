@@ -41,9 +41,9 @@ class Platform(SceneNode.SceneNode):
 
         self._global_container_stack = Application.getInstance().getGlobalContainerStack()
         if self._global_container_stack:
-            container = self._global_container_stack.findContainer({"platform_mesh":"*"})
+            container = self._global_container_stack.findContainer({ "platform": "*" })
             if container:
-                mesh_file = container.getMetaDataEntry("platform_mesh")
+                mesh_file = container.getMetaDataEntry("platform")
                 path = Resources.getPath(Resources.Meshes, mesh_file)
 
                 if self._load_platform_job:
@@ -55,7 +55,7 @@ class Platform(SceneNode.SceneNode):
                 self._load_platform_job.finished.connect(self._onPlatformLoaded)
                 self._load_platform_job.start()
 
-                offset = container.getMetaDataEntry("platform_mesh_offset")
+                offset = container.getMetaDataEntry("platform_offset")
                 if offset:
                     self.setPosition(Vector(offset[0], offset[1], offset[2]))
                 else:
