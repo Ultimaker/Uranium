@@ -160,6 +160,18 @@ class SettingDefinition:
 
         return None
 
+    ## Check if this setting definition matches the provided criteria.
+    #   \param kwargs \type{dict} A dictionary of keyword arguments that need to match its attributes.
+    def matchesFilter(self, **kwargs):
+        for key, value in kwargs.items():
+            try:
+                if getattr(self, key) != value:
+                    matches = False
+                    return False
+            except AttributeError:
+                return False
+        return True
+
     ##  Find all definitions matching certain criteria.
     #
     #   This will search this definition and its children for definitions matching the search criteria.
@@ -170,15 +182,7 @@ class SettingDefinition:
     def findDefinitions(self, **kwargs):
         definitions = []
 
-        has_properties = True
-        for key, value in kwargs.items():
-            try:
-                if getattr(self, key) != value:
-                    has_properties = False
-            except AttributeError:
-                has_properties = False
-
-        if has_properties:
+        if self.matchesFilter(**kwargs):
             definitions.append(self)
 
         for child in self._children:
