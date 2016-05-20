@@ -41,28 +41,28 @@ class MimeType:
     ##  The name of the mime type.
     @property
     def name(self):
-        return self._name
+        return self.__name
 
     ##  The comment of the mime type.
     @property
     def comment(self):
-        return self._comment
+        return self.__comment
 
     ##  The list of suffixes for the mime type.
     @property
     def suffixes(self):
-        return self._suffixes
+        return self.__suffixes
 
     ##  The preferred suffix for the mime type.
     @property
     def preferredSuffix(self):
-        return self._preferred_suffix
+        return self.__preferred_suffix
 
     def __repr__(self):
-        return "<MimeType name={0}>".format(self._name)
+        return "<MimeType name={0}>".format(self.__name)
 
     def __eq__(self, other):
-        return self._name == other.name
+        return self.__name == other.name
 
     ##  Strip the extension from a file name when it corresponds to one of the suffixes of this mime type.
     #
