@@ -129,9 +129,6 @@ class SettingDefinitionsModel(QAbstractListModel):
         if not self._container:
             return
 
-        if key in self._expanded:
-            return
-
         if key not in self._visible:
             return
 
@@ -143,7 +140,6 @@ class SettingDefinitionsModel(QAbstractListModel):
 
         if len(definition.children) == 0:
             return
-
         parent_index = self._definitions.index(definition)
 
         start_index = parent_index + 1
@@ -181,6 +177,7 @@ class SettingDefinitionsModel(QAbstractListModel):
     ##  Hide the children of a specified SettingDefinition.
     @pyqtSlot(str)
     def collapse(self, key):
+
         if not self._container:
             return
 
@@ -250,12 +247,11 @@ class SettingDefinitionsModel(QAbstractListModel):
 
         definition = self._definitions[index.row()]
 
-        # Chceck if the definition matches the filter.
+        # Check if the definition matches the filter.
         # If it does not matches the filter, we can ignore it.
         matches_filter = definition.matchesFilter(**self._filter_dict)
-
         if not matches_filter:
-            return False
+            return QVariant()
 
         if role == self.KeyRole:
             return definition.key
@@ -294,8 +290,8 @@ class SettingDefinitionsModel(QAbstractListModel):
 
         if not self._container:
             return
-
         children_list = self._container.definitions
+
         if self._root:
             children_list = self._root.children
 
@@ -331,7 +327,6 @@ class SettingDefinitionsModel(QAbstractListModel):
     def _onPreferencesChanged(self, name):
         if name != "general/visible_settings":
             return
-
         new_visible = set()
         for key in Preferences.getInstance().getValue("general/visible_settings").replace("\n", ";").split(";"):
             new_visible.add(key.strip())
