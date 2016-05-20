@@ -31,6 +31,9 @@ class SettingDefinitionsModel(QAbstractListModel):
 
         self._definitions = []
 
+        # Should everything be expanded by default?
+        self._expanded_by_default = True
+
         self._expanded = set()
         self._visible = set()
 
@@ -250,7 +253,7 @@ class SettingDefinitionsModel(QAbstractListModel):
 
         # Chceck if the definition matches the filter.
         # If it does not matches the filter, we can ignore it.
-        matches_filter = definition.findDefinitions(**self._filter_dict)
+        matches_filter = definition.matchesFilter(**self._filter_dict)
 
         if not matches_filter:
             return False
@@ -300,6 +303,8 @@ class SettingDefinitionsModel(QAbstractListModel):
         for child in children_list:
             if self._show_all or child.key in self._visible:
                 self._definitions.append(child)
+                if self._expanded_by_default:
+                    self.expand(child.key)
 
     def _countParents(self, definition):
         if definition.parent is None:
