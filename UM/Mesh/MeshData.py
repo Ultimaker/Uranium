@@ -6,9 +6,6 @@ from UM.Math.AxisAlignedBox import AxisAlignedBox
 from UM.Logger import Logger
 
 from enum import Enum
-
-from UM.View.GL.OpenGL import OpenGL
-
 import numpy
 import numpy.linalg
 import scipy.spatial
@@ -43,25 +40,11 @@ class MeshData:
         self._vertex_count = len(self._vertices) if self._vertices is not None else 0
         self._face_count = len(self._indices) if self._indices is not None else 0
         self._type = MeshType.faces
-        self._file_name = None
+        self._file_name = file_name
         # original center position
         self._center_position = center_position
         self._convex_hull = None    # type: scipy.spatial.qhull.ConvexHull
         self._convex_hull_vertices = None
-
-    def __deepcopy__(self, memo):
-        copy = MeshData()
-        copy._vertices = deepcopy(self._vertices, memo)
-        copy._normals = deepcopy(self._normals, memo)
-        copy._indices = deepcopy(self._indices, memo)
-        copy._colors = deepcopy(self._colors, memo)
-        copy._uvs = deepcopy(self._uvs, memo)
-        copy._vertex_count = deepcopy(self._vertex_count, memo)
-        copy._face_count = deepcopy(self._face_count, memo)
-        copy._type = deepcopy(self._type, memo)
-        copy._file_name = deepcopy(self._file_name, memo)
-        self._center_position = deepcopy (self._center_position, memo)
-        return copy
 
     def set(self, vertices=Reuse, normals=Reuse, indices=Reuse, colors=Reuse, uvs=Reuse, file_name=Reuse,
             center_position=Reuse):
@@ -143,9 +126,8 @@ class MeshData:
             data += transformation.getData()[:,3]
             data = data[:,0:3]
 
-            mesh = deepcopy(self)
-            mesh._vertices = data
-            return mesh
+            result = self.set(vertices=data)
+            return result
         else:
             return MeshData(vertices = self._vertices)
 
@@ -203,8 +185,10 @@ class MeshData:
         return self._colors.tostring()
 
     def getUVCoordinatesAsByteArray(self):
-        if self._uvs is not None:
-            return self._uvs[0 : self._vertex_count].tostring()
+        if self._uvs is None:
+            return None
+        # FIXME cache result
+        return self._uvs.tostring()
 
     #######################################################################
     # Convex hull handling

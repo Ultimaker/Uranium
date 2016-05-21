@@ -80,7 +80,7 @@ class SceneNode(SignalEmitter):
         copy.translate(self.getPosition())
         copy.setOrientation(self.getOrientation())
         copy.setScale(self.getScale())
-        copy.setMeshData(deepcopy(self._mesh_data, memo))
+        copy.setMeshData(self._mesh_data, memo)
         copy.setVisible(deepcopy(self._visible, memo))
         copy._selectable = deepcopy(self._selectable, memo)
         for decorator in self._decorators:
