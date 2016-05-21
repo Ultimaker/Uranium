@@ -637,10 +637,10 @@ class SceneNode(SignalEmitter):
             original_aabb = self._mesh_data.getExtents()
         for child in self._children:
             if aabb is None:
-                aabb = deepcopy(child.getBoundingBox())
-                original_aabb = deepcopy(child.getOriginalBoundingBox())
+                aabb = child.getBoundingBox()
+                original_aabb = child.getOriginalBoundingBox()
             else:
-                aabb += child.getBoundingBox()
-                original_aabb += child.getOriginalBoundingBox()
+                aabb = aabb + child.getBoundingBox()
+                original_aabb = original_aabb + child.getOriginalBoundingBox()
         self._aabb = aabb
         self._original_aabb = original_aabb

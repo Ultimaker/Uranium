@@ -6,51 +6,43 @@ from UM.Math.Float import Float
 
 import numpy
 
-## Axis alligned bounding box. 
+## Axis aligned bounding box.
 class AxisAlignedBox:
     class IntersectionResult:
         NoIntersection = 1
         PartialIntersection = 2
         FullIntersection = 3
 
-    def __init__(self, *args, **kwargs):
-        super().__init__()
+    def __init__(self, minimum=Vector.Null, maximum=Vector.Null):
+        if minimum.x > maximum.x or minimum.y > maximum.y or minimum.z > maximum.z:
+            minimum = Vector(min(minimum.x, maximum.x), min(minimum.y, maximum.y), min(minimum.z, maximum.z))
+            maximum = Vector(max(minimum.x, maximum.x), max(minimum.y, maximum.y), max(minimum.z, maximum.z))
 
-        self._min = Vector()
-        self._max = Vector()
+        self._min = minimum
+        self._max = maximum
 
-        if len(args) == 3:
-            self.setLeft(-args[0] / 2)
-            self.setRight(args[0] / 2)
+    def set(self, minimum=None, maximum=None, left=None, right=None, top=None, bottom=None, front=None, back=None):
+        if minimum is None:
+            minimum = self._min
 
-            self.setTop(args[1] / 2)
-            self.setBottom(-args[1] / 2)
+        if maximum is None:
+            maximum = self._max
 
-            self.setBack(-args[2] / 2)
-            self.setFront(args[2] / 2)
+        if left is not None or bottom is not None or back is not None:
+            left = minimum.x if left is None else left
+            bottom = minimum.y if bottom is None else bottom
+            back = minimum.z if back is None else back
+            minimum = Vector(left, bottom, back)
 
-        if "minimum" in kwargs:
-            self._min = kwargs["minimum"]
+        if right is not None or top is not None or front is not None:
+            right = maximum.x if right is None else right
+            top = maximum.y if top is None else top
+            front = maximum.z if front is None else front
+            maximum = Vector(right, top, front)
 
-        if "maximum" in kwargs:
-            self._max = kwargs["maximum"]
-            
-        ## Sometimes the min and max are not correctly set. 
-        if not self._max:
-            self._max = Vector()
-            
-        if not self._min:
-            self._min = Vector()    
-
-        self._ensureMinMax()
+        return AxisAlignedBox(minimum, maximum)
 
     def __add__(self, other):
-        b = AxisAlignedBox()
-        b += self
-        b += other
-        return b
-
-    def __iadd__(self, other):
         if not other.isValid():
             return self
 
@@ -58,21 +50,10 @@ class AxisAlignedBox:
                          min(self._min.z, other.back))
         new_max = Vector(max(self._max.x, other.right), max(self._max.y, other.top),
                          max(self._max.z, other.front))
-        self._min = new_min
-        self._max = new_max
+        return AxisAlignedBox(minimum=new_min, maximum=new_max)
 
-        return self
-
-    #def __sub__(self, other):
-        #b = AxisAlignedBox()
-        #b += self
-        #b -= other
-        #return b
-
-    #def __isub__(self, other):
-        #self._dimensions -= other._dimensions
-        #self._center = self._dimensions / 2.0
-        #return self
+    def __iadd__(self, other):
+        raise NotImplementedError()
 
     @property
     def width(self):
@@ -94,65 +75,33 @@ class AxisAlignedBox:
     def left(self):
         return self._min.x
 
-    def setLeft(self, value):
-        self._min = self._min.set(x=value)
-        self._ensureMinMax()
-
     @property
     def right(self):
         return self._max.x
-
-    def setRight(self, value):
-        self._max = self._max.set(x=value)
-        self._ensureMinMax()
 
     @property
     def bottom(self):
         return self._min.y
 
-    def setBottom(self, value):
-        self._min = self._min.set(y=value)
-        self._ensureMinMax()
-
     @property
     def top(self):
         return self._max.y
-
-    def setTop(self, value):
-        self._max = self._max.set(y=value)
-        self._ensureMinMax()
 
     @property
     def back(self):
         return self._min.z
 
-    def setBack(self, value):
-        self._min = self._min.set(z=value)
-        self._ensureMinMax()
-
     @property
     def front(self):
         return self._max.z
-
-    def setFront(self, value):
-        self._max = self._max.set(z=value)
-        self._ensureMinMax()
 
     @property
     def minimum(self):
         return self._min
 
-    def setMinimum(self, m):
-        self._min = m
-        self._ensureMinMax()
-
     @property
     def maximum(self):
         return self._max
-
-    def setMaximum(self, m):
-        self._max = m
-        self._ensureMinMax()
 
     ##  Check if the bounding box is valid.
     #   Uses fuzzycompare to validate.
@@ -207,23 +156,9 @@ class AxisAlignedBox:
         return self.IntersectionResult.PartialIntersection
 
     ##  private:
-
-    #   Ensure min contains the minimum values and max contains the maximum values
-    def _ensureMinMax(self):
-        if self._max.x < self._min.x:
-            x = self._min.x
-            self._min.setX(self._max.x)
-            self._max.setX(x)
-
-        if self._max.y < self._min.y:
-            y = self._min.y
-            self._min.setY(self._max.y)
-            self._max.setY(y)
-
-        if self._max.z < self._min.z:
-            z = self._min.z
-            self._min.setZ(self._max.z)
-            self._max.setZ(z)
-
     def __repr__(self):
         return "AxisAlignedBox(min = {0}, max = {1})".format(self._min, self._max)
+
+    # This field is filled in below. This is needed to help static analysis tools (read: PyCharm)
+    Null = None
+AxisAlignedBox.Null = AxisAlignedBox()
