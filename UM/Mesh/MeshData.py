@@ -9,8 +9,8 @@ from enum import Enum
 import numpy
 import numpy.linalg
 import scipy.spatial
-import hashlib
 from copy import deepcopy
+import hashlib
 from time import time
 numpy.seterr(all="ignore") # Ignore warnings (dev by zero)
 
@@ -121,13 +121,7 @@ class MeshData:
     #   \param transformation 4x4 homogenous transformation matrix
     def getTransformed(self, transformation):
         if self._vertices is not None:
-            data = numpy.pad(self._vertices, ((0,0), (0,1)), "constant", constant_values=(0.0, 0.0))
-            data = data.dot(transformation.getTransposed().getData())
-            data += transformation.getData()[:,3]
-            data = data[:,0:3]
-
-            result = self.set(vertices=data)
-            return result
+            return self.set(vertices=transformVertices(self._vertices, transformation))
         else:
             return MeshData(vertices = self._vertices)
 
@@ -193,7 +187,6 @@ class MeshData:
     #######################################################################
     # Convex hull handling
     #######################################################################
-
     def _computeConvexHull(self):
         points = self.getVertices()
         if points is None:
@@ -219,9 +212,17 @@ class MeshData:
             self._convex_hull_vertices = numpy.take(convex_hull.points, convex_hull.vertices, axis=0)
         return self._convex_hull_vertices
 
+    def getConvexHullTransformedVertices(self, transformation):
+        vertices = self.getConvexHullVertices()
+        if vertices is not None:
+            return transformVertices(vertices, transformation)
+        else:
+            return None
+
     def toString(self):
         return "MeshData(_vertices=" + str(self._vertices) + ", _normals=" + str(self._normals) + ", _indices=" + \
-               str(self._indices) + ", _colors=" + str(self._colors) + ", _uvs=" + str(self._uvs) + ") "
+               str(self._indices) + ", _colors=" + str(self._colors) + ", _uvs=" + str(self._uvs) +") "
+
 ##
 #
 def immutableNDArray(nda):
@@ -232,3 +233,10 @@ def immutableNDArray(nda):
     copy = deepcopy(nda)
     copy.flags.writeable = False
     return copy
+
+def transformVertices(vertices, transformation):
+    data = numpy.pad(vertices, ((0, 0), (0, 1)), "constant", constant_values=(0.0, 0.0))
+    data = data.dot(transformation.getTransposed().getData())
+    data += transformation.getData()[:, 3]
+    data = data[:, 0:3]
+    return data
