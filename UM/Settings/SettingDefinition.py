@@ -122,6 +122,16 @@ class SettingDefinition:
     def serialize(self):
         pass
 
+    ##  Gets the key of this setting definition and of all its descendants.
+    #
+    #   \return A set of the key in this definition and all its descendants.
+    def getAllKeys(self):
+        keys = set()
+        keys.add(self.key)
+        for child in self.children:
+            keys |= child.getAllKeys() #Recursively get all keys of all descendants.
+        return keys
+
     ##  Serialize this setting to a dict.
     #
     #   \return \type{dict} A representation of this setting definition.

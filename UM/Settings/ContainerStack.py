@@ -6,6 +6,7 @@ import io
 from UM.Signal import Signal, signalemitter
 from UM.PluginObject import PluginObject
 from UM.Logger import Logger
+from UM.Settings.DefinitionContainer import DefinitionContainer #For getting all definitions in this stack.
 import UM.Settings.ContainerRegistry
 
 from . import ContainerInterface
@@ -167,6 +168,19 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
                     raise Exception("When trying to deserialize, we recieved an unknown ID (%s) for container" % container_id)
 
         ## TODO; Deserialize the containers.
+
+    ##  Get all keys known to this container stack.
+    #
+    #   In combination with getProperty(), you can obtain the current property
+    #   values of all settings.
+    #
+    #   \return A set of all setting keys in this container stack.
+    def getAllKeys(self):
+        keys = set()
+        definition_containers = [container for container in self.getContainers() if container.__class__ == DefinitionContainer] #To get all keys, get all definitions from all definition containers.
+        for definition_container in definition_containers:
+            keys |= definition_container.getAllKeys()
+        return keys
 
     ##  Get a list of all containers in this stack.
     #

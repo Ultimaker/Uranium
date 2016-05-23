@@ -75,6 +75,15 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
     def definitions(self):
         return self._definitions
 
+    ##  Gets all keys of settings in this container.
+    #
+    #   \return A set of all keys of settings in this container.
+    def getAllKeys(self):
+        keys = set()
+        for definition in self.definitions:
+            keys |= definition.getAllKeys()
+        return keys
+
     ##  \copydoc ContainerInterface::getMetaDataEntry
     #
     #   Reimplemented from ContainerInterface
