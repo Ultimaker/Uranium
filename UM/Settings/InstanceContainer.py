@@ -248,3 +248,12 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
     #   way of figuring out what SettingDefinition to use when creating a new SettingInstance.
     def setDefinition(self, definition):
         self._definition = definition
+
+    def __lt__(self, other):
+        own_weight = self.getMetaDataEntry("weight")
+        other_weight = self.getMetaDataEntry("weight")
+
+        if own_weight and other_weight:
+            return own_weight < other_weight
+
+        return self._name < other.name
