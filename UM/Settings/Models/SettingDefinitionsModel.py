@@ -129,7 +129,7 @@ class SettingDefinitionsModel(QAbstractListModel):
         if not self._container:
             return
 
-        if key not in self._visible:
+        if not self._show_all and key not in self._visible:
             return
 
         definitions = self._container.findDefinitions(key = key)
@@ -312,7 +312,7 @@ class SettingDefinitionsModel(QAbstractListModel):
 
     def _getFirstVisibleChild(self, definition):
         for child in definition.children:
-            if child.key in self._visible:
+            if self._show_all or child.key in self._visible:
                 return child
 
         return None
@@ -334,7 +334,7 @@ class SettingDefinitionsModel(QAbstractListModel):
         for key in Preferences.getInstance().getValue("general/visible_settings").replace("\n", ";").split(";"):
             new_visible.add(key.strip())
 
-        if new_visible == self._visible:
+        if new_visible == self._visible or self._show_all:
             return
 
         print(new_visible)
