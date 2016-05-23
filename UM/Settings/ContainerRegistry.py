@@ -44,20 +44,6 @@ class ContainerRegistry:
 
         self._containers = []
 
-        self._container_types = {
-            "definition": DefinitionContainer.DefinitionContainer,
-            "instance": InstanceContainer.InstanceContainer,
-            "stack": ContainerStack.ContainerStack,
-        }
-
-        self._mime_type_map = {
-            "application/x-uranium-definitioncontainer": DefinitionContainer.DefinitionContainer,
-            "application/x-uranium-instancecontainer": InstanceContainer.InstanceContainer,
-            "application/x-uranium-containerstack": ContainerStack.ContainerStack,
-        }
-
-        PluginRegistry.getInstance().addType("settings_container", self.addContainerType)
-
         self._resource_types = [Resources.DefinitionContainers]
 
     containerAdded = Signal()
@@ -120,12 +106,13 @@ class ContainerRegistry:
     ##  Add a container type that will be used to serialize/deserialize containers.
     #
     #   \param container An instance of the container type to add.
-    def addContainerType(self, container):
+    @classmethod
+    def addContainerType(cls, container):
         plugin_id = container.getPluginId()
-        self._container_types[plugin_id] = container.__class__
+        cls.__container_types[plugin_id] = container.__class__
 
         metadata = PluginRegistry.getInstance().getMetaData(plugin_id)
-        self._mime_type_map[metadata["settings_container"]["mimetype"]] = container.__class__
+        cls.__mime_type_map[metadata["settings_container"]["mimetype"]] = container.__class__
 
     ##  Load all available definition containers, instance containers and
     #   container stacks.
@@ -140,7 +127,7 @@ class ContainerRegistry:
         for file_path in files:
             try:
                 mime = MimeTypeDatabase.getMimeTypeForFile(file_path)
-                container_type = self._mime_type_map.get(mime.name)
+                container_type = self.__mime_type_map.get(mime.name)
                 container_id = mime.stripExtension(os.path.basename(file_path))
 
                 ## First replace + with empty space (as the file writing does this)
@@ -214,3 +201,17 @@ class ContainerRegistry:
         return cls.__instance
 
     __instance = None
+
+    __container_types = {
+        "definition": DefinitionContainer.DefinitionContainer,
+        "instance": InstanceContainer.InstanceContainer,
+        "stack": ContainerStack.ContainerStack,
+    }
+
+    __mime_type_map = {
+        "application/x-uranium-definitioncontainer": DefinitionContainer.DefinitionContainer,
+        "application/x-uranium-instancecontainer": InstanceContainer.InstanceContainer,
+        "application/x-uranium-containerstack": ContainerStack.ContainerStack,
+    }
+
+PluginRegistry.addType("settings_container", ContainerRegistry.addContainerType)
