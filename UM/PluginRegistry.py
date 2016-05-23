@@ -86,8 +86,7 @@ class PluginRegistry(object):
                 try:
                     self._type_register_map[plugin_type](plugin_object)
                 except Exception as e:
-                    Logger.log("e" , "Unable to add plugin %s" %e)
-             
+                    Logger.logException("e" , "Unable to add plugin %s", id)
             self._plugins[id] = plugin
             self.addActivePlugin(id)
             Logger.log("i", "Loaded plugin %s", id)
