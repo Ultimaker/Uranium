@@ -13,7 +13,7 @@ from UM.Preferences import Preferences
 from UM.OutputDevice.OutputDeviceManager import OutputDeviceManager
 from UM.i18n import i18nCatalog
 
-from UM.Settings.ContainerStack import ContainerStack
+import UM.Settings
 
 import threading
 import argparse
@@ -106,7 +106,7 @@ class Application():
         self.showMessageSignal.connect(self.showMessage)
         self.hideMessageSignal.connect(self.hideMessage)
 
-        self._global_container_stack = ContainerStack("empty")
+        self._global_container_stack = UM.Settings.ContainerStack("empty")
 
     ##  Emitted when the application window was closed and we need to shut down the application
     applicationShuttingDown = Signal()
