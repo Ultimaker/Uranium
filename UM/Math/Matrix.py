@@ -51,6 +51,18 @@ class Matrix(object):
         else:
             self._data = numpy.array(data, copy=True, dtype = numpy.float64)
 
+    def __eq__(self, other):
+        if self is other:
+            return True
+        if other is None:
+            return False
+        if type(other) is not Matrix:
+            return False
+
+        if self._data is None and other._data is None:
+            return True
+        return numpy.array_equal(self._data, other._data)
+
     def at(self, x, y):
         if(x >= 4 or y >= 4 or x < 0 or y < 0):
             raise IndexError
