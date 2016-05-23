@@ -140,7 +140,11 @@ class SettingDefinitionsModel(QAbstractListModel):
 
         if len(definition.children) == 0:
             return
-        parent_index = self._definitions.index(definition)
+
+        try:
+            parent_index = self._definitions.index(definition)
+        except ValueError:
+            return
 
         start_index = parent_index + 1
         end_index = parent_index + len(definition.children)
@@ -172,7 +176,8 @@ class SettingDefinitionsModel(QAbstractListModel):
         self.expand(key)
 
         for child in definitions[0].children:
-            self.expandAll(child.key)
+            if child.children:
+                self.expandAll(child.key)
 
     ##  Hide the children of a specified SettingDefinition.
     @pyqtSlot(str)
@@ -208,12 +213,36 @@ class SettingDefinitionsModel(QAbstractListModel):
     ##  Show a single SettingDefinition.
     @pyqtSlot(str)
     def show(self, key):
-        pass
+        self.setVisible(key, True)
 
     ##  Hide a single SettingDefinition.
     @pyqtSlot(str)
     def hide(self, key):
-        pass
+        self.setVisible(key, False)
+
+    ##  Set a single SettingDefinition's visible state
+    @pyqtSlot(str, bool)
+    def setVisible(self, key, visible):
+        if key in self._visible and visible:
+            # Ignore already visible settings that need to be made visible.
+            return
+
+        if key not in self._visible and not visible:
+            # Ignore already hidden settings that need to be hidden.
+            return
+
+        definitions = self._container.findDefinitions(key = key)
+        if not definitions:
+            Logger.log("e", "Tried to change visiblity of a non-existant SettingDefinition")
+            return
+
+        if visible:
+            self._visible.add(key)
+        else:
+            self._visible.remove(key)
+
+        preference = ";".join(self._visible)
+        Preferences.getInstance().setValue("general/visible_settings", preference)
 
     ##  Reimplemented from QAbstractListModel
     def rowCount(self, parent = None):
@@ -300,7 +329,7 @@ class SettingDefinitionsModel(QAbstractListModel):
         for child in children_list:
             if self._show_all or child.key in self._visible:
                 self._definitions.append(child)
-                if self._expanded_by_default:
+                if self._expanded_by_default or child.key in self._expanded:
                     self.expandAll(child.key)
         self.endResetModel()
 
@@ -330,6 +359,7 @@ class SettingDefinitionsModel(QAbstractListModel):
     def _onPreferencesChanged(self, name):
         if name != "general/visible_settings":
             return
+
         new_visible = set()
         for key in Preferences.getInstance().getValue("general/visible_settings").replace("\n", ";").split(";"):
             new_visible.add(key.strip())
@@ -337,8 +367,10 @@ class SettingDefinitionsModel(QAbstractListModel):
         if new_visible == self._visible or self._show_all:
             return
 
-        print(new_visible)
 
-        self.beginResetModel()
         self._visible = new_visible
-        self.endResetModel()
+
+        if not self._container:
+            return
+
+        self._update()
