@@ -41,8 +41,8 @@ class MeshBuilder:
     #   \return A Mesh data.
     def build(self):
         return MeshData(vertices=self.getVertices(), normals=self.getNormals(), indices=self.getIndices(),
-                        colors=self.getColors(), uvs=self.getUVCoordinates(), file_name=self._file_name,
-                        center_position=self._center_position)
+                        colors=self.getColors(), uvs=self.getUVCoordinates(), file_name=self.getFileName(),
+                        center_position=self.getCenterPosition())
 
     def setCenterPosition(self, position):
         self._center_position = position
