@@ -169,7 +169,15 @@ class ContainerRegistry:
             if not instance.isDirty():
                 continue
 
-            data = instance.serialize()
+            try:
+                data = instance.serialize()
+            except NotImplementedError:
+                # Serializing is not supported so skip this container
+                continue
+            except Exception:
+                Logger.logException("e", "An exception occurred trying to serialize container %s", instance.getId())
+                continue
+
             file_name = urllib.parse.quote_plus(instance.getId()) + ".inst.cfg"
             path = Resources.getStoragePath(Resources.InstanceContainers, file_name)
             with SaveFile(path, "wt", -1, "utf-8") as f:
@@ -179,14 +187,30 @@ class ContainerRegistry:
             if not stack.isDirty():
                 continue
 
-            data = stack.serialize()
+            try:
+                data = stack.serialize()
+            except NotImplementedError:
+                # Serializing is not supported so skip this container
+                continue
+            except Exception:
+                Logger.logException("e", "An exception occurred trying to serialize container %s", stack.getId())
+                continue
+
             file_name = urllib.parse.quote_plus(stack.getId()) + ".stack.cfg"
             path = Resources.getStoragePath(Resources.ContainerStacks, file_name)
             with SaveFile(path, "wt", -1, "utf-8") as f:
                 f.write(data)
 
         for definition in self.findDefinitionContainers():
-            data = definition.serialize()
+            try:
+                data = definition.serialize()
+            except NotImplementedError:
+                # Serializing is not supported so skip this container
+                continue
+            except Exception:
+                Logger.logException("e", "An exception occurred trying to serialize container %s", instance.getId())
+                continue
+
             file_name = urllib.parse.quote_plus(definition.getId()) + ".def.cfg"
             path = Resources.getStoragePath(Resources.DefinitionContainers, file_name)
             with SaveFile(path, "wt", -1, "utf-8") as f:
