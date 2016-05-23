@@ -2,14 +2,26 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 import enum
+import os
 
 from UM.Signal import Signal, signalemitter
 from UM.Logger import Logger
+from UM.Decorators import call_if_enabled
 
 from . import SettingRelation
 from . import Validator
 from . import SettingFunction
 from .SettingDefinition import SettingDefinition
+
+# Helper functions for SettingInstance tracing
+def _traceSetProperty(instance, property_name, property_value, container):
+    Logger.log("d", "Set property {0} of instance {1} to value {2}, updating using values from {3}".format(property_name, instance, property_value, container))
+
+def _traceUpdateProperty(instance, property_name, container):
+    Logger.log("d", "Updating property {0} of instance {1} using container {2}".format(property_name, instance, container))
+
+def _isTraceEnabled():
+    return "URANIUM_TRACE_SETTINGINSTANCE" in os.environ
 
 
 ##  The state of the instance
@@ -60,6 +72,7 @@ class SettingInstance:
 
         raise AttributeError("'SettingInstance' object has no attribute '{0}'".format(name))
 
+    @call_if_enabled(_traceSetProperty, _isTraceEnabled())
     def setProperty(self, name, value, container = None):
         if SettingDefinition.hasProperty(name):
             if SettingDefinition.isReadOnlyProperty(name):
@@ -67,7 +80,6 @@ class SettingInstance:
                 return
 
             if name not in self.__property_values or value != self.__property_values[name]:
-                Logger.log("d", "Set property %s of instance %s", name, self)
 
                 self.__property_values[name] = value
                 if name == "value":
@@ -87,6 +99,7 @@ class SettingInstance:
         else:
             raise AttributeError("No property {0} defined".format(name))
 
+    @call_if_enabled(_traceUpdateProperty, _isTraceEnabled())
     def updateProperty(self, name, container = None):
         if not SettingDefinition.hasProperty(name):
             Logger.log("e", "Trying to update unknown property %s", name)
@@ -96,7 +109,6 @@ class SettingInstance:
             Logger.log("d", "Ignoring update of value for setting %s since it has been set by the user.", self._definition.key)
             return
 
-        Logger.log("d", "Update property %s of instance %s", name, self)
 
         try:
             function = getattr(self._definition, name)

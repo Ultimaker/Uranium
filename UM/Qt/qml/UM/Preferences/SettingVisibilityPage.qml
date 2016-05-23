@@ -66,7 +66,7 @@ PreferencesPage
             }
             ListView
             {
-                model: UM.SettingDefinitionsModel { id: definitionsModel; containerId: "fdmprinter" }
+                model: UM.SettingDefinitionsModel { id: definitionsModel; containerId: "fdmprinter"; showAll: true; }
                 delegate:Loader
                 {
                     id: loader

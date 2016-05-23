@@ -36,6 +36,7 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
         self._metadata = {}
         self._containers = []
         self._next_stack = None
+        self._dirty = True
 
     ##  \copydoc ContainerInterface::getId
     #
@@ -85,6 +86,9 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
             self._metadata[key] = value
         else:
             Logger.log("w", "Meta data with key %s was not found. Unable to change.", key)
+
+    def isDirty(self):
+        return self._dirty
 
     ##  \copydoc ContainerInterface::getProperty
     #

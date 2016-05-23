@@ -11,11 +11,13 @@ from UM.Settings.InstanceContainer import InstanceContainer
 class InstanceContainersModel(ListModel):
     NameRole = Qt.UserRole + 1  # Human readable name (string)
     IdRole = Qt.UserRole + 2    # Unique ID of Definition
+    MetaDataRole = Qt.UserRole + 3
 
     def __init__(self, parent = None):
         super().__init__(parent)
         self.addRoleName(self.NameRole, "name")
         self.addRoleName(self.IdRole, "id")
+        self.addRoleName(self.MetaDataRole, "metadata")
 
         self._instance_containers = []
 
@@ -36,9 +38,14 @@ class InstanceContainersModel(ListModel):
     def _update(self):
         self.clear()
         self._instance_containers = ContainerRegistry.getInstance().findInstanceContainers(**self._filter_dict)
+        self._instance_containers.sort()
+
         for container in self._instance_containers:
-            self.appendItem({"name": container.getName(),
-                             "id": container.getId()})
+            self.appendItem({
+                "name": container.getName(),
+                "id": container.getId(),
+                "metadata": container.getMetaData(),
+            })
 
     ##  Set the filter of this model based on a string.
     #   \param filter_dict Dictionary to do the filtering by.
