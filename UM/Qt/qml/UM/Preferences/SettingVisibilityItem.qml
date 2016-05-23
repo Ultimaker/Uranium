@@ -23,8 +23,7 @@ UM.TooltipArea
         text: definition.label
         checked: model.visible;
         enabled: !model.prohibited;
-
-        //onClicked: delegateItem.settingsModel.setSettingVisible(model.key, checked);
+        onClicked: definitionsModel.setVisible(model.key, checked);
     }
 }
 
