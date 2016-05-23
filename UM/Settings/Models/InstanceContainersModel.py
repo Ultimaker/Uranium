@@ -38,6 +38,8 @@ class InstanceContainersModel(ListModel):
     def _update(self):
         self.clear()
         self._instance_containers = ContainerRegistry.getInstance().findInstanceContainers(**self._filter_dict)
+        self._instance_containers.sort()
+
         for container in self._instance_containers:
             self.appendItem({
                 "name": container.getName(),

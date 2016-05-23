@@ -42,6 +42,7 @@ class ContainerStacksModel(ListModel):
             container.nameChanged.disconnect(self._onContainerNameChanged)
 
         self._container_stacks = ContainerRegistry.getInstance().findContainerStacks(**self._filter_dict)
+        self._container_stacks.sort(key = lambda i: i.getName())
 
         for container in self._container_stacks:
             container.nameChanged.connect(self._onContainerNameChanged)
