@@ -179,6 +179,9 @@ class ContainerRegistry:
     def saveAll(self):
 
         for instance in self.findInstanceContainers():
+            if not instance.isDirty():
+                continue
+
             data = instance.serialize()
             file_name = urllib.parse.quote_plus(instance.getId()) + ".inst.cfg"
             path = Resources.getStoragePath(Resources.InstanceContainers, file_name)
@@ -186,6 +189,9 @@ class ContainerRegistry:
                 f.write(data)
 
         for stack in self.findContainerStacks():
+            if not stack.isDirty():
+                continue
+
             data = stack.serialize()
             file_name = urllib.parse.quote_plus(stack.getId()) + ".stack.cfg"
             path = Resources.getStoragePath(Resources.ContainerStacks, file_name)

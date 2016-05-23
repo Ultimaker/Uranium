@@ -41,6 +41,8 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
         self._metadata = {}
         self._instances = {}
 
+        self._dirty = False
+
     ##  \copydoc ContainerInterface::getId
     #
     #   Reimplemented from ContainerInterface
@@ -62,6 +64,7 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
     def setName(self, name):
         if name != self._name:
             self._name = name
+            self._dirty = True
             self.nameChanged.emit()
 
     ##  \copydoc ContainerInterface::getMetaData
@@ -87,8 +90,13 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
     def addMetaDataEntry(self, key, value):
         if key not in self._metadata:
             self._metadata[key] = value
+            self._dirty = True
         else:
             Logger.log("w", "Meta data with key %s was already added.", key)
+
+    ##  Check if this container is dirty, that is, if it changed from deserialization.
+    def isDirty(self):
+        return self._dirty
 
     ##  \copydoc ContainerInterface::getProperty
     #
@@ -131,6 +139,8 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
 
         Logger.log("d", "Set property %s of setting %s in container %s to value %s", property_name, key, self._id, property_value)
         self._instances[key].setProperty(property_name, property_value, container)
+
+        self._dirty = True
 
     propertyChanged = Signal()
 
@@ -194,6 +204,8 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
         if "values" in parser:
             for key, value in parser["values"].items():
                 self.setProperty(key, "value", value)
+
+        self._dirty = False
 
     ##  Find instances matching certain criteria.
     #
