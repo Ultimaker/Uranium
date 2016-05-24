@@ -6,6 +6,7 @@ from UM.Math.AxisAlignedBox import AxisAlignedBox
 from UM.Logger import Logger
 
 from enum import Enum
+import threading
 import numpy
 import numpy.linalg
 import scipy.spatial
@@ -45,6 +46,7 @@ class MeshData:
         self._center_position = center_position
         self._convex_hull = None    # type: scipy.spatial.qhull.ConvexHull
         self._convex_hull_vertices = None
+        self._convex_hull_lock = threading.Lock()
 
     ## Create a new MeshData with specified changes
     #   \return \type{MeshData}
@@ -204,9 +206,10 @@ class MeshData:
     #
     #    \return \type{scipy.spatial.qhull.ConvexHull}
     def getConvexHull(self):
-        if self._convex_hull is None:
-            self._computeConvexHull()
-        return self._convex_hull
+        with self._convex_hull_lock:
+            if self._convex_hull is None:
+                self._computeConvexHull()
+            return self._convex_hull
 
     ##  Gets the convex hull points
     #
