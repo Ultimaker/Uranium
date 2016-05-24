@@ -32,10 +32,6 @@ class MeshBuilder:
         # original center position
         self._center_position = None
 
-    # FIXME remove this
-    def getData(self):
-        return self.build()
-
     ##  Build a MeshData object.
     #
     #   \return A Mesh data.
