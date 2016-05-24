@@ -4,13 +4,10 @@
 from UM.Tool import Tool
 from UM.Event import Event, MouseEvent
 
-from UM.Math.Plane import Plane
 from UM.Math.Vector import Vector
-from UM.Math.Float import Float
 
 from UM.Operations.MirrorOperation import MirrorOperation
 from UM.Operations.GroupedOperation import GroupedOperation
-from UM.Application import Application
 
 from UM.Scene.Selection import Selection
 from UM.Scene.ToolHandle import ToolHandle
