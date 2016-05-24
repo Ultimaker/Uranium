@@ -15,7 +15,7 @@ ListView {
     verticalLayoutDirection: ListView.BottomToTop;
     visible: true
 
-    model: UM.Models.visibleMessagesModel;
+    model: UM.VisibleMessagesModel { }
 
     interactive: false;
     delegate: Rectangle

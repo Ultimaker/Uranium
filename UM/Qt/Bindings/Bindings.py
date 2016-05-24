@@ -27,6 +27,7 @@ from . import SelectionProxy
 from . import OutputDeviceManagerProxy
 from . import i18nCatalogProxy
 from . import ExtensionModel
+from . import VisibleMessagesModel
 
 import UM.Settings.Models
 
@@ -64,6 +65,7 @@ class Bindings:
         qmlRegisterType(AngledCornerRectangle.AngledCornerRectangle, "UM", 1, 0, "AngledCornerRectangle")
         qmlRegisterType(PointingRectangle.PointingRectangle, "UM", 1, 0, "PointingRectangle")
         qmlRegisterType(ExtensionModel.ExtensionModel, "UM", 1, 0, "ExtensionModel")
+        qmlRegisterType(VisibleMessagesModel.VisibleMessagesModel, "UM", 1, 0, "VisibleMessagesModel")
 
         # Singleton proxy objects
         qmlRegisterSingletonType(ControllerProxy.ControllerProxy, "UM", 1, 0, "Controller", Bindings.createControllerProxy)
