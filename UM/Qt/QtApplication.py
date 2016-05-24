@@ -6,7 +6,7 @@ import os
 import signal
 import platform
 
-from PyQt5.QtCore import Qt, QObject, QCoreApplication, QEvent, pyqtSlot, QLocale, QTranslator, QLibraryInfo, PYQT_VERSION_STR
+from PyQt5.QtCore import Qt, QObject, QCoreApplication, QEvent, pyqtSlot, QLocale, QTranslator, QLibraryInfo, QT_VERSION_STR, PYQT_VERSION_STR
 from PyQt5.QtQml import QQmlApplicationEngine, qmlRegisterType, qmlRegisterSingletonType
 from PyQt5.QtWidgets import QApplication, QSplashScreen
 from PyQt5.QtGui import QGuiApplication, QPixmap
@@ -130,6 +130,8 @@ class QtApplication(QApplication, Application):
         self._engine.addImportPath(os.path.join(Application.getInstallPrefix(), "Resources", "qml"))
         if not hasattr(sys, "frozen"):
             self._engine.addImportPath(os.path.join(os.path.dirname(__file__), "qml"))
+
+        self._engine.rootContext().setContextProperty("QT_VERSION_STR", QT_VERSION_STR)
 
         self.registerObjects(self._engine)
         
