@@ -206,7 +206,11 @@ class SettingDefinition:
         if other is None:
             return False
 
-        return self._key == other.key
+        try:
+            return self._key == other.key
+        except: #Has no key. Not the same type of object.
+            Logger.log("w", "Trying to compare equality of SettingDefinition and something that is no SettingDefinition.")
+            return False
 
     ##  Define a new supported property for SettingDefinitions.
     #
