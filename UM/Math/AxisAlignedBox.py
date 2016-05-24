@@ -15,9 +15,10 @@ class AxisAlignedBox:
 
     def __init__(self, minimum=Vector.Null, maximum=Vector.Null):
         if minimum.x > maximum.x or minimum.y > maximum.y or minimum.z > maximum.z:
-            minimum = Vector(min(minimum.x, maximum.x), min(minimum.y, maximum.y), min(minimum.z, maximum.z))
-            maximum = Vector(max(minimum.x, maximum.x), max(minimum.y, maximum.y), max(minimum.z, maximum.z))
-
+            swapped_minimum = Vector(min(minimum.x, maximum.x), min(minimum.y, maximum.y), min(minimum.z, maximum.z))
+            swapped_maximum = Vector(max(minimum.x, maximum.x), max(minimum.y, maximum.y), max(minimum.z, maximum.z))
+            minimum = swapped_minimum
+            maximum = swapped_maximum
         self._min = minimum
         self._max = maximum
 
