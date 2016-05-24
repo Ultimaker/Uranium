@@ -72,14 +72,6 @@ class ReadMeshJob(Job):
             max_bounds = Application.getInstance().getController().getScene()._maximum_bounds
             node._resetAABB()
             bounding_box = node.getBoundingBox()
-            timeout_counter = 0
-            #As the calculation of the bounding box is in a seperate thread it might be that it's not done yet.
-            while bounding_box.width == 0 or bounding_box.height == 0 or bounding_box.depth == 0:
-                bounding_box = node.getBoundingBox()
-                time.sleep(0.1)
-                timeout_counter += 1
-                if timeout_counter > 10:
-                    break
 
             if Preferences.getInstance().getValue("mesh/scale_to_fit") == True or Preferences.getInstance().getValue("mesh/scale_tiny_meshes") == True:
                 scale_factor_width = max_bounds.width / bounding_box.width
