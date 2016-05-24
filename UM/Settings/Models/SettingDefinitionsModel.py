@@ -60,7 +60,6 @@ class SettingDefinitionsModel(QAbstractListModel):
         if container_id != self._container_id:
             self._container_id = container_id
 
-            self.beginResetModel()
             containers = UM.Settings.ContainerRegistry.getInstance().findDefinitionContainers(id = self._container_id)
             if containers:
                 self._container = containers[0]
@@ -68,7 +67,6 @@ class SettingDefinitionsModel(QAbstractListModel):
                 self._container = None
 
             self._update()
-            self.endResetModel()
 
             self.containerIdChanged.emit()
 
@@ -90,10 +88,8 @@ class SettingDefinitionsModel(QAbstractListModel):
                     Logger.log("w", "Tried to set root of SettingDefinitionsModel to an unknown definition")
                     return
 
-                self.beginResetModel()
                 self._root = definitions[0]
                 self._update()
-                self.endResetModel()
 
             self.rootKeyChanged.emit()
 
@@ -107,9 +103,8 @@ class SettingDefinitionsModel(QAbstractListModel):
     ##  Set the showAll property.
     def setShowAll(self, show):
         if show != self._show_all:
-            self.beginResetModel()
             self._show_all = show
-            self.endResetModel()
+            self._update()
 
     ##  Emitted when the showAll property changes.
     showAllChanged = pyqtSignal()
