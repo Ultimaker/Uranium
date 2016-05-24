@@ -355,6 +355,11 @@ class Polygon:
         else:
             return -1
 
+##  Creates an immutable copy of the given narray
+#
+#   If the array is already immutable then it just returns it.
+#   \param nda \type{numpy.ndarray} the array to copy
+#   \return \type{numpy.ndarray} an immutable narray
 def immutableNDArray(nda):
     if nda is None:
         return None

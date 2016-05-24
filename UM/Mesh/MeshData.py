@@ -46,6 +46,8 @@ class MeshData:
         self._convex_hull = None    # type: scipy.spatial.qhull.ConvexHull
         self._convex_hull_vertices = None
 
+    ## Create a new MeshData with specified changes
+    #   \return \type{MeshData}
     def set(self, vertices=Reuse, normals=Reuse, indices=Reuse, colors=Reuse, uvs=Reuse, file_name=Reuse,
             center_position=Reuse):
         vertices = vertices if vertices is not Reuse else self._vertices
@@ -198,20 +200,26 @@ class MeshData:
         Logger.log("d", "Calculating 3D convex hull took %s seconds. %s input vertices. %s output vertices.",
                    end_time - start_time, len(points), len(self._convex_hull.vertices))
 
-    ##  Gets the Convex Hull points
+    ##  Gets the Convex Hull of this mesh
     #
+    #    \return \type{scipy.spatial.qhull.ConvexHull}
     def getConvexHull(self):
-        # Returns type: scipy.spatial.qhull.ConvexHull
         if self._convex_hull is None:
             self._computeConvexHull()
         return self._convex_hull
 
+    ##  Gets the convex hull points
+    #
+    #   \return \type{numpy.ndarray} the vertices which describe the convex hull
     def getConvexHullVertices(self):
         if self._convex_hull_vertices is None:
             convex_hull = self.getConvexHull()
             self._convex_hull_vertices = numpy.take(convex_hull.points, convex_hull.vertices, axis=0)
         return self._convex_hull_vertices
 
+    ##  Gets transformed convex hull points
+    #
+    #   \return \type{numpy.ndarray} the vertices which describe the convex hull
     def getConvexHullTransformedVertices(self, transformation):
         vertices = self.getConvexHullVertices()
         if vertices is not None:
@@ -223,8 +231,11 @@ class MeshData:
         return "MeshData(_vertices=" + str(self._vertices) + ", _normals=" + str(self._normals) + ", _indices=" + \
                str(self._indices) + ", _colors=" + str(self._colors) + ", _uvs=" + str(self._uvs) +") "
 
-##
+##  Creates an immutable copy of the given narray
 #
+#   If the array is already immutable then it just returns it.
+#   \param nda \type{numpy.ndarray} the array to copy
+#   \return \type{numpy.ndarray} an immutable narray
 def immutableNDArray(nda):
     if nda is None:
         return None
@@ -234,6 +245,11 @@ def immutableNDArray(nda):
     copy.flags.writeable = False
     return copy
 
+##  Transform an array of vertices using a matrix
+#
+#   \param vertices \type{numpy.ndarray} array of 3D vertices
+#   \param transformation a 4x4 matrix
+#   \return \type{numpy.ndarray} the transformed vertices
 def transformVertices(vertices, transformation):
     data = numpy.pad(vertices, ((0, 0), (0, 1)), "constant", constant_values=(0.0, 0.0))
     data = data.dot(transformation.getTransposed().getData())
