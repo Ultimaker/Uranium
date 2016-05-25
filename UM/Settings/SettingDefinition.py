@@ -175,8 +175,18 @@ class SettingDefinition:
     def matchesFilter(self, **kwargs):
         for key, value in kwargs.items():
             try:
-                if getattr(self, key) != value:
-                    return False
+                try:
+                    if "*" in value:  # Don't look for exact match but if the value is contained in it.
+                        key_value = getattr(self, key)
+                        value = value.strip("*")
+                        if value not in key_value:
+                            return False
+                    else:
+                        if getattr(self, key) != value:
+                            return False
+                except TypeError:  # If property is not a string, the "*" in fails.
+                    if getattr(self, key) != value:
+                        return False
             except AttributeError:
                 return False
         return True
