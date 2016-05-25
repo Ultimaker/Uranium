@@ -106,7 +106,8 @@ class Application():
         self.showMessageSignal.connect(self.showMessage)
         self.hideMessageSignal.connect(self.hideMessage)
 
-        self._global_container_stack = UM.Settings.ContainerStack("empty")
+        self._global_container_stack = None
+
 
     ##  Emitted when the application window was closed and we need to shut down the application
     applicationShuttingDown = Signal()
