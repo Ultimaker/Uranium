@@ -15,6 +15,7 @@ import hashlib
 from time import time
 numpy.seterr(all="ignore") # Ignore warnings (dev by zero)
 
+MAXIMUM_HULL_VERTICES_COUNT = 1024   # Maximum number of vertices to have in the convex hull.
 
 class MeshType(Enum):
     faces = 1 # Start at one, as 0 is false (so if this is used in a if statement, it's always true)
@@ -195,12 +196,7 @@ class MeshData:
         points = self.getVertices()
         if points is None:
             return
-
-        start_time = time()
-        self._convex_hull = scipy.spatial.ConvexHull(points)
-        end_time = time()
-        Logger.log("d", "Calculating 3D convex hull took %s seconds. %s input vertices. %s output vertices.",
-                   end_time - start_time, len(points), len(self._convex_hull.vertices))
+        self._convex_hull = approximateConvexHull(points, MAXIMUM_HULL_VERTICES_COUNT)
 
     ##  Gets the Convex Hull of this mesh
     #
@@ -259,3 +255,56 @@ def transformVertices(vertices, transformation):
     data += transformation.getData()[:, 3]
     data = data[:, 0:3]
     return data
+
+##  Round an array of vertices off to the nearest multiple of unit
+#
+#   \param vertices \type{numpy.ndarray} the source array of vertices
+#   \param unit \type{float} the unit to scale the vertices to
+#   \return \type{numpy.ndarray} the rounded vertices
+def roundVertexArray(vertices, unit):
+    expanded = vertices / unit
+    rounded = expanded.round(0)
+    return rounded * unit
+
+##  Extract the unique vectors from an array of vectors
+#
+#   \param vertices \type{numpy.ndarray} the source array of vertices
+#   \return \type{numpy.ndarray} the array of unique vertices
+def uniqueVertices(vertices):
+    vertex_byte_view = numpy.ascontiguousarray(vertices).view(
+        numpy.dtype((numpy.void, vertices.dtype.itemsize * vertices.shape[1])))
+    _, idx = numpy.unique(vertex_byte_view, return_index=True)
+    return vertices[idx]  # Select the unique rows by index.
+
+##  Compute an approximation of the convex hull of an array of vertices
+#
+#   \param vertices \type{numpy.ndarray} the source array of vertices
+#   \param target_count \type{int} the maximum number of vertices which may be in the result
+#   \return \type{scipy.spatial.qhull.ConvexHull} the convex hull or None if the input was degenerate
+def approximateConvexHull(vertex_data, target_count):
+    start_time = time()
+
+    input_max = target_count * 50   # Maximum number of vertices we want to feed to the convex hull algorithm.
+    unit_size = 0.125               # Initial rounding interval. i.e. round to 0.125.
+
+    # Round off vertices and extract the uniques until the number of vertices is below the input_max.
+    while len(vertex_data) > input_max:
+        vertex_data = uniqueVertices(roundVertexArray(vertex_data, unit_size))
+        unit_size *= 2
+
+    if len(vertex_data) < 4:
+        return None
+
+    # Take the convex hull and keep on rounding it off until the number of vertices is below the target_count.
+    hull_result = scipy.spatial.ConvexHull(vertex_data)
+    vertex_data = numpy.take(hull_result.points, hull_result.vertices, axis=0)
+
+    while len(vertex_data) > target_count:
+        vertex_data = uniqueVertices(roundVertexArray(vertex_data, unit_size))
+        hull_result = scipy.spatial.ConvexHull(vertex_data)
+        vertex_data = numpy.take(hull_result.points, hull_result.vertices, axis=0)
+
+    end_time = time()
+    Logger.log("d", "approximateConvexHull(target_count=%s) Calculating 3D convex hull took %s seconds. %s input vertices. %s output vertices.",
+               target_count, end_time - start_time, len(vertex_data), len(hull_result.vertices))
+    return hull_result
