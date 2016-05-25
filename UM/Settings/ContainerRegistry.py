@@ -42,7 +42,9 @@ class ContainerRegistry:
         )
         MimeTypeDatabase.addMimeType(mime)
 
-        self._containers = []
+        self._emptyInstanceContainer = _EmptyInstanceContainer("empty")
+
+        self._containers = [ self._emptyInstanceContainer ]
 
         self._resource_types = [Resources.DefinitionContainers]
 
@@ -103,6 +105,10 @@ class ContainerRegistry:
 
         return containers
 
+    ##  This is a small convenience to make it easier to support complex structures in ContainerStacks.
+    def getEmptyInstanceContainer(self):
+        return self._emptyInstanceContainer
+
     ##  Add a container type that will be used to serialize/deserialize containers.
     #
     #   \param container An instance of the container type to add.
@@ -130,10 +136,8 @@ class ContainerRegistry:
                 container_type = self.__mime_type_map.get(mime.name)
                 container_id = mime.stripExtension(os.path.basename(file_path))
 
-                ## First replace + with empty space (as the file writing does this)
-                container_id = container_id.replace("+", " ")
                 ## Ensure that all special characters are encoded back.
-                container_id = urllib.parse.unquote(container_id)
+                container_id = urllib.parse.unquote_plus(container_id)
 
                 if container_type is None:
                     Logger.log("w", "Unable to detect container type for %s", mime.name)
@@ -239,3 +243,13 @@ class ContainerRegistry:
     }
 
 PluginRegistry.addType("settings_container", ContainerRegistry.addContainerType)
+
+class _EmptyInstanceContainer(InstanceContainer.InstanceContainer):
+    def isDirty(self):
+        return False
+
+    def getProperty(self, key, property_name):
+        return None
+
+    def setProperty(self, key, property_name, property_value):
+        return

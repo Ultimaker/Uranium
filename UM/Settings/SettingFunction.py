@@ -45,7 +45,12 @@ class SettingFunction:
 
         locals = { }
         for name in self._settings:
-            locals[name] = value_provider.getProperty(name, "value")
+            value = value_provider.getProperty(name, "value")
+            if value is None:
+                Logger.log("e", "%s references unknown setting %s", self, name)
+                continue
+
+            locals[name] = value
 
         try:
             return eval(self._compiled, globals(), locals)
