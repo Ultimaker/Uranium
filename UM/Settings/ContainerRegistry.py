@@ -136,10 +136,8 @@ class ContainerRegistry:
                 container_type = self.__mime_type_map.get(mime.name)
                 container_id = mime.stripExtension(os.path.basename(file_path))
 
-                ## First replace + with empty space (as the file writing does this)
-                container_id = container_id.replace("+", " ")
                 ## Ensure that all special characters are encoded back.
-                container_id = urllib.parse.unquote(container_id)
+                container_id = urllib.parse.unquote_plus(container_id)
 
                 if container_type is None:
                     Logger.log("w", "Unable to detect container type for %s", mime.name)
