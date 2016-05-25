@@ -358,11 +358,16 @@ class Polygon:
 ##  Creates an immutable copy of the given narray
 #
 #   If the array is already immutable then it just returns it.
-#   \param nda \type{numpy.ndarray} the array to copy
+#   \param nda \type{numpy.ndarray} the array to copy. May be a list
 #   \return \type{numpy.ndarray} an immutable narray
 def immutableNDArray(nda):
     if nda is None:
         return None
+
+    if type(nda) is list:
+        nda = numpy.array(nda, numpy.float32)
+        nda.flags.writeable = False
+
     if not nda.flags.writeable:
         return nda
     copy = deepcopy(nda)
