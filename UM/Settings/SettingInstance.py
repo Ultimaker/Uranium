@@ -119,19 +119,18 @@ class SettingInstance:
             container = self._container
 
         result = function(container)
-        if name not in self.__property_values or result != self.__property_values[name]:
-            self.__property_values[name] = result
-            if name == "value":
-                self._update(container)
+        self.__property_values[name] = result
+        if name == "value":
+            self._update(container)
 
-                self._state = InstanceState.Calculated
-                self.propertyChanged.emit(self, "state")
+            self._state = InstanceState.Calculated
+            self.propertyChanged.emit(self, "state")
 
-            if self._validator:
-                self._validator.validate()
-                self.propertyChanged.emit(self, "validationState")
+        if self._validator:
+            self._validator.validate()
+            self.propertyChanged.emit(self, "validationState")
 
-            self.propertyChanged.emit(self, name)
+        self.propertyChanged.emit(self, name)
 
     def recalculate(self, container):
         self._update(container)
