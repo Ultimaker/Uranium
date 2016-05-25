@@ -178,8 +178,8 @@ class SettingDefinition:
                 try:
                     if "*" in value:  # Don't look for exact match but if the value is contained in it.
                         key_value = getattr(self, key)
-                        value = value.strip("*")
-                        if value not in key_value:
+                        value = value.strip("*").lower()
+                        if value not in key_value.lower():
                             return False
                     else:
                         if getattr(self, key) != value:
