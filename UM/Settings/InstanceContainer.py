@@ -211,7 +211,7 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
 
         if "values" in parser:
             for key, value in parser["values"].items():
-                self.setProperty(key, "value", value)
+                self.setProperty(key, "value", value, self._definition)
 
         self._dirty = False
 
