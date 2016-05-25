@@ -120,6 +120,7 @@ class Application():
 
     def setGlobalContainerStack(self, stack):
         self._global_container_stack = stack
+        self._global_container_stack.recalculate()
         self.globalContainerStackChanged.emit()
 
     def getGlobalContainerStack(self):

@@ -133,6 +133,13 @@ class SettingInstance:
 
             self.propertyChanged.emit(self, name)
 
+    def recalculate(self, container):
+        self._update(container)
+
+        if self._validator:
+            self._validator.validate()
+            self.propertyChanged.emit(self, "validationState")
+
     ##  Emitted whenever a property of this instance changes.
     #
     #   \param instance The instance that reported the property change (usually self).
