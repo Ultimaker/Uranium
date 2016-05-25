@@ -42,7 +42,9 @@ class ContainerRegistry:
         )
         MimeTypeDatabase.addMimeType(mime)
 
-        self._containers = []
+        self._emptyInstanceContainer = _EmptyInstanceContainer("empty")
+
+        self._containers = [ self._emptyInstanceContainer ]
 
         self._resource_types = [Resources.DefinitionContainers]
 
@@ -102,6 +104,10 @@ class ContainerRegistry:
                 containers.append(container)
 
         return containers
+
+    ##  This is a small convenience to make it easier to support complex structures in ContainerStacks.
+    def getEmptyInstanceContainer(self):
+        return self._emptyInstanceContainer
 
     ##  Add a container type that will be used to serialize/deserialize containers.
     #
@@ -239,3 +245,13 @@ class ContainerRegistry:
     }
 
 PluginRegistry.addType("settings_container", ContainerRegistry.addContainerType)
+
+class _EmptyInstanceContainer(InstanceContainer.InstanceContainer):
+    def isDirty(self):
+        return False
+
+    def getProperty(self, key, property_name):
+        return None
+
+    def setProperty(self, key, property_name, property_value):
+        return
