@@ -66,7 +66,10 @@ class SettingInstance:
         if name in self.__property_values:
             value = self.__property_values[name]
             if isinstance(value, str):
-                return SettingDefinition.settingValueFromString(self._definition.type, value)
+                try:
+                    return SettingDefinition.settingValueFromString(self._definition.type, value)
+                except Exception:
+                    return value
             else:
                 return value
 
