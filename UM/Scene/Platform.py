@@ -4,6 +4,7 @@
 from . import SceneNode
 
 from UM.Application import Application
+from UM.Logger import Logger
 from UM.Resources import Resources
 from UM.Math.Vector import Vector
 from UM.Job import Job
@@ -61,7 +62,11 @@ class Platform(SceneNode.SceneNode):
 
                 offset = container.getMetaDataEntry("platform_offset")
                 if offset:
-                    self.setPosition(Vector(offset[0], offset[1], offset[2]))
+                    if len(offset) == 3:
+                        self.setPosition(Vector(offset[0], offset[1], offset[2]))
+                    else:
+                        Logger.log("w", "Platform offset is invalid: %s", str(offset))
+                        self.setPosition(Vector(0.0, 0.0, 0.0))
                 else:
                     self.setPosition(Vector(0.0, 0.0, 0.0))
 
