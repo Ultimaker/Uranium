@@ -250,7 +250,6 @@ class SettingDefinitionsModel(QAbstractListModel):
     #   \param filter_dict Dictionary to do the filtering by.
     def setFilter(self, filter_dict):
         self._filter_dict = filter_dict
-        print("Filter dict set:", filter_dict)
         self._update()
 
     filterChanged = pyqtSignal()
@@ -258,6 +257,12 @@ class SettingDefinitionsModel(QAbstractListModel):
     @pyqtProperty("QVariantMap", fset=setFilter, notify=filterChanged)
     def filter(self):
         return self._filter_dict
+
+    ##  Filter the settings definition by a partial match against their labels
+    #   \param text Partial text to match the labels of the settings definitions with
+    @pyqtSlot(str)
+    def setLabelFilter(self, text):
+        self.setFilter({"label": "%s*" % text})
 
     ##  Reimplemented from QAbstractListModel
     def data(self, index, role):
