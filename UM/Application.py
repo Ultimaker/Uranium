@@ -12,19 +12,21 @@ from UM.Mesh.MeshFileHandler import MeshFileHandler
 from UM.Resources import Resources
 from UM.Operations.OperationStack import OperationStack
 from UM.Event import CallFunctionEvent
-from UM.Signal import Signal, SignalEmitter
+from UM.Signal import Signal, signalemitter
 from UM.Logger import Logger
 from UM.Preferences import Preferences
 from UM.OutputDevice.OutputDeviceManager import OutputDeviceManager
-from UM.Settings.MachineManager import MachineManager
 from UM.i18n import i18nCatalog
+
+import UM.Settings
 
 ##  Central object responsible for running the main event loop and creating other central objects.
 #
 #   The Application object is a central object for accessing other important objects. It is also
 #   responsible for starting the main event loop. It is passed on to plugins so it can be easily
 #   used to access objects required for those plugins.
-class Application(SignalEmitter):
+@signalemitter
+class Application():
     ##  Init method
     #
     #   \param name \type{string} The name of the application.
@@ -70,12 +72,13 @@ class Application(SignalEmitter):
         except FileNotFoundError:
             pass
 
+        preferences.addPreference("general/visible_settings", "")
+
         self._controller = Controller(self)
         self._mesh_file_handler = MeshFileHandler()
         self._extensions = []
         self._backend = None
         self._output_device_manager = OutputDeviceManager()
-        self._machine_manager = MachineManager(self._application_name)
 
         self._required_plugins = []
 
@@ -102,12 +105,25 @@ class Application(SignalEmitter):
         self.showMessageSignal.connect(self.showMessage)
         self.hideMessageSignal.connect(self.hideMessage)
 
+        self._global_container_stack = None
+
+
     ##  Emitted when the application window was closed and we need to shut down the application
     applicationShuttingDown = Signal()
 
     showMessageSignal = Signal()
 
     hideMessageSignal = Signal()
+
+    globalContainerStackChanged = Signal()
+
+    def setGlobalContainerStack(self, stack):
+        self._global_container_stack = stack
+        self._global_container_stack.recalculate()
+        self.globalContainerStackChanged.emit()
+
+    def getGlobalContainerStack(self):
+        return self._global_container_stack
 
     def hideMessage(self, message):
         raise NotImplementedError
@@ -215,9 +231,6 @@ class Application(SignalEmitter):
     def setBackend(self, backend):
         self._backend = backend
 
-    def getMachineManager(self):
-        return self._machine_manager
-
     ##  Get the backend of the application (the program that does the heavy lifting).
     #   \returns Backend \type{Backend}
     def getBackend(self):
@@ -291,7 +304,6 @@ class Application(SignalEmitter):
                             dest="external-backend",
                             action="store_true", default=False,
                             help="Use an externally started backend instead of starting it automatically.")
-
         self.addCommandLineOptions(parser)
 
         self._parsed_command_line = vars(parser.parse_args())

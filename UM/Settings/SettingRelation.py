@@ -1,0 +1,58 @@
+# Copyright (c) 2016 Ultimaker B.V.
+# Uranium is released under the terms of the AGPLv3 or higher.
+
+import enum
+
+##  The type of relation, i.e. what direction does this relation have.
+class RelationType(enum.IntEnum):
+    RequiresTarget = 1 # The relation represents that the owner requires the target.
+    RequiredByTarget = 2 # The relation represents that the target requires the owner.
+
+##  A representation of a relationship between two settings.
+#
+#   This is a simple class representing a relationship between two settings.
+#   One of the settings is the "owner", which means it contains the setting, the other
+#   setting is the "target", the setting the relation is pointing at. Relations
+#   have a type and a role. The type determines in what direction this relation is,
+#   the role what property it is used for.
+#
+#   \note SettingRelation objects are usually created by DefinitionContainer after
+#   constructing SettingDefinition objects.
+class SettingRelation:
+    ##  Constructor.
+    #
+    #   \param owner \type{SettingDefinition} The object that owns this relation.
+    #   \param target \type{SettingDefinition} The target of the relation.
+    #   \param type \type{RelationType} The type of the relation.
+    #   \param role \type{string} The role of the relation, what property is it used for.
+    def __init__(self, owner, target, relation_type, role):
+        if owner is None or target is None:
+            raise ValueError("owner or target cannot be None")
+
+        self._owner = owner
+        self._target = target
+        self._type = relation_type
+        self._role = role
+
+    ##  The owner of this relation.
+    @property
+    def owner(self):
+        return self._owner
+
+    ##  The target of this relation.
+    @property
+    def target(self):
+        return self._target
+
+    ##  The type of this relation.
+    @property
+    def type(self):
+        return self._type
+
+    ##  The role of this relation.
+    @property
+    def role(self):
+        return self._role
+
+    def __repr__(self):
+        return "<SettingRelation owner={0} target={1} type={2} role={3}>".format(self._owner, self._target, self._type, self._role)

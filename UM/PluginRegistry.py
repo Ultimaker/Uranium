@@ -17,7 +17,7 @@ from UM.Logger import Logger
 #
 #   [plugins]: docs/plugins.md
 class PluginRegistry(object):
-    APIVersion = 2
+    APIVersion = 3
 
     def __init__(self):
         super().__init__()
@@ -85,11 +85,12 @@ class PluginRegistry(object):
                 try:
                     self._type_register_map[plugin_type](plugin_object)
                 except Exception as e:
-                    Logger.log("e", "Unable to add plugin %s" %e)
+                    Logger.logException("e" , "Unable to add plugin %s", id)
 
             self._plugins[plugin_id] = plugin
             self.addActivePlugin(plugin_id)
             Logger.log("i", "Loaded plugin %s", plugin_id)
+
         except KeyError as e:
             Logger.log("e", "Error loading plugin %s:", plugin_id)
             Logger.log("e", "Unknown plugin type: %s", str(e))

@@ -13,7 +13,7 @@ def getMetaData():
             "description": catalog.i18nc("@info:whatsthis", "Enables saving to local files."),
             "author": "Ultimaker B.V.",
             "version": "1.0",
-            "api": 2,
+            "api": 3,
         }
     }
 

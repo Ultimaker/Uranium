@@ -5,18 +5,14 @@ from PyQt5.QtQml import qmlRegisterType, qmlRegisterSingletonType, qmlRegisterUn
 
 from UM.Qt.Duration import Duration, DurationFormat
 
-from UM.Qt.Bindings.MainWindow import MainWindow
-
-from UM.Qt.Bindings.ViewModel import ViewModel
-from UM.Qt.Bindings.ToolModel import ToolModel
-
-from UM.Qt.Bindings.ApplicationProxy import ApplicationProxy
-from UM.Qt.Bindings.ControllerProxy import ControllerProxy
-from UM.Qt.Bindings.BackendProxy import BackendProxy
-from UM.Qt.Bindings.SceneProxy import SceneProxy
-from UM.Qt.Bindings.Models import Models
-from UM.Qt.Bindings.ResourcesProxy import ResourcesProxy
-
+from . import MainWindow
+from . import ViewModel
+from . import ToolModel
+from . import ApplicationProxy
+from . import ControllerProxy
+from . import BackendProxy
+from . import SceneProxy
+from . import ResourcesProxy
 from . import OperationStackProxy
 from . import JobsModel
 from . import MeshFileHandlerProxy
@@ -24,45 +20,37 @@ from . import PreferencesProxy
 from . import Theme
 from . import AngledCornerRectangle
 from . import PointingRectangle
-from . import SettingCategoriesModel
 from . import ActiveToolProxy
 from . import ActiveViewProxy
 from . import OutputDevicesModel
 from . import SelectionProxy
 from . import OutputDeviceManagerProxy
-from . import MachineDefinitionsModel
-from . import MachineInstancesModel
-from . import ProfilesModel
-from . import MachineManagerProxy
-from . import MachineVariantsModel
-from . import MachineMaterialsModel
 from . import i18nCatalogProxy
-from . import ActiveProfileProxy
+from . import ExtensionModel
+from . import VisibleMessagesModel
+
+import UM.Settings.Models
 
 class Bindings:
     @classmethod
     def createControllerProxy(self, engine, script_engine):
-        return ControllerProxy()
+        return ControllerProxy.ControllerProxy()
 
     @classmethod
     def createApplicationProxy(self, engine, script_engine):
-        return ApplicationProxy()
+        return ApplicationProxy.ApplicationProxy()
 
     @classmethod
     def createBackendProxy(self, engine, script_engine):
-        return BackendProxy()
+        return BackendProxy.BackendProxy()
 
     @classmethod
     def createSceneProxy(self, engine, script_engine):
-        return SceneProxy()
-
-    @classmethod
-    def createModels(self, engine, script_engine):
-        return Models()
+        return SceneProxy.SceneProxy()
 
     @classmethod
     def createResourcesProxy(cls, engine, script_engine):
-        return ResourcesProxy()
+        return ResourcesProxy.ResourcesProxy()
 
     @classmethod
     def createOperationStackProxy(cls, engine, script_engine):
@@ -70,22 +58,21 @@ class Bindings:
 
     @classmethod
     def register(self):
-        qmlRegisterType(MainWindow, "UM", 1, 0, "MainWindow")
-        qmlRegisterType(ViewModel, "UM", 1, 0, "ViewModel")
-        #qmlRegisterType(FileModel, "UM", 1, 0, "FileModel")
-        qmlRegisterType(ToolModel, "UM", 1, 0, "ToolModel")
+        qmlRegisterType(MainWindow.MainWindow, "UM", 1, 0, "MainWindow")
+        qmlRegisterType(ViewModel.ViewModel, "UM", 1, 0, "ViewModel")
+        qmlRegisterType(ToolModel.ToolModel, "UM", 1, 0, "ToolModel")
         qmlRegisterType(JobsModel.JobsModel, "UM", 1, 0, "JobsModel")
-        qmlRegisterType(SettingCategoriesModel.SettingCategoriesModel, "UM", 1, 0, "SettingCategoriesModel")
         qmlRegisterType(AngledCornerRectangle.AngledCornerRectangle, "UM", 1, 0, "AngledCornerRectangle")
         qmlRegisterType(PointingRectangle.PointingRectangle, "UM", 1, 0, "PointingRectangle")
+        qmlRegisterType(ExtensionModel.ExtensionModel, "UM", 1, 0, "ExtensionModel")
+        qmlRegisterType(VisibleMessagesModel.VisibleMessagesModel, "UM", 1, 0, "VisibleMessagesModel")
 
         # Singleton proxy objects
-        qmlRegisterSingletonType(ControllerProxy, "UM", 1, 0, "Controller", Bindings.createControllerProxy)
-        qmlRegisterSingletonType(ApplicationProxy, "UM", 1, 0, "Application", Bindings.createApplicationProxy)
-        qmlRegisterSingletonType(BackendProxy, "UM", 1, 0, "Backend", Bindings.createBackendProxy)
-        qmlRegisterSingletonType(SceneProxy, "UM", 1, 0, "Scene", Bindings.createSceneProxy)
-        qmlRegisterSingletonType(Models, "UM", 1, 0, "Models", Bindings.createModels)
-        qmlRegisterSingletonType(ResourcesProxy, "UM", 1, 0, "Resources", Bindings.createResourcesProxy)
+        qmlRegisterSingletonType(ControllerProxy.ControllerProxy, "UM", 1, 0, "Controller", Bindings.createControllerProxy)
+        qmlRegisterSingletonType(ApplicationProxy.ApplicationProxy, "UM", 1, 0, "Application", Bindings.createApplicationProxy)
+        qmlRegisterSingletonType(BackendProxy.BackendProxy, "UM", 1, 0, "Backend", Bindings.createBackendProxy)
+        qmlRegisterSingletonType(SceneProxy.SceneProxy, "UM", 1, 0, "Scene", Bindings.createSceneProxy)
+        qmlRegisterSingletonType(ResourcesProxy.ResourcesProxy, "UM", 1, 0, "Resources", Bindings.createResourcesProxy)
         qmlRegisterSingletonType(OperationStackProxy.OperationStackProxy, "UM", 1, 0, "OperationStack", Bindings.createOperationStackProxy)
         qmlRegisterSingletonType(MeshFileHandlerProxy.MeshFileHandlerProxy, "UM", 1, 0, "MeshFileHandler", MeshFileHandlerProxy.createMeshFileHandlerProxy)
         qmlRegisterSingletonType(PreferencesProxy.PreferencesProxy, "UM", 1, 0, "Preferences", PreferencesProxy.createPreferencesProxy)
@@ -100,12 +87,12 @@ class Bindings:
         # Additions after 15.06. Uses API version 1.1 so should be imported with "import UM 1.1"
         qmlRegisterType(OutputDevicesModel.OutputDevicesModel, "UM", 1, 1, "OutputDevicesModel")
         qmlRegisterType(i18nCatalogProxy.i18nCatalogProxy, "UM", 1, 1, "I18nCatalog")
-        qmlRegisterType(MachineDefinitionsModel.MachineDefinitionsModel, "UM", 1, 1, "MachineDefinitionsModel")
-        qmlRegisterType(MachineInstancesModel.MachineInstancesModel, "UM", 1, 1, "MachineInstancesModel")
-        qmlRegisterType(MachineVariantsModel.MachineVariantsModel, "UM", 1, 1, "MachineVariantsModel")
-        qmlRegisterType(MachineMaterialsModel.MachineMaterialsModel, "UM", 1, 1, "MachineMaterialsModel")
-        qmlRegisterType(ProfilesModel.ProfilesModel, "UM", 1, 1, "ProfilesModel")
 
         qmlRegisterSingletonType(OutputDeviceManagerProxy.OutputDeviceManagerProxy, "UM", 1, 1, "OutputDeviceManager", OutputDeviceManagerProxy.createOutputDeviceManagerProxy)
-        qmlRegisterSingletonType(MachineManagerProxy.MachineManagerProxy, "UM", 1, 1, "MachineManager", MachineManagerProxy.createMachineManagerProxy)
-        qmlRegisterSingletonType(ActiveProfileProxy.ActiveProfileProxy, "UM", 1, 1, "ActiveProfile", ActiveProfileProxy.createActiveProfileProxy)
+
+        # Additions after 2.1. Uses API version 1.2
+        qmlRegisterType(UM.Settings.Models.SettingDefinitionsModel, "UM", 1, 2, "SettingDefinitionsModel")
+        qmlRegisterType(UM.Settings.Models.DefinitionContainersModel, "UM", 1, 2, "DefinitionContainersModel")
+        qmlRegisterType(UM.Settings.Models.InstanceContainersModel, "UM", 1, 2, "InstanceContainersModel")
+        qmlRegisterType(UM.Settings.Models.ContainerStacksModel, "UM", 1, 2, "ContainerStacksModel")
+        qmlRegisterType(UM.Settings.Models.SettingPropertyProvider, "UM", 1, 2, "SettingPropertyProvider")

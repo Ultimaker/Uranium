@@ -22,7 +22,7 @@ from UM.View.GL.OpenGL import OpenGL
 from UM.View.RenderBatch import RenderBatch
 from UM.Qt.GL.QtOpenGL import QtOpenGL
 
-from UM.Signal import Signal, SignalEmitter
+from UM.Signal import Signal, signalemitter
 
 import numpy
 import copy
@@ -32,7 +32,8 @@ vertexBufferProperty = "__qtgl2_vertex_buffer"
 indexBufferProperty = "__qtgl2_index_buffer"
 
 ##  A Renderer implementation using PyQt's OpenGL implementation to render.
-class QtRenderer(Renderer, SignalEmitter):
+@signalemitter
+class QtRenderer(Renderer):
     def __init__(self):
         super().__init__()
 

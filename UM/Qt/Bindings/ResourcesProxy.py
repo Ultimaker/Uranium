@@ -13,9 +13,6 @@ class ResourcesProxy(QObject):
         Themes = UM.Resources.Resources.Themes
         Images = UM.Resources.Resources.Images
         Meshes = UM.Resources.Resources.Meshes
-        MachineDefinitions = UM.Resources.Resources.MachineDefinitions
-        MachineInstances = UM.Resources.Resources.MachineInstances
-        Profiles = UM.Resources.Resources.Profiles
         i18n = UM.Resources.Resources.i18n
         Shaders = UM.Resources.Resources.Shaders
         UserType = UM.Resources.Resources.UserType

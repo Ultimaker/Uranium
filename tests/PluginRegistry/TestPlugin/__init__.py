@@ -7,7 +7,7 @@ def getMetaData():
     return {
         "plugin": {
             "name": "TestPlugin",
-            "api": 2
+            "api": 3
         }
     }
 

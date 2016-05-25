@@ -14,7 +14,7 @@ def getMetaData():
             "author": "Ultimaker",
             "version": "1.0",
             "description": i18n_catalog.i18nc("@info:whatsthis", "Outputs log information to the console."),
-            "api": 2
+            "api": 3
         }
     }
 

@@ -1,0 +1,17 @@
+{
+    "version": 2,
+    "name": "Test",
+
+    "metadata": {
+        "author": "Ultimaker",
+        "category": "Test"
+    },
+    "settings": {
+        "test_setting": {
+            "label": "Test",
+            "description": "A Test Setting",
+            "default_value": 10,
+            "type": "int"
+        }
+    }
+}

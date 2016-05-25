@@ -1,7 +1,15 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2016 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-#Shoop da woop!
+from .ContainerRegistry import ContainerRegistry
 
-## \package Settings
-#  Machine setting storage and validation.
+from .SettingDefinition import SettingDefinition
+from .SettingInstance import SettingInstance, InstanceState
+
+from .SettingFunction import SettingFunction
+
+from .DefinitionContainer import DefinitionContainer
+from .InstanceContainer import InstanceContainer
+from .ContainerStack import ContainerStack
+
+from .Validator import Validator, ValidatorState

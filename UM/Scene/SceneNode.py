@@ -6,7 +6,7 @@ from UM.Math.Vector import Vector
 from UM.Math.Quaternion import Quaternion
 from UM.Math.AxisAlignedBox import AxisAlignedBox
 
-from UM.Signal import Signal, SignalEmitter
+from UM.Signal import Signal, signalemitter
 from UM.Job import Job
 from UM.Mesh.MeshData import MeshData
 from UM.Logger import Logger
@@ -23,7 +23,8 @@ from copy import deepcopy
 #   These decorators can add functionality to scene nodes.
 #   \sa SceneNodeDecorator
 #   \todo Add unit testing
-class SceneNode(SignalEmitter):
+@signalemitter
+class SceneNode():
     class TransformSpace:
         Local = 1
         Parent = 2

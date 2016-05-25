@@ -6,9 +6,43 @@
 
 import inspect
 import threading
+import os
 from weakref import WeakSet, WeakKeyDictionary
 
 from UM.Event import CallFunctionEvent
+from UM.Decorators import deprecated, call_if_enabled
+from UM.Logger import Logger
+
+# Helper functions for tracing signal emission.
+def _traceEmit(signal, *args, **kwargs):
+    Logger.log("d", "Emitting signal %s with arguments %s", str(signal), str(args) + str(kwargs))
+
+    if signal._Signal__type == Signal.Queued:
+        Logger.log("d", "> Queued signal, postponing emit until next event loop run")
+
+    if signal._Signal__type == Signal.Auto:
+        if Signal._app is not None and threading.current_thread() is not Signal._app.getMainThread():
+            Logger.log("d", "> Auto signal and not on main thread, postponing emit until next event loop run")
+
+    for func in signal._Signal__functions:
+        Logger.log("d", "> Calling %s", str(func))
+
+    for dest, funcs in signal._Signal__methods.items():
+        for func in funcs:
+            Logger.log("d", "> Calling %s", str(func))
+
+    for signal in signal._Signal__signals:
+        Logger.log("d", "> Emitting %s", str(signal))
+
+
+def _traceConnect(signal, *args, **kwargs):
+    Logger.log("d", "Connecting signal %s to %s", str(signal), str(args[0]))
+
+def _traceDisconnect(signal, *args, **kwargs):
+    Logger.log("d", "Connecting signal %s from %s", str(signal), str(args[0]))
+
+def _isTraceEnabled():
+    return "URANIUM_TRACE_SIGNALS" in os.environ
 
 ##  Simple implementation of signals and slots.
 #
@@ -76,6 +110,7 @@ class Signal:
     #   \note If the Signal type is Queued and this is not called from the application thread
     #   the call will be posted as an event to the application main thread, which means the
     #   function will be called on the next application event loop tick.
+    @call_if_enabled(_traceEmit, _isTraceEnabled())
     def emit(self, *args, **kwargs):
         try:
             if self.__type == Signal.Queued:
@@ -114,6 +149,7 @@ class Signal:
 
     ##  Connect to this signal.
     #   \param connector The signal or slot (function) to connect.
+    @call_if_enabled(_traceConnect, _isTraceEnabled())
     def connect(self, connector):
         if self.__emitting:
             # When we try to connect to a signal we change the dictionary of connectors.
@@ -136,6 +172,7 @@ class Signal:
 
     ##  Disconnect from this signal.
     #   \param connector The signal or slot (function) to disconnect.
+    @call_if_enabled(_traceDisconnect, _isTraceEnabled())
     def disconnect(self, connector):
         if self.__emitting:
             # See above.
@@ -181,7 +218,38 @@ class Signal:
 #   that is an instance of Signal.
 class SignalEmitter:
     ##  Initialize method.
+    @deprecated("Please use the new @signalemitter decorator", "2.2")
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         for name, signal in inspect.getmembers(self, lambda i: isinstance(i, Signal)):
             setattr(self, name, Signal(type = signal.getType())) #pylint: disable=bad-whitespace
+
+##  Class decorator that ensures a class has unique instances of signals.
+#
+#   Since signals need to be instance variables, normally you would need to create all
+#   signals in the class" `__init__` method. However, this makes them rather awkward to
+#   document. This decorator instead makes it possible to declare them as class variables,
+#   which makes documenting them near the function they are used possible. This decorator
+#   adjusts the class' __new__ method to create new signal instances for all class signals.
+def signalemitter(cls):
+    # First, check if the base class has any signals defined
+    signals = inspect.getmembers(cls, lambda i: isinstance(i, Signal))
+    if not signals:
+        raise TypeError("Class {0} is marked as signal emitter but no signal were found".format(cls))
+
+    # Then, replace the class' new method with one that modifies the created instance to have
+    # unique signals.
+    old_new = cls.__new__
+    def new_new(subclass, *args, **kwargs):
+        if old_new == object.__new__:
+            sub = object.__new__(subclass)
+        else:
+            sub = old_new(subclass, *args, **kwargs)
+
+        for key, value in inspect.getmembers(cls, lambda i: isinstance(i, Signal)):
+            setattr(sub, key, Signal(type = value.getType()))
+
+        return sub
+
+    cls.__new__ = new_new
+    return cls

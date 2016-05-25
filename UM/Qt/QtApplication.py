@@ -6,7 +6,7 @@ import os
 import signal
 import platform
 
-from PyQt5.QtCore import Qt, QObject, QCoreApplication, QEvent, pyqtSlot, QLocale, QTranslator, QLibraryInfo, PYQT_VERSION_STR
+from PyQt5.QtCore import Qt, QObject, QCoreApplication, QEvent, pyqtSlot, QLocale, QTranslator, QLibraryInfo, QT_VERSION_STR, PYQT_VERSION_STR
 from PyQt5.QtQml import QQmlApplicationEngine, qmlRegisterType, qmlRegisterSingletonType
 from PyQt5.QtWidgets import QApplication, QSplashScreen
 from PyQt5.QtGui import QGuiApplication, QPixmap
@@ -18,11 +18,13 @@ from UM.Application import Application
 from UM.Qt.QtRenderer import QtRenderer
 from UM.Qt.Bindings.Bindings import Bindings
 from UM.JobQueue import JobQueue
-from UM.Signal import Signal, SignalEmitter
+from UM.Signal import Signal, signalemitter
 from UM.Resources import Resources
 from UM.Logger import Logger
 from UM.Preferences import Preferences
 from UM.i18n import i18nCatalog
+
+from UM.Settings.ContainerRegistry import ContainerRegistry
 
 # Raised when we try to use an unsupported version of a dependency.
 class UnsupportedVersionError(Exception):
@@ -34,7 +36,8 @@ if int(major) < 5 or int(minor) < 4:
     raise UnsupportedVersionError("This application requires at least PyQt 5.4.0")
 
 ##  Application subclass that provides a Qt application object.
-class QtApplication(QApplication, Application, SignalEmitter):
+@signalemitter
+class QtApplication(QApplication, Application):
     def __init__(self, **kwargs):
         plugin_path = ""
         if sys.platform == "win32":
@@ -88,7 +91,7 @@ class QtApplication(QApplication, Application, SignalEmitter):
 
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Loading machines..."))
 
-        self.getMachineManager().loadAll()
+        #self.getMachineManager().loadAll()
 
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Loading preferences..."))
         try:
@@ -127,6 +130,8 @@ class QtApplication(QApplication, Application, SignalEmitter):
         self._engine.addImportPath(os.path.join(Application.getInstallPrefix(), "Resources", "qml"))
         if not hasattr(sys, "frozen"):
             self._engine.addImportPath(os.path.join(os.path.dirname(__file__), "qml"))
+
+        self._engine.rootContext().setContextProperty("QT_VERSION_STR", QT_VERSION_STR)
 
         self.registerObjects(self._engine)
         
@@ -183,10 +188,6 @@ class QtApplication(QApplication, Application, SignalEmitter):
     def windowClosed(self):
         Logger.log("d", "Shutting down %s", self.getApplicationName())
         self._shutting_down = True
-        try:
-            self.getMachineManager().saveAll()
-        except Exception as e:
-            Logger.log("e", "Exception while saving machines: %s", repr(e))
 
         try:
             Preferences.getInstance().writeToFile(Resources.getStoragePath(Resources.Preferences, self.getApplicationName() + ".cfg"))

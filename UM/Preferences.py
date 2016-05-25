@@ -3,14 +3,15 @@
 
 import configparser
 
-from UM.Signal import Signal, SignalEmitter
+from UM.Signal import Signal, signalemitter
 from UM.Logger import Logger
 
 from UM.SaveFile import SaveFile
 
-##  Preferences are application based settings that are saved for future use.
-#   Typical preferences would be window size, standard machine, etc.
-class Preferences(SignalEmitter):
+##      Preferences are application based settings that are saved for future use. 
+#       Typical preferences would be window size, standard machine, etc.
+@signalemitter
+class Preferences():
     def __init__(self):
         super().__init__()
 
