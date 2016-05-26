@@ -98,6 +98,16 @@ class SettingPropertyProvider(QObject):
     def storeIndex(self):
         return self._store_index
 
+    ##  At what level in the stack does the value for this setting occur?
+    @pyqtProperty(int, notify = propertiesChanged)
+    def stackLevel(self):
+        for container in self._stack.getContainers():
+            try:
+                if container.getProperty(self._key, "value") is not None:
+                    return self._stack.getContainerIndex(container)
+            except AttributeError:
+                continue
+
     ##  Set the value of a property.
     #
     #   \param stack_index At which level in the stack should this property be set?
