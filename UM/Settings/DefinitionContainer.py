@@ -90,12 +90,9 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
     def getMetaDataEntry(self, entry, default = None):
         return self._metadata.get(entry, default)
 
-    ##  \copydoc ContainerInterface::getValue
+    ##  \copydoc ContainerInterface::getProperty
     #
-    #   Reimplemented from ContainerInterface
-    #
-    #   This returns the value of the property specified. Note that when property_name is "value" it will instead
-    #   return the value of the "default_value" property.
+    #   Reimplemented from ContainerInterface.
     def getProperty(self, key, property_name):
         definitions = self.findDefinitions(key = key)
         if not definitions:
@@ -108,6 +105,15 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
             return value
         except AttributeError:
             return None
+
+    ##  \copydoc ContainerInterface::hasProperty
+    #
+    #   Reimplemented from ContainerInterface
+    def hasProperty(self, key, property_name):
+        definitions = self.findDefinitions(key = key)
+        if not definitions:
+            return False
+        return hasattr(definitions[0], property_name)
 
     ##  This signal is unused since the definition container is immutable, but is provided for API consistency.
     propertyChanged = Signal()

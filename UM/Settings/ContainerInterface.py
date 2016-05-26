@@ -54,6 +54,16 @@ class ContainerInterface:
     def getProperty(self, key, property_name):
         pass
 
+    ##  Get whether the container item has a specific property.
+    #
+    #   \param key The key of the item to check the property from.
+    #   \param name The name of the property to check for.
+    #
+    #   \return True if the specified item has the property, or False if it
+    #   doesn't.
+    def hasProperty(self, key, property_name):
+        pass
+
     ##  Serialize this container to a string.
     #
     #   The serialized representation of the container can be used to write the

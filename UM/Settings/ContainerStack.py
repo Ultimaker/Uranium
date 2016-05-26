@@ -113,6 +113,22 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
         else:
             return None
 
+    ##  \copydoc ContainerInterface::hasProperty
+    #
+    #   Reimplemented from ContainerInterface.
+    #
+    #   hasProperty will check if any of the containers in the stack has the
+    #   specified property. If it does, it stops and returns True. If it gets to
+    #   the end of the stack, it returns False.
+    def hasProperty(self, key, property_name):
+        for container in self._containers:
+            if container.hasProperty(key, property_name):
+                return True
+
+        if self._next_stack:
+            return self._next_stack.hasProperty(key, property_name)
+        return False
+
     propertyChanged = Signal()
 
     ##  \copydoc ContainerInterface::serialize
