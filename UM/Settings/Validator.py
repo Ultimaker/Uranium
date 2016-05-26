@@ -78,4 +78,3 @@ class Validator(SettingFunction.SettingFunction):
             state = ValidatorState.Exception
 
         return state
-            self._state = ValidatorState.Exception
