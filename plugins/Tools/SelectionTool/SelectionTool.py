@@ -13,8 +13,8 @@ from PyQt5 import QtCore, QtWidgets
 ##  Provides the tool to select meshes and groups
 #
 #   Note that the tool has two implementations for different modes of selection:
-#   Pixel Selection Mode and Boundingbox Selection Mode. Of these two, only Pixel Selection Mode
-#   is in active use. Boundingbox Selection Mode may not be functional.
+#   Pixel Selection Mode and BoundingBox Selection Mode. Of these two, only Pixel Selection Mode
+#   is in active use. BoundingBox Selection Mode may not be functional.
 
 class SelectionTool(Tool):
     PixelSelectionMode = 1
@@ -45,7 +45,7 @@ class SelectionTool(Tool):
     ##  Set the selection mode
     #
     #   The tool has two implementations for different modes of selection: PixelSelectionMode and BoundingboxSelectionMode.
-    #   Of these two, only Pixel Selection Mode is in active use. Boundingbox Selection Mode may not be functional.
+    #   Of these two, only Pixel Selection Mode is in active use. BoundingBox Selection Mode may not be functional.
     #   \param mode type(SelectionTool enum)
     def setSelectionMode(self, mode):
         self._selection_mode = mode

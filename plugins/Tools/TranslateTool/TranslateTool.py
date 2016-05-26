@@ -39,7 +39,7 @@ class TranslateTool(Tool):
 
         self.setExposedProperties("ToolHint", "X", "Y", "Z")
 
-    ##  Get the x-location of the selection boundingbox center
+    ##  Get the x-location of the selection bounding box center
     #
     #   \param x type(float) location in mm
     def getX(self):
@@ -47,7 +47,7 @@ class TranslateTool(Tool):
             return float(Selection.getBoundingBox().center.x)
         return 0.0
 
-    ##  Get the y-location of the selection boundingbox center
+    ##  Get the y-location of the selection bounding box center
     #
     #   \param y type(float) location in mm
     def getY(self):
@@ -57,7 +57,7 @@ class TranslateTool(Tool):
             return float(Selection.getBoundingBox().center.z)
         return 0.0
 
-    ##  Get the z-location of the selection boundingbox bottom
+    ##  Get the z-location of the selection bounding box bottom
     #   The bottom is used as opposed to the center, because the biggest usecase is to push the selection into the buildplate
     #
     #   \param z type(float) location in mm
@@ -69,52 +69,52 @@ class TranslateTool(Tool):
             return float(Selection.getBoundingBox().bottom)
         return 0.0
 
-    ##  Set the x-location of the selected object(s) by translating relative to the selection boundingbox center
+    ##  Set the x-location of the selected object(s) by translating relative to the selection bounding box center
     #
     #   \param x type(float) location in mm
     def setX(self, x):
-        boundingbox = Selection.getBoundingBox()
+        bounding_box = Selection.getBoundingBox()
 
         op = GroupedOperation()
         for selected_node in Selection.getAllSelectedObjects():
             new_position = selected_node.getWorldPosition()
-            new_position.setY(float(y) + (new_position.x - boundingbox.center.x))
+            new_position.setY(float(y) + (new_position.x - bounding_box.center.x))
 
             node_op = TranslateOperation(selected_node, new_position, set_position = True)
             op.addOperation(node_op)
         op.push()
         self.operationStopped.emit(self)
 
-    ##  Set the y-location of the selected object(s) by translating relative to the selection boundingbox center
+    ##  Set the y-location of the selected object(s) by translating relative to the selection bounding box center
     #
     #   \param y type(float) location in mm
     def setY(self, y):
-        boundingbox = Selection.getBoundingBox()
+        bounding_box = Selection.getBoundingBox()
 
         op = GroupedOperation()
         for selected_node in Selection.getAllSelectedObjects():
             # Note; The switching of z & y is intentional. We display z as up for the user,
             # But store the data in openGL space.
             new_position = selected_node.getWorldPosition()
-            new_position.setY(float(y) + (new_position.z - boundingbox.center.z))
+            new_position.setY(float(y) + (new_position.z - bounding_box.center.z))
 
             node_op = TranslateOperation(selected_node, new_position, set_position = True)
             op.addOperation(node_op)
         op.push()
         self.operationStopped.emit(self)
 
-    ##  Set the y-location of the selected object(s) by translating relative to the selection boundingbox bottom
+    ##  Set the y-location of the selected object(s) by translating relative to the selection bounding box bottom
     #
     #   \param z type(float) location in mm
     def setZ(self, z):
-        boundingbox = Selection.getBoundingBox()
+        bounding_box = Selection.getBoundingBox()
 
         op = GroupedOperation()
         for selected_node in Selection.getAllSelectedObjects():
             # Note; The switching of z & y is intentional. We display z as up for the user,
             # But store the data in openGL space.
             new_position = selected_node.getWorldPosition()
-            new_position.setY(float(z) + (new_position.y - boundingbox.bottom))
+            new_position.setY(float(z) + (new_position.y - bounding_box.bottom))
 
             node_op = TranslateOperation(selected_node, new_position, set_position = True)
             op.addOperation(node_op)
@@ -134,7 +134,7 @@ class TranslateTool(Tool):
     def event(self, event):
         super().event(event)
 
-        # Make sure the displayed values are updated if the boundingbox of the selected mesh(es) changes
+        # Make sure the displayed values are updated if the bounding box of the selected mesh(es) changes
         if event.type == Event.ToolActivateEvent:
             for node in Selection.getAllSelectedObjects():
                 node.boundingBoxChanged.connect(self.propertyChanged)
