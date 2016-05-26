@@ -144,14 +144,6 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
 
     propertyChanged = Signal()
 
-    def recalculate(self, container):
-        for key, instance in self._instances.items():
-            if instance.state != SettingInstance.InstanceState.User:
-                continue
-
-            Logger.log("d", "Recalculate instance %s", instance)
-            instance.recalculate(container)
-
     ##  \copydoc ContainerInterface::serialize
     #
     #   Reimplemented from ContainerInterface

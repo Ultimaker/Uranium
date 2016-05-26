@@ -32,6 +32,7 @@ class SettingPropertyProvider(QObject):
 
             if self._stack:
                 self._stack.propertyChanged.disconnect(self._onPropertyChanged)
+                self._stack.containersChanged.disconnect(self._update)
 
             if self._stack_id:
                 stacks = UM.Settings.ContainerRegistry.getInstance().findContainerStacks(id = self._stack_id)
@@ -40,6 +41,7 @@ class SettingPropertyProvider(QObject):
                 else:
                     self._stack = stacks[0]
                     self._stack.propertyChanged.connect(self._onPropertyChanged)
+                    self._stack.containersChanged.connect(self._update)
             else:
                 self._stack = None
 
@@ -121,8 +123,8 @@ class SettingPropertyProvider(QObject):
 
     # protected:
 
-    def _onPropertyChanged(self, instance, property_name):
-        if instance.definition.key != self._key:
+    def _onPropertyChanged(self, key, property_name):
+        if key != self._key:
             return
 
         if property_name not in self._watched_properties:
@@ -130,16 +132,11 @@ class SettingPropertyProvider(QObject):
 
         value = self._getPropertyValue(property_name)
 
-        Logger.log("d","Property changed. Key: %s Name: %s Value: %s", instance.definition.key, property_name, value)
-
-        #property_value = self._stack.getProperty(self._key, property_name)
-        #if isinstance(property_value, UM.Settings.SettingFunction):
-            #property_value = property_value(self._stack)
 
         self._property_values[property_name] = value
         self.propertiesChanged.emit()
 
-    def _update(self):
+    def _update(self, container = None):
         if not self._stack or not self._watched_properties or not self._key:
             return
 
@@ -148,7 +145,6 @@ class SettingPropertyProvider(QObject):
             new_properties[property_name] = self._getPropertyValue(property_name)
 
         if new_properties != self._property_values:
-            Logger.log("d", "SettingPropertyProvider update: %s",new_properties)
             self._property_values = new_properties
             self.propertiesChanged.emit()
 
