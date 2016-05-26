@@ -7,10 +7,11 @@ from UM.Signal import Signal, signalemitter
 from UM.PluginObject import PluginObject
 from UM.Logger import Logger
 from UM.Settings.DefinitionContainer import DefinitionContainer #For getting all definitions in this stack.
+
 import UM.Settings.ContainerRegistry
 
 from . import ContainerInterface
-
+from . import SettingFunction
 
 class IncorrectVersionError(Exception):
     pass
@@ -103,12 +104,30 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
         for container in self._containers:
             value = container.getProperty(key, property_name)
             if value is not None:
+                if isinstance(value, SettingFunction.SettingFunction):
+                    return value(self)
                 return value
 
         if self._next_stack:
             return self._next_stack.getProperty(key, property_name)
         else:
             return None
+
+    ##  \copydoc ContainerInterface::hasProperty
+    #
+    #   Reimplemented from ContainerInterface.
+    #
+    #   hasProperty will check if any of the containers in the stack has the
+    #   specified property. If it does, it stops and returns True. If it gets to
+    #   the end of the stack, it returns False.
+    def hasProperty(self, key, property_name):
+        for container in self._containers:
+            if container.hasProperty(key, property_name):
+                return True
+
+        if self._next_stack:
+            return self._next_stack.hasProperty(key, property_name)
+        return False
 
     propertyChanged = Signal()
 
@@ -258,14 +277,6 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
 
         return None
 
-    def recalculate(self):
-        for container in self._containers:
-            try:
-                print("recalculate ", container)
-                container.recalculate(self)
-            except AttributeError:
-                pass
-
     ##  Add a container to the top of the stack.
     #
     #   \param container The container to add to the stack.
@@ -274,12 +285,6 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
             container.propertyChanged.connect(self.propertyChanged)
             self._containers.insert(0, container)
             self.containersChanged.emit(container)
-
-            try:
-                container.recalculate(self)
-            except AttributeError:
-                pass
-
         else:
             raise Exception("Unable to add stack to itself.")
 
@@ -300,11 +305,6 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
         container.propertyChanged.connect(self.propertyChanged)
         self._containers[index] = container
         self.containersChanged.emit(container)
-
-        try:
-            container.recalculate(self)
-        except AttributeError:
-            pass
 
     ##  Remove a container from the stack.
     #

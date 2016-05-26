@@ -56,7 +56,7 @@ class SettingInstance:
         self._validator = None
         validator_type = SettingDefinition.getValidatorForType(self._definition.type)
         if validator_type:
-            self._validator = validator_type(self)
+            self._validator = validator_type(self._definition.key)
 
         self._state = InstanceState.Default
 
@@ -65,7 +65,7 @@ class SettingInstance:
     def __getattr__(self, name):
         if name in self.__property_values:
             value = self.__property_values[name]
-            if isinstance(value, str):
+            if isinstance(value, str) and name == "value":
                 try:
                     return SettingDefinition.settingValueFromString(self._definition.type, value)
                 except Exception:
@@ -83,6 +83,8 @@ class SettingInstance:
                 return
 
             if name not in self.__property_values or value != self.__property_values[name]:
+                if isinstance(value, str) and value.strip().startswith("="):
+                    value = SettingFunction.SettingFunction(value[1:])
 
                 self.__property_values[name] = value
                 if name == "value":
@@ -90,15 +92,14 @@ class SettingInstance:
                         container = self._container
 
                     self._state = InstanceState.User
-                    self.propertyChanged.emit(self, "state")
+                    self.propertyChanged.emit(self._definition.key, "state")
 
                     self._update(container)
 
                 if self._validator:
-                    self._validator.validate()
-                    self.propertyChanged.emit(self, "validationState")
+                    self.propertyChanged.emit(self._definition.key, "validationState")
 
-                self.propertyChanged.emit(self, name)
+                self.propertyChanged.emit(self._definition.key, name)
         else:
             raise AttributeError("No property {0} defined".format(name))
 
@@ -112,35 +113,10 @@ class SettingInstance:
             Logger.log("d", "Ignoring update of value for setting %s since it has been set by the user.", self._definition.key)
             return
 
-
-        try:
-            function = getattr(self._definition, name)
-        except AttributeError:
-            return
-
-        if not container:
-            container = self._container
-
-        result = function(container)
-        self.__property_values[name] = result
-        if name == "value":
-            self._update(container)
-
-            self._state = InstanceState.Calculated
-            self.propertyChanged.emit(self, "state")
-
         if self._validator:
-            self._validator.validate()
-            self.propertyChanged.emit(self, "validationState")
+            self.propertyChanged.emit(self._definition.key, "validationState")
 
-        self.propertyChanged.emit(self, name)
-
-    def recalculate(self, container):
-        self._update(container)
-
-        if self._validator:
-            self._validator.validate()
-            self.propertyChanged.emit(self, "validationState")
+        self.propertyChanged.emit(self._definition.key, name)
 
     ##  Emitted whenever a property of this instance changes.
     #
@@ -162,9 +138,9 @@ class SettingInstance:
     @property
     def validationState(self):
         if self._validator:
-            return self._validator.state
+            return self._validator
 
-        return Validator.ValidatorState.Unknown
+        return None
 
     @property
     def state(self):
@@ -184,16 +160,8 @@ class SettingInstance:
             if SettingDefinition.isReadOnlyProperty(property_name):
                 continue
 
-            if isinstance(getattr(self._definition, property_name), SettingFunction.SettingFunction) and not property_name in self.__property_values:
-                self.updateProperty(property_name, container)
-
             for relation in filter(lambda r: r.role == property_name, self._definition.relations):
                 if relation.type == SettingRelation.RelationType.RequiresTarget:
                     continue
 
-                instance = self._container.getInstance(relation.target.key)
-                if not instance:
-                    instance = SettingInstance(relation.target, self._container)
-                    self._container.addInstance(instance)
-
-                instance.updateProperty(property_name, container)
+                self._container.propertyChanged.emit(relation.target.key, relation.role)

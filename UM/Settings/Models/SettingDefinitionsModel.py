@@ -39,8 +39,10 @@ class SettingDefinitionsModel(QAbstractListModel):
 
         self._show_all = False
 
-        Preferences.getInstance().preferenceChanged.connect(self._onPreferencesChanged)
-        self._onPreferencesChanged("general/visible_settings")
+        self._visibility_handler = None
+
+        #Preferences.getInstance().preferenceChanged.connect(self._onPreferencesChanged)
+        #self._onPreferencesChanged("general/visible_settings")
 
         self._role_names = {
             self.KeyRole: b"key",
@@ -108,10 +110,32 @@ class SettingDefinitionsModel(QAbstractListModel):
 
     ##  Emitted when the showAll property changes.
     showAllChanged = pyqtSignal()
+
     ##  Whether or not the model should show all definitions regardless of visibility.
     @pyqtProperty(bool, fset = setShowAll, notify = showAllChanged)
     def showAll(self):
         return self._show_all
+
+    ##  Set the list (string with keys separated by ;) to be visible
+    def setVisibilityHandler(self, visibility_handler):
+        if self._visibility_handler:
+            self._visibility_handler.visibilityChanged.disconnect(self._onVisibilityChanged)
+
+        self._visibility_handler = visibility_handler
+
+        if self._visibility_handler:
+            self._visibility_handler.visibilityChanged.connect(self._onVisibilityChanged)
+            self._onVisibilityChanged()
+
+    def _onVisibilityChanged(self):
+        self._visible = self._visibility_handler.getVisible()
+        self._update()
+
+    visibilityHandlerChanged = pyqtSignal()
+
+    @pyqtProperty("QVariant", fset = setVisibilityHandler, notify = visibilityHandlerChanged)
+    def visibilityHandler(self):
+        pass
 
     ##  Are a specified SettingDefinitions's children visible.
     @pyqtSlot(str, result = bool)
@@ -190,7 +214,12 @@ class SettingDefinitionsModel(QAbstractListModel):
 
         definition = definitions[0]
 
-        start_index = self._definitions.index(self._getFirstVisibleChild(definition))
+        first_child = self._getFirstVisibleChild(definition)
+        if not first_child: # No visible children, mark it as collapsed and ignore the rest.
+            self._expanded.remove(key)
+            return
+
+        start_index = self._definitions.index(first_child)
         end_index = start_index + self._getVisibleChildCount(definition) - 1
 
         self.beginRemoveRows(QModelIndex(), start_index, end_index)
@@ -236,8 +265,21 @@ class SettingDefinitionsModel(QAbstractListModel):
         else:
             self._visible.remove(key)
 
-        preference = ";".join(self._visible)
-        Preferences.getInstance().setValue("general/visible_settings", preference)
+        if self._visibility_handler:
+            self._visibility_handler.setVisible(self._visible)
+
+        #TODO: To make the class more general, the saving of visible settings to preferences was removed.
+        #This needs to be re-introduced again.
+        #preference = ";".join(self._visible)
+        #Preferences.getInstance().setValue("general/visible_settings", preference)
+
+    @pyqtSlot(str, result = int)
+    def getIndex(self, key):
+        definitions = self._container.findDefinitions(key = key)
+        if not definitions:
+            return -1
+
+        return self._definitions.index(definitions[0])
 
     ##  Reimplemented from QAbstractListModel
     def rowCount(self, parent = None):
@@ -349,22 +391,3 @@ class SettingDefinitionsModel(QAbstractListModel):
                 count += self._getVisibleChildCount(child)
 
         return count
-
-    def _onPreferencesChanged(self, name):
-        if name != "general/visible_settings":
-            return
-
-        new_visible = set()
-        for key in Preferences.getInstance().getValue("general/visible_settings").replace("\n", ";").split(";"):
-            new_visible.add(key.strip())
-
-        if new_visible == self._visible or self._show_all:
-            return
-
-
-        self._visible = new_visible
-
-        if not self._container:
-            return
-
-        self._update()

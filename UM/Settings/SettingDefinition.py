@@ -400,7 +400,7 @@ class SettingDefinition:
         # The default value of the setting. Used when no value function is defined.
         "default_value": {"type": DefinitionPropertyType.Any, "required": False, "read_only": True,  "default": 0},
         # A function used to calculate the value of the setting.
-        "value": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False,  "default": 0},
+        "value": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False,  "default": None},
         # A function that should evaluate to a boolean to indicate whether or not the setting is enabled.
         "enabled": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False, "default": True},
         # A function that calculates the minimum value for this setting. If the value is less than this, validation will indicate an error.

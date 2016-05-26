@@ -144,7 +144,7 @@ class ContainerRegistry:
                     continue
 
                 new_container = container_type(container_id)
-                with open(file_path) as f:
+                with open(file_path, encoding = "utf-8") as f:
                     new_container.deserialize(f.read())
                 self._containers.append(new_container)
             except Exception as e:

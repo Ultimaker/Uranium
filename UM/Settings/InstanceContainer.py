@@ -12,6 +12,7 @@ import UM.Settings.ContainerRegistry
 
 from . import ContainerInterface
 from . import SettingInstance
+from . import SettingRelation
 
 class InvalidInstanceError(Exception):
     pass
@@ -110,6 +111,12 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
 
         return None
 
+    ##  \copydoc ContainerInterface::hasProperty
+    #
+    #   Reimplemented from ContainerInterface.
+    def hasProperty(self, key, property_name):
+        return key in self._instances and hasattr(self._instances, property_name)
+
     ##  Set the value of a property of a SettingInstance.
     #
     #   This will set the value of the specified property on the SettingInstance corresponding to key.
@@ -143,14 +150,6 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
         self._dirty = True
 
     propertyChanged = Signal()
-
-    def recalculate(self, container):
-        for key, instance in self._instances.items():
-            if instance.state != SettingInstance.InstanceState.User:
-                continue
-
-            Logger.log("d", "Recalculate instance %s", instance)
-            instance.recalculate(container)
 
     ##  \copydoc ContainerInterface::serialize
     #
@@ -245,6 +244,22 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
 
         instance.propertyChanged.connect(self.propertyChanged)
         self._instances[key] = instance
+
+    ##  Remove an instance from this container.
+    def removeInstance(self, key):
+        if key not in self._instances:
+            return
+
+        definition = self._instances[key].definition
+        del self._instances[key]
+
+        # Notify listeners of changed properties for all related properties
+        for relation in definition.relations:
+            if relation.type == SettingRelation.RelationType.RequiresTarget:
+                continue
+
+            self.propertyChanged.emit(relation.target.key, relation.role)
+
 
     ##  Get the DefinitionContainer used for new instance creation.
     def getDefinition(self):
