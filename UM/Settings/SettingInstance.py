@@ -112,29 +112,10 @@ class SettingInstance:
             Logger.log("d", "Ignoring update of value for setting %s since it has been set by the user.", self._definition.key)
             return
 
-
-        try:
-            function = getattr(self._definition, name)
-        except AttributeError:
-            return
-
-        if not container:
-            container = self._container
-
-        result = function(container)
-        self.__property_values[name] = result
-        if name == "value":
-            self._update(container)
-
-            self._state = InstanceState.Calculated
-            self.propertyChanged.emit(self, "state")
-
         if self._validator:
-            self._validator.validate()
-            self.propertyChanged.emit(self, "validationState")
+            self.propertyChanged.emit(self._definition.key, "validationState")
 
-        self.propertyChanged.emit(self, name)
-
+        self.propertyChanged.emit(self._definition.key, name)
 
     ##  Emitted whenever a property of this instance changes.
     #
@@ -178,16 +159,8 @@ class SettingInstance:
             if SettingDefinition.isReadOnlyProperty(property_name):
                 continue
 
-            if isinstance(getattr(self._definition, property_name), SettingFunction.SettingFunction) and not property_name in self.__property_values:
-                self.updateProperty(property_name, container)
-
             for relation in filter(lambda r: r.role == property_name, self._definition.relations):
                 if relation.type == SettingRelation.RelationType.RequiresTarget:
                     continue
 
-                instance = self._container.getInstance(relation.target.key)
-                if not instance:
-                    instance = SettingInstance(relation.target, self._container)
-                    self._container.addInstance(instance)
-
-                instance.updateProperty(property_name, container)
+                self._container.propertyChanged.emit(relation.target.key, relation.role)
