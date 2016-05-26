@@ -102,10 +102,10 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
             return None
 
         try:
-            if property_name == "value":
-                return getattr(definitions[0], "default_value")
-
-            return getattr(definitions[0], property_name)
+            value = getattr(definitions[0], property_name)
+            if value is None and property_name == "value":
+                value = getattr(definitions[0], "default_value")
+            return value
         except AttributeError:
             return None
 
