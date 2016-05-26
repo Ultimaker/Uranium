@@ -51,12 +51,16 @@ class Validator(SettingFunction.SettingFunction):
             maximum_warning = value_provider.getProperty(self._key, "maximum_value_warning")
 
             if minimum is not None and maximum is not None and minimum > maximum:
-                raise ValueError("Cannot validate setting {0} when minimum > maximum".format(self._key))
+                raise ValueError("Cannot validate a state with minimum > maximum (" + self._instance.definition.key + ")")
+
+            # If we have no value property, just do nothing
+            if not hasattr(self._instance, "value"):
+                self._state = ValidatorState.Unknown
+                return
 
             value = value_provider.getProperty(self._key, "value")
             if value is None or value != value:
-                raise ValueError("Cannot validate None, NaN or similar values, actual value: {0}".format(value))
-
+                raise ValueError("Cannot validate None, NaN or similar values in setting {0}, actual value: {1}".format(self._instance.definition.key, value))
             print("validate", self._key, value, minimum, maximum, minimum_warning, maximum_warning)
 
             if minimum is not None and value < minimum:
@@ -70,7 +74,8 @@ class Validator(SettingFunction.SettingFunction):
             else:
                 state = ValidatorState.Valid
         except Exception as e:
-            Logger.logException("w", "Could not validate settng %s, an exception was raised", self._key)
+            Logger.logException("w", "Could not validate setting %s, an exception was raised", self._key)
             state = ValidatorState.Exception
 
         return state
+            self._state = ValidatorState.Exception
