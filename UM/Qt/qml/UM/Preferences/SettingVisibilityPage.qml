@@ -16,9 +16,7 @@ PreferencesPage
     signal scrollToSection( string key )
     onScrollToSection:
     {
-        scrollToIndex = Math.max(0, settingList.model.find("id", key));
-        //Delay finding the scroll offset until the scrollview has had time to fill up
-        scrollToTimer.start()
+        settingsListView.positionViewAtIndex(definitionsModel.getIndex(key), ListView.Beginning)
     }
 
     function reset()
@@ -31,14 +29,6 @@ PreferencesPage
     {
         id: base;
         anchors.fill: parent;
-
-        Timer
-        {
-            id: scrollToTimer
-            interval: 1
-            repeat: false
-            onTriggered: scrollView.flickableItem.contentY = settingList.itemAt(scrollToIndex).mapToItem(settingList, 0, 0).y 
-        }
 
         TextField
         {

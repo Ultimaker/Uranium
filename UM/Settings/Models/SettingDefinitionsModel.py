@@ -268,6 +268,14 @@ class SettingDefinitionsModel(QAbstractListModel):
         #preference = ";".join(self._visible)
         #Preferences.getInstance().setValue("general/visible_settings", preference)
 
+    @pyqtSlot(str, result = int)
+    def getIndex(self, key):
+        definitions = self._container.findDefinitions(key = key)
+        if not definitions:
+            return -1
+
+        return self._definitions.index(definitions[0])
+
     ##  Reimplemented from QAbstractListModel
     def rowCount(self, parent = None):
         if not self._container:
