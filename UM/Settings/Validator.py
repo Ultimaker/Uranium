@@ -5,6 +5,8 @@ from enum import Enum
 
 from UM.Logger import Logger
 
+from . import SettingFunction
+
 class ValidatorState(Enum):
     Exception = "Exception"
     Unknown = "Unknown"
@@ -18,62 +20,57 @@ class ValidatorState(Enum):
 #
 #   This class performs validation of any value that has __lt__ and __gt__ implemented, but
 #   it is primarily used for numerical values like integers and floats.
-class Validator:
+class Validator(SettingFunction.SettingFunction):
     ##  Constructor
     #
     #   \param instance The instance this Validator validates.
-    def __init__(self, instance, *args, **kwargs):
-        if instance is None:
+    def __init__(self, key, *args, **kwargs):
+        if key is None:
             raise ValueError("Instance should not be None")
 
-        super().__init__(*args, **kwargs)
+        super().__init__("None", *args, **kwargs)
 
-        self._instance = instance
-        self._state = ValidatorState.Unknown
+        self._key = key
+        #self._instance = instance
+        #self._state = ValidatorState.Unknown
 
-    @property
-    def state(self):
-        return self._state
+    #@property
+    #def state(self):
+        #return self._state
 
     ##  Perform the actual validation.
-    def validate(self):
-        self._state = ValidatorState.Unknown
+    def __call__(self, value_provider, *args, **kwargs):
+        if not value_provider:
+            return
+
+        state = ValidatorState.Unknown
         try:
-            minimum = None
-            if hasattr(self._instance, "minimum_value"):
-                minimum = self._instance.minimum_value
-            maximum = None
-            if hasattr(self._instance, "maximum_value"):
-                maximum = self._instance.maximum_value
-            minimum_warning = None
-            if hasattr(self._instance, "minimum_value_warning"):
-                minimum_warning = self._instance.minimum_value_warning
-            maximum_warning = None
-            if hasattr(self._instance, "maximum_value_warning"):
-                maximum_warning = self._instance.maximum_value_warning
+            minimum = value_provider.getProperty(self._key, "minimum_value")
+            maximum = value_provider.getProperty(self._key, "maximum_value")
+            minimum_warning = value_provider.getProperty(self._key, "minium_value_warning")
+            maximum_warning = value_provider.getProperty(self._key, "maximum_value_warning")
 
             if minimum is not None and maximum is not None and minimum > maximum:
-                raise ValueError("Cannot validate a state with minimum > maximum")
+                raise ValueError("Cannot validate setting {0} when minimum > maximum".format(self._key))
 
-            # If we have no value property, just do nothing
-            if not hasattr(self._instance, "value"):
-                self._state = ValidatorState.Unknown
-                return
-
-            value = self._instance.value
+            value = value_provider.getProperty(self._key, "value")
             if value is None or value != value:
-                raise ValueError("Cannot validate None, NaN or similar values")
+                raise ValueError("Cannot validate None, NaN or similar values, actual value: {0}".format(value))
+
+            print("validate", self._key, value, minimum, maximum, minimum_warning, maximum_warning)
 
             if minimum is not None and value < minimum:
-                self._state = ValidatorState.MinimumError
+                state = ValidatorState.MinimumError
             elif maximum is not None and value > maximum:
-                self._state = ValidatorState.MaximumError
+                state = ValidatorState.MaximumError
             elif minimum_warning is not None and value < minimum_warning:
-                self._state = ValidatorState.MinimumWarning
+                state = ValidatorState.MinimumWarning
             elif maximum_warning is not None and value > maximum_warning:
-                self._state = ValidatorState.MaximumWarning
+                state = ValidatorState.MaximumWarning
             else:
-                self._state = ValidatorState.Valid
+                state = ValidatorState.Valid
         except Exception as e:
-            Logger.logException("w", "Could not validate, an exception was raised")
-            self._state = ValidatorState.Exception
+            Logger.logException("w", "Could not validate settng %s, an exception was raised", self._key)
+            state = ValidatorState.Exception
+
+        return state
