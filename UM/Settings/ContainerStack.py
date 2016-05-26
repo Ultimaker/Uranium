@@ -258,14 +258,6 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
 
         return None
 
-    def recalculate(self):
-        for container in self._containers:
-            try:
-                print("recalculate ", container)
-                container.recalculate(self)
-            except AttributeError:
-                pass
-
     ##  Add a container to the top of the stack.
     #
     #   \param container The container to add to the stack.
@@ -274,12 +266,6 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
             container.propertyChanged.connect(self.propertyChanged)
             self._containers.insert(0, container)
             self.containersChanged.emit(container)
-
-            try:
-                container.recalculate(self)
-            except AttributeError:
-                pass
-
         else:
             raise Exception("Unable to add stack to itself.")
 
@@ -300,11 +286,6 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
         container.propertyChanged.connect(self.propertyChanged)
         self._containers[index] = container
         self.containersChanged.emit(container)
-
-        try:
-            container.recalculate(self)
-        except AttributeError:
-            pass
 
     ##  Remove a container from the stack.
     #
