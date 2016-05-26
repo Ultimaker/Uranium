@@ -144,14 +144,6 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
 
     propertyChanged = Signal()
 
-    def recalculate(self, container):
-        for key, instance in self._instances.items():
-            if instance.state != SettingInstance.InstanceState.User:
-                continue
-
-            Logger.log("d", "Recalculate instance %s", instance)
-            instance.recalculate(container)
-
     ##  \copydoc ContainerInterface::serialize
     #
     #   Reimplemented from ContainerInterface
@@ -245,6 +237,13 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
 
         instance.propertyChanged.connect(self.propertyChanged)
         self._instances[key] = instance
+
+    ##  Remove an instance from this container.
+    def removeInstance(self, key):
+        if key not in self._instances:
+            return
+
+        del self._instances[key]
 
     ##  Get the DefinitionContainer used for new instance creation.
     def getDefinition(self):

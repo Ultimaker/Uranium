@@ -279,7 +279,6 @@ class SettingDefinitionsModel(QAbstractListModel):
     #   \param filter_dict Dictionary to do the filtering by.
     def setFilter(self, filter_dict):
         self._filter_dict = filter_dict
-        print("Filter dict set:", filter_dict)
         self._update()
 
     filterChanged = pyqtSignal()
