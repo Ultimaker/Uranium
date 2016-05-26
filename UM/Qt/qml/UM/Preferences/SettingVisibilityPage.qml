@@ -53,7 +53,7 @@ PreferencesPage
 
             placeholderText: catalog.i18nc("@label:textbox", "Filter...");
 
-            onTextChanged: settingsListView.model.setLabelFilter(text);
+            onTextChanged: settingsListView.model.filter = {"label": "*" + text}
         }
 
         ScrollView
@@ -76,7 +76,7 @@ PreferencesPage
                     id: loader
 
                     width: parent.width
-                    height: model.type ? UM.Theme.getSize("section").height : 0
+                    height: model.type != undefined ? UM.Theme.getSize("section").height : 0
 
                     property var definition: model
                     property var settingDefinitionsModel: definitionsModel
