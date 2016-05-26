@@ -238,6 +238,13 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
         instance.propertyChanged.connect(self.propertyChanged)
         self._instances[key] = instance
 
+    ##  Remove an instance from this container.
+    def removeInstance(self, key):
+        if key not in self._instances:
+            return
+
+        del self._instances[key]
+
     ##  Get the DefinitionContainer used for new instance creation.
     def getDefinition(self):
         return self._definition

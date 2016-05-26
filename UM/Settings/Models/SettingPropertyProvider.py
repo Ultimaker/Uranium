@@ -121,6 +121,15 @@ class SettingPropertyProvider(QObject):
 
         container.setProperty(self._key, property_name, property_value, self._stack)
 
+    @pyqtSlot(int)
+    def removeFromContainer(self, index):
+        container = self._stack.getContainer(index)
+        if not container or not isinstance(container, UM.Settings.InstanceContainer):
+            return
+
+        container.removeInstance(self._key)
+        self._update()
+
     # protected:
 
     def _onPropertyChanged(self, key, property_name):
