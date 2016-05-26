@@ -53,7 +53,7 @@ PreferencesPage
 
             placeholderText: catalog.i18nc("@label:textbox", "Filter...");
 
-            onTextChanged: settingCategoriesModel.filter(text);
+            onTextChanged: settingsListView.model.filter = {"label": "*" + text}
         }
 
         ScrollView
@@ -69,13 +69,14 @@ PreferencesPage
             }
             ListView
             {
+                id: settingsListView
                 model: UM.SettingDefinitionsModel { id: definitionsModel; containerId: "fdmprinter"; showAll: true; }
                 delegate:Loader
                 {
                     id: loader
 
                     width: parent.width
-                    height: UM.Theme.getSize("section").height;
+                    height: model.type != undefined ? UM.Theme.getSize("section").height : 0
 
                     property var definition: model
                     property var settingDefinitionsModel: definitionsModel
