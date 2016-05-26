@@ -12,6 +12,7 @@ import UM.Settings.ContainerRegistry
 
 from . import ContainerInterface
 from . import SettingInstance
+from . import SettingRelation
 
 class InvalidInstanceError(Exception):
     pass
@@ -249,7 +250,16 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
         if key not in self._instances:
             return
 
+        definition = self._instances[key].definition
         del self._instances[key]
+
+        # Notify listeners of changed properties for all related properties
+        for relation in definition.relations:
+            if relation.type == SettingRelation.RelationType.RequiresTarget:
+                continue
+
+            self.propertyChanged.emit(relation.target.key, relation.role)
+
 
     ##  Get the DefinitionContainer used for new instance creation.
     def getDefinition(self):
