@@ -50,8 +50,7 @@ class PluginsModel(ListModel):
                 "author": aboutData.get("author", "John Doe"),
                 "version": aboutData.get("version", "Unknown")
             })
-
-            self.sort(lambda k: k["name"])
+        self.sort(lambda k: k["name"])
 
     @pyqtSlot(str,bool)
     def setEnabled(self, name, enabled):
