@@ -66,6 +66,9 @@ class QtApplication(QApplication, Application):
         self._main_window = None
 
         self._shutting_down = False
+        self._qml_import_paths = []
+        self._qml_import_paths.append(os.path.join(os.path.dirname(sys.executable), "qml"))
+        self._qml_import_paths.append(os.path.join(Application.getInstallPrefix(), "Resources", "qml"))
 
         self.setAttribute(Qt.AA_UseDesktopOpenGL)
 
@@ -125,9 +128,9 @@ class QtApplication(QApplication, Application):
 
         self._engine = QQmlApplicationEngine()
 
-        
-        self._engine.addImportPath(os.path.join(os.path.dirname(sys.executable), "qml"))
-        self._engine.addImportPath(os.path.join(Application.getInstallPrefix(), "Resources", "qml"))
+        for path in self._qml_import_paths:
+            self._engine.addImportPath(path)
+
         if not hasattr(sys, "frozen"):
             self._engine.addImportPath(os.path.join(os.path.dirname(__file__), "qml"))
 
