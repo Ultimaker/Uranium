@@ -214,7 +214,12 @@ class SettingDefinitionsModel(QAbstractListModel):
 
         definition = definitions[0]
 
-        start_index = self._definitions.index(self._getFirstVisibleChild(definition))
+        first_child = self._getFirstVisibleChild(definition)
+        if not first_child: # No visible children, mark it as collapsed and ignore the rest.
+            self._expanded.remove(key)
+            return
+
+        start_index = self._definitions.index(first_child)
         end_index = start_index + self._getVisibleChildCount(definition) - 1
 
         self.beginRemoveRows(QModelIndex(), start_index, end_index)

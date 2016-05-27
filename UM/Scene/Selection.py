@@ -43,21 +43,21 @@ class Selection:
 
     @classmethod
     def getBoundingBox(cls):
-        boundingbox = None # don't start with an empty boundingbox, because that includes (0,0,0)
+        bounding_box = None # don't start with an empty bounding box, because that includes (0,0,0)
 
         for node in cls.__selection:
             if type(node) is not SceneNode or not node.getMeshData():
                 continue
 
-            if not boundingbox:
-                boundingbox = copy.deepcopy(node.getBoundingBox())
+            if not bounding_box:
+                bounding_box = copy.deepcopy(node.getBoundingBox())
             else:
-                boundingbox += node.getBoundingBox()
+                bounding_box += node.getBoundingBox()
 
-        if not boundingbox:
-            boundingbox = AxisAlignedBox()
+        if not bounding_box:
+            bounding_box = AxisAlignedBox()
 
-        return boundingbox
+        return bounding_box
 
     @classmethod
     ##  Get selected object by index
