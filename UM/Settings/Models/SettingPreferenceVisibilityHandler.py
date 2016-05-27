@@ -18,7 +18,7 @@ class SettingPreferenceVisibilityHandler(QObject):
             return
         new_visible = set()
         self._visibility_string = Preferences.getInstance().getValue("general/visible_settings")
-        for key in self._visibility_string.replace("\n", ";").split(";"):
+        for key in self._visibility_string.split(";"):
             new_visible.add(key.strip())
 
         self._visible = new_visible

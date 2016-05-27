@@ -22,6 +22,7 @@ class Preferences():
     def addPreference(self, key, default_value):
         preference = self._findPreference(key)
         if preference:
+            Logger.log("d", "Adding preference %s, but it already exists.", key)
             preference.setDefault(default_value)
             return
 
@@ -41,6 +42,7 @@ class Preferences():
     def setDefault(self, key, default_value):
         preference = self._findPreference(key)
         if not preference: #Key not found.
+            Logger.log("w", "Tried to set the default value of non-existing setting %s.", key)
             return
         if preference.getValue() == preference.getDefault():
             self.setValue(key, default_value)
@@ -52,6 +54,8 @@ class Preferences():
         if preference:
             preference.setValue(value)
             self.preferenceChanged.emit(key)
+        else:
+            Logger.log("w", "Tried to set the value of non-existing setting %s.", key)
 
     def getValue(self, key):
         preference = self._findPreference(key)
@@ -64,6 +68,7 @@ class Preferences():
                 value = False
             return value
 
+        Logger.log("w", "Tried to get the value of non-existing setting %s.", key)
         return None
 
     def resetPreference(self, key):
