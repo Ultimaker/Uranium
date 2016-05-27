@@ -254,7 +254,6 @@ class SettingDefinitionsModel(QAbstractListModel):
         if not definitions:
             Logger.log("e", "Tried to change visiblity of a non-existant SettingDefinition")
             return
-
         if visible:
             self._visible.add(key)
         else:
@@ -307,7 +306,6 @@ class SettingDefinitionsModel(QAbstractListModel):
             return QVariant()
 
         definition = self._definitions[index.row()]
-
         # Check if the definition matches the filter.
         # If it does not matches the filter, we can ignore it.
         matches_filter = definition.matchesFilter(**self._filter_dict)
@@ -331,7 +329,7 @@ class SettingDefinitionsModel(QAbstractListModel):
             data = getattr(definition, role_name.decode())
         except AttributeError:
             data = ""
-
+            
         if isinstance(data, collections.OrderedDict):
             result = []
             for key, value in data.items():
@@ -360,8 +358,12 @@ class SettingDefinitionsModel(QAbstractListModel):
         for child in children_list:
             if self._show_all or child.key in self._visible:
                 self._definitions.append(child)
-                if self._expanded_by_default or child.key in self._expanded:
-                    self.expandAll(child.key)
+            else:
+                # If a category isn't visible, this does not mean that the children can't be visible
+                for item in filter(lambda i: self._show_all or i.key in self._visible, child.children):
+                    self._definitions.append(item)
+            if self._expanded_by_default or child.key in self._expanded:
+                self.expandAll(child.key)
         self.endResetModel()
 
     def _countParents(self, definition):
