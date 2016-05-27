@@ -97,7 +97,7 @@ ListView {
                 source: UM.Theme.getIcon("cross2")
             }
 
-            onClicked: UM.Models.visibleMessagesModel.hideMessage(model.id)
+            onClicked: base.model.hideMessage(model.id)
             visible: model.dismissable
             enabled: model.dismissable
             style: ButtonStyle {
@@ -122,7 +122,7 @@ ListView {
                 model: message.actions
                 delegate: Button{
                     id: messageStackButton
-                    onClicked:UM.Models.visibleMessagesModel.actionTriggered(message.model_id, model.action_id)
+                    onClicked: base.model.actionTriggered(message.model_id, model.action_id)
                     text: model.name
                     style: ButtonStyle {
                         background: Item{
