@@ -1,6 +1,8 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
+from enum import IntEnum
+
 from UM.Backend.SignalSocket import SignalSocket
 from UM.Preferences import Preferences
 from UM.Logger import Logger
@@ -17,6 +19,12 @@ import threading
 import sys
 from time import sleep
 
+##  The current processing state of the backend.
+class BackendState(IntEnum):
+    NotStarted = 1
+    Processing = 2
+    Done = 3
+    Error = 4
 
 ##      Base class for any backend communication (separate piece of software).
 #       It makes use of the Socket class from libArcus for the actual communication bits.

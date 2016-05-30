@@ -1,26 +1,21 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-from enum import IntEnum #For the processing state tracking.
 from PyQt5.QtCore import QObject, pyqtSignal, pyqtProperty
+
 from UM.i18n import i18nCatalog
 from UM.Message import Message
 from UM.Application import Application
+from UM.Backend.Backend import BackendState
 
 i18n_catalog = i18nCatalog("uranium")
-
-##  The current processing state of the backend.
-class BackendState(IntEnum):
-    NOT_STARTED = 0
-    PROCESSING = 1
-    DONE = 2
 
 class BackendProxy(QObject):
     def __init__(self, parent = None):
         super().__init__(parent)
         self._backend = Application.getInstance().getBackend()
         self._progress = -1
-        self._state = BackendState.NOT_STARTED
+        self._state = BackendState.NotStarted
         if self._backend:
             self._backend.processingProgress.connect(self._onProcessingProgress)
             self._backend.backendStateChange.connect(self._onBackendStateChange)
