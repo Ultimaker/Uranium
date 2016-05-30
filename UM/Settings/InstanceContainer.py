@@ -250,11 +250,14 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
         if key not in self._instances:
             return
 
-        definition = self._instances[key].definition
+        instance = self._instances[key]
         del self._instances[key]
+        instance.propertyChanged.emit(key, "value")
+
+        self._dirty = True
 
         # Notify listeners of changed properties for all related properties
-        for relation in definition.relations:
+        for relation in instance.definition.relations:
             if relation.type == SettingRelation.RelationType.RequiresTarget:
                 continue
 
