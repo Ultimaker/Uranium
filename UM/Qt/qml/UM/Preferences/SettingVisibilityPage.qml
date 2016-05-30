@@ -60,7 +60,7 @@ PreferencesPage
             ListView
             {
                 id: settingsListView
-                model: UM.SettingDefinitionsModel { id: definitionsModel; containerId: "fdmprinter"; showAll: true; }
+                model: UM.SettingDefinitionsModel { id: definitionsModel; containerId: "fdmprinter"; showAll: true; visibilityHandler: UM.SettingPreferenceVisibilityHandler { } }
                 delegate:Loader
                 {
                     id: loader
