@@ -270,6 +270,42 @@ class SettingDefinitionsModel(QAbstractListModel):
 
         return self._definitions.index(definitions[0])
 
+    @pyqtSlot(str, str, result = "QVariantMap")
+    def getRequires(self, key, role = None):
+        definitions = self._container.findDefinitions(key = key)
+        if not definitions:
+            return {}
+
+        result = {}
+        for relation in definitions[0].relations:
+            if relation.type is not UM.Settings.SettingRelation.RelationType.RequiresTarget:
+                continue
+
+            if role and role != relation.role:
+                continue
+
+            result[relation.target.key] = relation.target.label
+
+        return result
+
+    @pyqtSlot(str, str, result = "QVariantMap")
+    def getRequiredBy(self, key, role = None):
+        definitions = self._container.findDefinitions(key = key)
+        if not definitions:
+            return {}
+
+        result = {}
+        for relation in definitions[0].relations:
+            if relation.type is not UM.Settings.SettingRelation.RelationType.RequiredByTarget:
+                continue
+
+            if role and role != relation.role:
+                continue
+
+            result[relation.target.key] = relation.target.label
+
+        return result
+
     ##  Reimplemented from QAbstractListModel
     def rowCount(self, parent = None):
         if not self._container:
