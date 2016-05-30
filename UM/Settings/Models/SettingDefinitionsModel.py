@@ -41,9 +41,6 @@ class SettingDefinitionsModel(QAbstractListModel):
 
         self._visibility_handler = None
 
-        #Preferences.getInstance().preferenceChanged.connect(self._onPreferencesChanged)
-        #self._onPreferencesChanged("general/visible_settings")
-
         self._role_names = {
             self.KeyRole: b"key",
             self.DepthRole: b"depth",
@@ -127,15 +124,11 @@ class SettingDefinitionsModel(QAbstractListModel):
             self._visibility_handler.visibilityChanged.connect(self._onVisibilityChanged)
             self._onVisibilityChanged()
 
-    def _onVisibilityChanged(self):
-        self._visible = self._visibility_handler.getVisible()
-        self._update()
-
     visibilityHandlerChanged = pyqtSignal()
 
     @pyqtProperty("QVariant", fset = setVisibilityHandler, notify = visibilityHandlerChanged)
     def visibilityHandler(self):
-        pass
+        return self._visibility_handler
 
     ##  Are a specified SettingDefinitions's children visible.
     @pyqtSlot(str, result = bool)
@@ -264,13 +257,10 @@ class SettingDefinitionsModel(QAbstractListModel):
         else:
             self._visible.remove(key)
 
+        self.dataChanged.emit(self.index(self._definitions.index(definitions[0]), 0), self.index(self._definitions.index(definitions[0]), 0), [self.VisibleRole])
+
         if self._visibility_handler:
             self._visibility_handler.setVisible(self._visible)
-
-        #TODO: To make the class more general, the saving of visible settings to preferences was removed.
-        #This needs to be re-introduced again.
-        #preference = ";".join(self._visible)
-        #Preferences.getInstance().setValue("general/visible_settings", preference)
 
     @pyqtSlot(str, result = int)
     def getIndex(self, key):
@@ -334,7 +324,7 @@ class SettingDefinitionsModel(QAbstractListModel):
             data = getattr(definition, role_name.decode())
         except AttributeError:
             data = ""
-            
+
         if isinstance(data, collections.OrderedDict):
             result = []
             for key, value in data.items():
@@ -393,3 +383,20 @@ class SettingDefinitionsModel(QAbstractListModel):
                 count += self._getVisibleChildCount(child)
 
         return count
+
+    def _onVisibilityChanged(self):
+        new_visible = self._visibility_handler.getVisible()
+        if new_visible == self._visible:
+            return
+
+        self._visible = new_visible
+
+        if self._show_all:
+            # We are already showing all settings, just update the visible role.
+            self.dataChanged.emit(self.index(0, 0), self.index(len(self._definitions) - 1, 0))
+            return
+
+        if not self._container:
+            return
+
+        self._update()
