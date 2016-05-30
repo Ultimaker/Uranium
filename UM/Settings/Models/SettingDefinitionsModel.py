@@ -270,13 +270,16 @@ class SettingDefinitionsModel(QAbstractListModel):
 
         return self._definitions.index(definitions[0])
 
-    @pyqtSlot(str, str, result = "QVariantMap")
+    @pyqtSlot(str, str, result = "QVariantList")
     def getRequires(self, key, role = None):
+        if not self._container:
+            return []
+
         definitions = self._container.findDefinitions(key = key)
         if not definitions:
-            return {}
+            return []
 
-        result = {}
+        result = []
         for relation in definitions[0].relations:
             if relation.type is not UM.Settings.SettingRelation.RelationType.RequiresTarget:
                 continue
@@ -284,17 +287,20 @@ class SettingDefinitionsModel(QAbstractListModel):
             if role and role != relation.role:
                 continue
 
-            result[relation.target.key] = relation.target.label
+            result.append({ "key": relation.target.key, "label": relation.target.label})
 
         return result
 
-    @pyqtSlot(str, str, result = "QVariantMap")
+    @pyqtSlot(str, str, result = "QVariantList")
     def getRequiredBy(self, key, role = None):
+        if not self._container:
+            return []
+
         definitions = self._container.findDefinitions(key = key)
         if not definitions:
-            return {}
+            return []
 
-        result = {}
+        result = []
         for relation in definitions[0].relations:
             if relation.type is not UM.Settings.SettingRelation.RelationType.RequiredByTarget:
                 continue
@@ -302,7 +308,7 @@ class SettingDefinitionsModel(QAbstractListModel):
             if role and role != relation.role:
                 continue
 
-            result[relation.target.key] = relation.target.label
+            result.append({ "key": relation.target.key, "label": relation.target.label})
 
         return result
 
