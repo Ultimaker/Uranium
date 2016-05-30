@@ -56,7 +56,6 @@ class Validator(SettingFunction.SettingFunction):
             value = value_provider.getProperty(self._key, "value")
             if value is None or value != value:
                 raise ValueError("Cannot validate None, NaN or similar values in setting {0}, actual value: {1}".format(self._key, value))
-            print("validate", self._key, value, minimum, maximum, minimum_warning, maximum_warning)
 
             if minimum is not None and value < minimum:
                 state = ValidatorState.MinimumError
