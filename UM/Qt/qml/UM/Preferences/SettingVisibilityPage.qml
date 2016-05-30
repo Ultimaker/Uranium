@@ -21,7 +21,7 @@ PreferencesPage
 
     function reset()
     {
-        UM.Preferences.resetPreference("general/setting_visibility")
+        UM.Preferences.resetPreference("general/visible_settings")
     }
     resetEnabled: true;
 
