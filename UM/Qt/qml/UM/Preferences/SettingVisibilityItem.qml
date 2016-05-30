@@ -23,7 +23,11 @@ UM.TooltipArea
         text: definition.label
         checked: model.visible;
         enabled: !model.prohibited;
-        onClicked: definitionsModel.setVisible(model.key, checked);
+
+        MouseArea {
+            anchors.fill: parent;
+            onClicked: definitionsModel.setVisible(model.key, !check.checked);
+        }
     }
 }
 
