@@ -433,8 +433,6 @@ class SettingDefinitionsModel(QAbstractListModel):
 
     def _onVisibilityChanged(self):
         new_visible = self._visibility_handler.getVisible()
-        if new_visible == self._visible:
-            return
 
         self._visible = new_visible
 
