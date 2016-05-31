@@ -53,6 +53,7 @@ class DefinitionContainersModel(ListModel):
                     break
             else: # No existing manufacturer was greater, so put it at the end.
                 self.appendItem(item)
+        self.sort(lambda k: k["name"])
 
     ##  Set the filter of this model based on a string.
     #   \param filter_dict Dictionary to do the filtering by.
