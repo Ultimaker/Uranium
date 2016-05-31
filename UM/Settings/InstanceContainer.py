@@ -115,7 +115,7 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
     #
     #   Reimplemented from ContainerInterface.
     def hasProperty(self, key, property_name):
-        return key in self._instances and hasattr(self._instances, property_name)
+        return key in self._instances and hasattr(self._instances[key], property_name)
 
     ##  Set the value of a property of a SettingInstance.
     #
