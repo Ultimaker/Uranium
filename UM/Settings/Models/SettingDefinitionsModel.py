@@ -257,7 +257,12 @@ class SettingDefinitionsModel(QAbstractListModel):
         else:
             self._visible.remove(key)
 
-        self.dataChanged.emit(self.index(self._definitions.index(definitions[0]), 0), self.index(self._definitions.index(definitions[0]), 0), [self.VisibleRole])
+        # The visibility change data emit is mostly usefull if show_all is enabled, as we don't want to reset the
+        # entire model at that point.
+        try:
+            self.dataChanged.emit(self.index(self._definitions.index(definitions[0]), 0), self.index(self._definitions.index(definitions[0]), 0), [self.VisibleRole])
+        except ValueError:
+            pass  # Definition was not added yet. Ignore.
 
         if self._visibility_handler:
             self._visibility_handler.setVisible(self._visible)
