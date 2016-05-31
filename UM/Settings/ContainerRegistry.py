@@ -162,8 +162,12 @@ class ContainerRegistry:
     def removeContainer(self, container_id):
         containers = self.findContainers(None, id = container_id)
         if containers:
-            self._containers.remove(containers[0])
-            self.containerRemoved.emit(containers[0])
+            container = containers[0]
+
+            self._containers.remove(container)
+            self._deleteFiles(container)
+            self.containerRemoved.emit(container)
+
         else:
             Logger.log("w", "Could not remove container with id %s, as no container with that ID is known")
 
@@ -219,6 +223,32 @@ class ContainerRegistry:
             path = Resources.getStoragePath(Resources.DefinitionContainers, file_name)
             with SaveFile(path, "wt", -1, "utf-8") as f:
                 f.write(data)
+
+    # Remove all files related to a container located in a storage path
+    #
+    # Since we cannot assume we can write to any other path, we can only support removing from
+    # a storage path. This effectively "resets" a container that is located in another resource
+    # path.
+    def _deleteFiles(self, container):
+        for resource_type in self._resource_types:
+            mime_type_name = ""
+            for name, container_type in self.__mime_type_map.items():
+                if container_type == container.__class__:
+                    mime_type_name = name
+                    break
+            else:
+                return
+
+            mime_type = MimeTypeDatabase.getMimeType(mime_type_name)
+
+            for suffix in mime_type.suffixes:
+                try:
+                    path = Resources.getStoragePath(resource_type, urllib.parse.quote_plus(container.getId()) + "." + suffix)
+                    if os.path.isfile(path):
+                        Logger.log("d", "Removing container file %s", path)
+                        os.remove(path)
+                except Exception:
+                    continue
 
     ##  Get the singleton instance for this class.
     @classmethod
