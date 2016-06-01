@@ -72,6 +72,7 @@ PreferencesPage
                     property var settingDefinitionsModel: definitionsModel
 
                     asynchronous: true
+                    active: model.type != undefined
                     source:
                     {
                         switch(model.type)
