@@ -2,6 +2,7 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 import os
+import re #For finding containers with asterisks in the constraints.
 import urllib
 
 from UM.PluginRegistry import PluginRegistry
@@ -56,28 +57,40 @@ class ContainerRegistry:
 
     ##  Find all DefinitionContainer objects matching certain criteria.
     #
-    #   \param kwargs \type{dict} A dictionary of keyword arguments containing keys and values that need to match the metadata of the DefinitionContainer.
+    #   \param kwargs \type{dict} A dictionary of keyword arguments containing
+    #   keys and values that need to match the metadata of the
+    #   DefinitionContainer. An asterisk in the values can be used to denote a
+    #   wildcard.
     def findDefinitionContainers(self, **kwargs):
         return self.findContainers(DefinitionContainer.DefinitionContainer, **kwargs)
 
     ##  Find all InstanceContainer objects matching certain criteria.
     #
-    #   \param kwargs \type{dict} A dictionary of keyword arguments containing keys and values that need to match the metadata of the InstanceContainer.
+    #   \param kwargs \type{dict} A dictionary of keyword arguments containing
+    #   keys and values that need to match the metadata of the
+    #   InstanceContainer. An asterisk in the values can be used to denote a
+    #   wildcard.
     def findInstanceContainers(self, **kwargs):
         return self.findContainers(InstanceContainer.InstanceContainer, **kwargs)
 
     ##  Find all ContainerStack objects matching certain criteria.
     #
-    #   \param kwargs \type{dict} A dictionary of keyword arguments containing keys and values that need to match the metadata of the ContainerStack.
+    #   \param kwargs \type{dict} A dictionary of keyword arguments containing
+    #   keys and values that need to match the metadata of the ContainerStack.
+    #   An asterisk in the values can be used to denote a wildcard.
     def findContainerStacks(self, **kwargs):
         return self.findContainers(ContainerStack.ContainerStack, **kwargs)
 
-    ##  Find all container objects matching certain criteria
+    ##  Find all container objects matching certain criteria.
     #
-    #   \param container_type If provided, return only objects that are instances or subclasses of container_type.
-    #   \param kwargs \type{dict} A dictionary of keyword arguments containing keys and values that need to match the metadata of the container.
+    #   \param container_type If provided, return only objects that are
+    #   instances or subclasses of container_type.
+    #   \param kwargs \type{dict} A dictionary of keyword arguments containing
+    #   keys and values that need to match the metadata of the container. An
+    #   asterisk can be used to denote a wildcard.
     #
-    #   \return A list of containers matching the search criteria, or an empty list if nothing was found.
+    #   \return A list of containers matching the search criteria, or an empty
+    #   list if nothing was found.
     def findContainers(self, container_type = None, **kwargs):
         containers = []
         for container in self._containers:
@@ -86,19 +99,37 @@ class ContainerRegistry:
 
             matches_container = True
             for key, value in kwargs.items():
-                if key == "id":
-                    if container.getId() != value:
-                        matches_container = False
-                    continue
-                if key == "definition":
-                    try:
-                        if container.getDefinition().getId() != value:
+                try:
+                    value = re.escape(value) #Escape for regex patterns.
+                    value = "^" + value.replace("\\*", ".*") + "$" #Instead of (now escaped) asterisks, match on any string. Also add anchors for a complete match.
+                    value_pattern = re.compile(value)
+                    if key == "id":
+                        if not value_pattern.match(container.getId()):
                             matches_container = False
                         continue
-                    except AttributeError:  # Only instanceContainers have a get definition. We can ignore all others.
-                        pass
-                if container.getMetaDataEntry(key) != value:
-                    matches_container = False
+                    if key == "definition":
+                        try:
+                            if not value_pattern.match(container.getDefinition().getId()):
+                                matches_container = False
+                            continue
+                        except AttributeError:  # Only instanceContainers have a get definition. We can ignore all others.
+                            pass
+                    if not value_pattern.match(container.getMetaDataEntry(key)):
+                        matches_container = False
+                except TypeError: #Value was not a string.
+                    if key == "id":
+                        if value != container.getId():
+                            matches_container = False
+                        continue
+                    if key == "definition":
+                        try:
+                            if value != container.getDefinition().getId():
+                                matches_container = False
+                            continue
+                        except AttributeError:
+                            pass
+                    if value != container.getMetaDataEntry(key):
+                        matches_container = False
 
             if matches_container:
                 containers.append(container)
@@ -151,7 +182,7 @@ class ContainerRegistry:
                 Logger.logException("e", "Could not deserialize container %s", container_id)
 
     def addContainer(self, container):
-        containers = self.findContainers(None, id = container.getId())
+        containers = self.findContainers(container_type = container.__class__, id = container.getId())
         if containers:
             Logger.log("w", "Container of type %s and id %s already added", repr(container.__class__), container.getId())
             return

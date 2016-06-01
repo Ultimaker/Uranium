@@ -220,6 +220,20 @@ test_findContainers_data = [
         "result": [
             { "id": "b", "number": 1, "mixed": 9 }
         ]
+    },
+    {
+        "name": "Asterisk Filter",
+        "containers": [
+            { "id": "a", "curseword": "fuck" },
+            { "id": "b", "curseword": "shit" },
+            { "id": "c", "curseword": "flabberjack" },
+            { "id": "d", "curseword": "failbucket" }
+        ],
+        "filter": { "curseword": "f*ck" },
+        "result": [
+            { "id": "a", "curseword": "fuck" },
+            { "id": "c", "curseword": "flabberjack" }
+        ]
     }
 ]
 
