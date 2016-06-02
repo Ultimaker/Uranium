@@ -214,6 +214,8 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
         definition_containers = [container for container in self.getContainers() if container.__class__ == DefinitionContainer] #To get all keys, get all definitions from all definition containers.
         for definition_container in definition_containers:
             keys |= definition_container.getAllKeys()
+        if self._next_stack:
+            keys |= self._next_stack.getAllKeys()
         return keys
 
     ##  Get a list of all containers in this stack.
