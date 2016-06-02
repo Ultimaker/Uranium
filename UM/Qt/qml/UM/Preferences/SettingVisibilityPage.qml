@@ -30,18 +30,42 @@ PreferencesPage
         id: base;
         anchors.fill: parent;
 
+        CheckBox
+        {
+            id: toggleVisibleSettings
+            anchors
+            {
+                verticalCenter: filter.verticalCenter;
+                left: parent.left;
+                leftMargin: UM.Theme.getSize("default_margin").width
+            }
+            text: catalog.i18nc("@label:textbox", "Check all")
+            checked: false
+            onClicked:
+            {
+                var keys = [];
+                var keyRoleId = settingsListView.model.roleId("key")
+                for(var i = 0; i < settingsListView.model.rowCount(); i++) {
+                    var key = settingsListView.model.data(settingsListView.model.index(i,0), keyRoleId);
+                    if(key) keys.push(key)
+                }
+                settingsListView.model.setVisibleBulk(keys, checked);
+            }
+        }
+
         TextField
         {
             id: filter;
 
             anchors
             {
-                top: parent.top;
-                left: parent.left;
-                right: parent.right;
+                top: parent.top
+                left: toggleVisibleSettings.right
+                leftMargin: UM.Theme.getSize("default_margin").width
+                right: parent.right
             }
 
-            placeholderText: catalog.i18nc("@label:textbox", "Filter...");
+            placeholderText: catalog.i18nc("@label:textbox", "Filter...")
 
             onTextChanged: settingsListView.model.filter = {"label": "*" + text}
         }
@@ -53,6 +77,7 @@ PreferencesPage
             anchors
             {
                 top: filter.bottom;
+                topMargin: UM.Theme.getSize("default_margin").height
                 left: parent.left;
                 right: parent.right;
                 bottom: parent.bottom;
