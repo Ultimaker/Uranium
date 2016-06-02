@@ -165,7 +165,6 @@ class ContainerRegistry:
     #
     #   If this function is called again, it will clear the old data and reload.
     def load(self):
-        self._containers = [ self._emptyInstanceContainer ] # Clear the old containers, if any.
         files = []
         for type in self._resource_types:
             files.extend(Resources.getAllResourcesOfType(type))
@@ -295,7 +294,6 @@ class ContainerRegistry:
     def getInstance(cls):
         if not cls.__instance:
             cls.__instance = ContainerRegistry()
-            cls.__instance.load()
         return cls.__instance
 
     __instance = None
