@@ -107,6 +107,10 @@ class ContainerRegistry:
                         if not value_pattern.match(container.getId()):
                             matches_container = False
                         continue
+                    if key == "name":
+                        if not value_pattern.match(container.getName()):
+                            matches_container = False
+                        continue
                     if key == "definition":
                         try:
                             if not value_pattern.match(container.getDefinition().getId()):
@@ -121,6 +125,10 @@ class ContainerRegistry:
                         if value != container.getId():
                             matches_container = False
                         continue
+                    if key == "name":
+                        if container.getName() != value:
+                            matches_container = False
+                        continue
                     if key == "definition":
                         try:
                             if value != container.getDefinition().getId():
@@ -130,6 +138,7 @@ class ContainerRegistry:
                             pass
                     if value != container.getMetaDataEntry(key):
                         matches_container = False
+                    continue
 
             if matches_container:
                 containers.append(container)
