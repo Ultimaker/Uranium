@@ -86,6 +86,7 @@ class SettingPropertyProvider(QObject):
     propertiesChanged = pyqtSignal()
     @pyqtProperty("QVariantMap", notify = propertiesChanged)
     def properties(self):
+
         return self._property_values
 
     def setStoreIndex(self, index):
@@ -138,7 +139,6 @@ class SettingPropertyProvider(QObject):
             return
 
         container.removeInstance(self._key)
-        self._update()
 
     # protected:
 
