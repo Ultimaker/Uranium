@@ -254,6 +254,7 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
         del self._instances[key]
         instance.propertyChanged.emit(key, "value")
         instance.propertyChanged.emit(key, "state")  # State is no longer user state, so signal is needed.
+        instance.propertyChanged.emit(key, "validationState") # If the value was invalid, it should now no longer be invalid.
 
         self._dirty = True
 
