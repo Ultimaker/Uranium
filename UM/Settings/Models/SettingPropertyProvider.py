@@ -136,6 +136,7 @@ class SettingPropertyProvider(QObject):
     def removeFromContainer(self, index):
         container = self._stack.getContainer(index)
         if not container or not isinstance(container, UM.Settings.InstanceContainer):
+            Logger.log("w", "Unable to remove instance from container as it was either not found or not an instance container")
             return
 
         container.removeInstance(self._key)
