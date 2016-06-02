@@ -74,7 +74,18 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     #
     #   Reimplemented from ContainerInterface
     def getMetaDataEntry(self, entry, default = None):
-        return self._metadata.get(entry, default)
+        value = self._metadata.get(entry, None)
+
+        if value is None:
+            for container in self._containers:
+                value = container.getMetaDataEntry(entry, None)
+                if value is not None:
+                    break
+
+        if value is None:
+            return default
+        else:
+            return value
 
     def addMetaDataEntry(self, key, value):
         if key not in self._metadata:
