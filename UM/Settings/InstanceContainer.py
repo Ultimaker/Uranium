@@ -253,6 +253,7 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
         instance = self._instances[key]
         del self._instances[key]
         instance.propertyChanged.emit(key, "value")
+        instance.propertyChanged.emit(key, "state")  # State is no longer user state, so signal is needed.
 
         self._dirty = True
 
