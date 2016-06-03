@@ -40,9 +40,14 @@ PreferencesPage
                 leftMargin: UM.Theme.getSize("default_margin").width
             }
             text: catalog.i18nc("@label:textbox", "Check all")
-            checked: false
+            checkedState: Qt.PartiallyChecked
+            partiallyCheckedEnabled: true
             onClicked:
             {
+                if(toggleVisibleSettings.partiallyCheckedEnabled) {
+                    toggleVisibleSettings.checked = true
+                    toggleVisibleSettings.partiallyCheckedEnabled = false
+                }
                 var keys = [];
                 var keyRoleId = settingsListView.model.roleId("key")
                 for(var i = 0; i < settingsListView.model.rowCount(); i++) {
@@ -85,7 +90,41 @@ PreferencesPage
             ListView
             {
                 id: settingsListView
-                model: UM.SettingDefinitionsModel { id: definitionsModel; containerId: "fdmprinter"; showAll: true; visibilityHandler: UM.SettingPreferenceVisibilityHandler { } }
+                model: UM.SettingDefinitionsModel {
+                    id: definitionsModel
+                    containerId: "fdmprinter"
+                    showAll: true
+                    visibilityHandler: UM.SettingPreferenceVisibilityHandler { }
+                    onSettingsVisibilityChanged:
+                    {
+                        var typeRoleId = settingsListView.model.roleId("type");
+                        var visibleRoleId = settingsListView.model.roleId("visible");
+                        var all_visible = true;
+                        var all_hidden = true;
+                        for(var i = 0; i < settingsListView.model.rowCount(); i++) {
+                            var type = settingsListView.model.data(settingsListView.model.index(i,0), typeRoleId);
+                            var visible = settingsListView.model.data(settingsListView.model.index(i,0), visibleRoleId);
+                            if(type && type != "category") {
+                                if(visible) {
+                                    all_hidden = false;
+                                } else {
+                                    all_visible = false;
+                                }
+                                if(!all_hidden && !all_visible) {
+                                    toggleVisibleSettings.partiallyCheckedEnabled = true
+                                    toggleVisibleSettings.checkedState = Qt.PartiallyChecked
+                                    return
+                                }
+                            }
+                        }
+                        toggleVisibleSettings.partiallyCheckedEnabled = false
+                        if(all_visible) {
+                            toggleVisibleSettings.checked = true
+                        } else {
+                            toggleVisibleSettings.checked = false
+                        }
+                    }
+                }
                 delegate:Loader
                 {
                     id: loader

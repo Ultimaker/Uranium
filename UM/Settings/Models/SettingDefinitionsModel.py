@@ -397,6 +397,8 @@ class SettingDefinitionsModel(QAbstractListModel):
 
         return data
 
+    settingsVisibilityChanged = pyqtSignal()
+
     ##  Reimplemented from QAbstractListModel
     def roleNames(self):
         return self._role_names
@@ -434,6 +436,7 @@ class SettingDefinitionsModel(QAbstractListModel):
             if self._expanded_by_default or child.key in self._expanded:
                 self.expandAll(child.key)
         self.endResetModel()
+        self.settingsVisibilityChanged.emit()
 
     def _countParents(self, definition):
         if definition.parent is None:
@@ -462,6 +465,7 @@ class SettingDefinitionsModel(QAbstractListModel):
         new_visible = self._visibility_handler.getVisible()
 
         self._visible = new_visible
+        self.settingsVisibilityChanged.emit()
 
         if self._show_all:
             # We are already showing all settings, just update the visible role.
