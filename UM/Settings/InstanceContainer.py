@@ -163,6 +163,11 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
         for key in all_keys:
             self.removeInstance(key)
 
+    ##  Get all the keys of the instances of this container
+    #   \returns list of keys
+    def getAllKeys(self):
+        return [key for key in self._instances]
+
     ##  \copydoc ContainerInterface::serialize
     #
     #   Reimplemented from ContainerInterface
