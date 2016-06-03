@@ -95,6 +95,12 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
         else:
             Logger.log("w", "Meta data with key %s was already added.", key)
 
+    def setMetaDataEntry(self, key, value):
+        if key in self._metadata:
+            self._metadata[key] = value
+        else:
+            Logger.log("w", "Meta data with key %s was not found. Unable to change.", key)
+
     ##  Check if this container is dirty, that is, if it changed from deserialization.
     def isDirty(self):
         return self._dirty
