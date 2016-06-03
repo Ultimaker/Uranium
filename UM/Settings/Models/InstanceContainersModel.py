@@ -1,6 +1,6 @@
 from UM.Qt.ListModel import ListModel
 
-from PyQt5.QtCore import pyqtProperty, Qt, pyqtSignal
+from PyQt5.QtCore import pyqtProperty, Qt, pyqtSignal, pyqtSlot
 
 from UM.Settings.ContainerRegistry import ContainerRegistry
 from UM.Settings.InstanceContainer import InstanceContainer
@@ -57,3 +57,10 @@ class InstanceContainersModel(ListModel):
     @pyqtProperty("QVariantMap", fset = setFilter, notify = filterChanged)
     def filter(self):
         return self._filter_dict
+
+    @pyqtSlot(str, str)
+    def rename(self, instance_id, new_name):
+        containers = ContainerRegistry.getInstance().findInstanceContainers(id = instance_id)
+        if containers:
+            containers[0].setName(new_name)
+            self._update()
