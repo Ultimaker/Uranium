@@ -237,6 +237,23 @@ class SettingDefinitionsModel(QAbstractListModel):
     def hide(self, key):
         self.setVisible(key, False)
 
+    ##  Set SettingDefinition visible state in bulk
+    @pyqtSlot(str, bool)
+    def setVisibleBulk(self, keys, visible):
+        new_visible = self._visible.copy()
+        keys = keys.split(",")
+        for key in keys:
+            definitions = self._container.findDefinitions(key = key)
+            if not definitions or definitions[0].type == "category":
+                continue
+
+            if visible and key not in new_visible:
+                new_visible.add(key)
+            elif not visible and key in new_visible:
+                new_visible.remove(key)
+        if new_visible != self._visible:
+            self._visibility_handler.setVisible(new_visible)
+
     ##  Set a single SettingDefinition's visible state
     @pyqtSlot(str, bool)
     def setVisible(self, key, visible):
@@ -383,6 +400,16 @@ class SettingDefinitionsModel(QAbstractListModel):
     ##  Reimplemented from QAbstractListModel
     def roleNames(self):
         return self._role_names
+
+    ##  Get role id from a role name
+    @pyqtSlot(str, result=int)
+    def roleId(self, role_name):
+        try:
+            index = list(self._role_names.values()).index(role_name.encode())
+            return list(self._role_names.keys())[index]
+        except:
+            pass
+        return -1
 
     ##  protected:
 
