@@ -151,6 +151,12 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
 
     propertyChanged = Signal()
 
+    ##  Remove all instances from this container.
+    def clear(self):
+        all_keys = self._instances.copy()
+        for key in all_keys:
+            self.removeInstance(key)
+
     ##  \copydoc ContainerInterface::serialize
     #
     #   Reimplemented from ContainerInterface
