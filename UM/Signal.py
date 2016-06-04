@@ -7,6 +7,7 @@
 import inspect
 import threading
 import os
+import copy
 from weakref import WeakSet, WeakKeyDictionary
 
 from UM.Event import CallFunctionEvent
@@ -205,6 +206,18 @@ class Signal:
     #   Since Weak containers cannot be serialized by Pickle we just return an empty dict as state.
     def __getstate__(self):
         return {}
+
+    ##  To proerly handle deepcopy in combination with __getstate__
+    #
+    #   Apparently deepcopy uses __getstate__ internally, which is not documented. The reimplementation
+    #   of __getstate__ then breaks deepcopy. On the other hand, if we do not reimplement it like that,
+    #   we break pickle. So instead make sure to also reimplement __deepcopy__.
+    def __deepcopy__(self, memo):
+        signal = Signal(type = self.__type)
+        signal.__functions = copy.deepcopy(self.__functions, memo)
+        signal.__methods = copy.deepcopy(self.__methods, memo)
+        signal.__signals = copy.deepcopy(self.__signals, memo)
+        return signal
 
     ##  private:
 
