@@ -35,11 +35,15 @@ class SettingPropertyProvider(QObject):
                 self._stack.containersChanged.disconnect(self._update)
 
             if self._stack_id:
-                stacks = UM.Settings.ContainerRegistry.getInstance().findContainerStacks(id = self._stack_id)
-                if not stacks:
-                    self._stack = None
+                stack = None
+                if self._stack_id == "global":
+                    self._stack = UM.Application.getInstance().getGlobalContainerStack()
                 else:
-                    self._stack = stacks[0]
+                    stacks = UM.Settings.ContainerRegistry.getInstance().findContainerStacks(id = self._stack_id)
+                    if stacks:
+                        self._stack = stacks[0]
+
+                if self._stack:
                     self._stack.propertyChanged.connect(self._onPropertyChanged)
                     self._stack.containersChanged.connect(self._update)
             else:
