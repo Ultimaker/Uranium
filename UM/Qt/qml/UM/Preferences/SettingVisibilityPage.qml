@@ -79,6 +79,8 @@ PreferencesPage
         {
             id: scrollView
 
+            frameVisible: true
+
             anchors
             {
                 top: filter.bottom;
