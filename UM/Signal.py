@@ -200,6 +200,12 @@ class Signal:
         self.__methods.clear()
         self.__signals.clear()
 
+    ##  To support Pickle
+    #
+    #   Since Weak containers cannot be serialized by Pickle we just return an empty dict as state.
+    def __getstate__(self):
+        return {}
+
     ##  private:
 
     #   To avoid circular references when importing Application, this should be

@@ -63,6 +63,11 @@ class SettingInstance:
         self.__property_values = {}
 
     def __getattr__(self, name):
+        if name == "_SettingInstance__property_values":
+            # Prevent infinite recursion when __property_values is not set.
+            # This happens primarily with Pickle
+            raise AttributeError("'SettingInstance' object has no attribute '{0}'".format(name))
+
         if name in self.__property_values:
             value = self.__property_values[name]
             if isinstance(value, str) and name == "value":

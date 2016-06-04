@@ -78,6 +78,19 @@ class SettingFunction:
     def __str__(self):
         return "SettingFunction({0})".format(self._code)
 
+    ##  To support Pickle
+    #
+    #   Pickle does not support the compiled code, so instead remove it from the state.
+    #   We can re-compile it later on anyway.
+    def __getstate__(self):
+        state = self.__dict__.copy()
+        del state["_compiled"]
+        return state
+
+    def __setstate__(self, state):
+        self.__dict__.update(state)
+        self._compiled = compile(self._code, repr(self), "eval")
+
 # Helper class used to analyze a parsed function
 class _SettingExpressionVisitor(ast.NodeVisitor):
     def __init__(self):
