@@ -19,7 +19,7 @@ from UM.MimeTypeDatabase import MimeType, MimeTypeDatabase
 #   This allows us to test the container registry without testing the container
 #   class. If something is wrong in the container class it won't influence this
 #   test.
-class MockContainer(UM.Settings.ContainerInterface.ContainerInterface, UM.PluginObject.PluginObject):
+class MockContainer(UM.Settings.ContainerInterface.ContainerInterface, UM.PluginObject):
     ##  Initialise a new definition container.
     #
     #   The container will have the specified ID and all metadata in the
@@ -91,7 +91,7 @@ class MockContainer(UM.Settings.ContainerInterface.ContainerInterface, UM.Plugin
 def container_registry():
     Resources.addSearchPath(os.path.dirname(os.path.abspath(__file__)))
     UM.Settings.ContainerRegistry._ContainerRegistry__instance = None # Reset the private instance variable every time
-    UM.PluginRegistry.PluginRegistry.getInstance().removeType("settings_container")
+    UM.PluginRegistry.getInstance().removeType("settings_container")
 
     return UM.Settings.ContainerRegistry.getInstance()
 
@@ -131,11 +131,11 @@ def test_addContainer(container_registry):
 #
 #   \param container_registry A new container registry from a fixture.
 def test_addContainerType(container_registry, plugin_registry):
-    old_container_type_count = len(container_registry._container_types)
+    old_container_type_count = len(container_registry._ContainerRegistry__container_types)
     plugin_registry.addPluginLocation(os.path.dirname(os.path.abspath(__file__))) # Load plug-ins relative to this file.
     plugin_registry.loadPlugins()
     # The __init__ script now adds itself to the container registry.
-    assert len(container_registry._container_types) == old_container_type_count + 1
+    assert len(container_registry._ContainerRegistry__container_types) == old_container_type_count + 1
 
     with pytest.raises(Exception):
         container_registry.addContainerType(None)

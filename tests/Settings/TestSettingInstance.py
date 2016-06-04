@@ -5,9 +5,32 @@ import pytest
 
 import UM.Settings
 
+##  A very basic copy of the instance container.
+#
+#   Since validator makes have use of this we need it to make validators work.
 class MockContainer():
-    def getProperty(self, key, property_name): # Called by SettingInstance::updateProperty
-        return 10.0
+    def __init__(self):
+        super().__init__()
+
+        self._instances = []
+
+    def getProperty(self, key, property_name):
+        for instance in self._instances:
+            if instance.definition.key == key:
+                try:
+                    value = getattr(instance, property_name)
+                except AttributeError:
+                    break
+
+                if isinstance(value, UM.Settings.SettingFunction):
+                    return value(self)
+                else:
+                    return value
+
+        return None
+
+    def addInstance(self, instance):
+        self._instances.append(instance)
 
 @pytest.fixture
 def setting_definition():
@@ -33,26 +56,15 @@ def test_create(setting_definition, instance_container):
 
 def test_setProperty(setting_definition, instance_container):
     instance = UM.Settings.SettingInstance(setting_definition, instance_container)
+    instance_container.addInstance(instance)
 
     instance.setProperty("value", 20.0)
     assert instance.value == 20.0
     assert instance.state == UM.Settings.InstanceState.User
-    assert instance.validationState == UM.Settings.ValidatorState.Valid
+    assert instance.validationState(instance_container) == UM.Settings.ValidatorState.Valid
 
     with pytest.raises(AttributeError):
         instance.setProperty("something", 10)
-
-def test_updateProperty(setting_definition, instance_container):
-    instance = UM.Settings.SettingInstance(setting_definition, instance_container)
-
-    instance.updateProperty("maximum_value")
-
-    assert instance.maximum_value == 100
-    # We are updating a property that is not value, so state should not change.
-    assert instance.state == UM.Settings.InstanceState.Default
-
-    # Since we only update maximum_value, value will not be set and validation will have nothing to validate
-    assert instance.validationState == UM.Settings.ValidatorState.Unknown
 
 test_validationState_data = [
     {"value": 10.0, "state": UM.Settings.ValidatorState.Valid},
@@ -76,13 +88,14 @@ def test_validationState(data, instance_container):
     })
 
     instance = UM.Settings.SettingInstance(definition, instance_container)
+    instance_container.addInstance(instance)
 
     # Ensure the instance is filled with proper values for the validation range
-    instance.updateProperty("minimum_value")
-    instance.updateProperty("maximum_value")
-    instance.updateProperty("minimum_value_warning")
-    instance.updateProperty("maximum_value_warning")
+    instance.setProperty("minimum_value", 0.0)
+    instance.setProperty("maximum_value", 20.0)
+    instance.setProperty("minimum_value_warning", 5.0)
+    instance.setProperty("maximum_value_warning", 15.0)
 
     instance.setProperty("value", data["value"])
 
-    assert instance.validationState == data["state"]
+    assert instance.validationState(instance_container) == data["state"]

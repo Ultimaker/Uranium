@@ -60,18 +60,12 @@ def test_instance_setProperty():
     def1_instance.setProperty("value", 20.0)
 
     assert def1_instance.value == 20.0
-    assert def1_instance.minimum_value == 10.0
 
     with pytest.raises(AttributeError):
         assert def1_instance.maximum == 50.0
 
-    def2_instance = instance_container.getInstance("test_1")
-    assert def2_instance is not None
-    assert def2_instance.value == 100
-    assert def2_instance.maximum_value == 200
-
-    with pytest.raises(AttributeError):
-        assert def2_instance.minimum == 10.0
+    assert definition2.value(instance_container) == 100
+    assert definition2.maximum_value(instance_container) == 200
 
 test_serialize_data = [
     ({"definition": "basic", "name": "Basic"}, "basic.inst.cfg"),

@@ -69,6 +69,9 @@ class MockContainer(UM.Settings.ContainerInterface.ContainerInterface):
 
     propertyChanged = Signal()
 
+    def hasProperty(self, key, property_name):
+        return key in self.items
+
     ##  Serialises this container.
     #
     #   The serialisation of the mock needs to be kept simple, so it only
@@ -106,7 +109,7 @@ def container_stack():
 def container_registry():
     Resources.addSearchPath(os.path.dirname(os.path.abspath(__file__)))
     UM.Settings.ContainerRegistry._ContainerRegistry__instance = None # Reset the private instance variable every time
-    UM.PluginRegistry.PluginRegistry.getInstance().removeType("settings_container")
+    UM.PluginRegistry.getInstance().removeType("settings_container")
 
     return UM.Settings.ContainerRegistry.getInstance()
 
