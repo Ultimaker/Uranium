@@ -47,7 +47,7 @@ class Validator(SettingFunction.SettingFunction):
         try:
             minimum = value_provider.getProperty(self._key, "minimum_value")
             maximum = value_provider.getProperty(self._key, "maximum_value")
-            minimum_warning = value_provider.getProperty(self._key, "minium_value_warning")
+            minimum_warning = value_provider.getProperty(self._key, "minimum_value_warning")
             maximum_warning = value_provider.getProperty(self._key, "maximum_value_warning")
 
             if minimum is not None and maximum is not None and minimum > maximum:
