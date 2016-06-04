@@ -7,7 +7,7 @@ from UM.PluginObject import PluginObject
 from UM.Settings.ContainerInterface import ContainerInterface
 
 ##  Test container type to test adding new container types with.
-class TestContainer(ContainerInterface, PluginObject):
+class ContainerTestPlugin(ContainerInterface, PluginObject):
     ##  Initialise a new definition container.
     #
     #   The container will have the specified ID and all metadata in the
@@ -55,6 +55,9 @@ class TestContainer(ContainerInterface, PluginObject):
     #
     #   \return Always returns None.
     def getProperty(self, key, property_name):
+        pass
+
+    def hasProperty(self, key, property_name):
         pass
 
     ##  Serializes the container to a string representation.

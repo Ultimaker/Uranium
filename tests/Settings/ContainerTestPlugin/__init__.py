@@ -1,7 +1,7 @@
 # Copyright (c) 2016 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-from .TestContainer import TestContainer
+from .ContainerTestPlugin import ContainerTestPlugin
 from UM.Settings.ContainerRegistry import ContainerRegistry
 
 def getMetaData():
@@ -13,5 +13,5 @@ def getMetaData():
     }
 
 def register(app):
-    ContainerRegistry.getInstance().addContainerType(TestContainer())
-    return { "test": TestContainer() }
+    ContainerRegistry.getInstance().addContainerType(ContainerTestPlugin())
+    return { "test": ContainerTestPlugin() }
