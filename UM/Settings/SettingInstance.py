@@ -15,10 +15,10 @@ from .SettingDefinition import SettingDefinition
 
 # Helper functions for SettingInstance tracing
 def _traceSetProperty(instance, property_name, property_value, container):
-    Logger.log("d", "Set property {0} of instance {1} to value {2}, updating using values from {3}".format(property_name, instance, property_value, container))
+    Logger.log("d", "Set property '{0}' of '{1}' to '{2}', updating using values from {3}".format(property_name, instance, property_value, container))
 
 def _traceUpdateProperty(instance, property_name, container):
-    Logger.log("d", "Updating property {0} of instance {1} using container {2}".format(property_name, instance, container))
+    Logger.log("d", "Updating property '{0}' of '{1}' using container {2}".format(property_name, instance, container))
 
 def _isTraceEnabled():
     return "URANIUM_TRACE_SETTINGINSTANCE" in os.environ

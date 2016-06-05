@@ -150,7 +150,7 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
             instance.propertyChanged.connect(self.propertyChanged)
             self._instances[instance.definition.key] = instance
 
-        Logger.log("d", "Set property %s of setting %s in container %s to value %s", property_name, key, self._id, property_value)
+        Logger.log("d", "Set property '%s' of '%s' in '%s' to '%s'", property_name, key, self._id, property_value)
         self._instances[key].setProperty(property_name, property_value, container)
 
         self._dirty = True
