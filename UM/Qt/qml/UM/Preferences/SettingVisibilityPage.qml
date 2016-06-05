@@ -25,6 +25,36 @@ PreferencesPage
     }
     resetEnabled: true;
 
+    function updateToggleVisibleSettings()
+    {
+        var typeRoleId = settingsListView.model.roleId("type");
+        var visibleRoleId = settingsListView.model.roleId("visible");
+        var all_visible = true;
+        var all_hidden = true;
+        for(var i = 0; i < settingsListView.model.rowCount(); i++) {
+            var type = settingsListView.model.data(settingsListView.model.index(i,0), typeRoleId);
+            var visible = settingsListView.model.data(settingsListView.model.index(i,0), visibleRoleId);
+            if(type && type != "category") {
+                if(visible) {
+                    all_hidden = false;
+                } else {
+                    all_visible = false;
+                }
+                if(!all_hidden && !all_visible) {
+                    toggleVisibleSettings.partiallyCheckedEnabled = true
+                    toggleVisibleSettings.checkedState = Qt.PartiallyChecked
+                    return
+                }
+            }
+        }
+        toggleVisibleSettings.partiallyCheckedEnabled = false
+        if(all_visible) {
+            toggleVisibleSettings.checkedState = Qt.Checked
+        } else {
+            toggleVisibleSettings.checkedState = Qt.Unchecked
+        }
+    }
+
     Item
     {
         id: base;
@@ -92,40 +122,13 @@ PreferencesPage
             ListView
             {
                 id: settingsListView
+                Component.onCompleted: updateToggleVisibleSettings()
                 model: UM.SettingDefinitionsModel {
                     id: definitionsModel
                     containerId: "fdmprinter"
                     showAll: true
                     visibilityHandler: UM.SettingPreferenceVisibilityHandler { }
-                    onSettingsVisibilityChanged:
-                    {
-                        var typeRoleId = settingsListView.model.roleId("type");
-                        var visibleRoleId = settingsListView.model.roleId("visible");
-                        var all_visible = true;
-                        var all_hidden = true;
-                        for(var i = 0; i < settingsListView.model.rowCount(); i++) {
-                            var type = settingsListView.model.data(settingsListView.model.index(i,0), typeRoleId);
-                            var visible = settingsListView.model.data(settingsListView.model.index(i,0), visibleRoleId);
-                            if(type && type != "category") {
-                                if(visible) {
-                                    all_hidden = false;
-                                } else {
-                                    all_visible = false;
-                                }
-                                if(!all_hidden && !all_visible) {
-                                    toggleVisibleSettings.partiallyCheckedEnabled = true
-                                    toggleVisibleSettings.checkedState = Qt.PartiallyChecked
-                                    return
-                                }
-                            }
-                        }
-                        toggleVisibleSettings.partiallyCheckedEnabled = false
-                        if(all_visible) {
-                            toggleVisibleSettings.checked = true
-                        } else {
-                            toggleVisibleSettings.checked = false
-                        }
-                    }
+                    onSettingsVisibilityChanged: updateToggleVisibleSettings()
                 }
                 delegate:Loader
                 {
