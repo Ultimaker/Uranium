@@ -58,7 +58,7 @@ class Application():
 
         self._main_thread = threading.current_thread()
 
-        super().__init__(**kwargs)  # Call super to make multiple inheritance work.
+        super().__init__()  # Call super to make multiple inheritance work.
 
         self._renderer = None
 
