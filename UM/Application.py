@@ -31,7 +31,7 @@ class Application():
     #
     #   \param name \type{string} The name of the application.
     #   \param version \type{string} Version, formatted as major.minor.rev
-    def __init__(self, name, version, **kwargs):
+    def __init__(self, name, version, buildtype = "", **kwargs):
         if Application._instance != None:
             raise ValueError("Duplicate singleton creation")
 
@@ -41,6 +41,7 @@ class Application():
 
         self._application_name = name
         self._version = version
+        self._buildtype = buildtype
 
         os.putenv("UBUNTU_MENUPROXY", "0")  # For Ubuntu Unity this makes Qt use its own menu bar rather than pass it on to Unity.
 
@@ -133,6 +134,11 @@ class Application():
     #   \returns version \type{string}
     def getVersion(self):
         return self._version
+
+    ##  Get the buildtype of the application
+    #   \returns version \type{string}
+    def getBuildType(self):
+        return self._buildtype
 
     ##  Add a message to the visible message list so it will be displayed.
     #   This should only be called by message object itself.
