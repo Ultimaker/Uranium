@@ -27,30 +27,32 @@ class SettingPropertyProvider(QObject):
 
     ##  Set the containerStackId property.
     def setContainerStackId(self, stack_id):
-        if stack_id != self._stack_id:
-            self._stack_id = stack_id
+        if stack_id == self._stack_id:
+            return #No change.
+
+        self._stack_id = stack_id
+
+        if self._stack:
+            self._stack.propertyChanged.disconnect(self._onPropertyChanged)
+            self._stack.containersChanged.disconnect(self._update)
+
+        if self._stack_id:
+            stack = None
+            if self._stack_id == "global":
+                self._stack = UM.Application.getInstance().getGlobalContainerStack()
+            else:
+                stacks = UM.Settings.ContainerRegistry.getInstance().findContainerStacks(id = self._stack_id)
+                if stacks:
+                    self._stack = stacks[0]
 
             if self._stack:
-                self._stack.propertyChanged.disconnect(self._onPropertyChanged)
-                self._stack.containersChanged.disconnect(self._update)
+                self._stack.propertyChanged.connect(self._onPropertyChanged)
+                self._stack.containersChanged.connect(self._update)
+        else:
+            self._stack = None
 
-            if self._stack_id:
-                stack = None
-                if self._stack_id == "global":
-                    self._stack = UM.Application.getInstance().getGlobalContainerStack()
-                else:
-                    stacks = UM.Settings.ContainerRegistry.getInstance().findContainerStacks(id = self._stack_id)
-                    if stacks:
-                        self._stack = stacks[0]
-
-                if self._stack:
-                    self._stack.propertyChanged.connect(self._onPropertyChanged)
-                    self._stack.containersChanged.connect(self._update)
-            else:
-                self._stack = None
-
-            self._update()
-            self.containerStackIdChanged.emit()
+        self._update()
+        self.containerStackIdChanged.emit()
 
     ##  Emitted when the containerStackId property changes.
     containerStackIdChanged = pyqtSignal()
