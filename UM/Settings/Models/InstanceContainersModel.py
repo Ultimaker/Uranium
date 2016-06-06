@@ -38,7 +38,7 @@ class InstanceContainersModel(ListModel):
     def _update(self):
         self.clear()
         self._instance_containers = ContainerRegistry.getInstance().findInstanceContainers(**self._filter_dict)
-        self._instance_containers.sort()
+        self._instance_containers.sort(key = lambda k: (0 if k.getMetaDataEntry("read_only") else 1, int(k.getMetaDataEntry("weight")) if k.getMetaDataEntry("weight") else 0, k.getName()))
 
         for container in self._instance_containers:
             self.appendItem({
