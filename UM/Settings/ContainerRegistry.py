@@ -264,6 +264,29 @@ class ContainerRegistry:
             with SaveFile(path, "wt", -1, "utf-8") as f:
                 f.write(data)
 
+    ##  Creates a new unique name for a container that doesn't exist yet.
+    #
+    #   It tries if the original name you provide exists, and if it doesn't
+    #   it'll add a " #1" or " #2" after the name to make it unique.
+    #
+    #   \param original The original name that may not be unique.
+    #   \return A unique name that looks a lot like the original but may have
+    #   a number behind it to make it unique.
+    def uniqueName(self, original):
+        name = original.strip()
+        num_check = re.compile("(.*?)\s*#\d$").match(name)
+        if num_check: #There is a number in the name.
+            name = num_check.group(1) #Filter out the number.
+        if name == "": #Wait, that deleted everything!
+            name = "Extruder"
+        unique_name = name
+
+        i = 1
+        while self.findContainers(id = unique_name) or self.findContainers(name = unique_name): #A container already has this name.
+            i += 1 #Try next numbering.
+            unique_name = "%s #%d" % (name, i) #Fill name like this: "Extruder #2".
+        return unique_name
+
     # Remove all files related to a container located in a storage path
     #
     # Since we cannot assume we can write to any other path, we can only support removing from
