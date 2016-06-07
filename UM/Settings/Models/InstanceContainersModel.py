@@ -30,6 +30,7 @@ class InstanceContainersModel(ListModel):
 
         # Listen to changes
         ContainerRegistry.getInstance().containerAdded.connect(self._onContainerChanged)
+        ContainerRegistry.getInstance().containerChanged.connect(self._onContainerChanged)
         ContainerRegistry.getInstance().containerRemoved.connect(self._onContainerChanged)
 
         self._filter_dict = {}
