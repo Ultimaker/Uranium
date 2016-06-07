@@ -50,7 +50,6 @@ class ContainerRegistry:
         self._resource_types = [Resources.DefinitionContainers]
 
     containerAdded = Signal()
-    containerChanged = Signal()
     containerRemoved = Signal()
 
     def addResourceType(self, type):
