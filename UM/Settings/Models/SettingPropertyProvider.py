@@ -107,6 +107,9 @@ class SettingPropertyProvider(QObject):
     ##  At what level in the stack does the value for this setting occur?
     @pyqtProperty(int, notify = propertiesChanged)
     def stackLevel(self):
+        if not self._stack:
+            return -1
+
         for container in self._stack.getContainers():
             try:
                 if container.getProperty(self._key, "value") is not None:
