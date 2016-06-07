@@ -165,8 +165,18 @@ class SettingInstance:
             if SettingDefinition.isReadOnlyProperty(property_name):
                 continue
 
-            for relation in filter(lambda r: r.role == property_name, self._definition.relations):
-                if relation.type == SettingRelation.RelationType.RequiresTarget:
-                    continue
+            changed_relations = set()
+            self._addRelations(changed_relations, self._definition.relations, property_name)
 
-                self._container.propertyChanged.emit(relation.target.key, relation.role)
+            # TODO: We should send this as a single change event instead of several of them.
+            # That would increase performance by reducing the amount of updates.
+            for relation in changed_relations:
+                container.propertyChanged.emit(relation, property_name)
+
+    def _addRelations(self, relations_set, relations, role):
+        for relation in filter(lambda r: r.role == role, relations):
+            if relation.type == SettingRelation.RelationType.RequiresTarget:
+                continue
+
+            relations_set.add(relation.target.key)
+            self._addRelations(relations_set, relation.target.relations, role)
