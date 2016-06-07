@@ -1,6 +1,6 @@
 from UM.Qt.ListModel import ListModel
 
-from PyQt5.QtCore import pyqtProperty, Qt, pyqtSignal, pyqtSlot
+from PyQt5.QtCore import pyqtProperty, Qt, pyqtSignal, pyqtSlot, QUrl
 
 from UM.Settings.ContainerRegistry import ContainerRegistry
 from UM.Settings.InstanceContainer import InstanceContainer
@@ -95,3 +95,13 @@ class InstanceContainersModel(ListModel):
         if containers:
             containers[0].setName(new_name)
             self._update()
+
+    @pyqtSlot(str, QUrl)
+    def exportProfile(self, instance_id, fileUrl):
+        if not fileUrl.isValid():
+            return False
+        containers = ContainerRegistry.getInstance().findInstanceContainers(id=instance_id)
+        if containers:
+            with open(fileUrl.toLocalFile(), "w") as fhandle:
+                fhandle.write(containers[0].serialize())
+        return False
