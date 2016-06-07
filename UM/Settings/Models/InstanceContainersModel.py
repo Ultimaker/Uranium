@@ -14,6 +14,11 @@ class InstanceContainersModel(ListModel):
     MetaDataRole = Qt.UserRole + 3
     SettingsRole = Qt.UserRole + 4
 
+    LabelRole = Qt.UserRole + 5
+    ValueRole = Qt.UserRole + 6
+    UnitRole = Qt.UserRole + 7
+    CategoryRole = Qt.UserRole + 8
+
     def __init__(self, parent = None):
         super().__init__(parent)
         self.addRoleName(self.NameRole, "name")
@@ -43,12 +48,26 @@ class InstanceContainersModel(ListModel):
         self._instance_containers.sort(key = lambda k: (0 if k.getMetaDataEntry("read_only") else 1, int(k.getMetaDataEntry("weight")) if k.getMetaDataEntry("weight") else 0, k.getName()))
 
         for container in self._instance_containers:
-            settings = []
-            for key in container.getAllKeys():
-                settings.append({
+            settings = ListModel()
+            settings.addRoleName(self.LabelRole, "label")
+            settings.addRoleName(self.ValueRole, "value")
+            settings.addRoleName(self.UnitRole, "unit")
+            settings.addRoleName(self.CategoryRole, "category")
+
+            container_keys = list(container.getAllKeys())
+            container_keys.sort()
+
+            for key in container_keys:
+                category = container.getInstance(key).definition
+                while category.type != "category":
+                    category = category.parent
+
+                settings.appendItem({
                     "key": key,
                     "value": container.getProperty(key, "value"),
                     "label": container.getInstance(key).definition.label,
+                    "unit": container.getInstance(key).definition.unit,
+                    "category": category.label
                 })
 
             self.appendItem({
