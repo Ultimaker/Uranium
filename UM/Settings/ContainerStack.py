@@ -111,16 +111,29 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     #   stack will be tried and so on until the bottom of the stack is reached.
     #   If a next stack is defined for this stack it will then try to get the
     #   value from that stack. If no next stack is defined, None will be returned.
+    #
+    #   Note that if the property value is a function, this method will return the
+    #   result of evaluating that property with the current stack. If you need the
+    #   actual function, use getRawProperty()
     def getProperty(self, key, property_name):
+        value = self.getRawProperty(key, property_name)
+        if isinstance(value, SettingFunction.SettingFunction):
+            return value(self)
+
+        return value
+
+    ##  Retrieve a property of a setting by key and property name.
+    #
+    #   This method does the same as getProperty() except it does not perform any
+    #   special handling of the result, instead the raw stored value is returned.
+    def getRawProperty(self, key, property_name):
         for container in self._containers:
             value = container.getProperty(key, property_name)
             if value is not None:
-                if isinstance(value, SettingFunction.SettingFunction):
-                    return value(self)
                 return value
 
         if self._next_stack:
-            return self._next_stack.getProperty(key, property_name)
+            return self._next_stack.getRawProperty(key, property_name)
         else:
             return None
 
