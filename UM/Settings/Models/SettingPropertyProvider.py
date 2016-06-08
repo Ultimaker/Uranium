@@ -24,6 +24,7 @@ class SettingPropertyProvider(QObject):
         self._watched_properties = []
         self._property_values = {}
         self._store_index = 0
+        self._value_used = None
 
     ##  Set the containerStackId property.
     def setContainerStackId(self, stack_id):
@@ -163,10 +164,41 @@ class SettingPropertyProvider(QObject):
 
         container.removeInstance(self._key)
 
+    isValueUsedChanged = pyqtSignal()
+    @pyqtProperty(bool, notify = isValueUsedChanged)
+    def isValueUsed(self):
+        if self._value_used is not None:
+            return self._value_used
+
+        relations = filter(lambda r: r.type == UM.Settings.SettingRelation.RelationType.RequiredByTarget and r.role == "value", self._stack.getProperty(self._key, "relations"))
+        definition = self._stack.getSettingDefinition(self._key)
+        if not definition:
+            return False
+
+        relation_count = 0
+        value_used_count = 0
+        for relation in relations:
+            # If the setting is not a (x-times-grand)child of this setting, ignore it.
+            if not definition.findDefinitions(key = relation.target.key):
+                continue
+
+            relation_count += 1
+
+            if self._stack.getProperty(relation.target.key, "state") != UM.Settings.InstanceState.User:
+                value_used_count += 1
+
+        self._value_used = relation_count == 0 or (relation_count > 0 and value_used_count != 0)
+        return self._value_used
+
     # protected:
 
     def _onPropertyChanged(self, key, property_name):
         if key != self._key:
+            relations = filter(lambda r: r.target.key == key and r.type == UM.Settings.SettingRelation.RelationType.RequiredByTarget and r.role == "value", self._stack.getProperty(self._key, "relations"))
+            for relation in relations:
+                self._value_used = None
+                self.isValueUsedChanged.emit()
+
             return
 
         if property_name not in self._watched_properties:
