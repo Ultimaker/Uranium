@@ -445,7 +445,7 @@ class SettingDefinition:
         # An enumeration
         "enum": {"from": None, "to": None, "validator": None},
         # A floating point value
-        "float": {"from": str, "to": _toFloatConversion, "validator": Validator.Validator},
+        "float": {"from": lambda v: str(round(v, 4)), "to": _toFloatConversion, "validator": Validator.Validator},
         # A list of 2D points
         "polygon": {"from": None, "to": None, "validator": None},
         # A list of polygons
