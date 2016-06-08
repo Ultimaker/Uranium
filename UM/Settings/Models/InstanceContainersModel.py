@@ -12,12 +12,14 @@ class InstanceContainersModel(ListModel):
     NameRole = Qt.UserRole + 1  # Human readable name (string)
     IdRole = Qt.UserRole + 2    # Unique ID of Definition
     MetaDataRole = Qt.UserRole + 3
+    HasSettingsRole = Qt.UserRole + 4
 
     def __init__(self, parent = None):
         super().__init__(parent)
         self.addRoleName(self.NameRole, "name")
         self.addRoleName(self.IdRole, "id")
         self.addRoleName(self.MetaDataRole, "metadata")
+        self.addRoleName(self.HasSettingsRole, "hasSettings")
 
         self._instance_containers = []
 
@@ -45,6 +47,7 @@ class InstanceContainersModel(ListModel):
                 "name": container.getName(),
                 "id": container.getId(),
                 "metadata": container.getMetaData(),
+                "hasSettings": len(container.getAllKeys()) > 0
             })
 
     ##  Set the filter of this model based on a string.
