@@ -1,13 +1,14 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-from UM.Signal import Signal, SignalEmitter
+from UM.Signal import Signal, signalemitter
 from UM.PluginObject import PluginObject
 
 
 ##  Abstract base class for all input devices (Human Input Devices)
 #   Examples of this are mouse & keyboard
-class InputDevice(PluginObject, SignalEmitter):
+@signalemitter
+class InputDevice(PluginObject):
     def __init__(self):
         super().__init__()
 

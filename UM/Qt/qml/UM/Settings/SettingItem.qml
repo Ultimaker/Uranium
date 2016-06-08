@@ -42,7 +42,7 @@ Item {
 
     property bool hovered: false;
 
-    MouseArea 
+    MouseArea
     {
         id: mouse;
 

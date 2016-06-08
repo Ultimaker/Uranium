@@ -25,7 +25,7 @@ PreferencesPage
         {
             id:pluginList
             delegate: pluginDelegate
-            model: UM.Models.pluginsModel
+            model: UM.PluginsModel { }
             section.delegate: Label { text: section }
             section.property: "type"
             anchors.fill:parent

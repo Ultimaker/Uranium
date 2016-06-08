@@ -52,6 +52,12 @@ class OutputDevicesModel(ListModel):
 
         return { "id": "", "name": "", "short_description": "", "description": "", "icon_name": "save", "priority": -1 }
 
+    outputDevicesChanged = pyqtSignal()
+
+    @pyqtProperty(int, notify = outputDevicesChanged)
+    def deviceCount(self):
+        return self.rowCount()
+
     def _update(self):
         self.beginResetModel()
 
@@ -69,3 +75,5 @@ class OutputDevicesModel(ListModel):
 
         self.sort(lambda i: -i["priority"])
         self.endResetModel()
+
+        self.outputDevicesChanged.emit()

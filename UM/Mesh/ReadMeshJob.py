@@ -13,6 +13,7 @@ from UM.Mesh.MeshReader import MeshReader
 
 import time
 import os.path
+import math
 
 from UM.i18n import i18nCatalog
 i18n_catalog = i18nCatalog("uranium")
@@ -70,34 +71,36 @@ class ReadMeshJob(Job):
         # Scale down to maximum bounds size if that is available
         if hasattr(Application.getInstance().getController().getScene(), "_maximum_bounds"):
             max_bounds = Application.getInstance().getController().getScene()._maximum_bounds
-            node._resetAABB()
-            bounding_box = node.getBoundingBox()
-            timeout_counter = 0
-            #As the calculation of the bounding box is in a seperate thread it might be that it's not done yet.
-            while bounding_box.width == 0 or bounding_box.height == 0 or bounding_box.depth == 0:
-                bounding_box = node.getBoundingBox()
-                time.sleep(0.1)
-                timeout_counter += 1
-                if timeout_counter > 10:
-                    break
-            if max_bounds.width < bounding_box.width or max_bounds.height < bounding_box.height or max_bounds.depth < bounding_box.depth:
-                scale_factor_width = max_bounds.width / bounding_box.width
-                scale_factor_height = max_bounds.height / bounding_box.height
-                scale_factor_depth = max_bounds.depth / bounding_box.depth
-                scale_factor = min(scale_factor_width,scale_factor_height,scale_factor_depth)
 
-                scale_vector = Vector(scale_factor, scale_factor, scale_factor)
-                display_scale_factor = scale_factor * 100
+            mesh_data = node.getMeshData()
+            if mesh_data:
+                bounding_box = mesh_data.getExtents()
 
-                if Preferences.getInstance().getValue("mesh/scale_to_fit") == True:
-                    scale_message = Message(i18n_catalog.i18nc("@info:status", "Auto scaled object to {0}% of original size", ("%i" % display_scale_factor)))
+                if Preferences.getInstance().getValue("mesh/scale_to_fit") == True or Preferences.getInstance().getValue("mesh/scale_tiny_meshes") == True:
+                    scale_factor_width = max_bounds.width / bounding_box.width
+                    scale_factor_height = max_bounds.height / bounding_box.height
+                    scale_factor_depth = max_bounds.depth / bounding_box.depth
+                    scale_factor = min(scale_factor_width,scale_factor_height,scale_factor_depth)
+                    if Preferences.getInstance().getValue("mesh/scale_to_fit") == True and (scale_factor_width < 1 or scale_factor_height < 1 or scale_factor_depth < 1):
+                        # Use scale factor to scale large object down
+                        pass
+                    elif Preferences.getInstance().getValue("mesh/scale_tiny_meshes") == True and (scale_factor_width > 100 and scale_factor_height > 100 and scale_factor_depth > 100):
+                        # Round scale factor to lower factor of 10 to scale tiny object up (eg convert m to mm units)
+                        scale_factor = math.pow(10, math.floor(math.log(scale_factor)/math.log(10)))
+                    else:
+                        scale_factor = 1
 
-                    try:
-                        node.scale(scale_vector)
-                        scale_message.show()
-                    except Exception as e:
-                        print(e)
+                    if scale_factor != 1:
+                        scale_vector = Vector(scale_factor, scale_factor, scale_factor)
+                        display_scale_factor = scale_factor * 100
 
+                        scale_message = Message(i18n_catalog.i18nc("@info:status", "Auto scaled object to {0}% of original size", ("%i" % display_scale_factor)))
+
+                        try:
+                            node.scale(scale_vector)
+                            scale_message.show()
+                        except Exception as e:
+                            print(e)
         self.setResult(node)
 
         loading_message.hide()

@@ -1,0 +1,10 @@
+{
+    "version": 2,
+    "name": "Test",
+
+    "metadata": {
+        "author": "Ultimaker",
+        "category": "Test"
+    },
+    "settings": { }
+}

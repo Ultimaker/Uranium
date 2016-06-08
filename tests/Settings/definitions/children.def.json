@@ -1,0 +1,29 @@
+{
+    "version": 2,
+    "name": "Test",
+
+    "metadata": {},
+    "settings": {
+        "test_setting": {
+            "label": "Test",
+            "description": "A Test Setting",
+            "default_value": 10,
+            "type": "int",
+
+            "children": {
+                "test_child_0": {
+                    "label": "Test Child 0",
+                    "description": "A Test Setting",
+                    "default_value": 10,
+                    "type": "int"
+                },
+                "test_child_1": {
+                    "label": "Test Child 1",
+                    "description": "A Test Setting",
+                    "default_value": 10,
+                    "type": "int"
+                }
+            }
+        }
+    }
+}

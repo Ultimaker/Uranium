@@ -53,6 +53,10 @@ class ActiveToolProxy(QObject):
     def properties(self):
         return self._properties_proxy;
 
+    @pyqtSlot()
+    def forceUpdate(self):
+        self._updateProperties()
+
     @pyqtSlot(str, "QVariant")
     def setProperty(self, property, value):
         if not self._active_tool:

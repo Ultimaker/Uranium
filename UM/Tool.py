@@ -1,7 +1,7 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-from UM.Signal import Signal, SignalEmitter
+from UM.Signal import Signal, signalemitter
 from UM.PluginObject import PluginObject
 from UM.Event import Event
 from UM.Scene.Selection import Selection
@@ -10,10 +10,11 @@ import UM.Application  # Circular dependency blah
 
 ##  Abstract base class for tools that manipulate (or otherwise interact with) the scene.
 #
-class Tool(PluginObject, SignalEmitter):
+@signalemitter
+class Tool(PluginObject):
     def __init__(self):
         super().__init__()
-        self._controller = UM.Application.Application.getInstance().getController() # Circular dependency blah
+        self._controller = UM.Application.getInstance().getController() # Circular dependency blah
         self._enabled = True
 
         self._handle = None
@@ -49,7 +50,7 @@ class Tool(PluginObject, SignalEmitter):
     #   \sa Event
     def event(self, event):
         if not self._selection_pass:
-            self._selection_pass = UM.Application.Application.getInstance().getRenderer().getRenderPass("selection")
+            self._selection_pass = UM.Application.getInstance().getRenderer().getRenderPass("selection")
 
         if event.type == Event.ToolActivateEvent:
             if Selection.hasSelection() and self._handle:

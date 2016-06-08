@@ -13,8 +13,8 @@ from PyQt5 import QtCore, QtWidgets
 ##  Provides the tool to select meshes and groups
 #
 #   Note that the tool has two implementations for different modes of selection:
-#   Pixel Selection Mode and Boundingbox Selection Mode. Of these two, only Pixel Selection Mode
-#   is in active use. Boundingbox Selection Mode may not be functional.
+#   Pixel Selection Mode and BoundingBox Selection Mode. Of these two, only Pixel Selection Mode
+#   is in active use. BoundingBox Selection Mode may not be functional.
 
 class SelectionTool(Tool):
     PixelSelectionMode = 1
@@ -30,19 +30,22 @@ class SelectionTool(Tool):
 
         self._selection_mode = self.PixelSelectionMode
         self._ctrl_is_active = None # Control modifier key is used for multi-selection
+        self._alt_is_active = None  # Alt modifier key is used for sub-selection
 
     ##  Prepare modifier-key variables on each event
     #
     #   \param event type(Event) event passed from event handler
     def checkModifierKeys(self, event):
-        # Control modifier key is used for multi-selection
         modifiers = QtWidgets.QApplication.keyboardModifiers()
-        self._ctrl_is_active = modifiers == QtCore.Qt.ControlModifier
+        # Control modifier key is used for multi-selection
+        self._ctrl_is_active = modifiers & QtCore.Qt.ControlModifier
+        # Alt modifier key is used for sub-selection
+        self._alt_is_active = modifiers & QtCore.Qt.AltModifier
 
     ##  Set the selection mode
     #
     #   The tool has two implementations for different modes of selection: PixelSelectionMode and BoundingboxSelectionMode.
-    #   Of these two, only Pixel Selection Mode is in active use. Boundingbox Selection Mode may not be functional.
+    #   Of these two, only Pixel Selection Mode is in active use. BoundingBox Selection Mode may not be functional.
     #   \param mode type(SelectionTool enum)
     def setSelectionMode(self, mode):
         self._selection_mode = mode
@@ -114,14 +117,14 @@ class SelectionTool(Tool):
                     if is_selected:
                         # Deselect the scenenode and its sibblings in a group
                         if node.getParent():
-                            if not self._isNodeInGroup(node):
+                            if self._alt_is_active or not self._isNodeInGroup(node):
                                 Selection.remove(node)
                             else:
                                 Selection.remove(self._findTopGroupNode(node))
                     else:
                         # Select the scenenode and its sibblings in a group
                         if node.getParent():
-                            if not self._isNodeInGroup(node):
+                            if self._alt_is_active or not self._isNodeInGroup(node):
                                 Selection.add(node)
                             else:
                                 Selection.add(self._findTopGroupNode(node))
@@ -130,10 +133,13 @@ class SelectionTool(Tool):
                         # Select only the scenenode and its sibblings in a group
                         Selection.clear()
                         if node.getParent():
-                            if not self._isNodeInGroup(node):
+                            if self._alt_is_active or not self._isNodeInGroup(node):
                                 Selection.add(node)
                             else:
                                 Selection.add(self._findTopGroupNode(node))
+                    elif self._isNodeInGroup(node) and self._alt_is_active:
+                        Selection.clear()
+                        Selection.add(node)
 
     ##  Check whether a node is in a group
     #

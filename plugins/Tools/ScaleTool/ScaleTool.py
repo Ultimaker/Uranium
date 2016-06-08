@@ -193,7 +193,7 @@ class ScaleTool(Tool):
             self._snap_scale = snap
             self.propertyChanged.emit()
 
-    ##  Get the width of the boundingbox of the selected object(s)
+    ##  Get the width of the bounding box of the selected object(s)
     #
     #   \return width type(float) Width in mm
     def getObjectWidth(self):
@@ -202,7 +202,7 @@ class ScaleTool(Tool):
 
         return 0.0
 
-    ##  Get the height of the boundingbox of the selected object(s)
+    ##  Get the height of the bounding box of the selected object(s)
     #
     #   \return height type(float) height in mm
     def getObjectHeight(self):
@@ -211,7 +211,7 @@ class ScaleTool(Tool):
 
         return 0.0
 
-    ##  Get the depth of the boundingbox of the first selected object
+    ##  Get the depth of the bounding box of the first selected object
     #
     #   \return depth type(float) depth in mm
     def getObjectDepth(self):

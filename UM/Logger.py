@@ -42,6 +42,9 @@ class Logger:
             filled_message = address + message % args # Replace all the %s with the variables. Python formatting is magic.
             logger.log(log_type, filled_message)
 
+        if not cls.__loggers:
+            print(message % args)
+
     ##
     @classmethod
     def logException(cls, log_type, message, *args):

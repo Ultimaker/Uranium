@@ -8,17 +8,14 @@ from UM.Logger import Logger
 
 class ResourcesProxy(QObject):
     class Type:
-        Resources = UM.Resources.Resources.Resources
-        Preferences = UM.Resources.Resources.Preferences
-        Themes = UM.Resources.Resources.Themes
-        Images = UM.Resources.Resources.Images
-        Meshes = UM.Resources.Resources.Meshes
-        MachineDefinitions = UM.Resources.Resources.MachineDefinitions
-        MachineInstances = UM.Resources.Resources.MachineInstances
-        Profiles = UM.Resources.Resources.Profiles
-        i18n = UM.Resources.Resources.i18n
-        Shaders = UM.Resources.Resources.Shaders
-        UserType = UM.Resources.Resources.UserType
+        Resources = UM.Resources.Resources
+        Preferences = UM.Resources.Preferences
+        Themes = UM.Resources.Themes
+        Images = UM.Resources.Images
+        Meshes = UM.Resources.Meshes
+        i18n = UM.Resources.i18n
+        Shaders = UM.Resources.Shaders
+        UserType = UM.Resources.UserType
     Q_ENUMS(Type)
 
     def __init__(self, parent = None):

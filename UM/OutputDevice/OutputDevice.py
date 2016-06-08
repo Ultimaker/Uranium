@@ -1,7 +1,7 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-from UM.Signal import Signal, SignalEmitter
+from UM.Signal import Signal, signalemitter
 
 
 ##  Base class for output devices.
@@ -19,7 +19,8 @@ from UM.Signal import Signal, SignalEmitter
 #   For example, when implementing a web service as output device, it would be completely
 #   acceptable to show a login dialog when calling requestWrite() if there are no saved
 #   login credentials.
-class OutputDevice(SignalEmitter):
+@signalemitter
+class OutputDevice():
     def __init__(self, device_id, **kwargs):
         super().__init__()
 
@@ -122,12 +123,10 @@ class OutputDevice(SignalEmitter):
     #   should be written to the device.
     #   \param file_name \type{string} A suggestion for the file name to write
     #   to. Can be freely ignored if providing a file name makes no sense.
-    #   \param filter_by_machine \type{bool} If the file name is ignored, should
-    #   the file format that the output device chooses be limited to the formats
-    #   that are supported by the currently active machine?
+    #   \param limit_mimetype \type{list} Limit output to these mime types
     #
     #   \exception OutputDeviceError.WriteRequestFailedError
-    def requestWrite(self, node, file_name = None, filter_by_machine = False):
+    def requestWrite(self, node, file_name = None, limit_mimetypes = False):
         raise NotImplementedError("requestWrite needs to be implemented")
 
     writeStarted = Signal()

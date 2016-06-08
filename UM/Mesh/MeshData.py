@@ -3,7 +3,7 @@
 
 from UM.Math.Vector import Vector
 from UM.Math.AxisAlignedBox import AxisAlignedBox
-from UM.Signal import Signal, SignalEmitter
+from UM.Signal import Signal, signalemitter
 from UM.Logger import Logger
 
 from enum import Enum
@@ -31,7 +31,8 @@ class MeshType(Enum):
 #   Normals are stored in the same manner and kept in sync with the vertices. Indices
 #   are stored as a two-dimensional array of integers with the rows being the individual
 #   faces and the three columns being the indices that refer to the individual vertices.
-class MeshData(SignalEmitter):
+@signalemitter
+class MeshData():
     def __init__(self, **kwargs):
         self._vertices = kwargs.get("vertices", None)
         self._normals = kwargs.get("normals", None)
