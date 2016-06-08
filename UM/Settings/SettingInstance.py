@@ -95,9 +95,10 @@ class SettingInstance:
                 if name == "value":
                     if not container:
                         container = self._container
-
-                    self._state = InstanceState.User
-                    self.propertyChanged.emit(self._definition.key, "state")
+                    ## If state changed, emit the signal
+                    if self._state != InstanceState.User:
+                        self._state = InstanceState.User
+                        self.propertyChanged.emit(self._definition.key, "state")
 
                     self.updateRelations(container)
 
