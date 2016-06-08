@@ -278,6 +278,21 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
 
         return None
 
+    ##  Get the SettingDefinition object for a specified key
+    def getSettingDefinition(self, key):
+        for container in self._containers:
+            if not isinstance(container, DefinitionContainer):
+                continue
+
+            settings = container.findDefinitions(key = key)
+            if settings:
+                return settings[0]
+
+        if self._next_stack:
+            return self._next_stack.getSettingDefinition(key)
+        else:
+            return None
+
     ##  Find a container matching certain criteria.
     #
     #   \param filter \type{dict} A dictionary containing key and value pairs
