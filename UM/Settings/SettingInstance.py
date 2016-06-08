@@ -107,7 +107,12 @@ class SettingInstance:
 
                 self.propertyChanged.emit(self._definition.key, name)
         else:
-            raise AttributeError("No property {0} defined".format(name))
+            if name == "state":
+                if value == "InstanceState.Calculated":
+                    self._state = InstanceState.Calculated
+                    self.propertyChanged.emit(self._definition.key, "state")
+            else:
+                raise AttributeError("No property {0} defined".format(name))
 
     @call_if_enabled(_traceUpdateProperty, _isTraceEnabled())
     def updateProperty(self, name, container = None):
