@@ -99,7 +99,7 @@ class SettingInstance:
                     self._state = InstanceState.User
                     self.propertyChanged.emit(self._definition.key, "state")
 
-                    self._update(container)
+                    self.updateRelations(container)
 
                 if self._validator:
                     self.propertyChanged.emit(self._definition.key, "validationState")
@@ -156,7 +156,7 @@ class SettingInstance:
 
     ## protected:
 
-    def _update(self, container):
+    def updateRelations(self, container):
         property_names = SettingDefinition.getPropertyNames()
         property_names.remove("value")  # Move "value" to the front of the list so we always update that first.
         property_names.insert(0, "value")
