@@ -104,18 +104,19 @@ class SettingPropertyProvider(QObject):
     def storeIndex(self):
         return self._store_index
 
-    ##  At what level in the stack does the value for this setting occur?
-    @pyqtProperty(int, notify = propertiesChanged)
-    def stackLevel(self):
+    ##  At what levels in the stack does the value(s) for this setting occur?
+    @pyqtProperty("QVariantList", notify = propertiesChanged)
+    def stackLevels(self):
         if not self._stack:
             return -1
-
+        levels = []
         for container in self._stack.getContainers():
             try:
                 if container.getProperty(self._key, "value") is not None:
-                    return self._stack.getContainerIndex(container)
+                    levels.append(self._stack.getContainerIndex(container))
             except AttributeError:
                 continue
+        return levels
 
     ##  Set the value of a property.
     #
@@ -139,6 +140,19 @@ class SettingPropertyProvider(QObject):
             return
 
         container.setProperty(self._key, property_name, property_value, self._stack)
+
+    ##  Manually request the value of a property.
+    #   The most notable difference with the properties is that you have more control over at what point in the stack
+    #   you want the setting to be retrieved (instead of always taking the top one)
+    #   \param property_name The name of the property to get the value from.
+    #   \param stack_level the index of the container to get the value from.
+    @pyqtSlot(str, int, result = "QVariant")
+    def getPropertyValue(self, property_name, stack_level):
+        try:
+            value = self._stack.getContainers()[stack_level].getProperty(self._key, property_name)
+        except IndexError:  # Requested stack level does not exist
+            return
+        return value
 
     @pyqtSlot(int)
     def removeFromContainer(self, index):
