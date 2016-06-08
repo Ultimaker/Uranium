@@ -174,9 +174,9 @@ class SettingPropertyProvider(QObject):
 
         value = self._getPropertyValue(property_name)
 
-
-        self._property_values[property_name] = value
-        self.propertiesChanged.emit()
+        if self._property_values[property_name] != value:
+            self._property_values[property_name] = value
+            self.propertiesChanged.emit()
 
     def _update(self, container = None):
         if not self._stack or not self._watched_properties or not self._key:
