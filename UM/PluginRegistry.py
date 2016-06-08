@@ -22,6 +22,7 @@ class PluginRegistry(object):
     def __init__(self):
         super().__init__()
         self._plugins = {}
+        self._plugin_objects = {}
         self._meta_data = {}
         self._plugin_locations = []
         self._application = None
@@ -82,6 +83,7 @@ class PluginRegistry(object):
                 return
             for plugin_type, plugin_object in to_register.items():
                 plugin_object.setPluginId(plugin_id)
+                self._plugin_objects[plugin_id] = plugin_object
                 try:
                     self._type_register_map[plugin_type](plugin_object)
                 except Exception as e:
@@ -111,6 +113,13 @@ class PluginRegistry(object):
                     self.loadPlugin(plugin_id)
                 except PluginNotFoundError:
                     pass
+
+    ##  Get a plugin object
+    #   \param plugin_id \type{string} The ID of the plugin object to get.
+    def getPluginObject(self, plugin_id):
+        if plugin_id not in self._plugins:
+            self.loadPlugin(plugin_id)
+        return self._plugin_objects[plugin_id]
 
     ##  Get the metadata for a certain plugin
     #   \param plugin_id \type{string} The ID of the plugin
