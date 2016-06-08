@@ -279,7 +279,7 @@ class ContainerRegistry:
         if num_check: #There is a number in the name.
             name = num_check.group(1) #Filter out the number.
         if name == "": #Wait, that deleted everything!
-            name = "Extruder"
+            name = "Profile"
         unique_name = name
 
         i = 1
