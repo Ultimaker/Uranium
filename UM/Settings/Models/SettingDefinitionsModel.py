@@ -36,6 +36,7 @@ class SettingDefinitionsModel(QAbstractListModel):
 
         self._expanded = set()
         self._visible = set()
+        self._exclude = set()
 
         self._show_all = False
 
@@ -129,6 +130,22 @@ class SettingDefinitionsModel(QAbstractListModel):
     @pyqtProperty("QVariant", fset = setVisibilityHandler, notify = visibilityHandlerChanged)
     def visibilityHandler(self):
         return self._visibility_handler
+
+    ##  Set the exclude property
+    def setExclude(self, exclude):
+        exclude = set(exclude)
+        if exclude != self._exclude:
+            self._exclude = exclude
+            self._update()
+            self.excludeChanged.emit()
+
+    ##  Emitted whenever the exclude property changes
+    excludeChanged = pyqtSignal()
+
+    ##  This property indicates which settings should never be visibile.
+    @pyqtProperty("QVariantList", fset = setExclude, notify = excludeChanged)
+    def exclude(self):
+        return list(self._exclude)
 
     ##  Are a specified SettingDefinitions's children visible.
     @pyqtSlot(str, result = bool)
@@ -427,6 +444,9 @@ class SettingDefinitionsModel(QAbstractListModel):
             children_list = self._root.children
 
         for child in children_list:
+            if child.key in self._exclude:
+                continue
+
             if self._show_all or child.key in self._visible:
                 self._definitions.append(child)
             else:
