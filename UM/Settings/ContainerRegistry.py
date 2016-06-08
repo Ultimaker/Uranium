@@ -207,6 +207,8 @@ class ContainerRegistry:
             self._deleteFiles(container)
             self.containerRemoved.emit(container)
 
+            Logger.log("d", "Removed container %s", container.getId())
+
         else:
             Logger.log("w", "Could not remove container with id %s, as no container with that ID is known")
 
@@ -307,7 +309,6 @@ class ContainerRegistry:
                 try:
                     path = Resources.getStoragePath(resource_type, urllib.parse.quote_plus(container.getId()) + "." + suffix)
                     if os.path.isfile(path):
-                        Logger.log("d", "Removing container file %s", path)
                         os.remove(path)
                 except Exception:
                     continue
