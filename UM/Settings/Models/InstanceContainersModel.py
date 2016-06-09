@@ -3,12 +3,14 @@ from UM.Qt.ListModel import ListModel
 from PyQt5.QtCore import pyqtProperty, Qt, pyqtSignal, pyqtSlot, QUrl
 from PyQt5.QtWidgets import QMessageBox
 
+from UM.Application import Application
 from UM.Logger import Logger
 from UM.Message import Message
 from UM.Platform import Platform
 from UM.PluginRegistry import PluginRegistry #For getting the possible profile writers to write with.
 from UM.Settings.ContainerRegistry import ContainerRegistry
 from UM.Settings.InstanceContainer import InstanceContainer
+from UM.Util import parseBool
 
 import os
 
@@ -184,16 +186,16 @@ class InstanceContainersModel(ListModel):
                 Logger.log("e", "Failed to import profile from %s: %s", path, str(e))
                 return { "status": "error", "message": catalog.i18nc("@info:status", "Failed to import profile from <filename>{0}</filename>: <message>{1}</message>", path, str(e)) }
             if profile: #Success!
-                # profile.setReadOnly(False)
-                ContainerRegistry.getInstance().addContainer(profile)
-                #File name (without extension) trumps the name stored in the profile
-                file_name = os.path.basename(os.path.splitext(path)[0])
-                #profile.setName takes care of making sure the profile name is unique
-                # profile.setName(file_name)
+                profile.setReadOnly(False)
 
-                #Make sure the profile is available for the currently selected printer
-                # profile.setMachineTypeId(self._manager.getActiveMachineInstance().getMachineDefinition().getProfilesMachineId())
-                # self._manager.addProfile(profile) #Add the new profile to the list of profiles.
+                if self._filterQualityByMachine():
+                    profile.setDefinition(self._activeDefinition())
+                    if self._hasMaterials():
+                        profile.addMetaDataEntry("material", self._activeMaterialId())
+                else:
+                    profile.setDefinition(ContainerRegistry.getInstance().findDefinitionContainers(id="fdmprinter")[0])
+                ContainerRegistry.getInstance().addContainer(profile)
+
                 return { "status": "ok", "message": catalog.i18nc("@info:status", "Successfully imported profile {0}", profile.getName()) }
 
         #If it hasn't returned by now, none of the plugins loaded the profile successfully.
@@ -215,3 +217,31 @@ class InstanceContainersModel(ListModel):
             if profile_io_type in meta_data:
                 result.append( (plugin_id, meta_data) )
         return result
+
+    def _filterQualityByMachine(self):
+        global_container_stack = Application.getInstance().getGlobalContainerStack()
+        if global_container_stack:
+            return bool(global_container_stack.getMetaDataEntry("has_machine_quality", False))
+        return False
+
+    def _activeDefinition(self):
+        global_container_stack = Application.getInstance().getGlobalContainerStack()
+        if global_container_stack:
+            definition = global_container_stack.getBottom()
+            if definition:
+                return definition
+        return None
+
+    def _hasMaterials(self):
+        global_container_stack = Application.getInstance().getGlobalContainerStack()
+        if global_container_stack:
+            return global_container_stack.getMetaDataEntry("has_materials", False)
+        return False
+
+    def _activeMaterialId(self):
+        global_container_stack = Application.getInstance().getGlobalContainerStack()
+        if global_container_stack:
+            material = global_container_stack.findContainer({"type": "material"})
+            if material:
+                return material.getId()
+        return ""
