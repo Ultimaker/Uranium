@@ -136,7 +136,7 @@ class InstanceContainersModel(ListModel):
     #   \return The plugin object matching the given extension and description.
     def _findProfileWriter(self, extension, description):
         pr = PluginRegistry.getInstance()
-        for plugin_id, meta_data in self._getProfileWriters():
+        for plugin_id, meta_data in self._getProfileIOPlugins("profile_writer"):
             for supported_type in meta_data["profile_writer"]:  # All file types this plugin can supposedly write.
                 supported_extension = supported_type.get("extension", None)
                 if supported_extension == extension:  # This plugin supports a file type with the same extension.
@@ -145,10 +145,6 @@ class InstanceContainersModel(ListModel):
                         return pr.getPluginObject(plugin_id)
         return None
 
-    @pyqtSlot(str, QUrl)
-    def importProfile(self, instance_id, fileUrl):
-        pass
-
     ##  Gets a list of the possible file filters that the plugins have
     #   registered they can write.
     #
@@ -156,25 +152,66 @@ class InstanceContainersModel(ListModel):
     #   dialog.
     @pyqtSlot(result="QVariantList")
     def getFileNameFiltersWrite(self):
-        filters = []
+        return self._getFileNameFilters("profile_writer")
 
-        for plugin_id, meta_data in self._getProfileWriters():
-            for writer in meta_data["profile_writer"]:
+    @pyqtSlot(result="QVariantList")
+    def getFileNameFiltersRead(self):
+        return self._getFileNameFilters("profile_reader")
+
+    def _getFileNameFilters(self, profile_io_type):
+        filters = []
+        for plugin_id, meta_data in self._getProfileIOPlugins(profile_io_type):
+            for writer in meta_data[profile_io_type]:
                 filters.append(writer["description"] + " (*." + writer["extension"] + ")")
 
         filters.append(
             catalog.i18nc("@item:inlistbox", "All Files (*)"))  # Also allow arbitrary files, if the user so prefers.
         return filters
 
+    @pyqtSlot(QUrl, result="QVariantMap")
+    def importProfile(self, url):
+        path = url.toLocalFile()
+        if not path:
+            return { "status": "error", "message": catalog.i18nc("@info:status", "Failed to import profile from <filename>{0}</filename>: <message>{1}</message>", path, "Invalid path") }
+
+        pr = PluginRegistry.getInstance()
+        for plugin_id, meta_data in self._getProfileIOPlugins("profile_reader"):
+            profile_reader = pr.getPluginObject(plugin_id)
+            try:
+                profile = profile_reader.read(path) #Try to open the file with the profile reader.
+            except Exception as e:
+                #Note that this will fail quickly. That is, if any profile reader throws an exception, it will stop reading. It will only continue reading if the reader returned None.
+                Logger.log("e", "Failed to import profile from %s: %s", path, str(e))
+                return { "status": "error", "message": catalog.i18nc("@info:status", "Failed to import profile from <filename>{0}</filename>: <message>{1}</message>", path, str(e)) }
+            if profile: #Success!
+                # profile.setReadOnly(False)
+                ContainerRegistry.getInstance().addContainer(profile)
+                #File name (without extension) trumps the name stored in the profile
+                file_name = os.path.basename(os.path.splitext(path)[0])
+                #profile.setName takes care of making sure the profile name is unique
+                # profile.setName(file_name)
+
+                #Make sure the profile is available for the currently selected printer
+                # profile.setMachineTypeId(self._manager.getActiveMachineInstance().getMachineDefinition().getProfilesMachineId())
+                # self._manager.addProfile(profile) #Add the new profile to the list of profiles.
+                return { "status": "ok", "message": catalog.i18nc("@info:status", "Successfully imported profile {0}", profile.getName()) }
+
+        #If it hasn't returned by now, none of the plugins loaded the profile successfully.
+        return { "status": "error", "message": catalog.i18nc("@info:status", "Profile {0} has an unknown file type.", path) }
+
+    @pyqtSlot(result=QUrl)
+    def getDefaultPath(self):
+        return QUrl.fromLocalFile(os.path.expanduser("~/"))
+
     ##  Gets a list of profile writer plugins
     #   \return List of tuples of (plugin_id, meta_data).
-    def _getProfileWriters(self):
+    def _getProfileIOPlugins(self, profile_io_type):
         pr = PluginRegistry.getInstance()
         active_plugin_ids = pr.getActivePlugins()
 
         result = []
         for plugin_id in active_plugin_ids:
             meta_data = pr.getMetaData(plugin_id)
-            if "profile_writer" in meta_data:
+            if profile_io_type in meta_data:
                 result.append( (plugin_id, meta_data) )
         return result
