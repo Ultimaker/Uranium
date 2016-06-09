@@ -170,7 +170,10 @@ class SettingPropertyProvider(QObject):
         if self._value_used is not None:
             return self._value_used
 
-        relations = filter(lambda r: r.type == UM.Settings.SettingRelation.RelationType.RequiredByTarget and r.role == "value", self._stack.getProperty(self._key, "relations"))
+        relations = self._stack.getProperty(self._key, "relations")
+        if relations:
+            relations = filter(lambda r: r.type == UM.Settings.SettingRelation.RelationType.RequiredByTarget and r.role == "value", self._stack.getProperty(self._key, "relations"))
+
         definition = self._stack.getSettingDefinition(self._key)
         if not definition:
             return False
