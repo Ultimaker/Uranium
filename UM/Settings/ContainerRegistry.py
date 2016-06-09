@@ -118,7 +118,7 @@ class ContainerRegistry:
                             continue
                         except AttributeError:  # Only instanceContainers have a get definition. We can ignore all others.
                             pass
-                    if not value_pattern.match(container.getMetaDataEntry(key)):
+                    if not value_pattern.match(str(container.getMetaDataEntry(key))):
                         matches_container = False
                 except TypeError: #Value was not a string.
                     if key == "id":
