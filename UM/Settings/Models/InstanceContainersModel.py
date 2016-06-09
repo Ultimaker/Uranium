@@ -49,11 +49,16 @@ class InstanceContainersModel(ListModel):
 
     ##  Private convenience function to reset & repopulate the model.
     def _update(self):
+        for container in self._instance_containers:
+            container.nameChanged.disconnect(self._update)
+
         self.clear()
         self._instance_containers = ContainerRegistry.getInstance().findInstanceContainers(**self._filter_dict)
         self._instance_containers.sort(key = lambda k: (0 if k.isReadOnly() else 1, int(k.getMetaDataEntry("weight")) if k.getMetaDataEntry("weight") else 0, k.getName()))
 
         for container in self._instance_containers:
+            container.nameChanged.connect(self._update)
+
             metadata = container.getMetaData().copy()
             metadata["has_settings"] = len(container.getAllKeys()) > 0
 
