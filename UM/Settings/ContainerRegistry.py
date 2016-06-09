@@ -6,7 +6,7 @@ import re #For finding containers with asterisks in the constraints.
 import urllib
 
 from UM.PluginRegistry import PluginRegistry
-from UM.Resources import Resources
+from UM.Resources import Resources, UnsupportedStorageTypeError
 from UM.MimeTypeDatabase import MimeType, MimeTypeDatabase
 from UM.Logger import Logger
 from UM.SaveFile import SaveFile
@@ -166,10 +166,13 @@ class ContainerRegistry:
     #   If this function is called again, it will clear the old data and reload.
     def load(self):
         files = []
-        for type in self._resource_types:
-            files.extend(Resources.getAllResourcesOfType(type))
+        files_resource_type = []
+        for resource_type in self._resource_types:
+            resources = Resources.getAllResourcesOfType(resource_type)
+            files.extend(resources)
+            files_resource_type.extend([resource_type]*len(resources))
 
-        for file_path in files:
+        for file_path, resource_type in zip(files, files_resource_type):
             try:
                 mime = MimeTypeDatabase.getMimeTypeForFile(file_path)
                 container_type = self.__mime_type_map.get(mime.name)
@@ -178,6 +181,12 @@ class ContainerRegistry:
                 ## Ensure that all special characters are encoded back.
                 container_id = urllib.parse.unquote_plus(container_id)
 
+                read_only = True
+                try:
+                    read_only = os.path.dirname(file_path) != (Resources.getStoragePathForType(resource_type))
+                except UnsupportedStorageTypeError:
+                    pass
+
                 if container_type is None:
                     Logger.log("w", "Unable to detect container type for %s", mime.name)
                     continue
@@ -185,6 +194,7 @@ class ContainerRegistry:
                 new_container = container_type(container_id)
                 with open(file_path, encoding = "utf-8") as f:
                     new_container.deserialize(f.read())
+                new_container.setReadOnly(read_only)
                 self._containers.append(new_container)
             except Exception as e:
                 Logger.logException("e", "Could not deserialize container %s", container_id)

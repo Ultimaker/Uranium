@@ -65,6 +65,15 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
 
     name = property(getName)
 
+    ##  \copydoc ContainerInterface::isReadOnly
+    #
+    #   Reimplemented from ContainerInterface
+    def isReadOnly(self):
+        return True
+
+    def setReadOnly(self, read_only):
+        pass
+
     ##  \copydoc ContainerInterface::getMetaData
     #
     #   Reimplemented from ContainerInterface
