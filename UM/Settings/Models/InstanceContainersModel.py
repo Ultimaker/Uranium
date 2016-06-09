@@ -41,7 +41,7 @@ class InstanceContainersModel(ListModel):
         self._instance_containers.sort(key = lambda k: (0 if k.getMetaDataEntry("read_only") else 1, int(k.getMetaDataEntry("weight")) if k.getMetaDataEntry("weight") else 0, k.getName()))
 
         for container in self._instance_containers:
-            metadata = container.getMetaData()
+            metadata = container.getMetaData().copy()
             metadata["has_settings"] = len(container.getAllKeys()) > 0
 
             self.appendItem({
