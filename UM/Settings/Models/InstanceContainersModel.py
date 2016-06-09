@@ -47,7 +47,7 @@ class InstanceContainersModel(ListModel):
             self.appendItem({
                 "name": container.getName(),
                 "id": container.getId(),
-                "metadata": container.getMetaData()
+                "metadata": metadata
             })
 
     ##  Set the filter of this model based on a string.
