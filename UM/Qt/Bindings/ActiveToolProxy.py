@@ -51,7 +51,7 @@ class ActiveToolProxy(QObject):
     propertiesChanged = pyqtSignal()
     @pyqtProperty(QObject, notify = propertiesChanged)
     def properties(self):
-        return self._properties_proxy;
+        return self._properties_proxy
 
     @pyqtSlot()
     def forceUpdate(self):
