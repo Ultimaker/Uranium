@@ -37,6 +37,7 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
         self._metadata = {}
         self._containers = []
         self._next_stack = None
+        self._read_only = False
         self._dirty = True
 
     ##  \copydoc ContainerInterface::getId
@@ -63,6 +64,15 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
         if name != self._name:
             self._name = name
             self.nameChanged.emit()
+
+    ##  \copydoc ContainerInterface::isReadOnly
+    #
+    #   Reimplemented from ContainerInterface
+    def isReadOnly(self):
+        return self._read_only
+
+    def setReadOnly(self, read_only):
+        self._read_only = read_only
 
     ##  \copydoc ContainerInterface::getMetaData
     #

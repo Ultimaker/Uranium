@@ -41,7 +41,7 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
         self._definition = None
         self._metadata = {}
         self._instances = {}
-
+        self._read_only = False
         self._dirty = False
 
     ##  \copydoc ContainerInterface::getId
@@ -67,6 +67,15 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
             self._name = name
             self._dirty = True
             self.nameChanged.emit()
+
+    ##  \copydoc ContainerInterface::isReadOnly
+    #
+    #   Reimplemented from ContainerInterface
+    def isReadOnly(self):
+        return self._read_only
+
+    def setReadOnly(self, read_only):
+        self._read_only = read_only
 
     ##  \copydoc ContainerInterface::getMetaData
     #

@@ -65,6 +65,15 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
 
     name = property(getName)
 
+    ##  \copydoc ContainerInterface::isReadOnly
+    #
+    #   Reimplemented from ContainerInterface
+    def isReadOnly(self):
+        return True
+
+    def setReadOnly(self, read_only):
+        pass
+
     ##  \copydoc ContainerInterface::getMetaData
     #
     #   Reimplemented from ContainerInterface
@@ -200,7 +209,7 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
     def _loadFile(self, file_name):
         path = Resources.getPath(Resources.DefinitionContainers, file_name + ".def.json")
         contents = {}
-        with open(path) as f:
+        with open(path, encoding = "utf-8") as f:
             contents = json.load(f, object_pairs_hook=collections.OrderedDict)
         return contents
 

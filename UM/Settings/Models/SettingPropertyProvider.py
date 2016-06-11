@@ -170,7 +170,10 @@ class SettingPropertyProvider(QObject):
         if self._value_used is not None:
             return self._value_used
 
-        relations = filter(lambda r: r.type == UM.Settings.SettingRelation.RelationType.RequiredByTarget and r.role == "value", self._stack.getProperty(self._key, "relations"))
+        relations = self._stack.getProperty(self._key, "relations")
+        if relations:
+            relations = filter(lambda r: r.type == UM.Settings.SettingRelation.RelationType.RequiredByTarget and r.role == "value", self._stack.getProperty(self._key, "relations"))
+
         definition = self._stack.getSettingDefinition(self._key)
         if not definition:
             return False
@@ -194,10 +197,12 @@ class SettingPropertyProvider(QObject):
 
     def _onPropertyChanged(self, key, property_name):
         if key != self._key:
-            relations = filter(lambda r: r.target.key == key and r.type == UM.Settings.SettingRelation.RelationType.RequiredByTarget and r.role == "value", self._stack.getProperty(self._key, "relations"))
-            for relation in relations:
-                self._value_used = None
-                self.isValueUsedChanged.emit()
+            relations = self._stack.getProperty(self._key, "relations")
+            if relations:
+                relations = filter(lambda r: r.target.key == key and r.type == UM.Settings.SettingRelation.RelationType.RequiredByTarget and r.role == "value", relations)
+                for relation in relations:
+                    self._value_used = None
+                    self.isValueUsedChanged.emit()
 
             return
 

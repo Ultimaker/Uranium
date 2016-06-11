@@ -204,7 +204,7 @@ class SceneNode():
                 break
 
     ##  Call a decoration of this SceneNode.
-    #   SceneNodeDecorators add Decorations, which are calable functions.
+    #   SceneNodeDecorators add Decorations, which are callable functions.
     #   \param \type{string} function The function to be called.
     #   \param *args
     #   \param **kwargs
