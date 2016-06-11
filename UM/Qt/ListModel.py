@@ -45,7 +45,7 @@ class ListModel(QAbstractListModel):
         try:
             return self._items[index]
         except:
-            return None
+            return {}
 
     ##  The list of items in this model.
     @pyqtProperty("QVariantList")

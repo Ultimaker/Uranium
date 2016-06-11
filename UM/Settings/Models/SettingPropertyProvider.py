@@ -24,6 +24,7 @@ class SettingPropertyProvider(QObject):
         self._watched_properties = []
         self._property_values = {}
         self._store_index = 0
+        self._value_used = None
 
     ##  Set the containerStackId property.
     def setContainerStackId(self, stack_id):
@@ -104,18 +105,19 @@ class SettingPropertyProvider(QObject):
     def storeIndex(self):
         return self._store_index
 
-    ##  At what level in the stack does the value for this setting occur?
-    @pyqtProperty(int, notify = propertiesChanged)
-    def stackLevel(self):
+    ##  At what levels in the stack does the value(s) for this setting occur?
+    @pyqtProperty("QVariantList", notify = propertiesChanged)
+    def stackLevels(self):
         if not self._stack:
             return -1
-
+        levels = []
         for container in self._stack.getContainers():
             try:
                 if container.getProperty(self._key, "value") is not None:
-                    return self._stack.getContainerIndex(container)
+                    levels.append(self._stack.getContainerIndex(container))
             except AttributeError:
                 continue
+        return levels
 
     ##  Set the value of a property.
     #
@@ -140,6 +142,19 @@ class SettingPropertyProvider(QObject):
 
         container.setProperty(self._key, property_name, property_value, self._stack)
 
+    ##  Manually request the value of a property.
+    #   The most notable difference with the properties is that you have more control over at what point in the stack
+    #   you want the setting to be retrieved (instead of always taking the top one)
+    #   \param property_name The name of the property to get the value from.
+    #   \param stack_level the index of the container to get the value from.
+    @pyqtSlot(str, int, result = "QVariant")
+    def getPropertyValue(self, property_name, stack_level):
+        try:
+            value = self._stack.getContainers()[stack_level].getProperty(self._key, property_name)
+        except IndexError:  # Requested stack level does not exist
+            return
+        return value
+
     @pyqtSlot(int)
     def removeFromContainer(self, index):
         container = self._stack.getContainer(index)
@@ -149,10 +164,41 @@ class SettingPropertyProvider(QObject):
 
         container.removeInstance(self._key)
 
+    isValueUsedChanged = pyqtSignal()
+    @pyqtProperty(bool, notify = isValueUsedChanged)
+    def isValueUsed(self):
+        if self._value_used is not None:
+            return self._value_used
+
+        relations = filter(lambda r: r.type == UM.Settings.SettingRelation.RelationType.RequiredByTarget and r.role == "value", self._stack.getProperty(self._key, "relations"))
+        definition = self._stack.getSettingDefinition(self._key)
+        if not definition:
+            return False
+
+        relation_count = 0
+        value_used_count = 0
+        for relation in relations:
+            # If the setting is not a (x-times-grand)child of this setting, ignore it.
+            if not definition.findDefinitions(key = relation.target.key):
+                continue
+
+            relation_count += 1
+
+            if self._stack.getProperty(relation.target.key, "state") != UM.Settings.InstanceState.User:
+                value_used_count += 1
+
+        self._value_used = relation_count == 0 or (relation_count > 0 and value_used_count != 0)
+        return self._value_used
+
     # protected:
 
     def _onPropertyChanged(self, key, property_name):
         if key != self._key:
+            relations = filter(lambda r: r.target.key == key and r.type == UM.Settings.SettingRelation.RelationType.RequiredByTarget and r.role == "value", self._stack.getProperty(self._key, "relations"))
+            for relation in relations:
+                self._value_used = None
+                self.isValueUsedChanged.emit()
+
             return
 
         if property_name not in self._watched_properties:
@@ -160,9 +206,9 @@ class SettingPropertyProvider(QObject):
 
         value = self._getPropertyValue(property_name)
 
-
-        self._property_values[property_name] = value
-        self.propertiesChanged.emit()
+        if self._property_values[property_name] != value:
+            self._property_values[property_name] = value
+            self.propertiesChanged.emit()
 
     def _update(self, container = None):
         if not self._stack or not self._watched_properties or not self._key:

@@ -95,18 +95,24 @@ class SettingInstance:
                 if name == "value":
                     if not container:
                         container = self._container
+                    ## If state changed, emit the signal
+                    if self._state != InstanceState.User:
+                        self._state = InstanceState.User
+                        self.propertyChanged.emit(self._definition.key, "state")
 
-                    self._state = InstanceState.User
-                    self.propertyChanged.emit(self._definition.key, "state")
-
-                    self._update(container)
+                    self.updateRelations(container)
 
                 if self._validator:
                     self.propertyChanged.emit(self._definition.key, "validationState")
 
                 self.propertyChanged.emit(self._definition.key, name)
         else:
-            raise AttributeError("No property {0} defined".format(name))
+            if name == "state":
+                if value == "InstanceState.Calculated":
+                    self._state = InstanceState.Calculated
+                    self.propertyChanged.emit(self._definition.key, "state")
+            else:
+                raise AttributeError("No property {0} defined".format(name))
 
     @call_if_enabled(_traceUpdateProperty, _isTraceEnabled())
     def updateProperty(self, name, container = None):
@@ -156,7 +162,7 @@ class SettingInstance:
 
     ## protected:
 
-    def _update(self, container):
+    def updateRelations(self, container):
         property_names = SettingDefinition.getPropertyNames()
         property_names.remove("value")  # Move "value" to the front of the list so we always update that first.
         property_names.insert(0, "value")

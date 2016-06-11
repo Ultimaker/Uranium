@@ -67,7 +67,7 @@ class Validator(SettingFunction.SettingFunction):
                 state = ValidatorState.MaximumWarning
             else:
                 state = ValidatorState.Valid
-        except Exception as e:
+        except:
             Logger.logException("w", "Could not validate setting %s, an exception was raised", self._key)
             state = ValidatorState.Exception
 

@@ -275,12 +275,10 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
 
         self._dirty = True
 
-        # Notify listeners of changed properties for all related properties
-        for relation in instance.definition.relations:
-            if relation.type == SettingRelation.RelationType.RequiresTarget:
-                continue
+        instance.updateRelations(self)
 
-            self.propertyChanged.emit(relation.target.key, relation.role)
+        # Notify listeners of changed properties for all related properties
+
 
 
     ##  Get the DefinitionContainer used for new instance creation.
@@ -296,7 +294,7 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
 
     def __lt__(self, other):
         own_weight = self.getMetaDataEntry("weight")
-        other_weight = self.getMetaDataEntry("weight")
+        other_weight = other.getMetaDataEntry("weight")
 
         if own_weight and other_weight:
             return own_weight < other_weight

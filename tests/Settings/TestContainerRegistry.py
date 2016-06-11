@@ -60,6 +60,12 @@ class MockContainer(UM.Settings.ContainerInterface.ContainerInterface, UM.Plugin
     def getName(self):
         return "MockContainer"
 
+    ##  Gets the value of a property of a container item.
+    #
+    #   This method is not implemented in the mock container.
+    def getProperty(self, key, property_name):
+        raise NotImplementedError()
+
     ##  Get the value of a container item.
     #
     #   Since this mock container cannot contain any items, it always returns
@@ -68,6 +74,12 @@ class MockContainer(UM.Settings.ContainerInterface.ContainerInterface, UM.Plugin
     #   \return Always returns None.
     def getValue(self, key):
         pass
+
+    ##  Get whether the container item has a specific property.
+    #
+    #   This method is not implemented in the mock container.
+    def hasProperty(self, key, property_name):
+        raise NotImplementedError()
 
     ##  Serializes the container to a string representation.
     #
@@ -317,6 +329,33 @@ def test_load(container_registry):
     assert "metadata" in ids_found
     assert "single_setting" in ids_found
     assert "inherits" in ids_found
+
+##  Tests the making of a unique name for containers in the registry.
+#
+#   \param container_registry A new container registry from a fixture.
+def test_uniqueName(container_registry):
+    assert container_registry.uniqueName("test") == "test" #No collisions.
+
+    mock_container = MockContainer(id = "test", metadata = { })
+    container_registry.addContainer(mock_container)
+    assert container_registry.uniqueName("test") == "test #2" #One collision.
+    assert container_registry.uniqueName("test") == "test #2" #The check for unique name doesn't have influence on the registry.
+    assert container_registry.uniqueName("test #2") == "test #2"
+
+    mock_container = MockContainer(id = "test #2", metadata = { })
+    container_registry.addContainer(mock_container)
+    assert container_registry.uniqueName("test") == "test #3" #Two collisions.
+    assert container_registry.uniqueName("test #2") == "test #3" #The ' #2' shouldn't count towards the index.
+    assert container_registry.uniqueName("test #3") == "test #3"
+
+    assert container_registry.uniqueName("") == "Profile" #Empty base names should be filled in with a default base name 'profile'.
+    assert container_registry.uniqueName(" #2") == "Profile"
+
+    mock_container = MockContainer(id = "Profile", metadata = { })
+    container_registry.addContainer(mock_container)
+    assert container_registry.uniqueName("") == "Profile #2" #Empty base names should be filled in with a default base name 'profile'.
+    assert container_registry.uniqueName(" #2") == "Profile #2"
+    assert container_registry.uniqueName("Profile #2") == "Profile #2"
 
 ##  Helper function to verify if the metadata of the answers matches required
 #   metadata.
