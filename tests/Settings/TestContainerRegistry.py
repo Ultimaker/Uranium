@@ -62,7 +62,7 @@ class MockContainer(UM.Settings.ContainerInterface.ContainerInterface, UM.Plugin
 
     ##  Get whether the container item is stored on a read only location in the filesystem.
     #
-    #   Reimplemented from ContainerInterface
+    #   \return Always returns False
     def isReadOnly(self):
         return False
 
