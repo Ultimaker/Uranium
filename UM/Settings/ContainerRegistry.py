@@ -326,9 +326,10 @@ class ContainerRegistry:
     ##  Get the singleton instance for this class.
     @classmethod
     def getInstance(cls):
-        if not cls.__instance:
-            cls.__instance = ContainerRegistry()
-        return cls.__instance
+        # Note: Explicit use of class name to prevent issues with inheritance.
+        if ContainerRegistry.__instance is None:
+            ContainerRegistry.__instance = cls()
+        return ContainerRegistry.__instance
 
     __instance = None
 
