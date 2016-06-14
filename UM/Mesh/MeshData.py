@@ -244,6 +244,30 @@ class MeshData():
         self._vertex_count = 0
         self._face_count = 0
     
+    ##  Set the amount of faces and vertices before loading data to the mesh.
+    #
+    #   This way we can create the array before we fill it. This method will reserve
+    #   `num_vertices` amount of space for vertices, `num_vertices` amount of space
+    #   for colors and `num_faces` amount of space for indices.
+    #
+    #   \param num_faces Number of faces for which memory must be reserved.
+    #   \param num_vertices Number of vertices for which memory must be reserved.
+    def reserveFaceAndVerticeCount(self, num_faces, num_vertices):
+        if type(num_faces) == float:
+            Logger.log("w", "Had to convert 'num_faces' with int(): %s -> %s ", num_faces, int(num_faces))
+            num_faces = int(num_faces)
+        if type(num_vertices) == float:
+            Logger.log("w", "Had to convert 'num_vertices' with int(): %s -> %s ", num_vertices, int(num_vertices))
+            num_vertices = int(num_numvertices)
+
+        self._vertices = numpy.zeros((num_vertices, 3), dtype=numpy.float32)
+        self._colors = numpy.zeros((num_vertices, 4), dtype=numpy.float32)
+        self._indices = numpy.zeros((num_faces, 3), dtype=numpy.int32)
+
+        self._vertex_count = 0
+        self._face_count = 0
+
+    
     ##  Add a vertex to the mesh.
     #   \param x x coordinate of vertex.
     #   \param y y coordinate of vertex.
@@ -398,6 +422,24 @@ class MeshData():
         else:
             self._colors = numpy.concatenate((self._colors[0:self._vertex_count], colors))
     
+    # Add faces defined by indices into vertices with vetex colors defined by colors
+    # Assumes vertices and colors have the same length.
+    #
+    def addFacesWithColor(self, vertices, indices, colors):
+        #If badly used, crash and burn
+        if len(self._indices) <  self._face_count + len(indices) or len(self._colors) < self._vertex_count + len(colors) or len(self._vertices) < self._vertex_count + len(vertices):
+            Logger.log( "w", "Insufficient size of mesh_data: f_c: %s, v_c: %s, _in_l: %s, in_l: %s, _co_l: %s, co_l: %s, _ve_l: %s, ve_l: %s", self._face_count, self._vertex_count,len(self._indices),len(indices),len(self._colors),len(colors),len(self._vertices),len(vertices))
+            return
+
+        self._indices[self._face_count:(self._face_count+len(indices)),:] = self._vertex_count + indices 
+        self._face_count += len(indices)
+        
+        end_idx = self._vertex_count + len(vertices)    
+        self._colors[self._vertex_count:end_idx,:] = colors
+        self._vertices[self._vertex_count:end_idx,:] = vertices
+        self._vertex_count  += len(vertices)
+
+
     ## 
     # /param colors is a vertexCount by 4 numpy array with floats in range of 0 to 1.
     def setColors(self, colors):
