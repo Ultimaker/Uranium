@@ -40,6 +40,12 @@ class MockContainer(UM.Settings.ContainerInterface.ContainerInterface):
     def getName(self):
         return "Fred"
 
+    ##  Get whether the container item is stored on a read only location in the filesystem.
+    #
+    #   \return Always returns False
+    def isReadOnly(self):
+        return False
+
     ##  Returns the metadata dictionary.
     #
     #   \return A dictionary containing metadata for this container stack.

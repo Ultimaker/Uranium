@@ -48,6 +48,12 @@ class ContainerTestPlugin(ContainerInterface, PluginObject):
     def getName(self):
         return "TestContainer"
 
+    ##  Get whether the container item is stored on a read only location in the filesystem.
+    #
+    #   \return Always returns False
+    def isReadOnly(self):
+        return False
+
     ##  Get the value of a property of a container item.
     #
     #   Since this test container cannot contain any items, it always returns

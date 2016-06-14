@@ -76,7 +76,7 @@ class SettingFunction:
         return self._settings
 
     def __str__(self):
-        return "SettingFunction({0})".format(self._code)
+        return "={0}".format(self._code)
 
     ##  To support Pickle
     #

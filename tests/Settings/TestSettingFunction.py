@@ -145,6 +145,6 @@ def test_getUsedSettings(data):
 def test_str():
     # Due to the simplicity of the function, it's not really necessary to make a full-blown parametrised test for this. Just two simple tests:
     function = UM.Settings.SettingFunction("3.14156") # Simple test case.
-    assert str(function) == "SettingFunction(3.14156)"
+    assert str(function) == "=3.14156"
     function = UM.Settings.SettingFunction("") # Also the edge case.
-    assert str(function) == "SettingFunction()"
+    assert str(function) == "="
