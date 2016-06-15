@@ -173,22 +173,38 @@ class SettingDefinition:
     ## Check if this setting definition matches the provided criteria.
     #   \param kwargs \type{dict} A dictionary of keyword arguments that need to match its attributes.
     def matchesFilter(self, **kwargs):
-        for key, value in kwargs.items():
+        for key in kwargs:
             try:
-                try:
-                    if "*" in value:  # Don't look for exact match but if the value is contained in it.
-                        key_value = getattr(self, key)
-                        value = value.strip("* ").lower() # Strip leading/traling "*"" and spaces
-                        if value not in key_value.lower():
-                            return False
-                    else:
-                        if getattr(self, key) != value:
-                            return False
-                except TypeError:  # If property is not a string, the "*" in fails.
-                    if getattr(self, key) != value:
-                        return False
+                property_value = getattr(self, key)
             except AttributeError:
+                # If we do not have the attribute, we do not match
                 return False
+
+            value = kwargs[key]
+            if property_value == value:
+                # If the value matches with the expected value, we match for this property and should
+                # continue with the other properties.
+                # We do this check first so we can avoid the costly wildcard matching for situations where
+                # we do not need to perform wildcard matching anyway.
+                continue
+
+            if isinstance(value, str):
+                if not isinstance(property_value, str):
+                    # If value is a string but the actual property value is not there is no situation where we
+                    # will match.
+                    return False
+
+                if "*" not in value:
+                    # If both are strings but there is no wildcard we do not match since we already checked if
+                    # both are equal.
+                    return False
+
+                value = value.strip("* ").lower()
+                if value not in property_value.lower():
+                    return False
+            else:
+                return False
+
         return True
 
     ##  Find all definitions matching certain criteria.
