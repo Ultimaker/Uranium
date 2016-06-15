@@ -127,7 +127,7 @@ PreferencesPage
                     id: definitionsModel
                     containerId: "fdmprinter"
                     showAll: true
-                    exclude: ["machine_settings"]
+                    // exclude: ["machine_settings"]  ==> make machine settings visible again for now (TODO: this is temporary)
                     visibilityHandler: UM.SettingPreferenceVisibilityHandler { }
                     onSettingsVisibilityChanged: updateToggleVisibleSettings()
                 }
