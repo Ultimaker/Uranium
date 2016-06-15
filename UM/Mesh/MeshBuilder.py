@@ -175,7 +175,7 @@ class MeshBuilder:
     #   \param x x coordinate of vertex.
     #   \param y y coordinate of vertex.
     #   \param z z coordinate of vertex.
-    def addVertex(self,x,y,z):
+    def addVertex(self, x, y, z):
         if self._vertices is None:
             self._vertices = numpy.zeros((10, 3), dtype=numpy.float32)
 
@@ -194,7 +194,7 @@ class MeshBuilder:
     #   \param nx x part of normal.
     #   \param ny y part of normal.
     #   \param nz z part of normal.
-    def addVertexWithNormal(self,x,y,z,nx,ny,nz):
+    def addVertexWithNormal(self, x, y, z, nx, ny, nz):
         if self._vertices is None:
             self._vertices = numpy.zeros((10, 3), dtype=numpy.float32)
         if self._normals is None: #Specific case, reserve vert count does not reservere size for normals
