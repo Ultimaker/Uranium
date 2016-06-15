@@ -62,6 +62,9 @@ class SettingDefinition:
         self._children = []
         self._relations = []
 
+        self.__ancestors = set() # Cached set of keys of ancestors. Used for fast lookups of ancestors.
+        self.__descendants = {} # Cached set of key - definition pairs of descendants. Used for fast lookup of descendants by key.
+
         self.__property_values = {}
 
     ##  Override __getattr__ to provide access to definition properties.
@@ -164,9 +167,16 @@ class SettingDefinition:
     #
     #   \return \type{SettingDefinition} The child with the specified key or None if not found.
     def getChild(self, key):
-        for child in self._children:
-            if child.key == key:
-                return child
+        if not self.__descendants:
+            self.__descendants = self._getDescendants()
+
+        if key in self.__descendants:
+            child = self.__descendants[key]
+            if child not in self._children:
+                # Descendants includes children-of-children etc. so we need to make sure we only return direct children.
+                return None
+
+            return child
 
         return None
 
@@ -217,6 +227,23 @@ class SettingDefinition:
     def findDefinitions(self, **kwargs):
         definitions = []
 
+        if not self.__descendants:
+            self.__descendants = self._getDescendants()
+
+        key = kwargs.get("key")
+        if key and not "*" in key:
+            # Optimization for the most common situation: finding a setting by key
+            if self._key != key and key not in self.__descendants:
+                # If the mentioned key is not ourself and not in children, we will never match.
+                return []
+
+            if len(kwargs) == 1:
+                # If all we are searching for is a key, return either ourself or a value from the descendants.
+                if self._key == key:
+                    return [self]
+
+                return [self.__descendants[key]]
+
         if self.matchesFilter(**kwargs):
             definitions.append(self)
 
@@ -224,6 +251,28 @@ class SettingDefinition:
             definitions.extend(child.findDefinitions(**kwargs))
 
         return definitions
+
+    ##  Check whether a certain setting is an ancestor of this definition.
+    #
+    #   \param key \type{str} The key of the setting to check.
+    #
+    #   \return True if the specified setting is an ancestor of this definition, False if not.
+    def isAncestor(self, key):
+        if not self.__ancestors:
+            self.__ancestors = self._getAncestors()
+
+        return key in self.__ancestors
+
+    ##  Check whether a certain setting is a descendant of this definition.
+    #
+    #   \param key \type{str} The key of the setting to check.
+    #
+    #   \return True if the specified setting is a descendant of this definition, False if not.
+    def isDescendant(self, key):
+        if not self.__descendants:
+            self.__ancestors = self._getAncestors()
+
+        return key in self.__descendants
 
     def __repr__(self):
         return "<SettingDefinition (0x{0:x}) key={1} container={2}>".format(id(self), self._key, self._container)
@@ -397,6 +446,29 @@ class SettingDefinition:
         for key in filter(lambda i: self.__property_definitions[i]["required"], self.__property_definitions):
             if key not in self.__property_values:
                 raise AttributeError("Setting {0} is missing required property {1}".format(self._key, key))
+
+        self.__ancestors = self._getAncestors()
+        self.__descendants = self._getDescendants()
+
+    def _getAncestors(self):
+        result = set()
+
+        parent = self._parent
+        while parent:
+            result.add(parent.key)
+            parent = parent.parent
+
+    def _getDescendants(self, definition = None):
+        result = {}
+
+        if not definition:
+            definition = self
+
+        for child in definition.children:
+            result[child.key] = child
+            result.update(self._getDescendants(child))
+
+        return result
 
     __property_definitions = {
         # The name of the setting. Only used for display purposes.
