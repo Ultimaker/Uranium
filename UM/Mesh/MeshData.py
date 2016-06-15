@@ -4,13 +4,13 @@
 from UM.Math.Vector import Vector
 from UM.Math.AxisAlignedBox import AxisAlignedBox
 from UM.Logger import Logger
+from UM.Math import NumPyUtil
 
 from enum import Enum
 import threading
 import numpy
 import numpy.linalg
 import scipy.spatial
-from copy import deepcopy
 import hashlib
 from time import time
 numpy.seterr(all="ignore") # Ignore warnings (dev by zero)
@@ -34,11 +34,11 @@ Reuse = object()    # A 'symbol' used to mark parameters which were not explicit
 class MeshData:
     def __init__(self, vertices=None, normals=None, indices=None, colors=None, uvs=None, file_name=None,
                  center_position=None):
-        self._vertices = immutableNDArray(vertices)
-        self._normals = immutableNDArray(normals)
-        self._indices = immutableNDArray(indices)
-        self._colors = immutableNDArray(colors)
-        self._uvs = immutableNDArray(uvs)
+        self._vertices = NumPyUtil.immutableNDArray(vertices)
+        self._normals = NumPyUtil.immutableNDArray(normals)
+        self._indices = NumPyUtil.immutableNDArray(indices)
+        self._colors = NumPyUtil.immutableNDArray(colors)
+        self._uvs = NumPyUtil.immutableNDArray(uvs)
         self._vertex_count = len(self._vertices) if self._vertices is not None else 0
         self._face_count = len(self._indices) if self._indices is not None else 0
         self._type = MeshType.faces
@@ -229,20 +229,6 @@ class MeshData:
     def toString(self):
         return "MeshData(_vertices=" + str(self._vertices) + ", _normals=" + str(self._normals) + ", _indices=" + \
                str(self._indices) + ", _colors=" + str(self._colors) + ", _uvs=" + str(self._uvs) +") "
-
-##  Creates an immutable copy of the given narray
-#
-#   If the array is already immutable then it just returns it.
-#   \param nda \type{numpy.ndarray} the array to copy
-#   \return \type{numpy.ndarray} an immutable narray
-def immutableNDArray(nda):
-    if nda is None:
-        return None
-    if not nda.flags.writeable:
-        return nda
-    copy = deepcopy(nda)
-    copy.flags.writeable = False
-    return copy
 
 ##  Transform an array of vertices using a matrix
 #

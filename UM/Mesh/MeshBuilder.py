@@ -156,11 +156,11 @@ class MeshBuilder:
         self._vertex_count = 0
         self._face_count = 0
 
-    ##  Set the amount of verts before loading data to the mesh.
+    ##  Preallocate space for vertices before loading data to the mesh.
     #
     #   This way we can create the array before we fill it. This method will reserve
-    #   `num_vertices` amount of space for vertices. It will not reserve space for
-    #   normals or indices.
+    #   `num_vertices` amount of space for vertices. It deletes any existing normals
+    #   and indices but does not reserve space for them.
     #
     #   \param num_vertices Number of verts to be reserved.
     def reserveVertexCount(self, num_vertices):
@@ -281,6 +281,10 @@ class MeshBuilder:
         self.addVertexWithNormal(x1, y1, z1, nx1, ny1, nz1)
         self.addVertexWithNormal(x2, y2, z2, nx2, ny2, nz2)
 
+    ##  Sets the color for a vertex
+    #
+    #   \param index \type{int} the index of the vertex in the vertices array.
+    #   \param color \type{UM.Math.Color} the color of the vertex.
     def setVertexColor(self, index, color):
         if self._colors is None:
             self._colors = numpy.zeros((10, 4), dtype=numpy.float32)

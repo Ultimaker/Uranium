@@ -3,12 +3,13 @@
 
 import numpy
 import time
-from copy import deepcopy
 
 from UM.Math.Float import Float #For fuzzy comparison of edge cases.
 from UM.Math.LineSegment import LineSegment #For line-line intersections for computing polygon intersections.
 from UM.Math.Vector2 import Vector2 #For constructing line segments for polygon intersections.
 from UM.Logger import Logger
+
+from UM.Math import NumPyUtil
 
 try:
     import scipy.spatial
@@ -20,13 +21,11 @@ except ImportError:
 ##  A class representing an immutable arbitrary 2-dimensional polygon.
 class Polygon:
     def __init__(self, points = None):
-        self._points = immutableNDArray(points)
+        self._points = NumPyUtil.immutableNDArray(points)
 
     def __eq__(self, other):
         if self is other:
             return True
-        if other is None:
-            return False
         if type(other) is not Polygon:
             return False
 
@@ -354,22 +353,3 @@ class Polygon:
             return 0
         else:
             return -1
-
-##  Creates an immutable copy of the given narray
-#
-#   If the array is already immutable then it just returns it.
-#   \param nda \type{numpy.ndarray} the array to copy. May be a list
-#   \return \type{numpy.ndarray} an immutable narray
-def immutableNDArray(nda):
-    if nda is None:
-        return None
-
-    if type(nda) is list:
-        nda = numpy.array(nda, numpy.float32)
-        nda.flags.writeable = False
-
-    if not nda.flags.writeable:
-        return nda
-    copy = deepcopy(nda)
-    copy.flags.writeable = False
-    return copy

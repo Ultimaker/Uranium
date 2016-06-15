@@ -54,8 +54,6 @@ class Matrix(object):
     def __eq__(self, other):
         if self is other:
             return True
-        if other is None:
-            return False
         if type(other) is not Matrix:
             return False
 
