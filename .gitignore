@@ -19,3 +19,6 @@ _eric6project/Uranium.e4t
 ## Eclipse+PyDev
 .project
 .pydevproject
+
+## IntelliJ projects
+.idea
