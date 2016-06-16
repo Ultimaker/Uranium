@@ -36,6 +36,8 @@ class Resources:
     InstanceContainers = 9
     ## Location of container stack files. Equal to $resources/stacks
     ContainerStacks = 10
+    ## Location of cached data
+    Cache = 11
 
     ## Any custom resource types should be greater than this to prevent collisions with standard types.
     UserType = 128
@@ -147,6 +149,8 @@ class Resources:
         # Special casing for Linux, since configuration should be stored in ~/.config but data should be stored in ~/.local/share
         if resource_type == cls.Preferences:
             path = cls.__config_storage_path
+        elif resource_type == cls.Cache:
+            path = cls.__cache_storage_path
         else:
             path = os.path.join(cls.__data_storage_path, cls.__types_storage[resource_type])
 
@@ -249,20 +253,32 @@ class Resources:
                 xdg_data_home = os.environ["XDG_DATA_HOME"]
             except KeyError:
                 xdg_data_home = os.path.expanduser("~/.local/share")
-
             cls.__data_storage_path = os.path.join(xdg_data_home, cls.ApplicationIdentifier)
+
+            xdg_cache_home = ""
+            try:
+                xdg_cache_home = os.environ["XDG_CACHE_HOME"]
+            except KeyError:
+                xdg_cache_home = os.path.expanduser("~/.cache")
+            cls.__cache_storage_path = os.path.join(xdg_cache_home, cls.ApplicationIdentifier)
         else:
             cls.__config_storage_path = "."
 
         if not cls.__data_storage_path:
             cls.__data_storage_path = cls.__config_storage_path
 
+        if not cls.__cache_storage_path:
+            cls.__cache_storage_path = os.path.join(cls.__config_storage_path, "cache")
+
     __config_storage_path = None
     __data_storage_path = None
+    __cache_storage_path = None
+
     __paths = []
     __types = {
         Resources: "",
         Preferences: "",
+        Cache: "",
         Meshes: "meshes",
         Shaders: "shaders",
         i18n: "i18n",
@@ -275,6 +291,7 @@ class Resources:
     __types_storage = {
         Resources: "",
         Preferences: "",
+        Cache: "",
         InstanceContainers: "instances",
         ContainerStacks: "stacks",
     }
