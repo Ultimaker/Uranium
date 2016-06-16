@@ -370,6 +370,8 @@ class ContainerRegistry:
                     return None
 
             return definition
+        except FileNotFoundError:
+            return None
         except Exception as e:
             # We could not load a cached version for some reason. Ignore it.
             Logger.logException("d", "Could not load cached definition for %s", path)
