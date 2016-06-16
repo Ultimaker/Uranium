@@ -4,6 +4,7 @@
 import os
 import re #For finding containers with asterisks in the constraints.
 import urllib
+import pickle
 
 from UM.PluginRegistry import PluginRegistry
 from UM.Resources import Resources, UnsupportedStorageTypeError
@@ -203,12 +204,22 @@ class ContainerRegistry:
 
         for _, container_id, file_path, read_only, container_type in files:
             try:
+                if issubclass(container_type, DefinitionContainer.DefinitionContainer):
+                    definition = self._loadCachedDefinition(container_id, file_path)
+                    if definition:
+                        self._containers.append(definition)
+                        continue
+
                 new_container = container_type(container_id)
                 with open(file_path, encoding = "utf-8") as f:
                     new_container.deserialize(f.read())
                 new_container.setReadOnly(read_only)
                 self._containers.append(new_container)
                 self.containerAdded.emit(new_container)
+
+                if issubclass(container_type, DefinitionContainer.DefinitionContainer):
+                    self._saveCachedDefinition(new_container)
+
             except Exception as e:
                 Logger.logException("e", "Could not deserialize container %s", container_id)
 
@@ -335,6 +346,44 @@ class ContainerRegistry:
                         os.remove(path)
                 except Exception:
                     continue
+
+    # Load a binary cached version of a DefinitionContainer
+    def _loadCachedDefinition(self, definition_id, path):
+        try:
+            cache_path = Resources.getPath(Resources.Cache, "definitions", definition_id)
+
+            cache_mtime = os.path.getmtime(cache_path)
+            definition_mtime = os.path.getmtime(path)
+
+            if definition_mtime > cache_mtime:
+                # The definition is newer than the cached version, so ignore the cached version.
+                Logger.log("d", "Definition file %s is newer than cache, ignoring cached version", path)
+                return None
+
+            definition = None
+            with open(cache_path, "rb") as f:
+                definition = pickle.load(f)
+
+            for file_path in definition.getInheritedFiles():
+                if os.path.getmtime(file_path) > cache_mtime:
+                    Logger.log("d", "Definition file %s is newer than cache, ignoring cached version", file_path)
+                    return None
+
+            return definition
+        except Exception as e:
+            # We could not load a cached version for some reason. Ignore it.
+            Logger.logException("d", "Could not load cached definition for %s", path)
+            return None
+
+    # Store a cached version of a DefinitionContainer
+    def _saveCachedDefinition(self, definition):
+        cache_path = Resources.getStoragePath(Resources.Cache, "definitions", definition.id)
+
+        # Ensure the cache path exists
+        os.makedirs(os.path.dirname(cache_path), exist_ok=True)
+
+        with open(cache_path, "wb") as f:
+            pickle.dump(definition, f)
 
     ##  Get the singleton instance for this class.
     @classmethod
