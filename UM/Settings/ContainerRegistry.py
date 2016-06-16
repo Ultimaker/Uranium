@@ -166,31 +166,43 @@ class ContainerRegistry:
     #   If this function is called again, it will clear the old data and reload.
     def load(self):
         files = []
-        files_resource_type = []
         for resource_type in self._resource_types:
             resources = Resources.getAllResourcesOfType(resource_type)
-            files.extend(resources)
-            files_resource_type.extend([resource_type]*len(resources))
 
-        for file_path, resource_type in zip(files, files_resource_type):
             try:
-                mime = MimeTypeDatabase.getMimeTypeForFile(file_path)
+                resource_storage_path = Resources.getStoragePathForType(resource_type)
+            except UnsupportedStorageTypeError:
+                resource_storage_path = ""
+
+            # Pre-process the list of files to insert relevant data
+            # Most importantly, we need to ensure the loading order is DefinitionContainer, InstanceContainer, ContainerStack
+            for path in resources:
+                mime = MimeTypeDatabase.getMimeTypeForFile(path)
                 container_type = self.__mime_type_map.get(mime.name)
-                container_id = mime.stripExtension(os.path.basename(file_path))
-
-                ## Ensure that all special characters are encoded back.
-                container_id = urllib.parse.unquote_plus(container_id)
-
-                read_only = True
-                try:
-                    read_only = os.path.dirname(file_path) != (Resources.getStoragePathForType(resource_type))
-                except UnsupportedStorageTypeError:
-                    pass
-
-                if container_type is None:
-                    Logger.log("w", "Unable to detect container type for %s", mime.name)
+                if not container_type:
+                    Logger.log("w", "Could not determine container type for file %s, ignoring", path)
                     continue
 
+                type_priority = 2
+
+                if issubclass(container_type, DefinitionContainer.DefinitionContainer):
+                    type_priority = 0
+
+                if issubclass(container_type, InstanceContainer.InstanceContainer):
+                    type_priority = 1
+
+                # Since we have the mime type and resource type here, process these two properties so we do not
+                # need to look up mime types etc. again.
+                container_id = urllib.parse.unquote_plus(mime.stripExtension(os.path.basename(path)))
+                read_only = os.path.dirname(path) != resource_storage_path
+
+                files.append((type_priority, container_id, path, read_only, container_type))
+
+        # Sort the list of files by type_priority so we can ensure correct loading order.
+        files = sorted(files, key = lambda i: i[0])
+
+        for _, container_id, file_path, read_only, container_type in files:
+            try:
                 new_container = container_type(container_id)
                 with open(file_path, encoding = "utf-8") as f:
                     new_container.deserialize(f.read())
