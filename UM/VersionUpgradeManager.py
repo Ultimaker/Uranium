@@ -1,16 +1,16 @@
 # Copyright (c) 2016 Ultimaker B.V.
 # Cura is released under the terms of the AGPLv3 or higher.
 
+import collections #For deque, for breadth-first search.
+import configparser #To read config files to get the version number from them.
+import os #To get the configuration file names and to rename files.
+
 from UM.Logger import Logger
 from UM.PluginRegistry import PluginRegistry #To find plug-ins.
 from UM.Preferences import Preferences #To get the current preferences version.
 from UM.Resources import Resources #To load old versions from.
 from UM.Settings.MachineInstance import MachineInstance #To get the current machine instance version.
 from UM.Settings.Profile import Profile #To get the current profile version.
-
-import collections #For deque, for breadth-first search.
-import configparser #To read config files to get the version number from them.
-import os #To get the configuration filenames and to rename files.
 
 ##  Regulates the upgrading of configuration from one application version to the
 #   next.
