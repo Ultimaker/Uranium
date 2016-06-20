@@ -135,7 +135,9 @@ class VersionUpgradeManager:
     #   specified directory, to directories which must be excluded from the
     #   result.
     #   \return The filename of each file in the specified directory.
-    def _getFilesInDirectory(self, directory, exclude_paths = []):
+    def _getFilesInDirectory(self, directory, exclude_paths = None):
+        if not exclude_paths:
+            exclude_paths = []
         exclude_paths = [os.path.join(directory, exclude_path) for exclude_path in exclude_paths] # Prepend the specified directory before each exclude path.
         for (path, directory_names, filenames) in os.walk(directory):
             directory_names = [directory_name for directory_name in directory_names if os.path.join(path, directory_name) not in exclude_paths] # Prune the exclude paths.
