@@ -9,8 +9,7 @@ from UM.Logger import Logger
 from UM.PluginRegistry import PluginRegistry #To find plug-ins.
 from UM.Preferences import Preferences #To get the current preferences version.
 from UM.Resources import Resources #To load old versions from.
-from UM.Settings.MachineInstance import MachineInstance #To get the current machine instance version.
-from UM.Settings.Profile import Profile #To get the current profile version.
+from UM.Settings.InstanceContainer import InstanceContainer #To get the current instance container version.
 
 ##  Regulates the upgrading of configuration from one application version to the
 #   next.
@@ -46,7 +45,7 @@ class VersionUpgradeManager:
     #   The upgrade plug-ins must all be loaded at this point, or no upgrades
     #   can be performed.
     def upgrade(self):
-        self._upgradeConfigurationType(new_version = MachineInstance.MachineInstanceVersion,
+        self._upgradeConfigurationType(new_version = InstanceContainer.Version,
                                        configuration_type = "machine_instance",
                                        resource_type = Resources.MachineInstances,
                                        upgrade_method_name = "upgradeMachineInstance",
@@ -57,12 +56,6 @@ class VersionUpgradeManager:
                                        resource_type = Resources.Preferences,
                                        upgrade_method_name = "upgradePreferences",
                                        get_old_version = self._getPreferencesVersion)
-
-        self._upgradeConfigurationType(new_version = Profile.ProfileVersion,
-                                       configuration_type = "profile",
-                                       resource_type = Resources.Profiles,
-                                       upgrade_method_name = "upgradeProfile",
-                                       get_old_version = self._getProfileVersion)
 
     # private:
 
