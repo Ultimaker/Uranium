@@ -28,27 +28,24 @@ class STLReader(MeshReader):
         scene_node = SceneNode()
 
         loaded_data = stl.mesh.Mesh.from_file(file_name)
+        vertices = numpy.resize(loaded_data.points.flatten(), (int(loaded_data.points.size / 3), 3))
 
-        mesh._vertices = numpy.resize(loaded_data.points.flatten(), (int(loaded_data.points.size / 3), 3))
         # Invert values of second column
-        mesh._vertices[:,1] *= -1
+        vertices[:,1] *= -1
 
         # Swap column 1 and 2 (We have a different coordinate system)
-        self._swapColumns(mesh._vertices, 1, 2)
+        self._swapColumns(vertices, 1, 2)
+
+        mesh.setVertices(vertices)
 
         # Create an nd array containing indicies of faces.
         # As we have the data duplicated & packed, it will always count up;
         # [[0, 1, 2]
         #  [3, 4, 5]]
-        mesh._indices = numpy.resize(numpy.arange(int(loaded_data.points.size / 3), dtype=numpy.int32),
-                                     (int(loaded_data.points.size / 9), 3))
+        mesh.setIndices(numpy.resize(numpy.arange(int(loaded_data.points.size / 3), dtype=numpy.int32),
+                                     (int(loaded_data.points.size / 9), 3)))
 
-        # As we didn't use the addFace, we need to
-        mesh._vertex_count = int(loaded_data.points.size / 3)
-        mesh._face_count = int(loaded_data.points.size / 9)
-
-        #time.sleep(0.1) #Yield somewhat to ensure the GUI has time to update a bit.
-        mesh.calculateNormals(fast = True)
+        mesh.calculateNormals()
 
         Logger.log("d", "Loaded a mesh with %s vertices", mesh.getVertexCount())
         scene_node.setMeshData(mesh)

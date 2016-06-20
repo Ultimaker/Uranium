@@ -228,6 +228,15 @@ class MeshData():
 
         self._vertex_count = 0
         self._face_count = 0
+
+
+    def setIndices(self, indices):
+        self._indices = indices
+        self._face_count = int(self._indices.size / 3)
+
+    def setVertices(self, vertices):
+        self._vertices = vertices
+        self._vertex_count = int(self._vertices.size / 3)
     
     ##  Set the amount of verts before loading data to the mesh.
     #
