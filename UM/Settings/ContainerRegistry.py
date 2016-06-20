@@ -196,6 +196,7 @@ class ContainerRegistry:
                     new_container.deserialize(f.read())
                 new_container.setReadOnly(read_only)
                 self._containers.append(new_container)
+                self.containerAdded.emit(new_container)
             except Exception as e:
                 Logger.logException("e", "Could not deserialize container %s", container_id)
 
