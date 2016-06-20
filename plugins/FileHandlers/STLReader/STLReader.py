@@ -45,7 +45,7 @@ class STLReader(MeshReader):
         mesh.setIndices(numpy.resize(numpy.arange(int(loaded_data.points.size / 3), dtype=numpy.int32),
                                      (int(loaded_data.points.size / 9), 3)))
 
-        mesh.calculateNormals()
+        mesh.calculateNormals(fast = True)
 
         Logger.log("d", "Loaded a mesh with %s vertices", mesh.getVertexCount())
         scene_node.setMeshData(mesh)
