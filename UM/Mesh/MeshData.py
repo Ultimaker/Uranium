@@ -21,7 +21,10 @@ class MeshType(Enum):
     faces = 1 # Start at one, as 0 is false (so if this is used in a if statement, it's always true)
     pointcloud = 2
 
-Reuse = object()    # A 'symbol' used to mark parameters which were not explicitly given.
+# This object is being used as a 'symbol' to identify parameters have not been explicitly supplied
+# to the set() method. We can't use the value None for this purpose because it is also a valid (new)
+# value to set a field to in set().
+Reuse = object()
 
 ##  Class to hold a list of verts and possibly how (and if) they are connected.
 #
