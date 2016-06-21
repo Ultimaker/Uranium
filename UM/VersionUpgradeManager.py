@@ -35,7 +35,8 @@ class VersionUpgradeManager:
     #   This initialises the cache for shortest upgrade paths, and registers the
     #   version upgrade plug-ins.
     def __init__(self):
-        self._versionUpgrades = [] # All upgrade plug-ins.
+        self._version_upgrades = {} #For each upgrade type and each version, gives a set of upgrade plug-ins that can convert them to something else.
+
         self._registry = PluginRegistry.getInstance()
         PluginRegistry.addType("version_upgrade", self._addVersionUpgrade)
 
@@ -61,10 +62,29 @@ class VersionUpgradeManager:
 
     ##  Adds a version upgrade plug-in.
     #
+    #   This reads from the metadata which upgrades the plug-in can perform and
+    #   sorts the upgrade functions in memory so that the upgrades can be used
+    #   when an upgrade is requested.
+    #
     #   \param version_upgrade_plugin The plug-in object of the version upgrade
     #   plug-in.
     def _addVersionUpgrade(self, version_upgrade_plugin):
-        self._versionUpgrades.append(version_upgrade_plugin)
+        meta_data = self._registry.getMetaData(version_upgrade_plugin.getId())
+        if "version_upgrade" not in meta_data:
+            Logger.log("w", "Version upgrade plug-in %s doesn't define any configuration types it can upgrade.", version_upgrade_plugin.getId())
+            return #Don't need to add.
+        upgrades = self._registry.getMetaData(version_upgrade_plugin.getId())["version_upgrade"]
+
+        for source, destination in upgrades.items(): #Each conversion that this plug-in can perform.
+            source_type, source_version = source
+            destination_type, destination_version, upgrade_function = destination
+
+            #Fill in the dictionary representing the graph, if it doesn't have the keys yet.
+            if destination_type not in self._version_upgrades:
+                self._version_upgrades[destination_type] = {}
+            if destination_version not in self._version_upgrades[destination_version]:
+                self._version_upgrades[destination_type][destination_version] = set()
+            self._version_upgrades[destination_type][destination_version].add((source_type, source_version, upgrade_function)) #Add the edge to the graph.
 
     ##  For each version of a configuration type, finds the next step to take to
     #   upgrade as quickly as possible to the most recent version.
@@ -164,25 +184,6 @@ class VersionUpgradeManager:
     #   \return The version of the profile.
     def _getProfileVersion(self, profile):
         return int(self._getCfgItem(profile, section = "general", item = "version"))
-
-    ##  Creates a look-up table to get plug-ins by what version they upgrade
-    #   to.
-    #
-    #   \param configuration_type The type of configuration file the version
-    #   number applies to.
-    #   \return A dictionary with an entry for every version that the upgrade
-    #   plug-ins can convert to, and which plug-ins can convert to that version.
-    def _sortByDestinationVersion(self, configuration_type):
-        result = {}
-        for plugin in self._versionUpgrades:
-            metadata = self._registry.getMetaData(plugin.getPluginId())["version_upgrade"]
-            if configuration_type not in metadata: # Filter by configuration_type.
-                continue
-            destination = metadata[configuration_type]["to"]
-            if not destination in result: # Entry doesn't exist yet.
-                result[destination] = []
-            result[destination].append(plugin) # Sort this plug-in under the correct entry.
-        return result
 
     ##  Stores an old version of a configuration file away.
     #
