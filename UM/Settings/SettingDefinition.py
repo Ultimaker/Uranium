@@ -168,7 +168,7 @@ class SettingDefinition:
     #   \return \type{SettingDefinition} The child with the specified key or None if not found.
     def getChild(self, key):
         if not self.__descendants:
-            self.__descendants = self._getDescendants()
+            self.__descendants = self._updateDescendants()
 
         if key in self.__descendants:
             child = self.__descendants[key]
@@ -228,7 +228,7 @@ class SettingDefinition:
         definitions = []
 
         if not self.__descendants:
-            self.__descendants = self._getDescendants()
+            self.__descendants = self._updateDescendants()
 
         key = kwargs.get("key")
         if key and not "*" in key:
@@ -259,7 +259,7 @@ class SettingDefinition:
     #   \return True if the specified setting is an ancestor of this definition, False if not.
     def isAncestor(self, key):
         if not self.__ancestors:
-            self.__ancestors = self._getAncestors()
+            self.__ancestors = self._updateAncestors()
 
         return key in self.__ancestors
 
@@ -270,9 +270,16 @@ class SettingDefinition:
     #   \return True if the specified setting is a descendant of this definition, False if not.
     def isDescendant(self, key):
         if not self.__descendants:
-            self.__ancestors = self._getAncestors()
+            self.__descendants = self._updateDescendants()
 
         return key in self.__descendants
+
+    ##  Get a set of keys representing the setting's ancestors.
+    def getAncestors(self):
+        if not self.__ancestors:
+            self.__ancestors = self._updateAncestors()
+
+        return self.__ancestors
 
     def __repr__(self):
         return "<SettingDefinition (0x{0:x}) key={1} container={2}>".format(id(self), self._key, self._container)
@@ -447,10 +454,10 @@ class SettingDefinition:
             if key not in self.__property_values:
                 raise AttributeError("Setting {0} is missing required property {1}".format(self._key, key))
 
-        self.__ancestors = self._getAncestors()
-        self.__descendants = self._getDescendants()
+        self.__ancestors = self._updateAncestors()
+        self.__descendants = self._updateDescendants()
 
-    def _getAncestors(self):
+    def _updateAncestors(self):
         result = set()
 
         parent = self._parent
@@ -458,7 +465,9 @@ class SettingDefinition:
             result.add(parent.key)
             parent = parent.parent
 
-    def _getDescendants(self, definition = None):
+        return result
+
+    def _updateDescendants(self, definition = None):
         result = {}
 
         if not definition:
@@ -466,7 +475,7 @@ class SettingDefinition:
 
         for child in definition.children:
             result[child.key] = child
-            result.update(self._getDescendants(child))
+            result.update(self._updateDescendants(child))
 
         return result
 
