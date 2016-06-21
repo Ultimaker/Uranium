@@ -95,7 +95,7 @@ class QtApplication(QApplication, Application):
             {
                 "instance_container": UM.Settings.InstanceContainer.Version,
                 "container_stack": UM.Settings.ContainerStack.Version,
-                "preferences": UM.Preferences.PreferencesVersion
+                "preferences": UM.Preferences.Version
             }
         )
         self._version_upgrade_manager.upgrade()

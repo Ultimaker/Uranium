@@ -12,7 +12,7 @@ from UM.SaveFile import SaveFile
 #       Typical preferences would be window size, standard machine, etc.
 @signalemitter
 class Preferences():
-    PreferencesVersion = 2
+    Version = 2
 
     def __init__(self):
         super().__init__()
@@ -107,7 +107,7 @@ class Preferences():
                 if pref.getValue() != pref.getDefault():
                     parser[group][key] = str(pref.getValue())
 
-        parser["general"]["version"] = str(Preferences.PreferencesVersion)
+        parser["general"]["version"] = str(Preferences.Version)
 
         try:
             with SaveFile(file, "wt") as save_file:
@@ -151,7 +151,7 @@ class Preferences():
             self._parser = configparser.ConfigParser(interpolation = None) #pylint: disable=bad-whitespace
             self._parser.read(file)
 
-            if self._parser["general"]["version"] != str(Preferences.PreferencesVersion):
+            if self._parser["general"]["version"] != str(Preferences.Version):
                 Logger.log("w", "Old config file found, ignoring")
                 self._parser = None
                 return

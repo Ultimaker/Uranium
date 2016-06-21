@@ -56,7 +56,7 @@ class VersionUpgradeManager:
                                        upgrade_method_name = "upgradeMachineInstance",
                                        get_old_version = self._getMachineInstanceVersion)
 
-        self._upgradeConfigurationType(new_version = Preferences.PreferencesVersion,
+        self._upgradeConfigurationType(new_version = Preferences.Version,
                                        configuration_type = "preferences",
                                        resource_type = Resources.Preferences,
                                        upgrade_method_name = "upgradePreferences",
