@@ -34,8 +34,12 @@ class VersionUpgradeManager:
     #
     #   This initialises the cache for shortest upgrade paths, and registers the
     #   version upgrade plug-ins.
-    def __init__(self):
+    #
+    #   \param current_versions For each preference type currently in use, the
+    #   current version that is in use.
+    def __init__(self, current_versions):
         self._version_upgrades = {} #For each upgrade type and each version, gives a set of upgrade plug-ins that can convert them to something else.
+        self._current_versions = current_versions #To know which preference versions and types to upgrade to.
 
         self._registry = PluginRegistry.getInstance()
         PluginRegistry.addType("version_upgrade", self._addVersionUpgrade)
