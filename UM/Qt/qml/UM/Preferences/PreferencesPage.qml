@@ -22,7 +22,7 @@ Item {
         if(value == "True")
         {
             return true
-        }else if(value == "False")
+        }else if(value == "False" || value == undefined)
         {
             return false
         }

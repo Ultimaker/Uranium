@@ -13,7 +13,7 @@ def getMetaData():
             "author": "Ultimaker",
             "version": "1.0",
             "description": i18n_catalog.i18nc("@info:whatsthis", "Checks for updates of the software."),
-            "api": 2
+            "api": 3
         }
     }
 

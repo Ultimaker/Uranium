@@ -3,14 +3,15 @@
 
 import configparser
 
-from UM.Signal import Signal, SignalEmitter
+from UM.Signal import Signal, signalemitter
 from UM.Logger import Logger
 
 from UM.SaveFile import SaveFile
 
-##  Preferences are application based settings that are saved for future use.
-#   Typical preferences would be window size, standard machine, etc.
-class Preferences(SignalEmitter):
+##      Preferences are application based settings that are saved for future use. 
+#       Typical preferences would be window size, standard machine, etc.
+@signalemitter
+class Preferences():
     def __init__(self):
         super().__init__()
 
@@ -21,6 +22,7 @@ class Preferences(SignalEmitter):
     def addPreference(self, key, default_value):
         preference = self._findPreference(key)
         if preference:
+            Logger.log("d", "Adding preference %s, but it already exists.", key)
             preference.setDefault(default_value)
             return
 
@@ -40,6 +42,7 @@ class Preferences(SignalEmitter):
     def setDefault(self, key, default_value):
         preference = self._findPreference(key)
         if not preference: #Key not found.
+            Logger.log("w", "Tried to set the default value of non-existing setting %s.", key)
             return
         if preference.getValue() == preference.getDefault():
             self.setValue(key, default_value)
@@ -51,6 +54,8 @@ class Preferences(SignalEmitter):
         if preference:
             preference.setValue(value)
             self.preferenceChanged.emit(key)
+        else:
+            Logger.log("w", "Tried to set the value of non-existing setting %s.", key)
 
     def getValue(self, key):
         preference = self._findPreference(key)
@@ -63,6 +68,7 @@ class Preferences(SignalEmitter):
                 value = False
             return value
 
+        Logger.log("w", "Tried to get the value of non-existing setting %s.", key)
         return None
 
     def resetPreference(self, key):

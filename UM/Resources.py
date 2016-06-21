@@ -30,14 +30,12 @@ class Resources:
     Images = 6
     ## Location of themes. Equal to $resources/themes.
     Themes = 7
-    ## Location of machine definition files. Equal to $resources/machines
-    MachineDefinitions = 8
-    ## Location of machine instance files. Equal to $resources/machine_instances
-    MachineInstances = 9
-    ## Location of setting profile files. Equal to $resources/profiles
-    Profiles = 10
-    ## Location of working profiles for each machine instance. Equal to $resources/instance_profiles
-    MachineInstanceProfiles = 11
+    ## Location of definition container files. Equal to $resources/definitions
+    DefinitionContainers = 8
+    ## Location of instance container files. Equal to $resources/instances
+    InstanceContainers = 9
+    ## Location of container stack files. Equal to $resources/stacks
+    ContainerStacks = 10
 
     ## Any custom resource types should be greater than this to prevent collisions with standard types.
     UserType = 128
@@ -68,6 +66,33 @@ class Resources:
             return paths[0]
 
         raise FileNotFoundError("Could not find resource {0} in {1}".format(args, resource_type))
+
+    ##  Get a list of paths to all resources of a certain resource type.
+    #
+    #   \param type The resource type to get the paths for.
+    #
+    #   \return A list of absolute paths to resources of the specified type.
+    @classmethod
+    def getAllResourcesOfType(cls, type):
+        files = {}
+        search_dirs = cls.getAllPathsForType(type)
+
+        for directory in search_dirs:
+            if not os.path.isdir(directory):
+                continue
+
+            for root, dirname, entries in os.walk(directory):
+                for entry in entries:
+                    if not entry.startswith('.') and os.path.isfile(os.path.join(root, entry)):
+                        if not entry in files:
+                            files[entry] = []
+                        files[entry].append(os.path.join(root, entry))
+
+        result = []
+        for name, paths in files.items():
+            result.append(paths[0])
+
+        return result
 
     ##  Get the path that can be used to write a certain resource file.
     #
@@ -171,6 +196,7 @@ class Resources:
             raise ResourceTypeError("Type {0} already exists".format(resource_type))
 
         cls.__types[resource_type] = path
+        cls.__types_storage[resource_type] = path
 
     ##  Remove a custom resource type.
     @classmethod
@@ -242,16 +268,13 @@ class Resources:
         i18n: "i18n",
         Images: "images",
         Themes: "themes",
-        MachineDefinitions: "machines",
-        MachineInstances: "machine_instances",
-        Profiles: "profiles",
-        MachineInstanceProfiles: "instance_profiles"
+        DefinitionContainers: "definitions",
+        InstanceContainers: "instances",
+        ContainerStacks: "stacks",
     }
     __types_storage = {
         Resources: "",
         Preferences: "",
-        MachineDefinitions: "machines",
-        MachineInstances: "machine_instances",
-        Profiles: "profiles",
-        MachineInstanceProfiles: "instance_profiles"
+        InstanceContainers: "instances",
+        ContainerStacks: "stacks",
     }

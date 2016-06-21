@@ -5,7 +5,7 @@ from UM.Math.Matrix import Matrix
 from UM.Math.Vector import Vector
 from UM.Math.Quaternion import Quaternion
 
-from UM.Signal import Signal, SignalEmitter
+from UM.Signal import Signal, signalemitter
 from UM.Mesh.MeshBuilder import MeshBuilder
 from UM.Logger import Logger
 
@@ -20,7 +20,8 @@ from copy import deepcopy
 #   These decorators can add functionality to scene nodes.
 #   \sa SceneNodeDecorator
 #   \todo Add unit testing
-class SceneNode(SignalEmitter):
+@signalemitter
+class SceneNode():
     class TransformSpace:
         Local = 1
         Parent = 2
@@ -202,7 +203,7 @@ class SceneNode(SignalEmitter):
                 break
 
     ##  Call a decoration of this SceneNode.
-    #   SceneNodeDecorators add Decorations, which are calable functions.
+    #   SceneNodeDecorators add Decorations, which are callable functions.
     #   \param \type{string} function The function to be called.
     #   \param *args
     #   \param **kwargs

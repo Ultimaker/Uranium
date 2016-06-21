@@ -13,7 +13,7 @@ def getMetaData():
             "author": "Ultimaker",
             "version": "1.0",
             "description": i18n_catalog.i18nc("@info:whatsthis", "Provides support for writing 3MF files."),
-            "api": 2
+            "api": 3
         },
         "mesh_writer": {
             "output": [{

@@ -5,14 +5,19 @@
 class Version(object):
     def __init__(self, version):
         super().__init__()
-        try:
+        if isinstance(version, str):
             version_list = version.replace("-", ".").replace("_", ".").split(".")
-        except AttributeError:
-            version_list = version
         else:
+            version_list = version
+        self._major = 0
+        self._minor = 0
+        self._revision = 0
+        try:
             self._major = int(version_list[0])
             self._minor = int(version_list[1])
             self._revision = int(version_list[2])
+        except IndexError:
+            pass
 
     def getMajor(self):
         return self._major

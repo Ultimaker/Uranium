@@ -1,183 +1,156 @@
-// Copyright (c) 2015 Ultimaker B.V.
+// Copyright (c) 2016 Ultimaker B.V.
 // Uranium is released under the terms of the AGPLv3 or higher.
 
 import QtQuick 2.1
 import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.1
 
-import UM 1.1 as UM
+import UM 1.2 as UM
 
-PreferencesPage {
+PreferencesPage
+{
     title: catalog.i18nc("@title:tab", "Setting Visibility");
 
     property int scrollToIndex: 0
 
     signal scrollToSection( string key )
-    onScrollToSection: {
-        scrollToIndex = Math.max(0, settingList.model.find("id", key));
-        //Delay finding the scroll offset until the scrollview has had time to fill up
-        scrollToTimer.start()
+    onScrollToSection:
+    {
+        settingsListView.positionViewAtIndex(definitionsModel.getIndex(key), ListView.Beginning)
     }
 
-    function reset() {
+    function reset()
+    {
+        UM.Preferences.resetPreference("general/visible_settings")
     }
-    resetEnabled: false;
+    resetEnabled: true;
 
-    Item {
+    function updateToggleVisibleSettings()
+    {
+        var typeRoleId = settingsListView.model.roleId("type");
+        var visibleRoleId = settingsListView.model.roleId("visible");
+        var all_visible = true;
+        var all_hidden = true;
+        for(var i = 0; i < settingsListView.model.rowCount(); i++) {
+            var type = settingsListView.model.data(settingsListView.model.index(i,0), typeRoleId);
+            var visible = settingsListView.model.data(settingsListView.model.index(i,0), visibleRoleId);
+            if(type && type != "category") {
+                if(visible) {
+                    all_hidden = false;
+                } else {
+                    all_visible = false;
+                }
+                if(!all_hidden && !all_visible) {
+                    toggleVisibleSettings.partiallyCheckedEnabled = true
+                    toggleVisibleSettings.checkedState = Qt.PartiallyChecked
+                    return
+                }
+            }
+        }
+        toggleVisibleSettings.partiallyCheckedEnabled = false
+        if(all_visible) {
+            toggleVisibleSettings.checkedState = Qt.Checked
+        } else {
+            toggleVisibleSettings.checkedState = Qt.Unchecked
+        }
+    }
+
+    Item
+    {
         id: base;
         anchors.fill: parent;
 
-        Timer {
-            id: scrollToTimer
-            interval: 1
-            repeat: false
-            onTriggered: scrollView.flickableItem.contentY = settingList.itemAt(scrollToIndex).mapToItem(settingList, 0, 0).y 
+        CheckBox
+        {
+            id: toggleVisibleSettings
+            anchors
+            {
+                verticalCenter: filter.verticalCenter;
+                left: parent.left;
+                leftMargin: UM.Theme.getSize("default_margin").width
+            }
+            text: catalog.i18nc("@label:textbox", "Check all")
+            checkedState: Qt.PartiallyChecked
+            partiallyCheckedEnabled: true
+            onClicked:
+            {
+                if(toggleVisibleSettings.partiallyCheckedEnabled) {
+                    toggleVisibleSettings.checked = true
+                    toggleVisibleSettings.partiallyCheckedEnabled = false
+                }
+                var keys = [];
+                var keyRoleId = settingsListView.model.roleId("key")
+                for(var i = 0; i < settingsListView.model.rowCount(); i++) {
+                    var key = settingsListView.model.data(settingsListView.model.index(i,0), keyRoleId);
+                    if(key) keys.push(key)
+                }
+                settingsListView.model.setVisibleBulk(keys, checked);
+            }
         }
 
-        TextField {
+        TextField
+        {
             id: filter;
 
-            anchors {
-                top: parent.top;
-                left: parent.left;
-                right: parent.right;
+            anchors
+            {
+                top: parent.top
+                left: toggleVisibleSettings.right
+                leftMargin: UM.Theme.getSize("default_margin").width
+                right: parent.right
             }
 
-            placeholderText: catalog.i18nc("@label:textbox", "Filter...");
+            placeholderText: catalog.i18nc("@label:textbox", "Filter...")
 
-            onTextChanged: settingCategoriesModel.filter(text);
+            onTextChanged: settingsListView.model.filter = {"label": "*" + text}
         }
 
-        ScrollView {
+        ScrollView
+        {
             id: scrollView
 
-            anchors {
+            frameVisible: true
+
+            anchors
+            {
                 top: filter.bottom;
+                topMargin: UM.Theme.getSize("default_margin").height
                 left: parent.left;
                 right: parent.right;
                 bottom: parent.bottom;
             }
+            ListView
+            {
+                id: settingsListView
+                Component.onCompleted: updateToggleVisibleSettings()
+                model: UM.SettingDefinitionsModel {
+                    id: definitionsModel
+                    containerId: "fdmprinter"
+                    showAll: true
+                    exclude: ["machine_settings"]
+                    visibilityHandler: UM.SettingPreferenceVisibilityHandler { }
+                    onSettingsVisibilityChanged: updateToggleVisibleSettings()
+                }
+                delegate:Loader
+                {
+                    id: loader
 
-            Column {
-                width: childrenRect.width;
-                height: childrenRect.height;
+                    width: parent.width
+                    height: model.type != undefined ? UM.Theme.getSize("section").height : 0
 
-                Repeater {
-                    id: settingList;
+                    property var definition: model
+                    property var settingDefinitionsModel: definitionsModel
 
-                    model: UM.SettingCategoriesModel { id: settingCategoriesModel; }
-
-                    delegate: Item {
-                        id: delegateItem;
-
-                        width: base.width - UM.Theme.getSize("default_margin").width * 2;
-                        height: childrenRect.height;
-
-                        ToolButton {
-                            id: categoryHeader;
-                            text: model.name;
-                            checkable: true;
-                            width: parent.width;
-                            onCheckedChanged: settingsColumn.state != "" ? settingsColumn.state = "" : settingsColumn.state = "collapsed";
-
-                            style: ButtonStyle {
-                                background: Rectangle
-                                {
-                                    width: control.width;
-                                    height: control.height;
-                                    color: control.hovered ? palette.highlight : "transparent";
-                                }
-                                label: Row
-                                {
-                                    spacing: UM.Theme.getSize("default_margin").width;
-                                    Image
-                                    {
-                                        anchors.verticalCenter: parent.verticalCenter;
-                                        source: control.checked ? UM.Theme.getIcon("arrow_right") : UM.Theme.getIcon("arrow_bottom")
-                                    }
-                                    Label
-                                    {
-                                        text: control.text;
-                                        font.bold: true;
-                                        color: control.hovered ? palette.highlightedText : palette.text;
-                                    }
-                                }
-                            }
-                        }
-
-                        property variant settingsModel: model.settings;
-
-                        Column {
-                            id: settingsColumn;
-
-                            anchors.top: categoryHeader.bottom;
-
-                            property real childrenHeight:
-                            {
-                                var h = 0.0;
-                                for(var i in children)
-                                {
-                                    var item = children[i];
-                                    h += children[i].height;
-                                    if(item.settingVisible)
-                                    {
-                                        if(i > 0)
-                                        {
-                                            h += spacing;
-                                        }
-                                    }
-                                }
-                                return h;
-                            }
-
-                            width: childrenRect.width;
-                            height: childrenHeight;
-
-                            Repeater
-                            {
-                                model: delegateItem.settingsModel;
-
-                                delegate: UM.TooltipArea
-                                {
-                                    x: model.depth * UM.Theme.getSize("default_margin").width;
-                                    text: model.description;
-
-                                    width: childrenRect.width;
-                                    height: childrenRect.height;
-
-                                    CheckBox
-                                    {
-                                        id: check
-
-                                        text: model.name;
-                                        checked: model.visible;
-                                        enabled: !model.prohibited;
-
-                                        onClicked: delegateItem.settingsModel.setSettingVisible(model.key, checked);
-
-                                        states: State
-                                        {
-                                            name: "filtered";
-                                            when: model.filtered;
-                                            PropertyChanges { target: check; opacity: 0; height: 0; }
-                                        }
-                                    }
-                                }
-                            }
-
-                            states: State {
-                                name: "collapsed";
-
-                                PropertyChanges { target: settingsColumn; opacity: 0; height: 0; }
-                            }
-
-                            transitions: Transition {
-                                to: "collapsed";
-                                SequentialAnimation {
-                                    NumberAnimation { property: "opacity"; duration: 75; }
-                                    NumberAnimation { property: "height"; duration: 75; }
-                                }
-                            }
+                    asynchronous: true
+                    active: model.type != undefined
+                    source:
+                    {
+                        switch(model.type)
+                        {
+                            case "category":
+                                return "SettingVisibilityCategory.qml"
+                            default:
+                                return "SettingVisibilityItem.qml"
                         }
                     }
                 }

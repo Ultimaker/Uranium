@@ -31,26 +31,6 @@ class SaveFile:
         self._temp_file = None
 
     def __enter__(self):
-        # First, try to acquire a file lock on the file we want to write to.
-        file = open(self._path, self._mode, *self._open_args, **self._open_kwargs)
-        while True:
-            # Try to acquire a lock. This will block if the file was already locked by a different process.
-            lockFile(file)
-
-            # Once the lock is released it is possible the other instance already replaced the file we opened.
-            # So try to open it again and check if we have the same file.
-            # If we do, that means the file did not get replaced in the mean time and we properly acquired a lock on the right file.
-            file_new = open(self._path, self._mode, *self._open_args, **self._open_kwargs)
-            if os.path.sameopenfile(file.fileno(), file_new.fileno()):
-                file_new.close()
-                break
-            else:
-                # Otherwise, retry the entire procedure.
-                file.close()
-                file = file_new
-
-        # Remember the locked file.
-        self._file = file
         # Create a temporary file that we can write to.
         self._temp_file = tempfile.NamedTemporaryFile(self._mode, dir = os.path.dirname(self._path), delete = False) #pylint: disable=bad-whitespace
         return self._temp_file
@@ -58,12 +38,47 @@ class SaveFile:
     def __exit__(self, exc_type, exc_value, traceback):
         self._temp_file.close()
 
-        # Close the actual file to release the file lock.
-        # Note that this introduces a possible race condition where another process can lock the file
-        # before this process can replace it.
-        self._file.close()
+        while not self._file:
+            # First, try to open the file we want to write to.
+            try:
+                self._file = open(self._path, self._mode, *self._open_args, **self._open_kwargs)
+            except Exception:
+                self._file = None
 
-        # Replace the existing file with the temporary file.
-        # This operation is guaranteed to be atomic on Unix systems and should be atomic on Windows as well.
-        # This way we can ensure we either have the old file or the new file.
-        os.replace(self._temp_file.name, self._path)
+        while True:
+            # Try to acquire a lock. This will block if the file was already locked by a different process.
+            lockFile(self._file)
+
+            # Once the lock is released it is possible the other instance already replaced the file we opened.
+            # So try to open it again and check if we have the same file.
+            # If we do, that means the file did not get replaced in the mean time and we properly acquired a lock on the right file.
+            try:
+                file_new = open(self._path, self._mode, *self._open_args, **self._open_kwargs)
+            except Exception:
+                # An error was raised when trying to open the file, try again.
+                # This primarily happens on windows where trying to open an opened file will raise a PermisisonError
+                continue
+
+            if not self._file.closed and os.path.sameopenfile(self._file.fileno(), file_new.fileno()):
+                file_new.close()
+
+                # Close the actual file to release the file lock.
+                # Note that this introduces a slight race condition where another process can lock the file
+                # before this process can replace it.
+                self._file.close()
+
+                # Replace the existing file with the temporary file.
+                # This operation is guaranteed to be atomic on Unix systems and should be atomic on Windows as well.
+                # This way we can ensure we either have the old file or the new file.
+                # Note that due to the above mentioned race condition, on Windows a PermissionError can be raised.
+                # If that happens, the replace operation failed and we should try again.
+                try:
+                    os.replace(self._temp_file.name, self._path)
+                except Exception:
+                    continue
+
+                break
+            else:
+                # Otherwise, retry the entire procedure.
+                self._file.close()
+                self._file = file_new

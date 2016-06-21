@@ -1,0 +1,25 @@
+{
+    "version": 2,
+    "name": "Inherits",
+
+    "inherits": "single_setting",
+
+    "metadata": {
+        "category": "Other",
+        "manufacturer": "Ultimaker"
+    },
+    "settings": {
+        "test_setting_1": {
+            "label": "Test 1",
+            "description": "A Test Setting",
+            "default_value": 10,
+            "type": "int"
+        }
+    },
+    "overrides":
+    {
+        "test_setting": {
+            "default_value": 11
+        }
+    }
+}

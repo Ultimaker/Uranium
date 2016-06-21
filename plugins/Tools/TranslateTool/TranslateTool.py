@@ -6,7 +6,6 @@ from UM.Event import Event, MouseEvent, KeyEvent
 
 from UM.Math.Plane import Plane
 from UM.Math.Vector import Vector
-from UM.Math.Float import Float
 
 from UM.Operations.TranslateOperation import TranslateOperation
 from UM.Operations.GroupedOperation import GroupedOperation
@@ -39,77 +38,82 @@ class TranslateTool(Tool):
 
         self.setExposedProperties("ToolHint", "X", "Y", "Z")
 
-    ##  Get the x-location of the first selected object
+    ##  Get the x-location of the selection bounding box center
     #
     #   \param x type(float) location in mm
     def getX(self):
         if Selection.hasSelection():
-            return float(Selection.getSelectedObject(0).getWorldPosition().x)
+            return float(Selection.getBoundingBox().center.x)
         return 0.0
 
-    ##  Get the y-location of the first selected object
+    ##  Get the y-location of the selection bounding box center
     #
     #   \param y type(float) location in mm
     def getY(self):
         if Selection.hasSelection():
             # Note; The switching of z & y is intentional. We display z as up for the user,
             # But store the data in openGL space.
-            return float(Selection.getSelectedObject(0).getWorldPosition().z)
+            return float(Selection.getBoundingBox().center.z)
         return 0.0
 
-    ##  Get the z-location of the first selected object
+    ##  Get the z-location of the selection bounding box bottom
+    #   The bottom is used as opposed to the center, because the biggest usecase is to push the selection into the buildplate
     #
     #   \param z type(float) location in mm
     def getZ(self):
         # We want to display based on the bottom instead of the actual coordinate.
         if Selection.hasSelection():
-            selected_node = Selection.getSelectedObject(0)
-            try:
-                bottom = selected_node.getBoundingBox().bottom
-            except AttributeError: #It can happen that there is no bounding box yet.
-                bottom = 0
-
-            return float(bottom)
+            # Note; The switching of z & y is intentional. We display z as up for the user,
+            # But store the data in openGL space.
+            return float(Selection.getBoundingBox().bottom)
         return 0.0
 
-    ##  Set the x-location of the selected object(s) by translating the first selected object
+    ##  Set the x-location of the selected object(s) by translating relative to the selection bounding box center
     #
     #   \param x type(float) location in mm
     def setX(self, x):
-        obj = Selection.getSelectedObject(0)
-        if obj:
-            new_position = obj.getWorldPosition().set(x=x)
-            Selection.applyOperation(TranslateOperation, new_position, set_position = True)
-            self.operationStopped.emit(self)
+        bounding_box = Selection.getBoundingBox()
 
-    ##  Set the y-location of the selected object(s) by translating the first selected object
+        op = GroupedOperation()
+        for selected_node in Selection.getAllSelectedObjects():
+            new_position = selected_node.getWorldPosition().set(y=float(x) + (new_position.x - bounding_box.center.x))
+            node_op = TranslateOperation(selected_node, new_position, set_position = True)
+            op.addOperation(node_op)
+        op.push()
+        self.operationStopped.emit(self)
+
+    ##  Set the y-location of the selected object(s) by translating relative to the selection bounding box center
     #
     #   \param y type(float) location in mm
     def setY(self, y):
-        obj = Selection.getSelectedObject(0)
-        if obj:
-            new_position = obj.getWorldPosition().set(z=y)
+        bounding_box = Selection.getBoundingBox()
 
+        op = GroupedOperation()
+        for selected_node in Selection.getAllSelectedObjects():
             # Note; The switching of z & y is intentional. We display z as up for the user,
             # But store the data in openGL space.
-            Selection.applyOperation(TranslateOperation, new_position, set_position = True)
-            self.operationStopped.emit(self)
+            new_position = selected_node.getWorldPosition().set(y=float(y) + (new_position.z - bounding_box.center.z))
 
-    ##  Set the z-location of the selected object(s) by translating the first selected object
+            node_op = TranslateOperation(selected_node, new_position, set_position = True)
+            op.addOperation(node_op)
+        op.push()
+        self.operationStopped.emit(self)
+
+    ##  Set the y-location of the selected object(s) by translating relative to the selection bounding box bottom
     #
     #   \param z type(float) location in mm
     def setZ(self, z):
-        obj = Selection.getSelectedObject(0)
-        if obj:
-            selected_node = Selection.getSelectedObject(0)
-            center = selected_node.getBoundingBox().center
-            bottom = selected_node.getBoundingBox().bottom
-            # Note; The switching of z & y is intentional. We display z as up for the user,
-            # But store the data in openGL space.
+        bounding_box = Selection.getBoundingBox()
 
-            new_position = obj.getWorldPosition().set(y=(float(z) + (center.y - bottom)))
-            Selection.applyOperation(TranslateOperation, new_position, set_position = True)
-            self.operationStopped.emit(self)
+        op = GroupedOperation()
+        for selected_node in Selection.getAllSelectedObjects():
+            # Note: The switching of z & y is intentional. We display z as up for the user,
+            # But store the data in openGL space.
+            new_position = selected_node.getWorldPosition().set(y=float(z) + (new_position.y - bounding_box.bottom))
+            node_op = TranslateOperation(selected_node, new_position, set_position = True)
+            op.addOperation(node_op)
+        op.push()
+        self.operationStopped.emit(self)
 
     ##  Set which axis/axes are enabled for the current translate operation
     #
@@ -124,7 +128,7 @@ class TranslateTool(Tool):
     def event(self, event):
         super().event(event)
 
-        # Make sure the displayed values are updated if the boundingbox of the selected mesh(es) changes
+        # Make sure the displayed values are updated if the bounding box of the selected mesh(es) changes
         if event.type == Event.ToolActivateEvent:
             for node in Selection.getAllSelectedObjects():
                 node.boundingBoxChanged.connect(self.propertyChanged)
@@ -193,7 +197,11 @@ class TranslateTool(Tool):
                     self._distance = Vector(0, 0, 0)
                     self.operationStarted.emit(self)
 
-                Selection.applyOperation(TranslateOperation, drag)
+                op = GroupedOperation()
+                for node in Selection.getAllSelectedObjects():
+                    op.addOperation(TranslateOperation(node, drag))
+                op.push()
+
                 self._distance += drag
 
             self.setDragStart(event.x, event.y)

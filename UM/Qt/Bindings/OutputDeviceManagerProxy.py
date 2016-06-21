@@ -50,18 +50,15 @@ class OutputDeviceManagerProxy(QObject):
     #   \param device_id \type{string} The handle of the device to write to.
     #   \param file_name \type{string} A suggestion for the file name to write
     #   to. Can be freely ignored if providing a file name makes no sense.
-    #   \param kwargs Key-word arguments:
-    #       filter_by_machine: If the file name is ignored, should the file
-    #                          format that the output device chooses be limited
-    #                          to the formats that are supported by the
-    #                          currently active machine?
+    #   \param kwargs Keyword arguments:
+    #       limit_mimetypes: Limit the possible mimetypes to use for writing to these types.
     @pyqtSlot(str, str, "QVariantMap")
     def requestWriteToDevice(self, device_id, file_name, kwargs):
-        filter_by_machine = kwargs.get("filter_by_machine", False)
+        limit_mimetypes = kwargs.get("limit_mimetypes", None)
         # On Windows, calling requestWrite() on LocalFileOutputDevice crashes when called from a signal
         # handler attached to a QML MenuItem. So instead, defer the call to the next run of the event 
         # loop, since that does work.
-        Application.getInstance().callLater(self._writeToDevice, Application.getInstance().getController().getScene().getRoot(), device_id, file_name, filter_by_machine)
+        Application.getInstance().callLater(self._writeToDevice, Application.getInstance().getController().getScene().getRoot(), device_id, file_name, limit_mimetypes)
 
     ##  Request that the current selection is written to the output device.
     #
@@ -72,21 +69,18 @@ class OutputDeviceManagerProxy(QObject):
     #   \param device_id \type{string} The handle of the device to write to.
     #   \param file_name \type{string} A suggestion for the file name to write
     #   to. Can be freely ignored if providing a file name makes no sense.
-    #   \param kwargs Key-word arguments:
-    #       filter_by_machine: If the file name is ignored, should the file
-    #                          format that the output device chooses be limited
-    #                          to the formats that are supported by the
-    #                          currently active machine?
+    #   \param kwargs Keyword arguments:
+    #       limit_mimetypes: Limit the possible mimetypes to use for writing to these types.
     @pyqtSlot(str, str, "QVariantMap")
     def requestWriteSelectionToDevice(self, device_id, file_name, kwargs):
         if not Selection.hasSelection():
             return
 
-        filter_by_machine = kwargs.get("filter_by_machine", False)
+        limit_mimetypes = kwargs.get("limit_mimetypes", False)
         # On Windows, calling requestWrite() on LocalFileOutputDevice crashes when called from a signal
         # handler attached to a QML MenuItem. So instead, defer the call to the next run of the event 
         # loop, since that does work.
-        Application.getInstance().callLater(self._writeToDevice, Selection.getSelectedObject(0), device_id, file_name, filter_by_machine)
+        Application.getInstance().callLater(self._writeToDevice, Selection.getSelectedObject(0), device_id, file_name, limit_mimetypes)
 
     def _onActiveDeviceChanged(self):
         self.activeDeviceChanged.emit()
@@ -102,16 +96,14 @@ class OutputDeviceManagerProxy(QObject):
     #   \param device_id \type{string} The handle of the device to write to.
     #   \param file_name \type{string} A suggestion for the file name to write
     #   to. Can be freely ignored if providing a file name makes no sense.
-    #   \param filter_by_machine \type{bool} If the file name is ignored, should
-    #   the file format that the output device chooses be limited to the formats
-    #   that are supported by the currently active machine?
-    def _writeToDevice(self, node, device_id, file_name, filter_by_machine):
+    #   \param limit_mimetypes: Limit the possible mimetypes to use for writing to these types.
+    def _writeToDevice(self, node, device_id, file_name, limit_mimetypes):
         device = self._device_manager.getOutputDevice(device_id)
         if not device:
             return
 
         try:
-            device.requestWrite(node, file_name, filter_by_machine)
+            device.requestWrite(node, file_name, limit_mimetypes)
         except OutputDeviceError.UserCanceledError:
             pass
         except OutputDeviceError.DeviceBusyError:

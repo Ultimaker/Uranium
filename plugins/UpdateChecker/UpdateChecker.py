@@ -8,6 +8,7 @@ from UM.i18n import i18nCatalog
 from UM.Application import Application
 from UM.Message import Message
 from UM.Version import Version
+from UM.Preferences import Preferences
 
 import urllib.request
 import platform
@@ -20,27 +21,34 @@ i18n_catalog = i18nCatalog("uranium")
 
 ## This extention checks for new versions of the application based on the application name and the version number.
 #  The plugin is currently only usuable for applications maintained by Ultimaker. But it should be relatively easy
-#  to change it to work for other applications. 
+#  to change it to work for other applications.
 class UpdateChecker(Extension):
     def __init__(self):
         super().__init__()
         self.addMenuItem(i18n_catalog.i18nc("@item:inmenu", "Check for Updates"), self.checkNewVersion)
         self._url = None
-        
-        thread = Thread(target = self.checkNewVersion)
-        thread.daemon = True
-        thread.start()
-    
-    ##  Callback for the message that is spawned when there is a new version.  
+
+        Preferences.getInstance().addPreference("info/automatic_update_check", True)
+        if Preferences.getInstance().getValue("info/automatic_update_check"):
+            thread = Thread(target = self.checkNewVersion, args = (True,))
+            thread.daemon = True
+            thread.start()
+
+    ##  Callback for the message that is spawned when there is a new version.
     def actionTriggered(self, message, action):
         if action == "download":
-            if self._url is not None: 
+            if self._url is not None:
                 webbrowser.open(self._url)
-    
+
     ##  Connect with software.ultimaker.com, load latest.json and check version info.
     #   If the version info is higher then the current version, spawn a message to
     #   allow the user to download it.
-    def checkNewVersion(self):
+    #
+    #   \param silent type(boolean) Suppresses messages other than "new version found" messages.
+    #                               This is used when checking for a new version at startup.
+    def checkNewVersion(self, silent = False):
+        no_new_version = True
+
         application_name = Application.getInstance().getApplicationName()
         Logger.log("i", "Checking for new version of %s" % application_name)
 
@@ -48,6 +56,8 @@ class UpdateChecker(Extension):
             latest_version_file = urllib.request.urlopen("http://software.ultimaker.com/latest.json")
         except Exception as e:
             Logger.log("e", "Failed to check for new version. %s" %e)
+            if not silent:
+                Message(i18n_catalog.i18nc("@info", "Could not access update information.")).show()
             return
 
         try:
@@ -57,9 +67,13 @@ class UpdateChecker(Extension):
                 if Application.getInstance().getVersion() is not "master":
                     local_version = Version(Application.getInstance().getVersion())
                 else:
+                    if not silent:
+                        Message(i18n_catalog.i18nc("@info", "The version you are using does not support checking for updates.")).show()
                     return
             except ValueError:
                 Logger.log("w", "Could not determine application version from string %s, not checking for updates", Application.getInstance().getVersion())
+                if not silent:
+                    Message(i18n_catalog.i18nc("@info", "The version you are using does not support checking for updates.")).show()
                 return
 
             if application_name in data:
@@ -75,6 +89,7 @@ class UpdateChecker(Extension):
                                 self._url = value["url"]
                                 message.actionTriggered.connect(self.actionTriggered)
                                 message.show()
+                                no_new_version = False
                                 break
                     else:
                         Logger.log("e", "Could not find version information or download url for update.")
@@ -82,3 +97,6 @@ class UpdateChecker(Extension):
                 Logger.log("e", "Did not find any version information for %s." % application_name)
         except Exception as e:
             Logger.log("e", "Exception in update checker: %s" % (e))
+
+        if no_new_version and not silent:
+            Message(i18n_catalog.i18nc("@info", "No new version was found.")).show()

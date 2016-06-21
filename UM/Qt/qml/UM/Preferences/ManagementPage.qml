@@ -12,6 +12,7 @@ PreferencesPage
     id: base;
 
     property alias model: objectList.model;
+    property alias section: objectList.section;
     property string nameRole: "name";
     property bool detailsVisible: true;
 
@@ -38,15 +39,8 @@ PreferencesPage
 
     resetEnabled: false;
 
-    function activeIndex() 
-    {
-        for(var i = 0; i < objectList.model.rowCount(); i++) {
-            if (objectList.model.getItem(i).active) {
-                return i;
-            }
-        }
-    }
-
+    property string activeId: ""
+    property int activeIndex: -1
 
     Row
     {
@@ -133,7 +127,7 @@ PreferencesPage
             ListView
             {
                 id: objectList;
-                currentIndex: activeIndex()
+                currentIndex: activeIndex
 
                 section.property: "group"
                 section.criteria: ViewSection.FullString
@@ -166,7 +160,7 @@ PreferencesPage
                         anchors.right: parent.right;
                         text: model.name
                         elide: Text.ElideRight
-                        font.italic: model.active == true
+                        font.italic: model.id == activeId
                         color: parent.ListView.isCurrentItem ? palette.highlightedText : palette.text;
                     }
 

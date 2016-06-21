@@ -16,7 +16,8 @@ class PluginsModel(ListModel):
     DescriptionRole = Qt.UserRole + 5
     AuthorRole = Qt.UserRole + 6
     VersionRole = Qt.UserRole + 7
-    
+    IdRole = Qt.UserRole + 8
+
     def __init__(self, parent = None):
         super().__init__(parent)
         self._plugin_registery = PluginRegistry.getInstance()
@@ -29,7 +30,7 @@ class PluginsModel(ListModel):
         self.addRoleName(self.AuthorRole, "author")
         self.addRoleName(self.VersionRole, "version")
         self._update()
-    
+
     def _update(self):
         self.clear() 
         active_plugins = self._plugin_registery.getActivePlugins()
@@ -40,6 +41,7 @@ class PluginsModel(ListModel):
 
             aboutData = plugin["plugin"]
             self.appendItem({
+                "id": plugin["id"],
                 "required": plugin["id"] in self._required_plugins,
                 "enabled": plugin["id"] in active_plugins,
 
@@ -48,8 +50,7 @@ class PluginsModel(ListModel):
                 "author": aboutData.get("author", "John Doe"),
                 "version": aboutData.get("version", "Unknown")
             })
-
-            self.sort(lambda k: k["name"])
+        self.sort(lambda k: k["name"])
 
     @pyqtSlot(str,bool)
     def setEnabled(self, name, enabled):

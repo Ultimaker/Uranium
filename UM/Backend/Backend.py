@@ -1,10 +1,12 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
+from enum import IntEnum
+
 from UM.Backend.SignalSocket import SignalSocket
 from UM.Preferences import Preferences
 from UM.Logger import Logger
-from UM.Signal import Signal, SignalEmitter
+from UM.Signal import Signal, signalemitter
 from UM.Application import Application
 from UM.PluginObject import PluginObject
 from UM.Platform import Platform
@@ -17,11 +19,18 @@ import threading
 import sys
 from time import sleep
 
+##  The current processing state of the backend.
+class BackendState(IntEnum):
+    NotStarted = 1
+    Processing = 2
+    Done = 3
+    Error = 4
 
 ##      Base class for any backend communication (separate piece of software).
 #       It makes use of the Socket class from libArcus for the actual communication bits.
 #       The message_handlers dict should be filled with string (full name of proto message), function pairs.
-class Backend(PluginObject, SignalEmitter):
+@signalemitter
+class Backend(PluginObject):
     def __init__(self):
         super().__init__()  # Call super to make multiple inheritance work.
         self._supported_commands = {}

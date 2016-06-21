@@ -16,7 +16,6 @@ from UM.Math.Quaternion import Quaternion
 from UM.Math.Float import Float
 
 from UM.Operations.RotateOperation import RotateOperation
-from UM.Operations.TranslateOperation import TranslateOperation
 from UM.Operations.GroupedOperation import GroupedOperation
 from UM.Operations.SetTransformOperation import SetTransformOperation
 from UM.Operations.LayFlatOperation import LayFlatOperation
@@ -129,23 +128,22 @@ class RotateTool(Tool):
                 direction = 1 if Vector.Unit_Z.dot(drag_start.cross(drag_end)) > 0 else -1
                 rotation = Quaternion.fromAngleAxis(direction * angle, Vector.Unit_Z)
 
-            self._angle += direction * angle
-
             # Rate-limit the angle change notification
             # This is done to prevent the UI from being flooded with property change notifications,
             # which in turn would trigger constant repaints.
             new_time = time.monotonic()
             if not self._angle_update_time or new_time - self._angle_update_time > 0.1:
-                self.propertyChanged.emit()
                 self._angle_update_time = new_time
+                self._angle += direction * angle
+                self.propertyChanged.emit()
 
-            # Rotate around the saved centeres of all selected nodes
-            op = GroupedOperation()
-            for node, position in self._saved_node_positions:
-                op.addOperation(RotateOperation(node, rotation, rotate_around_point = position))
-            op.push()
+                # Rotate around the saved centeres of all selected nodes
+                op = GroupedOperation()
+                for node, position in self._saved_node_positions:
+                    op.addOperation(RotateOperation(node, rotation, rotate_around_point = position))
+                op.push()
 
-            self.setDragStart(event.x, event.y)
+                self.setDragStart(event.x, event.y)
 
         if event.type == Event.MouseReleaseEvent:
             # Finish a rotate operation

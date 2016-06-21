@@ -16,7 +16,7 @@ Button {
     style: UM.Theme.styles.sidebar_category;
 
     signal configureSettingVisibility()
-    signal showAllHidenInheritedSettings()
+    signal showAllHiddenInheritedSettings()
 
     signal showTooltip();
     signal hideTooltip();
@@ -55,7 +55,7 @@ Button {
         width: height;
 
         onClicked: {
-            base.showAllHidenInheritedSettings()
+            base.showAllHiddenInheritedSettings()
         }
 
         color: hovered ? UM.Theme.getColor("setting_control_button_hover") : UM.Theme.getColor("setting_control_button")

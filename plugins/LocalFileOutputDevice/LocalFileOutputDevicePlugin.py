@@ -54,10 +54,9 @@ class LocalFileOutputDevice(OutputDevice):
     #   should be written to the device.
     #   \param file_name \type{string} A suggestion for the file name to write
     #   to. Can be freely ignored if providing a file name makes no sense.
-    #   \param filter_by_machine \type{bool} If the file name is ignored, should
-    #   the file format be limited to the formats that are supported by the
+    #   \param limit_mimetypes
     #   currently active machine?
-    def requestWrite(self, node, file_name = None, filter_by_machine = False):
+    def requestWrite(self, node, file_name = None, limit_mimetypes = None):
         if self._writing:
             raise OutputDeviceError.DeviceBusyError()
 
@@ -82,9 +81,9 @@ class LocalFileOutputDevice(OutputDevice):
 
         file_types = Application.getInstance().getMeshFileHandler().getSupportedFileTypesWrite()
         file_types.sort(key = lambda k: k["description"])
-        if filter_by_machine:
-            machine_file_formats = Application.getInstance().getMachineManager().getActiveMachineInstance().getMachineDefinition().getFileFormats()
-            file_types = list(filter(lambda file_type: file_type["mime_type"] in machine_file_formats, file_types)) #Take the intersection between file_types and machine_file_formats.
+        if limit_mimetypes:
+            file_types = list(filter(lambda i: i["mime_type"] in limit_mimetypes, file_types))
+
         if len(file_types) == 0:
             Logger.log("e", "There are no file types available to write with!")
             raise OutputDeviceError.WriteRequestFailedError()

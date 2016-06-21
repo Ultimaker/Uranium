@@ -4,15 +4,12 @@
 from UM.Job import Job
 from UM.Application import Application
 from UM.Message import Message
-from UM.Math.AxisAlignedBox import AxisAlignedBox
-from UM.Math.Matrix import Matrix
 from UM.Math.Vector import Vector
 from UM.Preferences import Preferences
 from UM.Logger import Logger
 from UM.Mesh.MeshReader import MeshReader
 
 import time
-import os.path
 import math
 
 from UM.i18n import i18nCatalog

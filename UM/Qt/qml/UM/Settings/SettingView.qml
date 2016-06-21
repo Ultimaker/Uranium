@@ -28,7 +28,7 @@ ScrollView
 
         Repeater
         {
-            model: UM.SettingCategoriesModel { id: categoriesModel; }
+//             model: UM.SettingCategoriesModel { id: categoriesModel; }
 
             delegate: Item
             {
@@ -71,7 +71,7 @@ ScrollView
                     }
 
                     onConfigureSettingVisibility: if(base.configureSettings) base.configureSettings.trigger(categoryHeader);
-                    onShowAllHidenInheritedSettings: categoriesModel.showAllHidenInheritedSettings(key)
+                    onshowAllHiddenInheritedSettings: categoriesModel.showAllHiddenInheritedSettings(key)
                 }
 
                 Column
