@@ -31,6 +31,7 @@ UM.Dialog
 
     onAccepted: base.nextPage()
 
+
     // Provides a single mechanism for going to the next page or closing the wizard on the last page
     // Pages can use the nextClicked signal to extend this event
     function nextPage()
@@ -45,18 +46,19 @@ UM.Dialog
         {
             base.visible = false
             base.resetPages()
-            currentPage = 0
         }
     }
 
     function appendPage(page, title)
     {
         pagesModel.append({"page": page, "title": title})
+        //page.onCompleted.connect(base.nextPage())
     }
 
     function insertPage(page, title, position)
     {
         pagesModel.insert(position, {"page": page, "title": title})
+        //page.onCompleted.connect(base.nextPage())
     }
 
     function removePage(index)
@@ -64,16 +66,16 @@ UM.Dialog
         pagesModel.remove(index)
     }
 
-    // Removes all but the first page
+    // Removes all pages
     function resetPages()
     {
             var old_page_count = getPageCount()
             // Delete old pages (if any)
-            for (var i = old_page_count - 1; i > 0; i--)
+            for (var i = old_page_count - 1; i >= 0; i--)
             {
                 removePage(i)
             }
-            currentPage = 0
+            currentPage = -1
     }
 
     function getPageSource(index)
@@ -171,9 +173,9 @@ UM.Dialog
             }
         }
 
-        Loader
+        Item
         {
-            id: pageLoader
+            id: pageItem
 
             anchors {
                 top: parent.top
@@ -184,13 +186,13 @@ UM.Dialog
             }
 
             width: parent.width - wizardProgress.width - (2 *  UM.Theme.getSize("default_margin").width)
-            source: pagesModel.get(base.currentPage).page;
+            children: pagesModel.get(base.currentPage).page;
 
-            Binding {
-                target: pageLoader.item;
-                property: "wizard";
-                value: base;
-            }
+            // In between property so we can listen to onConnectChanged
+            property var content: pagesModel.get(base.currentPage).page;
+
+            // Connect the completed of the page to the nextPage of the wizard.
+            onContentChanged: content.onCompleted.connect(base.nextPage)
         }
 
         Connections
