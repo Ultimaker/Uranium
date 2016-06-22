@@ -202,6 +202,15 @@ class Resources:
         cls.__types[resource_type] = path
         cls.__types_storage[resource_type] = path
 
+    ##  Gets the configuration storage path.
+    #
+    #   This is where the application stores user configuration, such as
+    #   preferences.
+    def getConfigStoragePath(cls):
+        if not cls.__config_storage_path:
+            cls.__initializeStoragePaths()
+        return cls.__config_storage_path
+
     ##  Remove a custom resource type.
     @classmethod
     def removeType(cls, resource_type):
