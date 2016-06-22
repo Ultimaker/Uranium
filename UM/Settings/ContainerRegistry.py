@@ -48,6 +48,8 @@ class ContainerRegistry:
 
         self._containers = [ self._emptyInstanceContainer ]
 
+        self._id_container_cache = {}
+
         self._resource_types = [Resources.DefinitionContainers]
 
     containerAdded = Signal()
@@ -94,6 +96,13 @@ class ContainerRegistry:
     #   list if nothing was found.
     def findContainers(self, container_type = None, **kwargs):
         containers = []
+
+        if len(kwargs) == 1 and "id" in kwargs:
+            # If we are just searching for a single container by ID, look it up from the container cache
+            container = self._id_container_cache.get(kwargs.get("id"))
+            if container:
+                return [ container ]
+
         for container in self._containers:
             if container_type and not isinstance(container, container_type):
                 continue
@@ -164,7 +173,8 @@ class ContainerRegistry:
     ##  Load all available definition containers, instance containers and
     #   container stacks.
     #
-    #   If this function is called again, it will clear the old data and reload.
+    #   \note This method does not clear the internal list of containers. This means that any containers
+    #   that were already added when the first call to this method happened will not be re-added.
     def load(self):
         files = []
         for resource_type in self._resource_types:
@@ -203,23 +213,25 @@ class ContainerRegistry:
         files = sorted(files, key = lambda i: i[0])
 
         for _, container_id, file_path, read_only, container_type in files:
+            if container_id in self._id_container_cache:
+                continue
+
             try:
                 if issubclass(container_type, DefinitionContainer.DefinitionContainer):
                     definition = self._loadCachedDefinition(container_id, file_path)
                     if definition:
-                        self._containers.append(definition)
+                        self.addContainer(definition)
                         continue
 
                 new_container = container_type(container_id)
                 with open(file_path, encoding = "utf-8") as f:
                     new_container.deserialize(f.read())
                 new_container.setReadOnly(read_only)
-                self._containers.append(new_container)
-                self.containerAdded.emit(new_container)
 
                 if issubclass(container_type, DefinitionContainer.DefinitionContainer):
                     self._saveCachedDefinition(new_container)
 
+                self.addContainer(new_container)
             except Exception as e:
                 Logger.logException("e", "Could not deserialize container %s", container_id)
 
@@ -230,6 +242,7 @@ class ContainerRegistry:
             return
 
         self._containers.append(container)
+        self._id_container_cache[container.getId()] = container
         self.containerAdded.emit(container)
 
     def removeContainer(self, container_id):
@@ -238,6 +251,7 @@ class ContainerRegistry:
             container = containers[0]
 
             self._containers.remove(container)
+            del self._id_container_cache[container.id]
             self._deleteFiles(container)
             self.containerRemoved.emit(container)
 
