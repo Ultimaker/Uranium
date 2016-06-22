@@ -84,49 +84,34 @@ class VersionUpgradeManager:
             destination_type, destination_version, upgrade_function = destination
 
             #Fill in the dictionary representing the graph, if it doesn't have the keys yet.
-            if destination_type not in self._version_upgrades:
-                self._version_upgrades[destination_type] = {}
-            if destination_version not in self._version_upgrades[destination_version]:
-                self._version_upgrades[destination_type][destination_version] = set()
-            self._version_upgrades[destination_type][destination_version].add((source_type, source_version, upgrade_function, get_version_function)) #Add the edge to the graph.
+            if (destination_type, destination_version) not in self._version_upgrades:
+                self._version_upgrades[(destination_type, destination_version)] = set()
+            self._version_upgrades[(destination_type, destination_version)].add((source_type, source_version, upgrade_function, get_version_function)) #Add the edge to the graph.
 
-    ##  For each version of a configuration type, finds the next step to take to
-    #   upgrade as quickly as possible to the most recent version.
+    ##  Finds the next step to take to upgrade each combination of configuration
+    #   type and version.
     #
-    #   The configuration type should be either "machine_instance",
-    #   "preferences" or "profile", matching the types listed in the metadata of
-    #   a plug-in. This is abstracted to prevent having to maintain the same
-    #   code in lots of different functions that do basically the same.
-    #
-    #   This function uses a breadth-first search to get the fewest number of
-    #   steps required to upgrade to the destination version.
-    #
-    #   \param configuration_type The type of configuration to compute the
-    #   shortest upgrade paths of.
-    #   \param destination_version The version to compute the shortest paths to.
-    #   \return A dictionary with an entry for each version number from which we
-    #   can reach the destination version, naming the version upgrade plug-in
-    #   with which to convert for the next step.
-    def _findShortestUpgradePaths(self, configuration_type, destination_version):
-        by_destination_version = self._sortByDestinationVersion(configuration_type)
-        result = {}
+    #   \return A dictionary of type/version pairs that map to functions that
+    #   upgrade said data format one step towards the most recent version, such
+    #   that the fewest number of steps is required.
+    def _findShortestUpgradePaths(self):
+        result = {} #For each (type, version) tuple, which upgrade function to use to upgrade it towards the newest versions.
 
-        # Perform a breadth-first search.
-        registry = PluginRegistry.getInstance()
-        front = collections.deque() # Use as a queue for breadth-first iteration: Append right, pop left.
-        front.append(destination_version)
+        #Perform a many-to-many shortest path search with Dijkstra's algorithm.
+        front = collections.deque() #Use as a queue for breadth-first iteration: Append right, pop left.
+        for configuration_type, version in self._current_versions.items():
+            front.append((configuration_type, version))
         explored_versions = set()
         while len(front) > 0:
-            version = front.popleft() # To make it a queue, pop on the opposite side of where you append!
-            if version in by_destination_version: # We can upgrade to this version.
-                for neighbour in by_destination_version[version]:
-                    source_version = registry.getMetaData(neighbour.getPluginId())["version_upgrade"][configuration_type]["from"]
-                    if source_version in explored_versions: # Already encountered elsewhere. No need to re-compute.
+            destination_type, destination_version = front.popleft() #To make it a queue, pop on the opposite side of where you append!
+            if (destination_type, destination_version) in self._version_upgrades: #We can upgrade to this version.
+                for source_type, source_version, upgrade_function, _ in self._version_upgrades[(destination_type, destination_version)]:
+                    if (source_type, source_version) in explored_versions:
                         continue
-                    front.append(source_version)
-                    if source_version not in result: # First time we encounter this version. Due to breadth-first search, this must be part of the shortest path then.
-                        result[source_version] = neighbour
-            explored_versions.add(version)
+                    front.append((source_type, source_version))
+                    if (source_type, source_version) not in result: #First time we encounter this version. Due to breadth-first search, this must be part of the shortest path then.
+                        result[(source_type, source_version)] = upgrade_function
+            explored_versions.add((destination_type, destination_version))
 
         return result
 
