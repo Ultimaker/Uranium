@@ -80,7 +80,7 @@ class VersionUpgradeManager:
         upgrades = self._registry.getMetaData(version_upgrade_plugin.getId())["version_upgrade"]
 
         for source, destination in upgrades.items(): #Each conversion that this plug-in can perform.
-            source_type, source_version = source
+            source_type, source_version, get_version_function = source
             destination_type, destination_version, upgrade_function = destination
 
             #Fill in the dictionary representing the graph, if it doesn't have the keys yet.
@@ -88,7 +88,7 @@ class VersionUpgradeManager:
                 self._version_upgrades[destination_type] = {}
             if destination_version not in self._version_upgrades[destination_version]:
                 self._version_upgrades[destination_type][destination_version] = set()
-            self._version_upgrades[destination_type][destination_version].add((source_type, source_version, upgrade_function)) #Add the edge to the graph.
+            self._version_upgrades[destination_type][destination_version].add((source_type, source_version, upgrade_function, get_version_function)) #Add the edge to the graph.
 
     ##  For each version of a configuration type, finds the next step to take to
     #   upgrade as quickly as possible to the most recent version.
