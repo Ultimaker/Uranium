@@ -76,7 +76,8 @@ class TranslateTool(Tool):
 
         op = GroupedOperation()
         for selected_node in Selection.getAllSelectedObjects():
-            new_position = selected_node.getWorldPosition().set(y=float(x) + (new_position.x - bounding_box.center.x))
+            world_position = selected_node.getWorldPosition()
+            new_position = world_position.set(x=float(x) + (world_position.x - bounding_box.center.x))
             node_op = TranslateOperation(selected_node, new_position, set_position = True)
             op.addOperation(node_op)
         op.push()
@@ -92,7 +93,8 @@ class TranslateTool(Tool):
         for selected_node in Selection.getAllSelectedObjects():
             # Note; The switching of z & y is intentional. We display z as up for the user,
             # But store the data in openGL space.
-            new_position = selected_node.getWorldPosition().set(y=float(y) + (new_position.z - bounding_box.center.z))
+            world_position = selected_node.getWorldPosition()
+            new_position = world_position.set(z=float(y) + (world_position.z - bounding_box.center.z))
 
             node_op = TranslateOperation(selected_node, new_position, set_position = True)
             op.addOperation(node_op)
@@ -109,7 +111,8 @@ class TranslateTool(Tool):
         for selected_node in Selection.getAllSelectedObjects():
             # Note: The switching of z & y is intentional. We display z as up for the user,
             # But store the data in openGL space.
-            new_position = selected_node.getWorldPosition().set(y=float(z) + (new_position.y - bounding_box.bottom))
+            world_position = selected_node.getWorldPosition()
+            new_position = world_position.set(y=float(z) + (world_position.y - bounding_box.bottom))
             node_op = TranslateOperation(selected_node, new_position, set_position = True)
             op.addOperation(node_op)
         op.push()
