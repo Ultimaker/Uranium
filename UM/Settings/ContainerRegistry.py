@@ -3,8 +3,8 @@
 
 import os
 import re #For finding containers with asterisks in the constraints.
-import urllib
-import pickle
+import urllib #For ensuring container file names are proper file names
+import pickle #For serializing/deserializing Python classes to binary files
 
 from UM.PluginRegistry import PluginRegistry
 from UM.Resources import Resources, UnsupportedStorageTypeError
