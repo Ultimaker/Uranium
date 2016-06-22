@@ -12,6 +12,8 @@ from UM.Logger import Logger
 from UM.SaveFile import SaveFile
 from UM.Signal import Signal, signalemitter
 
+import UM.Dictionary
+
 from . import DefinitionContainer
 from . import InstanceContainer
 from . import ContainerStack
@@ -238,7 +240,8 @@ class ContainerRegistry:
                 Logger.logException("e", "An exception occurred trying to serialize container %s", instance.getId())
                 continue
 
-            file_name = urllib.parse.quote_plus(instance.getId()) + ".inst.cfg"
+            mime_type = self.getMimeTypeForContainer(type(instance))
+            file_name = urllib.parse.quote_plus(instance.getId()) + "." + mime_type.preferredSuffix
             path = Resources.getStoragePath(Resources.InstanceContainers, file_name)
             with SaveFile(path, "wt", -1, "utf-8") as f:
                 f.write(data)
@@ -256,7 +259,8 @@ class ContainerRegistry:
                 Logger.logException("e", "An exception occurred trying to serialize container %s", stack.getId())
                 continue
 
-            file_name = urllib.parse.quote_plus(stack.getId()) + ".stack.cfg"
+            mime_type = self.getMimeTypeForContainer(type(stack))
+            file_name = urllib.parse.quote_plus(stack.getId()) + "." + mime_type.preferredSuffix
             path = Resources.getStoragePath(Resources.ContainerStacks, file_name)
             with SaveFile(path, "wt", -1, "utf-8") as f:
                 f.write(data)
@@ -268,10 +272,11 @@ class ContainerRegistry:
                 # Serializing is not supported so skip this container
                 continue
             except Exception:
-                Logger.logException("e", "An exception occurred trying to serialize container %s", instance.getId())
+                Logger.logException("e", "An exception occurred trying to serialize container %s", definition.getId())
                 continue
 
-            file_name = urllib.parse.quote_plus(definition.getId()) + ".def.cfg"
+            mime_type = self.getMimeTypeForContainer(type(definition))
+            file_name = urllib.parse.quote_plus(definition.getId()) + "." + mime_type.preferredSuffix
             path = Resources.getStoragePath(Resources.DefinitionContainers, file_name)
             with SaveFile(path, "wt", -1, "utf-8") as f:
                 f.write(data)
@@ -298,6 +303,15 @@ class ContainerRegistry:
             i += 1 #Try next numbering.
             unique_name = "%s #%d" % (name, i) #Fill name like this: "Extruder #2".
         return unique_name
+
+    @classmethod
+    def getMimeTypeForContainer(cls, container_type):
+        mime_type_name = UM.Dictionary.findKey(cls.__mime_type_map, container_type)
+        if mime_type_name:
+            print(mime_type_name)
+            return MimeTypeDatabase.getMimeType(mime_type_name)
+
+        return None
 
     # Remove all files related to a container located in a storage path
     #
