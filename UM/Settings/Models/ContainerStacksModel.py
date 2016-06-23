@@ -9,12 +9,14 @@ from UM.Settings.ContainerStack import ContainerStack
 #   changed.
 class ContainerStacksModel(ListModel):
     NameRole = Qt.UserRole + 1
-    IdRole = Qt.UserRole + 3
+    IdRole = Qt.UserRole + 2
+    MetaDataRole = Qt.UserRole + 3
 
     def __init__(self, parent = None):
         super().__init__(parent)
         self.addRoleName(self.NameRole, "name")
         self.addRoleName(self.IdRole, "id")
+        self.addRoleName(self.IdRole, "metadata")
         self._container_stacks = ContainerRegistry.getInstance().findContainerStacks()
 
         # Listen to changes
@@ -45,9 +47,13 @@ class ContainerStacksModel(ListModel):
         self._container_stacks.sort(key = lambda i: i.getName())
 
         for container in self._container_stacks:
+            metadata = container.getMetaData().copy()
+            metadata["definition_name"] = container.getBottom().getName()
+
             container.nameChanged.connect(self._onContainerNameChanged)
             self.appendItem({"name": container.getName(),
-                             "id": container.getId()})
+                             "id": container.getId(),
+                             "metadata": metadata})
 
     ##  Set the filter of this model based on a string.
     #   \param filter_dict Dictionary to do the filtering by.
