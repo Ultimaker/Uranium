@@ -158,7 +158,7 @@ class VersionUpgradeManager:
         while len(front) > 0:
             destination_type, destination_version = front.popleft() #To make it a queue, pop on the opposite side of where you append!
             if (destination_type, destination_version) in self._version_upgrades: #We can upgrade to this version.
-                for source_type, source_version, upgrade_function, _ in self._version_upgrades[(destination_type, destination_version)]:
+                for source_type, source_version, upgrade_function in self._version_upgrades[(destination_type, destination_version)]:
                     if (source_type, source_version) in explored_versions:
                         continue
                     front.append((source_type, source_version))
