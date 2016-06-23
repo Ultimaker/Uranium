@@ -3,7 +3,7 @@ from UM.Preferences import Preferences
 
 from . import SettingVisibilityHandler
 
-class SettingPreferenceVisibilityHandler(SettingVisibilityHandler.SettingVisibilityHandler):
+class SettingPreferenceVisibilityHandler(SettingVisibilityHandler):
     def __init__(self, parent = None, *args, **kwargs):
         super().__init__(parent = parent, *args, **kwargs)
 
