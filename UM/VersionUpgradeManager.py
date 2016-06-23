@@ -10,6 +10,11 @@ from UM.PluginRegistry import PluginRegistry #To find plug-ins.
 from UM.Preferences import Preferences #To get the current preferences version.
 from UM.Resources import Resources #To load old versions from.
 from UM.Settings.InstanceContainer import InstanceContainer #To get the current instance container version.
+import UM.Application #To get the name of the application for a message.
+import UM.i18n #To translate the "upgrade succeeded" message.
+import UM.Message #To show the "upgrade succeeded" message.
+
+catalogue = UM.i18n.i18nCatalog("uranium")
 
 ##  Regulates the upgrading of configuration from one application version to the
 #   next.
@@ -53,6 +58,7 @@ class VersionUpgradeManager:
     #   can be performed.
     def upgrade(self):
         Logger.log("i", "Looking for old configuration files to upgrade.")
+        upgraded = False #Did we upgrade something?
         paths = self._findShortestUpgradePaths()
         for old_configuration_type, storage_paths in self._storage_paths.items():
             for storage_path in storage_paths:
@@ -83,6 +89,7 @@ class VersionUpgradeManager:
                         configuration_type = new_type
                     else: #Upgrade successful (without breaking).
                         if version != old_version:
+                            upgraded = True
                             Logger.log("i", "Upgraded %s to version %s.", configuration_file, str(version))
                             self._storeOldFile(storage_path, configuration_file, old_version)
                             try:
@@ -90,6 +97,9 @@ class VersionUpgradeManager:
                                     file_handle.write(configuration) #Save the new file.
                             except IOError:
                                 Logger.log("w", "Couldn't write new configuration file to %s.", configuration_file_absolute)
+        if upgraded:
+            message = UM.Message(text=catalogue.i18nc("@info:version-upgrade", "A configuration from an older version of {0} was imported.", UM.Application.getInstance().getApplicationName()))
+            message.show()
 
     # private:
 
