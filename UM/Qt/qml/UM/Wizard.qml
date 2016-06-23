@@ -52,13 +52,11 @@ UM.Dialog
     function appendPage(page, title)
     {
         pagesModel.append({"page": page, "title": title})
-        //page.onCompleted.connect(base.nextPage())
     }
 
     function insertPage(page, title, position)
     {
         pagesModel.insert(position, {"page": page, "title": title})
-        //page.onCompleted.connect(base.nextPage())
     }
 
     function removePage(index)
