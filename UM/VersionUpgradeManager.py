@@ -114,16 +114,6 @@ class VersionUpgradeManager:
         if "version_upgrade" not in meta_data:
             Logger.log("w", "Version upgrade plug-in %s doesn't define any configuration types it can upgrade.", version_upgrade_plugin.getPluginId())
             return #Don't need to add.
-        upgrades = self._registry.getMetaData(version_upgrade_plugin.getPluginId())["version_upgrade"]
-
-        for source, destination in upgrades.items(): #Each conversion that this plug-in can perform.
-            source_type, source_version, get_version_function = source
-            destination_type, destination_version, upgrade_function = destination
-
-            #Fill in the dictionary representing the graph, if it doesn't have the keys yet.
-            if (destination_type, destination_version) not in self._version_upgrades:
-                self._version_upgrades[(destination_type, destination_version)] = set()
-            self._version_upgrades[(destination_type, destination_version)].add((source_type, source_version, upgrade_function, get_version_function)) #Add the edge to the graph.
 
         #Additional metadata about the source types: How to recognise the version and where to find them.
         if "sources" in meta_data:
@@ -134,6 +124,16 @@ class VersionUpgradeManager:
                     if configuration_type not in self._storage_paths:
                         self._storage_paths[configuration_type] = set()
                     self._storage_paths[configuration_type] |= source["location"]
+
+        upgrades = self._registry.getMetaData(version_upgrade_plugin.getPluginId())["version_upgrade"]
+        for source, destination in upgrades.items(): #Each conversion that this plug-in can perform.
+            source_type, source_version = source
+            destination_type, destination_version, upgrade_function = destination
+
+            #Fill in the dictionary representing the graph, if it doesn't have the keys yet.
+            if (destination_type, destination_version) not in self._version_upgrades:
+                self._version_upgrades[(destination_type, destination_version)] = set()
+            self._version_upgrades[(destination_type, destination_version)].add((source_type, source_version, upgrade_function)) #Add the edge to the graph.
 
     ##  Finds the next step to take to upgrade each combination of configuration
     #   type and version.
