@@ -63,12 +63,16 @@ class VersionUpgradeManager:
                 storage_path_absolute = os.path.relpath(storage_path, Resources.getConfigStoragePath())
                 for configuration_file in self._getFilesInDirectory(storage_path_absolute, exclude_paths = ["old"]):
                     configuration_file_absolute = os.path.join(storage_path_absolute, configuration_file)
+
+                    #Read the old file.
                     try:
                         with open(configuration_file_absolute) as file_handle:
                             configuration = file_handle.read()
                     except IOError:
                         Logger.log("w", "Can't open configuration file %s for reading.", configuration_file_absolute)
                         continue
+
+                    #Get the version number of the old file.
                     try:
                         old_version = self._get_version_functions[old_configuration_type](configuration)
                     except: #Version getter gives an exception. Not a valid file. Can't upgrade it then.
@@ -76,6 +80,8 @@ class VersionUpgradeManager:
                         continue
                     version = old_version
                     configuration_type = old_configuration_type
+
+                    #Keep converting the file until it's at one of the current versions.
                     while (configuration_type, version) not in self._current_versions:
                         new_type, new_version, upgrade = paths[(configuration_type, version)]
                         try:
