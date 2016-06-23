@@ -2,7 +2,6 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 from UM.Scene.ToolHandle import ToolHandle
-from UM.Mesh.MeshData import MeshData
 from UM.Mesh.MeshBuilder import MeshBuilder
 from UM.Math.Vector import Vector
 
@@ -80,7 +79,7 @@ class ScaleToolHandle(ToolHandle):
             center = Vector(0, 0, self._handle_position),
             color = ToolHandle.ZAxisColor
         )
-        self.setSolidMesh(mb.getData())
+        self.setSolidMesh(mb.build())
 
         #SELECTIONMESH -> LINES
         mb = MeshBuilder()
@@ -141,4 +140,4 @@ class ScaleToolHandle(ToolHandle):
             color = ToolHandle.ZAxisColor
         )
 
-        self.setSelectionMesh(mb.getData())
+        self.setSelectionMesh(mb.build())

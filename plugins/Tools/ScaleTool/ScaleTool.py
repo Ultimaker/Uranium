@@ -7,6 +7,7 @@ from UM.Scene.ToolHandle import ToolHandle
 from UM.Scene.Selection import Selection
 from UM.Math.Plane import Plane
 from UM.Math.Vector import Vector
+from UM.Math.Float import Float
 
 from UM.Operations.ScaleOperation import ScaleOperation
 from UM.Operations.GroupedOperation import GroupedOperation
@@ -14,6 +15,8 @@ from UM.Operations.SetTransformOperation import SetTransformOperation
 from UM.Operations.ScaleToBoundsOperation import ScaleToBoundsOperation
 
 from . import ScaleToolHandle
+
+DIMENSION_TOLERANCE = 0.0001    # Tolerance value used for comparing dimensions from the UI.
 
 ##  Provides the tool to scale meshes and groups
 
@@ -127,15 +130,13 @@ class ScaleTool(Tool):
                         scale_change = Vector(0.0, 0.0, 0.0)
                         if self._non_uniform_scale:
                             if self.getLockedAxis() == ToolHandle.XAxis:
-                                scale_change.setX(scale_factor)
+                                scale_change = scale_change.set(x=scale_factor)
                             elif self.getLockedAxis() == ToolHandle.YAxis:
-                                scale_change.setY(scale_factor)
+                                scale_change = scale_change.set(y=scale_factor)
                             elif self.getLockedAxis() == ToolHandle.ZAxis:
-                                scale_change.setZ(scale_factor)
+                                scale_change = scale_change.set(z=scale_factor)
                         else:
-                            scale_change.setX(scale_factor)
-                            scale_change.setY(scale_factor)
-                            scale_change.setZ(scale_factor)
+                            scale_change = Vector(x=scale_factor, y=scale_factor, z=scale_factor)
 
                         # Scale around the saved centeres of all selected nodes
                         op = GroupedOperation()
@@ -256,11 +257,10 @@ class ScaleTool(Tool):
     def setObjectWidth(self, width):
         obj = Selection.getSelectedObject(0)
         if obj:
-            obj_scale = self._getScaleInWorldCoordinates(obj)
-            obj_width = obj.getBoundingBox().width / obj_scale.x
-            target_scale = float(width) / obj_width
-            if obj_scale.x != target_scale:
-                scale_factor = abs(target_scale / obj_scale.x)
+            width = float(width)
+            obj_width = obj.getBoundingBox().width
+            if not Float.fuzzyCompare(obj_width, width, DIMENSION_TOLERANCE):
+                scale_factor = width / obj_width
                 if self._non_uniform_scale:
                     scale_vector = Vector(scale_factor, 1, 1)
                 else:
@@ -273,11 +273,10 @@ class ScaleTool(Tool):
     def setObjectHeight(self, height):
         obj = Selection.getSelectedObject(0)
         if obj:
-            obj_scale = self._getScaleInWorldCoordinates(obj)
-            obj_height = obj.getBoundingBox().height / obj_scale.y
-            target_scale = float(height) / obj_height
-            if obj_scale.y != target_scale:
-                scale_factor = abs(target_scale / obj_scale.y)
+            height = float(height)
+            obj_height = obj.getBoundingBox().height
+            if not Float.fuzzyCompare(obj_height, height, DIMENSION_TOLERANCE):
+                scale_factor = height / obj_height
                 if self._non_uniform_scale:
                     scale_vector = Vector(1, scale_factor, 1)
                 else:
@@ -290,11 +289,10 @@ class ScaleTool(Tool):
     def setObjectDepth(self, depth):
         obj = Selection.getSelectedObject(0)
         if obj:
-            obj_scale = self._getScaleInWorldCoordinates(obj)
-            obj_depth = obj.getBoundingBox().depth / obj_scale.z
-            target_scale = float(depth) / obj_depth
-            if obj_scale.z != target_scale:
-                scale_factor = abs(target_scale / obj_scale.z)
+            depth = float(depth)
+            obj_depth = obj.getBoundingBox().depth
+            if not Float.fuzzyCompare(obj_depth, depth, DIMENSION_TOLERANCE):
+                scale_factor = depth / obj_depth
                 if self._non_uniform_scale:
                     scale_vector = Vector(1, 1, scale_factor)
                 else:
