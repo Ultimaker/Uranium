@@ -123,7 +123,7 @@ class VersionUpgradeManager:
 
         #Additional metadata about the source types: How to recognise the version and where to find them.
         if "sources" in meta_data:
-            for configuration_type, source in meta_data["sources"].items:
+            for configuration_type, source in meta_data["sources"].items():
                 if "get_version" in source:
                     self._get_version_functions[configuration_type] = source["get_version"] #May overwrite from other plug-ins that can also load the same configuration type.
                 if "location" in source:
