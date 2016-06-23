@@ -16,3 +16,19 @@ class VersionUpgrade(PluginObject):
     ##  Initialises a version upgrade plugin instance.
     def __init__(self):
         super().__init__()
+
+##  An exception to throw if the formatting of a file is wrong.
+class FormatException(Exception):
+    ##  Creates the exception instance.
+    #
+    #   \param message A message indicating what went wrong.
+    #   \param file The file it went wrong in.
+    def __init__(self, message, file = ""):
+        self._message = message
+        self._file = file
+
+    ##  Gives a human-readable representation of this exception.
+    #
+    #   \return A human-readable representation of this exception.
+    def __str__(self):
+        return "Exception parsing " + self._file + ": " + self._message
