@@ -110,11 +110,11 @@ class VersionUpgradeManager:
     #   \param version_upgrade_plugin The plug-in object of the version upgrade
     #   plug-in.
     def _addVersionUpgrade(self, version_upgrade_plugin):
-        meta_data = self._registry.getMetaData(version_upgrade_plugin.getId())
+        meta_data = self._registry.getMetaData(version_upgrade_plugin.getPluginId())
         if "version_upgrade" not in meta_data:
-            Logger.log("w", "Version upgrade plug-in %s doesn't define any configuration types it can upgrade.", version_upgrade_plugin.getId())
+            Logger.log("w", "Version upgrade plug-in %s doesn't define any configuration types it can upgrade.", version_upgrade_plugin.getPluginId())
             return #Don't need to add.
-        upgrades = self._registry.getMetaData(version_upgrade_plugin.getId())["version_upgrade"]
+        upgrades = self._registry.getMetaData(version_upgrade_plugin.getPluginId())["version_upgrade"]
 
         for source, destination in upgrades.items(): #Each conversion that this plug-in can perform.
             source_type, source_version, get_version_function = source
