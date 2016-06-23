@@ -3,7 +3,8 @@
 
 import os
 import re #For finding containers with asterisks in the constraints.
-import urllib
+import urllib #For ensuring container file names are proper file names
+import pickle #For serializing/deserializing Python classes to binary files
 
 from UM.PluginRegistry import PluginRegistry
 from UM.Resources import Resources, UnsupportedStorageTypeError
@@ -46,6 +47,8 @@ class ContainerRegistry:
         self._emptyInstanceContainer = _EmptyInstanceContainer("empty")
 
         self._containers = [ self._emptyInstanceContainer ]
+
+        self._id_container_cache = {}
 
         self._resource_types = [Resources.DefinitionContainers]
 
@@ -93,6 +96,13 @@ class ContainerRegistry:
     #   list if nothing was found.
     def findContainers(self, container_type = None, **kwargs):
         containers = []
+
+        if len(kwargs) == 1 and "id" in kwargs:
+            # If we are just searching for a single container by ID, look it up from the container cache
+            container = self._id_container_cache.get(kwargs.get("id"))
+            if container:
+                return [ container ]
+
         for container in self._containers:
             if container_type and not isinstance(container, container_type):
                 continue
@@ -163,40 +173,65 @@ class ContainerRegistry:
     ##  Load all available definition containers, instance containers and
     #   container stacks.
     #
-    #   If this function is called again, it will clear the old data and reload.
+    #   \note This method does not clear the internal list of containers. This means that any containers
+    #   that were already added when the first call to this method happened will not be re-added.
     def load(self):
         files = []
-        files_resource_type = []
         for resource_type in self._resource_types:
             resources = Resources.getAllResourcesOfType(resource_type)
-            files.extend(resources)
-            files_resource_type.extend([resource_type]*len(resources))
 
-        for file_path, resource_type in zip(files, files_resource_type):
             try:
-                mime = MimeTypeDatabase.getMimeTypeForFile(file_path)
+                resource_storage_path = Resources.getStoragePathForType(resource_type)
+            except UnsupportedStorageTypeError:
+                resource_storage_path = ""
+
+            # Pre-process the list of files to insert relevant data
+            # Most importantly, we need to ensure the loading order is DefinitionContainer, InstanceContainer, ContainerStack
+            for path in resources:
+                mime = MimeTypeDatabase.getMimeTypeForFile(path)
                 container_type = self.__mime_type_map.get(mime.name)
-                container_id = mime.stripExtension(os.path.basename(file_path))
-
-                ## Ensure that all special characters are encoded back.
-                container_id = urllib.parse.unquote_plus(container_id)
-
-                read_only = True
-                try:
-                    read_only = os.path.dirname(file_path) != (Resources.getStoragePathForType(resource_type))
-                except UnsupportedStorageTypeError:
-                    pass
-
-                if container_type is None:
-                    Logger.log("w", "Unable to detect container type for %s", mime.name)
+                if not container_type:
+                    Logger.log("w", "Could not determine container type for file %s, ignoring", path)
                     continue
+
+                type_priority = 2
+
+                if issubclass(container_type, DefinitionContainer.DefinitionContainer):
+                    type_priority = 0
+
+                if issubclass(container_type, InstanceContainer.InstanceContainer):
+                    type_priority = 1
+
+                # Since we have the mime type and resource type here, process these two properties so we do not
+                # need to look up mime types etc. again.
+                container_id = urllib.parse.unquote_plus(mime.stripExtension(os.path.basename(path)))
+                read_only = os.path.dirname(path) != resource_storage_path
+
+                files.append((type_priority, container_id, path, read_only, container_type))
+
+        # Sort the list of files by type_priority so we can ensure correct loading order.
+        files = sorted(files, key = lambda i: i[0])
+
+        for _, container_id, file_path, read_only, container_type in files:
+            if container_id in self._id_container_cache:
+                continue
+
+            try:
+                if issubclass(container_type, DefinitionContainer.DefinitionContainer):
+                    definition = self._loadCachedDefinition(container_id, file_path)
+                    if definition:
+                        self.addContainer(definition)
+                        continue
 
                 new_container = container_type(container_id)
                 with open(file_path, encoding = "utf-8") as f:
                     new_container.deserialize(f.read())
                 new_container.setReadOnly(read_only)
-                self._containers.append(new_container)
-                self.containerAdded.emit(new_container)
+
+                if issubclass(container_type, DefinitionContainer.DefinitionContainer):
+                    self._saveCachedDefinition(new_container)
+
+                self.addContainer(new_container)
             except Exception as e:
                 Logger.logException("e", "Could not deserialize container %s", container_id)
 
@@ -207,6 +242,7 @@ class ContainerRegistry:
             return
 
         self._containers.append(container)
+        self._id_container_cache[container.getId()] = container
         self.containerAdded.emit(container)
 
     def removeContainer(self, container_id):
@@ -215,6 +251,7 @@ class ContainerRegistry:
             container = containers[0]
 
             self._containers.remove(container)
+            del self._id_container_cache[container.id]
             self._deleteFiles(container)
             self.containerRemoved.emit(container)
 
@@ -323,6 +360,46 @@ class ContainerRegistry:
                         os.remove(path)
                 except Exception:
                     continue
+
+    # Load a binary cached version of a DefinitionContainer
+    def _loadCachedDefinition(self, definition_id, path):
+        try:
+            cache_path = Resources.getPath(Resources.Cache, "definitions", definition_id)
+
+            cache_mtime = os.path.getmtime(cache_path)
+            definition_mtime = os.path.getmtime(path)
+
+            if definition_mtime > cache_mtime:
+                # The definition is newer than the cached version, so ignore the cached version.
+                Logger.log("d", "Definition file %s is newer than cache, ignoring cached version", path)
+                return None
+
+            definition = None
+            with open(cache_path, "rb") as f:
+                definition = pickle.load(f)
+
+            for file_path in definition.getInheritedFiles():
+                if os.path.getmtime(file_path) > cache_mtime:
+                    Logger.log("d", "Definition file %s is newer than cache, ignoring cached version", file_path)
+                    return None
+
+            return definition
+        except FileNotFoundError:
+            return None
+        except Exception as e:
+            # We could not load a cached version for some reason. Ignore it.
+            Logger.logException("d", "Could not load cached definition for %s", path)
+            return None
+
+    # Store a cached version of a DefinitionContainer
+    def _saveCachedDefinition(self, definition):
+        cache_path = Resources.getStoragePath(Resources.Cache, "definitions", definition.id)
+
+        # Ensure the cache path exists
+        os.makedirs(os.path.dirname(cache_path), exist_ok=True)
+
+        with open(cache_path, "wb") as f:
+            pickle.dump(definition, f)
 
     ##  Get the singleton instance for this class.
     @classmethod
