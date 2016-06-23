@@ -38,7 +38,9 @@ class VersionUpgradeManager:
     #   \param current_versions For each preference type currently in use, the
     #   current version that is in use.
     def __init__(self, current_versions):
-        self._version_upgrades = {} #For each upgrade type and each version, gives a set of upgrade plug-ins that can convert them to something else.
+        self._version_upgrades = {} #For each config type and each version, gives a set of upgrade plug-ins that can convert them to something else.
+        self._get_version_functions = {} #For each config type, gives a function with which to get the version number from those files.
+        self._storage_paths = {} #For each config type, a set of storage paths to search for old config files.
         self._current_versions = current_versions #To know which preference versions and types to upgrade to.
 
         self._registry = PluginRegistry.getInstance()
@@ -50,17 +52,42 @@ class VersionUpgradeManager:
     #   The upgrade plug-ins must all be loaded at this point, or no upgrades
     #   can be performed.
     def upgrade(self):
-        self._upgradeConfigurationType(new_version = InstanceContainer.Version,
-                                       configuration_type = "machine_instance",
-                                       resource_type = Resources.MachineInstances,
-                                       upgrade_method_name = "upgradeMachineInstance",
-                                       get_old_version = self._getMachineInstanceVersion)
-
-        self._upgradeConfigurationType(new_version = Preferences.Version,
-                                       configuration_type = "preferences",
-                                       resource_type = Resources.Preferences,
-                                       upgrade_method_name = "upgradePreferences",
-                                       get_old_version = self._getPreferencesVersion)
+        paths = self._findShortestUpgradePaths()
+        for old_configuration_type, storage_paths in self._storage_paths.items():
+            for storage_path in storage_paths:
+                storage_path_absolute = os.path.relpath(storage_path, Resources.getConfigStoragePath())
+                for configuration_file in self._getFilesInDirectory(storage_path_absolute, exclude_paths = ["old"]):
+                    configuration_file_absolute = os.path.join(storage_path_absolute, configuration_file)
+                    try:
+                        with open(configuration_file_absolute) as file_handle:
+                            configuration = file_handle.read()
+                    except IOError:
+                        Logger.log("w", "Can't open configuration file %s for reading.", configuration_file_absolute)
+                        continue
+                    try:
+                        old_version = self._get_version_functions[old_configuration_type](configuration)
+                    except: #Version getter gives an exception. Not a valid file. Can't upgrade it then.
+                        Logger.log("w", "Invalid %s file: %s", old_configuration_type, configuration_file_absolute)
+                        continue
+                    version = old_version
+                    configuration_type = old_configuration_type
+                    while (configuration_type, version) not in self._current_versions:
+                        new_type, new_version, upgrade = paths[(configuration_type, version)]
+                        try:
+                            configuration = upgrade(configuration)
+                        except Exception as e:
+                            Logger.log("w", "Exception in %s upgrade with %s: %s", old_configuration_type, upgrade.__module__, str(e))
+                            break #Continue with next file.
+                        version = new_version
+                        configuration_type = new_type
+                    else: #Upgrade successful (without breaking).
+                        if version != old_version:
+                            self._storeOldFile(storage_path, configuration_file, old_version) #TODO
+                            try:
+                                with open(os.path.join(configuration_file), "a") as file_handle:
+                                    file_handle.write(configuration) #Save the new file.
+                            except IOError:
+                                Logger.log("w", "Couldn't write new configuration file to %s.", configuration_file_absolute)
 
     # private:
 
@@ -88,6 +115,16 @@ class VersionUpgradeManager:
                 self._version_upgrades[(destination_type, destination_version)] = set()
             self._version_upgrades[(destination_type, destination_version)].add((source_type, source_version, upgrade_function, get_version_function)) #Add the edge to the graph.
 
+        #Additional metadata about the source types: How to recognise the version and where to find them.
+        if "sources" in meta_data:
+            for configuration_type, source in meta_data["sources"].items:
+                if "get_version" in source:
+                    self._get_version_functions[configuration_type] = source["get_version"] #May overwrite from other plug-ins that can also load the same configuration type.
+                if "location" in source:
+                    if configuration_type not in self._storage_paths:
+                        self._storage_paths[configuration_type] = set()
+                    self._storage_paths[configuration_type] |= source["location"]
+
     ##  Finds the next step to take to upgrade each combination of configuration
     #   type and version.
     #
@@ -110,7 +147,7 @@ class VersionUpgradeManager:
                         continue
                     front.append((source_type, source_version))
                     if (source_type, source_version) not in result: #First time we encounter this version. Due to breadth-first search, this must be part of the shortest path then.
-                        result[(source_type, source_version)] = upgrade_function
+                        result[(source_type, source_version)] = (destination_type, destination_version, upgrade_function)
             explored_versions.add((destination_type, destination_version))
 
         return result
@@ -143,7 +180,7 @@ class VersionUpgradeManager:
     #   \param exclude_paths (Optional) A list of paths, relative to the
     #   specified directory, to directories which must be excluded from the
     #   result.
-    #   \return The filename of each file in the specified directory.
+    #   \return The filename of each file relative to the specified directory.
     def _getFilesInDirectory(self, directory, exclude_paths = None):
         if not exclude_paths:
             exclude_paths = []
@@ -151,7 +188,7 @@ class VersionUpgradeManager:
         for (path, directory_names, filenames) in os.walk(directory):
             directory_names = [directory_name for directory_name in directory_names if os.path.join(path, directory_name) not in exclude_paths] # Prune the exclude paths.
             for filename in filenames:
-                yield os.path.join(os.path.relpath(path, directory), filename)
+                yield os.path.join(directory, filename)
 
     ##  Gets the version of a machine instance file.
     #
@@ -197,43 +234,3 @@ class VersionUpgradeManager:
                 pass
             os.rename(os.path.join(resource_directory,                          relative_path),
                       os.path.join(resource_directory, "old", str(old_version), relative_path)) # Try again!
-
-    ##  Performs the upgrade process of a single configuration type.
-    #
-    #   \param new_version The version to upgrade to.
-    #   \param configuration_type The configuration type to upgrade, as
-    #   specified by the upgrade plug-ins.
-    #   \param resource_type The resource type of the files to upgrade. This is
-    #   required to know where the configuration files are stored.
-    #   \param upgrade_function_name The name of the method to upgrade the file
-    #   with. This is the name of the function that is called on the version
-    #   upgrade plug-in.
-    #   \param get_old_version A function pointer to indicate how to get the
-    #   version number of this file.
-    def _upgradeConfigurationType(self, new_version, configuration_type, resource_type, upgrade_method_name, get_old_version):
-        paths = self._findShortestUpgradePaths(configuration_type, new_version)
-        base_directory = Resources.getStoragePathForType(resource_type)
-        for configuration_file in self._getFilesInDirectory(base_directory, exclude_paths = ["old"]):
-            with open(os.path.join(base_directory, configuration_file)) as file_handle:
-                configuration = file_handle.read()
-            try:
-                old_version = get_old_version(configuration)
-            except: # Not a valid file. Can't upgrade it then.
-                Logger.log("w", "Invalid %s file: %s", configuration_type, configuration_file)
-                continue
-            if old_version not in paths: # No upgrade to bring this up to the most recent version.
-                continue
-            version = old_version
-            while version != new_version:
-                upgrade = paths[version] # Get the upgrade to apply from this place.
-                try:
-                    configuration = getattr(upgrade, upgrade_method_name)(configuration) # Do the actual upgrade.
-                except Exception as e:
-                    Logger.log("w", "Exception in " + configuration_type + " upgrade with " + upgrade.getPluginId() + ": " + str(e))
-                    break # Continue with next file.
-                version = self._registry.getMetaData(upgrade.getPluginId())["version_upgrade"][configuration_type]["to"]
-            else:
-                if version != old_version:
-                    self._storeOldFile(base_directory, configuration_file, old_version)
-                    with open(os.path.join(base_directory, configuration_file), "a") as file_handle:
-                        file_handle.write(configuration) # Save the new file.
