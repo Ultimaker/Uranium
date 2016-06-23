@@ -4,13 +4,10 @@
 from UM.Tool import Tool
 from UM.Event import Event, MouseEvent
 
-from UM.Math.Plane import Plane
 from UM.Math.Vector import Vector
-from UM.Math.Float import Float
 
 from UM.Operations.MirrorOperation import MirrorOperation
 from UM.Operations.GroupedOperation import GroupedOperation
-from UM.Application import Application
 
 from UM.Scene.Selection import Selection
 from UM.Scene.ToolHandle import ToolHandle
@@ -50,26 +47,27 @@ class MirrorTool(Tool):
                 op = None
                 if Selection.getCount() == 1:
                     node = Selection.getSelectedObject(0)
-                    mirror = Vector(1,1,1)
                     if self.getLockedAxis() == ToolHandle.XAxis:
-                        mirror.setX(-1)
+                        mirror = Vector(-1, 1, 1)
                     elif self.getLockedAxis() == ToolHandle.YAxis:
-                        mirror.setY(-1)
+                        mirror = Vector(1, -1, 1)
                     elif self.getLockedAxis() == ToolHandle.ZAxis:
-                        mirror.setZ(-1)
-
+                        mirror = Vector(1, 1, -1)
+                    else:
+                        mirror = Vector(1, 1, 1)
                     op = MirrorOperation(node, mirror, mirror_around_center = True)
                 else:
                     op = GroupedOperation()
 
                     for node in Selection.getAllSelectedObjects():
-                        mirror = Vector(1,1,1)
                         if self.getLockedAxis() == ToolHandle.XAxis:
-                            mirror.setX(-1)
+                            mirror = Vector(-1, 1, 1)
                         elif self.getLockedAxis() == ToolHandle.YAxis:
-                            mirror.setY(-1)
+                            mirror = Vector(1, -1, 1)
                         elif self.getLockedAxis() == ToolHandle.ZAxis:
-                            mirror.setZ(-1)
+                            mirror = Vector(1, 1, -1)
+                        else:
+                            mirror = Vector(1, 1, 1)
 
                         op.addOperation(MirrorOperation(node, mirror, mirror_around_center = True))
 

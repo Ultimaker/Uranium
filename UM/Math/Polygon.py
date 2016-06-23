@@ -7,6 +7,9 @@ import time
 from UM.Math.Float import Float #For fuzzy comparison of edge cases.
 from UM.Math.LineSegment import LineSegment #For line-line intersections for computing polygon intersections.
 from UM.Math.Vector2 import Vector2 #For constructing line segments for polygon intersections.
+from UM.Logger import Logger
+
+from UM.Math import NumPyUtil
 
 try:
     import scipy.spatial
@@ -15,19 +18,28 @@ except ImportError:
     has_scipy = False
 
 
-##  A class representing an arbitrary 2-dimensional polygon.
+##  A class representing an immutable arbitrary 2-dimensional polygon.
 class Polygon:
     def __init__(self, points = None):
-        self._points = points
+        self._points = NumPyUtil.immutableNDArray(points)
+
+    def __eq__(self, other):
+        if self is other:
+            return True
+        if type(other) is not Polygon:
+            return False
+
+        point_count = len(self._points) if self._points is not None else 0
+        point_count2 = len(other.getPoints()) if other.getPoints() is not None else 0
+        if point_count != point_count2:
+            return False
+        return numpy.array_equal(self._points, other.getPoints())
 
     def isValid(self):
         return self._points is not None and len(self._points)
 
     def getPoints(self):
         return self._points
-
-    def setPoints(self, points):
-        self._points = points
 
     ##  Project this polygon on a line described by a normal.
     #
@@ -55,7 +67,7 @@ class Polygon:
             return #Axis has no direction. Can't expect us to mirror anything!
         axis_direction /= numpy.linalg.norm(axis_direction) #Normalise the direction.
         if len(self._points) == 0: #No points to mirror. We can skip this altogether.
-            return
+            return self
 
         #In order to be able to mirror points around an arbitrary axis, we have to normalize the axis and all points such that the axis goes through the origin.
         point_matrix = numpy.matrix(self._points)
@@ -75,7 +87,7 @@ class Polygon:
 
         #Shift the points back to the original coordinate space before the axis was normalised to the origin.
         point_matrix += point_on_axis
-        self._points = point_matrix.getA()[::-1]
+        return Polygon(point_matrix.getA()[::-1])
 
     ##  Computes the intersection of the convex hulls of this and another
     #   polygon.
