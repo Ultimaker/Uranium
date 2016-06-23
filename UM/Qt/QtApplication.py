@@ -54,6 +54,14 @@ class QtApplication(QApplication, Application):
             Logger.log("i", "Adding QT5 plugin path: %s" % (plugin_path))
             QCoreApplication.addLibraryPath(plugin_path)
 
+        self._version_upgrade_manager = VersionUpgradeManager(
+            {
+                "instance_container": UM.Settings.InstanceContainer.Version,
+                "container_stack": UM.Settings.ContainerStack.Version,
+                "preferences": UM.Preferences.Version
+            }
+        )
+
         os.environ["QSG_RENDER_LOOP"] = "basic"
         super().__init__(sys.argv, **kwargs)
 
@@ -91,13 +99,6 @@ class QtApplication(QApplication, Application):
         self._plugin_registry.checkRequiredPlugins(self.getRequiredPlugins())
 
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Updating configuration..."))
-        self._version_upgrade_manager = VersionUpgradeManager(
-            {
-                "instance_container": UM.Settings.InstanceContainer.Version,
-                "container_stack": UM.Settings.ContainerStack.Version,
-                "preferences": UM.Preferences.Version
-            }
-        )
         self._version_upgrade_manager.upgrade()
 
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Loading preferences..."))
