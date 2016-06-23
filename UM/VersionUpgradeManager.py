@@ -52,6 +52,7 @@ class VersionUpgradeManager:
     #   The upgrade plug-ins must all be loaded at this point, or no upgrades
     #   can be performed.
     def upgrade(self):
+        Logger.log("i", "Looking for old configuration files to upgrade.")
         paths = self._findShortestUpgradePaths()
         for old_configuration_type, storage_paths in self._storage_paths.items():
             for storage_path in storage_paths:
@@ -82,7 +83,8 @@ class VersionUpgradeManager:
                         configuration_type = new_type
                     else: #Upgrade successful (without breaking).
                         if version != old_version:
-                            self._storeOldFile(storage_path, configuration_file, old_version) #TODO
+                            Logger.log("i", "Upgraded %s to version %s.", configuration_file, str(version))
+                            self._storeOldFile(storage_path, configuration_file, old_version)
                             try:
                                 with open(os.path.join(configuration_file), "a") as file_handle:
                                     file_handle.write(configuration) #Save the new file.
