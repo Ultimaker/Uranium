@@ -16,7 +16,7 @@ class ContainerStacksModel(ListModel):
         super().__init__(parent)
         self.addRoleName(self.NameRole, "name")
         self.addRoleName(self.IdRole, "id")
-        self.addRoleName(self.IdRole, "metadata")
+        self.addRoleName(self.MetaDataRole, "metadata")
         self._container_stacks = ContainerRegistry.getInstance().findContainerStacks()
 
         # Listen to changes
