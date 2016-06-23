@@ -48,7 +48,8 @@ class ContainerStacksModel(ListModel):
 
         for container in self._container_stacks:
             metadata = container.getMetaData().copy()
-            metadata["definition_name"] = container.getBottom().getName()
+            if container.getBottom():
+                metadata["definition_name"] = container.getBottom().getName()
 
             container.nameChanged.connect(self._onContainerNameChanged)
             self.appendItem({"name": container.getName(),
