@@ -345,7 +345,6 @@ class ContainerRegistry:
     def getMimeTypeForContainer(cls, container_type):
         mime_type_name = UM.Dictionary.findKey(cls.__mime_type_map, container_type)
         if mime_type_name:
-            print(mime_type_name)
             return MimeTypeDatabase.getMimeType(mime_type_name)
 
         return None
