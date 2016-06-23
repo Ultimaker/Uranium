@@ -7,9 +7,7 @@ import os #To get the configuration file names and to rename files.
 
 from UM.Logger import Logger
 from UM.PluginRegistry import PluginRegistry #To find plug-ins.
-from UM.Preferences import Preferences #To get the current preferences version.
 from UM.Resources import Resources #To load old versions from.
-from UM.Settings.InstanceContainer import InstanceContainer #To get the current instance container version.
 import UM.Application #To get the name of the application for a message.
 import UM.i18n #To translate the "upgrade succeeded" message.
 import UM.Message #To show the "upgrade succeeded" message.
