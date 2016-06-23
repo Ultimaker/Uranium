@@ -25,36 +25,6 @@ PreferencesPage
     }
     resetEnabled: true;
 
-    function updateToggleVisibleSettings()
-    {
-        var typeRoleId = settingsListView.model.roleId("type");
-        var visibleRoleId = settingsListView.model.roleId("visible");
-        var all_visible = true;
-        var all_hidden = true;
-        for(var i = 0; i < settingsListView.model.rowCount(); i++) {
-            var type = settingsListView.model.data(settingsListView.model.index(i,0), typeRoleId);
-            var visible = settingsListView.model.data(settingsListView.model.index(i,0), visibleRoleId);
-            if(type && type != "category") {
-                if(visible) {
-                    all_hidden = false;
-                } else {
-                    all_visible = false;
-                }
-                if(!all_hidden && !all_visible) {
-                    toggleVisibleSettings.partiallyCheckedEnabled = true
-                    toggleVisibleSettings.checkedState = Qt.PartiallyChecked
-                    return
-                }
-            }
-        }
-        toggleVisibleSettings.partiallyCheckedEnabled = false
-        if(all_visible) {
-            toggleVisibleSettings.checkedState = Qt.Checked
-        } else {
-            toggleVisibleSettings.checkedState = Qt.Unchecked
-        }
-    }
-
     Item
     {
         id: base;
@@ -70,21 +40,37 @@ PreferencesPage
                 leftMargin: UM.Theme.getSize("default_margin").width
             }
             text: catalog.i18nc("@label:textbox", "Check all")
-            checkedState: Qt.PartiallyChecked
-            partiallyCheckedEnabled: true
-            onClicked:
+            checkedState:
             {
-                if(toggleVisibleSettings.partiallyCheckedEnabled) {
-                    toggleVisibleSettings.checked = true
-                    toggleVisibleSettings.partiallyCheckedEnabled = false
+                if(definitionsModel.visibleCount == definitionsModel.categoryCount)
+                {
+                    return Qt.Unchecked
                 }
-                var keys = [];
-                var keyRoleId = settingsListView.model.roleId("key")
-                for(var i = 0; i < settingsListView.model.rowCount(); i++) {
-                    var key = settingsListView.model.data(settingsListView.model.index(i,0), keyRoleId);
-                    if(key) keys.push(key)
+                else if(definitionsModel.visibleCount == definitionsModel.rowCount())
+                {
+                    return Qt.Checked
                 }
-                settingsListView.model.setVisibleBulk(keys, checked);
+                else
+                {
+                    return Qt.PartiallyChecked
+                }
+            }
+            partiallyCheckedEnabled: true
+
+            MouseArea
+            {
+                anchors.fill: parent;
+                onClicked:
+                {
+                    if(parent.checkedState == Qt.Unchecked || parent.checkedState == Qt.PartiallyChecked)
+                    {
+                        definitionsModel.setAllVisible(true)
+                    }
+                    else
+                    {
+                        definitionsModel.setAllVisible(false)
+                    }
+                }
             }
         }
 
@@ -102,7 +88,7 @@ PreferencesPage
 
             placeholderText: catalog.i18nc("@label:textbox", "Filter...")
 
-            onTextChanged: settingsListView.model.filter = {"label": "*" + text}
+            onTextChanged: definitionsModel.filter = {"label": "*" + text}
         }
 
         ScrollView
@@ -122,16 +108,18 @@ PreferencesPage
             ListView
             {
                 id: settingsListView
-                Component.onCompleted: updateToggleVisibleSettings()
-                model: UM.SettingDefinitionsModel {
+
+                model: UM.SettingDefinitionsModel
+                {
                     id: definitionsModel
                     containerId: "fdmprinter"
                     showAll: true
                     exclude: ["machine_settings"]
+                    expanded: ["*"]
                     visibilityHandler: UM.SettingPreferenceVisibilityHandler { }
-                    onSettingsVisibilityChanged: updateToggleVisibleSettings()
                 }
-                delegate:Loader
+
+                delegate: Loader
                 {
                     id: loader
 

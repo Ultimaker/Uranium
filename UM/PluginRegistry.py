@@ -82,12 +82,11 @@ class PluginRegistry(object):
                 Logger.log("e", "Plugin %s did not return any objects to register", plugin_id)
                 return
             for plugin_type, plugin_object in to_register.items():
-                plugin_object.setPluginId(plugin_id)
-                self._plugin_objects[plugin_id] = plugin_object
-                try:
-                    self._type_register_map[plugin_type](plugin_object)
-                except Exception as e:
-                    Logger.logException("e" , "Unable to add plugin %s", id)
+                if type(plugin_object) == list:
+                    for nested_plugin_object in plugin_object:
+                        self._addPluginObject(nested_plugin_object, plugin_id, plugin_type)
+                else:
+                    self._addPluginObject(plugin_object, plugin_id, plugin_type)
 
             self._plugins[plugin_id] = plugin
             self.addActivePlugin(plugin_id)
@@ -99,6 +98,14 @@ class PluginRegistry(object):
         except Exception as e:
             Logger.log("e", "Error loading plugin %s:", plugin_id)
             Logger.log("e", str(e))
+
+    def _addPluginObject(self, plugin_object, plugin_id, plugin_type):
+        plugin_object.setPluginId(plugin_id)
+        self._plugin_objects[plugin_id] = plugin_object
+        try:
+            self._type_register_map[plugin_type](plugin_object)
+        except Exception as e:
+            Logger.logException("e", "Unable to add plugin %s", id)
 
     ##  Load all plugins matching a certain set of metadata
     #   \param meta_data \type{dict} The meta data that needs to be matched.
