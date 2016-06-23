@@ -206,6 +206,7 @@ class Resources:
     #
     #   This is where the application stores user configuration, such as
     #   preferences.
+    @classmethod
     def getConfigStoragePath(cls):
         if not cls.__config_storage_path:
             cls.__initializeStoragePaths()
