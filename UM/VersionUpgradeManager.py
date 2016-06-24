@@ -61,7 +61,9 @@ class VersionUpgradeManager:
         for old_configuration_type, storage_paths in self._storage_paths.items():
             for storage_path in storage_paths:
                 storage_path_absolute = os.path.join(Resources.getConfigStoragePath(), storage_path)
+                print(" ~ Looking in " + storage_path_absolute)
                 for configuration_file in self._getFilesInDirectory(storage_path_absolute, exclude_paths = ["old"]):
+                    print(" ~ Converting file " + configuration_file)
                     configuration_file_absolute = os.path.join(storage_path_absolute, configuration_file)
 
                     #Read the old file.
@@ -83,6 +85,9 @@ class VersionUpgradeManager:
 
                     #Keep converting the file until it's at one of the current versions.
                     while (configuration_type, version) not in self._current_versions:
+                        if (configuration_type, version) not in paths:
+                            Logger.log("w", "File %s could not be upgraded to the most recent version. No upgrade plug-in can do it.", configuration_file)
+                            break #Continue with next file.
                         new_type, new_version, upgrade = paths[(configuration_type, version)]
                         try:
                             configuration = upgrade(configuration)
