@@ -24,7 +24,7 @@ class ResourcesProxy(QObject):
     @pyqtSlot(int, str, result = str)
     def getPath(self, type, name):
         try:
-            return UM.Resources.Resources.getPath(type, name)
+            return UM.Resources.getPath(type, name)
         except:
-            Logger.log("w", "Could not find the requested resource: %s" % (name))
+            Logger.log("w", "Could not find the requested resource: %s", name)
             return ""

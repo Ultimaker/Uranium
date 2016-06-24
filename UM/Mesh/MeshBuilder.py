@@ -524,9 +524,9 @@ class MeshBuilder:
         #We'll compute the vertices of the arc by computing an initial point and
         #rotating the initial point with a rotation matrix.
         if axis == Vector.Unit_Y:
-            start = axis.cross(Vector.Unit_X).normalize() * radius
+            start = axis.cross(Vector.Unit_X).normalized() * radius
         else:
-            start = axis.cross(Vector.Unit_Y).normalize() * radius
+            start = axis.cross(Vector.Unit_Y).normalized() * radius
 
         angle_increment = angle / sections
         current_angle = 0
