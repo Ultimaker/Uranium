@@ -212,6 +212,15 @@ class Resources:
             cls.__initializeStoragePaths()
         return cls.__config_storage_path
 
+    ##  Gets the data storage path.
+    #
+    #   This is where the application stores user files, such as profiles.
+    @classmethod
+    def getDataStoragePath(cls):
+        if not cls.__data_storage_path:
+            cls.__initializeStoragePaths()
+        return cls.__data_storage_path
+
     ##  Remove a custom resource type.
     @classmethod
     def removeType(cls, resource_type):

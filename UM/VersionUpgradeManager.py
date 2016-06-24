@@ -60,52 +60,14 @@ class VersionUpgradeManager:
         paths = self._findShortestUpgradePaths()
         for old_configuration_type, storage_paths in self._storage_paths.items():
             for storage_path in storage_paths:
-                storage_path_absolute = os.path.join(Resources.getConfigStoragePath(), storage_path)
-                print(" ~ Looking in " + storage_path_absolute)
-                for configuration_file in self._getFilesInDirectory(storage_path_absolute, exclude_paths = ["old"]):
-                    print(" ~ Converting file " + configuration_file)
-                    configuration_file_absolute = os.path.join(storage_path_absolute, configuration_file)
+                storage_path_config = os.path.join(Resources.getConfigStoragePath(), storage_path)
+                for configuration_file in self._getFilesInDirectory(storage_path_config, exclude_paths = ["old"]):
+                    upgraded |= self._upgradeFile(storage_path_config, configuration_file, old_configuration_type, paths)
+                storage_path_data = os.path.join(Resources.getDataStoragePath(), storage_path) #A second place to look.
+                if storage_path_data != storage_path_config:
+                    for configuration_file in self._getFilesInDirectory(storage_path_data, exclude_paths = ["old"]):
+                        upgraded |= self._upgradeFile(storage_path_data, configuration_file, old_configuration_type, paths)
 
-                    #Read the old file.
-                    try:
-                        with open(configuration_file_absolute) as file_handle:
-                            configuration = file_handle.read()
-                    except IOError:
-                        Logger.log("w", "Can't open configuration file %s for reading.", configuration_file_absolute)
-                        continue
-
-                    #Get the version number of the old file.
-                    try:
-                        old_version = self._get_version_functions[old_configuration_type](configuration)
-                    except: #Version getter gives an exception. Not a valid file. Can't upgrade it then.
-                        Logger.log("w", "Invalid %s file: %s", old_configuration_type, configuration_file_absolute)
-                        continue
-                    version = old_version
-                    configuration_type = old_configuration_type
-
-                    #Keep converting the file until it's at one of the current versions.
-                    while (configuration_type, version) not in self._current_versions:
-                        if (configuration_type, version) not in paths:
-                            Logger.log("w", "File %s (%s, %s) could not be upgraded to the most recent version. No upgrade plug-in can do it.", configuration_file, configuration_type, str(version))
-                            break #Continue with next file.
-                        new_type, new_version, upgrade = paths[(configuration_type, version)]
-                        try:
-                            configuration = upgrade(configuration)
-                        except Exception as e:
-                            Logger.log("w", "Exception in %s upgrade with %s: %s", old_configuration_type, upgrade.__module__, str(e))
-                            break #Continue with next file.
-                        version = new_version
-                        configuration_type = new_type
-                    else: #Upgrade successful (without breaking).
-                        if version != old_version:
-                            upgraded = True
-                            Logger.log("i", "Upgraded %s to version %s.", configuration_file, str(version))
-                            self._storeOldFile(storage_path, configuration_file, old_version)
-                            try:
-                                with open(os.path.join(configuration_file), "w") as file_handle:
-                                    file_handle.write(configuration) #Save the new file.
-                            except IOError:
-                                Logger.log("w", "Couldn't write new configuration file to %s.", configuration_file_absolute)
         if upgraded:
             message = UM.Message(text=catalogue.i18nc("@info:version-upgrade", "A configuration from an older version of {0} was imported.", UM.Application.getInstance().getApplicationName()))
             message.show()
@@ -257,3 +219,58 @@ class VersionUpgradeManager:
                 pass
             os.rename(os.path.join(resource_directory,                          relative_path),
                       os.path.join(resource_directory, "old", str(old_version), relative_path)) # Try again!
+
+    ##  Upgrades a single file to any version in self._current_versions.
+    #
+    #   \param storage_path_absolute The path where to find the file.
+    #   \param configuration_file The file to upgrade to a current version.
+    #   \param old_configuration_type The type of the configuration file before
+    #   upgrading it.
+    #   \param paths Pre-computed paths through the version graph that specify
+    #   how to upgrade a file from any version.
+    #   \return True if the file was successfully upgraded, or False otherwise.
+    def _upgradeFile(self, storage_path_absolute, configuration_file, old_configuration_type, paths):
+        configuration_file_absolute = os.path.join(storage_path_absolute, configuration_file)
+
+        #Read the old file.
+        try:
+            with open(configuration_file_absolute) as file_handle:
+                configuration = file_handle.read()
+        except IOError:
+            Logger.log("w", "Can't open configuration file %s for reading.", configuration_file_absolute)
+            return False
+
+        #Get the version number of the old file.
+        try:
+            old_version = self._get_version_functions[old_configuration_type](configuration)
+        except: #Version getter gives an exception. Not a valid file. Can't upgrade it then.
+            Logger.log("w", "Invalid %s file: %s", old_configuration_type, configuration_file_absolute)
+            return False
+        version = old_version
+        configuration_type = old_configuration_type
+
+        #Keep converting the file until it's at one of the current versions.
+        while (configuration_type, version) not in self._current_versions:
+            if (configuration_type, version) not in paths:
+                Logger.log("w", "File %s (%s, %s) could not be upgraded to the most recent version. No upgrade plug-in can do it.", configuration_file, configuration_type, str(version))
+                return False
+            new_type, new_version, upgrade = paths[(configuration_type, version)]
+            try:
+                configuration = upgrade(configuration)
+            except Exception as e:
+                Logger.log("w", "Exception in %s upgrade with %s: %s", old_configuration_type, upgrade.__module__, str(e))
+                return False
+            version = new_version
+            configuration_type = new_type
+
+        #If the version changed, save the new file.
+        if version != old_version:
+            self._storeOldFile(storage_path_absolute, configuration_file, old_version)
+            try:
+                with open(os.path.join(configuration_file), "w") as file_handle:
+                    file_handle.write(configuration) #Save the new file.
+            except IOError:
+                Logger.log("w", "Couldn't write new configuration file to %s.", configuration_file_absolute)
+                return False
+            Logger.log("i", "Upgraded %s to version %s.", configuration_file, str(version))
+            return True
