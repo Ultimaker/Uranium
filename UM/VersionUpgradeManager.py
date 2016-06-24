@@ -86,7 +86,7 @@ class VersionUpgradeManager:
                     #Keep converting the file until it's at one of the current versions.
                     while (configuration_type, version) not in self._current_versions:
                         if (configuration_type, version) not in paths:
-                            Logger.log("w", "File %s could not be upgraded to the most recent version. No upgrade plug-in can do it.", configuration_file)
+                            Logger.log("w", "File %s (%s, %s) could not be upgraded to the most recent version. No upgrade plug-in can do it.", configuration_file, configuration_type, str(version))
                             break #Continue with next file.
                         new_type, new_version, upgrade = paths[(configuration_type, version)]
                         try:
@@ -157,7 +157,7 @@ class VersionUpgradeManager:
 
         #Perform a many-to-many shortest path search with Dijkstra's algorithm.
         front = collections.deque() #Use as a queue for breadth-first iteration: Append right, pop left.
-        for configuration_type, version in self._current_versions.items():
+        for configuration_type, version in self._current_versions:
             front.append((configuration_type, version))
         explored_versions = set()
         while len(front) > 0:
