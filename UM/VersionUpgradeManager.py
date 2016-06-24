@@ -60,7 +60,7 @@ class VersionUpgradeManager:
         paths = self._findShortestUpgradePaths()
         for old_configuration_type, storage_paths in self._storage_paths.items():
             for storage_path in storage_paths:
-                storage_path_absolute = os.path.relpath(storage_path, Resources.getConfigStoragePath())
+                storage_path_absolute = os.path.join(Resources.getConfigStoragePath(), storage_path)
                 for configuration_file in self._getFilesInDirectory(storage_path_absolute, exclude_paths = ["old"]):
                     configuration_file_absolute = os.path.join(storage_path_absolute, configuration_file)
 
