@@ -102,7 +102,7 @@ class VersionUpgradeManager:
                             Logger.log("i", "Upgraded %s to version %s.", configuration_file, str(version))
                             self._storeOldFile(storage_path, configuration_file, old_version)
                             try:
-                                with open(os.path.join(configuration_file), "a") as file_handle:
+                                with open(os.path.join(configuration_file), "w") as file_handle:
                                     file_handle.write(configuration) #Save the new file.
                             except IOError:
                                 Logger.log("w", "Couldn't write new configuration file to %s.", configuration_file_absolute)
