@@ -11,8 +11,8 @@ from UM.SaveFile import SaveFile
 ##      Preferences are application based settings that are saved for future use. 
 #       Typical preferences would be window size, standard machine, etc.
 @signalemitter
-class Preferences():
-    Version = 2
+class Preferences:
+    Version = 3
 
     def __init__(self):
         super().__init__()
