@@ -86,10 +86,6 @@ class QtApplication(QApplication, Application):
         Logger.log("i", "Command line arguments: %s", self._parsed_command_line)
         self._plugin_registry.checkRequiredPlugins(self.getRequiredPlugins())
 
-        self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Loading machines..."))
-
-        #self.getMachineManager().loadAll()
-
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Loading preferences..."))
         try:
             file = Resources.getPath(Resources.Preferences, self.getApplicationName() + ".cfg")
@@ -99,13 +95,13 @@ class QtApplication(QApplication, Application):
 
     def run(self):
         pass
-    
+
     def hideMessage(self, message):
         with self._message_lock:
             if message in self._visible_messages:
                 self._visible_messages.remove(message)
                 self.visibleMessageRemoved.emit(message)
-    
+
     def showMessage(self, message):
         with self._message_lock:
             if message not in self._visible_messages:
@@ -131,15 +127,15 @@ class QtApplication(QApplication, Application):
         self._engine.rootContext().setContextProperty("QT_VERSION_STR", QT_VERSION_STR)
 
         self.registerObjects(self._engine)
-        
+
         self._engine.load(self._main_qml)
         self.engineCreatedSignal.emit()
-    
+
     engineCreatedSignal = Signal()
 
     def isShuttingDown(self):
         return self._shutting_down
-    
+
     def registerObjects(self, engine):
         pass
 
