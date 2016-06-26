@@ -29,8 +29,9 @@ _eric6project/Uranium.e4t
 .cache
 *.kate-swp
 
-## Eclipse+PyDev
+## Eclipse+PyDev incl. Mylyn
 .project
+.settings/org.eclipse.mylyn.tasks.ui.prefs
 .pydevproject
 
 ## IntelliJ projects
