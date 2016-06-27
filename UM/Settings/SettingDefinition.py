@@ -500,6 +500,8 @@ class SettingDefinition:
         "value": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False,  "default": None},
         # A function that should evaluate to a boolean to indicate whether or not the setting is enabled.
         "enabled": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False, "default": True},
+        # A function that should evaluate to a boolean to indicate whether or not the setting is experimental.
+        "is_experimental": {"type": DefinitionPropertyType.Function, "required": False, "read_only": True, "default": False},
         # A function that calculates the minimum value for this setting. If the value is less than this, validation will indicate an error.
         "minimum_value": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False, "default": None},
         # A function that calculates the maximum value for this setting. If the value is more than this, validation will indicate an error.
