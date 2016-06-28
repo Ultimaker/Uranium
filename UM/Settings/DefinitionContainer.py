@@ -40,6 +40,7 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
         self._name = container_id
         self._metadata = {}
         self._definitions = []
+        self._inherited_files = []
         self._i18n_catalog = i18n_catalog
 
         self._definition_cache = {}
@@ -85,6 +86,9 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
     @property
     def definitions(self):
         return self._definitions
+
+    def getInheritedFiles(self):
+        return self._inherited_files
 
     ##  Gets all keys of settings in this container.
     #
@@ -211,6 +215,8 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
         contents = {}
         with open(path, encoding = "utf-8") as f:
             contents = json.load(f, object_pairs_hook=collections.OrderedDict)
+
+        self._inherited_files.append(path)
         return contents
 
     # Recursively resolve loading inherited files

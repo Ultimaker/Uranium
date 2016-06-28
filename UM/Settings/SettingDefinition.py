@@ -62,6 +62,9 @@ class SettingDefinition:
         self._children = []
         self._relations = []
 
+        self.__ancestors = set() # Cached set of keys of ancestors. Used for fast lookups of ancestors.
+        self.__descendants = {} # Cached set of key - definition pairs of descendants. Used for fast lookup of descendants by key.
+
         self.__property_values = {}
 
     ##  Override __getattr__ to provide access to definition properties.
@@ -164,31 +167,54 @@ class SettingDefinition:
     #
     #   \return \type{SettingDefinition} The child with the specified key or None if not found.
     def getChild(self, key):
-        for child in self._children:
-            if child.key == key:
-                return child
+        if not self.__descendants:
+            self.__descendants = self._updateDescendants()
+
+        if key in self.__descendants:
+            child = self.__descendants[key]
+            if child not in self._children:
+                # Descendants includes children-of-children etc. so we need to make sure we only return direct children.
+                return None
+
+            return child
 
         return None
 
     ## Check if this setting definition matches the provided criteria.
     #   \param kwargs \type{dict} A dictionary of keyword arguments that need to match its attributes.
     def matchesFilter(self, **kwargs):
-        for key, value in kwargs.items():
+        for key in kwargs:
             try:
-                try:
-                    if "*" in value:  # Don't look for exact match but if the value is contained in it.
-                        key_value = getattr(self, key)
-                        value = value.strip("* ").lower() # Strip leading/traling "*"" and spaces
-                        if value not in key_value.lower():
-                            return False
-                    else:
-                        if getattr(self, key) != value:
-                            return False
-                except TypeError:  # If property is not a string, the "*" in fails.
-                    if getattr(self, key) != value:
-                        return False
+                property_value = getattr(self, key)
             except AttributeError:
+                # If we do not have the attribute, we do not match
                 return False
+
+            value = kwargs[key]
+            if property_value == value:
+                # If the value matches with the expected value, we match for this property and should
+                # continue with the other properties.
+                # We do this check first so we can avoid the costly wildcard matching for situations where
+                # we do not need to perform wildcard matching anyway.
+                continue
+
+            if isinstance(value, str):
+                if not isinstance(property_value, str):
+                    # If value is a string but the actual property value is not there is no situation where we
+                    # will match.
+                    return False
+
+                if "*" not in value:
+                    # If both are strings but there is no wildcard we do not match since we already checked if
+                    # both are equal.
+                    return False
+
+                value = value.strip("* ").lower()
+                if value not in property_value.lower():
+                    return False
+            else:
+                return False
+
         return True
 
     ##  Find all definitions matching certain criteria.
@@ -201,6 +227,23 @@ class SettingDefinition:
     def findDefinitions(self, **kwargs):
         definitions = []
 
+        if not self.__descendants:
+            self.__descendants = self._updateDescendants()
+
+        key = kwargs.get("key")
+        if key and not "*" in key:
+            # Optimization for the most common situation: finding a setting by key
+            if self._key != key and key not in self.__descendants:
+                # If the mentioned key is not ourself and not in children, we will never match.
+                return []
+
+            if len(kwargs) == 1:
+                # If all we are searching for is a key, return either ourself or a value from the descendants.
+                if self._key == key:
+                    return [self]
+
+                return [self.__descendants[key]]
+
         if self.matchesFilter(**kwargs):
             definitions.append(self)
 
@@ -208,6 +251,35 @@ class SettingDefinition:
             definitions.extend(child.findDefinitions(**kwargs))
 
         return definitions
+
+    ##  Check whether a certain setting is an ancestor of this definition.
+    #
+    #   \param key \type{str} The key of the setting to check.
+    #
+    #   \return True if the specified setting is an ancestor of this definition, False if not.
+    def isAncestor(self, key):
+        if not self.__ancestors:
+            self.__ancestors = self._updateAncestors()
+
+        return key in self.__ancestors
+
+    ##  Check whether a certain setting is a descendant of this definition.
+    #
+    #   \param key \type{str} The key of the setting to check.
+    #
+    #   \return True if the specified setting is a descendant of this definition, False if not.
+    def isDescendant(self, key):
+        if not self.__descendants:
+            self.__descendants = self._updateDescendants()
+
+        return key in self.__descendants
+
+    ##  Get a set of keys representing the setting's ancestors.
+    def getAncestors(self):
+        if not self.__ancestors:
+            self.__ancestors = self._updateAncestors()
+
+        return self.__ancestors
 
     def __repr__(self):
         return "<SettingDefinition (0x{0:x}) key={1} container={2}>".format(id(self), self._key, self._container)
@@ -381,6 +453,31 @@ class SettingDefinition:
         for key in filter(lambda i: self.__property_definitions[i]["required"], self.__property_definitions):
             if key not in self.__property_values:
                 raise AttributeError("Setting {0} is missing required property {1}".format(self._key, key))
+
+        self.__ancestors = self._updateAncestors()
+        self.__descendants = self._updateDescendants()
+
+    def _updateAncestors(self):
+        result = set()
+
+        parent = self._parent
+        while parent:
+            result.add(parent.key)
+            parent = parent.parent
+
+        return result
+
+    def _updateDescendants(self, definition = None):
+        result = {}
+
+        if not definition:
+            definition = self
+
+        for child in definition.children:
+            result[child.key] = child
+            result.update(self._updateDescendants(child))
+
+        return result
 
     __property_definitions = {
         # The name of the setting. Only used for display purposes.

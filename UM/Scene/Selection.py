@@ -50,12 +50,12 @@ class Selection:
                 continue
 
             if not bounding_box:
-                bounding_box = copy.deepcopy(node.getBoundingBox())
+                bounding_box = node.getBoundingBox()
             else:
-                bounding_box += node.getBoundingBox()
+                bounding_box = bounding_box + node.getBoundingBox()
 
         if not bounding_box:
-            bounding_box = AxisAlignedBox()
+            bounding_box = AxisAlignedBox.Null
 
         return bounding_box
 
@@ -90,7 +90,7 @@ class Selection:
     @classmethod
     def getSelectionCenter(cls):
         if not cls.__selection:
-            cls.__selection_center = Vector(0, 0, 0)
+            cls.__selection_center = Vector.Null
 
         return cls.__selection_center
 
@@ -111,7 +111,6 @@ class Selection:
         if not cls.__selection:
             return
 
-        op = None
         operations = []
 
         if len(cls.__selection) == 1:
@@ -131,12 +130,12 @@ class Selection:
 
     @classmethod
     def _onTransformationChanged(cls, node):
-        cls.__selection_center = Vector(0, 0, 0)
+        cls.__selection_center = Vector.Null
 
         for object in cls.__selection:
-            cls.__selection_center += object.getWorldPosition()
+            cls.__selection_center = cls.__selection_center + object.getWorldPosition()
 
-        cls.__selection_center /= len(cls.__selection)
+        cls.__selection_center = cls.__selection_center / len(cls.__selection)
 
         cls.selectionCenterChanged.emit()
 

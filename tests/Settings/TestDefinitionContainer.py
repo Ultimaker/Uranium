@@ -170,9 +170,9 @@ test_findDefinitions_data = [
                                                                                                       { "key": "zoo", "default_value": "baz" } ]),
     ("Multiple answers", { "default_value": "bar"}, [ { "key": "foo", "default_value": "bar" },
                                                       { "key": "boo", "default_value": "bar" } ],   [ { "key": "foo", "default_value": "bar" }, { "key": "boo", "default_value": "bar" } ]),
-    ("Multiple filters", { "key": "foo",
-                           "default_value": "bar"}, [ { "key": "foo", "default_value": "bar" } ],   [ { "key": "foo", "default_value": "boo" },
-                                                                                                      { "key": "foo", "default_value": "bar" },
+    ("Multiple filters", { "key": "moo",
+                           "default_value": "bar"}, [ { "key": "moo", "default_value": "bar" } ],   [ { "key": "foo", "default_value": "boo" },
+                                                                                                      { "key": "moo", "default_value": "bar" },
                                                                                                       { "key": "zoo", "default_value": "bar" } ])
 ]
 

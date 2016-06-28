@@ -49,7 +49,7 @@ class Quaternion(object):
     #   \param angle \type{float} Angle in radians
     #   \param axis \type{Vector} Axis of rotation
     def setByAngleAxis(self, angle, axis):
-        a = axis.getNormalized().getData()
+        a = axis.normalized().getData()
         halfAngle = angle / 2.0
         self._data[3] = math.cos(halfAngle)
         self._data[0:3] = a * math.sin(halfAngle)

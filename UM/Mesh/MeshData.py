@@ -3,25 +3,28 @@
 
 from UM.Math.Vector import Vector
 from UM.Math.AxisAlignedBox import AxisAlignedBox
-from UM.Signal import Signal, signalemitter
 from UM.Logger import Logger
+from UM.Math import NumPyUtil
 
 from enum import Enum
-
-from UM.View.GL.OpenGL import OpenGL
-
+import threading
 import numpy
 import numpy.linalg
+import scipy.spatial
 import hashlib
-from copy import deepcopy
 from time import time
 numpy.seterr(all="ignore") # Ignore warnings (dev by zero)
 
+MAXIMUM_HULL_VERTICES_COUNT = 1024   # Maximum number of vertices to have in the convex hull.
 
 class MeshType(Enum):
     faces = 1 # Start at one, as 0 is false (so if this is used in a if statement, it's always true)
     pointcloud = 2
 
+# This object is being used as a 'symbol' to identify parameters have not been explicitly supplied
+# to the set() method. We can't use the value None for this purpose because it is also a valid (new)
+# value to set a field to in set().
+Reuse = object()
 
 ##  Class to hold a list of verts and possibly how (and if) they are connected.
 #
@@ -31,47 +34,38 @@ class MeshType(Enum):
 #   Normals are stored in the same manner and kept in sync with the vertices. Indices
 #   are stored as a two-dimensional array of integers with the rows being the individual
 #   faces and the three columns being the indices that refer to the individual vertices.
-@signalemitter
-class MeshData():
-    def __init__(self, **kwargs):
-        self._vertices = kwargs.get("vertices", None)
-        self._normals = kwargs.get("normals", None)
-        self._indices = kwargs.get("indices", None)
-        self._colors = kwargs.get("colors", None)
-        self._uvs = kwargs.get("uvs", None)
+class MeshData:
+    def __init__(self, vertices=None, normals=None, indices=None, colors=None, uvs=None, file_name=None,
+                 center_position=None):
+        self._vertices = NumPyUtil.immutableNDArray(vertices)
+        self._normals = NumPyUtil.immutableNDArray(normals)
+        self._indices = NumPyUtil.immutableNDArray(indices)
+        self._colors = NumPyUtil.immutableNDArray(colors)
+        self._uvs = NumPyUtil.immutableNDArray(uvs)
         self._vertex_count = len(self._vertices) if self._vertices is not None else 0
         self._face_count = len(self._indices) if self._indices is not None else 0
         self._type = MeshType.faces
-        self._file_name = None
+        self._file_name = file_name
         # original center position
-        self._center_position = None 
-        self.dataChanged.connect(self._resetVertexBuffer)
-        self.dataChanged.connect(self._resetIndexBuffer)
-    
-    dataChanged = Signal()
-    
-    def __deepcopy__(self, memo):
-        copy = MeshData()
-        copy._vertices = deepcopy(self._vertices, memo)
-        copy._normals = deepcopy(self._normals, memo)
-        copy._indices = deepcopy(self._indices, memo)
-        copy._colors = deepcopy(self._colors, memo)
-        copy._uvs = deepcopy(self._uvs, memo)
-        copy._vertex_count = deepcopy(self._vertex_count, memo)
-        copy._face_count = deepcopy(self._face_count, memo)
-        copy._type = deepcopy(self._type, memo)
-        copy._file_name = deepcopy(self._file_name, memo)
-        self._center_position = deepcopy (self._center_position, memo)
-        return copy
+        self._center_position = center_position
+        self._convex_hull = None    # type: scipy.spatial.qhull.ConvexHull
+        self._convex_hull_vertices = None
+        self._convex_hull_lock = threading.Lock()
 
-    def _resetIndexBuffer(self):
-        try:
-            delattr(self, OpenGL.IndexBufferProperty)
-        except:
-            pass
-    
-    def setCenterPosition(self, position):
-        self._center_position = position
+    ## Create a new MeshData with specified changes
+    #   \return \type{MeshData}
+    def set(self, vertices=Reuse, normals=Reuse, indices=Reuse, colors=Reuse, uvs=Reuse, file_name=Reuse,
+            center_position=Reuse):
+        vertices = vertices if vertices is not Reuse else self._vertices
+        normals = normals if normals is not Reuse else self._normals
+        indices = indices if indices is not Reuse else self._indices
+        colors = colors if colors is not Reuse else self._colors
+        uvs = uvs if uvs is not Reuse else self._uvs
+        file_name = file_name if file_name is not Reuse else self._file_name
+        center_position = center_position if center_position is not Reuse else self._center_position
+
+        return MeshData(vertices=vertices, normals=normals, indices=indices, colors=colors, uvs=uvs,
+                        file_name=file_name, center_position=center_position)
 
     def getHash(self):
         m = hashlib.sha256()
@@ -80,32 +74,17 @@ class MeshData():
 
     def getCenterPosition(self):
         return self._center_position
-    
-    def _resetVertexBuffer(self):
-        try:
-            delattr(self, OpenGL.VertexBufferProperty)
-        except:
-            pass
-    
-    ##  Set the type of the mesh 
-    #   \param mesh_type MeshType enum 
-    def setType(self, mesh_type):
-        if isinstance(mesh_type, MeshType):
-            self._type = mesh_type
-    
+
     def getType(self):
         return self._type
 
     def getFaceCount(self):
         return self._face_count
-    
+
     ##  Get the array of vertices
     def getVertices(self):
-        if self._vertices is None:
-            return None
+        return self._vertices
 
-        return self._vertices[0 : self._vertex_count] #Only return up until point where data was filled
-    
     ##  Get the number of vertices
     def getVertexCount(self):
         return self._vertex_count
@@ -116,22 +95,7 @@ class MeshData():
             return self._vertices[index]
         except IndexError:
             return None
-    
-    #   Remove vertex by index or list of indices
-    #   \param index Either a single index or a list of indices to be removed.
-    def removeVertex(self, index):
-        try: 
-            #print("deleting ", index)
-            #print( self._vertices) 
-            self._vertices = numpy.delete(self._vertices, index,0)
-            if self.hasNormals():
-               self._normals = numpy.delete(self._normals,index,0)
-            #print( self._vertices)    
-            self._vertex_count = len(self._vertices)
-        except IndexError:
-            pass
-        self.dataChanged.emit()
-        
+
     ##  Return whether this mesh has vertex normals.
     def hasNormals(self):
         return self._normals is not None
@@ -147,13 +111,13 @@ class MeshData():
     ##  Get the array of indices
     #   \return \type{numpy.ndarray}
     def getIndices(self):
-        return self._indices[0:self._face_count]
+        return self._indices
 
     def hasColors(self):
         return self._colors is not None
 
     def getColors(self):
-        return self._colors[0:self._vertex_count]
+        return self._colors
 
     def hasUVCoordinates(self):
         return self._uvs is not None
@@ -161,21 +125,21 @@ class MeshData():
     def getFileName(self):
         return self._file_name
 
-    def setFileName(self, file_name):
-        self._file_name = file_name
-
     ##  Transform the meshdata by given Matrix
     #   \param transformation 4x4 homogenous transformation matrix
     def getTransformed(self, transformation):
         if self._vertices is not None:
-            data = numpy.pad(self._vertices[0:self._vertex_count], ((0,0), (0,1)), "constant", constant_values=(0.0, 0.0))
-            data = data.dot(transformation.getTransposed().getData())
-            data += transformation.getData()[:,3]
-            data = data[:,0:3]
+            transformed_vertices = transformVertices(self._vertices, transformation)
 
-            mesh = deepcopy(self)
-            mesh._vertices = data
-            return mesh
+            transformed_normals = None
+            if self._normals is not None:
+                if self.hasIndices():
+                    transformed_normals = calculateNormalsFromIndexedVertices(transformed_vertices, self._indices,
+                                                                              self._face_count)
+                else:
+                    transformed_normals = calculateNormalsFromVertices(transformed_vertices, self._vertex_count)
+
+            return self.set(vertices=transformed_vertices, normals=transformed_normals)
         else:
             return MeshData(vertices = self._vertices)
 
@@ -184,335 +148,220 @@ class MeshData():
     #   \param matrix The transformation matrix from model to world coordinates.
     def getExtents(self, matrix = None):
         if self._vertices is None:
-            return AxisAlignedBox()
+            return None
 
-        data = numpy.pad(self._vertices[0:self._vertex_count], ((0,0), (0,1)), "constant", constant_values=(0.0, 1.0))
+        data = numpy.pad(self.getConvexHullVertices(), ((0, 0), (0, 1)), "constant", constant_values=(0.0, 1.0))
 
         if matrix is not None:
             transposed = matrix.getTransposed().getData()
             data = data.dot(transposed)
-            data += transposed[:,3]
-            data = data[:,0:3]
+            data += transposed[:, 3]
+            data = data[:, 0:3]
 
         min = data.min(axis=0)
         max = data.max(axis=0)
 
         return AxisAlignedBox(minimum=Vector(min[0], min[1], min[2]), maximum=Vector(max[0], max[1], max[2]))
 
-    def clear(self):
-        setattr(self, "__qtgl2_vertex_buffer", None)
-        setattr(self, "__qtgl2_index_buffer", None)
-        self._vertices = None
-        self._normals = None
-        self._indices = None
-        self._colors = None
-        self._uvs = None
-        self._vertex_count = 0
-        self._face_count = 0
-
-    ##  Set the amount of faces before loading data to the mesh.
-    #
-    #   This way we can create the array before we fill it. This method will reserve
-    #   `(num_faces * 3)` amount of space for vertices, `(num_faces * 3)` amount of space
-    #   for normals and `num_faces` amount of space for indices.
-    #
-    #   \param num_faces Number of faces for which memory must be reserved.
-    def reserveFaceCount(self, num_faces):
-        if type(num_faces) == float:
-            Logger.log("w", "Had to convert 'num_faces' with int(): %s -> %s ", num_faces, int(num_faces))
-            num_faces = int(num_faces)
-
-        self._vertices = numpy.zeros((num_faces * 3, 3), dtype=numpy.float32)
-        self._normals = numpy.zeros((num_faces * 3, 3), dtype=numpy.float32)
-        self._indices = numpy.zeros((num_faces, 3), dtype=numpy.int32)
-
-        self._vertex_count = 0
-        self._face_count = 0
-    
-    ##  Set the amount of verts before loading data to the mesh.
-    #
-    #   This way we can create the array before we fill it. This method will reserve
-    #   `num_vertices` amount of space for vertices. It will not reserve space for
-    #   normals or indices.
-    #
-    #   \param num_vertices Number of verts to be reserved.
-    def reserveVertexCount(self, num_vertices):
-        self._vertices = numpy.zeros((num_vertices, 3), dtype=numpy.float32)
-        self._normals = None
-        self._indices = None
-
-        self._vertex_count = 0
-        self._face_count = 0
-    
-    ##  Set the amount of faces and vertices before loading data to the mesh.
-    #
-    #   This way we can create the array before we fill it. This method will reserve
-    #   `num_vertices` amount of space for vertices, `num_vertices` amount of space
-    #   for colors and `num_faces` amount of space for indices.
-    #
-    #   \param num_faces Number of faces for which memory must be reserved.
-    #   \param num_vertices Number of vertices for which memory must be reserved.
-    def reserveFaceAndVerticeCount(self, num_faces, num_vertices):
-        if type(num_faces) == float:
-            Logger.log("w", "Had to convert 'num_faces' with int(): %s -> %s ", num_faces, int(num_faces))
-            num_faces = int(num_faces)
-        if type(num_vertices) == float:
-            Logger.log("w", "Had to convert 'num_vertices' with int(): %s -> %s ", num_vertices, int(num_vertices))
-            num_vertices = int(num_numvertices)
-
-        self._vertices = numpy.zeros((num_vertices, 3), dtype=numpy.float32)
-        self._colors = numpy.zeros((num_vertices, 4), dtype=numpy.float32)
-        self._indices = numpy.zeros((num_faces, 3), dtype=numpy.int32)
-
-        self._vertex_count = 0
-        self._face_count = 0
-
-    
-    ##  Add a vertex to the mesh.
-    #   \param x x coordinate of vertex.
-    #   \param y y coordinate of vertex.
-    #   \param z z coordinate of vertex.
-    def addVertex(self,x,y,z):
-        if self._vertices is None:
-            self._vertices = numpy.zeros((10, 3), dtype=numpy.float32)
-
-        if len(self._vertices) == self._vertex_count:
-            self._vertices.resize((self._vertex_count * 2, 3))
-
-        self._vertices[self._vertex_count, 0] = x
-        self._vertices[self._vertex_count, 1] = y
-        self._vertices[self._vertex_count, 2] = z
-        self._vertex_count += 1
-    
-    ##  Add a vertex to the mesh.
-    #   \param x x coordinate of vertex.
-    #   \param y y coordinate of vertex.
-    #   \param z z coordinate of vertex.
-    #   \param nx x part of normal.
-    #   \param ny y part of normal.
-    #   \param nz z part of normal.
-    def addVertexWithNormal(self,x,y,z,nx,ny,nz):
-        if self._vertices is None:
-            self._vertices = numpy.zeros((10, 3), dtype=numpy.float32)
-        if self._normals is None: #Specific case, reserve vert count does not reservere size for normals
-            self._normals = numpy.zeros((10, 3), dtype=numpy.float32)
-
-        if len(self._vertices) == self._vertex_count:
-            self._vertices.resize((self._vertex_count * 2, 3))
-
-        if self._normals is None:
-            self._normals = numpy.zeros((self._vertex_count, 3), dtype=numpy.float32)
-
-        if len(self._normals) == self._vertex_count:
-            self._normals.resize((self._vertex_count * 2, 3))
-
-        self._vertices[self._vertex_count, 0] = x
-        self._vertices[self._vertex_count, 1] = y
-        self._vertices[self._vertex_count, 2] = z
-        self._normals[self._vertex_count, 0] = nx
-        self._normals[self._vertex_count, 1] = ny
-        self._normals[self._vertex_count, 2] = nz
-        self._vertex_count += 1
-    
-    ##  Add a face by providing three verts.
-    #   \param x0 x coordinate of first vertex.
-    #   \param y0 y coordinate of first vertex.
-    #   \param z0 z coordinate of first vertex.
-    #   \param x1 x coordinate of second vertex.
-    #   \param y1 y coordinate of second vertex.
-    #   \param z1 z coordinate of second vertex.
-    #   \param x2 x coordinate of third vertex.
-    #   \param y2 y coordinate of third vertex.
-    #   \param z2 z coordinate of third vertex.
-    def addFace(self, x0, y0, z0, x1, y1, z1, x2, y2, z2):
-        if self._indices is None:
-            self._indices = numpy.zeros((10, 3), dtype=numpy.int32)
-
-        if len(self._indices) == self._face_count:
-            self._indices.resize((self._face_count * 2, 3))
-        
-        self._indices[self._face_count, 0] = self._vertex_count
-        self._indices[self._face_count, 1] = self._vertex_count + 1
-        self._indices[self._face_count, 2] = self._vertex_count + 2
-        self._face_count += 1
-
-        self.addVertex(x0, y0, z0)
-        self.addVertex(x1, y1, z1)
-        self.addVertex(x2, y2, z2)
-
-    ##  Add a face by providing three vertices and the normals that go with those vertices.
-    #
-    #   \param x0 The X coordinate of the first vertex.
-    #   \param y0 The Y coordinate of the first vertex.
-    #   \param z0 The Z coordinate of the first vertex.
-    #   \param nx0 The X coordinate of the normal of the first vertex.
-    #   \param ny0 The Y coordinate of the normal of the first vertex.
-    #   \param nz0 The Z coordinate of the normal of the first vertex.
-    #
-    #   \param x1 The X coordinate of the second vertex.
-    #   \param y1 The Y coordinate of the second vertex.
-    #   \param z1 The Z coordinate of the second vertex.
-    #   \param nx1 The X coordinate of the normal of the second vertex.
-    #   \param ny1 The Y coordinate of the normal of the second vertex.
-    #   \param nz1 The Z coordinate of the normal of the second vertex.
-    #
-    #   \param x2 The X coordinate of the third vertex.
-    #   \param y2 The Y coordinate of the third vertex.
-    #   \param z2 The Z coordinate of the third vertex.
-    #   \param nx2 The X coordinate of the normal of the third vertex.
-    #   \param ny2 The Y coordinate of the normal of the third vertex.
-    #   \param nz2 The Z coordinate of the normal of the third vertex.
-    def addFaceWithNormals(self,x0, y0, z0, nx0, ny0, nz0, x1, y1, z1, nx1, ny1, nz1, x2, y2, z2, nx2, ny2, nz2):
-        if self._indices is None:
-            self._indices = numpy.zeros((10, 3), dtype=numpy.int32)
-
-        if len(self._indices) == self._face_count:
-            self._indices.resize((self._face_count * 2, 3))
-
-        self._indices[self._face_count, 0] = self._vertex_count
-        self._indices[self._face_count, 1] = self._vertex_count + 1
-        self._indices[self._face_count, 2] = self._vertex_count + 2
-        self._face_count += 1
-
-        self.addVertexWithNormal(x0, y0, z0, nx0, ny0, nz0)
-        self.addVertexWithNormal(x1, y1, z1, nx1, ny1, nz1)
-        self.addVertexWithNormal(x2, y2, z2, nx2, ny2, nz2)
-
-    def setVertexColor(self, index, color):
-        if self._colors is None:
-            self._colors = numpy.zeros((10, 4), dtype=numpy.float32)
-
-        if len(self._colors) < len(self._vertices):
-            self._colors.resize((len(self._vertices), 4))
-
-        self._colors[index, 0] = color.r
-        self._colors[index, 1] = color.g
-        self._colors[index, 2] = color.b
-        self._colors[index, 3] = color.a
-
-    def setVertexUVCoordinates(self, index, u, v):
-        if self._uvs is None:
-            self._uvs = numpy.zeros((10, 2), dtype=numpy.float32)
-
-        if len(self._uvs) < len(self._vertices):
-            self._uvs.resize((len(self._vertices), 2))
-
-        self._uvs[index, 0] = u
-        self._uvs[index, 1] = v
-
-    def addVertices(self, vertices):
-        if self._vertices is None:
-            self._vertices = vertices
-            self._vertex_count = len(vertices)
-        else:
-            self._vertices = numpy.concatenate((self._vertices[0:self._vertex_count], vertices))
-            self._vertex_count  += len(vertices)
-
-    def addIndices(self, indices):
-        if self._indices is None:
-            self._indices = indices
-            self._face_count = len(indices)
-        else:
-            self._indices = numpy.concatenate((self._indices[0:self._face_count], indices))
-            self._face_count += len(indices)
-
-    def addColors(self, colors):
-        if self._colors is None:
-            self._colors = colors
-        else:
-            self._colors = numpy.concatenate((self._colors[0:self._vertex_count], colors))
-    
-    # Add faces defined by indices into vertices with vetex colors defined by colors
-    # Assumes vertices and colors have the same length.
-    #
-    def addFacesWithColor(self, vertices, indices, colors):
-        #If badly used, crash and burn
-        if len(self._indices) <  self._face_count + len(indices) or len(self._colors) < self._vertex_count + len(colors) or len(self._vertices) < self._vertex_count + len(vertices):
-            Logger.log( "w", "Insufficient size of mesh_data: f_c: %s, v_c: %s, _in_l: %s, in_l: %s, _co_l: %s, co_l: %s, _ve_l: %s, ve_l: %s", self._face_count, self._vertex_count,len(self._indices),len(indices),len(self._colors),len(colors),len(self._vertices),len(vertices))
-            return
-
-        self._indices[self._face_count:(self._face_count+len(indices)),:] = self._vertex_count + indices 
-        self._face_count += len(indices)
-        
-        end_idx = self._vertex_count + len(vertices)    
-        self._colors[self._vertex_count:end_idx,:] = colors
-        self._vertices[self._vertex_count:end_idx,:] = vertices
-        self._vertex_count  += len(vertices)
-
-
-    ## 
-    # /param colors is a vertexCount by 4 numpy array with floats in range of 0 to 1.
-    def setColors(self, colors):
-        self._colors = colors
-    
     ##  Get all vertices of this mesh as a bytearray
     #
     #   \return A bytearray object with 3 floats per vertex.
     def getVerticesAsByteArray(self):
-        if self._vertices is not None:
-            return self._vertices[0 : self._vertex_count].tostring()
+        if self._vertices is None:
+            return None
+        # FIXME cache result
+        return self._vertices.tostring()
 
     ##  Get all normals of this mesh as a bytearray
     #
     #   \return A bytearray object with 3 floats per normal.
     def getNormalsAsByteArray(self):
-        if self._normals is not None:
-            return self._normals[0 : self._vertex_count].tostring()
+        if self._normals is None:
+            return None
+        # FIXME cache result
+        return self._normals.tostring()
 
     ##  Get all indices as a bytearray
     #
     #   \return A bytearray object with 3 ints per face.
     def getIndicesAsByteArray(self):
-        if self._indices is not None:
-            return self._indices[0:self._face_count].tostring()
+        if self._indices is None:
+            return None
+        # FIXME cache result
+        return self._indices.tostring()
 
     def getColorsAsByteArray(self):
-        if self._colors is not None:
-            return self._colors[0 : self._vertex_count].tostring()
+        if self._colors is None:
+            return None
+        # FIXME cache result
+        return self._colors.tostring()
 
     def getUVCoordinatesAsByteArray(self):
-        if self._uvs is not None:
-            return self._uvs[0 : self._vertex_count].tostring()
+        if self._uvs is None:
+            return None
+        # FIXME cache result
+        return self._uvs.tostring()
 
-    ##  Calculate the normals of this mesh, assuming it was created by using addFace (eg; the verts are connected)
-    #
-    #   Keyword arguments:
-    #   - fast: A boolean indicating whether or not to use a fast method of normal calculation that assumes each triangle
-    #           is stored as a set of three unique vertices.
-    def calculateNormals(self, **kwargs):
-        if self._vertices is None:
+    #######################################################################
+    # Convex hull handling
+    #######################################################################
+    def _computeConvexHull(self):
+        points = self.getVertices()
+        if points is None:
             return
-        start_time = time()
-        # Numpy magic!
-        # First, reset the normals
-        self._normals = numpy.zeros((self._vertex_count, 3), dtype=numpy.float32)
+        self._convex_hull = approximateConvexHull(points, MAXIMUM_HULL_VERTICES_COUNT)
 
-        if self.hasIndices() and not kwargs.get("fast", False):
-            for face in self._indices[0:self._face_count]:
-                #print(self._vertices[face[0]])
-                #print(self._vertices[face[1]])
-                #print(self._vertices[face[2]])
-                self._normals[face[0]] = numpy.cross(self._vertices[face[0]] - self._vertices[face[1]], self._vertices[face[0]] - self._vertices[face[2]])
-                length = numpy.linalg.norm(self._normals[face[0]])
-                self._normals[face[0]] /= length
-                self._normals[face[1]] = self._normals[face[0]]
-                self._normals[face[2]] = self._normals[face[0]]
-        else: #Old way of doing it, asuming that each face has 3 unique verts
-            # Then, take the cross product of each pair of vectors formed from a set of three vertices.
-            # The [] operator on a numpy array returns itself a numpy array. The slicing syntax is [begin:end:step],
-            # so in this case we perform the cross over a two arrays. The first array is built from the difference
-            # between every second item in the array starting at two and every third item in the array starting at
-            # zero. The second array is built from the difference between every third item in the array starting at
-            # two and every third item in the array starting at zero. The cross operation then returns an array of
-            # the normals of each set of three vertices.
-            n = numpy.cross(self._vertices[1:self._vertex_count:3] - self._vertices[:self._vertex_count:3], self._vertices[2:self._vertex_count:3] - self._vertices[:self._vertex_count:3])
-            # We then calculate the length for each normal and perform normalization on the normals.
-            l = numpy.linalg.norm(n, axis=1)
-            n[:, 0] /= l
-            n[:, 1] /= l
-            n[:, 2] /= l
-            # Finally, we store the normals per vertex, with each face normal being repeated three times, once for
-            # every vertex.
-            self._normals = n.repeat(3, axis=0)
-        end_time = time()
-        Logger.log("d", "Calculating normals took %s seconds", end_time - start_time)
+    ##  Gets the Convex Hull of this mesh
+    #
+    #    \return \type{scipy.spatial.qhull.ConvexHull}
+    def getConvexHull(self):
+        with self._convex_hull_lock:
+            if self._convex_hull is None:
+                self._computeConvexHull()
+            return self._convex_hull
+
+    ##  Gets the convex hull points
+    #
+    #   \return \type{numpy.ndarray} the vertices which describe the convex hull
+    def getConvexHullVertices(self):
+        if self._convex_hull_vertices is None:
+            convex_hull = self.getConvexHull()
+            self._convex_hull_vertices = numpy.take(convex_hull.points, convex_hull.vertices, axis=0)
+        return self._convex_hull_vertices
+
+    ##  Gets transformed convex hull points
+    #
+    #   \return \type{numpy.ndarray} the vertices which describe the convex hull
+    def getConvexHullTransformedVertices(self, transformation):
+        vertices = self.getConvexHullVertices()
+        if vertices is not None:
+            return transformVertices(vertices, transformation)
+        else:
+            return None
+
+    def toString(self):
+        return "MeshData(_vertices=" + str(self._vertices) + ", _normals=" + str(self._normals) + ", _indices=" + \
+               str(self._indices) + ", _colors=" + str(self._colors) + ", _uvs=" + str(self._uvs) +") "
+
+##  Transform an array of vertices using a matrix
+#
+#   \param vertices \type{numpy.ndarray} array of 3D vertices
+#   \param transformation a 4x4 matrix
+#   \return \type{numpy.ndarray} the transformed vertices
+def transformVertices(vertices, transformation):
+    data = numpy.pad(vertices, ((0, 0), (0, 1)), "constant", constant_values=(0.0, 0.0))
+    data = data.dot(transformation.getTransposed().getData())
+    data += transformation.getData()[:, 3]
+    data = data[:, 0:3]
+    return data
+
+##  Round an array of vertices off to the nearest multiple of unit
+#
+#   \param vertices \type{numpy.ndarray} the source array of vertices
+#   \param unit \type{float} the unit to scale the vertices to
+#   \return \type{numpy.ndarray} the rounded vertices
+def roundVertexArray(vertices, unit):
+    expanded = vertices / unit
+    rounded = expanded.round(0)
+    return rounded * unit
+
+##  Extract the unique vectors from an array of vectors
+#
+#   \param vertices \type{numpy.ndarray} the source array of vertices
+#   \return \type{numpy.ndarray} the array of unique vertices
+def uniqueVertices(vertices):
+    vertex_byte_view = numpy.ascontiguousarray(vertices).view(
+        numpy.dtype((numpy.void, vertices.dtype.itemsize * vertices.shape[1])))
+    _, idx = numpy.unique(vertex_byte_view, return_index=True)
+    return vertices[idx]  # Select the unique rows by index.
+
+##  Compute an approximation of the convex hull of an array of vertices
+#
+#   \param vertices \type{numpy.ndarray} the source array of vertices
+#   \param target_count \type{int} the maximum number of vertices which may be in the result
+#   \return \type{scipy.spatial.qhull.ConvexHull} the convex hull or None if the input was degenerate
+def approximateConvexHull(vertex_data, target_count):
+    start_time = time()
+
+    input_max = target_count * 50   # Maximum number of vertices we want to feed to the convex hull algorithm.
+    unit_size = 0.125               # Initial rounding interval. i.e. round to 0.125.
+
+    # Round off vertices and extract the uniques until the number of vertices is below the input_max.
+    while len(vertex_data) > input_max:
+        vertex_data = uniqueVertices(roundVertexArray(vertex_data, unit_size))
+        unit_size *= 2
+
+    if len(vertex_data) < 4:
+        return None
+
+    # Take the convex hull and keep on rounding it off until the number of vertices is below the target_count.
+    hull_result = scipy.spatial.ConvexHull(vertex_data)
+    vertex_data = numpy.take(hull_result.points, hull_result.vertices, axis=0)
+
+    while len(vertex_data) > target_count:
+        vertex_data = uniqueVertices(roundVertexArray(vertex_data, unit_size))
+        hull_result = scipy.spatial.ConvexHull(vertex_data)
+        vertex_data = numpy.take(hull_result.points, hull_result.vertices, axis=0)
+        unit_size *= 2
+
+    end_time = time()
+    Logger.log("d", "approximateConvexHull(target_count=%s) Calculating 3D convex hull took %s seconds. %s input vertices. %s output vertices.",
+               target_count, end_time - start_time, len(vertex_data), len(hull_result.vertices))
+    return hull_result
+
+##  Calculate the normals of this mesh, assuming it was created by using addFace (eg; the verts are connected)
+#
+#   \param vertices \type{narray} list of vertices as a 1D list of float triples
+#   \param vertex_count \type{integer} the number of vertices to use in the vertices array
+#   \return \type{narray} list normals as a 1D array of floats, each group of 3 floats is a vector
+def calculateNormalsFromVertices(vertices, vertex_count):
+    start_time = time()
+    # Numpy magic!
+
+    # Old way of doing it, asuming that each face has 3 unique verts
+    # Then, take the cross product of each pair of vectors formed from a set of three vertices.
+    # The [] operator on a numpy array returns itself a numpy array. The slicing syntax is [begin:end:step],
+    # so in this case we perform the cross over a two arrays. The first array is built from the difference
+    # between every second item in the array starting at two and every third item in the array starting at
+    # zero. The second array is built from the difference between every third item in the array starting at
+    # two and every third item in the array starting at zero. The cross operation then returns an array of
+    # the normals of each set of three vertices.
+    n = numpy.cross(vertices[1:vertex_count:3] - vertices[:vertex_count:3],
+                    vertices[2:vertex_count:3] - vertices[:vertex_count:3])
+    # We then calculate the length for each normal and perform normalization on the normals.
+    l = numpy.linalg.norm(n, axis=1)
+    n[:, 0] /= l
+    n[:, 1] /= l
+    n[:, 2] /= l
+    # Finally, we store the normals per vertex, with each face normal being repeated three times, once for
+    # every vertex.
+    normals = n.repeat(3, axis=0)
+
+    end_time = time()
+    Logger.log("d", "Calculating normals took %s seconds", end_time - start_time)
+    return normals
+
+## Calculate the normals of this mesh of triagles using indexes.
+#
+#   \param vertices \type{narray} list of vertices as a 1D list of float triples
+#   \param indices \type{narray} list of indices as a 1D list of integers
+#   \param face_count \type{integer} the number of triangles defined by the indices array
+#   \return \type{narray} list normals as a 1D array of floats, each group of 3 floats is a vector
+def calculateNormalsFromIndexedVertices(vertices, indices, face_count):
+    start_time = time()
+    # Numpy magic!
+    # First, reset the normals
+    normals = numpy.zeros((face_count*3, 3), dtype=numpy.float32)
+
+    for face in indices[0:face_count]:
+        #print(self._vertices[face[0]])
+        #print(self._vertices[face[1]])
+        #print(self._vertices[face[2]])
+        normals[face[0]] = numpy.cross(vertices[face[0]] - vertices[face[1]], vertices[face[0]] - vertices[face[2]])
+        length = numpy.linalg.norm(normals[face[0]])
+        normals[face[0]] /= length
+        normals[face[1]] = normals[face[0]]
+        normals[face[2]] = normals[face[0]]
+    end_time = time()
+    Logger.log("d", "Calculating normals took %s seconds", end_time - start_time)
+    return normals

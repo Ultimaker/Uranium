@@ -21,10 +21,12 @@ class SettingPropertyProvider(QObject):
         self._stack_id = ""
         self._stack = None
         self._key = ""
+        self._relations = set()
         self._watched_properties = []
         self._property_values = {}
         self._store_index = 0
         self._value_used = None
+        self._stack_levels = []
 
     ##  Set the containerStackId property.
     def setContainerStackId(self, stack_id):
@@ -105,11 +107,17 @@ class SettingPropertyProvider(QObject):
     def storeIndex(self):
         return self._store_index
 
+    stackLevelChanged = pyqtSignal()
+
     ##  At what levels in the stack does the value(s) for this setting occur?
-    @pyqtProperty("QVariantList", notify = propertiesChanged)
+    @pyqtProperty("QVariantList", notify = stackLevelChanged)
     def stackLevels(self):
         if not self._stack:
             return -1
+
+        return self._stack_levels
+
+    def _updateStackLevels(self):
         levels = []
         for container in self._stack.getContainers():
             try:
@@ -117,7 +125,9 @@ class SettingPropertyProvider(QObject):
                     levels.append(self._stack.getContainerIndex(container))
             except AttributeError:
                 continue
-        return levels
+        if levels != self._stack_levels:
+            self._stack_levels = levels
+            self.stackLevelChanged.emit()
 
     ##  Set the value of a property.
     #
@@ -170,24 +180,20 @@ class SettingPropertyProvider(QObject):
         if self._value_used is not None:
             return self._value_used
 
-        relations = self._stack.getProperty(self._key, "relations")
-        if relations:
-            relations = filter(lambda r: r.type == UM.Settings.SettingRelation.RelationType.RequiredByTarget and r.role == "value", self._stack.getProperty(self._key, "relations"))
-
         definition = self._stack.getSettingDefinition(self._key)
         if not definition:
             return False
 
         relation_count = 0
         value_used_count = 0
-        for relation in relations:
-            # If the setting is not a (x-times-grand)child of this setting, ignore it.
-            if not definition.findDefinitions(key = relation.target.key):
+        for key in self._relations:
+            # If the setting is not a descendant of this setting, ignore it.
+            if not definition.isDescendant(key):
                 continue
 
             relation_count += 1
 
-            if self._stack.getProperty(relation.target.key, "state") != UM.Settings.InstanceState.User:
+            if self._stack.getProperty(key, "state") != UM.Settings.InstanceState.User:
                 value_used_count += 1
 
         self._value_used = relation_count == 0 or (relation_count > 0 and value_used_count != 0)
@@ -197,12 +203,9 @@ class SettingPropertyProvider(QObject):
 
     def _onPropertyChanged(self, key, property_name):
         if key != self._key:
-            relations = self._stack.getProperty(self._key, "relations")
-            if relations:
-                relations = filter(lambda r: r.target.key == key and r.type == UM.Settings.SettingRelation.RelationType.RequiredByTarget and r.role == "value", relations)
-                for relation in relations:
-                    self._value_used = None
-                    self.isValueUsedChanged.emit()
+            if key in self._relations:
+                self._value_used = None
+                self.isValueUsedChanged.emit()
 
             return
 
@@ -214,10 +217,14 @@ class SettingPropertyProvider(QObject):
         if self._property_values[property_name] != value:
             self._property_values[property_name] = value
             self.propertiesChanged.emit()
+        self._updateStackLevels()
 
     def _update(self, container = None):
         if not self._stack or not self._watched_properties or not self._key:
             return
+
+        for relation in filter(lambda r: r.type == UM.Settings.SettingRelation.RelationType.RequiredByTarget and r.role == "value", self._stack.getProperty(self._key, "relations")):
+            self._relations.add(relation.target.key)
 
         new_properties = {}
         for property_name in self._watched_properties:

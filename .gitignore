@@ -1,3 +1,16 @@
+# CMake
+CMakeFiles/*
+cmake_install.cmake
+CMakeCache.txt
+CPackSourceConfig.cmake
+
+# CMake - Makefile generator
+Makefile
+
+# JUnit
+junit.xml
+
+# Different files
 *.pyc
 *kdev*
 __pycache__
@@ -16,6 +29,10 @@ _eric6project/Uranium.e4t
 .cache
 *.kate-swp
 
-## Eclipse+PyDev
+## Eclipse+PyDev incl. Mylyn
 .project
+.settings/org.eclipse.mylyn.tasks.ui.prefs
 .pydevproject
+
+## IntelliJ projects
+.idea

@@ -75,6 +75,6 @@ class MirrorToolHandle(ToolHandle):
             axis = Vector.Unit_X,
             angle = -90
         )
-
-        self.setSolidMesh(mb.getData())
-        self.setSelectionMesh(mb.getData())
+        mesh = mb.build()
+        self.setSolidMesh(mesh)
+        self.setSelectionMesh(mesh)
