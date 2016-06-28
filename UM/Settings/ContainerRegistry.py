@@ -148,6 +148,13 @@ class ContainerRegistry:
                             continue
                         except AttributeError:
                             pass
+                    if key == "read_only":
+                        try:
+                            if value != container.isReadOnly():
+                                matches_container = False
+                            continue
+                        except AttributeError:
+                            pass
                     if value != container.getMetaDataEntry(key):
                         matches_container = False
                     continue
