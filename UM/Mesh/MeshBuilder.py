@@ -346,9 +346,9 @@ class MeshBuilder:
             return
 
         if self.hasIndices() and not fast:
-            self._normals = calculateNormalsFromVertices(self._vertices, self._vertex_count)
-        else:
             self._normals = calculateNormalsFromIndexedVertices(self._vertices, self._indices, self._face_count)
+        else:
+            self._normals = calculateNormalsFromVertices(self._vertices, self._vertex_count)
 
     ##  Adds a 3-dimensional line to the mesh of this mesh builder.
     #

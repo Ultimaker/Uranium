@@ -134,9 +134,10 @@ class MeshData:
             transformed_normals = None
             if self._normals is not None:
                 if self.hasIndices():
-                    transformed_normals = calculateNormalsFromVertices(transformed_vertices, self._vertex_count)
+                    transformed_normals = calculateNormalsFromIndexedVertices(transformed_vertices, self._indices,
+                                                                              self._face_count)
                 else:
-                    transformed_normals = calculateNormalsFromIndexedVertices(transformed_vertices, self._indices, self._face_count)
+                    transformed_normals = calculateNormalsFromVertices(transformed_vertices, self._vertex_count)
 
             return self.set(vertices=transformed_vertices, normals=transformed_normals)
         else:
