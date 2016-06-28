@@ -3,9 +3,8 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 from UM.Mesh.MeshReader import MeshReader
-from UM.Mesh.MeshData import MeshData
+from UM.Mesh.MeshBuilder import MeshBuilder
 import os
-import struct
 from UM.Scene.SceneNode import SceneNode
 
 from UM.Job import Job
@@ -16,7 +15,6 @@ class OBJReader(MeshReader):
         self._supported_extensions = [".obj"]
 
     def read(self, file_name):
-        mesh = None
         scene_node = None
 
         extension = os.path.splitext(file_name)[1]
@@ -27,8 +25,8 @@ class OBJReader(MeshReader):
             face_list = []
             scene_node = SceneNode()
 
-            mesh = MeshData()
-            scene_node.setMeshData(mesh)
+            mesh_builder = MeshBuilder()
+            mesh_builder.setFileName(file_name)
             f = open(file_name, "rt")
             for line in f:
                 parts = line.split()
@@ -53,7 +51,7 @@ class OBJReader(MeshReader):
                 Job.yieldThread()
             f.close()
 
-            mesh.reserveVertexCount(3 * len(face_list))
+            mesh_builder.reserveVertexCount(3 * len(face_list))
             num_vertices = len(vertex_list)
             num_normals = len(normal_list)
 
@@ -89,21 +87,22 @@ class OBJReader(MeshReader):
                 if k < 0 or k >= num_vertices:
                     k = 0
                 if ni != -1 and nj != -1 and nk != -1:
-                    mesh.addFaceWithNormals(vertex_list[i][0], vertex_list[i][1], vertex_list[i][2], normal_list[ni][0], normal_list[ni][1], normal_list[ni][2], vertex_list[j][0], vertex_list[j][1], vertex_list[j][2], normal_list[nj][0], normal_list[nj][1], normal_list[nj][2], vertex_list[k][0], vertex_list[k][1], vertex_list[k][2],normal_list[nk][0], normal_list[nk][1], normal_list[nk][2])
+                    mesh_builder.addFaceWithNormals(vertex_list[i][0], vertex_list[i][1], vertex_list[i][2], normal_list[ni][0], normal_list[ni][1], normal_list[ni][2], vertex_list[j][0], vertex_list[j][1], vertex_list[j][2], normal_list[nj][0], normal_list[nj][1], normal_list[nj][2], vertex_list[k][0], vertex_list[k][1], vertex_list[k][2],normal_list[nk][0], normal_list[nk][1], normal_list[nk][2])
                 else:
-                    mesh.addFace(vertex_list[i][0], vertex_list[i][1], vertex_list[i][2], vertex_list[j][0], vertex_list[j][1], vertex_list[j][2], vertex_list[k][0], vertex_list[k][1], vertex_list[k][2])
+                    mesh_builder.addFaceByPoints(vertex_list[i][0], vertex_list[i][1], vertex_list[i][2], vertex_list[j][0], vertex_list[j][1], vertex_list[j][2], vertex_list[k][0], vertex_list[k][1], vertex_list[k][2])
 
                 if ui != -1:
-                    mesh.setVertexUVCoordinates(mesh.getVertexCount() - 3, uv_list[ui][0], uv_list[ui][1])
+                    mesh_builder.setVertexUVCoordinates(mesh_builder.getVertexCount() - 3, uv_list[ui][0], uv_list[ui][1])
 
                 if uj != -1:
-                    mesh.setVertexUVCoordinates(mesh.getVertexCount() - 2, uv_list[uj][0], uv_list[uj][1])
+                    mesh_builder.setVertexUVCoordinates(mesh_builder.getVertexCount() - 2, uv_list[uj][0], uv_list[uj][1])
 
                 if uk != -1:
-                    mesh.setVertexUVCoordinates(mesh.getVertexCount() - 1, uv_list[uk][0], uv_list[uk][1])
+                    mesh_builder.setVertexUVCoordinates(mesh_builder.getVertexCount() - 1, uv_list[uk][0], uv_list[uk][1])
 
                 Job.yieldThread()
-            if not mesh.hasNormals():
-                mesh.calculateNormals(fast = True)
+            if not mesh_builder.hasNormals():
+                mesh_builder.calculateNormals(fast = True)
+            scene_node.setMeshData(mesh_builder.build())
 
         return scene_node

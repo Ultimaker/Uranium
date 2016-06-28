@@ -7,4 +7,6 @@ from .InstanceContainersModel import InstanceContainersModel
 from .ContainerStacksModel import ContainerStacksModel
 
 from .SettingPropertyProvider import SettingPropertyProvider
+
+from .SettingVisibilityHandler import SettingVisibilityHandler
 from .SettingPreferenceVisibilityHandler import SettingPreferenceVisibilityHandler

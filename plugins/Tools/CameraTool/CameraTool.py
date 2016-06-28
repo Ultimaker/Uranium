@@ -241,12 +241,12 @@ class CameraTool(Tool):
         my.setByRotationAxis(dx, Vector.Unit_Y)
 
         mx = Matrix(my.getData())
-        mx.rotateByAxis(dy, Vector.Unit_Y.cross(diff).normalize())
+        mx.rotateByAxis(dy, Vector.Unit_Y.cross(diff).normalized())
 
         n = diff.multiply(mx)
 
         try:
-            angle = math.acos(Vector.Unit_Y.dot(n.getNormalized()))
+            angle = math.acos(Vector.Unit_Y.dot(n.normalized()))
         except ValueError:
             return
 

@@ -19,6 +19,7 @@ class Controller():
     def __init__(self, application):
         super().__init__()  # Call super to make multiple inheritance work.
         self._active_tool = None
+        self._tool_operation_active = False
         self._tools = {}
 
         self._input_devices = {}
@@ -148,11 +149,24 @@ class Controller():
         name = tool.getPluginId()
         if name not in self._tools:
             self._tools[name] = tool
-            tool.operationStarted.connect(self.toolOperationStarted)
-            tool.operationStopped.connect(self.toolOperationStopped)
+            tool.operationStarted.connect(self._onToolOperationStarted)
+            tool.operationStopped.connect(self._onToolOperationStopped)
             self.toolsChanged.emit()
         else:
             Logger.log("w", "%s was already added to tool list. Unable to add it again.", name)
+
+    def _onToolOperationStarted(self, tool):
+        self._tool_operation_active = True
+        self.toolOperationStarted.emit(tool)
+
+    def _onToolOperationStopped(self, tool):
+        self._tool_operation_active = False
+        self.toolOperationStopped.emit(tool)
+
+    ##  Gets whether a tool is currently in use
+    #   \return \type{bool} true if a tool current being used.
+    def isToolOperationActive(self):
+        return self._tool_operation_active
 
     ##  Request active tool. Returns None if there is no active tool
     #   \return Tool \type{Tool} if an tool is active, None otherwise.

@@ -49,10 +49,7 @@ class MeshFileHandler(object):
                     # If the result has a mesh and no children it needs to be centered
                     if result.getMeshData() and len(result.getChildren()) == 0:
                         extents = result.getMeshData().getExtents()
-                        move_vector = Vector()
-                        move_vector.setX(extents.center.x)
-                        move_vector.setY(extents.center.y) # Ensure that bottom is on 0 (above plate)
-                        move_vector.setZ(extents.center.z)
+                        move_vector = Vector(extents.center.x, extents.center.y, extents.center.z)
                         result.setCenterPosition(move_vector)
 
                         if result.getMeshData().getExtents().bottom != 0:

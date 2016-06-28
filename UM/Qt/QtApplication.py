@@ -11,20 +11,14 @@ from PyQt5.QtQml import QQmlApplicationEngine, qmlRegisterType, qmlRegisterSingl
 from PyQt5.QtWidgets import QApplication, QSplashScreen
 from PyQt5.QtGui import QGuiApplication, QPixmap
 from PyQt5.QtCore import QTimer
-# Load the SVG image loader plugin. This module isn't directly used, but is needed for SVG icons.
-import PyQt5.QtSvg
-
 from UM.Application import Application
 from UM.Qt.QtRenderer import QtRenderer
 from UM.Qt.Bindings.Bindings import Bindings
-from UM.JobQueue import JobQueue
 from UM.Signal import Signal, signalemitter
 from UM.Resources import Resources
 from UM.Logger import Logger
 from UM.Preferences import Preferences
 from UM.i18n import i18nCatalog
-
-from UM.Settings.ContainerRegistry import ContainerRegistry
 
 # Raised when we try to use an unsupported version of a dependency.
 class UnsupportedVersionError(Exception):
@@ -92,10 +86,6 @@ class QtApplication(QApplication, Application):
         Logger.log("i", "Command line arguments: %s", self._parsed_command_line)
         self._plugin_registry.checkRequiredPlugins(self.getRequiredPlugins())
 
-        self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Loading machines..."))
-
-        #self.getMachineManager().loadAll()
-
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Loading preferences..."))
         try:
             file = Resources.getPath(Resources.Preferences, self.getApplicationName() + ".cfg")
@@ -105,13 +95,13 @@ class QtApplication(QApplication, Application):
 
     def run(self):
         pass
-    
+
     def hideMessage(self, message):
         with self._message_lock:
             if message in self._visible_messages:
                 self._visible_messages.remove(message)
                 self.visibleMessageRemoved.emit(message)
-    
+
     def showMessage(self, message):
         with self._message_lock:
             if message not in self._visible_messages:
@@ -137,15 +127,15 @@ class QtApplication(QApplication, Application):
         self._engine.rootContext().setContextProperty("QT_VERSION_STR", QT_VERSION_STR)
 
         self.registerObjects(self._engine)
-        
+
         self._engine.load(self._main_qml)
         self.engineCreatedSignal.emit()
-    
+
     engineCreatedSignal = Signal()
 
     def isShuttingDown(self):
         return self._shutting_down
-    
+
     def registerObjects(self, engine):
         pass
 

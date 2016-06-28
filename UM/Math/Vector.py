@@ -4,7 +4,6 @@
 import numpy
 import numpy.linalg
 import math
-from copy import deepcopy
 from UM.Math.Float import Float
 
 # Disable divide-by-zero warnings so that 1.0 / (1.0, 0.0, 0.0) returns (1.0, Inf, Inf) without complaining
@@ -13,33 +12,24 @@ numpy.seterr(divide="ignore")
 
 ##  Simple 3D-vector class based on numpy arrays.
 #
-#   This class represents a 3-dimensional vector.
+#   This class represents an immutable 3-dimensional vector.
 class Vector(object):
     Unit_X = None
     Unit_Y = None
     Unit_Z = None
 
-    def __init__(self, *args, **kwargs):
-        if len(args) == 3:
-            self._data = numpy.array([args[0], args[1], args[2]],dtype = numpy.float64)
-        elif "data" in kwargs:
-            self._data = kwargs["data"].copy()
-        else:
-            self._data = numpy.zeros(3, dtype = numpy.float64)
-    
-    ##  Set the data of the vector
+    ##  Initialize a new vector
     #   \param x X coordinate of vector.
     #   \param y Y coordinate of vector.
     #   \param z Z coordinate of vector.
-    def setData(self, x = 0,y = 0,z = 0):
-        self._data = numpy.array([x,y,z],dtype = numpy.float64)
-    
-    def flip(self):
-        self._data[0] = -1 * self._data[0]
-        self._data[1] = -1 * self._data[1]
-        self._data[2] = -1 * self._data[2]
-        return self
-    
+    def __init__(self, x=None, y=None, z=None, data=None):
+        if x is not None and y is not None and z is not None:
+            self._data = numpy.array([x, y, z], dtype = numpy.float64)
+        elif data is not None:
+            self._data = data.copy()
+        else:
+            self._data = numpy.zeros(3, dtype = numpy.float64)
+
     ##  Get numpy array with the data
     #   \returns numpy array of length 3 holding xyz data.
     def getData(self):
@@ -50,31 +40,22 @@ class Vector(object):
     def x(self):
         return numpy.float64(self._data[0])
 
-    ##  Set the x component of this vector
-    #   \param value The value for the x component
-    def setX(self, value):
-        self._data[0] = numpy.float64(value)
-
     ##  Return the y component of this vector
     @property
     def y(self):
         return numpy.float64(self._data[1])
-
-    ##  Set the y component of this vector
-    #   \param value The value for the y component
-    def setY(self, value):
-        self._data[1] = numpy.float64(value)
 
     ## Return the z component of this vector
     @property
     def z(self):
         return numpy.float64(self._data[2])
 
-    ##  Set the z component of this vector
-    #   \param value The value for the z component
-    def setZ(self, value):
-        self._data[2] = numpy.float64(value)
-    
+    def set(self, x=None, y=None, z=None):
+        new_x = self._data[0] if x is None else x
+        new_y = self._data[1] if y is None else y
+        new_z = self._data[2] if z is None else z
+        return Vector(new_x, new_y, new_z)
+
     ##  Get the angle from this vector to another
     def angleToVector(self, vector):
         v0 = numpy.array(self._data, dtype = numpy.float64, copy=False)
@@ -83,16 +64,14 @@ class Vector(object):
         dot /= self._normalizeVector(v0) * self._normalizeVector(v1)
         return numpy.arccos(numpy.fabs(dot))
     
-    def normalize(self):
+    def normalized(self):
         l = self.length()
-        if l != 0:
-            self._data /= l
-        return self
+        if l !=0:
+            new_data = self._data / l
+            return Vector(data=new_data)
+        else:
+            return self
 
-    def getNormalized(self):
-        other = deepcopy(self)
-        return other.normalize()
-    
     ##  Return length, i.e. Euclidean norm, of ndarray along axis.
     def _normalizeVector(self, data):
         data = numpy.array(data, dtype = numpy.float64, copy=True)
@@ -142,93 +121,77 @@ class Vector(object):
         return Vector(self.x * other.x, self.y * other.y, self.z * other.z)
 
     def __eq__(self, other):
-        return Float.fuzzyCompare(self.x, other.x, 1e-6) and Float.fuzzyCompare(self.y, other.y, 1e-6) and Float.fuzzyCompare(self.z, other.z, 1e-6)
+        if self is other:
+            return True
+        if other is None:
+            return False
+        return self.equals(other)
+
+    ## Compares this vector to another vector.
+    #
+    #   \param epsilon optional tolerance value for the comparision.
+    #   \returns True if the two vectors are the same.
+    def equals(self, other, epsilon=1e-6):
+        return Float.fuzzyCompare(self.x, other.x, epsilon) and \
+               Float.fuzzyCompare(self.y, other.y, epsilon) and \
+               Float.fuzzyCompare(self.z, other.z, epsilon)
 
     def __add__(self, other):
-        v = Vector(data = self._data)
-        v += other
-        return v
+        if type(other) is Vector:
+            return Vector(data=self._data + other._data)
+        else:
+            return Vector(data=self._data + other)
 
     def __iadd__(self, other):
-        if type(other) is float:
-            self._data[0] += other
-            self._data[1] += other
-            self._data[2] += other
-        elif type(other) is Vector:
-            self._data[0] += other._data[0]
-            self._data[1] += other._data[1]
-            self._data[2] += other._data[2]
-        else:
-            raise NotImplementedError()
-
-        return self
+        return self + other
 
     def __sub__(self, other):
-        v = Vector(data = self._data)
-        v -= other
-        return v
+        if type(other) is Vector:
+            return Vector(data=self._data - other._data)
+        else:
+            return Vector(data=self._data - other)
 
     def __isub__(self, other):
-        if type(other) is float:
-            self._data[0] -= other
-            self._data[1] -= other
-            self._data[2] -= other
-        elif type(other) is Vector:
-            self._data[0] -= other._data[0]
-            self._data[1] -= other._data[1]
-            self._data[2] -= other._data[2]
-        else:
-            raise NotImplementedError()
-
-        return self
+        return self - other
 
     def __mul__(self, other):
-        v = deepcopy(self)
-        v *= other
-        return v
+        if isNumber(other):
+            new_data = self._data * other
+        elif type(other) is Vector:
+            new_data = self._data * other._data
+        else:
+            raise NotImplementedError()
+        return Vector(data=new_data)
 
     def __imul__(self, other):
-        t = type(other)
-        if t is float or t is numpy.float32 or t is numpy.float64 or t is int:
-            self._data *= other
-            return self
-        elif t is Vector: #Element-wise multiplication.
-            self._data[0] *= other._data[0]
-            self._data[1] *= other._data[1]
-            self._data[2] *= other._data[2]
-            return self
-        else:
-            raise NotImplementedError()
+        return self * other
 
     def __rmul__(self, other):
-        v = deepcopy(self)
-        v *= other
-        return v
+        return self * other
 
     def __truediv__(self, other):
-        v = Vector(data = self._data)
-        v /= other
-        return v
+        if isNumber(other):
+            new_data = self._data / other
+        elif type(other) is Vector:
+            new_data = self._data / other._data
+        else:
+            raise NotImplementedError()
+        return Vector(data=new_data)
 
     def __itruediv__(self, other):
-        if type(other) is float or type(other) is int:
-            self._data /= other
-            return self
-        if type(other) is Vector:
-            self._data /= other._data
-            return self
-        else:
-            raise NotImplementedError()
+        return self / other
 
     def __rtruediv__(self, other):
-        if type(other) is float:
-            v = numpy.float64(other) / self._data
-            return Vector(v[0], v[1], v[2])
+        if isNumber(other):
+            new_data = other / self._data
+        elif type(other) is Vector:
+            new_data = other._data / self._data
         else:
             raise NotImplementedError()
+        return Vector(data=new_data)
 
     def __neg__(self):
-        return Vector(data = -self._data)
+        return Vector(data = -1 * self._data)
 
     def __repr__(self):
         return "Vector({0}, {1}, {2})".format(self._data[0], self._data[1], self._data[2])
@@ -245,6 +208,16 @@ class Vector(object):
     def __ge__(self, other):
         return self._data[0] >= other._data[0] and self._data[1] >= other._data[1] and self._data[2] >= other._data[2]
 
+    # These fields are filled in below. This is needed to help static analysis tools (read: PyCharm)
+    Null = None
+    Unit_Y = None
+    Unit_X = None
+    Unit_Z = None
+
+def isNumber(value):
+    return type(value) in [float, int, numpy.float32, numpy.float64]
+
+Vector.Null = Vector()
 Vector.Unit_X = Vector(1, 0, 0)
 Vector.Unit_Y = Vector(0, 1, 0)
 Vector.Unit_Z = Vector(0, 0, 1)
