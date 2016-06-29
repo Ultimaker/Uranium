@@ -1,4 +1,4 @@
-# Copyright (c) 2016 Ultimaker B.V.
+    # Copyright (c) 2016 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 import os
@@ -261,6 +261,22 @@ class ContainerRegistry:
 
         else:
             Logger.log("w", "Could not remove container with id %s, as no container with that ID is known")
+
+    def renameContainer(self, container_id, new_name, new_id = None):
+        containers = self.findContainers(None, id = container_id)
+        if not containers:
+            return
+
+        container = containers[0]
+
+        if new_name == container.getName():
+            return
+
+        # Remove all files relating to the old container
+        self._deleteFiles(container)
+        container.setName(new_name)
+        if new_id:
+            container._id = new_id
 
     def saveAll(self):
 
