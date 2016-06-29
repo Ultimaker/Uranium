@@ -99,4 +99,5 @@ class Bindings:
         qmlRegisterType(UM.Settings.Models.ContainerStacksModel, "UM", 1, 2, "ContainerStacksModel")
         qmlRegisterType(UM.Settings.Models.SettingPropertyProvider, "UM", 1, 2, "SettingPropertyProvider")
         qmlRegisterType(UM.Settings.Models.SettingPreferenceVisibilityHandler, "UM", 1, 2, "SettingPreferenceVisibilityHandler")
+        qmlRegisterType(UM.Settings.Models.ContainerPropertyProvider, "UM", 1, 2, "ContainerPropertyProvider")
 
