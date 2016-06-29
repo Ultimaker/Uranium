@@ -3,6 +3,7 @@
 
 import configparser
 import io
+import copy
 
 from UM.Signal import Signal, signalemitter
 from UM.PluginObject import PluginObject
@@ -89,6 +90,7 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
     def setMetaData(self, metadata):
         if metadata != self._metadata:
             self._metadata = metadata
+            self._dirty = True
             self.metaDataChanged.emit()
 
     ##  \copydoc ContainerInterface::getMetaDataEntry
@@ -107,6 +109,7 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
     def setMetaDataEntry(self, key, value):
         if key in self._metadata:
             self._metadata[key] = value
+            self._dirty = True
         else:
             Logger.log("w", "Meta data with key %s was not found. Unable to change.", key)
 
@@ -176,6 +179,13 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
     #   \returns list of keys
     def getAllKeys(self):
         return [key for key in self._instances]
+
+    def duplicate(self, new_id, new_name = None):
+        new_container = copy.deepcopy(self)
+        new_container._id = new_id
+        new_container.setName(new_name if new_name else new_id)
+        new_container._dirty = True
+        return new_container
 
     ##  \copydoc ContainerInterface::serialize
     #
