@@ -8,6 +8,7 @@ import copy
 from UM.Resources import Resources
 from UM.PluginObject import PluginObject
 from UM.Logger import Logger
+from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType
 from UM.Signal import Signal
 
 from . import ContainerInterface
@@ -23,6 +24,14 @@ class IncorrectDefinitionVersionError(Exception):
 
 class InvalidOverrideError(Exception):
     pass
+
+MimeTypeDatabase.addMimeType(
+    MimeType(
+        name = "application/x-uranium-definitioncontainer",
+        comment = "Uranium Definition Container",
+        suffixes = ["def.json"]
+    )
+)
 
 ##  A container for SettingDefinition objects.
 #

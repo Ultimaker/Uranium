@@ -6,6 +6,7 @@ import io
 from UM.Signal import Signal, signalemitter
 from UM.PluginObject import PluginObject
 from UM.Logger import Logger
+from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType
 from UM.Settings.DefinitionContainer import DefinitionContainer #For getting all definitions in this stack.
 
 import UM.Settings.ContainerRegistry
@@ -20,6 +21,13 @@ class IncorrectVersionError(Exception):
 class InvalidContainerStackError(Exception):
     pass
 
+MimeTypeDatabase.addMimeType(
+    MimeType(
+        name = "application/x-uranium-containerstack",
+        comment = "Uranium Container Stack",
+        suffixes = [ "stack.cfg" ]
+    )
+)
 
 ##  A stack of setting containers to handle setting value retrieval.
 @signalemitter

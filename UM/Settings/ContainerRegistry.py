@@ -25,31 +25,10 @@ class ContainerRegistry:
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        mime = MimeType(
-            name = "application/x-uranium-definitioncontainer",
-            comment = "Uranium Definition Container",
-            suffixes = [ "def.json" ]
-        )
-        MimeTypeDatabase.addMimeType(mime)
-        mime = MimeType(
-            name = "application/x-uranium-instancecontainer",
-            comment = "Uranium Instance Container",
-            suffixes = [ "inst.cfg" ]
-        )
-        MimeTypeDatabase.addMimeType(mime)
-        mime = MimeType(
-            name = "application/x-uranium-containerstack",
-            comment = "Uranium Container Stack",
-            suffixes = [ "stack.cfg" ]
-        )
-        MimeTypeDatabase.addMimeType(mime)
-
         self._emptyInstanceContainer = _EmptyInstanceContainer("empty")
 
-        self._containers = [ self._emptyInstanceContainer ]
-
+        self._containers = [self._emptyInstanceContainer]
         self._id_container_cache = {}
-
         self._resource_types = [Resources.DefinitionContainers]
 
     containerAdded = Signal()

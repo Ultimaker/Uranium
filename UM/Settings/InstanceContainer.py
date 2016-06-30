@@ -7,6 +7,7 @@ import io
 from UM.Signal import Signal, signalemitter
 from UM.PluginObject import PluginObject
 from UM.Logger import Logger
+from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType
 
 import UM.Settings.ContainerRegistry
 
@@ -22,6 +23,14 @@ class IncorrectInstanceVersionError(Exception):
 
 class DefinitionNotFoundError(Exception):
     pass
+
+MimeTypeDatabase.addMimeType(
+    MimeType(
+        name = "application/x-uranium-instancecontainer",
+        comment = "Uranium Instance Container",
+        suffixes = [ "inst.cfg" ]
+    )
+)
 
 ##  A container for SettingInstance objects.
 #
