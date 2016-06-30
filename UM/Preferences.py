@@ -5,8 +5,17 @@ import configparser
 
 from UM.Signal import Signal, signalemitter
 from UM.Logger import Logger
-
+from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType #To register the MIME type of the preference file.
 from UM.SaveFile import SaveFile
+
+MimeTypeDatabase.addMimeType(
+    MimeType(
+        name = "application/x-uranium-preferences",
+        comment = "Uranium Preferences File",
+        suffixes = ["cfg"],
+        preferred_suffix = "cfg"
+    )
+)
 
 ##      Preferences are application based settings that are saved for future use. 
 #       Typical preferences would be window size, standard machine, etc.
