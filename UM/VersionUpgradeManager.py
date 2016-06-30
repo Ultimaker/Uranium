@@ -260,6 +260,8 @@ class VersionUpgradeManager:
             except Exception as e:
                 Logger.log("w", "Exception in %s upgrade with %s: %s", old_configuration_type, upgrade.__module__, str(e))
                 return False
+            if not configuration: #Upgrade failed.
+                return False
             version = new_version
             configuration_type = new_type
 
