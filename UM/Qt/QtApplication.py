@@ -11,8 +11,6 @@ from PyQt5.QtQml import QQmlApplicationEngine, qmlRegisterType, qmlRegisterSingl
 from PyQt5.QtWidgets import QApplication, QSplashScreen
 from PyQt5.QtGui import QGuiApplication, QPixmap
 from PyQt5.QtCore import QTimer
-# Load the SVG image loader plugin. This module isn't directly used, but is needed for SVG icons.
-import PyQt5.QtSvg
 
 from UM.Application import Application
 from UM.Qt.QtRenderer import QtRenderer
