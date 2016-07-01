@@ -94,7 +94,6 @@ class SettingPropertyProvider(QObject):
     propertiesChanged = pyqtSignal()
     @pyqtProperty("QVariantMap", notify = propertiesChanged)
     def properties(self):
-
         return self._property_values
 
     def setStoreIndex(self, index):
@@ -222,7 +221,7 @@ class SettingPropertyProvider(QObject):
     def _update(self, container = None):
         if not self._stack or not self._watched_properties or not self._key:
             return
-
+        self._updateStackLevels()
         for relation in filter(lambda r: r.type == UM.Settings.SettingRelation.RelationType.RequiredByTarget and r.role == "value", self._stack.getProperty(self._key, "relations")):
             self._relations.add(relation.target.key)
 
