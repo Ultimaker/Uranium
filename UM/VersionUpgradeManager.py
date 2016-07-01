@@ -179,7 +179,8 @@ class VersionUpgradeManager:
             #pylint: disable=unused-variable
             directory_names = [directory_name for directory_name in directory_names if os.path.join(path, directory_name) not in exclude_paths] #Prune the exclude paths.
             for filename in filenames:
-                yield os.path.join(path, filename)
+                relative_path = os.path.relpath(path, directory)
+                yield os.path.join(relative_path, filename)
 
     ##  Gets the version of a machine instance file.
     #
@@ -215,16 +216,16 @@ class VersionUpgradeManager:
     #   file in question.
     #   \param old_version The version number in the file in question.
     def _storeOldFile(self, resource_directory, relative_path, old_version):
-        try: # For speed, first just try to rename the file without checking if the directory exists and stuff.
+        try: #For speed, first just try to rename the file without checking if the directory exists and stuff.
             os.rename(os.path.join(resource_directory,                          relative_path),
-                      os.path.join(resource_directory, "old", str(old_version), relative_path)) # Store the old file away.
-        except FileNotFoundError: # Assume the target directory doesn't exist yet. The other case is that the file itself doesn't exist, but that's a coding error anyway.
+                      os.path.join(resource_directory, "old", str(old_version), relative_path)) #Store the old file away.
+        except FileNotFoundError: #Assume the target directory doesn't exist yet. The other case is that the file itself doesn't exist, but that's a coding error anyway.
             try:
                 os.makedirs(os.path.join(resource_directory, "old", str(old_version)))
-            except OSError: # Assume that the directory already existed. Otherwise it's probably a permission error or OS-internal error, in which case we can't write anyway.
+            except OSError: #Assume that the directory already existed. Otherwise it's probably a permission error or OS-internal error, in which case we can't write anyway.
                 pass
             os.rename(os.path.join(resource_directory,                          relative_path),
-                      os.path.join(resource_directory, "old", str(old_version), relative_path)) # Try again!
+                      os.path.join(resource_directory, "old", str(old_version), relative_path)) #Try again!
 
     ##  Upgrades a single file to any version in self._current_versions.
     #
@@ -283,10 +284,10 @@ class VersionUpgradeManager:
                 new_filename += "." + mime_type.preferredSuffix
             elif mime_type.suffixes:
                 new_filename += "." + mime_type.suffixes[0]
-            configuration_file = os.path.join(storage_path, new_filename)
+            configuration_file_absolute = os.path.join(storage_path, new_filename)
 
             try:
-                with open(os.path.join(configuration_file), "w") as file_handle:
+                with open(os.path.join(configuration_file_absolute), "w") as file_handle:
                     file_handle.write(configuration) #Save the new file.
             except IOError:
                 Logger.log("w", "Couldn't write new configuration file to %s.", configuration_file_absolute)
