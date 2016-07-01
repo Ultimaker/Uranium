@@ -56,9 +56,9 @@ class QtApplication(QApplication, Application):
 
         self._version_upgrade_manager = VersionUpgradeManager(
             {
-                ("instance_container", UM.Settings.InstanceContainer.Version),
-                ("container_stack", UM.Settings.ContainerStack.Version),
-                ("preferences", UM.Preferences.Version)
+                ("instance_container", UM.Settings.InstanceContainer.Version): (Resources.getStoragePathForType(Resources.InstanceContainers), "application/x-uranium-instancecontainer"),
+                ("container_stack", UM.Settings.ContainerStack.Version):       (Resources.getStoragePathForType(Resources.ContainerStacks), "application/x-uranium-containerstack"),
+                ("preferences", UM.Preferences.Version):                       (Resources.getStoragePathForType(Resources.Preferences), "application/x-uranium-preferences")
             }
         )
 

@@ -11,6 +11,7 @@ from UM.Resources import Resources #To load old versions from.
 import UM.Application #To get the name of the application for a message.
 import UM.i18n #To translate the "upgrade succeeded" message.
 import UM.Message #To show the "upgrade succeeded" message.
+import UM.MimeTypeDatabase #To know how to save the resulting files.
 
 catalogue = UM.i18n.i18nCatalog("uranium")
 
@@ -38,8 +39,9 @@ class VersionUpgradeManager:
     #   This initialises the cache for shortest upgrade paths, and registers the
     #   version upgrade plug-ins.
     #
-    #   \param current_versions For each preference type currently in use, the
-    #   current version that is in use.
+    #   \param current_versions A dictionary of tuples of configuration types
+    #   and their versions currently in use, and with each of these a tuple of
+    #   where to store this type of file and its MIME type.
     def __init__(self, current_versions):
         self._version_upgrades = {} #For each config type and each version, gives a set of upgrade plug-ins that can convert them to something else.
         self._get_version_functions = {} #For each config type, gives a function with which to get the version number from those files.
@@ -268,6 +270,17 @@ class VersionUpgradeManager:
         #If the version changed, save the new file.
         if version != old_version or configuration_type != old_configuration_type:
             self._storeOldFile(storage_path_absolute, configuration_file, old_version)
+
+            #Finding out where to store this file.
+            storage_path, mime_type = self._current_versions[(configuration_type, version)]
+            mime_type = UM.MimeTypeDatabase.getMimeType(mime_type) #Get the actual MIME type object, from the name.
+            new_filename = os.path.splitext(configuration_file)[0]
+            if mime_type.preferredSuffix:
+                new_filename += mime_type.preferredSuffix
+            elif mime_type.suffixes:
+                new_filename += mime_type.suffixes[0]
+            configuration_file = os.path.join(storage_path, new_filename)
+
             try:
                 with open(os.path.join(configuration_file), "w") as file_handle:
                     file_handle.write(configuration) #Save the new file.
