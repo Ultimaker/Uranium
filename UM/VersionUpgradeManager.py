@@ -56,6 +56,9 @@ class VersionUpgradeManager:
     #
     #   The upgrade plug-ins must all be loaded at this point, or no upgrades
     #   can be performed.
+    #
+    #   \return True if anything was upgraded, or False if it was already up to
+    #   date.
     def upgrade(self):
         Logger.log("i", "Looking for old configuration files to upgrade.")
         upgraded = False #Did we upgrade something?
@@ -73,6 +76,7 @@ class VersionUpgradeManager:
         if upgraded:
             message = UM.Message(text=catalogue.i18nc("@info:version-upgrade", "A configuration from an older version of {0} was imported.", UM.Application.getInstance().getApplicationName()))
             message.show()
+        return upgraded
 
     # private:
 
