@@ -264,8 +264,8 @@ class VersionUpgradeManager:
             new_type, new_version, upgrade = paths[(configuration_type, version)]
             try:
                 configuration = upgrade(configuration)
-            except Exception as e:
-                Logger.log("w", "Exception in %s upgrade with %s: %s", old_configuration_type, upgrade.__module__, str(e))
+            except Exception as e: #Upgrade failed due to a coding error in the plug-in.
+                Logger.logException("w", "Exception in %s upgrade with %s: %s", old_configuration_type, upgrade.__module__, str(e))
                 return False
             if not configuration: #Upgrade failed.
                 return False
