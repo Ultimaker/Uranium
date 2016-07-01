@@ -89,15 +89,16 @@ class QtApplication(QApplication, Application):
         Logger.log("i", "Command line arguments: %s", self._parsed_command_line)
         self._plugin_registry.checkRequiredPlugins(self.getRequiredPlugins())
 
-        self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Updating configuration..."))
-        upgraded = self._version_upgrade_manager.upgrade()
-        if upgraded:
-            preferences = UM.Preferences.getInstance() #Preferences might have changed. Load them again.
-                                                       #Note that the language can't be updated, so that will always revert to English.
-            try:
-                preferences.readFromFile(Resources.getPath(Resources.Preferences, self._application_name + ".cfg"))
-            except FileNotFoundError:
-                pass
+        if self._version_upgrade_manager:
+            self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Updating configuration..."))
+            upgraded = self._version_upgrade_manager.upgrade()
+            if upgraded:
+                preferences = UM.Preferences.getInstance() #Preferences might have changed. Load them again.
+                                                           #Note that the language can't be updated, so that will always revert to English.
+                try:
+                    preferences.readFromFile(Resources.getPath(Resources.Preferences, self._application_name + ".cfg"))
+                except FileNotFoundError:
+                    pass
 
 
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Loading preferences..."))
