@@ -3,7 +3,7 @@
 
 ##      The point of a SceneNodeDecorator is that it can be added to a SceneNode, where it then provides decorations
 #       Decorations are functions of a SceneNodeDecorator that can be called (except for functions already defined
-#       in SceneNodeDecorator.
+#       in SceneNodeDecorator).
 #       \sa SceneNode
 class SceneNodeDecorator:
     def __init__(self):
@@ -17,4 +17,4 @@ class SceneNodeDecorator:
         return self._node
 
     def __deepcopy__(self, memo):
-        raise NotImplementedError("Subclasses of SceneNodeDecorator should implement thier own __deepcopy__() method.")
+        raise NotImplementedError("Subclasses of SceneNodeDecorator should implement their own __deepcopy__() method.")
