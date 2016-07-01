@@ -266,7 +266,7 @@ class VersionUpgradeManager:
             configuration_type = new_type
 
         #If the version changed, save the new file.
-        if version != old_version:
+        if version != old_version or configuration_type != old_configuration_type:
             self._storeOldFile(storage_path_absolute, configuration_file, old_version)
             try:
                 with open(os.path.join(configuration_file), "w") as file_handle:
