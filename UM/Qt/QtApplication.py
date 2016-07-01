@@ -18,7 +18,6 @@ from UM.Signal import Signal, signalemitter
 from UM.Resources import Resources
 from UM.Logger import Logger
 from UM.Preferences import Preferences
-from UM.VersionUpgradeManager import VersionUpgradeManager
 from UM.i18n import i18nCatalog
 import UM.Settings.InstanceContainer #For version upgrade to know the version number.
 import UM.Settings.ContainerStack #For version upgrade to know the version number.
@@ -53,14 +52,6 @@ class QtApplication(QApplication, Application):
         if plugin_path:
             Logger.log("i", "Adding QT5 plugin path: %s" % (plugin_path))
             QCoreApplication.addLibraryPath(plugin_path)
-
-        self._version_upgrade_manager = VersionUpgradeManager(
-            {
-                ("instance_container", UM.Settings.InstanceContainer.Version): (Resources.getStoragePathForType(Resources.InstanceContainers), "application/x-uranium-instancecontainer"),
-                ("container_stack", UM.Settings.ContainerStack.Version):       (Resources.getStoragePathForType(Resources.ContainerStacks), "application/x-uranium-containerstack"),
-                ("preferences", UM.Preferences.Version):                       (Resources.getStoragePathForType(Resources.Preferences), "application/x-uranium-preferences")
-            }
-        )
 
         os.environ["QSG_RENDER_LOOP"] = "basic"
         super().__init__(sys.argv, **kwargs)

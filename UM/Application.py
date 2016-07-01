@@ -56,6 +56,15 @@ class Application():
         if not hasattr(sys, "frozen"):
             Resources.addSearchPath(os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "resources"))
 
+        import UM.VersionUpgradeManager #Needs to be here to prevent circular dependencies.
+        self._version_upgrade_manager = UM.VersionUpgradeManager.VersionUpgradeManager(
+            {
+                ("instance_container", UM.Settings.InstanceContainer.Version): (Resources.getStoragePathForType(Resources.InstanceContainers), "application/x-uranium-instancecontainer"),
+                ("container_stack", UM.Settings.ContainerStack.Version):       (Resources.getStoragePathForType(Resources.ContainerStacks), "application/x-uranium-containerstack"),
+                ("preferences", UM.Preferences.Version):                       (Resources.getStoragePathForType(Resources.Preferences), "application/x-uranium-preferences")
+            }
+        )
+
         self._main_thread = threading.current_thread()
 
         super().__init__()  # Call super to make multiple inheritance work.
