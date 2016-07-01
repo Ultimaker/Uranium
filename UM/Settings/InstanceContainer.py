@@ -224,7 +224,7 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
         parser.read_string(serialized)
 
         if not "general" in parser or not "version" in parser["general"] or not "definition" in parser["general"]:
-            raise InvalidInstanceError("Missing required section 'general' or 'version' property")
+            raise InvalidInstanceError("Missing required section 'general', 'definition' property or 'version' property")
 
         if parser["general"].getint("version") != self.Version:
             raise IncorrectInstanceVersionError("Reported version {0} but expected version {1}".format(parser["general"].getint("version"), self.Version))
