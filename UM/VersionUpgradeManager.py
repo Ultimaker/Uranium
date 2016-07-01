@@ -276,9 +276,9 @@ class VersionUpgradeManager:
             mime_type = UM.MimeTypeDatabase.getMimeType(mime_type) #Get the actual MIME type object, from the name.
             new_filename = os.path.splitext(configuration_file)[0]
             if mime_type.preferredSuffix:
-                new_filename += mime_type.preferredSuffix
+                new_filename += "." + mime_type.preferredSuffix
             elif mime_type.suffixes:
-                new_filename += mime_type.suffixes[0]
+                new_filename += "." + mime_type.suffixes[0]
             configuration_file = os.path.join(storage_path, new_filename)
 
             try:
