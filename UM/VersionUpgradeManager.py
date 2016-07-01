@@ -289,3 +289,4 @@ class VersionUpgradeManager:
                 return False
             Logger.log("i", "Upgraded %s to version %s.", configuration_file, str(version))
             return True
+        return False #Version didn't change. Was already current.
