@@ -41,6 +41,7 @@ class Backend(PluginObject):
         self._port = 49674
         self._process = None
         self._backend_log = []
+        self._backend_log_max_lines = None
 
         Application.getInstance().callLater(self._createSocket)
 
@@ -58,7 +59,6 @@ class Backend(PluginObject):
                 self._createSocket()
                 return
 
-            self._backend_log = []
             self._process = self._runEngineProcess(command)
             Logger.log("i", "Started engine process: %s" % (self.getEngineCommand()[0]))
             self._backend_log.append(bytes("Calling engine with: %s\n" % self.getEngineCommand(), "utf-8"))
@@ -78,6 +78,9 @@ class Backend(PluginObject):
     ##  Get the logging messages of the backend connection.
     #   \returns  
     def getLog(self):
+        if self._backend_log_max_lines and type(self._backend_log_max_lines) == int:
+            while len(self._backend_log) >= self._backend_log_max_lines:
+                del(self._backend_log[0])
         return self._backend_log
 
     ##  \brief Convert byte array containing 3 floats per vertex
