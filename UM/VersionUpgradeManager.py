@@ -175,9 +175,7 @@ class VersionUpgradeManager:
             exclude_paths = []
         exclude_paths = [os.path.join(directory, exclude_path) for exclude_path in exclude_paths] #Prepend the specified directory before each exclude path.
         for (path, directory_names, filenames) in os.walk(directory, topdown=True):
-            #This variable IS used by os.walk as long as topdown == True.
-            #pylint: disable=unused-variable
-            directory_names = [directory_name for directory_name in directory_names if os.path.join(path, directory_name) not in exclude_paths] #Prune the exclude paths.
+            directory_names[:] = [directory_name for directory_name in directory_names if os.path.join(path, directory_name) not in exclude_paths] #Prune the exclude paths.
             for filename in filenames:
                 relative_path = os.path.relpath(path, directory)
                 yield os.path.join(relative_path, filename)
