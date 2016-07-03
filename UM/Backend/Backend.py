@@ -59,6 +59,8 @@ class Backend(PluginObject):
                 self._createSocket()
                 return
 
+            if not self._backend_log_max_lines:
+                self._backend_log = []
             self._process = self._runEngineProcess(command)
             Logger.log("i", "Started engine process: %s" % (self.getEngineCommand()[0]))
             self._backend_log.append(bytes("Calling engine with: %s\n" % self.getEngineCommand(), "utf-8"))
