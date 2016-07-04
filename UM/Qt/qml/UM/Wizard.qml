@@ -184,23 +184,13 @@ UM.Dialog
             }
 
             width: parent.width - wizardProgress.width - (2 *  UM.Theme.getSize("default_margin").width)
-            children: pagesModel.get(base.currentPage).page;
+            children: content;
 
             // In between property so we can listen to onConnectChanged
-            property var content: pagesModel.get(base.currentPage).page;
+            property var content: pagesModel.get(base.currentPage) ? pagesModel.get(base.currentPage).page : Item;
 
             // Connect the completed of the page to the nextPage of the wizard.
-            onContentChanged: content.onCompleted.connect(base.nextPage)
-        }
-
-        Connections
-        {
-            target: pageLoader.item
-            ignoreUnknownSignals: true
-            onReloadModel:
-            {
-                base.wizardModel = newModel
-            }
+            onContentChanged: { if (content.onCompleted) content.onCompleted.connect(base.nextPage) }
         }
 
         SystemPalette{ id: palette }

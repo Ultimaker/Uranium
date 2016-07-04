@@ -26,6 +26,7 @@ class SettingPropertyProvider(QObject):
         self._property_values = {}
         self._store_index = 0
         self._value_used = None
+        self._stack_levels = []
 
     ##  Set the containerStackId property.
     def setContainerStackId(self, stack_id):
@@ -93,7 +94,6 @@ class SettingPropertyProvider(QObject):
     propertiesChanged = pyqtSignal()
     @pyqtProperty("QVariantMap", notify = propertiesChanged)
     def properties(self):
-
         return self._property_values
 
     def setStoreIndex(self, index):
@@ -106,11 +106,17 @@ class SettingPropertyProvider(QObject):
     def storeIndex(self):
         return self._store_index
 
+    stackLevelChanged = pyqtSignal()
+
     ##  At what levels in the stack does the value(s) for this setting occur?
-    @pyqtProperty("QVariantList", notify = propertiesChanged)
+    @pyqtProperty("QVariantList", notify = stackLevelChanged)
     def stackLevels(self):
         if not self._stack:
             return -1
+
+        return self._stack_levels
+
+    def _updateStackLevels(self):
         levels = []
         for container in self._stack.getContainers():
             try:
@@ -118,7 +124,9 @@ class SettingPropertyProvider(QObject):
                     levels.append(self._stack.getContainerIndex(container))
             except AttributeError:
                 continue
-        return levels
+        if levels != self._stack_levels:
+            self._stack_levels = levels
+            self.stackLevelChanged.emit()
 
     ##  Set the value of a property.
     #
@@ -208,11 +216,12 @@ class SettingPropertyProvider(QObject):
         if self._property_values[property_name] != value:
             self._property_values[property_name] = value
             self.propertiesChanged.emit()
+        self._updateStackLevels()
 
     def _update(self, container = None):
         if not self._stack or not self._watched_properties or not self._key:
             return
-
+        self._updateStackLevels()
         for relation in filter(lambda r: r.type == UM.Settings.SettingRelation.RelationType.RequiredByTarget and r.role == "value", self._stack.getProperty(self._key, "relations")):
             self._relations.add(relation.target.key)
 

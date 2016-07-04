@@ -26,3 +26,6 @@ class GroupDecorator(SceneNodeDecorator):
             if not self.getNode().getParent() and self._old_parent:
                 self.getNode().setParent(self._old_parent)
                 self._old_parent = None
+
+    def __deepcopy__(self, memo):
+        return GroupDecorator()

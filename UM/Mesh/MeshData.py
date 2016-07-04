@@ -129,7 +129,17 @@ class MeshData:
     #   \param transformation 4x4 homogenous transformation matrix
     def getTransformed(self, transformation):
         if self._vertices is not None:
-            return self.set(vertices=transformVertices(self._vertices, transformation))
+            transformed_vertices = transformVertices(self._vertices, transformation)
+
+            transformed_normals = None
+            if self._normals is not None:
+                if self.hasIndices():
+                    transformed_normals = calculateNormalsFromIndexedVertices(transformed_vertices, self._indices,
+                                                                              self._face_count)
+                else:
+                    transformed_normals = calculateNormalsFromVertices(transformed_vertices, self._vertex_count)
+
+            return self.set(vertices=transformed_vertices, normals=transformed_normals)
         else:
             return MeshData(vertices = self._vertices)
 
@@ -292,8 +302,66 @@ def approximateConvexHull(vertex_data, target_count):
         vertex_data = uniqueVertices(roundVertexArray(vertex_data, unit_size))
         hull_result = scipy.spatial.ConvexHull(vertex_data)
         vertex_data = numpy.take(hull_result.points, hull_result.vertices, axis=0)
+        unit_size *= 2
 
     end_time = time()
     Logger.log("d", "approximateConvexHull(target_count=%s) Calculating 3D convex hull took %s seconds. %s input vertices. %s output vertices.",
                target_count, end_time - start_time, len(vertex_data), len(hull_result.vertices))
     return hull_result
+
+##  Calculate the normals of this mesh, assuming it was created by using addFace (eg; the verts are connected)
+#
+#   \param vertices \type{narray} list of vertices as a 1D list of float triples
+#   \param vertex_count \type{integer} the number of vertices to use in the vertices array
+#   \return \type{narray} list normals as a 1D array of floats, each group of 3 floats is a vector
+def calculateNormalsFromVertices(vertices, vertex_count):
+    start_time = time()
+    # Numpy magic!
+
+    # Old way of doing it, asuming that each face has 3 unique verts
+    # Then, take the cross product of each pair of vectors formed from a set of three vertices.
+    # The [] operator on a numpy array returns itself a numpy array. The slicing syntax is [begin:end:step],
+    # so in this case we perform the cross over a two arrays. The first array is built from the difference
+    # between every second item in the array starting at two and every third item in the array starting at
+    # zero. The second array is built from the difference between every third item in the array starting at
+    # two and every third item in the array starting at zero. The cross operation then returns an array of
+    # the normals of each set of three vertices.
+    n = numpy.cross(vertices[1:vertex_count:3] - vertices[:vertex_count:3],
+                    vertices[2:vertex_count:3] - vertices[:vertex_count:3])
+    # We then calculate the length for each normal and perform normalization on the normals.
+    l = numpy.linalg.norm(n, axis=1)
+    n[:, 0] /= l
+    n[:, 1] /= l
+    n[:, 2] /= l
+    # Finally, we store the normals per vertex, with each face normal being repeated three times, once for
+    # every vertex.
+    normals = n.repeat(3, axis=0)
+
+    end_time = time()
+    Logger.log("d", "Calculating normals took %s seconds", end_time - start_time)
+    return normals
+
+## Calculate the normals of this mesh of triagles using indexes.
+#
+#   \param vertices \type{narray} list of vertices as a 1D list of float triples
+#   \param indices \type{narray} list of indices as a 1D list of integers
+#   \param face_count \type{integer} the number of triangles defined by the indices array
+#   \return \type{narray} list normals as a 1D array of floats, each group of 3 floats is a vector
+def calculateNormalsFromIndexedVertices(vertices, indices, face_count):
+    start_time = time()
+    # Numpy magic!
+    # First, reset the normals
+    normals = numpy.zeros((face_count*3, 3), dtype=numpy.float32)
+
+    for face in indices[0:face_count]:
+        #print(self._vertices[face[0]])
+        #print(self._vertices[face[1]])
+        #print(self._vertices[face[2]])
+        normals[face[0]] = numpy.cross(vertices[face[0]] - vertices[face[1]], vertices[face[0]] - vertices[face[2]])
+        length = numpy.linalg.norm(normals[face[0]])
+        normals[face[0]] /= length
+        normals[face[1]] = normals[face[0]]
+        normals[face[2]] = normals[face[0]]
+    end_time = time()
+    Logger.log("d", "Calculating normals took %s seconds", end_time - start_time)
+    return normals

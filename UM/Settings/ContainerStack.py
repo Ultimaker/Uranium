@@ -99,12 +99,14 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
 
     def addMetaDataEntry(self, key, value):
         if key not in self._metadata:
+            self._dirty = True
             self._metadata[key] = value
         else:
             Logger.log("w", "Meta data with key %s was already added.", key)
 
     def setMetaDataEntry(self, key, value):
         if key in self._metadata:
+            self._dirty = True
             self._metadata[key] = value
         else:
             Logger.log("w", "Meta data with key %s was not found. Unable to change.", key)
@@ -114,7 +116,6 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
 
     def setDirty(self, dirty):
         self._dirty = dirty
-
 
     ##  \copydoc ContainerInterface::getProperty
     #

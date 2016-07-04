@@ -3,13 +3,15 @@
 
 from UM.Mesh.MeshData import MeshData
 from UM.Mesh.MeshData import MeshType
+from UM.Mesh.MeshData import calculateNormalsFromVertices
+from UM.Mesh.MeshData import calculateNormalsFromIndexedVertices
 from UM.Math.Vector import Vector
 from UM.Math.Matrix import Matrix
 from UM.Logger import Logger
 
 import numpy
 import math
-from time import time
+
 
 ##  Builds new meshes by adding primitives.
 #
@@ -339,43 +341,14 @@ class MeshBuilder:
     #   Keyword arguments:
     #   - fast: A boolean indicating whether or not to use a fast method of normal calculation that assumes each triangle
     #           is stored as a set of three unique vertices.
-    def calculateNormals(self, **kwargs):
+    def calculateNormals(self, fast=False):
         if self._vertices is None:
             return
-        start_time = time()
-        # Numpy magic!
-        # First, reset the normals
-        self._normals = numpy.zeros((self._vertex_count, 3), dtype=numpy.float32)
 
-        if self.hasIndices() and not kwargs.get("fast", False):
-            for face in self._indices[0:self._face_count]:
-                #print(self._vertices[face[0]])
-                #print(self._vertices[face[1]])
-                #print(self._vertices[face[2]])
-                self._normals[face[0]] = numpy.cross(self._vertices[face[0]] - self._vertices[face[1]], self._vertices[face[0]] - self._vertices[face[2]])
-                length = numpy.linalg.norm(self._normals[face[0]])
-                self._normals[face[0]] /= length
-                self._normals[face[1]] = self._normals[face[0]]
-                self._normals[face[2]] = self._normals[face[0]]
-        else: #Old way of doing it, asuming that each face has 3 unique verts
-            # Then, take the cross product of each pair of vectors formed from a set of three vertices.
-            # The [] operator on a numpy array returns itself a numpy array. The slicing syntax is [begin:end:step],
-            # so in this case we perform the cross over a two arrays. The first array is built from the difference
-            # between every second item in the array starting at two and every third item in the array starting at
-            # zero. The second array is built from the difference between every third item in the array starting at
-            # two and every third item in the array starting at zero. The cross operation then returns an array of
-            # the normals of each set of three vertices.
-            n = numpy.cross(self._vertices[1:self._vertex_count:3] - self._vertices[:self._vertex_count:3], self._vertices[2:self._vertex_count:3] - self._vertices[:self._vertex_count:3])
-            # We then calculate the length for each normal and perform normalization on the normals.
-            l = numpy.linalg.norm(n, axis=1)
-            n[:, 0] /= l
-            n[:, 1] /= l
-            n[:, 2] /= l
-            # Finally, we store the normals per vertex, with each face normal being repeated three times, once for
-            # every vertex.
-            self._normals = n.repeat(3, axis=0)
-        end_time = time()
-        Logger.log("d", "Calculating normals took %s seconds", end_time - start_time)
+        if self.hasIndices() and not fast:
+            self._normals = calculateNormalsFromIndexedVertices(self._vertices, self._indices, self._face_count)
+        else:
+            self._normals = calculateNormalsFromVertices(self._vertices, self._vertex_count)
 
     ##  Adds a 3-dimensional line to the mesh of this mesh builder.
     #
@@ -524,9 +497,9 @@ class MeshBuilder:
         #We'll compute the vertices of the arc by computing an initial point and
         #rotating the initial point with a rotation matrix.
         if axis == Vector.Unit_Y:
-            start = axis.cross(Vector.Unit_X).normalize() * radius
+            start = axis.cross(Vector.Unit_X).normalized() * radius
         else:
-            start = axis.cross(Vector.Unit_Y).normalize() * radius
+            start = axis.cross(Vector.Unit_Y).normalized() * radius
 
         angle_increment = angle / sections
         current_angle = 0
@@ -675,3 +648,5 @@ class MeshBuilder:
             vertex_count = self.getVertexCount()
             for i in range(1, 6):
                 self.setVertexColor(vertex_count - i, color)
+
+

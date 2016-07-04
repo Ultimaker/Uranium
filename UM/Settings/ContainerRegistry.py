@@ -260,7 +260,7 @@ class ContainerRegistry:
             container = containers[0]
 
             self._containers.remove(container)
-            del self._id_container_cache[container.id]
+            del self._id_container_cache[container.getId()]
             self._deleteFiles(container)
             self.containerRemoved.emit(container)
 
