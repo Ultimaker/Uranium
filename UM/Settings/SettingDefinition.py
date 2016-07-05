@@ -34,7 +34,7 @@ class DefinitionPropertyType(enum.IntEnum):
 #   == Supported Properties
 #
 #   The SettingDefinition class contains a concept of "supported properties". These are properties that
-#   are supported when serializing or deserializing the setting. These properties are defined through the
+#   are supported when serializing or deserializing a setting. These properties are defined through the
 #   addSupportedProperty() method. Each property needs a name and a type. In addition, there are two
 #   optional boolean value to indicate whether the property is "required" and whether it is "read only".
 #   Currently, four types of supported properties are defined. Please DefinitionPropertyType for a description
