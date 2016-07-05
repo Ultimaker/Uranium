@@ -136,7 +136,7 @@ test_getUsedSettings_data = [
 @pytest.mark.parametrize("data", test_getUsedSettings_data)
 def test_getUsedSettings(data):
     function = UM.Settings.SettingFunction(data["code"])
-    answer = function.getUsedSettings()
+    answer = function.getUsedSettingKeys()
     assert len(answer) == len(data["variables"])
     for variable in data["variables"]: # Check for set equality regardless of the order.
         assert variable in answer

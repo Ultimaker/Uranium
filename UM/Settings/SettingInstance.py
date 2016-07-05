@@ -109,8 +109,9 @@ class SettingInstance:
         else:
             if name == "state":
                 if value == "InstanceState.Calculated":
-                    self._state = InstanceState.Calculated
-                    self.propertyChanged.emit(self._definition.key, "state")
+                    if self._state != InstanceState.Calculated:
+                        self._state = InstanceState.Calculated
+                        self.propertyChanged.emit(self._definition.key, "state")
             else:
                 raise AttributeError("No property {0} defined".format(name))
 
