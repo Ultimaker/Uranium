@@ -6,8 +6,6 @@ from UM.Math.AxisAlignedBox import AxisAlignedBox
 from UM.Logger import Logger
 from UM.Math import NumPyUtil
 
-import traceback
-
 from enum import Enum
 import threading
 import numpy
@@ -372,8 +370,6 @@ def calculateNormalsFromVertices(vertices, vertex_count):
 #   \param face_count \type{integer} the number of triangles defined by the indices array
 #   \return \type{narray} list normals as a 1D array of floats, each group of 3 floats is a vector
 def calculateNormalsFromIndexedVertices(vertices, indices, face_count):
-    traceback.print_stack()
-
     start_time = time()
     # Numpy magic!
     # First, reset the normals
