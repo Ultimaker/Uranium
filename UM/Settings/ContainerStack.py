@@ -263,7 +263,7 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     #
     #   \exception IndexError Raised when the specified index is out of bounds.
     def getContainer(self, index):
-        if index == -1:
+        if index < 0:
             raise IndexError
         return self._containers[index]
 
@@ -352,9 +352,9 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     #   \exception IndexError Raised when the specified index is out of bounds.
     #   \exception Exception when trying to replace container ContainerStack.
     def replaceContainer(self, index, container):
-        if index == -1:
+        if index < 0:
             raise IndexError
-        if container == self:
+        if container is self:
             raise Exception("Unable to replace container with ContainerStack (self) ")
 
         self._containers[index].propertyChanged.disconnect(self.propertyChanged)
@@ -368,7 +368,7 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     #
     #   \exception IndexError Raised when the specified index is out of bounds.
     def removeContainer(self, index = 0):
-        if index == -1:
+        if index < 0:
             raise IndexError
         try:
             container = self._containers[index]
@@ -376,7 +376,7 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
             del self._containers[index]
             self.containersChanged.emit(container)
         except TypeError:
-            raise IndexError("Can't delete container with intex %s" % index)
+            raise IndexError("Can't delete container with index %s" % index)
 
     ##  Get the next stack
     #
@@ -393,6 +393,6 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     #   Raises Exception when trying to set itself as next stack (to prevent infinite loops)
     #   \sa getNextStack
     def setNextStack(self, stack):
-        if self == stack:
+        if self is stack:
             raise Exception("Next stack can not be itself")
         self._next_stack = stack
