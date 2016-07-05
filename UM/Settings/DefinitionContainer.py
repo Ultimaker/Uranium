@@ -284,7 +284,7 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
         if not isinstance(function, SettingFunction.SettingFunction):
             return
 
-        for setting in function.getUsedSettings():
+        for setting in function.getUsedSettingKeys():
             other = self._getDefinition(setting)
             if not other:
                 Logger.log("w", "Function for definition %s references unknown definition %s", definition.key, setting)

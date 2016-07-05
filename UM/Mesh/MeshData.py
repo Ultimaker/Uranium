@@ -130,14 +130,7 @@ class MeshData:
     def getTransformed(self, transformation):
         if self._vertices is not None:
             transformed_vertices = transformVertices(self._vertices, transformation)
-
-            transformed_normals = None
-            if self._normals is not None:
-                if self.hasIndices():
-                    transformed_normals = calculateNormalsFromIndexedVertices(transformed_vertices, self._indices,
-                                                                              self._face_count)
-                else:
-                    transformed_normals = calculateNormalsFromVertices(transformed_vertices, self._vertex_count)
+            transformed_normals = transformNormals(self._normals, transformation) if self._normals is not None else None
 
             return self.set(vertices=transformed_vertices, normals=transformed_normals)
         else:
@@ -253,6 +246,35 @@ def transformVertices(vertices, transformation):
     data = data.dot(transformation.getTransposed().getData())
     data += transformation.getData()[:, 3]
     data = data[:, 0:3]
+    return data
+
+##  Transform an array of normals using a matrix
+#
+#   \param normals \type{numpy.ndarray} array of 3D normals
+#   \param transformation a 4x4 matrix
+#   \return \type{numpy.ndarray} the transformed normals
+#
+#   \note This assumes the normals are untranslated unit normals, and returns the same.
+def transformNormals(normals, transformation):
+    data = numpy.pad(normals, ((0, 0), (0, 1)), "constant", constant_values=(0.0, 0.0))
+
+    # Get the translation from the transformation so we can cancel it later.
+    translation = transformation.getTranslation()
+
+    # Transform the normals so they get the proper rotation
+    data = data.dot(transformation.getTransposed().getData())
+    data += transformation.getData()[:, 3]
+    data = data[:, 0:3]
+
+    # Cancel the translation since normals should always go from origin to a point on the unit sphere.
+    data[:] -= translation.getData()
+
+    # Re-normalize the normals, since the transformation can contain scaling.
+    lengths = numpy.linalg.norm(data, axis = 1)
+    data[:, 0] /= lengths
+    data[:, 1] /= lengths
+    data[:, 2] /= lengths
+
     return data
 
 ##  Round an array of vertices off to the nearest multiple of unit

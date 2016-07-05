@@ -67,6 +67,10 @@ class MeshBuilder:
 
         return self._vertices[0 : self._vertex_count] #Only return up until point where data was filled
 
+    def setVertices(self, vertices):
+        self._vertices = vertices
+        self._vertex_count = int(self._vertices.size / 3)
+
     ##  Get the number of vertices
     def getVertexCount(self):
         return self._vertex_count
@@ -115,6 +119,10 @@ class MeshBuilder:
             return None
 
         return self._indices[0:self._face_count]
+
+    def setIndices(self, indices):
+        self._indices = indices
+        self._face_count = int(self._indices.size / 3)
 
     def hasColors(self):
         return self._colors is not None

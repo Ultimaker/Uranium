@@ -43,4 +43,4 @@ class FileLogger(LogOutput):
         elif(log_type == "c"):
             self._logger.critical(message)
         else:
-            print("Unable to log. Recieved unknown type %s" % log_type)
+            print("Unable to log. Received unknown type %s" % log_type)

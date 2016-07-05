@@ -161,6 +161,7 @@ class SettingPropertyProvider(QObject):
         try:
             value = self._stack.getContainers()[stack_level].getProperty(self._key, property_name)
         except IndexError:  # Requested stack level does not exist
+            Logger.log("w", "Tried to get property of type %s from %s but it did not exist on requested index %s", property_name, self._key, stack_level)
             return
         return value
 

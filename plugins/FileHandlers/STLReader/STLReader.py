@@ -11,7 +11,20 @@ from UM.Job import Job
 import os
 import struct
 import time
+import numpy
 
+use_numpystl = False
+
+try:
+    import stl  # numpy-stl lib
+    import stl.mesh
+
+    # Increase max count. (10 million should be okay-ish)
+    stl.stl.MAX_COUNT = 10000000
+    use_numpystl = True
+except ImportError:
+    Logger.log("w", "Could not find numpy-stl, falling back to slower code.")
+    # We have our own fallback code.
 
 class STLReader(MeshReader):
     def __init__(self):
@@ -21,26 +34,51 @@ class STLReader(MeshReader):
     ## Decide if we need to use ascii or binary in order to read file
     def read(self, file_name):
         mesh_builder = MeshBuilder()
-        mesh_builder.setFileName(file_name)
         scene_node = SceneNode()
-        f = open(file_name, "rb")
-        if not self._loadBinary(mesh_builder, f):
-            f.close()
-            f = open(file_name, "rt")
-            try:
-                self._loadAscii(mesh_builder, f)
-            except UnicodeDecodeError:
-                return None
-            f.close()
 
-        f.close()
-        time.sleep(0.1)  # Yield somewhat to ensure the GUI has time to update a bit.
-        mesh_builder.calculateNormals(fast=True)
+        if use_numpystl:
+            self._loadWithNumpySTL(file_name, mesh_builder)
+        else:
+            f = open(file_name, "rb")
+            if not self._loadBinary(mesh_builder, f):
+                f.close()
+                f = open(file_name, "rt")
+                try:
+                    self._loadAscii(mesh_builder, f)
+                except UnicodeDecodeError:
+                    return None
+                f.close()
+
+            Job.yieldThread() # Yield somewhat to ensure the GUI has time to update a bit.
+
+        mesh_builder.calculateNormals(fast = True)
 
         mesh = mesh_builder.build()
         Logger.log("d", "Loaded a mesh with %s vertices", mesh_builder.getVertexCount())
         scene_node.setMeshData(mesh)
         return scene_node
+
+    def _swapColumns(self, array, frm, to):
+        array[:, [frm, to]] = array[:, [to, frm]]
+
+    def _loadWithNumpySTL(self, file_name, mesh_builder):
+        loaded_data = stl.mesh.Mesh.from_file(file_name)
+        vertices = numpy.resize(loaded_data.points.flatten(), (int(loaded_data.points.size / 3), 3))
+
+        # Invert values of second column
+        vertices[:, 1] *= -1
+
+        # Swap column 1 and 2 (We have a different coordinate system)
+        self._swapColumns(vertices, 1, 2)
+
+        mesh_builder.setVertices(vertices)
+
+        # Create an nd array containing indicies of faces.
+        # As we have the data duplicated & packed, it will always count up;
+        # [[0, 1, 2]
+        #  [3, 4, 5]]
+        mesh_builder.setIndices(numpy.resize(numpy.arange(int(loaded_data.points.size / 3), dtype=numpy.int32),
+                                             (int(loaded_data.points.size / 9), 3)))
 
     # Private
     ## Load the STL data from file by consdering the data as ascii.
