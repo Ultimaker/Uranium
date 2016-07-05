@@ -22,7 +22,6 @@ class Preferences():
     def addPreference(self, key, default_value):
         preference = self._findPreference(key)
         if preference:
-            Logger.log("d", "Adding preference %s, but it already exists.", key)
             preference.setDefault(default_value)
             return
 
