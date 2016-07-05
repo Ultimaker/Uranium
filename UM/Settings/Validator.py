@@ -31,12 +31,6 @@ class Validator(SettingFunction.SettingFunction):
         super().__init__("None", *args, **kwargs)
 
         self._key = key
-        #self._instance = instance
-        #self._state = ValidatorState.Unknown
-
-    #@property
-    #def state(self):
-        #return self._state
 
     ##  Perform the actual validation.
     def __call__(self, value_provider, *args, **kwargs):
