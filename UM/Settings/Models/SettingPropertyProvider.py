@@ -223,8 +223,10 @@ class SettingPropertyProvider(QObject):
         if not self._stack or not self._watched_properties or not self._key:
             return
         self._updateStackLevels()
-        for relation in filter(lambda r: r.type == UM.Settings.SettingRelation.RelationType.RequiredByTarget and r.role == "value", self._stack.getProperty(self._key, "relations")):
-            self._relations.add(relation.target.key)
+        relations = self._stack.getProperty(self._key, "relations")
+        if relations:  # If the setting doesn't have the property releations, None is returned
+            for relation in filter(lambda r: r.type == UM.Settings.SettingRelation.RelationType.RequiredByTarget and r.role == "value", relations):
+                self._relations.add(relation.target.key)
 
         new_properties = {}
         for property_name in self._watched_properties:
