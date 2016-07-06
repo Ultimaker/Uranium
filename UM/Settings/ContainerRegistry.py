@@ -168,17 +168,6 @@ class ContainerRegistry:
     def getEmptyInstanceContainer(self):
         return self._emptyInstanceContainer
 
-    ##  Add a container type that will be used to serialize/deserialize containers.
-    #
-    #   \param container An instance of the container type to add.
-    @classmethod
-    def addContainerType(cls, container):
-        plugin_id = container.getPluginId()
-        cls.__container_types[plugin_id] = container.__class__
-
-        metadata = PluginRegistry.getInstance().getMetaData(plugin_id)
-        cls.__mime_type_map[metadata["settings_container"]["mimetype"]] = container.__class__
-
     ##  Load all available definition containers, instance containers and
     #   container stacks.
     #
@@ -364,6 +353,22 @@ class ContainerRegistry:
             unique_name = "%s #%d" % (name, i) #Fill name like this: "Extruder #2".
         return unique_name
 
+    ##  Add a container type that will be used to serialize/deserialize containers.
+    #
+    #   \param container An instance of the container type to add.
+    @classmethod
+    def addContainerType(cls, container):
+        plugin_id = container.getPluginId()
+        cls.__container_types[plugin_id] = container.__class__
+
+        metadata = PluginRegistry.getInstance().getMetaData(plugin_id)
+        cls.__mime_type_map[metadata["settings_container"]["mimetype"]] = container.__class__
+
+    ##  Retrieve the mime type corresponding to a certain container type
+    #
+    #   \param container_type The type of container to get the mime type for.
+    #
+    #   \return A MimeType object that matches the mime type of the container or None if not found.
     @classmethod
     def getMimeTypeForContainer(cls, container_type):
         mime_type_name = UM.Dictionary.findKey(cls.__mime_type_map, container_type)
@@ -371,6 +376,23 @@ class ContainerRegistry:
             return MimeTypeDatabase.getMimeType(mime_type_name)
 
         return None
+
+    ##  Get the container type corresponding to a certain mime type.
+    #
+    #   \param mime_type The mime type to get the container type for.
+    #
+    #   \return A class object of a container type that corresponds to the specified mime type or None if not found.
+    @classmethod
+    def getContainerForMimeType(cls, mime_type):
+        return cls.__mime_type_map.get(mime_type.name, None)
+
+    ##  Get all the registered container types
+    #
+    #   \return A dictionary view object that provides access to the container types.
+    #           The key is the plugin ID, the value the container type.
+    @classmethod
+    def getContainerTypes(cls):
+        return cls.__container_types.items()
 
     # Remove all files related to a container located in a storage path
     #
