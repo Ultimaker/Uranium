@@ -49,6 +49,8 @@ class ScaleTool(Tool):
             "ScaleZ"
         )
 
+        self._first_move_after_click = True
+
     ##  Handle mouse and keyboard events
     #
     #   \param event type(Event)
@@ -85,6 +87,7 @@ class ScaleTool(Tool):
             # Initialise a scale operation
             if MouseEvent.LeftButton not in event.buttons:
                 return False
+            self._first_move_after_click = True
 
             id = self._selection_pass.getIdAtPosition(event.x, event.y)
             if not id:
@@ -142,6 +145,11 @@ class ScaleTool(Tool):
                         op = GroupedOperation()
                         for node, position in self._saved_node_positions:
                             op.addOperation(ScaleOperation(node, scale_change, relative_scale = True, scale_around_point = position))
+                        if self._first_move_after_click:
+                            op._always_merge = False  # prevent merge multi operations on the same operation
+                            self._first_move_after_click = False
+                        else:
+                            op._always_merge = True  # prevent operation in multiple operations
                         op.push()
                         self._drag_length = (self._saved_handle_position - drag_position).length()
                 else:

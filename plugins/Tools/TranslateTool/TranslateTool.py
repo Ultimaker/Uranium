@@ -36,7 +36,10 @@ class TranslateTool(Tool):
         self._distance_update_time = None
         self._distance = None
 
+        self._first_move_after_click = True
+
         self.setExposedProperties("ToolHint", "X", "Y", "Z")
+
 
     ##  Get the x-location of the selection bounding box center
     #
@@ -150,9 +153,9 @@ class TranslateTool(Tool):
 
         if event.type == Event.MousePressEvent and self._controller.getToolsEnabled():
             # Start a translate operation
-
             if MouseEvent.LeftButton not in event.buttons:
                 return False
+            self._first_move_after_click = True
 
             id = self._selection_pass.getIdAtPosition(event.x, event.y)
             if not id:
@@ -203,6 +206,11 @@ class TranslateTool(Tool):
                 op = GroupedOperation()
                 for node in Selection.getAllSelectedObjects():
                     op.addOperation(TranslateOperation(node, drag))
+                if self._first_move_after_click:
+                    op._always_merge = False  # prevent merge multi operations on the same operation
+                    self._first_move_after_click = False
+                else:
+                    op._always_merge = True  # prevent operation in multiple operations
                 op.push()
 
                 self._distance += drag
