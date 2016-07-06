@@ -204,6 +204,7 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
         if new_name:
             new_container.setName(new_name)
         new_container._dirty = True
+        new_container._read_only = False
         return new_container
 
     ##  \copydoc ContainerInterface::serialize
