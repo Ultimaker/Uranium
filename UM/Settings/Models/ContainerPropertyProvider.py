@@ -93,6 +93,9 @@ class ContainerPropertyProvider(QObject):
         if not self._container or not self._key:
             return
 
+        if self._container.isReadOnly():
+            return
+
         if property_name not in self._watched_properties:
             Logger.log("w", "Tried to set a property that is not being watched")
             return
