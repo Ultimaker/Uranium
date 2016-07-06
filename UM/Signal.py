@@ -85,14 +85,15 @@ class Signal:
     #                 Possible keywords:
     #                 - type: The signal type. Defaults to Auto.
     def __init__(self, **kwargs):
-        self.__functions = WeakSet()
+
+        # These collections must be treated as immutable otherwise we lose thread safety.
+        self.__functions = WeakSet()    # TODO make these ordered and 100% deterministic, i.e. no iterating over sets.
         self.__methods = WeakKeyDictionary()
         self.__signals = WeakSet()
-        self.__type = kwargs.get("type", Signal.Auto)
 
-        self.__emitting = False
-        self.__connect_queue = []
-        self.__disconnect_queue = []
+        self.__lock = threading.Lock()  # Guards access to the fields above.
+
+        self.__type = kwargs.get("type", Signal.Auto)
 
     ##  \exception NotImplementedError
     def __call__(self):
@@ -125,81 +126,87 @@ class Signal:
         except AttributeError: # If Signal._app is not set
             return
 
-        self.__emitting = True
+        # Quickly make some private references to the collections we need to process.
+        # Although the these fields are always safe to use read and use with regards to threading,
+        # we want to operate on a consistent snapshot of the whole set of fields.
+        with self.__lock:
+            functions = self.__functions
+            methods = self.__methods
+            signals = self.__signals
 
         # Call handler functions
-        for func in self.__functions:
+        for func in functions:
             func(*args, **kwargs)
 
         # Call handler methods
-        for dest, funcs in self.__methods.items():
+        for dest, funcs in methods.items():
             for func in funcs:
                 func(dest, *args, **kwargs)
 
         # Emit connected signals
-        for signal in self.__signals:
+        for signal in signals:
             signal.emit(*args, **kwargs)
-
-        self.__emitting = False
-        for connector in self.__connect_queue:
-            self.connect(connector)
-        self.__connect_queue.clear()
-        for connector in self.__disconnect_queue:
-            self.disconnect(connector)
-        self.__connect_queue.clear()
 
     ##  Connect to this signal.
     #   \param connector The signal or slot (function) to connect.
     @call_if_enabled(_traceConnect, _isTraceEnabled())
     def connect(self, connector):
-        if self.__emitting:
-            # When we try to connect to a signal we change the dictionary of connectors.
-            # This will cause an Exception since we are iterating over a dictionary that changed.
-            # So instead, defer the connections until after we are done emitting.
-            self.__connect_queue.append(connector)
-            return
+        with self.__lock:
+            if isinstance(connector, Signal):
+                if connector == self:
+                    return
+                signals = self.__signals.copy() # We must create a whole new set and never modify the original.
+                signals.add(connector)
+                self.__signals = signals    # Switch in our newly updated set.
 
-        if isinstance(connector, Signal):
-            if connector == self:
-                return
-            self.__signals.add(connector)
-        elif inspect.ismethod(connector):
-            if connector.__self__ not in self.__methods:
-                self.__methods[connector.__self__] = set()
+            elif inspect.ismethod(connector):
+                # Update the set of methods by creating a new map.
+                methods = self.__methods.copy()
 
-            self.__methods[connector.__self__].add(connector.__func__)
-        else:
-            self.__functions.add(connector)
+                if connector.__self__ in methods:
+                    function_set = methods[connector.__self__].copy()
+                else:
+                    function_set = set()
+                function_set.add(connector.__func__)
+                methods[connector.__self__] = function_set
+                self.__methods = methods    # Switch in the new version of the map.
+            else:
+                # Once again, update the set of functions using a whole new set.
+                functions = self.__functions.copy()
+                functions.add(connector)
+                self.__functions = functions
 
     ##  Disconnect from this signal.
     #   \param connector The signal or slot (function) to disconnect.
     @call_if_enabled(_traceDisconnect, _isTraceEnabled())
     def disconnect(self, connector):
-        if self.__emitting:
-            # See above.
-            self.__disconnect_queue.append(connector)
-            return
+        with self.__lock:
+            try:
+                if connector in self.__signals:
+                    signals = self.__signals.copy()
+                    signals.remove(connector)
+                    self.__signals = signals    # Switch in the new version.
+                elif inspect.ismethod(connector) and connector.__self__ in self.__methods:
+                    methods = self.__methods.copy()
+                    function_set = methods[connector.__self__].copy()
+                    function_set.remove(connector.__func__)
+                    methods[connector.__self__] = function_set
+                    self.__methods = methods    # Switch in the new version.
+                else:
+                    if connector in self.__functions:
+                        functions = self.__functions.copy()
+                        self.__functions.remove(connector)
+                        self.__functions = functions    # Switch in the new version.
 
-        try:
-            if connector in self.__signals:
-                self.__signals.remove(connector)
-            elif inspect.ismethod(connector) and connector.__self__ in self.__methods:
-                self.__methods[connector.__self__].remove(connector.__func__)
-            else:
-                if connector in self.__functions:
-                    self.__functions.remove(connector)
-
-        except KeyError: #Ignore errors when connector is not connected to this signal.
-            pass
+            except KeyError: #Ignore errors when connector is not connected to this signal.
+                pass
 
     ##  Disconnect all connected slots.
     def disconnectAll(self):
-        if self.__emitting:
-            raise RuntimeError("Tried to disconnect signal while signal is being emitted")
-
-        self.__functions.clear()
-        self.__methods.clear()
-        self.__signals.clear()
+        with self.__lock:
+            self.__functions = WeakSet()
+            self.__methods = WeakKeyDictionary()
+            self.__signals = WeakSet()
 
     ##  To support Pickle
     #
@@ -213,10 +220,16 @@ class Signal:
     #   of __getstate__ then breaks deepcopy. On the other hand, if we do not reimplement it like that,
     #   we break pickle. So instead make sure to also reimplement __deepcopy__.
     def __deepcopy__(self, memo):
+        # Snapshot these fields
+        with self.__lock:
+            functions = self.__functions
+            methods = self.__methods
+            signals = self.__signals
+
         signal = Signal(type = self.__type)
-        signal.__functions = copy.deepcopy(self.__functions, memo)
-        signal.__methods = copy.deepcopy(self.__methods, memo)
-        signal.__signals = copy.deepcopy(self.__signals, memo)
+        signal.__functions = copy.deepcopy(functions, memo)
+        signal.__methods = copy.deepcopy(methods, memo)
+        signal.__signals = copy.deepcopy(signals, memo)
         return signal
 
     ##  private:
@@ -224,6 +237,15 @@ class Signal:
     #   To avoid circular references when importing Application, this should be
     #   set by the Application instance.
     _app = None
+
+    def __str__(self):
+        function_str = ", ".join([repr(f) for f in self.__functions])
+        method_str = ", ".join([ "{dest: " + str(dest) + ", funcs: " + strMethodSet(funcs) + "}" for dest, funcs in self.__methods.items()])
+        signal_str = ", ".join([str(signal) for signal in self.__signals])
+        return "Signal<{}> {{ __functions={{ {} }}, __methods={{ {} }}, __signals={{ {} }} }}".format(id(self), function_str, method_str, signal_str)
+
+def strMethodSet(method_set):
+    return "{" + ", ".join([str(m) for m in method_set]) + "}"
 
 ##  Convenience class to simplify signal creation.
 #
