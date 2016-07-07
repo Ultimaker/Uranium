@@ -44,6 +44,8 @@ class RotateTool(Tool):
         self._iterations = 0
         self._total_iterations = 0
 
+        self._first_move_after_click = True
+
         self.setExposedProperties("ToolHint", "RotationSnap", "RotationSnapAngle")
 
     ##  Handle mouse and keyboard events
@@ -66,6 +68,7 @@ class RotateTool(Tool):
             # Start a rotate operation
             if MouseEvent.LeftButton not in event.buttons:
                 return False
+            self._first_move_after_click = True
 
             id = self._selection_pass.getIdAtPosition(event.x, event.y)
             if not id:
@@ -75,7 +78,7 @@ class RotateTool(Tool):
                 self.setLockedAxis(id)
                 handle_position = self._handle.getWorldPosition()
 
-                # Save the current positions of the node, as we want to rotate arround their current centres
+                # Save the current positions of the node, as we want to rotate around their current centres
                 self._saved_node_positions = []
                 for node in Selection.getAllSelectedObjects():
                     self._saved_node_positions.append((node, node.getWorldPosition()))
@@ -141,6 +144,11 @@ class RotateTool(Tool):
                 op = GroupedOperation()
                 for node, position in self._saved_node_positions:
                     op.addOperation(RotateOperation(node, rotation, rotate_around_point = position))
+                if self._first_move_after_click:
+                    op._always_merge = False  # prevent merge multi operations on the same operation
+                    self._first_move_after_click = False
+                else:
+                    op._always_merge = True  # prevent operation in multiple operations
                 op.push()
 
                 self.setDragStart(event.x, event.y)
