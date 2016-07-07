@@ -7,8 +7,7 @@
 import inspect
 import threading
 import os
-import copy
-from weakref import WeakSet, WeakKeyDictionary
+import weakref
 
 from UM.Event import CallFunctionEvent
 from UM.Decorators import deprecated, call_if_enabled
@@ -85,11 +84,10 @@ class Signal:
     #                 Possible keywords:
     #                 - type: The signal type. Defaults to Auto.
     def __init__(self, **kwargs):
-
         # These collections must be treated as immutable otherwise we lose thread safety.
-        self.__functions = WeakSet()    # TODO make these ordered and 100% deterministic, i.e. no iterating over sets.
-        self.__methods = WeakKeyDictionary()
-        self.__signals = WeakSet()
+        self.__functions = WeakImmutableList()
+        self.__methods = WeakImmutablePairList()
+        self.__signals = WeakImmutableList()
 
         self.__lock = threading.Lock()  # Guards access to the fields above.
 
@@ -139,9 +137,8 @@ class Signal:
             func(*args, **kwargs)
 
         # Call handler methods
-        for dest, funcs in methods.items():
-            for func in funcs:
-                func(dest, *args, **kwargs)
+        for dest, func in methods:
+            func(dest, *args, **kwargs)
 
         # Emit connected signals
         for signal in signals:
@@ -155,58 +152,31 @@ class Signal:
             if isinstance(connector, Signal):
                 if connector == self:
                     return
-                signals = self.__signals.copy() # We must create a whole new set and never modify the original.
-                signals.add(connector)
-                self.__signals = signals    # Switch in our newly updated set.
-
+                self.__signals = self.__signals.append(connector)
             elif inspect.ismethod(connector):
-                # Update the set of methods by creating a new map.
-                methods = self.__methods.copy()
-
-                if connector.__self__ in methods:
-                    function_set = methods[connector.__self__].copy()
-                else:
-                    function_set = set()
-                function_set.add(connector.__func__)
-                methods[connector.__self__] = function_set
-                self.__methods = methods    # Switch in the new version of the map.
+                self.__methods = self.__methods.append(connector.__self__, connector.__func__)
             else:
                 # Once again, update the set of functions using a whole new set.
-                functions = self.__functions.copy()
-                functions.add(connector)
-                self.__functions = functions
+                self.__functions = self.__functions.append(connector)
 
     ##  Disconnect from this signal.
     #   \param connector The signal or slot (function) to disconnect.
     @call_if_enabled(_traceDisconnect, _isTraceEnabled())
     def disconnect(self, connector):
         with self.__lock:
-            try:
-                if connector in self.__signals:
-                    signals = self.__signals.copy()
-                    signals.remove(connector)
-                    self.__signals = signals    # Switch in the new version.
-                elif inspect.ismethod(connector) and connector.__self__ in self.__methods:
-                    methods = self.__methods.copy()
-                    function_set = methods[connector.__self__].copy()
-                    function_set.remove(connector.__func__)
-                    methods[connector.__self__] = function_set
-                    self.__methods = methods    # Switch in the new version.
-                else:
-                    if connector in self.__functions:
-                        functions = self.__functions.copy()
-                        self.__functions.remove(connector)
-                        self.__functions = functions    # Switch in the new version.
-
-            except KeyError: #Ignore errors when connector is not connected to this signal.
-                pass
+            if isinstance(connector, Signal):
+                self.__signals = self.__signals.remove(connector)
+            elif inspect.ismethod(connector):
+                self.__methods = self.__methods.remove(connector.__self__, connector.__func__)
+            else:
+                self.__functions = self.__functions.remove(connector)
 
     ##  Disconnect all connected slots.
     def disconnectAll(self):
         with self.__lock:
-            self.__functions = WeakSet()
-            self.__methods = WeakKeyDictionary()
-            self.__signals = WeakSet()
+            self.__functions = WeakImmutableList()
+            self.__methods = WeakImmutablePairList()
+            self.__signals = WeakImmutableList()
 
     ##  To support Pickle
     #
@@ -227,9 +197,9 @@ class Signal:
             signals = self.__signals
 
         signal = Signal(type = self.__type)
-        signal.__functions = copy.deepcopy(functions, memo)
-        signal.__methods = copy.deepcopy(methods, memo)
-        signal.__signals = copy.deepcopy(signals, memo)
+        signal.__functions = functions
+        signal.__methods = methods
+        signal.__signals = signals
         return signal
 
     ##  private:
@@ -238,9 +208,10 @@ class Signal:
     #   set by the Application instance.
     _app = None
 
+    # This __str__() is useful for debugging.
     def __str__(self):
         function_str = ", ".join([repr(f) for f in self.__functions])
-        method_str = ", ".join([ "{dest: " + str(dest) + ", funcs: " + strMethodSet(funcs) + "}" for dest, funcs in self.__methods.items()])
+        method_str = ", ".join([ "{dest: " + str(dest) + ", funcs: " + strMethodSet(funcs) + "}" for dest, funcs in self.__methods])
         signal_str = ", ".join([str(signal) for signal in self.__signals])
         return "Signal<{}> {{ __functions={{ {} }}, __methods={{ {} }}, __signals={{ {} }} }}".format(id(self), function_str, method_str, signal_str)
 
@@ -294,3 +265,123 @@ def signalemitter(cls):
 
     cls.__new__ = new_new
     return cls
+
+##  Minimal implementation of a weak reference list with immutable tendencies.
+#
+#   Strictly speaking this isn't immutable because the garbage collector can modify
+#   it, but no application code can. Also, this class doesn't implement the Python
+#   list API, only the handful of methods we actually need in the code above.
+class WeakImmutableList:
+    def __init__(self):
+        self.__list = []
+
+    ## Append an item and return a new list
+    #
+    #  \param item the item to append
+    #  \return a new list
+    def append(self, item):
+        new_instance = WeakImmutableList()
+        new_instance.__list = self.__cleanList()
+        new_instance.__list.append(weakref.ref(item))
+        return new_instance
+
+    ## Remove an item and return a list
+    #
+    #  Note that unlike the normal Python list.remove() method, this ones
+    #  doesn't throw a ValueError if the item isn't in the list.
+    #  \param item item to remove
+    #  \return a list which does not have the item.
+    def remove(self, item):
+        for item_ref in self.__list:
+            if item_ref() is item:
+                new_instance = WeakImmutableList()
+                new_instance.__list = self.__cleanList()
+                new_instance.__list.remove(item_ref)
+                return new_instance
+        else:
+            return self # No changes needed
+
+    # Create a new list with the missing values removed.
+    def __cleanList(self):
+        return [item_ref for item_ref in self.__list if item_ref() is not None]
+
+    def __iter__(self):
+        return WeakImmutableListIterator(self.__list)
+
+## Iterator wrapper which filters out missing values.
+#
+# It dereferences each weak reference object and filters out the objects
+# which have already disappeared via GC.
+class WeakImmutableListIterator:
+    def __init__(self, list_):
+        self.__it = list_.__iter__()
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        next_item = self.__it.__next__()()
+        while next_item is None:    # Skip missing values
+            next_item = self.__it.__next__()()
+        return next_item
+
+##  A variation of WeakImmutableList which holds a pair of values using weak refernces.
+class WeakImmutablePairList:
+    def __init__(self):
+        self.__list = []
+
+    ## Append an item and return a new list
+    #
+    #  \param item the item to append
+    #  \return a new list
+    def append(self, left_item, right_item):
+        new_instance = WeakImmutablePairList()
+        new_instance.__list = self.__cleanList()
+        new_instance.__list.append( (weakref.ref(left_item), weakref.ref(right_item)) )
+        return new_instance
+
+    ## Remove an item and return a list
+    #
+    #  Note that unlike the normal Python list.remove() method, this ones
+    #  doesn't throw a ValueError if the item isn't in the list.
+    #  \param item item to remove
+    #  \return a list which does not have the item.
+    def remove(self, left_item, right_item):
+        for pair in self.__list:
+            left = pair[0]()
+            right = pair[1]()
+
+            if left is left_item and right is right_item:
+                new_instance = WeakImmutablePairList()
+                new_instance.__list = self.__cleanList()
+                new_instance.__list.remove(pair)
+                return new_instance
+        else:
+            return self # No changes needed
+
+    # Create a new list with the missing values removed.
+    def __cleanList(self):
+        return [pair for pair in self.__list if pair[0]() is not None and pair[1]() is not None]
+
+    def __iter__(self):
+        return WeakImmutablePairListIterator(self.__list)
+
+# A small iterator wrapper which dereferences the weak ref objects and filters
+# out the objects which have already disappeared via GC.
+class WeakImmutablePairListIterator:
+    def __init__(self, list_):
+        self.__it = list_.__iter__()
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        pair = self.__it.__next__()
+        left = pair[0]()
+        right = pair[1]()
+        while left is None or right is None:    # Skip missing values
+            pair = self.__it.__next__()
+            left = pair[0]()
+            right = pair[1]()
+
+        return (left, right)
