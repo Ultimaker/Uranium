@@ -94,7 +94,7 @@ class ContainerRegistry:
     #
     #   \return A list of containers matching the search criteria, or an empty
     #   list if nothing was found.
-    def findContainers(self, container_type = None, **kwargs):
+    def findContainers(self, container_type = None, ignore_case = False, **kwargs):
         containers = []
 
         if len(kwargs) == 1 and "id" in kwargs:
@@ -112,7 +112,10 @@ class ContainerRegistry:
                 try:
                     value = re.escape(value) #Escape for regex patterns.
                     value = "^" + value.replace("\\*", ".*") + "$" #Instead of (now escaped) asterisks, match on any string. Also add anchors for a complete match.
-                    value_pattern = re.compile(value)
+                    if ignore_case:
+                        value_pattern = re.compile(value, re.IGNORECASE)
+                    else:
+                        value_pattern = re.compile(value)
                     if key == "id":
                         if not value_pattern.match(container.getId()):
                             matches_container = False
@@ -331,7 +334,7 @@ class ContainerRegistry:
         unique_name = name
 
         i = 1
-        while self.findContainers(id = unique_name) or self.findContainers(name = unique_name): #A container already has this name.
+        while self.findContainers(id = unique_name, ignore_case = True) or self.findContainers(name = unique_name): #A container already has this name.
             i += 1 #Try next numbering.
             unique_name = "%s #%d" % (name, i) #Fill name like this: "Extruder #2".
         return unique_name

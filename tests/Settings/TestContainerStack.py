@@ -448,7 +448,7 @@ def test_removeContainer(container_stack):
         container_stack.removeContainer(1)
     with pytest.raises(IndexError):
         container_stack.removeContainer(-1)
-    with pytest.raises(IndexError): # Curveball!
+    with pytest.raises(TypeError): # Curveball!
         container_stack.removeContainer("test")
     container_stack.removeContainer(0)
     assert container_stack.getContainers() == []

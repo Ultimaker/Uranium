@@ -347,6 +347,7 @@ def test_uniqueName(container_registry):
     assert container_registry.uniqueName("test") == "test #2" #One collision.
     assert container_registry.uniqueName("test") == "test #2" #The check for unique name doesn't have influence on the registry.
     assert container_registry.uniqueName("test #2") == "test #2"
+    assert container_registry.uniqueName("TEST").lower() == "test #2"
 
     mock_container = MockContainer(id = "test #2", metadata = { })
     container_registry.addContainer(mock_container)
