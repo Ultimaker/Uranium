@@ -1,6 +1,7 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
+import UM.Application
 from UM.Signal import Signal, signalemitter
 
 import threading
@@ -15,6 +16,19 @@ class OperationStack():
         self._operations = [] #List of operations.
         self._current_index = -1 #Index of the most recently executed operation.
         self._lock = threading.Lock() #Lock to make sure only one thread can modify the operation stack at a time.
+
+        # The merge behaviour must only occur when an operation is in the middle of a user action.
+        # So, whenever an operation is started or ended, we do not want this auto-merge.
+        self._merge_operations = False
+        self._controller = UM.Application.getInstance().getController()  # Circular dependency blah
+        self._controller.toolOperationStarted.connect(self._onToolOperationStarted)
+        self._controller.toolOperationStopped.connect(self._onToolOperationStopped)
+
+    def _onToolOperationStarted(self, tool):
+        self._merge_operations = False
+
+    def _onToolOperationStopped(self, tool):
+        self._merge_operations = False
 
     ##  Push an operation on the stack.
     #
@@ -101,10 +115,11 @@ class OperationStack():
             op1 = self._operations[self._current_index]
             op2 = self._operations[self._current_index - 1]
 
-            if not op1._always_merge and not op2._always_merge:
+            if not op1._always_merge and not op2._always_merge and not self._merge_operations:
                 if abs(op1._timestamp - op2._timestamp) > self._merge_window: #For normal operations, only merge if the operations were very quickly after each other.
                     return
 
+            self._merge_operations = True #A signal sets this to False again.
             merged = op1.mergeWith(op2)
             if merged: #Replace the merged operations in the stack with the new one.
                 del self._operations[self._current_index]
