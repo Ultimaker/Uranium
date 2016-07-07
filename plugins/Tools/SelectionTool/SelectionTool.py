@@ -60,13 +60,12 @@ class SelectionTool(Tool):
             self._selection_pass = self._renderer.getRenderPass("selection")
 
         self.checkModifierKeys(event)
-        if event.type == MouseEvent.MouseReleaseEvent and MouseEvent.LeftButton in event.buttons and self._controller.getToolsEnabled():
+        if event.type == MouseEvent.MousePressEvent and MouseEvent.LeftButton in event.buttons and self._controller.getToolsEnabled():
             # Perform a selection operation
             if self._selection_mode == self.PixelSelectionMode:
                 self._pixelSelection(event)
             else:
                 self._boundingBoxSelection(event)
-
         return False
 
     ##  Handle mouse and keyboard events for bounding box selection
@@ -102,7 +101,7 @@ class SelectionTool(Tool):
         # Find a node id by looking at a pixel value at the requested location
         item_id = self._selection_pass.getIdAtPosition(event.x, event.y)
 
-        if not item_id:
+        if not item_id and not self._shift_is_active:
             Selection.clear()
             return
 

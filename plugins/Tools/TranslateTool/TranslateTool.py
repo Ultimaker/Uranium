@@ -144,12 +144,8 @@ class TranslateTool(Tool):
                 node.boundingBoxChanged.disconnect(self.propertyChanged)
 
         if event.type == Event.KeyPressEvent and event.key == KeyEvent.ShiftKey:
-            # Snap-to-grid is turned on when pressing the shift button
-            self._grid_snap = True
+            return False
 
-        if event.type == Event.KeyReleaseEvent and event.key == KeyEvent.ShiftKey:
-            # Snap-to-grid is turned off when releasing the shift button
-            self._grid_snap = False
 
         if event.type == Event.MousePressEvent and self._controller.getToolsEnabled():
             # Start a translate operation

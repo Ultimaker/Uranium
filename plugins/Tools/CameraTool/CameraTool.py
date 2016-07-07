@@ -150,7 +150,7 @@ class CameraTool(Tool):
             if self.moveEvent(event) == True:
                 self._move = True
                 self._start_drag = (event.x, event.y)
-                return True
+                return False
             elif self.rotateEvent(event) == True:
                 self._rotate = True
                 self._start_drag = (event.x, event.y)
