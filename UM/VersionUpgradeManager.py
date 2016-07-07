@@ -66,11 +66,11 @@ class VersionUpgradeManager:
         for old_configuration_type, storage_paths in self._storage_paths.items():
             for storage_path in storage_paths:
                 storage_path_config = os.path.join(Resources.getConfigStoragePath(), storage_path)
-                for configuration_file in self._getFilesInDirectory(storage_path_config, exclude_paths = ["old"]):
+                for configuration_file in self._getFilesInDirectory(storage_path_config, exclude_paths = ["old", "cache"]):
                     upgraded |= self._upgradeFile(storage_path_config, configuration_file, old_configuration_type, paths)
                 storage_path_data = os.path.join(Resources.getDataStoragePath(), storage_path) #A second place to look.
                 if storage_path_data != storage_path_config:
-                    for configuration_file in self._getFilesInDirectory(storage_path_data, exclude_paths = ["old"]):
+                    for configuration_file in self._getFilesInDirectory(storage_path_data, exclude_paths = ["old", "cache"]):
                         upgraded |= self._upgradeFile(storage_path_data, configuration_file, old_configuration_type, paths)
 
         if upgraded:
