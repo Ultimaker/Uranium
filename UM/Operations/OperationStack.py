@@ -17,8 +17,8 @@ class OperationStack():
         self._current_index = -1 #Index of the most recently executed operation.
         self._lock = threading.Lock() #Lock to make sure only one thread can modify the operation stack at a time.
 
-        # Only merge operations when we're in the same operation. So, whenever an operation is started
-        # or ended, we have to set _merge_operations to False so the original behaviour is in place.
+        # The merge behaviour must only occur when an operation is in the middle of a user action.
+        # So, whenever an operation is started or ended, we do not want this auto-merge.
         self._merge_operations = False
         self._controller = UM.Application.getInstance().getController()  # Circular dependency blah
         self._controller.toolOperationStarted.connect(self._onToolOperationStarted)
