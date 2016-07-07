@@ -3,6 +3,7 @@
 
 import configparser
 import io
+import copy
 
 from UM.Signal import Signal, signalemitter
 from UM.PluginObject import PluginObject
@@ -98,6 +99,7 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
     def setMetaData(self, metadata):
         if metadata != self._metadata:
             self._metadata = metadata
+            self._dirty = True
             self.metaDataChanged.emit()
 
     ##  \copydoc ContainerInterface::getMetaDataEntry
@@ -106,6 +108,12 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
     def getMetaDataEntry(self, entry, default = None):
         return self._metadata.get(entry, default)
 
+    ##  Add a new entry to the metadata of this container.
+    #
+    #   \param key \type{str} The key of the new entry.
+    #   \param value The value of the new entry.
+    #
+    #   \note This does nothing if the key already exists.
     def addMetaDataEntry(self, key, value):
         if key not in self._metadata:
             self._metadata[key] = value
@@ -113,9 +121,16 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
         else:
             Logger.log("w", "Meta data with key %s was already added.", key)
 
+    ##  Set a metadata entry to a certain value.
+    #
+    #   \param key The key of the metadata entry to set.
+    #   \param value The new value of the metadata.
+    #
+    #   \note This does nothing if the key is not already added to the metadata.
     def setMetaDataEntry(self, key, value):
         if key in self._metadata:
             self._metadata[key] = value
+            self._dirty = True
         else:
             Logger.log("w", "Meta data with key %s was not found. Unable to change.", key)
 
@@ -185,6 +200,21 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
     #   \returns list of keys
     def getAllKeys(self):
         return [key for key in self._instances]
+
+    ##  Create a new InstanceContainer with the same contents as this container
+    #
+    #   \param new_id \type{str} The new ID of the container
+    #   \param new_name \type{str} The new name of the container. Defaults to None to indicate the name should not change.
+    #
+    #   \return A new InstanceContainer with the same contents as this container.
+    def duplicate(self, new_id, new_name = None):
+        new_container = copy.deepcopy(self)
+        new_container._id = new_id
+        if new_name:
+            new_container.setName(new_name)
+        new_container._dirty = True
+        new_container._read_only = False
+        return new_container
 
     ##  \copydoc ContainerInterface::serialize
     #

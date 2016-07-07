@@ -1,4 +1,4 @@
-# Copyright (c) 2016 Ultimaker B.V.
+    # Copyright (c) 2016 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 import os
@@ -12,6 +12,8 @@ from UM.MimeTypeDatabase import MimeType, MimeTypeDatabase
 from UM.Logger import Logger
 from UM.SaveFile import SaveFile
 from UM.Signal import Signal, signalemitter
+
+import UM.Dictionary
 
 from . import DefinitionContainer
 from . import InstanceContainer
@@ -128,6 +130,13 @@ class ContainerRegistry:
                             continue
                         except AttributeError:
                             pass
+                    if key == "read_only":
+                        try:
+                            if value != container.isReadOnly():
+                                matches_container = False
+                            continue
+                        except AttributeError:
+                            pass
                     if value != container.getMetaDataEntry(key):
                         matches_container = False
                     continue
@@ -140,17 +149,6 @@ class ContainerRegistry:
     ##  This is a small convenience to make it easier to support complex structures in ContainerStacks.
     def getEmptyInstanceContainer(self):
         return self._emptyInstanceContainer
-
-    ##  Add a container type that will be used to serialize/deserialize containers.
-    #
-    #   \param container An instance of the container type to add.
-    @classmethod
-    def addContainerType(cls, container):
-        plugin_id = container.getPluginId()
-        cls.__container_types[plugin_id] = container.__class__
-
-        metadata = PluginRegistry.getInstance().getMetaData(plugin_id)
-        cls.__mime_type_map[metadata["settings_container"]["mimetype"]] = container.__class__
 
     ##  Load all available definition containers, instance containers and
     #   container stacks.
@@ -242,6 +240,22 @@ class ContainerRegistry:
         else:
             Logger.log("w", "Could not remove container with id %s, as no container with that ID is known")
 
+    def renameContainer(self, container_id, new_name, new_id = None):
+        containers = self.findContainers(None, id = container_id)
+        if not containers:
+            return
+
+        container = containers[0]
+
+        if new_name == container.getName():
+            return
+
+        # Remove all files relating to the old container
+        self._deleteFiles(container)
+        container.setName(new_name)
+        if new_id:
+            container._id = new_id
+
     def saveAll(self):
 
         for instance in self.findInstanceContainers():
@@ -257,7 +271,8 @@ class ContainerRegistry:
                 Logger.logException("e", "An exception occurred trying to serialize container %s", instance.getId())
                 continue
 
-            file_name = urllib.parse.quote_plus(instance.getId()) + ".inst.cfg"
+            mime_type = self.getMimeTypeForContainer(type(instance))
+            file_name = urllib.parse.quote_plus(instance.getId()) + "." + mime_type.preferredSuffix
             path = Resources.getStoragePath(Resources.InstanceContainers, file_name)
             with SaveFile(path, "wt", -1, "utf-8") as f:
                 f.write(data)
@@ -275,7 +290,8 @@ class ContainerRegistry:
                 Logger.logException("e", "An exception occurred trying to serialize container %s", stack.getId())
                 continue
 
-            file_name = urllib.parse.quote_plus(stack.getId()) + ".stack.cfg"
+            mime_type = self.getMimeTypeForContainer(type(stack))
+            file_name = urllib.parse.quote_plus(stack.getId()) + "." + mime_type.preferredSuffix
             path = Resources.getStoragePath(Resources.ContainerStacks, file_name)
             with SaveFile(path, "wt", -1, "utf-8") as f:
                 f.write(data)
@@ -287,10 +303,11 @@ class ContainerRegistry:
                 # Serializing is not supported so skip this container
                 continue
             except Exception:
-                Logger.logException("e", "An exception occurred trying to serialize container %s", instance.getId())
+                Logger.logException("e", "An exception occurred trying to serialize container %s", definition.getId())
                 continue
 
-            file_name = urllib.parse.quote_plus(definition.getId()) + ".def.cfg"
+            mime_type = self.getMimeTypeForContainer(type(definition))
+            file_name = urllib.parse.quote_plus(definition.getId()) + "." + mime_type.preferredSuffix
             path = Resources.getStoragePath(Resources.DefinitionContainers, file_name)
             with SaveFile(path, "wt", -1, "utf-8") as f:
                 f.write(data)
@@ -317,6 +334,47 @@ class ContainerRegistry:
             i += 1 #Try next numbering.
             unique_name = "%s #%d" % (name, i) #Fill name like this: "Extruder #2".
         return unique_name
+
+    ##  Add a container type that will be used to serialize/deserialize containers.
+    #
+    #   \param container An instance of the container type to add.
+    @classmethod
+    def addContainerType(cls, container):
+        plugin_id = container.getPluginId()
+        cls.__container_types[plugin_id] = container.__class__
+
+        metadata = PluginRegistry.getInstance().getMetaData(plugin_id)
+        cls.__mime_type_map[metadata["settings_container"]["mimetype"]] = container.__class__
+
+    ##  Retrieve the mime type corresponding to a certain container type
+    #
+    #   \param container_type The type of container to get the mime type for.
+    #
+    #   \return A MimeType object that matches the mime type of the container or None if not found.
+    @classmethod
+    def getMimeTypeForContainer(cls, container_type):
+        mime_type_name = UM.Dictionary.findKey(cls.__mime_type_map, container_type)
+        if mime_type_name:
+            return MimeTypeDatabase.getMimeType(mime_type_name)
+
+        return None
+
+    ##  Get the container type corresponding to a certain mime type.
+    #
+    #   \param mime_type The mime type to get the container type for.
+    #
+    #   \return A class object of a container type that corresponds to the specified mime type or None if not found.
+    @classmethod
+    def getContainerForMimeType(cls, mime_type):
+        return cls.__mime_type_map.get(mime_type.name, None)
+
+    ##  Get all the registered container types
+    #
+    #   \return A dictionary view object that provides access to the container types.
+    #           The key is the plugin ID, the value the container type.
+    @classmethod
+    def getContainerTypes(cls):
+        return cls.__container_types.items()
 
     # Remove all files related to a container located in a storage path
     #

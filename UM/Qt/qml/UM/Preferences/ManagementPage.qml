@@ -23,19 +23,10 @@ PreferencesPage
     default property alias details: detailsPane.children;
 
     signal itemActivated();
-    signal activateObject();
-    signal addObject();
-    signal removeObject();
-    signal renameObject();
 
-    property alias activateEnabled: activateButton.enabled;
-    property alias addEnabled: addButton.enabled;
-    property alias removeEnabled: removeButton.enabled;
-    property alias renameEnabled: renameButton.enabled;
 
-    property alias buttons: buttons.children;
+    property alias buttons: buttonRow.children;
 
-    property alias addText: addButton.text;
 
     resetEnabled: false;
 
@@ -44,46 +35,23 @@ PreferencesPage
 
     Row
     {
-        id: buttons;
+        id: buttonRow;
 
-        width: childrenRect.width;
+        anchors
+        {
+            left: parent.left
+            right: parent.right
+            top: parent.top
+        }
+
         height: childrenRect.height;
-
-        Button
-        {
-            id: activateButton;
-            text: catalog.i18nc("@action:button", "Activate");
-            iconName: "list-activate";
-            onClicked: base.activateObject();
-        }
-        Button
-        {
-            id: addButton;
-            text: catalog.i18nc("@action:button", "Add");
-            iconName: "list-add";
-            onClicked: base.addObject();
-        }
-        Button
-        {
-            id: removeButton;
-            text: catalog.i18nc("@action:button", "Remove");
-            iconName: "list-remove";
-            onClicked: base.removeObject();
-        }
-        Button
-        {
-            id: renameButton;
-            text: catalog.i18nc("@action:button", "Rename");
-            iconName: "edit-rename";
-            onClicked: base.renameObject();
-        }
     }
 
     Item
     {
         anchors
         {
-            top: buttons.bottom;
+            top: buttonRow.bottom;
             topMargin: UM.Theme.getSize("default_margin").height;
             left: parent.left;
             right: parent.right;

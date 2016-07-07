@@ -11,6 +11,7 @@ from PyQt5.QtQml import QQmlApplicationEngine, qmlRegisterType, qmlRegisterSingl
 from PyQt5.QtWidgets import QApplication, QSplashScreen
 from PyQt5.QtGui import QGuiApplication, QPixmap
 from PyQt5.QtCore import QTimer
+
 from UM.Application import Application
 from UM.Qt.QtRenderer import QtRenderer
 from UM.Qt.Bindings.Bindings import Bindings

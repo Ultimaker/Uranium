@@ -20,6 +20,7 @@ class InstanceContainersModel(ListModel):
     IdRole = Qt.UserRole + 2    # Unique ID of Definition
     MetaDataRole = Qt.UserRole + 3
     ReadOnlyRole = Qt.UserRole + 4
+    SectionRole = Qt.UserRole + 5
 
     def __init__(self, parent = None):
         super().__init__(parent)
@@ -27,8 +28,11 @@ class InstanceContainersModel(ListModel):
         self.addRoleName(self.IdRole, "id")
         self.addRoleName(self.MetaDataRole, "metadata")
         self.addRoleName(self.ReadOnlyRole, "readOnly")
+        self.addRoleName(self.SectionRole, "section")
 
         self._instance_containers = []
+
+        self._section_property = ""
 
         # Listen to changes
         ContainerRegistry.getInstance().containerAdded.connect(self._onContainerChanged)
@@ -50,7 +54,7 @@ class InstanceContainersModel(ListModel):
 
         self.clear()
         self._instance_containers = ContainerRegistry.getInstance().findInstanceContainers(**self._filter_dict)
-        self._instance_containers.sort(key = lambda k: (0 if k.isReadOnly() else 1, int(k.getMetaDataEntry("weight")) if k.getMetaDataEntry("weight") else 0, k.getName()))
+        self._instance_containers.sort(key = self._sortKey)
 
         for container in self._instance_containers:
             container.nameChanged.connect(self._update)
@@ -62,8 +66,21 @@ class InstanceContainersModel(ListModel):
                 "name": container.getName(),
                 "id": container.getId(),
                 "metadata": metadata,
-                "readOnly": container.isReadOnly()
+                "readOnly": container.isReadOnly(),
+                "section": container.getMetaDataEntry(self._section_property, ""),
             })
+
+
+    def setSectionProperty(self, property_name):
+        if self._section_property != property_name:
+            self._section_property = property_name
+            self.sectionPropertyChanged.emit()
+            self._update()
+
+    sectionPropertyChanged = pyqtSignal()
+    @pyqtProperty(str, fset = setSectionProperty, notify = sectionPropertyChanged)
+    def sectionProperty(self):
+        return self._section_property
 
     ##  Set the filter of this model based on a string.
     #   \param filter_dict Dictionary to do the filtering by.
@@ -134,3 +151,14 @@ class InstanceContainersModel(ListModel):
         if not path:
             return
         return ContainerRegistry.getInstance().importProfile(path)
+
+    def _sortKey(self, item):
+        result = []
+        if self._section_property:
+            result.append(item.getMetaDataEntry(self._section_property, ""))
+
+        result.append(not item.isReadOnly())
+        result.append(item.getMetaDataEntry("weight", ""))
+        result.append(item.getName())
+
+        return result
