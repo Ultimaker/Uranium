@@ -253,6 +253,7 @@ class VersionUpgradeManager:
             return False
         version = old_version
         configuration_type = old_configuration_type
+        filename_without_extension = os.path.splitext(configuration_file)[0]
 
         #Keep converting the file until it's at one of the current versions.
         while (configuration_type, version) not in self._current_versions:
@@ -261,7 +262,7 @@ class VersionUpgradeManager:
                 return False
             new_type, new_version, upgrade = paths[(configuration_type, version)]
             try:
-                configuration = upgrade(configuration)
+                filename_without_extension, configuration = upgrade(configuration, filename_without_extension)
             except Exception as e: #Upgrade failed due to a coding error in the plug-in.
                 Logger.logException("w", "Exception in %s upgrade with %s: %s", old_configuration_type, upgrade.__module__, str(e))
                 return False
@@ -278,7 +279,7 @@ class VersionUpgradeManager:
             resource_type, mime_type = self._current_versions[(configuration_type, version)]
             storage_path = Resources.getStoragePathForType(resource_type)
             mime_type = UM.MimeTypeDatabase.getMimeType(mime_type) #Get the actual MIME type object, from the name.
-            new_filename = os.path.splitext(configuration_file)[0]
+            new_filename = filename_without_extension
             if mime_type.preferredSuffix:
                 new_filename += "." + mime_type.preferredSuffix
             elif mime_type.suffixes:
