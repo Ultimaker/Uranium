@@ -17,4 +17,4 @@ class SceneNodeDecorator:
         return self._node
 
     def __deepcopy__(self, memo):
-        raise NotImplementedError("Subclasses of SceneNodeDecorator should implement their own __deepcopy__() method.")
+        raise NotImplementedError("Subclass {0} of SceneNodeDecorator should implement their own __deepcopy__() method.".format(str(self)))
