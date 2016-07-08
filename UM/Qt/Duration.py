@@ -100,4 +100,8 @@ class Duration(QObject):
                 return i18n_catalog.i18nc("@label Minutes only duration format, {0} is minutes", "{0} minutes", self._minutes)
 
         return ""
+    
+    def getDurationInISOFormat(self):
+        total_hours = self.hours() + self.days() * 24
+        return "%02d:%02d:%02d" % (total_hours, self.minutes(), self.seconds())
 
