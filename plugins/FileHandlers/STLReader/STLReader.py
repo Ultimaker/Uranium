@@ -52,6 +52,7 @@ class STLReader(MeshReader):
             Job.yieldThread() # Yield somewhat to ensure the GUI has time to update a bit.
 
         mesh_builder.calculateNormals(fast = True)
+        mesh_builder.setFileName(file_name)
 
         mesh = mesh_builder.build()
         Logger.log("d", "Loaded a mesh with %s vertices", mesh_builder.getVertexCount())
