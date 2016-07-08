@@ -44,9 +44,8 @@ class Selection:
     @classmethod
     def getBoundingBox(cls):
         bounding_box = None # don't start with an empty bounding box, because that includes (0,0,0)
-
         for node in cls.__selection:
-            if type(node) is not SceneNode or not node.getMeshData():
+            if type(node) is not SceneNode:
                 continue
 
             if not bounding_box:
