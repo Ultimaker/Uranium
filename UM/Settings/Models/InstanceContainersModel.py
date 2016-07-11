@@ -51,6 +51,7 @@ class InstanceContainersModel(ListModel):
     def _update(self):
         for container in self._instance_containers:
             container.nameChanged.disconnect(self._update)
+            container.metaDataChanged.disconnect(self._updateMetaData)
 
         self.clear()
         self._instance_containers = ContainerRegistry.getInstance().findInstanceContainers(**self._filter_dict)
@@ -58,6 +59,7 @@ class InstanceContainersModel(ListModel):
 
         for container in self._instance_containers:
             container.nameChanged.connect(self._update)
+            container.metaDataChanged.connect(self._updateMetaData)
 
             metadata = container.getMetaData().copy()
             metadata["has_settings"] = len(container.getAllKeys()) > 0
@@ -162,3 +164,11 @@ class InstanceContainersModel(ListModel):
         result.append(item.getName())
 
         return result
+
+    def _updateMetaData(self, container):
+        index = self.find("id", container.id)
+
+        if self._section_property:
+            self.setProperty(index, "section", container.getMetaDataEntry(self._section_property, ""))
+
+        self.setProperty(index, "metadata", container.getMetaData())
