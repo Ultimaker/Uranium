@@ -227,9 +227,10 @@ class VersionUpgradeManager:
                 os.makedirs(os.path.join(resource_directory, "old", str(old_version)))
             except OSError: #Assume that the directory already existed. Otherwise it's probably a permission error or OS-internal error, in which case we can't write anyway.
                 pass
-            except FileExistsError: #Couldn't remove the old file for some reason.
+            try:
+                os.rename(os.path.join(resource_directory, relative_path), newpath) #Try again!
+            except FileExistsError: #Couldn't remove the old file for some other reason. Internal OS error?
                 pass
-            os.rename(os.path.join(resource_directory, relative_path), newpath) #Try again!
         except FileExistsError:
             pass
 
