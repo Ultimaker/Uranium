@@ -214,16 +214,24 @@ class VersionUpgradeManager:
     #   file in question.
     #   \param old_version The version number in the file in question.
     def _storeOldFile(self, resource_directory, relative_path, old_version):
+        newpath = os.path.join(resource_directory, "old", str(old_version), relative_path)
+        if os.path.exists(newpath): #If we've updated previously but this old version was launched again, overwrite the old configuration.
+            try:
+                os.remove(newpath)
+            except OSError: #Couldn't remove. Permissions?
+                return
         try: #For speed, first just try to rename the file without checking if the directory exists and stuff.
-            os.rename(os.path.join(resource_directory,                          relative_path),
-                      os.path.join(resource_directory, "old", str(old_version), relative_path)) #Store the old file away.
+            os.rename(os.path.join(resource_directory, relative_path), newpath) #Store the old file away.
         except FileNotFoundError: #Assume the target directory doesn't exist yet. The other case is that the file itself doesn't exist, but that's a coding error anyway.
             try:
                 os.makedirs(os.path.join(resource_directory, "old", str(old_version)))
             except OSError: #Assume that the directory already existed. Otherwise it's probably a permission error or OS-internal error, in which case we can't write anyway.
                 pass
-            os.rename(os.path.join(resource_directory,                          relative_path),
-                      os.path.join(resource_directory, "old", str(old_version), relative_path)) #Try again!
+            except FileExistsError: #Couldn't remove the old file for some reason.
+                pass
+            os.rename(os.path.join(resource_directory, relative_path), newpath) #Try again!
+        except FileExistsError:
+            pass
 
     ##  Upgrades a single file to any version in self._current_versions.
     #
