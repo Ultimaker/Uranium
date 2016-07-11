@@ -94,7 +94,7 @@ PreferencesPage
             {
                 id: objectList;
                 currentIndex: activeIndex
-                onCurrentIndexChanged: base.currentItem = currentItem != null ? model.getItem(currentIndex) : null;
+                onCurrentIndexChanged: base.currentItem = (currentIndex != null) ? model.getItem(currentIndex) : null
 
                 section.property: "group"
                 section.criteria: ViewSection.FullString
