@@ -17,16 +17,14 @@ PreferencesPage
     property bool detailsVisible: true;
 
     property variant objectList: objectList;
-    property variant currentItem: objectList.currentItem != null ? objectList.model.getItem(objectList.currentIndex) : null;
+    property variant currentItem: null
     property string scrollviewCaption: "";
 
     default property alias details: detailsPane.children;
 
     signal itemActivated();
 
-
     property alias buttons: buttonRow.children;
-
 
     resetEnabled: false;
 
@@ -96,6 +94,7 @@ PreferencesPage
             {
                 id: objectList;
                 currentIndex: activeIndex
+                onCurrentIndexChanged: base.currentItem = currentItem != null ? model.getItem(currentIndex) : null;
 
                 section.property: "group"
                 section.criteria: ViewSection.FullString
@@ -166,5 +165,18 @@ PreferencesPage
 
         UM.I18nCatalog { id: catalog; name: "uranium"; }
         SystemPalette { id: palette }
+
+        Connections
+        {
+            target: objectList.model
+
+            onDataChanged:
+            {
+                if(topLeft.row <= objectList.currentIndex || bottomRight.row <= objectList.currentIndex)
+                {
+                    base.currentItem = objectList.currentItem != null ? objectList.model.getItem(objectList.currentIndex) : null;
+                }
+            }
+        }
     }
 }
