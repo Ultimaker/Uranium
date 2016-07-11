@@ -141,24 +141,6 @@ class VersionUpgradeManager:
 
         return result
 
-    ##  Gets a single item out of a config file.
-    #
-    #   This uses the config parser to read the entire file, then gets the
-    #   requested property from it. That makes it hella inefficient! But if you
-    #   only need one item, it is convenient to use this function.
-    #
-    #   This function does not do any error checking. If the config file is not
-    #   well-formed, an exception will be raised.
-    #
-    #   \param config_file The contents of a config file.
-    #   \param section The section to get the item from.
-    #   \param item The item to read from the specified section.
-    #   \return The value of the specified item, as a string.
-    def _getCfgItem(self, config_file, section, item):
-        config = configparser.ConfigParser(interpolation = None)
-        config.read_string(config_file)
-        return config.get(section, item)
-
     ##  Get the filenames of all files in a specified directory and its
     #   subdirectories.
     #
@@ -179,27 +161,6 @@ class VersionUpgradeManager:
             for filename in filenames:
                 relative_path = os.path.relpath(path, directory)
                 yield os.path.join(relative_path, filename)
-
-    ##  Gets the version of a machine instance file.
-    #
-    #   \param machine_instance The contents of a machine_instance file.
-    #   \return The version of the machine instance.
-    def _getMachineInstanceVersion(self, machine_instance):
-        return int(self._getCfgItem(machine_instance, section = "general", item = "version"))
-
-    ##  Gets the version of a preferences file.
-    #
-    #   \param preferences The contents of a preferences file.
-    #   \return The version of the preferences.
-    def _getPreferencesVersion(self, preferences):
-        return int(self._getCfgItem(preferences, section = "general", item = "version"))
-
-    ##  Gets the version of a profile file.
-    #
-    #   \param profile The contents of a profile file.
-    #   \return The version of the profile.
-    def _getProfileVersion(self, profile):
-        return int(self._getCfgItem(profile, section = "general", item = "version"))
 
     ##  Stores an old version of a configuration file away.
     #
