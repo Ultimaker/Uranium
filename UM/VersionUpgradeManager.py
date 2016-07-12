@@ -209,7 +209,7 @@ class VersionUpgradeManager:
 
         #Read the old file.
         try:
-            with open(configuration_file_absolute) as file_handle:
+            with open(configuration_file_absolute, encoding = "utf-8", errors = "ignore") as file_handle:
                 configuration = file_handle.read()
         except IOError:
             Logger.log("w", "Can't open configuration file %s for reading.", configuration_file_absolute)
@@ -257,7 +257,7 @@ class VersionUpgradeManager:
             configuration_file_absolute = os.path.join(storage_path, new_filename)
 
             try:
-                with open(os.path.join(configuration_file_absolute), "w") as file_handle:
+                with open(os.path.join(configuration_file_absolute, encoding = "utf-8"), "w") as file_handle:
                     file_handle.write(configuration) #Save the new file.
             except IOError:
                 Logger.log("w", "Couldn't write new configuration file to %s.", configuration_file_absolute)
