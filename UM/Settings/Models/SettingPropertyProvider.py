@@ -31,7 +31,7 @@ class SettingPropertyProvider(QObject):
     ##  Set the containerStackId property.
     def setContainerStackId(self, stack_id):
         if stack_id == self._stack_id:
-            return #No change.
+            return # No change.
 
         self._stack_id = stack_id
 
@@ -113,17 +113,23 @@ class SettingPropertyProvider(QObject):
     def stackLevels(self):
         if not self._stack:
             return -1
-
         return self._stack_levels
 
     def _updateStackLevels(self):
         levels = []
-        for container in self._stack.getContainers():
-            try:
-                if container.getProperty(self._key, "value") is not None:
-                    levels.append(self._stack.getContainerIndex(container))
-            except AttributeError:
-                continue
+        # Start looking at the stack this provider is attached to.
+        current_stack = self._stack
+        index = 0
+        while current_stack:
+            for container in current_stack.getContainers():
+                try:
+                    if container.getProperty(self._key, "value") is not None:
+                        levels.append(index)
+                except AttributeError:
+                    pass
+                index += 1
+            # If there is a next stack, check that one as well.
+            current_stack = current_stack.getNextStack()
         if levels != self._stack_levels:
             self._stack_levels = levels
             self.stackLevelChanged.emit()
@@ -159,7 +165,17 @@ class SettingPropertyProvider(QObject):
     @pyqtSlot(str, int, result = "QVariant")
     def getPropertyValue(self, property_name, stack_level):
         try:
-            value = self._stack.getContainers()[stack_level].getProperty(self._key, property_name)
+            # Because we continue to count if there are multiple linked stacks, we need to check what stack is targeted
+            current_stack = self._stack
+            while current_stack:
+                num_containers = len(current_stack.getContainers())
+                if num_containers < stack_level:
+                    stack_level -= num_containers
+                    current_stack = self._stack.getNextStack()
+                else:
+                    break  # Found the right stack
+
+            value = current_stack.getContainers()[stack_level].getProperty(self._key, property_name)
         except IndexError:  # Requested stack level does not exist
             Logger.log("w", "Tried to get property of type %s from %s but it did not exist on requested index %s", property_name, self._key, stack_level)
             return
@@ -167,7 +183,16 @@ class SettingPropertyProvider(QObject):
 
     @pyqtSlot(int)
     def removeFromContainer(self, index):
-        container = self._stack.getContainer(index)
+        current_stack = self._stack
+        while current_stack:
+            num_containers = len(current_stack.getContainers())
+            if num_containers < index:
+                index -= num_containers
+                current_stack = self._stack.getNextStack()
+            else:
+                break  # Found the right stack
+
+        container = current_stack.getContainer(index)
         if not container or not isinstance(container, UM.Settings.InstanceContainer):
             Logger.log("w", "Unable to remove instance from container as it was either not found or not an instance container")
             return
