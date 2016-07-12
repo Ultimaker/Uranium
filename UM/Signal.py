@@ -156,7 +156,7 @@ class Signal:
             elif inspect.ismethod(connector):
                 self.__methods = self.__methods.append(connector.__self__, connector.__func__)
             else:
-                # Once again, update the set of functions using a whole new set.
+                # Once again, update the list of functions using a whole new list.
                 self.__functions = self.__functions.append(connector)
 
     ##  Disconnect from this signal.
