@@ -175,10 +175,14 @@ class SettingPropertyProvider(QObject):
                 else:
                     break  # Found the right stack
 
+            if not current_stack:
+                Logger.log("w", "Could not find the right stack for setting %s at stack level %d while trying to get property %s", self._key, stack_level, property_name)
+                return None
+
             value = current_stack.getContainers()[stack_level].getProperty(self._key, property_name)
         except IndexError:  # Requested stack level does not exist
-            Logger.log("w", "Tried to get property of type %s from %s but it did not exist on requested index %s", property_name, self._key, stack_level)
-            return
+            Logger.log("w", "Tried to get property of type %s from %s but it did not exist on requested index %d", property_name, self._key, stack_level)
+            return None
         return value
 
     @pyqtSlot(int)
@@ -191,6 +195,10 @@ class SettingPropertyProvider(QObject):
                 current_stack = self._stack.getNextStack()
             else:
                 break  # Found the right stack
+
+        if not current_stack:
+            Logger.log("w", "Unable to remove instance from container because the right stack at stack level %d could not be found", stack_level)
+            return
 
         container = current_stack.getContainer(index)
         if not container or not isinstance(container, UM.Settings.InstanceContainer):
