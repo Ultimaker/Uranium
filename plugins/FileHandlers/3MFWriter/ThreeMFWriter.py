@@ -49,6 +49,9 @@ class ThreeMFWriter(MeshWriter):
         try:
             model_file = zipfile.ZipInfo("3D/3dmodel.model")
             content_types_file = zipfile.ZipInfo("[Content_Types].xml")
+            # Because zipfile is stupid and ignores archive-level compression settings when writing with ZipInfo.
+            model_file.compress_type = zipfile.ZIP_DEFLATED
+            content_types_file.compress_type = zipfile.ZIP_DEFLATED
             model = ET.Element('model', unit = "millimeter", xmlns = self._namespaces["3mf"])
             resources = ET.SubElement(model, "resources")
             build = ET.SubElement(model, "build")
