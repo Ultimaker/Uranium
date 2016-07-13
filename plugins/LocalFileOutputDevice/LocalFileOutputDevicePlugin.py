@@ -65,9 +65,6 @@ class LocalFileOutputDevice(OutputDevice):
         dialog.setFileMode(QFileDialog.AnyFile)
         dialog.setAcceptMode(QFileDialog.AcceptSave)
 
-        default_save_path = os.path.expanduser("~/")
-        dialog.setDirectory(default_save_path)
-
         # Ensure platform never ask for overwrite confirmation since we do this ourselves
         dialog.setOption(QFileDialog.DontConfirmOverwrite)
 
