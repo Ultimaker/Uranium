@@ -99,7 +99,7 @@ class SettingPropertyProvider(QObject):
     def setStoreIndex(self, index):
         if index != self._store_index:
             self._store_index = index
-            self.indexChanged.emit()
+            self.storeIndexChanged.emit()
 
     storeIndexChanged = pyqtSignal()
     @pyqtProperty(int, fset = setStoreIndex, notify = storeIndexChanged)
