@@ -465,6 +465,7 @@ class ContainerRegistry:
 
 PluginRegistry.addType("settings_container", ContainerRegistry.addContainerType)
 
+
 class _EmptyInstanceContainer(InstanceContainer.InstanceContainer):
     def isDirty(self):
         return False
@@ -474,3 +475,9 @@ class _EmptyInstanceContainer(InstanceContainer.InstanceContainer):
 
     def setProperty(self, key, property_name, property_value):
         return
+
+    ##  \copydoc ContainerInterface::serialize
+    #
+    #   Reimplemented from ContainerInterface
+    def serialize(self):
+        return ""
