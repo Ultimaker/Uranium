@@ -267,7 +267,7 @@ class SettingPropertyProvider(QObject):
             return
         self._updateStackLevels()
         relations = self._stack.getProperty(self._key, "relations")
-        if relations:  # If the setting doesn't have the property releations, None is returned
+        if relations:  # If the setting doesn't have the property relations, None is returned
             for relation in filter(lambda r: r.type == UM.Settings.SettingRelation.RelationType.RequiredByTarget and r.role == "value", relations):
                 self._relations.add(relation.target.key)
 
