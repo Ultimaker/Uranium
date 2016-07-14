@@ -179,6 +179,7 @@ class SettingInstance:
             # That would increase performance by reducing the amount of updates.
             for relation in changed_relations:
                 container.propertyChanged.emit(relation, property_name)
+                container.propertyChanged.emit(relation, "validationState")  # Ensure that validation state is updated
 
     def _addRelations(self, relations_set, relations, role):
         for relation in filter(lambda r: r.role == role, relations):
