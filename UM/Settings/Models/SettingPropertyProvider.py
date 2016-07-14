@@ -179,7 +179,7 @@ class SettingPropertyProvider(QObject):
             current_stack = self._stack
             while current_stack:
                 num_containers = len(current_stack.getContainers())
-                if num_containers < stack_level:
+                if stack_level >= num_containers:
                     stack_level -= num_containers
                     current_stack = self._stack.getNextStack()
                 else:
@@ -200,7 +200,7 @@ class SettingPropertyProvider(QObject):
         current_stack = self._stack
         while current_stack:
             num_containers = len(current_stack.getContainers())
-            if num_containers < index:
+            if index >= num_containers:
                 index -= num_containers
                 current_stack = self._stack.getNextStack()
             else:
