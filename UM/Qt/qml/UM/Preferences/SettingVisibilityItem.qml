@@ -8,13 +8,15 @@ import QtQuick.Controls.Styles 1.1
 
 import UM 1.2 as UM
 
-Row {
-    x: model.depth * UM.Theme.getSize("default_margin").width;
-
+Item {
+    # Use the depth of the model to move the item, but also leave space for the visibility / enabled exclamation mark.
+    x: (model.depth + 1)* UM.Theme.getSize("default_margin").width;
     UM.TooltipArea
     {
         width: height;
         height: check.height;
+        anchors.right: checkboxTooltipArea.left
+        anchors.rightMargin: 2
 
         text:
         {
@@ -52,7 +54,6 @@ Row {
         UM.RecolorImage
         {
             anchors.centerIn: parent
-
             width: check.height * 0.75
             height: width
 
@@ -70,7 +71,7 @@ Row {
 
         width: childrenRect.width;
         height: childrenRect.height;
-
+        id: checkboxTooltipArea
         CheckBox
         {
             id: check
