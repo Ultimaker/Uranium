@@ -9,7 +9,7 @@ import QtQuick.Controls.Styles 1.1
 import UM 1.2 as UM
 
 Item {
-    # Use the depth of the model to move the item, but also leave space for the visibility / enabled exclamation mark.
+    // Use the depth of the model to move the item, but also leave space for the visibility / enabled exclamation mark.
     x: (model.depth + 1)* UM.Theme.getSize("default_margin").width;
     UM.TooltipArea
     {
