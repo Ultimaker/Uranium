@@ -474,3 +474,6 @@ class _EmptyInstanceContainer(InstanceContainer.InstanceContainer):
 
     def setProperty(self, key, property_name, property_value):
         return
+
+    def serialize(self):
+        return "[general]\n version = 2\n name = empty\n definition = fdmprinter\n"
