@@ -225,7 +225,7 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
         parser = configparser.ConfigParser(interpolation = None, empty_lines_in_values = False)
 
         if not self._definition:
-            Logger.log("e", "Tried to serialize an instance container without definition, this is not supported")
+            Logger.log("w", "Tried to serialize an instance container without definition, this is not supported")
             return ""
 
         parser["general"] = {}
