@@ -222,7 +222,6 @@ class SettingPropertyProvider(QObject):
     def isValueUsed(self):
         if self._value_used is not None:
             return self._value_used
-
         definition = self._stack.getSettingDefinition(self._key)
         if not definition:
             return False
@@ -278,6 +277,10 @@ class SettingPropertyProvider(QObject):
         if new_properties != self._property_values:
             self._property_values = new_properties
             self.propertiesChanged.emit()
+
+        # Force update of value_used
+        self._value_used = None
+        self.isValueUsedChanged.emit()
 
     def _getPropertyValue(self, property_name):
         property_value = self._stack.getProperty(self._key, property_name)
