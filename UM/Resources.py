@@ -83,7 +83,7 @@ class Resources:
             if not os.path.isdir(directory):
                 continue
 
-            for root, dirname, entries in os.walk(directory):
+            for root, dirname, entries in os.walk(directory, followlinks = True):
                 for entry in entries:
                     if not entry.startswith('.') and os.path.isfile(os.path.join(root, entry)):
                         if not entry in files:
