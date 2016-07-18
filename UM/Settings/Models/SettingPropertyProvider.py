@@ -165,6 +165,8 @@ class SettingPropertyProvider(QObject):
                         # In this case the setting does need to be set, as it needs to be stored in the user settings.
                         self.removeFromContainer(self._store_index)
                         return
+                    else:  # First value that we encountered was different, stop looking & continue as normal.
+                        break
         container.setProperty(self._key, property_name, property_value, self._stack)
 
     ##  Manually request the value of a property.
