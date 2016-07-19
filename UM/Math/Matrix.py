@@ -432,6 +432,8 @@ class Matrix(object):
             scale[1] *= -1
         if M[2, 2] < 0:
             scale[2] *= -1
+        if numpy.dot(row[0], numpy.cross(row[1], row[2])) < 0:
+            numpy.negative(row, row)
 
         angles[1] = math.asin(-row[0, 2])
         if math.cos(angles[1]):

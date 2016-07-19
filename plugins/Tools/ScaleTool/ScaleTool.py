@@ -8,6 +8,7 @@ from UM.Scene.Selection import Selection
 from UM.Math.Plane import Plane
 from UM.Math.Vector import Vector
 from UM.Math.Float import Float
+from UM.Math.Matrix import Matrix
 
 from UM.Operations.ScaleOperation import ScaleOperation
 from UM.Operations.GroupedOperation import GroupedOperation
@@ -15,6 +16,8 @@ from UM.Operations.SetTransformOperation import SetTransformOperation
 from UM.Operations.ScaleToBoundsOperation import ScaleToBoundsOperation
 
 from . import ScaleToolHandle
+
+import scipy
 
 DIMENSION_TOLERANCE = 0.0001    # Tolerance value used for comparing dimensions from the UI.
 
@@ -349,9 +352,23 @@ class ScaleTool(Tool):
     #   \param node type(SceneNode)
     #   \return scale type(float) scale factor (1.0 = normal scale)
     def _getScaleInWorldCoordinates(self, node):
-        original_aabb = node.getOriginalBoundingBox()
-        aabb = node.getBoundingBox()
+        rotated_matrix = Matrix()
 
-        scale = Vector(aabb.width / original_aabb.width, aabb.height / original_aabb.height, aabb.depth / original_aabb.depth)
+        # The rotation matrix that we get back from our own decompose isn't quite correct for some reason.
+        # It seems that it does not "draw the line" between scale, rotate & skew quite correctly in all cases.
+        # The decomposition is insanely fast and the combination of all of the components does result in the same
+        # Transformation matrix (Also note that there are multiple solutions for decomposition and that one just doesn't
+        # work here, but fine everywhere else).
+        #
+        # In order to remedy this, we use singular value decomposition.
+        # SVD solves a = U s V.H for us, where A is the matrix. U and V.h are Rotation matrices and s holds the scale.
+        transformation_data = node.getWorldTransformation().getData()[:3, :3]
+        U, s, Vh = scipy.linalg.svd(transformation_data)
 
+        # As we want a single rotation matrix (without scale!) we can combine U and vh again.
+        rotated_matrix._data[:3, :3] = U.dot(Vh)
+        aabb = node.getMeshData().getExtents(node.getWorldTransformation())
+        original_aabb = node.getMeshData().getExtents(rotated_matrix)
+        scale = Vector(aabb.width / original_aabb.width, aabb.height / original_aabb.height,
+                       aabb.depth / original_aabb.depth)
         return scale
