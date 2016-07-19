@@ -588,6 +588,9 @@ class SceneNode():
 
     boundingBoxChanged = Signal()
 
+    def getShear(self):
+        return self._shear
+
     ##  private:
     def _transformChanged(self):
         self._updateTransformation()

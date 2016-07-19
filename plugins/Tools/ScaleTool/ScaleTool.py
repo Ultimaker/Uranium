@@ -159,7 +159,7 @@ class ScaleTool(Tool):
 
     ##  Reset scale of the selected objects
     def resetScale(self):
-        Selection.applyOperation(SetTransformOperation, None, None, Vector(1.0, 1.0, 1.0))
+        Selection.applyOperation(SetTransformOperation, None, None, Vector(1.0, 1.0, 1.0), Vector(0, 0, 0))
 
     ##  Initialise and start a ScaleToBoundsOperation on the selected objects
     def scaleToMax(self):

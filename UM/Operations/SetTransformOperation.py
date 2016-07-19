@@ -2,6 +2,7 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 from . import Operation
+from UM.Math.Matrix import Matrix
 
 ##  Operation that translates, rotates and scales a node all at once.
 class SetTransformOperation(Operation.Operation):
@@ -16,32 +17,48 @@ class SetTransformOperation(Operation.Operation):
     #   \param translation A translation matrix to move the node with.
     #   \param orientation An orientation matrix to rotate the node with.
     #   \param scale A scaling matrix to resize the node with.
-    def __init__(self, node, translation = None, orientation = None, scale = None):
+    def __init__(self, node, translation = None, orientation = None, scale = None, shear = None):
         super().__init__()
         self._node = node
 
         self._old_translation = node.getPosition()
         self._old_orientation = node.getOrientation()
         self._old_scale = node.getScale()
+        self._old_shear = node.getShear()
+        self._old_transformation = node.getWorldTransformation()
 
-        self._new_translation = translation
-        self._new_orientation = orientation
-        self._new_scale = scale
+        if translation:
+            self._new_translation = translation
+        else:
+            self._new_translation = node.getPosition()
+
+        if orientation:
+            self._new_orientation = orientation
+        else:
+            self._new_orientation = node.getOrientation()
+
+        if scale:
+            self._new_scale = scale
+        else:
+            self._new_scale = node.getScale()
+
+        if shear:
+            self._new_shear = shear
+        else:
+            self._new_shear = node.getShear()
+
+        self._new_transformation = Matrix()
+
+        euler_orientation = self._new_orientation.toMatrix().getEuler()
+        self._new_transformation.compose(scale = self._new_scale, shear = self._new_shear, angles = euler_orientation, translate = self._new_translation)
 
     ##  Undoes the transformation, restoring the node to the old state.
     def undo(self):
-        self._node.setPosition(self._old_translation)
-        self._node.setOrientation(self._old_orientation)
-        self._node.setScale(self._old_scale)
+        self._node.setTransformation(self._old_transformation)
 
     ##  Re-applies the transformation after it has been undone.
     def redo(self):
-        if self._new_translation:
-            self._node.setPosition(self._new_translation)
-        if self._new_orientation:
-            self._node.setOrientation(self._new_orientation)
-        if self._new_scale:
-            self._node.setScale(self._new_scale)
+        self._node.setTransformation(self._new_transformation)
 
     ##  Merges this operation with another TransformOperation.
     #
@@ -59,17 +76,10 @@ class SetTransformOperation(Operation.Operation):
             return False
         if other._node != self._node: # Must be on the same node.
             return False
-        if other._new_translation is None or self._new_translation is None: #Must have valid transformations in each of the operations.
-            return False
-        if other._new_orientation is None or self._new_orientation is None:
-            return False
-        if other._new_scale is None or self._new_scale is None:
-            return False
 
-        op = SetTransformOperation(self._node, self._new_translation, self._new_orientation, self._new_scale)
-        op._old_translation = other._old_translation
-        op._old_orientation = other._old_orientation
-        op._old_scale = other._old_scale
+        op = SetTransformOperation(self._node)
+        op._old_transformation = other._old_transformation
+        op._new_transformation = self._new_transformation
         return op
 
     ##  Returns a programmer-readable representation of this operation.
