@@ -425,9 +425,13 @@ class Matrix(object):
         row[2] /= scale[2]
         shear[1:] /= scale[2]
 
-        if numpy.dot(row[0], numpy.cross(row[1], row[2])) < 0:
-            numpy.negative(scale, scale)
-            numpy.negative(row, row)
+        # If the scale was negative, we need to reflect that in the returned scale again.
+        if M[0, 0] < 0:
+            scale[0] *= -1
+        if M[1, 1] < 0:
+            scale[1] *= -1
+        if M[2, 2] < 0:
+            scale[2] *= -1
 
         angles[1] = math.asin(-row[0, 2])
         if math.cos(angles[1]):
