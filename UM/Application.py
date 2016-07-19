@@ -69,6 +69,7 @@ class Application():
         preferences = Preferences.getInstance()
         preferences.addPreference("general/language", "en")
         preferences.addPreference("general/visible_settings", "")
+
         try:
             preferences.readFromFile(Resources.getPath(Resources.Preferences, self._application_name + ".cfg"))
         except FileNotFoundError:

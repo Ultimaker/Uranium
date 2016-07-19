@@ -28,7 +28,7 @@ class LocalFileOutputDevicePlugin(OutputDevicePlugin):
         super().__init__()
 
         Preferences.getInstance().addPreference("local_file/last_used_type", "")
-        Preferences.getInstance().addPreference("local_file/dialog_state", "")
+        Preferences.getInstance().addPreference("local_file/dialog_save_path", "")
 
     def start(self):
         self.getOutputDeviceManager().addOutputDevice(LocalFileOutputDevice())
@@ -61,6 +61,7 @@ class LocalFileOutputDevice(OutputDevice):
             raise OutputDeviceError.DeviceBusyError()
 
         dialog = QFileDialog()
+
         dialog.setWindowTitle(catalog.i18nc("@title:window", "Save to File"))
         dialog.setFileMode(QFileDialog.AnyFile)
         dialog.setAcceptMode(QFileDialog.AcceptSave)
@@ -101,12 +102,14 @@ class LocalFileOutputDevice(OutputDevice):
         if file_name != None:
             dialog.selectFile(file_name)
 
-        dialog.restoreState(Preferences.getInstance().getValue("local_file/dialog_state").encode())
+        stored_directory = Preferences.getInstance().getValue("local_file/dialog_save_path")
+        dialog.setDirectory(stored_directory)
 
         if not dialog.exec_():
             raise OutputDeviceError.UserCanceledError()
 
-        Preferences.getInstance().setValue("local_file/dialog_state", str(dialog.saveState()))
+        save_path = dialog.directory().absolutePath()
+        Preferences.getInstance().setValue("local_file/dialog_save_path", save_path)
 
         selected_type = file_types[filters.index(dialog.selectedNameFilter())]
         Preferences.getInstance().setValue("local_file/last_used_type", selected_type["mime_type"])
