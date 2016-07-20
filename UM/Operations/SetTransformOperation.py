@@ -3,6 +3,7 @@
 
 from . import Operation
 from UM.Math.Matrix import Matrix
+from UM.Math.Vector import Vector
 
 ##  Operation that translates, rotates and scales a node all at once.
 class SetTransformOperation(Operation.Operation):
@@ -17,7 +18,7 @@ class SetTransformOperation(Operation.Operation):
     #   \param translation A translation matrix to move the node with.
     #   \param orientation An orientation matrix to rotate the node with.
     #   \param scale A scaling matrix to resize the node with.
-    def __init__(self, node, translation = None, orientation = None, scale = None, shear = None):
+    def __init__(self, node, translation = None, orientation = None, scale = None, shear = None, mirror = None):
         super().__init__()
         self._node = node
 
@@ -47,10 +48,19 @@ class SetTransformOperation(Operation.Operation):
         else:
             self._new_shear = node.getShear()
 
+        if mirror:
+            self._new_mirror = mirror
+        else:
+            # Scale will either be negative or positive. If it's negative, we need to use the inverse mirror.
+            if self._node.getScale().x < 0:
+                self._new_mirror = Vector(-node.getMirror().x, -node.getMirror().y, -node.getMirror().z)
+            else:
+                self._new_mirror = node.getMirror()
+
         self._new_transformation = Matrix()
 
         euler_orientation = self._new_orientation.toMatrix().getEuler()
-        self._new_transformation.compose(scale = self._new_scale, shear = self._new_shear, angles = euler_orientation, translate = self._new_translation)
+        self._new_transformation.compose(scale = self._new_scale, shear = self._new_shear, angles = euler_orientation, translate = self._new_translation, mirror = self._new_mirror)
 
     ##  Undoes the transformation, restoring the node to the old state.
     def undo(self):

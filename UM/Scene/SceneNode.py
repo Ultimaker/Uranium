@@ -46,6 +46,7 @@ class SceneNode():
         self._position = Vector()
         self._scale = Vector(1.0, 1.0, 1.0)
         self._shear = Vector(0.0, 0.0, 0.0)
+        self._mirror = Vector(1.0, 1.0, 1.0)
         self._orientation = Quaternion()
 
         # World transformation (from root to local)
@@ -107,6 +108,9 @@ class SceneNode():
     #   \returns SceneNode if it has a parent and None if it's the root node.
     def getParent(self):
         return self._parent
+
+    def getMirror(self):
+        return self._mirror
 
     ##  Get the MeshData of the bounding box
     #   \returns \type{MeshData} Bounding box mesh.
@@ -602,10 +606,11 @@ class SceneNode():
             child._transformChanged()
 
     def _updateTransformation(self):
-        scale, shear, euler_angles, translation = self._transformation.decompose()
+        scale, shear, euler_angles, translation, mirror = self._transformation.decompose()
         self._position = translation
         self._scale = scale
         self._shear = shear
+        self._mirror = mirror
         orientation = Quaternion()
         euler_angle_matrix = Matrix()
         euler_angle_matrix.setByEuler(euler_angles.x, euler_angles.y, euler_angles.z)
@@ -616,15 +621,13 @@ class SceneNode():
         else:
             self._world_transformation = self._transformation
 
-        world_scale, world_shear, world_euler_angles, world_translation = self._world_transformation.decompose()
+        world_scale, world_shear, world_euler_angles, world_translation, world_mirror = self._world_transformation.decompose()
         self._derived_position = world_translation
         self._derived_scale = world_scale
 
         world_euler_angle_matrix = Matrix()
         world_euler_angle_matrix.setByEuler(world_euler_angles.x, world_euler_angles.y, world_euler_angles.z)
         self._derived_orientation.setByMatrix(world_euler_angle_matrix)
-
-        world_scale, world_shear, world_euler_angles, world_translation = self._world_transformation.decompose()
 
     def _resetAABB(self):
         if not self._calculate_aabb:

@@ -198,7 +198,7 @@ class Matrix(object):
     #   @param angles : list of Euler angles about static x, y, z axes
     #   @param translate : translation vector along x, y, z axes
     #   @param perspective : perspective partition of matrix
-    def compose(self, scale = None, shear = None, angles = None, translate = None, perspective = None):
+    def compose(self, scale = None, shear = None, angles = None, translate = None, perspective = None, mirror = None):
         M = numpy.identity(4)
         if perspective is not None:
             P = numpy.identity(4)
@@ -224,6 +224,12 @@ class Matrix(object):
             S[1, 1] = scale.y
             S[2, 2] = scale.z
             M = numpy.dot(M, S)
+        if mirror is not None:
+            mir = numpy.identity(4)
+            mir[0, 0] *= mirror.x
+            mir[1, 1] *= mirror.y
+            mir[2, 2] *= mirror.z
+            M = numpy.dot(M, mir)
         M /= M[3, 3]
         self._data = M
 
@@ -405,6 +411,7 @@ class Matrix(object):
         scale = numpy.zeros((3, ))
         shear = [0.0, 0.0, 0.0]
         angles = [0.0, 0.0, 0.0]
+        mirror = [1, 1, 1]
 
         translate = M[3, :3].copy()
         M[3, :3] = 0.0
@@ -425,15 +432,17 @@ class Matrix(object):
         row[2] /= scale[2]
         shear[1:] /= scale[2]
 
-        # If the scale was negative, we need to reflect that in the returned scale again.
-        if M[0, 0] < 0:
-            scale[0] *= -1
-        if M[1, 1] < 0:
-            scale[1] *= -1
-        if M[2, 2] < 0:
-            scale[2] *= -1
         if numpy.dot(row[0], numpy.cross(row[1], row[2])) < 0:
+            numpy.negative(scale, scale)
             numpy.negative(row, row)
+
+        # If the scale was negative, we give back a seperate mirror vector to indicate this.
+        if M[0, 0] < 0:
+            mirror[0] = -1
+        if M[1, 1] < 0:
+            mirror[1] = -1
+        if M[2, 2] < 0:
+            mirror[2] = -1
 
         angles[1] = math.asin(-row[0, 2])
         if math.cos(angles[1]):
@@ -443,7 +452,7 @@ class Matrix(object):
             angles[0] = math.atan2(-row[2, 1], row[1, 1])
             angles[2] = 0.0
 
-        return Vector(data = scale), Vector(data = shear), Vector(data = angles), Vector(data = translate)
+        return Vector(data = scale), Vector(data = shear), Vector(data = angles), Vector(data = translate), Vector(data = mirror)
 
     def _unitVector(self, data, axis=None, out=None):
         """Return ndarray normalized by length, i.e. Euclidean norm, along axis.
