@@ -101,7 +101,7 @@ class ScaleOperation(Operation.Operation):
                 new_scale = new_scale.set(z=-self._min_scale)
             self._node.setScale(new_scale, SceneNode.TransformSpace.World)
         else:
-            self._node.scale(self._scale, SceneNode.TransformSpace.World) #Default to _set_scale
+            self._node.scale(self._scale, SceneNode.TransformSpace.Local) #Default to _set_scale
 
     ##  Merge this operation with another scale operation.
     #
