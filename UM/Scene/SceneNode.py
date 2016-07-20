@@ -452,7 +452,6 @@ class SceneNode():
         if not self._enabled or scale == self._scale:
             return
         if transform_space == SceneNode.TransformSpace.Local:
-            print("Herpiederp", scale, self._scale)
             self.scale(scale / self._scale, SceneNode.TransformSpace.Local)
             return
         if transform_space == SceneNode.TransformSpace.World:
