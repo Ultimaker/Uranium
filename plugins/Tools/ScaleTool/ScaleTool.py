@@ -138,6 +138,9 @@ class ScaleTool(Tool):
                                 scale_change = scale_change.set(y=scale_factor)
                             elif self.getLockedAxis() == ToolHandle.ZAxis:
                                 scale_change = scale_change.set(z=scale_factor)
+                            else:
+                                # Middle handle
+                                scale_change = Vector(x=scale_factor, y=scale_factor, z=scale_factor)
                         else:
                             scale_change = Vector(x=scale_factor, y=scale_factor, z=scale_factor)
 
