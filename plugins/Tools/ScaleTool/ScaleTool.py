@@ -355,8 +355,13 @@ class ScaleTool(Tool):
     #   \param node type(SceneNode)
     #   \return scale type(float) scale factor (1.0 = normal scale)
     def _getScaleInWorldCoordinates(self, node):
-        rotated_matrix = Matrix()
+        aabb = node.getBoundingBox()
+        original_aabb = self._getRotatedExtents(node)
+        scale = Vector(aabb.width / original_aabb.width, aabb.height / original_aabb.height,
+                       aabb.depth / original_aabb.depth)
+        return scale
 
+    def _getRotatedExtents(self, node, with_translation = False):
         # The rotation matrix that we get back from our own decompose isn't quite correct for some reason.
         # It seems that it does not "draw the line" between scale, rotate & skew quite correctly in all cases.
         # The decomposition is insanely fast and the combination of all of the components does result in the same
@@ -365,13 +370,22 @@ class ScaleTool(Tool):
         #
         # In order to remedy this, we use singular value decomposition.
         # SVD solves a = U s V.H for us, where A is the matrix. U and V.h are Rotation matrices and s holds the scale.
-        transformation_data = node.getWorldTransformation().getData()[:3, :3]
-        U, s, Vh = scipy.linalg.svd(transformation_data)
+        extents = None
+        if node.getMeshData():
+            rotated_matrix = Matrix()
+            transformation_data = node.getWorldTransformation().getData()[:3, :3]
+            U, s, Vh = scipy.linalg.svd(transformation_data)
 
-        # As we want a single rotation matrix (without scale!) we can combine U and vh again.
-        rotated_matrix._data[:3, :3] = U.dot(Vh)
-        aabb = node.getMeshData().getExtents(node.getWorldTransformation())
-        original_aabb = node.getMeshData().getExtents(rotated_matrix)
-        scale = Vector(aabb.width / original_aabb.width, aabb.height / original_aabb.height,
-                       aabb.depth / original_aabb.depth)
-        return scale
+            # As we want a single rotation matrix (without scale!) we can combine U and vh again.
+            rotated_matrix._data[:3, :3] = U.dot(Vh)
+            if with_translation:
+                rotated_matrix._data[:3, 3] = node.getPosition().getData()
+
+            extents = node.getMeshData().getExtents(rotated_matrix)
+        for child in node.getChildren():
+            # We want the children with their (local) translation, as this influences the size of the AABB.
+            if extents is None:
+                extents = self._getRotatedExtents(child, with_translation = True)
+            else:
+                extents = extents + self._getRotatedExtents(child, with_translation = True)
+        return extents
