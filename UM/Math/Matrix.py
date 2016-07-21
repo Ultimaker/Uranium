@@ -198,6 +198,7 @@ class Matrix(object):
     #   @param angles : list of Euler angles about static x, y, z axes
     #   @param translate : translation vector along x, y, z axes
     #   @param perspective : perspective partition of matrix
+    #   @param mirror: vector with mirror factors (1 if that axis is not mirrored, -1 if it is)
     def compose(self, scale = None, shear = None, angles = None, translate = None, perspective = None, mirror = None):
         M = numpy.identity(4)
         if perspective is not None:
