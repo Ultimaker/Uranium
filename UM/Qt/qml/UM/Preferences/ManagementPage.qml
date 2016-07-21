@@ -13,6 +13,7 @@ PreferencesPage
 
     property alias model: objectList.model;
     property alias section: objectList.section;
+    property alias delegate: objectList.delegate;
     property string nameRole: "name";
     property bool detailsVisible: true;
 
@@ -94,7 +95,11 @@ PreferencesPage
             {
                 id: objectList;
                 currentIndex: activeIndex
-                onCurrentIndexChanged: base.currentItem = (currentIndex != null) ? model.getItem(currentIndex) : null
+                onCurrentIndexChanged: {
+                    // Explicitly trigger onCurrentItemChanged
+                    base.currentItem = null;
+                    base.currentItem = (currentIndex != null) ? model.getItem(currentIndex) : null;
+                }
 
                 section.property: "group"
                 section.criteria: ViewSection.FullString
