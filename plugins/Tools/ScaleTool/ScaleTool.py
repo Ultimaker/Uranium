@@ -361,6 +361,13 @@ class ScaleTool(Tool):
                        aabb.depth / original_aabb.depth)
         return scale
 
+    def _getSVDRotationFromMatrix(self, matrix):
+        result = Matrix()
+        rotation_data = matrix.getData()[:3, :3]
+        U, s, Vh = scipy.linalg.svd(rotation_data)
+        result._data[:3, :3] = U.dot(Vh)
+        return result
+
     def _getRotatedExtents(self, node, with_translation = False):
         # The rotation matrix that we get back from our own decompose isn't quite correct for some reason.
         # It seems that it does not "draw the line" between scale, rotate & skew quite correctly in all cases.
@@ -372,12 +379,7 @@ class ScaleTool(Tool):
         # SVD solves a = U s V.H for us, where A is the matrix. U and V.h are Rotation matrices and s holds the scale.
         extents = None
         if node.getMeshData():
-            rotated_matrix = Matrix()
-            transformation_data = node.getWorldTransformation().getData()[:3, :3]
-            U, s, Vh = scipy.linalg.svd(transformation_data)
-
-            # As we want a single rotation matrix (without scale!) we can combine U and vh again.
-            rotated_matrix._data[:3, :3] = U.dot(Vh)
+            rotated_matrix = self._getSVDRotationFromMatrix(node.getWorldTransformation())
             if with_translation:
                 rotated_matrix._data[:3, 3] = node.getPosition().getData()
 
