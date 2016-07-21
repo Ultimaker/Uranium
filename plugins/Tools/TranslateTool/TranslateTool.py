@@ -6,6 +6,7 @@ from UM.Event import Event, MouseEvent, KeyEvent
 
 from UM.Math.Plane import Plane
 from UM.Math.Vector import Vector
+from UM.Math.Float import Float
 
 from UM.Operations.TranslateOperation import TranslateOperation
 from UM.Operations.GroupedOperation import GroupedOperation
@@ -17,6 +18,8 @@ from UM.Scene.ToolHandle import ToolHandle
 from . import TranslateToolHandle
 
 import time
+
+DIMENSION_TOLERANCE = 0.0001  # Tolerance value used for comparing dimensions from the UI.
 
 ##  Provides the tool to move meshes and groups
 #
@@ -76,12 +79,13 @@ class TranslateTool(Tool):
         bounding_box = Selection.getBoundingBox()
 
         op = GroupedOperation()
-        for selected_node in Selection.getAllSelectedObjects():
-            world_position = selected_node.getWorldPosition()
-            new_position = world_position.set(x=float(x) + (world_position.x - bounding_box.center.x))
-            node_op = TranslateOperation(selected_node, new_position, set_position = True)
-            op.addOperation(node_op)
-        op.push()
+        if not Float.fuzzyCompare(float(x), float(bounding_box.center.x), DIMENSION_TOLERANCE):
+            for selected_node in Selection.getAllSelectedObjects():
+                world_position = selected_node.getWorldPosition()
+                new_position = world_position.set(x=float(x) + (world_position.x - bounding_box.center.x))
+                node_op = TranslateOperation(selected_node, new_position, set_position = True)
+                op.addOperation(node_op)
+            op.push()
         self.operationStopped.emit(self)
 
     ##  Set the y-location of the selected object(s) by translating relative to the selection bounding box center
@@ -91,15 +95,16 @@ class TranslateTool(Tool):
         bounding_box = Selection.getBoundingBox()
 
         op = GroupedOperation()
-        for selected_node in Selection.getAllSelectedObjects():
-            # Note; The switching of z & y is intentional. We display z as up for the user,
-            # But store the data in openGL space.
-            world_position = selected_node.getWorldPosition()
-            new_position = world_position.set(z=float(y) + (world_position.z - bounding_box.center.z))
+        if not Float.fuzzyCompare(float(y), float(bounding_box.center.z), DIMENSION_TOLERANCE):
+            for selected_node in Selection.getAllSelectedObjects():
+                # Note; The switching of z & y is intentional. We display z as up for the user,
+                # But store the data in openGL space.
+                world_position = selected_node.getWorldPosition()
+                new_position = world_position.set(z=float(y) + (world_position.z - bounding_box.center.z))
 
-            node_op = TranslateOperation(selected_node, new_position, set_position = True)
-            op.addOperation(node_op)
-        op.push()
+                node_op = TranslateOperation(selected_node, new_position, set_position = True)
+                op.addOperation(node_op)
+            op.push()
         self.operationStopped.emit(self)
 
     ##  Set the y-location of the selected object(s) by translating relative to the selection bounding box bottom
@@ -109,14 +114,15 @@ class TranslateTool(Tool):
         bounding_box = Selection.getBoundingBox()
 
         op = GroupedOperation()
-        for selected_node in Selection.getAllSelectedObjects():
-            # Note: The switching of z & y is intentional. We display z as up for the user,
-            # But store the data in openGL space.
-            world_position = selected_node.getWorldPosition()
-            new_position = world_position.set(y=float(z) + (world_position.y - bounding_box.bottom))
-            node_op = TranslateOperation(selected_node, new_position, set_position = True)
-            op.addOperation(node_op)
-        op.push()
+        if not Float.fuzzyCompare(float(z), float(bounding_box.center.y), DIMENSION_TOLERANCE):
+            for selected_node in Selection.getAllSelectedObjects():
+                # Note: The switching of z & y is intentional. We display z as up for the user,
+                # But store the data in openGL space.
+                world_position = selected_node.getWorldPosition()
+                new_position = world_position.set(y=float(z) + (world_position.y - bounding_box.bottom))
+                node_op = TranslateOperation(selected_node, new_position, set_position = True)
+                op.addOperation(node_op)
+            op.push()
         self.operationStopped.emit(self)
 
     ##  Set which axis/axes are enabled for the current translate operation
