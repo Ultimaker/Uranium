@@ -173,19 +173,18 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
     def setProperty(self, key, property_name, property_value, container = None):
         if key not in self._instances:
             if not self._definition:
-                Logger.log("w", "Tried to set value of setting %s that has no instance in container %s and unable to create a new instance (1)", key, repr(self))
+                Logger.log("w", "Tried to set value of setting %s that has no instance in container %s and the container has no definition", key, self._name)
                 return
 
             setting_definition = self._definition.findDefinitions(key = key)
             if not setting_definition:
-                Logger.log("w", "Tried to set value of setting %s that has no instance in container %s and unable to create a new instance (2)", key, repr(self))
+                Logger.log("w", "Tried to set value of setting %s that has no instance in container %s or its definition %s", key, self._name, self._definition.getName())
                 return
 
             instance = SettingInstance.SettingInstance(setting_definition[0], self)
             instance.propertyChanged.connect(self.propertyChanged)
             self._instances[instance.definition.key] = instance
 
-        #Logger.log("d", "Set property '%s' of '%s' in '%s' to '%s'", property_name, key, self._id, property_value)
         self._instances[key].setProperty(property_name, property_value, container)
 
         self._dirty = True
