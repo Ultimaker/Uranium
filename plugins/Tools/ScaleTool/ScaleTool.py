@@ -39,7 +39,9 @@ class ScaleTool(Tool):
 
         # We use the position of the scale handle when the operation starts.
         # This is done in order to prevent runaway reactions (drag changes of 100+)
-        self._saved_handle_position = None
+        self._saved_handle_position = None  # for non uniform drag
+        self._scale_sum = 0.0  # a memory for uniform drag with snap scaling
+        self._last_event = None  # for uniform drag
 
         self.setExposedProperties(
             "ScaleSnap",
@@ -102,6 +104,8 @@ class ScaleTool(Tool):
                 self._saved_node_positions.append((node, node.getWorldPosition()))
 
             self._saved_handle_position = self._handle.getWorldPosition()
+            self._scale_sum = 0.0
+            self._last_event = event
 
             if id == ToolHandle.XAxis:
                 self.setDragPlane(Plane(Vector(0, 0, 1), self._saved_handle_position.z))
@@ -125,10 +129,24 @@ class ScaleTool(Tool):
                 drag_length = (drag_position - self._saved_handle_position).length()
                 if self._drag_length > 0:
                     drag_change = (drag_length - self._drag_length) / 100 * self._scale_speed
-                    if self._snap_scale:
-                        scale_factor = round(drag_change, 1)
+                    if self._non_uniform_scale and self.getLockedAxis() in [ToolHandle.XAxis, ToolHandle.YAxis, ToolHandle.ZAxis]:
+                        # drag the handle, axis is already determined
+                        if self._snap_scale:
+                            scale_factor = round(drag_change, 1)
+                        else:
+                            scale_factor = drag_change
                     else:
-                        scale_factor = drag_change
+                        # uniform scaling, we use the screen x, y for scaling
+                        # upper right is scale up, lower left is scale down
+                        scale_factor_delta = ((self._last_event.y - event.y) - (self._last_event.x - event.x)) * self._scale_speed
+                        self._scale_sum += scale_factor_delta
+                        if self._snap_scale:
+                            scale_factor = round(self._scale_sum, 1)
+                            # remember the decimals when snap scaling
+                            self._scale_sum -= scale_factor
+                        else:
+                            scale_factor = self._scale_sum
+                            self._scale_sum = 0.0
                     if scale_factor:
                         scale_change = Vector(0.0, 0.0, 0.0)
                         if self._non_uniform_scale:
@@ -140,11 +158,11 @@ class ScaleTool(Tool):
                                 scale_change = scale_change.set(z=scale_factor)
                             else:
                                 # Middle handle
-                                scale_change = Vector(x=scale_factor, y=scale_factor, z=scale_factor)
+                                scale_change = scale_change.set(x=scale_factor, y=scale_factor, z=scale_factor)
                         else:
-                            scale_change = Vector(x=scale_factor, y=scale_factor, z=scale_factor)
+                            scale_change = scale_change.set(x=scale_factor, y=scale_factor, z=scale_factor)
 
-                        # Scale around the saved centeres of all selected nodes
+                        # Scale around the saved centers of all selected nodes
                         op = GroupedOperation()
                         for node, position in self._saved_node_positions:
                             op.addOperation(ScaleOperation(node, scale_change, relative_scale = True, scale_around_point = position))
@@ -152,6 +170,7 @@ class ScaleTool(Tool):
                         self._drag_length = (self._saved_handle_position - drag_position).length()
                 else:
                     self._drag_length = (self._saved_handle_position - drag_position).length() #First move, do nothing but set right length.
+                self._last_event = event  # remember for uniform drag
                 return True
 
         if event.type == Event.MouseReleaseEvent:

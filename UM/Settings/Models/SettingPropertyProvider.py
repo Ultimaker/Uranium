@@ -224,6 +224,8 @@ class SettingPropertyProvider(QObject):
     def isValueUsed(self):
         if self._value_used is not None:
             return self._value_used
+        if not self._stack:
+            return False
         definition = self._stack.getSettingDefinition(self._key)
         if not definition:
             return False
