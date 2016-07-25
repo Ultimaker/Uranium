@@ -11,8 +11,10 @@ i18n_catalog = i18nCatalog("uranium")
 
 class DurationFormat(QObject):
     class Format:
+        Seconds = 0
         Short = 1
         Long = 2
+        ISO8601 = 3
     Q_ENUMS(Format)
 
 ##  A class representing a time duration.
@@ -86,7 +88,9 @@ class Duration(QObject):
     #   This is not called toString() primarily because that conflicts with JavaScript"s toString()
     @pyqtSlot(int, result = str)
     def getDisplayString(self, format = DurationFormat.Format.Short):
-        if format == DurationFormat.Format.Short:
+        if format == DurationFormat.Seconds.:
+            return str(((self.days() * 24 + self.hours())* 60 + self.minutes()) * 60 + self.seconds())
+        elif format == DurationFormat.Format.Short:
             if self._days > 0:
                 return i18n_catalog.i18nc("@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes", "{0:0>2}d {1:0>2}h {2:0>2}min", self._days, self._hours, self._minutes)
             else:
@@ -98,10 +102,7 @@ class Duration(QObject):
                 return i18n_catalog.i18nc("@label Hours-minutes duration fromat. {0} is hours, {1} is minutes", "{0} hours {1} minutes", self._hours, self._minutes)
             else:
                 return i18n_catalog.i18nc("@label Minutes only duration format, {0} is minutes", "{0} minutes", self._minutes)
-
+        elif format == DurationFormat.Format.ISO8601:
+            return "%02d:%02d:%02d" % (self.days() * 24 + self.hours(), self.minutes(), self.seconds())
+        
         return ""
-    
-    def getDurationInISOFormat(self):
-        total_hours = self.hours() + self.days() * 24
-        return "%02d:%02d:%02d" % (total_hours, self.minutes(), self.seconds())
-
