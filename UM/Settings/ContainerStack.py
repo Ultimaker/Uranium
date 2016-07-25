@@ -256,9 +256,11 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
 
     ##  Get a list of all containers in this stack.
     #
+    #   Note that it returns a shallow copy of the container list, as it's only allowed to change the order or entries
+    #   in this list by the proper functions.
     #   \return \type{list} A list of all containers in this stack.
     def getContainers(self):
-        return self._containers
+        return self._containers[:]
 
     def getContainerIndex(self, container):
         return self._containers.index(container)
