@@ -88,7 +88,7 @@ class Duration(QObject):
     #   This is not called toString() primarily because that conflicts with JavaScript"s toString()
     @pyqtSlot(int, result = str)
     def getDisplayString(self, format = DurationFormat.Format.Short):
-        if format == DurationFormat.Seconds:
+        if format == DurationFormat.Format.Seconds:
             return str(((self.days() * 24 + self.hours())* 60 + self.minutes()) * 60 + self.seconds())
         elif format == DurationFormat.Format.Short:
             if self._days > 0:
