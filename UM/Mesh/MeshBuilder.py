@@ -666,7 +666,6 @@ class MeshBuilder:
         if len(hull_points) < 3:
             return False
 
-        #mesh_builder = cls()
         point_first = Vector(hull_points[0][0], height, hull_points[0][1])
         point_previous = Vector(hull_points[1][0], height, hull_points[1][1])
         for point in hull_points[2:]:  # Add the faces in the order of a triangle fan.
