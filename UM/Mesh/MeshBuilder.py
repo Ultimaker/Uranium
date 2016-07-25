@@ -657,4 +657,57 @@ class MeshBuilder:
             for i in range(1, 6):
                 self.setVertexColor(vertex_count - i, color)
 
+    ##  Create a mesh from points that represent a convex hull.
+    #   \param hull_points list of xy values
+    #   \param height the opengl y position of the generated mesh
+    #   \return success
+    def addConvexPolygon(self, hull_points, height, color=None):
+        # Input checking.
+        if len(hull_points) < 3:
+            return False
 
+        #mesh_builder = cls()
+        point_first = Vector(hull_points[0][0], height, hull_points[0][1])
+        point_previous = Vector(hull_points[1][0], height, hull_points[1][1])
+        for point in hull_points[2:]:  # Add the faces in the order of a triangle fan.
+            point_new = Vector(point[0], height, point[1])
+            self.addFace(point_first, point_previous, point_new, color=color)
+            point_previous = point_new  # Prepare point_previous for the next triangle.
+
+        return True
+
+    ##  Create an extrusion from xy coordinates that represent a convex polygon.
+    #   \param xy_points list of xy values
+    #   \param y0, y1 opengl y locations
+    #   \return success
+    def addConvexPolygonExtrusion(self, xy_points, y0, y1, color=None):
+        if len(xy_points) < 3:
+            return False
+
+        # Bottom faces
+        if not self.addConvexPolygon(xy_points, y0, color=color):
+            return False
+        # Top faces
+        if not self.addConvexPolygon(xy_points[::-1], y1, color=color):
+            return False
+        # Side faces.
+        for idx in range(len(xy_points)-1):
+            point0 = xy_points[idx]
+            point1 = xy_points[idx+1]
+            v0 = Vector(point0[0], y0, point0[1])
+            v1 = Vector(point1[0], y0, point1[1])
+            v2 = Vector(point1[0], y1, point1[1])
+            v3 = Vector(point0[0], y1, point0[1])
+            self.addQuad(v0, v1, v2, v3, color=color)
+        # Last face from first point to last point
+        last_point = xy_points[-1]
+        first_point = xy_points[0]
+        v0 = Vector(last_point[0], y0, last_point[1])
+        v1 = Vector(first_point[0], y0, first_point[1])
+        v2 = Vector(first_point[0], y1, first_point[1])
+        v3 = Vector(last_point[0], y1, last_point[1])
+        self.addQuad(v0, v1, v2, v3, color=color)
+
+        self.calculateNormals(self)
+
+        return True
