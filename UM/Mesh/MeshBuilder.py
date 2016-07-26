@@ -750,6 +750,4 @@ class MeshBuilder:
         v3 = Vector(last_point[0], y1, last_point[1])
         self.addQuad(v0, v1, v2, v3, color=color)
 
-        self.calculateNormals(self)
-
         return True
