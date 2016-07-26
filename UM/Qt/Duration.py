@@ -87,22 +87,22 @@ class Duration(QObject):
     #
     #   This is not called toString() primarily because that conflicts with JavaScript"s toString()
     @pyqtSlot(int, result = str)
-    def getDisplayString(self, format = DurationFormat.Format.Short):
-        if format == DurationFormat.Format.Seconds:
+    def getDisplayString(self, display_format = DurationFormat.Format.Short):
+        if display_format == DurationFormat.Format.Seconds:
             return str(((self._days * 24 + self._hours)* 60 + self._minutes) * 60 + self._seconds )
-        elif format == DurationFormat.Format.Short:
+        elif display_format == DurationFormat.Format.Short:
             if self._days > 0:
                 return i18n_catalog.i18nc("@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes", "{0:0>2}d {1:0>2}h {2:0>2}min", self._days, self._hours, self._minutes)
             else:
                 return i18n_catalog.i18nc("@label Short hours-minutes format. {0} is hours, {1} is minutes", "{0:0>2}h {1:0>2}min", self._hours, self._minutes)
-        elif format == DurationFormat.Format.Long:
+        elif display_format == DurationFormat.Format.Long:
             if self._days > 0:
                 return i18n_catalog.i18nc("@label Days-hours-minutes duration format. {0} is days, {1} is hours, {2} is minutes", "{0} days {1} hours {2} minutes", self._days, self._hours, self._minutes)
             elif self._hours > 0:
                 return i18n_catalog.i18nc("@label Hours-minutes duration fromat. {0} is hours, {1} is minutes", "{0} hours {1} minutes", self._hours, self._minutes)
             else:
                 return i18n_catalog.i18nc("@label Minutes only duration format, {0} is minutes", "{0} minutes", self._minutes)
-        elif format == DurationFormat.Format.ISO8601:
+        elif display_format == DurationFormat.Format.ISO8601:
             return "%02d:%02d:%02d" % (self._days * 24 + self._hours, self._minutes, self._seconds)
 
         return ""
