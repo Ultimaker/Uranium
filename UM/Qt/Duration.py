@@ -89,7 +89,7 @@ class Duration(QObject):
     @pyqtSlot(int, result = str)
     def getDisplayString(self, format = DurationFormat.Format.Short):
         if format == DurationFormat.Format.Seconds:
-            return str(((self.days() * 24 + self.hours())* 60 + self.minutes()) * 60 + self.seconds())
+            return str(((self._days * 24 + self._hours)* 60 + self._minutes) * 60 + self._seconds )
         elif format == DurationFormat.Format.Short:
             if self._days > 0:
                 return i18n_catalog.i18nc("@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes", "{0:0>2}d {1:0>2}h {2:0>2}min", self._days, self._hours, self._minutes)
@@ -103,6 +103,6 @@ class Duration(QObject):
             else:
                 return i18n_catalog.i18nc("@label Minutes only duration format, {0} is minutes", "{0} minutes", self._minutes)
         elif format == DurationFormat.Format.ISO8601:
-            return "%02d:%02d:%02d" % (self.days() * 24 + self.hours(), self.minutes(), self.seconds())
+            return "%02d:%02d:%02d" % (self._days * 24 + self._hours, self._minutes, self._seconds)
 
         return ""
