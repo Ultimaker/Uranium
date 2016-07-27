@@ -90,7 +90,7 @@ class UpdateChecker(Extension):
     url = "http://software.ultimaker.com/latest.json"
     
     def __init__(self):
-        super().__init__()
+        super().__init__(self)
         self.addMenuItem(i18n_catalog.i18nc("@item:inmenu", "Check for Updates"), self.checkNewVersion)
 
         Preferences.getInstance().addPreference("info/automatic_update_check", True)
