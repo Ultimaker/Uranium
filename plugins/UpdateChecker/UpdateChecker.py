@@ -35,8 +35,8 @@ class UpdateCheckerJob(Job):
 
         try:
             latest_version_file = urllib.request.urlopen(self.url)
-        except Exception as e:
-            Logger.log("e", "Failed to check for new version. %s" %e)
+        except Exception:
+            Logger.logException("e", "Failed to check for new version.")
             if not self.silent:
                 Message(i18n_catalog.i18nc("@info", "Could not access update information.")).show()
             return
@@ -76,8 +76,8 @@ class UpdateCheckerJob(Job):
                         Logger.log("e", "Could not find version information or download url for update.")
             else:
                 Logger.log("e", "Did not find any version information for %s." % application_name)
-        except Exception as e:
-            Logger.log("e", "Exception in update checker: %s" % (e))
+        except Exception:
+            Logger.logException("e", "Exception in update checker while parsing the JSON file.")
 
         if no_new_version and not self.silent:
             Message(i18n_catalog.i18nc("@info", "No new version was found.")).show()
