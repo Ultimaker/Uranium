@@ -21,7 +21,7 @@ i18n_catalog = i18nCatalog("uranium")
 
 class UpdateCheckerJob(Job):
     def __init__(self, silent = False, url = None):
-        super.__init__()
+        super().__init__()
         self.silent = silent
         self.url = url
     
