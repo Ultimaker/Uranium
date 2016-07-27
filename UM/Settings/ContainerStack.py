@@ -119,6 +119,10 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
         else:
             Logger.log("w", "Meta data with key %s was not found. Unable to change.", key)
 
+    def removeMetaDataEntry(self, key):
+        if key in self._metadata:
+            del self._metadata[key]
+
     def isDirty(self):
         return self._dirty
 
