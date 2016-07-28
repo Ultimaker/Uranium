@@ -15,7 +15,7 @@ from UM.Logger import Logger
 
 # Helper functions for tracing signal emission.
 def _traceEmit(signal, *args, **kwargs):
-    Logger.log("d", "Emitting signal %s with arguments %s", str(signal), str(args) + str(kwargs))
+    Logger.log("d", "Emitting %s with arguments %s", str(signal._Signal__name), str(args) + str(kwargs))
 
     if signal._Signal__type == Signal.Queued:
         Logger.log("d", "> Queued signal, postponing emit until next event loop run")
@@ -31,14 +31,14 @@ def _traceEmit(signal, *args, **kwargs):
         Logger.log("d", "> Calling %s on %s", str(func), str(dest))
 
     for signal in signal._Signal__signals:
-        Logger.log("d", "> Emitting %s", str(signal))
+        Logger.log("d", "> Emitting %s", str(signal._Signal__name))
 
 
 def _traceConnect(signal, *args, **kwargs):
-    Logger.log("d", "Connecting signal %s to %s", str(signal), str(args[0]))
+    Logger.log("d", "Connecting signal %s to %s", str(signal._Signal__name), str(args[0]))
 
 def _traceDisconnect(signal, *args, **kwargs):
-    Logger.log("d", "Connecting signal %s from %s", str(signal), str(args[0]))
+    Logger.log("d", "Connecting signal %s from %s", str(signal._Signal__name), str(args[0]))
 
 def _isTraceEnabled():
     return "URANIUM_TRACE_SIGNALS" in os.environ
@@ -93,7 +93,10 @@ class Signal:
         self.__type = kwargs.get("type", Signal.Auto)
 
         if "URANIUM_TRACE_SIGNALS" in os.environ:
-            self.__name = "Signal"
+            try:
+                self.__name = inspect.stack()[1].frame.f_locals["key"]
+            except KeyError:
+                self.__name = "Signal"
 
     ##  \exception NotImplementedError
     def __call__(self):
