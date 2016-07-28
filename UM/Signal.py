@@ -27,9 +27,8 @@ def _traceEmit(signal, *args, **kwargs):
     for func in signal._Signal__functions:
         Logger.log("d", "> Calling %s", str(func))
 
-    for dest, funcs in signal._Signal__methods.items():
-        for func in funcs:
-            Logger.log("d", "> Calling %s", str(func))
+    for dest, func in signal._Signal__methods:
+        Logger.log("d", "> Calling %s on %s", str(func), str(dest))
 
     for signal in signal._Signal__signals:
         Logger.log("d", "> Emitting %s", str(signal))
@@ -92,6 +91,9 @@ class Signal:
         self.__lock = threading.Lock()  # Guards access to the fields above.
 
         self.__type = kwargs.get("type", Signal.Auto)
+
+        if "URANIUM_TRACE_SIGNALS" in os.environ:
+            self.__name = "Signal"
 
     ##  \exception NotImplementedError
     def __call__(self):
@@ -209,11 +211,11 @@ class Signal:
     _app = None
 
     # This __str__() is useful for debugging.
-    def __str__(self):
-        function_str = ", ".join([repr(f) for f in self.__functions])
-        method_str = ", ".join([ "{dest: " + str(dest) + ", funcs: " + strMethodSet(funcs) + "}" for dest, funcs in self.__methods])
-        signal_str = ", ".join([str(signal) for signal in self.__signals])
-        return "Signal<{}> {{ __functions={{ {} }}, __methods={{ {} }}, __signals={{ {} }} }}".format(id(self), function_str, method_str, signal_str)
+    # def __str__(self):
+    #     function_str = ", ".join([repr(f) for f in self.__functions])
+    #     method_str = ", ".join([ "{dest: " + str(dest) + ", funcs: " + strMethodSet(funcs) + "}" for dest, funcs in self.__methods])
+    #     signal_str = ", ".join([str(signal) for signal in self.__signals])
+    #     return "Signal<{}> {{ __functions={{ {} }}, __methods={{ {} }}, __signals={{ {} }} }}".format(id(self), function_str, method_str, signal_str)
 
 def strMethodSet(method_set):
     return "{" + ", ".join([str(m) for m in method_set]) + "}"
