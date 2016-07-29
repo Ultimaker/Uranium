@@ -19,11 +19,12 @@ class RemoveSceneNodeOperation(Operation.Operation):
 
     ##  Undoes the operation, putting the node back in the scene.
     def undo(self):
-        self._node.setParent(self._parent) #Hanging it back under its original parent puts it back in the scene.
+        self._node.setParent(self._parent)  # Hanging it back under its original parent puts it back in the scene.
 
     ##  Redo the operation, removing the node again.
     def redo(self):
         self._node.setParent(None)
+
 
         # Hack to ensure that the _onchanged is triggered correctly.
         # We can't do it the right way as most remove changes don't need to trigger
@@ -32,5 +33,5 @@ class RemoveSceneNodeOperation(Operation.Operation):
             Application.getInstance().getBackend().forceSlice()
         except:
             pass
-        if Selection.isSelected(self._node): #Also remove the selection.
+        if Selection.isSelected(self._node):  # Also remove the selection.
             Selection.remove(self._node)

@@ -78,7 +78,7 @@ class RotateTool(Tool):
                 # Save the current positions of the node, as we want to rotate around their current centres
                 self._saved_node_positions = []
                 for node in Selection.getAllSelectedObjects():
-                    self._saved_node_positions.append((node, node.getWorldPosition()))
+                    self._saved_node_positions.append((node, node.getPosition()))
 
                 if id == ToolHandle.XAxis:
                     self.setDragPlane(Plane(Vector(1, 0, 0), handle_position.x))
