@@ -124,8 +124,10 @@ class ScaleOperation(Operation.Operation):
             return False
         if other._add_scale and not self._add_scale:
             return False
+        if other._relative_scale and not self._relative_scale:
+            return False
 
-        op = ScaleOperation(self._node, self._scale)
+        op = ScaleOperation(self._node, self._node.getScale())
         op._old_transformation = other._old_transformation #Use the oldest transformation of the two.
         return op
 
