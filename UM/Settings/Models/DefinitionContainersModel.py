@@ -11,19 +11,21 @@ from UM.Settings.DefinitionContainer import DefinitionContainer
 class DefinitionContainersModel(ListModel):
     NameRole = Qt.UserRole + 1          # Human readable name (string)
     IdRole = Qt.UserRole + 2            # Unique ID of Definition
-    CategoryRole = Qt.UserRole + 3      # Category of definition / machine. (string)
+    SectionRole = Qt.UserRole + 3       # Section of definition / machine. (string)
 
     def __init__(self, parent = None):
         super().__init__(parent)
         self.addRoleName(self.NameRole, "name")
         self.addRoleName(self.IdRole, "id")
-        self.addRoleName(self.CategoryRole, "category")
+        self.addRoleName(self.SectionRole, "section")
 
         self._definition_containers = []
 
         # Listen to changes
         ContainerRegistry.getInstance().containerAdded.connect(self._onContainerChanged)
         ContainerRegistry.getInstance().containerRemoved.connect(self._onContainerChanged)
+
+        self._section_property = ""
 
         self._filter_dict = {}
         self._update()
@@ -38,14 +40,28 @@ class DefinitionContainersModel(ListModel):
     def _update(self):
         self.clear()
         self._definition_containers = ContainerRegistry.getInstance().findDefinitionContainers(**self._filter_dict)
+        self._definition_containers.sort(key = self._sortKey)
+
         for container in self._definition_containers:
-            item = { # Prepare an item for insertion.
+            metadata = container.getMetaData().copy()
+
+            self.appendItem({
                 "name": container.getName(),
                 "id": container.getId(),
-                "category": container.getMetaDataEntry("category", "")
-            }
-            self.appendItem(item)
-        self.sort(lambda k: (k["category"].lower(), k["name"].lower()))
+                "metadata": metadata,
+                "section": container.getMetaDataEntry(self._section_property, ""),
+            })
+
+    def setSectionProperty(self, property_name):
+        if self._section_property != property_name:
+            self._section_property = property_name
+            self.sectionPropertyChanged.emit()
+            self._update()
+
+    sectionPropertyChanged = pyqtSignal()
+    @pyqtProperty(str, fset = setSectionProperty, notify = sectionPropertyChanged)
+    def sectionProperty(self):
+        return self._section_property
 
     ##  Set the filter of this model based on a string.
     #   \param filter_dict Dictionary to do the filtering by.
@@ -57,3 +73,22 @@ class DefinitionContainersModel(ListModel):
     @pyqtProperty("QVariantMap", fset = setFilter, notify = filterChanged)
     def filter(self):
         return self._filter_dict
+
+    def _sortKey(self, item):
+        result = []
+        result.append(item.getMetaDataEntry("weight", 0))
+
+        if self._section_property:
+            result.append(item.getMetaDataEntry(self._section_property, ""))
+
+        result.append(item.getName())
+
+        return result
+
+    def _updateMetaData(self, container):
+        index = self.find("id", container.id)
+
+        if self._section_property:
+            self.setProperty(index, "section", container.getMetaDataEntry(self._section_property, ""))
+
+        self.setProperty(index, "metadata", container.getMetaData())
