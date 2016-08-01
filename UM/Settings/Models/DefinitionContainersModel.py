@@ -26,6 +26,7 @@ class DefinitionContainersModel(ListModel):
         ContainerRegistry.getInstance().containerRemoved.connect(self._onContainerChanged)
 
         self._section_property = ""
+        self._preferred_section_value = ""
 
         self._filter_dict = {}
         self._update()
@@ -63,6 +64,17 @@ class DefinitionContainersModel(ListModel):
     def sectionProperty(self):
         return self._section_property
 
+    def setPreferredSectionValue(self, value):
+        if self._preferred_section_value != value:
+            self._preferred_section_value = value
+            self.preferredSectionValueChanged.emit()
+            self._update()
+
+    preferredSectionValueChanged = pyqtSignal()
+    @pyqtProperty(str, fset = setPreferredSectionValue, notify = preferredSectionValueChanged)
+    def preferredSectionValue(self):
+        return self._preferred_section_value
+
     ##  Set the filter of this model based on a string.
     #   \param filter_dict Dictionary to do the filtering by.
     def setFilter(self, filter_dict):
@@ -76,11 +88,15 @@ class DefinitionContainersModel(ListModel):
 
     def _sortKey(self, item):
         result = []
-        result.append(item.getMetaDataEntry("weight", 0))
 
         if self._section_property:
-            result.append(item.getMetaDataEntry(self._section_property, ""))
+            section_value = item.getMetaDataEntry(self._section_property, "")
+            if self._preferred_section_value:
+                print(item.getName(), section_value != self._preferred_section_value)
+                result.append(section_value != self._preferred_section_value)
+            result.append(section_value)
 
+        result.append(item.getMetaDataEntry("weight", 0))
         result.append(item.getName())
 
         return result
