@@ -190,7 +190,12 @@ UM.Dialog
             property var content: pagesModel.get(base.currentPage) ? pagesModel.get(base.currentPage).page : Item;
 
             // Connect the completed of the page to the nextPage of the wizard.
-            onContentChanged: { if (content.onCompleted) content.onCompleted.connect(base.nextPage) }
+            onContentChanged:
+            {
+                if (content.onCompleted)
+                    content.onCompleted.connect(base.nextPage)
+                    content.dialog = base
+            }
         }
 
         SystemPalette{ id: palette }
