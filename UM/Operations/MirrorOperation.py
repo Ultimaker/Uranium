@@ -33,7 +33,7 @@ class MirrorOperation(Operation.Operation):
     ##  Re-apply the operation after undoing it.
     def redo(self):
         if self._mirror_around_center: #Move the centre to the origin if we want to mirror around the centre instead of the origin.
-            center = self._node.getBoundingBox().center
+            center = self._node.getPosition()
             self._node.setPosition(-center)
         self._node.scale(self._mirror, SceneNode.TransformSpace.World) #Then mirror around the origin.
         if self._mirror_around_center: #If we moved the centre, move it back.

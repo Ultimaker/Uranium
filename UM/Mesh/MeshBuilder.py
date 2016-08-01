@@ -713,7 +713,9 @@ class MeshBuilder:
         point_previous = Vector(hull_points[1][0], height, hull_points[1][1])
         for point in hull_points[2:]:  # Add the faces in the order of a triangle fan.
             point_new = Vector(point[0], height, point[1])
-            self.addFace(point_first, point_previous, point_new, color=color)
+            normal = (point_previous - point_first).cross(point_new - point_first)
+
+            self.addFace(point_first, point_previous, point_new, color = color, normal = normal)
             point_previous = point_new  # Prepare point_previous for the next triangle.
 
         return True
@@ -740,7 +742,10 @@ class MeshBuilder:
             v1 = Vector(point1[0], y0, point1[1])
             v2 = Vector(point1[0], y1, point1[1])
             v3 = Vector(point0[0], y1, point0[1])
-            self.addQuad(v0, v1, v2, v3, color=color)
+
+            normal = (v1 - v0).cross(v2 - v0)
+
+            self.addQuad(v0, v1, v2, v3, color = color, normal = normal)
         # Last face from first point to last point
         last_point = xy_points[-1]
         first_point = xy_points[0]
@@ -748,6 +753,9 @@ class MeshBuilder:
         v1 = Vector(first_point[0], y0, first_point[1])
         v2 = Vector(first_point[0], y1, first_point[1])
         v3 = Vector(last_point[0], y1, last_point[1])
-        self.addQuad(v0, v1, v2, v3, color=color)
+
+        normal = (v1 - v0).cross(v2 - v0)
+
+        self.addQuad(v0, v1, v2, v3, color=color, normal = normal)
 
         return True

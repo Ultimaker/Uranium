@@ -96,8 +96,7 @@ class PluginRegistry(object):
             Logger.log("e", "Error loading plugin %s:", plugin_id)
             Logger.log("e", "Unknown plugin type: %s", str(e))
         except Exception as e:
-            Logger.log("e", "Error loading plugin %s:", plugin_id)
-            Logger.log("e", str(e))
+            Logger.logException("e", "Error loading plugin %s:", plugin_id)
 
     def _addPluginObject(self, plugin_object, plugin_id, plugin_type):
         plugin_object.setPluginId(plugin_id)

@@ -99,7 +99,7 @@ class SelectionPass(RenderPass):
             r = random.randint(0, 255)
             g = random.randint(0, 255)
             b = random.randint(0, 255)
-            a = 255 if Selection.isSelected(node) else 0
+            a = 255 if Selection.isSelected(node) or self._isInSelectedGroup(node) else 0
             color = Color(r, g, b, a)
 
             if color not in self._selection_map:
@@ -111,3 +111,15 @@ class SelectionPass(RenderPass):
 
     def _dropAlpha(self, color):
         return Color(color.r, color.g, color.b, 0.0)
+
+    ##  Get the top root group for a node
+    #
+    #   \param node type(SceneNode)
+    #   \return group type(SceneNode)
+    def _isInSelectedGroup(self, node):
+        group_node = node.getParent()
+        while group_node.callDecoration("isGroup"):
+            if Selection.isSelected(group_node):
+                return True
+            group_node = group_node.getParent()
+        return False

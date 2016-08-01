@@ -306,6 +306,7 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
             return
 
         instance.propertyChanged.connect(self.propertyChanged)
+        instance.propertyChanged.emit(key, "value")
         self._instances[key] = instance
 
     ##  Remove an instance from this container.

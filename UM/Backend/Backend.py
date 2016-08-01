@@ -63,7 +63,7 @@ class Backend(PluginObject):
                 self._backend_log = []
             self._process = self._runEngineProcess(command)
             Logger.log("i", "Started engine process: %s" % (self.getEngineCommand()[0]))
-            self._backend_log.append(bytes("Calling engine with: %s\n" % self.getEngineCommand(), "utf-8"))
+            self._backendLog(bytes("Calling engine with: %s\n" % self.getEngineCommand(), "utf-8"))
             t = threading.Thread(target = self._storeOutputToLogThread, args = (self._process.stdout,))
             t.daemon = True
             t.start()
@@ -76,7 +76,11 @@ class Backend(PluginObject):
     def close(self):
         if self._socket:
             self._socket.close()
-    
+
+    def _backendLog(self, line):
+        Logger.log('d', "[Backend] " + str(line, encoding="utf-8").strip())
+        self._backend_log.append(line)
+
     ##  Get the logging messages of the backend connection.
     #   \returns  
     def getLog(self):
@@ -130,14 +134,14 @@ class Backend(PluginObject):
             if line == b"":
                 self.backendQuit.emit()
                 break
-            self._backend_log.append(line)
+            self._backendLog(line)
 
     def _storeStderrToLogThread(self, handle):
         while True:
             line = handle.readline()
             if line == b"":
                 break
-            self._backend_log.append(line)
+            self._backendLog(line)
 
     ##  Private socket state changed handler.
     def _onSocketStateChanged(self, state):

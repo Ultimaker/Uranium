@@ -27,6 +27,7 @@ class SettingPropertyProvider(QObject):
         self._store_index = 0
         self._value_used = None
         self._stack_levels = []
+        self._remove_unused_value = True
 
     ##  Set the containerStackId property.
     def setContainerStackId(self, stack_id):
@@ -62,6 +63,16 @@ class SettingPropertyProvider(QObject):
     @pyqtProperty(str, fset = setContainerStackId, notify = containerStackIdChanged)
     def containerStackId(self):
         return self._stack_id
+
+    removeUnusedValueChanged = pyqtSignal()
+
+    def setRemoveUnusedValue(self, remove_unused_value):
+        self._remove_unused_value = remove_unused_value
+        self.removeUnusedValueChanged.emit()
+
+    @pyqtProperty(bool, fset = setRemoveUnusedValue, notify = removeUnusedValueChanged)
+    def removeUnusedValue(self):
+        return self._remove_unused_value
 
     ##  Set the watchedProperties property.
     def setWatchedProperties(self, properties):
@@ -159,7 +170,7 @@ class SettingPropertyProvider(QObject):
             for index in self._stack_levels:
                 if index > self._store_index:
                     old_value = self.getPropertyValue(property_name, index)
-                    if str(old_value) == str(property_value) and str(self._stack.getContainer(self._store_index).getProperty(self._key, "state")) != "InstanceState.Calculated":
+                    if str(old_value) == str(property_value) and str(self._stack.getContainer(self._store_index).getProperty(self._key, "state")) != "InstanceState.Calculated" and self._remove_unused_value:
                         # If we change the setting so that it would be the same as a deeper setting, we can just remove
                         # the value. Note that we only do this when this is not caused by the calculated state
                         # In this case the setting does need to be set, as it needs to be stored in the user settings.
