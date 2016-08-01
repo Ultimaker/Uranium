@@ -92,7 +92,6 @@ class DefinitionContainersModel(ListModel):
         if self._section_property:
             section_value = item.getMetaDataEntry(self._section_property, "")
             if self._preferred_section_value:
-                print(item.getName(), section_value != self._preferred_section_value)
                 result.append(section_value != self._preferred_section_value)
             result.append(section_value)
 
