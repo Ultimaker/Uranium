@@ -112,7 +112,7 @@ UM.Dialog
                         width: wizardProgress.width
                         text: title
 
-                        property bool active: text == pagesModel.get(base.currentPage).title;
+                        property bool active: pagesModel.get(base.currentPage) != undefined && text == pagesModel.get(base.currentPage).title;
 
                         style: ButtonStyle
                         {
@@ -149,7 +149,7 @@ UM.Dialog
                         id: progressArrow
                         anchors.top: progressButton.bottom
                         x: (wizardProgress.width-progressArrow.width)/2
-                        visible: title != pagesModel.get(pagesModel.count - 1).title ? true : false
+                        visible: pagesModel.get(pagesModel.count - 1) && title != pagesModel.get(pagesModel.count - 1).title ? true : false
                         UM.RecolorImage {
                             id: downArrow
                             width: UM.Theme.getSize("standard_arrow").width
