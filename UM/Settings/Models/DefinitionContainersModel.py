@@ -12,14 +12,12 @@ class DefinitionContainersModel(ListModel):
     NameRole = Qt.UserRole + 1          # Human readable name (string)
     IdRole = Qt.UserRole + 2            # Unique ID of Definition
     CategoryRole = Qt.UserRole + 3      # Category of definition / machine. (string)
-    ManufacturerRole = Qt.UserRole + 4  # Manufacturer of definition / machine. (string)
 
     def __init__(self, parent = None):
         super().__init__(parent)
         self.addRoleName(self.NameRole, "name")
         self.addRoleName(self.IdRole, "id")
         self.addRoleName(self.CategoryRole, "category")
-        self.addRoleName(self.ManufacturerRole, "manufacturer")
 
         self._definition_containers = []
 
@@ -44,8 +42,7 @@ class DefinitionContainersModel(ListModel):
             item = { # Prepare an item for insertion.
                 "name": container.getName(),
                 "id": container.getId(),
-                "category": container.getMetaDataEntry("category", ""),
-                "manufacturer": container.getMetaDataEntry("manufacturer", "")
+                "category": container.getMetaDataEntry("category", "")
             }
             self.appendItem(item)
         self.sort(lambda k: (k["category"].lower(), k["name"].lower()))
