@@ -98,6 +98,10 @@ class SettingFunction:
         self.__dict__.update(state)
         self._compiled = compile(self._code, repr(self), "eval")
 
+    ##  Expose a custom function to the code executed by SettingFunction
+    #
+    #   \param name What identifier to use in the executed code.
+    #   \param operator A callable that implements the actual logic to execute.
     @classmethod
     def registerOperator(cls, name, operator):
         cls.__operators[name] = operator
@@ -123,7 +127,6 @@ class _SettingExpressionVisitor(ast.NodeVisitor):
 
         if node.id not in self._knownNames and node.id not in __builtins__:
             self.names.append(node.id)
-
 
     def visit_Str(self, node):
         if node.s not in self._knownNames and node.s not in __builtins__:
