@@ -51,7 +51,6 @@ class SettingFunction:
         for name in self._settings:
             value = value_provider.getProperty(name, "value")
             if value is None:
-                Logger.log("e", "%s references unknown setting %s", self, name)
                 continue
 
             locals[name] = value
@@ -124,6 +123,11 @@ class _SettingExpressionVisitor(ast.NodeVisitor):
 
         if node.id not in self._knownNames and node.id not in __builtins__:
             self.names.append(node.id)
+
+
+    def visit_Str(self, node):
+        if node.s not in self._knownNames and node.s not in __builtins__:
+            self.names.append(node.s)
 
     _knownNames = [
         "math",
