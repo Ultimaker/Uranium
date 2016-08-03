@@ -46,7 +46,7 @@ PreferencesPage
                 {
                     return Qt.Unchecked
                 }
-                else if(definitionsModel.visibleCount == definitionsModel.rowCount())
+                else if(definitionsModel.visibleCount == definitionsModel.rowCount)
                 {
                     return Qt.Checked
                 }
