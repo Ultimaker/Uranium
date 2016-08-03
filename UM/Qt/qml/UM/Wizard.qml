@@ -193,8 +193,13 @@ UM.Dialog
             onContentChanged:
             {
                 if (content.onCompleted)
+                {
                     content.onCompleted.connect(base.nextPage)
+                }
+                if ('dialog' in content)
+                {
                     content.dialog = base
+                }
             }
         }
 
