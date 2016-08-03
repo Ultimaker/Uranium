@@ -469,6 +469,9 @@ class _EmptyInstanceContainer(InstanceContainer.InstanceContainer):
     def isDirty(self):
         return False
 
+    def isReadOnly(self):
+        return True
+
     def getProperty(self, key, property_name):
         return None
 
