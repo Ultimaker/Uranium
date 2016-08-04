@@ -337,13 +337,16 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     #   \param container_type \type{class} An optional type of container to
     #   filter on.
     #   \return The first container that matches the filter criteria or None if not found.
-    def findContainer(self, filter, container_type = None):
+    def findContainer(self, criteria = None, container_type = None, **kwargs):
+        if not criteria and kwargs:
+            criteria = kwargs
+
         for container in self._containers:
             meta_data = container.getMetaData()
             match = True
-            for key in filter:
+            for key in criteria:
                 try:
-                    if (meta_data[key] == filter[key] or filter[key] == "*") and (container.__class__ == container_type or container_type == None):
+                    if (meta_data[key] == criteria[key] or criteria[key] == "*") and (container.__class__ == container_type or container_type == None):
                         continue
                     else:
                         match = False
