@@ -531,7 +531,10 @@ class SettingDefinition:
         regex_pattern = '(?<!\.|\w|\d)0+(\d+)'
         value = re.sub(regex_pattern, stripLeading0 ,value)
 
-        return ast.literal_eval(value)
+        try:
+            return ast.literal_eval(value)
+        except:
+            return 0
 
     __type_definitions = {
         # An integer value
