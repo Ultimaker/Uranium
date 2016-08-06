@@ -4,7 +4,7 @@
 import collections
 import itertools
 
-from PyQt5.QtCore import Qt, QAbstractListModel, QVariant, QModelIndex, pyqtProperty, pyqtSignal, pyqtSlot
+from PyQt5.QtCore import Qt, QAbstractListModel, QVariant, QModelIndex, QObject, pyqtProperty, pyqtSignal, pyqtSlot
 
 from UM.Logger import Logger
 from UM.Preferences import Preferences
@@ -360,6 +360,10 @@ class SettingDefinitionsModel(QAbstractListModel):
         return result
 
     ##  Reimplemented from QAbstractListModel
+    # Note that rowCount() is overridden from QAbstractItemModel. The signature of the method in that
+    # class is "int rowCount(const QModelIndex& parent)" which makes this slot declaration incorrect.
+    # TODO: fix the pointer when actually using this parameter.
+    @pyqtSlot(QObject, result = int)
     def rowCount(self, parent = None):
         if not self._container:
             return 0

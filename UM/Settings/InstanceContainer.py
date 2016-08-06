@@ -221,7 +221,7 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
     #
     #   Reimplemented from ContainerInterface
     def serialize(self):
-        parser = configparser.ConfigParser(interpolation = None, empty_lines_in_values = False)
+        parser = configparser.ConfigParser(interpolation = None)
 
         if not self._definition:
             Logger.log("w", "Tried to serialize an instance container without definition, this is not supported")
@@ -251,7 +251,7 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
     #
     #   Reimplemented from ContainerInterface
     def deserialize(self, serialized):
-        parser = configparser.ConfigParser(interpolation = None, empty_lines_in_values = False)
+        parser = configparser.ConfigParser(interpolation = None)
         parser.read_string(serialized)
 
         if not "general" in parser or not "version" in parser["general"] or not "definition" in parser["general"]:

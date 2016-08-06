@@ -153,14 +153,24 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     #
     #   This method does the same as getProperty() except it does not perform any
     #   special handling of the result, instead the raw stored value is returned.
-    def getRawProperty(self, key, property_name):
+    #
+    #   \param key The key to get the property value of.
+    #   \param property_name The name of the property to get the value of.
+    #   \param kwargs Keyword arguments
+    #                 Possible values:
+    #                 * use_next: True if the value should be retrieved from the next stack if not found in this stack. False if not. Defaults to True.
+    #
+    #   \return The raw property value of the property, or None if not found. Note that
+    #           the value might be a SettingFunction instance.
+    #
+    def getRawProperty(self, key, property_name, **kwargs):
         for container in self._containers:
             value = container.getProperty(key, property_name)
             if value is not None:
                 return value
 
-        if self._next_stack:
-            return self._next_stack.getRawProperty(key, property_name)
+        if self._next_stack and kwargs.get("use_next", True):
+            return self._next_stack.getRawProperty(key, property_name, **kwargs)
         else:
             return None
 
@@ -327,13 +337,16 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     #   \param container_type \type{class} An optional type of container to
     #   filter on.
     #   \return The first container that matches the filter criteria or None if not found.
-    def findContainer(self, filter, container_type = None):
+    def findContainer(self, criteria = None, container_type = None, **kwargs):
+        if not criteria and kwargs:
+            criteria = kwargs
+
         for container in self._containers:
             meta_data = container.getMetaData()
             match = True
-            for key in filter:
+            for key in criteria:
                 try:
-                    if (meta_data[key] == filter[key] or filter[key] == "*") and (container.__class__ == container_type or container_type == None):
+                    if (meta_data[key] == criteria[key] or criteria[key] == "*") and (container.__class__ == container_type or container_type == None):
                         continue
                     else:
                         match = False

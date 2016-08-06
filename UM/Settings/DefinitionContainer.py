@@ -296,7 +296,6 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
         for setting in function.getUsedSettingKeys():
             other = self._getDefinition(setting)
             if not other:
-                Logger.log("w", "Function for definition %s references unknown definition %s", definition.key, setting)
                 continue
 
             relation = SettingRelation.SettingRelation(definition, other, SettingRelation.RelationType.RequiresTarget, property)

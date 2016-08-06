@@ -9,6 +9,10 @@ from UM.Logger import Logger
 class IllegalMethodError(Exception):
     pass
 
+def _debug_value(value):
+    Logger.log("d", "Setting Function: %s", value)
+    return value
+
 ##  Encapsulates Python code that provides a simple value calculation function.
 #
 class SettingFunction:
@@ -47,13 +51,16 @@ class SettingFunction:
         for name in self._settings:
             value = value_provider.getProperty(name, "value")
             if value is None:
-                Logger.log("e", "%s references unknown setting %s", self, name)
                 continue
 
             locals[name] = value
 
+        g = {}
+        g.update(globals())
+        g.update(self.__operators)
+
         try:
-            return eval(self._compiled, globals(), locals)
+            return eval(self._compiled, g, locals)
         except Exception as e:
             Logger.logException("d", "An exception occurred in inherit function %s", self)
 
@@ -91,6 +98,19 @@ class SettingFunction:
         self.__dict__.update(state)
         self._compiled = compile(self._code, repr(self), "eval")
 
+    ##  Expose a custom function to the code executed by SettingFunction
+    #
+    #   \param name What identifier to use in the executed code.
+    #   \param operator A callable that implements the actual logic to execute.
+    @classmethod
+    def registerOperator(cls, name, operator):
+        cls.__operators[name] = operator
+        _SettingExpressionVisitor._knownNames.append(name)
+
+    __operators = {
+        "debug": _debug_value
+    }
+
 # Helper class used to analyze a parsed function
 class _SettingExpressionVisitor(ast.NodeVisitor):
     def __init__(self):
@@ -108,8 +128,15 @@ class _SettingExpressionVisitor(ast.NodeVisitor):
         if node.id not in self._knownNames and node.id not in __builtins__:
             self.names.append(node.id)
 
+    def visit_Str(self, node):
+        if node.s not in self._knownNames and node.s not in __builtins__:
+            self.names.append(node.s)
+
     _knownNames = [
-        "math"
+        "math",
+        "max",
+        "min",
+        "debug"
     ]
 
     _blacklist = [

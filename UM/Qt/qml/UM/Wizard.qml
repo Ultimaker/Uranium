@@ -112,7 +112,7 @@ UM.Dialog
                         width: wizardProgress.width
                         text: title
 
-                        property bool active: text == pagesModel.get(base.currentPage).title;
+                        property bool active: pagesModel.get(base.currentPage) != undefined && text == pagesModel.get(base.currentPage).title;
 
                         style: ButtonStyle
                         {
@@ -149,7 +149,7 @@ UM.Dialog
                         id: progressArrow
                         anchors.top: progressButton.bottom
                         x: (wizardProgress.width-progressArrow.width)/2
-                        visible: title != pagesModel.get(pagesModel.count - 1).title ? true : false
+                        visible: pagesModel.get(pagesModel.count - 1) && title != pagesModel.get(pagesModel.count - 1).title ? true : false
                         UM.RecolorImage {
                             id: downArrow
                             width: UM.Theme.getSize("standard_arrow").width
@@ -190,7 +190,17 @@ UM.Dialog
             property var content: pagesModel.get(base.currentPage) ? pagesModel.get(base.currentPage).page : Item;
 
             // Connect the completed of the page to the nextPage of the wizard.
-            onContentChanged: { if (content.onCompleted) content.onCompleted.connect(base.nextPage) }
+            onContentChanged:
+            {
+                if (content.onCompleted)
+                {
+                    content.onCompleted.connect(base.nextPage)
+                }
+                if ('dialog' in content)
+                {
+                    content.dialog = base
+                }
+            }
         }
 
         SystemPalette{ id: palette }

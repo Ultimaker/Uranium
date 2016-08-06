@@ -238,7 +238,7 @@ class ContainerRegistry:
             Logger.log("d", "Removed container %s", container.getId())
 
         else:
-            Logger.log("w", "Could not remove container with id %s, as no container with that ID is known")
+            Logger.log("w", "Could not remove container with id %s, as no container with that ID is known", container_id)
 
     def renameContainer(self, container_id, new_name, new_id = None):
         containers = self.findContainers(None, id = container_id)
