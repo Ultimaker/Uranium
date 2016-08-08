@@ -24,7 +24,7 @@ class UpdateCheckerJob(Job):
         super().__init__()
         self.silent = silent
         self.url = url
-    
+
     def run(self):
         if not self.url:
             Logger.log("e", "Can not check for a new release. URL not set!")
@@ -36,7 +36,7 @@ class UpdateCheckerJob(Job):
         try:
             latest_version_file = urllib.request.urlopen(self.url)
         except Exception:
-            Logger.logException("e", "Failed to check for new version.")
+            Logger.log("e", "Failed to check for new version: %s" % e)
             if not self.silent:
                 Message(i18n_catalog.i18nc("@info", "Could not access update information.")).show()
             return
@@ -88,7 +88,7 @@ class UpdateCheckerJob(Job):
 #  to change it to work for other applications.
 class UpdateChecker(Extension):
     url = "http://software.ultimaker.com/latest.json"
-    
+
     def __init__(self):
         super().__init__()
         self.addMenuItem(i18n_catalog.i18nc("@item:inmenu", "Check for Updates"), self.checkNewVersion)
@@ -96,7 +96,7 @@ class UpdateChecker(Extension):
         Preferences.getInstance().addPreference("info/automatic_update_check", True)
         if Preferences.getInstance().getValue("info/automatic_update_check"):
             self.checkNewVersion(True)
-            
+
     ##  Callback for the message that is spawned when there is a new version.
     def actionTriggered(self, message, action):
         if action == "download":
