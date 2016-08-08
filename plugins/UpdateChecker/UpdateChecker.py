@@ -35,7 +35,7 @@ class UpdateCheckerJob(Job):
 
         try:
             latest_version_file = urllib.request.urlopen(self.url)
-        except Exception:
+        except Exception as e:
             Logger.log("e", "Failed to check for new version: %s" % e)
             if not self.silent:
                 Message(i18n_catalog.i18nc("@info", "Could not access update information.")).show()
