@@ -45,7 +45,7 @@ Item {
                     }
                 }
 
-                return catalog.i18ncp("@item:tooltip %1 is list of setting names", "This setting has been disabled by %1. It will only become visible after that setting is changed.", "This setting has been disabled by %1. It will only become visible after those settings are changed.", requires.length) .arg(requires_text);
+                return catalog.i18ncp("@item:tooltip %1 is list of setting names", "This setting has been disabled by the value of %1. Change the value of that setting to make this setting visible.", "This setting has been disabled by the values of %1. Change the values of those settings to make this setting visible.", requires.length) .arg(requires_text);
             }
         }
 
@@ -57,7 +57,7 @@ Item {
             width: check.height * 0.75
             height: width
 
-            source: UM.Theme.getIcon("warning")
+            source: UM.Theme.getIcon("notice")
 
             color: palette.buttonText
         }
