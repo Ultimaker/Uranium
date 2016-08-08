@@ -22,7 +22,7 @@ class QtOpenGL(OpenGL):
         self._gl = QOpenGLContext.currentContext().versionFunctions(profile)
         if not self._gl:
             Logger.log("e", "Startup failed due to OpenGL initialization failing")
-            QMessageBox.critical("Failed to Initialize OpenGL", "Could not initialize OpenGL. This program requires OpenGL 2.0 or higher. Please check your video card drivers.")
+            QMessageBox.critical(None, "Failed to Initialize OpenGL", "Could not initialize OpenGL. This program requires OpenGL 2.0 or higher. Please check your video card drivers.")
             sys.exit(1)
 
         # It would be nice to be able to not necessarily need OpenGL Framebuffer Object support, but
@@ -32,7 +32,7 @@ class QtOpenGL(OpenGL):
         # hard-depend on Framebuffer Objects.
         if not self.hasFrameBufferObjects():
             Logger.log("e", "Starup failed, OpenGL does not support Frame Buffer Objects")
-            QMessageBox.critical("Critical OpenGL Extensions Missing", "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers.")
+            QMessageBox.critical(None, "Critical OpenGL Extensions Missing", "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers.")
             sys.exit(1)
 
         self._gl.initializeOpenGLFunctions()
