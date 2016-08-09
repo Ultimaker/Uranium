@@ -210,14 +210,14 @@ class VersionUpgradeManager:
         #Read the old file.
         try:
             with open(configuration_file_absolute, encoding = "utf-8", errors = "ignore") as file_handle:
-                configuration = file_handle.read()
+                file_data = file_handle.read()
         except IOError:
             Logger.log("w", "Can't open configuration file %s for reading.", configuration_file_absolute)
             return False
 
         #Get the version number of the old file.
         try:
-            old_version = self._get_version_functions[old_configuration_type](configuration)
+            old_version = self._get_version_functions[old_configuration_type](file_data)
         except: #Version getter gives an exception. Not a valid file. Can't upgrade it then.
             Logger.log("w", "Invalid %s file: %s", old_configuration_type, configuration_file_absolute)
             return False
@@ -232,11 +232,11 @@ class VersionUpgradeManager:
                 return False
             new_type, new_version, upgrade = paths[(configuration_type, version)]
             try:
-                filename_without_extension, configuration = upgrade(configuration, filename_without_extension)
+                filename_without_extension, file_data = upgrade(file_data, filename_without_extension)
             except Exception as e: #Upgrade failed due to a coding error in the plug-in.
                 Logger.logException("w", "Exception in %s upgrade with %s: %s", old_configuration_type, upgrade.__module__, str(e))
                 return False
-            if not configuration: #Upgrade failed.
+            if not file_data: #Upgrade failed.
                 return False
             version = new_version
             configuration_type = new_type
@@ -258,7 +258,7 @@ class VersionUpgradeManager:
 
             try:
                 with open(os.path.join(configuration_file_absolute), "w", encoding = "utf-8") as file_handle:
-                    file_handle.write(configuration) #Save the new file.
+                    file_handle.write(file_data) #Save the new file.
             except IOError:
                 Logger.log("w", "Couldn't write new configuration file to %s.", configuration_file_absolute)
                 return False
