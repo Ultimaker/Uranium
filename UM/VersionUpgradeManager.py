@@ -76,7 +76,6 @@ class VersionUpgradeManager:
         if upgraded:
             message = UM.Message(text=catalogue.i18nc("@info:version-upgrade", "A configuration from an older version of {0} was imported.", UM.Application.getInstance().getApplicationName()))
             message.show()
-        exit() #Test
         return upgraded
 
     # private:
