@@ -197,6 +197,9 @@ class VersionUpgradeManager:
 
     ##  Upgrades a single file to any version in self._current_versions.
     #
+    #   A single file will be taken as source file, but may result in any number
+    #   of output files.
+    #
     #   \param storage_path_absolute The path where to find the file.
     #   \param configuration_file The file to upgrade to a current version.
     #   \param old_configuration_type The type of the configuration file before
@@ -210,20 +213,20 @@ class VersionUpgradeManager:
         #Read the old file.
         try:
             with open(configuration_file_absolute, encoding = "utf-8", errors = "ignore") as file_handle:
-                file_data = file_handle.read()
+                files_data = [file_handle.read()]
         except IOError:
             Logger.log("w", "Can't open configuration file %s for reading.", configuration_file_absolute)
             return False
 
         #Get the version number of the old file.
         try:
-            old_version = self._get_version_functions[old_configuration_type](file_data)
+            old_version = self._get_version_functions[old_configuration_type](files_data[0])
         except: #Version getter gives an exception. Not a valid file. Can't upgrade it then.
             Logger.log("w", "Invalid %s file: %s", old_configuration_type, configuration_file_absolute)
             return False
         version = old_version
         configuration_type = old_configuration_type
-        filename_without_extension = os.path.splitext(configuration_file)[0]
+        filenames_without_extension = [os.path.splitext(configuration_file)[0]]
 
         #Keep converting the file until it's at one of the current versions.
         while (configuration_type, version) not in self._current_versions:
@@ -231,37 +234,47 @@ class VersionUpgradeManager:
                 Logger.log("w", "File %s (%s, %s) could not be upgraded to the most recent version. No upgrade plug-in can do it.", configuration_file, configuration_type, str(version))
                 return False
             new_type, new_version, upgrade = paths[(configuration_type, version)]
-            try:
-                filename_without_extension, file_data = upgrade(file_data, filename_without_extension)
-            except Exception as e: #Upgrade failed due to a coding error in the plug-in.
-                Logger.logException("w", "Exception in %s upgrade with %s: %s", old_configuration_type, upgrade.__module__, str(e))
-                return False
-            if not file_data: #Upgrade failed.
-                return False
+            new_filenames_without_extension = []
+            new_files_data = []
+            for file_idx, file_data in enumerate(files_data):
+                try:
+                    this_filenames_without_extension, this_files_data = upgrade(file_data, filenames_without_extension[file_idx])
+                except Exception as e: #Upgrade failed due to a coding error in the plug-in.
+                    Logger.logException("w", "Exception in %s upgrade with %s: %s", old_configuration_type, upgrade.__module__, str(e))
+                    return False
+                if not this_files_data: #Upgrade failed.
+                    return False
+                new_filenames_without_extension += this_filenames_without_extension
+                new_files_data += this_files_data
+            filenames_without_extension = new_filenames_without_extension
+            files_data = new_files_data
             version = new_version
             configuration_type = new_type
 
-        #If the version changed, save the new file.
+        #If the version changed, save the new files.
         if version != old_version or configuration_type != old_configuration_type:
             self._storeOldFile(storage_path_absolute, configuration_file, old_version)
 
-            #Finding out where to store this file.
+            #Finding out where to store these files.
             resource_type, mime_type = self._current_versions[(configuration_type, version)]
             storage_path = Resources.getStoragePathForType(resource_type)
             mime_type = UM.MimeTypeDatabase.getMimeType(mime_type) #Get the actual MIME type object, from the name.
-            new_filename = filename_without_extension
             if mime_type.preferredSuffix:
-                new_filename += "." + mime_type.preferredSuffix
+                extension = "." + mime_type.preferredSuffix
             elif mime_type.suffixes:
-                new_filename += "." + mime_type.suffixes[0]
-            configuration_file_absolute = os.path.join(storage_path, new_filename)
+                extension = "." + mime_type.suffixes[0]
+            else:
+                extension = "" #No known suffix. Put no extension behind it.
+            new_filenames = [filename + extension for filename in filenames_without_extension]
+            configuration_files_absolute = [os.path.join(storage_path, filename) for filename in new_filenames]
 
-            try:
-                with open(os.path.join(configuration_file_absolute), "w", encoding = "utf-8") as file_handle:
-                    file_handle.write(file_data) #Save the new file.
-            except IOError:
-                Logger.log("w", "Couldn't write new configuration file to %s.", configuration_file_absolute)
-                return False
+            for file_idx, configuration_file_absolute in enumerate(configuration_files_absolute):
+                try:
+                    with open(os.path.join(configuration_file_absolute), "w", encoding = "utf-8") as file_handle:
+                        file_handle.write(files_data[file_idx]) #Save the new file.
+                except IOError:
+                    Logger.log("w", "Couldn't write new configuration file to %s.", configuration_file_absolute)
+                    return False
             Logger.log("i", "Upgraded %s to version %s.", configuration_file, str(version))
             return True
         return False #Version didn't change. Was already current.
