@@ -76,6 +76,7 @@ class VersionUpgradeManager:
         if upgraded:
             message = UM.Message(text=catalogue.i18nc("@info:version-upgrade", "A configuration from an older version of {0} was imported.", UM.Application.getInstance().getApplicationName()))
             message.show()
+        exit() #Test
         return upgraded
 
     # private:
@@ -222,7 +223,6 @@ class VersionUpgradeManager:
         try:
             old_version = self._get_version_functions[old_configuration_type](files_data[0])
         except: #Version getter gives an exception. Not a valid file. Can't upgrade it then.
-            Logger.log("w", "Invalid %s file: %s", old_configuration_type, configuration_file_absolute)
             return False
         version = old_version
         configuration_type = old_configuration_type
@@ -231,7 +231,7 @@ class VersionUpgradeManager:
         #Keep converting the file until it's at one of the current versions.
         while (configuration_type, version) not in self._current_versions:
             if (configuration_type, version) not in paths:
-                Logger.log("w", "File %s (%s, %s) could not be upgraded to the most recent version. No upgrade plug-in can do it.", configuration_file, configuration_type, str(version))
+                #No version upgrade plug-in claims to be able to upgrade this file.
                 return False
             new_type, new_version, upgrade = paths[(configuration_type, version)]
             new_filenames_without_extension = []
