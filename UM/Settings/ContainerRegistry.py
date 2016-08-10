@@ -252,9 +252,13 @@ class ContainerRegistry:
 
         # Remove all files relating to the old container
         self._deleteFiles(container)
+        self.containerRemoved.emit(container)
+
         container.setName(new_name)
         if new_id:
             container._id = new_id
+
+        self.containerAdded.emit(container)
 
     def saveAll(self):
 
