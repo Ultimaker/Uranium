@@ -252,9 +252,13 @@ class ContainerRegistry:
 
         # Remove all files relating to the old container
         self._deleteFiles(container)
+        self.containerRemoved.emit(container)
+
         container.setName(new_name)
         if new_id:
             container._id = new_id
+
+        self.containerAdded.emit(container)
 
     def saveAll(self):
 
@@ -468,6 +472,9 @@ PluginRegistry.addType("settings_container", ContainerRegistry.addContainerType)
 class _EmptyInstanceContainer(InstanceContainer.InstanceContainer):
     def isDirty(self):
         return False
+
+    def isReadOnly(self):
+        return True
 
     def getProperty(self, key, property_name):
         return None
