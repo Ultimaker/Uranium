@@ -210,7 +210,7 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
     #
     #   \return A new InstanceContainer with the same contents as this container.
     def duplicate(self, new_id, new_name = None):
-        new_container = self.__type__(new_id)
+        new_container = self.__class__(new_id)
         if new_name:
             new_container.setName(new_name)
 
