@@ -15,7 +15,6 @@ import UM.Settings.ContainerRegistry
 from . import ContainerInterface
 from . import SettingInstance
 from . import SettingRelation
-from . import SettingDefinition
 
 class InvalidInstanceError(Exception):
     pass
@@ -217,8 +216,9 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
         new_container.setMetaData(copy.deepcopy(self._metadata))
         new_container.setDefinition(self._definition)
 
-        for instance in self._instances:
-            for property_name in SettingDefinition.getPropertyNames():
+        for instance_id in self._instances:
+            instance = self._instances[instance_id]
+            for property_name in instance.definition.getPropertyNames():
                 if not hasattr(instance, property_name):
                     continue
 
