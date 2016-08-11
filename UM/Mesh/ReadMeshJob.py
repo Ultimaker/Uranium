@@ -74,7 +74,7 @@ class ReadMeshJob(Job):
                 scale_factor_width = max_bounds.width / build_bounds.width
                 scale_factor_height = max_bounds.height / build_bounds.height
                 scale_factor_depth = max_bounds.depth / build_bounds.depth
-                scale_factor = min(scale_factor_width,scale_factor_depth, scale_factor_height)
+                scale_factor = min(scale_factor_width, scale_factor_depth, scale_factor_height)
                 if Preferences.getInstance().getValue("mesh/scale_to_fit") == True and (scale_factor_width < 1 or scale_factor_height < 1 or scale_factor_depth < 1): # Use scale factor to scale large object down
                     # Ignore scaling on models which are less than 3 times bigger than the build volume
                     if 1/scale_factor < 3:
