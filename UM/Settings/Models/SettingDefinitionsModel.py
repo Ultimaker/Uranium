@@ -427,6 +427,11 @@ class SettingDefinitionsModel(QAbstractListModel):
 
         self._updateVisibleRows()
 
+    ##  Force updating the model.
+    @pyqtSlot()
+    def forceUpdate(self):
+        self._update()
+
     # Update the internal list of definitions and the visibility mapping.
     #
     # Note that this triggers a model reset and should only be called when the
