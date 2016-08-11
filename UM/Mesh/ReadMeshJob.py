@@ -95,8 +95,8 @@ class ReadMeshJob(Job):
                     try:
                         node.scale(scale_vector)
                         scale_message.show()
-                    except Exception as e:
-                        print(e)
+                    except Exception:
+                        Logger.logException("e", "While auto-scaling an exception has been raised")
         self.setResult(node)
 
         loading_message.hide()
