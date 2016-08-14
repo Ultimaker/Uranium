@@ -2,6 +2,12 @@ project(uranium)
 
 cmake_minimum_required(VERSION 2.8.12)
 
+message(STATUS ${CMAKE_MODULE_PATH})
+
+set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/
+                      ${CMAKE_MODULE_PATH})
+
+include(UraniumTranslationTools)
 include(GNUInstallDirs)
 
 find_package(PythonInterp 3.4.0 REQUIRED)
@@ -26,55 +32,6 @@ add_custom_command(TARGET tests POST_BUILD COMMAND "LANG=C" "PYTHONPATH=${CMAKE_
 
 
 # Documentation
-
-# Macro needed to list all sub-directory of a directory.
-# There is no function in cmake as far as I know.
-# Found at: http://stackoverflow.com/a/7788165
-MACRO(SUBDIRLIST result curdir)
-  FILE(GLOB children RELATIVE ${curdir} ${curdir}/*)
-  SET(dirlist "")
-  FOREACH(child ${children})
-    IF(IS_DIRECTORY ${curdir}/${child})
-        STRING(REPLACE "/" "" child ${child})
-        LIST(APPEND dirlist ${child})
-    ENDIF()
-  ENDFOREACH()
-  SET(${result} ${dirlist})
-ENDMACRO()
-
-MACRO(TARGETS_FOR_PO_FILES language)
-    if(DEFINED GETTEXT_MSGINIT_EXECUTABLE)
-        message(STATUS "Creating target i18n-create-po-${language}")
-        add_custom_target(i18n-create-po-${language})
-        add_dependencies(i18n-create-po i18n-create-po-${language})
-    endif()
-    message(STATUS "Creating target i18n-update-po-${language}")
-    add_custom_target(i18n-update-po-${language})
-    add_dependencies(i18n-update-po i18n-update-po-${language})
-    foreach(pot_file ${pot_files})
-        string(REGEX REPLACE ".*/(.*).pot" "${CMAKE_SOURCE_DIR}/resources/i18n/${language}/\\1.po" po_file ${pot_file})
-        if(DEFINED GETTEXT_MSGINIT_EXECUTABLE)
-            add_custom_command(TARGET i18n-create-po-${language} POST_BUILD
-                               COMMAND ${GETTEXT_MSGINIT_EXECUTABLE} ARGS --no-wrap --no-translator -l ${language} -i ${pot_file} -o ${po_file})
-        endif()
-        add_custom_command(TARGET i18n-update-po-${language} POST_BUILD
-                           COMMAND ${GETTEXT_MSGMERGE_EXECUTABLE} ARGS --no-wrap -o ${po_file} ${po_file} ${pot_file})
-    endforeach()
-ENDMACRO()
-
-MACRO(TARGETS_FOR_MO_FILES language)
-    message(STATUS "Creating target i18n-create-mo-${language}")
-    add_custom_target(i18n-create-mo-${language})
-    add_dependencies(i18n-create-mo i18n-create-mo-${language})
-    file(GLOB po_files ${CMAKE_SOURCE_DIR}/resources/i18n/${language}/*.po)
-    foreach(po_file ${po_files})
-        string(REGEX REPLACE ".*/(.*).po" "${CMAKE_BINARY_DIR}/resources/i18n/${language}/LC_MESSAGES/\\1.mo" mo_file ${po_file})
-        add_custom_command(TARGET i18n-create-mo-${language} POST_BUILD
-                           COMMAND mkdir ARGS -p ${CMAKE_BINARY_DIR}/resources/i18n/${language}/LC_MESSAGES/
-                           COMMAND ${GETTEXT_MSGFMT_EXECUTABLE} ARGS ${po_file} -o ${mo_file} -f)
-    endforeach()
-ENDMACRO()
-
 find_package(Doxygen)
 if(${DOXYGEN_FOUND})
     add_custom_target(doc ${DOXYGEN_EXECUTABLE} ${CMAKE_SOURCE_DIR}/Doxyfile WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
@@ -84,37 +41,15 @@ endif()
 add_custom_target(extract-messages ${CMAKE_SOURCE_DIR}/scripts/extract-messages ${CMAKE_SOURCE_DIR} uranium)
 
 # Build Translations
-find_package(Gettext)
-
-if(GETTEXT_FOUND)
-    # translations target will convert .po files into .mo and .qm as needed.
-    # The files are checked for a _qt suffix and if it is found, converted to
-    # qm, otherwise they are converted to .po.
-    if(DEFINED GETTEXT_MSGINIT_EXECUTABLE)
-        message(STATUS "Creating target i18n-create-po")
-        add_custom_target(i18n-create-po)
-    else()
-        message(WARNING "GETTEXT_MSGINIT_EXECUTABLE is undefined!\nSkipping to create i18n-create-po* targets...")
-    endif()
-    message(STATUS "Creating target i18n-update-po")
-    add_custom_target(i18n-update-po)
-    message(STATUS "Creating target i18n-update-mo")
-    add_custom_target(i18n-create-mo ALL)
-
-    SUBDIRLIST(languages ${CMAKE_SOURCE_DIR}/resources/i18n/)
-    file(GLOB pot_files ${CMAKE_SOURCE_DIR}/resources/i18n/*.pot)
-    foreach(language ${languages})
-        TARGETS_FOR_PO_FILES(${language})
-        TARGETS_FOR_MO_FILES(${language})
-    endforeach()
-    install(DIRECTORY ${CMAKE_BINARY_DIR}/resources DESTINATION ${CMAKE_INSTALL_DATADIR}/uranium/)
-endif()
+CREATE_TRANSLATION_TARGETS()
 
 if(APPLE OR WIN32)
     install(DIRECTORY UM DESTINATION lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/site-packages)
 else()
     install(DIRECTORY UM DESTINATION lib/python${PYTHON_VERSION_MAJOR}/dist-packages)
 endif()
+install(FILES ${CMAKE_SOURCE_DIR}/UraniumTranslationTools.cmake
+        DESTINATION ${CMAKE_INSTALL_DATADIR}/cmake-${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}/Modules/
 install(DIRECTORY resources DESTINATION ${CMAKE_INSTALL_DATADIR}/uranium)
 install(DIRECTORY plugins DESTINATION lib/uranium)
 
