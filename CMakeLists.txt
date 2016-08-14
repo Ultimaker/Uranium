@@ -6,8 +6,8 @@ message(STATUS ${CMAKE_MODULE_PATH})
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/
                       ${CMAKE_MODULE_PATH})
-
 include(UraniumTranslationTools)
+
 include(GNUInstallDirs)
 
 find_package(PythonInterp 3.4.0 REQUIRED)
