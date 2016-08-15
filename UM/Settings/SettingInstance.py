@@ -185,6 +185,9 @@ class SettingInstance:
         for relation in filter(lambda r: r.role == role, relations):
             if relation.type == SettingRelation.RelationType.RequiresTarget:
                 continue
+            # Do not add relation to self.
+            if relation.target.key == self.definition.key:
+                continue
 
             relations_set.add(relation.target.key)
             self._addRelations(relations_set, relation.target.relations, role)

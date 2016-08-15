@@ -136,7 +136,9 @@ class _SettingExpressionVisitor(ast.NodeVisitor):
         "math",
         "max",
         "min",
-        "debug"
+        "debug",
+        "sum",
+        "len"
     ]
 
     _blacklist = [
