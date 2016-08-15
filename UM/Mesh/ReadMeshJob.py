@@ -76,15 +76,15 @@ class ReadMeshJob(Job):
                 scale_factor_depth = max_bounds.depth / build_bounds.depth
                 scale_factor = min(scale_factor_width, scale_factor_depth, scale_factor_height)
                 if Preferences.getInstance().getValue("mesh/scale_to_fit") == True and (scale_factor_width < 1 or scale_factor_height < 1 or scale_factor_depth < 1): # Use scale factor to scale large object down
-                    # Ignore scaling on models which are less than 3 times bigger than the build volume
+                    # Ignore scaling on models which are less than 1.25 times bigger than the build volume
                     ignore_factor = 1.25
-                    if 1/scale_factor < ignore_factor:
-                        Logger.log("i", "Ignoring auto-scaling, because %s < %s" %(1/scale_factor, ignore_factor))
+                    if 1 / scale_factor < ignore_factor:
+                        Logger.log("i", "Ignoring auto-scaling, because %.3d < %.3d" % (1 / scale_factor, ignore_factor))
                         scale_factor = 1
                     pass
                 elif Preferences.getInstance().getValue("mesh/scale_tiny_meshes") == True and (scale_factor_width > 100 and scale_factor_height > 100 and scale_factor_depth > 100):
                     # Round scale factor to lower factor of 10 to scale tiny object up (eg convert m to mm units)
-                    scale_factor = math.pow(10, math.floor(math.log(scale_factor)/math.log(10)))
+                    scale_factor = math.pow(10, math.floor(math.log(scale_factor) / math.log(10)))
                 else:
                     scale_factor = 1
 

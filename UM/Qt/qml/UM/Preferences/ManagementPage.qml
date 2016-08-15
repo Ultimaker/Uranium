@@ -95,7 +95,8 @@ PreferencesPage
             {
                 id: objectList;
                 currentIndex: activeIndex
-                onCurrentIndexChanged: {
+                onCurrentIndexChanged:
+                {
                     // Explicitly trigger onCurrentItemChanged
                     base.currentItem = null;
                     base.currentItem = (currentIndex != null) ? model.getItem(currentIndex) : null;
