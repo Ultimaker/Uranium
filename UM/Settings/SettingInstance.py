@@ -158,6 +158,9 @@ class SettingInstance:
     def state(self):
         return self._state
 
+    def resetState(self):
+        self._state = InstanceState.Default
+
     def __repr__(self):
         return "<SettingInstance (0x{0:x}) definition={1} container={2}>".format(id(self), self._definition, self._container)
 

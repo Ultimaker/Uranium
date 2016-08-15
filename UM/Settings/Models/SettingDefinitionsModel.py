@@ -304,6 +304,11 @@ class SettingDefinitionsModel(QAbstractListModel):
         if self._visibility_handler:
             self._visibility_handler.setVisible(self._visible)
 
+    ##  Get a single SettingDefinition's visible state
+    @pyqtSlot(str, result = bool)
+    def getVisible(self, key):
+        return key in self._visible
+
     @pyqtSlot(str, result = int)
     def getIndex(self, key):
         definitions = self._container.findDefinitions(key = key)
@@ -421,6 +426,11 @@ class SettingDefinitionsModel(QAbstractListModel):
             self.dataChanged.emit(self.index(row, 0), self.index(row, 0), [self.VisibleRole])
 
         self._updateVisibleRows()
+
+    ##  Force updating the model.
+    @pyqtSlot()
+    def forceUpdate(self):
+        self._update()
 
     # Update the internal list of definitions and the visibility mapping.
     #

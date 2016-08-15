@@ -209,10 +209,21 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
     #
     #   \return A new InstanceContainer with the same contents as this container.
     def duplicate(self, new_id, new_name = None):
-        new_container = copy.deepcopy(self)
-        new_container._id = new_id
+        new_container = self.__class__(new_id)
         if new_name:
             new_container.setName(new_name)
+
+        new_container.setMetaData(copy.deepcopy(self._metadata))
+        new_container.setDefinition(self._definition)
+
+        for instance_id in self._instances:
+            instance = self._instances[instance_id]
+            for property_name in instance.definition.getPropertyNames():
+                if not hasattr(instance, property_name):
+                    continue
+
+                new_container.setProperty(instance.definition.key, property_name, getattr(instance, property_name))
+
         new_container._dirty = True
         new_container._read_only = False
         return new_container
