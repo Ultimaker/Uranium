@@ -190,4 +190,7 @@ class SettingInstance:
                 continue
 
             relations_set.add(relation.target.key)
-            self._addRelations(relations_set, relation.target.relations, role)
+
+            # Ensure that all properties of related settings are added.
+            for property_name in SettingDefinition.getPropertyNames():
+                self._addRelations(relations_set, relation.target.relations, property_name)
