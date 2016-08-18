@@ -61,6 +61,12 @@ class Backend(PluginObject):
 
             if not self._backend_log_max_lines:
                 self._backend_log = []
+
+            # Double check that the old process is indeed killed.
+            if self._process is not None:
+                self._process.terminate()
+                Logger.log("d", "Engine process is killed. Received return code %s", self._process.wait())
+
             self._process = self._runEngineProcess(command)
             Logger.log("i", "Started engine process: %s" % (self.getEngineCommand()[0]))
             self._backendLog(bytes("Calling engine with: %s\n" % self.getEngineCommand(), "utf-8"))
