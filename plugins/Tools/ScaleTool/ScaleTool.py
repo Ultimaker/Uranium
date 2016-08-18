@@ -136,7 +136,7 @@ class ScaleTool(Tool):
                         else:
                             scale_factor = drag_change
                     else:
-                        # uniform scaling becuse we use grey square, we use the screen x, y for scaling
+                        # uniform scaling; because we use central cube, we use the screen x, y for scaling.
                         # upper right is scale up, lower left is scale down
                         scale_factor_delta = ((self._last_event.y - event.y) - (self._last_event.x - event.x)) * self._scale_speed
                         self._scale_sum += scale_factor_delta
