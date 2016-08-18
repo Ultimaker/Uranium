@@ -151,13 +151,31 @@ class Backend(PluginObject):
 
     ##  Private socket state changed handler.
     def _onSocketStateChanged(self, state):
+        self._logSocketState(state)
         if state == Arcus.SocketState.Listening:
             if not Application.getInstance().getCommandLineOption("external-backend", False):
                 self.startEngine()
         elif state == Arcus.SocketState.Connected:
             Logger.log("d", "Backend connected on port %s", self._port)
             self.backendConnected.emit()
-    
+
+    ## Debug function created to provide more info for CURA-2127
+    def _logSocketState(self, state):
+        if state == Arcus.SocketState.Listening:
+            Logger.log("d", "Socket state changed to Listening")
+        elif state == Arcus.SocketState.Connecting:
+            Logger.log("d", "Socket state changed to Connecting")
+        elif state == Arcus.SocketState.Connected:
+            Logger.log("d", "Socket state changed to Connected")
+        elif state == Arcus.SocketState.Error:
+            Logger.log("d", "Socket state changed to Error")
+        elif state == Arcus.SocketState.Closing:
+            Logger.log("d", "Socket state changed to Closing")
+        elif state == Arcus.SocketState.Closed:
+            Logger.log("d", "Socket state changed to Closed")
+        elif state == Arcus.SocketState.Error:
+            Logger.log("d", "Socket state changed to Error")
+
     ##  Private message handler
     def _onMessageReceived(self):
         message = self._socket.takeNextMessage()
