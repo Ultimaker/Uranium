@@ -190,20 +190,23 @@ class Backend(PluginObject):
     def _onSocketError(self, error):
         if error.getErrorCode() == Arcus.ErrorCode.BindFailedError:
             self._port += 1
+            Logger.log("d", "Socket was unable to bind to port, increasing port number to %s", self._port)
         elif error.getErrorCode() == Arcus.ErrorCode.ConnectionResetError:
             Logger.log("i", "Backend crashed or closed. Restarting...")
         elif error.getErrorCode() == Arcus.ErrorCode.Debug:
-            Logger.log("d", str(error))
+            Logger.log("d", "Socket debug: %s", str(error))
             return
         else:
-            Logger.log("w", str(error))
+            Logger.log("w", "Unhandled socket error %s", str(error))
 
-        sleep(0.1)  # Hack: Without a sleep this can deadlock the application spamming error messages.
+        #sleep(0.1)  # Hack: Without a sleep this can deadlock the application spamming error messages.
         self._createSocket()
 
     ##  Creates a socket and attaches listeners.
     def _createSocket(self, protocol_file):
+        Logger.log("d", "Attempting to create new socket")  # temp debug logging
         if self._socket:
+            Logger.log("d", "Previous socket existed. Closing that first.") # temp debug logging
             self._socket.stateChanged.disconnect(self._onSocketStateChanged)
             self._socket.messageReceived.disconnect(self._onMessageReceived)
             self._socket.error.disconnect(self._onSocketError)
