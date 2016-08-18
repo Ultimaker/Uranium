@@ -129,14 +129,14 @@ class ScaleTool(Tool):
                 drag_length = (drag_position - self._saved_handle_position).length()
                 if self._drag_length > 0:
                     drag_change = (drag_length - self._drag_length) / 100 * self._scale_speed
-                    if self._non_uniform_scale and self.getLockedAxis() in [ToolHandle.XAxis, ToolHandle.YAxis, ToolHandle.ZAxis]:
+                    if self.getLockedAxis() in [ToolHandle.XAxis, ToolHandle.YAxis, ToolHandle.ZAxis]:
                         # drag the handle, axis is already determined
                         if self._snap_scale:
                             scale_factor = round(drag_change, 1)
                         else:
                             scale_factor = drag_change
                     else:
-                        # uniform scaling, we use the screen x, y for scaling
+                        # uniform scaling becuse we use grey square, we use the screen x, y for scaling
                         # upper right is scale up, lower left is scale down
                         scale_factor_delta = ((self._last_event.y - event.y) - (self._last_event.x - event.x)) * self._scale_speed
                         self._scale_sum += scale_factor_delta
