@@ -79,7 +79,7 @@ class SceneNode():
 
     def __deepcopy__(self, memo):
         copy = SceneNode()
-        copy.setTransformation(self._transformation)
+        copy.setTransformation(self.getLocalTransformation())
         copy.setMeshData(self._mesh_data)
         copy.setVisible(deepcopy(self._visible, memo))
         copy._selectable = deepcopy(self._selectable, memo)
