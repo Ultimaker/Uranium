@@ -140,6 +140,9 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
     def isDirty(self):
         return self._dirty
 
+    def setDirty(self, dirty):
+        self._dirty = dirty
+
     ##  \copydoc ContainerInterface::getProperty
     #
     #   Reimplemented from ContainerInterface
