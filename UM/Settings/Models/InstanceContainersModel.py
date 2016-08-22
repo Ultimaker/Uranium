@@ -71,6 +71,7 @@ class InstanceContainersModel(ListModel):
                 "readOnly": container.isReadOnly(),
                 "section": container.getMetaDataEntry(self._section_property, ""),
             })
+        self.sort(lambda k: (k["section"], k["id"]))
 
 
     def setSectionProperty(self, property_name):
