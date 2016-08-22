@@ -173,8 +173,6 @@ class Backend(PluginObject):
             Logger.log("d", "Socket state changed to Closing")
         elif state == Arcus.SocketState.Closed:
             Logger.log("d", "Socket state changed to Closed")
-        elif state == Arcus.SocketState.Error:
-            Logger.log("d", "Socket state changed to Error")
 
     ##  Private message handler
     def _onMessageReceived(self):
