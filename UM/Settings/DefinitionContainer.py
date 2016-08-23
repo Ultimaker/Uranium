@@ -294,6 +294,10 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
             return
 
         for setting in function.getUsedSettingKeys():
+            # Do not create relation on self
+            if setting == definition.key:
+                continue
+
             other = self._getDefinition(setting)
             if not other:
                 continue
