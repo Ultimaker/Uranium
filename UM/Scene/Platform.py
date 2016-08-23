@@ -74,19 +74,17 @@ class Platform(SceneNode.SceneNode):
         if not self._global_container_stack or not OpenGL.getInstance():
             return
 
+        self._texture = OpenGL.getInstance().createTexture()
+
         container = self._global_container_stack.findContainer({"platform_texture":"*"})
         if container:
             texture_file = container.getMetaDataEntry("platform_texture")
-            if texture_file:
-                self._texture = OpenGL.getInstance().createTexture()
-                self._texture.load(Resources.getPath(Resources.Images, texture_file))
+            self._texture.load(Resources.getPath(Resources.Images, texture_file))
+        # Note: if no texture file is specified, a 1 x 1 pixel transparent image is created
+        # by UM.GL.QtTexture to prevent rendering issues
 
-                if self._shader:
-                    self._shader.setTexture(0, self._texture)
-        else:
-            self._texture = None
-            if self._shader:
-                self._shader.setTexture(0, None)
+        if self._shader:
+            self._shader.setTexture(0, self._texture)
 
     def _onPlatformLoaded(self, job):
         self._load_platform_job = None

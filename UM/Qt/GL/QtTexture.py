@@ -19,8 +19,11 @@ class QtTexture(Texture):
         return self._qt_texture.textureId()
 
     def bind(self, unit):
-        if self._file_name != None and not self._qt_texture.isCreated():
-            image = QImage(self._file_name).mirrored()
+        if not self._qt_texture.isCreated():
+            if self._file_name != None:
+                image = QImage(self._file_name).mirrored()
+            else:
+                image = QImage(1, 1, QImage.Format_ARGB32)
             self._qt_texture.setData(image)
             self._qt_texture.setMinMagFilters(QOpenGLTexture.Linear, QOpenGLTexture.Linear)
 
