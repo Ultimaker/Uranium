@@ -68,19 +68,23 @@ class ReadMeshJob(Job):
         if hasattr(Application.getInstance().getController().getScene(), "_maximum_bounds"):
             max_bounds = Application.getInstance().getController().getScene()._maximum_bounds
             node._resetAABB()
-            bounding_box = node.getBoundingBox()
+            build_bounds = node.getBoundingBox()
 
             if Preferences.getInstance().getValue("mesh/scale_to_fit") == True or Preferences.getInstance().getValue("mesh/scale_tiny_meshes") == True:
-                scale_factor_width = max_bounds.width / bounding_box.width
-                scale_factor_height = max_bounds.height / bounding_box.height
-                scale_factor_depth = max_bounds.depth / bounding_box.depth
-                scale_factor = min(scale_factor_width,scale_factor_height,scale_factor_depth)
-                if Preferences.getInstance().getValue("mesh/scale_to_fit") == True and (scale_factor_width < 1 or scale_factor_height < 1 or scale_factor_depth < 1):
-                    # Use scale factor to scale large object down
+                scale_factor_width = max_bounds.width / build_bounds.width
+                scale_factor_height = max_bounds.height / build_bounds.height
+                scale_factor_depth = max_bounds.depth / build_bounds.depth
+                scale_factor = min(scale_factor_width, scale_factor_depth, scale_factor_height)
+                if Preferences.getInstance().getValue("mesh/scale_to_fit") == True and (scale_factor_width < 1 or scale_factor_height < 1 or scale_factor_depth < 1): # Use scale factor to scale large object down
+                    # Ignore scaling on models which are less than 1.25 times bigger than the build volume
+                    ignore_factor = 1.25
+                    if 1 / scale_factor < ignore_factor:
+                        Logger.log("i", "Ignoring auto-scaling, because %.3d < %.3d" % (1 / scale_factor, ignore_factor))
+                        scale_factor = 1
                     pass
                 elif Preferences.getInstance().getValue("mesh/scale_tiny_meshes") == True and (scale_factor_width > 100 and scale_factor_height > 100 and scale_factor_depth > 100):
                     # Round scale factor to lower factor of 10 to scale tiny object up (eg convert m to mm units)
-                    scale_factor = math.pow(10, math.floor(math.log(scale_factor)/math.log(10)))
+                    scale_factor = math.pow(10, math.floor(math.log(scale_factor) / math.log(10)))
                 else:
                     scale_factor = 1
 
@@ -93,8 +97,8 @@ class ReadMeshJob(Job):
                     try:
                         node.scale(scale_vector)
                         scale_message.show()
-                    except Exception as e:
-                        print(e)
+                    except Exception:
+                        Logger.logException("e", "While auto-scaling an exception has been raised")
         self.setResult(node)
 
         loading_message.hide()

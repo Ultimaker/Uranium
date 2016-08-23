@@ -61,6 +61,12 @@ class Backend(PluginObject):
 
             if not self._backend_log_max_lines:
                 self._backend_log = []
+
+            # Double check that the old process is indeed killed.
+            if self._process is not None:
+                self._process.terminate()
+                Logger.log("d", "Engine process is killed. Received return code %s", self._process.wait())
+
             self._process = self._runEngineProcess(command)
             Logger.log("i", "Started engine process: %s" % (self.getEngineCommand()[0]))
             self._backendLog(bytes("Calling engine with: %s\n" % self.getEngineCommand(), "utf-8"))
@@ -145,13 +151,29 @@ class Backend(PluginObject):
 
     ##  Private socket state changed handler.
     def _onSocketStateChanged(self, state):
+        self._logSocketState(state)
         if state == Arcus.SocketState.Listening:
             if not Application.getInstance().getCommandLineOption("external-backend", False):
                 self.startEngine()
         elif state == Arcus.SocketState.Connected:
             Logger.log("d", "Backend connected on port %s", self._port)
             self.backendConnected.emit()
-    
+
+    ## Debug function created to provide more info for CURA-2127
+    def _logSocketState(self, state):
+        if state == Arcus.SocketState.Listening:
+            Logger.log("d", "Socket state changed to Listening")
+        elif state == Arcus.SocketState.Connecting:
+            Logger.log("d", "Socket state changed to Connecting")
+        elif state == Arcus.SocketState.Connected:
+            Logger.log("d", "Socket state changed to Connected")
+        elif state == Arcus.SocketState.Error:
+            Logger.log("d", "Socket state changed to Error")
+        elif state == Arcus.SocketState.Closing:
+            Logger.log("d", "Socket state changed to Closing")
+        elif state == Arcus.SocketState.Closed:
+            Logger.log("d", "Socket state changed to Closed")
+
     ##  Private message handler
     def _onMessageReceived(self):
         message = self._socket.takeNextMessage()
@@ -166,20 +188,23 @@ class Backend(PluginObject):
     def _onSocketError(self, error):
         if error.getErrorCode() == Arcus.ErrorCode.BindFailedError:
             self._port += 1
+            Logger.log("d", "Socket was unable to bind to port, increasing port number to %s", self._port)
         elif error.getErrorCode() == Arcus.ErrorCode.ConnectionResetError:
             Logger.log("i", "Backend crashed or closed. Restarting...")
         elif error.getErrorCode() == Arcus.ErrorCode.Debug:
-            Logger.log("d", str(error))
+            Logger.log("d", "Socket debug: %s", str(error))
             return
         else:
-            Logger.log("w", str(error))
+            Logger.log("w", "Unhandled socket error %s", str(error))
 
-        sleep(0.1)  # Hack: Without a sleep this can deadlock the application spamming error messages.
+        #sleep(0.1)  # Hack: Without a sleep this can deadlock the application spamming error messages.
         self._createSocket()
 
     ##  Creates a socket and attaches listeners.
     def _createSocket(self, protocol_file):
+        Logger.log("d", "Attempting to create new socket")  # temp debug logging
         if self._socket:
+            Logger.log("d", "Previous socket existed. Closing that first.") # temp debug logging
             self._socket.stateChanged.disconnect(self._onSocketStateChanged)
             self._socket.messageReceived.disconnect(self._onMessageReceived)
             self._socket.error.disconnect(self._onSocketError)

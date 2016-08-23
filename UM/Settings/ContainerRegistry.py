@@ -256,7 +256,9 @@ class ContainerRegistry:
 
         container.setName(new_name)
         if new_id:
+            del self._id_container_cache[container._id]
             container._id = new_id
+            self._id_container_cache[container._id] = container #Keep cache up-to-date.
 
         self.containerAdded.emit(container)
 

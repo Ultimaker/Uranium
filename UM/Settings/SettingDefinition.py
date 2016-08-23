@@ -550,9 +550,9 @@ class SettingDefinition:
         # A floating point value
         "float": {"from": lambda v: str(round(v, 4)) if v is not None else "", "to": _toFloatConversion, "validator": Validator.Validator},
         # A list of 2D points
-        "polygon": {"from": None, "to": None, "validator": None},
+        "polygon": {"from": str, "to": ast.literal_eval, "validator": None},
         # A list of polygons
-        "polygons": {"from": None, "to": None, "validator": None},
+        "polygons": {"from": str, "to": ast.literal_eval, "validator": None},
         # A 3D point
         "vec3": {"from": None, "to": None, "validator": None},
     }
