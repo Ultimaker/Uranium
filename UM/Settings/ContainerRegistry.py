@@ -330,6 +330,10 @@ class ContainerRegistry:
     #   a number behind it to make it unique.
     def uniqueName(self, original):
         name = original.strip()
+
+        if not self.findContainers(id = name, ignore_case = True) and not self.findContainers(name = name):
+            return name # Nothing to do. Name is unique as it is.
+
         num_check = re.compile("(.*?)\s*#\d$").match(name)
         if num_check: #There is a number in the name.
             name = num_check.group(1) #Filter out the number.
