@@ -241,13 +241,16 @@ class ContainerRegistry:
             Logger.log("w", "Could not remove container with id %s, as no container with that ID is known", container_id)
 
     def renameContainer(self, container_id, new_name, new_id = None):
+        Logger.log("d", "Renaming container %s to %s", container_id, new_name)
         containers = self.findContainers(None, id = container_id)
         if not containers:
+            Logger.log("w", "Unable to rename container %s, because it does not exist", container_id)
             return
 
         container = containers[0]
 
         if new_name == container.getName():
+            Logger.log("w", "Unable to rename container %s, because the name (%s) didn't change", container_id, new_name)
             return
 
         # Remove all files relating to the old container
@@ -258,12 +261,11 @@ class ContainerRegistry:
         if new_id:
             del self._id_container_cache[container._id]
             container._id = new_id
-            self._id_container_cache[container._id] = container #Keep cache up-to-date.
+            self._id_container_cache[container._id] = container # Keep cache up-to-date.
 
         self.containerAdded.emit(container)
 
     def saveAll(self):
-
         for instance in self.findInstanceContainers():
             if not instance.isDirty():
                 continue
