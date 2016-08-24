@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-23 16:42+0100\n"
+"POT-Creation-Date: 2016-08-24 15:39+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
 #: /home/ruben/Projects/Uranium/plugins/Views/WireframeView/__init__.py:13
 msgctxt "@label"
@@ -144,19 +145,35 @@ msgctxt "@info:whatsthis"
 msgid "Checks for updates of the software."
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:27
-msgctxt "@item:inmenu"
-msgid "Check for Updates"
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:41
+msgctxt "@info"
+msgid "Could not access update information."
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:73
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:52
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:57
+msgctxt "@info"
+msgid "The version you are using does not support checking for updates."
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:68
 msgctxt "@info"
 msgid "A new version is available!"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:74
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:69
 msgctxt "@action:button"
 msgid "Download"
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:83
+msgctxt "@info"
+msgid "No new version was found."
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:94
+msgctxt "@item:inmenu"
+msgid "Check for Updates"
 msgstr ""
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:44
@@ -179,14 +196,12 @@ msgctxt "@title:window"
 msgid "Save to File"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:121
-#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/ProfilesModel.py:154
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:120
 msgctxt "@title:window"
 msgid "File Already Exists"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:121
-#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/ProfilesModel.py:154
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:120
 #, python-brace-format
 msgctxt "@label"
 msgid ""
@@ -194,37 +209,37 @@ msgid ""
 "overwrite it?"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:141
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:140
 #, python-brace-format
 msgctxt "@info:progress"
 msgid "Saving to <filename>{0}</filename>"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:149
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:148
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Permission denied when trying to save <filename>{0}</filename>"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:152
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:174
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:151
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:173
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:168
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:167
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Saved to <filename>{0}</filename>"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:169
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:168
 msgctxt "@action:button"
 msgid "Open Folder"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:169
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:168
 msgctxt "@info:tooltip"
 msgid "Open the folder containing the file"
 msgstr ""
@@ -256,7 +271,7 @@ msgstr ""
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:21
 msgctxt "@info:tooltip"
-msgid "Scale Object"
+msgid "Scale Model"
 msgstr ""
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/SelectionTool/__init__.py:13
@@ -281,12 +296,12 @@ msgstr ""
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:20
 msgctxt "@action:button"
-msgid "Translate"
+msgid "Move"
 msgstr ""
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:21
 msgctxt "@info:tooltip"
-msgid "Translate Object"
+msgid "Move Model"
 msgstr ""
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/CameraTool/__init__.py:12
@@ -316,7 +331,7 @@ msgstr ""
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:20
 msgctxt "@info:tooltip"
-msgid "Rotate Object"
+msgid "Rotate Model"
 msgstr ""
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:12
@@ -336,84 +351,16 @@ msgstr ""
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:20
 msgctxt "@info:tooltip"
-msgid "Mirror Object"
+msgid "Mirror Model"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Settings/MachineManager.py:404
-#, python-brace-format
-msgctxt ""
-"@item:intext appended to customised profiles ({0} is old profile name)"
-msgid "{0} (Customised)"
+#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:120
+#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:46
+msgctxt "@item:inlistbox"
+msgid "All Files (*)"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Settings/MachineManager.py:459
-msgctxt "@item:profile name"
-msgid "Custom profile"
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Settings/MachineManager.py:831
-msgctxt "@title:window"
-msgid "Replace profile"
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Settings/MachineManager.py:832
-#, python-brace-format
-msgctxt "@label"
-msgid "Selecting \"{0}\" replaces your current settings."
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Settings/MachineManager.py:835
-msgctxt "@label"
-msgid "Create profile"
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Settings/MachineManager.py:836
-msgctxt "@label"
-msgid "Discard changes"
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Settings/MachineManager.py:839
-msgctxt "@label"
-msgid "Do you want to save your settings in a custom profile?"
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Settings/MachineManager.py:841
-#, python-brace-format
-msgctxt "@label"
-msgid ""
-"Do you want to update profile \"{0}\" or save your settings in a new custom "
-"profile?"
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Settings/MachineManager.py:842
-#, python-brace-format
-msgctxt "@label"
-msgid "Update \"{0}\""
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Settings/MachineManager.py:850
-#, python-brace-format
-msgctxt "@info:status"
-msgid "Added a new profile named \"{0}\""
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Settings/MachineDefinition.py:137
-msgctxt "@label"
-msgid "Unknown Manufacturer"
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Settings/MachineDefinition.py:138
-msgctxt "@label"
-msgid "Unknown Author"
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Settings/Profile.py:51
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:52
-msgctxt "@label"
-msgid "Current settings"
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:91
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:95
 #, python-brace-format
 msgctxt ""
 "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is "
@@ -421,13 +368,13 @@ msgctxt ""
 msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:93
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:97
 #, python-brace-format
 msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
 msgid "{0:0>2}h {1:0>2}min"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:96
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:100
 #, python-brace-format
 msgctxt ""
 "@label Days-hours-minutes duration format. {0} is days, {1} is hours, {2} is "
@@ -435,29 +382,29 @@ msgctxt ""
 msgid "{0} days {1} hours {2} minutes"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:98
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:102
 #, python-brace-format
 msgctxt "@label Hours-minutes duration fromat. {0} is hours, {1} is minutes"
 msgid "{0} hours {1} minutes"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:100
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:104
 #, python-brace-format
 msgctxt "@label Minutes only duration format, {0} is minutes"
 msgid "{0} minutes"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:79
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:87
 msgctxt "@info:progress"
 msgid "Loading plugins..."
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:85
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:94
 msgctxt "@info:progress"
-msgid "Loading machines..."
+msgid "Updating configuration..."
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:89
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:105
 msgctxt "@info:progress"
 msgid "Loading preferences..."
 msgstr ""
@@ -468,112 +415,54 @@ msgctxt "@item:inlistbox"
 msgid "All Supported Types ({0})"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:46
-#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/ProfilesModel.py:223
-#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/ProfilesModel.py:236
-msgctxt "@item:inlistbox"
-msgid "All Files (*)"
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/ProfilesModel.py:114
-#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/ProfilesModel.py:122
-#, python-brace-format
-msgctxt "@info:status"
-msgid ""
-"Failed to import profile from <filename>{0}</filename>: <message>{1}</"
-"message>"
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/ProfilesModel.py:134
-#, python-brace-format
-msgctxt "@info:status"
-msgid "Successfully imported profile {0}"
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/ProfilesModel.py:137
-#, python-brace-format
-msgctxt "@info:status"
-msgid "Profile {0} has an unknown file type."
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/ProfilesModel.py:199
-#, python-brace-format
-msgctxt "@info:status"
-msgid ""
-"Failed to export profile to <filename>{0}</filename>: <message>{1}</message>"
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/ProfilesModel.py:204
-#, python-brace-format
-msgctxt "@info:status"
-msgid ""
-"Failed to export profile to <filename>{0}</filename>: Writer plugin reported "
-"failure."
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/ProfilesModel.py:207
-#, python-brace-format
-msgctxt "@info:status"
-msgid "Exported profile to <filename>{0}</filename>"
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/ProfilesModel.py:222
-msgctxt "@item:inlistbox"
-msgid "All supported files"
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/ProfilesModel.py:267
-msgctxt "@item:inlistbox"
-msgid "- Use Global Profile -"
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/ProfilesModel.py:288
-msgctxt "@item:inlistbox"
-msgid "Current settings"
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:35
+#: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:33
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Cannot open file type <filename>{0}</filename>"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:44
-#: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:66
+#: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:42
+#: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:63
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Failed to load <filename>{0}</filename>"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:48
+#: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:46
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Loading <filename>{0}</filename>"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:94
+#: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:95
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled object to {0}% of original size"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:29
+#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:77
+#, python-brace-format
+msgctxt "@info:version-upgrade"
+msgid "A configuration from an older version of {0} was imported."
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:53
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:22
 msgctxt "@action:button"
 msgid "Reset"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:42
+#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:66
 msgctxt "@action:button"
 msgid "Scale to Max"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:67
+#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:91
 msgctxt "@option:check"
 msgid "Snap Scaling"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:84
+#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:108
 msgctxt "@option:check"
 msgid "Uniform Scaling"
 msgstr ""
@@ -589,33 +478,38 @@ msgid "Snap Rotation"
 msgstr ""
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:19
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:147
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:148
 msgctxt "@title:tab"
 msgid "Plugins"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:90
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:81
+msgctxt "@label"
+msgid "Info..."
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:101
 msgctxt "@label"
 msgid "No text available"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:96
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:107
 msgctxt "@title:window"
 msgid "About %1"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:128
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:139
 msgctxt "@label"
 msgid "Author:"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:150
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:161
 msgctxt "@label"
 msgid "Version:"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:168
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:110
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:179
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:113
 msgctxt "@action:button"
 msgid "Close"
 msgstr ""
@@ -625,31 +519,19 @@ msgctxt "@title:window"
 msgid "Preferences"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:103
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:106
 msgctxt "@action:button"
 msgid "Defaults"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:143
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:146
 msgctxt "@title:tab"
 msgid "General"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:144
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:147
 msgctxt "@title:tab"
 msgid "Settings"
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:145
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:12
-msgctxt "@title:tab"
-msgid "Printers"
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:146
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:14
-msgctxt "@title:tab"
-msgid "Profiles"
 msgstr ""
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:20
@@ -658,7 +540,7 @@ msgid "Rename"
 msgstr ""
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:55
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:222
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:240
 msgctxt "@action:button"
 msgid "Cancel"
 msgstr ""
@@ -668,33 +550,44 @@ msgctxt "@action:button"
 msgid "Ok"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityPage.qml:11
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:31
+msgctxt "@item:tooltip"
+msgid ""
+"This setting has been disabled by the active machine and will not be visible."
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:48
+msgctxt "@item:tooltip %1 is list of setting names"
+msgid ""
+"This setting has been disabled by the value of %1. Change the value of that "
+"setting to make this setting visible."
+msgid_plural ""
+"This setting has been disabled by the values of %1. Change the values of "
+"those settings to make this setting visible."
+msgstr[0] ""
+msgstr[1] ""
+
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityPage.qml:12
 msgctxt "@title:tab"
 msgid "Setting Visibility"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityPage.qml:46
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityPage.qml:42
+msgctxt "@label:textbox"
+msgid "Check all"
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityPage.qml:89
 msgctxt "@label:textbox"
 msgid "Filter..."
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ManagementPage.qml:49
-msgctxt "@action:button"
-msgid "Add"
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:12
+msgctxt "@title:tab"
+msgid "Printers"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ManagementPage.qml:56
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Settings/SettingsConfigurationPage.qml:52
-msgctxt "@action:button"
-msgid "Remove"
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ManagementPage.qml:63
-msgctxt "@action:button"
-msgid "Rename"
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:32
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:39
 msgctxt "@label"
 msgid "Type"
 msgstr ""
@@ -709,128 +602,97 @@ msgctxt "@label (%1 is object name)"
 msgid "Are you sure you wish to remove %1? This cannot be undone!"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:25
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:14
+msgctxt "@title:tab"
+msgid "Profiles"
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:15
+msgctxt "@label"
+msgid "Duplicate"
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:45
 msgctxt "@label %1 is printer name"
 msgid "Printer: %1"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:50
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:83
+msgctxt "@action:button"
+msgid "Update \"%1\""
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:84
+msgctxt "@action:button"
+msgid "Update profile"
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:92
+msgctxt "@action:button"
+msgid "Discard current settings"
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:93
+msgctxt "@action:button"
+msgid "Reload profile"
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:107
+msgctxt "@label"
+msgid "Based on"
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:107
 msgctxt "@label"
 msgid "Profile type"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:53
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:112
 msgctxt "@label"
-msgid "Starter profile (protected)"
+msgid "Protected profile"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:53
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:112
 msgctxt "@label"
 msgid "Custom profile"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:78
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:139
 msgctxt "@action:button"
 msgid "Import"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:85
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:146
 msgctxt "@action:button"
 msgid "Export"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:110
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:184
 msgctxt "@window:title"
 msgid "Import Profile"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:118
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:192
 msgctxt "@title:window"
 msgid "Import Profile"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:145
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:219
 msgctxt "@title:window"
 msgid "Export Profile"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Settings/SettingView.qml:212
-msgctxt "@label"
-msgid "<i><br/>Affects:<br/></i>"
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Settings/SettingView.qml:217
-msgctxt "@label"
-msgid "<i><br/>Is affected by:<br/></i>"
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Settings/SettingView.qml:223
-msgctxt "@label"
-msgid ""
-"This setting has a value that is different from the profile.\n"
-"\n"
-"Click to restore the value of the profile."
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Settings/SettingView.qml:224
-msgctxt "@label"
-msgid ""
-"This setting is normally calculated, but it currently has an absolute value "
-"set.\n"
-"\n"
-"Click to restore the calculated value."
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Settings/SettingView.qml:232
-msgctxt "@label"
-msgid ""
-"Some hidden settings use values different from their normal calculated "
-"value.\n"
-"\n"
-"Click to make these settings visible."
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Settings/SettingView.qml:279
-msgctxt "@action:menu"
-msgid "Hide this setting"
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Settings/SettingView.qml:285
-msgctxt "@action:menu"
-msgid "Configure setting visiblity..."
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Settings/SettingsConfigurationPage.qml:18
-msgctxt "@title:tab"
-msgid "Machine"
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Settings/SettingsConfigurationPage.qml:29
-msgctxt "@label:listbox"
-msgid "Active Machine:"
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Settings/SettingsConfigurationPage.qml:112
-msgctxt "@title:window"
-msgid "Confirm Machine Deletion"
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Settings/SettingsConfigurationPage.qml:114
-msgctxt "@label"
-msgid "Are you sure you wish to remove the machine?"
-msgstr ""
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:179
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:214
 msgctxt "@action:button"
 msgid "Back"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:195
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:230
 msgctxt "@action:button"
 msgid "Finish"
 msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:195
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:230
 msgctxt "@action:button"
 msgid "Next"
 msgstr ""
