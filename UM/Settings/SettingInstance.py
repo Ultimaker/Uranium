@@ -136,7 +136,7 @@ class SettingInstance:
     #   \param property The name of the property that changed.
     propertyChanged = Signal()
 
-    ##  The SettingDefintion this instance maintains state for.
+    ##  The SettingDefinition this instance maintains state for.
     @property
     def definition(self):
         return self._definition
