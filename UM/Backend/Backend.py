@@ -81,6 +81,8 @@ class Backend(PluginObject):
 
     def close(self):
         if self._socket:
+            while self._socket.getState() == Arcus.SocketState.Opening:
+                sleep(0.1)
             self._socket.close()
 
     def _backendLog(self, line):
