@@ -52,11 +52,11 @@ Button {
     signal hideTooltip();
     signal contextMenuRequested()
 
-    text: definition.label
-    iconSource: UM.Theme.getIcon(definition.icon)
+    text: definition ? definition.label : ""
+    iconSource: definition ? UM.Theme.getIcon(definition.icon) : ""
 
     checkable: true
-    checked: definition.expanded
+    checked: definition? definition.expanded : ""
 
     onClicked: definition.expanded ? settingDefinitionsModel.collapse(definition.key) : settingDefinitionsModel.expandAll(definition.key)
 }

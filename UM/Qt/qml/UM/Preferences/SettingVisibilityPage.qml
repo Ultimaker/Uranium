@@ -112,9 +112,9 @@ PreferencesPage
                 model: UM.SettingDefinitionsModel
                 {
                     id: definitionsModel
-                    containerId: "fdmprinter"
+                    containerId: ""
                     showAll: true
-                    exclude: ["machine_settings"]
+                    exclude: [""]
                     expanded: ["*"]
                     visibilityHandler: UM.SettingPreferenceVisibilityHandler { }
                 }

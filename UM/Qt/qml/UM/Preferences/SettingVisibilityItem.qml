@@ -10,7 +10,7 @@ import UM 1.2 as UM
 
 Item {
     // Use the depth of the model to move the item, but also leave space for the visibility / enabled exclamation mark.
-    x: (model.depth + 1)* UM.Theme.getSize("default_margin").width;
+    x: definition ? (definition.depth + 1)* UM.Theme.getSize("default_margin").width : UM.Theme.getSize("default_margin").width
     UM.TooltipArea
     {
         width: height;
@@ -24,8 +24,8 @@ Item {
             {
                 return ""
             }
-
-            var requires = settingDefinitionsModel.getRequires(definition.key, "enabled")
+            var key = definition ? definition.key : ""
+            var requires = settingDefinitionsModel.getRequires(key, "enabled")
             if(requires.length == 0)
             {
                 return catalog.i18nc("@item:tooltip", "This setting has been disabled by the active machine and will not be visible.");
@@ -67,7 +67,7 @@ Item {
 
     UM.TooltipArea
     {
-        text: model.description;
+        text: definition ? definition.description : ""
 
         width: childrenRect.width;
         height: childrenRect.height;
@@ -76,13 +76,13 @@ Item {
         {
             id: check
 
-            text: definition.label
-            checked: model.visible;
-            enabled: !model.prohibited;
+            text: definition ? definition.label: ""
+            checked: definition ? definition.visible: false
+            enabled: definition ? !definition.prohibited: false
 
             MouseArea {
                 anchors.fill: parent;
-                onClicked: definitionsModel.setVisible(model.key, !check.checked);
+                onClicked: definitionsModel.setVisible(definition.key, !check.checked);
             }
         }
     }
@@ -93,7 +93,7 @@ Item {
 
         containerStackId: "global"
         watchedProperties: [ "enabled" ]
-        key: definition.key
+        key: definition ? definition.key : ""
     }
 
     UM.I18nCatalog { id: catalog; name: "uranium" }

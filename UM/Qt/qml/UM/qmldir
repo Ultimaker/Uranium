@@ -11,6 +11,8 @@ PreferencesPage 1.0 Preferences/PreferencesPage.qml
 ManagementPage 1.0 Preferences/ManagementPage.qml
 RenameDialog 1.1 Preferences/RenameDialog.qml
 ConfirmRemoveDialog 1.1 Preferences/ConfirmRemoveDialog.qml
+SettingVisibilityItem 1.1 Preferences/SettingVisibilityItem.qml
+SettingVisibilityCategory 1.1 Preferences/SettingVisibilityCategory.qml
 
 SettingItem 1.0 Settings/SettingItem.qml
 SettingItemStyle 1.0 Settings/SettingItemStyle.qml
