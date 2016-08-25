@@ -311,6 +311,8 @@ class SettingDefinitionsModel(QAbstractListModel):
 
     @pyqtSlot(str, result = int)
     def getIndex(self, key):
+        if not self._container:
+            return -1
         definitions = self._container.findDefinitions(key = key)
         if not definitions:
             return -1
