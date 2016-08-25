@@ -191,7 +191,6 @@ class Backend(PluginObject):
             Logger.log("d", "Socket was unable to bind to port, increasing port number to %s", self._port)
         elif error.getErrorCode() == Arcus.ErrorCode.ConnectionResetError:
             Logger.log("i", "Backend crashed or closed.")
-            return
         elif error.getErrorCode() == Arcus.ErrorCode.Debug:
             Logger.log("d", "Socket debug: %s", str(error))
             return
