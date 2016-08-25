@@ -18,6 +18,13 @@ ENDMACRO()
 
 ## Translation tools:
 
+option(CURA_BINARY_DATA_DIRECTORY "Directory to the cura-binary-data repository")
+
+if(NOT CURA_BINARY_DATA_DIRECTORY AND NOT DEFINED $ENV{CURA_BINARY_DATA_DIRECTORY})
+    message(STATUS "Using CURA_BINARY_DATA_DIRECTORY from set of environment variables...")
+    SET(CURA_BINARY_DATA_DIRECTORY $ENV{CURA_BINARY_DATA_DIRECTORY})
+endif()
+
 # Dynamically creates targets for each language to create a *.po-file
 MACRO(TARGETS_FOR_PO_FILES language)
     if(DEFINED GETTEXT_MSGINIT_EXECUTABLE)
@@ -44,12 +51,24 @@ MACRO(TARGETS_FOR_MO_FILES language)
     message(STATUS "Creating target i18n-create-mo-${language}")
     add_custom_target(i18n-create-mo-${language})
     add_dependencies(i18n-create-mo i18n-create-mo-${language})
+    if(TARGET i18n-copy-mo)
+        message(STATUS "Creating target i18n-copy-mo-${language}")
+        add_custom_target(i18n-copy-mo-${language})
+        add_dependencies(i18n-copy-mo i18n-copy-mo-${language})
+    endif()
     file(GLOB po_files ${CMAKE_SOURCE_DIR}/resources/i18n/${language}/*.po)
     foreach(po_file ${po_files})
         string(REGEX REPLACE ".*/(.*).po" "${CMAKE_BINARY_DIR}/resources/i18n/${language}/LC_MESSAGES/\\1.mo" mo_file ${po_file})
         add_custom_command(TARGET i18n-create-mo-${language} POST_BUILD
                            COMMAND mkdir ARGS -p ${CMAKE_BINARY_DIR}/resources/i18n/${language}/LC_MESSAGES/
                            COMMAND ${GETTEXT_MSGFMT_EXECUTABLE} ARGS ${po_file} -o ${mo_file} -f)
+        if(TARGET i18n-copy-mo-${language})
+             string(REGEX REPLACE ".*/(.*).po" "${CURA_BINARY_DATA_DIRECTORY}/${PROJECT_NAME}/resources/i18n/${language}/LC_MESSAGES/\\1.mo" mo_file_binary_copy ${po_file})
+             add_custom_command(TARGET i18n-copy-mo-${language} POST_BUILD
+                                COMMAND mkdir ARGS -p ${CURA_BINARY_DATA_DIRECTORY}/resources/i18n/${language}/LC_MESSAGES/
+                                COMMAND cp ARGS -fv ${mo_file} ${mo_file_binary_copy})
+             add_dependencies(i18n-copy-mo-${language} i18n-create-mo-${language})
+        endif()
     endforeach()
 ENDMACRO()
 
@@ -66,6 +85,17 @@ if(GETTEXT_FOUND)
         add_custom_target(i18n-create-po)
     else()
         message(WARNING "GETTEXT_MSGINIT_EXECUTABLE is undefined!\nSkipping to create i18n-create-po* targets...")
+    endif()
+    if(CURA_BINARY_DATA_DIRECTORY)
+        if(EXISTS ${CURA_BINARY_DATA_DIRECTORY})
+            message(STATUS "CURA_BINARY_DATA_DIRECTORY: ${CURA_BINARY_DATA_DIRECTORY}")
+            message(STATUS "Creating target i18n-copy-mo")
+            add_custom_target(i18n-copy-mo)
+        else()
+            message(WARNING "CURA_BINARY_DATA_DIRECTORY does not exist! (${CURA_BINARY_DATA_DIRECTORY})")
+        endif()
+    else()
+        message(WARNING "CURA_BINARY_DATA_DIRECTORY is not set!")
     endif()
     message(STATUS "Creating target i18n-update-po")
     add_custom_target(i18n-update-po)
