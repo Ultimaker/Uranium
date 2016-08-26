@@ -96,6 +96,15 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
     def definitions(self):
         return self._definitions
 
+    ##  Gets all ancestors of this definition container.
+    #
+    #   This returns the definition in the "inherits" property of this
+    #   container, and the definition in its "inherits" property, and so on. The
+    #   ancestors are returned in order from parent to
+    #   grand-grand-grand-...-grandparent, normally ending in a "root"
+    #   container.
+    #
+    #   \return A list of ancestors, in order from near ancestor to the root.
     def getInheritedFiles(self):
         return self._inherited_files
 
