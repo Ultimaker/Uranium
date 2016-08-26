@@ -101,9 +101,9 @@ class ScaleOperation(Operation.Operation):
                 new_scale = new_scale.set(z=-self._min_scale)
             self._node.setScale(new_scale, SceneNode.TransformSpace.World)
         else:
-            self._node.setPosition(-self._scale_around_point)  # If scaling around a point, shift that point to the axis origin first and shift it back after performing the transformation.
+            self._node.setPosition(-self._scale_around_point, SceneNode.TransformSpace.World)  # If scaling around a point, shift that point to the axis origin first and shift it back after performing the transformation.
             self._node.scale(self._scale, SceneNode.TransformSpace.World) #Default to _set_scale
-            self._node.setPosition(self._scale_around_point)  # If scaling around a point, shift that point to the axis origin first and shift it back after performing the transformation.
+            self._node.setPosition(self._scale_around_point, SceneNode.TransformSpace.World)  # If scaling around a point, shift that point to the axis origin first and shift it back after performing the transformation.
 
     ##  Merge this operation with another scale operation.
     #
