@@ -25,6 +25,7 @@ class PluginRegistry(object):
         self._plugin_objects = {}
         self._meta_data = {}
         self._plugin_locations = []
+        self._folder_cache = {}
         self._application = None
         self._active_plugins = []
 
@@ -319,15 +320,22 @@ class PluginRegistry(object):
         if not os.path.isdir(folder):
             return None
 
-        for file in os.listdir(folder):
-            filepath = os.path.join(folder, file)
-            if os.path.isdir(filepath):
-                if file == plugin_id and os.path.exists(os.path.join(filepath, "__init__.py")):
-                    return folder
-                else:
-                    filepath = self._locatePlugin(plugin_id, filepath)
-                    if filepath:
-                        return filepath
+        if folder not in self._folder_cache:
+            sub_folders = []
+            for file in os.listdir(folder):
+                filepath = os.path.join(folder, file)
+                if os.path.isdir(filepath):
+                    entry = (file, filepath)
+                    sub_folders.append(entry)
+            self._folder_cache[folder] = sub_folders
+
+        for (file, filepath) in self._folder_cache[folder]:
+            if file == plugin_id and os.path.exists(os.path.join(filepath, "__init__.py")):
+                return folder
+            else:
+                filepath = self._locatePlugin(plugin_id, filepath)
+                if filepath:
+                    return filepath
 
         return None
 
