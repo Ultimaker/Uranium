@@ -28,7 +28,7 @@ Item {
             var requires = settingDefinitionsModel.getRequires(key, "enabled")
             if(requires.length == 0)
             {
-                return catalog.i18nc("@item:tooltip", "This setting has been disabled by the active machine and will not be visible.");
+                return catalog.i18nc("@item:tooltip", "This setting has been hidden by the active machine and will not be visible.");
             }
             else
             {
@@ -45,7 +45,7 @@ Item {
                     }
                 }
 
-                return catalog.i18ncp("@item:tooltip %1 is list of setting names", "This setting has been disabled by the value of %1. Change the value of that setting to make this setting visible.", "This setting has been disabled by the values of %1. Change the values of those settings to make this setting visible.", requires.length) .arg(requires_text);
+                return catalog.i18ncp("@item:tooltip %1 is list of setting names", "This setting has been hidden by the value of %1. Change the value of that setting to make this setting visible.", "This setting has been hidden by the values of %1. Change the values of those settings to make this setting visible.", requires.length) .arg(requires_text);
             }
         }
 
