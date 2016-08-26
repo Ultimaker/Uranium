@@ -501,7 +501,7 @@ class SceneNode():
         if transform_space == SceneNode.TransformSpace.World:
             if self.getWorldPosition() == position:
                 return
-            self.translate(position - self._position, SceneNode.TransformSpace.World)
+            self.translate(position - (self._position + self._parent.getPosition()), SceneNode.TransformSpace.World)
 
     ##  Signal. Emitted whenever the transformation of this object or any child object changes.
     #   \param object The object that caused the change.
