@@ -96,6 +96,18 @@ class InstanceContainersModel(ListModel):
     def filter(self):
         return self._filter_dict
 
+    ##  Get an list of unique values in a role
+    @pyqtSlot(str, result="QVariantList")
+    def getUniqueValues(self, property_name):
+        values = []
+        for item in self.items:
+            if property_name in item:
+                values.append(item[property_name])
+            elif property_name in item["metadata"]:
+                values.append(item["metadata"][property_name])
+
+        return list(set(values))
+
     @pyqtSlot(str, str)
     def rename(self, instance_id, new_name):
         containers = ContainerRegistry.getInstance().findInstanceContainers(id = instance_id)
