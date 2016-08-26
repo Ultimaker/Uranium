@@ -137,7 +137,7 @@ class InstanceContainersModel(ListModel):
                 result.append( (plugin_id, meta_data) )
         return result
 
-    @pyqtSlot(str, QUrl, str)
+    @pyqtSlot("QVariantList", QUrl, str)
     def exportProfile(self, instance_id, file_url, file_type):
         if not file_url.isValid():
             return
