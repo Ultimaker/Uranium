@@ -114,7 +114,8 @@ class ContainerRegistry:
                                 continue
                             except AttributeError:  # Only instanceContainers have a get definition. We can ignore all others.
                                 pass
-                        elif not value_pattern.match(str(container.getMetaDataEntry(key))):
+
+                        if not value_pattern.match(str(container.getMetaDataEntry(key))):
                             matches_container = False
                     elif not ignore_case:
                         if key == "id":
@@ -132,7 +133,8 @@ class ContainerRegistry:
                                 continue
                             except AttributeError:  # Only instanceContainers have a get definition. We can ignore all others.
                                 pass
-                        elif value != str(container.getMetaDataEntry(key)):
+
+                        if value != str(container.getMetaDataEntry(key)):
                             matches_container = False
                     else:
                         if key == "id":
@@ -150,7 +152,8 @@ class ContainerRegistry:
                                 continue
                             except AttributeError:  # Only instanceContainers have a get definition. We can ignore all others.
                                 pass
-                        elif value.lower() != str(container.getMetaDataEntry(key)).lower():
+
+                        if value.lower() != str(container.getMetaDataEntry(key)).lower():
                             matches_container = False
                 except TypeError: #Value was not a string.
                     if key == "id" or key == "name" or key == "definition":
@@ -163,7 +166,8 @@ class ContainerRegistry:
                             continue
                         except AttributeError:
                             pass
-                    elif value != container.getMetaDataEntry(key):
+
+                    if value != container.getMetaDataEntry(key):
                         matches_container = False
                     continue
 
