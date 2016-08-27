@@ -184,6 +184,10 @@ class SettingInstance:
                 container.propertyChanged.emit(relation, property_name)
                 container.propertyChanged.emit(relation, "validationState")  # Ensure that validation state is updated
 
+    ##  Recursive function to put all settings that require eachother for changes of a property value in a list
+    #   \param relations_set \type{set} Set of keys (strings) of settings that are influenced
+    #   \param relations list of relation objects that need to be checked.
+    #   \param role name of the property value of the settings
     def _addRelations(self, relations_set, relations, role):
         for relation in filter(lambda r: r.role == role, relations):
             if relation.type == SettingRelation.RelationType.RequiresTarget:
