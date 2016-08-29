@@ -141,7 +141,10 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
         return self._dirty
 
     def setDirty(self, dirty):
-        self._dirty = dirty
+        if self._read_only:
+            Logger.log("w", "Tried to set dirty on read-only object.")
+        else:
+            self._dirty = dirty
 
     ##  \copydoc ContainerInterface::getProperty
     #
@@ -174,6 +177,12 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
     #
     #   \note If no definition container is set for this container, new instances cannot be created and this method will do nothing.
     def setProperty(self, key, property_name, property_value, container = None):
+        if self._read_only:
+            Logger.log(
+                "w",
+                "Tried to setProperty [%s] with value [%s] with key [%s] on read-only object [%s]" % (
+                    property_name, property_value, key, self.id))
+            return
         if key not in self._instances:
             if not self._definition:
                 Logger.log("w", "Tried to set value of setting %s that has no instance in container %s and the container has no definition", key, self._name)
@@ -339,8 +348,6 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
         instance.updateRelations(self)
 
         # Notify listeners of changed properties for all related properties
-
-
 
     ##  Get the DefinitionContainer used for new instance creation.
     def getDefinition(self):
