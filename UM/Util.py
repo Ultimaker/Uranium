@@ -6,4 +6,4 @@
 #   \param \type{bool|str|int} any value.
 #   \return \type{bool}
 def parseBool(value):
-    return value in [True, "True", "true", 1]
+    return value in [True, "True", "true", "Yes", "yes", 1]
