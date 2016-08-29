@@ -52,13 +52,15 @@ class ListModel(QAbstractListModel):
     def items(self):
         return self._items
 
-    ##  Clear the list.
+    ##  Replace all items at once.
+    #   \param items The new list of items.
     def setItems(self, items):
         self.beginResetModel()
         self._items = items
         self.endResetModel()
 
     ##  Add an item to the list.
+    #   \param item The item to add.
     @pyqtSlot(dict)
     def appendItem(self, item):
         self.insertItem(len(self._items), item)
