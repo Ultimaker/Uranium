@@ -53,7 +53,7 @@ class InstanceContainersModel(ListModel):
             container.nameChanged.disconnect(self._update)
             container.metaDataChanged.disconnect(self._updateMetaData)
 
-        self.clear()
+        items = []
         self._instance_containers = ContainerRegistry.getInstance().findInstanceContainers(**self._filter_dict)
         self._instance_containers.sort(key = self._sortKey)
 
@@ -64,14 +64,15 @@ class InstanceContainersModel(ListModel):
             metadata = container.getMetaData().copy()
             metadata["has_settings"] = len(container.getAllKeys()) > 0
 
-            self.appendItem({
+            items.append({
                 "name": container.getName(),
                 "id": container.getId(),
                 "metadata": metadata,
                 "readOnly": container.isReadOnly(),
                 "section": container.getMetaDataEntry(self._section_property, ""),
             })
-        self.sort(lambda k: (k["section"], k["id"]))
+        items.sort(key = lambda k: (k["section"], k["id"]))
+        self.setItems(items)
 
 
     def setSectionProperty(self, property_name):

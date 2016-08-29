@@ -36,12 +36,13 @@ class DirectoryListModel(ListModel):
                     path = path[7:]
             self._directory = os.path.dirname(path)
 
-            self.clear()
+            items = []
             extensions = Application.getInstance().getMeshFileHandler().getSupportedFileTypesRead()
             for entry in os.listdir(self._directory):
                 if os.path.splitext(entry)[1] in extensions:
-                    self.appendItem({ "name": os.path.basename(entry), "url": QUrl.fromLocalFile(os.path.join(self._directory, entry)) })
+                    items.append({ "name": os.path.basename(entry), "url": QUrl.fromLocalFile(os.path.join(self._directory, entry)) })
 
-        self.sort(lambda e: e["name"])
+        items.sort(key = lambda e: e["name"])
+        self.setItems(items)
 
     directory = pyqtProperty(str, fget = getDirectory, fset = setDirectory, notify = directoryChanged)

@@ -52,6 +52,12 @@ class ListModel(QAbstractListModel):
     def items(self):
         return self._items
 
+    ##  Clear the list.
+    def setItems(self, items):
+        self.beginResetModel()
+        self._items = items
+        self.endResetModel()
+
     ##  Add an item to the list.
     @pyqtSlot(dict)
     def appendItem(self, item):

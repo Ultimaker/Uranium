@@ -28,7 +28,7 @@ class ViewModel(ListModel):
         self.addRoleName(self.IconRole, "icon")
 
     def _onViewsChanged(self):
-        self.clear()
+        items = []
         views = self._controller.getAllViews()
 
         for id in views:
@@ -45,6 +45,7 @@ class ViewModel(ListModel):
             weight = viewMetaData.get("weight", 0)
 
             currentView = self._controller.getActiveView()
-            self.appendItem({ "id": id, "name": name, "active": id == currentView.getPluginId(), "description": description, "icon": iconName, "weight": weight })
+            items.append({ "id": id, "name": name, "active": id == currentView.getPluginId(), "description": description, "icon": iconName, "weight": weight })
 
-        self.sort(lambda t: t["weight"])
+        items.sort(key = lambda t: t["weight"])
+        self.setItems(items)

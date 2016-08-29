@@ -105,7 +105,7 @@ class MeshListModel(ListModel):
                 #self.insertItem(new_index,data)
 
     def updateList(self, trigger_node):
-        self.clear()
+        items = []
         for root_child in self._scene.getRoot().getChildren():
             if root_child.callDecoration("isGroup"): # Check if its a group node
                 parent_key = id(root_child)
@@ -122,7 +122,7 @@ class MeshListModel(ListModel):
                             "is_group":bool(node.callDecoration("isGroup")),
                             "is_dummy" : False
                             }
-                    self.appendItem(data)
+                    items.append(data)
                 data = { "name":"Dummy",
                          "visibility": True,
                          "key": 0,
@@ -132,7 +132,7 @@ class MeshListModel(ListModel):
                          "is_group":False,
                          "is_dummy" : True
                         }
-                self.appendItem(data)
+                items.append(data)
 
             elif type(root_child) is SceneNode or type(root_child) is PointCloudNode: # Item is not a group node.
                 data = {"name":root_child.getName(),
@@ -151,7 +151,9 @@ class MeshListModel(ListModel):
                     self.removeItem(index)
                     self.insertItem(index,data)
                 else:
-                    self.appendItem(data)
+                    items.append(data)
+
+        self.setItems(items)
 
     # set the visibility of a node (by key)
     @pyqtSlot("long",bool)
