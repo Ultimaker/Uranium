@@ -88,8 +88,10 @@ class InstanceContainersModel(ListModel):
     ##  Set the filter of this model based on a string.
     #   \param filter_dict Dictionary to do the filtering by.
     def setFilter(self, filter_dict):
-        self._filter_dict = filter_dict
-        self._update()
+        if filter_dict != self._filter_dict:
+            self._filter_dict = filter_dict
+            self.filterChanged.emit()
+            self._update()
 
     filterChanged = pyqtSignal()
     @pyqtProperty("QVariantMap", fset = setFilter, notify = filterChanged)
@@ -98,10 +100,11 @@ class InstanceContainersModel(ListModel):
 
     @pyqtSlot(str, str)
     def rename(self, instance_id, new_name):
-        containers = ContainerRegistry.getInstance().findInstanceContainers(id = instance_id)
-        if containers:
-            containers[0].setName(new_name)
-            self._update()
+        if new_name != self.getName():
+            containers = ContainerRegistry.getInstance().findInstanceContainers(id = instance_id)
+            if containers:
+                containers[0].setName(new_name)
+                self._update()
 
     ##  Gets a list of the possible file filters that the plugins have
     #   registered they can write.
