@@ -91,52 +91,82 @@ class ContainerRegistry:
             matches_container = True
             for key, value in kwargs.items():
                 try:
-                    value = re.escape(value) #Escape for regex patterns.
-                    value = "^" + value.replace("\\*", ".*") + "$" #Instead of (now escaped) asterisks, match on any string. Also add anchors for a complete match.
-                    if ignore_case:
-                        value_pattern = re.compile(value, re.IGNORECASE)
+                    if "*" in value:
+                        value = re.escape(value) #Escape for regex patterns.
+                        value = "^" + value.replace("\\*", ".*") + "$" #Instead of (now escaped) asterisks, match on any string. Also add anchors for a complete match.
+                        if ignore_case:
+                            value_pattern = re.compile(value, re.IGNORECASE)
+                        else:
+                            value_pattern = re.compile(value)
+
+                        if key == "id":
+                            if not value_pattern.match(container.getId()):
+                                matches_container = False
+                            continue
+                        elif key == "name":
+                            if not value_pattern.match(container.getName()):
+                                matches_container = False
+                            continue
+                        elif key == "definition":
+                            try:
+                                if not value_pattern.match(container.getDefinition().getId()):
+                                    matches_container = False
+                                continue
+                            except AttributeError:  # Only instanceContainers have a get definition. We can ignore all others.
+                                pass
+
+                        if not value_pattern.match(str(container.getMetaDataEntry(key))):
+                            matches_container = False
+                    elif not ignore_case:
+                        if key == "id":
+                            if value != container.getId():
+                                matches_container = False
+                            continue
+                        elif key == "name":
+                            if value != container.getName():
+                                matches_container = False
+                            continue
+                        elif key == "definition":
+                            try:
+                                if value != container.getDefinition().getId():
+                                    matches_container = False
+                                continue
+                            except AttributeError:  # Only instanceContainers have a get definition. We can ignore all others.
+                                pass
+
+                        if value != str(container.getMetaDataEntry(key)):
+                            matches_container = False
                     else:
-                        value_pattern = re.compile(value)
-                    if key == "id":
-                        if not value_pattern.match(container.getId()):
-                            matches_container = False
-                        continue
-                    if key == "name":
-                        if not value_pattern.match(container.getName()):
-                            matches_container = False
-                        continue
-                    if key == "definition":
-                        try:
-                            if not value_pattern.match(container.getDefinition().getId()):
+                        if key == "id":
+                            if value.lower() != container.getId().lower():
                                 matches_container = False
                             continue
-                        except AttributeError:  # Only instanceContainers have a get definition. We can ignore all others.
-                            pass
-                    if not value_pattern.match(str(container.getMetaDataEntry(key))):
-                        matches_container = False
+                        elif key == "name":
+                            if value.lower() != container.getName().lower():
+                                matches_container = False
+                            continue
+                        elif key == "definition":
+                            try:
+                                if value.lower() != container.getDefinition().getId().lower():
+                                    matches_container = False
+                                continue
+                            except AttributeError:  # Only instanceContainers have a get definition. We can ignore all others.
+                                pass
+
+                        if value.lower() != str(container.getMetaDataEntry(key)).lower():
+                            matches_container = False
                 except TypeError: #Value was not a string.
-                    if key == "id":
-                        if value != container.getId():
-                            matches_container = False
+                    if key == "id" or key == "name" or key == "definition":
+                        matches_container = False
                         continue
-                    if key == "name":
-                        if container.getName() != value:
-                            matches_container = False
-                        continue
-                    if key == "definition":
-                        try:
-                            if value != container.getDefinition().getId():
-                                matches_container = False
-                            continue
-                        except AttributeError:
-                            pass
-                    if key == "read_only":
+                    elif key == "read_only":
                         try:
                             if value != container.isReadOnly():
                                 matches_container = False
                             continue
                         except AttributeError:
                             pass
+
                     if value != container.getMetaDataEntry(key):
                         matches_container = False
                     continue
