@@ -37,7 +37,7 @@ class ContainerStacksModel(ListModel):
 
     ##  Private convenience function to reset & repopulate the model.
     def _update(self):
-        self.clear()
+        items = []
 
         # Remove all connections
         for container in self._container_stacks:
@@ -52,9 +52,10 @@ class ContainerStacksModel(ListModel):
                 metadata["definition_name"] = container.getBottom().getName()
 
             container.nameChanged.connect(self._onContainerNameChanged)
-            self.appendItem({"name": container.getName(),
+            items.append({"name": container.getName(),
                              "id": container.getId(),
                              "metadata": metadata})
+        self.setItems(items)
 
     ##  Set the filter of this model based on a string.
     #   \param filter_dict Dictionary to do the filtering by.

@@ -39,19 +39,20 @@ class DefinitionContainersModel(ListModel):
 
     ##  Private convenience function to reset & repopulate the model.
     def _update(self):
-        self.clear()
+        items = []
         self._definition_containers = ContainerRegistry.getInstance().findDefinitionContainers(**self._filter_dict)
         self._definition_containers.sort(key = self._sortKey)
 
         for container in self._definition_containers:
             metadata = container.getMetaData().copy()
 
-            self.appendItem({
+            items.append({
                 "name": container.getName(),
                 "id": container.getId(),
                 "metadata": metadata,
                 "section": container.getMetaDataEntry(self._section_property, ""),
             })
+        self.setItems(items)
 
     def setSectionProperty(self, property_name):
         if self._section_property != property_name:

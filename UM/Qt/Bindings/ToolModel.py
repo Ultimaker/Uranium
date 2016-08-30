@@ -33,7 +33,7 @@ class ToolModel(ListModel):
         self.addRoleName(self.DescriptionRole, "description")
 
     def _onToolsChanged(self):
-        self.clear()
+        items = []
 
         tools = self._controller.getAllTools()
         for name in tools:
@@ -50,7 +50,7 @@ class ToolModel(ListModel):
 
             enabled = self._controller.getTool(name).getEnabled()
 
-            self.appendItem({
+            items.append({
                 "id": name,
                 "name": toolMetaData.get("name", name),
                 "icon": iconName,
@@ -60,7 +60,8 @@ class ToolModel(ListModel):
                 "weight": weight
             })
 
-        self.sort(lambda t: t["weight"])
+        items.sort(key = lambda t: t["weight"])
+        self.setItems(items)
 
     def _onActiveToolChanged(self):
         activeTool = self._controller.getActiveTool()
