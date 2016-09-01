@@ -4,6 +4,7 @@
 from PyQt5.QtCore import QObject, QVariant, pyqtProperty, pyqtSlot, pyqtSignal
 
 from UM.Logger import Logger
+from UM.Settings.SettingFunction import SettingFunction
 
 import UM.Settings
 
@@ -251,6 +252,10 @@ class SettingPropertyProvider(QObject):
             relation_count += 1
 
             if self._stack.getProperty(key, "state") != UM.Settings.InstanceState.User:
+                value_used_count += 1
+
+            # If the setting has a formula the value is still used.
+            if isinstance(self._stack.getRawProperty(key, "value"), SettingFunction):
                 value_used_count += 1
 
         self._value_used = relation_count == 0 or (relation_count > 0 and value_used_count != 0)
