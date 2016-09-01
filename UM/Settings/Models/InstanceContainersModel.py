@@ -17,7 +17,7 @@ catalog = i18nCatalog("uranium")
 #   changed.
 class InstanceContainersModel(ListModel):
     NameRole = Qt.UserRole + 1  # Human readable name (string)
-    IdRole = Qt.UserRole + 2    # Unique ID of Definition
+    IdRole = Qt.UserRole + 2    # Unique ID of the InstanceContainer
     MetaDataRole = Qt.UserRole + 3
     ReadOnlyRole = Qt.UserRole + 4
     SectionRole = Qt.UserRole + 5
