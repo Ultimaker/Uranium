@@ -16,6 +16,7 @@ ListView {
     visible: true
 
     model: UM.VisibleMessagesModel { }
+    spacing: UM.Theme.getSize("default_lining").height
 
     interactive: false;
     delegate: Rectangle
