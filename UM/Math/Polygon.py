@@ -56,6 +56,9 @@ class Polygon:
 
         return (projection_min, projection_max)
 
+    def translate(self, x = 0, y =  0):
+        return Polygon(numpy.add(self._points, numpy.array([[x, y]])))
+
     ##  Mirrors this polygon across the specified axis.
     #
     #   \param point_on_axis A point on the axis to mirror across.
