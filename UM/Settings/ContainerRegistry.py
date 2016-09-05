@@ -517,7 +517,7 @@ class _EmptyInstanceContainer(InstanceContainer.InstanceContainer):
     def getProperty(self, key, property_name):
         return None
 
-    def setProperty(self, key, property_name, property_value):
+    def setProperty(self, key, property_name, property_value, container = None):
         return
 
     def serialize(self):
