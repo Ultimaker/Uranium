@@ -48,8 +48,8 @@ if(APPLE OR WIN32)
 else()
     install(DIRECTORY UM DESTINATION lib/python${PYTHON_VERSION_MAJOR}/dist-packages)
 endif()
-install(FILES ${CMAKE_SOURCE_DIR}/UraniumTranslationTools.cmake
-        DESTINATION ${CMAKE_INSTALL_DATADIR}/cmake-${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}/Modules/
+install(FILES ${CMAKE_SOURCE_DIR}/cmake/UraniumTranslationTools.cmake
+        DESTINATION ${CMAKE_INSTALL_DATADIR}/cmake-${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}/Modules/ )
 install(DIRECTORY resources DESTINATION ${CMAKE_INSTALL_DATADIR}/uranium)
 install(DIRECTORY plugins DESTINATION lib/uranium)
 
