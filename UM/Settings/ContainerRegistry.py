@@ -518,6 +518,7 @@ class _EmptyInstanceContainer(InstanceContainer.InstanceContainer):
         return None
 
     def setProperty(self, key, property_name, property_value, container = None):
+        Logger.log("e", "Setting property %s of container %s which should remain empty", key, self.getName())
         return
 
     def serialize(self):
