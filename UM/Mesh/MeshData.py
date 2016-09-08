@@ -36,7 +36,7 @@ Reuse = object()
 #   faces and the three columns being the indices that refer to the individual vertices.
 class MeshData:
     def __init__(self, vertices=None, normals=None, indices=None, colors=None, uvs=None, file_name=None,
-                 center_position=None):
+                 center_position=None, type = MeshType.faces):
         self._vertices = NumPyUtil.immutableNDArray(vertices)
         self._normals = NumPyUtil.immutableNDArray(normals)
         self._indices = NumPyUtil.immutableNDArray(indices)
@@ -44,7 +44,7 @@ class MeshData:
         self._uvs = NumPyUtil.immutableNDArray(uvs)
         self._vertex_count = len(self._vertices) if self._vertices is not None else 0
         self._face_count = len(self._indices) if self._indices is not None else 0
-        self._type = MeshType.faces
+        self._type = type
         self._file_name = file_name
         # original center position
         self._center_position = center_position
