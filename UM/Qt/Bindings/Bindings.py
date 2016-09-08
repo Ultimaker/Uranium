@@ -30,6 +30,8 @@ from . import ExtensionModel
 from . import PluginsModel
 from . import VisibleMessagesModel
 
+from . import MeshListModel
+
 import UM.Settings.Models
 
 class Bindings:
@@ -100,4 +102,5 @@ class Bindings:
         qmlRegisterType(UM.Settings.Models.SettingPropertyProvider, "UM", 1, 2, "SettingPropertyProvider")
         qmlRegisterType(UM.Settings.Models.SettingPreferenceVisibilityHandler, "UM", 1, 2, "SettingPreferenceVisibilityHandler")
         qmlRegisterType(UM.Settings.Models.ContainerPropertyProvider, "UM", 1, 2, "ContainerPropertyProvider")
+        qmlRegisterType(MeshListModel.MeshListModel, "UM", 1, 2, "MeshListModel")
 
