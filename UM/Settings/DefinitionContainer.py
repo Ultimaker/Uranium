@@ -53,6 +53,7 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
         self._i18n_catalog = i18n_catalog
 
         self._definition_cache = {}
+        self._path = ""
 
     ##  Reimplement __setattr__ so we can make sure the definition remains unchanged after creation.
     def __setattr__(self, name, value):
@@ -83,6 +84,18 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
 
     def setReadOnly(self, read_only):
         pass
+
+    ##  \copydoc ContainerInterface::getPath.
+    #
+    #   Reimplemented from ContainerInterface
+    def getPath(self):
+        return self._path
+
+    ##  \copydoc ContainerInterface::setPath
+    #
+    #   Reimplemented from ContainerInterface
+    def setPath(self, path):
+        self._path = path
 
     ##  \copydoc ContainerInterface::getMetaData
     #

@@ -53,6 +53,7 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
         self._instances = {}
         self._read_only = False
         self._dirty = False
+        self._path = ""
 
     ##  \copydoc ContainerInterface::getId
     #
@@ -61,6 +62,18 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
         return self._id
 
     id = property(getId)
+
+    ##  \copydoc ContainerInterface::getPath.
+    #
+    #   Reimplemented from ContainerInterface
+    def getPath(self):
+        return self._path
+
+    ##  \copydoc ContainerInterface::setPath
+    #
+    #   Reimplemented from ContainerInterface
+    def setPath(self, path):
+        self._path = path
 
     ##  \copydoc ContainerInterface::getName
     #
