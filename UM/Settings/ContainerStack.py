@@ -47,6 +47,7 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
         self._next_stack = None
         self._read_only = False
         self._dirty = True
+        self._path = ""
 
     ##  \copydoc ContainerInterface::getId
     #
@@ -312,6 +313,18 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
             return self._containers[-1]
 
         return None
+
+    ##  \copydoc ContainerInterface::getPath.
+    #
+    #   Reimplemented from ContainerInterface
+    def getPath(self):
+        return self._path
+
+    ##  \copydoc ContainerInterface::setPath
+    #
+    #   Reimplemented from ContainerInterface
+    def setPath(self, path):
+        self._path = path
 
     ##  Get the SettingDefinition object for a specified key
     def getSettingDefinition(self, key):
