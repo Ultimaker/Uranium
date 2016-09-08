@@ -30,7 +30,7 @@ ListView {
 
         color: UM.Theme.getColor("message_background")
         border.width: UM.Theme.getSize("default_lining").width
-        border.color: UM.Theme.getColor("lining")
+        border.color: UM.Theme.getColor("message_border")
 
         property variant actions: model.actions;
         property variant model_id: model.id
@@ -75,6 +75,9 @@ ListView {
                 indeterminate: model.progress == -1 ? true: false //if the progress is unknown (-1) -> the progressbar is indeterminate
                 style: UM.Theme.styles.progressbar
 
+                property string backgroundColor: UM.Theme.getColor("message_progressbar_background")
+                property string controlColor: UM.Theme.getColor("message_progressbar_control")
+
                 anchors.top: parent.bottom;
                 anchors.topMargin: UM.Theme.getSize("default_margin").width;
             }
@@ -94,7 +97,21 @@ ListView {
                 anchors.fill: parent;
                 sourceSize.width: width
                 sourceSize.height: width
-                color: UM.Theme.getColor("message_dismiss")
+                color:
+                {
+                    if(closeButton.pressed)
+                    {
+                        return UM.Theme.getColor("message_button_active");
+                    }
+                    else if(closeButton.hovered)
+                    {
+                        return UM.Theme.getColor("message_button_hover");
+                    }
+                    else
+                    {
+                        return UM.Theme.getColor("message_button");
+                    }
+                }
                 source: UM.Theme.getIcon("cross2")
             }
 
@@ -135,15 +152,42 @@ ListView {
                                 id: messageStackButtonBackground
                                 width: parent.width
                                 height: parent.height
-                                color: control.pressed ? UM.Theme.getColor("button_active") :
-                                       control.hovered ? UM.Theme.getColor("button_hover") : UM.Theme.getColor("button")
+                                color:
+                                {
+                                    if(control.pressed)
+                                    {
+                                        return UM.Theme.getColor("message_button_active");
+                                    }
+                                    else if(control.hovered)
+                                    {
+                                        return UM.Theme.getColor("message_button_hover");
+                                    }
+                                    else
+                                    {
+                                        return UM.Theme.getColor("message_button");
+                                    }
+                                }
                                 Behavior on color { ColorAnimation { duration: 50; } }
                             }
                             Label {
                                 id: messageStackButtonText
                                 anchors.centerIn: parent
                                 text: control.text
-                                color: UM.Theme.getColor("button_text")
+                                color:
+                                {
+                                    if(control.pressed)
+                                    {
+                                        return UM.Theme.getColor("message_button_text_active");
+                                    }
+                                    else if(control.hovered)
+                                    {
+                                        return UM.Theme.getColor("message_button_text_hover");
+                                    }
+                                    else
+                                    {
+                                        return UM.Theme.getColor("message_button_text");
+                                    }
+                                }
                                 font: UM.Theme.getFont("default")
                             }
                         }
