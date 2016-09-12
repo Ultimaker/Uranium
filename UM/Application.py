@@ -92,7 +92,14 @@ class Application():
         self._plugin_registry.addPluginLocation(os.path.join(Application.getInstallPrefix(), "Resources", "uranium", "plugins"))
         self._plugin_registry.addPluginLocation(os.path.join(Application.getInstallPrefix(), "Resources", self.getApplicationName(), "plugins"))
         # Locally installed plugins
-        self._plugin_registry.addPluginLocation(os.path.join(Resources.getStoragePath(Resources.Resources), "plugins"))
+        local_path = os.path.join(Resources.getStoragePath(Resources.Resources), "plugins")
+        # Ensure the local plugins directory exists
+        try:
+            os.makedirs(local_path)
+        except OSError:
+            pass
+        self._plugin_registry.addPluginLocation(local_path)
+
         if not hasattr(sys, "frozen"):
             self._plugin_registry.addPluginLocation(os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "plugins"))
 
