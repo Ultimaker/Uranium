@@ -2,11 +2,12 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 from UM.Application import Application
-from UM.Signal import Signal
+from UM.Signal import Signal, signalemitter
 
 
 ## Class for displaying messages in the application.
 #
+@signalemitter
 class Message:
     ##  Class for displaying messages in the application
     #   \param text Text that needs to be displayed in the message
