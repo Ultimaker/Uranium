@@ -31,6 +31,40 @@ Item
         return input.toFixed(decimals).replace(/\.?0*$/, ""); //Match on periods, if any ( \.? ), followed by any number of zeros ( 0* ), then the end of string ( $ ).
     }
 
+    Button
+    {
+        id: resetPositionButton
+
+        //: Reset position tool button
+        text: catalog.i18nc("@action:button","Center on Build Plate")
+        iconSource: UM.Theme.getIcon("scale_reset");
+
+        anchors.top: dropToBuildplateButton.bottom;
+        anchors.topMargin: UM.Theme.getSize("default_margin").height;
+        z: 1
+
+        style: UM.Theme.styles.tool_button;
+
+        onClicked: UM.ActiveTool.triggerAction("resetPosition");
+        visible: false
+    }
+
+    Button
+    {
+        id: dropToBuildplateButton
+
+        //: Drop to build plate tool button
+        text: catalog.i18nc("@action:button","Drop to Build Plate");
+        iconSource: UM.Theme.getIcon("scale_reset");
+
+        anchors.top: parent.top;
+        z: 1
+
+        style: UM.Theme.styles.tool_button;
+        onClicked: UM.ActiveTool.triggerAction("dropToBuildplate")
+        visible: false
+    }
+
     Grid
     {
         id: textfields;
