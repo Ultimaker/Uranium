@@ -165,10 +165,9 @@ class SettingInstance:
         return "<SettingInstance (0x{0:x}) definition={1} container={2}>".format(id(self), self._definition, self._container)
 
     ## protected:
-
     def updateRelations(self, container):
         property_names = SettingDefinition.getPropertyNames()
-        property_names.remove("value")  # Move "value" to the front of the list so we always update that first.
+        property_names.remove("global_inherits_stack")  # Move "value" to the front of the list so we always update that first.
         property_names.insert(0, "value")
 
         for property_name in property_names:
@@ -181,8 +180,9 @@ class SettingInstance:
             # TODO: We should send this as a single change event instead of several of them.
             # That would increase performance by reducing the amount of updates.
             for relation in changed_relations:
-                container.propertyChanged.emit(relation, property_name)
-                container.propertyChanged.emit(relation, "validationState")  # Ensure that validation state is updated
+                container.propertyChanged.emit(relation.target.key, relation.role)
+                if relation.role == "value":  # If the value state is updated, the validation state could also be changed.
+                    container.propertyChanged.emit(relation.target.key, "validationState")
 
     ##  Recursive function to put all settings that require eachother for changes of a property value in a list
     #   \param relations_set \type{set} Set of keys (strings) of settings that are influenced
@@ -196,7 +196,7 @@ class SettingInstance:
             if relation.target.key == self.definition.key:
                 continue
 
-            relations_set.add(relation.target.key)
+            relations_set.add(relation)
 
             # Ensure that all properties of related settings are added.
             for property_name in SettingDefinition.getPropertyNames():
