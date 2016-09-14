@@ -233,14 +233,14 @@ class VersionUpgradeManager:
             if (configuration_type, version) not in paths:
                 #No version upgrade plug-in claims to be able to upgrade this file.
                 return False
-            new_type, new_version, upgrade = paths[(configuration_type, version)]
+            new_type, new_version, upgrade_step = paths[(configuration_type, version)]
             new_filenames_without_extension = []
             new_files_data = []
             for file_idx, file_data in enumerate(files_data):
                 try:
-                    this_filenames_without_extension, this_files_data = upgrade(file_data, filenames_without_extension[file_idx])
+                    this_filenames_without_extension, this_files_data = upgrade_step(file_data, filenames_without_extension[file_idx])
                 except Exception as e: #Upgrade failed due to a coding error in the plug-in.
-                    Logger.logException("w", "Exception in %s upgrade with %s: %s", old_configuration_type, upgrade.__module__, str(e))
+                    Logger.logException("w", "Exception in %s upgrade with %s: %s", old_configuration_type, upgrade_step.__module__, str(e))
                     return False
                 if not this_files_data: #Upgrade failed.
                     return False
