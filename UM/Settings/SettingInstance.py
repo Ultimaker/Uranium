@@ -198,6 +198,9 @@ class SettingInstance:
 
             relations_set.add(relation)
 
+            property_names = SettingDefinition.getPropertyNames()
+            property_names.remove("value")  # Move "value" to the front of the list so we always update that first.
+            property_names.insert(0, "value")
             # Ensure that all properties of related settings are added.
-            for property_name in SettingDefinition.getPropertyNames():
+            for property_name in property_names:
                 self._addRelations(relations_set, relation.target.relations, property_name)
