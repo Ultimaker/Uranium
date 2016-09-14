@@ -88,3 +88,11 @@ class ContainerInterface:
     #   \param serialized A serialized string containing a container that should be deserialized.
     def deserialize(self, serialized):
         pass
+
+    ##  Get the path used to create this InstanceContainer.
+    def getPath(self):
+        pass
+
+    ##  Set the path used to create this InstanceContainer
+    def setPath(self, path):
+        pass

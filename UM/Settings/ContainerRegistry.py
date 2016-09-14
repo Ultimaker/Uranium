@@ -237,6 +237,7 @@ class ContainerRegistry:
                 with open(file_path, encoding = "utf-8") as f:
                     new_container.deserialize(f.read())
                 new_container.setReadOnly(read_only)
+                new_container.setPath(file_path)
 
                 if issubclass(container_type, DefinitionContainer.DefinitionContainer):
                     self._saveCachedDefinition(new_container)
@@ -517,7 +518,8 @@ class _EmptyInstanceContainer(InstanceContainer.InstanceContainer):
     def getProperty(self, key, property_name):
         return None
 
-    def setProperty(self, key, property_name, property_value):
+    def setProperty(self, key, property_name, property_value, container = None):
+        Logger.log("e", "Setting property %s of container %s which should remain empty", key, self.getName())
         return
 
     def serialize(self):

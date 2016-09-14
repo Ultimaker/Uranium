@@ -97,11 +97,11 @@ class Duration(QObject):
                 return i18n_catalog.i18nc("@label Short hours-minutes format. {0} is hours, {1} is minutes", "{0:0>2}h {1:0>2}min", self._hours, self._minutes)
         elif display_format == DurationFormat.Format.Long:
             if self._days > 0:
-                return i18n_catalog.i18nc("@label Days-hours-minutes duration format. {0} is days, {1} is hours, {2} is minutes", "{0} days {1} hours {2} minutes", self._days, self._hours, self._minutes)
+                return i18n_catalog.i18ncp("@label Long duration format. {0} is days", "{0} day", "{0} days", self._days) + " " + i18n_catalog.i18ncp("@label Long duration format. {0} is hours", "{0} hour", "{0} hours", self._hours) + " " + i18n_catalog.i18ncp("@label Long duration format. {0} is minutes", "{0} minute", "{0} minutes", self._minutes)
             elif self._hours > 0:
-                return i18n_catalog.i18nc("@label Hours-minutes duration fromat. {0} is hours, {1} is minutes", "{0} hours {1} minutes", self._hours, self._minutes)
+                return i18n_catalog.i18ncp("@label Long duration format. {0} is hours", "{0} hour", "{0} hours", self._hours) + " " + i18n_catalog.i18ncp("@label Long duration format. {0} is minutes", "{0} minute", "{0} minutes", self._minutes)
             else:
-                return i18n_catalog.i18nc("@label Minutes only duration format, {0} is minutes", "{0} minutes", self._minutes)
+                return i18n_catalog.i18ncp("@label Long duration format. {0} is minutes", "{0} minute", "{0} minutes", self._minutes)
         elif display_format == DurationFormat.Format.ISO8601:
             return "%02d:%02d:%02d" % (self._days * 24 + self._hours, self._minutes, self._seconds)
 

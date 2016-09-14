@@ -78,7 +78,7 @@ class ThreeMFWriter(MeshWriter):
                     for vert in verts:
                         xml_vertex = ET.SubElement(vertices, "vertex", x = str(vert[0]), y = str(vert[0]), z = str(vert[0]))
 
-                transformation_string = self._convertMatrixToString(node.getWorldTransformation())
+                transformation_string = self._convertMatrixToString(n.getWorldTransformation())
                 if transformation_string != self._convertMatrixToString(Matrix()):
                     item = ET.SubElement(build, "item", objectid = str(index+1), transform = transformation_string)
                 else:

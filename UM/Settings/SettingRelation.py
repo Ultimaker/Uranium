@@ -34,6 +34,9 @@ class SettingRelation:
         self._type = relation_type
         self._role = role
 
+    def __hash__(self):
+        return hash(str(self))
+
     ##  The owner of this relation.
     @property
     def owner(self):

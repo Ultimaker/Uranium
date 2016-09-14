@@ -16,8 +16,9 @@ UM.Dialog
     property alias newName: nameField.text;
     property bool validName: true;
     property string validationError;
+    property string dialogTitle: catalog.i18nc("@title:window", "Rename");
 
-    title: catalog.i18nc("@title:window", "Rename");
+    title: dialogTitle;
 
     minimumWidth: 400 * Screen.devicePixelRatio
     minimumHeight: 120 * Screen.devicePixelRatio
