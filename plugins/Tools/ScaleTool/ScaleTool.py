@@ -61,7 +61,6 @@ class ScaleTool(Tool):
         super().event(event)
 
         if event.type == Event.ToolActivateEvent:
-            self._old_scale = Selection.getSelectedObject(0).getScale()
             for node in Selection.getAllSelectedObjects():
                 node.boundingBoxChanged.connect(self.propertyChanged)
 
