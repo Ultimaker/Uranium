@@ -241,7 +241,7 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
         if "metadata" in parser:
             self._metadata = dict(parser["metadata"])
 
-        # The containers are saved in a single coma separated list.
+        # The containers are saved in a single comma-separated list.
         container_id_list = parser["general"].get("containers", "").split(",")
         for container_id in container_id_list:
             if container_id != "":
