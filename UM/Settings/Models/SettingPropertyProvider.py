@@ -171,10 +171,8 @@ class SettingPropertyProvider(QObject):
             for index in self._stack_levels:
                 if index > self._store_index:
                     old_value = self.getPropertyValue(property_name, index)
-                    old_resolve_value = self.getPropertyValue("resolve", index)
                     key_state = str(self._stack.getContainer(self._store_index).getProperty(self._key, "state"))
-                    if str(old_resolve_value) == str(property_value) and str(old_value) == str(property_value) and \
-                                            key_state != "InstanceState.Calculated":
+                    if str(old_value) == str(property_value) and key_state != "InstanceState.Calculated":
                         # If we change the setting so that it would be the same as a deeper setting, we can just remove
                         # the value. Note that we only do this when this is not caused by the calculated state
                         # In this case the setting does need to be set, as it needs to be stored in the user settings.
