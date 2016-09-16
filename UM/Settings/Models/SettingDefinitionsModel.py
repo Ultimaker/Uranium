@@ -117,6 +117,8 @@ class SettingDefinitionsModel(QAbstractListModel):
     def showAll(self):
         return self._show_all
 
+    visibilityChanged = pyqtSignal()
+
     ##  Set the visibilityHandler property
     def setVisibilityHandler(self, visibility_handler):
         if self._visibility_handler:
@@ -126,6 +128,7 @@ class SettingDefinitionsModel(QAbstractListModel):
 
         if self._visibility_handler:
             self._visibility_handler.visibilityChanged.connect(self._onVisibilityChanged)
+            self._visibility_handler.visibilityChanged.connect(self.visibilityChanged)
             self._onVisibilityChanged()
 
         self.visibilityHandlerChanged.emit()
