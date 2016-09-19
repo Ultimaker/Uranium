@@ -74,6 +74,11 @@ class RenderPass:
     def bind(self):
         if self._fbo:
             self._fbo.bind()
+
+            # Ensure we can actually write to the relevant FBO components.
+            self._gl.glColorMask(self._gl.GL_TRUE, self._gl.GL_TRUE,self._gl.GL_TRUE, self._gl.GL_TRUE)
+            self._gl.glDepthMask(self._gl.GL_TRUE)
+
             self._gl.glClear(self._gl.GL_COLOR_BUFFER_BIT | self._gl.GL_DEPTH_BUFFER_BIT)
 
     ##  Release the render pass.
