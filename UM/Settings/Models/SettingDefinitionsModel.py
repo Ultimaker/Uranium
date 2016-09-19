@@ -123,6 +123,7 @@ class SettingDefinitionsModel(QAbstractListModel):
     def setVisibilityHandler(self, visibility_handler):
         if self._visibility_handler:
             self._visibility_handler.visibilityChanged.disconnect(self._onVisibilityChanged)
+            self._visibility_handler.visibilityChanged.disconnect(self.visibilityChanged)
 
         self._visibility_handler = visibility_handler
 
