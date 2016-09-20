@@ -24,12 +24,14 @@ extract() {
         return
     fi
 
+    echo "Extracted messages from $file"
+
     msguniq --to-code=UTF-8 -o json.$$ json.$$.tmp
     if test -f json.$$; then
         destfile="$dest/$(basename $file).pot"
         mv json.$$ $destfile
     fi
-    rm -f json.$$ json.$$.tmp 
+    rm -f json.$$ json.$$.tmp
 }
 
 dir=$1; shift

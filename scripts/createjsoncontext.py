@@ -42,7 +42,7 @@ pottxt = ""
 
 def appendMessage(file, setting, field, value):
     global pottxt
-    pottxt += "#: {0}\nmsgctxt \"{1} {2}\"\nmsgid \"{3}\"\nmsgstr \"\"\n\n".format(file, setting, field, value.replace("\n", "\\n"))
+    pottxt += "#: {0}\nmsgctxt \"{1} {2}\"\nmsgid \"{3}\"\nmsgstr \"\"\n\n".format(file, setting, field, value.replace("\n", "\\n").replace("\"", "\\\""))
 
 def processSettings(file, settings):
     for name, value in settings.items():
@@ -91,18 +91,10 @@ else:
         error = False
 
         jsondatadict = json.load(data_file, object_pairs_hook=collections.OrderedDict)
-        if "categories" not in jsondatadict:
+        if "settings" not in jsondatadict:
             exit(1)
 
-        for name, value in jsondatadict["categories"].items():
-            if "label" in value:
-                appendMessage(jsonfilename.replace(basedir, ""), name, "label", value["label"])
-
-            if "description" in value:
-                appendMessage(jsonfilename.replace(basedir, ""), name, "description", value["description"])
-
-            if "settings" in value:
-                processSettings(jsonfilename.replace(basedir, ""), value["settings"])
+        processSettings(jsonfilename.replace(basedir, ""), jsondatadict["settings"])
 
     if pottxt != "":
         with open(outputfilename, "w") as output_file:
