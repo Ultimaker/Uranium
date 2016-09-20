@@ -336,6 +336,18 @@ class SettingDefinition:
     def hasProperty(cls, name):
         return name in cls.__property_definitions
 
+    ##  Get the type of a specified property.
+    #
+    #   \param name \type{str} The name of the property to find the type of.
+    #
+    #   \return DefinitionPropertyType corresponding to the type of the property or None if not found.
+    @classmethod
+    def getPropertyType(cls, name):
+        if name in cls.__property_definitions:
+            return cls.__property_definitions[name]["type"]
+
+        return None
+
     ##  Check if the specified property is considered a required property.
     #
     #   Required properties are checked when deserializing a SettingDefinition and if not present an error
