@@ -22,6 +22,8 @@ class MirrorTool(Tool):
 
         self._handle = MirrorToolHandle.MirrorToolHandle()
 
+        self._operation_started = False
+
     ##  Handle mouse and keyboard events
     #
     #   \param event type(Event)
@@ -40,8 +42,14 @@ class MirrorTool(Tool):
             if ToolHandle.isAxis(id):
                 self.setLockedAxis(id)
                 return True
+            self._operation_started = True
+            self.operationStarted.emit(self)
 
         if event.type == Event.MouseReleaseEvent:
+            if self._operation_started:
+                self._operation_started = False
+                self.operationStopped.emit(self)
+
             # Perform a mirror operation
             if self.getLockedAxis():
                 op = None
