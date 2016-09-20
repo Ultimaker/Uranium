@@ -96,13 +96,13 @@ class ScaleTool(Tool):
 
             if ToolHandle.isAxis(id):
                 self.setLockedAxis(id)
+            self._saved_handle_position = self._handle.getWorldPosition()
 
             # Save the current positions of the node, as we want to scale arround their current centres
             self._saved_node_positions = []
             for node in Selection.getAllSelectedObjects():
                 self._saved_node_positions.append((node, node.getPosition()))
 
-            self._saved_handle_position = self._handle.getWorldPosition()
             self._scale_sum = 0.0
             self._last_event = event
 
