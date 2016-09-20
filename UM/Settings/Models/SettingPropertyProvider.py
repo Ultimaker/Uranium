@@ -308,8 +308,6 @@ class SettingPropertyProvider(QObject):
         if isinstance(property_value, UM.Settings.SettingFunction):
             property_value = property_value(self._stack)
 
-        #if property_value is None:
-
         if property_name == "value":
             property_value = UM.Settings.SettingDefinition.settingValueToString(self._stack.getProperty(self._key, "type"), property_value)
 

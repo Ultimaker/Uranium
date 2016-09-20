@@ -48,6 +48,7 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
         self._read_only = False
         self._dirty = True
         self._path = ""
+        self._postponed_emits = []  # gets filled with 2-tuples: signal, signal_argument(s)
 
     ##  \copydoc ContainerInterface::getId
     #
@@ -388,10 +389,11 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     #
     #   \param index \type{int} The index of the container to replace.
     #   \param container The container to replace the existing entry with.
+    #   \param postpone_emit  During stack manipulation you may want to emit later.
     #
     #   \exception IndexError Raised when the specified index is out of bounds.
     #   \exception Exception when trying to replace container ContainerStack.
-    def replaceContainer(self, index, container):
+    def replaceContainer(self, index, container, postpone_emit=False):
         if index < 0:
             raise IndexError
         if container is self:
@@ -400,7 +402,11 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
         self._containers[index].propertyChanged.disconnect(self.propertyChanged)
         container.propertyChanged.connect(self.propertyChanged)
         self._containers[index] = container
-        self.containersChanged.emit(container)
+        if postpone_emit:
+            # send it using sendPostponedEmits
+            self._postponed_emits.append((self.containersChanged, container))
+        else:
+            self.containersChanged.emit(container)
 
     ##  Remove a container from the stack.
     #
@@ -436,3 +442,11 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
         if self is stack:
             raise Exception("Next stack can not be itself")
         self._next_stack = stack
+
+    ##  Send postponed emits
+    #   These emits are collected from the option postpone_emit.
+    #   Note: the option can be implemented for all functions modifying the stack.
+    def sendPostponedEmits(self):
+        while self._postponed_emits:
+            signal, signal_arg = self._postponed_emits.pop(0)
+            signal.emit(signal_arg)
