@@ -38,7 +38,7 @@ class InstanceContainersModel(ListModel):
         ContainerRegistry.getInstance().containerAdded.connect(self._onContainerChanged)
         ContainerRegistry.getInstance().containerRemoved.connect(self._onContainerChanged)
 
-        self._filter_dict = {}
+        self._filter_dicts = [{}]    # List of fitlers for queries. The result is the union of the each list of results.
         self._update()
 
     ##  Handler for container added / removed events from registry
@@ -53,10 +53,15 @@ class InstanceContainersModel(ListModel):
             container.nameChanged.disconnect(self._update)
             container.metaDataChanged.disconnect(self._updateMetaData)
 
-        items = []
-        self._instance_containers = ContainerRegistry.getInstance().findInstanceContainers(**self._filter_dict)
+        # Perform each query and assemble the union of all the results.
+        results = set()
+        for filter_dict in self._filter_dicts:
+            results.update(ContainerRegistry.getInstance().findInstanceContainers(**filter_dict))
+        self._instance_containers = list(results)
+
         self._instance_containers.sort(key = self._sortKey)
 
+        items = []
         for container in self._instance_containers:
             container.nameChanged.connect(self._update)
             container.metaDataChanged.connect(self._updateMetaData)
@@ -86,17 +91,28 @@ class InstanceContainersModel(ListModel):
         return self._section_property
 
     ##  Set the filter of this model based on a string.
-    #   \param filter_dict Dictionary to do the filtering by.
+    #   \param filter_dict \type{Dict} Dictionary to do the filtering by.
     def setFilter(self, filter_dict):
-        if filter_dict != self._filter_dict:
-            self._filter_dict = filter_dict
-            self.filterChanged.emit()
-            self._update()
+        self.setFilterList([filter_dict])
 
     filterChanged = pyqtSignal()
     @pyqtProperty("QVariantMap", fset = setFilter, notify = filterChanged)
     def filter(self):
-        return self._filter_dict
+        return self._filter_dicts[0] if len(self._filter_dicts) !=0 else None
+
+    ##  Set a list of filters to use when fetching containers.
+    #
+    #   \param filter_list \type{List[Dict]} List of filter dicts to fetch multiple
+    #               sets of containers. The final result is the union of these sets.
+    def setFilterList(self, filter_list):
+        if filter_list != self._filter_dicts:
+            self._filter_dicts = filter_list
+            self.filterChanged.emit()
+            self._update()
+
+    @pyqtProperty("QVariantList", fset=setFilterList, notify=filterChanged)
+    def filterList(self):
+        return self._filter_dicts
 
     @pyqtSlot(str, str)
     def rename(self, instance_id, new_name):
