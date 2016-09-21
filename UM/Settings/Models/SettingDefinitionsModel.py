@@ -3,13 +3,18 @@
 
 import collections
 import itertools
+import os.path
 
 from PyQt5.QtCore import Qt, QAbstractListModel, QVariant, QModelIndex, QObject, pyqtProperty, pyqtSignal, pyqtSlot
 
 from UM.Logger import Logger
 from UM.Preferences import Preferences
+from UM.Resources import Resources
+from UM.i18n import i18nCatalog
 
 import UM.Settings
+
+from UM.Settings.SettingDefinition import DefinitionPropertyType
 
 ##  Model that provides a flattened list of the tree of SettingDefinition objects in a DefinitionContainer
 #
@@ -30,6 +35,7 @@ class SettingDefinitionsModel(QAbstractListModel):
 
         self._container_id = None
         self._container = None
+        self._i18n_catalog = None
 
         self._root_key = ""
         self._root = None
@@ -345,7 +351,11 @@ class SettingDefinitionsModel(QAbstractListModel):
             if role and role != relation.role:
                 continue
 
-            result.append({ "key": relation.target.key, "label": relation.target.label})
+            label = relation.target.label
+            if self._i18n_catalog:
+                label = self._i18n_catalog.i18nc(relation.target.key + " label", label)
+
+            result.append({ "key": relation.target.key, "label": label})
 
         return result
 
@@ -366,7 +376,11 @@ class SettingDefinitionsModel(QAbstractListModel):
             if role and role != relation.role:
                 continue
 
-            result.append({ "key": relation.target.key, "label": relation.target.label})
+            label = relation.target.label
+            if self._i18n_catalog:
+                label = self._i18n_catalog.i18nc(relation.target.key + " label", label)
+
+            result.append({ "key": relation.target.key, "label": label})
 
         return result
 
@@ -416,8 +430,14 @@ class SettingDefinitionsModel(QAbstractListModel):
         if isinstance(data, collections.OrderedDict):
             result = []
             for key, value in data.items():
+                if self._i18n_catalog:
+                    value = self._i18n_catalog.i18nc(definition.key + " option " + key, value)
+
                 result.append({"key": key, "value": value})
             return result
+
+        if isinstance(data, str) and self._i18n_catalog:
+            data = self._i18n_catalog.i18nc(definition.key + " " + role_name.decode(), data)
 
         return data
 
@@ -445,6 +465,14 @@ class SettingDefinitionsModel(QAbstractListModel):
     def _update(self):
         if not self._container:
             return
+
+        # Try and find a translation catalog for the definition
+        for file_name in self._container.getInheritedFiles():
+            try:
+                i18n_file = Resources.getPath(Resources.i18n, "en", os.path.basename(file_name) + ".po")
+                self._i18n_catalog = i18nCatalog(os.path.basename(file_name))
+            except FileNotFoundError:
+                continue
 
         self.beginResetModel()
 

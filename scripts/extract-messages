@@ -13,7 +13,7 @@ catalogname=$2
 # extract strings from JSON files and extract-python to extract strings from Python files.
 #
 mkdir -p $basedir/resources/i18n
-$scriptdir/extract-json $basedir/resources/machines/ $basedir/resources/i18n
+$scriptdir/extract-json $basedir/resources/definitions/ $basedir/resources/i18n
 $scriptdir/extract-all $basedir $basedir/resources/i18n/$catalogname.pot
 msgconv --to-code=UTF-8 $basedir/resources/i18n/$catalogname.pot -o $basedir/resources/i18n/$catalogname.pot
 
