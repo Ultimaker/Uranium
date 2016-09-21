@@ -43,19 +43,25 @@ UpgradeTask = collections.namedtuple("UpgradeTask", ["storage_path", "file_name"
 #   to the current (upgraded) versions, where they are never loaded again unless
 #   the user manually retrieves the files.
 class VersionUpgradeManager:
+    ##  The singleton instance of this class.
+    __instance = None
+
+    ##  Gets the instance of the VersionUpgradeManager, or creates one.
+    @classmethod
+    def getInstance(cls):
+        if not cls.__instance:
+            cls.__instance = VersionUpgradeManager()
+        return cls.__instance
+
     ##  Initialises the version upgrade manager.
     #
     #   This initialises the cache for shortest upgrade routes, and registers
     #   the version upgrade plug-ins.
-    #
-    #   \param current_versions A dictionary of tuples of configuration types
-    #   and their versions currently in use, and with each of these a tuple of
-    #   where to store this type of file and its MIME type.
-    def __init__(self, current_versions):
+    def __init__(self):
         self._version_upgrades = {} #For each config type and each version, gives a set of upgrade plug-ins that can convert them to something else.
         self._get_version_functions = {} #For each config type, gives a function with which to get the version number from those files.
         self._storage_paths = {} #For each config type, a set of storage paths to search for old config files.
-        self._current_versions = current_versions #To know which preference versions and types to upgrade to.
+        self._current_versions = {} #To know which preference versions and types to upgrade to.
         self._upgrade_tasks = collections.deque() #The files that we still have to upgrade.
         self._upgrade_routes = {} #How to upgrade from one version to another. Needs to be pre-computed after all version upgrade plug-ins are registered.
 
@@ -71,6 +77,14 @@ class VersionUpgradeManager:
     #   \param configuration_type The type of configuration to be stored.
     def getStoragePath(self, configuration_type):
         return self._storage_paths[configuration_type]
+
+    ##  Changes the target versions to upgrade to.
+    #
+    #   \param current_versions A dictionary of tuples of configuration types
+    #   and their versions currently in use, and with each of these a tuple of
+    #   where to store this type of file and its MIME type.
+    def setCurrentVersions(self, current_versions):
+        self._current_versions = current_versions
 
     ##  Performs the version upgrades of all configuration files to the most
     #   recent version.
