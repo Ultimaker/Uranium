@@ -25,7 +25,7 @@ ListView {
         width: UM.Theme.getSize("message").width
         property int labelHeight: messageLabel.height + (UM.Theme.getSize("default_margin").height * 2)
         property int progressBarHeight: totalProgressBar.height + UM.Theme.getSize("default_margin").height
-        property int actionButtonsHeight: UM.Theme.getSize("message_button").height+ UM.Theme.getSize("default_margin").height
+        property int actionButtonsHeight: actionButtons.height > 0 ? actionButtons.height + UM.Theme.getSize("default_margin").height : 0
         height: model.progress == null ? message.labelHeight : message.labelHeight + message.progressBarHeight + message.actionButtonsHeight
         anchors.horizontalCenter: parent.horizontalCenter;
 
