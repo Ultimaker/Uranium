@@ -86,6 +86,25 @@ class VersionUpgradeManager:
             message.show()
         return upgraded
 
+    ##  Schedules an additional file for upgrading.
+    #
+    #   This method is intended to be called by upgrade plug-ins during
+    #   upgrading, to make sure we also upgrade any extra files that should be
+    #   added during the upgrade process.
+    #   Note that the file is not immediately upgraded, but scheduled for
+    #   upgrading. If this method is called while the ``upgrade()`` function is
+    #   still running, it will get upgraded at the end of that run. If it is
+    #   called while the ``upgrade()`` function is not running, it would get
+    #   upgraded during the next call to ``upgrade()``.
+    #
+    #   \param storage_path The path to where the specified type of file is
+    #   stored.
+    #   \param file_name The path to the file to upgrade, relative to the
+    #   storage path.
+    #   \param configuration_type The file type of the specified file.
+    def upgradeExtraFile(self, storage_path, file_name, configuration_type):
+        self._upgrade_tasks.append(UpgradeTask(storage_path = storage_path, file_name = file_name, configuration_type = configuration_type))
+
     # private:
 
     ##  Adds a version upgrade plug-in.
