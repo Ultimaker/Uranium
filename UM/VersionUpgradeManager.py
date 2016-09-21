@@ -2,7 +2,6 @@
 # Cura is released under the terms of the AGPLv3 or higher.
 
 import collections #For deque, for breadth-first search and to track tasks, and namedtuple.
-import configparser #To read config files to get the version number from them.
 import os #To get the configuration file names and to rename files.
 
 from UM.Logger import Logger
