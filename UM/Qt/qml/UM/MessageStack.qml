@@ -25,7 +25,8 @@ ListView {
         width: UM.Theme.getSize("message").width
         property int labelHeight: messageLabel.height + (UM.Theme.getSize("default_margin").height * 2)
         property int progressBarHeight: totalProgressBar.height + UM.Theme.getSize("default_margin").height
-        height: model.progress == null ? message.labelHeight : message.labelHeight + message.progressBarHeight
+        property int actionButtonsHeight: UM.Theme.getSize("message_button").height+ UM.Theme.getSize("default_margin").height
+        height: model.progress == null ? message.labelHeight : message.labelHeight + message.progressBarHeight + message.actionButtonsHeight
         anchors.horizontalCenter: parent.horizontalCenter;
 
         color: UM.Theme.getColor("message_background")
@@ -60,27 +61,30 @@ ListView {
             color: UM.Theme.getColor("message_text")
             font: UM.Theme.getFont("default")
             wrapMode: Text.Wrap;
+        }
 
-            ProgressBar {
-                id: totalProgressBar;
-                minimumValue: 0;
-                maximumValue: model.max_progress;
+        ProgressBar
+        {
+            id: totalProgressBar;
+            minimumValue: 0;
+            maximumValue: model.max_progress;
 
-                value: 0
+            value: 0
 
-                // Doing this in an explicit binding since the implicit binding breaks on occasion.
-                Binding { target: totalProgressBar; property: "value"; value: model.progress }
+            // Doing this in an explicit binding since the implicit binding breaks on occasion.
+            Binding { target: totalProgressBar; property: "value"; value: model.progress }
 
-                visible: model.progress == null ? false: true//if the progress is null (for example with the loaded message) -> hide the progressbar
-                indeterminate: model.progress == -1 ? true: false //if the progress is unknown (-1) -> the progressbar is indeterminate
-                style: UM.Theme.styles.progressbar
+            visible: model.progress == null ? false: true//if the progress is null (for example with the loaded message) -> hide the progressbar
+            indeterminate: model.progress == -1 ? true: false //if the progress is unknown (-1) -> the progressbar is indeterminate
+            style: UM.Theme.styles.progressbar
 
-                property string backgroundColor: UM.Theme.getColor("message_progressbar_background")
-                property string controlColor: UM.Theme.getColor("message_progressbar_control")
+            property string backgroundColor: UM.Theme.getColor("message_progressbar_background")
+            property string controlColor: UM.Theme.getColor("message_progressbar_control")
 
-                anchors.top: parent.bottom;
-                anchors.topMargin: UM.Theme.getSize("default_margin").width;
-            }
+            anchors.top: messageLabel.bottom;
+            anchors.topMargin: UM.Theme.getSize("default_margin").width;
+            anchors.left: parent.left;
+            anchors.leftMargin: UM.Theme.getSize("default_margin").width;
         }
 
         Button {
@@ -132,7 +136,9 @@ ListView {
             anchors {
                 right: parent.right;
                 rightMargin: UM.Theme.getSize("default_margin").width * 2;
-                verticalCenter: parent.verticalCenter;
+                top: totalProgressBar.bottom
+                topMargin: UM.Theme.getSize("default_margin").height
+                //verticalCenter: parent.verticalCenter;
             }
 
             Repeater
