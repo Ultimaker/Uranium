@@ -1,7 +1,7 @@
 # Copyright (c) 2016 Ultimaker B.V.
 # Cura is released under the terms of the AGPLv3 or higher.
 
-import collections #For deque, for breadth-first search.
+import collections #For deque, for breadth-first search and to track tasks, and namedtuple.
 import configparser #To read config files to get the version number from them.
 import os #To get the configuration file names and to rename files.
 
@@ -14,6 +14,16 @@ import UM.Message #To show the "upgrade succeeded" message.
 import UM.MimeTypeDatabase #To know how to save the resulting files.
 
 catalogue = UM.i18n.i18nCatalog("uranium")
+
+##  File that needs upgrading, with all the required info to upgrade it.
+#
+#   Fields are:
+#   - storage_path: A path to where the type of file is stored before upgrading.
+#     This is used to store the old file in an /old directory.
+#   - file_name: The name to the file that needs to be upgraded, relative to the
+#     storage path.
+#   - configuration_type: The configuration type of the file before upgrading.
+UpgradeTask = collections.namedtuple("UpgradeTask", ["storage_path", "file_name", "configuration_type"])
 
 ##  Regulates the upgrading of configuration from one application version to the
 #   next.
@@ -47,6 +57,7 @@ class VersionUpgradeManager:
         self._get_version_functions = {} #For each config type, gives a function with which to get the version number from those files.
         self._storage_paths = {} #For each config type, a set of storage paths to search for old config files.
         self._current_versions = current_versions #To know which preference versions and types to upgrade to.
+        self._upgrade_tasks = collections.deque() #The files that we still have to upgrade.
 
         self._registry = PluginRegistry.getInstance()
         PluginRegistry.addType("version_upgrade", self._addVersionUpgrade)
@@ -61,18 +72,14 @@ class VersionUpgradeManager:
     #   date.
     def upgrade(self):
         Logger.log("i", "Looking for old configuration files to upgrade.")
+        for upgrade_task in self._getUpgradeTasks(): #Get the initial files to upgrade.
+            self._upgrade_tasks.append(upgrade_task)
+
         upgraded = False #Did we upgrade something?
         paths = self._findShortestUpgradePaths()
-        exclude_folders = ["old", "cache", "plugins"]
-        for old_configuration_type, storage_paths in self._storage_paths.items():
-            for storage_path in storage_paths:
-                storage_path_config = os.path.join(Resources.getConfigStoragePath(), storage_path)
-                for configuration_file in self._getFilesInDirectory(storage_path_config, exclude_paths = exclude_folders):
-                    upgraded |= self._upgradeFile(storage_path_config, configuration_file, old_configuration_type, paths)
-                storage_path_data = os.path.join(Resources.getDataStoragePath(), storage_path) #A second place to look.
-                if storage_path_data != storage_path_config:
-                    for configuration_file in self._getFilesInDirectory(storage_path_data, exclude_paths = exclude_folders):
-                        upgraded |= self._upgradeFile(storage_path_data, configuration_file, old_configuration_type, paths)
+        while self._upgrade_tasks:
+            upgrade_task = self._upgrade_tasks.popleft()
+            self._upgradeFile(upgrade_task.storage_path, upgrade_task.file_name, upgrade_task.configuration_type, paths) #Upgrade this file.
 
         if upgraded:
             message = UM.Message(text=catalogue.i18nc("@info:version-upgrade", "A configuration from an older version of {0} was imported.", UM.Application.getInstance().getApplicationName()))
@@ -162,6 +169,21 @@ class VersionUpgradeManager:
             for filename in filenames:
                 relative_path = os.path.relpath(path, directory)
                 yield os.path.join(relative_path, filename)
+
+    ##  Gets all files that need to be upgraded.
+    #
+    #   \return A generator of UpgradeTasks of files to upgrade.
+    def _getUpgradeTasks(self):
+        exclude_folders = ["old", "cache", "plugins"]
+        for old_configuration_type, storage_paths in self._storage_paths.items():
+            for storage_path in storage_paths:
+                storage_path_config = os.path.join(Resources.getConfigStoragePath(), storage_path)
+                for configuration_file in self._getFilesInDirectory(storage_path_config, exclude_paths = exclude_folders):
+                    yield UpgradeTask(storage_path = storage_path_config, file_name = configuration_file, configuration_type = old_configuration_type)
+                storage_path_data = os.path.join(Resources.getDataStoragePath(), storage_path) #A second place to look.
+                if storage_path_data != storage_path_config:
+                    for configuration_file in self._getFilesInDirectory(storage_path_data, exclude_paths = exclude_folders):
+                        yield UpgradeTask(storage_path = storage_path_data, file_name = configuration_file, configuration_type = old_configuration_type)
 
     ##  Stores an old version of a configuration file away.
     #
