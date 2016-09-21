@@ -68,14 +68,15 @@ class VersionUpgradeManager:
         self._registry = PluginRegistry.getInstance()
         PluginRegistry.addType("version_upgrade", self._addVersionUpgrade)
 
-    ##  Gets the path where a specified type of file should be stored.
+    ##  Gets the paths where a specified type of file should be stored.
     #
     #   This differs from the storage path in the Resources class, since it also
     #   knows where to store old file types. This information is gathered from
     #   the upgrade plug-ins.
     #
     #   \param configuration_type The type of configuration to be stored.
-    def getStoragePath(self, configuration_type):
+    #   \return A set of storage paths for the specified configuration type.
+    def getStoragePaths(self, configuration_type):
         return self._storage_paths[configuration_type]
 
     ##  Changes the target versions to upgrade to.
