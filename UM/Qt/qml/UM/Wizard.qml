@@ -188,6 +188,7 @@ UM.Dialog
 
             // In between property so we can listen to onConnectChanged
             property var content: pagesModel.get(base.currentPage) ? pagesModel.get(base.currentPage).page : Item;
+            property var wizard: base
 
             // Connect the completed of the page to the nextPage of the wizard.
             onContentChanged:
@@ -196,7 +197,7 @@ UM.Dialog
                 {
                     content.onCompleted.connect(base.nextPage)
                 }
-                if ('dialog' in content)
+                if ("dialog" in content)
                 {
                     content.dialog = base
                 }
