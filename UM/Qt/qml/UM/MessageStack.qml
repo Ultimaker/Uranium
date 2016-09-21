@@ -134,9 +134,9 @@ ListView {
             id: actionButtons;
 
             anchors {
-                right: parent.right;
-                rightMargin: UM.Theme.getSize("default_margin").width * 2;
-                top: totalProgressBar.bottom
+                right: parent.right
+                rightMargin: UM.Theme.getSize("default_margin").width
+                top: totalProgressBar.visible ? totalProgressBar.bottom : message.top
                 topMargin: UM.Theme.getSize("default_margin").height
             }
 
