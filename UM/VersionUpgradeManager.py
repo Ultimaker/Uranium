@@ -57,6 +57,7 @@ class VersionUpgradeManager:
         self._storage_paths = {} #For each config type, a set of storage paths to search for old config files.
         self._current_versions = current_versions #To know which preference versions and types to upgrade to.
         self._upgrade_tasks = collections.deque() #The files that we still have to upgrade.
+        self._upgrade_routes = {} #How to upgrade from one version to another. Needs to be pre-computed after all version upgrade plug-ins are registered.
 
         self._registry = PluginRegistry.getInstance()
         PluginRegistry.addType("version_upgrade", self._addVersionUpgrade)
@@ -73,12 +74,12 @@ class VersionUpgradeManager:
         Logger.log("i", "Looking for old configuration files to upgrade.")
         for upgrade_task in self._getUpgradeTasks(): #Get the initial files to upgrade.
             self._upgrade_tasks.append(upgrade_task)
+        self._upgrade_routes = self._findShortestUpgradeRoutes() #Pre-compute the upgrade routes.
 
         upgraded = False #Did we upgrade something?
-        routes = self._findShortestUpgradeRoutes()
         while self._upgrade_tasks:
             upgrade_task = self._upgrade_tasks.popleft()
-            self._upgradeFile(upgrade_task.storage_path, upgrade_task.file_name, upgrade_task.configuration_type, routes) #Upgrade this file.
+            self._upgradeFile(upgrade_task.storage_path, upgrade_task.file_name, upgrade_task.configuration_type) #Upgrade this file.
 
         if upgraded:
             message = UM.Message(text=catalogue.i18nc("@info:version-upgrade", "A configuration from an older version of {0} was imported.", UM.Application.getInstance().getApplicationName()))
@@ -226,10 +227,8 @@ class VersionUpgradeManager:
     #   \param configuration_file The file to upgrade to a current version.
     #   \param old_configuration_type The type of the configuration file before
     #   upgrading it.
-    #   \param routes Pre-computed routes through the version graph that specify
-    #   how to upgrade a file from any version.
     #   \return True if the file was successfully upgraded, or False otherwise.
-    def _upgradeFile(self, storage_path_absolute, configuration_file, old_configuration_type, routes):
+    def _upgradeFile(self, storage_path_absolute, configuration_file, old_configuration_type):
         configuration_file_absolute = os.path.join(storage_path_absolute, configuration_file)
 
         #Read the old file.
@@ -251,10 +250,10 @@ class VersionUpgradeManager:
 
         #Keep converting the file until it's at one of the current versions.
         while (configuration_type, version) not in self._current_versions:
-            if (configuration_type, version) not in routes:
+            if (configuration_type, version) not in self._upgrade_routes:
                 #No version upgrade plug-in claims to be able to upgrade this file.
                 return False
-            new_type, new_version, upgrade_step = routes[(configuration_type, version)]
+            new_type, new_version, upgrade_step = self._upgrade_routes[(configuration_type, version)]
             new_filenames_without_extension = []
             new_files_data = []
             for file_idx, file_data in enumerate(files_data):
