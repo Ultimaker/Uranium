@@ -57,7 +57,7 @@ ListView {
                 return "%1 %2%".arg(model.text).arg(progress)
             }
 
-            text: model.progress > 0 ? messageLabel.getProgressText() : model.text == undefined ? '' : model.text
+            text: model.progress > 0 ? messageLabel.getProgressText() : model.text == undefined ? "" : model.text
             color: UM.Theme.getColor("message_text")
             font: UM.Theme.getFont("default")
             wrapMode: Text.Wrap;
@@ -138,7 +138,6 @@ ListView {
                 rightMargin: UM.Theme.getSize("default_margin").width * 2;
                 top: totalProgressBar.bottom
                 topMargin: UM.Theme.getSize("default_margin").height
-                //verticalCenter: parent.verticalCenter;
             }
 
             Repeater
