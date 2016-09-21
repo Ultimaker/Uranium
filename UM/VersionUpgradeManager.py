@@ -29,14 +29,14 @@ UpgradeTask = collections.namedtuple("UpgradeTask", ["storage_path", "file_name"
 #
 #   The process of upgrading will take a look at all profiles, preferences and
 #   machine instances and check their version numbers. If they are older than
-#   the current version number of their respective type of file, an upgrade path
-#   will be planned for it in order to upgrade the file to the current version
-#   in as few conversions as possible.
+#   the current version number of their respective type of file, an upgrade
+#   route will be planned for it in order to upgrade the file to the current
+#   version in as few conversions as possible.
 #
-#   To this end, the upgrade manager will maintain the shortest paths to the
+#   To this end, the upgrade manager will maintain the shortest routes to the
 #   current version for each of the types of profiles and each old version it
-#   encounters. Once a shortest path is found, it is cached and can be re-used
-#   for all nodes along this path. This minimises the extra start-up time
+#   encounters. Once a shortest route is found, it is cached and can be re-used
+#   for all nodes along this route. This minimises the extra start-up time
 #   required for the conversions.
 #
 #   Old versions of the configuration are not deleted, but put in a folder next
@@ -45,8 +45,8 @@ UpgradeTask = collections.namedtuple("UpgradeTask", ["storage_path", "file_name"
 class VersionUpgradeManager:
     ##  Initialises the version upgrade manager.
     #
-    #   This initialises the cache for shortest upgrade paths, and registers the
-    #   version upgrade plug-ins.
+    #   This initialises the cache for shortest upgrade routes, and registers
+    #   the version upgrade plug-ins.
     #
     #   \param current_versions A dictionary of tuples of configuration types
     #   and their versions currently in use, and with each of these a tuple of
@@ -75,10 +75,10 @@ class VersionUpgradeManager:
             self._upgrade_tasks.append(upgrade_task)
 
         upgraded = False #Did we upgrade something?
-        paths = self._findShortestUpgradePaths()
+        routes = self._findShortestUpgradeRoutes()
         while self._upgrade_tasks:
             upgrade_task = self._upgrade_tasks.popleft()
-            self._upgradeFile(upgrade_task.storage_path, upgrade_task.file_name, upgrade_task.configuration_type, paths) #Upgrade this file.
+            self._upgradeFile(upgrade_task.storage_path, upgrade_task.file_name, upgrade_task.configuration_type, routes) #Upgrade this file.
 
         if upgraded:
             message = UM.Message(text=catalogue.i18nc("@info:version-upgrade", "A configuration from an older version of {0} was imported.", UM.Application.getInstance().getApplicationName()))
@@ -127,7 +127,7 @@ class VersionUpgradeManager:
     #   \return A dictionary of type/version pairs that map to functions that
     #   upgrade said data format one step towards the most recent version, such
     #   that the fewest number of steps is required.
-    def _findShortestUpgradePaths(self):
+    def _findShortestUpgradeRoutes(self):
         result = {} #For each (type, version) tuple, which upgrade function to use to upgrade it towards the newest versions.
 
         #Perform a many-to-many shortest path search with Dijkstra's algorithm.
@@ -142,7 +142,7 @@ class VersionUpgradeManager:
                     if (source_type, source_version) in explored_versions:
                         continue
                     front.append((source_type, source_version))
-                    if (source_type, source_version) not in result: #First time we encounter this version. Due to breadth-first search, this must be part of the shortest path then.
+                    if (source_type, source_version) not in result: #First time we encounter this version. Due to breadth-first search, this must be part of the shortest route then.
                         result[(source_type, source_version)] = (destination_type, destination_version, upgrade_function)
             explored_versions.add((destination_type, destination_version))
 
@@ -226,10 +226,10 @@ class VersionUpgradeManager:
     #   \param configuration_file The file to upgrade to a current version.
     #   \param old_configuration_type The type of the configuration file before
     #   upgrading it.
-    #   \param paths Pre-computed paths through the version graph that specify
+    #   \param routes Pre-computed routes through the version graph that specify
     #   how to upgrade a file from any version.
     #   \return True if the file was successfully upgraded, or False otherwise.
-    def _upgradeFile(self, storage_path_absolute, configuration_file, old_configuration_type, paths):
+    def _upgradeFile(self, storage_path_absolute, configuration_file, old_configuration_type, routes):
         configuration_file_absolute = os.path.join(storage_path_absolute, configuration_file)
 
         #Read the old file.
@@ -251,10 +251,10 @@ class VersionUpgradeManager:
 
         #Keep converting the file until it's at one of the current versions.
         while (configuration_type, version) not in self._current_versions:
-            if (configuration_type, version) not in paths:
+            if (configuration_type, version) not in routes:
                 #No version upgrade plug-in claims to be able to upgrade this file.
                 return False
-            new_type, new_version, upgrade_step = paths[(configuration_type, version)]
+            new_type, new_version, upgrade_step = routes[(configuration_type, version)]
             new_filenames_without_extension = []
             new_files_data = []
             for file_idx, file_data in enumerate(files_data):
