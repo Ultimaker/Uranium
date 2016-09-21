@@ -181,7 +181,7 @@ class VersionUpgradeManager:
                 for configuration_file in self._getFilesInDirectory(storage_path_config, exclude_paths = exclude_folders):
                     yield UpgradeTask(storage_path = storage_path_config, file_name = configuration_file, configuration_type = old_configuration_type)
                 storage_path_data = os.path.join(Resources.getDataStoragePath(), storage_path) #A second place to look.
-                if storage_path_data != storage_path_config:
+                if storage_path_data != storage_path_config: #On Windows and OSX, these are the same. Don't search twice.
                     for configuration_file in self._getFilesInDirectory(storage_path_data, exclude_paths = exclude_folders):
                         yield UpgradeTask(storage_path = storage_path_data, file_name = configuration_file, configuration_type = old_configuration_type)
 
