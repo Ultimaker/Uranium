@@ -54,6 +54,7 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
         self._read_only = False
         self._dirty = False
         self._path = ""
+        self._postponed_emits = []
 
     ##  \copydoc ContainerInterface::getId
     #
@@ -220,7 +221,8 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
     def clear(self):
         all_keys = self._instances.copy()
         for key in all_keys:
-            self.removeInstance(key)
+            self.removeInstance(key, postpone_emit=True)
+        self.sendPostponedEmits()
 
     ##  Get all the keys of the instances of this container
     #   \returns list of keys
@@ -346,15 +348,22 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
         self._instances[key] = instance
 
     ##  Remove an instance from this container.
-    def removeInstance(self, key):
+    #   /param postpone_emit postpone emit until calling sendPostponedEmits
+    def removeInstance(self, key, postpone_emit=False):
         if key not in self._instances:
             return
 
         instance = self._instances[key]
         del self._instances[key]
-        instance.propertyChanged.emit(key, "value")
-        instance.propertyChanged.emit(key, "state")  # State is no longer user state, so signal is needed.
-        instance.propertyChanged.emit(key, "validationState") # If the value was invalid, it should now no longer be invalid.
+        if postpone_emit:
+            # postpone, call sendPostponedEmits later.
+            self._postponed_emits.append((instance.propertyChanged, (key, "value")))
+            self._postponed_emits.append((instance.propertyChanged, (key, "state")))
+            self._postponed_emits.append((instance.propertyChanged, (key, "validationState")))
+        else:
+            instance.propertyChanged.emit(key, "value")
+            instance.propertyChanged.emit(key, "state")  # State is no longer user state, so signal is needed.
+            instance.propertyChanged.emit(key, "validationState") # If the value was invalid, it should now no longer be invalid.
 
         self._dirty = True
 
@@ -381,3 +390,11 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
             return own_weight < other_weight
 
         return self._name < other.name
+
+    ##  Send postponed emits
+    #   These emits are collected from the option postpone_emit.
+    #   Note: the option can be implemented for all functions modifying the container.
+    def sendPostponedEmits(self):
+        while self._postponed_emits:
+            signal, signal_arg = self._postponed_emits.pop(0)
+            signal.emit(*signal_arg)

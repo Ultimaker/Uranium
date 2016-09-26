@@ -165,18 +165,19 @@ class SettingPropertyProvider(QObject):
             Logger.log("w", "Tried to set a property that is not being watched")
             return
 
-        if self._property_values[property_name] == property_value:
-            return
-
         container = self._stack.getContainer(self._store_index)
         if isinstance(container, UM.Settings.DefinitionContainer):
             return
 
-        if property_name == "value" and self._remove_unused_value:
+        # In some cases we clean some stuff and the result is as when nothing as been changed manually.
+        # So the revert button disappears and resolvement may be in place again.
+        if property_name == "value" and self._remove_unused_value and self._property_values.get("resolve", None) == property_value:
             for index in self._stack_levels:
                 if index > self._store_index:
                     old_value = self.getPropertyValue(property_name, index)
                     key_state = str(self._stack.getContainer(self._store_index).getProperty(self._key, "state"))
+                    # sometimes: old value is int, property_value is float
+                    # (and the container is not removed, dus the revert button appears)
                     if str(old_value) == str(property_value) and key_state != "InstanceState.Calculated":
                         # If we change the setting so that it would be the same as a deeper setting, we can just remove
                         # the value. Note that we only do this when this is not caused by the calculated state
@@ -185,6 +186,10 @@ class SettingPropertyProvider(QObject):
                         return
                     else:  # First value that we encountered was different, stop looking & continue as normal.
                         break
+
+        if self._property_values[property_name] == property_value:
+            return
+
         container.setProperty(self._key, property_name, property_value, self._stack)
 
     ##  Manually request the value of a property.
