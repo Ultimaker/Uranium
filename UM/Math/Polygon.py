@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2016 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 import numpy
@@ -20,6 +20,25 @@ except ImportError:
 
 ##  A class representing an immutable arbitrary 2-dimensional polygon.
 class Polygon:
+    ##  Return vertices from an approximate circle.
+    #
+    #   An octagon is returned, which comes close enough to a circle.
+    #
+    #   \param radius The radius of the circle.
+    #   \return A polygon that approximates a circle.
+    @staticmethod
+    def approximatedCircle(radius):
+        return Polygon(points = numpy.array([
+            [-radius, 0],
+            [-radius * 0.707, radius * 0.707],
+            [0, radius],
+            [radius * 0.707, radius * 0.707],
+            [radius, 0],
+            [radius * 0.707, -radius * 0.707],
+            [0, -radius],
+            [-radius * 0.707, -radius * 0.707]
+        ], numpy.float32))
+
     def __init__(self, points = None):
         self._points = NumPyUtil.immutableNDArray(points)
 
