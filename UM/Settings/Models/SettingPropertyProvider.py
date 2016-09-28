@@ -55,7 +55,7 @@ class SettingPropertyProvider(QObject):
                 self._stack.containersChanged.connect(self._update)
         else:
             self._stack = None
-
+        self._validator = None
         self._update()
         self.containerStackIdChanged.emit()
 
@@ -94,6 +94,7 @@ class SettingPropertyProvider(QObject):
     def setKey(self, key):
         if key != self._key:
             self._key = key
+            self._validator = None
             self._update()
             self.keyChanged.emit()
 
