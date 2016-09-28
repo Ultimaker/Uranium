@@ -53,12 +53,7 @@ class InstanceContainersModel(ListModel):
             container.nameChanged.disconnect(self._update)
             container.metaDataChanged.disconnect(self._updateMetaData)
 
-        # Perform each query and assemble the union of all the results.
-        results = set()
-        for filter_dict in self._filter_dicts:
-            results.update(ContainerRegistry.getInstance().findInstanceContainers(**filter_dict))
-        self._instance_containers = list(results)
-
+        self._instance_containers = self._fetchInstanceContainers()
         self._instance_containers.sort(key = self._sortKey)
 
         items = []
@@ -78,6 +73,17 @@ class InstanceContainersModel(ListModel):
             })
         self.setItems(items)
 
+    ##  Fetch the list of containers to display.
+    #
+    #   This method is intended to be overrideable by subclasses.
+    #
+    #   \return \type{List[ContainerInstance]}
+    def _fetchInstanceContainers(self):
+        # Perform each query and assemble the union of all the results.
+        results = set()
+        for filter_dict in self._filter_dicts:
+            results.update(ContainerRegistry.getInstance().findInstanceContainers(**filter_dict))
+        return list(results)
 
     def setSectionProperty(self, property_name):
         if self._section_property != property_name:
