@@ -29,6 +29,7 @@ class SettingPropertyProvider(QObject):
         self._value_used = None
         self._stack_levels = []
         self._remove_unused_value = True
+        self._validator = None
 
     ##  Set the containerStackId property.
     def setContainerStackId(self, stack_id):
@@ -319,6 +320,18 @@ class SettingPropertyProvider(QObject):
             property_value = property_value(self._stack)
 
         if property_name == "value":
-            property_value = UM.Settings.SettingDefinition.settingValueToString(self._stack.getProperty(self._key, "type"), property_value)
-
+            property_value = UM.Settings.SettingDefinition.settingValueToString(
+                self._stack.getProperty(self._key, "type"), property_value)
+        elif property_name == "validationState":
+            # Setting is not validated. This can happen if there is only a setting definition.
+            # We do need to validate it, because a setting defintions value can be set by a function, which could
+            # be an invalid setting.
+            if property_value is None:
+                if not self._validator:
+                    definition = self._stack.getSettingDefinition(self._key)
+                    validator_type = UM.Settings.SettingDefinition.getValidatorForType(definition.type)
+                    if validator_type:
+                        self._validator = validator_type(self._key)
+                if self._validator:
+                    property_value = self._validator(self._stack)
         return str(property_value)
