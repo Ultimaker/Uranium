@@ -12,6 +12,7 @@ import weakref
 from UM.Event import CallFunctionEvent
 from UM.Decorators import deprecated, call_if_enabled
 from UM.Logger import Logger
+from UM.Platform import Platform
 
 # Helper functions for tracing signal emission.
 def _traceEmit(signal, *args, **kwargs):
@@ -94,7 +95,10 @@ class Signal:
 
         if "URANIUM_TRACE_SIGNALS" in os.environ:
             try:
-                self.__name = inspect.stack()[1].frame.f_locals["key"]
+                if Platform.isWindows():
+                    self.__name = inspect.stack()[1][0].f_locals["key"]
+                else:
+                    self.__name = inspect.stack()[1].frame.f_locals["key"]
             except KeyError:
                 self.__name = "Signal"
 
