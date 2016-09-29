@@ -21,185 +21,185 @@ msgstr ""
 #: /home/ruben/Projects/Uranium/plugins/Views/WireframeView/__init__.py:13
 msgctxt "@label"
 msgid "Wireframe View"
-msgstr "Vue filaire"
+msgstr "Tel Çerçeve Görünümü"
 
 #: /home/ruben/Projects/Uranium/plugins/Views/WireframeView/__init__.py:16
 msgctxt "@info:whatsthis"
 msgid "Provides a simple wireframe view."
-msgstr "Fournit une vue filaire simple."
+msgstr "Basit bit tel çerçeve görünümü sunar."
 
 #: /home/ruben/Projects/Uranium/plugins/Views/SimpleView/__init__.py:13
 msgctxt "@label"
 msgid "Simple View"
-msgstr "Vue simple"
+msgstr "Basit Görünüm"
 
 #: /home/ruben/Projects/Uranium/plugins/Views/SimpleView/__init__.py:16
 msgctxt "@info:whatsthis"
 msgid "Provides a simple solid mesh view."
-msgstr "Affiche une vue en maille solide simple."
+msgstr "Basit gerçek bir ağ görünümü sağlar."
 
 #: /home/ruben/Projects/Uranium/plugins/Views/SimpleView/__init__.py:20
 msgctxt "@item:inmenu"
 msgid "Simple"
-msgstr "Simple"
+msgstr "Basit"
 
 #: /home/ruben/Projects/Uranium/plugins/FileLogger/__init__.py:13
 msgctxt "@label"
 msgid "File Logger"
-msgstr "Journal d'évènements dans un fichier"
+msgstr "Dosya Günlükçüsü"
 
 #: /home/ruben/Projects/Uranium/plugins/FileLogger/__init__.py:16
 #: /home/ruben/Projects/Uranium/plugins/ConsoleLogger/__init__.py:16
 msgctxt "@info:whatsthis"
 msgid "Outputs log information to the console."
-msgstr "Affiche les journaux d'évènements (log) dans la console."
+msgstr "Günlük bilgilerinin çıktısını konsola verir."
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLReader/__init__.py:12
 msgctxt "@label"
 msgid "STL Reader"
-msgstr "Lecteur de fichiers STL"
+msgstr "STL Okuyucu"
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLReader/__init__.py:15
 msgctxt "@info:whatsthis"
 msgid "Provides support for reading STL files."
-msgstr "Permet la lecture de fichiers STL"
+msgstr "STL dosyalarının okunması için destek sağlar."
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLReader/__init__.py:21
 msgctxt "@item:inlistbox"
 msgid "STL File"
-msgstr "Fichier STL"
+msgstr "STL Dosyası"
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/OBJReader/__init__.py:13
 msgctxt "@label"
 msgid "Wavefront OBJ Reader"
-msgstr "Lecteur OBJ Wavefront"
+msgstr "Wavefront OBJ Okuyucu"
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/OBJReader/__init__.py:16
 msgctxt "@info:whatsthis"
 msgid "Makes it possbile to read Wavefront OBJ files."
-msgstr "Permet la lecture de fichiers OBJ Wavefront"
+msgstr "Wavefront OBJ dosyalarının okunmasına olanak sağlar."
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/OBJReader/__init__.py:22
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:22
 msgctxt "@item:inlistbox"
 msgid "Wavefront OBJ File"
-msgstr "Fichier OBJ Wavefront"
+msgstr "Wavefront OBJ Dosyası"
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:13
 msgctxt "@label"
 msgid "Wavefront OBJ Writer"
-msgstr "Générateur OBJ Wavefront"
+msgstr "Wavefront OBJ Yazıcı"
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:16
 msgctxt "@info:whatsthis"
 msgid "Makes it possbile to write Wavefront OBJ files."
-msgstr "Permet l'écriture de fichiers OBJ Wavefront"
+msgstr "Wavefront OBJ dosyalarının yazılmasına olanak sağlar."
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:13
 msgctxt "@label"
 msgid "STL Writer"
-msgstr "Générateur STL"
+msgstr "STL Yazıcı"
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:16
 msgctxt "@info:whatsthis"
 msgid "Provides support for writing STL files."
-msgstr "Permet l'écriture de fichiers STL"
+msgstr "STL dosyalarının yazılması için destek sağlar."
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:25
 msgctxt "@item:inlistbox"
 msgid "STL File (Ascii)"
-msgstr "Fichier STL (ASCII)"
+msgstr "STL Dosyası (Ascii)"
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:31
 msgctxt "@item:inlistbox"
 msgid "STL File (Binary)"
-msgstr "Fichier STL (Binaire)"
+msgstr "STL Dosyası (İkili)"
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/3MFWriter/__init__.py:12
 msgctxt "@label"
 msgid "3MF Writer"
-msgstr "Générateur 3MF"
+msgstr "3MF Yazıcı"
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/3MFWriter/__init__.py:15
 msgctxt "@info:whatsthis"
 msgid "Provides support for writing 3MF files."
-msgstr "Permet l'écriture de fichiers 3MF"
+msgstr "3MF dosyalarının yazılması için destek sağlar."
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/3MFWriter/__init__.py:21
 msgctxt "@item:inlistbox"
 msgid "3MF file"
-msgstr "Fichier 3MF"
+msgstr "3MF dosyası"
 
 #: /home/ruben/Projects/Uranium/plugins/ConsoleLogger/__init__.py:13
 msgctxt "@label"
 msgid "Console Logger"
-msgstr "Journal d'évènements en console"
+msgstr "Konsol Günlükçüsü"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/__init__.py:12
 msgctxt "@label"
 msgid "Update Checker"
-msgstr "Mise à jour du contrôleur"
+msgstr "Güncelleme Denetleyicisi"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/__init__.py:15
 msgctxt "@info:whatsthis"
 msgid "Checks for updates of the software."
-msgstr "Vérifier les mises à jour du logiciel."
+msgstr "Yazılım güncellemelerini denetler."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:41
 msgctxt "@info"
 msgid "Could not access update information."
-msgstr "Impossible d'accéder aux informations de mise à jour."
+msgstr "Güncelleme bilgilerine erişilemedi."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:52
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:57
 msgctxt "@info"
 msgid "The version you are using does not support checking for updates."
-msgstr "La version que vous utilisez ne prend pas en charge la vérification des mises à jour."
+msgstr "Kullandığınız sürüm güncellemeleri denetlemeyi desteklemiyor."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:68
 msgctxt "@info"
 msgid "A new version is available!"
-msgstr "Une nouvelle version est disponible !"
+msgstr "Yeni bir sürüm mevcut!"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:69
 msgctxt "@action:button"
 msgid "Download"
-msgstr "Télécharger"
+msgstr "İndir"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:83
 msgctxt "@info"
 msgid "No new version was found."
-msgstr "Aucune nouvelle version n'a été trouvée."
+msgstr "Yeni sürüm bulunamadı."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:94
 msgctxt "@item:inmenu"
 msgid "Check for Updates"
-msgstr "Vérifier les mises à jour"
+msgstr "Güncellemeleri Denetle"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:44
 msgctxt "@item:inmenu"
 msgid "Local File"
-msgstr "Fichier local"
+msgstr "Yerel Dosya"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:45
 msgctxt "@action:button"
 msgid "Save to File"
-msgstr "Enregistrer sous Fichier"
+msgstr "Dosyaya Kaydet"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:46
 msgctxt "@info:tooltip"
 msgid "Save to File"
-msgstr "Enregistrer sous Fichier"
+msgstr "Dosyaya Kaydet"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:65
 msgctxt "@title:window"
 msgid "Save to File"
-msgstr "Enregistrer sous Fichier"
+msgstr "Dosyaya Kaydet"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:120
 msgctxt "@title:window"
 msgid "File Already Exists"
-msgstr "Le fichier existe déjà"
+msgstr "Dosya Zaten Mevcut"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:120
 #, python-brace-format
@@ -207,158 +207,158 @@ msgctxt "@label"
 msgid ""
 "The file <filename>{0}</filename> already exists. Are you sure you want to "
 "overwrite it?"
-msgstr "Le fichier <filename>{0}</filename> existe déjà. Êtes vous sûr de vouloir le remplacer ?"
+msgstr "Dosya <dosya adı>{0}</dosya adı> zaten mevcut. Üstüne yazmak istediğinizden emin misiniz?"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:140
 #, python-brace-format
 msgctxt "@info:progress"
 msgid "Saving to <filename>{0}</filename>"
-msgstr "Enregistrement vers <filename>{0}</filename>"
+msgstr "<Dosya adı>{0}</dosya adı>na kaydediliyor"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:148
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Permission denied when trying to save <filename>{0}</filename>"
-msgstr "Permission refusée lors de l'essai d'enregistrement de <filename>{0}</filename>"
+msgstr "<Dosya adı>{0}</dosya adı> dosyasını kaydetmeye çalışırken izin reddedildi"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:151
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:173
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
-msgstr "Impossible d'enregistrer <filename>{0}</filename> : <message>{1}</message>"
+msgstr "<Dosya adı>{0}</dosya adı>na kaydedilemedi: <ileti>{1}</ileti>"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:167
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Saved to <filename>{0}</filename>"
-msgstr "Enregistré vers <filename>{0}</filename>"
+msgstr "<Dosya adı>{0}</dosya adı>na kaydedildi"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:168
 msgctxt "@action:button"
 msgid "Open Folder"
-msgstr "Ouvrir le dossier"
+msgstr "Klasörü Aç"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:168
 msgctxt "@info:tooltip"
 msgid "Open the folder containing the file"
-msgstr "Ouvrir le dossier contenant le fichier"
+msgstr "Dosyayı içeren klasörü açın"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/__init__.py:12
 msgctxt "@label"
 msgid "Local File Output Device"
-msgstr "Fichier local Périphérique de sortie"
+msgstr "Yerel Dosya Çıkış Cihazı"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/__init__.py:13
 msgctxt "@info:whatsthis"
 msgid "Enables saving to local files."
-msgstr "Active la sauvegarde vers des fichiers locaux."
+msgstr "Yerel dosyalara kaydetmeyi sağlar."
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:13
 msgctxt "@label"
 msgid "Scale Tool"
-msgstr "Outil de mise à l'échelle"
+msgstr "Ölçek Aracı"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:16
 msgctxt "@info:whatsthis"
 msgid "Provides the Scale tool."
-msgstr "Accès à l'outil de mise à l'échelle"
+msgstr "Ölçek aracı sağlar."
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:20
 msgctxt "@label"
 msgid "Scale"
-msgstr "Mettre à l'échelle"
+msgstr "Ölçek"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:21
 msgctxt "@info:tooltip"
 msgid "Scale Model"
-msgstr "Mettre à l'échelle le modèle"
+msgstr "Ölçek Modeli"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/SelectionTool/__init__.py:13
 msgctxt "@label"
 msgid "Selection Tool"
-msgstr "Outil de sélection"
+msgstr "Seçim Aracı"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/SelectionTool/__init__.py:16
 msgctxt "@info:whatsthis"
 msgid "Provides the Selection tool."
-msgstr "Accès à l'outil de sélection."
+msgstr "Seçim aracı sağlar."
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:13
 msgctxt "@label"
 msgid "Translate Tool"
-msgstr "Outil de positionnement"
+msgstr "Çeviri Aracı"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:16
 msgctxt "@info:whatsthis"
 msgid "Provides the Translate tool."
-msgstr "Accès à l'outil de positionnement"
+msgstr "Çeviri aracı sağlar."
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:20
 msgctxt "@action:button"
 msgid "Move"
-msgstr "Déplacer"
+msgstr "Taşıma"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:21
 msgctxt "@info:tooltip"
 msgid "Move Model"
-msgstr "Déplacer le modèle"
+msgstr "Taşıma Modu"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/CameraTool/__init__.py:12
 msgctxt "@label"
 msgid "Camera Tool"
-msgstr "Caméra"
+msgstr "Kamera Aracı"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/CameraTool/__init__.py:15
 msgctxt "@info:whatsthis"
 msgid "Provides the tool to manipulate the camera."
-msgstr "Accès à l'outil de manipulation de la caméra"
+msgstr "Aracın kamerayı yönlendirmesini sağlar."
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:12
 msgctxt "@label"
 msgid "Rotate Tool"
-msgstr "Outil de rotation"
+msgstr "Döndürme Aracı"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:15
 msgctxt "@info:whatsthis"
 msgid "Provides the Rotate tool."
-msgstr "Accès à l'outil de rotation"
+msgstr "Döndürme aracı sağlar."
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:19
 msgctxt "@label"
 msgid "Rotate"
-msgstr "Pivoter"
+msgstr "Döndürme"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:20
 msgctxt "@info:tooltip"
 msgid "Rotate Model"
-msgstr "Pivoter le modèle"
+msgstr "Döndürme Modeli"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:12
 msgctxt "@label"
 msgid "Mirror Tool"
-msgstr "Outil de symétrie"
+msgstr "Ayna Aracı"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:15
 msgctxt "@info:whatsthis"
 msgid "Provides the Mirror tool."
-msgstr "Accès à l'outil de symétrie"
+msgstr "Ayna aracı sağlar."
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:19
 msgctxt "@label"
 msgid "Mirror"
-msgstr "Symétrie"
+msgstr "Ayna"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:20
 msgctxt "@info:tooltip"
 msgid "Mirror Model"
-msgstr "Modèle symétrique"
+msgstr "Ayna Modeli"
 
 #: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:124
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:46
 msgctxt "@item:inlistbox"
 msgid "All Files (*)"
-msgstr "Tous les fichiers (*)"
+msgstr "Tüm Dosyalar (*)"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:95
 #, python-brace-format
@@ -366,21 +366,21 @@ msgctxt ""
 "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is "
 "minutes"
 msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
-msgstr "{0:0>2}j {1:0>2}h {2:0>2}min"
+msgstr "{0:0>2}g {1:0>2}sa {2:0>2}dk"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:97
 #, python-brace-format
 msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
 msgid "{0:0>2}h {1:0>2}min"
-msgstr "{0:0>2}h {1:0>2}min"
+msgstr "{0:0>2}sa {1:0>2}dk"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:100
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is days"
 msgid "{0} day"
 msgid_plural "{0} days"
-msgstr[0] "{0} jour"
-msgstr[1] "{0} jours"
+msgstr[0] "{0} gün"
+msgstr[1] "{0} gün"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:100
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:102
@@ -388,8 +388,8 @@ msgstr[1] "{0} jours"
 msgctxt "@label Long duration format. {0} is hours"
 msgid "{0} hour"
 msgid_plural "{0} hours"
-msgstr[0] "{0} heure"
-msgstr[1] "{0} heures"
+msgstr[0] "{0} saat"
+msgstr[1] "{0} saat"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:100
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:102
@@ -398,180 +398,180 @@ msgstr[1] "{0} heures"
 msgctxt "@label Long duration format. {0} is minutes"
 msgid "{0} minute"
 msgid_plural "{0} minutes"
-msgstr[0] "{0} minute"
-msgstr[1] "{0} minutes"
+msgstr[0] "{0} dakika"
+msgstr[1] "{0} dakika"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:87
 msgctxt "@info:progress"
 msgid "Loading plugins..."
-msgstr "Chargement des plug-ins..."
+msgstr "Eklentiler yükleniyor..."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:94
 msgctxt "@info:progress"
 msgid "Updating configuration..."
-msgstr "Mise à jour de la configuration..."
+msgstr "Yapılandırma güncelleniyor..."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:105
 msgctxt "@info:progress"
 msgid "Loading preferences..."
-msgstr "Chargement des préférences..."
+msgstr "Tercihler yükleniyor..."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:45
 #, python-brace-format
 msgctxt "@item:inlistbox"
 msgid "All Supported Types ({0})"
-msgstr "Tous les types supportés ({0})"
+msgstr "Tüm desteklenen türler ({0})"
 
 #: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:33
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Cannot open file type <filename>{0}</filename>"
-msgstr "Impossible d'ouvrir le type de fichier <filename>{0}</filename>"
+msgstr "<Dosya adı>{0}</dosya adı> dosya türünü açılamıyor"
 
 #: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:42
 #: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:63
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Failed to load <filename>{0}</filename>"
-msgstr "Échec du chargement de <filename>{0}</filename>"
+msgstr "<Dosya adı>{0}</dosya adı> yüklemesi başarısız oldu"
 
 #: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:46
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Loading <filename>{0}</filename>"
-msgstr "Chargement du fichier <filename>{0}</filename>"
+msgstr "<Dosya adı>{0}</dosya adı> yükleniyor"
 
 #: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:95
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled object to {0}% of original size"
-msgstr "Mise à l'échelle automatique de l'objet à {0}% de sa taille d'origine"
+msgstr "Nesne özgün boyutun %{0}’sine kadar otomatik ölçeklendirildi"
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:78
 #, python-brace-format
 msgctxt "@info:version-upgrade"
 msgid "A configuration from an older version of {0} was imported."
-msgstr "Une configuration d'une ancienne version de {0} a été importée."
+msgstr "Eski {0} versiyonundan bir yapılandırma içe aktarıldı."
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:53
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:22
 msgctxt "@action:button"
 msgid "Reset"
-msgstr "Réinitialiser"
+msgstr "Sıfırla"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:66
 msgctxt "@action:button"
 msgid "Scale to Max"
-msgstr "Mettre à l'échelle maximale"
+msgstr "En Yükseğe ölçeklendir"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:91
 msgctxt "@option:check"
 msgid "Snap Scaling"
-msgstr "Ajustement de l'échelle simplifié"
+msgstr "Ölçeklendirmeyi Tuttur"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:108
 msgctxt "@option:check"
 msgid "Uniform Scaling"
-msgstr "Échelle uniforme"
+msgstr "Ölçeklendirmeyi Aynı Yap"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:39
 msgctxt "@action:button"
 msgid "Center on Build Plate"
-msgstr "Centrer sur le plateau"
+msgstr "Yapı Levhasında Ortala"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:57
 msgctxt "@action:button"
 msgid "Drop to Build Plate"
-msgstr "Abaisser sur le plateau"
+msgstr "Yapı Levhasına Bırak"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:39
 msgctxt "@action:button"
 msgid "Lay flat"
-msgstr "Mettre à plat"
+msgstr "Düz Şekilde Yerleştir"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:55
 msgctxt "@action:checkbox"
 msgid "Snap Rotation"
-msgstr "Rotation simplifiée"
+msgstr "Döndürmeyi Tuttur"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:19
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:148
 msgctxt "@title:tab"
 msgid "Plugins"
-msgstr "Plug-ins"
+msgstr "Eklentiler"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:81
 msgctxt "@label"
 msgid "Info..."
-msgstr "Info..."
+msgstr "Bilgi..."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:101
 msgctxt "@label"
 msgid "No text available"
-msgstr "Aucun texte disponible"
+msgstr "Metin yok"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:107
 msgctxt "@title:window"
 msgid "About %1"
-msgstr "À propos de %1"
+msgstr "Yaklaşık %1"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:139
 msgctxt "@label"
 msgid "Author:"
-msgstr "Auteur :"
+msgstr "Yazar:"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:161
 msgctxt "@label"
 msgid "Version:"
-msgstr "Version :"
+msgstr "Sürüm:"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:179
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:113
 msgctxt "@action:button"
 msgid "Close"
-msgstr "Fermer"
+msgstr "Kapat"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:18
 msgctxt "@title:window"
 msgid "Preferences"
-msgstr "Préférences"
+msgstr "Tercihler"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:106
 msgctxt "@action:button"
 msgid "Defaults"
-msgstr "Rétablir les paramètres par défaut"
+msgstr "Varsayılanlar"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:146
 msgctxt "@title:tab"
 msgid "General"
-msgstr "Général"
+msgstr "Genel"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:147
 msgctxt "@title:tab"
 msgid "Settings"
-msgstr "Paramètres"
+msgstr "Ayarlar"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:19
 msgctxt "@title:window"
 msgid "Rename"
-msgstr "Renommer"
+msgstr "Yeniden Adlandır"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:56
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:240
 msgctxt "@action:button"
 msgid "Cancel"
-msgstr "Annuler"
+msgstr "İptal Et"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:60
 msgctxt "@action:button"
 msgid "Ok"
-msgstr "Ok"
+msgstr "Tamam"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:31
 msgctxt "@item:tooltip"
 msgid ""
 "This setting has been hidden by the active machine and will not be visible."
-msgstr "Ce paramètre a été masqué par la machine active et ne sera pas visible."
+msgstr "Bu ayar etkin makine tarafından saklanmış ve görünür olmayacak."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:48
 msgctxt "@item:tooltip %1 is list of setting names"
@@ -581,135 +581,135 @@ msgid ""
 msgid_plural ""
 "This setting has been hidden by the values of %1. Change the values of those "
 "settings to make this setting visible."
-msgstr[0] "Ce paramètre a été masqué par la valeur de %1. Modifiez la valeur de ce paramètre pour le rendre visible."
-msgstr[1] "Ce paramètre a été masqué par les valeurs de %1. Modifiez les valeurs de ces paramètres pour les rendre visibles."
+msgstr[0] "Bu ayar %1 değerle saklanmış. Ayarı görünür yapmak için ayar değerini değiştirin."
+msgstr[1] "Bu ayar %1 değerle saklanmış. Ayarı görünür yapmak için bu ayarların değerini değiştirin."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityPage.qml:12
 msgctxt "@title:tab"
 msgid "Setting Visibility"
-msgstr "Visibilité des paramètres"
+msgstr "Görünürlüğü Ayarlama"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityPage.qml:42
 msgctxt "@label:textbox"
 msgid "Check all"
-msgstr "Vérifier tout"
+msgstr "Tümünü Denetle"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityPage.qml:89
 msgctxt "@label:textbox"
 msgid "Filter..."
-msgstr "Filtrer..."
+msgstr "Filtrele..."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:12
 msgctxt "@title:tab"
 msgid "Printers"
-msgstr "Imprimantes"
+msgstr "Yazıcılar"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:39
 msgctxt "@label"
 msgid "Type"
-msgstr "Type"
+msgstr "Tür"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:16
 msgctxt "@title:window"
 msgid "Confirm Remove"
-msgstr "Confirmer la suppression"
+msgstr "Kaldırmayı Onayla"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:17
 msgctxt "@label (%1 is object name)"
 msgid "Are you sure you wish to remove %1? This cannot be undone!"
-msgstr "Êtes-vous sûr de vouloir supprimer l'objet %1 ? Vous ne pourrez pas revenir en arrière !"
+msgstr "%1’i kaldırmak istediğinizden emin misiniz? Bu eylem geri alınamaz!"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:14
 msgctxt "@title:tab"
 msgid "Profiles"
-msgstr "Profils"
+msgstr "Profiller"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:15
 msgctxt "@label"
 msgid "Duplicate"
-msgstr "Dupliquer"
+msgstr "Çoğalt"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:45
 msgctxt "@label %1 is printer name"
 msgid "Printer: %1"
-msgstr "Imprimante : %1"
+msgstr "Yazıcı: %1"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:83
 msgctxt "@action:button"
 msgid "Update \"%1\""
-msgstr "Mettre à jour « %1 »"
+msgstr "“%1” güncelleme"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:84
 msgctxt "@action:button"
 msgid "Update profile"
-msgstr "Mettre à jour un profil"
+msgstr "Profili güncelle"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:92
 msgctxt "@action:button"
 msgid "Discard current settings"
-msgstr "Ignorer les paramètres actuels"
+msgstr "Geçerli ayarları çıkar"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:93
 msgctxt "@action:button"
 msgid "Reload profile"
-msgstr "Recharger un profil"
+msgstr "Profili yeniden yükle"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:107
 msgctxt "@label"
 msgid "Based on"
-msgstr "Basé sur"
+msgstr "Başvuru stili"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:107
 msgctxt "@label"
 msgid "Profile type"
-msgstr "Type de profil"
+msgstr "Profil türü"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:112
 msgctxt "@label"
 msgid "Protected profile"
-msgstr "Profil protégé"
+msgstr "Korumalı profil"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:112
 msgctxt "@label"
 msgid "Custom profile"
-msgstr "Personnaliser le profil"
+msgstr "Özel profil"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:139
 msgctxt "@action:button"
 msgid "Import"
-msgstr "Importer"
+msgstr "İçe Aktar"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:146
 msgctxt "@action:button"
 msgid "Export"
-msgstr "Exporter"
+msgstr "Dışa Aktar"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:184
 msgctxt "@window:title"
 msgid "Import Profile"
-msgstr "Importer un profil"
+msgstr "Profili İçe Aktar"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:192
 msgctxt "@title:window"
 msgid "Import Profile"
-msgstr "Importer un profil"
+msgstr "Profili İçe Aktar"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:219
 msgctxt "@title:window"
 msgid "Export Profile"
-msgstr "Exporter un profil"
+msgstr "Profili Dışa Aktar"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:214
 msgctxt "@action:button"
 msgid "Back"
-msgstr "Précédent"
+msgstr "Geri"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:230
 msgctxt "@action:button"
 msgid "Finish"
-msgstr "Fin"
+msgstr "Bitir"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:230
 msgctxt "@action:button"
 msgid "Next"
-msgstr "Suivant"
+msgstr "İleri"
