@@ -443,7 +443,14 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     def setNextStack(self, stack):
         if self is stack:
             raise Exception("Next stack can not be itself")
+        if self._next_stack == stack:
+            return
+        # Link the propertyChanged signal of next to self.
+        if self._next_stack:
+            self._next_stack.propertyChanged.disconnect(self.propertyChanged)
         self._next_stack = stack
+        if self._next_stack:
+            self._next_stack.propertyChanged.connect(self.propertyChanged)
 
     ##  Send postponed emits
     #   These emits are collected from the option postpone_emit.
