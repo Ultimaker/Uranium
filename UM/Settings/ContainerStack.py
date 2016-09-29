@@ -243,7 +243,9 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
             self._metadata = dict(parser["metadata"])
 
         # The containers are saved in a single comma-separated list.
-        container_id_list = parser["general"].get("containers", "").split(",")
+        container_string = parser["general"].get("containers", "")
+        Logger.log("d", "While serializing, we got the following container string: %s", container_string)
+        container_id_list = container_string.split(",")
         for container_id in container_id_list:
             if container_id != "":
                 containers = UM.Settings.ContainerRegistry.getInstance().findContainers(id = container_id)
@@ -251,7 +253,7 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
                     containers[0].propertyChanged.connect(self.propertyChanged)
                     self._containers.append(containers[0])
                 else:
-                    raise Exception("When trying to deserialize, we received an unknown ID (%s) for container" % container_id)
+                    raise Exception("When trying to deserialize %s, we received an unknown ID (%s) for container %s" % (self._id, container_id))
 
         ## TODO; Deserialize the containers.
 
