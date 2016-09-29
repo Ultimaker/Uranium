@@ -356,10 +356,10 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
         instance = self._instances[key]
         del self._instances[key]
         if postpone_emit:
-            # postpone, call sendPostponedEmits later.
-            self._postponed_emits.append((instance.propertyChanged, (key, "value")))
-            self._postponed_emits.append((instance.propertyChanged, (key, "state")))
+            # postpone, call sendPostponedEmits later. The order matters.
             self._postponed_emits.append((instance.propertyChanged, (key, "validationState")))
+            self._postponed_emits.append((instance.propertyChanged, (key, "state")))
+            self._postponed_emits.append((instance.propertyChanged, (key, "value")))
         else:
             # Notify listeners of changed properties for all related properties
             instance.propertyChanged.emit(key, "value")
