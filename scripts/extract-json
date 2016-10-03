@@ -37,6 +37,6 @@ extract() {
 dir=$1; shift
 dest=$1; shift
 
-for file in $(find "$dir" -name *.json | grep -v 'tests'); do
+for file in $(find -L "$dir" -name *.json | grep -v 'tests'); do
     extract $dir $dest $file
 done

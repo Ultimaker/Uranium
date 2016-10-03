@@ -9,4 +9,4 @@
 #
 dir=$1
 dest=$2
-xgettext --from-code=UTF-8 --language=python -ki18n:1 -ki18nc:1c,2 -o $dest $(find "$dir" -name \*.py)
+xgettext --from-code=UTF-8 --language=python -ki18n:1 -ki18nc:1c,2 -o $dest $(find -L "$dir" -name \*.py)
