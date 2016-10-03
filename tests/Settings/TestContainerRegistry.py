@@ -66,6 +66,14 @@ class MockContainer(UM.Settings.ContainerInterface.ContainerInterface, UM.Plugin
     def isReadOnly(self):
         return False
 
+    ##  Mock get path
+    def getPath(self):
+        return "/path/to/the/light/side"
+
+    ##  Mock set path
+    def setPath(self, path):
+        pass
+
     ##  Gets the value of a property of a container item.
     #
     #   This method is not implemented in the mock container.

@@ -46,6 +46,14 @@ class MockContainer(UM.Settings.ContainerInterface.ContainerInterface):
     def isReadOnly(self):
         return False
 
+    ##  Mock get path
+    def getPath(self):
+        return "/path/to/the/light/side"
+
+    ##  Mock set path
+    def setPath(self, path):
+        pass
+
     ##  Returns the metadata dictionary.
     #
     #   \return A dictionary containing metadata for this container stack.
