@@ -173,7 +173,7 @@ class SettingPropertyProvider(QObject):
 
         # In some cases we clean some stuff and the result is as when nothing as been changed manually.
         # So the revert button disappears and resolvement may be in place again.
-        if property_name == "value" and self._remove_unused_value and self._property_values.get("resolve", None) == property_value:
+        if property_name == "value" and self._remove_unused_value:
             for index in self._stack_levels:
                 if index > self._store_index:
                     old_value = self.getPropertyValue(property_name, index)
