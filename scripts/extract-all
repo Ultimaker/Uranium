@@ -9,5 +9,5 @@
 #
 dir=$1
 dest=$2
-xgettext --from-code=UTF-8 --language=python -ki18n:1 -ki18nc:1c,2 -ki18np:1,2 -ki18ncp:1c,2,3  -o $dest $(find "$dir" -name \*.py)
-xgettext --from-code=UTF-8 --join-existing --language=javascript -ki18n:1 -ki18nc:1c,2 -ki18np:1,2 -ki18ncp:1c,2,3  -o $dest $(find "$dir" -name \*.qml)
+xgettext --from-code=UTF-8 --language=python -ki18n:1 -ki18nc:1c,2 -ki18np:1,2 -ki18ncp:1c,2,3  -o $dest $(find -L "$dir" -name \*.py)
+xgettext --from-code=UTF-8 --join-existing --language=javascript -ki18n:1 -ki18nc:1c,2 -ki18np:1,2 -ki18ncp:1c,2,3  -o $dest $(find -L "$dir" -name \*.qml)
