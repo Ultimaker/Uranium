@@ -136,25 +136,6 @@ class SettingPropertyProvider(QObject):
             return -1
         return self._stack_levels
 
-    def _updateStackLevels(self):
-        levels = []
-        # Start looking at the stack this provider is attached to.
-        current_stack = self._stack
-        index = 0
-        while current_stack:
-            for container in current_stack.getContainers():
-                try:
-                    if container.getProperty(self._key, "value") is not None:
-                        levels.append(index)
-                except AttributeError:
-                    pass
-                index += 1
-            # If there is a next stack, check that one as well.
-            current_stack = current_stack.getNextStack()
-        if levels != self._stack_levels:
-            self._stack_levels = levels
-            self.stackLevelChanged.emit()
-
     ##  Set the value of a property.
     #
     #   \param stack_index At which level in the stack should this property be set?
@@ -313,6 +294,25 @@ class SettingPropertyProvider(QObject):
         # Force update of value_used
         self._value_used = None
         self.isValueUsedChanged.emit()
+
+    def _updateStackLevels(self):
+        levels = []
+        # Start looking at the stack this provider is attached to.
+        current_stack = self._stack
+        index = 0
+        while current_stack:
+            for container in current_stack.getContainers():
+                try:
+                    if container.getProperty(self._key, "value") is not None:
+                        levels.append(index)
+                except AttributeError:
+                    pass
+                index += 1
+            # If there is a next stack, check that one as well.
+            current_stack = current_stack.getNextStack()
+        if levels != self._stack_levels:
+            self._stack_levels = levels
+            self.stackLevelChanged.emit()
 
     def _getPropertyValue(self, property_name):
         property_value = self._stack.getProperty(self._key, property_name)
