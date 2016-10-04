@@ -58,7 +58,7 @@ class ThreeMFWriter(MeshWriter):
             content_types_file.compress_type = zipfile.ZIP_DEFLATED
             content_types = ET.Element("Types", xmlns = self._namespaces["content-types"])
             rels_type = ET.SubElement(content_types, "Default", Extension = "rels", ContentType = "application/vnd.openxmlformats-package.relationships+xml")
-            model_type = ET.SubElement(content_types, "Default", Extension="model", ContentType="application/vnd.ms-package.3dmanufacturing-3dmodel+xml")
+            model_type = ET.SubElement(content_types, "Default", Extension = "model", ContentType = "application/vnd.ms-package.3dmanufacturing-3dmodel+xml")
 
             # Create _rels/.rels file
             relations_file = zipfile.ZipInfo("_rels/.rels")
