@@ -177,7 +177,7 @@ class SettingPropertyProvider(QObject):
         if self._property_map.value(property_name) == property_value and self._remove_unused_value:
             return
 
-        container.setProperty(self._key, property_name, property_value, self._stack)
+        container.setProperty(self._key, property_name, property_value)
 
     ##  Manually request the value of a property.
     #   The most notable difference with the properties is that you have more control over at what point in the stack
