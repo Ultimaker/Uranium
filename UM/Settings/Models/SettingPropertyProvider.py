@@ -2,6 +2,7 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 from PyQt5.QtCore import QObject, QVariant, pyqtProperty, pyqtSlot, pyqtSignal
+from PyQt5.QtQml import QQmlPropertyMap
 
 from UM.Logger import Logger
 from UM.Settings.SettingFunction import SettingFunction
@@ -19,12 +20,13 @@ class SettingPropertyProvider(QObject):
     def __init__(self, parent = None, *args, **kwargs):
         super().__init__(parent = parent, *args, **kwargs)
 
+        self._property_map = None
+
         self._stack_id = ""
         self._stack = None
         self._key = ""
         self._relations = set()
         self._watched_properties = []
-        self._property_values = {}
         self._store_index = 0
         self._value_used = None
         self._stack_levels = []
@@ -106,9 +108,9 @@ class SettingPropertyProvider(QObject):
         return self._key
 
     propertiesChanged = pyqtSignal()
-    @pyqtProperty("QVariantMap", notify = propertiesChanged)
+    @pyqtProperty(QQmlPropertyMap, notify = propertiesChanged)
     def properties(self):
-        return self._property_values
+        return self._property_map
 
     @pyqtSlot()
     def forcePropertiesChanged(self):
@@ -191,7 +193,7 @@ class SettingPropertyProvider(QObject):
 
         # _remove_unused_value is used when the stack value differs from the effective value
         # i.e. there is a resolve function
-        if self._property_values[property_name] == property_value and self._remove_unused_value:
+        if self._property_map.value(property_name) == property_value and self._remove_unused_value:
             return
 
         container.setProperty(self._key, property_name, property_value, self._stack)
@@ -289,12 +291,7 @@ class SettingPropertyProvider(QObject):
         if property_name not in self._watched_properties:
             return
 
-        value = self._getPropertyValue(property_name)
-
-        if self._property_values[property_name] != value:
-            self._property_values[property_name] = value
-            self.propertiesChanged.emit()
-
+        self._property_map.insert(property_name, self._getPropertyValue(property_name))
         self._updateStackLevels()
 
     def _update(self, container = None):
@@ -306,13 +303,12 @@ class SettingPropertyProvider(QObject):
             for relation in filter(lambda r: r.type == UM.Settings.SettingRelation.RelationType.RequiredByTarget and r.role == "value", relations):
                 self._relations.add(relation.target.key)
 
-        new_properties = {}
-        for property_name in self._watched_properties:
-            new_properties[property_name] = self._getPropertyValue(property_name)
+        self._property_map = QQmlPropertyMap(self)
 
-        if new_properties != self._property_values:
-            self._property_values = new_properties
-            self.propertiesChanged.emit()
+        for property_name in self._watched_properties:
+            self._property_map.insert(property_name, self._getPropertyValue(property_name))
+
+        self.propertiesChanged.emit()
 
         # Force update of value_used
         self._value_used = None
