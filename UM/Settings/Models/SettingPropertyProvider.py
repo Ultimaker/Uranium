@@ -41,7 +41,7 @@ class SettingPropertyProvider(QObject):
         self._stack_id = stack_id
 
         if self._stack:
-            self._stack.propertyChanged.disconnect(self._onPropertyChanged)
+            self._stack.propertiesChanged.disconnect(self._onPropertiesChanged)
             self._stack.containersChanged.disconnect(self._update)
 
         if self._stack_id:
@@ -53,7 +53,7 @@ class SettingPropertyProvider(QObject):
                     self._stack = stacks[0]
 
             if self._stack:
-                self._stack.propertyChanged.connect(self._onPropertyChanged)
+                self._stack.propertiesChanged.connect(self._onPropertiesChanged)
                 self._stack.containersChanged.connect(self._update)
         else:
             self._stack = None
@@ -261,23 +261,23 @@ class SettingPropertyProvider(QObject):
 
     # protected:
 
-    def _onPropertyChanged(self, key, property_name):
+    def _onPropertiesChanged(self, key, property_names):
         if key != self._key:
             if key in self._relations:
                 self._value_used = None
                 self.isValueUsedChanged.emit()
-
             return
 
-        if property_name not in self._watched_properties:
-            return
+        for property_name in property_names:
+            if property_name not in self._watched_properties:
+                continue
 
-        self._property_map.insert(property_name, self._getPropertyValue(property_name))
-        self._updateStackLevels()
+            self._property_map.insert(property_name, self._getPropertyValue(property_name))
 
     def _update(self, container = None):
         if not self._stack or not self._watched_properties or not self._key:
             return
+
         self._updateStackLevels()
         relations = self._stack.getProperty(self._key, "relations")
         if relations:  # If the setting doesn't have the property relations, None is returned
