@@ -172,14 +172,14 @@ class SettingPropertyProvider(QObject):
             return
 
         # In some cases we clean some stuff and the result is as when nothing as been changed manually.
-        # So the revert button disappears and resolvement may be in place again.
         if property_name == "value" and self._remove_unused_value:
             for index in self._stack_levels:
                 if index > self._store_index:
                     old_value = self.getPropertyValue(property_name, index)
+
                     key_state = str(self._stack.getContainer(self._store_index).getProperty(self._key, "state"))
                     # sometimes: old value is int, property_value is float
-                    # (and the container is not removed, dus the revert button appears)
+                    # (and the container is not removed, so the revert button appears)
                     if str(old_value) == str(property_value) and key_state != "InstanceState.Calculated":
                         # If we change the setting so that it would be the same as a deeper setting, we can just remove
                         # the value. Note that we only do this when this is not caused by the calculated state
@@ -189,7 +189,9 @@ class SettingPropertyProvider(QObject):
                     else:  # First value that we encountered was different, stop looking & continue as normal.
                         break
 
-        if self._property_values[property_name] == property_value:
+        # _remove_unused_value is used when the stack value differs from the effective value
+        # i.e. there is a resolve function
+        if self._property_values[property_name] == property_value and self._remove_unused_value:
             return
 
         container.setProperty(self._key, property_name, property_value, self._stack)
@@ -292,6 +294,7 @@ class SettingPropertyProvider(QObject):
         if self._property_values[property_name] != value:
             self._property_values[property_name] = value
             self.propertiesChanged.emit()
+
         self._updateStackLevels()
 
     def _update(self, container = None):
