@@ -16,7 +16,8 @@ class ThreeMFWriter(MeshWriter):
     def __init__(self):
         super().__init__()
         self._namespaces = {
-            "3mf": "http://schemas.microsoft.com/3dmanufacturing/core/2015/02"
+            "3mf": "http://schemas.microsoft.com/3dmanufacturing/core/2015/02",
+            "content-types": "http://schemas.openxmlformats.org/package/2006/content-types"
         }
 
     def _convertMatrixToString(self, matrix):
@@ -52,6 +53,10 @@ class ThreeMFWriter(MeshWriter):
             # Because zipfile is stupid and ignores archive-level compression settings when writing with ZipInfo.
             model_file.compress_type = zipfile.ZIP_DEFLATED
             content_types_file.compress_type = zipfile.ZIP_DEFLATED
+
+            content_types = ET.Element("Types", xmlns = self._namespaces["content-types"])
+            rels_type = ET.SubElement(content_types, "Default", Extension = "rels", ContentType = "application/vnd.openxmlformats-package.relationships+xml")
+            model_type = ET.SubElement(content_types, "Default", Extension="model", ContentType="application/vnd.ms-package.3dmanufacturing-3dmodel+xml")
             model = ET.Element('model', unit = "millimeter", xmlns = self._namespaces["3mf"])
             resources = ET.SubElement(model, "resources")
             build = ET.SubElement(model, "build")
@@ -85,7 +90,7 @@ class ThreeMFWriter(MeshWriter):
                     item = ET.SubElement(build, "item", objectid = str(index+1)) #, transform = transformation_string)
 
             archive.writestr(model_file, b'<?xml version="1.0" encoding="UTF-8"?> \n' + ET.tostring(model))
-            archive.writestr(content_types_file, "")
+            archive.writestr(content_types_file,  b'<?xml version="1.0" encoding="UTF-8"?> \n' + ET.tostring(content_types))
         except Exception as e:
             print("Error writing zip file", e)
             return False
