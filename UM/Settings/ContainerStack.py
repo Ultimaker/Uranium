@@ -253,7 +253,7 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
                     containers[0].propertyChanged.connect(self.propertyChanged)
                     self._containers.append(containers[0])
                 else:
-                    raise Exception("When trying to deserialize %s, we received an unknown ID (%s) for container %s" % (self._id, container_id))
+                    raise Exception("When trying to deserialize %s, we received an unknown ID (%s) for container" % (self._id, container_id))
 
         ## TODO; Deserialize the containers.
 
