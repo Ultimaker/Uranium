@@ -74,13 +74,6 @@ class STLReader(MeshReader):
 
         mesh_builder.setVertices(vertices)
 
-        # Create an nd array containing indicies of faces.
-        # As we have the data duplicated & packed, it will always count up;
-        # [[0, 1, 2]
-        #  [3, 4, 5]]
-        mesh_builder.setIndices(numpy.resize(numpy.arange(int(loaded_data.points.size / 3), dtype=numpy.int32),
-                                             (int(loaded_data.points.size / 9), 3)))
-
     # Private
     ## Load the STL data from file by consdering the data as ascii.
     # \param mesh The MeshData object where the data is written to.
