@@ -382,8 +382,8 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
         self._definition = definition
 
     def __lt__(self, other):
-        own_weight = self.getMetaDataEntry("weight")
-        other_weight = other.getMetaDataEntry("weight")
+        own_weight = int(self.getMetaDataEntry("weight", 0))
+        other_weight = int(other.getMetaDataEntry("weight", 0))
 
         if own_weight and other_weight:
             return own_weight < other_weight
