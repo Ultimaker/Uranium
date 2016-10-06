@@ -96,7 +96,7 @@ class DefinitionContainersModel(ListModel):
                 result.append(section_value != self._preferred_section_value)
             result.append(section_value)
 
-        result.append(item.getMetaDataEntry("weight", 0))
+        result.append(int(item.getMetaDataEntry("weight", 0)))
         result.append(item.getName())
 
         return result

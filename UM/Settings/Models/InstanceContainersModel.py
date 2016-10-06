@@ -186,7 +186,7 @@ class InstanceContainersModel(ListModel):
             result.append(item.getMetaDataEntry(self._section_property, ""))
 
         result.append(not item.isReadOnly())
-        result.append(item.getMetaDataEntry("weight", ""))
+        result.append(int(item.getMetaDataEntry("weight", 0)))
         result.append(item.getName())
 
         return result
