@@ -76,6 +76,11 @@ class ThreeMFWriter(MeshWriter):
                 mesh_data = n.getMeshData()
                 vertices = ET.SubElement(mesh, "vertices")
                 verts = mesh_data.getVertices()
+
+                if verts is None:
+                    Logger.log("d", "3mf writer can't write nodes without mesh data. Skipping this node.")
+                    continue  # No mesh data, nothing to do.
+
                 if mesh_data.hasIndices():
                     for face in mesh_data.getIndices():
                         v1 = verts[face[0]]
