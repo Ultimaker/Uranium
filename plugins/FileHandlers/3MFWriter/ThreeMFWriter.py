@@ -66,7 +66,7 @@ class ThreeMFWriter(MeshWriter):
             relations_element = ET.Element("Relationships", xmlns = self._namespaces["relationships"])
             model_relation_element = ET.SubElement(relations_element, "Relationship", Target = "/3D/3dmodel.model", Id = "rel0", Type = "http://schemas.microsoft.com/3dmanufacturing/2013/01/3dmodel")
 
-            model = ET.Element('model', unit = "millimeter", xmlns = self._namespaces["3mf"])
+            model = ET.Element("model", unit = "millimeter", xmlns = self._namespaces["3mf"])
             resources = ET.SubElement(model, "resources")
             build = ET.SubElement(model, "build")
             for index, n in enumerate(nodes):
@@ -89,8 +89,14 @@ class ThreeMFWriter(MeshWriter):
                     for face in mesh_data.getIndices():
                         triangle = ET.SubElement(triangles, "triangle", v1 = str(face[0]) , v2 = str(face[1]), v3 = str(face[2]))
                 else:
-                    for vert in verts:
-                        xml_vertex = ET.SubElement(vertices, "vertex", x = str(vert[0]), y = str(vert[0]), z = str(vert[0]))
+                    triangles = ET.SubElement(mesh, "triangles")
+                    for index, vert in enumerate(verts):
+                        xml_vertex = ET.SubElement(vertices, "vertex", x = str(vert[0]), y = str(vert[2]), z = str(vert[1]))
+
+                        # If we have no faces defined, assume that every three subsequent vertices form a face.
+                        if index % 3 == 0:
+                            triangle = ET.SubElement(triangles, "triangle", v1 = str(index), v2 = str(index + 1), v3 = str(index + 2))
+
 
                 transformation_string = self._convertMatrixToString(n.getWorldTransformation())
                 if transformation_string != self._convertMatrixToString(Matrix()):
