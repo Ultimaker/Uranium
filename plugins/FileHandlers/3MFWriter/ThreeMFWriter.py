@@ -114,6 +114,15 @@ class ThreeMFWriter(MeshWriter):
                 translation_matrix = Matrix()
                 translation_matrix.setByTranslation(translation)
                 world_transformation.multiply(translation_matrix)
+
+                # We use a different coordinate frame, so we need to flip the transformation
+                flip_matrix = Matrix()
+                flip_matrix._data[1, 1] = 0
+                flip_matrix._data[1, 2] = 1
+                flip_matrix._data[2, 1] = 1
+                flip_matrix._data[2, 2] = 0
+                world_transformation.multiply(flip_matrix)
+
                 transformation_string = self._convertMatrixToString(world_transformation)
                 if transformation_string != self._convertMatrixToString(Matrix()):
                     item = ET.SubElement(build, "item", objectid = str(index + 1), transform = transformation_string)
