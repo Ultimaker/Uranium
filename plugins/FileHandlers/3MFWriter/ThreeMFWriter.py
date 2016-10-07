@@ -107,8 +107,9 @@ class ThreeMFWriter(MeshWriter):
                 # 3MF sees lower left corner of buildplate as zero, so we need to translate a bit first
                 global_container_stack = UM.Application.getInstance().getGlobalContainerStack()
                 if global_container_stack:
-                    translation = Vector(x=global_container_stack.getProperty("machine_width", "value") / 2, y=0,
-                                         z=-global_container_stack.getProperty("machine_depth", "value") / 2)
+                    translation = Vector(x = global_container_stack.getProperty("machine_width", "value") / 2,
+                                         y = 0,
+                                         z = -global_container_stack.getProperty("machine_depth", "value") / 2)
                 else:
                     translation = Vector(0, 0, 0)
                 translation_matrix = Matrix()
