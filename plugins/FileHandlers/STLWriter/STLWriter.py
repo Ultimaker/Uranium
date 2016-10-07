@@ -59,6 +59,21 @@ class STLWriter(MeshWriter):
 
                     stream.write("  endloop\n")
                     stream.write("endfacet\n")
+            else:
+                verts = mesh_data.getVertices()
+                num_verts = mesh_data.getVertexCount()
+                for index in range(0, num_verts - 1, 3):
+                    stream.write("facet normal 0.0 0.0 0.0\n")
+                    stream.write("  outer loop\n")
+                    v1 = verts[index]
+                    v2 = verts[index + 1]
+                    v3 = verts[index + 2]
+                    stream.write("    vertex {0} {1} {2}\n".format(v1[0], -v1[2], v1[1]))
+                    stream.write("    vertex {0} {1} {2}\n".format(v2[0], -v2[2], v2[1]))
+                    stream.write("    vertex {0} {1} {2}\n".format(v3[0], -v3[2], v3[1]))
+
+                    stream.write("  endloop\n")
+                    stream.write("endfacet\n")
 
         stream.write("endsolid {0}\n".format(name))
 
