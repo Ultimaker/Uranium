@@ -244,7 +244,7 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
 
         # The containers are saved in a single comma-separated list.
         container_string = parser["general"].get("containers", "")
-        Logger.log("d", "While serializing, we got the following container string: %s", container_string)
+        Logger.log("d", "While deserializing, we got the following container string: %s", container_string)
         container_id_list = container_string.split(",")
         for container_id in container_id_list:
             if container_id != "":
