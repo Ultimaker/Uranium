@@ -2,6 +2,7 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 from UM.Mesh.MeshWriter import MeshWriter
+from UM.Math.Vector import Vector
 from UM.Scene.SceneNode import SceneNode
 from UM.Scene.Iterator.BreadthFirstIterator import BreadthFirstIterator
 from UM.Logger import Logger
@@ -9,7 +10,7 @@ from UM.Math.Matrix import Matrix
 
 import xml.etree.ElementTree as ET
 import zipfile
-import io
+import UM.Application
 
 
 class ThreeMFWriter(MeshWriter):
@@ -95,19 +96,29 @@ class ThreeMFWriter(MeshWriter):
                         triangle = ET.SubElement(triangles, "triangle", v1 = str(face[0]) , v2 = str(face[1]), v3 = str(face[2]))
                 else:
                     triangles = ET.SubElement(mesh, "triangles")
-                    for index, vert in enumerate(verts):
+                    for idx, vert in enumerate(verts):
                         xml_vertex = ET.SubElement(vertices, "vertex", x = str(vert[0]), y = str(vert[2]), z = str(vert[1]))
 
                         # If we have no faces defined, assume that every three subsequent vertices form a face.
-                        if index % 3 == 0:
-                            triangle = ET.SubElement(triangles, "triangle", v1 = str(index), v2 = str(index + 1), v3 = str(index + 2))
+                        if idx % 3 == 0:
+                            triangle = ET.SubElement(triangles, "triangle", v1 = str(idx), v2 = str(idx + 1), v3 = str(idx + 2))
+                world_transformation = n.getWorldTransformation()
 
-
-                transformation_string = self._convertMatrixToString(n.getWorldTransformation())
-                if transformation_string != self._convertMatrixToString(Matrix()):
-                    item = ET.SubElement(build, "item", objectid = str(index+1), transform = transformation_string)
+                # 3MF sees lower left corner of buildplate as zero, so we need to translate a bit first
+                global_container_stack = UM.Application.getInstance().getGlobalContainerStack()
+                if global_container_stack:
+                    translation = Vector(x=global_container_stack.getProperty("machine_width", "value") / 2, y=0,
+                                         z=-global_container_stack.getProperty("machine_depth", "value") / 2)
                 else:
-                    item = ET.SubElement(build, "item", objectid = str(index+1)) #, transform = transformation_string)
+                    translation = Vector(0, 0, 0)
+                translation_matrix = Matrix()
+                translation_matrix.setByTranslation(translation)
+                world_transformation.multiply(translation_matrix)
+                transformation_string = self._convertMatrixToString(world_transformation)
+                if transformation_string != self._convertMatrixToString(Matrix()):
+                    item = ET.SubElement(build, "item", objectid = str(index + 1), transform = transformation_string)
+                else:
+                    item = ET.SubElement(build, "item", objectid = str(index + 1)) #, transform = transformation_string)
 
             archive.writestr(model_file, b'<?xml version="1.0" encoding="UTF-8"?> \n' + ET.tostring(model))
             archive.writestr(content_types_file, b'<?xml version="1.0" encoding="UTF-8"?> \n' + ET.tostring(content_types))
