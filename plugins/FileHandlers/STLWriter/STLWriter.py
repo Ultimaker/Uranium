@@ -43,9 +43,11 @@ class STLWriter(MeshWriter):
 
         for node in nodes:
             mesh_data = node.getMeshData().getTransformed(node.getWorldTransformation())
+            verts = mesh_data.getVertices()
+            if verts is None:
+                continue  # No mesh data, nothing to do.
 
             if mesh_data.hasIndices():
-                verts = mesh_data.getVertices()
                 for face in mesh_data.getIndices():
                     stream.write("facet normal 0.0 0.0 0.0\n")
                     stream.write("  outer loop\n")
@@ -60,7 +62,6 @@ class STLWriter(MeshWriter):
                     stream.write("  endloop\n")
                     stream.write("endfacet\n")
             else:
-                verts = mesh_data.getVertices()
                 num_verts = mesh_data.getVertexCount()
                 for index in range(0, num_verts - 1, 3):
                     stream.write("facet normal 0.0 0.0 0.0\n")

@@ -30,6 +30,8 @@ class OBJWriter(MeshWriter):
         for node in nodes:
             mesh_data = node.getMeshData().getTransformed(node.getWorldTransformation())
             verts = mesh_data.getVertices()
+            if verts is None:
+                continue   # No mesh data, nothing to do.
 
             stream.write("# {0}\n# Vertices\n".format(node.getName()))
 
