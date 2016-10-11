@@ -14,6 +14,7 @@ class QtTexture(Texture):
         self._qt_texture = QOpenGLTexture(QOpenGLTexture.Target2D)
         self._gl = OpenGL.getInstance().getBindingsObject()
         self._file_name = None
+        self._image = None
 
     def getTextureId(self):
         return self._qt_texture.textureId()
@@ -21,16 +22,19 @@ class QtTexture(Texture):
     def bind(self, unit):
         if not self._qt_texture.isCreated():
             if self._file_name != None:
-                image = QImage(self._file_name).mirrored()
-            else:
-                image = QImage(1, 1, QImage.Format_ARGB32)
-            self._qt_texture.setData(image)
+                self._image = QImage(self._file_name).mirrored()
+            elif self._image is None: # No filename or image set.
+                self._image = QImage(1, 1, QImage.Format_ARGB32)
+            self._qt_texture.setData(self._image)
             self._qt_texture.setMinMagFilters(QOpenGLTexture.Linear, QOpenGLTexture.Linear)
 
         self._qt_texture.bind(unit)
 
     def release(self, unit):
         self._qt_texture.release(unit)
+
+    def setImage(self, image):
+        self._image = image
 
     def load(self, file_name):
         self._file_name = file_name
