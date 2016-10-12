@@ -1,18 +1,18 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Uranium
+# Copyright (C) 2016 Ultimaker
+# This file is distributed under the same license as the Uranium package.
+# Ruben Dulek <r.dulek@ultimaker.com>, 2016.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: 2.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-13 17:37+0200\n"
 "PO-Revision-Date: 2016-09-29 13:44+0200\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Last-Translator: Ruben Dulek <r.dulek@ultimaker.com>\n"
+"Language-Team: Ultimaker <info@ultimaker.com>\n"
+"Language: nl-NL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -21,7 +21,7 @@ msgstr ""
 #: /home/ruben/Projects/Uranium/plugins/Views/WireframeView/__init__.py:13
 msgctxt "@label"
 msgid "Wireframe View"
-msgstr "draadmodelweergave"
+msgstr "Draadmodelweergave"
 
 #: /home/ruben/Projects/Uranium/plugins/Views/WireframeView/__init__.py:16
 msgctxt "@info:whatsthis"
@@ -31,7 +31,7 @@ msgstr "Deze optie biedt een eenvoudige draadmodelweergave."
 #: /home/ruben/Projects/Uranium/plugins/Views/SimpleView/__init__.py:13
 msgctxt "@label"
 msgid "Simple View"
-msgstr "Eenvoudige weergave"
+msgstr "Eenvoudige Weergave"
 
 #: /home/ruben/Projects/Uranium/plugins/Views/SimpleView/__init__.py:16
 msgctxt "@info:whatsthis"
@@ -41,7 +41,7 @@ msgstr "Biedt een eenvoudig, solide rasterweergave."
 #: /home/ruben/Projects/Uranium/plugins/Views/SimpleView/__init__.py:20
 msgctxt "@item:inmenu"
 msgid "Simple"
-msgstr "Eenvoudige"
+msgstr "Eenvoudig"
 
 #: /home/ruben/Projects/Uranium/plugins/FileLogger/__init__.py:13
 msgctxt "@label"
@@ -93,7 +93,7 @@ msgstr "Wavefront OBJ-schrijver"
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:16
 msgctxt "@info:whatsthis"
 msgid "Makes it possbile to write Wavefront OBJ files."
-msgstr "Deze optie maakt het mogelijk Wavefront OBJ-bestanden te schrijven."
+msgstr "Maakt het mogelijk Wavefront OBJ-bestanden te schrijven."
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:13
 msgctxt "@label"
@@ -103,7 +103,7 @@ msgstr "STL-lezer"
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:16
 msgctxt "@info:whatsthis"
 msgid "Provides support for writing STL files."
-msgstr "Deze optie biedt ondersteuning voor het schrijven van STL-bestanden."
+msgstr "Biedt ondersteuning voor het schrijven van STL-bestanden."
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:25
 msgctxt "@item:inlistbox"
@@ -123,7 +123,7 @@ msgstr "3MF-schrijver"
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/3MFWriter/__init__.py:15
 msgctxt "@info:whatsthis"
 msgid "Provides support for writing 3MF files."
-msgstr "Deze optie biedt ondersteuning voor het schrijven van 3MF-bestanden."
+msgstr "Biedt ondersteuning voor het schrijven van 3MF-bestanden."
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/3MFWriter/__init__.py:21
 msgctxt "@item:inlistbox"
@@ -174,32 +174,32 @@ msgstr "Er is geen nieuwe versie gevonden."
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:94
 msgctxt "@item:inmenu"
 msgid "Check for Updates"
-msgstr "Controleren op updates"
+msgstr "Controleren op Updates"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:44
 msgctxt "@item:inmenu"
 msgid "Local File"
-msgstr "Lokaal bestand"
+msgstr "Lokaal Bestand"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:45
 msgctxt "@action:button"
 msgid "Save to File"
-msgstr "Opslaan als bestand"
+msgstr "Opslaan als Bestand"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:46
 msgctxt "@info:tooltip"
 msgid "Save to File"
-msgstr "Opslaan als bestand"
+msgstr "Opslaan als Bestand"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:65
 msgctxt "@title:window"
 msgid "Save to File"
-msgstr "Opslaan als bestand"
+msgstr "Opslaan als Bestand"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:120
 msgctxt "@title:window"
 msgid "File Already Exists"
-msgstr "Het bestand bestaat al"
+msgstr "Het Bestand Bestaat Al"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:120
 #, python-brace-format
@@ -237,7 +237,7 @@ msgstr "Opgeslagen als <filename>{0}</filename>"
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:168
 msgctxt "@action:button"
 msgid "Open Folder"
-msgstr "Map openen"
+msgstr "Map Openen"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:168
 msgctxt "@info:tooltip"
@@ -272,7 +272,7 @@ msgstr "Schalen"
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:21
 msgctxt "@info:tooltip"
 msgid "Scale Model"
-msgstr "Model schalen"
+msgstr "Model Schalen"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/SelectionTool/__init__.py:13
 msgctxt "@label"
@@ -292,7 +292,7 @@ msgstr "Verplaatsgereedschap"
 #: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:16
 msgctxt "@info:whatsthis"
 msgid "Provides the Translate tool."
-msgstr "Deze optie biedt het Verplaatsgereedschap."
+msgstr "Biedt het Verplaatsgereedschap."
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:20
 msgctxt "@action:button"
@@ -302,7 +302,7 @@ msgstr "Verplaatsen"
 #: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:21
 msgctxt "@info:tooltip"
 msgid "Move Model"
-msgstr "Model verplaatsen"
+msgstr "Model Verplaatsen"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/CameraTool/__init__.py:12
 msgctxt "@label"
@@ -332,7 +332,7 @@ msgstr "Roteren"
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:20
 msgctxt "@info:tooltip"
 msgid "Rotate Model"
-msgstr "Model roteren"
+msgstr "Model Roteren"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:12
 msgctxt "@label"
@@ -352,13 +352,13 @@ msgstr "Spiegelen"
 #: /home/ruben/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:20
 msgctxt "@info:tooltip"
 msgid "Mirror Model"
-msgstr "Model spiegelen"
+msgstr "Model Spiegelen"
 
 #: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:124
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:46
 msgctxt "@item:inlistbox"
 msgid "All Files (*)"
-msgstr "Alle bestanden (*)"
+msgstr "Alle Bestanden (*)"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:95
 #, python-brace-format
@@ -420,7 +420,7 @@ msgstr "Voorkeuren laden..."
 #, python-brace-format
 msgctxt "@item:inlistbox"
 msgid "All Supported Types ({0})"
-msgstr "Alle ondersteunde typen ({0})"
+msgstr "Alle Ondersteunde Typen ({0})"
 
 #: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:33
 #, python-brace-format
@@ -462,27 +462,27 @@ msgstr "Herstellen"
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:66
 msgctxt "@action:button"
 msgid "Scale to Max"
-msgstr "Schalen naar maximale grootte"
+msgstr "Schalen naar Maximale Grootte"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:91
 msgctxt "@option:check"
 msgid "Snap Scaling"
-msgstr "Schalen in stappen"
+msgstr "Schalen in Stappen"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:108
 msgctxt "@option:check"
 msgid "Uniform Scaling"
-msgstr "Uniform schalen"
+msgstr "Uniform Schalen"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:39
 msgctxt "@action:button"
 msgid "Center on Build Plate"
-msgstr "Op platform centreren"
+msgstr "Op Platform Centreren"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:57
 msgctxt "@action:button"
 msgid "Drop to Build Plate"
-msgstr "Op platform laten vallen"
+msgstr "Op Platform Laten Vallen"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:39
 msgctxt "@action:button"
@@ -492,7 +492,7 @@ msgstr "Plat neerleggen"
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:55
 msgctxt "@action:checkbox"
 msgid "Snap Rotation"
-msgstr "Roteren in stappen"
+msgstr "Roteren in Stappen"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:19
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:148
@@ -587,12 +587,12 @@ msgstr[1] "Deze instelling is verborgen vanwege de waarden van %1. Wijzig de waa
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityPage.qml:12
 msgctxt "@title:tab"
 msgid "Setting Visibility"
-msgstr "Zichtbaarheid instellen"
+msgstr "Zichtbaarheid Instellen"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityPage.qml:42
 msgctxt "@label:textbox"
 msgid "Check all"
-msgstr "Alles controleren"
+msgstr "Alles aanvinken"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityPage.qml:89
 msgctxt "@label:textbox"
@@ -612,7 +612,7 @@ msgstr "Type"
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:16
 msgctxt "@title:window"
 msgid "Confirm Remove"
-msgstr "Verwijderen bevestigen"
+msgstr "Verwijderen Bevestigen"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:17
 msgctxt "@label (%1 is object name)"
@@ -637,7 +637,7 @@ msgstr "Printer: %1"
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:83
 msgctxt "@action:button"
 msgid "Update \"%1\""
-msgstr "\"%1” bijwerken"
+msgstr "\"%1\" bijwerken"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:84
 msgctxt "@action:button"
@@ -687,17 +687,17 @@ msgstr "Exporteren"
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:184
 msgctxt "@window:title"
 msgid "Import Profile"
-msgstr "Profiel importeren"
+msgstr "Profiel Importeren"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:192
 msgctxt "@title:window"
 msgid "Import Profile"
-msgstr "Profiel importeren"
+msgstr "Profiel Importeren"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:219
 msgctxt "@title:window"
 msgid "Export Profile"
-msgstr "Profiel exporteren"
+msgstr "Profiel Exporteren"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:214
 msgctxt "@action:button"
