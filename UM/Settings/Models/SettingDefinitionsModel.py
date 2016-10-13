@@ -469,7 +469,8 @@ class SettingDefinitionsModel(QAbstractListModel):
         # Try and find a translation catalog for the definition
         for file_name in self._container.getInheritedFiles():
             try:
-                i18n_file = Resources.getPath(Resources.i18n, "en", os.path.basename(file_name) + ".po")
+                # See if the file exist. TODO: proper check if the file is loadable as well.
+                i18n_file = Resources.getPath(Resources.i18n, "en", "LC_MESSAGES", os.path.basename(file_name) + ".mo")
                 self._i18n_catalog = i18nCatalog(os.path.basename(file_name))
             except FileNotFoundError:
                 continue
