@@ -38,15 +38,11 @@ class ThreeMFWriter(MeshWriter):
         result += str(matrix._data[2,3]) + " "
         return result
 
-    def write(self, stream, node, mode = MeshWriter.OutputMode.BinaryMode):
-        nodes = []
-        for n in BreadthFirstIterator(node):
-            if type(n) is not SceneNode or not n.getMeshData():
-                continue
-
-            nodes.append(n)
-        if not len(nodes):
-            return False
+    def write(self, stream, nodes, mode = MeshWriter.OutputMode.BinaryMode):
+        try:
+            MeshWriter._meshNodes(nodes).__next__()
+        except StopIteration:
+            return False #Don't write anything if there is no mesh data.
 
         archive = zipfile.ZipFile(stream, "w", compression = zipfile.ZIP_DEFLATED)
         try:
@@ -70,7 +66,7 @@ class ThreeMFWriter(MeshWriter):
             model = ET.Element("model", unit = "millimeter", xmlns = self._namespaces["3mf"])
             resources = ET.SubElement(model, "resources")
             build = ET.SubElement(model, "build")
-            for index, n in enumerate(nodes):
+            for index, n in enumerate(MeshWriter._meshNodes(nodes)):
                 object = ET.SubElement(resources, "object", id = str(index+1), type = "model")
                 mesh = ET.SubElement(object, "mesh")
 

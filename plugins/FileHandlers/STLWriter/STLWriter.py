@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2016 Ultimaker B.V.
 # Copyright (c) 2013 David Braam
 # Uranium is released under the terms of the AGPLv3 or higher.
 
@@ -12,25 +12,23 @@ import struct
 import os
 
 class STLWriter(MeshWriter):
-    ##  Write the Mesh to file.
-    #   \param file_name Location to write to
-    #   \param storage_device Device to write to.
-    #   \param mesh_data MeshData to write.
-    def write(self, stream, node, mode = MeshWriter.OutputMode.TextMode):
-        nodes = []
-        for n in BreadthFirstIterator(node):
-            if type(n) is not SceneNode or not n.getMeshData():
-                continue
-
-            nodes.append(n)
-
-        if not nodes:
-            return False
+    ##  Write the specified sequence of nodes to a stream in the STL format.
+    #
+    #   \param stream The output stream to write to.
+    #   \param nodes A sequence of scene nodes to write to the output stream.
+    #   \param mode The output mode to use for writing scene nodes. Text mode
+    #   causes the writer to write in STL's ASCII format. Binary mode causes the
+    #   writer to write in STL's binary format. Any other mode is invalid.
+    def write(self, stream, nodes, mode = MeshWriter.OutputMode.TextMode):
+        try:
+            MeshWriter._meshNodes(nodes).__next__()
+        except:
+            return False #Don't try to write a file if there is no mesh.
 
         if mode == MeshWriter.OutputMode.TextMode:
-            self._writeAscii(stream, nodes)
+            self._writeAscii(stream, MeshWriter._meshNodes(nodes))
         elif mode == MeshWriter.OutputMode.BinaryMode:
-            self._writeBinary(stream, nodes)
+            self._writeBinary(stream, MeshWriter._meshNodes(nodes))
         else:
             Logger.log("e", "Unsupported output mode writing STL to stream")
             return False

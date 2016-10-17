@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2016 Ultimaker B.V.
 # Copyright (c) 2013 David Braam
 # Uranium is released under the terms of the AGPLv3 or higher.
 
@@ -10,24 +10,25 @@ import time
 import struct
 
 class OBJWriter(MeshWriter):
-    def write(self, stream, node, mode = MeshWriter.OutputMode.TextMode):
+    ##  Writes the specified nodes to a stream in the OBJ format.
+    #
+    #   \param stream The stream to write the OBJ data to.
+    #   \param nodes The nodes to write as OBJ data.
+    #   \param mode Additional information on how to serialise the OBJ format.
+    #   The OBJ format only supports text mode.
+    def write(self, stream, nodes, mode = MeshWriter.OutputMode.TextMode):
         if mode != MeshWriter.OutputMode.TextMode:
             return False
 
-        nodes = []
-        for n in BreadthFirstIterator(node):
-            if type(n) is not SceneNode or not n.getMeshData():
-                continue
-
-            nodes.append(n)
-
-        if not nodes:
-            return False
+        try:
+            MeshWriter._meshNodes(nodes).__next__()
+        except StopIteration:
+            return False #Don't write files without mesh data.
 
         stream.write("# URANIUM OBJ EXPORT {0}\n".format(time.strftime("%a %d %b %Y %H:%M:%S")))
 
         face_offset = 1
-        for node in nodes:
+        for node in MeshWriter._meshNodes(nodes):
             mesh_data = node.getMeshData().getTransformed(node.getWorldTransformation())
             verts = mesh_data.getVertices()
             if verts is None:
