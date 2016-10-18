@@ -220,14 +220,14 @@ class VersionUpgradeManager:
     def _getUpgradeTasks(self):
         exclude_folders = ["old", "cache", "plugins"]
         for old_configuration_type, storage_paths in self._storage_paths.items():
-            for storage_path in storage_paths:
-                storage_path_config = os.path.join(Resources.getConfigStoragePath(), storage_path)
-                for configuration_file in self._getFilesInDirectory(storage_path_config, exclude_paths = exclude_folders):
-                    yield UpgradeTask(storage_path = storage_path_config, file_name = configuration_file, configuration_type = old_configuration_type)
-                storage_path_data = os.path.join(Resources.getDataStoragePath(), storage_path) #A second place to look.
-                if storage_path_data != storage_path_config: #On Windows and OSX, these are the same. Don't search twice.
-                    for configuration_file in self._getFilesInDirectory(storage_path_data, exclude_paths = exclude_folders):
-                        yield UpgradeTask(storage_path = storage_path_data, file_name = configuration_file, configuration_type = old_configuration_type)
+            storage_path_prefixes = set(Resources.getSearchPaths()) #Set removes duplicates.
+            storage_path_prefixes.add(Resources.getConfigStoragePath())
+            storage_path_prefixes.add(Resources.getDataStoragePath())
+            for prefix in storage_path_prefixes:
+                for storage_path in storage_paths:
+                    path = os.path.join(prefix, storage_path)
+                    for configuration_file in self._getFilesInDirectory(path, exclude_paths = exclude_folders):
+                        yield UpgradeTask(storage_path = path, file_name = configuration_file, configuration_type = old_configuration_type)
 
     ##  Stores an old version of a configuration file away.
     #
