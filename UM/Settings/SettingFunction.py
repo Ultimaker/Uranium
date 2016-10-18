@@ -85,6 +85,9 @@ class SettingFunction:
     def __str__(self):
         return "={0}".format(self._code)
 
+    def __repr__(self):
+        return "<UM.Settings.SettingFunction (0x{0:x}) ={1} >".format(id(self), self._code)
+
     ##  To support Pickle
     #
     #   Pickle does not support the compiled code, so instead remove it from the state.
