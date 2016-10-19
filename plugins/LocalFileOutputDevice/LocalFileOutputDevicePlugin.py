@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2016 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 import os
@@ -48,15 +48,15 @@ class LocalFileOutputDevice(OutputDevice):
 
         self._writing = False
 
-    ##  Request the specified node to be written to a file.
+    ##  Request the specified nodes to be written to a file.
     #
-    #   \param node \type{SceneNode} The root of a tree of scene nodes that
-    #   should be written to the device.
+    #   \param nodes A collection of scene nodes that should be written to the
+    #   file.
     #   \param file_name \type{string} A suggestion for the file name to write
     #   to. Can be freely ignored if providing a file name makes no sense.
-    #   \param limit_mimetypes
-    #   currently active machine?
-    def requestWrite(self, node, file_name = None, limit_mimetypes = None):
+    #   \param limit_mimetypes Should we limit the available MIME types to the
+    #   MIME types available to the currently active machine?
+    def requestWrite(self, nodes, file_name = None, limit_mimetypes = None):
         if self._writing:
             raise OutputDeviceError.DeviceBusyError()
 
@@ -132,7 +132,7 @@ class LocalFileOutputDevice(OutputDevice):
                 Logger.log("d", "Writing to Local File %s in binary mode", file_name)
                 stream = open(file_name, "wb")
 
-            job = WriteMeshJob(mesh_writer, stream, node, mode)
+            job = WriteMeshJob(mesh_writer, stream, nodes, mode)
             job.setFileName(file_name)
             job.progress.connect(self._onJobProgress)
             job.finished.connect(self._onWriteJobFinished)

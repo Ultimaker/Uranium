@@ -9,8 +9,8 @@ import UM 1.1 as UM
 Item
 {
     id: base
-    width: Math.max(23 * UM.Theme.getSize("line").width, childrenRect.width);
-    height: Math.max(9.5 * UM.Theme.getSize("line").height, childrenRect.height);
+    width: childrenRect.width
+    height: childrenRect.height
     UM.I18nCatalog { id: catalog; name:"uranium"}
 
     // We use properties for the text as doing the bindings indirectly doesn't cause any breaks

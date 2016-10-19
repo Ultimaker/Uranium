@@ -8,15 +8,14 @@ import UM 1.1 as UM
 
 Item
 {
-    width: Math.max(14 * UM.Theme.getSize("line").width, childrenRect.width);
-    height: Math.max(4.5 * UM.Theme.getSize("line").height, childrenRect.height);
+    width: childrenRect.width
+    height: childrenRect.height
     UM.I18nCatalog { id: catalog; name:"uranium"}
     Button
     {
         id: resetRotationButton
 
         anchors.left: parent.left;
-        anchors.leftMargin: UM.Theme.getSize("default_margin").width;
 
         //: Reset Rotation tool button
         text: catalog.i18nc("@action:button","Reset")
@@ -47,7 +46,6 @@ Item
     CheckBox
     {
         anchors.left: parent.left;
-        anchors.leftMargin: UM.Theme.getSize("default_margin").width;
         anchors.top: resetRotationButton.bottom;
         anchors.topMargin: UM.Theme.getSize("default_margin").width;
 

@@ -318,6 +318,7 @@ class SceneNode():
         child._transformChanged()
         child.parentChanged.emit(self)
 
+        self._resetAABB()
         self.childrenChanged.emit(self)
 
     ##  \brief Removes all children and its children's children.
