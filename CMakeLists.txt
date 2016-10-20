@@ -1,6 +1,6 @@
 project(uranium NONE)
 
-cmake_minimum_required(VERSION 2.8.12)
+cmake_minimum_required(VERSION 3.2.0)
 
 message(STATUS ${CMAKE_MODULE_PATH})
 
@@ -20,8 +20,8 @@ add_custom_command(TARGET check POST_BUILD COMMAND "PYTHONPATH=${CMAKE_SOURCE_DI
 
 # Tests
 # Note that we use exit 0 here to not mark the build as a failure on test failure
-add_custom_target(tests)
-add_custom_command(TARGET tests POST_BUILD COMMAND "LANG=C" "PYTHONPATH=${CMAKE_SOURCE_DIR}" ${PYTHON_EXECUTABLE} -m pytest -r a --junitxml=${CMAKE_BINARY_DIR}/junit.xml ${CMAKE_SOURCE_DIR} || exit 0)
+add_test(NAME pytest COMMAND "LANG=C" "PYTHONPATH=${CMAKE_SOURCE_DIR}" ${PYTHON_EXECUTABLE} -m pytest -r a --junitxml=${CMAKE_BINARY_DIR}/junit.xml ${CMAKE_SOURCE_DIR} || exit 0)
+enable_testing()
 
 # # Benchmarks
 # add_custom_target(benchmark)
