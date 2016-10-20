@@ -459,3 +459,12 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
         while self._postponed_emits:
             signal, signal_arg = self._postponed_emits.pop(0)
             signal.emit(signal_arg)
+
+    ##  Check if the container stack has errors
+    def hasErrors(self):
+        for key in self.getAllKeys():
+            validation_state = self.getProperty(key, "validationState")
+            if validation_state in (UM.Settings.ValidatorState.Exception, UM.Settings.ValidatorState.MaximumError,
+            UM.Settings.ValidatorState.MinimumError):
+                return True
+        return False
