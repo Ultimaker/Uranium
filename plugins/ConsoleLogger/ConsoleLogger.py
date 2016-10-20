@@ -2,6 +2,7 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 from UM.Logger import LogOutput
+from UM.Preferences import Preferences
 
 import logging
 
@@ -32,15 +33,21 @@ class ConsoleLogger(LogOutput):
     #   \param log_type "e" (error) , "i"(info), "d"(debug) or "w"(warning)
     #   \param message String containing message to be logged
     def log(self, log_type, message):
-        if(log_type == "w"): # Warning
-            self._logger.warning(message)
-        elif(log_type == "i"): # Info
-            self._logger.info(message)
-        elif(log_type == "e"): # Error
-            self._logger.error(message)
-        elif(log_type == "d"):
-            self._logger.debug(message)
-        elif(log_type == "c"):
+        preference = Preferences.getInstance().getValue("logger/log_level_console")
+        try:
+            log_level_console = int(preference)
+        except:
+            log_level_console = 50
+
+        if log_type == "c" and log_level_console >= 50: # Critical
             self._logger.critical(message)
-        else:
+        elif log_type == "e" and log_level_console >= 40: # Error
+            self._logger.error(message)
+        elif log_type == "w" and log_level_console >= 30: # Warning
+            self._logger.warning(message)
+        elif log_type == "i" and log_level_console >= 20: # Info
+            self._logger.info(message)
+        elif log_type == "d" and log_level_console >= 10: # Debug
+            self._logger.debug(message)
+        elif log_type not in ("c","e","w","i","d"):
             print("Unable to log. Received unknown type %s" % log_type)
