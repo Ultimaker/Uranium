@@ -221,6 +221,13 @@ class Resources:
             cls.__initializeStoragePaths()
         return cls.__data_storage_path
 
+    ##  Gets the search paths for resources.
+    #
+    #   \return A sequence of paths where resources might be.
+    @classmethod
+    def getSearchPaths(cls):
+        yield from cls.__paths
+
     ##  Remove a custom resource type.
     @classmethod
     def removeType(cls, resource_type):
