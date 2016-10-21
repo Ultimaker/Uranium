@@ -158,21 +158,20 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     #
     #   \param key The key to get the property value of.
     #   \param property_name The name of the property to get the value of.
-    #   \param kwargs Keyword arguments
-    #                 Possible values:
-    #                 * use_next: True if the value should be retrieved from the next stack if not found in this stack. False if not. Defaults to True.
+    #   \param use_next True if the value should be retrieved from the next
+    #   stack if not found in this stack. False if not.
     #
     #   \return The raw property value of the property, or None if not found. Note that
     #           the value might be a SettingFunction instance.
     #
-    def getRawProperty(self, key, property_name, **kwargs):
+    def getRawProperty(self, key, property_name, *, use_next = True):
         for container in self._containers:
             value = container.getProperty(key, property_name)
             if value is not None:
                 return value
 
-        if self._next_stack and kwargs.get("use_next", True):
-            return self._next_stack.getRawProperty(key, property_name, **kwargs)
+        if self._next_stack and use_next:
+            return self._next_stack.getRawProperty(key, property_name, use_next)
         else:
             return None
 
