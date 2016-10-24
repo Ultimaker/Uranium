@@ -82,7 +82,10 @@ class ContainerRegistry:
             # If we are just searching for a single container by ID, look it up from the container cache
             container = self._id_container_cache.get(kwargs.get("id"))
             if container:
-                return [ container ]
+                # Add an extra check to make sure the found container matches the requested container type.
+                # This should never occur but has happened with broken configurations.
+                if container_type and isinstance(container, container_type):
+                    return [ container ]
 
         for container in self._containers:
             if container_type and not isinstance(container, container_type):
