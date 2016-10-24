@@ -224,6 +224,8 @@ class ContainerRegistry:
 
         for _, container_id, file_path, read_only, container_type in files:
             if container_id in self._id_container_cache:
+                Logger.log("c", "Found a container with a duplicate ID: %s", container_id)
+                Logger.log("c", "Existing container is %s, trying to load %s from %s", self._id_container_cache[container_id], container_type, file_path)
                 continue
 
             try:
