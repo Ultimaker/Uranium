@@ -84,7 +84,9 @@ class ContainerRegistry:
             if container:
                 # Add an extra check to make sure the found container matches the requested container type.
                 # This should never occur but has happened with broken configurations.
-                if container_type and isinstance(container, container_type):
+                if not container_type:
+                    return [ container ]
+                elif isinstance(container, container_type):
                     return [ container ]
 
         for container in self._containers:
