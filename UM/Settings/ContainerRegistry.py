@@ -318,7 +318,7 @@ class ContainerRegistry:
             mime_type = self.getMimeTypeForContainer(type(instance))
             file_name = urllib.parse.quote_plus(instance.getId()) + "." + mime_type.preferredSuffix
             path = Resources.getStoragePath(Resources.InstanceContainers, file_name)
-            with SaveFile(path, "wt", -1, "utf-8") as f:
+            with SaveFile(path, "wt") as f:
                 f.write(data)
 
         for stack in self.findContainerStacks():
@@ -337,7 +337,7 @@ class ContainerRegistry:
             mime_type = self.getMimeTypeForContainer(type(stack))
             file_name = urllib.parse.quote_plus(stack.getId()) + "." + mime_type.preferredSuffix
             path = Resources.getStoragePath(Resources.ContainerStacks, file_name)
-            with SaveFile(path, "wt", -1, "utf-8") as f:
+            with SaveFile(path, "wt") as f:
                 f.write(data)
 
         for definition in self.findDefinitionContainers():
@@ -353,7 +353,7 @@ class ContainerRegistry:
             mime_type = self.getMimeTypeForContainer(type(definition))
             file_name = urllib.parse.quote_plus(definition.getId()) + "." + mime_type.preferredSuffix
             path = Resources.getStoragePath(Resources.DefinitionContainers, file_name)
-            with SaveFile(path, "wt", -1, "utf-8") as f:
+            with SaveFile(path, "wt") as f:
                 f.write(data)
 
     ##  Creates a new unique name for a container that doesn't exist yet.
