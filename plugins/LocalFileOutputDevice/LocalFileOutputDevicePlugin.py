@@ -127,7 +127,7 @@ class LocalFileOutputDevice(OutputDevice):
             mode = selected_type["mode"]
             if mode == MeshWriter.OutputMode.TextMode:
                 Logger.log("d", "Writing to Local File %s in text mode", file_name)
-                stream = open(file_name, "wt")
+                stream = open(file_name, "wt", encoding = "utf-8")
             elif mode == MeshWriter.OutputMode.BinaryMode:
                 Logger.log("d", "Writing to Local File %s in binary mode", file_name)
                 stream = open(file_name, "wb")
