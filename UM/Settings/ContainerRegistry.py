@@ -82,7 +82,10 @@ class ContainerRegistry:
             # If we are just searching for a single container by ID, look it up from the container cache
             container = self._id_container_cache.get(kwargs.get("id"))
             if container:
-                return [ container ]
+                # Add an extra check to make sure the found container matches the requested container type.
+                # This should never occur but has happened with broken configurations.
+                if container_type and isinstance(container, container_type):
+                    return [ container ]
 
         for container in self._containers:
             if container_type and not isinstance(container, container_type):
@@ -224,6 +227,8 @@ class ContainerRegistry:
 
         for _, container_id, file_path, read_only, container_type in files:
             if container_id in self._id_container_cache:
+                Logger.log("c", "Found a container with a duplicate ID: %s", container_id)
+                Logger.log("c", "Existing container is %s, trying to load %s from %s", self._id_container_cache[container_id], container_type, file_path)
                 continue
 
             try:
@@ -313,7 +318,7 @@ class ContainerRegistry:
             mime_type = self.getMimeTypeForContainer(type(instance))
             file_name = urllib.parse.quote_plus(instance.getId()) + "." + mime_type.preferredSuffix
             path = Resources.getStoragePath(Resources.InstanceContainers, file_name)
-            with SaveFile(path, "wt", -1, "utf-8") as f:
+            with SaveFile(path, "wt") as f:
                 f.write(data)
 
         for stack in self.findContainerStacks():
@@ -332,7 +337,7 @@ class ContainerRegistry:
             mime_type = self.getMimeTypeForContainer(type(stack))
             file_name = urllib.parse.quote_plus(stack.getId()) + "." + mime_type.preferredSuffix
             path = Resources.getStoragePath(Resources.ContainerStacks, file_name)
-            with SaveFile(path, "wt", -1, "utf-8") as f:
+            with SaveFile(path, "wt") as f:
                 f.write(data)
 
         for definition in self.findDefinitionContainers():
@@ -348,7 +353,7 @@ class ContainerRegistry:
             mime_type = self.getMimeTypeForContainer(type(definition))
             file_name = urllib.parse.quote_plus(definition.getId()) + "." + mime_type.preferredSuffix
             path = Resources.getStoragePath(Resources.DefinitionContainers, file_name)
-            with SaveFile(path, "wt", -1, "utf-8") as f:
+            with SaveFile(path, "wt") as f:
                 f.write(data)
 
     ##  Creates a new unique name for a container that doesn't exist yet.

@@ -22,17 +22,23 @@ else:
 #   that the file contents are always correct and that concurrent writes do not
 #   end up writing to the same file at the same time.
 class SaveFile:
-    def __init__(self, path, mode, *args, **kwargs):
+    # Create a new SaveFile.
+    #
+    # \param path The path to write to.
+    # \param mode The file mode to use. See open() for details.
+    # \param encoding The encoding to use while writing the file. Defaults to UTF-8.
+    # \param kwargs Keyword arguments passed on to open().
+    def __init__(self, path, mode, encoding = "utf-8", **kwargs):
         self._path = path
         self._mode = mode
-        self._open_args = args
+        self._encoding = encoding
         self._open_kwargs = kwargs
         self._file = None
         self._temp_file = None
 
     def __enter__(self):
         # Create a temporary file that we can write to.
-        self._temp_file = tempfile.NamedTemporaryFile(self._mode, dir = os.path.dirname(self._path), delete = False) #pylint: disable=bad-whitespace
+        self._temp_file = tempfile.NamedTemporaryFile(self._mode, dir = os.path.dirname(self._path), encoding = self._encoding, delete = False, **self._open_kwargs) #pylint: disable=bad-whitespace
         return self._temp_file
 
     def __exit__(self, exc_type, exc_value, traceback):
@@ -41,7 +47,7 @@ class SaveFile:
         while not self._file:
             # First, try to open the file we want to write to.
             try:
-                self._file = open(self._path, self._mode, *self._open_args, **self._open_kwargs)
+                self._file = open(self._path, self._mode, encoding = self._encoding, **self._open_kwargs)
             except Exception:
                 self._file = None
 
@@ -53,7 +59,7 @@ class SaveFile:
             # So try to open it again and check if we have the same file.
             # If we do, that means the file did not get replaced in the mean time and we properly acquired a lock on the right file.
             try:
-                file_new = open(self._path, self._mode, *self._open_args, **self._open_kwargs)
+                file_new = open(self._path, self._mode, encoding = self._encoding, **self._open_kwargs)
             except Exception:
                 # An error was raised when trying to open the file, try again.
                 # This primarily happens on windows where trying to open an opened file will raise a PermisisonError
