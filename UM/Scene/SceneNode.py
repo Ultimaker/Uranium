@@ -4,6 +4,7 @@
 from UM.Math.Matrix import Matrix
 from UM.Math.Vector import Vector
 from UM.Math.Quaternion import Quaternion
+from UM.Math.AxisAlignedBox import AxisAlignedBox
 
 from UM.Signal import Signal, signalemitter
 from UM.Mesh.MeshBuilder import MeshBuilder
@@ -642,6 +643,11 @@ class SceneNode():
         if self._mesh_data:
             aabb = self._mesh_data.getExtents(self.getWorldTransformation())
             original_aabb = self._mesh_data.getExtents()
+        else: # If there is no mesh_data, use a boundingbox that encompasses the local (0,0,0)
+            position = self.getWorldPosition()
+            aabb = AxisAlignedBox(minimum = position, maximum = position)
+            original_aabb = AxisAlignedBox(minimum = position, maximum = position)
+
         for child in self._children:
             if aabb is None:
                 aabb = child.getBoundingBox()
