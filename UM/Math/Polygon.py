@@ -67,6 +67,7 @@ class Polygon:
     #           The first element is the minimum value, the second the maximum.
     def project(self, normal):
         projection_min = numpy.dot(normal, self._points[0])
+
         projection_max = projection_min
         for point in self._points:
             projection = numpy.dot(normal, point)
@@ -234,9 +235,11 @@ class Polygon:
     #   \param other \type{Polygon} The polygon to check for intersection.
     #   \return A tuple of the x and y distance of intersection, or None if no intersection occured.
     def intersectsPolygon(self, other):
+        if len(self._points) == 0 or len(other.getPoints()) == 0:  # Polygon has no points, so it cant intersect.
+            return None
+
         retSize = 10000000.0
         ret = None
-
         for n in range(0, len(self._points)):
             p0 = self._points[n-1]
             p1 = self._points[n]
