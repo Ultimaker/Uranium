@@ -454,7 +454,7 @@ class ContainerRegistry:
     # Load a binary cached version of a DefinitionContainer
     def _loadCachedDefinition(self, definition_id, path):
         try:
-            cache_path = Resources.getPath(Resources.Cache, "definitions", definition_id)
+            cache_path = Resources.getPath(Resources.Cache, "definitions", self.getApplication().getVersion(), definition_id)
 
             cache_mtime = os.path.getmtime(cache_path)
             definition_mtime = os.path.getmtime(path)
@@ -483,7 +483,7 @@ class ContainerRegistry:
 
     # Store a cached version of a DefinitionContainer
     def _saveCachedDefinition(self, definition):
-        cache_path = Resources.getStoragePath(Resources.Cache, "definitions", definition.id)
+        cache_path = Resources.getStoragePath(Resources.Cache, "definitions", self.getApplication().getVersion(), definition.id)
 
         # Ensure the cache path exists
         os.makedirs(os.path.dirname(cache_path), exist_ok=True)
@@ -499,6 +499,15 @@ class ContainerRegistry:
             ContainerRegistry.__instance = cls()
         return ContainerRegistry.__instance
 
+    @classmethod
+    def setApplication(cls, application):
+        cls.__application = application
+
+    @classmethod
+    def getApplication(cls):
+        return cls.__application
+
+    __application = None
     __instance = None
 
     __container_types = {
