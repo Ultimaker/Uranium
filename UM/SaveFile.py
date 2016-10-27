@@ -22,6 +22,9 @@ else:
 #   that the file contents are always correct and that concurrent writes do not
 #   end up writing to the same file at the same time.
 class SaveFile:
+    # How many time so re-try saving this file when getting unknown exceptions.
+    __max_retries = 10
+
     # Create a new SaveFile.
     #
     # \param path The path to write to.
@@ -44,12 +47,17 @@ class SaveFile:
     def __exit__(self, exc_type, exc_value, traceback):
         self._temp_file.close()
 
+        self.__max_retries = 10
         while not self._file:
             # First, try to open the file we want to write to.
             try:
                 self._file = open(self._path, self._mode, encoding = self._encoding, **self._open_kwargs)
-            except Exception:
-                self._file = None
+            except PermissionError:
+                self._file = None #Always retry.
+            except Exception as e:
+                if self.__max_retries <= 0:
+                    raise e
+                self.__max_retries -= 1
 
         while True:
             # Try to acquire a lock. This will block if the file was already locked by a different process.
@@ -60,10 +68,15 @@ class SaveFile:
             # If we do, that means the file did not get replaced in the mean time and we properly acquired a lock on the right file.
             try:
                 file_new = open(self._path, self._mode, encoding = self._encoding, **self._open_kwargs)
-            except Exception:
-                # An error was raised when trying to open the file, try again.
-                # This primarily happens on windows where trying to open an opened file will raise a PermisisonError
+            except PermissionError:
+                # This primarily happens on Windows where trying to open an opened file will raise a PermissionError.
+                # We want to block on those, to simulate blocking writes.
                 continue
+            except Exception as e:
+                #In other cases with unknown exceptions, don't try again indefinitely.
+                if self.__max_retries <= 0:
+                    raise e
+                self.__max_retries -= 1
 
             if not self._file.closed and os.path.sameopenfile(self._file.fileno(), file_new.fileno()):
                 file_new.close()
@@ -80,8 +93,12 @@ class SaveFile:
                 # If that happens, the replace operation failed and we should try again.
                 try:
                     os.replace(self._temp_file.name, self._path)
-                except Exception:
+                except PermissionError:
                     continue
+                except Exception as e:
+                    if self.__max_retries <= 0:
+                        raise e
+                    self.__max_retries -= 1
 
                 break
             else:
