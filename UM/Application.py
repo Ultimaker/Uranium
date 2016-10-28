@@ -105,6 +105,8 @@ class Application():
 
         self._plugin_registry.setApplication(self)
 
+        UM.Settings.ContainerRegistry.setApplication(self)
+
         self._parsed_command_line = None
         self.parseCommandLine()
 
