@@ -375,9 +375,12 @@ class ScaleTool(Tool):
     def _getScaleInWorldCoordinates(self, node):
         aabb = node.getBoundingBox()
         original_aabb = self._getRotatedExtents(node)
-        scale = Vector(aabb.width / original_aabb.width, aabb.height / original_aabb.height,
-                       aabb.depth / original_aabb.depth)
-        return scale
+        if aabb is not None and original_aabb is not None:
+            scale = Vector(aabb.width / original_aabb.width, aabb.height / original_aabb.height,
+                           aabb.depth / original_aabb.depth)
+            return scale
+        else:
+            return Vector(1, 1, 1)
 
     def _getSVDRotationFromMatrix(self, matrix):
         result = Matrix()
