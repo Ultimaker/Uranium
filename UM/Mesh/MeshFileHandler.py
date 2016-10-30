@@ -119,11 +119,15 @@ class MeshFileHandler(object):
         meta_data = PluginRegistry.getInstance().getAllMetaData(filter = {"mesh_reader": {}}, active_only = True)
         for entry in meta_data:
             if "mesh_reader" in entry:
-                for input_type in entry["mesh_reader"]:
-                    ext = input_type.get("extension", None)
-                    if ext:
-                        description = input_type.get("description", ext)
-                        supported_types[ext] = description
+                if type(entry["mesh_reader"]) is list:
+                    for input_type in entry["mesh_reader"]:
+                        ext = input_type.get("extension", None)
+                        if ext:
+                            description = input_type.get("description", ext)
+                            supported_types[ext] = description
+                else:
+                    Logger.log("w", "Unexpected info has been provided with the keyname 'mesh_reader'. Ignoring..")
+                    continue
 
         return supported_types
 
