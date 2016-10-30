@@ -60,8 +60,6 @@ class MeshListModel(ListModel):
                 new_model_entry = self.getItem(new_index) # Model data of location node should move to.
 
                 for parent_node in Application.getInstance().getController().getScene().getRoot().getAllChildren():
-                    #print("parent id: " , id(parent_node) , " ", old_model_entry['parent_key'], " moved: " , new_model_entry["parent_key"])
-
                     if id(parent_node) == new_model_entry["parent_key"]:
                         # Found group the object is moving to.
                         group_move = False
