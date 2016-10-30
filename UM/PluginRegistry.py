@@ -43,9 +43,11 @@ class PluginRegistry(object):
     def getActivePlugins(self):
         return self._active_plugins
 
-    ##  Get the list of active plugins.
-    def isActivePlugin(self, plugin_name):
-        return plugin_name in self._active_plugins
+    ##  Ask whether plugin_name is an active plugin.
+    #
+    #   \param plugin_id \type{string} The id of the plugin which might be active or not.
+    def isActivePlugin(self, plugin_id):
+        return plugin_id in self._active_plugins
 
     ##  Remove plugin from the list of active plugins.
     #
