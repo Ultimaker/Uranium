@@ -73,6 +73,7 @@ MACRO(TARGETS_FOR_MO_FILES language)
 ENDMACRO()
 
 # Checks for availability of gettext and when found creates all targets 
+# TODO: Adding option to set the PROJECT_NAME externally!
 MACRO(CREATE_TRANSLATION_TARGETS)
 find_package(Gettext)
 
