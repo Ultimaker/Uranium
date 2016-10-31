@@ -143,9 +143,13 @@ class InstanceContainersModel(ListModel):
     @pyqtSlot(str, result="QVariantList")
     def getFileNameFilters(self, io_type):
         filters = []
+        all_types = []
         for plugin_id, meta_data in self._getIOPlugins(io_type):
             for writer in meta_data[io_type]:
                 filters.append(writer["description"] + " (*." + writer["extension"] + ")")
+                all_types.append("*.{0}".format(writer["extension"]))
+
+        filters.insert(0, catalog.i18nc("@item:inlistbox", "All Supported Types ({0})", " ".join(all_types)))
 
         filters.append(
             catalog.i18nc("@item:inlistbox", "All Files (*)"))  # Also allow arbitrary files, if the user so prefers.
