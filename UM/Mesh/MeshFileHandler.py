@@ -119,7 +119,7 @@ class MeshFileHandler(object):
         meta_data = PluginRegistry.getInstance().getAllMetaData(filter = {"mesh_reader": {}}, active_only = True)
         for entry in meta_data:
             if "mesh_reader" in entry:
-                if type(entry["mesh_reader"]) is list:
+                if "__iter__" in dir(entry["mesh_reader"]): # Check whether we have an object here which is an iterable
                     for input_type in entry["mesh_reader"]:
                         ext = input_type.get("extension", None)
                         if ext:
