@@ -84,6 +84,7 @@ class SceneNode():
         copy.setMeshData(self._mesh_data)
         copy.setVisible(deepcopy(self._visible, memo))
         copy._selectable = deepcopy(self._selectable, memo)
+        copy._name = deepcopy(self._name, memo)
         for decorator in self._decorators:
             copy.addDecorator(deepcopy(decorator, memo))
 
