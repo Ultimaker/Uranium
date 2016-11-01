@@ -4,7 +4,7 @@ from UM.Qt.ListModel import ListModel
 
 from PyQt5.QtCore import pyqtProperty, Qt, pyqtSignal, pyqtSlot, QUrl
 
-from UM.PluginRegistry import PluginRegistry #For getting the possible profile writers to write with.
+from UM.PluginRegistry import PluginRegistry #For getting the possible profile readers/writers.
 from UM.Settings.ContainerRegistry import ContainerRegistry
 from UM.Settings.InstanceContainer import InstanceContainer
 
@@ -145,21 +145,24 @@ class InstanceContainersModel(ListModel):
         filters = []
         all_types = []
         for plugin_id, meta_data in self._getIOPlugins(io_type):
-            for writer in meta_data[io_type]:
-                filters.append(writer["description"] + " (*." + writer["extension"] + ")")
-                all_types.append("*.{0}".format(writer["extension"]))
+            for io_plugin in meta_data[io_type]:
+                filters.append(io_plugin["description"] + " (*." + io_plugin["extension"] + ")")
+                all_types.append("*.{0}".format(io_plugin["extension"]))
 
-        filters.insert(0, catalog.i18nc("@item:inlistbox", "All Supported Types ({0})", " ".join(all_types)))
+        if "_reader" in io_type:
+            # if we're listing readers, add the option to show all supported files as the default option
+            filters.insert(0,
+                catalog.i18nc("@item:inlistbox", "All Supported Types ({0})", " ".join(all_types)))
 
-        filters.append(
-            catalog.i18nc("@item:inlistbox", "All Files (*)"))  # Also allow arbitrary files, if the user so prefers.
+            filters.append(
+                catalog.i18nc("@item:inlistbox", "All Files (*)"))  # Also allow arbitrary files, if the user so prefers.
         return filters
 
     @pyqtSlot(result=QUrl)
     def getDefaultPath(self):
         return QUrl.fromLocalFile(os.path.expanduser("~/"))
 
-    ##  Gets a list of profile writer plugins
+    ##  Gets a list of profile reader/writer plugins
     #   \return List of tuples of (plugin_id, meta_data).
     def _getIOPlugins(self, io_type):
         pr = PluginRegistry.getInstance()
