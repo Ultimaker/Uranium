@@ -4,7 +4,7 @@ from UM.Qt.ListModel import ListModel
 
 from PyQt5.QtCore import pyqtProperty, Qt, pyqtSignal, pyqtSlot, QUrl
 
-from UM.PluginRegistry import PluginRegistry #For getting the possible profile readers/writers.
+from UM.PluginRegistry import PluginRegistry #For getting the possible profile readers and writers.
 from UM.Settings.ContainerRegistry import ContainerRegistry
 from UM.Settings.InstanceContainer import InstanceContainer
 
@@ -135,7 +135,9 @@ class InstanceContainersModel(ListModel):
                 self._update()
 
     ##  Gets a list of the possible file filters that the plugins have
-    #   registered they can write.
+    #   registered they can read or write. The convenience meta-filters
+    #   "All Supported Types" and "All Files" are added when listing
+    #   readers, but not when listing writers.
     #
     #   \param io_type \type{str} name of the needed IO type
     #   \return A list of strings indicating file name filters for a file
@@ -162,7 +164,7 @@ class InstanceContainersModel(ListModel):
     def getDefaultPath(self):
         return QUrl.fromLocalFile(os.path.expanduser("~/"))
 
-    ##  Gets a list of profile reader/writer plugins
+    ##  Gets a list of profile reader or writer plugins
     #   \return List of tuples of (plugin_id, meta_data).
     def _getIOPlugins(self, io_type):
         pr = PluginRegistry.getInstance()
