@@ -127,7 +127,8 @@ class ThreeMFWriter(MeshWriter):
                 object = ET.SubElement(resources, "object", id=str(index + 1), type="model")
                 components = ET.SubElement(object, "components")
                 for child in node.getChildren():
-                    component = ET.SubElement(components, "component", objectid = str(added_nodes.index(child) + 1), transform = self._convertMatrixToString(child.getLocalTransformation()))
+                    if child in added_nodes:
+                        component = ET.SubElement(components, "component", objectid = str(added_nodes.index(child) + 1), transform = self._convertMatrixToString(child.getLocalTransformation()))
                 index += 1
                 added_nodes.append(node)
 
