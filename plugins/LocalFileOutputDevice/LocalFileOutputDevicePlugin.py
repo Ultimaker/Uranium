@@ -42,7 +42,7 @@ class LocalFileOutputDevice(OutputDevice):
         super().__init__("local_file")
 
         self.setName(catalog.i18nc("@item:inmenu", "Local File"))
-        self.setShortDescription(catalog.i18nc("@action:button", "Save to File"))
+        self.setShortDescription(catalog.i18nc("@action:button Preceded by 'Ready to'.", "Save to File"))
         self.setDescription(catalog.i18nc("@info:tooltip", "Save to File"))
         self.setIconName("save")
 
