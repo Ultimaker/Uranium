@@ -84,7 +84,6 @@ class ThreeMFWriter(MeshWriter):
                 if verts is None:
                     Logger.log("d", "3mf writer can't write nodes without mesh data. Skipping this node.")
                     continue  # No mesh data, nothing to do.
-
                 if mesh_data.hasIndices():
                     for face in mesh_data.getIndices():
                         v1 = verts[face[0]]
@@ -145,18 +144,18 @@ class ThreeMFWriter(MeshWriter):
             # build volume.
             if global_container_stack:
                 translation_vector = Vector(x=global_container_stack.getProperty("machine_width", "value") / 2,
-                                            y=0,
-                                            z=-global_container_stack.getProperty("machine_depth", "value") / 2)
+                                            y=global_container_stack.getProperty("machine_depth", "value") / 2,
+                                            z=0)
                 translation_matrix = Matrix()
                 translation_matrix.setByTranslation(translation_vector)
-                transformation_matrix.multiply(translation_matrix)
+                transformation_matrix.preMultiply(translation_matrix)
 
             # Find out what the final build items are and add them.
             for node in added_nodes:
                 if node.getParent().callDecoration("isGroup") is None:
                     node_matrix = node.getLocalTransformation()
 
-                    ET.SubElement(build, "item", objectid = str(added_nodes.index(node) + 1), transform = self._convertMatrixToString(node_matrix.multiply(transformation_matrix)))
+                    ET.SubElement(build, "item", objectid = str(added_nodes.index(node) + 1), transform = self._convertMatrixToString(node_matrix.preMultiply(transformation_matrix)))
 
             archive.writestr(model_file, b'<?xml version="1.0" encoding="UTF-8"?> \n' + ET.tostring(model))
             archive.writestr(content_types_file, b'<?xml version="1.0" encoding="UTF-8"?> \n' + ET.tostring(content_types))
