@@ -178,7 +178,6 @@ class CameraTool(Tool):
                 self._start_drag = None
             if self._dragged:
                 self._dragged = False
-                return True
 
         return False
 
