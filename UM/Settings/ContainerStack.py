@@ -474,3 +474,13 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
             UM.Settings.ValidatorState.MinimumError):
                 return True
         return False
+
+    ##  Get all the keys that are in an error state in this stack
+    def getErrorKeys(self):
+        error_keys = []
+        for key in self.getAllKeys():
+            validation_state = self.getProperty(key, "validationState")
+            if validation_state in (UM.Settings.ValidatorState.Exception, UM.Settings.ValidatorState.MaximumError,
+                                    UM.Settings.ValidatorState.MinimumError):
+                error_keys.append(key)
+        return error_keys
