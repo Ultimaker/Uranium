@@ -116,7 +116,6 @@ class ScaleTool(Tool):
                 self.setDragPlane(Plane(Vector(0, 1, 0), self._saved_handle_position.y))
 
             self.setDragStart(event.x, event.y)
-            self.operationStarted.emit(self)
 
         if event.type == Event.MouseMoveEvent:
             # Perform a scale operation
@@ -168,6 +167,7 @@ class ScaleTool(Tool):
                         op.push()
                         self._drag_length = (self._saved_handle_position - drag_position).length()
                 else:
+                    self.operationStarted.emit(self)
                     self._drag_length = (self._saved_handle_position - drag_position).length() #First move, do nothing but set right length.
                 self._last_event = event  # remember for uniform drag
                 return True
