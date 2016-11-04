@@ -8,7 +8,12 @@ from UM.Scene.Iterator.BreadthFirstIterator import BreadthFirstIterator
 from UM.Logger import Logger
 from UM.Math.Matrix import Matrix
 
-import xml.etree.ElementTree as ET
+try:
+    import xml.etree.cElementTree as ET
+    Logger.log("w", "Unable to load cElementTree, switching to slower version")
+except ImportError:
+    import xml.etree.ElementTree as ET
+
 import zipfile
 import UM.Application
 
