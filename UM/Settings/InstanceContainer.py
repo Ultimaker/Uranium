@@ -4,6 +4,7 @@
 import configparser
 import io
 import copy
+from typing import List
 
 from UM.Signal import Signal, signalemitter
 from UM.PluginObject import PluginObject
@@ -11,9 +12,10 @@ from UM.Logger import Logger
 from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType
 
 import UM.Settings.ContainerRegistry
+from UM.Settings.DefinitionContainer import DefinitionContainer
 
 from . import ContainerInterface
-from . import SettingInstance
+from UM.Settings.SettingInstance import SettingInstance
 from . import SettingRelation
 
 class InvalidInstanceError(Exception):
@@ -46,11 +48,11 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
     def __init__(self, container_id, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self._id = str(container_id)
-        self._name = container_id
-        self._definition = None
+        self._id = str(container_id)    # type: str
+        self._name = container_id       # type: str
+        self._definition = None         # type: DefinitionContainer
         self._metadata = {}
-        self._instances = {}
+        self._instances = {}            # type: Dict[str, SettingInstance]
         self._read_only = False
         self._dirty = False
         self._path = ""
@@ -59,7 +61,7 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
     ##  \copydoc ContainerInterface::getId
     #
     #   Reimplemented from ContainerInterface
-    def getId(self):
+    def getId(self) -> str:
         return self._id
 
     id = property(getId)
@@ -79,7 +81,7 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
     ##  \copydoc ContainerInterface::getName
     #
     #   Reimplemented from ContainerInterface
-    def getName(self):
+    def getName(self) -> str:
         return self._name
 
     name = property(getName)
@@ -95,7 +97,7 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
     ##  \copydoc ContainerInterface::isReadOnly
     #
     #   Reimplemented from ContainerInterface
-    def isReadOnly(self):
+    def isReadOnly(self) -> bool:
         return self._read_only
 
     def setReadOnly(self, read_only):
@@ -207,7 +209,7 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
                 Logger.log("w", "Tried to set value of setting %s that has no instance in container %s or its definition %s", key, self._name, self._definition.getName())
                 return
 
-            instance = SettingInstance.SettingInstance(setting_definition[0], self)
+            instance = SettingInstance(setting_definition[0], self)
             instance.propertyChanged.connect(self.propertyChanged)
             self._instances[instance.definition.key] = instance
 
@@ -235,7 +237,7 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
     #   \param new_name \type{str} The new name of the container. Defaults to None to indicate the name should not change.
     #
     #   \return A new InstanceContainer with the same contents as this container.
-    def duplicate(self, new_id, new_name = None):
+    def duplicate(self, new_id: str, new_name: str = None):
         new_container = self.__class__(new_id)
         if new_name:
             new_container.setName(new_name)
@@ -258,7 +260,7 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
     ##  \copydoc ContainerInterface::serialize
     #
     #   Reimplemented from ContainerInterface
-    def serialize(self):
+    def serialize(self) -> str:
         parser = configparser.ConfigParser(interpolation = None)
 
         if not self._definition:
@@ -288,7 +290,7 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
     ##  \copydoc ContainerInterface::deserialize
     #
     #   Reimplemented from ContainerInterface
-    def deserialize(self, serialized):
+    def deserialize(self, serialized: str) -> None:
         parser = configparser.ConfigParser(interpolation = None)
         parser.read_string(serialized)
 
@@ -329,7 +331,7 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
     ##  Find instances matching certain criteria.
     #
     #   \param kwargs \type{dict} A dictionary of keyword arguments with key-value pairs that should match properties of the instances.
-    def findInstances(self, **kwargs):
+    def findInstances(self, **kwargs) -> List[SettingInstance]:
         result = []
         for setting_key, instance in self._instances.items():
             for key, value in kwargs.items():
@@ -342,14 +344,14 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
 
     ##  Get an instance by key
     #
-    def getInstance(self, key):
+    def getInstance(self, key: str) -> SettingInstance:
         if key in self._instances:
             return self._instances[key]
 
         return None
 
     ##  Add a new instance to this container.
-    def addInstance(self, instance):
+    def addInstance(self, instance: SettingInstance) -> None:
         key = instance.definition.key
         if key in self._instances:
             return
@@ -360,7 +362,7 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
 
     ##  Remove an instance from this container.
     #   /param postpone_emit postpone emit until calling sendPostponedEmits
-    def removeInstance(self, key, postpone_emit=False):
+    def removeInstance(self, key: str, postpone_emit: bool=False) -> None:
         if key not in self._instances:
             return
 
@@ -382,14 +384,14 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
         instance.updateRelations(self)
 
     ##  Get the DefinitionContainer used for new instance creation.
-    def getDefinition(self):
+    def getDefinition(self) -> DefinitionContainer:
         return self._definition
 
     ##  Set the DefinitionContainer to use for new instance creation.
     #
     #   Since SettingInstance needs a SettingDefinition to work properly, we need some
     #   way of figuring out what SettingDefinition to use when creating a new SettingInstance.
-    def setDefinition(self, definition):
+    def setDefinition(self, definition: DefinitionContainer):
         self._definition = definition
 
     def __lt__(self, other):

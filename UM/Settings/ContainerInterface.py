@@ -14,7 +14,7 @@ class ContainerInterface:
     #   configuration files or when writing a file to disk.
     #
     #   \return \type{string} The unique ID of this container.
-    def getId(self):
+    def getId(self) -> str:
         pass
 
     ##  Get the human-readable name of this container.
@@ -23,14 +23,14 @@ class ContainerInterface:
     #   used in the interface.
     #
     #   \return \type{string} The name of this container.
-    def getName(self):
+    def getName(self) -> str:
         pass
 
     ##  Get whether the container item is stored on a read only location in the filesystem.
     #
     #   \return True if the specified item is stored on a read-only location
     #   in the filesystem
-    def isReadOnly(self):
+    def isReadOnly(self) -> bool:
         pass
 
     ##  Get all metadata of this container.
@@ -58,7 +58,7 @@ class ContainerInterface:
     #   \param name \type{string} The name of the property to retrieve.
     #
     #   \return The specified property value of the container item corresponding to key, or None if not found.
-    def getProperty(self, key, property_name):
+    def getProperty(self, key: str, property_name: str):
         pass
 
     ##  Get whether the container item has a specific property.
@@ -68,7 +68,7 @@ class ContainerInterface:
     #
     #   \return True if the specified item has the property, or False if it
     #   doesn't.
-    def hasProperty(self, key, property_name):
+    def hasProperty(self, key: str, property_name: str) -> bool:
         pass
 
     ##  Serialize this container to a string.
@@ -77,7 +77,7 @@ class ContainerInterface:
     #   container to disk or send it over the network.
     #
     #   \return \type{string} A string representation of this container.
-    def serialize(self):
+    def serialize(self) -> str:
         pass
 
     ##  Deserialize the container from a string representation.
@@ -86,7 +86,7 @@ class ContainerInterface:
     #   represenation.
     #
     #   \param serialized A serialized string containing a container that should be deserialized.
-    def deserialize(self, serialized):
+    def deserialize(self, serialized: str):
         pass
 
     ##  Get the path used to create this InstanceContainer.

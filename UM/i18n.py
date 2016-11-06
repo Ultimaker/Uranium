@@ -4,6 +4,7 @@
 import gettext
 
 from UM.Resources import Resources
+from UM.Application import Application
 
 ##  Wraps a gettext translation catalog for simplified use.
 #
@@ -188,5 +189,6 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
     __tag_replacements = {
         "filename": None,
         "message": None
-    }
-    __application = None
+    }   # type: Dict[str, str]
+    __application = None    # type: Application
+

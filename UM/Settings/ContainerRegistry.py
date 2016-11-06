@@ -4,20 +4,23 @@
 import os
 import re #For finding containers with asterisks in the constraints.
 import urllib #For ensuring container file names are proper file names
+import urllib.parse
 import pickle #For serializing/deserializing Python classes to binary files
+from typing import List
 
 from UM.PluginRegistry import PluginRegistry
 from UM.Resources import Resources, UnsupportedStorageTypeError
 from UM.MimeTypeDatabase import MimeType, MimeTypeDatabase
 from UM.Logger import Logger
 from UM.SaveFile import SaveFile
+from UM.Settings.ContainerInterface import ContainerInterface
 from UM.Signal import Signal, signalemitter
 
 import UM.Dictionary
 
-from . import DefinitionContainer
-from . import InstanceContainer
-from . import ContainerStack
+from UM.Settings.DefinitionContainer import DefinitionContainer
+from UM.Settings.ContainerStack import ContainerStack
+from UM.Settings.InstanceContainer import InstanceContainer
 
 ##  Central class to manage all Setting containers.
 #
@@ -29,14 +32,14 @@ class ContainerRegistry:
 
         self._emptyInstanceContainer = _EmptyInstanceContainer("empty")
 
-        self._containers = [self._emptyInstanceContainer]
+        self._containers = [self._emptyInstanceContainer]   # type: List[ContainerInterface]
         self._id_container_cache = {}
-        self._resource_types = [Resources.DefinitionContainers]
+        self._resource_types = [Resources.DefinitionContainers] # type: List[int]
 
     containerAdded = Signal()
     containerRemoved = Signal()
 
-    def addResourceType(self, type):
+    def addResourceType(self, type: int) -> None:
         self._resource_types.append(type)
 
     ##  Find all DefinitionContainer objects matching certain criteria.
@@ -45,8 +48,8 @@ class ContainerRegistry:
     #   keys and values that need to match the metadata of the
     #   DefinitionContainer. An asterisk in the values can be used to denote a
     #   wildcard.
-    def findDefinitionContainers(self, **kwargs):
-        return self.findContainers(DefinitionContainer.DefinitionContainer, **kwargs)
+    def findDefinitionContainers(self, **kwargs) -> List[DefinitionContainer]:
+        return self.findContainers(DefinitionContainer, **kwargs)
 
     ##  Find all InstanceContainer objects matching certain criteria.
     #
@@ -54,16 +57,16 @@ class ContainerRegistry:
     #   keys and values that need to match the metadata of the
     #   InstanceContainer. An asterisk in the values can be used to denote a
     #   wildcard.
-    def findInstanceContainers(self, **kwargs):
-        return self.findContainers(InstanceContainer.InstanceContainer, **kwargs)
+    def findInstanceContainers(self, **kwargs) -> List[InstanceContainer]:
+        return self.findContainers(InstanceContainer, **kwargs)
 
     ##  Find all ContainerStack objects matching certain criteria.
     #
     #   \param kwargs \type{dict} A dictionary of keyword arguments containing
     #   keys and values that need to match the metadata of the ContainerStack.
     #   An asterisk in the values can be used to denote a wildcard.
-    def findContainerStacks(self, **kwargs):
-        return self.findContainers(ContainerStack.ContainerStack, **kwargs)
+    def findContainerStacks(self, **kwargs) -> List[ContainerStack]:
+        return self.findContainers(ContainerStack, **kwargs)
 
     ##  Find all container objects matching certain criteria.
     #
@@ -75,7 +78,7 @@ class ContainerRegistry:
     #
     #   \return A list of containers matching the search criteria, or an empty
     #   list if nothing was found.
-    def findContainers(self, container_type = None, ignore_case = False, **kwargs):
+    def findContainers(self, container_type = None, ignore_case = False, **kwargs) -> List[ContainerInterface]:
         containers = []
 
         if len(kwargs) == 1 and "id" in kwargs:
@@ -182,7 +185,7 @@ class ContainerRegistry:
         return containers
 
     ##  This is a small convenience to make it easier to support complex structures in ContainerStacks.
-    def getEmptyInstanceContainer(self):
+    def getEmptyInstanceContainer(self) -> InstanceContainer:
         return self._emptyInstanceContainer
 
     ##  Load all available definition containers, instance containers and
@@ -190,7 +193,7 @@ class ContainerRegistry:
     #
     #   \note This method does not clear the internal list of containers. This means that any containers
     #   that were already added when the first call to this method happened will not be re-added.
-    def load(self):
+    def load(self) -> None:
         files = []
         for resource_type in self._resource_types:
             resources = Resources.getAllResourcesOfType(resource_type)
@@ -211,10 +214,10 @@ class ContainerRegistry:
 
                 type_priority = 2
 
-                if issubclass(container_type, DefinitionContainer.DefinitionContainer):
+                if issubclass(container_type, DefinitionContainer):
                     type_priority = 0
 
-                if issubclass(container_type, InstanceContainer.InstanceContainer):
+                if issubclass(container_type, InstanceContainer):
                     type_priority = 1
 
                 # Since we have the mime type and resource type here, process these two properties so we do not
@@ -234,7 +237,7 @@ class ContainerRegistry:
                 continue
 
             try:
-                if issubclass(container_type, DefinitionContainer.DefinitionContainer):
+                if issubclass(container_type, DefinitionContainer):
                     definition = self._loadCachedDefinition(container_id, file_path)
                     if definition:
                         self.addContainer(definition)
@@ -246,14 +249,14 @@ class ContainerRegistry:
                 new_container.setReadOnly(read_only)
                 new_container.setPath(file_path)
 
-                if issubclass(container_type, DefinitionContainer.DefinitionContainer):
+                if issubclass(container_type, DefinitionContainer):
                     self._saveCachedDefinition(new_container)
 
                 self.addContainer(new_container)
             except Exception as e:
                 Logger.logException("e", "Could not deserialize container %s", container_id)
 
-    def addContainer(self, container):
+    def addContainer(self, container: ContainerInterface) -> None:
         containers = self.findContainers(container_type = container.__class__, id = container.getId())
         if containers:
             Logger.log("w", "Container of type %s and id %s already added", repr(container.__class__), container.getId())
@@ -263,7 +266,7 @@ class ContainerRegistry:
         self._id_container_cache[container.getId()] = container
         self.containerAdded.emit(container)
 
-    def removeContainer(self, container_id):
+    def removeContainer(self, container_id: str) -> None:
         containers = self.findContainers(None, id = container_id)
         if containers:
             container = containers[0]
@@ -278,7 +281,7 @@ class ContainerRegistry:
         else:
             Logger.log("w", "Could not remove container with id %s, as no container with that ID is known", container_id)
 
-    def renameContainer(self, container_id, new_name, new_id = None):
+    def renameContainer(self, container_id: str, new_name: str, new_id: str = None) -> None:
         Logger.log("d", "Renaming container %s to %s", container_id, new_name)
         containers = self.findContainers(None, id = container_id)
         if not containers:
@@ -303,7 +306,7 @@ class ContainerRegistry:
 
         self.containerAdded.emit(container)
 
-    def saveAll(self):
+    def saveAll(self) -> None:
         for instance in self.findInstanceContainers():
             if not instance.isDirty():
                 continue
@@ -366,7 +369,7 @@ class ContainerRegistry:
     #   \param original The original name that may not be unique.
     #   \return A unique name that looks a lot like the original but may have
     #   a number behind it to make it unique.
-    def uniqueName(self, original):
+    def uniqueName(self, original: str) -> str:
         name = original.strip()
 
         if not self.findContainers(id = name, ignore_case = True) and not self.findContainers(name = name):
@@ -508,27 +511,27 @@ class ContainerRegistry:
         return cls.__application
 
     __application = None
-    __instance = None
+    __instance = None  # type: ContainerRegistry
 
     __container_types = {
-        "definition": DefinitionContainer.DefinitionContainer,
-        "instance": InstanceContainer.InstanceContainer,
-        "stack": ContainerStack.ContainerStack,
+        "definition": DefinitionContainer,
+        "instance": InstanceContainer,
+        "stack": ContainerStack,
     }
 
     __mime_type_map = {
-        "application/x-uranium-definitioncontainer": DefinitionContainer.DefinitionContainer,
-        "application/x-uranium-instancecontainer": InstanceContainer.InstanceContainer,
-        "application/x-uranium-containerstack": ContainerStack.ContainerStack,
+        "application/x-uranium-definitioncontainer": DefinitionContainer,
+        "application/x-uranium-instancecontainer": InstanceContainer,
+        "application/x-uranium-containerstack": ContainerStack,
     }
 
 PluginRegistry.addType("settings_container", ContainerRegistry.addContainerType)
 
-class _EmptyInstanceContainer(InstanceContainer.InstanceContainer):
-    def isDirty(self):
+class _EmptyInstanceContainer(InstanceContainer):
+    def isDirty(self) -> bool:
         return False
 
-    def isReadOnly(self):
+    def isReadOnly(self) -> bool:
         return True
 
     def getProperty(self, key, property_name):
@@ -538,5 +541,5 @@ class _EmptyInstanceContainer(InstanceContainer.InstanceContainer):
         Logger.log("e", "Setting property %s of container %s which should remain empty", key, self.getName())
         return
 
-    def serialize(self):
+    def serialize(self) -> str:
         return "[general]\n version = 2\n name = empty\n definition = fdmprinter\n"

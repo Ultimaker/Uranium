@@ -138,5 +138,5 @@ class Selection:
 
         cls.selectionCenterChanged.emit()
 
-    __selection = []
+    __selection = []    # type: List[SceneNode]
     __selection_center = Vector(0, 0, 0)

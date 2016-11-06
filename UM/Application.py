@@ -341,4 +341,5 @@ class Application():
         else:
             return os.path.abspath(os.path.join(os.path.dirname(sys.executable), ".."))
 
-    _instance = None
+    _instance = None    # type: Application
+

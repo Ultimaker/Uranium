@@ -6,6 +6,7 @@ import os
 
 from UM.PluginError import PluginNotFoundError, InvalidMetaDataError
 from UM.Logger import Logger
+from typing import Callable, Any
 
 ##  A central object to dynamically load modules as plugins.
 #
@@ -356,6 +357,6 @@ class PluginRegistry(object):
                 return False
         return True
 
-    _type_register_map = {}
-    _instance = None
+    _type_register_map = {} # type: Dict[str, Callable[[Any], None]]
+    _instance = None    # type: PluginRegistry
 

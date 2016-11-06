@@ -18,9 +18,6 @@
 #
 # Sorted list implementation.
 
-from __future__ import print_function
-from sys import hexversion
-
 from bisect import bisect_left, bisect_right, insort
 from itertools import chain, repeat, starmap
 from collections import Sequence, MutableSequence
@@ -29,20 +26,11 @@ from operator import iadd, add
 from functools import wraps
 from math import log
 
-if hexversion < 0x03000000:
-    from itertools import izip as zip
-    from itertools import imap as map
-    try:
-        from thread import get_ident
-    except ImportError:
-        from dummy_thread import get_ident
-else:
-    from functools import reduce
-    try:
-        from _thread import get_ident
-    except ImportError:
-        from _dummy_thread import get_ident
-
+from functools import reduce
+try:
+    from _thread import get_ident
+except ImportError:
+    from _dummy_thread import get_ident
 
 def recursive_repr(func):
     """Decorator to prevent infinite repr recursion."""

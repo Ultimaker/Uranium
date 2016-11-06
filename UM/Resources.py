@@ -299,11 +299,11 @@ class Resources:
         if not cls.__cache_storage_path:
             cls.__cache_storage_path = os.path.join(cls.__config_storage_path, "cache")
 
-    __config_storage_path = None
-    __data_storage_path = None
-    __cache_storage_path = None
+    __config_storage_path = None    # type: str
+    __data_storage_path = None      # type: str
+    __cache_storage_path = None     # type: str
 
-    __paths = []
+    __paths = []    # type: List[str]
     __types = {
         Resources: "",
         Preferences: "",

@@ -13,6 +13,7 @@ from UM.Event import CallFunctionEvent
 from UM.Decorators import deprecated, call_if_enabled
 from UM.Logger import Logger
 from UM.Platform import Platform
+from UM.Application import Application
 
 # Helper functions for tracing signal emission.
 def _traceEmit(signal, *args, **kwargs):
@@ -215,7 +216,7 @@ class Signal:
 
     #   To avoid circular references when importing Application, this should be
     #   set by the Application instance.
-    _app = None
+    _app = None # type: Application
 
     # This __str__() is useful for debugging.
     # def __str__(self):

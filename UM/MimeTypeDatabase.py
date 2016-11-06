@@ -163,4 +163,4 @@ class MimeTypeDatabase:
         cls.__custom_mimetypes.append(mime_type)
 
     __system_database = QMimeDatabase()
-    __custom_mimetypes = []
+    __custom_mimetypes = [] # type: List[MimeType]
