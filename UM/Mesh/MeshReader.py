@@ -41,6 +41,6 @@ class MeshReader(PluginObject):
     ##  Read mesh data from file and returns a node that contains the data 
     #   Note that in some cases you can get an entire scene of nodes in this way (eg; 3MF)
     #
-    #   \return node \type{SceneNode} The scene node to write to the stream.
+    #   \return node \type{SceneNode} or \type{list(SceneNode)} The SceneNode or SceneNodes read from file.
     def read(self, file_name):
         raise NotImplementedError("Reader plugin was not correctly implemented, no read was specified")

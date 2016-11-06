@@ -15,6 +15,9 @@ class GroupDecorator(SceneNodeDecorator):
     def isGroup(self):
         return True
 
+    def getOldParent(self):
+        return self._old_parent
+
     def _onChildrenChanged(self, node):
         if not self.getNode().hasChildren():
             # A group that no longer has children may remove itself from the scene

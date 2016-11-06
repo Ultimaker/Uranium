@@ -83,7 +83,10 @@ class Resources:
             if not os.path.isdir(directory):
                 continue
 
-            for root, dirname, entries in os.walk(directory, followlinks = True):
+            for root, dirnames, entries in os.walk(directory, followlinks = True):
+                dirname = root.replace(directory, "")
+                if os.sep + "." in dirname:
+                    continue
                 for entry in entries:
                     if not entry.startswith('.') and os.path.isfile(os.path.join(root, entry)):
                         if not entry in files:
@@ -220,6 +223,13 @@ class Resources:
         if not cls.__data_storage_path:
             cls.__initializeStoragePaths()
         return cls.__data_storage_path
+
+    ##  Gets the search paths for resources.
+    #
+    #   \return A sequence of paths where resources might be.
+    @classmethod
+    def getSearchPaths(cls):
+        yield from cls.__paths
 
     ##  Remove a custom resource type.
     @classmethod

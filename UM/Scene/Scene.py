@@ -17,7 +17,7 @@ class Scene():
     def __init__(self):
         super().__init__() # Call super to make multiple inheritance work.
 
-        self._root = SceneNode()
+        self._root = SceneNode(name= "Root")
         self._root.setCalculateBoundingBox(False)
         self._connectSignalsRoot()
         self._active_camera = None

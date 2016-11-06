@@ -158,21 +158,27 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     #
     #   \param key The key to get the property value of.
     #   \param property_name The name of the property to get the value of.
-    #   \param kwargs Keyword arguments
-    #                 Possible values:
-    #                 * use_next: True if the value should be retrieved from the next stack if not found in this stack. False if not. Defaults to True.
+    #   \param use_next True if the value should be retrieved from the next
+    #   stack if not found in this stack. False if not.
+    #   \param skip_until_container A container ID to skip to. If set, it will
+    #   be as if all containers above the specified container are empty. If the
+    #   container is not in the stack, it'll try to find it in the next stack.
     #
     #   \return The raw property value of the property, or None if not found. Note that
     #           the value might be a SettingFunction instance.
     #
-    def getRawProperty(self, key, property_name, **kwargs):
+    def getRawProperty(self, key, property_name, *, use_next = True, skip_until_container = None):
         for container in self._containers:
+            if skip_until_container and container.getId() != skip_until_container:
+                continue #Skip.
+            skip_until_container = None #When we find the container, stop skipping.
+
             value = container.getProperty(key, property_name)
             if value is not None:
                 return value
 
-        if self._next_stack and kwargs.get("use_next", True):
-            return self._next_stack.getRawProperty(key, property_name, **kwargs)
+        if self._next_stack and use_next:
+            return self._next_stack.getRawProperty(key, property_name, use_next = use_next, skip_until_container = skip_until_container)
         else:
             return None
 
@@ -459,3 +465,22 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
         while self._postponed_emits:
             signal, signal_arg = self._postponed_emits.pop(0)
             signal.emit(signal_arg)
+
+    ##  Check if the container stack has errors
+    def hasErrors(self):
+        for key in self.getAllKeys():
+            validation_state = self.getProperty(key, "validationState")
+            if validation_state in (UM.Settings.ValidatorState.Exception, UM.Settings.ValidatorState.MaximumError,
+            UM.Settings.ValidatorState.MinimumError):
+                return True
+        return False
+
+    ##  Get all the keys that are in an error state in this stack
+    def getErrorKeys(self):
+        error_keys = []
+        for key in self.getAllKeys():
+            validation_state = self.getProperty(key, "validationState")
+            if validation_state in (UM.Settings.ValidatorState.Exception, UM.Settings.ValidatorState.MaximumError,
+                                    UM.Settings.ValidatorState.MinimumError):
+                error_keys.append(key)
+        return error_keys

@@ -67,6 +67,7 @@ class Polygon:
     #           The first element is the minimum value, the second the maximum.
     def project(self, normal):
         projection_min = numpy.dot(normal, self._points[0])
+
         projection_max = projection_min
         for point in self._points:
             projection = numpy.dot(normal, point)
@@ -76,7 +77,10 @@ class Polygon:
         return (projection_min, projection_max)
 
     def translate(self, x = 0, y =  0):
-        return Polygon(numpy.add(self._points, numpy.array([[x, y]])))
+        if self.isValid():
+            return Polygon(numpy.add(self._points, numpy.array([[x, y]])))
+        else:
+            return self
 
     ##  Mirrors this polygon across the specified axis.
     #
@@ -88,7 +92,7 @@ class Polygon:
             Logger.log("w", "Tried to mirror a polygon over an axis with direction [0, 0, 0].")
             return #Axis has no direction. Can't expect us to mirror anything!
         axis_direction /= numpy.linalg.norm(axis_direction) #Normalise the direction.
-        if len(self._points) == 0: #No points to mirror. We can skip this altogether.
+        if not self.isValid(): # Not a valid polygon, so don't do anything.
             return self
 
         #In order to be able to mirror points around an arbitrary axis, we have to normalize the axis and all points such that the axis goes through the origin.
@@ -234,9 +238,11 @@ class Polygon:
     #   \param other \type{Polygon} The polygon to check for intersection.
     #   \return A tuple of the x and y distance of intersection, or None if no intersection occured.
     def intersectsPolygon(self, other):
+        if len(self._points) < 2 or len(other.getPoints()) < 2:  # Polygon has not enough points, so it cant intersect.
+            return None
+
         retSize = 10000000.0
         ret = None
-
         for n in range(0, len(self._points)):
             p0 = self._points[n-1]
             p1 = self._points[n]

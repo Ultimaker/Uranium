@@ -116,7 +116,6 @@ class ScaleTool(Tool):
                 self.setDragPlane(Plane(Vector(0, 1, 0), self._saved_handle_position.y))
 
             self.setDragStart(event.x, event.y)
-            self.operationStarted.emit(self)
 
         if event.type == Event.MouseMoveEvent:
             # Perform a scale operation
@@ -168,6 +167,7 @@ class ScaleTool(Tool):
                         op.push()
                         self._drag_length = (self._saved_handle_position - drag_position).length()
                 else:
+                    self.operationStarted.emit(self)
                     self._drag_length = (self._saved_handle_position - drag_position).length() #First move, do nothing but set right length.
                 self._last_event = event  # remember for uniform drag
                 return True
@@ -375,9 +375,12 @@ class ScaleTool(Tool):
     def _getScaleInWorldCoordinates(self, node):
         aabb = node.getBoundingBox()
         original_aabb = self._getRotatedExtents(node)
-        scale = Vector(aabb.width / original_aabb.width, aabb.height / original_aabb.height,
-                       aabb.depth / original_aabb.depth)
-        return scale
+        if aabb is not None and original_aabb is not None:
+            scale = Vector(aabb.width / original_aabb.width, aabb.height / original_aabb.height,
+                           aabb.depth / original_aabb.depth)
+            return scale
+        else:
+            return Vector(1, 1, 1)
 
     def _getSVDRotationFromMatrix(self, matrix):
         result = Matrix()
