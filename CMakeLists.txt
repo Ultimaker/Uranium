@@ -12,16 +12,21 @@ include(GNUInstallDirs)
 
 find_package(PythonInterp 3.4.0 REQUIRED)
 
-# Checks using pylint
+# # Checks using pylint
 # Note that we use exit 0 here to not mark the build as a failure on check failure
 # In addition, the specified pylint configuration uses the spellchecker plugin. This required python-enchant to be installed.
 add_custom_target(check)
 add_custom_command(TARGET check POST_BUILD COMMAND "PYTHONPATH=${CMAKE_SOURCE_DIR}" ${PYTHON_EXECUTABLE} -m pylint --rcfile=${CMAKE_SOURCE_DIR}/pylint.cfg UM --msg-template=\"{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}\" > ${CMAKE_BINARY_DIR}/pylint.log || exit 0 WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
-# Tests
-# Note that we use exit 0 here to not mark the build as a failure on test failure
-add_test(NAME pytest COMMAND "LANG=C" "PYTHONPATH=${CMAKE_SOURCE_DIR}" ${PYTHON_EXECUTABLE} -m pytest -r a --junitxml=${CMAKE_BINARY_DIR}/junit.xml ${CMAKE_SOURCE_DIR} || exit 0)
+# # Tests
 enable_testing()
+add_test(NAME pytest COMMAND ${PYTHON_EXECUTABLE} -m pytest -r a --junitxml=${CMAKE_BINARY_DIR}/junit.xml ${CMAKE_SOURCE_DIR})
+# Using untranslated strings on Linux
+if(UNIX AND NOT APPLE) 
+    set_tests_properties(pytest PROPERTIES ENVIRONMENT LANG=de_DE.UTF-8)
+endif()
+# Adding PYTHONPATH on every OS
+set_tests_properties(pytest PROPERTIES ENVIRONMENT PYTHONPATH=${CMAKE_SOURCE_DIR})
 
 # # Benchmarks
 # add_custom_target(benchmark)
