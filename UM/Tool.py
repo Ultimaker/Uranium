@@ -47,6 +47,8 @@ class Tool(PluginObject):
 
     ##  Handle an event.
     #   \param event \type{Event} The event to handle.
+    #   \return \type{bool} true if this event has been handled and requires
+    #           no further processing.
     #   \sa Event
     def event(self, event):
         if not self._selection_pass:
