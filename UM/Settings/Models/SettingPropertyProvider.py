@@ -274,6 +274,8 @@ class SettingPropertyProvider(QObject):
 
             self._property_map.insert(property_name, self._getPropertyValue(property_name))
 
+        self._updateStackLevels()
+
     def _update(self, container = None):
         if not self._stack or not self._watched_properties or not self._key:
             return
