@@ -24,7 +24,8 @@ class ThreeMFWriter(MeshWriter):
         self._namespaces = {
             "3mf": "http://schemas.microsoft.com/3dmanufacturing/core/2015/02",
             "content-types": "http://schemas.openxmlformats.org/package/2006/content-types",
-            "relationships": "http://schemas.openxmlformats.org/package/2006/relationships"
+            "relationships": "http://schemas.openxmlformats.org/package/2006/relationships",
+            "cura": "http://software.ultimaker.com/xml/cura/3mf/2015/10"
         }
 
         self._unit_matrix_string = self._convertMatrixToString(Matrix())
