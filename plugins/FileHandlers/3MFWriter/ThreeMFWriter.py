@@ -3,10 +3,9 @@
 
 from UM.Mesh.MeshWriter import MeshWriter
 from UM.Math.Vector import Vector
-from UM.Scene.SceneNode import SceneNode
-from UM.Scene.Iterator.BreadthFirstIterator import BreadthFirstIterator
 from UM.Logger import Logger
 from UM.Math.Matrix import Matrix
+from UM.Settings.SettingRelation import RelationType
 
 try:
     import xml.etree.cElementTree as ET
@@ -110,6 +109,22 @@ class ThreeMFWriter(MeshWriter):
                         # If we have no faces defined, assume that every three subsequent vertices form a face.
                         if idx % 3 == 0:
                             triangle = ET.SubElement(triangles, "triangle", v1 = str(idx), v2 = str(idx + 1), v3 = str(idx + 2))
+
+                # Handle per object settings
+                stack = n.callDecoration("getStack")
+                if stack is not None:
+                    changed_setting_keys = set(stack.getTop().getAllKeys())
+
+                    # Ensure that we save the extruder used for this object.
+                    if stack.getProperty("machine_extruder_count", "value") > 1:
+                        changed_setting_keys.add("extruder_nr")
+
+                    settings_xml = ET.SubElement(object, "settings", xmlns=self._namespaces["cura"])
+
+                    # Get values for all changed settings & save them.
+                    for key in changed_setting_keys:
+                        setting_xml = ET.SubElement(settings_xml, "setting", key = key)
+                        setting_xml.text = str(stack.getProperty(key, "value"))
 
             # Add one to the index as we haven't incremented the last iteration.
             index += 1
