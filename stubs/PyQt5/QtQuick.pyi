@@ -1046,7 +1046,7 @@ class QSGSimpleTextureNode(QSGGeometryNode):
 class QSGTexture(QtCore.QObject):
 
     class Filtering(int): ...
-    None = ... # type: 'QSGTexture.Filtering'
+    # None = ... # type: 'QSGTexture.Filtering'
     Nearest = ... # type: 'QSGTexture.Filtering'
     Linear = ... # type: 'QSGTexture.Filtering'
 

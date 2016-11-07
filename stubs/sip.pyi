@@ -15,7 +15,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 
-from typing import overload, Sequence, Union
+from typing import overload, Sequence, Union, TypeVar, Generic
 
 
 # Constants.
@@ -33,9 +33,9 @@ class wrapper(simplewrapper): ...
 # we know that implement it.
 Buffer = Union['array', 'voidptr', str, bytes, bytearray]
 
-
 # The array type.
-class array(Sequence): ...
+T = TypeVar('T')
+class array(Generic[T], Sequence): ...
 
 
 # The voidptr type.
