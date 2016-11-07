@@ -1,4 +1,4 @@
 set MYPYPATH=.;.\stubs\
 
-mypy -m UM
+mypy -p UM
 rem mypy -m cura
