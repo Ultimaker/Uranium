@@ -7,7 +7,7 @@ from UM.Job import Job
 ##  A Job subclass that performs writing.
 #
 #   The writer defines what the result of this job is.
-class WriteJob(Job):
+class WriteFileJob(Job):
     ##  Creates a new job for writing.
     #
     #   \param writer The file writer to use, with the correct MIME type.
