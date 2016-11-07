@@ -9,4 +9,7 @@ from UM.FileHandler.FileHandler import FileHandler
 #   This class is created by Application and handles reading and writing workspace files.
 class WorkspaceFileHandler(FileHandler):
     def __init__(self):
-        super().__init__("workspace_writers", "workspace_readers")
+        super().__init__("workspace_writer", "workspace_reader")
+
+    def readerRead(self, reader, file_name, **kwargs):
+        pass
