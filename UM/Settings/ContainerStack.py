@@ -503,7 +503,7 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
         self._property_changes[key].add(property_name)
 
         if not self._emit_property_changed_queued:
-            Signal._app.callLater(self._emitCollectedPropertyChanges)
+            UM.Settings.ContainerRegistry.getApplication().callLater(self._emitCollectedPropertyChanges)
             self._emit_property_changed_queued = True
 
     # Perform the emission of the change signals that were collected in a previous step.
