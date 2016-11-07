@@ -3,6 +3,8 @@
 
 from UM.PluginRegistry import PluginRegistry
 from UM.Logger import Logger
+from .FileWriter import FileWriter
+
 
 ##  Central class for reading and writing meshes.
 #   This class is created by Application and handles reading and writing mesh files.
@@ -42,11 +44,13 @@ class FileHandler:
                 ext = output.get("extension", "")
                 description = output.get("description", ext)
                 mime_type = output.get("mime_type", "text/plain")
+                mode = output.get("mode", FileWriter.OutputMode.TextMode)
                 supported_types.append({
                     "id": entry["id"],
                     "extension": ext,
                     "description": description,
-                    "mime_type": mime_type
+                    "mime_type": mime_type,
+                    "mode": mode
                 })
         return supported_types
 

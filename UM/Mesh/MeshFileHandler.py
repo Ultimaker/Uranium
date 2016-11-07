@@ -56,23 +56,3 @@ class MeshFileHandler(FileHandler):
 
         Logger.log("w", "Unable to read file %s", file_name)
         return None  # unable to read
-
-    ##  Get list of all supported filetypes for writing.
-    #   \return List of dicts containing id, extension, description and mime_type for all supported file types.
-    def getSupportedFileTypesWrite(self):
-        supported_types = []
-        meta_data = PluginRegistry.getInstance().getAllMetaData(filter={self._writer_type: {}}, active_only=True)
-        for entry in meta_data:
-            for output in entry[self._writer_type].get("output", []):
-                ext = output.get("extension", "")
-                description = output.get("description", ext)
-                mime_type = output.get("mime_type", "text/plain")
-                mode = output.get("mode", MeshWriter.OutputMode.TextMode)
-                supported_types.append({
-                    "id": entry["id"],
-                    "extension": ext,
-                    "description": description,
-                    "mime_type": mime_type,
-                    "mode": mode
-                    })
-            return supported_types
