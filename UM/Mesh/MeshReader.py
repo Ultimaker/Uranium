@@ -9,7 +9,6 @@ from UM.FileHandler.FileReader import FileReader
 class MeshReader(FileReader):
     def __init__(self):
         super().__init__()
-        self._supported_extensions = []
 
     ##  Read mesh data from file and returns a node that contains the data 
     #   Note that in some cases you can get an entire scene of nodes in this way (eg; 3MF)
