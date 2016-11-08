@@ -4,13 +4,22 @@
 from UM.PluginRegistry import PluginRegistry
 from UM.Logger import Logger
 from .FileWriter import FileWriter
+from PyQt5.QtCore import QObject, pyqtProperty, pyqtSlot, QUrl
+
+import platform
+
+from UM.i18n import i18nCatalog
+i18n_catalog = i18nCatalog("uranium")
 
 
 ##  Central class for reading and writing meshes.
 #   This class is created by Application and handles reading and writing mesh files.
-class FileHandler:
-    def __init__(self, writer_type, reader_type):
-        super().__init__()
+class FileHandler(QObject):
+    _instance = None
+    _application = None
+
+    def __init__(self, writer_type, reader_type, parent = None):
+        super().__init__(parent)
 
         self._readers = {}
         self._writers = {}
@@ -20,6 +29,61 @@ class FileHandler:
 
         PluginRegistry.addType(self._writer_type, self.addWriter)
         PluginRegistry.addType(self._reader_type, self.addReader)
+
+    @classmethod
+    def setApplication(cls, application):
+        cls._application = application
+
+    @classmethod
+    def getApplication(cls):
+        return cls._application
+
+    ##  Return the singleton instance of the filehandler.
+    @classmethod
+    def getInstance(cls, *args, **kwargs):
+        # Note: Explicit use of class name to prevent issues with inheritance.
+        if FileHandler._instance is None:
+            FileHandler._instance = cls()
+
+        return FileHandler._instance
+
+    @pyqtProperty("QStringList", constant=True)
+    def supportedReadFileTypes(self):
+        file_types = []
+        all_types = []
+
+        if platform.system() == "Linux":
+            for ext, desc in self.getSupportedFileTypesRead().items():
+                file_types.append("{0} (*.{1} *.{2})".format(desc, ext.lower(), ext.upper()))
+                all_types.append("*.{0} *.{1}".format(ext.lower(), ext.upper()))
+        else:
+            for ext, desc in self.getSupportedFileTypesRead().items():
+                file_types.append("{0} (*.{1})".format(desc, ext))
+                all_types.append("*.{0}".format(ext))
+
+        file_types.sort()
+        file_types.insert(0, i18n_catalog.i18nc("@item:inlistbox", "All Supported Types ({0})", " ".join(all_types)))
+        file_types.append(i18n_catalog.i18nc("@item:inlistbox", "All Files (*)"))
+
+        return file_types
+
+    @pyqtProperty("QStringList", constant=True)
+    def supportedWriteFileTypes(self):
+        file_types = []
+
+        for item in self.getSupportedFileTypesWrite():
+            file_types.append("{0} (*.{1})".format(item["description"], item["extension"]))
+
+        file_types.sort()
+
+        return file_types
+
+    @pyqtSlot(QUrl)
+    def readLocalFile(self, file):
+        self._readLocalFile(file)
+
+    def _readLocalFile(self, file):
+        raise NotImplemented("_readLocalFile needs to be implemented by subclasses")
 
     ##  Get a writer object that supports writing the specified mime type
     #

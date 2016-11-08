@@ -2,12 +2,12 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 from UM.Logger import Logger
-from UM.PluginRegistry import PluginRegistry
-from UM.Mesh.MeshWriter import MeshWriter
+
 from UM.Math.Matrix import Matrix
 from UM.Math.Vector import Vector
-
 from UM.FileHandler.FileHandler import FileHandler
+
+import os.path
 
 
 ##  Central class for reading and writing meshes.
@@ -56,3 +56,24 @@ class MeshFileHandler(FileHandler):
 
         Logger.log("w", "Unable to read file %s", file_name)
         return None  # unable to read
+
+    def _readLocalFile(self, file):
+        if not file.isValid():
+            return
+
+        # We need to prevent circular dependency, so do some just in time importing.
+        from UM.Mesh.ReadMeshJob import ReadMeshJob
+        job = ReadMeshJob(file.toLocalFile())
+        job.finished.connect(self._readMeshFinished)
+        job.start()
+
+    def _readMeshFinished(self, job):
+        nodes = job.getResult()
+        for node in nodes:
+            node.setSelectable(True)
+            node.setName(os.path.basename(job.getFileName()))
+            # We need to prevent circular dependency, so do some just in time importing.
+            from UM.Operations.AddSceneNodeOperation import AddSceneNodeOperation
+            op = AddSceneNodeOperation(node, self._application.getController().getScene().getRoot())
+            op.push()
+            self._application.getController().getScene().sceneChanged.emit(node)
