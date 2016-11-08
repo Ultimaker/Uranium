@@ -174,7 +174,6 @@ class FileHandler(QObject):
     def getReaderForFile(self, file_name):
         for id, reader in self._readers.items():
             try:
-                print(reader)
                 if reader.acceptsFile(file_name):
                     return reader
             except Exception as e:
