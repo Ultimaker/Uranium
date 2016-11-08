@@ -16,6 +16,7 @@ from . import ResourcesProxy
 from . import OperationStackProxy
 from . import JobsModel
 from UM.Mesh.MeshFileHandler import MeshFileHandler
+from UM.Workspace.WorkspaceFileHandler import WorkspaceFileHandler
 from . import PreferencesProxy
 from . import Theme
 from . import AngledCornerRectangle
@@ -79,6 +80,7 @@ class Bindings:
         qmlRegisterSingletonType(ResourcesProxy.ResourcesProxy, "UM", 1, 0, "Resources", Bindings.createResourcesProxy)
         qmlRegisterSingletonType(OperationStackProxy.OperationStackProxy, "UM", 1, 0, "OperationStack", Bindings.createOperationStackProxy)
         qmlRegisterSingletonType(MeshFileHandler, "UM", 1, 0, "MeshFileHandler", MeshFileHandler.getInstance)
+        qmlRegisterSingletonType(WorkspaceFileHandler, "UM", 1,0 , "WorkspaceFileHandler", WorkspaceFileHandler.getInstance)
         qmlRegisterSingletonType(PreferencesProxy.PreferencesProxy, "UM", 1, 0, "Preferences", PreferencesProxy.createPreferencesProxy)
         qmlRegisterSingletonType(Theme.Theme, "UM", 1, 0, "Theme", Theme.createTheme)
         qmlRegisterSingletonType(ActiveToolProxy.ActiveToolProxy, "UM", 1, 0, "ActiveTool", ActiveToolProxy.createActiveToolProxy)

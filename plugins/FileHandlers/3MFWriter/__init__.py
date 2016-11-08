@@ -2,6 +2,7 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 from . import ThreeMFWriter
+from . import ThreeMFWorkspaceWriter
 
 from UM.i18n import i18nCatalog
 i18n_catalog = i18nCatalog("uranium")
@@ -22,8 +23,15 @@ def getMetaData():
                 "mime_type": "application/vnd.ms-package.3dmanufacturing-3dmodel+xml",
                 "mode": ThreeMFWriter.ThreeMFWriter().OutputMode().BinaryMode
             }]
+        },
+        "workspace_writer": {
+            "output": [{
+                "extension": "3mf",
+                "description": i18n_catalog.i18nc("@item:inlistbox", "3MF file"),
+                "mime_type": "application/vnd.ms-package.3dmanufacturing-3dmodel+xml"
+            }]
         }
     }
 
 def register(app):
-    return { "mesh_writer": ThreeMFWriter.ThreeMFWriter() }
+    return { "mesh_writer": ThreeMFWriter.ThreeMFWriter(), "workspace_writer": ThreeMFWorkspaceWriter.ThreeMFWorkspaceWriter() }
