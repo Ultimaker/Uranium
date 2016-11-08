@@ -58,9 +58,6 @@ class MeshFileHandler(FileHandler):
         return None  # unable to read
 
     def _readLocalFile(self, file):
-        if not file.isValid():
-            return
-
         # We need to prevent circular dependency, so do some just in time importing.
         from UM.Mesh.ReadMeshJob import ReadMeshJob
         job = ReadMeshJob(file.toLocalFile())

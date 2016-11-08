@@ -80,6 +80,8 @@ class FileHandler(QObject):
 
     @pyqtSlot(QUrl)
     def readLocalFile(self, file):
+        if not file.isValid():
+            return
         self._readLocalFile(file)
 
     def _readLocalFile(self, file):
