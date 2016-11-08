@@ -17,6 +17,7 @@ from UM.Logger import Logger
 from UM.Preferences import Preferences
 from UM.OutputDevice.OutputDeviceManager import OutputDeviceManager
 from UM.i18n import i18nCatalog
+from UM.Workspace.WorkspaceFileHandler import WorkspaceFileHandler
 
 import UM.Settings
 
@@ -77,6 +78,7 @@ class Application():
 
         self._controller = Controller(self)
         self._mesh_file_handler = MeshFileHandler()
+        self._workspace_file_handler = WorkspaceFileHandler()
         self._extensions = []
         self._backend = None
         self._output_device_manager = OutputDeviceManager()
@@ -116,7 +118,6 @@ class Application():
         self.hideMessageSignal.connect(self.hideMessage)
 
         self._global_container_stack = None
-
 
     ##  Emitted when the application window was closed and we need to shut down the application
     applicationShuttingDown = Signal()
@@ -264,6 +265,9 @@ class Application():
     #   \returns MeshFileHandler \type{MeshFileHandler}
     def getMeshFileHandler(self):
         return self._mesh_file_handler
+
+    def getWorkspaceFileHandler(self):
+        return self._workspace_file_handler
 
     def getOperationStack(self):
         return self._operation_stack
