@@ -390,10 +390,11 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     ##  Add a container to the top of the stack.
     #
     #   \param container The container to add to the stack.
-    def addContainer(self, container):
+    #   \param index \type{int} The index of to insert the container at; defaults to the top
+    def addContainer(self, container, index = 0):
         if container is not self:
             container.propertyChanged.connect(self._collectPropertyChanges)
-            self._containers.insert(0, container)
+            self._containers.insert(index, container)
             self.containersChanged.emit(container)
         else:
             raise Exception("Unable to add stack to itself.")
