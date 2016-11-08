@@ -18,10 +18,10 @@ i18n_catalog = i18nCatalog("uranium")
 ##  A Job subclass that performs file loading.
 #
 class ReadFileJob(Job):
-    def __init__(self, filename):
+    def __init__(self, filename, handler = None):
         super().__init__()
         self._filename = filename
-        self._handler = None
+        self._handler = handler
         self._loading_message = None
 
     def getFileName(self):

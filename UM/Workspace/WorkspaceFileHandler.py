@@ -13,3 +13,12 @@ class WorkspaceFileHandler(FileHandler):
 
     def readerRead(self, reader, file_name, **kwargs):
         pass
+
+    def _readLocalFile(self, file):
+        from UM.FileHandler.ReadFileJob import ReadFileJob
+        job = ReadFileJob(file.toLocalFile(), handler = self)
+        job.finished.connect(self._readWorkspaceFinished)
+        job.start()
+
+    def _readWorkspaceFinished(self, job):
+        pass

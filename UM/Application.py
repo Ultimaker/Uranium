@@ -77,9 +77,9 @@ class Application():
             pass
 
         self._controller = Controller(self)
-        self._mesh_file_handler = MeshFileHandler()
+        self._mesh_file_handler = MeshFileHandler.getInstance()
         self._mesh_file_handler.setApplication(self)
-        self._workspace_file_handler = WorkspaceFileHandler()
+        self._workspace_file_handler = WorkspaceFileHandler.getInstance()
         self._workspace_file_handler.setApplication(self)
         self._extensions = []
         self._backend = None

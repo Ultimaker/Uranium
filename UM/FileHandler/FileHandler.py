@@ -41,11 +41,10 @@ class FileHandler(QObject):
     ##  Return the singleton instance of the filehandler.
     @classmethod
     def getInstance(cls, *args, **kwargs):
-        # Note: Explicit use of class name to prevent issues with inheritance.
-        if FileHandler._instance is None:
-            FileHandler._instance = cls()
+        if cls._instance is None:
+            cls._instance = cls()
 
-        return FileHandler._instance
+        return cls._instance
 
     @pyqtProperty("QStringList", constant=True)
     def supportedReadFileTypes(self):
@@ -175,6 +174,7 @@ class FileHandler(QObject):
     def getReaderForFile(self, file_name):
         for id, reader in self._readers.items():
             try:
+                print(reader)
                 if reader.acceptsFile(file_name):
                     return reader
             except Exception as e:
