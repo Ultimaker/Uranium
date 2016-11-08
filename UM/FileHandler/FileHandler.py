@@ -83,7 +83,7 @@ class FileHandler(QObject):
         self._readLocalFile(file)
 
     def _readLocalFile(self, file):
-        raise NotImplemented("_readLocalFile needs to be implemented by subclasses")
+        raise NotImplementedError("_readLocalFile needs to be implemented by subclasses")
 
     ##  Get a writer object that supports writing the specified mime type
     #
