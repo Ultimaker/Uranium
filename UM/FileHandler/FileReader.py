@@ -19,6 +19,7 @@ class FileReader(PluginObject):
 
     def __init__(self):
         super().__init__()
+        self._supported_extensions = []
 
     ##  Returns true if file_name can be processed by this plugin.
     #
