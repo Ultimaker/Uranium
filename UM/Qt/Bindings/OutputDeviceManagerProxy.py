@@ -106,7 +106,7 @@ class OutputDeviceManagerProxy(QObject):
         if file_type == "mesh":
             file_handler = Application.getInstance().getMeshFileHandler()
         elif file_type == "workspace":
-            file_handler = Application.getInstance().getMeshFileHandler()
+            file_handler = Application.getInstance().getWorkspaceFileHandler()
         else:
             # Unrecognised type
             file_handler = None
