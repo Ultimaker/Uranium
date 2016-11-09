@@ -119,8 +119,11 @@ class Preferences:
         parser["general"]["version"] = str(Preferences.Version)
 
         try:
-            with SaveFile(file, "wt") as save_file:
-                parser.write(save_file)
+            if hasattr(file, "read"):  # If it already is a stream like object, write right away
+                parser.write(file)
+            else:
+                with SaveFile(file, "wt") as save_file:
+                    parser.write(save_file)
         except Exception as e:
             Logger.log("e", "Failed to write preferences to %s: %s", file, str(e))
 
