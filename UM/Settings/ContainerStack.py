@@ -401,7 +401,6 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     def insertContainer(self, index, container):
         if container is self:
             raise Exception("Unable to add stack to itself.")
-            return
 
         container.propertyChanged.connect(self._collectPropertyChanges)
         self._containers.insert(index, container)
