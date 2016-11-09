@@ -1,6 +1,6 @@
 project(uranium NONE)
 
-cmake_minimum_required(VERSION 3.2.0)
+cmake_minimum_required(VERSION 2.8.12)
 
 message(STATUS ${CMAKE_MODULE_PATH})
 
@@ -23,10 +23,14 @@ enable_testing()
 add_test(NAME pytest COMMAND ${PYTHON_EXECUTABLE} -m pytest -r a --junitxml=${CMAKE_BINARY_DIR}/junit.xml ${CMAKE_SOURCE_DIR})
 # Using untranslated strings on Linux
 if(UNIX AND NOT APPLE) 
-    set_tests_properties(pytest PROPERTIES ENVIRONMENT LANG=de_DE.UTF-8)
+    set_tests_properties(pytest PROPERTIES ENVIRONMENT LANG=C)
 endif()
 # Adding PYTHONPATH on every OS
 set_tests_properties(pytest PROPERTIES ENVIRONMENT PYTHONPATH=${CMAKE_SOURCE_DIR})
+# Adding compatibility with our old tests target
+add_custom_target(tests
+                  COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target test
+                  COMMENT "Notice: tests target is deprecated, please use the test target")
 
 # # Benchmarks
 # add_custom_target(benchmark)
