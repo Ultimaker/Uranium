@@ -21,17 +21,18 @@ def getMetaData():
                 "extension": "3mf",
                 "description": i18n_catalog.i18nc("@item:inlistbox", "3MF file"),
                 "mime_type": "application/vnd.ms-package.3dmanufacturing-3dmodel+xml",
-                "mode": ThreeMFWriter.ThreeMFWriter().OutputMode().BinaryMode
+                "mode": ThreeMFWriter.ThreeMFWriter.OutputMode.BinaryMode
             }]
         },
         "workspace_writer": {
             "output": [{
                 "extension": "3mf",
                 "description": i18n_catalog.i18nc("@item:inlistbox", "3MF file"),
-                "mime_type": "application/vnd.ms-package.3dmanufacturing-3dmodel+xml"
+                "mime_type": "application/vnd.ms-package.3dmanufacturing-3dmodel+xml",
+                "mode": ThreeMFWorkspaceWriter.ThreeMFWorkspaceWriter.OutputMode.BinaryMode
             }]
         }
     }
 
 def register(app):
-    return { "mesh_writer": ThreeMFWriter.ThreeMFWriter(), "workspace_writer": ThreeMFWorkspaceWriter.ThreeMFWorkspaceWriter() }
+    return {"mesh_writer": ThreeMFWriter.ThreeMFWriter(), "workspace_writer": ThreeMFWorkspaceWriter.ThreeMFWorkspaceWriter()}
