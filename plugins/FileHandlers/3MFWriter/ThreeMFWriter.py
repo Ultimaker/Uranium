@@ -28,6 +28,8 @@ class ThreeMFWriter(MeshWriter):
         }
 
         self._unit_matrix_string = self._convertMatrixToString(Matrix())
+        self._archive = None
+        self._store_archive = False
 
     def _convertMatrixToString(self, matrix):
         result = ""
@@ -45,12 +47,21 @@ class ThreeMFWriter(MeshWriter):
         result += str(matrix._data[2,3]) + " "
         return result
 
+    ##  Should we store the archive
+    #   Note that if this is true, the archive will not be closed.
+    #   The object that set this parameter is then responsible for closing it correctly!
+    def setStoreArchive(self, store_archive):
+        self._store_archive = store_archive
+
+    def getArchive(self):
+        return self._archive
+
     def write(self, stream, nodes, mode = MeshWriter.OutputMode.BinaryMode):
         try:
             MeshWriter._meshNodes(nodes).__next__()
         except StopIteration:
             return False #Don't write anything if there is no mesh data.
-
+        self._archive = None # Reset archive
         archive = zipfile.ZipFile(stream, "w", compression = zipfile.ZIP_DEFLATED)
         try:
             model_file = zipfile.ZipInfo("3D/3dmodel.model")
@@ -186,6 +197,9 @@ class ThreeMFWriter(MeshWriter):
             Logger.logException("e", "Error writing zip file")
             return False
         finally:
-            archive.close()
+            if not self._store_archive:
+                archive.close()
+            else:
+                self._archive = archive
 
         return True
