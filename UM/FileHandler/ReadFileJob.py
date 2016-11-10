@@ -65,3 +65,4 @@ class ReadFileJob(Job):
                 result_message = Message(i18n_catalog.i18nc("@info:status", "Failed to load <filename>{0}</filename>", self._filename), lifetime=0)
                 result_message.show()
                 return
+            self._loading_message.hide()

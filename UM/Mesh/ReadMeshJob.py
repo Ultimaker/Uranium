@@ -64,5 +64,3 @@ class ReadMeshJob(ReadFileJob):
                             scale_message.show()
                         except Exception:
                             Logger.logException("e", "While auto-scaling an exception has been raised")
-
-        self._loading_message.hide()
