@@ -12,7 +12,14 @@ class WorkspaceFileHandler(FileHandler):
         super().__init__("workspace_writer", "workspace_reader")
 
     def readerRead(self, reader, file_name, **kwargs):
-        pass
+        try:
+            results = reader.read(file_name)
+            return results
+        except:
+            Logger.logException("e", "An exception occured while loading workspace.")
+
+        Logger.log("w", "Unable to load workspace %s", file_name)
+        return None
 
     def _readLocalFile(self, file):
         from UM.FileHandler.ReadFileJob import ReadFileJob
@@ -21,4 +28,14 @@ class WorkspaceFileHandler(FileHandler):
         job.start()
 
     def _readWorkspaceFinished(self, job):
-        pass
+        # Delete all old nodes.
+        self._application.deleteAll()
+
+        # Add the loaded nodes to the scene.
+        nodes = job.getResult()
+        for node in nodes:
+            # We need to prevent circular dependency, so do some just in time importing.
+            from UM.Operations.AddSceneNodeOperation import AddSceneNodeOperation
+            op = AddSceneNodeOperation(node, self._application.getController().getScene().getRoot())
+            op.push()
+            self._application.getController().getScene().sceneChanged.emit(node)
