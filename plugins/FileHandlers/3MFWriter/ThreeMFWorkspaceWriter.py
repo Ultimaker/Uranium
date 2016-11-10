@@ -1,6 +1,8 @@
 from UM.Workspace.WorkspaceWriter import WorkspaceWriter
 from UM.Application import Application
+from UM.Preferences import Preferences
 import zipfile
+from io import StringIO
 
 
 class ThreeMFWorkspaceWriter(WorkspaceWriter):
@@ -24,6 +26,23 @@ class ThreeMFWorkspaceWriter(WorkspaceWriter):
         global_stack_file.compress_type = zipfile.ZIP_DEFLATED
         archive.writestr(global_stack_file, global_container_stack.serialize())
 
+        # Write user changes to the archive.
+        global_user_instance_container = global_container_stack.getTop()
+        global_user_instance_file = zipfile.ZipInfo("Cura/%s.inst.cfg" % global_user_instance_container.getId())
+        global_user_instance_container.compress_type = zipfile.ZIP_DEFLATED
+        archive.writestr(global_user_instance_file, global_user_instance_container.serialize())
+
+        # Write quality changes to the archive.
+        global_quality_changes = global_container_stack.findContainer({"type": "quality_changes"})
+        global_quality_changes_file = zipfile.ZipInfo("Cura/%s.inst.cfg" % global_quality_changes.getId())
+        global_quality_changes.compress_type = zipfile.ZIP_DEFLATED
+        archive.writestr(global_quality_changes_file, global_quality_changes.serialize())
+
+        # Write preferences to archive
+        preferences_file = zipfile.ZipInfo("Cura/preferences.cfg")
+        preferences_string = StringIO()
+        Preferences.getInstance().writeToFile(preferences_string)
+        archive.writestr(preferences_file, preferences_string.getvalue())
         # Close the archive & reset states.
         archive.close()
         mesh_writer.setStoreArchive(False)
