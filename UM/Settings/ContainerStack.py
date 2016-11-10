@@ -391,12 +391,20 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     #
     #   \param container The container to add to the stack.
     def addContainer(self, container):
-        if container is not self:
-            container.propertyChanged.connect(self._collectPropertyChanges)
-            self._containers.insert(0, container)
-            self.containersChanged.emit(container)
-        else:
+        self.insertContainer(0, container)
+
+    ##  Insert a container into the stack.
+    #
+    #   \param index \type{int} The index of to insert the container at.
+    #          A negative index counts from the bottom
+    #   \param container The container to add to the stack.
+    def insertContainer(self, index, container):
+        if container is self:
             raise Exception("Unable to add stack to itself.")
+
+        container.propertyChanged.connect(self._collectPropertyChanges)
+        self._containers.insert(index, container)
+        self.containersChanged.emit(container)
 
     ##  Replace a container in the stack.
     #
