@@ -54,6 +54,16 @@ class Polygon:
             return False
         return numpy.array_equal(self._points, other.getPoints())
 
+    ##  Gives a debugging representation of the polygon.
+    #
+    #   This lists the polygon's coordinates, like so::
+    #     [[0,0], [1,3], [3,0]]
+    #
+    #   \return A representation of the polygon that is useful for debugging.
+    def __repr__(self):
+        coordinates = (("[" + str(point[0]) + "," + str(point[1]) + "]") for point in self._points)
+        return "[" + ", ".join(coordinates) + "]"
+
     def isValid(self):
         return self._points is not None and len(self._points)
 
