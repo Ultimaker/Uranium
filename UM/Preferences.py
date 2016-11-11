@@ -167,8 +167,8 @@ class Preferences:
                 Logger.log("w", "Old config file found, ignoring")
                 self._parser = None
                 return
-        except Exception as e:
-            Logger.log("e", "An exception occured while trying to read preferences file: %s", e)
+        except Exception:
+            Logger.logException("e", "An exception occured while trying to read preferences file")
             self._parser = None
             return
 
