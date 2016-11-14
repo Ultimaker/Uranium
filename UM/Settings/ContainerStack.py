@@ -238,6 +238,7 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     #
     #   TODO: Expand documentation here, include the fact that this should _not_ include all containers
     def deserialize(self, serialized):
+        self._containers = []  # Clear all containers before starting.
         parser = configparser.ConfigParser(interpolation=None, empty_lines_in_values=False)
         parser.read_string(serialized)
 
