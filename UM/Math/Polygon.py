@@ -86,7 +86,11 @@ class Polygon:
 
         return (projection_min, projection_max)
 
-    def translate(self, x = 0, y =  0):
+    ##  Moves the polygon by a fixed offset.
+    #
+    #   \param x The distance to move along the X-axis.
+    #   \param y The distance to move along the Y-axis.
+    def translate(self, x = 0, y = 0):
         if self.isValid():
             return Polygon(numpy.add(self._points, numpy.array([[x, y]])))
         else:
