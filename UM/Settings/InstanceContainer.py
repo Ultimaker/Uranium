@@ -309,6 +309,10 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
         if parser["general"].getint("version") != self.Version:
             raise IncorrectInstanceVersionError("Reported version {0} but expected version {1}".format(parser["general"].getint("version"), self.Version))
 
+        # Reset old data
+        self._metadata = {}
+        self._instances = {}
+
         self._name = parser["general"].get("name", self._id)
 
         definition_id = parser["general"]["definition"]
