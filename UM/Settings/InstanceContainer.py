@@ -56,6 +56,33 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
         self._path = ""
         self._postponed_emits = []
 
+    def __eq__(self, other):
+        if type(self) != type(other):
+            return False  # Type mismatch
+        if self._id != other.getId():
+            return False  # ID mismatch
+
+        for entry in self._metadata:
+            if other.getMetaDataEntry(entry) != self._metadata[entry]:
+                return False  # Meta data entry mismatch
+
+        for entry in other.getMetaData():
+            if entry not in self._metadata:
+                return False  # Other has a meta data entry that this object does not have.
+
+        for key in self._instances:
+            if key not in other._instances:
+                return False  # This object has an instance that other does not have.
+            if self._instances[key] != other._instances[key]:
+                return False  # The objects don't match.
+
+        for key in other._instances:
+            if key not in self._instances:
+                return False  # Other has an instance that this object does not have.
+
+    def __ne__(self, other):
+        return not self == other
+
     ##  \copydoc ContainerInterface::getId
     #
     #   Reimplemented from ContainerInterface
