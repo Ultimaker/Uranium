@@ -114,8 +114,7 @@ class SettingPropertyProvider(QObject):
 
     @pyqtSlot()
     def forcePropertiesChanged(self):
-        for watched_property in self._watched_properties:
-            self._onPropertyChanged(self._key, watched_property)
+        self._onPropertiesChanged(self._key, self._watched_properties)
 
     def setStoreIndex(self, index):
         if index != self._store_index:
