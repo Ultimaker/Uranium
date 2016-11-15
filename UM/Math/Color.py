@@ -7,7 +7,7 @@ from typing import Union
 #
 #   This class represents an RGBA color value, in the range of 0.0 to 1.0.
 class Color:
-    def __init__(self, r: Union[int, float] = 0, g: Union[int, float] = 0, b: Union[int, float] = 0, a: Union[int, float] = 0):
+    def __init__(self, r: Union[int, float] = 0, g: Union[int, float] = 0, b: Union[int, float] = 0, a: Union[int, float] = 0) -> None:
         self._r = r if type(r) is float else r / 255    # type: float
         self._g = g if type(g) is float else g / 255    # type: float
         self._b = b if type(b) is float else b / 255    # type: float

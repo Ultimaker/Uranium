@@ -3,19 +3,19 @@
 
 from PyQt5.QtCore import QObject, pyqtSlot, QUrl, Q_ENUMS
 
-import UM.Resources
+from UM.Resources import Resources
 from UM.Logger import Logger
 
 class ResourcesProxy(QObject):
     class Type:
-        Resources = UM.Resources.Resources
-        Preferences = UM.Resources.Preferences
-        Themes = UM.Resources.Themes
-        Images = UM.Resources.Images
-        Meshes = UM.Resources.Meshes
-        i18n = UM.Resources.i18n
-        Shaders = UM.Resources.Shaders
-        UserType = UM.Resources.UserType
+        Resources = Resources.Resources
+        Preferences = Resources.Preferences
+        Themes = Resources.Themes
+        Images = Resources.Images
+        Meshes = Resources.Meshes
+        i18n = Resources.i18n
+        Shaders = Resources.Shaders
+        UserType = Resources.UserType
     Q_ENUMS(Type)
 
     def __init__(self, parent = None):

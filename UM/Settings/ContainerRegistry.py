@@ -6,7 +6,7 @@ import re #For finding containers with asterisks in the constraints.
 import urllib #For ensuring container file names are proper file names
 import urllib.parse
 import pickle #For serializing/deserializing Python classes to binary files
-from typing import List
+from typing import List, cast
 
 from UM.PluginRegistry import PluginRegistry
 from UM.Resources import Resources, UnsupportedStorageTypeError
@@ -17,6 +17,7 @@ from UM.Settings.ContainerInterface import ContainerInterface
 from UM.Signal import Signal, signalemitter
 
 import UM.Dictionary
+from UM.Application import Application
 
 from UM.Settings.DefinitionContainer import DefinitionContainer
 from UM.Settings.ContainerStack import ContainerStack
@@ -49,7 +50,7 @@ class ContainerRegistry:
     #   DefinitionContainer. An asterisk in the values can be used to denote a
     #   wildcard.
     def findDefinitionContainers(self, **kwargs) -> List[DefinitionContainer]:
-        return self.findContainers(DefinitionContainer, **kwargs)
+        return cast(List[DefinitionContainer], self.findContainers(DefinitionContainer, **kwargs))
 
     ##  Find all InstanceContainer objects matching certain criteria.
     #
@@ -58,7 +59,7 @@ class ContainerRegistry:
     #   InstanceContainer. An asterisk in the values can be used to denote a
     #   wildcard.
     def findInstanceContainers(self, **kwargs) -> List[InstanceContainer]:
-        return self.findContainers(InstanceContainer, **kwargs)
+        return cast(List[InstanceContainer], self.findContainers(InstanceContainer, **kwargs))
 
     ##  Find all ContainerStack objects matching certain criteria.
     #
@@ -66,7 +67,7 @@ class ContainerRegistry:
     #   keys and values that need to match the metadata of the ContainerStack.
     #   An asterisk in the values can be used to denote a wildcard.
     def findContainerStacks(self, **kwargs) -> List[ContainerStack]:
-        return self.findContainers(ContainerStack, **kwargs)
+        return cast(List[ContainerStack], self.findContainers(ContainerStack, **kwargs))
 
     ##  Find all container objects matching certain criteria.
     #
@@ -281,7 +282,7 @@ class ContainerRegistry:
         else:
             Logger.log("w", "Could not remove container with id %s, as no container with that ID is known", container_id)
 
-    def renameContainer(self, container_id: str, new_name: str, new_id: str = None) -> None:
+    def renameContainer(self, container_id, new_name, new_id = None):
         Logger.log("d", "Renaming container %s to %s", container_id, new_name)
         containers = self.findContainers(None, id = container_id)
         if not containers:
@@ -510,7 +511,7 @@ class ContainerRegistry:
     def getApplication(cls):
         return cls.__application
 
-    __application = None
+    __application = None    # type: Application
     __instance = None  # type: ContainerRegistry
 
     __container_types = {

@@ -44,7 +44,7 @@ UpgradeTask = collections.namedtuple("UpgradeTask", ["storage_path", "file_name"
 #   the user manually retrieves the files.
 class VersionUpgradeManager:
     ##  The singleton instance of this class.
-    __instance = None
+    __instance = None   # type: VersionUpgradeManager
 
     ##  Gets the instance of the VersionUpgradeManager, or creates one.
     @classmethod

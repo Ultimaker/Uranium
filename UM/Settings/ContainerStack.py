@@ -2,7 +2,7 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 import configparser
 import io
-from typing import Set, List, Optional
+from typing import Set, List, Optional, cast
 
 from UM.Signal import Signal, signalemitter
 from UM.PluginObject import PluginObject
@@ -273,7 +273,7 @@ class ContainerStack(ContainerInterface, PluginObject):
     def getAllKeys(self) -> Set[str]:
         keys = set()    # type: Set[str]
         definition_containers = [container for container in self.getContainers() if container.__class__ == DefinitionContainer] #To get all keys, get all definitions from all definition containers.
-        for definition_container in definition_containers:
+        for definition_container in cast(List[DefinitionContainer], definition_containers):
             keys |= definition_container.getAllKeys()
         if self._next_stack:
             keys |= self._next_stack.getAllKeys()

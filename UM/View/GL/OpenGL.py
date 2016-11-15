@@ -120,4 +120,4 @@ class OpenGL:
         cls._instance = instance
 
     ## private:
-    _instance = None
+    _instance = None    # type: OpenGL
