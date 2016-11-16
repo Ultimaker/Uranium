@@ -56,9 +56,16 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
         self._path = ""
         self._postponed_emits = []
 
+    def __hash__(self):
+        # We need to re-implement the hash, because we defined the __eq__ operator.
+        # According to some, returning the ID is technically not right, as objects with the same value should return
+        # the same hash. The way we use it, it is acceptable for objects with the same value to return a different hash.
+        return id(self)
+
     def __eq__(self, other):
         if type(self) != type(other):
             return False  # Type mismatch
+
         if self._id != other.getId():
             return False  # ID mismatch
 
@@ -79,6 +86,7 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
         for key in other._instances:
             if key not in self._instances:
                 return False  # Other has an instance that this object does not have.
+        return True
 
     def __ne__(self, other):
         return not self == other
