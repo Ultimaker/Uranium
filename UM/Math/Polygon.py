@@ -2,7 +2,6 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 import numpy
-import time
 
 from UM.Math.Float import Float #For fuzzy comparison of edge cases.
 from UM.Math.LineSegment import LineSegment #For line-line intersections for computing polygon intersections.
@@ -362,8 +361,6 @@ class Polygon:
         for n in range(0, len(self._points)):
             for m in range(0, len(other._points)):
                 points[n * len(other._points) + m] = self._points[n] + other._points[m]
-
-                time.sleep(0.00001)
 
         return Polygon(points)
 
