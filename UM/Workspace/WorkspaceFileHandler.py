@@ -28,14 +28,17 @@ class WorkspaceFileHandler(FileHandler):
         job.start()
 
     def _readWorkspaceFinished(self, job):
-        # Delete all old nodes.
-        self._application.deleteAll()
-
         # Add the loaded nodes to the scene.
         nodes = job.getResult()
-        for node in nodes:
-            # We need to prevent circular dependency, so do some just in time importing.
-            from UM.Operations.AddSceneNodeOperation import AddSceneNodeOperation
-            op = AddSceneNodeOperation(node, self._application.getController().getScene().getRoot())
-            op.push()
-            self._application.getController().getScene().sceneChanged.emit(node)
+        if nodes is not None:  # Job was not a failure.
+            # Delete all old nodes.
+            self._application.deleteAll()
+
+            # Add the loaded nodes to the scene.
+            nodes = job.getResult()
+            for node in nodes:
+                # We need to prevent circular dependency, so do some just in time importing.
+                from UM.Operations.AddSceneNodeOperation import AddSceneNodeOperation
+                op = AddSceneNodeOperation(node, self._application.getController().getScene().getRoot())
+                op.push()
+                self._application.getController().getScene().sceneChanged.emit(node)
