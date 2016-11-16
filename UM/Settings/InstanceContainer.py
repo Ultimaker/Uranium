@@ -89,7 +89,7 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
         return True
 
     def __ne__(self, other):
-        return not self == other
+        return not (self == other)
 
     ##  \copydoc ContainerInterface::getId
     #
