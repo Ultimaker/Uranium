@@ -30,12 +30,17 @@ class Logger:
     #   \param message \type{string} containing message to be logged
     #   \param *args \type{list} List of variables to be added to the message.
     @classmethod
-    def log(cls, log_type, message, *args):
+    def log(cls, log_type, message, *args, **kwargs):
         caller_frame = inspect.currentframe().f_back
         frame_info = inspect.getframeinfo(caller_frame)
 
-        if args: # Only format the message if there are args
-            message = message % args # Replace all the %s with the variables. Python formatting is magic.
+        if args or kwargs: # Only format the message if there are args
+            new_message = message.format(*args, **kwargs)
+
+            if new_message == message:
+                new_message = message % args # Replace all the %s with the variables. Python formatting is magic.
+
+            message = new_message
 
         message = "{class_name}.{function} [{line}]: {message}".format(class_name = caller_frame.f_globals["__name__"], function = frame_info.function, line = frame_info.lineno, message = message)
 
