@@ -2,7 +2,6 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 import numpy
-import time
 
 from UM.Math.Float import Float #For fuzzy comparison of edge cases.
 from UM.Math.LineSegment import LineSegment #For line-line intersections for computing polygon intersections.
@@ -54,6 +53,16 @@ class Polygon:
             return False
         return numpy.array_equal(self._points, other.getPoints())
 
+    ##  Gives a debugging representation of the polygon.
+    #
+    #   This lists the polygon's coordinates, like so::
+    #     [[0,0], [1,3], [3,0]]
+    #
+    #   \return A representation of the polygon that is useful for debugging.
+    def __repr__(self):
+        coordinates = (("[" + str(point[0]) + "," + str(point[1]) + "]") for point in self._points)
+        return "[" + ", ".join(coordinates) + "]"
+
     def isValid(self):
         return self._points is not None and len(self._points)
 
@@ -76,7 +85,11 @@ class Polygon:
 
         return (projection_min, projection_max)
 
-    def translate(self, x = 0, y =  0):
+    ##  Moves the polygon by a fixed offset.
+    #
+    #   \param x The distance to move along the X-axis.
+    #   \param y The distance to move along the Y-axis.
+    def translate(self, x = 0, y = 0):
         if self.isValid():
             return Polygon(numpy.add(self._points, numpy.array([[x, y]])))
         else:
@@ -348,8 +361,6 @@ class Polygon:
         for n in range(0, len(self._points)):
             for m in range(0, len(other._points)):
                 points[n * len(other._points) + m] = self._points[n] + other._points[m]
-
-                time.sleep(0.00001)
 
         return Polygon(points)
 

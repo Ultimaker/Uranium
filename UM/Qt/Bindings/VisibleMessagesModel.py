@@ -36,7 +36,7 @@ class VisibleMessagesModel(ListModel):
                 "text": message.getText(),
                 "progress": message.getProgress(),
                 "max_progress": message.getMaxProgress(),
-                "id": id(message),
+                "id": str(id(message)),
                 "actions":self.createActionsModel(message.getActions()),
                 "dismissable": message.isDismissable()
             })
@@ -53,26 +53,26 @@ class VisibleMessagesModel(ListModel):
             model.appendItem(action)
         return model   
     
-    @pyqtSlot("long")
+    @pyqtSlot(str)
     def hideMessage(self, message_id):
         Application.getInstance().hideMessageById(message_id)
     
-    @pyqtSlot("long", str)
+    @pyqtSlot(str, str)
     def actionTriggered(self, message_id, action_id):
         for message in Application.getInstance().getVisibleMessages():
-            if id(message) == message_id: 
+            if str(id(message)) == message_id:
                 message.actionTriggered.emit(message, action_id)
                 break
     
     def removeMessage(self, message):
-        message_id = id(message)
+        message_id = str(id(message))
         for index in range(0,len(self.items)):
             if self.items[index]["id"] == message_id:
                 self.removeItem(index)
                 break
 
     def _onMessageProgress(self, message):
-        index = self.find("id", id(message))
+        index = self.find("id", str(id(message)))
 
         if index != -1:
             self.setProperty(index, "progress", message.getProgress())
