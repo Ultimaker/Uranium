@@ -25,6 +25,12 @@ class UpdateCheckerJob(Job):
         self.silent = silent
         self.url = url
 
+    ##  Callback for the message that is spawned when there is a new version.
+    def actionTriggered(self, message, action):
+        if action == "download":
+            if self._url is not None:
+                webbrowser.open(self._url)
+
     def run(self):
         if not self.url:
             Logger.log("e", "Can not check for a new release. URL not set!")
@@ -78,6 +84,8 @@ class UpdateCheckerJob(Job):
                 Logger.log("w", "Did not find any version information for %s." % application_name)
         except Exception:
             Logger.logException("e", "Exception in update checker while parsing the JSON file.")
+            Message(i18n_catalog.i18nc("@info", "An exception occured while parsing the JSON file.")).show()
+            no_new_version = False # Just to suppress the message below.
 
         if no_new_version and not self.silent:
             Message(i18n_catalog.i18nc("@info", "No new version was found.")).show()
@@ -96,12 +104,6 @@ class UpdateChecker(Extension):
         Preferences.getInstance().addPreference("info/automatic_update_check", True)
         if Preferences.getInstance().getValue("info/automatic_update_check"):
             self.checkNewVersion(True)
-
-    ##  Callback for the message that is spawned when there is a new version.
-    def actionTriggered(self, message, action):
-        if action == "download":
-            if self._url is not None:
-                webbrowser.open(self._url)
 
     ##  Connect with software.ultimaker.com, load latest.json and check version info.
     #   If the version info is higher then the current version, spawn a message to
