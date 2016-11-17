@@ -41,6 +41,9 @@ class TranslateTool(Tool):
 
         self.setExposedProperties("ToolHint", "X", "Y", "Z")
 
+        # Ensure that the properties (X, Y & Z) are updated whenever the selection center is changed.
+        Selection.selectionCenterChanged.connect(self.propertyChanged)
+
 
     ##  Get the x-location of the selection bounding box center
     #
