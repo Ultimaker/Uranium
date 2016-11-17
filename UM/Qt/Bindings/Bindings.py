@@ -80,7 +80,6 @@ class Bindings:
         qmlRegisterSingletonType(ResourcesProxy.ResourcesProxy, "UM", 1, 0, "Resources", Bindings.createResourcesProxy)
         qmlRegisterSingletonType(OperationStackProxy.OperationStackProxy, "UM", 1, 0, "OperationStack", Bindings.createOperationStackProxy)
         qmlRegisterSingletonType(MeshFileHandler, "UM", 1, 0, "MeshFileHandler", MeshFileHandler.getInstance)
-        qmlRegisterSingletonType(WorkspaceFileHandler, "UM", 1,0 , "WorkspaceFileHandler", WorkspaceFileHandler.getInstance)
         qmlRegisterSingletonType(PreferencesProxy.PreferencesProxy, "UM", 1, 0, "Preferences", PreferencesProxy.createPreferencesProxy)
         qmlRegisterSingletonType(Theme.Theme, "UM", 1, 0, "Theme", Theme.createTheme)
         qmlRegisterSingletonType(ActiveToolProxy.ActiveToolProxy, "UM", 1, 0, "ActiveTool", ActiveToolProxy.createActiveToolProxy)
@@ -106,3 +105,5 @@ class Bindings:
         qmlRegisterType(UM.Settings.Models.ContainerPropertyProvider, "UM", 1, 2, "ContainerPropertyProvider")
         qmlRegisterType(MeshListModel.MeshListModel, "UM", 1, 2, "MeshListModel")
 
+        # Additions after 2.3;
+        qmlRegisterSingletonType(WorkspaceFileHandler, "UM", 1, 3, "WorkspaceFileHandler", WorkspaceFileHandler.getInstance)
