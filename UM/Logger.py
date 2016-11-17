@@ -31,20 +31,16 @@ class Logger:
     #   \param *args \type{list} List of variables to be added to the message.
     @classmethod
     def log(cls, log_type, message, *args):
-        function = inspect.currentframe().f_back.f_code
-        filename = function.co_filename
-        for path in sys.path:
-            if filename.startswith(path):
-                filename = filename.replace(path, "...")
-                continue
-        address = "%s (%s [%s]): " %(filename, function.co_name, function.co_firstlineno)
-        
+        caller_frame = inspect.currentframe().f_back
+        frame_info = inspect.getframeinfo(caller_frame)
+
         if args: # Only format the message if there are args
             message = message % args # Replace all the %s with the variables. Python formatting is magic.
-        
+
+        message = "{class_name}.{function} [{line}]: {message}".format(class_name = caller_frame.f_globals["__name__"], function = frame_info.function, line = frame_info.lineno, message = message)
+
         for logger in cls.__loggers:
-            filled_message = address + message
-            logger.log(log_type, filled_message)
+            logger.log(log_type, message)
 
         if not cls.__loggers:
             print(message)
