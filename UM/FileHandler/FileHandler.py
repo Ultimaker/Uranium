@@ -7,6 +7,7 @@ from .FileWriter import FileWriter
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSlot, QUrl
 
 import platform
+import UM.Platform
 
 from UM.i18n import i18nCatalog
 i18n_catalog = i18nCatalog("uranium")
@@ -51,7 +52,7 @@ class FileHandler(QObject):
         file_types = []
         all_types = []
 
-        if platform.system() == "Linux":
+        if UM.Platform.isLinux():
             for ext, desc in self.getSupportedFileTypesRead().items():
                 file_types.append("{0} (*.{1} *.{2})".format(desc, ext.lower(), ext.upper()))
                 all_types.append("*.{0} *.{1}".format(ext.lower(), ext.upper()))
