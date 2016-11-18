@@ -41,9 +41,9 @@ class MirrorTool(Tool):
 
             if ToolHandle.isAxis(id):
                 self.setLockedAxis(id)
+                self._operation_started = True
+                self.operationStarted.emit(self)
                 return True
-            self._operation_started = True
-            self.operationStarted.emit(self)
 
         if event.type == Event.MouseReleaseEvent:
             if self._operation_started:
