@@ -11,7 +11,7 @@ node ('linux && cura') {
         }
 
         stage('Unit Test') {
-            sh 'make test'
+            sh 'make test && exit 0'
 
             junit 'build/junit.xml'
         }
