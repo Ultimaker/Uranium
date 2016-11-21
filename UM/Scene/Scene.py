@@ -92,7 +92,9 @@ class Scene():
     #
     #   \return The object if found, or None if not.
     def findObject(self, object_id):
+        print("FINDOBJECT", object_id)
         for node in BreadthFirstIterator(self._root):
+            print(id(node), object_id)
             if id(node) == object_id:
                 return node
         return None
