@@ -26,9 +26,18 @@ class Logger:
         return cls.__loggers
 
     ##  Send a message of certain type to all loggers to be handled.
+    #
+    #   This method supports placeholders in either str.format() style or % style. For more details see
+    #   the respective Python documentation pages.
+    #
+    #   Note that only str.format() supports keyword argument placeholders. Additionally, if str.format()
+    #   makes any changes, % formatting will not be applied.
+    #
     #   \param log_type \type{string} Values must be; 'e' (error) , 'i'(info), 'd'(debug) or 'w'(warning).
     #   \param message \type{string} containing message to be logged
-    #   \param *args \type{list} List of variables to be added to the message.
+    #
+    #   \param *args \type{list} List of placeholder replacements that will be passed to str.format() or %.
+    #   \param **kwargs \type{dict} List of placeholder replacements that will be passed to str.format().
     @classmethod
     def log(cls, log_type, message, *args, **kwargs):
         caller_frame = inspect.currentframe().f_back
