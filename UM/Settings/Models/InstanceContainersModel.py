@@ -40,7 +40,7 @@ class InstanceContainersModel(ListModel):
         ContainerRegistry.getInstance().containerRemoved.connect(self._onContainerChanged)
 
         # List of fitlers for queries. The result is the union of the each list of results.
-        self._filter_dict = [{}]  # type: List[Dict[str,str]]
+        self._filter_dicts = [{}]  # type: List[Dict[str,str]]
         self._update()
 
     ##  Handler for container added / removed events from registry

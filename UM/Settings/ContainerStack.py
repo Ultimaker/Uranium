@@ -9,11 +9,9 @@ from UM.PluginObject import PluginObject
 from UM.Logger import Logger
 from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType
 from UM.Settings.DefinitionContainer import DefinitionContainer #For getting all definitions in this stack.
-
-import UM.Settings.ContainerRegistry
-
-from UM.Settings.ContainerInterface import ContainerInterface
+from UM.Settings.Interfaces import ContainerInterface, ContainerRegistryInterface
 from UM.Settings.SettingFunction import SettingFunction
+from UM.Settings.Validator import ValidatorState
 
 class IncorrectVersionError(Exception):
     pass
@@ -255,7 +253,7 @@ class ContainerStack(ContainerInterface, PluginObject):
         container_id_list = container_string.split(",")
         for container_id in container_id_list:
             if container_id != "":
-                containers = UM.Settings.ContainerRegistry.getInstance().findContainers(id = container_id)
+                containers = _containerRegistry.findContainers(id = container_id)
                 if containers:
                     containers[0].propertyChanged.connect(self.propertyChanged)
                     self._containers.append(containers[0])
@@ -481,7 +479,13 @@ class ContainerStack(ContainerInterface, PluginObject):
         error_keys = []
         for key in self.getAllKeys():
             validation_state = self.getProperty(key, "validationState")
-            if validation_state in (UM.Settings.ValidatorState.Exception, UM.Settings.ValidatorState.MaximumError,
-                                    UM.Settings.ValidatorState.MinimumError):
+            if validation_state in (ValidatorState.Exception, ValidatorState.MaximumError,
+                                    ValidatorState.MinimumError):
                 error_keys.append(key)
         return error_keys
+
+_containerRegistry = None   # type:  ContainerRegistryInterface
+
+def setContainerRegistry(registry: ContainerRegistryInterface) -> None:
+    global _containerRegistry
+    _containerRegistry = registry

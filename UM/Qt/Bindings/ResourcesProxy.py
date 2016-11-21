@@ -3,19 +3,19 @@
 
 from PyQt5.QtCore import QObject, pyqtSlot, QUrl, Q_ENUMS
 
-from UM.Resources import Resources
+import UM.Resources
 from UM.Logger import Logger
 
 class ResourcesProxy(QObject):
     class Type:
-        Resources = Resources.Resources
-        Preferences = Resources.Preferences
-        Themes = Resources.Themes
-        Images = Resources.Images
-        Meshes = Resources.Meshes
-        i18n = Resources.i18n
-        Shaders = Resources.Shaders
-        UserType = Resources.UserType
+        Resources = UM.Resources.Resources.Resources
+        Preferences = UM.Resources.Resources.Preferences
+        Themes = UM.Resources.Resources.Themes
+        Images = UM.Resources.Resources.Images
+        Meshes = UM.Resources.Resources.Meshes
+        i18n = UM.Resources.Resources.i18n
+        Shaders = UM.Resources.Resources.Shaders
+        UserType = UM.Resources.Resources.UserType
     Q_ENUMS(Type)
 
     def __init__(self, parent = None):
@@ -24,7 +24,7 @@ class ResourcesProxy(QObject):
     @pyqtSlot(int, str, result = str)
     def getPath(self, type, name):
         try:
-            return UM.Resources.getPath(type, name)
+            return UM.Resources.Resources.getPath(type, name)
         except:
             Logger.log("w", "Could not find the requested resource: %s", name)
             return ""

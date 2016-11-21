@@ -12,7 +12,7 @@ from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType
 from UM.Signal import Signal
 
 from UM.Settings.ContainerInterface import ContainerInterface
-from UM.Settings.SettingDefinition import SettingDefinition
+from UM.Settings.SettingDefinition import SettingDefinition, DefinitionPropertyType
 from UM.Settings.SettingRelation import SettingRelation
 from UM.Settings.SettingRelation import RelationType
 from UM.Settings.SettingFunction import SettingFunction
@@ -300,7 +300,7 @@ class DefinitionContainer(ContainerInterface, PluginObject):
 
     # Recursively update relations of settings
     def _updateRelations(self, definition):
-        for property in SettingDefinition.getPropertyNames(SettingDefinition.DefinitionPropertyType.Function):
+        for property in SettingDefinition.getPropertyNames(DefinitionPropertyType.Function):
             self._processFunction(definition, property)
 
         for child in definition.children:

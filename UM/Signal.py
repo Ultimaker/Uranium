@@ -13,7 +13,6 @@ from UM.Event import CallFunctionEvent
 from UM.Decorators import deprecated, call_if_enabled
 from UM.Logger import Logger
 from UM.Platform import Platform
-from UM.Application import Application
 
 # Helper functions for tracing signal emission.
 def _traceEmit(signal, *args, **kwargs):
@@ -23,7 +22,7 @@ def _traceEmit(signal, *args, **kwargs):
         Logger.log("d", "> Queued signal, postponing emit until next event loop run")
 
     if signal._Signal__type == Signal.Auto:
-        if Signal._app is not None and threading.current_thread() is not Signal._app.getMainThread():
+        if Signal._signalQueue is not None and threading.current_thread() is not Signal._signalQueue.getMainThread():
             Logger.log("d", "> Auto signal and not on main thread, postponing emit until next event loop run")
 
     for func in signal._Signal__functions:
@@ -44,6 +43,10 @@ def _traceDisconnect(signal, *args, **kwargs):
 
 def _isTraceEnabled():
     return "URANIUM_TRACE_SIGNALS" in os.environ
+
+class SignalQueue:
+    def functionEvent(self, event): pass
+    def getMainThread(self): pass
 
 ##  Simple implementation of signals and slots.
 #
@@ -124,12 +127,12 @@ class Signal:
     def emit(self, *args, **kwargs):
         try:
             if self.__type == Signal.Queued:
-                Signal._app.functionEvent(CallFunctionEvent(self.emit, args, kwargs))
+                Signal._signalQueue.functionEvent(CallFunctionEvent(self.emit, args, kwargs))
                 return
 
             if self.__type == Signal.Auto:
-                if threading.current_thread() is not Signal._app.getMainThread():
-                    Signal._app.functionEvent(CallFunctionEvent(self.emit, args, kwargs))
+                if threading.current_thread() is not Signal._signalQueue.getMainThread():
+                    Signal._signalQueue.functionEvent(CallFunctionEvent(self.emit, args, kwargs))
                     return
         except AttributeError: # If Signal._app is not set
             return
@@ -214,9 +217,7 @@ class Signal:
 
     ##  private:
 
-    #   To avoid circular references when importing Application, this should be
-    #   set by the Application instance.
-    _app = None # type: Application
+    _signalQueue = None # type: SignalQueue
 
     # This __str__() is useful for debugging.
     # def __str__(self):

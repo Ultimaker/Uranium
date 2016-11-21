@@ -22,12 +22,14 @@ from UM.Application import Application
 from UM.Settings.DefinitionContainer import DefinitionContainer
 from UM.Settings.ContainerStack import ContainerStack
 from UM.Settings.InstanceContainer import InstanceContainer
+from UM.Settings.Interfaces import ContainerRegistryInterface
+from UM.Settings.Interfaces import DefinitionContainerInterface
 
 ##  Central class to manage all Setting containers.
 #
 #
 @signalemitter
-class ContainerRegistry:
+class ContainerRegistry(ContainerRegistryInterface):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -49,8 +51,8 @@ class ContainerRegistry:
     #   keys and values that need to match the metadata of the
     #   DefinitionContainer. An asterisk in the values can be used to denote a
     #   wildcard.
-    def findDefinitionContainers(self, **kwargs) -> List[DefinitionContainer]:
-        return cast(List[DefinitionContainer], self.findContainers(DefinitionContainer, **kwargs))
+    def findDefinitionContainers(self, **kwargs) -> List[DefinitionContainerInterface]:
+        return cast(List[DefinitionContainerInterface], self.findContainers(DefinitionContainer, **kwargs))
 
     ##  Find all InstanceContainer objects matching certain criteria.
     #

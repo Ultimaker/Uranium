@@ -3,7 +3,8 @@
 
 from PyQt5.QtCore import Qt, QAbstractItemModel, QModelIndex, QVariant, pyqtProperty, pyqtSignal, pyqtSlot
 
-import UM.Settings
+from UM.Settings.SettingDefinition import SettingDefinition
+from UM.Settings.ContainerRegistry import ContainerRegistry
 
 class DefinitionTreeModel(QAbstractItemModel):
     KeyRole = Qt.UserRole + 1
@@ -18,7 +19,7 @@ class DefinitionTreeModel(QAbstractItemModel):
             self.KeyRole: b"key"
         }
         index = self.KeyRole + 1
-        for name in UM.Settings.SettingDefinition.getPropertyNames():
+        for name in SettingDefinition.getPropertyNames():
             self._role_names[index] = name.encode()
             index += 1
 
@@ -29,7 +30,7 @@ class DefinitionTreeModel(QAbstractItemModel):
             self._container_id = container_id
 
             self.beginResetModel()
-            containers = UM.Settings.ContainerRegistry.getInstance().findDefinitionContainers(id = self._container_id)
+            containers = ContainerRegistry.getInstance().findDefinitionContainers(id = self._container_id)
             if containers:
                 self._container = containers[0]
             else:

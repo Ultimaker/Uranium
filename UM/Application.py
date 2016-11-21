@@ -12,7 +12,7 @@ from UM.Mesh.MeshFileHandler import MeshFileHandler
 from UM.Resources import Resources
 from UM.Operations.OperationStack import OperationStack
 from UM.Event import CallFunctionEvent
-from UM.Signal import Signal, signalemitter
+from UM.Signal import Signal, signalemitter, SignalQueue
 from UM.Logger import Logger
 from UM.Preferences import Preferences
 from UM.OutputDevice.OutputDeviceManager import OutputDeviceManager
@@ -45,9 +45,8 @@ class Application():
 
         os.putenv("UBUNTU_MENUPROXY", "0")  # For Ubuntu Unity this makes Qt use its own menu bar rather than pass it on to Unity.
 
-        Signal._app = self
+        Signal._signalQueue = self
         Resources.ApplicationIdentifier = name
-        i18nCatalog.setApplication(self)
 
         Resources.addSearchPath(os.path.join(os.path.dirname(sys.executable), "resources"))
         Resources.addSearchPath(os.path.join(Application.getInstallPrefix(), "share", "uranium", "resources"))
@@ -59,6 +58,8 @@ class Application():
         self._main_thread = threading.current_thread()
 
         super().__init__()  # Call super to make multiple inheritance work.
+        i18nCatalog.setApplicationName(self.getApplicationName())
+        i18nCatalog.setLanguage(self.getApplicationLanguage())
 
         self._renderer = None
 
@@ -83,7 +84,7 @@ class Application():
 
         self._required_plugins = []
 
-        self._operation_stack = OperationStack()
+        self._operation_stack = OperationStack(self.getController())
 
         self._plugin_registry = PluginRegistry.getInstance()
 
@@ -105,7 +106,9 @@ class Application():
 
         self._plugin_registry.setApplication(self)
 
-        UM.Settings.ContainerRegistry.setApplication(self)
+        UM.Settings.ContainerRegistry.ContainerRegistry.setApplication(self)
+        UM.Settings.InstanceContainer.setContainerRegistry(self.getContainerRegistry())
+        UM.Settings.ContainerStack.setContainerRegistry(self.getContainerRegistry())
 
         self._parsed_command_line = None
         self.parseCommandLine()
@@ -117,6 +120,8 @@ class Application():
 
         self._global_container_stack = None
 
+    def getContainerRegistry(self):
+        return UM.Settings.ContainerRegistry.getInstance()
 
     ##  Emitted when the application window was closed and we need to shut down the application
     applicationShuttingDown = Signal()

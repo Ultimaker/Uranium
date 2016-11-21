@@ -23,6 +23,7 @@ from UM.i18n import i18nCatalog
 import UM.Settings.InstanceContainer #For version upgrade to know the version number.
 import UM.Settings.ContainerStack #For version upgrade to know the version number.
 import UM.Preferences #For version upgrade to know the version number.
+import UM.VersionUpgradeManager
 
 # Raised when we try to use an unsupported version of a dependency.
 class UnsupportedVersionError(Exception):

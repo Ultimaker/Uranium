@@ -4,7 +4,6 @@
 import gettext
 
 from UM.Resources import Resources
-from UM.Application import Application
 
 ##  Wraps a gettext translation catalog for simplified use.
 #
@@ -162,14 +161,9 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
         return output
 
     def _update(self):
-        if not self.__application:
+        if not self.__name or not self.__language:
             self.__require_update = True
             return
-
-        if not self.__name:
-            self.__name = self.__application.getApplicationName()
-        if self.__language == "default":
-            self.__language = self.__application.getApplicationLanguage()
 
         for path in Resources.getAllPathsForType(Resources.i18n):
             if gettext.find(self.__name, path, languages = [self.__language]): # pylint: disable=bad-whitespace
@@ -182,13 +176,19 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
         cls.__tag_replacements = replacements
 
     @classmethod
-    def setApplication(cls, application):
-        cls.__application = application
+    def setApplicationName(cls, applicationName):
+        cls.__name = applicationName
+        cls.__require_update = True
+
+    @classmethod
+    def setLanguage(cls, language):
+        cls.__language = language
+        cls.__require_update = True
 
     # Default replacements discards all tags
     __tag_replacements = {
         "filename": None,
         "message": None
     }   # type: Dict[str, str]
-    __application = None    # type: Application
+
 

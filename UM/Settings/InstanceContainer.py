@@ -11,12 +11,11 @@ from UM.PluginObject import PluginObject
 from UM.Logger import Logger
 from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType
 
-import UM.Settings.ContainerRegistry
+from UM.Settings.Interfaces import ContainerRegistryInterface
 from UM.Settings.DefinitionContainer import DefinitionContainer
 
 from . import ContainerInterface
 from UM.Settings.SettingInstance import SettingInstance
-from . import SettingRelation
 
 class InvalidInstanceError(Exception):
     pass
@@ -50,7 +49,7 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
 
         self._id = str(container_id)    # type: str
         self._name = container_id       # type: str
-        self._definition = None         # type: DefinitionContainer
+        self._definition = None         # type: DefinitionContainerInterface
         self._metadata = {}
         self._instances = {}            # type: Dict[str, SettingInstance]
         self._read_only = False
@@ -314,7 +313,8 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
         self._name = parser["general"].get("name", self._id)
 
         definition_id = parser["general"]["definition"]
-        definitions = UM.Settings.ContainerRegistry.ContainerRegistry.getInstance().findDefinitionContainers(id = definition_id)
+
+        definitions = _containerRegistry.findDefinitionContainers(id = definition_id)
         if not definitions:
             raise DefinitionNotFoundError("Could not find definition {0} required for instance {1}".format(definition_id, self._id))
         self._definition = definitions[0]
@@ -410,3 +410,9 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
         while self._postponed_emits:
             signal, signal_arg = self._postponed_emits.pop(0)
             signal.emit(*signal_arg)
+
+_containerRegistry = None   # type:  ContainerRegistryInterface
+
+def setContainerRegistry(registry: ContainerRegistryInterface) -> None:
+    global _containerRegistry
+    _containerRegistry = registry
