@@ -573,6 +573,8 @@ class SettingDefinitionsModel(QAbstractListModel):
 
     def _isAnyDescendantFiltered(self, definition):
         for child in definition.children:
+            if self._isAnyDescendantFiltered(child):
+                return True
             if self._filter_dict and child.matchesFilter(**self._filter_dict):
                 return True
         return False
