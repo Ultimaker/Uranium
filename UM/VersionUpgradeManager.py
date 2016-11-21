@@ -309,6 +309,7 @@ class VersionUpgradeManager:
                     Logger.logException("w", "Exception in %s upgrade with %s: %s", old_configuration_type, upgrade_step.__module__, str(e))
                     return False
                 if not this_files_data: #Upgrade failed.
+                    Logger.log("w", "Unable to upgrade this profile. Skipping it.")
                     return False
                 new_filenames_without_extension += this_filenames_without_extension
                 new_files_data += this_files_data
