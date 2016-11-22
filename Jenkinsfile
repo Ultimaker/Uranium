@@ -11,7 +11,11 @@ node ('linux && cura') {
         }
 
         stage('Unit Test') {
-            sh 'make test && exit 0'
+            try {
+                sh 'make test'
+            } catch(e) {
+                currentBuild.result = "UNSTABLE"
+            }
 
             junit 'build/junit.xml'
         }
