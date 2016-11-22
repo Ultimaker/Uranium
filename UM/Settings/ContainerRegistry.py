@@ -5,7 +5,6 @@ import os
 import re #For finding containers with asterisks in the constraints.
 import urllib #For ensuring container file names are proper file names
 import pickle #For serializing/deserializing Python classes to binary files
-import time  # For timing lock file
 
 from contextlib import contextmanager
 
@@ -15,6 +14,7 @@ from UM.MimeTypeDatabase import MimeType, MimeTypeDatabase
 from UM.Logger import Logger
 from UM.SaveFile import SaveFile
 from UM.Signal import Signal, signalemitter
+from UM.Util import LockFile
 
 import UM.Dictionary
 
@@ -501,37 +501,15 @@ class ContainerRegistry:
     ##  Get the lock filename including full path
     #   Dependent on when you call this function, Resources.getConfigStoragePath may return different paths
     def getLockFilename(self):
-        return os.path.join(Resources.getConfigStoragePath(), CONFIG_LOCK_FILENAME)
-
-    ##  Wait for a lock file to disappear
-    #   if the file is too old, it will be ignored too
-    def waitLockFileDisappear(self, filename=None):
-        if filename is None:
-            filename = self.getLockFilename()
-        now = time.time()
-        # Allow max age of 10 seconds
-        while os.path.exists(filename) and now < os.path.getmtime(
-                filename) + 10 and now > os.path.getmtime(filename):
-            Logger.log("d", "Waiting to finish writing in the config dir...")
-            time.sleep(1)
-            now = time.time()
+        return Resources.getStoragePath(Resources.Resources, CONFIG_LOCK_FILENAME)
 
     ##  Contextmanager to create a lock file and remove it afterwards.
     @contextmanager
     def lockFile(self):
-        filename = self.getLockFilename()
-        self.waitLockFileDisappear(filename=filename)
-        try:
-            with open(filename, 'w') as lock_file:
-                lock_file.write("%s" % os.getpid())
-        except:
-            Logger.log("e", "Could not create lock file [%s]" % filename)
-        yield
-        try:
-            if os.path.exists(filename):
-                os.remove(filename)
-        except:
-            Logger.log("e", "Could not delete lock file [%s]" % filename)
+        yield from LockFile(
+            self.getLockFilename(),
+            wait_msg="Waiting for lock file in local config dir to disappear..."
+            ).lockFileGenerator(timeout = 10)
 
     ##  Get the singleton instance for this class.
     @classmethod
