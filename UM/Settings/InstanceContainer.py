@@ -276,7 +276,7 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
             parser["metadata"][key] = str(value)
 
         parser["values"] = {}
-        for key, instance in self._instances.items():
+        for key, instance in sorted(self._instances.items()):
             try:
                 parser["values"][key] = str(instance.value)
             except AttributeError:

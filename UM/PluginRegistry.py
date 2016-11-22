@@ -284,14 +284,14 @@ class PluginRegistry(object):
 
         try:
             file, path, desc = imp.find_module(plugin_id, [location])
-        except Exception as e:
-            Logger.log("e", "Import error when importing %s: %s", plugin_id, str(e))
+        except Exception:
+            Logger.logException("e", "Import error when importing %s", plugin_id)
             return None
 
         try:
             module = imp.load_module(plugin_id, file, path, desc)
-        except Exception as e:
-            Logger.log("e", "Import error loading module %s: %s", plugin_id, str(e))
+        except Exception:
+            Logger.logException("e", "Import error loading module %s", plugin_id)
             return None
         finally:
             if file:

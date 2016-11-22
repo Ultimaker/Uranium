@@ -45,6 +45,7 @@ class RotateTool(Tool):
         self._total_iterations = 0
         self._rotating = False
         self.setExposedProperties("ToolHint", "RotationSnap", "RotationSnapAngle")
+        self._saved_node_positions = []
 
     ##  Handle mouse and keyboard events
     #
@@ -134,6 +135,8 @@ class RotateTool(Tool):
             elif self.getLockedAxis() == ToolHandle.ZAxis:
                 direction = 1 if Vector.Unit_Z.dot(drag_start.cross(drag_end)) > 0 else -1
                 rotation = Quaternion.fromAngleAxis(direction * angle, Vector.Unit_Z)
+            else:
+                direction = -1
 
             # Rate-limit the angle change notification
             # This is done to prevent the UI from being flooded with property change notifications,

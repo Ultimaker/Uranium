@@ -226,7 +226,7 @@ class ContainerRegistry(ContainerRegistryInterface):
                 # Since we have the mime type and resource type here, process these two properties so we do not
                 # need to look up mime types etc. again.
                 container_id = urllib.parse.unquote_plus(mime.stripExtension(os.path.basename(path)))
-                read_only = os.path.dirname(path) != resource_storage_path
+                read_only = os.path.realpath(os.path.dirname(path)) != os.path.realpath(resource_storage_path)
 
                 files.append((type_priority, container_id, path, read_only, container_type))
 

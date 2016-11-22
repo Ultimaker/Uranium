@@ -49,6 +49,9 @@ class ContainerStack(ContainerInterface, PluginObject):
         self._path = ""
         self._postponed_emits = []  # gets filled with 2-tuples: signal, signal_argument(s)
 
+        self._property_changes = {}
+        self._emit_property_changed_queued = False
+
     ##  \copydoc ContainerInterface::getId
     #
     #   Reimplemented from ContainerInterface
@@ -199,6 +202,8 @@ class ContainerStack(ContainerInterface, PluginObject):
 
     propertyChanged = Signal()
 
+    propertiesChanged = Signal()
+
     ##  \copydoc ContainerInterface::serialize
     #
     #   Reimplemented from ContainerInterface
@@ -255,7 +260,7 @@ class ContainerStack(ContainerInterface, PluginObject):
             if container_id != "":
                 containers = _containerRegistry.findContainers(id = container_id)
                 if containers:
-                    containers[0].propertyChanged.connect(self.propertyChanged)
+                    containers[0].propertyChanged.connect(self._collectPropertyChanges)
                     self._containers.append(containers[0])
                 else:
                     raise Exception("When trying to deserialize %s, we received an unknown ID (%s) for container" % (self._id, container_id))
@@ -385,12 +390,20 @@ class ContainerStack(ContainerInterface, PluginObject):
     #
     #   \param container The container to add to the stack.
     def addContainer(self, container):
-        if container is not self:
-            container.propertyChanged.connect(self.propertyChanged)
-            self._containers.insert(0, container)
-            self.containersChanged.emit(container)
-        else:
+        self.insertContainer(0, container)
+
+    ##  Insert a container into the stack.
+    #
+    #   \param index \type{int} The index of to insert the container at.
+    #          A negative index counts from the bottom
+    #   \param container The container to add to the stack.
+    def insertContainer(self, index, container):
+        if container is self:
             raise Exception("Unable to add stack to itself.")
+
+        container.propertyChanged.connect(self._collectPropertyChanges)
+        self._containers.insert(index, container)
+        self.containersChanged.emit(container)
 
     ##  Replace a container in the stack.
     #
@@ -406,8 +419,8 @@ class ContainerStack(ContainerInterface, PluginObject):
         if container is self:
             raise Exception("Unable to replace container with ContainerStack (self) ")
 
-        self._containers[index].propertyChanged.disconnect(self.propertyChanged)
-        container.propertyChanged.connect(self.propertyChanged)
+        self._containers[index].propertyChanged.disconnect(self._collectPropertyChanges)
+        container.propertyChanged.connect(self._collectPropertyChanges)
         self._containers[index] = container
         if postpone_emit:
             # send it using sendPostponedEmits
@@ -425,7 +438,7 @@ class ContainerStack(ContainerInterface, PluginObject):
             raise IndexError
         try:
             container = self._containers[index]
-            container.propertyChanged.disconnect(self.propertyChanged)
+            container.propertyChanged.disconnect(self._collectPropertyChanges)
             del self._containers[index]
             self.containersChanged.emit(container)
         except TypeError:
@@ -450,12 +463,12 @@ class ContainerStack(ContainerInterface, PluginObject):
             raise Exception("Next stack can not be itself")
         if self._next_stack == stack:
             return
-        # Link the propertyChanged signal of next to self.
+
         if self._next_stack:
-            self._next_stack.propertyChanged.disconnect(self.propertyChanged)
+            self._next_stack.propertyChanged.disconnect(self._collectPropertyChanges)
         self._next_stack = stack
         if self._next_stack:
-            self._next_stack.propertyChanged.connect(self.propertyChanged)
+            self._next_stack.propertyChanged.connect(self._collectPropertyChanges)
 
     ##  Send postponed emits
     #   These emits are collected from the option postpone_emit.
@@ -469,8 +482,8 @@ class ContainerStack(ContainerInterface, PluginObject):
     def hasErrors(self):
         for key in self.getAllKeys():
             validation_state = self.getProperty(key, "validationState")
-            if validation_state in (UM.Settings.ValidatorState.Exception, UM.Settings.ValidatorState.MaximumError,
-            UM.Settings.ValidatorState.MinimumError):
+            if validation_state in (ValidatorState.Exception, ValidatorState.MaximumError,
+            ValidatorState.MinimumError):
                 return True
         return False
 
@@ -483,6 +496,33 @@ class ContainerStack(ContainerInterface, PluginObject):
                                     ValidatorState.MinimumError):
                 error_keys.append(key)
         return error_keys
+
+    # protected:
+
+    # Gather up all signal emissions and delay their emit until the next time the event
+    # loop can run. This prevents us from sending the same change signal multiple times.
+    # In addition, it allows us to emit a single signal that reports all properties that
+    # have changed.
+    def _collectPropertyChanges(self, key, property_name):
+        if key not in self._property_changes:
+            self._property_changes[key] = set()
+
+        self._property_changes[key].add(property_name)
+
+        if not self._emit_property_changed_queued:
+            _containerRegistry.getApplication().callLater(self._emitCollectedPropertyChanges)
+            self._emit_property_changed_queued = True
+
+    # Perform the emission of the change signals that were collected in a previous step.
+    def _emitCollectedPropertyChanges(self):
+        for key, property_names in self._property_changes.items():
+            self.propertiesChanged.emit(key, property_names)
+
+            for property_name in property_names:
+                self.propertyChanged.emit(key, property_name)
+
+        self._property_changes = {}
+        self._emit_property_changed_queued = False
 
 _containerRegistry = None   # type:  ContainerRegistryInterface
 

@@ -10,11 +10,11 @@ from PyQt5 import QtCore, QtWidgets
 
 import math
 
+
 ##  Provides the tool to manipulate the camera: moving, zooming and rotating
 #
 #   Note that zooming is performed by moving closer to or further away from the origin ("dolly")
 #   instead of changing the field of view of the camera ("zoom")
-
 class CameraTool(Tool):
     def __init__(self):
         super().__init__()
@@ -40,7 +40,7 @@ class CameraTool(Tool):
 
         self._drag_distance = 0.05
 
-    ##  Set the minumum and maximum distance from the origin used for "zooming" the camera
+    ##  Set the minimum and maximum distance from the origin used for "zooming" the camera
     #
     #   \param min type(float) distance from the origin when fully zoomed in
     #   \param max type(float) distance from the origin when fully zoomed out
@@ -70,7 +70,7 @@ class CameraTool(Tool):
         modifiers = QtWidgets.QApplication.keyboardModifiers()
         self._shift_is_active = modifiers == QtCore.Qt.ShiftModifier
         self._ctrl_is_active = modifiers == QtCore.Qt.ControlModifier
-        #checks for the press and release event of the space key
+        # Checks for the press and release event of the space key
         if event.type is Event.KeyPressEvent:
             if event.key == KeyEvent.SpaceKey:
                 self._space_is_active = True
@@ -83,11 +83,11 @@ class CameraTool(Tool):
     #   \param event type(Event) event passed from event handler
     #   \return type(boolean)
     def moveEvent(self, event):
-        if MouseEvent.MiddleButton in event.buttons: #mousewheel
+        if MouseEvent.MiddleButton in event.buttons:  # mousewheel
             return True
-        elif MouseEvent.LeftButton in event.buttons and self._shift_is_active is True: #shift -> leftbutton
+        elif MouseEvent.LeftButton in event.buttons and self._shift_is_active is True:  # shift -> leftbutton
             return True
-        elif MouseEvent.RightButton in event.buttons and self._shift_is_active is True: #shift -> rightbutton
+        elif MouseEvent.RightButton in event.buttons and self._shift_is_active is True:  # shift -> rightbutton
             return True
 
     ##  Check if the event warrants a call off the _rotateCamera method
@@ -95,9 +95,9 @@ class CameraTool(Tool):
     #   \param event type(Event) event passed from event handler
     #   \return type(boolean)
     def rotateEvent(self, event):
-        if MouseEvent.RightButton in event.buttons: #rightbutton
+        if MouseEvent.RightButton in event.buttons:  # rightbutton
             return True
-        elif MouseEvent.LeftButton in event.buttons and self._space_is_active is True: #shift -> leftbutton
+        elif MouseEvent.LeftButton in event.buttons and self._space_is_active is True:  # shift -> leftbutton
             return True
 
     ##  Calls the zoomaction method for the mousewheel event, mouseMoveEvent (in combo with alt or space) and when the plus or minus keys are used
@@ -107,8 +107,8 @@ class CameraTool(Tool):
     def initiateZoom(self, event):
         if event.type is event.MousePressEvent:
             return False
-        elif event.type is Event.MouseMoveEvent and self._space_is_active is True: #space -> mousemove
-                if self._start_y == None:
+        elif event.type is Event.MouseMoveEvent and self._space_is_active is True:  # space -> mousemove
+                if self._start_y is None:
                     self._start_y = event.y
                 _diff_y = self._start_y - event.y
                 if _diff_y != 0.0:
@@ -119,10 +119,10 @@ class CameraTool(Tool):
             self._zoomCamera(event.vertical)
             return True
         elif event.type is Event.KeyPressEvent:
-            if event.key == KeyEvent.MinusKey or event.key == KeyEvent.UnderscoreKey: #checks for both the minus and underscore key because they usually share a button on the keyboard and are sometimes interchanged
-                self._zoomCamera(-(self._manual_zoom))
+            if event.key == KeyEvent.MinusKey or event.key == KeyEvent.UnderscoreKey:  # checks for both the minus and underscore key because they usually share a button on the keyboard and are sometimes interchanged
+                self._zoomCamera(-self._manual_zoom)
                 return True
-            elif event.key == KeyEvent.PlusKey or event.key == KeyEvent.EqualKey: #same story as the minus and underscore key: it checks for both the plus and equal key (so you won't have to do shift -> equal, to use the plus-key)
+            elif event.key == KeyEvent.PlusKey or event.key == KeyEvent.EqualKey:  # same story as the minus and underscore key: it checks for both the plus and equal key (so you won't have to do shift -> equal, to use the plus-key)
                 self._zoomCamera(self._manual_zoom)
                 return True
 
@@ -131,10 +131,10 @@ class CameraTool(Tool):
     #   \param event type(Event)
     def event(self, event):
         self.checkModifierKeys(event)
-        # handle mouse- and keyboard-initiated zoom-events
+        # Handle mouse- and keyboard-initiated zoom-events
         self.initiateZoom(event)
 
-        # handle keyboard-initiated rotate-events
+        # Handle keyboard-initiated rotate-events
         if event.type is event.KeyPressEvent and not self._ctrl_is_active:
             if event.key == KeyEvent.UpKey:
                 self._rotateCamera(0, 0.01)
@@ -145,7 +145,7 @@ class CameraTool(Tool):
             if event.key == KeyEvent.LeftKey:
                 self._rotateCamera(0.01, 0)
 
-        # handle mouse-initiated rotate- and move-events
+        # Handle mouse-initiated rotate- and move-events
         if event.type is Event.MousePressEvent:
             if self.moveEvent(event) == True:
                 self._move = True
@@ -178,6 +178,8 @@ class CameraTool(Tool):
                 self._start_drag = None
             if self._dragged:
                 self._dragged = False
+                if MouseEvent.RightButton in event.buttons:
+                    return True
 
         return False
 

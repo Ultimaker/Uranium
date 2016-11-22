@@ -15,7 +15,7 @@ from UM.PluginRegistry import PluginRegistry
 #       \sa Tool
 #       \sa Scene
 @signalemitter
-class Controller():
+class Controller:
     def __init__(self, application):
         super().__init__()  # Call super to make multiple inheritance work.
         self._active_tool = None
@@ -174,28 +174,27 @@ class Controller():
         return self._active_tool
 
     ##  Set the current active tool.
-    #   \param name \type{string} The name of the tool to set as active.
-    def setActiveTool(self, name):
-        try:
-            if self._active_tool:
-                self._active_tool.event(ToolEvent(ToolEvent.ToolDeactivateEvent))
+    #   The tool can be set by name of the tool or directly passing the tool object.
+    #   \param tool \type{Tool} or \type{string}
+    def setActiveTool(self, tool):
+        from UM.Tool import Tool
+        if self._active_tool:
+            self._active_tool.event(ToolEvent(ToolEvent.ToolDeactivateEvent))
 
-            if name:
-                self._active_tool = self._tools[name]
-            else:
-                self._active_tool = None
+        if isinstance(tool, Tool) or tool is None:
+            self._active_tool = tool
+        else:
+            self._active_tool = self.getTool(tool)
 
-            if self._active_tool:
-                self._active_tool.event(ToolEvent(ToolEvent.ToolActivateEvent))
+        if self._active_tool:
+            self._active_tool.event(ToolEvent(ToolEvent.ToolActivateEvent))
 
-            from UM.Scene.Selection import Selection  # Imported here to prevent a circular dependency.
-            if not self._active_tool and Selection.getCount() > 0:  # If something is selected, a tool must always be active.
-                self._active_tool = self._tools["TranslateTool"]  # Then default to the translation tool.
-                self._active_tool.event(ToolEvent(ToolEvent.ToolActivateEvent))
+        from UM.Scene.Selection import Selection  # Imported here to prevent a circular dependency.
+        if not self._active_tool and Selection.getCount() > 0:  # If something is selected, a tool must always be active.
+            self._active_tool = self._tools["TranslateTool"]  # Then default to the translation tool.
+            self._active_tool.event(ToolEvent(ToolEvent.ToolActivateEvent))
 
-            self.activeToolChanged.emit()
-        except KeyError:
-            Logger.log("e", "No tool named %s found.", name)
+        self.activeToolChanged.emit()
 
     ##  Emitted when the list of tools changes.
     toolsChanged = Signal()
@@ -250,11 +249,16 @@ class Controller():
 
     ##  Set the tool used for handling camera controls.
     #   Camera tool is the first tool to receive events.
-    #   \param tool \type{Tool}
+    #   The tool can be set by name of the tool or directly passing the tool object.
+    #   \param tool \type{Tool} or \type{string}
     #   \sa setSelectionTool
     #   \sa setActiveTool
     def setCameraTool(self, tool):
-        self._camera_tool = self.getTool(tool)
+        from UM.Tool import Tool
+        if isinstance(tool, Tool) or tool is None:
+            self._camera_tool = tool
+        else:
+            self._camera_tool = self.getTool(tool)
 
     ##  Get the camera tool (if any)
     #   \returns camera tool (or none)
@@ -263,11 +267,16 @@ class Controller():
 
     ##  Set the tool used for performing selections.
     #   Selection tool receives its events after camera tool and active tool.
-    #   \param tool \type{Tool}
+    #   The tool can be set by name of the tool or directly passing the tool object.
+    #   \param tool \type{Tool} or \type{string}
     #   \sa setCameraTool
     #   \sa setActiveTool
     def setSelectionTool(self, tool):
-        self._selection_tool = self.getTool(tool)
+        from UM.Tool import Tool
+        if isinstance(tool, Tool) or tool is None:
+            self._selection_tool = tool
+        else:
+            self._selection_tool = self.getTool(tool)
 
     def getToolsEnabled(self):
         return self._tools_enabled

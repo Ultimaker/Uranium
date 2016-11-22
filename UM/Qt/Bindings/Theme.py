@@ -188,7 +188,8 @@ class Theme(QObject):
 
     def _initializeDefaults(self):
         self._fonts = {
-            "system": QCoreApplication.instance().font()
+            "system": QCoreApplication.instance().font(),
+            "fixed": QFontDatabase.systemFont(QFontDatabase.FixedFont)
         }
 
         palette = QCoreApplication.instance().palette()

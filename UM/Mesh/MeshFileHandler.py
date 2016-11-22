@@ -24,7 +24,6 @@ class MeshFileHandler(object):
     #   \param file_name The name of file to load.
     #   \returns MeshReader that accepts the given file name. If no acceptable MeshReader is found None is returned.
     def getReaderForFile(self, file_name):
-        
         for id, reader in self._mesh_readers.items():
             try:
                 if reader.acceptsFile(file_name):
