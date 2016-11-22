@@ -35,10 +35,6 @@ class BackendProxy(QObject):
     def state(self):
         return self._state
 
-    @pyqtProperty(bool, notify=backendStateChange)
-    def paused(self):
-        return self._backend._pauseSlicing
-
     def _onProcessingProgress(self, amount):
         self._progress = amount
         self.processingProgress.emit(amount)
