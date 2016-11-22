@@ -371,11 +371,17 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
             self._postponed_emits.append((instance.propertyChanged, (key, "validationState")))
             self._postponed_emits.append((instance.propertyChanged, (key, "state")))
             self._postponed_emits.append((instance.propertyChanged, (key, "value")))
+            for property_name in instance.definition.getPropertyNames():
+                if instance.definition.dependsOnProperty(property_name) == "value":
+                    self._postponed_emits.append((instance.propertyChanged, (key, property_name)))
         else:
             # Notify listeners of changed properties for all related properties
             instance.propertyChanged.emit(key, "value")
             instance.propertyChanged.emit(key, "state")  # State is no longer user state, so signal is needed.
             instance.propertyChanged.emit(key, "validationState") # If the value was invalid, it should now no longer be invalid.
+            for property_name in instance.definition.getPropertyNames():
+                if instance.definition.dependsOnProperty(property_name) == "value":
+                    self.propertyChanged.emit(key, property_name)
 
         self._dirty = True
 
