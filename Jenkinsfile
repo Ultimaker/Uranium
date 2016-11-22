@@ -17,7 +17,7 @@ node ('linux && cura') {
                 currentBuild.result = "UNSTABLE"
             }
 
-            junit 'build/junit.xml'
+            junit 'junit.xml'
         }
 
         stage('Lint') {
