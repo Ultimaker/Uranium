@@ -21,7 +21,24 @@ node ('linux && cura') {
         }
 
         stage('Lint') {
-            sh 'make check'
+            try {
+                sh 'make check'
+            } catch(e) {
+                currentBuild.result = "UNSTABLE"
+            }
+
+            step([
+                $class: 'WarningsPublisher',
+                canComputeNew: false,
+                canResolveRelativePaths: false,
+                defaultEncoding: '',
+                excludePattern: '',
+                healthy: '',
+                includePattern: '',
+                messagesPattern: '',
+                parserConfigurations: [[parserName: 'PyLint', pattern: 'pylint.log']],
+                unHealthy: ''
+            ])
         }
     }
 }
