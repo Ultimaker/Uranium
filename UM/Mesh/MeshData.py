@@ -36,7 +36,7 @@ Reuse = object()
 #   faces and the three columns being the indices that refer to the individual vertices.
 class MeshData:
     def __init__(self, vertices=None, normals=None, indices=None, colors=None, uvs=None, file_name=None,
-                 center_position=None, type = MeshType.faces):
+                 center_position=None, zero_position=None, type = MeshType.faces):
         self._vertices = NumPyUtil.immutableNDArray(vertices)
         self._normals = NumPyUtil.immutableNDArray(normals)
         self._indices = NumPyUtil.immutableNDArray(indices)
@@ -48,6 +48,11 @@ class MeshData:
         self._file_name = file_name
         # original center position
         self._center_position = center_position
+        # original zero position, is changed after transformation
+        if zero_position is not None:
+            self._zero_position = zero_position
+        else:
+            self._zero_position = Vector(0, 0, 0)
         self._convex_hull = None    # type: scipy.spatial.qhull.ConvexHull
         self._convex_hull_vertices = None
         self._convex_hull_lock = threading.Lock()
@@ -55,7 +60,7 @@ class MeshData:
     ## Create a new MeshData with specified changes
     #   \return \type{MeshData}
     def set(self, vertices=Reuse, normals=Reuse, indices=Reuse, colors=Reuse, uvs=Reuse, file_name=Reuse,
-            center_position=Reuse):
+            center_position=Reuse, zero_position=Reuse):
         vertices = vertices if vertices is not Reuse else self._vertices
         normals = normals if normals is not Reuse else self._normals
         indices = indices if indices is not Reuse else self._indices
@@ -63,9 +68,10 @@ class MeshData:
         uvs = uvs if uvs is not Reuse else self._uvs
         file_name = file_name if file_name is not Reuse else self._file_name
         center_position = center_position if center_position is not Reuse else self._center_position
+        zero_position = zero_position if zero_position is not Reuse else self._zero_position
 
         return MeshData(vertices=vertices, normals=normals, indices=indices, colors=colors, uvs=uvs,
-                        file_name=file_name, center_position=center_position)
+                        file_name=file_name, center_position=center_position, zero_position=zero_position)
 
     def getHash(self):
         m = hashlib.sha256()
@@ -74,6 +80,9 @@ class MeshData:
 
     def getCenterPosition(self):
         return self._center_position
+
+    def getZeroPosition(self):
+        return self._zero_position
 
     def getType(self):
         return self._type
@@ -125,14 +134,21 @@ class MeshData:
     def getFileName(self):
         return self._file_name
 
-    ##  Transform the meshdata by given Matrix
+    ##  Transform the meshdata, center and zero position by given Matrix
     #   \param transformation 4x4 homogenous transformation matrix
     def getTransformed(self, transformation):
         if self._vertices is not None:
             transformed_vertices = transformVertices(self._vertices, transformation)
             transformed_normals = transformNormals(self._normals, transformation) if self._normals is not None else None
 
-            return self.set(vertices=transformed_vertices, normals=transformed_normals)
+            transformation_matrix = transformation.getTransposed()
+            if self._center_position is not None:
+                center_position = self._center_position.multiply(transformation_matrix)
+            else:
+                center_position = Reuse
+            zero_position = self._zero_position.multiply(transformation_matrix)
+
+            return self.set(vertices=transformed_vertices, normals=transformed_normals, center_position=center_position, zero_position=zero_position)
         else:
             return MeshData(vertices = self._vertices)
 

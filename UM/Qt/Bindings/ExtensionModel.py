@@ -17,8 +17,6 @@ class ExtensionModel(ListModel):
         self.addRoleName(self.ActionsRole, "actions")
         self.addRoleName(self.ExtensionRole, "extension")
         self._updateExtentionList()
-        
-        #print(self._items)
     
     def _updateExtentionList(self):
         #active_plugins = self._plugin_registery.getActivePlugins()

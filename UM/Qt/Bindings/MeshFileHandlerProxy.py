@@ -67,14 +67,13 @@ class MeshFileHandlerProxy(QObject):
         job.start()
 
     def _readMeshFinished(self, job):
-        node = job.getResult()
-        if node != None:  
+        nodes = job.getResult()
+        for node in nodes:
             node.setSelectable(True)
             node.setName(os.path.basename(job.getFileName()))
 
             op = AddSceneNodeOperation(node, self._scene.getRoot())
             op.push()
-
             self._scene.sceneChanged.emit(node)
 
 def createMeshFileHandlerProxy(engine, script_engine):

@@ -105,6 +105,8 @@ class Application():
 
         self._plugin_registry.setApplication(self)
 
+        UM.Settings.ContainerRegistry.setApplication(self)
+
         self._parsed_command_line = None
         self.parseCommandLine()
 
@@ -178,7 +180,7 @@ class Application():
         found_message = None
         with self._message_lock:
             for message in self._visible_messages:
-                if id(message) == message_id:
+                if id(message) == int(message_id):
                     found_message = message
         if found_message is not None:
             self.hideMessageSignal.emit(found_message)

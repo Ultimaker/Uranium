@@ -158,7 +158,7 @@ class Preferences:
             return self._parser
         try:
             self._parser = configparser.ConfigParser(interpolation = None) #pylint: disable=bad-whitespace
-            self._parser.read(file)
+            self._parser.read(file, encoding = "utf-8")
 
             if self._parser["general"]["version"] != str(Preferences.Version):
                 Logger.log("w", "Old config file found, ignoring")

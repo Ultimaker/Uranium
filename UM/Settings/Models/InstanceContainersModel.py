@@ -56,22 +56,28 @@ class InstanceContainersModel(ListModel):
         self._instance_containers = self._fetchInstanceContainers()
         self._instance_containers.sort(key = self._sortKey)
 
-        items = []
         for container in self._instance_containers:
             container.nameChanged.connect(self._update)
             container.metaDataChanged.connect(self._updateMetaData)
 
+        self.setItems(list(self._recomputeItems()))
+
+    ##  Computes the items that need to be in this list model.
+    #
+    #   This does not set the items in the list itself. It is intended to be
+    #   overwritten by subclasses that add their own roles to the model.
+    def _recomputeItems(self):
+        for container in self._instance_containers:
             metadata = container.getMetaData().copy()
             metadata["has_settings"] = len(container.getAllKeys()) > 0
 
-            items.append({
+            yield {
                 "name": container.getName(),
                 "id": container.getId(),
                 "metadata": metadata,
                 "readOnly": container.isReadOnly(),
-                "section": container.getMetaDataEntry(self._section_property, ""),
-            })
-        self.setItems(items)
+                "section": container.getMetaDataEntry(self._section_property, "")
+            }
 
     ##  Fetch the list of containers to display.
     #

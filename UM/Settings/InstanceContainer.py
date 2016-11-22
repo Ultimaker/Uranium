@@ -275,7 +275,7 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
             parser["metadata"][key] = str(value)
 
         parser["values"] = {}
-        for key, instance in self._instances.items():
+        for key, instance in sorted(self._instances.items()):
             try:
                 parser["values"][key] = str(instance.value)
             except AttributeError:
@@ -292,8 +292,19 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
         parser = configparser.ConfigParser(interpolation = None)
         parser.read_string(serialized)
 
-        if not "general" in parser or not "version" in parser["general"] or not "definition" in parser["general"]:
-            raise InvalidInstanceError("Missing required section 'general', 'definition' property or 'version' property")
+        has_general = "general" in parser
+        has_version = "version" in parser["general"]
+        has_definition = "definition" in parser["general"]
+
+        if not has_general or not has_version or not has_definition:
+            exception_string = "Missing the required"
+            if not has_general:
+                exception_string += " section 'general'"
+            if not has_definition:
+                exception_string += " property 'definition'"
+            if not has_version:
+                exception_string += " property 'version'"
+            raise InvalidInstanceError(exception_string)
 
         if parser["general"].getint("version") != self.Version:
             raise IncorrectInstanceVersionError("Reported version {0} but expected version {1}".format(parser["general"].getint("version"), self.Version))

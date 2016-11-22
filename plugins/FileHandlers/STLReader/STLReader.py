@@ -55,8 +55,12 @@ class STLReader(MeshReader):
         mesh_builder.setFileName(file_name)
 
         mesh = mesh_builder.build()
-        Logger.log("d", "Loaded a mesh with %s vertices", mesh_builder.getVertexCount())
+
+        if mesh_builder.getVertexCount() == 0:
+            Logger.log("d", "File did not contain valid data, unable to read.")
+            return None  # We didn't load anything.
         scene_node.setMeshData(mesh)
+        Logger.log("d", "Loaded a mesh with %s vertices", mesh_builder.getVertexCount())
         return scene_node
 
     def _swapColumns(self, array, frm, to):

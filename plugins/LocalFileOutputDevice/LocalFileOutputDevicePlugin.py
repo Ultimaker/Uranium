@@ -42,7 +42,7 @@ class LocalFileOutputDevice(OutputDevice):
         super().__init__("local_file")
 
         self.setName(catalog.i18nc("@item:inmenu", "Local File"))
-        self.setShortDescription(catalog.i18nc("@action:button", "Save to File"))
+        self.setShortDescription(catalog.i18nc("@action:button Preceded by 'Ready to'.", "Save to File"))
         self.setDescription(catalog.i18nc("@info:tooltip", "Save to File"))
         self.setIconName("save")
 
@@ -127,7 +127,7 @@ class LocalFileOutputDevice(OutputDevice):
             mode = selected_type["mode"]
             if mode == MeshWriter.OutputMode.TextMode:
                 Logger.log("d", "Writing to Local File %s in text mode", file_name)
-                stream = open(file_name, "wt")
+                stream = open(file_name, "wt", encoding = "utf-8")
             elif mode == MeshWriter.OutputMode.BinaryMode:
                 Logger.log("d", "Writing to Local File %s in binary mode", file_name)
                 stream = open(file_name, "wb")

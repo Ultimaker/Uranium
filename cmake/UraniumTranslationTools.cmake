@@ -73,6 +73,7 @@ MACRO(TARGETS_FOR_MO_FILES language)
 ENDMACRO()
 
 # Checks for availability of gettext and when found creates all targets 
+# TODO: Adding option to set the PROJECT_NAME externally!
 MACRO(CREATE_TRANSLATION_TARGETS)
 find_package(Gettext)
 
@@ -108,6 +109,6 @@ if(GETTEXT_FOUND)
         TARGETS_FOR_PO_FILES(${language})
         TARGETS_FOR_MO_FILES(${language})
     endforeach()
-    install(DIRECTORY ${CMAKE_BINARY_DIR}/resources DESTINATION ${CMAKE_INSTALL_DATADIR}/uranium/)
+    install(DIRECTORY ${CMAKE_BINARY_DIR}/resources DESTINATION ${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/)
 endif()
 ENDMACRO()

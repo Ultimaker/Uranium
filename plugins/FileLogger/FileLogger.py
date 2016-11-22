@@ -21,7 +21,7 @@ class FileLogger(LogOutput):
 
     def setFileName(self, file_name):
         if ".log" in file_name:
-            file_handler = logging.FileHandler(file_name)
+            file_handler = logging.FileHandler(file_name, encoding = "utf-8")
             format_handler = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
             file_handler.setFormatter(format_handler)
             self._logger.addHandler(file_handler)

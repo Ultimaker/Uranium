@@ -3,12 +3,16 @@
 
 from UM.Mesh.MeshWriter import MeshWriter
 from UM.Math.Vector import Vector
-from UM.Scene.SceneNode import SceneNode
-from UM.Scene.Iterator.BreadthFirstIterator import BreadthFirstIterator
 from UM.Logger import Logger
 from UM.Math.Matrix import Matrix
+from UM.Settings.SettingRelation import RelationType
 
-import xml.etree.ElementTree as ET
+try:
+    import xml.etree.cElementTree as ET
+except ImportError:
+    Logger.log("w", "Unable to load cElementTree, switching to slower version")
+    import xml.etree.ElementTree as ET
+
 import zipfile
 import UM.Application
 
@@ -19,8 +23,11 @@ class ThreeMFWriter(MeshWriter):
         self._namespaces = {
             "3mf": "http://schemas.microsoft.com/3dmanufacturing/core/2015/02",
             "content-types": "http://schemas.openxmlformats.org/package/2006/content-types",
-            "relationships": "http://schemas.openxmlformats.org/package/2006/relationships"
+            "relationships": "http://schemas.openxmlformats.org/package/2006/relationships",
+            "cura": "http://software.ultimaker.com/xml/cura/3mf/2015/10"
         }
+
+        self._unit_matrix_string = self._convertMatrixToString(Matrix())
 
     def _convertMatrixToString(self, matrix):
         result = ""
@@ -66,7 +73,12 @@ class ThreeMFWriter(MeshWriter):
             model = ET.Element("model", unit = "millimeter", xmlns = self._namespaces["3mf"])
             resources = ET.SubElement(model, "resources")
             build = ET.SubElement(model, "build")
+
+            added_nodes = []
+
+            # Write all nodes with meshData to the file as objects inside the resource tag
             for index, n in enumerate(MeshWriter._meshNodes(nodes)):
+                added_nodes.append(n)  # Save the nodes that have mesh data
                 object = ET.SubElement(resources, "object", id = str(index+1), type = "model")
                 mesh = ET.SubElement(object, "mesh")
 
@@ -77,15 +89,14 @@ class ThreeMFWriter(MeshWriter):
                 if verts is None:
                     Logger.log("d", "3mf writer can't write nodes without mesh data. Skipping this node.")
                     continue  # No mesh data, nothing to do.
-
                 if mesh_data.hasIndices():
                     for face in mesh_data.getIndices():
                         v1 = verts[face[0]]
                         v2 = verts[face[1]]
                         v3 = verts[face[2]]
-                        xml_vertex1 = ET.SubElement(vertices, "vertex", x = str(v1[0]), y = str(v1[2]), z = str(v1[1]))
-                        xml_vertex2 = ET.SubElement(vertices, "vertex", x = str(v2[0]), y = str(v2[2]), z = str(v2[1]))
-                        xml_vertex3 = ET.SubElement(vertices, "vertex", x = str(v3[0]), y = str(v3[2]), z = str(v3[1]))
+                        xml_vertex1 = ET.SubElement(vertices, "vertex", x = str(v1[0]), y = str(v1[1]), z = str(v1[2]))
+                        xml_vertex2 = ET.SubElement(vertices, "vertex", x = str(v2[0]), y = str(v2[1]), z = str(v2[2]))
+                        xml_vertex3 = ET.SubElement(vertices, "vertex", x = str(v3[0]), y = str(v3[1]), z = str(v3[2]))
 
                     triangles = ET.SubElement(mesh, "triangles")
                     for face in mesh_data.getIndices():
@@ -93,38 +104,80 @@ class ThreeMFWriter(MeshWriter):
                 else:
                     triangles = ET.SubElement(mesh, "triangles")
                     for idx, vert in enumerate(verts):
-                        xml_vertex = ET.SubElement(vertices, "vertex", x = str(vert[0]), y = str(vert[2]), z = str(vert[1]))
+                        xml_vertex = ET.SubElement(vertices, "vertex", x = str(vert[0]), y = str(vert[1]), z = str(vert[2]))
 
                         # If we have no faces defined, assume that every three subsequent vertices form a face.
                         if idx % 3 == 0:
                             triangle = ET.SubElement(triangles, "triangle", v1 = str(idx), v2 = str(idx + 1), v3 = str(idx + 2))
-                world_transformation = n.getWorldTransformation()
 
-                # 3MF sees lower left corner of buildplate as zero, so we need to translate a bit first
-                global_container_stack = UM.Application.getInstance().getGlobalContainerStack()
-                if global_container_stack:
-                    translation = Vector(x = global_container_stack.getProperty("machine_width", "value") / 2,
-                                         y = 0,
-                                         z = -global_container_stack.getProperty("machine_depth", "value") / 2)
-                else:
-                    translation = Vector(0, 0, 0)
+                # Handle per object settings
+                stack = n.callDecoration("getStack")
+                if stack is not None:
+                    changed_setting_keys = set(stack.getTop().getAllKeys())
+
+                    # Ensure that we save the extruder used for this object.
+                    if stack.getProperty("machine_extruder_count", "value") > 1:
+                        changed_setting_keys.add("extruder_nr")
+
+                    settings_xml = ET.SubElement(object, "settings", xmlns=self._namespaces["cura"])
+
+                    # Get values for all changed settings & save them.
+                    for key in changed_setting_keys:
+                        setting_xml = ET.SubElement(settings_xml, "setting", key = key)
+                        setting_xml.text = str(stack.getProperty(key, "value"))
+
+            # Add one to the index as we haven't incremented the last iteration.
+            index += 1
+            nodes_to_add = set()
+
+            for node in added_nodes:
+                # Check the parents of the nodes with mesh_data and ensure that they are also added.
+                parent_node = node.getParent()
+                while parent_node is not None:
+                    if parent_node.callDecoration("isGroup"):
+                        nodes_to_add.add(parent_node)
+                        parent_node = parent_node.getParent()
+                    else:
+                        parent_node = None
+
+            # Sort all the nodes by depth (so nodes with the highest depth are done first)
+            sorted_nodes_to_add = sorted(nodes_to_add, key=lambda node: node.getDepth(), reverse = True)
+
+            # We have already saved the nodes with mesh data, but now we also want to save nodes required for the scene
+            for node in sorted_nodes_to_add:
+                object = ET.SubElement(resources, "object", id=str(index + 1), type="model")
+                components = ET.SubElement(object, "components")
+                for child in node.getChildren():
+                    if child in added_nodes:
+                        component = ET.SubElement(components, "component", objectid = str(added_nodes.index(child) + 1), transform = self._convertMatrixToString(child.getLocalTransformation()))
+                index += 1
+                added_nodes.append(node)
+
+            # Create a transformation Matrix to convert from our worldspace into 3MF.
+            # First step: flip the y and z axis.
+            transformation_matrix = Matrix()
+            transformation_matrix._data[1, 1] = 0
+            transformation_matrix._data[1, 2] = -1
+            transformation_matrix._data[2, 1] = 1
+            transformation_matrix._data[2, 2] = 0
+
+            global_container_stack = UM.Application.getInstance().getGlobalContainerStack()
+            # Second step: 3MF defines the left corner of the machine as center, whereas cura uses the center of the
+            # build volume.
+            if global_container_stack:
+                translation_vector = Vector(x=global_container_stack.getProperty("machine_width", "value") / 2,
+                                            y=global_container_stack.getProperty("machine_depth", "value") / 2,
+                                            z=0)
                 translation_matrix = Matrix()
-                translation_matrix.setByTranslation(translation)
-                world_transformation.multiply(translation_matrix)
+                translation_matrix.setByTranslation(translation_vector)
+                transformation_matrix.preMultiply(translation_matrix)
 
-                # We use a different coordinate frame, so we need to flip the transformation
-                flip_matrix = Matrix()
-                flip_matrix._data[1, 1] = 0
-                flip_matrix._data[1, 2] = 1
-                flip_matrix._data[2, 1] = 1
-                flip_matrix._data[2, 2] = 0
-                world_transformation.multiply(flip_matrix)
+            # Find out what the final build items are and add them.
+            for node in added_nodes:
+                if node.getParent().callDecoration("isGroup") is None:
+                    node_matrix = node.getLocalTransformation()
 
-                transformation_string = self._convertMatrixToString(world_transformation)
-                if transformation_string != self._convertMatrixToString(Matrix()):
-                    item = ET.SubElement(build, "item", objectid = str(index + 1), transform = transformation_string)
-                else:
-                    item = ET.SubElement(build, "item", objectid = str(index + 1)) #, transform = transformation_string)
+                    ET.SubElement(build, "item", objectid = str(added_nodes.index(node) + 1), transform = self._convertMatrixToString(node_matrix.preMultiply(transformation_matrix)))
 
             archive.writestr(model_file, b'<?xml version="1.0" encoding="UTF-8"?> \n' + ET.tostring(model))
             archive.writestr(content_types_file, b'<?xml version="1.0" encoding="UTF-8"?> \n' + ET.tostring(content_types))

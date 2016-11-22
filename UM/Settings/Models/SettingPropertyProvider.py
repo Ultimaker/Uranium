@@ -2,6 +2,7 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 from PyQt5.QtCore import QObject, QVariant, pyqtProperty, pyqtSlot, pyqtSignal
+from PyQt5.QtQml import QQmlPropertyMap
 
 from UM.Logger import Logger
 from UM.Settings.SettingFunction import SettingFunction
@@ -19,12 +20,13 @@ class SettingPropertyProvider(QObject):
     def __init__(self, parent = None, *args, **kwargs):
         super().__init__(parent = parent, *args, **kwargs)
 
+        self._property_map = None
+
         self._stack_id = ""
         self._stack = None
         self._key = ""
         self._relations = set()
         self._watched_properties = []
-        self._property_values = {}
         self._store_index = 0
         self._value_used = None
         self._stack_levels = []
@@ -39,7 +41,7 @@ class SettingPropertyProvider(QObject):
         self._stack_id = stack_id
 
         if self._stack:
-            self._stack.propertyChanged.disconnect(self._onPropertyChanged)
+            self._stack.propertiesChanged.disconnect(self._onPropertiesChanged)
             self._stack.containersChanged.disconnect(self._update)
 
         if self._stack_id:
@@ -51,7 +53,7 @@ class SettingPropertyProvider(QObject):
                     self._stack = stacks[0]
 
             if self._stack:
-                self._stack.propertyChanged.connect(self._onPropertyChanged)
+                self._stack.propertiesChanged.connect(self._onPropertiesChanged)
                 self._stack.containersChanged.connect(self._update)
         else:
             self._stack = None
@@ -106,14 +108,13 @@ class SettingPropertyProvider(QObject):
         return self._key
 
     propertiesChanged = pyqtSignal()
-    @pyqtProperty("QVariantMap", notify = propertiesChanged)
+    @pyqtProperty(QQmlPropertyMap, notify = propertiesChanged)
     def properties(self):
-        return self._property_values
+        return self._property_map
 
     @pyqtSlot()
     def forcePropertiesChanged(self):
-        for watched_property in self._watched_properties:
-            self._onPropertyChanged(self._key, watched_property)
+        self._onPropertiesChanged(self._key, self._watched_properties)
 
     def setStoreIndex(self, index):
         if index != self._store_index:
@@ -133,25 +134,6 @@ class SettingPropertyProvider(QObject):
         if not self._stack:
             return -1
         return self._stack_levels
-
-    def _updateStackLevels(self):
-        levels = []
-        # Start looking at the stack this provider is attached to.
-        current_stack = self._stack
-        index = 0
-        while current_stack:
-            for container in current_stack.getContainers():
-                try:
-                    if container.getProperty(self._key, "value") is not None:
-                        levels.append(index)
-                except AttributeError:
-                    pass
-                index += 1
-            # If there is a next stack, check that one as well.
-            current_stack = current_stack.getNextStack()
-        if levels != self._stack_levels:
-            self._stack_levels = levels
-            self.stackLevelChanged.emit()
 
     ##  Set the value of a property.
     #
@@ -191,10 +173,10 @@ class SettingPropertyProvider(QObject):
 
         # _remove_unused_value is used when the stack value differs from the effective value
         # i.e. there is a resolve function
-        if self._property_values[property_name] == property_value and self._remove_unused_value:
+        if self._property_map.value(property_name) == property_value and self._remove_unused_value:
             return
 
-        container.setProperty(self._key, property_name, property_value, self._stack)
+        container.setProperty(self._key, property_name, property_value)
 
     ##  Manually request the value of a property.
     #   The most notable difference with the properties is that you have more control over at what point in the stack
@@ -278,45 +260,60 @@ class SettingPropertyProvider(QObject):
 
     # protected:
 
-    def _onPropertyChanged(self, key, property_name):
+    def _onPropertiesChanged(self, key, property_names):
         if key != self._key:
             if key in self._relations:
                 self._value_used = None
                 self.isValueUsedChanged.emit()
-
             return
 
-        if property_name not in self._watched_properties:
-            return
+        for property_name in property_names:
+            if property_name not in self._watched_properties:
+                continue
 
-        value = self._getPropertyValue(property_name)
-
-        if self._property_values[property_name] != value:
-            self._property_values[property_name] = value
-            self.propertiesChanged.emit()
+            self._property_map.insert(property_name, self._getPropertyValue(property_name))
 
         self._updateStackLevels()
 
     def _update(self, container = None):
         if not self._stack or not self._watched_properties or not self._key:
             return
+
         self._updateStackLevels()
         relations = self._stack.getProperty(self._key, "relations")
         if relations:  # If the setting doesn't have the property relations, None is returned
             for relation in filter(lambda r: r.type == UM.Settings.SettingRelation.RelationType.RequiredByTarget and r.role == "value", relations):
                 self._relations.add(relation.target.key)
 
-        new_properties = {}
-        for property_name in self._watched_properties:
-            new_properties[property_name] = self._getPropertyValue(property_name)
+        self._property_map = QQmlPropertyMap(self)
 
-        if new_properties != self._property_values:
-            self._property_values = new_properties
-            self.propertiesChanged.emit()
+        for property_name in self._watched_properties:
+            self._property_map.insert(property_name, self._getPropertyValue(property_name))
+
+        self.propertiesChanged.emit()
 
         # Force update of value_used
         self._value_used = None
         self.isValueUsedChanged.emit()
+
+    def _updateStackLevels(self):
+        levels = []
+        # Start looking at the stack this provider is attached to.
+        current_stack = self._stack
+        index = 0
+        while current_stack:
+            for container in current_stack.getContainers():
+                try:
+                    if container.getProperty(self._key, "value") is not None:
+                        levels.append(index)
+                except AttributeError:
+                    pass
+                index += 1
+            # If there is a next stack, check that one as well.
+            current_stack = current_stack.getNextStack()
+        if levels != self._stack_levels:
+            self._stack_levels = levels
+            self.stackLevelChanged.emit()
 
     def _getPropertyValue(self, property_name):
         property_value = self._stack.getProperty(self._key, property_name)

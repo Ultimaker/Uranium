@@ -184,17 +184,17 @@ msgstr "File locale"
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:45
 msgctxt "@action:button"
 msgid "Save to File"
-msgstr "Salva su file"
+msgstr "Salva su File"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:46
 msgctxt "@info:tooltip"
 msgid "Save to File"
-msgstr "Salva su file"
+msgstr "Salvare su File"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:65
 msgctxt "@title:window"
 msgid "Save to File"
-msgstr "Salva su file"
+msgstr "Salva su File"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:120
 msgctxt "@title:window"

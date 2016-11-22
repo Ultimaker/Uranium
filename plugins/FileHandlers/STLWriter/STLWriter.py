@@ -80,6 +80,7 @@ class STLWriter(MeshWriter):
         stream.write("Uranium STLWriter {0}".format(time.strftime("%a %d %b %Y %H:%M:%S")).encode().ljust(80, b"\000"))
 
         face_count = 0
+        nodes = list(nodes)
         for node in nodes:
             if node.getMeshData().hasIndices():
                 face_count += node.getMeshData().getFaceCount()

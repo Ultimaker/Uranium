@@ -43,8 +43,9 @@ class RotateTool(Tool):
         self._progress_message = None
         self._iterations = 0
         self._total_iterations = 0
-
+        self._rotating = False
         self.setExposedProperties("ToolHint", "RotationSnap", "RotationSnapAngle")
+        self._saved_node_positions = []
 
     ##  Handle mouse and keyboard events
     #
@@ -90,8 +91,9 @@ class RotateTool(Tool):
                 self.setDragPlane(Plane(Vector(0, 1, 0), handle_position.y))
 
             self.setDragStart(event.x, event.y)
+            self._rotating = False
             self._angle = 0
-            self.operationStarted.emit(self)
+
 
         if event.type == Event.MouseMoveEvent:
             # Perform a rotate operation
@@ -100,6 +102,10 @@ class RotateTool(Tool):
 
             if not self.getDragStart():
                 self.setDragStart(event.x, event.y)
+
+            if not self._rotating:
+                self._rotating = True
+                self.operationStarted.emit(self)
 
             handle_position = self._handle.getWorldPosition()
 
@@ -129,6 +135,8 @@ class RotateTool(Tool):
             elif self.getLockedAxis() == ToolHandle.ZAxis:
                 direction = 1 if Vector.Unit_Z.dot(drag_start.cross(drag_end)) > 0 else -1
                 rotation = Quaternion.fromAngleAxis(direction * angle, Vector.Unit_Z)
+            else:
+                direction = -1
 
             # Rate-limit the angle change notification
             # This is done to prevent the UI from being flooded with property change notifications,
@@ -154,7 +162,8 @@ class RotateTool(Tool):
                 self.setLockedAxis(None)
                 self._angle = None
                 self.propertyChanged.emit()
-                self.operationStopped.emit(self)
+                if self._rotating:
+                    self.operationStopped.emit(self)
                 return True
 
     ##  Return a formatted angle of the current rotate operation

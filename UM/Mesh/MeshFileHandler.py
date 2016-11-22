@@ -24,7 +24,6 @@ class MeshFileHandler(object):
     #   \param file_name The name of file to load.
     #   \returns MeshReader that accepts the given file name. If no acceptable MeshReader is found None is returned.
     def getReaderForFile(self, file_name):
-        
         for id, reader in self._mesh_readers.items():
             try:
                 if reader.acceptsFile(file_name):
@@ -43,27 +42,31 @@ class MeshFileHandler(object):
     # \returns MeshData if it was able to read the file, None otherwise.
     def readerRead(self, reader, file_name, **kwargs):
         try:
-            result = reader.read(file_name)
-            if result is not None:
-                if kwargs.get("center", True):
-                    # If the result has a mesh and no children it needs to be centered
-                    if result.getMeshData() and len(result.getChildren()) == 0:
-                        extents = result.getMeshData().getExtents()
-                        move_vector = Vector(extents.center.x, extents.center.y, extents.center.z)
-                        result.setCenterPosition(move_vector)
+            results = reader.read(file_name)
+            if results is not None:
+                if type(results) is not list:
+                    results = [results]
 
-                        if result.getMeshData().getExtents().bottom != 0:
-                           result.translate(Vector(0,-result.getMeshData().getExtents().bottom ,0))
+                for result in results:
+                    if kwargs.get("center", True):
+                        # If the result has a mesh and no children it needs to be centered
+                        if result.getMeshData() and len(result.getChildren()) == 0:
+                            extents = result.getMeshData().getExtents()
+                            move_vector = Vector(extents.center.x, extents.center.y, extents.center.z)
+                            result.setCenterPosition(move_vector)
 
-                    # Move all the meshes of children so that toolhandles are shown in the correct place.
-                    for node in result.getChildren():
-                        if node.getMeshData():
-                            extents = node.getMeshData().getExtents()
-                            m = Matrix()
-                            m.translate(-extents.center)
-                            node.setMeshData(node.getMeshData().getTransformed(m))
-                            node.translate(extents.center)
-                return result
+                            if result.getMeshData().getExtents(result.getWorldTransformation()).bottom != 0:
+                                result.translate(Vector(0, -result.getMeshData().getExtents(result.getWorldTransformation()).bottom, 0))
+
+                        # Move all the meshes of children so that toolhandles are shown in the correct place.
+                        for node in result.getChildren():
+                            if node.getMeshData():
+                                extents = node.getMeshData().getExtents()
+                                m = Matrix()
+                                m.translate(-extents.center)
+                                node.setMeshData(node.getMeshData().getTransformed(m))
+                                node.translate(extents.center)
+                return results
 
         except OSError as e:
             Logger.log("e", str(e))
