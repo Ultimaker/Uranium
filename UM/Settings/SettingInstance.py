@@ -125,6 +125,9 @@ class SettingInstance:
                     self.propertyChanged.emit(self._definition.key, "validationState")
 
                 self.propertyChanged.emit(self._definition.key, name)
+                for property_name in self._definition.getPropertyNames():
+                    if self._definition.dependsOnProperty(property_name) == name:
+                        self.propertyChanged.emit(self._definition.key, property_name)
         else:
             if name == "state":
                 if value == "InstanceState.Calculated":
