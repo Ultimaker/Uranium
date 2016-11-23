@@ -14,7 +14,7 @@ from UM.MimeTypeDatabase import MimeType, MimeTypeDatabase
 from UM.Logger import Logger
 from UM.SaveFile import SaveFile
 from UM.Signal import Signal, signalemitter
-from UM.Util import LockFile
+from UM.LockFile import LockFile
 
 import UM.Dictionary
 
