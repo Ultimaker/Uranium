@@ -77,10 +77,10 @@ class LocalFileOutputDevice(OutputDevice):
         selected_filter = None
         last_used_type = Preferences.getInstance().getValue("local_file/last_used_type")
 
-        if file_handler:
-            file_types = file_handler.getSupportedFileTypesWrite()
-        else:
-            file_types = Application.getInstance().getMeshFileHandler().getSupportedFileTypesWrite()
+        if not file_handler:
+            file_handler = Application.getInstance().getMeshFileHandler()
+
+        file_types = file_handler.getSupportedFileTypesWrite()
 
         file_types.sort(key = lambda k: k["description"])
         if limit_mimetypes:
