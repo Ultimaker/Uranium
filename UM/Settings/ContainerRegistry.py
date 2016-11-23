@@ -504,12 +504,12 @@ class ContainerRegistry:
         return Resources.getStoragePath(Resources.Resources, CONFIG_LOCK_FILENAME)
 
     ##  Contextmanager to create a lock file and remove it afterwards.
-    @contextmanager
     def lockFile(self):
-        yield from LockFile(
+        return LockFile(
             self.getLockFilename(),
-            wait_msg="Waiting for lock file in local config dir to disappear..."
-            ).lockFileGenerator(timeout = 10)
+            timeout = 10,
+            wait_msg = "Waiting for lock file in local config dir to disappear..."
+            )
 
     ##  Get the singleton instance for this class.
     @classmethod

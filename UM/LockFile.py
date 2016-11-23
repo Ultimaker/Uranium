@@ -4,54 +4,47 @@
 import os
 import time  # For timing lock file
 
-from contextlib import contextmanager
-
 from UM.Logger import Logger
 
 
 ##  Manage a lock file for reading / writing in a directory.
+#   \param filename the filename to use as lock file
+#   \param timeout in seconds; if the file is too old by this amount, then it gets ignored
+#   \param wait_msg the message to log when waiting for the lock file to disappear
 #
 #   example usage:
-#   $ with LockFile("my_lock_file.lock").lockFile(timeout = 20):
+#   $ with LockFile("my_lock_file.lock"):
 #   $   <do something in a directory>
 class LockFile(object):
-    def __init__(self, filename, wait_msg="Waiting for lock file to disappear..."):
+    def __init__(self, filename, timeout = 10, wait_msg = "Waiting for lock file to disappear..."):
         self._filename = filename
         self._wait_msg = wait_msg
+        self._timeout = timeout
 
-    ##  Wait for a lock file to disappear
-    #   if the file is too old, it will be ignored too
-    def waitLockFileDisappear(self, timeout = 10):
+    def _waitLockFileDisappear(self):
         now = time.time()
-        # Allow max age of 10 seconds
-        while os.path.exists(self._filename) and now < os.path.getmtime(self._filename) + timeout and now > os.path.getmtime(self._filename):
+        while os.path.exists(self._filename) and now < os.path.getmtime(self._filename) + self._timeout and now > os.path.getmtime(self._filename):
             Logger.log("d", self._wait_msg)
             time.sleep(1)
             now = time.time()
 
-    def createLockFile(self):
+    def _createLockFile(self):
         try:
             with open(self._filename, 'w') as lock_file:
                 lock_file.write("%s" % os.getpid())
         except:
             Logger.log("e", "Could not create lock file [%s]" % self._filename)
 
-    def deleteLockFile(self):
+    def _deleteLockFile(self):
         try:
             if os.path.exists(self._filename):
                 os.remove(self._filename)
         except:
             Logger.log("e", "Could not delete lock file [%s]" % self._filename)
 
-    ##  Generator for lock file, you can use this function in your own context manager
-    #   like so:  yield from lock_file.lockFileGenerator()
-    def lockFileGenerator(self, timeout = 10):
-        self.waitLockFileDisappear(timeout = timeout)
-        self.createLockFile()
-        yield
-        self.deleteLockFile()
+    def __enter__(self):
+        self._waitLockFileDisappear()
+        self._createLockFile()
 
-    ##  Contextmanager to create a lock file and remove it afterwards.
-    @contextmanager
-    def lockFile(self, timeout = 10):
-        yield from self.lockFileGenerator(timeout = timeout)
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self._deleteLockFile()
