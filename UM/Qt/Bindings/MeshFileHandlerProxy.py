@@ -61,23 +61,65 @@ class MeshFileHandlerProxy(QObject):
 
         return file_types
 
+    _loading_files = []
+    _non_sliceable_extensions = [".gcode", ".g"]
+
     @pyqtSlot(QUrl)
     def readLocalFile(self, file):
+        application = Application.getInstance()
+
         if not file.isValid():
             return
-        job = ReadMeshJob(file.toLocalFile())
+
+        for node in DepthFirstIterator(self._scene.getRoot()):
+            if hasattr(node, "gcode") and getattr(node, "gcode") is True:
+                application.deleteAll()
+                break
+
+        f = file.toLocalFile()
+        extension = os.path.splitext(f)[1]
+        filename = os.path.basename(f)
+        if len(self._loading_files) > 0:
+            # If a non-slicable file is already being loaded, we prevent loading of any further non-slicable files
+            if extension.lower() in self._non_sliceable_extensions:
+                message = Message(
+                    i18n_catalog.i18nc("@info:status", "Only one G-code file can be loaded at a time. Skipped importing {0}",
+                                  filename))
+                message.show()
+                return
+            # If file being loaded is non-slicable file, then prevent loading of any other files
+            extension = os.path.splitext(self._loading_files[0])[1]
+            if extension.lower() in self._non_sliceable_extensions:
+                message = Message(
+                    i18n_catalog.i18nc("@info:status",
+                                  "Can't open any other file if G-code is loading. Skipped importing {0}",
+                                  filename))
+                message.show()
+                return
+
+        self._loading_files.append(f)
+
+        job = ReadMeshJob(f)
         job.finished.connect(self._readMeshFinished)
         job.start()
 
     def _readMeshFinished(self, job):
         nodes = job.getResult()
+        filename = job.getFileName()
+        application = Application.getInstance()
+        self._loading_files.remove(filename)
         for node in nodes:
             node.setSelectable(True)
-            node.setName(os.path.basename(job.getFileName()))
+            node.setName(os.path.basename(filename))
+
+            extension = os.path.splitext(filename)[1]
+            if extension.lower() in self._non_sliceable_extensions:
+                application.changeLayerViewSignal.emit()
 
             op = AddSceneNodeOperation(node, self._scene.getRoot())
             op.push()
             self._scene.sceneChanged.emit(node)
+
 
 def createMeshFileHandlerProxy(engine, script_engine):
     return MeshFileHandlerProxy()
