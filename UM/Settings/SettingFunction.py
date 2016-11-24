@@ -63,6 +63,7 @@ class SettingFunction:
             return eval(self._compiled, g, locals)
         except Exception as e:
             Logger.logException("d", "An exception occurred in inherit function %s", self)
+            return 0  # Settings may be used in calculations and they need a value
 
     def __eq__(self, other):
         if not isinstance(other, SettingFunction):
