@@ -1,16 +1,13 @@
 # Copyright (c) 2016 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-from UM.PluginObject import PluginObject
+from UM.FileHandler.FileWriter import FileWriter
 from UM.Scene.Iterator.BreadthFirstIterator import BreadthFirstIterator
 from UM.Scene.SceneNode import SceneNode
 
-##  Base class for mesh writer objects
-class MeshWriter(PluginObject):
-    class OutputMode:
-        TextMode = 1
-        BinaryMode = 2
 
+##  Base class for mesh writer objects
+class MeshWriter(FileWriter):
     def __init__(self):
         super().__init__()
     
@@ -24,7 +21,7 @@ class MeshWriter(PluginObject):
     #   \param stream \type{IOStream} The stream to output to.
     #   \param nodes A collection of scene nodes to write to the stream.
     def write(self, stream, node):
-        raise NotImplementedError("Writer plugin was not correctly implemented, no write was specified")
+        raise NotImplementedError("MeshWriter plugin was not correctly implemented, no write was specified")
 
     ##  Filters a collection of nodes to only include nodes that are actual
     #   meshes.

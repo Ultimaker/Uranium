@@ -247,6 +247,10 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
         if parser["general"].getint("version") != self.Version:
             raise IncorrectVersionError
 
+        # Clear all data before starting.
+        self._containers = []
+        self._metadata = {}
+
         self._name = parser["general"].get("name")
         self._id = parser["general"].get("id")
 

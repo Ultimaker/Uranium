@@ -504,7 +504,6 @@ class SceneNode():
         if transform_space == SceneNode.TransformSpace.World:
             if self.getWorldPosition() == position:
                 return
-            Logger.log("d", "Translating: %s", repr(position - self._derived_position))
             self.translate(position - self._derived_position, SceneNode.TransformSpace.World)
 
     ##  Signal. Emitted whenever the transformation of this object or any child object changes.
