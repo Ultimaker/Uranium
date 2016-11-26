@@ -48,6 +48,14 @@ class ContainerTestPlugin(ContainerInterface, PluginObject):
     def getName(self):
         return "TestContainer"
 
+    ##  Mock get path
+    def getPath(self):
+        return "/path/to/the/light/side"
+
+    ##  Mock set path
+    def setPath(self, path):
+        pass
+
     ##  Get whether the container item is stored on a read only location in the filesystem.
     #
     #   \return Always returns False

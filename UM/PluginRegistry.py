@@ -43,6 +43,12 @@ class PluginRegistry(object):
     def getActivePlugins(self):
         return self._active_plugins
 
+    ##  Ask whether plugin_name is an active plugin.
+    #
+    #   \param plugin_id \type{string} The id of the plugin which might be active or not.
+    def isActivePlugin(self, plugin_id):
+        return plugin_id in self._active_plugins
+
     ##  Remove plugin from the list of active plugins.
     #
     #   \param plugin_id \type{string} The id of the plugin to remove.
@@ -277,14 +283,14 @@ class PluginRegistry(object):
 
         try:
             file, path, desc = imp.find_module(plugin_id, [location])
-        except Exception as e:
-            Logger.log("e", "Import error when importing %s: %s", plugin_id, str(e))
+        except Exception:
+            Logger.logException("e", "Import error when importing %s", plugin_id)
             return None
 
         try:
             module = imp.load_module(plugin_id, file, path, desc)
-        except Exception as e:
-            Logger.log("e", "Import error loading module %s: %s", plugin_id, str(e))
+        except Exception:
+            Logger.logException("e", "Import error loading module %s", plugin_id)
             return None
         finally:
             if file:

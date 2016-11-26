@@ -115,18 +115,18 @@ class OutputDevice():
     ##  Request performing a write operation on this device.
     #
     #   This method should be implemented by subclasses. It should write the
-    #   given SceneNode tree to a destination relevant for the device. It is
+    #   given SceneNode forest to a destination relevant for the device. It is
     #   recommended to perform the actual writing asynchronously and rely on
-    #   the write- signals to properly indicate state.
+    #   the write signals to properly indicate state.
     #
-    #   \param node \type{SceneNode} The root of a tree of scene nodes that
-    #   should be written to the device.
+    #   \param nodes A collection of scene nodes that should be written to the
+    #   device.
     #   \param file_name \type{string} A suggestion for the file name to write
     #   to. Can be freely ignored if providing a file name makes no sense.
-    #   \param limit_mimetype \type{list} Limit output to these mime types
+    #   \param limit_mimetype Limit output to these mime types.
     #
     #   \exception OutputDeviceError.WriteRequestFailedError
-    def requestWrite(self, node, file_name = None, limit_mimetypes = False):
+    def requestWrite(self, nodes, file_name = None, limit_mimetypes = False, file_handler = None):
         raise NotImplementedError("requestWrite needs to be implemented")
 
     writeStarted = Signal()

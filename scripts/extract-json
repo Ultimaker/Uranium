@@ -24,17 +24,19 @@ extract() {
         return
     fi
 
+    echo "Extracted messages from $file"
+
     msguniq --to-code=UTF-8 -o json.$$ json.$$.tmp
     if test -f json.$$; then
         destfile="$dest/$(basename $file).pot"
         mv json.$$ $destfile
     fi
-    rm -f json.$$ json.$$.tmp 
+    rm -f json.$$ json.$$.tmp
 }
 
 dir=$1; shift
 dest=$1; shift
 
-for file in $(find "$dir" -name *.json | grep -v 'tests'); do
+for file in $(find -L "$dir" -name *.json | grep -v 'tests'); do
     extract $dir $dest $file
 done

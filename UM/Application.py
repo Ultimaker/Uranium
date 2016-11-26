@@ -17,6 +17,7 @@ from UM.Logger import Logger
 from UM.Preferences import Preferences
 from UM.OutputDevice.OutputDeviceManager import OutputDeviceManager
 from UM.i18n import i18nCatalog
+from UM.Workspace.WorkspaceFileHandler import WorkspaceFileHandler
 
 import UM.Settings
 
@@ -76,7 +77,10 @@ class Application():
             pass
 
         self._controller = Controller(self)
-        self._mesh_file_handler = MeshFileHandler()
+        self._mesh_file_handler = MeshFileHandler.getInstance()
+        self._mesh_file_handler.setApplication(self)
+        self._workspace_file_handler = WorkspaceFileHandler.getInstance()
+        self._workspace_file_handler.setApplication(self)
         self._extensions = []
         self._backend = None
         self._output_device_manager = OutputDeviceManager()
@@ -104,6 +108,8 @@ class Application():
             self._plugin_registry.addPluginLocation(os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "plugins"))
 
         self._plugin_registry.setApplication(self)
+
+        UM.Settings.ContainerRegistry.setApplication(self)
 
         self._parsed_command_line = None
         self.parseCommandLine()
@@ -178,7 +184,7 @@ class Application():
         found_message = None
         with self._message_lock:
             for message in self._visible_messages:
-                if id(message) == message_id:
+                if id(message) == int(message_id):
                     found_message = message
         if found_message is not None:
             self.hideMessageSignal.emit(found_message)
@@ -262,6 +268,9 @@ class Application():
     #   \returns MeshFileHandler \type{MeshFileHandler}
     def getMeshFileHandler(self):
         return self._mesh_file_handler
+
+    def getWorkspaceFileHandler(self):
+        return self._workspace_file_handler
 
     def getOperationStack(self):
         return self._operation_stack

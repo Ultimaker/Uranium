@@ -34,6 +34,7 @@ class SettingRelation:
         self._type = relation_type
         self._role = role
 
+    ##  Ensure that the SettingRelation is hashable, so it can be used in a set.
     def __hash__(self):
         return hash(str(self))
 

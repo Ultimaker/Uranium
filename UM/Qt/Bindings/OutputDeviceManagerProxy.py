@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2016 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal, pyqtSlot
@@ -55,10 +55,11 @@ class OutputDeviceManagerProxy(QObject):
     @pyqtSlot(str, str, "QVariantMap")
     def requestWriteToDevice(self, device_id, file_name, kwargs):
         limit_mimetypes = kwargs.get("limit_mimetypes", None)
+        file_type = kwargs.get("file_type", "mesh")
         # On Windows, calling requestWrite() on LocalFileOutputDevice crashes when called from a signal
         # handler attached to a QML MenuItem. So instead, defer the call to the next run of the event 
         # loop, since that does work.
-        Application.getInstance().callLater(self._writeToDevice, Application.getInstance().getController().getScene().getRoot(), device_id, file_name, limit_mimetypes)
+        Application.getInstance().callLater(self._writeToDevice, [Application.getInstance().getController().getScene().getRoot()], device_id, file_name, limit_mimetypes, file_type)
 
     ##  Request that the current selection is written to the output device.
     #
@@ -80,7 +81,7 @@ class OutputDeviceManagerProxy(QObject):
         # On Windows, calling requestWrite() on LocalFileOutputDevice crashes when called from a signal
         # handler attached to a QML MenuItem. So instead, defer the call to the next run of the event 
         # loop, since that does work.
-        Application.getInstance().callLater(self._writeToDevice, Selection.getSelectedObject(0), device_id, file_name, limit_mimetypes)
+        Application.getInstance().callLater(self._writeToDevice, Selection.getAllSelectedObjects(), device_id, file_name, limit_mimetypes)
 
     def _onActiveDeviceChanged(self):
         self.activeDeviceChanged.emit()
@@ -91,19 +92,27 @@ class OutputDeviceManagerProxy(QObject):
     #   A file format is chosen from the list of available file formats by the
     #   output device.
     #
-    #   \param node \type{SceneNode} The root of a tree of scene nodes that
-    #   should be written to the device.
+    #   \param nodes The scene nodes that must be written to the device.
     #   \param device_id \type{string} The handle of the device to write to.
     #   \param file_name \type{string} A suggestion for the file name to write
     #   to. Can be freely ignored if providing a file name makes no sense.
     #   \param limit_mimetypes: Limit the possible mimetypes to use for writing to these types.
-    def _writeToDevice(self, node, device_id, file_name, limit_mimetypes):
+    #   \param file_handler What file handler to get the writer from.
+    def _writeToDevice(self, nodes, device_id, file_name, limit_mimetypes, file_type = "mesh"):
         device = self._device_manager.getOutputDevice(device_id)
         if not device:
             return
 
+        if file_type == "mesh":
+            file_handler = Application.getInstance().getMeshFileHandler()
+        elif file_type == "workspace":
+            file_handler = Application.getInstance().getWorkspaceFileHandler()
+        else:
+            # Unrecognised type
+            file_handler = None
+
         try:
-            device.requestWrite(node, file_name, limit_mimetypes)
+            device.requestWrite(nodes, file_name, limit_mimetypes, file_handler)
         except OutputDeviceError.UserCanceledError:
             pass
         except OutputDeviceError.DeviceBusyError:
@@ -111,6 +120,7 @@ class OutputDeviceManagerProxy(QObject):
         except OutputDeviceError.WriteRequestFailedError as e:
             message = Message(str(e))
             message.show()
+
 
 def createOutputDeviceManagerProxy(engine, script_engine):
     return OutputDeviceManagerProxy()

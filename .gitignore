@@ -7,6 +7,14 @@ CPackSourceConfig.cmake
 # CMake - Makefile generator
 Makefile
 
+# Build results
+build
+LC_MESSAGES
+*.mo
+*.qm
+resources/i18n/en
+resources/i18n/x-test
+
 # JUnit
 junit.xml
 
@@ -18,11 +26,6 @@ docs/html
 *.lprof
 *.log
 *~
-build
-*.qm
-*.mo
-resources/i18n/en
-resources/i18n/x-test
 Uranium.e4p
 _eric6project/Uranium.e4q
 _eric6project/Uranium.e4t

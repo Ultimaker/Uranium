@@ -4,7 +4,7 @@ from UM.Qt.ListModel import ListModel
 
 from PyQt5.QtCore import pyqtProperty, Qt, pyqtSignal, pyqtSlot, QUrl
 
-from UM.PluginRegistry import PluginRegistry #For getting the possible profile writers to write with.
+from UM.PluginRegistry import PluginRegistry #For getting the possible profile readers and writers.
 from UM.Settings.ContainerRegistry import ContainerRegistry
 from UM.Settings.InstanceContainer import InstanceContainer
 
@@ -38,7 +38,7 @@ class InstanceContainersModel(ListModel):
         ContainerRegistry.getInstance().containerAdded.connect(self._onContainerChanged)
         ContainerRegistry.getInstance().containerRemoved.connect(self._onContainerChanged)
 
-        self._filter_dict = {}
+        self._filter_dicts = [{}]    # List of fitlers for queries. The result is the union of the each list of results.
         self._update()
 
     ##  Handler for container added / removed events from registry
@@ -53,26 +53,43 @@ class InstanceContainersModel(ListModel):
             container.nameChanged.disconnect(self._update)
             container.metaDataChanged.disconnect(self._updateMetaData)
 
-        items = []
-        self._instance_containers = ContainerRegistry.getInstance().findInstanceContainers(**self._filter_dict)
+        self._instance_containers = self._fetchInstanceContainers()
         self._instance_containers.sort(key = self._sortKey)
 
         for container in self._instance_containers:
             container.nameChanged.connect(self._update)
             container.metaDataChanged.connect(self._updateMetaData)
 
+        self.setItems(list(self._recomputeItems()))
+
+    ##  Computes the items that need to be in this list model.
+    #
+    #   This does not set the items in the list itself. It is intended to be
+    #   overwritten by subclasses that add their own roles to the model.
+    def _recomputeItems(self):
+        for container in self._instance_containers:
             metadata = container.getMetaData().copy()
             metadata["has_settings"] = len(container.getAllKeys()) > 0
 
-            items.append({
+            yield {
                 "name": container.getName(),
                 "id": container.getId(),
                 "metadata": metadata,
                 "readOnly": container.isReadOnly(),
-                "section": container.getMetaDataEntry(self._section_property, ""),
-            })
-        self.setItems(items)
+                "section": container.getMetaDataEntry(self._section_property, "")
+            }
 
+    ##  Fetch the list of containers to display.
+    #
+    #   This method is intended to be overrideable by subclasses.
+    #
+    #   \return \type{List[ContainerInstance]}
+    def _fetchInstanceContainers(self):
+        # Perform each query and assemble the union of all the results.
+        results = set()
+        for filter_dict in self._filter_dicts:
+            results.update(ContainerRegistry.getInstance().findInstanceContainers(**filter_dict))
+        return list(results)
 
     def setSectionProperty(self, property_name):
         if self._section_property != property_name:
@@ -86,17 +103,28 @@ class InstanceContainersModel(ListModel):
         return self._section_property
 
     ##  Set the filter of this model based on a string.
-    #   \param filter_dict Dictionary to do the filtering by.
+    #   \param filter_dict \type{Dict} Dictionary to do the filtering by.
     def setFilter(self, filter_dict):
-        if filter_dict != self._filter_dict:
-            self._filter_dict = filter_dict
-            self.filterChanged.emit()
-            self._update()
+        self.setFilterList([filter_dict])
 
     filterChanged = pyqtSignal()
     @pyqtProperty("QVariantMap", fset = setFilter, notify = filterChanged)
     def filter(self):
-        return self._filter_dict
+        return self._filter_dicts[0] if len(self._filter_dicts) !=0 else None
+
+    ##  Set a list of filters to use when fetching containers.
+    #
+    #   \param filter_list \type{List[Dict]} List of filter dicts to fetch multiple
+    #               sets of containers. The final result is the union of these sets.
+    def setFilterList(self, filter_list):
+        if filter_list != self._filter_dicts:
+            self._filter_dicts = filter_list
+            self.filterChanged.emit()
+            self._update()
+
+    @pyqtProperty("QVariantList", fset=setFilterList, notify=filterChanged)
+    def filterList(self):
+        return self._filter_dicts
 
     @pyqtSlot(str, str)
     def rename(self, instance_id, new_name):
@@ -107,7 +135,9 @@ class InstanceContainersModel(ListModel):
                 self._update()
 
     ##  Gets a list of the possible file filters that the plugins have
-    #   registered they can write.
+    #   registered they can read or write. The convenience meta-filters
+    #   "All Supported Types" and "All Files" are added when listing
+    #   readers, but not when listing writers.
     #
     #   \param io_type \type{str} name of the needed IO type
     #   \return A list of strings indicating file name filters for a file
@@ -115,19 +145,26 @@ class InstanceContainersModel(ListModel):
     @pyqtSlot(str, result="QVariantList")
     def getFileNameFilters(self, io_type):
         filters = []
+        all_types = []
         for plugin_id, meta_data in self._getIOPlugins(io_type):
-            for writer in meta_data[io_type]:
-                filters.append(writer["description"] + " (*." + writer["extension"] + ")")
+            for io_plugin in meta_data[io_type]:
+                filters.append(io_plugin["description"] + " (*." + io_plugin["extension"] + ")")
+                all_types.append("*.{0}".format(io_plugin["extension"]))
 
-        filters.append(
-            catalog.i18nc("@item:inlistbox", "All Files (*)"))  # Also allow arbitrary files, if the user so prefers.
+        if "_reader" in io_type:
+            # if we're listing readers, add the option to show all supported files as the default option
+            filters.insert(0,
+                catalog.i18nc("@item:inlistbox", "All Supported Types ({0})", " ".join(all_types)))
+
+            filters.append(
+                catalog.i18nc("@item:inlistbox", "All Files (*)"))  # Also allow arbitrary files, if the user so prefers.
         return filters
 
     @pyqtSlot(result=QUrl)
     def getDefaultPath(self):
         return QUrl.fromLocalFile(os.path.expanduser("~/"))
 
-    ##  Gets a list of profile writer plugins
+    ##  Gets a list of profile reader or writer plugins
     #   \return List of tuples of (plugin_id, meta_data).
     def _getIOPlugins(self, io_type):
         pr = PluginRegistry.getInstance()
@@ -164,7 +201,7 @@ class InstanceContainersModel(ListModel):
             result.append(item.getMetaDataEntry(self._section_property, ""))
 
         result.append(not item.isReadOnly())
-        result.append(item.getMetaDataEntry("weight", ""))
+        result.append(int(item.getMetaDataEntry("weight", 0)))
         result.append(item.getName())
 
         return result

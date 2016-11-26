@@ -17,7 +17,7 @@ class Scene():
     def __init__(self):
         super().__init__() # Call super to make multiple inheritance work.
 
-        self._root = SceneNode()
+        self._root = SceneNode(name= "Root")
         self._root.setCalculateBoundingBox(False)
         self._connectSignalsRoot()
         self._active_camera = None
@@ -93,6 +93,7 @@ class Scene():
     #   \return The object if found, or None if not.
     def findObject(self, object_id):
         for node in BreadthFirstIterator(self._root):
+            print(id(node), object_id)
             if id(node) == object_id:
                 return node
         return None

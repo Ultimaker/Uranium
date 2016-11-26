@@ -3,13 +3,18 @@
 
 import collections
 import itertools
+import os.path
 
 from PyQt5.QtCore import Qt, QAbstractListModel, QVariant, QModelIndex, QObject, pyqtProperty, pyqtSignal, pyqtSlot
 
 from UM.Logger import Logger
 from UM.Preferences import Preferences
+from UM.Resources import Resources
+from UM.i18n import i18nCatalog
 
 import UM.Settings
+
+from UM.Settings.SettingDefinition import DefinitionPropertyType
 
 ##  Model that provides a flattened list of the tree of SettingDefinition objects in a DefinitionContainer
 #
@@ -30,6 +35,7 @@ class SettingDefinitionsModel(QAbstractListModel):
 
         self._container_id = None
         self._container = None
+        self._i18n_catalog = None
 
         self._root_key = ""
         self._root = None
@@ -42,7 +48,7 @@ class SettingDefinitionsModel(QAbstractListModel):
         self._exclude = set()
 
         self._show_all = False
-
+        self._show_ancestors = False
         self._visibility_handler = None
 
         self._filter_dict = {}
@@ -57,6 +63,20 @@ class SettingDefinitionsModel(QAbstractListModel):
         for name in UM.Settings.SettingDefinition.getPropertyNames():
             self._role_names[index] = name.encode()
             index += 1
+
+    ##  Emitted whenever the showAncestors property changes.
+    showAncestorsChanged = pyqtSignal()
+
+    def setShowAncestors(self, show_ancestors):
+        if show_ancestors != self._show_ancestors:
+            self._show_ancestors = show_ancestors
+            self._update()
+            self.showAncestorsChanged.emit()
+
+    @pyqtProperty(bool, fset=setShowAncestors, notify=showAncestorsChanged)
+    # Should we still show ancestors, even if filter says otherwise?
+    def showAncestors(self):
+        self._show_ancestors
 
     ##  Set the containerId property.
     def setContainerId(self, container_id):
@@ -117,15 +137,19 @@ class SettingDefinitionsModel(QAbstractListModel):
     def showAll(self):
         return self._show_all
 
+    visibilityChanged = pyqtSignal()
+
     ##  Set the visibilityHandler property
     def setVisibilityHandler(self, visibility_handler):
         if self._visibility_handler:
             self._visibility_handler.visibilityChanged.disconnect(self._onVisibilityChanged)
+            self._visibility_handler.visibilityChanged.disconnect(self.visibilityChanged)
 
         self._visibility_handler = visibility_handler
 
         if self._visibility_handler:
             self._visibility_handler.visibilityChanged.connect(self._onVisibilityChanged)
+            self._visibility_handler.visibilityChanged.connect(self.visibilityChanged)
             self._onVisibilityChanged()
 
         self.visibilityHandlerChanged.emit()
@@ -341,7 +365,11 @@ class SettingDefinitionsModel(QAbstractListModel):
             if role and role != relation.role:
                 continue
 
-            result.append({ "key": relation.target.key, "label": relation.target.label})
+            label = relation.target.label
+            if self._i18n_catalog:
+                label = self._i18n_catalog.i18nc(relation.target.key + " label", label)
+
+            result.append({ "key": relation.target.key, "label": label})
 
         return result
 
@@ -362,7 +390,11 @@ class SettingDefinitionsModel(QAbstractListModel):
             if role and role != relation.role:
                 continue
 
-            result.append({ "key": relation.target.key, "label": relation.target.label})
+            label = relation.target.label
+            if self._i18n_catalog:
+                label = self._i18n_catalog.i18nc(relation.target.key + " label", label)
+
+            result.append({ "key": relation.target.key, "label": label})
 
         return result
 
@@ -412,8 +444,14 @@ class SettingDefinitionsModel(QAbstractListModel):
         if isinstance(data, collections.OrderedDict):
             result = []
             for key, value in data.items():
+                if self._i18n_catalog:
+                    value = self._i18n_catalog.i18nc(definition.key + " option " + key, value)
+
                 result.append({"key": key, "value": value})
             return result
+
+        if isinstance(data, str) and self._i18n_catalog:
+            data = self._i18n_catalog.i18nc(definition.key + " " + role_name.decode(), data)
 
         return data
 
@@ -441,6 +479,15 @@ class SettingDefinitionsModel(QAbstractListModel):
     def _update(self):
         if not self._container:
             return
+
+        # Try and find a translation catalog for the definition
+        for file_name in self._container.getInheritedFiles():
+            try:
+                # See if the file exist. TODO: proper check if the file is loadable as well.
+                i18n_file = Resources.getPath(Resources.i18n, "en", "LC_MESSAGES", os.path.basename(file_name) + ".mo")
+                self._i18n_catalog = i18nCatalog(os.path.basename(file_name))
+            except FileNotFoundError:
+                continue
 
         self.beginResetModel()
 
@@ -512,6 +559,9 @@ class SettingDefinitionsModel(QAbstractListModel):
 
         # If it does not match the current filter, it should not be shown.
         if self._filter_dict and not definition.matchesFilter(**self._filter_dict):
+            if self._show_ancestors:
+                if self._isAnyDescendantFiltered(definition):
+                    return True
             return False
 
         # We should not show categories that are empty
@@ -520,6 +570,15 @@ class SettingDefinitionsModel(QAbstractListModel):
                 return False
 
         return True
+
+    def _isAnyDescendantFiltered(self, definition):
+        for child in definition.children:
+            if self._isAnyDescendantFiltered(child):
+                return True
+            if self._filter_dict and child.matchesFilter(**self._filter_dict):
+                return True
+        return False
+
 
     # Determines if any child of a definition is visible.
     def _isAnyDescendantVisible(self, definition):

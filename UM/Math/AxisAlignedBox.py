@@ -44,7 +44,7 @@ class AxisAlignedBox:
         return AxisAlignedBox(minimum, maximum)
 
     def __add__(self, other):
-        if not other.isValid():
+        if other is None or not other.isValid():
             return self
 
         new_min = Vector(min(self._min.x, other.left), min(self._min.y, other.bottom),

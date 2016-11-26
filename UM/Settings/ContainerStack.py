@@ -48,6 +48,10 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
         self._read_only = False
         self._dirty = True
         self._path = ""
+        self._postponed_emits = []  # gets filled with 2-tuples: signal, signal_argument(s)
+
+        self._property_changes = {}
+        self._emit_property_changed_queued = False
 
     ##  \copydoc ContainerInterface::getId
     #
@@ -157,21 +161,27 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     #
     #   \param key The key to get the property value of.
     #   \param property_name The name of the property to get the value of.
-    #   \param kwargs Keyword arguments
-    #                 Possible values:
-    #                 * use_next: True if the value should be retrieved from the next stack if not found in this stack. False if not. Defaults to True.
+    #   \param use_next True if the value should be retrieved from the next
+    #   stack if not found in this stack. False if not.
+    #   \param skip_until_container A container ID to skip to. If set, it will
+    #   be as if all containers above the specified container are empty. If the
+    #   container is not in the stack, it'll try to find it in the next stack.
     #
     #   \return The raw property value of the property, or None if not found. Note that
     #           the value might be a SettingFunction instance.
     #
-    def getRawProperty(self, key, property_name, **kwargs):
+    def getRawProperty(self, key, property_name, *, use_next = True, skip_until_container = None):
         for container in self._containers:
+            if skip_until_container and container.getId() != skip_until_container:
+                continue #Skip.
+            skip_until_container = None #When we find the container, stop skipping.
+
             value = container.getProperty(key, property_name)
             if value is not None:
                 return value
 
-        if self._next_stack and kwargs.get("use_next", True):
-            return self._next_stack.getRawProperty(key, property_name, **kwargs)
+        if self._next_stack and use_next:
+            return self._next_stack.getRawProperty(key, property_name, use_next = use_next, skip_until_container = skip_until_container)
         else:
             return None
 
@@ -192,6 +202,8 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
         return False
 
     propertyChanged = Signal()
+
+    propertiesChanged = Signal()
 
     ##  \copydoc ContainerInterface::serialize
     #
@@ -235,22 +247,28 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
         if parser["general"].getint("version") != self.Version:
             raise IncorrectVersionError
 
+        # Clear all data before starting.
+        self._containers = []
+        self._metadata = {}
+
         self._name = parser["general"].get("name")
         self._id = parser["general"].get("id")
 
         if "metadata" in parser:
             self._metadata = dict(parser["metadata"])
 
-        # The containers are saved in a single coma separated list.
-        container_id_list = parser["general"].get("containers", "").split(",")
+        # The containers are saved in a single comma-separated list.
+        container_string = parser["general"].get("containers", "")
+        Logger.log("d", "While deserializing, we got the following container string: %s", container_string)
+        container_id_list = container_string.split(",")
         for container_id in container_id_list:
             if container_id != "":
                 containers = UM.Settings.ContainerRegistry.getInstance().findContainers(id = container_id)
                 if containers:
-                    containers[0].propertyChanged.connect(self.propertyChanged)
+                    containers[0].propertyChanged.connect(self._collectPropertyChanges)
                     self._containers.append(containers[0])
                 else:
-                    raise Exception("When trying to deserialize, we received an unknown ID (%s) for container" % container_id)
+                    raise Exception("When trying to deserialize %s, we received an unknown ID (%s) for container" % (self._id, container_id))
 
         ## TODO; Deserialize the containers.
 
@@ -377,30 +395,43 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     #
     #   \param container The container to add to the stack.
     def addContainer(self, container):
-        if container is not self:
-            container.propertyChanged.connect(self.propertyChanged)
-            self._containers.insert(0, container)
-            self.containersChanged.emit(container)
-        else:
+        self.insertContainer(0, container)
+
+    ##  Insert a container into the stack.
+    #
+    #   \param index \type{int} The index of to insert the container at.
+    #          A negative index counts from the bottom
+    #   \param container The container to add to the stack.
+    def insertContainer(self, index, container):
+        if container is self:
             raise Exception("Unable to add stack to itself.")
+
+        container.propertyChanged.connect(self._collectPropertyChanges)
+        self._containers.insert(index, container)
+        self.containersChanged.emit(container)
 
     ##  Replace a container in the stack.
     #
     #   \param index \type{int} The index of the container to replace.
     #   \param container The container to replace the existing entry with.
+    #   \param postpone_emit  During stack manipulation you may want to emit later.
     #
     #   \exception IndexError Raised when the specified index is out of bounds.
     #   \exception Exception when trying to replace container ContainerStack.
-    def replaceContainer(self, index, container):
+    def replaceContainer(self, index, container, postpone_emit=False):
         if index < 0:
             raise IndexError
         if container is self:
             raise Exception("Unable to replace container with ContainerStack (self) ")
 
-        self._containers[index].propertyChanged.disconnect(self.propertyChanged)
-        container.propertyChanged.connect(self.propertyChanged)
+        self._containers[index].propertyChanged.disconnect(self._collectPropertyChanges)
+        container.propertyChanged.connect(self._collectPropertyChanges)
         self._containers[index] = container
-        self.containersChanged.emit(container)
+        if postpone_emit:
+            # send it using sendPostponedEmits
+            self._postponed_emits.append((self.containersChanged, container))
+        else:
+            self.containersChanged.emit(container)
 
     ##  Remove a container from the stack.
     #
@@ -412,7 +443,7 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
             raise IndexError
         try:
             container = self._containers[index]
-            container.propertyChanged.disconnect(self.propertyChanged)
+            container.propertyChanged.disconnect(self._collectPropertyChanges)
             del self._containers[index]
             self.containersChanged.emit(container)
         except TypeError:
@@ -435,4 +466,81 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     def setNextStack(self, stack):
         if self is stack:
             raise Exception("Next stack can not be itself")
+        if self._next_stack == stack:
+            return
+
+        if self._next_stack:
+            self._next_stack.propertyChanged.disconnect(self._collectPropertyChanges)
         self._next_stack = stack
+        if self._next_stack:
+            self._next_stack.propertyChanged.connect(self._collectPropertyChanges)
+
+    ##  Send postponed emits
+    #   These emits are collected from the option postpone_emit.
+    #   Note: the option can be implemented for all functions modifying the stack.
+    def sendPostponedEmits(self):
+        while self._postponed_emits:
+            signal, signal_arg = self._postponed_emits.pop(0)
+            signal.emit(signal_arg)
+
+    ##  Check if the container stack has errors
+    def hasErrors(self):
+        for key in self.getAllKeys():
+            validation_state = self.getProperty(key, "validationState")
+            if validation_state is None:
+                # Setting is not validated. This can happen if there is only a setting definition.
+                # We do need to validate it, because a setting defintions value can be set by a function, which could
+                # be an invalid setting.
+                definition = self.getSettingDefinition(key)
+                validator_type = UM.Settings.SettingDefinition.getValidatorForType(definition.type)
+                if validator_type:
+                    validator = validator_type(key)
+                    validation_state = validator(self)
+            if validation_state in (UM.Settings.ValidatorState.Exception, UM.Settings.ValidatorState.MaximumError, UM.Settings.ValidatorState.MinimumError):
+                return True
+        return False
+
+    ##  Get all the keys that are in an error state in this stack
+    def getErrorKeys(self):
+        error_keys = []
+        for key in self.getAllKeys():
+            validation_state = self.getProperty(key, "validationState")
+            if validation_state is None:
+                # Setting is not validated. This can happen if there is only a setting definition.
+                # We do need to validate it, because a setting defintions value can be set by a function, which could
+                # be an invalid setting.
+                definition = self.getSettingDefinition(key)
+                validator_type = UM.Settings.SettingDefinition.getValidatorForType(definition.type)
+                if validator_type:
+                    validator = validator_type(key)
+                    validation_state = validator(self)
+            if validation_state in (UM.Settings.ValidatorState.Exception, UM.Settings.ValidatorState.MaximumError, UM.Settings.ValidatorState.MinimumError):
+                error_keys.append(key)
+        return error_keys
+
+    # protected:
+
+    # Gather up all signal emissions and delay their emit until the next time the event
+    # loop can run. This prevents us from sending the same change signal multiple times.
+    # In addition, it allows us to emit a single signal that reports all properties that
+    # have changed.
+    def _collectPropertyChanges(self, key, property_name):
+        if key not in self._property_changes:
+            self._property_changes[key] = set()
+
+        self._property_changes[key].add(property_name)
+
+        if not self._emit_property_changed_queued:
+            UM.Settings.ContainerRegistry.getApplication().callLater(self._emitCollectedPropertyChanges)
+            self._emit_property_changed_queued = True
+
+    # Perform the emission of the change signals that were collected in a previous step.
+    def _emitCollectedPropertyChanges(self):
+        for key, property_names in self._property_changes.items():
+            self.propertiesChanged.emit(key, property_names)
+
+            for property_name in property_names:
+                self.propertyChanged.emit(key, property_name)
+
+        self._property_changes = {}
+        self._emit_property_changed_queued = False

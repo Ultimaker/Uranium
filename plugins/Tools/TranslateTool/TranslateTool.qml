@@ -9,8 +9,8 @@ import UM 1.1 as UM
 Item
 {
     id: base
-    width: Math.max(14 * UM.Theme.getSize("line").width, childrenRect.width);
-    height: Math.max(4.5 * UM.Theme.getSize("line").height, childrenRect.height);
+    width: childrenRect.width
+    height: childrenRect.height
     UM.I18nCatalog { id: catalog; name:"uranium"}
 
     property string xText
@@ -28,41 +28,12 @@ Item
         //First convert to fixed-point notation to round the number to 4 decimals and not introduce new floating point errors.
         //Then convert to a string (is implicit). The fixed-point notation will be something like "3.200".
         //Then remove any trailing zeroes and the radix.
-        return input.toFixed(decimals).replace(/\.?0*$/, ""); //Match on periods, if any ( \.? ), followed by any number of zeros ( 0* ), then the end of string ( $ ).
-    }
-
-    Button
-    {
-        id: resetPositionButton
-
-        //: Reset position tool button
-        text: catalog.i18nc("@action:button","Center on Build Plate")
-        iconSource: UM.Theme.getIcon("scale_reset");
-
-        anchors.top: dropToBuildplateButton.bottom;
-        anchors.topMargin: UM.Theme.getSize("default_margin").height;
-        z: 1
-
-        style: UM.Theme.styles.tool_button;
-
-        onClicked: UM.ActiveTool.triggerAction("resetPosition");
-        visible: false
-    }
-
-    Button
-    {
-        id: dropToBuildplateButton
-
-        //: Drop to build plate tool button
-        text: catalog.i18nc("@action:button","Drop to Build Plate");
-        iconSource: UM.Theme.getIcon("scale_reset");
-
-        anchors.top: parent.top;
-        z: 1
-
-        style: UM.Theme.styles.tool_button;
-        onClicked: UM.ActiveTool.triggerAction("dropToBuildplate")
-        visible: false
+        var output = input.toFixed(decimals).replace(/\.?0*$/, ""); //Match on periods, if any ( \.? ), followed by any number of zeros ( 0* ), then the end of string ( $ ).
+        if(output == "-0")
+        {
+            output = "0";
+        }
+        return output;
     }
 
     Grid

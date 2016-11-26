@@ -55,8 +55,12 @@ class STLReader(MeshReader):
         mesh_builder.setFileName(file_name)
 
         mesh = mesh_builder.build()
-        Logger.log("d", "Loaded a mesh with %s vertices", mesh_builder.getVertexCount())
+
+        if mesh_builder.getVertexCount() == 0:
+            Logger.log("d", "File did not contain valid data, unable to read.")
+            return None  # We didn't load anything.
         scene_node.setMeshData(mesh)
+        Logger.log("d", "Loaded a mesh with %s vertices", mesh_builder.getVertexCount())
         return scene_node
 
     def _swapColumns(self, array, frm, to):
@@ -73,13 +77,6 @@ class STLReader(MeshReader):
         self._swapColumns(vertices, 1, 2)
 
         mesh_builder.setVertices(vertices)
-
-        # Create an nd array containing indicies of faces.
-        # As we have the data duplicated & packed, it will always count up;
-        # [[0, 1, 2]
-        #  [3, 4, 5]]
-        mesh_builder.setIndices(numpy.resize(numpy.arange(int(loaded_data.points.size / 3), dtype=numpy.int32),
-                                             (int(loaded_data.points.size / 9), 3)))
 
     # Private
     ## Load the STL data from file by consdering the data as ascii.

@@ -23,8 +23,11 @@ class RemoveSceneNodeOperation(Operation.Operation):
 
     ##  Redo the operation, removing the node again.
     def redo(self):
+        old_parent = self._parent
         self._node.setParent(None)
 
+        if old_parent and old_parent.callDecoration("isGroup"):
+            old_parent.callDecoration("recomputeConvexHull")
 
         # Hack to ensure that the _onchanged is triggered correctly.
         # We can't do it the right way as most remove changes don't need to trigger

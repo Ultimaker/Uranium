@@ -2,7 +2,7 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 from UM.PluginObject import PluginObject
-
+import collections
 
 ##  Base class for plugins that extend the functionality of Uranium.
 #   Every extension adds a (sub) menu to the extension menu with one or
@@ -10,7 +10,7 @@ from UM.PluginObject import PluginObject
 class Extension(PluginObject):
     def __init__(self):
         super().__init__()
-        self._menu_function_dict = {}
+        self._menu_function_dict = collections.OrderedDict()
         self._menu_name = None
 
     ##  Add an item to the sub-menu of the extension
