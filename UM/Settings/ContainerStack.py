@@ -486,6 +486,9 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     ##  Check if the container stack has errors
     def hasErrors(self):
         for key in self.getAllKeys():
+            enabled = self.getProperty(key, "enabled")
+            if not enabled:
+                continue
             validation_state = self.getProperty(key, "validationState")
             if validation_state is None:
                 # Setting is not validated. This can happen if there is only a setting definition.
