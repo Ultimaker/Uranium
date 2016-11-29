@@ -6,18 +6,25 @@ import re #For finding containers with asterisks in the constraints.
 import urllib #For ensuring container file names are proper file names
 import pickle #For serializing/deserializing Python classes to binary files
 
+from contextlib import contextmanager
+
 from UM.PluginRegistry import PluginRegistry
 from UM.Resources import Resources, UnsupportedStorageTypeError
 from UM.MimeTypeDatabase import MimeType, MimeTypeDatabase
 from UM.Logger import Logger
 from UM.SaveFile import SaveFile
 from UM.Signal import Signal, signalemitter
+from UM.LockFile import LockFile
 
 import UM.Dictionary
 
 from . import DefinitionContainer
 from . import InstanceContainer
 from . import ContainerStack
+
+
+CONFIG_LOCK_FILENAME = "uranium.lock"
+
 
 ##  Central class to manage all Setting containers.
 #
@@ -490,6 +497,19 @@ class ContainerRegistry:
 
         with open(cache_path, "wb") as f:
             pickle.dump(definition, f)
+
+    ##  Get the lock filename including full path
+    #   Dependent on when you call this function, Resources.getConfigStoragePath may return different paths
+    def getLockFilename(self):
+        return Resources.getStoragePath(Resources.Resources, CONFIG_LOCK_FILENAME)
+
+    ##  Contextmanager to create a lock file and remove it afterwards.
+    def lockFile(self):
+        return LockFile(
+            self.getLockFilename(),
+            timeout = 10,
+            wait_msg = "Waiting for lock file in local config dir to disappear..."
+            )
 
     ##  Get the singleton instance for this class.
     @classmethod
