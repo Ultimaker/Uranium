@@ -55,10 +55,11 @@ class OutputDeviceManagerProxy(QObject):
     @pyqtSlot(str, str, "QVariantMap")
     def requestWriteToDevice(self, device_id, file_name, kwargs):
         limit_mimetypes = kwargs.get("limit_mimetypes", None)
+        file_type = kwargs.get("file_type", "mesh")
         # On Windows, calling requestWrite() on LocalFileOutputDevice crashes when called from a signal
         # handler attached to a QML MenuItem. So instead, defer the call to the next run of the event 
         # loop, since that does work.
-        Application.getInstance().callLater(self._writeToDevice, [Application.getInstance().getController().getScene().getRoot()], device_id, file_name, limit_mimetypes)
+        Application.getInstance().callLater(self._writeToDevice, [Application.getInstance().getController().getScene().getRoot()], device_id, file_name, limit_mimetypes, file_type)
 
     ##  Request that the current selection is written to the output device.
     #
@@ -96,13 +97,22 @@ class OutputDeviceManagerProxy(QObject):
     #   \param file_name \type{string} A suggestion for the file name to write
     #   to. Can be freely ignored if providing a file name makes no sense.
     #   \param limit_mimetypes: Limit the possible mimetypes to use for writing to these types.
-    def _writeToDevice(self, nodes, device_id, file_name, limit_mimetypes):
+    #   \param file_handler What file handler to get the writer from.
+    def _writeToDevice(self, nodes, device_id, file_name, limit_mimetypes, file_type = "mesh"):
         device = self._device_manager.getOutputDevice(device_id)
         if not device:
             return
 
+        if file_type == "mesh":
+            file_handler = Application.getInstance().getMeshFileHandler()
+        elif file_type == "workspace":
+            file_handler = Application.getInstance().getWorkspaceFileHandler()
+        else:
+            # Unrecognised type
+            file_handler = None
+
         try:
-            device.requestWrite(nodes, file_name, limit_mimetypes)
+            device.requestWrite(nodes, file_name, limit_mimetypes, file_handler)
         except OutputDeviceError.UserCanceledError:
             pass
         except OutputDeviceError.DeviceBusyError:
@@ -110,6 +120,7 @@ class OutputDeviceManagerProxy(QObject):
         except OutputDeviceError.WriteRequestFailedError as e:
             message = Message(str(e))
             message.show()
+
 
 def createOutputDeviceManagerProxy(engine, script_engine):
     return OutputDeviceManagerProxy()

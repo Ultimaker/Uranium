@@ -119,8 +119,11 @@ class Preferences:
         parser["general"]["version"] = str(Preferences.Version)
 
         try:
-            with SaveFile(file, "wt") as save_file:
-                parser.write(save_file)
+            if hasattr(file, "read"):  # If it already is a stream like object, write right away
+                parser.write(file)
+            else:
+                with SaveFile(file, "wt") as save_file:
+                    parser.write(save_file)
         except Exception as e:
             Logger.log("e", "Failed to write preferences to %s: %s", file, str(e))
 
@@ -158,14 +161,17 @@ class Preferences:
             return self._parser
         try:
             self._parser = configparser.ConfigParser(interpolation = None) #pylint: disable=bad-whitespace
-            self._parser.read(file, encoding = "utf-8")
+            if hasattr(file, "read"):
+                self._parser.read_file(file)
+            else:
+                self._parser.read(file, encoding = "utf-8")
 
             if self._parser["general"]["version"] != str(Preferences.Version):
                 Logger.log("w", "Old config file found, ignoring")
                 self._parser = None
                 return
-        except Exception as e:
-            Logger.log("e", "An exception occured while trying to read preferences file: %s", e)
+        except Exception:
+            Logger.logException("e", "An exception occured while trying to read preferences file")
             self._parser = None
             return
 

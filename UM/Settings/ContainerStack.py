@@ -247,6 +247,10 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
         if parser["general"].getint("version") != self.Version:
             raise IncorrectVersionError
 
+        # Clear all data before starting.
+        self._containers = []
+        self._metadata = {}
+
         self._name = parser["general"].get("name")
         self._id = parser["general"].get("id")
 
@@ -482,9 +486,20 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     ##  Check if the container stack has errors
     def hasErrors(self):
         for key in self.getAllKeys():
+            enabled = self.getProperty(key, "enabled")
+            if not enabled:
+                continue
             validation_state = self.getProperty(key, "validationState")
-            if validation_state in (UM.Settings.ValidatorState.Exception, UM.Settings.ValidatorState.MaximumError,
-            UM.Settings.ValidatorState.MinimumError):
+            if validation_state is None:
+                # Setting is not validated. This can happen if there is only a setting definition.
+                # We do need to validate it, because a setting defintions value can be set by a function, which could
+                # be an invalid setting.
+                definition = self.getSettingDefinition(key)
+                validator_type = UM.Settings.SettingDefinition.getValidatorForType(definition.type)
+                if validator_type:
+                    validator = validator_type(key)
+                    validation_state = validator(self)
+            if validation_state in (UM.Settings.ValidatorState.Exception, UM.Settings.ValidatorState.MaximumError, UM.Settings.ValidatorState.MinimumError):
                 return True
         return False
 
@@ -493,8 +508,16 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
         error_keys = []
         for key in self.getAllKeys():
             validation_state = self.getProperty(key, "validationState")
-            if validation_state in (UM.Settings.ValidatorState.Exception, UM.Settings.ValidatorState.MaximumError,
-                                    UM.Settings.ValidatorState.MinimumError):
+            if validation_state is None:
+                # Setting is not validated. This can happen if there is only a setting definition.
+                # We do need to validate it, because a setting defintions value can be set by a function, which could
+                # be an invalid setting.
+                definition = self.getSettingDefinition(key)
+                validator_type = UM.Settings.SettingDefinition.getValidatorForType(definition.type)
+                if validator_type:
+                    validator = validator_type(key)
+                    validation_state = validator(self)
+            if validation_state in (UM.Settings.ValidatorState.Exception, UM.Settings.ValidatorState.MaximumError, UM.Settings.ValidatorState.MinimumError):
                 error_keys.append(key)
         return error_keys
 
