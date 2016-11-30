@@ -16,7 +16,9 @@ class SettingPreferenceVisibilityHandler(SettingVisibilityHandler):
             return
 
         new_visible = set()
-        visibility_string = Preferences.getInstance().getValue("general/visible_settings", "")
+        visibility_string = Preferences.getInstance().getValue("general/visible_settings")
+        if visibility_string is None:
+            return
         for key in visibility_string.split(";"):
             new_visible.add(key.strip())
 
