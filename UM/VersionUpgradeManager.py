@@ -279,6 +279,8 @@ class VersionUpgradeManager:
         try:
             with open(configuration_file_absolute, encoding = "utf-8", errors = "ignore") as file_handle:
                 files_data = [file_handle.read()]
+        except MemoryError: #File is too big. It might be the log.
+            return False
         except FileNotFoundError: #File was already moved to an /old directory.
             return False
         except IOError:
