@@ -487,9 +487,10 @@ class SceneNode():
         elif transform_space == SceneNode.TransformSpace.Parent:
             self._transformation.preMultiply(translation_matrix)
         elif transform_space == SceneNode.TransformSpace.World:
+            world_transformation = deepcopy(self._world_transformation)
             self._transformation.multiply(self._world_transformation.getInverse())
             self._transformation.multiply(translation_matrix)
-            self._transformation.multiply(self._world_transformation)
+            self._transformation.multiply(world_transformation)
         self._transformChanged()
 
     ##  Set the local position value.
