@@ -248,6 +248,9 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
             raise IncorrectVersionError
 
         # Clear all data before starting.
+        for container in self._containers:
+            container.propertyChanged.disconnect(self._collectPropertyChanges)
+
         self._containers = []
         self._metadata = {}
 
