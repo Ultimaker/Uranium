@@ -1,417 +1,414 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# English translations for PACKAGE package.
+# Copyright (C) 2016 THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Automatically generated, 2016.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-10-24 13:16+0300\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2016-10-25 18:46+0300\n"
+"Last-Translator: Ruslan Popov <ruslan.popov@gmail.com>\n"
+"Language-Team: none\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Poedit 1.8.11\n"
 
 #: /Users/rad/devel/reprap/Uranium/plugins/ConsoleLogger/__init__.py:13
 msgctxt "@label"
 msgid "Console Logger"
-msgstr ""
+msgstr "Console Logger"
 
 #: /Users/rad/devel/reprap/Uranium/plugins/ConsoleLogger/__init__.py:16
 #: /Users/rad/devel/reprap/Uranium/plugins/FileLogger/__init__.py:16
 msgctxt "@info:whatsthis"
 msgid "Outputs log information to the console."
-msgstr ""
+msgstr "Outputs log information to the console."
 
 #: /Users/rad/devel/reprap/Uranium/plugins/FileHandlers/3MFWriter/__init__.py:12
 msgctxt "@label"
 msgid "3MF Writer"
-msgstr ""
+msgstr "3MF Writer"
 
 #: /Users/rad/devel/reprap/Uranium/plugins/FileHandlers/3MFWriter/__init__.py:15
 msgctxt "@info:whatsthis"
 msgid "Provides support for writing 3MF files."
-msgstr ""
+msgstr "Provides support for writing 3MF files."
 
 #: /Users/rad/devel/reprap/Uranium/plugins/FileHandlers/3MFWriter/__init__.py:21
 msgctxt "@item:inlistbox"
 msgid "3MF file"
-msgstr ""
+msgstr "3MF file"
 
 #: /Users/rad/devel/reprap/Uranium/plugins/FileHandlers/OBJReader/__init__.py:13
 msgctxt "@label"
 msgid "Wavefront OBJ Reader"
-msgstr ""
+msgstr "Wavefront OBJ Reader"
 
 #: /Users/rad/devel/reprap/Uranium/plugins/FileHandlers/OBJReader/__init__.py:16
 msgctxt "@info:whatsthis"
 msgid "Makes it possbile to read Wavefront OBJ files."
-msgstr ""
+msgstr "Makes it possbile to read Wavefront OBJ files."
 
 #: /Users/rad/devel/reprap/Uranium/plugins/FileHandlers/OBJReader/__init__.py:22
 #: /Users/rad/devel/reprap/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:22
 msgctxt "@item:inlistbox"
 msgid "Wavefront OBJ File"
-msgstr ""
+msgstr "Wavefront OBJ File"
 
 #: /Users/rad/devel/reprap/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:13
 msgctxt "@label"
 msgid "Wavefront OBJ Writer"
-msgstr ""
+msgstr "Wavefront OBJ Writer"
 
 #: /Users/rad/devel/reprap/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:16
 msgctxt "@info:whatsthis"
 msgid "Makes it possbile to write Wavefront OBJ files."
-msgstr ""
+msgstr "Makes it possbile to write Wavefront OBJ files."
 
 #: /Users/rad/devel/reprap/Uranium/plugins/FileHandlers/STLReader/__init__.py:12
 msgctxt "@label"
 msgid "STL Reader"
-msgstr ""
+msgstr "STL Reader"
 
 #: /Users/rad/devel/reprap/Uranium/plugins/FileHandlers/STLReader/__init__.py:15
 msgctxt "@info:whatsthis"
 msgid "Provides support for reading STL files."
-msgstr ""
+msgstr "Предоставляет поддержку для чтения STL файлов."
 
 #: /Users/rad/devel/reprap/Uranium/plugins/FileHandlers/STLReader/__init__.py:21
 msgctxt "@item:inlistbox"
 msgid "STL File"
-msgstr ""
+msgstr "Файл STL"
 
 #: /Users/rad/devel/reprap/Uranium/plugins/FileHandlers/STLWriter/__init__.py:13
 msgctxt "@label"
 msgid "STL Writer"
-msgstr ""
+msgstr "Запись STL"
 
 #: /Users/rad/devel/reprap/Uranium/plugins/FileHandlers/STLWriter/__init__.py:16
 msgctxt "@info:whatsthis"
 msgid "Provides support for writing STL files."
-msgstr ""
+msgstr "Предоставляет поддержку для записи STL файлов."
 
 #: /Users/rad/devel/reprap/Uranium/plugins/FileHandlers/STLWriter/__init__.py:25
 msgctxt "@item:inlistbox"
 msgid "STL File (Ascii)"
-msgstr ""
+msgstr "Файл STL (текстовый)"
 
 #: /Users/rad/devel/reprap/Uranium/plugins/FileHandlers/STLWriter/__init__.py:31
 msgctxt "@item:inlistbox"
 msgid "STL File (Binary)"
-msgstr ""
+msgstr "Файл STL (бинарный)"
 
 #: /Users/rad/devel/reprap/Uranium/plugins/FileLogger/__init__.py:13
 msgctxt "@label"
 msgid "File Logger"
-msgstr ""
+msgstr "Запись журнала в файл"
 
 #: /Users/rad/devel/reprap/Uranium/plugins/LocalFileOutputDevice/__init__.py:12
 msgctxt "@label"
 msgid "Local File Output Device"
-msgstr ""
+msgstr "Устройство вывода локальных файлов"
 
 #: /Users/rad/devel/reprap/Uranium/plugins/LocalFileOutputDevice/__init__.py:13
 msgctxt "@info:whatsthis"
 msgid "Enables saving to local files."
-msgstr ""
+msgstr "Разрешает сохранение в локальные файлы."
 
 #: /Users/rad/devel/reprap/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:44
 msgctxt "@item:inmenu"
 msgid "Local File"
-msgstr ""
+msgstr "Локальный файл"
 
 #: /Users/rad/devel/reprap/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:45
 msgctxt "@action:button"
 msgid "Save to File"
-msgstr ""
+msgstr "Сохранить в файл"
 
 #: /Users/rad/devel/reprap/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:46
 msgctxt "@info:tooltip"
 msgid "Save to File"
-msgstr ""
+msgstr "Сохранить в файл"
 
 #: /Users/rad/devel/reprap/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:65
 msgctxt "@title:window"
 msgid "Save to File"
-msgstr ""
+msgstr "Сохранить в файл"
 
 #: /Users/rad/devel/reprap/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:120
 msgctxt "@title:window"
 msgid "File Already Exists"
-msgstr ""
+msgstr "Файл уже существует"
 
 #: /Users/rad/devel/reprap/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:120
 #, python-brace-format
 msgctxt "@label"
-msgid ""
-"The file <filename>{0}</filename> already exists. Are you sure you want to "
-"overwrite it?"
-msgstr ""
+msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
+msgstr "Файл <filename>{0}</filename> уже существует. Вы уверены, что желаете перезаписать его?"
 
 #: /Users/rad/devel/reprap/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:140
 #, python-brace-format
 msgctxt "@info:progress"
 msgid "Saving to <filename>{0}</filename>"
-msgstr ""
+msgstr "Сохранение в <filename>{0}</filename>"
 
 #: /Users/rad/devel/reprap/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:148
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Permission denied when trying to save <filename>{0}</filename>"
-msgstr ""
+msgstr "Недостаточно прав при попытке записать <filename>{0}</filename>"
 
 #: /Users/rad/devel/reprap/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:151
 #: /Users/rad/devel/reprap/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:173
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
-msgstr ""
+msgstr "Не могу записать в <filename>{0}</filename>: <message>{1}</message>"
 
 #: /Users/rad/devel/reprap/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:167
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Saved to <filename>{0}</filename>"
-msgstr ""
+msgstr "Сохранено в <filename>{0}</filename>"
 
 #: /Users/rad/devel/reprap/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:168
 msgctxt "@action:button"
 msgid "Open Folder"
-msgstr ""
+msgstr "Открыть каталог"
 
 #: /Users/rad/devel/reprap/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:168
 msgctxt "@info:tooltip"
 msgid "Open the folder containing the file"
-msgstr ""
+msgstr "Открыть каталог, содержащий данный файл"
 
 #: /Users/rad/devel/reprap/Uranium/plugins/Tools/CameraTool/__init__.py:12
 msgctxt "@label"
 msgid "Camera Tool"
-msgstr ""
+msgstr "Камера"
 
 #: /Users/rad/devel/reprap/Uranium/plugins/Tools/CameraTool/__init__.py:15
 msgctxt "@info:whatsthis"
 msgid "Provides the tool to manipulate the camera."
-msgstr ""
+msgstr "Предоставляет возможность управлять камерой."
 
 #: /Users/rad/devel/reprap/Uranium/plugins/Tools/MirrorTool/__init__.py:12
 msgctxt "@label"
 msgid "Mirror Tool"
-msgstr ""
+msgstr "Зеркало"
 
 #: /Users/rad/devel/reprap/Uranium/plugins/Tools/MirrorTool/__init__.py:15
 msgctxt "@info:whatsthis"
 msgid "Provides the Mirror tool."
-msgstr ""
+msgstr "Предоставляет инструмент \"Зеркало\"."
 
 #: /Users/rad/devel/reprap/Uranium/plugins/Tools/MirrorTool/__init__.py:19
 msgctxt "@label"
 msgid "Mirror"
-msgstr ""
+msgstr "Зеркало"
 
 #: /Users/rad/devel/reprap/Uranium/plugins/Tools/MirrorTool/__init__.py:20
 msgctxt "@info:tooltip"
 msgid "Mirror Model"
-msgstr ""
+msgstr "Отзеркалить модель"
 
 #: /Users/rad/devel/reprap/Uranium/plugins/Tools/RotateTool/__init__.py:12
 msgctxt "@label"
 msgid "Rotate Tool"
-msgstr ""
+msgstr "Инструмент \"Вращение\""
 
 #: /Users/rad/devel/reprap/Uranium/plugins/Tools/RotateTool/__init__.py:15
 msgctxt "@info:whatsthis"
 msgid "Provides the Rotate tool."
-msgstr ""
+msgstr "Предоставляет инструмент \"Вращение\"."
 
 #: /Users/rad/devel/reprap/Uranium/plugins/Tools/RotateTool/__init__.py:19
 msgctxt "@label"
 msgid "Rotate"
-msgstr ""
+msgstr "Вращение"
 
 #: /Users/rad/devel/reprap/Uranium/plugins/Tools/RotateTool/__init__.py:20
 msgctxt "@info:tooltip"
 msgid "Rotate Model"
-msgstr ""
+msgstr "Вращение модели"
 
 #: /Users/rad/devel/reprap/Uranium/plugins/Tools/ScaleTool/__init__.py:13
 msgctxt "@label"
 msgid "Scale Tool"
-msgstr ""
+msgstr "Инструмент \"Масштабирование\""
 
 #: /Users/rad/devel/reprap/Uranium/plugins/Tools/ScaleTool/__init__.py:16
 msgctxt "@info:whatsthis"
 msgid "Provides the Scale tool."
-msgstr ""
+msgstr "Предоставляет инструмент \"Масштабирование\"."
 
 #: /Users/rad/devel/reprap/Uranium/plugins/Tools/ScaleTool/__init__.py:20
 msgctxt "@label"
 msgid "Scale"
-msgstr ""
+msgstr "Масштаб"
 
 #: /Users/rad/devel/reprap/Uranium/plugins/Tools/ScaleTool/__init__.py:21
 msgctxt "@info:tooltip"
 msgid "Scale Model"
-msgstr ""
+msgstr "Масштабировать модель"
 
 #: /Users/rad/devel/reprap/Uranium/plugins/Tools/SelectionTool/__init__.py:13
 msgctxt "@label"
 msgid "Selection Tool"
-msgstr ""
+msgstr "Инструмент \"Выбор\""
 
 #: /Users/rad/devel/reprap/Uranium/plugins/Tools/SelectionTool/__init__.py:16
 msgctxt "@info:whatsthis"
 msgid "Provides the Selection tool."
-msgstr ""
+msgstr "Предоставляет инструмент \"Выбор\"."
 
 #: /Users/rad/devel/reprap/Uranium/plugins/Tools/TranslateTool/__init__.py:13
 msgctxt "@label"
 msgid "Translate Tool"
-msgstr ""
+msgstr "Инструмент \"Перевод\"."
 
 #: /Users/rad/devel/reprap/Uranium/plugins/Tools/TranslateTool/__init__.py:16
 msgctxt "@info:whatsthis"
 msgid "Provides the Translate tool."
-msgstr ""
+msgstr "Предоставляет инструмент \"Перевод\"."
 
 #: /Users/rad/devel/reprap/Uranium/plugins/Tools/TranslateTool/__init__.py:20
 msgctxt "@action:button"
 msgid "Move"
-msgstr ""
+msgstr "Перемещение"
 
 #: /Users/rad/devel/reprap/Uranium/plugins/Tools/TranslateTool/__init__.py:21
 msgctxt "@info:tooltip"
 msgid "Move Model"
-msgstr ""
+msgstr "Перемещение модели"
 
 #: /Users/rad/devel/reprap/Uranium/plugins/UpdateChecker/__init__.py:12
 msgctxt "@label"
 msgid "Update Checker"
-msgstr ""
+msgstr "Проверка обновлений"
 
 #: /Users/rad/devel/reprap/Uranium/plugins/UpdateChecker/__init__.py:15
 msgctxt "@info:whatsthis"
 msgid "Checks for updates of the software."
-msgstr ""
+msgstr "Проверяет наличие обновлений ПО."
 
 #: /Users/rad/devel/reprap/Uranium/plugins/UpdateChecker/UpdateChecker.py:41
 msgctxt "@info"
 msgid "Could not access update information."
-msgstr ""
+msgstr "Невозможно получить информацию об обновлениях."
 
 #: /Users/rad/devel/reprap/Uranium/plugins/UpdateChecker/UpdateChecker.py:52
 #: /Users/rad/devel/reprap/Uranium/plugins/UpdateChecker/UpdateChecker.py:57
 msgctxt "@info"
 msgid "The version you are using does not support checking for updates."
-msgstr ""
+msgstr "Используемая вами версия не поддерживает проверку обновлений."
 
 #: /Users/rad/devel/reprap/Uranium/plugins/UpdateChecker/UpdateChecker.py:68
 msgctxt "@info"
 msgid "A new version is available!"
-msgstr ""
+msgstr "Доступна новая версия!"
 
 #: /Users/rad/devel/reprap/Uranium/plugins/UpdateChecker/UpdateChecker.py:69
 msgctxt "@action:button"
 msgid "Download"
-msgstr ""
+msgstr "Скачать"
 
 #: /Users/rad/devel/reprap/Uranium/plugins/UpdateChecker/UpdateChecker.py:83
 msgctxt "@info"
 msgid "No new version was found."
-msgstr ""
+msgstr "Новая версия не найдена."
 
 #: /Users/rad/devel/reprap/Uranium/plugins/UpdateChecker/UpdateChecker.py:94
 msgctxt "@item:inmenu"
 msgid "Check for Updates"
-msgstr ""
+msgstr "Проверить обновления"
 
 #: /Users/rad/devel/reprap/Uranium/plugins/Views/SimpleView/__init__.py:13
 msgctxt "@label"
 msgid "Simple View"
-msgstr ""
+msgstr "Обычный вид"
 
 #: /Users/rad/devel/reprap/Uranium/plugins/Views/SimpleView/__init__.py:16
 msgctxt "@info:whatsthis"
 msgid "Provides a simple solid mesh view."
-msgstr ""
+msgstr "Предоставляет просмотр в виде целого тела."
 
 #: /Users/rad/devel/reprap/Uranium/plugins/Views/SimpleView/__init__.py:20
 msgctxt "@item:inmenu"
 msgid "Simple"
-msgstr ""
+msgstr "Обычный"
 
 #: /Users/rad/devel/reprap/Uranium/plugins/Views/WireframeView/__init__.py:13
 msgctxt "@label"
 msgid "Wireframe View"
-msgstr ""
+msgstr "Проволочный вид"
 
 #: /Users/rad/devel/reprap/Uranium/plugins/Views/WireframeView/__init__.py:16
 msgctxt "@info:whatsthis"
 msgid "Provides a simple wireframe view."
-msgstr ""
+msgstr "Предоставляет просмотр в виде целого тела."
 
 #: /Users/rad/devel/reprap/Uranium/UM/Mesh/ReadMeshJob.py:33
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Cannot open file type <filename>{0}</filename>"
-msgstr ""
+msgstr "Не могу открыть файл типа <filename>{0}</filename>"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Mesh/ReadMeshJob.py:42
 #: /Users/rad/devel/reprap/Uranium/UM/Mesh/ReadMeshJob.py:63
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Failed to load <filename>{0}</filename>"
-msgstr ""
+msgstr "Не могу загрузить <filename>{0}</filename>"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Mesh/ReadMeshJob.py:46
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Loading <filename>{0}</filename>"
-msgstr ""
+msgstr "Загрузка <filename>{0}</filename>"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Mesh/ReadMeshJob.py:95
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled object to {0}% of original size"
-msgstr ""
+msgstr "Автоматическое масштабирование объекта к {0} % от оригинального размера"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:45
 #, python-brace-format
 msgctxt "@item:inlistbox"
 msgid "All Supported Types ({0})"
-msgstr ""
+msgstr "Все поддерживаемые типы ({0})"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:46
 #: /Users/rad/devel/reprap/Uranium/UM/Settings/Models/InstanceContainersModel.py:145
 msgctxt "@item:inlistbox"
 msgid "All Files (*)"
-msgstr ""
+msgstr "Все файлы (*)"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/Duration.py:95
 #, python-brace-format
-msgctxt ""
-"@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is "
-"minutes"
+msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
 msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
-msgstr ""
+msgstr "{0:0>2}д {1:0>2}ч {2:0>2}мин"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/Duration.py:97
 #, python-brace-format
 msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
 msgid "{0:0>2}h {1:0>2}min"
-msgstr ""
+msgstr "{0:0>2}ч {1:0>2}мин"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/Duration.py:100
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is days"
 msgid "{0} day"
 msgid_plural "{0} days"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{0} день"
+msgstr[1] "{0} дня"
+msgstr[2] "{0} дней"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/Duration.py:100
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/Duration.py:102
@@ -419,8 +416,9 @@ msgstr[1] ""
 msgctxt "@label Long duration format. {0} is hours"
 msgid "{0} hour"
 msgid_plural "{0} hours"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{0} час"
+msgstr[1] "{0} часа"
+msgstr[2] "{0} часов"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/Duration.py:100
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/Duration.py:102
@@ -429,40 +427,41 @@ msgstr[1] ""
 msgctxt "@label Long duration format. {0} is minutes"
 msgid "{0} minute"
 msgid_plural "{0} minutes"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{0} минута"
+msgstr[1] "{0} минуты"
+msgstr[2] "{0} минут"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/QtApplication.py:87
 msgctxt "@info:progress"
 msgid "Loading plugins..."
-msgstr ""
+msgstr "Загрузка плагинов..."
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/QtApplication.py:93
 msgctxt "@info:progress"
 msgid "Updating configuration..."
-msgstr ""
+msgstr "Обновление конфигурации..."
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/QtApplication.py:104
 msgctxt "@info:progress"
 msgid "Loading preferences..."
-msgstr ""
+msgstr "Загрузка настроек…"
 
 #: /Users/rad/devel/reprap/Uranium/UM/VersionUpgradeManager.py:110
 #, python-brace-format
 msgctxt "@info:version-upgrade"
 msgid "A configuration from an older version of {0} was imported."
-msgstr ""
+msgstr "Была импортирована конфигурация от старой версии {0}."
 
 #: /Users/rad/devel/reprap/Uranium/plugins/Tools/RotateTool/RotateTool.qml:21
 #: /Users/rad/devel/reprap/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:53
 msgctxt "@action:button"
 msgid "Reset"
-msgstr ""
+msgstr "Сброс"
 
 #: /Users/rad/devel/reprap/Uranium/plugins/Tools/RotateTool/RotateTool.qml:38
 msgctxt "@action:button"
 msgid "Lay flat"
-msgstr ""
+msgstr "Положить плашмя"
 
 #: /Users/rad/devel/reprap/Uranium/plugins/Tools/RotateTool/RotateTool.qml:53
 msgctxt "@action:checkbox"
@@ -472,7 +471,7 @@ msgstr ""
 #: /Users/rad/devel/reprap/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:66
 msgctxt "@action:button"
 msgid "Scale to Max"
-msgstr ""
+msgstr "Масштабировать до максимума"
 
 #: /Users/rad/devel/reprap/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:91
 msgctxt "@option:check"
@@ -487,219 +486,215 @@ msgstr ""
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:16
 msgctxt "@title:window"
 msgid "Confirm Remove"
-msgstr ""
+msgstr "Подтвердите удаление"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:17
 msgctxt "@label (%1 is object name)"
 msgid "Are you sure you wish to remove %1? This cannot be undone!"
-msgstr ""
+msgstr "Вы уверены, что желаете удалить %1? Это нельзя будет отменить!"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:12
 msgctxt "@title:tab"
 msgid "Printers"
-msgstr ""
+msgstr "Принтеры"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:39
 msgctxt "@label"
 msgid "Type"
-msgstr ""
+msgstr "Тип"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:19
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:148
 msgctxt "@title:tab"
 msgid "Plugins"
-msgstr ""
+msgstr "Плагины"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:81
 msgctxt "@label"
 msgid "Info..."
-msgstr ""
+msgstr "Инфо..."
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:101
 msgctxt "@label"
 msgid "No text available"
-msgstr ""
+msgstr "Текста нет"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:107
 msgctxt "@title:window"
 msgid "About %1"
-msgstr ""
+msgstr "О %1"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:139
 msgctxt "@label"
 msgid "Author:"
-msgstr ""
+msgstr "Автор:"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:161
 msgctxt "@label"
 msgid "Version:"
-msgstr ""
+msgstr "Версия:"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:179
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:113
 msgctxt "@action:button"
 msgid "Close"
-msgstr ""
+msgstr "Закрыть"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:18
 msgctxt "@title:window"
 msgid "Preferences"
-msgstr ""
+msgstr "Настройки"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:106
 msgctxt "@action:button"
 msgid "Defaults"
-msgstr ""
+msgstr "Стандартные"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:146
 msgctxt "@title:tab"
 msgid "General"
-msgstr ""
+msgstr "Общие"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:147
 msgctxt "@title:tab"
 msgid "Settings"
-msgstr ""
+msgstr "Параметры"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:14
 msgctxt "@title:tab"
 msgid "Profiles"
-msgstr ""
+msgstr "Профили"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:15
 msgctxt "@label"
 msgid "Duplicate"
-msgstr ""
+msgstr "Дублировать"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:45
 msgctxt "@label %1 is printer name"
 msgid "Printer: %1"
-msgstr ""
+msgstr "Принтер: %1"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:83
 msgctxt "@action:button"
 msgid "Update \"%1\""
-msgstr ""
+msgstr "Обновить \"%1\""
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:84
 msgctxt "@action:button"
 msgid "Update profile"
-msgstr ""
+msgstr "Обновить профиль"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:92
 msgctxt "@action:button"
 msgid "Discard current settings"
-msgstr ""
+msgstr "Сбросить текущие параметры"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:93
 msgctxt "@action:button"
 msgid "Reload profile"
-msgstr ""
+msgstr "Перезагрузить профиль"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:107
 msgctxt "@label"
 msgid "Based on"
-msgstr ""
+msgstr "Основан на"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:107
 msgctxt "@label"
 msgid "Profile type"
-msgstr ""
+msgstr "Тип профиля"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:112
 msgctxt "@label"
 msgid "Protected profile"
-msgstr ""
+msgstr "Защищённый профиль"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:112
 msgctxt "@label"
 msgid "Custom profile"
-msgstr ""
+msgstr "Собственный профиль"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:139
 msgctxt "@action:button"
 msgid "Import"
-msgstr ""
+msgstr "Импорт"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:146
 msgctxt "@action:button"
 msgid "Export"
-msgstr ""
+msgstr "Экспорт"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:184
 msgctxt "@window:title"
 msgid "Import Profile"
-msgstr ""
+msgstr "Импорт профиля"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:192
 msgctxt "@title:window"
 msgid "Import Profile"
-msgstr ""
+msgstr "Импорт профиля"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:219
 msgctxt "@title:window"
 msgid "Export Profile"
-msgstr ""
+msgstr "Экспорт профиля"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:19
 msgctxt "@title:window"
 msgid "Rename"
-msgstr ""
+msgstr "Переименовать"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:56
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/qml/UM/Wizard.qml:241
 msgctxt "@action:button"
 msgid "Cancel"
-msgstr ""
+msgstr "Отмена"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:60
 msgctxt "@action:button"
 msgid "Ok"
-msgstr ""
+msgstr "Ok"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:31
 msgctxt "@item:tooltip"
-msgid ""
-"This setting has been hidden by the active machine and will not be visible."
-msgstr ""
+msgid "This setting has been hidden by the active machine and will not be visible."
+msgstr "Данный параметр был скрыт текущим принтером и не будет отображаться."
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:48
 msgctxt "@item:tooltip %1 is list of setting names"
-msgid ""
-"This setting has been hidden by the value of %1. Change the value of that "
-"setting to make this setting visible."
-msgid_plural ""
-"This setting has been hidden by the values of %1. Change the values of those "
-"settings to make this setting visible."
-msgstr[0] ""
-msgstr[1] ""
+msgid "This setting has been hidden by the value of %1. Change the value of that setting to make this setting visible."
+msgid_plural "This setting has been hidden by the values of %1. Change the values of those settings to make this setting visible."
+msgstr[0] "Этот параметр был скрыт значением %1. Измените это значение, чтобы параметр стал отображаться."
+msgstr[1] "Эти параметры были скрыты значением %1. Измените это значение, чтобы параметр стал отображаться."
+msgstr[2] "Эти параметры были скрыты значением %1. Измените это значение, чтобы параметр стал отображаться."
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityPage.qml:12
 msgctxt "@title:tab"
 msgid "Setting Visibility"
-msgstr ""
+msgstr "Настройка видимости"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityPage.qml:42
 msgctxt "@label:textbox"
 msgid "Check all"
-msgstr ""
+msgstr "Выбрать все"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityPage.qml:89
 msgctxt "@label:textbox"
 msgid "Filter..."
-msgstr ""
+msgstr "Фильтр..."
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/qml/UM/Wizard.qml:215
 msgctxt "@action:button"
 msgid "Back"
-msgstr ""
+msgstr "Назад"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/qml/UM/Wizard.qml:231
 msgctxt "@action:button"
 msgid "Finish"
-msgstr ""
+msgstr "Завершить"
 
 #: /Users/rad/devel/reprap/Uranium/UM/Qt/qml/UM/Wizard.qml:231
 msgctxt "@action:button"
 msgid "Next"
-msgstr ""
+msgstr "Следующий"
