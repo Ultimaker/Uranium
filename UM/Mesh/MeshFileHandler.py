@@ -37,7 +37,6 @@ class MeshFileHandler(FileHandler):
                             extents = result.getMeshData().getExtents()
                             move_vector = Vector(extents.center.x, extents.center.y, extents.center.z)
                             result.setCenterPosition(move_vector)
-                            result.translate(move_vector, SceneNode.TransformSpace.Local)
 
                         # Move all the meshes of children so that toolhandles are shown in the correct place.
                         for node in result.getChildren():
