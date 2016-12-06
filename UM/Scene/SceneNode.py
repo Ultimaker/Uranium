@@ -194,6 +194,8 @@ class SceneNode():
 
     ##  Remove all decorators
     def removeDecorators(self):
+        for decorator in self._decorators:
+            decorator.clear()
         self._decorators = []
         self.decoratorsChanged.emit(self)
 
@@ -202,6 +204,7 @@ class SceneNode():
     def removeDecorator(self, dec_type):
         for decorator in self._decorators:
             if type(decorator) == dec_type:
+                decorator.clear()
                 self._decorators.remove(decorator)
                 self.decoratorsChanged.emit(self)
                 break
