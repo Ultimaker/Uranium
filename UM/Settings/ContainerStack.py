@@ -29,10 +29,18 @@ MimeTypeDatabase.addMimeType(
     )
 )
 
+MimeTypeDatabase.addMimeType(
+    MimeType(
+        name = "application/x-uranium-extruderstack",
+        comment = "Uranium Extruder Stack",
+        suffixes = [ "stack.cfg" ]
+    )
+)
+
 ##  A stack of setting containers to handle setting value retrieval.
 @signalemitter
 class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
-    Version = 2
+    Version = 3
 
     ##  Constructor
     #

@@ -540,6 +540,7 @@ class ContainerRegistry:
         "application/x-uranium-definitioncontainer": DefinitionContainer.DefinitionContainer,
         "application/x-uranium-instancecontainer": InstanceContainer.InstanceContainer,
         "application/x-uranium-containerstack": ContainerStack.ContainerStack,
+        "application/x-uranium-extruderstack": ContainerStack.ContainerStack,
     }
 
 PluginRegistry.addType("settings_container", ContainerRegistry.addContainerType)
