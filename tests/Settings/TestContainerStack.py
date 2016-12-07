@@ -645,6 +645,25 @@ def test_setNextStack(container_stack):
     with pytest.raises(Exception):
         container_stack.setNextStack(container_stack) # Can't set itself as next stack.
 
+##  Test backward compatibility of container config file format change
+#
+#   This tests whether ContainerStack can still deserialize containers using the old
+#   format where we would have a single comma separated entry with the containers.
+def test_backwardCompatibility(container_stack, container_registry):
+    container_a = MockContainer("a")
+    container_registry.addContainer(container_a) # Make sure this container isn't the one it complains about.
+
+    serialised = """
+    [general]
+    name = Test
+    id = testid
+    version = {version}
+    containers = a,a,a
+    """.format(version = UM.Settings.ContainerStack.Version) # Old-style serialized stack
+
+    container_stack.deserialize(serialised)
+    assert container_stack.getContainers() == [container_a, container_a, container_a]
+
 ##  Tests a single cycle of serialising and deserialising a container stack.
 #
 #   This will serialise and then deserialise the container stack, and sees if
