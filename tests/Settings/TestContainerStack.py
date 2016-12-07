@@ -23,8 +23,8 @@ from UM.Settings.ContainerStack import InvalidContainerStackError
 #   actual implementations, the tests in this suite are unaffected.
 class MockContainer(UM.Settings.ContainerInterface.ContainerInterface):
     ##  Creates a mock container with a new unique ID.
-    def __init__(self):
-        self._id = uuid.uuid4().int
+    def __init__(self, container_id = None):
+        self._id = uuid.uuid4().int if container_id == None else container_id
         self._metadata = {}
         self.items = {}
 
