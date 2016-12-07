@@ -664,6 +664,79 @@ def test_backwardCompatibility(container_stack, container_registry):
     container_stack.deserialize(serialised)
     assert container_stack.getContainers() == [container_a, container_a, container_a]
 
+##  Test serialization and deserialization of a stack with containers with special characters in their ID
+#
+def test_idSpecialCharacters(container_stack, container_registry):
+    container_ab = MockContainer("a,b") # Comma used to break deserialize
+    container_registry.addContainer(container_ab)
+
+    serialized = """
+    [general]
+    name = Test
+    id = testid
+    version = {version}
+    containers = a,b
+    """.format(version = UM.Settings.ContainerStack.Version)
+
+    with pytest.raises(Exception):
+        # Using old code, this would fail because it tries to add two containers, a and b.
+        container_stack.deserialize(serialized)
+
+    serialized = """
+    [general]
+    name = Test
+    id = testid
+    version = {version}
+
+    [containers]
+    0 = a,b
+    """.format(version = UM.Settings.ContainerStack.Version)
+
+    container_stack.deserialize(serialized)
+    assert container_stack.getContainers() == [container_ab]
+
+    test_container_0 = MockContainer("= TestContainer with, some? Special $ Characters #12")
+    container_registry.addContainer(test_container_0)
+
+    serialized = """
+    [general]
+    name = Test
+    id = testid
+    version = {version}
+
+    [containers]
+    0 = = TestContainer with, some? Special $ Characters #12
+    """.format(version = UM.Settings.ContainerStack.Version)
+
+    container_stack.deserialize(serialized)
+    assert container_stack.getContainers() == [test_container_0]
+
+    test_container_1 = MockContainer("☂℮﹩⊥ ḉ◎η☂αїη℮ґ")
+    container_registry.addContainer(test_container_1)
+
+    # Special unicode characters are handled properly
+    serialized = """
+    [general]
+    name = Test
+    id = testid
+    version = {version}
+
+    [containers]
+    0 = ☂℮﹩⊥ ḉ◎η☂αїη℮ґ
+    """.format(version = UM.Settings.ContainerStack.Version)
+
+    container_stack.deserialize(serialized)
+    assert container_stack.getContainers() == [test_container_1]
+
+    serialized = container_stack.serialize()
+
+    # Unfortunately, we cannot check that serialized == container_stack.serialized() due to dict
+    # having a random order.
+    assert "id = testid" in serialized
+    assert "name = Test" in serialized
+    assert "0 = ☂℮﹩⊥ ḉ◎η☂αїη℮ґ" in serialized
+
+
 ##  Tests a single cycle of serialising and deserialising a container stack.
 #
 #   This will serialise and then deserialise the container stack, and sees if
