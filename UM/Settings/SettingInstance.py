@@ -203,7 +203,8 @@ class SettingInstance:
             # That would increase performance by reducing the amount of updates.
             for relation in changed_relations:
                 container.propertyChanged.emit(relation.target.key, relation.role)
-                if relation.role == "value":  # If the value state is updated, the validation state could also be changed.
+                # If the value/minimum value/etc state is updated, the validation state must be re-evaluated
+                if relation.role in {"value", "minimum_value", "maximum_value", "minimum_value_warning", "maximum_value_warning"}:
                     container.propertyChanged.emit(relation.target.key, "validationState")
 
     ##  Recursive function to put all settings that require eachother for changes of a property value in a list
