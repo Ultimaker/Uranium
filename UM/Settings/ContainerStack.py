@@ -230,11 +230,9 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
         for key, value in self._metadata.items():
             parser["metadata"][key] = str(value)
 
-        container_id_string = ""
-        for container in self._containers:
-            container_id_string += str(container.getId()) + ","
-
-        parser["general"]["containers"] = container_id_string
+        parser.add_section("containers")
+        for index in range(len(self._containers)):
+            parser["containers"][str(index)] = self._containers[index].getId()
 
         stream = io.StringIO()
         parser.write(stream)
@@ -268,18 +266,28 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
         if "metadata" in parser:
             self._metadata = dict(parser["metadata"])
 
-        # The containers are saved in a single comma-separated list.
-        container_string = parser["general"].get("containers", "")
-        Logger.log("d", "While deserializing, we got the following container string: %s", container_string)
-        container_id_list = container_string.split(",")
-        for container_id in container_id_list:
-            if container_id != "":
+        if "containers" in parser:
+            for index, container_id in parser.items("containers"):
                 containers = UM.Settings.ContainerRegistry.getInstance().findContainers(id = container_id)
                 if containers:
                     containers[0].propertyChanged.connect(self._collectPropertyChanges)
                     self._containers.append(containers[0])
                 else:
                     raise Exception("When trying to deserialize %s, we received an unknown ID (%s) for container" % (self._id, container_id))
+
+        elif parser.has_option("general", "containers"):
+            # Backward compatibility with 2.3.1: The containers used to be saved in a single comma-separated list.
+            container_string = parser["general"].get("containers", "")
+            Logger.log("d", "While deserializing, we got the following container string: %s", container_string)
+            container_id_list = container_string.split(",")
+            for container_id in container_id_list:
+                if container_id != "":
+                    containers = UM.Settings.ContainerRegistry.getInstance().findContainers(id = container_id)
+                    if containers:
+                        containers[0].propertyChanged.connect(self._collectPropertyChanges)
+                        self._containers.append(containers[0])
+                    else:
+                        raise Exception("When trying to deserialize %s, we received an unknown ID (%s) for container" % (self._id, container_id))
 
         ## TODO; Deserialize the containers.
 
