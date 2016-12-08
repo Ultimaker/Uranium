@@ -276,7 +276,7 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
                     raise Exception("When trying to deserialize %s, we received an unknown ID (%s) for container" % (self._id, container_id))
 
         elif parser.has_option("general", "containers"):
-            # Backward compatibility: The containers used to be saved in a single comma-separated list.
+            # Backward compatibility with 2.3.1: The containers used to be saved in a single comma-separated list.
             container_string = parser["general"].get("containers", "")
             Logger.log("d", "While deserializing, we got the following container string: %s", container_string)
             container_id_list = container_string.split(",")
