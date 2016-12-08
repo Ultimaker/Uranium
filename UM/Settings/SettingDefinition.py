@@ -195,7 +195,6 @@ class SettingDefinition:
 
             if "i18n_catalog" in keywords:
                 catalog = keywords["i18n_catalog"]
-                del keywords["i18n_catalog"]
                 property_value = catalog.i18nc(self._key + " label", property_value)
 
             value = keywords["i18n_label"]
@@ -209,6 +208,9 @@ class SettingDefinition:
                 value = value.strip("* ").lower()
                 if value not in property_value.lower():
                     return False
+
+        if "i18n_catalog" in keywords:
+            del keywords["i18n_catalog"]
 
         # Normal attribute matching
         for key in keywords:
