@@ -88,7 +88,7 @@ PreferencesPage
 
             placeholderText: catalog.i18nc("@label:textbox", "Filter...")
 
-            onTextChanged: definitionsModel.filter = {"label": "*" + text}
+            onTextChanged: definitionsModel.filter = {"i18n_label": "*" + text}
         }
 
         ScrollView

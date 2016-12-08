@@ -28,6 +28,9 @@ class ReadMeshJob(ReadFileJob):
     def run(self):
         super().run()
 
+        if not self._result:
+            self._result = []
+
         # Scale down to maximum bounds size if that is available
         if hasattr(Application.getInstance().getController().getScene(), "_maximum_bounds"):
             for node in self._result:
