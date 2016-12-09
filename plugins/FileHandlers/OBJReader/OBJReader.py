@@ -8,7 +8,6 @@ import os
 from UM.Scene.SceneNode import SceneNode
 
 from UM.Job import Job
-from UM.Scene.SliceableObjectDecorator import SliceableObjectDecorator
 
 class OBJReader(MeshReader):
     def __init__(self):
@@ -106,6 +105,4 @@ class OBJReader(MeshReader):
                 mesh_builder.calculateNormals(fast = True)
             scene_node.setMeshData(mesh_builder.build())
 
-        sliceable_decorator = SliceableObjectDecorator()
-        scene_node.addDecorator(sliceable_decorator)
         return scene_node
