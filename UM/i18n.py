@@ -39,6 +39,9 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
 
         self._update()
 
+    def hasTranslationLoaded(self):
+        return self.__translation is not None
+
     ##  Mark a string as translatable
     #
     #   \param text The string to mark as translatable

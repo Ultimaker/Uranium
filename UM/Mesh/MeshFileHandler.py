@@ -2,7 +2,7 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 from UM.Logger import Logger
-
+from UM.Scene.Scene import SceneNode
 from UM.Math.Matrix import Matrix
 from UM.Math.Vector import Vector
 from UM.FileHandler.FileHandler import FileHandler
@@ -37,9 +37,6 @@ class MeshFileHandler(FileHandler):
                             extents = result.getMeshData().getExtents()
                             move_vector = Vector(extents.center.x, extents.center.y, extents.center.z)
                             result.setCenterPosition(move_vector)
-
-                            if result.getMeshData().getExtents(result.getWorldTransformation()).bottom != 0:
-                                result.translate(Vector(0, -result.getMeshData().getExtents(result.getWorldTransformation()).bottom, 0))
 
                         # Move all the meshes of children so that toolhandles are shown in the correct place.
                         for node in result.getChildren():

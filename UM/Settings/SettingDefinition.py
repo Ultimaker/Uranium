@@ -183,7 +183,37 @@ class SettingDefinition:
     ## Check if this setting definition matches the provided criteria.
     #   \param kwargs \type{dict} A dictionary of keyword arguments that need to match its attributes.
     def matchesFilter(self, **kwargs):
-        for key in kwargs:
+
+        # First check for translated labels.
+        keywords = kwargs.copy()
+        if "i18n_label" in keywords:
+            try:
+                property_value = getattr(self, "label")
+            except AttributeError:
+                # If we do not have the attribute, we do not match
+                return False
+
+            if "i18n_catalog" in keywords:
+                catalog = keywords["i18n_catalog"]
+                property_value = catalog.i18nc(self._key + " label", property_value)
+
+            value = keywords["i18n_label"]
+            del keywords["i18n_label"]
+            if not isinstance(value, str):
+                return False
+            if value != property_value:
+                if "*" not in value:
+                    return False
+
+                value = value.strip("* ").lower()
+                if value not in property_value.lower():
+                    return False
+
+        if "i18n_catalog" in keywords:
+            del keywords["i18n_catalog"]
+
+        # Normal attribute matching
+        for key in keywords:
             try:
                 property_value = getattr(self, key)
             except AttributeError:

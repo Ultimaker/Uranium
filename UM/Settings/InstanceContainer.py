@@ -248,7 +248,8 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
 
         self._instances[key].setProperty(property_name, property_value, container)
 
-        self._dirty = True
+        self.setDirty(True)
+
 
     propertyChanged = Signal()
 
