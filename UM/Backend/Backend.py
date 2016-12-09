@@ -25,7 +25,7 @@ class BackendState(IntEnum):
     Processing = 2
     Done = 3
     Error = 4
-    SlicingDisabled = 5
+    Disabled = 5
 
 ##      Base class for any backend communication (separate piece of software).
 #       It makes use of the Socket class from libArcus for the actual communication bits.
