@@ -5,14 +5,15 @@ import pytest
 import uuid # For creating unique ID's for each container stack.
 import os
 
+from UM.PluginRegistry import PluginRegistry
+from UM.Settings.ContainerRegistry import ContainerRegistry
 from UM.Signal import Signal
 from UM.Resources import Resources
 
-import UM.Settings
-import UM.Settings.ContainerInterface
-import UM.Settings.DefinitionContainer
-import UM.Settings.InstanceContainer
-import UM.Settings.ContainerStack
+from UM.Settings.ContainerInterface import ContainerInterface
+from UM.Settings.DefinitionContainer import DefinitionContainer
+from UM.Settings.InstanceContainer import InstanceContainer
+from UM.Settings.ContainerStack import ContainerStack
 from UM.Settings.ContainerStack import IncorrectVersionError
 from UM.Settings.ContainerStack import InvalidContainerStackError
 
@@ -21,7 +22,7 @@ from UM.Settings.ContainerStack import InvalidContainerStackError
 #   This allows us to test the container stack independent of any actual
 #   implementation of the containers. If something were to go wrong in the
 #   actual implementations, the tests in this suite are unaffected.
-class MockContainer(UM.Settings.ContainerInterface.ContainerInterface):
+class MockContainer(ContainerInterface):
     ##  Creates a mock container with a new unique ID.
     def __init__(self):
         self._id = uuid.uuid4().int
@@ -111,7 +112,7 @@ class MockContainer(UM.Settings.ContainerInterface.ContainerInterface):
 #   The container stack will get a new, unique ID.
 @pytest.fixture
 def container_stack():
-    return UM.Settings.ContainerStack(uuid.uuid4().int)
+    return ContainerStack(uuid.uuid4().int)
 
 ##  Creates a brand new container registry.
 #
@@ -122,10 +123,10 @@ def container_stack():
 @pytest.fixture
 def container_registry():
     Resources.addSearchPath(os.path.dirname(os.path.abspath(__file__)))
-    UM.Settings.ContainerRegistry._ContainerRegistry__instance = None # Reset the private instance variable every time
-    UM.PluginRegistry.getInstance().removeType("settings_container")
+    ContainerRegistry._ContainerRegistry__instance = None # Reset the private instance variable every time
+    PluginRegistry.getInstance().removeType("settings_container")
 
-    return UM.Settings.ContainerRegistry.getInstance()
+    return ContainerRegistry.getInstance()
 
 ##  Tests the creation of a container stack.
 #
@@ -159,7 +160,7 @@ def test_deserialize_syntax_error(container_stack):
 #   \param container_stack A new container stack from a fixture.
 #   \param container_registry A new container registry from a fixture.
 def test_deserialize_wrong_version(container_stack, container_registry):
-    container_registry.addContainer(UM.Settings.InstanceContainer("a")) # Make sure this container isn't the one it complains about.
+    container_registry.addContainer(InstanceContainer("a")) # Make sure this container isn't the one it complains about.
 
     serialised = """[general]
 name = Test
@@ -176,19 +177,19 @@ version = -1""" # -1 should always be wrong.
 #   \param container_stack A new container stack from a fixture.
 #   \param container_registry A new container registry from a fixture.
 def test_deserialize_missing_items(container_stack, container_registry):
-    container_registry.addContainer(UM.Settings.InstanceContainer("a")) # Make sure this container isn't the one it complains about.
+    container_registry.addContainer(InstanceContainer("a")) # Make sure this container isn't the one it complains about.
 
     serialised_no_name = """[general]
 id = testid
 containers = a
-version = """ + str(UM.Settings.ContainerStack.Version)
+version = """ + str(ContainerStack.Version)
     with pytest.raises(InvalidContainerStackError):
         container_stack.deserialize(serialised_no_name)
 
     serialised_no_id = """[general]
 name = Test
 containers = a
-version = """ + str(UM.Settings.ContainerStack.Version)
+version = """ + str(ContainerStack.Version)
     with pytest.raises(InvalidContainerStackError):
         container_stack.deserialize(serialised_no_id)
 
@@ -202,7 +203,7 @@ containers = a"""
     serialised_no_containers = """[general]
 name = Test
 id = testid
-version = """ + str(UM.Settings.ContainerStack.Version)
+version = """ + str(ContainerStack.Version)
     container_stack.deserialize(serialised_no_containers) # Missing containers is allowed.
 
     serialised_no_general = """[metadata]
@@ -217,47 +218,47 @@ foo = bar"""
 #   \param container_stack A new container stack from a fixture.
 #   \param container_registry A new container registry from a fixture.
 def test_deserialize_containers(container_stack, container_registry):
-    container = UM.Settings.InstanceContainer("a")
+    container = InstanceContainer("a")
     container_registry.addContainer(container)
 
     serialised = """[general]
 name = Test
 id = testid
 containers = a
-version = """ + str(UM.Settings.ContainerStack.Version) # Test case where there is a container.
+version = """ + str(ContainerStack.Version) # Test case where there is a container.
     container_stack.deserialize(serialised)
     assert container_stack.getContainers() == [container]
 
-    container_stack = UM.Settings.ContainerStack(uuid.uuid4().int)
+    container_stack = ContainerStack(uuid.uuid4().int)
     serialised = """[general]
 name = Test
 id = testid
 containers =
-version = """ + str(UM.Settings.ContainerStack.Version) # Test case where there is no container.
+version = """ + str(ContainerStack.Version) # Test case where there is no container.
     container_stack.deserialize(serialised)
     assert container_stack.getContainers() == []
 
-    container_stack = UM.Settings.ContainerStack(uuid.uuid4().int)
+    container_stack = ContainerStack(uuid.uuid4().int)
     serialised = """[general]
 name = Test
 id = testid
 containers = a,a
-version = """ + str(UM.Settings.ContainerStack.Version) # Test case where there are two of the same containers.
+version = """ + str(ContainerStack.Version) # Test case where there are two of the same containers.
     container_stack.deserialize(serialised)
     assert container_stack.getContainers() == [container, container]
 
-    container_stack = UM.Settings.ContainerStack(uuid.uuid4().int)
+    container_stack = ContainerStack(uuid.uuid4().int)
     serialised = """[general]
 name = Test
 id = testid
 containers = a,b
-version = """ + str(UM.Settings.ContainerStack.Version) # Test case where a container doesn't exist.
+version = """ + str(ContainerStack.Version) # Test case where a container doesn't exist.
     with pytest.raises(Exception):
         container_stack.deserialize(serialised)
 
-    container_stack = UM.Settings.ContainerStack(uuid.uuid4().int)
-    container_b = UM.Settings.InstanceContainer("b") # Add the missing container and try again.
-    UM.Settings.ContainerRegistry.getInstance().addContainer(container_b)
+    container_stack = ContainerStack(uuid.uuid4().int)
+    container_b = InstanceContainer("b") # Add the missing container and try again.
+    ContainerRegistry.getInstance().addContainer(container_b)
     container_stack.deserialize(serialised)
     assert container_stack.getContainers() == [container, container_b]
 
@@ -508,28 +509,28 @@ def test_replaceContainer(container_stack):
 #
 #   \param container_stack A new container stack from a fixture.
 def test_serialize(container_stack):
-    registry = UM.Settings.ContainerRegistry.getInstance() # All containers need to be registered in order to be recovered again after deserialising.
+    registry = ContainerRegistry.getInstance() # All containers need to be registered in order to be recovered again after deserialising.
 
     # First test the empty container stack.
     _test_serialize_cycle(container_stack)
 
     # Case with one subcontainer.
-    container = UM.Settings.InstanceContainer(uuid.uuid4().int)
+    container = InstanceContainer(uuid.uuid4().int)
     registry.addContainer(container)
     container_stack.addContainer(container)
     _test_serialize_cycle(container_stack)
 
     # Case with two subcontainers.
-    container = UM.Settings.InstanceContainer(uuid.uuid4().int)
+    container = InstanceContainer(uuid.uuid4().int)
     registry.addContainer(container)
     container_stack.addContainer(container) # Already had one, if all previous assertions were correct.
     _test_serialize_cycle(container_stack)
 
     # Case with all types of subcontainers.
-    container = UM.Settings.DefinitionContainer(uuid.uuid4().int)
+    container = DefinitionContainer(uuid.uuid4().int)
     registry.addContainer(container)
     container_stack.addContainer(container)
-    container = UM.Settings.ContainerStack(uuid.uuid4().int)
+    container = ContainerStack(uuid.uuid4().int)
     registry.addContainer(container)
     container_stack.addContainer(container)
     _test_serialize_cycle(container_stack)
@@ -551,9 +552,9 @@ def test_serialize(container_stack):
     _test_serialize_cycle(container_stack)
 
     # A container that is not in the registry.
-    container_stack.addContainer(UM.Settings.DefinitionContainer(uuid.uuid4().int))
+    container_stack.addContainer(DefinitionContainer(uuid.uuid4().int))
     serialised = container_stack.serialize()
-    container_stack = UM.Settings.ContainerStack(uuid.uuid4().int) # Completely fresh container stack.
+    container_stack = ContainerStack(uuid.uuid4().int) # Completely fresh container stack.
     with pytest.raises(Exception):
         container_stack.deserialize(serialised)
 
@@ -609,7 +610,7 @@ def _test_serialize_cycle(container_stack):
     containers = container_stack.getContainers()
 
     serialised = container_stack.serialize()
-    container_stack = UM.Settings.ContainerStack(uuid.uuid4().int) # Completely fresh container stack.
+    container_stack = ContainerStack(uuid.uuid4().int) # Completely fresh container stack.
     container_stack.deserialize(serialised)
 
     #ID and nextStack are allowed to be different.

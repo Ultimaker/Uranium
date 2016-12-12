@@ -4,10 +4,10 @@
 import collections #For deque, for breadth-first search and to track tasks, and namedtuple.
 import os #To get the configuration file names and to rename files.
 
+from UM.Application import Application
 from UM.Logger import Logger
 from UM.PluginRegistry import PluginRegistry #To find plug-ins.
 from UM.Resources import Resources #To load old versions from.
-import UM.Application #To get the name of the application for a message.
 import UM.i18n #To translate the "upgrade succeeded" message.
 import UM.Message #To show the "upgrade succeeded" message.
 import UM.MimeTypeDatabase #To know how to save the resulting files.
@@ -107,7 +107,7 @@ class VersionUpgradeManager:
             self._upgradeFile(upgrade_task.storage_path, upgrade_task.file_name, upgrade_task.configuration_type) #Upgrade this file.
 
         if upgraded:
-            message = UM.Message(text=catalogue.i18nc("@info:version-upgrade", "A configuration from an older version of {0} was imported.", UM.Application.getInstance().getApplicationName()))
+            message = UM.Message(text=catalogue.i18nc("@info:version-upgrade", "A configuration from an older version of {0} was imported.", Application.getInstance().getApplicationName()))
             message.show()
         return upgraded
 

@@ -7,7 +7,8 @@ import pytest
 
 import UM.Resources
 import UM.Settings
-import UM.PluginRegistry
+from UM.PluginRegistry import PluginRegistry
+from UM.Settings.ContainerRegistry import ContainerRegistry
 
 ##  Creates a brand new container registry.
 #
@@ -18,10 +19,10 @@ import UM.PluginRegistry
 @pytest.fixture
 def container_registry():
     UM.Resources.addSearchPath(os.path.dirname(os.path.abspath(__file__)))
-    UM.Settings.ContainerRegistry._ContainerRegistry__instance = None # Reset the private instance variable every time
-    UM.PluginRegistry.getInstance().removeType("settings_container")
+    ContainerRegistry._ContainerRegistry__instance = None # Reset the private instance variable every time
+    PluginRegistry.getInstance().removeType("settings_container")
 
-    instance = UM.Settings.ContainerRegistry.getInstance()
+    instance = ContainerRegistry.getInstance()
     instance.addResourceType(UM.Resources.InstanceContainers)
     instance.load()
 
