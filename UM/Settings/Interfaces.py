@@ -3,7 +3,8 @@
 
 import UM.Decorators
 
-from typing import List
+from typing import List, Dict, Any
+
 
 ##  Shared interface between setting container types
 #
@@ -41,7 +42,7 @@ class ContainerInterface:
     #   How this metadata is used depends on the application.
     #
     #   \return \type{dict} The metadata for this container.
-    def getMetaData(self):
+    def getMetaData(self) -> Dict[str, Any]:
         pass
 
     ##  Get the value of a single metadata entry.
@@ -51,7 +52,7 @@ class ContainerInterface:
     #
     #   \return The value of the metadata corresponding to `name`, or `default`
     #           when the entry could not be found.
-    def getMetaDataEntry(self, entry, default = None):
+    def getMetaDataEntry(self, entry: str, default: Any = None) -> Any:
         pass
 
     ##  Get the value of a property of the container item.
@@ -60,7 +61,7 @@ class ContainerInterface:
     #   \param name \type{string} The name of the property to retrieve.
     #
     #   \return The specified property value of the container item corresponding to key, or None if not found.
-    def getProperty(self, key: str, property_name: str):
+    def getProperty(self, key: str, property_name: str) -> Any:
         pass
 
     ##  Get whether the container item has a specific property.
@@ -88,15 +89,15 @@ class ContainerInterface:
     #   represenation.
     #
     #   \param serialized A serialized string containing a container that should be deserialized.
-    def deserialize(self, serialized: str):
+    def deserialize(self, serialized: str) -> None:
         pass
 
     ##  Get the path used to create this InstanceContainer.
-    def getPath(self):
+    def getPath(self) -> str:
         pass
 
     ##  Set the path used to create this InstanceContainer
-    def setPath(self, path):
+    def setPath(self, path: str) -> None:
         pass
 
 class DefinitionContainerInterface(ContainerInterface): pass

@@ -6,6 +6,7 @@ import json
 import enum
 import collections
 import re
+from typing import Any
 
 from UM.Logger import Logger
 
@@ -24,6 +25,24 @@ class DefinitionPropertyType(enum.IntEnum):
     TranslatedString = 3  ## Value is converted to string then passed through an i18nCatalog object to get a translated version of that string.
     Function = 4  ## Value is a python function. It is passed to SettingFunction's constructor which will parse and analyze it.
 
+## Conversion of string to float.
+def _toFloatConversion(value):
+    ## Ensure that all , are replaced with . (so they are seen as floats)
+    value = value.replace(",", ".")
+
+    def stripLeading0(matchobj):
+        return matchobj.group(0).lstrip("0")
+
+    ## Literal eval does not like "02" as a value, but users see this as "2".
+    ## We therefore look numbers with leading "0", provided they are not used in variable names
+    ## example: "test02 * 20" should not be changed, but "test * 02 * 20" should be changed (into "test * 2 * 20")
+    regex_pattern = '(?<!\.|\w|\d)0+(\d+)'
+    value = re.sub(regex_pattern, stripLeading0 ,value)
+
+    try:
+        return ast.literal_eval(value)
+    except:
+        return 0
 
 ##  Defines a single Setting with its properties.
 #
@@ -50,7 +69,7 @@ class SettingDefinition:
     #   \param container \type{DefinitionContainer} The container of this setting. Defaults to None.
     #   \param parent \type{SettingDefinition} The parent of this setting. Defaults to None.
     #   \param i18n_catalog \type{i18nCatalog} The translation catalog to use for this setting. Defaults to None.
-    def __init__(self, key, container = None, parent = None, i18n_catalog = None, *args, **kwargs):
+    def __init__(self, key: str, container = None, parent = None, i18n_catalog = None, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self._key = key
@@ -68,7 +87,7 @@ class SettingDefinition:
         self.__property_values = {}
 
     ##  Override __getattr__ to provide access to definition properties.
-    def __getattr__(self, name):
+    def __getattr__(self, name: str) -> Any:
         if name in self.__property_definitions:
             if name in self.__property_values:
                 return self.__property_values[name]
@@ -78,7 +97,7 @@ class SettingDefinition:
         raise AttributeError("'SettingDefinition' object has no attribute '{0}'".format(name))
 
     ##  Override __setattr__ to enforce invariant status of definition properties.
-    def __setattr__(self, name, value):
+    def __setattr__(self, name: str, value: Any) -> None:
         if name in self.__property_definitions:
             raise NotImplementedError("Setting of property {0} not supported".format(name))
 
@@ -529,25 +548,6 @@ class SettingDefinition:
         "comments": {"type": DefinitionPropertyType.String, "required": False, "read_only": True, "default": ""}
     }
 
-    ## Conversion of string to float.
-    def _toFloatConversion(value):
-        ## Ensure that all , are replaced with . (so they are seen as floats)
-        value = value.replace(",", ".")
-
-        def stripLeading0(matchobj):
-            return matchobj.group(0).lstrip("0")
-
-        ## Literal eval does not like "02" as a value, but users see this as "2".
-        ## We therefore look numbers with leading "0", provided they are not used in variable names
-        ## example: "test02 * 20" should not be changed, but "test * 02 * 20" should be changed (into "test * 2 * 20")
-        regex_pattern = '(?<!\.|\w|\d)0+(\d+)'
-        value = re.sub(regex_pattern, stripLeading0 ,value)
-
-        try:
-            return ast.literal_eval(value)
-        except:
-            return 0
-
     __type_definitions = {
         # An integer value
         "int": {"from": str, "to": ast.literal_eval, "validator": Validator.Validator},
@@ -568,5 +568,4 @@ class SettingDefinition:
         # A 3D point
         "vec3": {"from": None, "to": None, "validator": None},
     }
-
 

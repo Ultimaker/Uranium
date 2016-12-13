@@ -12,7 +12,8 @@ from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType
 from UM.Signal import Signal
 
 from UM.Settings.ContainerInterface import ContainerInterface
-from UM.Settings.SettingDefinition import SettingDefinition, DefinitionPropertyType
+from UM.Settings.SettingDefinition import SettingDefinition
+from UM.Settings.SettingDefinition import DefinitionPropertyType
 from UM.Settings.SettingRelation import SettingRelation
 from UM.Settings.SettingRelation import RelationType
 from UM.Settings.SettingFunction import SettingFunction
