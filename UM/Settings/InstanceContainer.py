@@ -14,7 +14,7 @@ from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType
 from UM.Settings.Interfaces import ContainerRegistryInterface
 from UM.Settings.DefinitionContainer import DefinitionContainer
 
-from . import ContainerInterface
+from UM.Settings.Interfaces import ContainerInterface
 from UM.Settings.SettingInstance import SettingInstance
 
 class InvalidInstanceError(Exception):
@@ -38,7 +38,7 @@ MimeTypeDatabase.addMimeType(
 #
 #
 @signalemitter
-class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
+class InstanceContainer(ContainerInterface, PluginObject):
     Version = 2
 
     ##  Constructor

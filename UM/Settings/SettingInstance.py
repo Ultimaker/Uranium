@@ -3,14 +3,18 @@
 
 import enum
 import os
-from typing import Any
+from typing import Any, List, Set
 
+# from UM.Settings.Interfaces import ContainerInterface
 from UM.Settings.Interfaces import ContainerInterface
 from UM.Signal import Signal, signalemitter
 from UM.Logger import Logger
 from UM.Decorators import call_if_enabled
 
-from . import SettingRelation
+MYPY = False
+if MYPY:
+    from UM.Settings.SettingRelation import SettingRelation
+from UM.Settings.SettingRelation import RelationType
 from . import Validator
 from . import SettingFunction
 from .SettingDefinition import SettingDefinition
@@ -198,7 +202,7 @@ class SettingInstance:
             if SettingDefinition.isReadOnlyProperty(property_name):
                 continue
 
-            changed_relations = set()
+            changed_relations = set()   # type: Set[SettingRelation]
             self._addRelations(changed_relations, self._definition.relations, property_name)
 
             # TODO: We should send this as a single change event instead of several of them.
@@ -213,9 +217,9 @@ class SettingInstance:
     #   \param relations_set \type{set} Set of keys (strings) of settings that are influenced
     #   \param relations list of relation objects that need to be checked.
     #   \param role name of the property value of the settings
-    def _addRelations(self, relations_set, relations, role) -> None:
+    def _addRelations(self, relations_set: Set['SettingRelation'], relations: List['SettingRelation'], role: str) -> None:
         for relation in filter(lambda r: r.role == role, relations):
-            if relation.type == SettingRelation.RelationType.RequiresTarget:
+            if relation.type == RelationType.RequiresTarget:
                 continue
             # Do not add relation to self.
             if relation.target.key == self.definition.key:

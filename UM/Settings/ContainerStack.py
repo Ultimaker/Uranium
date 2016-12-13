@@ -39,7 +39,7 @@ MimeTypeDatabase.addMimeType(
 
 ##  A stack of setting containers to handle setting value retrieval.
 @signalemitter
-class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
+class ContainerStack(ContainerInterface, PluginObject):
     Version = 3
 
     ##  Constructor

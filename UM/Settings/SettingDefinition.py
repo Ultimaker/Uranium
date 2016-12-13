@@ -6,9 +6,13 @@ import json
 import enum
 import collections
 import re
-from typing import Any
+from typing import Any, List
 
 from UM.Logger import Logger
+
+MYPY = False
+if MYPY:
+    from UM.Settings.SettingRelation import SettingRelation
 
 from . import SettingFunction
 from . import Validator
@@ -69,8 +73,8 @@ class SettingDefinition:
     #   \param container \type{DefinitionContainer} The container of this setting. Defaults to None.
     #   \param parent \type{SettingDefinition} The parent of this setting. Defaults to None.
     #   \param i18n_catalog \type{i18nCatalog} The translation catalog to use for this setting. Defaults to None.
-    def __init__(self, key: str, container = None, parent = None, i18n_catalog = None, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, key: str, container = None, parent = None, i18n_catalog = None) -> None:
+        super().__init__()
 
         self._key = key
         self._container = container
@@ -78,13 +82,16 @@ class SettingDefinition:
 
         self._i18n_catalog = i18n_catalog
 
-        self._children = []
-        self._relations = []
+        self._children = []     # type: List[SettingDefinition]
+        self._relations = []    # type: List[SettingRelation]
 
-        self.__ancestors = set() # Cached set of keys of ancestors. Used for fast lookups of ancestors.
-        self.__descendants = {} # Cached set of key - definition pairs of descendants. Used for fast lookup of descendants by key.
+        # Cached set of keys of ancestors. Used for fast lookups of ancestors.
+        self.__ancestors = set() # type: Set[str]
 
-        self.__property_values = {}
+        # Cached set of key - definition pairs of descendants. Used for fast lookup of descendants by key.
+        self.__descendants = {} # type: Dict[str, 'SettingDefinition']
+
+        self.__property_values = {} # type: Dict[str, Any]
 
     ##  Override __getattr__ to provide access to definition properties.
     def __getattr__(self, name: str) -> Any:
@@ -128,7 +135,7 @@ class SettingDefinition:
     #
     #   \return \type{list<SettingDefinition>}
     @property
-    def children(self):
+    def children(self) -> List['SettingDefinition']:
         return self._children
 
     ##  A list of SettingRelation objects of this setting.
@@ -545,7 +552,7 @@ class SettingDefinition:
 
         return result
 
-    def _updateDescendants(self, definition = None):
+    def _updateDescendants(self, definition: 'SettingDefinition' = None):
         result = {}
 
         if not definition:

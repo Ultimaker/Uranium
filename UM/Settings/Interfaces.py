@@ -8,6 +8,9 @@ from typing import List, Dict, Any
 
 ##  Shared interface between setting container types
 #
+from UM.Signal import Signal
+
+
 @UM.Decorators.interface
 class ContainerInterface:
     ##  Get the ID of the container.
@@ -99,6 +102,8 @@ class ContainerInterface:
     ##  Set the path used to create this InstanceContainer
     def setPath(self, path: str) -> None:
         pass
+
+    propertyChanged = None   # type: Signal
 
 class DefinitionContainerInterface(ContainerInterface): pass
 

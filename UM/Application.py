@@ -125,7 +125,7 @@ class Application():
         self._global_container_stack = None
 
     def getContainerRegistry(self):
-        return UM.Settings.ContainerRegistry.getInstance()
+        return UM.Settings.ContainerRegistry.ContainerRegistry.getInstance()
 
     ##  Emitted when the application window was closed and we need to shut down the application
     applicationShuttingDown = Signal()

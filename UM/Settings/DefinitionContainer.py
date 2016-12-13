@@ -11,7 +11,7 @@ from UM.Logger import Logger
 from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType
 from UM.Signal import Signal
 
-from UM.Settings.ContainerInterface import ContainerInterface
+from UM.Settings.Interfaces import ContainerInterface
 from UM.Settings.SettingDefinition import SettingDefinition
 from UM.Settings.SettingDefinition import DefinitionPropertyType
 from UM.Settings.SettingRelation import SettingRelation

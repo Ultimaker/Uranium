@@ -15,7 +15,7 @@ from UM.Resources import Resources, UnsupportedStorageTypeError
 from UM.MimeTypeDatabase import MimeType, MimeTypeDatabase
 from UM.Logger import Logger
 from UM.SaveFile import SaveFile
-from UM.Settings.ContainerInterface import ContainerInterface
+from UM.Settings.Interfaces import ContainerInterface
 from UM.Signal import Signal, signalemitter
 from UM.LockFile import LockFile
 
@@ -543,10 +543,10 @@ class ContainerRegistry(ContainerRegistryInterface):
     }
 
     __mime_type_map = {
-        "application/x-uranium-definitioncontainer": DefinitionContainer.DefinitionContainer,
-        "application/x-uranium-instancecontainer": InstanceContainer.InstanceContainer,
-        "application/x-uranium-containerstack": ContainerStack.ContainerStack,
-        "application/x-uranium-extruderstack": ContainerStack.ContainerStack
+        "application/x-uranium-definitioncontainer": DefinitionContainer,
+        "application/x-uranium-instancecontainer": InstanceContainer,
+        "application/x-uranium-containerstack": ContainerStack,
+        "application/x-uranium-extruderstack": ContainerStack
     }
 
 PluginRegistry.addType("settings_container", ContainerRegistry.addContainerType)

@@ -61,11 +61,6 @@ def call_if_enabled(function, condition):
 #   excluding builtin functions like __getattr__. It is also expected to match the signature of
 #   those functions.
 def interface(cls):
-    # First, sanity check the interface declaration to make sure it only contains methods
-    invalid_properties = list(filter(lambda i: not i[0].startswith("__") and not inspect.isfunction(i[1]), inspect.getmembers(cls)))
-    if invalid_properties:
-        raise TypeError("Class {0} is declared as interface but includes non-method properties: {1}".format(cls, invalid_properties))
-
     # Then, replace the new method with a method that checks if all methods have been reimplemented
     old_new = cls.__new__
     def new_new(subclass, *args, **kwargs):
