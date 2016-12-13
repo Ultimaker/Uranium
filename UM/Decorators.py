@@ -74,7 +74,7 @@ def interface(cls):
             if sub_method == method[1]:
                 raise NotImplementedError("Class {0} does not implement the complete interface of {1}: Missing method {2}".format(subclass, cls, method[0]))
 
-            if inspect.signature(sub_method) != inspect.signature(method[1]):
+            if not sameSignature(inspect.signature(sub_method), inspect.signature(method[1])):
                 raise NotImplementedError("Method {0} of class {1} does not have the same signature as method {2} in interface {3}: {4} vs {5}".format(sub_method, subclass, method[1], cls, inspect.signature(sub_method), inspect.signature(method[1])))
 
         if old_new == object.__new__:
@@ -89,3 +89,6 @@ def immutable(cls):
     property_names = list(filter(lambda i: isinstance(i, property), inspect.getmembers(cls)))
     cls.__slots__ = property_names
     return cls
+
+def sameSignature(a: inspect.Signature, b: inspect.Signature) -> bool:
+    return len(a.parameters) == len(b.parameters)
