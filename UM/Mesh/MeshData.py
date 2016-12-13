@@ -141,19 +141,12 @@ class MeshData:
             transformed_vertices = transformVertices(self._vertices, transformation)
             transformed_normals = transformNormals(self._normals, transformation) if self._normals is not None else None
 
-            transformation_matrix = transformation.getTransposed().getData()
-            # center position
+            transformation_matrix = transformation.getTransposed()
             if self._center_position is not None:
-                orig_center_position = numpy.append(self._center_position.getData(), 1)
-                transformed_center = orig_center_position.dot(transformation_matrix)
-                center_position = Vector(transformed_center[0], transformed_center[1], transformed_center[2])
+                center_position = self._center_position.multiply(transformation_matrix)
             else:
                 center_position = Reuse
-
-            # zero position
-            orig_zero_position = numpy.append(self._zero_position.getData(), 1)
-            transformed_zero = orig_zero_position.dot(transformation_matrix)
-            zero_position = Vector(transformed_zero[0], transformed_zero[1], transformed_zero[2])
+            zero_position = self._zero_position.multiply(transformation_matrix)
 
             return self.set(vertices=transformed_vertices, normals=transformed_normals, center_position=center_position, zero_position=zero_position)
         else:

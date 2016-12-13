@@ -126,7 +126,7 @@ class OutputDevice():
     #   \param limit_mimetype Limit output to these mime types.
     #
     #   \exception OutputDeviceError.WriteRequestFailedError
-    def requestWrite(self, nodes, file_name = None, limit_mimetypes = False):
+    def requestWrite(self, nodes, file_name = None, limit_mimetypes = False, file_handler = None):
         raise NotImplementedError("requestWrite needs to be implemented")
 
     writeStarted = Signal()

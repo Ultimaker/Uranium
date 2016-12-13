@@ -57,6 +57,41 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
         self._path = ""
         self._postponed_emits = []
 
+    def __hash__(self):
+        # We need to re-implement the hash, because we defined the __eq__ operator.
+        # According to some, returning the ID is technically not right, as objects with the same value should return
+        # the same hash. The way we use it, it is acceptable for objects with the same value to return a different hash.
+        return id(self)
+
+    def __eq__(self, other):
+        if type(self) != type(other):
+            return False  # Type mismatch
+
+        if self._id != other.getId():
+            return False  # ID mismatch
+
+        for entry in self._metadata:
+            if other.getMetaDataEntry(entry) != self._metadata[entry]:
+                return False  # Meta data entry mismatch
+
+        for entry in other.getMetaData():
+            if entry not in self._metadata:
+                return False  # Other has a meta data entry that this object does not have.
+
+        for key in self._instances:
+            if key not in other._instances:
+                return False  # This object has an instance that other does not have.
+            if self._instances[key] != other._instances[key]:
+                return False  # The objects don't match.
+
+        for key in other._instances:
+            if key not in self._instances:
+                return False  # Other has an instance that this object does not have.
+        return True
+
+    def __ne__(self, other):
+        return not (self == other)
+
     ##  \copydoc ContainerInterface::getId
     #
     #   Reimplemented from ContainerInterface
@@ -214,7 +249,8 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
 
         self._instances[key].setProperty(property_name, property_value, container)
 
-        self._dirty = True
+        self.setDirty(True)
+
 
     propertyChanged = Signal()
 
@@ -310,6 +346,10 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
         if int(parser["general"]["version"]) != self.Version:
             raise IncorrectInstanceVersionError("Reported version {0} but expected version {1}".format(int(parser["general"]["version"]), self.Version))
 
+        # Reset old data
+        self._metadata = {}
+        self._instances = {}
+
         self._name = parser["general"].get("name", self._id)
 
         definition_id = parser["general"]["definition"]
@@ -373,11 +413,17 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
             self._postponed_emits.append((instance.propertyChanged, (key, "validationState")))
             self._postponed_emits.append((instance.propertyChanged, (key, "state")))
             self._postponed_emits.append((instance.propertyChanged, (key, "value")))
+            for property_name in instance.definition.getPropertyNames():
+                if instance.definition.dependsOnProperty(property_name) == "value":
+                    self._postponed_emits.append((instance.propertyChanged, (key, property_name)))
         else:
             # Notify listeners of changed properties for all related properties
             instance.propertyChanged.emit(key, "value")
             instance.propertyChanged.emit(key, "state")  # State is no longer user state, so signal is needed.
             instance.propertyChanged.emit(key, "validationState") # If the value was invalid, it should now no longer be invalid.
+            for property_name in instance.definition.getPropertyNames():
+                if instance.definition.dependsOnProperty(property_name) == "value":
+                    self.propertyChanged.emit(key, property_name)
 
         self._dirty = True
 

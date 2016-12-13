@@ -9,6 +9,8 @@ from UM.Preferences import Preferences
 from UM.Logger import Logger
 from UM.Mesh.MeshReader import MeshReader
 
+from UM.FileHandler.ReadFileJob import ReadFileJob
+
 import time
 import math
 
@@ -18,56 +20,20 @@ i18n_catalog = i18nCatalog("uranium")
 ##  A Job subclass that performs mesh loading.
 #
 #   The result of this Job is a MeshData object.
-class ReadMeshJob(Job):
+class ReadMeshJob(ReadFileJob):
     def __init__(self, filename):
-        super().__init__()
-        self._filename = filename
+        super().__init__(filename)
         self._handler = Application.getInstance().getMeshFileHandler()
 
-    def getFileName(self):
-        return self._filename
-
     def run(self):
-        self.setResult([])
-        reader = self._handler.getReaderForFile(self._filename)
-        if not reader:
-            result_message = Message(i18n_catalog.i18nc("@info:status", "Cannot open file type <filename>{0}</filename>", self._filename), lifetime = 0)
-            result_message.show()
-            return
+        super().run()
 
-        # Give the plugin a chance to display a dialog before showing the loading UI
-        pre_read_result = reader.preRead(self._filename)
-
-        if pre_read_result != MeshReader.PreReadResult.accepted:
-            if pre_read_result == MeshReader.PreReadResult.failed:
-                result_message = Message(i18n_catalog.i18nc("@info:status", "Failed to load <filename>{0}</filename>", self._filename), lifetime = 0)
-                result_message.show()
-            return
-
-        loading_message = Message(i18n_catalog.i18nc("@info:status", "Loading <filename>{0}</filename>", self._filename), lifetime = 0, dismissable = False)
-        loading_message.setProgress(-1)
-        loading_message.show()
-
-        Job.yieldThread() # Yield to any other thread that might want to do something else.
-
-        nodes = None
-        try:
-            begin_time = time.time()
-            nodes = self._handler.readerRead(reader, self._filename)
-            end_time = time.time()
-            Logger.log("d", "Loading mesh took %s seconds", end_time - begin_time)
-        except:
-            Logger.logException("e", "Exception in mesh loader")
-        if not nodes:
-            loading_message.hide()
-
-            result_message = Message(i18n_catalog.i18nc("@info:status", "Failed to load <filename>{0}</filename>", self._filename), lifetime = 0)
-            result_message.show()
-            return
+        if not self._result:
+            self._result = []
 
         # Scale down to maximum bounds size if that is available
         if hasattr(Application.getInstance().getController().getScene(), "_maximum_bounds"):
-            for node in nodes:
+            for node in self._result:
                 max_bounds = Application.getInstance().getController().getScene()._maximum_bounds
                 node._resetAABB()
                 build_bounds = node.getBoundingBox()
@@ -101,6 +67,3 @@ class ReadMeshJob(Job):
                             scale_message.show()
                         except Exception:
                             Logger.logException("e", "While auto-scaling an exception has been raised")
-        self.setResult(nodes)
-
-        loading_message.hide()

@@ -26,25 +26,35 @@ class Logger:
         return cls.__loggers
 
     ##  Send a message of certain type to all loggers to be handled.
+    #
+    #   This method supports placeholders in either str.format() style or % style. For more details see
+    #   the respective Python documentation pages.
+    #
+    #   Note that only str.format() supports keyword argument placeholders. Additionally, if str.format()
+    #   makes any changes, % formatting will not be applied.
+    #
     #   \param log_type \type{string} Values must be; 'e' (error) , 'i'(info), 'd'(debug) or 'w'(warning).
     #   \param message \type{string} containing message to be logged
-    #   \param *args \type{list} List of variables to be added to the message.
+    #
+    #   \param *args \type{list} List of placeholder replacements that will be passed to str.format() or %.
+    #   \param **kwargs \type{dict} List of placeholder replacements that will be passed to str.format().
     @classmethod
-    def log(cls, log_type, message, *args):
-        function = inspect.currentframe().f_back.f_code
-        filename = function.co_filename
-        for path in sys.path:
-            if filename.startswith(path):
-                filename = filename.replace(path, "...")
-                continue
-        address = "%s (%s [%s]): " %(filename, function.co_name, function.co_firstlineno)
-        
-        if args: # Only format the message if there are args
-            message = message % args # Replace all the %s with the variables. Python formatting is magic.
-        
+    def log(cls, log_type, message, *args, **kwargs):
+        caller_frame = inspect.currentframe().f_back
+        frame_info = inspect.getframeinfo(caller_frame)
+
+        if args or kwargs: # Only format the message if there are args
+            new_message = message.format(*args, **kwargs)
+
+            if new_message == message:
+                new_message = message % args # Replace all the %s with the variables. Python formatting is magic.
+
+            message = new_message
+
+        message = "{class_name}.{function} [{line}]: {message}".format(class_name = caller_frame.f_globals["__name__"], function = frame_info.function, line = frame_info.lineno, message = message)
+
         for logger in cls.__loggers:
-            filled_message = address + message
-            logger.log(log_type, filled_message)
+            logger.log(log_type, message)
 
         if not cls.__loggers:
             print(message)

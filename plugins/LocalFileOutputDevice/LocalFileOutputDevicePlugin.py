@@ -13,7 +13,7 @@ from UM.Application import Application
 from UM.Preferences import Preferences
 from UM.Logger import Logger
 from UM.Mesh.MeshWriter import MeshWriter
-from UM.Mesh.WriteMeshJob import WriteMeshJob
+from UM.FileHandler.WriteFileJob import WriteFileJob
 from UM.Message import Message
 from UM.OutputDevice.OutputDevicePlugin import OutputDevicePlugin
 from UM.OutputDevice.OutputDevice import OutputDevice
@@ -56,7 +56,7 @@ class LocalFileOutputDevice(OutputDevice):
     #   to. Can be freely ignored if providing a file name makes no sense.
     #   \param limit_mimetypes Should we limit the available MIME types to the
     #   MIME types available to the currently active machine?
-    def requestWrite(self, nodes, file_name = None, limit_mimetypes = None):
+    def requestWrite(self, nodes, file_name = None, limit_mimetypes = None, file_handler = None):
         if self._writing:
             raise OutputDeviceError.DeviceBusyError()
 
@@ -77,7 +77,11 @@ class LocalFileOutputDevice(OutputDevice):
         selected_filter = None
         last_used_type = Preferences.getInstance().getValue("local_file/last_used_type")
 
-        file_types = Application.getInstance().getMeshFileHandler().getSupportedFileTypesWrite()
+        if not file_handler:
+            file_handler = Application.getInstance().getMeshFileHandler()
+
+        file_types = file_handler.getSupportedFileTypesWrite()
+
         file_types.sort(key = lambda k: k["description"])
         if limit_mimetypes:
             file_types = list(filter(lambda i: i["mime_type"] in limit_mimetypes, file_types))
@@ -96,10 +100,10 @@ class LocalFileOutputDevice(OutputDevice):
                     file_name += "." + item["extension"]
 
         dialog.setNameFilters(filters)
-        if selected_filter != None:
+        if selected_filter is not None:
             dialog.selectNameFilter(selected_filter)
 
-        if file_name != None:
+        if file_name is not None:
             dialog.selectFile(file_name)
 
         stored_directory = Preferences.getInstance().getValue("local_file/dialog_save_path")
@@ -122,7 +126,12 @@ class LocalFileOutputDevice(OutputDevice):
                 raise OutputDeviceError.UserCanceledError()
 
         self.writeStarted.emit(self)
-        mesh_writer = Application.getInstance().getMeshFileHandler().getWriter(selected_type["id"])
+
+        if file_handler:
+            file_writer = file_handler.getWriter(selected_type["id"])
+        else:
+            file_writer = Application.getInstance().getMeshFileHandler().getWriter(selected_type["id"])
+
         try:
             mode = selected_type["mode"]
             if mode == MeshWriter.OutputMode.TextMode:
@@ -132,7 +141,7 @@ class LocalFileOutputDevice(OutputDevice):
                 Logger.log("d", "Writing to Local File %s in binary mode", file_name)
                 stream = open(file_name, "wb")
 
-            job = WriteMeshJob(mesh_writer, stream, nodes, mode)
+            job = WriteFileJob(file_writer, stream, nodes, mode)
             job.setFileName(file_name)
             job.progress.connect(self._onJobProgress)
             job.finished.connect(self._onWriteJobFinished)

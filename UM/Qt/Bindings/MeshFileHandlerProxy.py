@@ -15,6 +15,8 @@ from UM.Mesh.WriteMeshJob import WriteMeshJob
 from UM.Operations.AddSceneNodeOperation import AddSceneNodeOperation
 from UM.Message import Message
 
+from UM.Decorators import deprecated
+
 import os.path
 import platform
 
@@ -22,6 +24,7 @@ from UM.i18n import i18nCatalog
 i18n_catalog = i18nCatalog("uranium")
 
 class MeshFileHandlerProxy(QObject):
+    @deprecated("MeshFileHandlerProxy is no longer required. Use MeshFileHandler directly", "2.4")
     def __init__(self, parent = None):
         super().__init__(parent)
         self._mesh_handler = Application.getInstance().getMeshFileHandler()

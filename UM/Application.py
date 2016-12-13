@@ -17,6 +17,7 @@ from UM.Logger import Logger
 from UM.Preferences import Preferences
 from UM.OutputDevice.OutputDeviceManager import OutputDeviceManager
 from UM.i18n import i18nCatalog
+from UM.Workspace.WorkspaceFileHandler import WorkspaceFileHandler
 
 import UM.Settings
 
@@ -77,7 +78,10 @@ class Application():
             pass
 
         self._controller = Controller(self)
-        self._mesh_file_handler = MeshFileHandler()
+        self._mesh_file_handler = MeshFileHandler.getInstance()
+        self._mesh_file_handler.setApplication(self)
+        self._workspace_file_handler = WorkspaceFileHandler.getInstance()
+        self._workspace_file_handler.setApplication(self)
         self._extensions = []
         self._backend = None
         self._output_device_manager = OutputDeviceManager()
@@ -269,6 +273,9 @@ class Application():
     #   \returns MeshFileHandler \type{MeshFileHandler}
     def getMeshFileHandler(self):
         return self._mesh_file_handler
+
+    def getWorkspaceFileHandler(self):
+        return self._workspace_file_handler
 
     def getOperationStack(self):
         return self._operation_stack

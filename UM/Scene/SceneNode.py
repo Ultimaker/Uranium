@@ -194,6 +194,8 @@ class SceneNode():
 
     ##  Remove all decorators
     def removeDecorators(self):
+        for decorator in self._decorators:
+            decorator.clear()
         self._decorators = []
         self.decoratorsChanged.emit(self)
 
@@ -202,6 +204,7 @@ class SceneNode():
     def removeDecorator(self, dec_type):
         for decorator in self._decorators:
             if type(decorator) == dec_type:
+                decorator.clear()
                 self._decorators.remove(decorator)
                 self.decoratorsChanged.emit(self)
                 break
@@ -487,9 +490,10 @@ class SceneNode():
         elif transform_space == SceneNode.TransformSpace.Parent:
             self._transformation.preMultiply(translation_matrix)
         elif transform_space == SceneNode.TransformSpace.World:
+            world_transformation = deepcopy(self._world_transformation)
             self._transformation.multiply(self._world_transformation.getInverse())
             self._transformation.multiply(translation_matrix)
-            self._transformation.multiply(self._world_transformation)
+            self._transformation.multiply(world_transformation)
         self._transformChanged()
 
     ##  Set the local position value.
@@ -504,7 +508,6 @@ class SceneNode():
         if transform_space == SceneNode.TransformSpace.World:
             if self.getWorldPosition() == position:
                 return
-            print("translating", position - self._derived_position)
             self.translate(position - self._derived_position, SceneNode.TransformSpace.World)
 
     ##  Signal. Emitted whenever the transformation of this object or any child object changes.

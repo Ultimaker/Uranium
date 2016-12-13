@@ -1,9 +1,12 @@
 # Copyright (c) 2016 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-from UM.PluginObject import PluginObject
+from UM.FileHandler.FileWriter import FileWriter
 
 
-class WorkspaceWriter(PluginObject):
+class WorkspaceWriter(FileWriter):
     def __init__(self):
         super().__init__()
+
+    def write(self, stream, node):
+        pass

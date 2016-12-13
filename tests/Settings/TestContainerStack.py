@@ -24,8 +24,8 @@ from UM.Settings.ContainerStack import InvalidContainerStackError
 #   actual implementations, the tests in this suite are unaffected.
 class MockContainer(ContainerInterface):
     ##  Creates a mock container with a new unique ID.
-    def __init__(self):
-        self._id = uuid.uuid4().int
+    def __init__(self, container_id = None):
+        self._id = uuid.uuid4().int if container_id == None else container_id
         self._metadata = {}
         self.items = {}
 
@@ -162,11 +162,16 @@ def test_deserialize_syntax_error(container_stack):
 def test_deserialize_wrong_version(container_stack, container_registry):
     container_registry.addContainer(InstanceContainer("a")) # Make sure this container isn't the one it complains about.
 
-    serialised = """[general]
-name = Test
-id = testid
-containers = a
-version = -1""" # -1 should always be wrong.
+    serialised = """
+    [general]
+    name = Test
+    id = testid
+    version = -1
+
+    [containers]
+    0 = a
+    """ # -1 should always be wrong.
+
     with pytest.raises(IncorrectVersionError):
         container_stack.deserialize(serialised)
 
@@ -179,35 +184,57 @@ version = -1""" # -1 should always be wrong.
 def test_deserialize_missing_items(container_stack, container_registry):
     container_registry.addContainer(InstanceContainer("a")) # Make sure this container isn't the one it complains about.
 
-    serialised_no_name = """[general]
-id = testid
-containers = a
-version = """ + str(ContainerStack.Version)
+    serialised_no_name = """
+    [general]
+    id = testid
+    version = {version}
+
+    [containers]
+    0 = a
+    """.format(version = ContainerStack.Version)
+
     with pytest.raises(InvalidContainerStackError):
         container_stack.deserialize(serialised_no_name)
 
-    serialised_no_id = """[general]
-name = Test
-containers = a
-version = """ + str(ContainerStack.Version)
+    serialised_no_id = """
+    [general]
+    name = Test
+    version = {version}
+
+    [containers]
+    0 = a
+    """.format(version = ContainerStack.Version)
+
     with pytest.raises(InvalidContainerStackError):
         container_stack.deserialize(serialised_no_id)
 
-    serialised_no_version = """[general]
-name = Test
-id = testid
-containers = a"""
+    serialised_no_version = """
+    [general]
+    name = Test
+    id = testid
+
+    [containers]
+    0 = a
+    """
+
     with pytest.raises(InvalidContainerStackError):
         container_stack.deserialize(serialised_no_version)
 
-    serialised_no_containers = """[general]
-name = Test
-id = testid
-version = """ + str(ContainerStack.Version)
-    container_stack.deserialize(serialised_no_containers) # Missing containers is allowed.
+    serialised_no_containers = """
+    [general]
+    name = Test
+    id = testid
+    version = {version}
+    """.format(version = ContainerStack.Version)
 
-    serialised_no_general = """[metadata]
-foo = bar"""
+    container_stack.deserialize(serialised_no_containers) # Missing containers is allowed.
+    assert container_stack.getContainers() == [] # Deserialize of an empty stack should result in an empty stack
+
+    serialised_no_general = """
+    [metadata]
+    foo = bar
+    """
+
     with pytest.raises(InvalidContainerStackError):
         container_stack.deserialize(serialised_no_general)
 
@@ -221,38 +248,59 @@ def test_deserialize_containers(container_stack, container_registry):
     container = InstanceContainer("a")
     container_registry.addContainer(container)
 
-    serialised = """[general]
-name = Test
-id = testid
-containers = a
-version = """ + str(ContainerStack.Version) # Test case where there is a container.
+    serialised = """
+    [general]
+    name = Test
+    id = testid
+    version = {version}
+
+    [containers]
+    0 = a
+    """.format(version = ContainerStack.Version) # Test case where there is a container.
+
     container_stack.deserialize(serialised)
     assert container_stack.getContainers() == [container]
 
     container_stack = ContainerStack(uuid.uuid4().int)
-    serialised = """[general]
-name = Test
-id = testid
-containers =
-version = """ + str(ContainerStack.Version) # Test case where there is no container.
+    serialised = """
+    [general]
+    name = Test
+    id = testid
+    version = {version}
+
+    [containers]
+    """.format(version = ContainerStack.Version) # Test case where there is no container.
+
     container_stack.deserialize(serialised)
     assert container_stack.getContainers() == []
 
     container_stack = ContainerStack(uuid.uuid4().int)
-    serialised = """[general]
-name = Test
-id = testid
-containers = a,a
-version = """ + str(ContainerStack.Version) # Test case where there are two of the same containers.
+    serialised = """
+    [general]
+    name = Test
+    id = testid
+    version = {version}
+
+    [containers]
+    0 = a
+    1 = a
+    """.format(version = ContainerStack.Version) # Test case where there are two of the same containers.
+
     container_stack.deserialize(serialised)
     assert container_stack.getContainers() == [container, container]
 
     container_stack = ContainerStack(uuid.uuid4().int)
-    serialised = """[general]
-name = Test
-id = testid
-containers = a,b
-version = """ + str(ContainerStack.Version) # Test case where a container doesn't exist.
+    serialised = """
+    [general]
+    name = Test
+    id = testid
+    version = {version}
+
+    [containers]
+    0 = a
+    1 = b
+    """.format(version = ContainerStack.Version) # Test case where a container doesn't exist.
+
     with pytest.raises(Exception):
         container_stack.deserialize(serialised)
 
@@ -597,6 +645,98 @@ def test_setNextStack(container_stack):
 
     with pytest.raises(Exception):
         container_stack.setNextStack(container_stack) # Can't set itself as next stack.
+
+##  Test backward compatibility of container config file format change
+#
+#   This tests whether ContainerStack can still deserialize containers using the old
+#   format where we would have a single comma separated entry with the containers.
+def test_backwardCompatibility(container_stack, container_registry):
+    container_a = MockContainer("a")
+    container_registry.addContainer(container_a) # Make sure this container isn't the one it complains about.
+
+    serialised = """
+    [general]
+    name = Test
+    id = testid
+    version = {version}
+    containers = a,a,a
+    """.format(version = ContainerStack.Version) # Old-style serialized stack
+
+    container_stack.deserialize(serialised)
+    assert container_stack.getContainers() == [container_a, container_a, container_a]
+
+##  Test serialization and deserialization of a stack with containers with special characters in their ID
+#
+def test_idSpecialCharacters(container_stack, container_registry):
+    container_ab = MockContainer("a,b") # Comma used to break deserialize
+    container_registry.addContainer(container_ab)
+
+    serialized = """
+    [general]
+    name = Test
+    id = testid
+    version = {version}
+    containers = a,b
+    """.format(version = ContainerStack.Version)
+
+    with pytest.raises(Exception):
+        # Using old code, this would fail because it tries to add two containers, a and b.
+        container_stack.deserialize(serialized)
+
+    serialized = """
+    [general]
+    name = Test
+    id = testid
+    version = {version}
+
+    [containers]
+    0 = a,b
+    """.format(version = ContainerStack.Version)
+
+    container_stack.deserialize(serialized)
+    assert container_stack.getContainers() == [container_ab]
+
+    test_container_0 = MockContainer("= TestContainer with, some? Special $ Characters #12")
+    container_registry.addContainer(test_container_0)
+
+    serialized = """
+    [general]
+    name = Test
+    id = testid
+    version = {version}
+
+    [containers]
+    0 = = TestContainer with, some? Special $ Characters #12
+    """.format(version = ContainerStack.Version)
+
+    container_stack.deserialize(serialized)
+    assert container_stack.getContainers() == [test_container_0]
+
+    test_container_1 = MockContainer("☂℮﹩⊥ ḉ◎η☂αїη℮ґ")
+    container_registry.addContainer(test_container_1)
+
+    # Special unicode characters are handled properly
+    serialized = """
+    [general]
+    name = Test
+    id = testid
+    version = {version}
+
+    [containers]
+    0 = ☂℮﹩⊥ ḉ◎η☂αїη℮ґ
+    """.format(version = ContainerStack.Version)
+
+    container_stack.deserialize(serialized)
+    assert container_stack.getContainers() == [test_container_1]
+
+    serialized = container_stack.serialize()
+
+    # Unfortunately, we cannot check that serialized == container_stack.serialized() due to dict
+    # having a random order.
+    assert "id = testid" in serialized
+    assert "name = Test" in serialized
+    assert "0 = ☂℮﹩⊥ ḉ◎η☂αїη℮ґ" in serialized
+
 
 ##  Tests a single cycle of serialising and deserialising a container stack.
 #

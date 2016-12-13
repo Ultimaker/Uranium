@@ -202,7 +202,37 @@ class SettingDefinition:
     ## Check if this setting definition matches the provided criteria.
     #   \param kwargs \type{dict} A dictionary of keyword arguments that need to match its attributes.
     def matchesFilter(self, **kwargs):
-        for key in kwargs:
+
+        # First check for translated labels.
+        keywords = kwargs.copy()
+        if "i18n_label" in keywords:
+            try:
+                property_value = getattr(self, "label")
+            except AttributeError:
+                # If we do not have the attribute, we do not match
+                return False
+
+            if "i18n_catalog" in keywords:
+                catalog = keywords["i18n_catalog"]
+                property_value = catalog.i18nc(self._key + " label", property_value)
+
+            value = keywords["i18n_label"]
+            del keywords["i18n_label"]
+            if not isinstance(value, str):
+                return False
+            if value != property_value:
+                if "*" not in value:
+                    return False
+
+                value = value.strip("* ").lower()
+                if value not in property_value.lower():
+                    return False
+
+        if "i18n_catalog" in keywords:
+            del keywords["i18n_catalog"]
+
+        # Normal attribute matching
+        for key in keywords:
             try:
                 property_value = getattr(self, key)
             except AttributeError:
@@ -326,12 +356,13 @@ class SettingDefinition:
     #   \param name \type{string} The name of the property to define.
     #   \param property_type \type{DefinitionPropertyType} The type of property.
     #   \param kwargs Keyword arguments. Possible values:
-    #                 required \type{bool} True if missing the property indicates an error should be raised. Defaults to False.
+    #                 required  \type{bool} True if missing the property indicates an error should be raised. Defaults to False.
     #                 read_only \type{bool} True if the property should never be set on a SettingInstance. Defaults to False. Note that for Function properties this indicates whether the result of the function should be stored.
-    #                 default The default value for this property. This will be returned when the specified property is not defined for this definition.
+    #                 default               The default value for this property. This will be returned when the specified property is not defined for this definition.
+    #                 depends_on            Key to another property that this property depends on; eg; if that value changes, this value should be re-evaluated.
     @classmethod
     def addSupportedProperty(cls, name, property_type, **kwargs):
-        cls.__property_definitions[name] = {"type": property_type, "required": kwargs.get("required", False), "read_only": kwargs.get("read_only", False), "default": kwargs.get("default", None)}
+        cls.__property_definitions[name] = {"type": property_type, "required": kwargs.get("required", False), "read_only": kwargs.get("read_only", False), "default": kwargs.get("default", None), "depends_on": kwargs.get("depends_on", None)}
 
     ##  Get the names of all supported properties.
     #
@@ -393,6 +424,19 @@ class SettingDefinition:
         if name in cls.__property_definitions:
             return cls.__property_definitions[name]["read_only"]
         return False
+
+    ##  Check if the specified property depends on another property
+    #
+    #   The value of certain properties can change if the value of another property changes. This is used to signify that relation.
+    #
+    #   \param name \type{string} The name of the property to check if it depends on another setting.
+    #
+    #   \return \type{string} The property it depends on or None if it does not depend on another property.
+    @classmethod
+    def dependsOnProperty(cls, name):
+        if name in cls.__property_definitions:
+            return cls.__property_definitions[name]["depends_on"]
+        return None
 
     ##  Add a new setting type to the list of accepted setting types.
     #
@@ -515,37 +559,37 @@ class SettingDefinition:
 
     __property_definitions = {
         # The name of the setting. Only used for display purposes.
-        "label": {"type": DefinitionPropertyType.TranslatedString, "required": True, "read_only": True, "default": ""},
+        "label": {"type": DefinitionPropertyType.TranslatedString, "required": True, "read_only": True, "default": "", "depends_on" : None},
         # The type of setting. Can be any one of the types defined.
-        "type": {"type": DefinitionPropertyType.String, "required": True, "read_only": True, "default": ""},
+        "type": {"type": DefinitionPropertyType.String, "required": True, "read_only": True, "default": "", "depends_on" : None},
         # An optional icon that can be displayed for the setting.
-        "icon": {"type": DefinitionPropertyType.String, "required": False, "read_only": True, "default": ""},
+        "icon": {"type": DefinitionPropertyType.String, "required": False, "read_only": True, "default": "", "depends_on" : None},
         # A string describing the unit used for the setting. This is only used for display purposes at the moment.
-        "unit": {"type": DefinitionPropertyType.String, "required": False, "read_only": True, "default": ""},
+        "unit": {"type": DefinitionPropertyType.String, "required": False, "read_only": True, "default": "", "depends_on" : None},
         # A description of what the setting does. Used for display purposes.
-        "description": {"type": DefinitionPropertyType.TranslatedString, "required": True, "read_only": True, "default": ""},
+        "description": {"type": DefinitionPropertyType.TranslatedString, "required": True, "read_only": True, "default": "", "depends_on" : None},
         # A description of what is wrong when the setting has a warning validation state. Used for display purposes.
-        "warning_description": {"type": DefinitionPropertyType.TranslatedString, "required": False, "read_only": True, "default": ""},
+        "warning_description": {"type": DefinitionPropertyType.TranslatedString, "required": False, "read_only": True, "default": "", "depends_on" : None},
         # A description of what is wrong when the setting has an error validation state. Used for display purposes.
-        "error_description": {"type": DefinitionPropertyType.TranslatedString, "required": False, "read_only": True, "default": ""},
+        "error_description": {"type": DefinitionPropertyType.TranslatedString, "required": False, "read_only": True, "default": "", "depends_on" : None},
         # The default value of the setting. Used when no value function is defined.
-        "default_value": {"type": DefinitionPropertyType.Any, "required": False, "read_only": True,  "default": 0},
+        "default_value": {"type": DefinitionPropertyType.Any, "required": False, "read_only": True,  "default": 0, "depends_on" : None},
         # A function used to calculate the value of the setting.
-        "value": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False,  "default": None},
+        "value": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False,  "default": None, "depends_on" : None},
         # A function that should evaluate to a boolean to indicate whether or not the setting is enabled.
-        "enabled": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False, "default": True},
+        "enabled": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False, "default": True, "depends_on": None},
         # A function that calculates the minimum value for this setting. If the value is less than this, validation will indicate an error.
-        "minimum_value": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False, "default": None},
+        "minimum_value": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False, "default": None, "depends_on" : None},
         # A function that calculates the maximum value for this setting. If the value is more than this, validation will indicate an error.
-        "maximum_value": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False, "default": None},
+        "maximum_value": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False, "default": None, "depends_on" : None},
         # A function that calculates the minimum warning value for this setting. If the value is less than this, validation will indicate a warning.
-        "minimum_value_warning": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False, "default": None},
+        "minimum_value_warning": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False, "default": None, "depends_on" : None},
         # A function that calculates the maximum warning value for this setting. If the value is more than this, validation will indicate a warning.
-        "maximum_value_warning": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False, "default": None},
+        "maximum_value_warning": {"type": DefinitionPropertyType.Function, "required": False, "read_only": False, "default": None, "depends_on" : None},
         # A dictionary of key-value pairs that provide the options for an enum type setting. The key is the actual value, the value is a translated display string.
-        "options": {"type": DefinitionPropertyType.Any, "required": False, "read_only": True, "default": {} },
+        "options": {"type": DefinitionPropertyType.Any, "required": False, "read_only": True, "default": {}, "depends_on" : None},
         # Optional comments that apply to the setting. Will be ignored.
-        "comments": {"type": DefinitionPropertyType.String, "required": False, "read_only": True, "default": ""}
+        "comments": {"type": DefinitionPropertyType.String, "required": False, "read_only": True, "default": "", "depends_on" : None}
     }
 
     __type_definitions = {

@@ -4,6 +4,7 @@ import configparser
 import io
 from typing import Set, List, Optional, cast
 
+from UM.Settings.SettingDefinition import SettingDefinition
 from UM.Signal import Signal, signalemitter
 from UM.PluginObject import PluginObject
 from UM.Logger import Logger
@@ -28,10 +29,18 @@ MimeTypeDatabase.addMimeType(
     )
 )
 
+MimeTypeDatabase.addMimeType(
+    MimeType(
+        name = "application/x-uranium-extruderstack",
+        comment = "Uranium Extruder Stack",
+        suffixes = [ "stack.cfg" ]
+    )
+)
+
 ##  A stack of setting containers to handle setting value retrieval.
 @signalemitter
-class ContainerStack(ContainerInterface, PluginObject):
-    Version = 2
+class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
+    Version = 3
 
     ##  Constructor
     #
@@ -221,11 +230,9 @@ class ContainerStack(ContainerInterface, PluginObject):
         for key, value in self._metadata.items():
             parser["metadata"][key] = str(value)
 
-        container_id_string = ""
-        for container in self._containers:
-            container_id_string += str(container.getId()) + ","
-
-        parser["general"]["containers"] = container_id_string
+        parser.add_section("containers")
+        for index in range(len(self._containers)):
+            parser["containers"][str(index)] = self._containers[index].getId()
 
         stream = io.StringIO()
         parser.write(stream)
@@ -246,24 +253,41 @@ class ContainerStack(ContainerInterface, PluginObject):
         if parser["general"].getint("version") != self.Version:
             raise IncorrectVersionError
 
+        # Clear all data before starting.
+        for container in self._containers:
+            container.propertyChanged.disconnect(self._collectPropertyChanges)
+
+        self._containers = []
+        self._metadata = {}
+
         self._name = parser["general"].get("name")
         self._id = parser["general"].get("id")
 
         if "metadata" in parser:
             self._metadata = dict(parser["metadata"])
 
-        # The containers are saved in a single comma-separated list.
-        container_string = parser["general"].get("containers", "")
-        Logger.log("d", "While deserializing, we got the following container string: %s", container_string)
-        container_id_list = container_string.split(",")
-        for container_id in container_id_list:
-            if container_id != "":
+        if "containers" in parser:
+            for index, container_id in parser.items("containers"):
                 containers = _containerRegistry.findContainers(id = container_id)
                 if containers:
                     containers[0].propertyChanged.connect(self._collectPropertyChanges)
                     self._containers.append(containers[0])
                 else:
                     raise Exception("When trying to deserialize %s, we received an unknown ID (%s) for container" % (self._id, container_id))
+
+        elif parser.has_option("general", "containers"):
+            # Backward compatibility with 2.3.1: The containers used to be saved in a single comma-separated list.
+            container_string = parser["general"].get("containers", "")
+            Logger.log("d", "While deserializing, we got the following container string: %s", container_string)
+            container_id_list = container_string.split(",")
+            for container_id in container_id_list:
+                if container_id != "":
+                    containers = _containerRegistry.findContainers(id = container_id)
+                    if containers:
+                        containers[0].propertyChanged.connect(self._collectPropertyChanges)
+                        self._containers.append(containers[0])
+                    else:
+                        raise Exception("When trying to deserialize %s, we received an unknown ID (%s) for container" % (self._id, container_id))
 
         ## TODO; Deserialize the containers.
 
@@ -481,9 +505,20 @@ class ContainerStack(ContainerInterface, PluginObject):
     ##  Check if the container stack has errors
     def hasErrors(self):
         for key in self.getAllKeys():
+            enabled = self.getProperty(key, "enabled")
+            if not enabled:
+                continue
             validation_state = self.getProperty(key, "validationState")
-            if validation_state in (ValidatorState.Exception, ValidatorState.MaximumError,
-            ValidatorState.MinimumError):
+            if validation_state is None:
+                # Setting is not validated. This can happen if there is only a setting definition.
+                # We do need to validate it, because a setting defintions value can be set by a function, which could
+                # be an invalid setting.
+                definition = self.getSettingDefinition(key)
+                validator_type = SettingDefinition.getValidatorForType(definition.type)
+                if validator_type:
+                    validator = validator_type(key)
+                    validation_state = validator(self)
+            if validation_state in (ValidatorState.Exception, ValidatorState.MaximumError, ValidatorState.MinimumError):
                 return True
         return False
 
@@ -492,8 +527,16 @@ class ContainerStack(ContainerInterface, PluginObject):
         error_keys = []
         for key in self.getAllKeys():
             validation_state = self.getProperty(key, "validationState")
-            if validation_state in (ValidatorState.Exception, ValidatorState.MaximumError,
-                                    ValidatorState.MinimumError):
+            if validation_state is None:
+                # Setting is not validated. This can happen if there is only a setting definition.
+                # We do need to validate it, because a setting defintions value can be set by a function, which could
+                # be an invalid setting.
+                definition = self.getSettingDefinition(key)
+                validator_type = SettingDefinition.getValidatorForType(definition.type)
+                if validator_type:
+                    validator = validator_type(key)
+                    validation_state = validator(self)
+            if validation_state in (ValidatorState.Exception, ValidatorState.MaximumError, ValidatorState.MinimumError):
                 error_keys.append(key)
         return error_keys
 
