@@ -195,7 +195,8 @@ class SettingDefinition:
 
             if "i18n_catalog" in keywords:
                 catalog = keywords["i18n_catalog"]
-                property_value = catalog.i18nc(self._key + " label", property_value)
+                if catalog:
+                    property_value = catalog.i18nc(self._key + " label", property_value)
 
             value = keywords["i18n_label"]
             del keywords["i18n_label"]
