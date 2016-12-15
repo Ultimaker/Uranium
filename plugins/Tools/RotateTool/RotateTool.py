@@ -74,6 +74,10 @@ class RotateTool(Tool):
 
             if ToolHandle.isAxis(id):
                 self.setLockedAxis(id)
+            else:
+                # Not clicked on an axis: do nothing.
+                return False
+
             handle_position = self._handle.getWorldPosition()
 
             # Save the current positions of the node, as we want to rotate around their current centres
