@@ -316,7 +316,12 @@ class Polygon:
                 return Polygon(numpy.zeros((0, 2), numpy.float64))
             if len(points) <= 2:
                 return Polygon(numpy.array(points, numpy.float64))
-            hull = scipy.spatial.ConvexHull(points)
+
+            try:
+                hull = scipy.spatial.ConvexHull(points)
+            except scipy.spatial.qhull.QhullError:
+                return Polygon(numpy.zeros((0, 2), numpy.float64))
+
             return Polygon(numpy.flipud(self._points[hull.vertices]))
     else:
         def getConvexHull(self):
