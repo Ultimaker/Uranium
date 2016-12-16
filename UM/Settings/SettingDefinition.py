@@ -595,7 +595,7 @@ class SettingDefinition:
 
     __type_definitions = {
         # An integer value
-        "int": {"from": str, "to": ast.literal_eval, "validator": Validator.Validator},
+        "int": {"from": lambda v: str(v) if v is not None else "", "to": ast.literal_eval, "validator": Validator.Validator},
         # A boolean value
         "bool": {"from": str, "to": ast.literal_eval, "validator": None},
         # Special case setting; Doesn't have a value. Display purposes only.
