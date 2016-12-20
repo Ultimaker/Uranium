@@ -92,7 +92,7 @@ class Controller:
         except KeyError:
             Logger.log("e", "No view named %s found", name)
         except Exception as e:
-            Logger.log("e", "An exception occurred while switching views", str(e))
+            Logger.log("e", "An exception occurred while switching views: %s", str(e))
 
     ##  Emitted when the list of views changes.
     viewsChanged = Signal()

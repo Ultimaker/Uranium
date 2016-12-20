@@ -38,6 +38,13 @@ class QtShaderProgram(ShaderProgram):
         if not self._shader_program.addShaderFromSourceCode(QOpenGLShader.Fragment, shader):
             Logger.log("e", "Fragment shader failed to compile: %s", self._shader_program.log())
 
+    def setGeometryShader(self, shader):
+        if not self._shader_program:
+            self._shader_program = QOpenGLShaderProgram()
+
+        if not self._shader_program.addShaderFromSourceCode(QOpenGLShader.Geometry, shader):
+            Logger.log("e", "Geometry shader failed to compile: %s", self._shader_program.log())
+
     def build(self):
         if not self._shader_program:
             Logger.log("e", "No shader sources loaded")

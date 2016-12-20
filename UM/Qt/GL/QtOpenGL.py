@@ -3,7 +3,7 @@
 
 import sys
 
-from PyQt5.QtGui import QOpenGLVersionProfile, QOpenGLContext, QOpenGLFramebufferObject, QOpenGLBuffer
+from PyQt5.QtGui import QOpenGLVersionProfile, QOpenGLContext, QOpenGLFramebufferObject, QOpenGLBuffer, QSurfaceFormat
 from PyQt5.QtWidgets import QMessageBox
 
 from UM.Logger import Logger
@@ -18,7 +18,8 @@ from . import QtShaderProgram
 class QtOpenGL(OpenGL):
     def __init__(self):
         profile = QOpenGLVersionProfile()
-        profile.setVersion(2, 0)
+        profile.setVersion(4, 1)
+        profile.setProfile(QSurfaceFormat.CoreProfile)  # required
         self._gl = QOpenGLContext.currentContext().versionFunctions(profile)
         if not self._gl:
             Logger.log("e", "Startup failed due to OpenGL initialization failing")

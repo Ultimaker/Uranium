@@ -43,8 +43,15 @@ class ShaderProgram:
         if "vertex" not in parser["shaders"] or "fragment" not in parser["shaders"]:
             raise InvalidShaderProgramError("{0} is missing a vertex of fragment shader".format(file_name))
 
-        self.setVertexShader(parser["shaders"]["vertex"])
-        self.setFragmentShader(parser["shaders"]["fragment"])
+        self.setVertexShader("#version 410\n" + parser["shaders"]["vertex"])
+        self.setFragmentShader("#version 410\n" + parser["shaders"]["fragment"])
+        if "geometry" in parser["shaders"]:
+            from UM.Logger import Logger
+            Logger.log("d", "Loading geometry shader [%s]..." % parser["shaders"]["geometry"])
+            self.setGeometryShader(
+                "#version 410\n" +
+                #"#extension GL_ARB_geometry_shader4 : enable\n" +
+                parser["shaders"]["geometry"])
 
         self.build()
 
