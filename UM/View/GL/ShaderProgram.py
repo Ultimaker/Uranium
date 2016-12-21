@@ -47,11 +47,11 @@ class ShaderProgram:
         self.setFragmentShader("#version 410\n" + parser["shaders"]["fragment"])
         if "geometry" in parser["shaders"]:
             from UM.Logger import Logger
-            Logger.log("d", "Loading geometry shader [%s]..." % parser["shaders"]["geometry"])
-            self.setGeometryShader(
-                "#version 410\n" +
-                #"#extension GL_ARB_geometry_shader4 : enable\n" +
-                parser["shaders"]["geometry"])
+            code =  "#version 410\n" + parser["shaders"]["geometry"]
+            code_str = "\n".join(["%4i %s" % (i, s) for i, s in enumerate(code.split("\n"))])
+            Logger.log("d", "Loading geometry shader... \n")
+            Logger.log("d", code_str)
+            self.setGeometryShader(code)
 
         self.build()
 
