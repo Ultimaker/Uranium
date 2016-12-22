@@ -148,6 +148,15 @@ def fillInProfileSpaces(start_time, end_time, profile_call_list):
 def secondsToMS(value):
     return math.floor(value *1000)
 
+def profileCall(name, callable):
+    start_time = time.time()
+    child_accu_stack.append([])
+    callable()
+    end_time = time.time()
+    call_stat = ProfileCall(name, 0, start_time, end_time,
+                            fillInProfileSpaces(start_time, end_time, child_accu_stack.pop()))
+    child_accu_stack[-1].append(call_stat)
+
 ###########################################################################
 
 ##  Simple implementation of signals and slots.
@@ -260,9 +269,12 @@ class Signal:
                 Logger.log('d', 'Stopping record stop_record_profile_requested')
 
         if record_profile:
-            child_stats = []
-            signal_start_time = time.time()
+            profileCall("[SIG] "+self.getName(), lambda: self._realEmit(*args, **kwargs))
+        else:
+            self._realEmit(*args, **kwargs)
 
+    def _realEmit(self, *args, **kwargs):
+        global record_profile
         try:
             if self.__type == Signal.Queued:
                 Signal._app.functionEvent(CallFunctionEvent(self.emit, args, kwargs))
@@ -283,53 +295,31 @@ class Signal:
             methods = self.__methods
             signals = self.__signals
 
-        # Call handler functions
-        if record_profile:
-            for func in functions:
-                start_time = time.time()
-                child_accu_stack.append([])
-                func(*args, **kwargs)
-                end_time = time.time()
-                call_stat = ProfileCall(func.__qualname__, 0, start_time, end_time,
-                                        fillInProfileSpaces(start_time, end_time, child_accu_stack.pop()))
-                child_stats.append(call_stat)
-        else:
+        if not record_profile:
+            # Call handler functions
             for func in functions:
                 func(*args, **kwargs)
 
-        # Call handler methods
-        if record_profile:
-            for dest, func in methods:
-                start_time = time.time()
-                child_accu_stack.append([])
-                func(dest, *args, **kwargs)
-                end_time = time.time()
-                call_stat = ProfileCall(func.__qualname__, 0, start_time, end_time,
-                                        fillInProfileSpaces(start_time, end_time, child_accu_stack.pop()))
-                child_stats.append(call_stat)
-        else:
+            # Call handler methods
             for dest, func in methods:
                 func(dest, *args, **kwargs)
 
-        # Emit connected signals
-        if record_profile:
+            # Emit connected signals
             for signal in signals:
-                start_time = time.time()
-                child_accu_stack.append([])
                 signal.emit(*args, **kwargs)
-                end_time = time.time()
-                call_stat = ProfileCall("[SIG]" + signal.getName(), 0, start_time, end_time,
-                                        fillInProfileSpaces(start_time, end_time, child_accu_stack.pop()))
-                child_stats.append(call_stat)
         else:
-            for signal in signals:
-                signal.emit(*args, **kwargs)
+            # Call handler functions
+            for func in functions:
+                profileCall(func.__qualname__, lambda: func(*args, **kwargs))
 
-        if record_profile:
-            signal_end_time = time.time()
-            signal_stat = ProfileCall("[SIG] "+self.getName(), 0, signal_start_time, signal_end_time,
-                                      fillInProfileSpaces(signal_start_time, signal_end_time, child_stats))
-            child_accu_stack[-1].append(signal_stat)
+            # Call handler methods
+            for dest, func in methods:
+                profileCall(func.__qualname__, lambda: func(dest, *args, **kwargs))
+
+            # Emit connected signals
+            for signal in signals:
+                profileCall("[SIG]" + signal.getName(), lambda: signal.emit(*args, **kwargs))
+
 
     ##  Connect to this signal.
     #   \param connector The signal or slot (function) to connect.
