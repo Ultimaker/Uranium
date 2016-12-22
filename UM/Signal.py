@@ -8,6 +8,9 @@ import inspect
 import threading
 import os
 import weakref
+import time
+
+import math
 
 from UM.Event import CallFunctionEvent
 from UM.Decorators import deprecated, call_if_enabled
@@ -16,7 +19,7 @@ from UM.Platform import Platform
 
 # Helper functions for tracing signal emission.
 def _traceEmit(signal, *args, **kwargs):
-    Logger.log("d", "Emitting %s with arguments %s", str(signal._Signal__name), str(args) + str(kwargs))
+    Logger.log("d", "Emitting %s with arguments %s", str(signal.getName()), str(args) + str(kwargs))
 
     if signal._Signal__type == Signal.Queued:
         Logger.log("d", "> Queued signal, postponing emit until next event loop run")
@@ -43,6 +46,109 @@ def _traceDisconnect(signal, *args, **kwargs):
 
 def _isTraceEnabled():
     return "URANIUM_TRACE_SIGNALS" in os.environ
+
+def _recordSignalNames():
+    return "URANIUM_TRACE_SIGNALS" in os.environ or SIGNAL_PROFILE
+
+###########################################################################
+SIGNAL_PROFILE = True
+global_inside_signal = False
+record_profile = False
+
+class ProfileCall:
+    def __init__(self, name, line_number, start_time, end_time, children):
+        self.__name = name
+        self.__line_number = line_number
+        self.__start_time = start_time
+        self.__end_time = end_time
+        self.__children = children if children is not None else [] # type: List[ProfileCall]
+
+    def getStartTime(self):
+        return self.__start_time
+
+    def getEndTime(self):
+        return self.__end_time
+
+    def getDuration(self):
+        return self.__end_time - self.__start_time
+
+    def toJSON(self, root=False):
+        if root:
+            return """
+{
+  "c": {
+    "callStats": """ + self._plainToJSON() + """,
+    "sampleIterval": 1,
+    "objectName": "Cura",
+    "runTime": """ + str(self.getDuration()) + """,
+    "totalSamples": """ + str(self.getDuration()) + """
+  },
+  "version": "0.34"
+}
+"""
+        else:
+            return self._plainToJSON()
+
+    def _plainToJSON(self):
+        percent_time = 21
+        return '''{
+"stack": [
+  "''' + self.__name + '''",
+  "Code: ''' + self.__name + '''",
+  ''' + str(self.__line_number) + ''',
+  ''' + str(self.getDuration()) + '''
+],
+"sampleCount": '''+ str(self.getDuration()) + ''',
+"children": [
+    ''' + ",\n".join( [kid.toJSON() for kid in self.__children]) + '''
+]
+}
+'''
+child_accu_stack = [ [] ]
+clear_profile_requested = False
+record_profile_requested = False
+stop_record_profile_requested = False
+
+def getProfileData():
+    raw_profile_calls = child_accu_stack[0]
+    if len(raw_profile_calls) == 0:
+        return None
+
+    start_time = raw_profile_calls[0].getStartTime()
+    end_time = raw_profile_calls[-1].getEndTime()
+    fill_children = fillInProfileSpaces(start_time, end_time, raw_profile_calls)
+    return ProfileCall("", 0, start_time, end_time, fill_children)
+
+def clearProfileData():
+    global clear_profile_requested
+    clear_profile_requested = True
+
+def recordProfileData():
+    global record_profile_requested
+    record_profile_requested = True
+
+def stopRecordProfileData():
+    global stop_record_profile_requested
+    stop_record_profile_requested = True
+
+def fillInProfileSpaces(start_time, end_time, profile_call_list):
+    result = []
+    time_counter = start_time
+    for profile_call in profile_call_list:
+        if secondsToMS(profile_call.getStartTime()) != secondsToMS(time_counter):
+            result.append(ProfileCall("", 0, time_counter, profile_call.getStartTime(), []))
+        result.append(profile_call)
+        time_counter = profile_call.getEndTime()
+
+    if secondsToMS(time_counter) != secondsToMS(end_time):
+        result.append(ProfileCall("", 0, time_counter, end_time, []))
+
+    return result
+
+def secondsToMS(value):
+    return math.floor(value *1000)
+
+###########################################################################
 
 ##  Simple implementation of signals and slots.
 #
@@ -93,7 +199,7 @@ class Signal:
 
         self.__type = kwargs.get("type", Signal.Auto)
 
-        if "URANIUM_TRACE_SIGNALS" in os.environ:
+        if _recordSignalNames():
             try:
                 if Platform.isWindows():
                     self.__name = inspect.stack()[1][0].f_locals["key"]
@@ -101,6 +207,11 @@ class Signal:
                     self.__name = inspect.stack()[1].frame.f_locals["key"]
             except KeyError:
                 self.__name = "Signal"
+        else:
+            self.__name = "Anon"
+
+    def getName(self):
+        return self.__name
 
     ##  \exception NotImplementedError
     def __call__(self):
@@ -121,6 +232,37 @@ class Signal:
     #   function will be called on the next application event loop tick.
     @call_if_enabled(_traceEmit, _isTraceEnabled())
     def emit(self, *args, **kwargs):
+        global child_accu_stack
+        global global_inside_signal
+        global record_profile
+
+        if not global_inside_signal:
+            global_inside_signal = True
+        inside_first_signal = global_inside_signal
+
+        if inside_first_signal:
+            global_inside_signal = False
+            global clear_profile_requested
+            if clear_profile_requested:
+                clear_profile_requested = False
+                child_accu_stack = [[]]
+
+            global record_profile_requested
+            if record_profile_requested:
+                record_profile_requested = False
+                record_profile = True
+                Logger.log('d', 'Starting record record_profile_requested')
+
+            global stop_record_profile_requested
+            if stop_record_profile_requested:
+                stop_record_profile_requested = False
+                record_profile = False
+                Logger.log('d', 'Stopping record stop_record_profile_requested')
+
+        if record_profile:
+            child_stats = []
+            signal_start_time = time.time()
+
         try:
             if self.__type == Signal.Queued:
                 Signal._app.functionEvent(CallFunctionEvent(self.emit, args, kwargs))
@@ -142,16 +284,52 @@ class Signal:
             signals = self.__signals
 
         # Call handler functions
-        for func in functions:
-            func(*args, **kwargs)
+        if record_profile:
+            for func in functions:
+                start_time = time.time()
+                child_accu_stack.append([])
+                func(*args, **kwargs)
+                end_time = time.time()
+                call_stat = ProfileCall(func.__qualname__, 0, start_time, end_time,
+                                        fillInProfileSpaces(start_time, end_time, child_accu_stack.pop()))
+                child_stats.append(call_stat)
+        else:
+            for func in functions:
+                func(*args, **kwargs)
 
         # Call handler methods
-        for dest, func in methods:
-            func(dest, *args, **kwargs)
+        if record_profile:
+            for dest, func in methods:
+                start_time = time.time()
+                child_accu_stack.append([])
+                func(dest, *args, **kwargs)
+                end_time = time.time()
+                call_stat = ProfileCall(func.__qualname__, 0, start_time, end_time,
+                                        fillInProfileSpaces(start_time, end_time, child_accu_stack.pop()))
+                child_stats.append(call_stat)
+        else:
+            for dest, func in methods:
+                func(dest, *args, **kwargs)
 
         # Emit connected signals
-        for signal in signals:
-            signal.emit(*args, **kwargs)
+        if record_profile:
+            for signal in signals:
+                start_time = time.time()
+                child_accu_stack.append([])
+                signal.emit(*args, **kwargs)
+                end_time = time.time()
+                call_stat = ProfileCall("[SIG]" + signal.getName(), 0, start_time, end_time,
+                                        fillInProfileSpaces(start_time, end_time, child_accu_stack.pop()))
+                child_stats.append(call_stat)
+        else:
+            for signal in signals:
+                signal.emit(*args, **kwargs)
+
+        if record_profile:
+            signal_end_time = time.time()
+            signal_stat = ProfileCall("[SIG] "+self.getName(), 0, signal_start_time, signal_end_time,
+                                      fillInProfileSpaces(signal_start_time, signal_end_time, child_stats))
+            child_accu_stack[-1].append(signal_stat)
 
     ##  Connect to this signal.
     #   \param connector The signal or slot (function) to connect.
@@ -163,9 +341,14 @@ class Signal:
                     return
                 self.__signals = self.__signals.append(connector)
             elif inspect.ismethod(connector):
+                # if SIGNAL_PROFILE:
+                #     Logger.log('d', "Connector method qual name: " + connector.__func__.__qualname__)
                 self.__methods = self.__methods.append(connector.__self__, connector.__func__)
             else:
                 # Once again, update the list of functions using a whole new list.
+                # if SIGNAL_PROFILE:
+                #     Logger.log('d', "Connector function qual name: " + connector.__qualname__)
+
                 self.__functions = self.__functions.append(connector)
 
     ##  Disconnect from this signal.
@@ -223,6 +406,21 @@ class Signal:
     #     method_str = ", ".join([ "{dest: " + str(dest) + ", funcs: " + strMethodSet(funcs) + "}" for dest, funcs in self.__methods])
     #     signal_str = ", ".join([str(signal) for signal in self.__signals])
     #     return "Signal<{}> {{ __functions={{ {} }}, __methods={{ {} }}, __signals={{ {} }} }}".format(id(self), function_str, method_str, signal_str)
+    @staticmethod
+    def getProfileData():
+        return getProfileData()
+
+    @staticmethod
+    def clearProfileData():
+        clearProfileData()
+
+    @staticmethod
+    def recordProfileData():
+        recordProfileData()
+
+    @staticmethod
+    def stopRecordProfileData():
+        stopRecordProfileData()
 
 def strMethodSet(method_set):
     return "{" + ", ".join([str(m) for m in method_set]) + "}"
