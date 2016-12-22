@@ -9,8 +9,8 @@ import threading
 import os
 import weakref
 import time
-
 import math
+from contextlib import contextmanager
 
 from UM.Event import CallFunctionEvent
 from UM.Decorators import deprecated, call_if_enabled
@@ -55,13 +55,13 @@ SIGNAL_PROFILE = True
 global_inside_signal = False
 record_profile = False
 
-class ProfileCall:
+class ProfileCallNode:
     def __init__(self, name, line_number, start_time, end_time, children):
         self.__name = name
         self.__line_number = line_number
         self.__start_time = start_time
         self.__end_time = end_time
-        self.__children = children if children is not None else [] # type: List[ProfileCall]
+        self.__children = children if children is not None else [] # type: List[ProfileCallNode]
 
     def getStartTime(self):
         return self.__start_time
@@ -90,7 +90,6 @@ class ProfileCall:
             return self._plainToJSON()
 
     def _plainToJSON(self):
-        percent_time = 21
         return '''{
 "stack": [
   "''' + self.__name + '''",
@@ -117,7 +116,7 @@ def getProfileData():
     start_time = raw_profile_calls[0].getStartTime()
     end_time = raw_profile_calls[-1].getEndTime()
     fill_children = fillInProfileSpaces(start_time, end_time, raw_profile_calls)
-    return ProfileCall("", 0, start_time, end_time, fill_children)
+    return ProfileCallNode("", 0, start_time, end_time, fill_children)
 
 def clearProfileData():
     global clear_profile_requested
@@ -136,25 +135,26 @@ def fillInProfileSpaces(start_time, end_time, profile_call_list):
     time_counter = start_time
     for profile_call in profile_call_list:
         if secondsToMS(profile_call.getStartTime()) != secondsToMS(time_counter):
-            result.append(ProfileCall("", 0, time_counter, profile_call.getStartTime(), []))
+            result.append(ProfileCallNode("", 0, time_counter, profile_call.getStartTime(), []))
         result.append(profile_call)
         time_counter = profile_call.getEndTime()
 
     if secondsToMS(time_counter) != secondsToMS(end_time):
-        result.append(ProfileCall("", 0, time_counter, end_time, []))
+        result.append(ProfileCallNode("", 0, time_counter, end_time, []))
 
     return result
 
 def secondsToMS(value):
     return math.floor(value *1000)
 
-def profileCall(name, callable):
+@contextmanager
+def profileCall(name):
     start_time = time.time()
     child_accu_stack.append([])
-    callable()
+    yield
     end_time = time.time()
-    call_stat = ProfileCall(name, 0, start_time, end_time,
-                            fillInProfileSpaces(start_time, end_time, child_accu_stack.pop()))
+    call_stat = ProfileCallNode(name, 0, start_time, end_time,
+                                fillInProfileSpaces(start_time, end_time, child_accu_stack.pop()))
     child_accu_stack[-1].append(call_stat)
 
 ###########################################################################
@@ -269,9 +269,13 @@ class Signal:
                 Logger.log('d', 'Stopping record stop_record_profile_requested')
 
         if record_profile:
-            profileCall("[SIG] "+self.getName(), lambda: self._realEmit(*args, **kwargs))
+            with profileCall("[SIG] "+self.getName()):
+                self._realEmit(*args, **kwargs)
         else:
             self._realEmit(*args, **kwargs)
+
+        if inside_first_signal:
+            global_inside_signal = False
 
     def _realEmit(self, *args, **kwargs):
         global record_profile
@@ -310,15 +314,18 @@ class Signal:
         else:
             # Call handler functions
             for func in functions:
-                profileCall(func.__qualname__, lambda: func(*args, **kwargs))
+                with profileCall(func.__qualname__):
+                    func(*args, **kwargs)
 
             # Call handler methods
             for dest, func in methods:
-                profileCall(func.__qualname__, lambda: func(dest, *args, **kwargs))
+                with profileCall(func.__qualname__):
+                    func(dest, *args, **kwargs)
 
             # Emit connected signals
             for signal in signals:
-                profileCall("[SIG]" + signal.getName(), lambda: signal.emit(*args, **kwargs))
+                with profileCall("[SIG]" + signal.getName()):
+                    signal.emit(*args, **kwargs)
 
 
     ##  Connect to this signal.
