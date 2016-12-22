@@ -157,6 +157,39 @@ def profileCall(name):
                                 fillInProfileSpaces(start_time, end_time, child_accu_stack.pop()))
     child_accu_stack[-1].append(call_stat)
 
+@contextmanager
+def profileRoot():
+    global child_accu_stack
+    global global_inside_signal
+    global record_profile
+
+    if not global_inside_signal:
+        global_inside_signal = True
+    inside_first_signal = global_inside_signal
+
+    if inside_first_signal:
+        global_inside_signal = False
+        global clear_profile_requested
+        if clear_profile_requested:
+            clear_profile_requested = False
+            child_accu_stack = [[]]
+
+        global record_profile_requested
+        if record_profile_requested:
+            record_profile_requested = False
+            record_profile = True
+            Logger.log('d', 'Starting record record_profile_requested')
+
+        global stop_record_profile_requested
+        if stop_record_profile_requested:
+            stop_record_profile_requested = False
+            record_profile = False
+            Logger.log('d', 'Stopping record stop_record_profile_requested')
+    yield
+
+    if inside_first_signal:
+        global_inside_signal = False
+
 ###########################################################################
 
 ##  Simple implementation of signals and slots.
@@ -241,41 +274,13 @@ class Signal:
     #   function will be called on the next application event loop tick.
     @call_if_enabled(_traceEmit, _isTraceEnabled())
     def emit(self, *args, **kwargs):
-        global child_accu_stack
-        global global_inside_signal
         global record_profile
-
-        if not global_inside_signal:
-            global_inside_signal = True
-        inside_first_signal = global_inside_signal
-
-        if inside_first_signal:
-            global_inside_signal = False
-            global clear_profile_requested
-            if clear_profile_requested:
-                clear_profile_requested = False
-                child_accu_stack = [[]]
-
-            global record_profile_requested
-            if record_profile_requested:
-                record_profile_requested = False
-                record_profile = True
-                Logger.log('d', 'Starting record record_profile_requested')
-
-            global stop_record_profile_requested
-            if stop_record_profile_requested:
-                stop_record_profile_requested = False
-                record_profile = False
-                Logger.log('d', 'Stopping record stop_record_profile_requested')
-
-        if record_profile:
-            with profileCall("[SIG] "+self.getName()):
+        with profileRoot():
+            if record_profile:
+                with profileCall("[SIG] "+self.getName()):
+                    self._realEmit(*args, **kwargs)
+            else:
                 self._realEmit(*args, **kwargs)
-        else:
-            self._realEmit(*args, **kwargs)
-
-        if inside_first_signal:
-            global_inside_signal = False
 
     def _realEmit(self, *args, **kwargs):
         global record_profile
