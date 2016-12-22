@@ -107,7 +107,7 @@ class CameraTool(Tool):
     def initiateZoom(self, event):
         if event.type is event.MousePressEvent:
             return False
-        elif event.type is Event.MouseMoveEvent and self._ctrl_is_active is False: #space -> mousemove
+        elif event.type is Event.MouseMoveEvent and self._space_is_active is False: #space -> mousemove
             self._start_y = None
         elif event.type is Event.MouseMoveEvent and self._space_is_active is True:  # space -> mousemove
                 if self._start_y is None:
