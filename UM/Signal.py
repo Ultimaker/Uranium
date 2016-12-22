@@ -52,7 +52,6 @@ def _recordSignalNames():
 
 ###########################################################################
 SIGNAL_PROFILE = True
-global_inside_signal = False
 record_profile = False
 
 class ProfileCallNode:
@@ -157,18 +156,11 @@ def profileCall(name):
                                 fillInProfileSpaces(start_time, end_time, child_accu_stack.pop()))
     child_accu_stack[-1].append(call_stat)
 
-@contextmanager
-def profileRoot():
+def markProfileRoot():
     global child_accu_stack
-    global global_inside_signal
     global record_profile
 
-    if not global_inside_signal:
-        global_inside_signal = True
-    inside_first_signal = global_inside_signal
-
-    if inside_first_signal:
-        global_inside_signal = False
+    if len(child_accu_stack) <= 1:
         global clear_profile_requested
         if clear_profile_requested:
             clear_profile_requested = False
@@ -185,10 +177,6 @@ def profileRoot():
             stop_record_profile_requested = False
             record_profile = False
             Logger.log('d', 'Stopping record stop_record_profile_requested')
-    yield
-
-    if inside_first_signal:
-        global_inside_signal = False
 
 ###########################################################################
 
@@ -275,12 +263,12 @@ class Signal:
     @call_if_enabled(_traceEmit, _isTraceEnabled())
     def emit(self, *args, **kwargs):
         global record_profile
-        with profileRoot():
-            if record_profile:
-                with profileCall("[SIG] "+self.getName()):
-                    self._realEmit(*args, **kwargs)
-            else:
+        markProfileRoot()
+        if record_profile:
+            with profileCall("[SIG] "+self.getName()):
                 self._realEmit(*args, **kwargs)
+        else:
+            self._realEmit(*args, **kwargs)
 
     def _realEmit(self, *args, **kwargs):
         global record_profile
