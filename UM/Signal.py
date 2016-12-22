@@ -8,14 +8,12 @@ import inspect
 import threading
 import os
 import weakref
-import time
-import math
-from contextlib import contextmanager
 
 from UM.Event import CallFunctionEvent
 from UM.Decorators import deprecated, call_if_enabled
 from UM.Logger import Logger
 from UM.Platform import Platform
+from UM import FlameProfiler
 
 # Helper functions for tracing signal emission.
 def _traceEmit(signal, *args, **kwargs):
@@ -48,135 +46,9 @@ def _isTraceEnabled():
     return "URANIUM_TRACE_SIGNALS" in os.environ
 
 def _recordSignalNames():
-    return "URANIUM_TRACE_SIGNALS" in os.environ or SIGNAL_PROFILE
+    return True
+    # return "URANIUM_TRACE_SIGNALS" in os.environ
 
-###########################################################################
-SIGNAL_PROFILE = True
-record_profile = False
-
-class ProfileCallNode:
-    def __init__(self, name, line_number, start_time, end_time, children):
-        self.__name = name
-        self.__line_number = line_number
-        self.__start_time = start_time
-        self.__end_time = end_time
-        self.__children = children if children is not None else [] # type: List[ProfileCallNode]
-
-    def getStartTime(self):
-        return self.__start_time
-
-    def getEndTime(self):
-        return self.__end_time
-
-    def getDuration(self):
-        return self.__end_time - self.__start_time
-
-    def toJSON(self, root=False):
-        if root:
-            return """
-{
-  "c": {
-    "callStats": """ + self._plainToJSON() + """,
-    "sampleIterval": 1,
-    "objectName": "Cura",
-    "runTime": """ + str(self.getDuration()) + """,
-    "totalSamples": """ + str(self.getDuration()) + """
-  },
-  "version": "0.34"
-}
-"""
-        else:
-            return self._plainToJSON()
-
-    def _plainToJSON(self):
-        return '''{
-"stack": [
-  "''' + self.__name + '''",
-  "Code: ''' + self.__name + '''",
-  ''' + str(self.__line_number) + ''',
-  ''' + str(self.getDuration()) + '''
-],
-"sampleCount": '''+ str(self.getDuration()) + ''',
-"children": [
-    ''' + ",\n".join( [kid.toJSON() for kid in self.__children]) + '''
-]
-}
-'''
-child_accu_stack = [ [] ]
-clear_profile_requested = False
-record_profile_requested = False
-stop_record_profile_requested = False
-
-def getProfileData():
-    raw_profile_calls = child_accu_stack[0]
-    if len(raw_profile_calls) == 0:
-        return None
-
-    start_time = raw_profile_calls[0].getStartTime()
-    end_time = raw_profile_calls[-1].getEndTime()
-    fill_children = fillInProfileSpaces(start_time, end_time, raw_profile_calls)
-    return ProfileCallNode("", 0, start_time, end_time, fill_children)
-
-def clearProfileData():
-    global clear_profile_requested
-    clear_profile_requested = True
-
-def recordProfileData():
-    global record_profile_requested
-    record_profile_requested = True
-
-def stopRecordProfileData():
-    global stop_record_profile_requested
-    stop_record_profile_requested = True
-
-def fillInProfileSpaces(start_time, end_time, profile_call_list):
-    result = []
-    time_counter = start_time
-    for profile_call in profile_call_list:
-        if secondsToMS(profile_call.getStartTime()) != secondsToMS(time_counter):
-            result.append(ProfileCallNode("", 0, time_counter, profile_call.getStartTime(), []))
-        result.append(profile_call)
-        time_counter = profile_call.getEndTime()
-
-    if secondsToMS(time_counter) != secondsToMS(end_time):
-        result.append(ProfileCallNode("", 0, time_counter, end_time, []))
-
-    return result
-
-def secondsToMS(value):
-    return math.floor(value *1000)
-
-@contextmanager
-def profileCall(name):
-    start_time = time.time()
-    child_accu_stack.append([])
-    yield
-    end_time = time.time()
-    call_stat = ProfileCallNode(name, 0, start_time, end_time,
-                                fillInProfileSpaces(start_time, end_time, child_accu_stack.pop()))
-    child_accu_stack[-1].append(call_stat)
-
-def markProfileRoot():
-    global child_accu_stack
-    global record_profile
-
-    if len(child_accu_stack) <= 1:
-        global clear_profile_requested
-        if clear_profile_requested:
-            clear_profile_requested = False
-            child_accu_stack = [[]]
-
-        global record_profile_requested
-        if record_profile_requested:
-            record_profile_requested = False
-            record_profile = True
-            Logger.log('d', 'Starting record record_profile_requested')
-
-        global stop_record_profile_requested
-        if stop_record_profile_requested:
-            stop_record_profile_requested = False
-            record_profile = False
-            Logger.log('d', 'Stopping record stop_record_profile_requested')
 
 ###########################################################################
 
@@ -262,16 +134,14 @@ class Signal:
     #   function will be called on the next application event loop tick.
     @call_if_enabled(_traceEmit, _isTraceEnabled())
     def emit(self, *args, **kwargs):
-        global record_profile
-        markProfileRoot()
-        if record_profile:
-            with profileCall("[SIG] "+self.getName()):
+        FlameProfiler.markProfileRoot()
+        if FlameProfiler.isRecordingProfile():
+            with FlameProfiler.profileCall("[SIG] " + self.getName()):
                 self._realEmit(*args, **kwargs)
         else:
             self._realEmit(*args, **kwargs)
 
     def _realEmit(self, *args, **kwargs):
-        global record_profile
         try:
             if self.__type == Signal.Queued:
                 Signal._app.functionEvent(CallFunctionEvent(self.emit, args, kwargs))
@@ -292,7 +162,7 @@ class Signal:
             methods = self.__methods
             signals = self.__signals
 
-        if not record_profile:
+        if not FlameProfiler.isRecordingProfile():
             # Call handler functions
             for func in functions:
                 func(*args, **kwargs)
@@ -307,17 +177,17 @@ class Signal:
         else:
             # Call handler functions
             for func in functions:
-                with profileCall(func.__qualname__):
+                with FlameProfiler.profileCall(func.__qualname__):
                     func(*args, **kwargs)
 
             # Call handler methods
             for dest, func in methods:
-                with profileCall(func.__qualname__):
+                with FlameProfiler.profileCall(func.__qualname__):
                     func(dest, *args, **kwargs)
 
             # Emit connected signals
             for signal in signals:
-                with profileCall("[SIG]" + signal.getName()):
+                with FlameProfiler.profileCall("[SIG]" + signal.getName()):
                     signal.emit(*args, **kwargs)
 
 
@@ -396,21 +266,6 @@ class Signal:
     #     method_str = ", ".join([ "{dest: " + str(dest) + ", funcs: " + strMethodSet(funcs) + "}" for dest, funcs in self.__methods])
     #     signal_str = ", ".join([str(signal) for signal in self.__signals])
     #     return "Signal<{}> {{ __functions={{ {} }}, __methods={{ {} }}, __signals={{ {} }} }}".format(id(self), function_str, method_str, signal_str)
-    @staticmethod
-    def getProfileData():
-        return getProfileData()
-
-    @staticmethod
-    def clearProfileData():
-        clearProfileData()
-
-    @staticmethod
-    def recordProfileData():
-        recordProfileData()
-
-    @staticmethod
-    def stopRecordProfileData():
-        stopRecordProfileData()
 
 def strMethodSet(method_set):
     return "{" + ", ".join([str(m) for m in method_set]) + "}"

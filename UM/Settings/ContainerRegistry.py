@@ -8,6 +8,7 @@ import pickle #For serializing/deserializing Python classes to binary files
 
 from contextlib import contextmanager
 
+from UM.FlameProfiler import profile
 from UM.PluginRegistry import PluginRegistry
 from UM.Resources import Resources, UnsupportedStorageTypeError
 from UM.MimeTypeDatabase import MimeType, MimeTypeDatabase
@@ -82,6 +83,7 @@ class ContainerRegistry:
     #
     #   \return A list of containers matching the search criteria, or an empty
     #   list if nothing was found.
+    @profile
     def findContainers(self, container_type = None, ignore_case = False, **kwargs):
         containers = []
 
@@ -260,6 +262,7 @@ class ContainerRegistry:
             except Exception as e:
                 Logger.logException("e", "Could not deserialize container %s", container_id)
 
+    @profile
     def addContainer(self, container):
         containers = self.findContainers(container_type = container.__class__, id = container.getId())
         if containers:
@@ -270,6 +273,7 @@ class ContainerRegistry:
         self._id_container_cache[container.getId()] = container
         self.containerAdded.emit(container)
 
+    @profile
     def removeContainer(self, container_id):
         containers = self.findContainers(None, id = container_id)
         if containers:
@@ -285,6 +289,7 @@ class ContainerRegistry:
         else:
             Logger.log("w", "Could not remove container with id %s, as no container with that ID is known", container_id)
 
+    @profile
     def renameContainer(self, container_id, new_name, new_id = None):
         Logger.log("d", "Renaming container %s to %s", container_id, new_name)
         containers = self.findContainers(None, id = container_id)
