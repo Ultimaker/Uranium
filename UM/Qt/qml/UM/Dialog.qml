@@ -13,8 +13,8 @@ Window {
     modality: Qt.ApplicationModal;
     flags: Qt.Dialog | Qt.CustomizeWindowHint | Qt.WindowTitleHint | Qt.WindowCloseButtonHint;
 
-    width: screenScaleFactor * 640;
-    height: screenScaleFactor * 480;
+    width: Screen.devicePixelRatio * 640;
+    height: Screen.devicePixelRatio * 480;
 
     property int margin: Screen.devicePixelRatio * 8;
     property bool closeOnAccept: true;  // Automatically close the window when the window is "accepted" (eg using the return key)
