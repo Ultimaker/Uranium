@@ -4,6 +4,8 @@ import time
 import math
 from contextlib import contextmanager
 
+import functools
+from PyQt5.QtCore import pyqtSlot as pyqt5PyqtSlot
 from UM.Logger import Logger
 
 ###########################################################################
@@ -147,3 +149,18 @@ def profile(function):
         else:
             return function(*args, **kwargs)
     return runIt
+
+def pyqtSlot(*args, **kwargs):
+    # return pyqt5PyqtSlot(*args, **kwargs)
+
+    def wrapIt(function):
+        @functools.wraps(function)
+        def wrapped(*args2, **kwargs2):
+            if isRecordingProfile():
+                with profileCall("[SLOT] "+ function.__qualname__):
+                    function(*args2, **kwargs2)
+            else:
+                function(*args2, **kwargs2)
+
+        return pyqt5PyqtSlot(*args, **kwargs)(wrapped)
+    return wrapIt
