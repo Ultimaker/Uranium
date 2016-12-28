@@ -46,8 +46,8 @@ class ShaderProgram:
         self.setVertexShader("#version 410\n" + parser["shaders"]["vertex"])
         self.setFragmentShader("#version 410\n" + parser["shaders"]["fragment"])
         if "geometry" in parser["shaders"]:
-            from UM.Logger import Logger
             code =  "#version 410\n" + parser["shaders"]["geometry"]
+            from UM.Logger import Logger
             code_str = "\n".join(["%4i %s" % (i, s) for i, s in enumerate(code.split("\n"))])
             Logger.log("d", "Loading geometry shader... \n")
             Logger.log("d", code_str)

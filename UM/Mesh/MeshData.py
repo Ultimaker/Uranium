@@ -34,9 +34,11 @@ Reuse = object()
 #   Normals are stored in the same manner and kept in sync with the vertices. Indices
 #   are stored as a two-dimensional array of integers with the rows being the individual
 #   faces and the three columns being the indices that refer to the individual vertices.
+#
+#   attributes: a dict with {"value", "opengl_type", "opengl_name"} type in vector2f, vector3f, uniforms, ...
 class MeshData:
     def __init__(self, vertices=None, normals=None, indices=None, colors=None, uvs=None, file_name=None,
-                 center_position=None, zero_position=None, type = MeshType.faces):
+                 center_position=None, zero_position=None, type = MeshType.faces, attributes=None):
         self._vertices = NumPyUtil.immutableNDArray(vertices)
         self._normals = NumPyUtil.immutableNDArray(normals)
         self._indices = NumPyUtil.immutableNDArray(indices)
@@ -57,10 +59,21 @@ class MeshData:
         self._convex_hull_vertices = None
         self._convex_hull_lock = threading.Lock()
 
+        self._attributes = {}
+        if attributes is not None:
+            for key, attribute in attributes.items():
+                new_value = {}
+                for attribute_key, attribute_value in attribute.items():
+                    if attribute_key == "value":
+                        new_value["value"] = NumPyUtil.immutableNDArray(attribute_value)
+                    else:
+                        new_value[attribute_key] = attribute_value
+                self._attributes[key] = new_value
+
     ## Create a new MeshData with specified changes
     #   \return \type{MeshData}
     def set(self, vertices=Reuse, normals=Reuse, indices=Reuse, colors=Reuse, uvs=Reuse, file_name=Reuse,
-            center_position=Reuse, zero_position=Reuse):
+            center_position=Reuse, zero_position=Reuse, attributes=Reuse):
         vertices = vertices if vertices is not Reuse else self._vertices
         normals = normals if normals is not Reuse else self._normals
         indices = indices if indices is not Reuse else self._indices
@@ -69,9 +82,10 @@ class MeshData:
         file_name = file_name if file_name is not Reuse else self._file_name
         center_position = center_position if center_position is not Reuse else self._center_position
         zero_position = zero_position if zero_position is not Reuse else self._zero_position
+        attributes = attributes if attributes is not Reuse else self._attributes
 
         return MeshData(vertices=vertices, normals=normals, indices=indices, colors=colors, uvs=uvs,
-                        file_name=file_name, center_position=center_position, zero_position=zero_position)
+                        file_name=file_name, center_position=center_position, zero_position=zero_position, attributes=attributes)
 
     def getHash(self):
         m = hashlib.sha256()
@@ -248,9 +262,20 @@ class MeshData:
         else:
             return None
 
+    def hasAttribute(self, key):
+        return key in self._attributes
+
+    #   the return value is a dict with at least keys opengl_name, opengl_type, value
+    def getAttribute(self, key):
+        return self._attributes[key]
+
+    def attributeNames(self):
+        return self._attributes.keys()
+
     def toString(self):
         return "MeshData(_vertices=" + str(self._vertices) + ", _normals=" + str(self._normals) + ", _indices=" + \
-               str(self._indices) + ", _colors=" + str(self._colors) + ", _uvs=" + str(self._uvs) +") "
+               str(self._indices) + ", _colors=" + str(self._colors) + ", _uvs=" + str(self._uvs) + ", _attributes=" + \
+               str(self._attributes.keys()) + ") "
 
 ##  Transform an array of vertices using a matrix
 #
