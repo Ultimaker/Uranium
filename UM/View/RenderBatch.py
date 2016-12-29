@@ -251,6 +251,12 @@ class RenderBatch():
             self._shader.enableAttribute(attribute["opengl_name"], attribute["opengl_type"], offset)
             if attribute["opengl_type"] == "vector2f":
                 offset += mesh.getVertexCount() * 2 * 4
+            elif attribute["opengl_type"] == "vector4f":
+                offset += mesh.getVertexCount() * 4 * 4
+            elif attribute["opengl_type"] == "int":
+                offset += mesh.getVertexCount() * 4
+            elif attribute["opengl_type"] == "float":
+                offset += mesh.getVertexCount() * 4
             else:
                 Logger.log("e", "Attribute with name [%s] uses non implemented type [%s]." % (attribute["opengl_name"], attribute["opengl_type"]))
                 self._shader.disableAttribute(attribute["opengl_name"])

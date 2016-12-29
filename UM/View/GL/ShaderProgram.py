@@ -3,6 +3,8 @@
 
 import configparser
 import ast
+from UM.Logger import Logger
+
 
 ##  Raised when an error occurs during loading of the shader file.
 class InvalidShaderProgramError(Exception):
@@ -43,11 +45,20 @@ class ShaderProgram:
         if "vertex" not in parser["shaders"] or "fragment" not in parser["shaders"]:
             raise InvalidShaderProgramError("{0} is missing a vertex of fragment shader".format(file_name))
 
+        # vertex_code = "#version 410\n" + parser["shaders"]["vertex"]
+        # vertex_code_str = "\n".join(["%4i %s" % (i, s) for i, s in enumerate(vertex_code.split("\n"))])
+        # Logger.log("d", "Vertex shader")
+        # Logger.log("d", vertex_code_str)
+
+        # fragment_code = "#version 410\n" + parser["shaders"]["fragment"]
+        # fragment_code_str = "\n".join(["%4i %s" % (i, s) for i, s in enumerate(fragment_code.split("\n"))])
+        # Logger.log("d", "Fragment shader")
+        # Logger.log("d", fragment_code_str)
+
         self.setVertexShader("#version 410\n" + parser["shaders"]["vertex"])
         self.setFragmentShader("#version 410\n" + parser["shaders"]["fragment"])
         if "geometry" in parser["shaders"]:
             code =  "#version 410\n" + parser["shaders"]["geometry"]
-            from UM.Logger import Logger
             code_str = "\n".join(["%4i %s" % (i, s) for i, s in enumerate(code.split("\n"))])
             Logger.log("d", "Loading geometry shader... \n")
             Logger.log("d", code_str)

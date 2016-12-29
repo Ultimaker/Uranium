@@ -113,6 +113,12 @@ class QtOpenGL(OpenGL):
             attribute = mesh.getAttribute(attribute_name)
             if attribute["opengl_type"] == "vector2f":
                 buffer_size += mesh.getVertexCount() * 2 * 4
+            elif attribute["opengl_type"] == "vector4f":
+                buffer_size += mesh.getVertexCount() * 4 * 4
+            elif attribute["opengl_type"] == "int":
+                buffer_size += mesh.getVertexCount() * 4
+            elif attribute["opengl_type"] == "float":
+                buffer_size += mesh.getVertexCount() * 4
             else:
                 Logger.log(
                     "e", "Could not determine buffer size for attribute [%s] with type [%s]" % (attribute_name, attribute["opengl_type"]))
