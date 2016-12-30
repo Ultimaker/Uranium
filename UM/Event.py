@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2016 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 ##  \file Event.py
@@ -40,7 +40,7 @@ class MouseEvent(Event):
     RightButton = "right"
     MiddleButton = "middle"
 
-    ##  Initialize.
+    ##  Raise a new mouse event.
     #   \param type The type of event. \sa Event
     #   \param x The X coordinate of the event.
     #   \param y The Y coordinate of the event.
@@ -98,17 +98,31 @@ class MouseEvent(Event):
     def buttons(self):
         return self._buttons
 
-
+##  Event relating to what's happening with the scroll wheel of a mouse.
 class WheelEvent(Event):
+    ##  Create a new scroll wheel event.
+    #
+    #   \param horizontal How far the scroll wheel scrolled horizontally, in
+    #   eighths of a degree. To the right is positive. To the left is negative.
+    #   \param vertical How far the scroll wheel scrolled vertically, in eighths
+    #   of a degree. Up is positive. Down is negative.
     def __init__(self, horizontal, vertical):
         super().__init__(Event.MouseWheelEvent)
         self._horizontal = horizontal
         self._vertical = vertical
 
+    ##  How far the scroll wheel was scrolled horizontally, in eighths of a
+    #   degree.
+    #
+    #   To the right is positive. To the left is negative.
     @property
     def horizontal(self):
         return self._horizontal
 
+    ##  How far the scroll wheel was scrolled vertically, in eighths of a
+    #   degree.
+    #
+    #   Up is positive. Down is negative.
     @property
     def vertical(self):
         return self._vertical
