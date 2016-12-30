@@ -61,7 +61,7 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
             self._update()
 
         translated = text
-        if self.__translation:
+        if self.hasTranslationLoaded():
             translated = self.__translation.gettext(text)
 
         if args:
@@ -84,7 +84,7 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
 
         translated = text
 
-        if self.__translation:
+        if self.hasTranslationLoaded():
             message_with_context = "{0}\x04{1}".format(context, text)
             message = self.__translation.gettext(message_with_context)
             if message != message_with_context:
@@ -117,7 +117,7 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
 
         translated = multiple if counter != 1 else single
 
-        if self.__translation:
+        if self.hasTranslationLoaded():
             translated = self.__translation.ngettext(single, multiple, counter)
 
         translated = translated.format(counter, args)
@@ -148,7 +148,7 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
 
         translated = multiple if counter != 1 else single
 
-        if self.__translation:
+        if self.hasTranslationLoaded():
             message_with_context = "{0}\x04{1}".format(context, single)
             message = self.__translation.ngettext(message_with_context, multiple, counter)
 
