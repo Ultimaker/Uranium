@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2016 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 import sys
@@ -59,7 +59,13 @@ class Logger:
         if not cls.__loggers:
             print(message)
 
-    ##
+    ##  Logs that an exception occurs.
+    #
+    #   It'll include the traceback of the exception in the log message. The
+    #   traceback is obtained from the current execution state.
+    #
+    #   \param log_type The importance level of the log (warning, info, etc.).
+    #   \param message The message to go along with the exception.
     @classmethod
     def logException(cls, log_type, message, *args):
         cls.log(log_type, "Exception: " + message, *args)
@@ -72,6 +78,9 @@ class Logger:
 
 ##  Abstract base class for log output classes.
 class LogOutput(PluginObject):
+    ##  Create the log output.
+    #
+    #   This is called during the plug-in loading stage.
     def __init__(self):
         super().__init__() # Call super to make multiple inheritance work.
         self._name = type(self).__name__ # Set name of the logger to it's class name
