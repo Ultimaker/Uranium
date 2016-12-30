@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2016 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 import gettext
@@ -23,7 +23,7 @@ from UM.Resources import Resources
 #   for details.
 #
 class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start with a upper case. But i18n is lower case by convention.] pylint: disable=invalid-name
-    ##  Constructor.
+    ##  Creates a new catalogue.
     #
     #   \param name The name of the catalog to load.
     #   \param language The language to load. Valid values are language codes or
