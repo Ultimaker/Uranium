@@ -5,11 +5,10 @@ from UM.Application import Application
 from UM.Signal import Signal, signalemitter
 
 
-## Class for displaying messages in the application.
-#
+## Class for displaying messages to the user.
 @signalemitter
 class Message:
-    ##  Class for displaying messages in the application
+    ##  Class for displaying messages to the user.
     #   \param text Text that needs to be displayed in the message
     #   \param lifetime How long should the message be displayed (in seconds).
     #                   if lifetime is 0, it will never automatically be destroyed.
