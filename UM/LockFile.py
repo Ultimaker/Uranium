@@ -53,8 +53,18 @@ class LockFile:
     ##  Deletes the lock file from the file system.
     def _deleteLockFile(self):
         try:
-            if os.path.exists(self._filename):
-                os.remove(self._filename)
+            os.remove(self._filename)
+        except FileNotFoundError:
+            #This can happen due to a leak in the thread-safety of this system.
+            #We ignore this leak for now, but this is how it can happen:
+            #   This thread              Other thread
+            # 1 Check if lock exists     Check if lock exists
+            # 2                          Create lock file
+            # 3 Create lock file (fails)
+            # 4 Do work                  Do work
+            # 5                          Delete lock file
+            # 6 Delete lock file (here)
+            pass
         except:
             Logger.log("e", "Could not delete lock file [%s]" % self._filename)
 
