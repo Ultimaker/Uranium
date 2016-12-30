@@ -128,7 +128,15 @@ class WheelEvent(Event):
         return self._vertical
 
 
-##  Key Event class.
+##  Event regarding the keyboard.
+#
+#   These events are raised when anything changes in the keyboard state. They
+#   keep track of the event type that was given by Qt, for instance whether it
+#   was a KeyPressEvent or a KeyReleaseEvent, and they keep track of which key
+#   it was.
+#
+#   Only the special keys are tracked (Shirt, Space, Escape, etc.), not the
+#   normal letter keys.
 class KeyEvent(Event):
     ShiftKey = 1
     ControlKey = 2
@@ -146,10 +154,15 @@ class KeyEvent(Event):
     PlusKey = 14
     EqualKey = 15
 
+    ##  Creates a new key event, passing the event type on to the ``Event``
+    #   parent class.
     def __init__(self, event_type, key):
         super().__init__(event_type)
         self._key = key
 
+    ##  Which key was pressed.
+    #
+    #   Compare this with ``KeyEvent.AltKey``, ``KeyEvent.EnterKey``, etc.
     @property
     def key(self):
         return self._key
