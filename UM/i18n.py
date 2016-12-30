@@ -49,7 +49,7 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
     def hasTranslationLoaded(self):
         return self.__translation is not None
 
-    ##  Mark a string as translatable
+    ##  Mark a string as translateable.
     #
     #   \param text The string to mark as translatable
     #   \param args Formatting arguments. These will replace formatting elements
