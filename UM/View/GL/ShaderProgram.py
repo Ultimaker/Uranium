@@ -35,7 +35,8 @@ class ShaderProgram:
     #
     #   \exception{InvalidShaderProgramError} Raised when the file provided does not contain any valid shaders.
     def load(self, file_name):
-        parser = configparser.ConfigParser(interpolation = None)
+        # Hashtags should not be ignored, they are part of GLSL.
+        parser = configparser.ConfigParser(interpolation = None, comment_prefixes = (';', ))
         parser.optionxform = lambda option: option
         parser.read(file_name)
 
@@ -45,23 +46,24 @@ class ShaderProgram:
         if "vertex" not in parser["shaders"] or "fragment" not in parser["shaders"]:
             raise InvalidShaderProgramError("{0} is missing a vertex of fragment shader".format(file_name))
 
-        # vertex_code = "#version 410\n" + parser["shaders"]["vertex"]
+        vertex_code = parser["shaders"]["vertex"]
+        # Enable when debugging shader code.
         # vertex_code_str = "\n".join(["%4i %s" % (i, s) for i, s in enumerate(vertex_code.split("\n"))])
         # Logger.log("d", "Vertex shader")
         # Logger.log("d", vertex_code_str)
 
-        # fragment_code = "#version 410\n" + parser["shaders"]["fragment"]
+        fragment_code = parser["shaders"]["fragment"]
         # fragment_code_str = "\n".join(["%4i %s" % (i, s) for i, s in enumerate(fragment_code.split("\n"))])
         # Logger.log("d", "Fragment shader")
         # Logger.log("d", fragment_code_str)
 
-        self.setVertexShader("#version 410\n" + parser["shaders"]["vertex"])
-        self.setFragmentShader("#version 410\n" + parser["shaders"]["fragment"])
+        self.setVertexShader(vertex_code)
+        self.setFragmentShader(fragment_code)
         if "geometry" in parser["shaders"]:
-            code =  "#version 410\n" + parser["shaders"]["geometry"]
-            code_str = "\n".join(["%4i %s" % (i, s) for i, s in enumerate(code.split("\n"))])
-            Logger.log("d", "Loading geometry shader... \n")
-            Logger.log("d", code_str)
+            code = parser["shaders"]["geometry"]
+            # code_str = "\n".join(["%4i %s" % (i, s) for i, s in enumerate(code.split("\n"))])
+            # Logger.log("d", "Loading geometry shader... \n")
+            # Logger.log("d", code_str)
             self.setGeometryShader(code)
 
         self.build()
