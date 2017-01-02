@@ -23,7 +23,7 @@ class CameraTool(Tool):
         self._yaw = 0
         self._pitch = 0
         self._origin = Vector(0, 0, 0)
-        self._min_zoom = 0
+        self._min_zoom = 1
         self._max_zoom = 2000.0
         self._manual_zoom = 200
 
@@ -107,6 +107,8 @@ class CameraTool(Tool):
     def initiateZoom(self, event):
         if event.type is event.MousePressEvent:
             return False
+        elif event.type is Event.MouseMoveEvent and self._space_is_active is False: #space -> mousemove
+            self._start_y = None
         elif event.type is Event.MouseMoveEvent and self._space_is_active is True:  # space -> mousemove
                 if self._start_y is None:
                     self._start_y = event.y

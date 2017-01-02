@@ -2,13 +2,13 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-13 17:37+0200\n"
+"POT-Creation-Date: 2016-12-28 11:00+0100\n"
 "PO-Revision-Date: 2016-09-29 13:44+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -115,21 +115,6 @@ msgctxt "@item:inlistbox"
 msgid "STL File (Binary)"
 msgstr "File STL (Binario)"
 
-#: /home/ruben/Projects/Uranium/plugins/FileHandlers/3MFWriter/__init__.py:12
-msgctxt "@label"
-msgid "3MF Writer"
-msgstr "Writer 3MF"
-
-#: /home/ruben/Projects/Uranium/plugins/FileHandlers/3MFWriter/__init__.py:15
-msgctxt "@info:whatsthis"
-msgid "Provides support for writing 3MF files."
-msgstr "Fornisce il supporto per la scrittura di file 3MF."
-
-#: /home/ruben/Projects/Uranium/plugins/FileHandlers/3MFWriter/__init__.py:21
-msgctxt "@item:inlistbox"
-msgid "3MF file"
-msgstr "File 3MF"
-
 #: /home/ruben/Projects/Uranium/plugins/ConsoleLogger/__init__.py:13
 msgctxt "@label"
 msgid "Console Logger"
@@ -145,33 +130,38 @@ msgctxt "@info:whatsthis"
 msgid "Checks for updates of the software."
 msgstr "Verifica la disponibilità di aggiornamenti del software."
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:41
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:47
 msgctxt "@info"
 msgid "Could not access update information."
 msgstr "Non è possibile accedere alle informazioni di aggiornamento."
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:52
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:57
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:58
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:63
 msgctxt "@info"
 msgid "The version you are using does not support checking for updates."
 msgstr "La versione che stai utilizzando non supporta la verifica della disponibilità di aggiornamenti."
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:68
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:74
 msgctxt "@info"
 msgid "A new version is available!"
 msgstr "È disponibile una nuova versione!"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:69
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:75
 msgctxt "@action:button"
 msgid "Download"
 msgstr "Download"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:83
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:87
+msgctxt "@info"
+msgid "An exception occured while parsing the JSON file."
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:91
 msgctxt "@info"
 msgid "No new version was found."
 msgstr "Non è stata trovata nessuna nuova versione."
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:94
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:102
 msgctxt "@item:inmenu"
 msgid "Check for Updates"
 msgstr "Controlla aggiornamenti"
@@ -182,7 +172,8 @@ msgid "Local File"
 msgstr "File locale"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:45
-msgctxt "@action:button"
+#, fuzzy
+msgctxt "@action:button Preceded by 'Ready to'."
 msgid "Save to File"
 msgstr "Salva su File"
 
@@ -196,50 +187,48 @@ msgctxt "@title:window"
 msgid "Save to File"
 msgstr "Salva su File"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:120
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:124
 msgctxt "@title:window"
 msgid "File Already Exists"
 msgstr "Il file esiste già"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:120
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:124
 #, python-brace-format
 msgctxt "@label"
-msgid ""
-"The file <filename>{0}</filename> already exists. Are you sure you want to "
-"overwrite it?"
+msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
 msgstr "Il file <filename>{0}</filename> esiste già. Sei sicuro di voler sovrascrivere?"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:140
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:149
 #, python-brace-format
 msgctxt "@info:progress"
 msgid "Saving to <filename>{0}</filename>"
 msgstr "Salvataggio su <filename>{0}</filename>"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:148
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:157
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Permission denied when trying to save <filename>{0}</filename>"
 msgstr "Autorizzazione negata quando si tenta di salvare <filename>{0}</filename>"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:151
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:173
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:160
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:182
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
 msgstr "Impossibile salvare <filename>{0}</filename>: <message>{1}</message>"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:167
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:176
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Saved to <filename>{0}</filename>"
 msgstr "Salvato su <filename>{0}</filename>"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:168
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:177
 msgctxt "@action:button"
 msgid "Open Folder"
 msgstr "Apri cartella"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:168
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:177
 msgctxt "@info:tooltip"
 msgid "Open the folder containing the file"
 msgstr "Apri la cartella contenente il file"
@@ -354,17 +343,24 @@ msgctxt "@info:tooltip"
 msgid "Mirror Model"
 msgstr "Modello Immagine speculare"
 
-#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:124
-#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:46
+#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:157
+#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:48
+#: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:65
+#, python-brace-format
+msgctxt "@item:inlistbox"
+msgid "All Supported Types ({0})"
+msgstr "Tutti i tipi supportati ({0})"
+
+#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:160
+#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:49
+#: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:66
 msgctxt "@item:inlistbox"
 msgid "All Files (*)"
 msgstr "Tutti i file (*)"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:95
 #, python-brace-format
-msgctxt ""
-"@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is "
-"minutes"
+msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
 msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
 msgstr "{0:0>2}g {1:0>2}h {2:0>2}min"
 
@@ -406,90 +402,69 @@ msgctxt "@info:progress"
 msgid "Loading plugins..."
 msgstr "Caricamento plugin in corso..."
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:94
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:93
 msgctxt "@info:progress"
 msgid "Updating configuration..."
 msgstr "Aggiornamento configurazione in corso..."
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:105
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:104
 msgctxt "@info:progress"
 msgid "Loading preferences..."
 msgstr "Caricamento preferenze in corso..."
 
-#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:45
-#, python-brace-format
-msgctxt "@item:inlistbox"
-msgid "All Supported Types ({0})"
-msgstr "Tutti i tipi supportati ({0})"
-
-#: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:33
-#, python-brace-format
-msgctxt "@info:status"
-msgid "Cannot open file type <filename>{0}</filename>"
-msgstr "Impossibile aprire il file tipo <filename>{0}</filename>"
-
-#: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:42
 #: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:63
-#, python-brace-format
-msgctxt "@info:status"
-msgid "Failed to load <filename>{0}</filename>"
-msgstr "Impossibile caricare <filename>{0}</filename>"
-
-#: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:46
-#, python-brace-format
-msgctxt "@info:status"
-msgid "Loading <filename>{0}</filename>"
-msgstr "Caricamento <filename>{0}</filename>"
-
-#: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:95
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled object to {0}% of original size"
 msgstr "Ridimensionamento automatico dell'oggetto a {0}% della dimensione originale"
 
-#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:78
+#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:109
 #, python-brace-format
 msgctxt "@info:version-upgrade"
 msgid "A configuration from an older version of {0} was imported."
 msgstr "È stata importata una configurazione da una versione precedente {0}."
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:53
-#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:22
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:36
+#, python-brace-format
+msgctxt "@info:status"
+msgid "Cannot open file type <filename>{0}</filename>"
+msgstr "Impossibile aprire il file tipo <filename>{0}</filename>"
+
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:45
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:65
+#, python-brace-format
+msgctxt "@info:status"
+msgid "Failed to load <filename>{0}</filename>"
+msgstr "Impossibile caricare <filename>{0}</filename>"
+
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:49
+#, python-brace-format
+msgctxt "@info:status"
+msgid "Loading <filename>{0}</filename>"
+msgstr "Caricamento <filename>{0}</filename>"
+
+#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:54
+#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:21
 msgctxt "@action:button"
 msgid "Reset"
 msgstr "Reset"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:66
-msgctxt "@action:button"
-msgid "Scale to Max"
-msgstr "Scala max"
-
-#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:91
+#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:77
 msgctxt "@option:check"
 msgid "Snap Scaling"
 msgstr "Ridimensionamento aggancio (Snap)"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:108
+#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:94
 msgctxt "@option:check"
 msgid "Uniform Scaling"
 msgstr "Ridimensionamento uniforme"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:39
-msgctxt "@action:button"
-msgid "Center on Build Plate"
-msgstr "Centra su piano di stampa"
-
-#: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:57
-msgctxt "@action:button"
-msgid "Drop to Build Plate"
-msgstr "Rilascia su piano di stampa"
-
-#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:39
+#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:38
 msgctxt "@action:button"
 msgid "Lay flat"
 msgstr "Posiziona in piano"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:55
+#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:53
 msgctxt "@action:checkbox"
 msgid "Snap Rotation"
 msgstr "Rotazione di aggancio (Snap)"
@@ -557,7 +532,7 @@ msgid "Rename"
 msgstr "Rinomina"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:56
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:240
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:241
 msgctxt "@action:button"
 msgid "Cancel"
 msgstr "Annulla"
@@ -569,18 +544,13 @@ msgstr "Ok"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:31
 msgctxt "@item:tooltip"
-msgid ""
-"This setting has been hidden by the active machine and will not be visible."
+msgid "This setting has been hidden by the active machine and will not be visible."
 msgstr "Questa impostazione è stata nascosta dalla macchina attiva e non sarà visibile."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:48
 msgctxt "@item:tooltip %1 is list of setting names"
-msgid ""
-"This setting has been hidden by the value of %1. Change the value of that "
-"setting to make this setting visible."
-msgid_plural ""
-"This setting has been hidden by the values of %1. Change the values of those "
-"settings to make this setting visible."
+msgid "This setting has been hidden by the value of %1. Change the value of that setting to make this setting visible."
+msgid_plural "This setting has been hidden by the values of %1. Change the values of those settings to make this setting visible."
 msgstr[0] "Questa impostazione è stata nascosta dal valore di %1. Modifica il valore di tale impostazione per rendere visibile l’impostazione."
 msgstr[1] "Questa impostazione è stata nascosta dai valori di %1. Modifica i valori di tali impostazioni per rendere visibile questa impostazione."
 
@@ -645,8 +615,9 @@ msgid "Update profile"
 msgstr "Aggiorna profilo"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:92
+#, fuzzy
 msgctxt "@action:button"
-msgid "Discard current settings"
+msgid "Discard current changes"
 msgstr "Elimina le impostazioni correnti"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:93
@@ -699,17 +670,41 @@ msgctxt "@title:window"
 msgid "Export Profile"
 msgstr "Esporta profilo"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:214
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:215
 msgctxt "@action:button"
 msgid "Back"
 msgstr "Indietro"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:230
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:231
 msgctxt "@action:button"
 msgid "Finish"
 msgstr "Fine"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:230
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:231
 msgctxt "@action:button"
 msgid "Next"
 msgstr "Avanti"
+
+#~ msgctxt "@label"
+#~ msgid "3MF Writer"
+#~ msgstr "Writer 3MF"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides support for writing 3MF files."
+#~ msgstr "Fornisce il supporto per la scrittura di file 3MF."
+
+#~ msgctxt "@item:inlistbox"
+#~ msgid "3MF file"
+#~ msgstr "File 3MF"
+
+#~ msgctxt "@action:button"
+#~ msgid "Scale to Max"
+#~ msgstr "Scala max"
+
+#~ msgctxt "@action:button"
+#~ msgid "Center on Build Plate"
+#~ msgstr "Centra su piano di stampa"
+
+#~ msgctxt "@action:button"
+#~ msgid "Drop to Build Plate"
+#~ msgstr "Rilascia su piano di stampa"

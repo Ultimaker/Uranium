@@ -61,6 +61,7 @@ class STLReader(MeshReader):
             return None  # We didn't load anything.
         scene_node.setMeshData(mesh)
         Logger.log("d", "Loaded a mesh with %s vertices", mesh_builder.getVertexCount())
+
         return scene_node
 
     def _swapColumns(self, array, frm, to):
