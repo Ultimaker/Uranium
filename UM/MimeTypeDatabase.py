@@ -39,29 +39,39 @@ class MimeType:
         else:
             self.__preferred_suffix = ""
 
-    ##  The name of the MIME type.
+    ##  The name that identifies the MIME type.
     @property
     def name(self):
         return self.__name
 
-    ##  The comment of the MIME type.
+    ##  The comment that describes of the MIME type.
     @property
     def comment(self):
         return self.__comment
 
-    ##  The list of suffixes for the MIME type.
+    ##  The list of file name suffixes for the MIME type.
     @property
     def suffixes(self):
         return self.__suffixes
 
-    ##  The preferred suffix for the MIME type.
+    ##  The preferred file name suffix for the MIME type.
     @property
     def preferredSuffix(self):
         return self.__preferred_suffix
 
+    ##  Gives a programmer-readable representation of the MIME type.
+    #
+    #   \return A string representing the MIME type.
     def __repr__(self):
         return "<MimeType name={0}>".format(self.__name)
 
+    ##  Indicates whether this MIME type is equal to another MIME type.
+    #
+    #   They are equal if the names match, since MIME types should have unique
+    #   names.
+    #
+    #   \return ``True`` if the two MIME types are equal, or ``False``
+    #   otherwise.
     def __eq__(self, other):
         return self.__name == other.name
 
@@ -69,8 +79,8 @@ class MimeType:
     #   suffixes of this MIME type.
     #
     #   \param file_name The file name to strip of extension.
-    #
-    #   \return file_name without extension or file_name when it does not match.
+    #   \return ``file_name`` without extension, or ``file_name`` when it does
+    #   not match.
     def stripExtension(self, file_name):
         suffixes = sorted(self.__suffixes.copy(), key = lambda i: len(i), reverse = True)
         for suffix in self.__suffixes:
@@ -84,7 +94,6 @@ class MimeType:
     ##  Create a ``MimeType`` object from a ``QMimeType`` object.
     #
     #   \param qt_mime The ``QMimeType`` object to convert.
-    #
     #   \return A new ``MimeType`` object with properties equal to the
     #   ``QMimeType`` object.
     @staticmethod
