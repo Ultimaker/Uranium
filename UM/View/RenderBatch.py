@@ -227,7 +227,13 @@ class RenderBatch():
         vertex_buffer = OpenGL.getInstance().createVertexBuffer(mesh)
         vertex_buffer.bind()
 
-        index_buffer = OpenGL.getInstance().createIndexBuffer(mesh)
+        if self._render_range is None:
+            index_buffer = OpenGL.getInstance().createIndexBuffer(mesh)
+        else:
+            # glDrawRangeElements does not work as expected and did not get the indices field working..
+            # Now we're just uploading a clipped part of the array and the start index always becomes 0.
+            index_buffer = OpenGL.getInstance().createIndexBuffer(
+                mesh, force_recreate = True, index_start = self._render_range[0], index_stop = self._render_range[1])
         if index_buffer is not None:
             index_buffer.bind()
 
@@ -271,7 +277,7 @@ class RenderBatch():
                 if self._render_mode == self.RenderMode.Triangles:
                     self._gl.glDrawRangeElements(self._render_mode, self._render_range[0], self._render_range[1], self._render_range[1] - self._render_range[0], self._gl.GL_UNSIGNED_INT, None)
                 else:
-                    self._gl.glDrawRangeElements(self._render_mode, self._render_range[0], self._render_range[1], self._render_range[1] - self._render_range[0], self._gl.GL_UNSIGNED_INT, None)
+                    self._gl.glDrawElements(self._render_mode, self._render_range[1] - self._render_range[0], self._gl.GL_UNSIGNED_INT, None)
         else:
             self._gl.glDrawArrays(self._render_mode, 0, mesh.getVertexCount())
 

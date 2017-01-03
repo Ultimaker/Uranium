@@ -20,8 +20,8 @@ class QtOpenGL(OpenGL):
         profile = QOpenGLVersionProfile()
         profile.setVersion(2, 0)
 
-        #profile.setVersion(4, 1)
-        #profile.setProfile(QSurfaceFormat.CoreProfile)  # required
+        # profile.setVersion(4, 1)
+        # profile.setProfile(QSurfaceFormat.CoreProfile)  # required
         self._gl = QOpenGLContext.currentContext().versionFunctions(profile)
         if not self._gl:
             Logger.log("e", "Startup failed due to OpenGL initialization failing")
@@ -170,7 +170,10 @@ class QtOpenGL(OpenGL):
         buffer.bind()
 
         data = mesh.getIndicesAsByteArray()
-        buffer.allocate(data, len(data))
+        if 'index_start' in kwargs and 'index_stop' in kwargs:
+            buffer.allocate(data[4 * kwargs['index_start']:4 * kwargs['index_stop']], 4*(kwargs['index_stop'] - kwargs['index_start']))
+        else:
+            buffer.allocate(data, len(data))
         buffer.release()
 
         setattr(mesh, OpenGL.IndexBufferProperty, buffer)
