@@ -11,8 +11,11 @@ from UM.Qt.QtMouseDevice import QtMouseDevice
 from UM.Qt.QtKeyDevice import QtKeyDevice
 from UM.Application import Application
 from UM.Preferences import Preferences
+from UM.Signal import Signal, signalemitter
+
 
 ##  QQuickWindow subclass that provides the main window.
+@signalemitter
 class MainWindow(QQuickWindow):
     def __init__(self, parent = None):
         super(MainWindow, self).__init__(parent)
@@ -170,6 +173,8 @@ class MainWindow(QQuickWindow):
     def hideEvent(self, event):
         Application.getInstance().windowClosed()
 
+    onRenderCompleted = Signal(type = Signal.Queued)
+
     def _render(self):
         renderer = self._app.getRenderer()
         view = self._app.getController().getActiveView()
@@ -179,6 +184,7 @@ class MainWindow(QQuickWindow):
         renderer.render()
         view.endRendering()
         renderer.endRendering()
+        self.onRenderCompleted.emit()
 
     def _onSceneChanged(self, object):
         self.update()
