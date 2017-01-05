@@ -173,7 +173,7 @@ class MainWindow(QQuickWindow):
     def hideEvent(self, event):
         Application.getInstance().windowClosed()
 
-    onRenderCompleted = Signal(type = Signal.Queued)
+    renderCompleted = Signal(type = Signal.Queued)
 
     def _render(self):
         renderer = self._app.getRenderer()
@@ -184,7 +184,7 @@ class MainWindow(QQuickWindow):
         renderer.render()
         view.endRendering()
         renderer.endRendering()
-        self.onRenderCompleted.emit()
+        self.renderCompleted.emit()
 
     def _onSceneChanged(self, object):
         self.update()
