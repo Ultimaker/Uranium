@@ -299,6 +299,8 @@ class Resources:
         if not cls.__cache_storage_path:
             cls.__cache_storage_path = os.path.join(cls.__config_storage_path, "cache")
 
+        cls.__paths.insert(0, cls.__data_storage_path)
+
     __config_storage_path = None
     __data_storage_path = None
     __cache_storage_path = None
