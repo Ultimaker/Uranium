@@ -3,6 +3,7 @@
 
 import collections #For deque, for breadth-first search and to track tasks, and namedtuple.
 import os #To get the configuration file names and to rename files.
+import traceback
 
 from UM.Logger import Logger
 from UM.PluginRegistry import PluginRegistry #To find plug-ins.
@@ -304,7 +305,8 @@ class VersionUpgradeManager:
                 try:
                     this_filenames_without_extension, this_files_data = upgrade_step(file_data, filenames_without_extension[file_idx])
                 except Exception as e: #Upgrade failed due to a coding error in the plug-in.
-                    Logger.logException("w", "Exception in %s upgrade with %s: %s", old_configuration_type, upgrade_step.__module__, str(e))
+                    Logger.logException("w", "Exception in %s upgrade with %s: %s", old_configuration_type,
+                                        upgrade_step.__module__, traceback.format_exc() )
                     return False
                 if not this_files_data: #Upgrade failed.
                     Logger.log("w", "Unable to upgrade the file %s. Skipping it.", filenames_without_extension[file_idx])
