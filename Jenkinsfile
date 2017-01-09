@@ -67,10 +67,20 @@ node ('linux && cura') {
                 )
             }
         }
-//         else
-//         {
+        else
+        {
+            // Send an email to indicate build was fixed
+            if(currentBuild.previousBuild.result != currentBuild.result)
+            {
+                emailext(
+                    subject: "[Jenkins] Build ${currentBuild.fullDisplayName} was fixed!",
+                    body: "Jenkins build ${currentBuild.fullDisplayName} changed from ${currentBuild.previousBuild.result} to ${currentBuild.result}.\n\nPlease check the build output at ${env.BUILD_URL} for details.",
+                    to: env.CURA_EMAIL_RECIPIENTS
+                )
+            }
+
 //             // Otherwise, trigger a build of cura-build
 //             build "../../cura-build/master", wait: false
-//         }
+        }
     }
 }
