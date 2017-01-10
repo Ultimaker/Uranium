@@ -1,5 +1,5 @@
 node ('linux && cura') {
-    // Step to prepare building
+    // Prepare building
     stage('Prepare') {
         // Ensure we start with a clean build directory.
         step([$class: 'WsCleanup'])
@@ -8,16 +8,18 @@ node ('linux && cura') {
         checkout scm
     }
 
-    // Perform the actual build and test runs in a "build" subdirectory of the current workspace.
+    // If any error occurs during building, we want to catch it and continue with the "finale" stage.
     catchError {
+        // Building and testing should happen in a subdirectory.
         dir('build') {
+            // Perform the "build". Since Uranium is Python code, this basically only ensures CMake is setup.
             stage('Build') {
                 // Ensure CMake is setup. Note that since this is Python code we do not really "build" it.
                 sh 'cmake .. -DCMAKE_PREFIX_PATH=/opt/ultimaker/cura-build-environment -DCMAKE_BUILD_TYPE=Release'
             }
 
+            // Try and run the unit tests. If this stage fails, we consider the build to be "unstable".
             stage('Unit Test') {
-                // Try and run the unit tests. If this step fails, we consider the build to be "unstable".
                 try {
                     sh 'make test'
                 } catch(e) {
@@ -25,8 +27,8 @@ node ('linux && cura') {
                 }
             }
 
+            // Perform pylint checks on the source code. If this step fails, we do not consider it an error.
             stage('Lint') {
-                // Perform pylint checks on the source code. If this step fails, we do not consider it an error.
                 try {
                     sh 'make check'
                 } catch(e) {
@@ -36,6 +38,7 @@ node ('linux && cura') {
         }
     }
 
+    // Perform any post-build actions like notification and publishing of unit tests.
     stage('Finalize') {
         // Publish the test results to Jenkins.
         junit 'build/junit.xml'
@@ -55,7 +58,7 @@ node ('linux && cura') {
                 emailext(
                     subject: "[Jenkins] Build ${currentBuild.fullDisplayName} has become ${currentBuild.result}",
                     body: "Jenkins build ${currentBuild.fullDisplayName} changed from ${currentBuild.previousBuild.result} to ${currentBuild.result}.\n\nPlease check the build output at ${env.BUILD_URL} for details.",
-                    to: env.CURA_EMAIL_RECIPIENTS
+                    to: env.CURA_EMAIL_RECIPIENTS // Note: Using an environment variable for security reasons.
                 )
             }
             else
