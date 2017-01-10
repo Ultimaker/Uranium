@@ -113,20 +113,6 @@ class MockContainer(UM.Settings.ContainerInterface.ContainerInterface):
 def container_stack():
     return UM.Settings.ContainerStack(uuid.uuid4().int)
 
-##  Creates a brand new container registry.
-#
-#   To force a new container registry, the registry is first set to None and
-#   then re-requested.
-#
-#   \return A brand new container registry.
-@pytest.fixture
-def container_registry():
-    Resources.addSearchPath(os.path.dirname(os.path.abspath(__file__)))
-    UM.Settings.ContainerRegistry._ContainerRegistry__instance = None # Reset the private instance variable every time
-    UM.PluginRegistry.getInstance().removeType("settings_container")
-
-    return UM.Settings.ContainerRegistry.getInstance()
-
 ##  Tests the creation of a container stack.
 #
 #   The actual creation is done in a fixture though.

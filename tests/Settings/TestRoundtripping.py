@@ -61,8 +61,8 @@ def test_roundtrip_basic(tmpdir, process_count):
     for result in results:
         assert result == data
 
-def test_roundtrip_instance(tmpdir, process_count, container_registry):
-    definition = container_registry.findDefinitionContainers(id = "inherits")[0]
+def test_roundtrip_instance(tmpdir, process_count, loaded_container_registry):
+    definition = loaded_container_registry.findDefinitionContainers(id = "inherits")[0]
 
     instance_container = UM.Settings.InstanceContainer("test_container")
     instance_container.setName("Test Instance Container")
@@ -87,9 +87,9 @@ def test_roundtrip_instance(tmpdir, process_count, container_registry):
         assert deserialized_container.getMetaData() == instance_container.getMetaData()
         assert deserialized_container.getProperty("test_setting_1", "value") == instance_container.getProperty("test_setting_1", "value")
 
-def test_roundtrip_stack(tmpdir, process_count, container_registry):
-    definition = container_registry.findDefinitionContainers(id = "multiple_settings")[0]
-    instances = container_registry.findInstanceContainers(id = "setting_values")[0]
+def test_roundtrip_stack(tmpdir, process_count, loaded_container_registry):
+    definition = loaded_container_registry.findDefinitionContainers(id = "multiple_settings")[0]
+    instances = loaded_container_registry.findInstanceContainers(id = "setting_values")[0]
 
     container_stack = UM.Settings.ContainerStack("test_stack")
     container_stack.setName("Test Container Stack")

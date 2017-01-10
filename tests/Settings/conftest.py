@@ -47,6 +47,10 @@ def container_registry():
     UM.Settings.ContainerRegistry._ContainerRegistry__instance = None # Reset the private instance variable every time
     UM.PluginRegistry.getInstance().removeType("settings_container")
 
+    return UM.Settings.ContainerRegistry.getInstance()
+
+@pytest.fixture
+def loaded_container_registry(container_registry):
     instance = UM.Settings.ContainerRegistry.getInstance()
     instance.addResourceType(UM.Resources.InstanceContainers)
     instance.load()
