@@ -87,7 +87,7 @@ test_call_data = [
     { "code": "",             "result": None },
     { "code": "os.read(os.open(\"/etc/passwd\", os.O_RDONLY), 10)", "result": None },
     { "code": "exec(\"os.read(os.open(\\\"/etc/passwd\\\", os.O_RDONLY), 10)\")", "result": None },
-    { "code": "boo",          "result": None } # Variable doesn't exist.
+    { "code": "boo",          "result": 0 } # Variable doesn't exist.
 ]
 
 ##  Tests the calling of a valid setting function.
