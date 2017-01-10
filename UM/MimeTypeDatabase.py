@@ -121,6 +121,8 @@ class MimeTypeDatabase:
 
         raise MimeTypeNotFoundError("Could not find mime type named {0}".format(name))
 
+    MimeTypeNotFoundError = MimeTypeNotFoundError
+
     ##  Get a mime type for a specific file.
     #
     #   \param file_name The name of the file to get the mime type for.

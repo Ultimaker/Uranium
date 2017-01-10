@@ -290,7 +290,11 @@ class VersionUpgradeManager:
         version = old_version
         configuration_type = old_configuration_type
 
-        mime_type = UM.MimeTypeDatabase.getMimeTypeForFile(configuration_file)  # Get the actual MIME type object, from the name.
+        try:
+            mime_type = UM.MimeTypeDatabase.getMimeTypeForFile(configuration_file)  # Get the actual MIME type object, from the name.
+        except UM.MimeTypeDatabase.MimeTypeNotFoundError:
+            return False
+
         filenames_without_extension = [self._stripMimeTypeExtension(mime_type, configuration_file)]
 
         #Keep converting the file until it's at one of the current versions.
