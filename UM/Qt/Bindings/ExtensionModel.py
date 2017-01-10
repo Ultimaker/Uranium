@@ -1,8 +1,8 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-from PyQt5.QtCore import Qt, pyqtSlot,QCoreApplication
-
+from PyQt5.QtCore import Qt
+from UM.FlameProfiler import pyqtSlot
 from UM.Application import Application
 from UM.Qt.ListModel import ListModel
 

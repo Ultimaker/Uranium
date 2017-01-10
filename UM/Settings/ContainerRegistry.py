@@ -4,6 +4,7 @@
 import os
 import re #For finding containers with asterisks in the constraints.
 import urllib #For ensuring container file names are proper file names
+import urllib.parse
 import pickle #For serializing/deserializing Python classes to binary files
 
 from contextlib import contextmanager

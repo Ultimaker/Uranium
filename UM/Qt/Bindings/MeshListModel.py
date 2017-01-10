@@ -1,8 +1,8 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-from PyQt5.QtCore import Qt, QCoreApplication, pyqtSlot,QUrl
-
+from PyQt5.QtCore import Qt, QUrl
+from UM.FlameProfiler import pyqtSlot
 from UM.Qt.ListModel import ListModel
 from UM.Application import Application
 from UM.Scene.Selection import Selection
@@ -10,7 +10,6 @@ from UM.Operations.RemoveSceneNodeOperation import RemoveSceneNodeOperation
 from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator
 from UM.Scene.SceneNode import SceneNode
 from UM.Scene.PointCloudNode import PointCloudNode
-import threading
 
 class MeshListModel(ListModel):
     NameRole = Qt.UserRole + 1 #Label 
