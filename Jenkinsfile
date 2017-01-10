@@ -50,7 +50,7 @@ node ('linux && cura') {
         ])
 
         // If the job was not successful, send an email about it
-        if(currentBuild.result != "SUCCESS")
+        if(currentBuild.result && currentBuild.result != "SUCCESS")
         {
             // If our situation changed, send a different mail than if we are simply warning about the build still being broken.
             if(currentBuild.previousBuild.result != currentBuild.result)
@@ -77,7 +77,7 @@ node ('linux && cura') {
             {
                 emailext(
                     subject: "[Jenkins] Build ${currentBuild.fullDisplayName} was fixed!",
-                    body: "Jenkins build ${currentBuild.fullDisplayName} changed from ${currentBuild.previousBuild.result} to ${currentBuild.result}.\n\nPlease check the build output at ${env.BUILD_URL} for details.",
+                    body: "Jenkins build ${currentBuild.fullDisplayName} was ${currentBuild.previousBuild.result} but is now stable again.\n\nPlease check the build output at ${env.BUILD_URL} for details.",
                     to: env.CURA_EMAIL_RECIPIENTS
                 )
             }
