@@ -134,7 +134,7 @@ class Signal:
     #   function will be called on the next application event loop tick.
     @call_if_enabled(_traceEmit, _isTraceEnabled())
     def emit(self, *args, **kwargs):
-        FlameProfiler.markProfileRoot()
+        FlameProfiler.updateProfileConfig()
         if FlameProfiler.isRecordingProfile():
             with FlameProfiler.profileCall("[SIG] " + self.getName()):
                 self._realEmit(*args, **kwargs)

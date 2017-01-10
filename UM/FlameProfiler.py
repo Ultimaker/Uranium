@@ -7,17 +7,21 @@ import functools
 from PyQt5.QtCore import pyqtSlot as pyqt5PyqtSlot
 from UM.Logger import Logger
 
-###########################################################################
-SIGNAL_PROFILE = True
-record_profile = False
+# A simple profiler which produces data suitable for viewing as a flame graph
+# when using the Big Flame Graph plugin.
 
-class ProfileCallNode:
+record_profile = False  # Flag to keep track of whether we are recording data.
+
+# Profiling data is build up of a tree of these kinds of nodes. Each node
+# has a name, start time, end time, and a list of children nodes which are
+# other functions/methods which were called by this function.
+class _ProfileCallNode:
     def __init__(self, name, line_number, start_time, end_time, children):
         self.__name = name
         self.__line_number = line_number
         self.__start_time = start_time
         self.__end_time = end_time
-        self.__children = children if children is not None else [] # type: List[ProfileCallNode]
+        self.__children = children if children is not None else [] # type: List[_ProfileCallNode]
 
     def getStartTime(self):
         return self.__start_time
@@ -64,6 +68,9 @@ clear_profile_requested = False
 record_profile_requested = False
 stop_record_profile_requested = False
 
+##  Fetch the accumulated profile data.
+#
+#   \return \type{ProfileCallNode} or None if there is no data.
 def getProfileData():
     raw_profile_calls = child_accu_stack[0]
     if len(raw_profile_calls) == 0:
@@ -71,57 +78,68 @@ def getProfileData():
 
     start_time = raw_profile_calls[0].getStartTime()
     end_time = raw_profile_calls[-1].getEndTime()
-    fill_children = fillInProfileSpaces(start_time, end_time, raw_profile_calls)
-    return ProfileCallNode("", 0, start_time, end_time, fill_children)
+    fill_children = _fillInProfileSpaces(start_time, end_time, raw_profile_calls)
+    return _ProfileCallNode("", 0, start_time, end_time, fill_children)
 
+##  Erase any profile data.
 def clearProfileData():
     global clear_profile_requested
     clear_profile_requested = True
 
+##  Start recording profile data.
 def startRecordingProfileData():
     global record_profile_requested
     record_profile_requested = True
 
+##  Stop recording profile data.
 def stopRecordingProfileData():
     global stop_record_profile_requested
     stop_record_profile_requested = True
 
-def fillInProfileSpaces(start_time, end_time, profile_call_list):
+def _fillInProfileSpaces(start_time, end_time, profile_call_list):
     result = []
     time_counter = start_time
     for profile_call in profile_call_list:
         if secondsToMS(profile_call.getStartTime()) != secondsToMS(time_counter):
-            result.append(ProfileCallNode("", 0, time_counter, profile_call.getStartTime(), []))
+            result.append(_ProfileCallNode("", 0, time_counter, profile_call.getStartTime(), []))
         result.append(profile_call)
         time_counter = profile_call.getEndTime()
 
     if secondsToMS(time_counter) != secondsToMS(end_time):
-        result.append(ProfileCallNode("", 0, time_counter, end_time, []))
+        result.append(_ProfileCallNode("", 0, time_counter, end_time, []))
 
     return result
 
 def secondsToMS(value):
     return math.floor(value *1000)
 
+##  Profile a block of code.
+#
+#   Use this context manager to wrap and profile a block of code.
+#   \param name \type{str} The name to use to identify this code in the profile report.
 @contextmanager
 def profileCall(name):
     start_time = time.time()
     child_accu_stack.append([])
     yield
     end_time = time.time()
-    call_stat = ProfileCallNode(name, 0, start_time, end_time,
-                                fillInProfileSpaces(start_time, end_time, child_accu_stack.pop()))
+    call_stat = _ProfileCallNode(name, 0, start_time, end_time,
+                                 _fillInProfileSpaces(start_time, end_time, child_accu_stack.pop()))
     child_accu_stack[-1].append(call_stat)
 
+##  Return whether we are recording profiling information.
+#
+#   \return \type{bool} True if we are recording.
 def isRecordingProfile():
     global record_profile
     return record_profile
 
 
-def markProfileRoot():
+def updateProfileConfig():
     global child_accu_stack
     global record_profile
 
+    # We can only update the active profiling config when we are not deeply nested inside profiled calls.
     if len(child_accu_stack) <= 1:
         global clear_profile_requested
         if clear_profile_requested:
@@ -140,6 +158,9 @@ def markProfileRoot():
             record_profile = False
             Logger.log('d', 'Stopping record stop_record_profile_requested')
 
+##  Decorator which can be manually applied to methods to record profiling information.
+#
+#   \type{Callable}
 def profile(function):
     def runIt(*args, ** kwargs):
         if isRecordingProfile():
@@ -149,6 +170,9 @@ def profile(function):
             return function(*args, **kwargs)
     return runIt
 
+##  Drop in replacement for PyQt5's pyqtSlot decorator which records profiling information.
+#
+#   See the PyQt5 documentation for information about pyqtSlot.
 def pyqtSlot(*args, **kwargs):
     def wrapIt(function):
         @functools.wraps(function)
