@@ -8,6 +8,8 @@ import numpy
 import math
 import pytest
 
+pytestmark = pytest.mark.skip(reason = "Incomplete tests")
+
 class TestPolygon():
     def setup_method(self, method):
         # Called before the first testfunction is executed
