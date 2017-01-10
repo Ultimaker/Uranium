@@ -376,16 +376,16 @@ class ContainerRegistry:
     def uniqueName(self, original):
         name = original.strip()
 
-        if not self.findContainers(id = name, ignore_case = True) and not self.findContainers(name = name):
-            return name # Nothing to do. Name is unique as it is.
-
-        num_check = re.compile("(.*?)\s*#\d$").match(name)
+        num_check = re.compile(r"(.*?)\s*#\d+$").match(name)
         if num_check: #There is a number in the name.
             name = num_check.group(1) #Filter out the number.
-        if name == "": #Wait, that deleted everything!
-            name = "Profile"
-        unique_name = name
 
+        if not name: #Wait, that deleted everything!
+            name = "Profile"
+        elif not self.findContainers(id = name, ignore_case = True) and not self.findContainers(name = name):
+            return original.strip()
+
+        unique_name = name
         i = 1
         while self.findContainers(id = unique_name, ignore_case = True) or self.findContainers(name = unique_name): #A container already has this name.
             i += 1 #Try next numbering.
