@@ -1,6 +1,7 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 import time
 import math
+import os
 from contextlib import contextmanager
 
 import functools
@@ -9,6 +10,9 @@ from UM.Logger import Logger
 
 # A simple profiler which produces data suitable for viewing as a flame graph
 # when using the Big Flame Graph plugin.
+
+def enabled():
+    return "URANIUM_FLAME_PROFILER" in os.environ
 
 record_profile = False  # Flag to keep track of whether we are recording data.
 
@@ -119,13 +123,16 @@ def secondsToMS(value):
 #   \param name \type{str} The name to use to identify this code in the profile report.
 @contextmanager
 def profileCall(name):
-    start_time = time.time()
-    child_accu_stack.append([])
-    yield
-    end_time = time.time()
-    call_stat = _ProfileCallNode(name, 0, start_time, end_time,
-                                 _fillInProfileSpaces(start_time, end_time, child_accu_stack.pop()))
-    child_accu_stack[-1].append(call_stat)
+    if enabled():
+        start_time = time.time()
+        child_accu_stack.append([])
+        yield
+        end_time = time.time()
+        call_stat = _ProfileCallNode(name, 0, start_time, end_time,
+                                     _fillInProfileSpaces(start_time, end_time, child_accu_stack.pop()))
+        child_accu_stack[-1].append(call_stat)
+    else:
+        yield
 
 ##  Return whether we are recording profiling information.
 #
@@ -162,26 +169,34 @@ def updateProfileConfig():
 #
 #   \type{Callable}
 def profile(function):
-    def runIt(*args, ** kwargs):
-        if isRecordingProfile():
-            with profileCall(function.__qualname__):
-                return function(*args, ** kwargs)
-        else:
-            return function(*args, **kwargs)
-    return runIt
+    if enabled():
+        def runIt(*args, ** kwargs):
+            if isRecordingProfile():
+                with profileCall(function.__qualname__):
+                    return function(*args, ** kwargs)
+            else:
+                return function(*args, **kwargs)
+        return runIt
+    else:
+        return function
 
 ##  Drop in replacement for PyQt5's pyqtSlot decorator which records profiling information.
 #
 #   See the PyQt5 documentation for information about pyqtSlot.
 def pyqtSlot(*args, **kwargs):
-    def wrapIt(function):
-        @functools.wraps(function)
-        def wrapped(*args2, **kwargs2):
-            if isRecordingProfile():
-                with profileCall("[SLOT] "+ function.__qualname__):
+    if enabled():
+        def wrapIt(function):
+            @functools.wraps(function)
+            def wrapped(*args2, **kwargs2):
+                if isRecordingProfile():
+                    with profileCall("[SLOT] "+ function.__qualname__):
+                        return function(*args2, **kwargs2)
+                else:
                     return function(*args2, **kwargs2)
-            else:
-                return function(*args2, **kwargs2)
 
-        return pyqt5PyqtSlot(*args, **kwargs)(wrapped)
-    return wrapIt
+            return pyqt5PyqtSlot(*args, **kwargs)(wrapped)
+        return wrapIt
+    else:
+        def dontWrapIt(function):
+            return pyqt5PyqtSlot(*args, **kwargs)(function)
+        return dontWrapIt

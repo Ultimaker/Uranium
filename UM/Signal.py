@@ -9,6 +9,8 @@ import threading
 import os
 import weakref
 
+import functools
+
 from UM.Event import CallFunctionEvent
 from UM.Decorators import deprecated, call_if_enabled
 from UM.Logger import Logger
@@ -45,10 +47,26 @@ def _traceDisconnect(signal, *args, **kwargs):
 def _isTraceEnabled():
     return "URANIUM_TRACE_SIGNALS" in os.environ
 
-def _recordSignalNames():
-    return True
-    # return "URANIUM_TRACE_SIGNALS" in os.environ
+###########################################################################
+# Integration with the Flame Profiler.
 
+def _recordSignalNames():
+    return FlameProfiler.enabled()
+
+def profileEmit(function):
+    if FlameProfiler.enabled():
+        @functools.wraps(function)
+        def wrapped(self, *args, **kwargs):
+            FlameProfiler.updateProfileConfig()
+            if FlameProfiler.isRecordingProfile():
+                with FlameProfiler.profileCall("[SIG] " + self.getName()):
+                    function(*args, **kwargs)
+            else:
+                function(self, *args, **kwargs)
+        return wrapped
+
+    else:
+        return function
 
 ###########################################################################
 
@@ -133,15 +151,8 @@ class Signal:
     #   the call will be posted as an event to the application main thread, which means the
     #   function will be called on the next application event loop tick.
     @call_if_enabled(_traceEmit, _isTraceEnabled())
+    @profileEmit
     def emit(self, *args, **kwargs):
-        FlameProfiler.updateProfileConfig()
-        if FlameProfiler.isRecordingProfile():
-            with FlameProfiler.profileCall("[SIG] " + self.getName()):
-                self._realEmit(*args, **kwargs)
-        else:
-            self._realEmit(*args, **kwargs)
-
-    def _realEmit(self, *args, **kwargs):
         try:
             if self.__type == Signal.Queued:
                 Signal._app.functionEvent(CallFunctionEvent(self.emit, args, kwargs))
