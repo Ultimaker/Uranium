@@ -43,7 +43,7 @@ def test_system_mimetypes(mime_database):
     mime = mime_database.getMimeTypeForFile(os.path.abspath(__file__))
     assert mime.name == "text/x-python"
     assert mime.comment == "Python script"
-    assert mime.suffixes == ["py", "pyx", "wsgi"]
+    assert "py" in mime.suffixes
     assert mime.preferredSuffix == "py"
 
 def test_compare(mime_database):

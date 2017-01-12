@@ -87,7 +87,7 @@ test_call_data = [
     { "code": "",             "result": None },
     { "code": "os.read(os.open(\"/etc/passwd\", os.O_RDONLY), 10)", "result": None },
     { "code": "exec(\"os.read(os.open(\\\"/etc/passwd\\\", os.O_RDONLY), 10)\")", "result": None },
-    { "code": "boo",          "result": None } # Variable doesn't exist.
+    { "code": "boo",          "result": 0 } # Variable doesn't exist.
 ]
 
 ##  Tests the calling of a valid setting function.
@@ -122,12 +122,13 @@ def test_eq():
 #   true variables in that function (the answer).
 test_getUsedSettings_data = [
     { "code": "0",       "variables": [] },
-    { "code": "\"x\"",   "variables": [] },
+    { "code": "\"x\"",   "variables": ["x"] },
     { "code": "x",       "variables": ["x"] },
     { "code": "x * y",   "variables": ["x", "y"] },
     { "code": "sqrt(4)", "variables": ["sqrt"] },
     { "code": "sqrt(x)", "variables": ["sqrt", "x"] },
-    { "code": "x * x",   "variables": ["x"] } # Use the same variable twice.
+    { "code": "x * x",   "variables": ["x"] }, # Use the same variable twice.
+    { "code": "sqrt('x')" , "variables": [ "sqrt", "x" ] }, # Calling functions with string parameters will mark the string parameter as a "used setting".
 ]
 
 ##  Tests if the function finds correctly which settings are used.
