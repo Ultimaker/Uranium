@@ -60,7 +60,7 @@ def profileEmit(function):
             FlameProfiler.updateProfileConfig()
             if FlameProfiler.isRecordingProfile():
                 with FlameProfiler.profileCall("[SIG] " + self.getName()):
-                    function(*args, **kwargs)
+                    function(self, *args, **kwargs)
             else:
                 function(self, *args, **kwargs)
         return wrapped
