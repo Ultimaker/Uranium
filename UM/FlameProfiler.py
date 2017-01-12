@@ -10,6 +10,12 @@ from UM.Logger import Logger
 
 # A simple profiler which produces data suitable for viewing as a flame graph
 # when using the Big Flame Graph plugin.
+#
+# An example of code which uses this profiling data is this Cura plugin:
+# https://github.com/sedwards2009/cura-big-flame-graph
+#
+# Set the environment variable URANIUM_FLAME_PROFILER to something before
+# starting the application to make the profiling code available.
 
 def enabled():
     return "URANIUM_FLAME_PROFILER" in os.environ
