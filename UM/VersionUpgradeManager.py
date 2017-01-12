@@ -315,7 +315,7 @@ class VersionUpgradeManager:
                 if upgrade_step_result:
                     this_filenames_without_extension, this_files_data = upgrade_step_result
                 else: #Upgrade failed.
-                    Logger.log("w", "Unable to upgrade the file %s. Skipping it.", filenames_without_extension[file_idx])
+                    Logger.log("w", "Unable to upgrade the file %s with %s.%s. Skipping it.", filenames_without_extension[file_idx], upgrade_step.__module__, upgrade_step.__name__)
                     return False
                 new_filenames_without_extension += this_filenames_without_extension
                 new_files_data += this_files_data
