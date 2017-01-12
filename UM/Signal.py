@@ -155,51 +155,16 @@ class Signal:
     def emit(self, *args, **kwargs):
         try:
             if self.__type == Signal.Queued:
-                Signal._app.functionEvent(CallFunctionEvent(self.emit, args, kwargs))
+                Signal._app.functionEvent(CallFunctionEvent(self.__performEmit, args, kwargs))
                 return
-
             if self.__type == Signal.Auto:
                 if threading.current_thread() is not Signal._app.getMainThread():
-                    Signal._app.functionEvent(CallFunctionEvent(self.emit, args, kwargs))
+                    Signal._app.functionEvent(CallFunctionEvent(self.__performEmit, args, kwargs))
                     return
         except AttributeError: # If Signal._app is not set
             return
 
-        # Quickly make some private references to the collections we need to process.
-        # Although the these fields are always safe to use read and use with regards to threading,
-        # we want to operate on a consistent snapshot of the whole set of fields.
-        with self.__lock:
-            functions = self.__functions
-            methods = self.__methods
-            signals = self.__signals
-
-        if not FlameProfiler.isRecordingProfile():
-            # Call handler functions
-            for func in functions:
-                func(*args, **kwargs)
-
-            # Call handler methods
-            for dest, func in methods:
-                func(dest, *args, **kwargs)
-
-            # Emit connected signals
-            for signal in signals:
-                signal.emit(*args, **kwargs)
-        else:
-            # Call handler functions
-            for func in functions:
-                with FlameProfiler.profileCall(func.__qualname__):
-                    func(*args, **kwargs)
-
-            # Call handler methods
-            for dest, func in methods:
-                with FlameProfiler.profileCall(func.__qualname__):
-                    func(dest, *args, **kwargs)
-
-            # Emit connected signals
-            for signal in signals:
-                with FlameProfiler.profileCall("[SIG]" + signal.getName()):
-                    signal.emit(*args, **kwargs)
+        self.__performEmit(*args, **kwargs)
 
 
     ##  Connect to this signal.
@@ -270,6 +235,45 @@ class Signal:
     #   To avoid circular references when importing Application, this should be
     #   set by the Application instance.
     _app = None
+
+    # Private implementation of the actual emit.
+    # This is done to make it possible to freely push function events without needing to maintain state.
+    def __performEmit(self, *args, **kwargs):
+        # Quickly make some private references to the collections we need to process.
+        # Although the these fields are always safe to use read and use with regards to threading,
+        # we want to operate on a consistent snapshot of the whole set of fields.
+        with self.__lock:
+            functions = self.__functions
+            methods = self.__methods
+            signals = self.__signals
+
+        if not FlameProfiler.isRecordingProfile():
+            # Call handler functions
+            for func in functions:
+                func(*args, **kwargs)
+
+            # Call handler methods
+            for dest, func in methods:
+                func(dest, *args, **kwargs)
+
+            # Emit connected signals
+            for signal in signals:
+                signal.emit(*args, **kwargs)
+        else:
+            # Call handler functions
+            for func in functions:
+                with FlameProfiler.profileCall(func.__qualname__):
+                    func(*args, **kwargs)
+
+            # Call handler methods
+            for dest, func in methods:
+                with FlameProfiler.profileCall(func.__qualname__):
+                    func(dest, *args, **kwargs)
+
+            # Emit connected signals
+            for signal in signals:
+                with FlameProfiler.profileCall("[SIG]" + signal.getName()):
+                    signal.emit(*args, **kwargs)
 
     # This __str__() is useful for debugging.
     # def __str__(self):
