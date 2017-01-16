@@ -1,10 +1,15 @@
-# Copyright (c) 2016 Ultimaker B.V.
+ # Copyright (c) 2016 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 import ast
 import math # Imported here so it can be used easily by the setting functions.
-
+from typing import Any, Dict
+from UM.Settings.Interfaces import ContainerInterface
 from UM.Logger import Logger
+
+MYPY = False
+if MYPY:
+    from UM.Settings.SettingInstance import SettingInstance
 
 class IllegalMethodError(Exception):
     pass
@@ -19,11 +24,14 @@ class SettingFunction:
     ##  Constructor.
     #
     #   \param code The Python code this function should evaluate.
-    def __init__(self, code, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, code: str) -> None:
+        super().__init__()
 
         self._code = code
-        self._settings = set()  # Keys of all settings that are referenced to in this function.
+
+        #  Keys of all settings that are referenced to in this function.
+        self._settings = frozenset()  # type: frozenset[str]
+
         self._compiled = None
         self._valid = False
 
@@ -40,14 +48,14 @@ class SettingFunction:
             Logger.log("e", "Exception in function ({0}) for setting: {1}".format(str(e), self._code))
 
     ##  Call the actual function to calculate the value.
-    def __call__(self, value_provider, *args, **kwargs):
+    def __call__(self, value_provider: ContainerInterface) -> Any:
         if not value_provider:
             return None
 
         if not self._valid:
             return None
 
-        locals = { }
+        locals = { }    # type: Dict[str, Any]
         for name in self._settings:
             value = value_provider.getProperty(name, "value")
             if value is None:
@@ -55,7 +63,7 @@ class SettingFunction:
 
             locals[name] = value
 
-        g = {}
+        g = {}  # type: Dict[str, Any]
         g.update(globals())
         g.update(self.__operators)
 
@@ -65,7 +73,7 @@ class SettingFunction:
             Logger.logException("d", "An exception occurred in inherit function %s", self)
             return 0  # Settings may be used in calculations and they need a value
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         if not isinstance(other, SettingFunction):
             return False
 
@@ -74,7 +82,7 @@ class SettingFunction:
     ##  Returns whether the function is ready to be executed.
     #
     #   \return True if the function is valid, or False if it's not.
-    def isValid(self):
+    def isValid(self) -> bool:
         return self._valid
 
     ##  Retrieve a set of the keys (strings) of all the settings used in this function.
@@ -83,22 +91,22 @@ class SettingFunction:
     def getUsedSettingKeys(self):
         return self._settings
 
-    def __str__(self):
+    def __str__(self) -> str:
         return "={0}".format(self._code)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "<UM.Settings.SettingFunction (0x{0:x}) ={1} >".format(id(self), self._code)
 
     ##  To support Pickle
     #
     #   Pickle does not support the compiled code, so instead remove it from the state.
     #   We can re-compile it later on anyway.
-    def __getstate__(self):
+    def __getstate__(self) -> Dict[str, Any]:
         state = self.__dict__.copy()
         del state["_compiled"]
         return state
 
-    def __setstate__(self, state):
+    def __setstate__(self, state: Dict[str, Any]) -> None:
         self.__dict__.update(state)
         self._compiled = compile(self._code, repr(self), "eval")
 
@@ -107,7 +115,7 @@ class SettingFunction:
     #   \param name What identifier to use in the executed code.
     #   \param operator A callable that implements the actual logic to execute.
     @classmethod
-    def registerOperator(cls, name, operator):
+    def registerOperator(cls, name: str, operator) -> None:
         cls.__operators[name] = operator
         _SettingExpressionVisitor._knownNames.append(name)
 

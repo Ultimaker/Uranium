@@ -111,4 +111,4 @@ class DefinitionContainerInterface(ContainerInterface): pass
 #
 @UM.Decorators.interface
 class ContainerRegistryInterface:
-    def findDefinitionContainers(self, **kwargs) -> List[DefinitionContainerInterface]: pass
+    def findDefinitionContainers(self, **kwargs: Any) -> List[DefinitionContainerInterface]: pass

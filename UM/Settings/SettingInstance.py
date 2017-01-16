@@ -3,7 +3,7 @@
 
 import enum
 import os
-from typing import Any, List, Set
+from typing import Any, List, Set, KeysView
 
 # from UM.Settings.Interfaces import ContainerInterface
 from UM.Settings.Interfaces import ContainerInterface
@@ -15,7 +15,6 @@ MYPY = False
 if MYPY:
     from UM.Settings.SettingRelation import SettingRelation
 from UM.Settings.SettingRelation import RelationType
-from . import Validator
 from . import SettingFunction
 from .SettingDefinition import SettingDefinition
 
@@ -69,10 +68,10 @@ class SettingInstance:
         self.__property_values = {} # type: Dict[str, Any]
 
     ##  Get a list of all supported property names
-    def getPropertyNames(self):
+    def getPropertyNames(self) -> KeysView[str]:
         return self.__property_values.keys()
 
-    def __eq__(self, other):
+    def __eq__(self, other: Any) -> bool:
         if type(self) != type(other):
             return False  # Type mismatch
 
@@ -84,10 +83,10 @@ class SettingInstance:
                 return False  # Other does not have the property
         return True
 
-    def __ne__(self, other):
+    def __ne__(self, other: Any) -> bool:
         return not (self == other)
 
-    def __getattr__(self, name):
+    def __getattr__(self, name: str) -> Any:
         if name == "_SettingInstance__property_values":
             # Prevent infinite recursion when __property_values is not set.
             # This happens primarily with Pickle

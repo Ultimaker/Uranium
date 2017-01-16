@@ -2,6 +2,7 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 import gettext
+from typing import Any, Dict
 
 from UM.Resources import Resources
 
@@ -32,14 +33,14 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
     #
     #   \note When `language` is `default`, the language to load can be overridden
     #   using the "LANGUAGE" environment variable.
-    def __init__(self, name = None, language = "default"): #pylint: disable=bad-whitespace
+    def __init__(self, name: str = None, language: str = "default") -> None: #pylint: disable=bad-whitespace
         self.__name = name
         self.__language = language
-        self.__translation = None
+        self.__translation = None   # type: gettext.NullTranslations
 
         self._update()
 
-    def hasTranslationLoaded(self):
+    def hasTranslationLoaded(self) -> bool:
         return self.__translation is not None
 
     ##  Mark a string as translatable
@@ -48,7 +49,7 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
     #   \param args Formatting arguments. These will replace formatting elements in the translated string. See python str.format()
     #
     #   \return The translated text or the untranslated text if no translation was found.
-    def i18n(self, text, *args):
+    def i18n(self, text: str, *args: Any) -> str:
         if self.__require_update:
             self._update()
 
@@ -68,7 +69,7 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
     #   \param args Formatting arguments. These will replace formatting elements in the translated string. See python str.format()
     #
     #   \return The translated text or the untranslated text if it was not found in this catalog.
-    def i18nc(self, context, text, *args):
+    def i18nc(self, context: str, text: str, *args: Any) -> str:
         if self.__require_update:
             self._update()
 
@@ -100,7 +101,7 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
     #         is at all times used to determine what form to use, with the language files
     #         specifying what plural forms are available.  Additionally, counter is passed as first
     #         argument to format the string.
-    def i18np(self, single, multiple, counter, *args):
+    def i18np(self, single: str, multiple: str, counter: int, *args: Any) -> str:
         if self.__require_update:
             self._update()
 
@@ -129,7 +130,7 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
     #         is at all times used to determine what form to use, with the language files
     #         specifying what plural forms are available. Additionally, counter is passed as first
     #         argument to format the string.
-    def i18ncp(self, context, single, multiple, counter, *args):
+    def i18ncp(self, context: str, single: str, multiple: str, counter: int, *args: Any) -> str:
         if self.__require_update:
             self._update()
 
@@ -146,7 +147,7 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
 
         return self._replaceTags(translated)
 
-    def _replaceTags(self, string):
+    def _replaceTags(self, string: str) -> str:
         output = string
         for key, value in self.__tag_replacements.items():
             source_open = "<{0}>".format(key)
@@ -163,7 +164,7 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
 
         return output
 
-    def _update(self):
+    def _update(self) -> None:
         if not self.__name or not self.__language:
             self.__require_update = True
             return
@@ -175,16 +176,16 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
         self.__require_update = False
 
     @classmethod
-    def setTagReplacements(cls, replacements):
+    def setTagReplacements(cls, replacements: Dict[str, str]) -> None:
         cls.__tag_replacements = replacements
 
     @classmethod
-    def setApplicationName(cls, applicationName):
+    def setApplicationName(cls, applicationName: str) -> None:
         cls.__name = applicationName
         cls.__require_update = True
 
     @classmethod
-    def setLanguage(cls, language):
+    def setLanguage(cls, language: str) -> None:
         cls.__language = language
         cls.__require_update = True
 

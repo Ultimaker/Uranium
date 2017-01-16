@@ -6,16 +6,18 @@ import json
 import enum
 import collections
 import re
-from typing import Any, List
+from typing import Any, List, Dict, Callable, Match, AnyStr, Set, Union
 
 from UM.Logger import Logger
+from UM.Settings.Interfaces import ContainerInterface, DefinitionContainerInterface
+from UM.i18n import i18nCatalog
 
 MYPY = False
 if MYPY:
     from UM.Settings.SettingRelation import SettingRelation
 
 from . import SettingFunction
-from . import Validator
+from UM.Settings.Validator import Validator
 
 
 ##  Type of definition property.
@@ -30,11 +32,11 @@ class DefinitionPropertyType(enum.IntEnum):
     Function = 4  ## Value is a python function. It is passed to SettingFunction's constructor which will parse and analyze it.
 
 ## Conversion of string to float.
-def _toFloatConversion(value):
+def _toFloatConversion(value: str) -> float:
     ## Ensure that all , are replaced with . (so they are seen as floats)
     value = value.replace(",", ".")
 
-    def stripLeading0(matchobj):
+    def stripLeading0(matchobj:  Match[str]) -> str:
         return matchobj.group(0).lstrip("0")
 
     ## Literal eval does not like "02" as a value, but users see this as "2".
@@ -70,10 +72,10 @@ class SettingDefinition:
     ##  Construcutor
     #
     #   \param key \type{string} The unique, machine readable/writable key to use for this setting.
-    #   \param container \type{DefinitionContainer} The container of this setting. Defaults to None.
+    #   \param container \type{DefinitionContainerInterface} The container of this setting. Defaults to None.
     #   \param parent \type{SettingDefinition} The parent of this setting. Defaults to None.
     #   \param i18n_catalog \type{i18nCatalog} The translation catalog to use for this setting. Defaults to None.
-    def __init__(self, key: str, container = None, parent = None, i18n_catalog = None) -> None:
+    def __init__(self, key: str, container: DefinitionContainerInterface = None, parent: 'SettingDefinition' = None, i18n_catalog: i18nCatalog = None) -> None:
         super().__init__()
 
         self._key = key
@@ -114,21 +116,21 @@ class SettingDefinition:
     #
     #   \return \type{string}
     @property
-    def key(self):
+    def key(self) -> str:
         return self._key
 
     ##  The container of this setting.
     #
-    #   \return \type{DefinitionContainer}
+    #   \return
     @property
-    def container(self):
+    def container(self) -> DefinitionContainerInterface:
         return self._container
 
     ##  The parent of this setting.
     #
     #   \return \type{SettingDefinition}
     @property
-    def parent(self):
+    def parent(self) -> 'SettingDefinition':
         return self._parent
 
     ##  A list of children of this setting.
@@ -142,19 +144,19 @@ class SettingDefinition:
     #
     #   \return \type{list<SettingRelation>}
     @property
-    def relations(self):
+    def relations(self) -> List["SettingRelation"]:
         return self._relations
 
     ##  Serialize this setting to a string.
     #
     #   \return \type{string} A serialized representation of this setting.
-    def serialize(self):
+    def serialize(self) -> str:
         pass
 
     ##  Gets the key of this setting definition and of all its descendants.
     #
     #   \return A set of the key in this definition and all its descendants.
-    def getAllKeys(self):
+    def getAllKeys(self) -> Set[str]:
         keys = set()
         keys.add(self.key)
         for child in self.children:
@@ -164,8 +166,8 @@ class SettingDefinition:
     ##  Serialize this setting to a dict.
     #
     #   \return \type{dict} A representation of this setting definition.
-    def serialize_to_dict(self):
-        result = {}
+    def serialize_to_dict(self) -> Dict[str, Any]:
+        result = {}     # type: Dict[str, Any]
         result["label"] = self.key
 
         result["children"] = {}
@@ -180,7 +182,7 @@ class SettingDefinition:
     ##  Deserialize this setting from a string or dict.
     #
     #   \param serialized \type{string or dict} A serialized representation of this setting.
-    def deserialize(self, serialized):
+    def deserialize(self, serialized: Union[str, Dict[str, Any]]) -> None:
         if isinstance(serialized, dict):
             self._deserialize_dict(serialized)
         else:
@@ -192,7 +194,7 @@ class SettingDefinition:
     #   \param key \type{string} The key of the child to get.
     #
     #   \return \type{SettingDefinition} The child with the specified key or None if not found.
-    def getChild(self, key):
+    def getChild(self, key: str) -> 'SettingDefinition':
         if not self.__descendants:
             self.__descendants = self._updateDescendants()
 
@@ -208,7 +210,7 @@ class SettingDefinition:
 
     ## Check if this setting definition matches the provided criteria.
     #   \param kwargs \type{dict} A dictionary of keyword arguments that need to match its attributes.
-    def matchesFilter(self, **kwargs):
+    def matchesFilter(self, **kwargs: Any) -> bool:
 
         # First check for translated labels.
         keywords = kwargs.copy()
@@ -280,8 +282,8 @@ class SettingDefinition:
     #   \param kwargs \type{dict} A dictionary of keyword arguments that need to match properties of the children.
     #
     #   \return \type{list} A list of children matching the search criteria. The list will be empty if no children were found.
-    def findDefinitions(self, **kwargs):
-        definitions = []
+    def findDefinitions(self, **kwargs: Any) -> List['SettingDefinition']:
+        definitions = []    # type: List['SettingDefinition']
 
         if not self.__descendants:
             self.__descendants = self._updateDescendants()
@@ -297,7 +299,6 @@ class SettingDefinition:
                 # If all we are searching for is a key, return either ourself or a value from the descendants.
                 if self._key == key:
                     return [self]
-
                 return [self.__descendants[key]]
 
         if self.matchesFilter(**kwargs):
@@ -313,7 +314,7 @@ class SettingDefinition:
     #   \param key \type{str} The key of the setting to check.
     #
     #   \return True if the specified setting is an ancestor of this definition, False if not.
-    def isAncestor(self, key):
+    def isAncestor(self, key: str) -> bool:
         if not self.__ancestors:
             self.__ancestors = self._updateAncestors()
 
@@ -324,23 +325,23 @@ class SettingDefinition:
     #   \param key \type{str} The key of the setting to check.
     #
     #   \return True if the specified setting is a descendant of this definition, False if not.
-    def isDescendant(self, key):
+    def isDescendant(self, key: str) -> bool:
         if not self.__descendants:
             self.__descendants = self._updateDescendants()
 
         return key in self.__descendants
 
     ##  Get a set of keys representing the setting's ancestors.
-    def getAncestors(self):
+    def getAncestors(self) -> Set[str]:
         if not self.__ancestors:
             self.__ancestors = self._updateAncestors()
 
         return self.__ancestors
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "<SettingDefinition (0x{0:x}) key={1} container={2}>".format(id(self), self._key, self._container)
 
-    def __eq__(self, other):
+    def __eq__(self, other: Any) -> bool:
         if other is None:
             return False
 
@@ -363,13 +364,14 @@ class SettingDefinition:
     #   \param name \type{string} The name of the property to define.
     #   \param property_type \type{DefinitionPropertyType} The type of property.
     #   \param kwargs Keyword arguments. Possible values:
-    #                 required  \type{bool} True if missing the property indicates an error should be raised. Defaults to False.
-    #                 read_only \type{bool} True if the property should never be set on a SettingInstance. Defaults to False. Note that for Function properties this indicates whether the result of the function should be stored.
-    #                 default               The default value for this property. This will be returned when the specified property is not defined for this definition.
-    #                 depends_on            Key to another property that this property depends on; eg; if that value changes, this value should be re-evaluated.
+    #   \param required     True if missing the property indicates an error should be raised. Defaults to False.
+    #   \param read_only    True if the property should never be set on a SettingInstance. Defaults to False. Note that for Function properties this indicates whether the result of the function should be stored.
+    #   \param default      The default value for this property. This will be returned when the specified property is not defined for this definition.
+    #   \param depends_on   Key to another property that this property depends on; eg; if that value changes, this value should be re-evaluated.
     @classmethod
-    def addSupportedProperty(cls, name, property_type, **kwargs):
-        cls.__property_definitions[name] = {"type": property_type, "required": kwargs.get("required", False), "read_only": kwargs.get("read_only", False), "default": kwargs.get("default", None), "depends_on": kwargs.get("depends_on", None)}
+    def addSupportedProperty(cls, name: str, property_type: DefinitionPropertyType, required: bool=False, read_only: bool=False, default: Any=None, depends_on: str=None) -> None:
+        cls.__property_definitions[name] = {"type": property_type, "required": required, "read_only": read_only,
+                                            "default": default, "depends_on": depends_on}
 
     ##  Get the names of all supported properties.
     #
@@ -377,7 +379,7 @@ class SettingDefinition:
     #
     #   \return A list of all the names of supported properties.
     @classmethod
-    def getPropertyNames(cls, type = None):
+    def getPropertyNames(cls, type: DefinitionPropertyType = None) -> List[str]:
         result = []
         for key, value in cls.__property_definitions.items():
             if not type or value["type"] == type:
@@ -390,7 +392,7 @@ class SettingDefinition:
     #
     #   \return True if the property is supported, False if not.
     @classmethod
-    def hasProperty(cls, name):
+    def hasProperty(cls, name: str) -> bool:
         return name in cls.__property_definitions
 
     ##  Get the type of a specified property.
@@ -399,7 +401,7 @@ class SettingDefinition:
     #
     #   \return DefinitionPropertyType corresponding to the type of the property or None if not found.
     @classmethod
-    def getPropertyType(cls, name):
+    def getPropertyType(cls, name: str) -> DefinitionPropertyType:
         if name in cls.__property_definitions:
             return cls.__property_definitions[name]["type"]
 
@@ -414,7 +416,7 @@ class SettingDefinition:
     #
     #   \return True if the property is supported and is required, False if it is not required or is not part of the list of supported properties.
     @classmethod
-    def isRequiredProperty(cls, name):
+    def isRequiredProperty(cls, name: str) -> bool:
         if name in cls.__property_definitions:
             return cls.__property_definitions[name]["required"]
         return False
@@ -427,7 +429,7 @@ class SettingDefinition:
     #
     #   \return True if the property is supported and is read-only, False if it is not required or is not part of the list of supported properties.
     @classmethod
-    def isReadOnlyProperty(cls, name):
+    def isReadOnlyProperty(cls, name: str) -> bool:
         if name in cls.__property_definitions:
             return cls.__property_definitions[name]["read_only"]
         return False
@@ -440,7 +442,7 @@ class SettingDefinition:
     #
     #   \return \type{string} The property it depends on or None if it does not depend on another property.
     @classmethod
-    def dependsOnProperty(cls, name):
+    def dependsOnProperty(cls, name: str) -> str:
         if name in cls.__property_definitions:
             return cls.__property_definitions[name]["depends_on"]
         return None
@@ -452,7 +454,7 @@ class SettingDefinition:
     #   \param to_string A function that converts a value of this type to a string.
     #
     @classmethod
-    def addSettingType(cls, type_name, from_string, to_string, validator = None):
+    def addSettingType(cls, type_name: str, from_string: Callable[[str], Any], to_string: Callable[[Any],str], validator: Validator = None) -> None:
         cls.__type_definitions[type_name] = { "from": from_string, "to": to_string, "validator": validator }
 
     ##  Convert a string to a value according to a setting type.
@@ -464,7 +466,7 @@ class SettingDefinition:
     #
     #   \exception ValueError Raised when the specified type does not exist.
     @classmethod
-    def settingValueFromString(cls, type_name, string_value):
+    def settingValueFromString(cls, type_name: str, string_value: str) -> Any:
         if type_name not in cls.__type_definitions:
             raise ValueError("Unknown setting type {0}".format(type_name))
 
@@ -483,7 +485,7 @@ class SettingDefinition:
     #
     #   \exception ValueError Raised when the specified type does not exist.
     @classmethod
-    def settingValueToString(cls, type_name, value):
+    def settingValueToString(cls, type_name: str, value: Any) -> str:
         if type_name not in cls.__type_definitions:
             raise ValueError("Unknown setting type {0}".format(type_name))
 
@@ -495,7 +497,7 @@ class SettingDefinition:
 
     ##  Get the validator type for a certain setting type.
     @classmethod
-    def getValidatorForType(cls, type_name):
+    def getValidatorForType(cls, type_name: str) -> Callable[[str],Validator]:
         if type_name not in cls.__type_definitions:
             raise ValueError("Unknown setting type {0}".format(type_name))
 
@@ -504,7 +506,7 @@ class SettingDefinition:
     ## protected:
 
     # Deserialize from a dictionary
-    def _deserialize_dict(self, serialized):
+    def _deserialize_dict(self, serialized: Dict[str, Any]) -> None:
         self._children = []
         self._relations = []
 
@@ -542,8 +544,8 @@ class SettingDefinition:
         self.__ancestors = self._updateAncestors()
         self.__descendants = self._updateDescendants()
 
-    def _updateAncestors(self):
-        result = set()
+    def _updateAncestors(self) -> Set[str]:
+        result = set()  # type: Set[str]
 
         parent = self._parent
         while parent:
@@ -552,7 +554,7 @@ class SettingDefinition:
 
         return result
 
-    def _updateDescendants(self, definition: 'SettingDefinition' = None):
+    def _updateDescendants(self, definition: 'SettingDefinition' = None) -> Dict[str, 'SettingDefinition']:
         result = {}
 
         if not definition:
@@ -597,11 +599,11 @@ class SettingDefinition:
         "options": {"type": DefinitionPropertyType.Any, "required": False, "read_only": True, "default": {}, "depends_on" : None},
         # Optional comments that apply to the setting. Will be ignored.
         "comments": {"type": DefinitionPropertyType.String, "required": False, "read_only": True, "default": "", "depends_on" : None}
-    }
+    }   # type: Dict[str, Dict[str, Any]]
 
     __type_definitions = {
         # An integer value
-        "int": {"from": str, "to": ast.literal_eval, "validator": Validator.Validator},
+        "int": {"from": str, "to": ast.literal_eval, "validator": Validator},
         # A boolean value
         "bool": {"from": str, "to": ast.literal_eval, "validator": None},
         # Special case setting; Doesn't have a value. Display purposes only.
@@ -611,12 +613,12 @@ class SettingDefinition:
         # An enumeration
         "enum": {"from": None, "to": None, "validator": None},
         # A floating point value
-        "float": {"from": lambda v: str(round(v, 4)) if v is not None else "", "to": _toFloatConversion, "validator": Validator.Validator},
+        "float": {"from": lambda v: str(round(v, 4)) if v is not None else "", "to": _toFloatConversion, "validator": Validator},
         # A list of 2D points
         "polygon": {"from": str, "to": ast.literal_eval, "validator": None},
         # A list of polygons
         "polygons": {"from": str, "to": ast.literal_eval, "validator": None},
         # A 3D point
         "vec3": {"from": None, "to": None, "validator": None},
-    }
+    }   # type: Dict[str, Dict[str, Any]]
 
