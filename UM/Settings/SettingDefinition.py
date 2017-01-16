@@ -223,7 +223,8 @@ class SettingDefinition:
 
             if "i18n_catalog" in keywords:
                 catalog = keywords["i18n_catalog"]
-                property_value = catalog.i18nc(self._key + " label", property_value)
+                if catalog:
+                    property_value = catalog.i18nc(self._key + " label", property_value)
 
             value = keywords["i18n_label"]
             del keywords["i18n_label"]
@@ -603,7 +604,7 @@ class SettingDefinition:
 
     __type_definitions = {
         # An integer value
-        "int": {"from": str, "to": ast.literal_eval, "validator": Validator},
+        "int": {"from": lambda v: str(v) if v is not None else "", "to": ast.literal_eval, "validator": Validator},
         # A boolean value
         "bool": {"from": str, "to": ast.literal_eval, "validator": None},
         # Special case setting; Doesn't have a value. Display purposes only.

@@ -25,6 +25,7 @@ class QtTexture(Texture):
                 self._image = QImage(self._file_name).mirrored()
             elif self._image is None: # No filename or image set.
                 self._image = QImage(1, 1, QImage.Format_ARGB32)
+                self._image.fill(0)
             self._qt_texture.setData(self._image)
             self._qt_texture.setMinMagFilters(QOpenGLTexture.Linear, QOpenGLTexture.Linear)
 

@@ -11,14 +11,17 @@ import weakref
 from weakref import ReferenceType
 from typing import Any, Union, Callable, TypeVar, Generic, List, Tuple, Iterable, cast, Optional
 
+import functools
+
 from UM.Event import CallFunctionEvent
 from UM.Decorators import deprecated, call_if_enabled
 from UM.Logger import Logger
 from UM.Platform import Platform
+from UM import FlameProfiler
 
 # Helper functions for tracing signal emission.
 def _traceEmit(signal: Any, *args: Any, **kwargs: Any) -> None:
-    Logger.log("d", "Emitting %s with arguments %s", str(signal._Signal__name), str(args) + str(kwargs))
+    Logger.log("d", "Emitting %s with arguments %s", str(signal.getName()), str(args) + str(kwargs))
 
     if signal._Signal__type == Signal.Queued:
         Logger.log("d", "> Queued signal, postponing emit until next event loop run")
@@ -49,6 +52,29 @@ def _isTraceEnabled() -> bool:
 class SignalQueue:
     def functionEvent(self, event): pass
     def getMainThread(self): pass
+
+###########################################################################
+# Integration with the Flame Profiler.
+
+def _recordSignalNames():
+    return FlameProfiler.enabled()
+
+def profileEmit(function):
+    if FlameProfiler.enabled():
+        @functools.wraps(function)
+        def wrapped(self, *args, **kwargs):
+            FlameProfiler.updateProfileConfig()
+            if FlameProfiler.isRecordingProfile():
+                with FlameProfiler.profileCall("[SIG] " + self.getName()):
+                    function(self, *args, **kwargs)
+            else:
+                function(self, *args, **kwargs)
+        return wrapped
+
+    else:
+        return function
+
+###########################################################################
 
 ##  Simple implementation of signals and slots.
 #
@@ -98,7 +124,7 @@ class Signal:
         self.__lock = threading.Lock()  # Guards access to the fields above.
         self.__type = type
 
-        if "URANIUM_TRACE_SIGNALS" in os.environ:
+        if _recordSignalNames():
             try:
                 if Platform.isWindows():
                     self.__name = inspect.stack()[1][0].f_locals["key"]
@@ -106,6 +132,11 @@ class Signal:
                     self.__name = inspect.stack()[1].frame.f_locals["key"]
             except KeyError:
                 self.__name = "Signal"
+        else:
+            self.__name = "Anon"
+
+    def getName(self):
+        return self.__name
 
     ##  \exception NotImplementedError
     def __call__(self) -> None:
@@ -125,38 +156,21 @@ class Signal:
     #   the call will be posted as an event to the application main thread, which means the
     #   function will be called on the next application event loop tick.
     @call_if_enabled(_traceEmit, _isTraceEnabled())
+    @profileEmit
     def emit(self, *args: Any, **kwargs: Any) -> None:
         try:
             if self.__type == Signal.Queued:
-                Signal._signalQueue.functionEvent(CallFunctionEvent(self.emit, args, kwargs))
+                Signal._app.functionEvent(CallFunctionEvent(self.__performEmit, args, kwargs))
                 return
-
             if self.__type == Signal.Auto:
-                if threading.current_thread() is not Signal._signalQueue.getMainThread():
-                    Signal._signalQueue.functionEvent(CallFunctionEvent(self.emit, args, kwargs))
+                if threading.current_thread() is not Signal._app.getMainThread():
+                    Signal._app.functionEvent(CallFunctionEvent(self.__performEmit, args, kwargs))
                     return
         except AttributeError: # If Signal._app is not set
             return
 
-        # Quickly make some private references to the collections we need to process.
-        # Although the these fields are always safe to use read and use with regards to threading,
-        # we want to operate on a consistent snapshot of the whole set of fields.
-        with self.__lock:
-            functions = self.__functions
-            methods = self.__methods
-            signals = self.__signals
+        self.__performEmit(*args, **kwargs)
 
-        # Call handler functions
-        for func in functions:
-            func(*args, **kwargs)
-
-        # Call handler methods
-        for dest, func in methods:
-            func(dest, *args, **kwargs)
-
-        # Emit connected signals
-        for signal in signals:
-            signal.emit(*args, **kwargs)
 
     ##  Connect to this signal.
     #   \param connector The signal or slot (function) to connect.
@@ -168,9 +182,14 @@ class Signal:
                     return
                 self.__signals = self.__signals.append(connector)
             elif inspect.ismethod(connector):
-                self.__methods = self.__methods.append(cast(Any, connector).__self__, cast(Any, connector).__func__)
+                # if SIGNAL_PROFILE:
+                #     Logger.log('d', "Connector method qual name: " + connector.__func__.__qualname__)
+                self.__methods = self.__methods.append(connector.__self__, connector.__func__)
             else:
                 # Once again, update the list of functions using a whole new list.
+                # if SIGNAL_PROFILE:
+                #     Logger.log('d', "Connector function qual name: " + connector.__qualname__)
+
                 self.__functions = self.__functions.append(connector)
 
     ##  Disconnect from this signal.
@@ -219,6 +238,45 @@ class Signal:
     ##  private:
 
     _signalQueue = None # type: SignalQueue
+
+    # Private implementation of the actual emit.
+    # This is done to make it possible to freely push function events without needing to maintain state.
+    def __performEmit(self, *args, **kwargs):
+        # Quickly make some private references to the collections we need to process.
+        # Although the these fields are always safe to use read and use with regards to threading,
+        # we want to operate on a consistent snapshot of the whole set of fields.
+        with self.__lock:
+            functions = self.__functions
+            methods = self.__methods
+            signals = self.__signals
+
+        if not FlameProfiler.isRecordingProfile():
+            # Call handler functions
+            for func in functions:
+                func(*args, **kwargs)
+
+            # Call handler methods
+            for dest, func in methods:
+                func(dest, *args, **kwargs)
+
+            # Emit connected signals
+            for signal in signals:
+                signal.emit(*args, **kwargs)
+        else:
+            # Call handler functions
+            for func in functions:
+                with FlameProfiler.profileCall(func.__qualname__):
+                    func(*args, **kwargs)
+
+            # Call handler methods
+            for dest, func in methods:
+                with FlameProfiler.profileCall(func.__qualname__):
+                    func(dest, *args, **kwargs)
+
+            # Emit connected signals
+            for signal in signals:
+                with FlameProfiler.profileCall("[SIG]" + signal.getName()):
+                    signal.emit(*args, **kwargs)
 
     # This __str__() is useful for debugging.
     # def __str__(self):

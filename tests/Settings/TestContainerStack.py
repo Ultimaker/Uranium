@@ -10,7 +10,7 @@ from UM.Settings.ContainerRegistry import ContainerRegistry
 from UM.Signal import Signal
 from UM.Resources import Resources
 
-from UM.Settings.ContainerInterface import ContainerInterface
+from UM.Settings.Interfaces import ContainerInterface
 from UM.Settings.DefinitionContainer import DefinitionContainer
 from UM.Settings.InstanceContainer import InstanceContainer
 from UM.Settings.ContainerStack import ContainerStack
@@ -113,20 +113,6 @@ class MockContainer(ContainerInterface):
 @pytest.fixture
 def container_stack():
     return ContainerStack(uuid.uuid4().int)
-
-##  Creates a brand new container registry.
-#
-#   To force a new container registry, the registry is first set to None and
-#   then re-requested.
-#
-#   \return A brand new container registry.
-@pytest.fixture
-def container_registry():
-    Resources.addSearchPath(os.path.dirname(os.path.abspath(__file__)))
-    ContainerRegistry._ContainerRegistry__instance = None # Reset the private instance variable every time
-    PluginRegistry.getInstance().removeType("settings_container")
-
-    return ContainerRegistry.getInstance()
 
 ##  Tests the creation of a container stack.
 #

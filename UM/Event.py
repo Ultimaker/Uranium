@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2016 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 ##  \file Event.py
@@ -43,7 +43,7 @@ class MouseEvent(Event):
     RightButton = "right"
     MiddleButton = "middle"
 
-    ##  Initialize.
+    ##  Raise a new mouse event.
     #   \param type The type of event. \sa Event
     #   \param x The X coordinate of the event.
     #   \param y The Y coordinate of the event.
@@ -101,23 +101,45 @@ class MouseEvent(Event):
     def buttons(self) -> List:
         return self._buttons
 
-
+##  Event relating to what's happening with the scroll wheel of a mouse.
 class WheelEvent(Event):
+    ##  Create a new scroll wheel event.
+    #
+    #   \param horizontal How far the scroll wheel scrolled horizontally, in
+    #   eighths of a degree. To the right is positive. To the left is negative.
+    #   \param vertical How far the scroll wheel scrolled vertically, in eighths
+    #   of a degree. Up is positive. Down is negative.
     def __init__(self, horizontal: int, vertical: int) -> None:
         super().__init__(Event.MouseWheelEvent)
         self._horizontal = horizontal
         self._vertical = vertical
 
+    ##  How far the scroll wheel was scrolled horizontally, in eighths of a
+    #   degree.
+    #
+    #   To the right is positive. To the left is negative.
     @property
     def horizontal(self) -> int:
         return self._horizontal
 
+    ##  How far the scroll wheel was scrolled vertically, in eighths of a
+    #   degree.
+    #
+    #   Up is positive. Down is negative.
     @property
     def vertical(self) -> int:
         return self._vertical
 
 
-##  Key Event class.
+##  Event regarding the keyboard.
+#
+#   These events are raised when anything changes in the keyboard state. They
+#   keep track of the event type that was given by Qt, for instance whether it
+#   was a KeyPressEvent or a KeyReleaseEvent, and they keep track of which key
+#   it was.
+#
+#   Only the special keys are tracked (Shirt, Space, Escape, etc.), not the
+#   normal letter keys.
 class KeyEvent(Event):
     ShiftKey = 1
     ControlKey = 2
@@ -135,10 +157,15 @@ class KeyEvent(Event):
     PlusKey = 14
     EqualKey = 15
 
+    ##  Creates a new key event, passing the event type on to the ``Event``
+    #   parent class.
     def __init__(self, event_type: int, key: int) -> None:
         super().__init__(event_type)
         self._key = key
 
+    ##  Which key was pressed.
+    #
+    #   Compare this with ``KeyEvent.AltKey``, ``KeyEvent.EnterKey``, etc.
     @property
     def key(self) -> int:
         return self._key

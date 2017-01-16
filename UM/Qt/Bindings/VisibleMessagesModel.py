@@ -3,7 +3,8 @@
 
 from UM.Qt.ListModel import ListModel
 from UM.Application import Application
-from PyQt5.QtCore import Qt, pyqtSlot
+from PyQt5.QtCore import Qt
+from UM.FlameProfiler import pyqtSlot
 
 class VisibleMessagesModel(ListModel):
     TextRole = Qt.UserRole + 1
