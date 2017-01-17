@@ -181,14 +181,14 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
 
     ##  Fill the catalogue by loading the translated texts from file (again).
     def _update(self) -> None:
-        if not self.__application:
+        if not self.__name:
             self.__require_update = True
             return
 
         if not self.__name:
-            self.__name = self.__application.getApplicationName()
+            self.__name = self.__name
         if self.__language == "default":
-            self.__language = self.__application.getApplicationLanguage()
+            self.__language = self.__language
 
         #Ask gettext for all the translations in the .mo files.
         for path in Resources.getAllPathsForType(Resources.i18n):

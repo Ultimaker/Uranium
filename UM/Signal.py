@@ -19,6 +19,10 @@ from UM.Logger import Logger
 from UM.Platform import Platform
 from UM import FlameProfiler
 
+MYPY = False
+if MYPY:
+    from UM.Application import Application
+
 # Helper functions for tracing signal emission.
 def _traceEmit(signal: Any, *args: Any, **kwargs: Any) -> None:
     Logger.log("d", "Emitting %s with arguments %s", str(signal.getName()), str(args) + str(kwargs))
@@ -117,9 +121,9 @@ class Signal:
     #                 - type: The signal type. Defaults to Auto.
     def __init__(self, type: int = Auto) -> None:
         # These collections must be treated as immutable otherwise we lose thread safety.
-        self.__functions = WeakImmutableList()      # type: 'WeakImmutableList'
-        self.__methods = WeakImmutablePairList()    # type: 'WeakImmutablePairList'
-        self.__signals = WeakImmutableList()        # type: 'WeakImmutableList'
+        self.__functions = WeakImmutableList()      # type: "WeakImmutableList"
+        self.__methods = WeakImmutablePairList()    # type: "WeakImmutablePairList"
+        self.__signals = WeakImmutableList()        # type: "WeakImmutableList"
 
         self.__lock = threading.Lock()  # Guards access to the fields above.
         self.__type = type
@@ -184,7 +188,7 @@ class Signal:
             elif inspect.ismethod(connector):
                 # if SIGNAL_PROFILE:
                 #     Logger.log('d', "Connector method qual name: " + connector.__func__.__qualname__)
-                self.__methods = self.__methods.append(connector.__self__, connector.__func__)
+                self.__methods = self.__methods.append(cast(Any, connector).__self__, cast(Any, connector).__func__)
             else:
                 # Once again, update the list of functions using a whole new list.
                 # if SIGNAL_PROFILE:
@@ -207,9 +211,9 @@ class Signal:
     ##  Disconnect all connected slots.
     def disconnectAll(self):
         with self.__lock:
-            self.__functions = WeakImmutableList()      # type: 'WeakImmutableList'
-            self.__methods = WeakImmutablePairList()    # type: 'WeakImmutablePairList'
-            self.__signals = WeakImmutableList()        # type: 'WeakImmutableList'
+            self.__functions = WeakImmutableList()      # type: "WeakImmutableList"
+            self.__methods = WeakImmutablePairList()    # type: "WeakImmutablePairList"
+            self.__signals = WeakImmutableList()        # type: "WeakImmutableList"
 
     ##  To support Pickle
     #
@@ -236,6 +240,10 @@ class Signal:
         return signal
 
     ##  private:
+
+    #   To avoid circular references when importing Application, this should be
+    #   set by the Application instance.
+    _app = None # type: Application
 
     _signalQueue = None # type: SignalQueue
 

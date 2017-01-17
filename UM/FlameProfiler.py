@@ -73,7 +73,7 @@ class _ProfileCallNode:
 ]
 }
 '''
-child_accu_stack = [ [] ]
+child_accu_stack = [ [] ]   # type: List[List[_ProfileCallNode]]
 clear_profile_requested = False
 record_profile_requested = False
 stop_record_profile_requested = False
