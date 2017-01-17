@@ -4,10 +4,10 @@
 import os
 import re #For finding containers with asterisks in the constraints.
 import urllib #For ensuring container file names are proper file names
+import urllib.parse
 import pickle #For serializing/deserializing Python classes to binary files
 
-from contextlib import contextmanager
-
+import UM.FlameProfiler
 from UM.PluginRegistry import PluginRegistry
 from UM.Resources import Resources, UnsupportedStorageTypeError
 from UM.MimeTypeDatabase import MimeType, MimeTypeDatabase
@@ -82,6 +82,7 @@ class ContainerRegistry:
     #
     #   \return A list of containers matching the search criteria, or an empty
     #   list if nothing was found.
+    @UM.FlameProfiler.profile
     def findContainers(self, container_type = None, ignore_case = False, **kwargs):
         containers = []
 
@@ -260,6 +261,7 @@ class ContainerRegistry:
             except Exception as e:
                 Logger.logException("e", "Could not deserialize container %s", container_id)
 
+    @UM.FlameProfiler.profile
     def addContainer(self, container):
         containers = self.findContainers(container_type = container.__class__, id = container.getId())
         if containers:
@@ -270,6 +272,7 @@ class ContainerRegistry:
         self._id_container_cache[container.getId()] = container
         self.containerAdded.emit(container)
 
+    @UM.FlameProfiler.profile
     def removeContainer(self, container_id):
         containers = self.findContainers(None, id = container_id)
         if containers:
@@ -285,6 +288,7 @@ class ContainerRegistry:
         else:
             Logger.log("w", "Could not remove container with id %s, as no container with that ID is known", container_id)
 
+    @UM.FlameProfiler.profile
     def renameContainer(self, container_id, new_name, new_id = None):
         Logger.log("d", "Renaming container %s to %s", container_id, new_name)
         containers = self.findContainers(None, id = container_id)
@@ -376,16 +380,16 @@ class ContainerRegistry:
     def uniqueName(self, original):
         name = original.strip()
 
-        if not self.findContainers(id = name, ignore_case = True) and not self.findContainers(name = name):
-            return name # Nothing to do. Name is unique as it is.
-
-        num_check = re.compile("(.*?)\s*#\d$").match(name)
+        num_check = re.compile(r"(.*?)\s*#\d+$").match(name)
         if num_check: #There is a number in the name.
             name = num_check.group(1) #Filter out the number.
-        if name == "": #Wait, that deleted everything!
-            name = "Profile"
-        unique_name = name
 
+        if not name: #Wait, that deleted everything!
+            name = "Profile"
+        elif not self.findContainers(id = name, ignore_case = True) and not self.findContainers(name = name):
+            return original.strip()
+
+        unique_name = name
         i = 1
         while self.findContainers(id = unique_name, ignore_case = True) or self.findContainers(name = unique_name): #A container already has this name.
             i += 1 #Try next numbering.

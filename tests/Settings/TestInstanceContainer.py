@@ -9,12 +9,6 @@ import UM.Settings
 from UM.Resources import Resources
 Resources.addSearchPath(os.path.dirname(os.path.abspath(__file__)))
 
-@pytest.fixture
-def container_registry():
-    UM.Settings.ContainerRegistry._ContainerRegistry__instance = None
-    UM.Settings.ContainerRegistry.getInstance().load()
-    return UM.Settings.ContainerRegistry.getInstance()
-
 def test_create():
     container = UM.Settings.InstanceContainer("test")
     assert container.getId() == "test"
@@ -75,9 +69,9 @@ test_serialize_data = [
     }}, "setting_values.inst.cfg"),
 ]
 @pytest.mark.parametrize("container_data,equals_file", test_serialize_data)
-def test_serialize(container_data, equals_file, container_registry):
+def test_serialize(container_data, equals_file, loaded_container_registry):
     instance_container = UM.Settings.InstanceContainer("test")
-    definition = container_registry.findDefinitionContainers(id = container_data["definition"])[0]
+    definition = loaded_container_registry.findDefinitionContainers(id = container_data["definition"])[0]
     instance_container.setDefinition(definition)
 
     instance_container.setName(container_data["name"])
@@ -101,7 +95,7 @@ test_deserialize_data = [
     ("setting_values.inst.cfg", {"name": "Setting Values", "values": { "test_setting_0": 20 } }),
 ]
 @pytest.mark.parametrize("filename,expected", test_deserialize_data)
-def test_deserialize(filename, expected, container_registry):
+def test_deserialize(filename, expected, loaded_container_registry):
     instance_container = UM.Settings.InstanceContainer(filename)
 
     path = Resources.getPath(Resources.InstanceContainers, filename)

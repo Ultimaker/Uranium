@@ -107,20 +107,6 @@ class MockContainer(UM.Settings.ContainerInterface.ContainerInterface, UM.Plugin
     def deserialize(self, serialized):
         raise NotImplementedError()
 
-##  Creates a brand new container registry.
-#
-#   To force a new container registry, the registry is first set to None and
-#   then re-requested.
-#
-#   \return A brand new container registry.
-@pytest.fixture
-def container_registry():
-    Resources.addSearchPath(os.path.dirname(os.path.abspath(__file__)))
-    UM.Settings.ContainerRegistry._ContainerRegistry__instance = None # Reset the private instance variable every time
-    UM.PluginRegistry.getInstance().removeType("settings_container")
-
-    return UM.Settings.ContainerRegistry.getInstance()
-
 ##  Tests adding a container to the registry.
 #
 #   \param container_registry A new container registry from a fixture.
@@ -371,6 +357,16 @@ def test_uniqueName(container_registry):
     assert container_registry.uniqueName("") == "Profile #2" #Empty base names should be filled in with a default base name 'profile'.
     assert container_registry.uniqueName(" #2") == "Profile #2"
     assert container_registry.uniqueName("Profile #2") == "Profile #2"
+
+    # Reproduce steps for issue CURA-2165 to verify the behaviour is still correct.
+    mock_container = MockContainer(id = "carlo #3", metadata = {})
+    container_registry.addContainer(mock_container)
+    mock_container = MockContainer(id = "carlo #4", metadata = {})
+    container_registry.addContainer(mock_container)
+    mock_container = MockContainer(id = "carlo #6", metadata = {})
+    container_registry.addContainer(mock_container)
+
+    assert container_registry.uniqueName("carlo #7") == "carlo #7"
 
 ##  Helper function to verify if the metadata of the answers matches required
 #   metadata.
