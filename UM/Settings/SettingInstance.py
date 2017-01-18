@@ -216,7 +216,7 @@ class SettingInstance:
     #   \param relations_set \type{set} Set of keys (strings) of settings that are influenced
     #   \param relations list of relation objects that need to be checked.
     #   \param role name of the property value of the settings
-    def _addRelations(self, relations_set: Set['SettingRelation'], relations: List['SettingRelation'], role: str) -> None:
+    def _addRelations(self, relations_set: Set["SettingRelation"], relations: List["SettingRelation"], role: str) -> None:
         for relation in filter(lambda r: r.role == role, relations):
             if relation.type == RelationType.RequiresTarget:
                 continue

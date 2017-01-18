@@ -36,14 +36,14 @@ def _toFloatConversion(value: str) -> float:
     ## Ensure that all , are replaced with . (so they are seen as floats)
     value = value.replace(",", ".")
 
-    def stripLeading0(matchobj:  Match[str]) -> str:
+    def stripLeading0(matchobj: Match[str]) -> str:
         return matchobj.group(0).lstrip("0")
 
     ## Literal eval does not like "02" as a value, but users see this as "2".
     ## We therefore look numbers with leading "0", provided they are not used in variable names
     ## example: "test02 * 20" should not be changed, but "test * 02 * 20" should be changed (into "test * 2 * 20")
     regex_pattern = '(?<!\.|\w|\d)0+(\d+)'
-    value = re.sub(regex_pattern, stripLeading0 ,value)
+    value = re.sub(regex_pattern, stripLeading0, value)
 
     try:
         return ast.literal_eval(value)
@@ -75,7 +75,7 @@ class SettingDefinition:
     #   \param container \type{DefinitionContainerInterface} The container of this setting. Defaults to None.
     #   \param parent \type{SettingDefinition} The parent of this setting. Defaults to None.
     #   \param i18n_catalog \type{i18nCatalog} The translation catalog to use for this setting. Defaults to None.
-    def __init__(self, key: str, container: DefinitionContainerInterface = None, parent: 'SettingDefinition' = None, i18n_catalog: i18nCatalog = None) -> None:
+    def __init__(self, key: str, container: DefinitionContainerInterface = None, parent: "SettingDefinition" = None, i18n_catalog: i18nCatalog = None) -> None:
         super().__init__()
 
         self._key = key
@@ -91,7 +91,7 @@ class SettingDefinition:
         self.__ancestors = set() # type: Set[str]
 
         # Cached set of key - definition pairs of descendants. Used for fast lookup of descendants by key.
-        self.__descendants = {} # type: Dict[str, 'SettingDefinition']
+        self.__descendants = {} # type: Dict[str, "SettingDefinition"]
 
         self.__property_values = {} # type: Dict[str, Any]
 
@@ -130,14 +130,14 @@ class SettingDefinition:
     #
     #   \return \type{SettingDefinition}
     @property
-    def parent(self) -> 'SettingDefinition':
+    def parent(self) -> "SettingDefinition":
         return self._parent
 
     ##  A list of children of this setting.
     #
     #   \return \type{list<SettingDefinition>}
     @property
-    def children(self) -> List['SettingDefinition']:
+    def children(self) -> List["SettingDefinition"]:
         return self._children
 
     ##  A list of SettingRelation objects of this setting.
@@ -194,7 +194,7 @@ class SettingDefinition:
     #   \param key \type{string} The key of the child to get.
     #
     #   \return \type{SettingDefinition} The child with the specified key or None if not found.
-    def getChild(self, key: str) -> 'SettingDefinition':
+    def getChild(self, key: str) -> "SettingDefinition":
         if not self.__descendants:
             self.__descendants = self._updateDescendants()
 
@@ -283,8 +283,8 @@ class SettingDefinition:
     #   \param kwargs \type{dict} A dictionary of keyword arguments that need to match properties of the children.
     #
     #   \return \type{list} A list of children matching the search criteria. The list will be empty if no children were found.
-    def findDefinitions(self, **kwargs: Any) -> List['SettingDefinition']:
-        definitions = []    # type: List['SettingDefinition']
+    def findDefinitions(self, **kwargs: Any) -> List["SettingDefinition"]:
+        definitions = []    # type: List["SettingDefinition"]
 
         if not self.__descendants:
             self.__descendants = self._updateDescendants()
@@ -555,7 +555,7 @@ class SettingDefinition:
 
         return result
 
-    def _updateDescendants(self, definition: 'SettingDefinition' = None) -> Dict[str, 'SettingDefinition']:
+    def _updateDescendants(self, definition: "SettingDefinition" = None) -> Dict[str, "SettingDefinition"]:
         result = {}
 
         if not definition:

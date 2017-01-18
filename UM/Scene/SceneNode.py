@@ -293,7 +293,7 @@ class SceneNode():
 
     ##  \brief Add a child to this node and set it's parent as this node.
     #   \params scene_node SceneNode to add.
-    def addChild(self, scene_node: 'SceneNode'):
+    def addChild(self, scene_node: "SceneNode"):
         if scene_node not in self._children:
             scene_node.transformationChanged.connect(self.transformationChanged)
             scene_node.childrenChanged.connect(self.childrenChanged)
@@ -310,7 +310,7 @@ class SceneNode():
 
     ##  \brief remove a single child
     #   \param child Scene node that needs to be removed.
-    def removeChild(self, child: 'SceneNode'):
+    def removeChild(self, child: "SceneNode"):
         if child not in self._children:
             return
 
