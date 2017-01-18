@@ -49,7 +49,14 @@ class QtOpenGL(OpenGL):
         elif "intel" in vendor_string:
             self._gpu_vendor = OpenGL.Vendor.Intel
 
-        self._gpu_type = self._gl.glGetString(self._gl.GL_RENDERER)
+        #WORKAROUND: Cura/#1117 Cura-packaging/12
+        # Some Intel GPU chipsets return a string, which is not undecodable via PyQt5.
+        # This workaround makes the code fall back to a "Unknown" renderer in these cases.
+        try:
+            self._gpu_type = self._gl.glGetString(self._gl.GL_RENDERER)
+        except UnicodeDecodeError:
+            Logger.log("e", "DecodeError while getting GL_RENDERER via glGetString!")
+            self._gpu_type = "Unknown"
 
         if not self.hasFrameBufferObjects():
             Logger.log("w", "No frame buffer support, falling back to texture copies.")
