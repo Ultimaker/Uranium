@@ -180,6 +180,7 @@ def updateProfileConfig():
 #   \type{Callable}
 def profile(function):
     if enabled():
+        @functools.wraps(function)
         def runIt(*args, ** kwargs):
             if isRecordingProfile():
                 with profileCall(function.__qualname__):
