@@ -2,9 +2,11 @@
 import time
 import math
 import os
+import threading
 from contextlib import contextmanager
-
 import functools
+from typing import List
+
 from PyQt5.QtCore import pyqtSlot as pyqt5PyqtSlot
 from UM.Logger import Logger
 
@@ -130,13 +132,16 @@ def secondsToMS(value):
 @contextmanager
 def profileCall(name):
     if enabled():
-        start_time = time.time()
+        start_time = time.perf_counter()
         child_accu_stack.append([])
         yield
-        end_time = time.time()
-        call_stat = _ProfileCallNode(name, 0, start_time, end_time,
-                                     _fillInProfileSpaces(start_time, end_time, child_accu_stack.pop()))
-        child_accu_stack[-1].append(call_stat)
+        end_time = time.perf_counter()
+
+        child_values = child_accu_stack.pop()
+        if (end_time - start_time) > 0.001: # Filter out small durations (< 1ms)
+            call_stat = _ProfileCallNode(name, 0, start_time, end_time, _fillInProfileSpaces(start_time, end_time,
+                                                                                         child_values))
+            child_accu_stack[-1].append(call_stat)
     else:
         yield
 
