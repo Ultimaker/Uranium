@@ -150,8 +150,7 @@ def profileCall(name):
 #   \return \type{bool} True if we are recording.
 def isRecordingProfile():
     global record_profile
-    return record_profile
-
+    return record_profile and threading.main_thread() is threading.current_thread()
 
 def updateProfileConfig():
     global child_accu_stack
