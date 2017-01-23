@@ -12,7 +12,8 @@ import pytest
 import multiprocessing
 
 import UM.SaveFile
-import UM.Settings
+import UM.Settings.ContainerStack
+import UM.Settings.InstanceContainer
 
 @pytest.fixture(params = [1, 2, 5, 10])
 def process_count(request):
@@ -64,7 +65,7 @@ def test_roundtrip_basic(tmpdir, process_count):
 def test_roundtrip_instance(tmpdir, process_count, loaded_container_registry):
     definition = loaded_container_registry.findDefinitionContainers(id = "inherits")[0]
 
-    instance_container = UM.Settings.InstanceContainer("test_container")
+    instance_container = UM.Settings.InstanceContainer.InstanceContainer("test_container")
     instance_container.setName("Test Instance Container")
     instance_container.setDefinition(definition)
     instance_container.addMetaDataEntry("test", "test")
@@ -79,7 +80,7 @@ def test_roundtrip_instance(tmpdir, process_count, loaded_container_registry):
     results = mp_run(process_count, read_data, temp_file)
 
     for result in results:
-        deserialized_container = UM.Settings.InstanceContainer("test_container")
+        deserialized_container = UM.Settings.InstanceContainer.InstanceContainer("test_container")
         deserialized_container.setDefinition(definition)
         deserialized_container.deserialize(result)
 
@@ -91,7 +92,7 @@ def test_roundtrip_stack(tmpdir, process_count, loaded_container_registry):
     definition = loaded_container_registry.findDefinitionContainers(id = "multiple_settings")[0]
     instances = loaded_container_registry.findInstanceContainers(id = "setting_values")[0]
 
-    container_stack = UM.Settings.ContainerStack("test_stack")
+    container_stack = UM.Settings.ContainerStack.ContainerStack("test_stack")
     container_stack.setName("Test Container Stack")
     container_stack.addMetaDataEntry("test", "test")
     container_stack.addContainer(definition)
@@ -106,7 +107,7 @@ def test_roundtrip_stack(tmpdir, process_count, loaded_container_registry):
     results = mp_run(process_count, read_data, temp_file)
 
     for result in results:
-        deserialized_stack = UM.Settings.ContainerStack("test_stack")
+        deserialized_stack = UM.Settings.ContainerStack.ContainerStack("test_stack")
         deserialized_stack.deserialize(result)
 
         assert deserialized_stack.getName() == container_stack.getName()
