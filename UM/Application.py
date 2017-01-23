@@ -219,11 +219,6 @@ class Application():
     def getApplicationName(self):
         return self._application_name
 
-    ##  Set name of the application.
-    #   \param application_name \type{string}
-    # def setApplicationName(self, application_name):
-    #     self._application_name = application_name
-
     def getApplicationLanguage(self):
         override_lang = os.getenv("URANIUM_LANGUAGE")
         if override_lang:

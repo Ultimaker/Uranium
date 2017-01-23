@@ -5,7 +5,6 @@ import enum
 import os
 from typing import Any, List, Set, KeysView
 
-# from UM.Settings.Interfaces import ContainerInterface
 from UM.Settings.Interfaces import ContainerInterface
 from UM.Signal import Signal, signalemitter
 from UM.Logger import Logger

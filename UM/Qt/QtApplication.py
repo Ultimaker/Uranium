@@ -168,10 +168,6 @@ class QtApplication(QApplication, Application):
                             action="store_true", default=False,
                             help="Disable Qt texture loading as a workaround for certain crashes.")
 
-    #   Overridden from QApplication::setApplicationName to call our internal setApplicationName
-    # def setApplicationName(self, name: str) -> None:
-    #     Application.setApplicationName(name)
-
     mainWindowChanged = Signal()
 
     def getMainWindow(self):
