@@ -46,6 +46,7 @@ class Application():
 
         os.putenv("UBUNTU_MENUPROXY", "0")  # For Ubuntu Unity this makes Qt use its own menu bar rather than pass it on to Unity.
 
+        Signal._app = self
         Signal._signalQueue = self
         Resources.ApplicationIdentifier = name
 

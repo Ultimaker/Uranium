@@ -291,7 +291,7 @@ class VersionUpgradeManager:
         configuration_type = old_configuration_type
 
         try:
-            mime_type = UM.MimeTypeDatabase.getMimeTypeForFile(configuration_file)  # Get the actual MIME type object, from the name.
+            mime_type = UM.MimeTypeDatabase.MimeTypeDatabase.getMimeTypeForFile(configuration_file)  # Get the actual MIME type object, from the name.
         except UM.MimeTypeDatabase.MimeTypeNotFoundError:
             return False
 

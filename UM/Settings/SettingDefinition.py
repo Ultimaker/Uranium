@@ -6,10 +6,10 @@ import json
 import enum
 import collections
 import re
-from typing import Any, List, Dict, Callable, Match, AnyStr, Set, Union
+from typing import Any, List, Dict, Callable, Match, Set, Union
 
 from UM.Logger import Logger
-from UM.Settings.Interfaces import ContainerInterface, DefinitionContainerInterface
+from UM.Settings.Interfaces import DefinitionContainerInterface
 from UM.i18n import i18nCatalog
 
 MYPY = False
