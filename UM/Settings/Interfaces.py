@@ -11,7 +11,7 @@ from typing import List, Dict, Any
 from UM.Signal import Signal
 
 
-# @UM.Decorators.interface
+@UM.Decorators.interface
 class ContainerInterface:
     ##  Get the ID of the container.
     #

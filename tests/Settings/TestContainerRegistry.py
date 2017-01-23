@@ -21,7 +21,7 @@ from UM.MimeTypeDatabase import MimeType, MimeTypeDatabase
 #   test.
 from UM.Settings.Interfaces import ContainerInterface
 
-class MockContainer(ContainerInterface, UM.PluginObject):
+class MockContainer(ContainerInterface, UM.PluginObject.PluginObject):
     ##  Initialise a new definition container.
     #
     #   The container will have the specified ID and all metadata in the
