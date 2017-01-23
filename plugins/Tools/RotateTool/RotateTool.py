@@ -72,7 +72,7 @@ class RotateTool(Tool):
             if not id:
                 return False
 
-            if ToolHandle.isAxis(id):
+            if self._handle.isAxis(id):
                 self.setLockedAxis(id)
             else:
                 # Not clicked on an axis: do nothing.

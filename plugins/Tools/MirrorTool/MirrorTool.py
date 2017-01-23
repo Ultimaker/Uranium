@@ -39,7 +39,7 @@ class MirrorTool(Tool):
             if not id:
                 return False
 
-            if ToolHandle.isAxis(id):
+            if self._handle.isAxis(id):
                 self.setLockedAxis(id)
                 self._operation_started = True
                 self.operationStarted.emit(self)
