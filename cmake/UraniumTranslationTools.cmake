@@ -42,7 +42,7 @@ MACRO(TARGETS_FOR_PO_FILES language)
                                COMMAND ${GETTEXT_MSGINIT_EXECUTABLE} ARGS --no-wrap --no-translator -l ${language} -i ${pot_file} -o ${po_file})
         endif()
         add_custom_command(TARGET i18n-update-po-${language} POST_BUILD
-                           COMMAND ${GETTEXT_MSGMERGE_EXECUTABLE} ARGS --no-wrap -o ${po_file} ${po_file} ${pot_file})
+                           COMMAND ${GETTEXT_MSGMERGE_EXECUTABLE} ARGS --no-wrap --no-fuzzy-matching -o ${po_file} ${po_file} ${pot_file})
     endforeach()
 ENDMACRO()
 
