@@ -8,27 +8,22 @@ from UM.View.Renderer import Renderer
 from UM.Math.Vector import Vector
 from UM.Math.Matrix import Matrix
 from UM.Resources import Resources
-from UM.Logger import Logger
-from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator
-from UM.Scene.Selection import Selection
-from UM.Scene.PointCloudNode import PointCloudNode
-from UM.Math.Color import Color
 
-from UM.Mesh.MeshBuilder import MeshBuilder
 from UM.View.CompositePass import CompositePass
 from UM.View.DefaultPass import DefaultPass
 from UM.View.SelectionPass import SelectionPass
 from UM.View.GL.OpenGL import OpenGL
+from UM.View.GL.Context import Context
 from UM.View.RenderBatch import RenderBatch
 
+from UM.Logger import Logger
 from UM.Signal import Signal, signalemitter
 
 import numpy
-import copy
-from ctypes import c_void_p
 
 vertexBufferProperty = "__qtgl2_vertex_buffer"
 indexBufferProperty = "__qtgl2_index_buffer"
+
 
 ##  A Renderer implementation using PyQt's OpenGL implementation to render.
 @signalemitter
@@ -56,6 +51,8 @@ class QtRenderer(Renderer):
         self._quad_buffer = None
 
         self._camera = None
+
+        self._supports_geometry_shader = False
 
     initialized = Signal()
 
@@ -164,7 +161,24 @@ class QtRenderer(Renderer):
         shader.disableAttribute("a_uvs")
         self._quad_buffer.release()
 
+    def getSupportsGeometryShader(self):
+        return self._supports_geometry_shader
+
     def _initialize(self):
+        ctx = Context.setContext(4, 5, core=True)
+        format = ctx.format()
+        major = format.majorVersion()
+        minor = format.minorVersion()
+        if major >= 4 or (major == 3 and minor >= 3):
+            self._supports_geometry_shader = True
+        elif (ctx.hasExtension("GL_EXT_geometry_shader4") or ctx.hasExtension("GL_ARB_geometry_shader4")):
+            self._supports_geometry_shader = True
+            Logger.log("d", "Geometry shader is available on this machine, but don't know if it works.")
+
+        # extensions = ctx.extensions()
+        # for e in extensions:
+        #     if "geometry" in str(e):
+        #         Logger.log("d", "ext: %s" % str(e))
         OpenGL.setInstance(OpenGL())
         self._gl = OpenGL.getInstance().getBindingsObject()
 
