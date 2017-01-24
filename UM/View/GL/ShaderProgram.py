@@ -3,7 +3,13 @@
 
 import configparser
 import ast
+
+from PyQt5.QtGui import QOpenGLShader, QOpenGLShaderProgram, QVector2D, QVector3D, QVector4D, QMatrix4x4, QColor, QImage, QOpenGLTexture
 from UM.Logger import Logger
+
+from UM.Math.Vector import Vector
+from UM.Math.Matrix import Matrix
+from UM.Math.Color import Color
 
 
 ##  Raised when an error occurs during loading of the shader file.
@@ -17,10 +23,17 @@ class InvalidShaderProgramError(Exception):
 #   based on the Python configparser module. These files contain the shaders
 #   for the different shader program stages, in addition to defaults that should
 #   be used for uniform values and uniform and attribute bindings.
-class ShaderProgram:
+class ShaderProgram(object):
     def __init__(self):
         self._bindings = {}
         self._attribute_bindings = {}
+
+        self._shader_program = None
+        self._uniform_indices = {}
+        self._attribute_indices = {}
+        self._uniform_values = {}
+        self._bound = False
+        self._textures = {}
 
     ##  Load a shader program file.
     #
@@ -84,17 +97,37 @@ class ShaderProgram:
     #
     #   \param shader \type{string} The vertex shader to use.
     def setVertexShader(self, shader):
-        raise NotImplementedError("Should be reimplemented by subclasses")
+        if not self._shader_program:
+            self._shader_program = QOpenGLShaderProgram()
+
+        if not self._shader_program.addShaderFromSourceCode(QOpenGLShader.Vertex, shader):
+            Logger.log("e", "Vertex shader failed to compile: %s", self._shader_program.log())
 
     ##  Set the fragment shader to use.
     #
     #   \param shader \type{string} The fragment shader to use.
     def setFragmentShader(self, shader):
-        raise NotImplementedError("Should be reimplemented by subclasses")
+        if not self._shader_program:
+            self._shader_program = QOpenGLShaderProgram()
+
+        if not self._shader_program.addShaderFromSourceCode(QOpenGLShader.Fragment, shader):
+            Logger.log("e", "Fragment shader failed to compile: %s", self._shader_program.log())
+
+    def setGeometryShader(self, shader):
+        if not self._shader_program:
+            self._shader_program = QOpenGLShaderProgram()
+
+        if not self._shader_program.addShaderFromSourceCode(QOpenGLShader.Geometry, shader):
+            Logger.log("e", "Geometry shader failed to compile: %s", self._shader_program.log())
 
     ##  Build the complete shader program out of the separately provided sources.
     def build(self):
-        raise NotImplementedError("Should be reimplemented by subclasses")
+        if not self._shader_program:
+            Logger.log("e", "No shader sources loaded")
+            return
+
+        if not self._shader_program.link():
+            Logger.log("e", "Shader failed to link: %s", self._shader_program.log())
 
     ##  Set a named uniform variable.
     #
@@ -108,14 +141,31 @@ class ShaderProgram:
     #                 Possible keywords:
     #                 - cache: False when the value should not be cached for later calls to bind().
     def setUniformValue(self, name, value, **kwargs):
-        raise NotImplementedError("Should be reimplemented by subclasses")
+        if not self._shader_program:
+            return
 
+        if name not in self._uniform_indices:
+            self._uniform_indices[name] = self._shader_program.uniformLocation(name)
+
+        uniform = self._uniform_indices[name]
+        if uniform == -1:
+            return
+
+        if kwargs.get("cache", True):
+            self._uniform_values[uniform] = value
+
+        if self._bound:
+            self._setUniformValueDirect(uniform, value)
     ##  Set a texture that should be bound to a specified texture unit when this shader is bound.
     #
     #   \param texture_unit \type{int} The texture unit to bind the texture to.
     #   \param texture \type{Texture} The texture object to bind to the texture unit.
     def setTexture(self, texture_unit, texture):
-        raise NotImplementedError("Should be reimplemented by subclasses")
+        if texture is None:
+            if texture_unit in self._textures:
+                del self._textures[texture_unit]
+        else:
+            self._textures[texture_unit] = texture
 
     ##  Enable a vertex attribute to be used.
     #
@@ -126,21 +176,70 @@ class ShaderProgram:
     #
     #   \note If the shader is not bound, this will bind the shader.
     def enableAttribute(self, name, type, offset, stride = 0):
-        raise NotImplementedError("Should be reimplemented by subclasses")
+        if not self._shader_program:
+            return
+
+        self.bind()
+
+        if name not in self._attribute_indices:
+            self._attribute_indices[name] = self._shader_program.attributeLocation(name)
+
+        attribute = self._attribute_indices[name]
+        if attribute == -1:
+            return
+
+        if type is "int":
+            self._shader_program.setAttributeBuffer(attribute, 0x1404, offset, 1, stride) #GL_INT
+        elif type is "float":
+            self._shader_program.setAttributeBuffer(attribute, 0x1406, offset, 1, stride) #GL_FLOAT
+        elif type is "vector2f":
+            self._shader_program.setAttributeBuffer(attribute, 0x1406, offset, 2, stride) #GL_FLOAT
+        elif type is "vector3f":
+            self._shader_program.setAttributeBuffer(attribute, 0x1406, offset, 3, stride) #GL_FLOAT
+        elif type is "vector4f":
+            self._shader_program.setAttributeBuffer(attribute, 0x1406, offset, 4, stride) #GL_FLOAT
+
+        self._shader_program.enableAttributeArray(attribute)
 
     ##  Disable a vertex attribute so it is no longer used.
     #
     #   \param name The name of the attribute to use.
     def disableAttribute(self, name):
-        raise NotImplementedError("Should be reimplemented by subclasses")
+        if not self._shader_program:
+            return
+
+        if name not in self._attribute_indices:
+            return
+
+        self._shader_program.disableAttributeArray(self._attribute_indices[name])
 
     ##  Bind the shader to use it for rendering.
     def bind(self):
-        raise NotImplementedError("Should be reimplemented by subclasses")
+        if not self._shader_program or not self._shader_program.isLinked():
+            return
+
+        if self._bound:
+            return
+
+        self._bound = True
+        self._shader_program.bind()
+
+        for uniform in self._uniform_values:
+            self._setUniformValueDirect(uniform, self._uniform_values[uniform])
+
+        for texture_unit, texture in self._textures.items():
+            texture.bind(texture_unit)
 
     ##  Release the shader so it will no longer be used for rendering.
     def release(self):
-        raise NotImplementedError("Should be reimplemented by subclasses")
+        if not self._shader_program or not self._bound:
+            return
+
+        self._bound = False
+        self._shader_program.release()
+
+        for texture_unit, texture in self._textures.items():
+            texture.release(texture_unit)
 
     ##  Add a uniform value binding.
     #
@@ -198,3 +297,26 @@ class ShaderProgram:
             return
 
         self._attribute_bindings.remove(key)
+
+    def _matrixToQMatrix4x4(self, m):
+        return QMatrix4x4(m.at(0, 0), m.at(0, 1), m.at(0, 2), m.at(0, 3), m.at(1, 0), m.at(1, 1), m.at(1, 2), m.at(1, 3),
+            m.at(2, 0), m.at(2, 1), m.at(2, 2), m.at(2, 3), m.at(3, 0), m.at(3, 1), m.at(3, 2), m.at(3, 3))
+
+    def _setUniformValueDirect(self, uniform, value):
+        if type(value) is Vector:
+            self._shader_program.setUniformValue(uniform, QVector3D(value.x, value.y, value.z))
+        elif type(value) is Matrix:
+            self._shader_program.setUniformValue(uniform, self._matrixToQMatrix4x4(value))
+        elif type(value) is Color:
+            self._shader_program.setUniformValue(uniform,
+                QColor(value.r * 255, value.g * 255, value.b * 255, value.a * 255))
+        elif type(value) is list and len(value) is 2:
+            self._shader_program.setUniformValue(uniform, QVector2D(value[0], value[1]))
+        elif type(value) is list and len(value) is 3:
+            self._shader_program.setUniformValue(uniform, QVector3D(value[0], value[1], value[2]))
+        elif type(value) is list and len(value) is 4:
+            self._shader_program.setUniformValue(uniform, QVector4D(value[0], value[1], value[2], value[3]))
+        elif type(value) is list and type(value[0]) is list and len(value[0]) is 2:
+            self._shader_program.setUniformValueArray(uniform, [QVector2D(i[0], i[1]) for i in value])
+        else:
+            self._shader_program.setUniformValue(uniform, value)

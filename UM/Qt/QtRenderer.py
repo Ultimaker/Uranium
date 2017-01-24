@@ -20,7 +20,6 @@ from UM.View.DefaultPass import DefaultPass
 from UM.View.SelectionPass import SelectionPass
 from UM.View.GL.OpenGL import OpenGL
 from UM.View.RenderBatch import RenderBatch
-from UM.Qt.GL.QtOpenGL import QtOpenGL
 
 from UM.Signal import Signal, signalemitter
 
@@ -166,7 +165,7 @@ class QtRenderer(Renderer):
         self._quad_buffer.release()
 
     def _initialize(self):
-        OpenGL.setInstance(QtOpenGL())
+        OpenGL.setInstance(OpenGL())
         self._gl = OpenGL.getInstance().getBindingsObject()
 
         self._default_material = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "default.shader"))
