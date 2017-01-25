@@ -3,6 +3,7 @@
 
 from UM.Application import Application
 from UM.Resources import Resources
+from UM.Math.Color import Color
 
 from UM.View.RenderPass import RenderPass
 from UM.View.GL.OpenGL import OpenGL
@@ -26,6 +27,10 @@ class CompositePass(RenderPass):
         super().__init__("composite", width, height, RenderPass.MaximumPriority)
 
         self._shader = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "composite.shader"))
+        theme = Application.getInstance().getTheme()
+        self._shader.setUniformValue("u_background_color", Color(*theme.getColor("viewport_background").getRgb()))
+        self._shader.setUniformValue("u_outline_color", Color(*theme.getColor("model_selection_outline").getRgb()))
+
         self._gl = OpenGL.getInstance().getBindingsObject()
         self._renderer = Application.getInstance().getRenderer()
 

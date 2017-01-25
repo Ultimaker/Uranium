@@ -156,12 +156,14 @@ class Controller:
             Logger.log("w", "%s was already added to tool list. Unable to add it again.", name)
 
     def _onToolOperationStarted(self, tool):
-        self._tool_operation_active = True
-        self.toolOperationStarted.emit(tool)
+        if not self._tool_operation_active:
+            self._tool_operation_active = True
+            self.toolOperationStarted.emit(tool)
 
     def _onToolOperationStopped(self, tool):
-        self._tool_operation_active = False
-        self.toolOperationStopped.emit(tool)
+        if self._tool_operation_active:
+            self._tool_operation_active = False
+            self.toolOperationStopped.emit(tool)
 
     ##  Gets whether a tool is currently in use
     #   \return \type{bool} true if a tool current being used.

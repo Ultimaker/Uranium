@@ -94,7 +94,7 @@ class ScaleTool(Tool):
             if not id:
                 return False
 
-            if ToolHandle.isAxis(id):
+            if self._handle.isAxis(id):
                 self.setLockedAxis(id)
             self._saved_handle_position = self._handle.getWorldPosition()
 
