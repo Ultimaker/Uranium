@@ -227,7 +227,7 @@ class Backend(PluginObject):
             protocol_file = protocol_file.replace("\\", "/")
 
         if not self._socket.registerAllMessageTypes(protocol_file):
-            Logger.log("e", "Could not register Cura protocol messages: %s", self._socket.getLastError())
+            Logger.log("e", "Could not register Uranium protocol messages: %s", self._socket.getLastError())
 
         if Application.getInstance().getCommandLineOption("external-backend", False):
             Logger.log("i", "Listening for backend connections on %s", self._port)
