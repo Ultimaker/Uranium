@@ -175,10 +175,6 @@ class QtRenderer(Renderer):
             self._supports_geometry_shader = True
             Logger.log("d", "Geometry shader is available on this machine, but don't know if it works.")
 
-        # extensions = ctx.extensions()
-        # for e in extensions:
-        #     if "geometry" in str(e):
-        #         Logger.log("d", "ext: %s" % str(e))
         OpenGL.setInstance(OpenGL())
         self._gl = OpenGL.getInstance().getBindingsObject()
 
