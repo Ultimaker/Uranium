@@ -44,16 +44,16 @@ def container_registry():
         )
     )
 
-    UM.Resources.addSearchPath(os.path.dirname(os.path.abspath(__file__)))
+    UM.Resources.Resources.addSearchPath(os.path.dirname(os.path.abspath(__file__)))
     ContainerRegistry._ContainerRegistry__instance = None # Reset the private instance variable every time
     PluginRegistry.getInstance().removeType("settings_container")
 
-    return UM.Settings.ContainerRegistry.getInstance()
+    return ContainerRegistry.getInstance()
 
 @pytest.fixture
 def loaded_container_registry(container_registry):
-    instance = UM.Settings.ContainerRegistry.getInstance()
-    instance.addResourceType(UM.Resources.InstanceContainers)
+    instance = ContainerRegistry.getInstance()
+    instance.addResourceType(UM.Resources.Resources.InstanceContainers)
     instance.load()
 
     return instance
