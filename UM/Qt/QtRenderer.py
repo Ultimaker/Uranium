@@ -171,7 +171,7 @@ class QtRenderer(Renderer):
         minor = format.minorVersion()
         if major >= 4 or (major == 3 and minor >= 3):
             self._supports_geometry_shader = True
-        elif (ctx.hasExtension("GL_EXT_geometry_shader4") or ctx.hasExtension("GL_ARB_geometry_shader4")):
+        elif (ctx.hasExtension(bytearray("GL_EXT_geometry_shader4", "utf-8")) or ctx.hasExtension(bytearray("GL_ARB_geometry_shader4", "utf-8"))):
             self._supports_geometry_shader = True
             Logger.log("d", "Geometry shader is available on this machine, but don't know if it works.")
 
