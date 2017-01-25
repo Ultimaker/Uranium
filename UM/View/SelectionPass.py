@@ -39,18 +39,26 @@ class SelectionPass(RenderPass):
 
     ##  Perform the actual rendering.
     def render(self):
-        self._selection_map = {
-            self._dropAlpha(ToolHandle.DisabledColor): ToolHandle.NoAxis,
-            self._dropAlpha(ToolHandle.XAxisColor): ToolHandle.XAxis,
-            self._dropAlpha(ToolHandle.YAxisColor): ToolHandle.YAxis,
-            self._dropAlpha(ToolHandle.ZAxisColor): ToolHandle.ZAxis,
-            self._dropAlpha(ToolHandle.AllAxisColor): ToolHandle.AllAxis,
-            ToolHandle.DisabledColor: ToolHandle.NoAxis,
-            ToolHandle.XAxisColor: ToolHandle.XAxis,
-            ToolHandle.YAxisColor: ToolHandle.YAxis,
-            ToolHandle.ZAxisColor: ToolHandle.ZAxis,
-            ToolHandle.AllAxisColor: ToolHandle.AllAxis
-        }
+        if not self._selection_map:
+            theme = Application.getInstance().getTheme()
+            disabled_axis_color = Color(*theme.getColor("disabled_axis").getRgb())
+            x_axis_color = Color(*theme.getColor("x_axis").getRgb())
+            y_axis_color = Color(*theme.getColor("y_axis").getRgb())
+            z_axis_color = Color(*theme.getColor("z_axis").getRgb())
+            all_axis_color = Color(*theme.getColor("all_axis").getRgb())
+
+            self._selection_map = {
+                self._dropAlpha(disabled_axis_color): ToolHandle.NoAxis,
+                self._dropAlpha(x_axis_color): ToolHandle.XAxis,
+                self._dropAlpha(y_axis_color): ToolHandle.YAxis,
+                self._dropAlpha(z_axis_color): ToolHandle.ZAxis,
+                self._dropAlpha(all_axis_color): ToolHandle.AllAxis,
+                disabled_axis_color: ToolHandle.NoAxis,
+                x_axis_color: ToolHandle.XAxis,
+                y_axis_color: ToolHandle.YAxis,
+                z_axis_color: ToolHandle.ZAxis,
+                all_axis_color: ToolHandle.AllAxis
+            }
 
         batch = RenderBatch(self._shader)
         tool_handle = RenderBatch(self._tool_handle_shader, type = RenderBatch.RenderType.Overlay)

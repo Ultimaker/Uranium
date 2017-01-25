@@ -24,6 +24,8 @@ import UM.Settings.InstanceContainer #For version upgrade to know the version nu
 import UM.Settings.ContainerStack #For version upgrade to know the version number.
 import UM.Preferences #For version upgrade to know the version number.
 
+import UM.Qt.Bindings.Theme
+
 # Raised when we try to use an unsupported version of a dependency.
 class UnsupportedVersionError(Exception):
     pass
@@ -62,6 +64,7 @@ class QtApplication(QApplication, Application):
         self._engine = None
         self._renderer = None
         self._main_window = None
+        self._theme = None
 
         self._shutting_down = False
         self._qml_import_paths = []
@@ -180,6 +183,15 @@ class QtApplication(QApplication, Application):
         if window != self._main_window:
             self._main_window = window
             self.mainWindowChanged.emit()
+
+    def getTheme(self, *args):
+        if self._theme is None:
+            if self._engine is None:
+                Logger.log("e", "The theme cannot be accessed before the engine is initialised")
+                return None
+
+            self._theme = UM.Qt.Bindings.Theme.Theme.getInstance(self._engine)
+        return self._theme
 
     #   Handle a function that should be called later.
     def functionEvent(self, event):

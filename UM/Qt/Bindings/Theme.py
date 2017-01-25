@@ -202,6 +202,16 @@ class Theme(QObject):
             "line": QSizeF(self._em_width, self._em_height)
         }
 
-def createTheme(engine, script_engine):
-    return Theme(engine)
+    ##  Get the singleton instance for this class.
+    @classmethod
+    def getInstance(cls, engine = None):
+        # Note: Explicit use of class name to prevent issues with inheritance.
+        if Theme.__instance is None:
+            Theme.__instance = cls(engine)
+        return Theme.__instance
+
+    __instance = None
+
+def createTheme(engine, script_engine = None):
+    return Theme.getInstance(engine)
 
