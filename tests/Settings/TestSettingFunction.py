@@ -3,7 +3,7 @@
 
 import pytest
 
-import UM.Settings.SettingFunction
+from UM.Settings.SettingFunction import SettingFunction
 
 ##  Individual test cases for the good setting functions.
 #
@@ -24,7 +24,7 @@ setting_function_good_data = [
 #   should occur during the creation of the fixture.
 @pytest.fixture(params = setting_function_good_data)
 def setting_function_good(request):
-    return UM.Settings.SettingFunction(request.param)
+    return SettingFunction(request.param)
 
 ##  Individual test cases for the bad setting functions.
 #
@@ -43,7 +43,7 @@ setting_function_bad_data = [
 #   give an error when creating the fixture.
 @pytest.fixture(params = setting_function_bad_data)
 def setting_function_bad(request):
-    return UM.Settings.SettingFunction(request.param)
+    return SettingFunction(request.param)
 
 ##  Tests the initialisation of setting functions with good functions.
 #
@@ -96,22 +96,22 @@ test_call_data = [
 @pytest.mark.parametrize("data", test_call_data)
 def test_call(data):
     value_provider = MockValueProvider()
-    function = UM.Settings.SettingFunction(data["code"])
+    function = SettingFunction(data["code"])
     assert function(value_provider) == data["result"]
 
 ##  Tests the equality operator on setting functions.
 def test_eq():
-    setting_function = UM.Settings.SettingFunction("3 * 3")
+    setting_function = SettingFunction("3 * 3")
     assert not (setting_function == "some string") # Equality against something of a different type.
     assert setting_function != "some string"
     assert setting_function == setting_function # Equality against itself.
     assert not (setting_function != setting_function)
 
-    duplicate = UM.Settings.SettingFunction("3 * 3") # Different instance with the same code. Should be equal!
+    duplicate = SettingFunction("3 * 3") # Different instance with the same code. Should be equal!
     assert setting_function == duplicate
     assert not (setting_function != duplicate)
 
-    same_answer = UM.Settings.SettingFunction("9") # Different code but the result is the same. Should NOT be equal!
+    same_answer = SettingFunction("9") # Different code but the result is the same. Should NOT be equal!
     assert not (setting_function == same_answer)
     assert setting_function != same_answer
 
@@ -136,7 +136,7 @@ test_getUsedSettings_data = [
 #   \param data A test case to test.
 @pytest.mark.parametrize("data", test_getUsedSettings_data)
 def test_getUsedSettings(data):
-    function = UM.Settings.SettingFunction(data["code"])
+    function = SettingFunction(data["code"])
     answer = function.getUsedSettingKeys()
     assert len(answer) == len(data["variables"])
     for variable in data["variables"]: # Check for set equality regardless of the order.
@@ -145,7 +145,7 @@ def test_getUsedSettings(data):
 ##  Tests the conversion of a setting function to string.
 def test_str():
     # Due to the simplicity of the function, it's not really necessary to make a full-blown parametrised test for this. Just two simple tests:
-    function = UM.Settings.SettingFunction("3.14156") # Simple test case.
+    function = SettingFunction("3.14156") # Simple test case.
     assert str(function) == "=3.14156"
-    function = UM.Settings.SettingFunction("") # Also the edge case.
+    function = SettingFunction("") # Also the edge case.
     assert str(function) == "="
