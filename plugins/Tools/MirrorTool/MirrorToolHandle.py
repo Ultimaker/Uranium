@@ -86,7 +86,7 @@ class MirrorToolHandle(ToolHandle):
             height = self._handle_height,
             depth = self._handle_width,
             center = Vector(0, self._handle_position, 0),
-            color = self._y_axis_color
+            color = ToolHandle.YAxisSelectionColor
         )
 
         mb.addPyramid(
@@ -94,7 +94,7 @@ class MirrorToolHandle(ToolHandle):
             height = self._handle_height,
             depth = self._handle_width,
             center = Vector(0, -self._handle_position, 0),
-            color = self._y_axis_color,
+            color = ToolHandle.YAxisSelectionColor,
             axis = Vector.Unit_X,
             angle = 180
         )
@@ -104,7 +104,7 @@ class MirrorToolHandle(ToolHandle):
             height = self._handle_height,
             depth = self._handle_width,
             center = Vector(self._handle_position, 0, 0),
-            color = self._x_axis_color,
+            color = ToolHandle.XAxisSelectionColor,
             axis = Vector.Unit_Z,
             angle = 90
         )
@@ -114,7 +114,7 @@ class MirrorToolHandle(ToolHandle):
             height = self._handle_height,
             depth = self._handle_width,
             center = Vector(-self._handle_position, 0, 0),
-            color = self._x_axis_color,
+            color = ToolHandle.XAxisSelectionColor,
             axis = Vector.Unit_Z,
             angle = -90
         )
@@ -124,7 +124,7 @@ class MirrorToolHandle(ToolHandle):
             height = self._handle_height,
             depth = self._handle_width,
             center = Vector(0, 0, -self._handle_position),
-            color = self._z_axis_color,
+            color = ToolHandle.ZAxisSelectionColor,
             axis = Vector.Unit_X,
             angle = 90
         )
@@ -134,7 +134,7 @@ class MirrorToolHandle(ToolHandle):
             height = self._handle_height,
             depth = self._handle_width,
             center = Vector(0, 0, self._handle_position),
-            color = self._z_axis_color,
+            color = ToolHandle.ZAxisSelectionColor,
             axis = Vector.Unit_X,
             angle = -90
         )

@@ -25,6 +25,14 @@ class ToolHandle(SceneNode.SceneNode):
     ZAxis = 4
     AllAxis = 5
 
+    # These colors are used to draw the selection pass only. They must be unique, which is
+    # why we cannot rely on themed colors
+    DisabledSelectionColor = Color(0.5, 0.5, 0.5, 1.0)
+    XAxisSelectionColor = Color(1.0, 0.0, 0.0, 1.0)
+    YAxisSelectionColor = Color(0.0, 0.0, 1.0, 1.0)
+    ZAxisSelectionColor = Color(0.0, 1.0, 0.0, 1.0)
+    AllAxisSelectionColor = Color(1.0, 1.0, 1.0, 1.0)
+
     def __init__(self, parent = None):
         super().__init__(parent)
 
