@@ -56,7 +56,7 @@ class RotateToolHandle(ToolHandle):
             inner_radius = self._active_inner_radius,
             outer_radius = self._active_outer_radius,
             width = self._active_line_width,
-            color = self._z_axis_color
+            color = ToolHandle.ZAxisSelectionColor
         )
 
         mb.addDonut(
@@ -65,7 +65,7 @@ class RotateToolHandle(ToolHandle):
             width = self._active_line_width,
             axis = Vector.Unit_X,
             angle = math.pi / 2,
-            color = self._y_axis_color
+            color = ToolHandle.YAxisSelectionColor
         )
 
         mb.addDonut(
@@ -74,7 +74,7 @@ class RotateToolHandle(ToolHandle):
             width = self._active_line_width,
             axis = Vector.Unit_Y,
             angle = math.pi / 2,
-            color = self._x_axis_color
+            color = ToolHandle.XAxisSelectionColor
         )
 
         self.setSelectionMesh(mb.build())
