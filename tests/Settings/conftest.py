@@ -48,6 +48,7 @@ def container_registry():
     ContainerRegistry._ContainerRegistry__instance = None # Reset the private instance variable every time
     PluginRegistry.getInstance().removeType("settings_container")
 
+    UM.Settings.ContainerStack.setContainerRegistry(ContainerRegistry.getInstance())
     return ContainerRegistry.getInstance()
 
 @pytest.fixture
