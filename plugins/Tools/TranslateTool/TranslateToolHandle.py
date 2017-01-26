@@ -93,7 +93,7 @@ class TranslateToolHandle(ToolHandle):
         self.setSolidMesh(mb.build())
 
         mb = MeshBuilder()
-        #ACTIVEMESH -> LINES
+        #SELECTIONMESH -> LINES
         if self.YAxis in self._enabled_axis:
             mb.addCube(
                 width = self._active_line_width,
