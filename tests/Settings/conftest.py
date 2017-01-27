@@ -49,6 +49,7 @@ def container_registry():
     PluginRegistry.getInstance().removeType("settings_container")
 
     UM.Settings.ContainerStack.setContainerRegistry(ContainerRegistry.getInstance())
+    UM.Settings.InstanceContainer.setContainerRegistry(ContainerRegistry.getInstance())
     return ContainerRegistry.getInstance()
 
 @pytest.fixture
