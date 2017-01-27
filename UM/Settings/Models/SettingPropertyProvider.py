@@ -77,8 +77,9 @@ class SettingPropertyProvider(QObject):
     removeUnusedValueChanged = pyqtSignal()
 
     def setRemoveUnusedValue(self, remove_unused_value):
-        self._remove_unused_value = remove_unused_value
-        self.removeUnusedValueChanged.emit()
+        if self._remove_unused_value != remove_unused_value:
+            self._remove_unused_value = remove_unused_value
+            self.removeUnusedValueChanged.emit()
 
     @pyqtProperty(bool, fset = setRemoveUnusedValue, notify = removeUnusedValueChanged)
     def removeUnusedValue(self):

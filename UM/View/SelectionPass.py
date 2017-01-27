@@ -35,22 +35,24 @@ class SelectionPass(RenderPass):
         self._renderer = Application.getInstance().getRenderer()
 
         self._selection_map = {}
+        self._toolhandle_selection_map = {
+            self._dropAlpha(ToolHandle.DisabledSelectionColor): ToolHandle.NoAxis,
+            self._dropAlpha(ToolHandle.XAxisSelectionColor): ToolHandle.XAxis,
+            self._dropAlpha(ToolHandle.YAxisSelectionColor): ToolHandle.YAxis,
+            self._dropAlpha(ToolHandle.ZAxisSelectionColor): ToolHandle.ZAxis,
+            self._dropAlpha(ToolHandle.AllAxisSelectionColor): ToolHandle.AllAxis,
+            ToolHandle.DisabledSelectionColor: ToolHandle.NoAxis,
+            ToolHandle.XAxisSelectionColor: ToolHandle.XAxis,
+            ToolHandle.YAxisSelectionColor: ToolHandle.YAxis,
+            ToolHandle.ZAxisSelectionColor: ToolHandle.ZAxis,
+            ToolHandle.AllAxisSelectionColor: ToolHandle.AllAxis
+        }
+
         self._output = None
 
     ##  Perform the actual rendering.
     def render(self):
-        self._selection_map = {
-            self._dropAlpha(ToolHandle.DisabledColor): ToolHandle.NoAxis,
-            self._dropAlpha(ToolHandle.XAxisColor): ToolHandle.XAxis,
-            self._dropAlpha(ToolHandle.YAxisColor): ToolHandle.YAxis,
-            self._dropAlpha(ToolHandle.ZAxisColor): ToolHandle.ZAxis,
-            self._dropAlpha(ToolHandle.AllAxisColor): ToolHandle.AllAxis,
-            ToolHandle.DisabledColor: ToolHandle.NoAxis,
-            ToolHandle.XAxisColor: ToolHandle.XAxis,
-            ToolHandle.YAxisColor: ToolHandle.YAxis,
-            ToolHandle.ZAxisColor: ToolHandle.ZAxis,
-            ToolHandle.AllAxisColor: ToolHandle.AllAxis
-        }
+        self._selection_map = self._toolhandle_selection_map.copy()
 
         batch = RenderBatch(self._shader)
         tool_handle = RenderBatch(self._tool_handle_shader, type = RenderBatch.RenderType.Overlay)

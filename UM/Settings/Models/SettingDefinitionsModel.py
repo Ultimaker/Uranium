@@ -240,9 +240,10 @@ class SettingDefinitionsModel(QAbstractListModel):
     ##  Show the children of a specified SettingDefinition.
     @pyqtSlot(str)
     def expand(self, key):
-        self._expanded.add(key)
-        self.expandedChanged.emit()
-        self._updateVisibleRows()
+        if key not in self._expanded:
+            self._expanded.add(key)
+            self.expandedChanged.emit()
+            self._updateVisibleRows()
 
     ##  Show the children of a specified SettingDefinition and all children of those settings as well.
     @pyqtSlot(str)
