@@ -1,9 +1,8 @@
 # Uranium
-# Copyright (C) 2016 Ultimaker
+# Copyright (C) 2017 Ultimaker
 # This file is distributed under the same license as the Uranium package.
-# Ruben Dulek <r.dulek@ultimaker.com>, 2016.
+# Ruben Dulek <r.dulek@ultimaker.com>, 2017.
 # 
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: 2.3\n"
@@ -19,13 +18,11 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:45
-#, fuzzy
 msgctxt "@action:button Preceded by 'Ready to'."
 msgid "Save to File"
 msgstr "Opslaan als bestand"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:92
-#, fuzzy
 msgctxt "@action:button"
 msgid "Discard current changes"
 msgstr "Huidige wijzigingen verwijderen"
