@@ -50,7 +50,11 @@ class OpenGLContext(object):
         minor = format.minorVersion()
 
         if major >= 4 or (major == 3 and minor >= 3):
-            self._supports_geometry_shader = True
+            Logger.log("d", "OpenGL context version has geometry shader support.")
+            return True
         elif (ctx.hasExtension(bytearray("GL_EXT_geometry_shader4", "utf-8")) or ctx.hasExtension(bytearray("GL_ARB_geometry_shader4", "utf-8"))):
-            self._supports_geometry_shader = True
             Logger.log("d", "Geometry shader is available on this machine, but don't know if it works.")
+            return True
+        else:
+            Logger.log("d", "Not matching OpenGL version or extension for geometry shader.")
+            return False
