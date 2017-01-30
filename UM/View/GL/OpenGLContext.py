@@ -6,7 +6,7 @@ from PyQt5.QtGui import QOpenGLVersionProfile, QOpenGLContext, QSurfaceFormat
 from UM.Logger import Logger
 
 
-class Context(object):
+class OpenGLContext(object):
 
     ##  Set OpenGL context, given major, minor version + core using QOpenGLContext
     #   Unfortunately, what you get back does not have to be the requested version.
@@ -26,3 +26,16 @@ class Context(object):
             return ctx
         else:
             Logger.log("e", "Failed creating OpenGL context (%d, %d, core=%s)" % (major_version, minor_version, core))
+
+    @classmethod
+    def supportsGeometryShader(self, ctx=None):
+        if ctx is None:
+            ctx = QOpenGLContext.currentContext()
+        format = ctx.format()
+        major = format.majorVersion()
+        minor = format.minorVersion()
+        if major >= 4 or (major == 3 and minor >= 3):
+            self._supports_geometry_shader = True
+        elif (ctx.hasExtension(bytearray("GL_EXT_geometry_shader4", "utf-8")) or ctx.hasExtension(bytearray("GL_ARB_geometry_shader4", "utf-8"))):
+            self._supports_geometry_shader = True
+            Logger.log("d", "Geometry shader is available on this machine, but don't know if it works.")

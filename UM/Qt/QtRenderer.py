@@ -13,7 +13,7 @@ from UM.View.CompositePass import CompositePass
 from UM.View.DefaultPass import DefaultPass
 from UM.View.SelectionPass import SelectionPass
 from UM.View.GL.OpenGL import OpenGL
-from UM.View.GL.Context import Context
+from UM.View.GL.OpenGLContext import OpenGLContext
 from UM.View.RenderBatch import RenderBatch
 
 from UM.Logger import Logger
@@ -165,15 +165,8 @@ class QtRenderer(Renderer):
         return self._supports_geometry_shader
 
     def _initialize(self):
-        ctx = Context.setContext(4, 5, core=True)
-        format = ctx.format()
-        major = format.majorVersion()
-        minor = format.minorVersion()
-        if major >= 4 or (major == 3 and minor >= 3):
-            self._supports_geometry_shader = True
-        elif (ctx.hasExtension(bytearray("GL_EXT_geometry_shader4", "utf-8")) or ctx.hasExtension(bytearray("GL_ARB_geometry_shader4", "utf-8"))):
-            self._supports_geometry_shader = True
-            Logger.log("d", "Geometry shader is available on this machine, but don't know if it works.")
+        ctx = OpenGLContext.setContext(4, 5, core = True)
+        self._supports_geometry_shader = OpenGLContext.supportsGeometryShader(ctx = ctx)
 
         OpenGL.setInstance(OpenGL())
         self._gl = OpenGL.getInstance().getBindingsObject()
