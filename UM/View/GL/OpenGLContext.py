@@ -20,9 +20,18 @@ class OpenGLContext(object):
         if success:
             ctx = QOpenGLContext.currentContext()
             fmt = ctx.format()
+            profile = fmt.profile()
+            if profile == QSurfaceFormat.CompatibilityProfile:
+                xtra = "Compatibility profile"
+            elif profile == QSurfaceFormat.CoreProfile:
+                xtra = "Core profile"
+            elif profile == QSurfaceFormat.NoProfile:
+                xtra = "No profile"
+            else:
+                xtra = "Unknown profile"
             Logger.log(
-                "d", "Successfully created OpenGL context, requested (%d, %d, core=%s), actual is (%d, %d)" % (
-                    major_version, minor_version, core, fmt.majorVersion(), fmt.minorVersion()))
+                "d", "Successfully created OpenGL context, requested (%d, %d, core=%s), actual is (%d, %d, %s)" % (
+                    major_version, minor_version, core, fmt.majorVersion(), fmt.minorVersion(), xtra))
             return ctx
         else:
             Logger.log("e", "Failed creating OpenGL context (%d, %d, core=%s)" % (major_version, minor_version, core))
@@ -34,6 +43,7 @@ class OpenGLContext(object):
         format = ctx.format()
         major = format.majorVersion()
         minor = format.minorVersion()
+
         if major >= 4 or (major == 3 and minor >= 3):
             self._supports_geometry_shader = True
         elif (ctx.hasExtension(bytearray("GL_EXT_geometry_shader4", "utf-8")) or ctx.hasExtension(bytearray("GL_ARB_geometry_shader4", "utf-8"))):
