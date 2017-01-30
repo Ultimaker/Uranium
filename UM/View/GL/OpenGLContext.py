@@ -1,7 +1,7 @@
 # Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-from PyQt5.QtGui import QOpenGLVersionProfile, QOpenGLContext, QSurfaceFormat
+from PyQt5.QtGui import QOpenGLContext, QSurfaceFormat
 
 from UM.Logger import Logger
 
@@ -12,11 +12,16 @@ class OpenGLContext(object):
     #   Unfortunately, what you get back does not have to be the requested version.
     @classmethod
     def setContext(self, major_version, minor_version, core = False):
-        profile = QOpenGLVersionProfile()
-        profile.setVersion(major_version, minor_version)
+        new_format = QSurfaceFormat()
+        new_format.setMajorVersion(major_version)
+        new_format.setMinorVersion(minor_version)
         if core:
-            profile.setProfile(QSurfaceFormat.CoreProfile)
-        success = QOpenGLContext().create()
+            new_format.setProfile(QSurfaceFormat.CoreProfile)
+        else:
+            new_format.setProfile(QSurfaceFormat.CompatibilityProfile)
+        new_context = QOpenGLContext()
+        new_context.setFormat(new_format)
+        success = new_context.create()
         if success:
             ctx = QOpenGLContext.currentContext()
             fmt = ctx.format()
