@@ -35,18 +35,11 @@ class OpenGL(object):
         profile = QOpenGLVersionProfile()
         profile.setVersion(2, 0)
 
-        # profile.setVersion(4, 1)
-        # profile.setProfile(QSurfaceFormat.CoreProfile)  # required
         self._gl = QOpenGLContext.currentContext().versionFunctions(profile)
         if not self._gl:
             Logger.log("e", "Startup failed due to OpenGL initialization failing")
             QMessageBox.critical(None, "Failed to Initialize OpenGL", "Could not initialize OpenGL. This program requires OpenGL 2.0 or higher. Please check your video card drivers.")
             sys.exit(1)
-
-        ctx = QOpenGLContext.currentContext()
-        fm = ctx.format()
-        major = fm.majorVersion()
-        minor = fm.minorVersion()
 
         # It would be nice to be able to not necessarily need OpenGL Framebuffer Object support, but
         # due to a limiation in PyQt, currently glReadPixels or similar methods are not available.
