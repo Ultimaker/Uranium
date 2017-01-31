@@ -119,6 +119,8 @@ class Signal:
 
         self.__type = kwargs.get("type", Signal.Auto)
 
+        self.__enabled = True
+
         if _recordSignalNames():
             try:
                 if Platform.isWindows():
@@ -132,6 +134,9 @@ class Signal:
 
     def getName(self):
         return self.__name
+
+    def setEnabled(self, enable):
+        self.__enabled = enable
 
     ##  \exception NotImplementedError
     def __call__(self):
@@ -153,6 +158,9 @@ class Signal:
     @call_if_enabled(_traceEmit, _isTraceEnabled())
     @profileEmit
     def emit(self, *args, **kwargs):
+        if not self.__enabled:
+            return
+
         try:
             if self.__type == Signal.Queued:
                 Signal._app.functionEvent(CallFunctionEvent(self.__performEmit, args, kwargs))
