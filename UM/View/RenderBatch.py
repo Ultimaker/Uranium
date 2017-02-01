@@ -9,6 +9,8 @@ from UM.Math.Vector import Vector
 
 from UM.View.GL.OpenGL import OpenGL
 
+from PyQt5.QtGui import QOpenGLVertexArrayObject
+
 vertexBufferProperty = "__gl_vertex_buffer"
 indexBufferProperty = "__gl_index_buffer"
 
@@ -81,6 +83,7 @@ class RenderBatch():
         self._view_projection_matrix = None
 
         self._gl = OpenGL.getInstance().getBindingsObject()
+        self._vao = None
 
     ##  The RenderType for this batch.
     @property
@@ -132,6 +135,21 @@ class RenderBatch():
 
         return False
 
+
+    def _updateVAO(self):
+        if self._vao is not None:
+            self._vao.destroy()
+
+        self._vao = QOpenGLVertexArrayObject()
+        self._vao.create()
+        if not self._vao.isCreated():
+            Logger.log("e", "vao not created. Hell breaks loose")
+            self._vao.bind()
+
+        for item in self._items:
+            self._prepareItemVAO(item)
+        self._vao.release()
+
     ##  Add an item to render to this batch.
     #
     #   \param transformation The transformation matrix to use for rendering the item.
@@ -147,6 +165,8 @@ class RenderBatch():
             return
 
         self._items.append({ "transformation": transformation, "mesh": mesh, "uniforms": uniforms})
+        self._updateVAO()
+
 
     ##  Render the batch.
     #
@@ -192,14 +212,135 @@ class RenderBatch():
             light_0_position = camera.getWorldPosition() + Vector(0, 50, 0)
         )
 
+        if not self._vao:
+            self._updateVAO()
         for item in self._items:
-            self._renderItem(item)
+            self._renderItemVAO(item)
 
         if self._state_teardown_callback:
             self._state_teardown_callback(self._gl)
 
         self._shader.release()
 
+    ##  Render using Vertex Array Objects (VAO)
+    def _renderItemVAO(self, item):
+        if item["uniforms"] is not None:
+            self._shader.updateBindings(**item["uniforms"])
+
+        transformation = item["transformation"]
+        mesh = item["mesh"]
+
+        normal_matrix = None
+        if mesh.hasNormals():
+            normal_matrix = copy.deepcopy(transformation)
+            normal_matrix.setRow(3, [0, 0, 0, 1])
+            normal_matrix.setColumn(3, [0, 0, 0, 1])
+            normal_matrix = normal_matrix.getInverse().getTransposed()
+
+        model_view_matrix = copy.deepcopy(transformation).preMultiply(self._view_matrix)
+        model_view_projection_matrix = copy.deepcopy(transformation).preMultiply(self._view_projection_matrix)
+
+        self._shader.updateBindings(
+            model_matrix = transformation,
+            normal_matrix = normal_matrix,
+            model_view_matrix = model_view_matrix,
+            model_view_projection_matrix = model_view_projection_matrix
+        )
+
+        if item["uniforms"] is not None:
+            self._shader.updateBindings(**item["uniforms"])
+
+        self._vao = QOpenGLVertexArrayObject()
+        self._vao.create()
+        if not self._vao.isCreated():
+            Logger.log("e", "vao not created. Hell breaks loose")
+        self._vao.bind()
+
+        Logger.log("d", "GL error (render1): [%s]", self._gl.glGetError())
+
+        if mesh.hasIndices():
+            if self._render_range is None:
+                if self._render_mode == self.RenderMode.Triangles:
+                    self._gl.glDrawElements(self._render_mode, mesh.getFaceCount() * 3 , self._gl.GL_UNSIGNED_INT, None)
+                else:
+                    self._gl.glDrawElements(self._render_mode, mesh.getFaceCount(), self._gl.GL_UNSIGNED_INT, None)
+            else:
+                if self._render_mode == self.RenderMode.Triangles:
+                    self._gl.glDrawRangeElements(self._render_mode, self._render_range[0], self._render_range[1], self._render_range[1] - self._render_range[0], self._gl.GL_UNSIGNED_INT, None)
+                else:
+                    self._gl.glDrawElements(self._render_mode, self._render_range[1] - self._render_range[0], self._gl.GL_UNSIGNED_INT, None)
+        else:
+            self._gl.glDrawArrays(self._render_mode, 0, mesh.getVertexCount())
+
+        Logger.log("d", "GL error (render2): [%s]", self._gl.glGetError())
+
+        self._vao.release()
+
+
+    ##  Prepare using Vertex Array Objects (VAO)
+    def _prepareItemVAO(self, item):
+        transformation = item["transformation"]
+        mesh = item["mesh"]
+
+        vertex_buffer = OpenGL.getInstance().createVertexBuffer(mesh)
+        vertex_buffer.bind()
+        Logger.log("d", "GL error (prepare1): [%s]", self._gl.glGetError())
+
+        if self._render_range is None:
+            index_buffer = OpenGL.getInstance().createIndexBuffer(mesh)
+        else:
+            # glDrawRangeElements does not work as expected and did not get the indices field working..
+            # Now we're just uploading a clipped part of the array and the start index always becomes 0.
+            index_buffer = OpenGL.getInstance().createIndexBuffer(
+                mesh, force_recreate = True, index_start = self._render_range[0], index_stop = self._render_range[1])
+        if index_buffer is not None:
+            index_buffer.bind()
+        Logger.log("d", "GL error (prepare2): [%s]", self._gl.glGetError())
+
+        offset = self._shader.enableAttributeTest("a_vertex", "vector3f", 0, gltest = self._gl)
+
+        #self._shader.enableAttribute("a_vertex", "vector3f", 0)
+        #
+        # Logger.log("d", "GL error (prepare3.1): [%s]", self._gl.glGetError())
+        # offset = mesh.getVertexCount() * 3 * 4
+        #
+        # if mesh.hasNormals():
+        #     self._shader.enableAttribute("a_normal", "vector3f", offset)
+        #     offset += mesh.getVertexCount() * 3 * 4
+        #
+        # Logger.log("d", "GL error (prepare3.2): [%s]", self._gl.glGetError())
+        #
+        # if mesh.hasColors():
+        #     self._shader.enableAttribute("a_color", "vector4f", offset)
+        #     offset += mesh.getVertexCount() * 4 * 4
+        #
+        # Logger.log("d", "GL error (prepare3.3): [%s]", self._gl.glGetError())
+        #
+        # if mesh.hasUVCoordinates():
+        #     self._shader.enableAttribute("a_uvs", "vector2f", offset)
+        #     offset += mesh.getVertexCount() * 2 * 4
+        #
+        # Logger.log("d", "GL error (prepare3.4): [%s]", self._gl.glGetError())
+
+        # for attribute_name in mesh.attributeNames():
+        #     attribute = mesh.getAttribute(attribute_name)
+        #     self._shader.enableAttribute(attribute["opengl_name"], attribute["opengl_type"], offset)
+        #     if attribute["opengl_type"] == "vector2f":
+        #         offset += mesh.getVertexCount() * 2 * 4
+        #     elif attribute["opengl_type"] == "vector4f":
+        #         offset += mesh.getVertexCount() * 4 * 4
+        #     elif attribute["opengl_type"] == "int":
+        #         offset += mesh.getVertexCount() * 4
+        #     elif attribute["opengl_type"] == "float":
+        #         offset += mesh.getVertexCount() * 4
+        #     else:
+        #         Logger.log("e", "Attribute with name [%s] uses non implemented type [%s]." % (attribute["opengl_name"], attribute["opengl_type"]))
+        #         self._shader.disableAttribute(attribute["opengl_name"])
+
+        Logger.log("d", "GL error (prepare4): [%s]", self._gl.glGetError())
+
+
+    ##  Render legacy
     def _renderItem(self, item):
         transformation = item["transformation"]
         mesh = item["mesh"]
@@ -280,6 +421,9 @@ class RenderBatch():
                     self._gl.glDrawElements(self._render_mode, self._render_range[1] - self._render_range[0], self._gl.GL_UNSIGNED_INT, None)
         else:
             self._gl.glDrawArrays(self._render_mode, 0, mesh.getVertexCount())
+
+        err = self._gl.glGetError()
+        Logger.log("d", "GL error: [%s]", err)
 
         self._shader.disableAttribute("a_vertex")
         self._shader.disableAttribute("a_normal")

@@ -20,6 +20,7 @@ from UM.Resources import Resources
 from UM.Logger import Logger
 from UM.Preferences import Preferences
 from UM.i18n import i18nCatalog
+from UM.View.GL.OpenGLContext import OpenGLContext
 import UM.Settings.InstanceContainer #For version upgrade to know the version number.
 import UM.Settings.ContainerStack #For version upgrade to know the version number.
 import UM.Preferences #For version upgrade to know the version number.
@@ -57,6 +58,11 @@ class QtApplication(QApplication, Application):
             QCoreApplication.addLibraryPath(plugin_path)
 
         os.environ["QSG_RENDER_LOOP"] = "basic"
+
+        OpenGLContext.setDefaultFormat(4, 1, core = True)
+        # OpenGLContext.setDefaultFormat(2, 1, core = False)
+        # OpenGLContext.setContext(4, 1, core = True)
+
         super().__init__(sys.argv, **kwargs)
 
         self._plugins_loaded = False #Used to determine when it's safe to use the plug-ins.

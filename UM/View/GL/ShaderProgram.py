@@ -4,7 +4,7 @@
 import configparser
 import ast
 
-from PyQt5.QtGui import QOpenGLShader, QOpenGLShaderProgram, QVector2D, QVector3D, QVector4D, QMatrix4x4, QColor, QImage, QOpenGLTexture
+from PyQt5.QtGui import QOpenGLShader, QOpenGLShaderProgram, QVector2D, QVector3D, QVector4D, QMatrix4x4, QColor, QImage, QOpenGLTexture, QOpenGLVertexArrayObject, QOpenGLBuffer
 from UM.Logger import Logger
 
 from UM.Math.Vector import Vector
@@ -45,27 +45,35 @@ class ShaderProgram(object):
     #   multiline string, make sure to indent them properly.
     #
     #   \param file_name The shader file to load.
+    #   \param version can be used for a special version of the shader. it will be appended
+    #          to the keys [vertex, fragment, geometry] in the shader file
     #
     #   \exception{InvalidShaderProgramError} Raised when the file provided does not contain any valid shaders.
-    def load(self, file_name):
+    def load(self, file_name, version = ""):
+        Logger.log("d", "Loading shader file [%s]...", file_name)
+
+        vertex_key = "vertex" + version
+        fragment_key = "fragment" + version
+        geometry_key = "geometry" + version
+
         # Hashtags should not be ignored, they are part of GLSL.
         parser = configparser.ConfigParser(interpolation = None, comment_prefixes = (';', ))
         parser.optionxform = lambda option: option
         parser.read(file_name)
 
         if "shaders" not in parser:
-            raise InvalidShaderProgramError("{0} is missing a vertex of fragment shader".format(file_name))
+            raise InvalidShaderProgramError("{0} is missing section [shaders]".format(file_name))
 
-        if "vertex" not in parser["shaders"] or "fragment" not in parser["shaders"]:
-            raise InvalidShaderProgramError("{0} is missing a vertex of fragment shader".format(file_name))
+        if vertex_key not in parser["shaders"] or fragment_key not in parser["shaders"]:
+            raise InvalidShaderProgramError("{0} is missing a shader [{1}, {2}]".format(file_name, vertex_key, fragment_key))
 
-        vertex_code = parser["shaders"]["vertex"]
+        vertex_code = parser["shaders"][vertex_key]
         # Enable when debugging shader code.
         # vertex_code_str = "\n".join(["%4i %s" % (i, s) for i, s in enumerate(vertex_code.split("\n"))])
         # Logger.log("d", "Vertex shader")
         # Logger.log("d", vertex_code_str)
 
-        fragment_code = parser["shaders"]["fragment"]
+        fragment_code = parser["shaders"][fragment_key]
         # fragment_code_str = "\n".join(["%4i %s" % (i, s) for i, s in enumerate(fragment_code.split("\n"))])
         # Logger.log("d", "Fragment shader")
         # Logger.log("d", fragment_code_str)
@@ -73,7 +81,7 @@ class ShaderProgram(object):
         self.setVertexShader(vertex_code)
         self.setFragmentShader(fragment_code)
         if "geometry" in parser["shaders"]:
-            code = parser["shaders"]["geometry"]
+            code = parser["shaders"][geometry_key]
             # code_str = "\n".join(["%4i %s" % (i, s) for i, s in enumerate(code.split("\n"))])
             # Logger.log("d", "Loading geometry shader... \n")
             # Logger.log("d", code_str)
@@ -175,7 +183,7 @@ class ShaderProgram(object):
     #   \param stride The stride of the attribute.
     #
     #   \note If the shader is not bound, this will bind the shader.
-    def enableAttribute(self, name, type, offset, stride = 0):
+    def enableAttribute(self, name, type, offset, stride = 0, gltest = None):
         if not self._shader_program:
             return
 
@@ -183,6 +191,9 @@ class ShaderProgram(object):
 
         if name not in self._attribute_indices:
             self._attribute_indices[name] = self._shader_program.attributeLocation(name)
+
+        if gltest is not None:
+            Logger.log("d", "GL error (prepare3a): [%s]", gltest.glGetError())
 
         attribute = self._attribute_indices[name]
         if attribute == -1:
@@ -199,7 +210,48 @@ class ShaderProgram(object):
         elif type is "vector4f":
             self._shader_program.setAttributeBuffer(attribute, 0x1406, offset, 4, stride) #GL_FLOAT
 
+        if gltest is not None:
+            Logger.log("d", "GL error (prepare3b): [%s]", gltest.glGetError())
+
         self._shader_program.enableAttributeArray(attribute)
+
+        if gltest is not None:
+            Logger.log("d", "GL error (prepare3c): [%s]", gltest.glGetError())
+
+    def enableAttributeTest(self, name, type, offset, stride=0, gltest=None):
+        if not self._shader_program:
+            return
+
+        self.bind()
+
+        if name not in self._attribute_indices:
+            self._attribute_indices[name] = self._shader_program.attributeLocation(name)
+
+        if gltest is not None:
+            Logger.log("d", "GL error (prepare3a): [%s]", gltest.glGetError())
+
+        attribute = self._attribute_indices[name]
+        if attribute == -1:
+            return
+
+        if type is "int":
+            self._shader_program.setAttributeArray(attribute, 0x1404, offset, 1, stride)  # GL_INT
+        elif type is "float":
+            self._shader_program.setAttributeArray(attribute, 0x1406, offset, 1, stride)  # GL_FLOAT
+        elif type is "vector2f":
+            self._shader_program.setAttributeArray(attribute, 0x1406, offset, 2, stride)  # GL_FLOAT
+        elif type is "vector3f":
+            self._shader_program.setAttributeArray(attribute, 0x1406, offset, 3, stride)  # GL_FLOAT
+        elif type is "vector4f":
+            self._shader_program.setAttributeArray(attribute, 0x1406, offset, 4, stride)  # GL_FLOAT
+
+        if gltest is not None:
+            Logger.log("d", "GL error (prepare3b): [%s]", gltest.glGetError())
+
+        self._shader_program.enableAttributeArray(attribute)
+
+        if gltest is not None:
+            Logger.log("d", "GL error (prepare3c): [%s]", gltest.glGetError())
 
     ##  Disable a vertex attribute so it is no longer used.
     #
@@ -320,3 +372,9 @@ class ShaderProgram(object):
             self._shader_program.setUniformValueArray(uniform, [QVector2D(i[0], i[1]) for i in value])
         else:
             self._shader_program.setUniformValue(uniform, value)
+
+    def test(self):
+        vao = QOpenGLVertexArrayObject()
+        vao.create()
+        vbo = QOpenGLBuffer()
+        vbo.create()

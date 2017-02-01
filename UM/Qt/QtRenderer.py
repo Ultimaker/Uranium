@@ -165,8 +165,8 @@ class QtRenderer(Renderer):
         return self._supports_geometry_shader
 
     def _initialize(self):
-        ctx = OpenGLContext.setContext(4, 5, core = True)
-        self._supports_geometry_shader = OpenGLContext.supportsGeometryShader(ctx = ctx)
+        #ctx = OpenGLContext.setContext(3, 3, core = True)
+        self._supports_geometry_shader = OpenGLContext.supportsGeometryShader()
 
         OpenGL.setInstance(OpenGL())
         self._gl = OpenGL.getInstance().getBindingsObject()

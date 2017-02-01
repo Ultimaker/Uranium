@@ -24,6 +24,7 @@ class OpenGLContext(object):
         success = new_context.create()
         if success:
             ctx = QOpenGLContext.currentContext()
+            Logger.log("d", "Context: %s" % ctx)
             fmt = ctx.format()
             profile = fmt.profile()
             if profile == QSurfaceFormat.CompatibilityProfile:
@@ -58,3 +59,24 @@ class OpenGLContext(object):
         else:
             Logger.log("d", "Not matching OpenGL version or extension for geometry shader.")
             return False
+
+    ##  Set the default format for each new OpenGL context
+    @classmethod
+    def setDefaultFormat(cls, major_version, minor_version, core = False):
+        new_format = QSurfaceFormat()
+        new_format.setMajorVersion(major_version)
+        new_format.setMinorVersion(minor_version)
+        if core:
+            profile = QSurfaceFormat.CoreProfile
+        else:
+            profile = QSurfaceFormat.CompatibilityProfile
+        new_format.setProfile(profile)
+
+        QSurfaceFormat.setDefaultFormat(new_format)
+        cls.major_version = major_version
+        cls.minor_version = minor_version
+        cls.profile = profile
+
+    major_version = 0
+    minor_version = 0
+    profile = None
