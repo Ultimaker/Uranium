@@ -18,6 +18,10 @@ find_package(PythonInterp 3.5.0 REQUIRED)
 add_custom_target(check)
 add_custom_command(TARGET check POST_BUILD COMMAND "PYTHONPATH=${CMAKE_SOURCE_DIR}" ${PYTHON_EXECUTABLE} -m pylint --rcfile=${CMAKE_SOURCE_DIR}/pylint.cfg UM --msg-template=\"{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}\" > ${CMAKE_BINARY_DIR}/pylint.log || exit 0 WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
+# # Check using Mypy
+add_custom_target(typecheck)
+add_custom_command(TARGET typecheck POST_BUILD COMMAND ${PYTHON_EXECUTABLE} run_mypy.py WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+
 # # Tests
 enable_testing()
 add_test(NAME pytest COMMAND ${PYTHON_EXECUTABLE} -m pytest -r a --junitxml=${CMAKE_BINARY_DIR}/junit.xml ${CMAKE_SOURCE_DIR})
