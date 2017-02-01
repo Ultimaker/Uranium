@@ -27,6 +27,7 @@ vertex41core =
     }
 
 fragment41core =
+    #version 410
     uniform lowp vec4 u_color;
 
     out vec4 frag_color;

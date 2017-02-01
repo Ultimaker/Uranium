@@ -146,7 +146,8 @@ class RenderBatch():
         self._vao = QOpenGLVertexArrayObject()
         self._vao.create()
         if self._vao.isCreated():
-            Logger.log("d", "VAO is created.")
+            # Logger.log("d", "VAO is created.")
+            pass
         else:
             Logger.log("e", "VAO not created. Hell breaks loose")
 
