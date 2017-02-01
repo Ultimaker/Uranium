@@ -218,41 +218,6 @@ class ShaderProgram(object):
         if gltest is not None:
             Logger.log("d", "GL error (prepare3c): [%s]", gltest.glGetError())
 
-    def enableAttributeTest(self, name, type, offset, stride=0, gltest=None):
-        if not self._shader_program:
-            return
-
-        self.bind()
-
-        if name not in self._attribute_indices:
-            self._attribute_indices[name] = self._shader_program.attributeLocation(name)
-
-        if gltest is not None:
-            Logger.log("d", "GL error (prepare3a): [%s]", gltest.glGetError())
-
-        attribute = self._attribute_indices[name]
-        if attribute == -1:
-            return
-
-        if type is "int":
-            self._shader_program.setAttributeArray(attribute, 0x1404, offset, 1, stride)  # GL_INT
-        elif type is "float":
-            self._shader_program.setAttributeArray(attribute, 0x1406, offset, 1, stride)  # GL_FLOAT
-        elif type is "vector2f":
-            self._shader_program.setAttributeArray(attribute, 0x1406, offset, 2, stride)  # GL_FLOAT
-        elif type is "vector3f":
-            self._shader_program.setAttributeArray(attribute, 0x1406, offset, 3, stride)  # GL_FLOAT
-        elif type is "vector4f":
-            self._shader_program.setAttributeArray(attribute, 0x1406, offset, 4, stride)  # GL_FLOAT
-
-        if gltest is not None:
-            Logger.log("d", "GL error (prepare3b): [%s]", gltest.glGetError())
-
-        self._shader_program.enableAttributeArray(attribute)
-
-        if gltest is not None:
-            Logger.log("d", "GL error (prepare3c): [%s]", gltest.glGetError())
-
     ##  Disable a vertex attribute so it is no longer used.
     #
     #   \param name The name of the attribute to use.

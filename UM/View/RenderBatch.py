@@ -135,19 +135,26 @@ class RenderBatch():
 
         return False
 
-
-    def _updateVAO(self):
+    ##  Update VAO once items have changed.
+    #   Note: Recalling this function does not work yet
+    def updateVAO(self):
         if self._vao is not None:
+            return
+            self._vao.release()
             self._vao.destroy()
 
         self._vao = QOpenGLVertexArrayObject()
         self._vao.create()
-        if not self._vao.isCreated():
-            Logger.log("e", "vao not created. Hell breaks loose")
-            self._vao.bind()
+        if self._vao.isCreated():
+            Logger.log("d", "VAO is created.")
+        else:
+            Logger.log("e", "VAO not created. Hell breaks loose")
+
+        self._vao.bind()
 
         for item in self._items:
             self._prepareItemVAO(item)
+
         self._vao.release()
 
     ##  Add an item to render to this batch.
@@ -165,7 +172,7 @@ class RenderBatch():
             return
 
         self._items.append({ "transformation": transformation, "mesh": mesh, "uniforms": uniforms})
-        self._updateVAO()
+        # self.updateVAO()
 
 
     ##  Render the batch.
@@ -213,7 +220,7 @@ class RenderBatch():
         )
 
         if not self._vao:
-            self._updateVAO()
+            self.updateVAO()
         for item in self._items:
             self._renderItemVAO(item)
 
@@ -250,13 +257,9 @@ class RenderBatch():
         if item["uniforms"] is not None:
             self._shader.updateBindings(**item["uniforms"])
 
-        self._vao = QOpenGLVertexArrayObject()
-        self._vao.create()
-        if not self._vao.isCreated():
-            Logger.log("e", "vao not created. Hell breaks loose")
         self._vao.bind()
 
-        Logger.log("d", "GL error (render1): [%s]", self._gl.glGetError())
+        # Logger.log("d", "GL error (render1): [%s]", self._gl.glGetError())
 
         if mesh.hasIndices():
             if self._render_range is None:
@@ -272,9 +275,9 @@ class RenderBatch():
         else:
             self._gl.glDrawArrays(self._render_mode, 0, mesh.getVertexCount())
 
-        Logger.log("d", "GL error (render2): [%s]", self._gl.glGetError())
+        # Logger.log("d", "GL error (render2): [%s]", self._gl.glGetError())
 
-        self._vao.release()
+        # self._vao.release()
 
 
     ##  Prepare using Vertex Array Objects (VAO)
@@ -284,7 +287,7 @@ class RenderBatch():
 
         vertex_buffer = OpenGL.getInstance().createVertexBuffer(mesh)
         vertex_buffer.bind()
-        Logger.log("d", "GL error (prepare1): [%s]", self._gl.glGetError())
+        #Logger.log("d", "GL error (prepare1): [%s]", self._gl.glGetError())
 
         if self._render_range is None:
             index_buffer = OpenGL.getInstance().createIndexBuffer(mesh)
@@ -295,49 +298,49 @@ class RenderBatch():
                 mesh, force_recreate = True, index_start = self._render_range[0], index_stop = self._render_range[1])
         if index_buffer is not None:
             index_buffer.bind()
-        Logger.log("d", "GL error (prepare2): [%s]", self._gl.glGetError())
+        # Logger.log("d", "GL error (prepare2): [%s]", self._gl.glGetError())
 
-        offset = self._shader.enableAttributeTest("a_vertex", "vector3f", 0, gltest = self._gl)
+        self._shader.enableAttribute("a_vertex", "vector3f", 0)
 
         #self._shader.enableAttribute("a_vertex", "vector3f", 0)
-        #
+
         # Logger.log("d", "GL error (prepare3.1): [%s]", self._gl.glGetError())
-        # offset = mesh.getVertexCount() * 3 * 4
-        #
-        # if mesh.hasNormals():
-        #     self._shader.enableAttribute("a_normal", "vector3f", offset)
-        #     offset += mesh.getVertexCount() * 3 * 4
-        #
+        offset = mesh.getVertexCount() * 3 * 4
+
+        if mesh.hasNormals():
+            self._shader.enableAttribute("a_normal", "vector3f", offset)
+            offset += mesh.getVertexCount() * 3 * 4
+
         # Logger.log("d", "GL error (prepare3.2): [%s]", self._gl.glGetError())
-        #
-        # if mesh.hasColors():
-        #     self._shader.enableAttribute("a_color", "vector4f", offset)
-        #     offset += mesh.getVertexCount() * 4 * 4
-        #
+
+        if mesh.hasColors():
+            self._shader.enableAttribute("a_color", "vector4f", offset)
+            offset += mesh.getVertexCount() * 4 * 4
+
         # Logger.log("d", "GL error (prepare3.3): [%s]", self._gl.glGetError())
-        #
-        # if mesh.hasUVCoordinates():
-        #     self._shader.enableAttribute("a_uvs", "vector2f", offset)
-        #     offset += mesh.getVertexCount() * 2 * 4
-        #
+
+        if mesh.hasUVCoordinates():
+            self._shader.enableAttribute("a_uvs", "vector2f", offset)
+            offset += mesh.getVertexCount() * 2 * 4
+
         # Logger.log("d", "GL error (prepare3.4): [%s]", self._gl.glGetError())
 
-        # for attribute_name in mesh.attributeNames():
-        #     attribute = mesh.getAttribute(attribute_name)
-        #     self._shader.enableAttribute(attribute["opengl_name"], attribute["opengl_type"], offset)
-        #     if attribute["opengl_type"] == "vector2f":
-        #         offset += mesh.getVertexCount() * 2 * 4
-        #     elif attribute["opengl_type"] == "vector4f":
-        #         offset += mesh.getVertexCount() * 4 * 4
-        #     elif attribute["opengl_type"] == "int":
-        #         offset += mesh.getVertexCount() * 4
-        #     elif attribute["opengl_type"] == "float":
-        #         offset += mesh.getVertexCount() * 4
-        #     else:
-        #         Logger.log("e", "Attribute with name [%s] uses non implemented type [%s]." % (attribute["opengl_name"], attribute["opengl_type"]))
-        #         self._shader.disableAttribute(attribute["opengl_name"])
+        for attribute_name in mesh.attributeNames():
+            attribute = mesh.getAttribute(attribute_name)
+            self._shader.enableAttribute(attribute["opengl_name"], attribute["opengl_type"], offset)
+            if attribute["opengl_type"] == "vector2f":
+                offset += mesh.getVertexCount() * 2 * 4
+            elif attribute["opengl_type"] == "vector4f":
+                offset += mesh.getVertexCount() * 4 * 4
+            elif attribute["opengl_type"] == "int":
+                offset += mesh.getVertexCount() * 4
+            elif attribute["opengl_type"] == "float":
+                offset += mesh.getVertexCount() * 4
+            else:
+                Logger.log("e", "Attribute with name [%s] uses non implemented type [%s]." % (attribute["opengl_name"], attribute["opengl_type"]))
+                self._shader.disableAttribute(attribute["opengl_name"])
 
-        Logger.log("d", "GL error (prepare4): [%s]", self._gl.glGetError())
+        # Logger.log("d", "GL error (prepare4): [%s]", self._gl.glGetError())
 
 
     ##  Render legacy
