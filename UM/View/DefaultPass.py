@@ -23,3 +23,4 @@ class DefaultPass(RenderPass):
             batch.render(camera)
 
         self.release()
+

@@ -140,19 +140,19 @@ class RenderBatch():
     def updateVAO(self):
         if self._vao is not None:
             return
-            self._vao.release()
-            self._vao.destroy()
+            #self._vao.release()
+            #self._vao.destroy()
 
-        self._vao = QOpenGLVertexArrayObject()
-        self._vao.create()
-        if self._vao.isCreated():
-            # Logger.log("d", "VAO is created.")
-            pass
-        else:
-            Logger.log("e", "VAO not created. Hell breaks loose")
+        if self._vao is None:
+            self._vao = QOpenGLVertexArrayObject()
+            self._vao.create()
+            if self._vao.isCreated():
+                # Logger.log("d", "VAO is created.")
+                pass
+            else:
+                Logger.log("e", "VAO not created. Hell breaks loose")
 
         self._vao.bind()
-
         for item in self._items:
             self._prepareItemVAO(item)
 
@@ -220,7 +220,7 @@ class RenderBatch():
             light_0_position = camera.getWorldPosition() + Vector(0, 50, 0)
         )
 
-        if not self._vao:
+        if self._vao is None:
             self.updateVAO()
         for item in self._items:
             self._renderItemVAO(item)
@@ -260,8 +260,6 @@ class RenderBatch():
 
         self._vao.bind()
 
-        # Logger.log("d", "GL error (render1): [%s]", self._gl.glGetError())
-
         if mesh.hasIndices():
             if self._render_range is None:
                 if self._render_mode == self.RenderMode.Triangles:
@@ -276,19 +274,17 @@ class RenderBatch():
         else:
             self._gl.glDrawArrays(self._render_mode, 0, mesh.getVertexCount())
 
-        # Logger.log("d", "GL error (render2): [%s]", self._gl.glGetError())
-
-        # self._vao.release()
-
+    def releaseVAO(self):
+        if self._vao is not None:
+            self._vao.release()
 
     ##  Prepare using Vertex Array Objects (VAO)
     def _prepareItemVAO(self, item):
-        transformation = item["transformation"]
+        # transformation = item["transformation"]
         mesh = item["mesh"]
 
         vertex_buffer = OpenGL.getInstance().createVertexBuffer(mesh)
         vertex_buffer.bind()
-        #Logger.log("d", "GL error (prepare1): [%s]", self._gl.glGetError())
 
         if self._render_range is None:
             index_buffer = OpenGL.getInstance().createIndexBuffer(mesh)
@@ -299,32 +295,22 @@ class RenderBatch():
                 mesh, force_recreate = True, index_start = self._render_range[0], index_stop = self._render_range[1])
         if index_buffer is not None:
             index_buffer.bind()
-        # Logger.log("d", "GL error (prepare2): [%s]", self._gl.glGetError())
 
         self._shader.enableAttribute("a_vertex", "vector3f", 0)
 
-        #self._shader.enableAttribute("a_vertex", "vector3f", 0)
-
-        # Logger.log("d", "GL error (prepare3.1): [%s]", self._gl.glGetError())
         offset = mesh.getVertexCount() * 3 * 4
 
         if mesh.hasNormals():
             self._shader.enableAttribute("a_normal", "vector3f", offset)
             offset += mesh.getVertexCount() * 3 * 4
 
-        # Logger.log("d", "GL error (prepare3.2): [%s]", self._gl.glGetError())
-
         if mesh.hasColors():
             self._shader.enableAttribute("a_color", "vector4f", offset)
             offset += mesh.getVertexCount() * 4 * 4
 
-        # Logger.log("d", "GL error (prepare3.3): [%s]", self._gl.glGetError())
-
         if mesh.hasUVCoordinates():
             self._shader.enableAttribute("a_uvs", "vector2f", offset)
             offset += mesh.getVertexCount() * 2 * 4
-
-        # Logger.log("d", "GL error (prepare3.4): [%s]", self._gl.glGetError())
 
         for attribute_name in mesh.attributeNames():
             attribute = mesh.getAttribute(attribute_name)
@@ -340,9 +326,6 @@ class RenderBatch():
             else:
                 Logger.log("e", "Attribute with name [%s] uses non implemented type [%s]." % (attribute["opengl_name"], attribute["opengl_type"]))
                 self._shader.disableAttribute(attribute["opengl_name"])
-
-        # Logger.log("d", "GL error (prepare4): [%s]", self._gl.glGetError())
-
 
     ##  Render legacy
     def _renderItem(self, item):
@@ -425,9 +408,6 @@ class RenderBatch():
                     self._gl.glDrawElements(self._render_mode, self._render_range[1] - self._render_range[0], self._gl.GL_UNSIGNED_INT, None)
         else:
             self._gl.glDrawArrays(self._render_mode, 0, mesh.getVertexCount())
-
-        err = self._gl.glGetError()
-        Logger.log("d", "GL error: [%s]", err)
 
         self._shader.disableAttribute("a_vertex")
         self._shader.disableAttribute("a_normal")

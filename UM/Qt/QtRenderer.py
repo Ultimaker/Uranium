@@ -1,7 +1,7 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-from PyQt5.QtGui import QColor, QOpenGLBuffer, QOpenGLContext, QOpenGLFramebufferObject, QOpenGLFramebufferObjectFormat, QSurfaceFormat, QOpenGLVersionProfile, QImage
+from PyQt5.QtGui import QColor, QOpenGLBuffer, QOpenGLContext, QOpenGLFramebufferObject, QOpenGLFramebufferObjectFormat, QSurfaceFormat, QOpenGLVersionProfile, QImage, QOpenGLVertexArrayObject
 
 from UM.Application import Application
 from UM.View.Renderer import Renderer
@@ -139,6 +139,8 @@ class QtRenderer(Renderer):
 
     ##  Overrides Renderer::endRendering()
     def endRendering(self):
+        for batch in self._batches:
+            batch.releaseVAO()
         self._batches.clear()
 
     ##  Render a full screen quad.
@@ -150,6 +152,10 @@ class QtRenderer(Renderer):
 
         shader.setUniformValue("u_modelViewProjectionMatrix", Matrix())
 
+        vao = QOpenGLVertexArrayObject()
+        vao.create()
+        vao.bind()
+
         self._quad_buffer.bind()
 
         shader.enableAttribute("a_vertex", "vector3f", 0)
@@ -160,6 +166,7 @@ class QtRenderer(Renderer):
         shader.disableAttribute("a_vertex")
         shader.disableAttribute("a_uvs")
         self._quad_buffer.release()
+
 
     def getSupportsGeometryShader(self):
         return self._supports_geometry_shader

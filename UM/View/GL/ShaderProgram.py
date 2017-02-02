@@ -80,11 +80,11 @@ class ShaderProgram(object):
 
         self.setVertexShader(vertex_code)
         self.setFragmentShader(fragment_code)
-        if "geometry" in parser["shaders"]:
+        if geometry_key in parser["shaders"]:
             code = parser["shaders"][geometry_key]
-            # code_str = "\n".join(["%4i %s" % (i, s) for i, s in enumerate(code.split("\n"))])
-            # Logger.log("d", "Loading geometry shader... \n")
-            # Logger.log("d", code_str)
+            code_str = "\n".join(["%4i %s" % (i, s) for i, s in enumerate(code.split("\n"))])
+            Logger.log("d", "Loading geometry shader... \n")
+            Logger.log("d", code_str)
             self.setGeometryShader(code)
 
         self.build()
@@ -183,7 +183,7 @@ class ShaderProgram(object):
     #   \param stride The stride of the attribute.
     #
     #   \note If the shader is not bound, this will bind the shader.
-    def enableAttribute(self, name, type, offset, stride = 0, gltest = None):
+    def enableAttribute(self, name, type, offset, stride = 0):
         if not self._shader_program:
             return
 
@@ -191,9 +191,6 @@ class ShaderProgram(object):
 
         if name not in self._attribute_indices:
             self._attribute_indices[name] = self._shader_program.attributeLocation(name)
-
-        if gltest is not None:
-            Logger.log("d", "GL error (prepare3a): [%s]", gltest.glGetError())
 
         attribute = self._attribute_indices[name]
         if attribute == -1:
@@ -210,13 +207,7 @@ class ShaderProgram(object):
         elif type is "vector4f":
             self._shader_program.setAttributeBuffer(attribute, 0x1406, offset, 4, stride) #GL_FLOAT
 
-        if gltest is not None:
-            Logger.log("d", "GL error (prepare3b): [%s]", gltest.glGetError())
-
         self._shader_program.enableAttributeArray(attribute)
-
-        if gltest is not None:
-            Logger.log("d", "GL error (prepare3c): [%s]", gltest.glGetError())
 
     ##  Disable a vertex attribute so it is no longer used.
     #
