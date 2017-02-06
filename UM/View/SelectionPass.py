@@ -6,7 +6,6 @@ import random
 from UM.Resources import Resources
 from UM.Application import Application
 
-from UM.Logger import Logger
 from UM.Math.Color import Color
 
 from UM.Scene.Selection import Selection
