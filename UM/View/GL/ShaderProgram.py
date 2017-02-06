@@ -35,6 +35,8 @@ class ShaderProgram(object):
         self._bound = False
         self._textures = {}
 
+        self._debug_shader = False  # Set this to true to enable extra logging concerning shaders
+
     ##  Load a shader program file.
     #
     #   This method loads shaders from a simple text file, using Python's configparser
@@ -68,23 +70,26 @@ class ShaderProgram(object):
             raise InvalidShaderProgramError("{0} is missing a shader [{1}, {2}]".format(file_name, vertex_key, fragment_key))
 
         vertex_code = parser["shaders"][vertex_key]
-        # Enable when debugging shader code.
-        # vertex_code_str = "\n".join(["%4i %s" % (i, s) for i, s in enumerate(vertex_code.split("\n"))])
-        # Logger.log("d", "Vertex shader")
-        # Logger.log("d", vertex_code_str)
+        if self._debug_shader:
+            vertex_code_str = "\n".join(["%4i %s" % (i, s) for i, s in enumerate(vertex_code.split("\n"))])
+            Logger.log("d", "Vertex shader")
+            Logger.log("d", vertex_code_str)
 
         fragment_code = parser["shaders"][fragment_key]
-        # fragment_code_str = "\n".join(["%4i %s" % (i, s) for i, s in enumerate(fragment_code.split("\n"))])
-        # Logger.log("d", "Fragment shader")
-        # Logger.log("d", fragment_code_str)
+        if self._debug_shader:
+            fragment_code_str = "\n".join(["%4i %s" % (i, s) for i, s in enumerate(fragment_code.split("\n"))])
+            Logger.log("d", "Fragment shader")
+            Logger.log("d", fragment_code_str)
 
         self.setVertexShader(vertex_code)
         self.setFragmentShader(fragment_code)
+        # Geometry shader is optional and only since version OpenGL 3.2 or with extension ARB_geometry_shader4
         if geometry_key in parser["shaders"]:
             code = parser["shaders"][geometry_key]
-            code_str = "\n".join(["%4i %s" % (i, s) for i, s in enumerate(code.split("\n"))])
-            Logger.log("d", "Loading geometry shader... \n")
-            Logger.log("d", code_str)
+            if self._debug_shader:
+                code_str = "\n".join(["%4i %s" % (i, s) for i, s in enumerate(code.split("\n"))])
+                Logger.log("d", "Loading geometry shader... \n")
+                Logger.log("d", code_str)
             self.setGeometryShader(code)
 
         self.build()
