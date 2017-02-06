@@ -329,8 +329,3 @@ class ShaderProgram(object):
         else:
             self._shader_program.setUniformValue(uniform, value)
 
-    def test(self):
-        vao = QOpenGLVertexArrayObject()
-        vao.create()
-        vbo = QOpenGLBuffer()
-        vbo.create()
