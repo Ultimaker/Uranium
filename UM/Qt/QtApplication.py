@@ -8,7 +8,7 @@ import platform
 
 from PyQt5.QtCore import Qt, QObject, QCoreApplication, QEvent, pyqtSlot, QLocale, QTranslator, QLibraryInfo, QT_VERSION_STR, PYQT_VERSION_STR
 from PyQt5.QtQml import QQmlApplicationEngine, qmlRegisterType, qmlRegisterSingletonType
-from PyQt5.QtWidgets import QApplication, QSplashScreen
+from PyQt5.QtWidgets import QApplication, QSplashScreen, QMessageBox
 from PyQt5.QtGui import QGuiApplication, QPixmap
 from PyQt5.QtCore import QTimer
 
@@ -60,7 +60,14 @@ class QtApplication(QApplication, Application):
         os.environ["QSG_RENDER_LOOP"] = "basic"
 
         super().__init__(sys.argv, **kwargs)
+
         major_version, minor_version, profile = OpenGLContext.detectBestOpenGLVersion()
+
+        if major_version is None and minor_version is None and profile is None:
+            Logger.log("e", "Startup failed due to OpenGL initialization failing")
+            QMessageBox.critical(None, "Failed to initialize OpenGL", "Could not initialize OpenGL. This program requires OpenGL 2.0 or higher. Please check your video card drivers.")
+            sys.exit(1)
+
         Logger.log("d", "Detected most suitable OpenGL context version: %s" % (
             OpenGLContext.versionAsText(major_version, minor_version, profile)))
         OpenGLContext.setDefaultFormat(major_version, minor_version, profile = profile)
@@ -108,7 +115,6 @@ class QtApplication(QApplication, Application):
                 preferences.readFromFile(Resources.getPath(Resources.Preferences, self._application_name + ".cfg"))
             except FileNotFoundError:
                 pass
-
 
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Loading preferences..."))
         try:

@@ -16,8 +16,9 @@ from UM.View.GL.OpenGL import OpenGL
 from UM.View.GL.OpenGLContext import OpenGLContext
 from UM.View.RenderBatch import RenderBatch
 
-from UM.Logger import Logger
 from UM.Signal import Signal, signalemitter
+
+from UM.Logger import Logger
 
 import numpy
 
@@ -139,8 +140,6 @@ class QtRenderer(Renderer):
 
     ##  Overrides Renderer::endRendering()
     def endRendering(self):
-        for batch in self._batches:
-            batch.releaseVAO()
         self._batches.clear()
 
     ##  Render a full screen quad (square).
@@ -153,9 +152,10 @@ class QtRenderer(Renderer):
 
         shader.setUniformValue("u_modelViewProjectionMatrix", Matrix())
 
-        vao = QOpenGLVertexArrayObject()
-        vao.create()
-        vao.bind()
+        if OpenGLContext.properties["supportsVertexArrayObjects"]:
+            vao = QOpenGLVertexArrayObject()
+            vao.create()
+            vao.bind()
 
         self._quad_buffer.bind()
 
@@ -173,6 +173,8 @@ class QtRenderer(Renderer):
 
     def _initialize(self):
         self._supports_geometry_shader = OpenGLContext.supportsGeometryShader()
+        supports_vao = OpenGLContext.supportsVertexArrayObjects()  # fill the OpenGLContext.properties
+        Logger.log("d", "Support for Vertex Array Objects: %s", supports_vao)
 
         OpenGL.setInstance(OpenGL())
         self._gl = OpenGL.getInstance().getBindingsObject()

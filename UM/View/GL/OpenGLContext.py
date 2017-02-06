@@ -31,9 +31,15 @@ class OpenGLContext(object):
         else:
             Logger.log("e", "Failed creating OpenGL context (%d, %d, core=%s)" % (major_version, minor_version, core))
 
+    @classmethod
+    def hasExtension(cls, extension_name, ctx = None):
+        if ctx is None:
+            ctx = QOpenGLContext.currentContext()
+        return ctx.hasExtension(bytearray(extension_name, "utf-8"))
+
     ##  Return whether the current context supports geometry shader
     @classmethod
-    def supportsGeometryShader(cls, ctx=None):
+    def supportsGeometryShader(cls, ctx = None):
         if ctx is None:
             ctx = QOpenGLContext.currentContext()
         format = ctx.format()
@@ -41,14 +47,25 @@ class OpenGLContext(object):
         minor = format.minorVersion()
 
         if major >= 4 or (major == 3 and minor >= 3):
-            Logger.log("d", "OpenGL context version has geometry shader support.")
-            return True
-        elif (ctx.hasExtension(bytearray("GL_EXT_geometry_shader4", "utf-8")) or ctx.hasExtension(bytearray("GL_ARB_geometry_shader4", "utf-8"))):
+            result = True
+        elif (cls.hasExtension("GL_EXT_geometry_shader4", ctx = ctx) or cls.hasExtension("GL_ARB_geometry_shader4", ctx = ctx)):
             Logger.log("d", "Geometry shader is available on this machine, but don't know if it works.")
-            return True
+            result = True
         else:
             Logger.log("d", "Not matching OpenGL version or extension for geometry shader.")
-            return False
+            result = False
+
+        Logger.log("d", "Support for geometry shader: %s", result)
+        cls.properties["supportsGeometryShader"] = result
+        return result
+
+    @classmethod
+    def supportsVertexArrayObjects(cls, ctx = None):
+        if ctx is None:
+            ctx = QOpenGLContext.currentContext()
+        result = cls.hasExtension("GL_ARB_vertex_array_object", ctx = ctx)
+        cls.properties["supportsVertexArrayObjects"] = result
+        return result
 
     ##  Set the default format for each new OpenGL context
     #   \param major_version
@@ -111,7 +128,8 @@ class OpenGLContext(object):
             xtra = "Unknown profile"
         return "%s.%s %s" % (major_version, minor_version, xtra)
 
+    # Global values
     major_version = 0
     minor_version = 0
     profile = None
-
+    properties = {}  # to be filled by helper functions

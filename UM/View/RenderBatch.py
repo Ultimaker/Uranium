@@ -8,6 +8,7 @@ from UM.Logger import Logger
 from UM.Math.Vector import Vector
 
 from UM.View.GL.OpenGL import OpenGL
+from UM.View.GL.OpenGLContext import OpenGLContext
 
 from PyQt5.QtGui import QOpenGLVertexArrayObject
 
@@ -22,6 +23,12 @@ indexBufferProperty = "__gl_index_buffer"
 #   individual objects. This means that for example the ShaderProgram used is
 #   only bound once, at the start of rendering. There are a few values, like
 #   the model-view-projection matrix that are updated for each object.
+#
+#   Currently RenderBatch objects are created each frame including the
+#   VertexArrayObject (VAO). This is done to greatly simplify managing
+#   RenderBatch-changes. Whenever (sets of) RenderBatches are managed throughout
+#   the lifetime of a session, crossing multiple frames, the usage of VAO's can
+#   improve performance by reusing them.
 class RenderBatch():
     ##  The type of render batch.
     #
@@ -83,7 +90,6 @@ class RenderBatch():
         self._view_projection_matrix = None
 
         self._gl = OpenGL.getInstance().getBindingsObject()
-        self._vao = None
 
     ##  The RenderType for this batch.
     @property
@@ -135,29 +141,6 @@ class RenderBatch():
 
         return False
 
-    ##  Update VAO once items have changed.
-    #   Note: Recalling this function does not work yet
-    def updateVAO(self):
-        if self._vao is not None:
-            return
-            #self._vao.release()
-            #self._vao.destroy()
-
-        if self._vao is None:
-            self._vao = QOpenGLVertexArrayObject()
-            self._vao.create()
-            if self._vao.isCreated():
-                # Logger.log("d", "VAO is created.")
-                pass
-            else:
-                Logger.log("e", "VAO not created. Hell breaks loose")
-
-        self._vao.bind()
-        for item in self._items:
-            self._prepareItemVAO(item)
-
-        self._vao.release()
-
     ##  Add an item to render to this batch.
     #
     #   \param transformation The transformation matrix to use for rendering the item.
@@ -173,8 +156,6 @@ class RenderBatch():
             return
 
         self._items.append({ "transformation": transformation, "mesh": mesh, "uniforms": uniforms})
-        # self.updateVAO()
-
 
     ##  Render the batch.
     #
@@ -220,114 +201,24 @@ class RenderBatch():
             light_0_position = camera.getWorldPosition() + Vector(0, 50, 0)
         )
 
-        if self._vao is None:
-            self.updateVAO()
+        # The VertexArrayObject (VAO) works like a VCR, recording buffer activities in the GPU.
+        # When the same buffers are used elsewhere, one can bind this VertexArrayObject to
+        # the context instead of uploading all buffers again.
+        if OpenGLContext.properties["supportsVertexArrayObjects"]:
+            vao = QOpenGLVertexArrayObject()
+            vao.create()
+            if not vao.isCreated():
+                Logger.log("e", "VAO not created. Hell breaks loose")
+            vao.bind()
+
         for item in self._items:
-            self._renderItemVAO(item)
+            self._renderItem(item)
 
         if self._state_teardown_callback:
             self._state_teardown_callback(self._gl)
 
         self._shader.release()
 
-    ##  Render using Vertex Array Objects (VAO)
-    def _renderItemVAO(self, item):
-        if item["uniforms"] is not None:
-            self._shader.updateBindings(**item["uniforms"])
-
-        transformation = item["transformation"]
-        mesh = item["mesh"]
-
-        normal_matrix = None
-        if mesh.hasNormals():
-            normal_matrix = copy.deepcopy(transformation)
-            normal_matrix.setRow(3, [0, 0, 0, 1])
-            normal_matrix.setColumn(3, [0, 0, 0, 1])
-            normal_matrix = normal_matrix.getInverse().getTransposed()
-
-        model_view_matrix = copy.deepcopy(transformation).preMultiply(self._view_matrix)
-        model_view_projection_matrix = copy.deepcopy(transformation).preMultiply(self._view_projection_matrix)
-
-        self._shader.updateBindings(
-            model_matrix = transformation,
-            normal_matrix = normal_matrix,
-            model_view_matrix = model_view_matrix,
-            model_view_projection_matrix = model_view_projection_matrix
-        )
-
-        if item["uniforms"] is not None:
-            self._shader.updateBindings(**item["uniforms"])
-
-        self._vao.bind()
-
-        if mesh.hasIndices():
-            if self._render_range is None:
-                if self._render_mode == self.RenderMode.Triangles:
-                    self._gl.glDrawElements(self._render_mode, mesh.getFaceCount() * 3 , self._gl.GL_UNSIGNED_INT, None)
-                else:
-                    self._gl.glDrawElements(self._render_mode, mesh.getFaceCount(), self._gl.GL_UNSIGNED_INT, None)
-            else:
-                if self._render_mode == self.RenderMode.Triangles:
-                    self._gl.glDrawRangeElements(self._render_mode, self._render_range[0], self._render_range[1], self._render_range[1] - self._render_range[0], self._gl.GL_UNSIGNED_INT, None)
-                else:
-                    self._gl.glDrawElements(self._render_mode, self._render_range[1] - self._render_range[0], self._gl.GL_UNSIGNED_INT, None)
-        else:
-            self._gl.glDrawArrays(self._render_mode, 0, mesh.getVertexCount())
-
-    def releaseVAO(self):
-        if self._vao is not None:
-            self._vao.release()
-
-    ##  Prepare using Vertex Array Objects (VAO)
-    def _prepareItemVAO(self, item):
-        # transformation = item["transformation"]
-        mesh = item["mesh"]
-
-        vertex_buffer = OpenGL.getInstance().createVertexBuffer(mesh)
-        vertex_buffer.bind()
-
-        if self._render_range is None:
-            index_buffer = OpenGL.getInstance().createIndexBuffer(mesh)
-        else:
-            # glDrawRangeElements does not work as expected and did not get the indices field working..
-            # Now we're just uploading a clipped part of the array and the start index always becomes 0.
-            index_buffer = OpenGL.getInstance().createIndexBuffer(
-                mesh, force_recreate = True, index_start = self._render_range[0], index_stop = self._render_range[1])
-        if index_buffer is not None:
-            index_buffer.bind()
-
-        self._shader.enableAttribute("a_vertex", "vector3f", 0)
-
-        offset = mesh.getVertexCount() * 3 * 4
-
-        if mesh.hasNormals():
-            self._shader.enableAttribute("a_normal", "vector3f", offset)
-            offset += mesh.getVertexCount() * 3 * 4
-
-        if mesh.hasColors():
-            self._shader.enableAttribute("a_color", "vector4f", offset)
-            offset += mesh.getVertexCount() * 4 * 4
-
-        if mesh.hasUVCoordinates():
-            self._shader.enableAttribute("a_uvs", "vector2f", offset)
-            offset += mesh.getVertexCount() * 2 * 4
-
-        for attribute_name in mesh.attributeNames():
-            attribute = mesh.getAttribute(attribute_name)
-            self._shader.enableAttribute(attribute["opengl_name"], attribute["opengl_type"], offset)
-            if attribute["opengl_type"] == "vector2f":
-                offset += mesh.getVertexCount() * 2 * 4
-            elif attribute["opengl_type"] == "vector4f":
-                offset += mesh.getVertexCount() * 4 * 4
-            elif attribute["opengl_type"] == "int":
-                offset += mesh.getVertexCount() * 4
-            elif attribute["opengl_type"] == "float":
-                offset += mesh.getVertexCount() * 4
-            else:
-                Logger.log("e", "Attribute with name [%s] uses non implemented type [%s]." % (attribute["opengl_name"], attribute["opengl_type"]))
-                self._shader.disableAttribute(attribute["opengl_name"])
-
-    ##  Render legacy
     def _renderItem(self, item):
         transformation = item["transformation"]
         mesh = item["mesh"]
