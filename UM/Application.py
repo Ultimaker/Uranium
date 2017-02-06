@@ -20,6 +20,8 @@ from UM.i18n import i18nCatalog
 from UM.Workspace.WorkspaceFileHandler import WorkspaceFileHandler
 
 import UM.Settings
+import shutil
+from UM.Platform import Platform
 
 ##  Central object responsible for running the main event loop and creating other central objects.
 #
@@ -58,6 +60,13 @@ class Application():
             Resources.addSearchPath(os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "resources"))
 
         self._main_thread = threading.current_thread()
+
+        self._parsed_command_line = None
+        self.parseCommandLine()
+
+        if self.getCommandLineOption("mrproper", False):
+            self._mrproper(not self.getCommandLineOption("all-users", False))
+            sys.exit(0)
 
         super().__init__()  # Call super to make multiple inheritance work.
 
@@ -110,9 +119,6 @@ class Application():
         self._plugin_registry.setApplication(self)
 
         UM.Settings.ContainerRegistry.setApplication(self)
-
-        self._parsed_command_line = None
-        self.parseCommandLine()
 
         self._visible_messages = []
         self._message_lock = threading.Lock()
@@ -320,7 +326,9 @@ class Application():
 
     def parseCommandLine(self):
         parser = argparse.ArgumentParser(prog = self.getApplicationName()) #pylint: disable=bad-whitespace
-        parser.add_argument("--version", action="version", version="%(prog)s {0}".format(self.getVersion()))
+        parser.add_argument("--version",
+                            action="version",
+                            version="%(prog)s {0}".format(self.getVersion()))
         parser.add_argument("--external-backend",
                             dest="external-backend",
                             action="store_true", default=False,
@@ -333,7 +341,8 @@ class Application():
     #
     #   \param parser \type{argparse.ArgumentParser} The parser that will parse the command line.
     def addCommandLineOptions(self, parser):
-        pass
+        parser.add_argument("--mrproper", action="store_true", dest="mrproper", default=False, help="Remove user data")
+        parser.add_argument("--all-users", action="store_true", dest="all-users", default=False, help="Allow to remove user data from all users")
 
     def addExtension(self, extension):
         self._extensions.append(extension)
@@ -347,5 +356,58 @@ class Application():
             return os.path.abspath(os.path.join(os.path.dirname(sys.argv[0]), ".."))
         else:
             return os.path.abspath(os.path.join(os.path.dirname(sys.executable), ".."))
+
+    def _mrproper(self, only_user = False):
+        path_list = []
+
+        if not only_user:
+            if Platform.isWindows():
+                os.path.join(os.path.expanduser(), )
+                dir_patterns = ["\\AppData\\Local\\%s" %self._application_name,
+                                ]
+                file_patterns = []
+            elif Platform.isOSX():
+                dir_patterns = ["Library/Application Support/%s" %self._application_name,
+                                ]
+                file_patterns = []
+            elif Platform.isLinux():
+                dir_patterns = ['.config/%s' %self._application_name,
+                                '.cache/%s' %self._application_name,
+                                '.local/share/%s' %self._application_name,
+                                ]
+                file_patterns = ['.config/%src' %self._application_name,
+                                 ]
+            else:
+                print("Unknown platform. Nothing to delete!")
+                return
+
+            user_basedir = os.path.split(os.path.expanduser("~"))[0]
+            user_paths = [os.path.join(user_basedir, entry) for entry in os.listdir(user_basedir)]
+            for user_path in user_paths:
+                for dir_pattern in dir_patterns:
+                    path_list.append(os.path.join(user_path, dir_pattern))
+                for file_pattern in file_patterns:
+                    path_list.append(os.path.join(user_path, file_pattern))
+
+        else:
+            if Platform.isLinux() or Platform.isOSX() or Platform.isWindows():
+                path_list += [Resources.getConfigStoragePath(),
+                              Resources.getDataStoragePath(),
+                              Resources.getStoragePathForType(Resources.Cache),
+                              ]
+            else:
+                print("Unknown platform. Nothing to delete!")
+                return
+
+        for path in path_list:
+            try:
+                if os.path.isdir(path):
+                    print("Removing dir: ", path)
+                    shutil.rmtree(path)
+                if os.path.isfile(path):
+                    print("Removing file: ", path)
+                    os.remove(path)
+            except Exception:
+                print("Failed to remove: %s" %path)
 
     _instance = None
