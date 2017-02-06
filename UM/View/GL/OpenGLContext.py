@@ -11,39 +11,29 @@ class OpenGLContext(object):
     ##  Set OpenGL context, given major, minor version + core using QOpenGLContext
     #   Unfortunately, what you get back does not have to be the requested version.
     @classmethod
-    def setContext(self, major_version, minor_version, core = False):
+    def setContext(cls, major_version, minor_version, core = False, profile = None):
         new_format = QSurfaceFormat()
         new_format.setMajorVersion(major_version)
         new_format.setMinorVersion(minor_version)
         if core:
-            new_format.setProfile(QSurfaceFormat.CoreProfile)
+            profile_ = QSurfaceFormat.CoreProfile
         else:
-            new_format.setProfile(QSurfaceFormat.CompatibilityProfile)
+            profile_ = QSurfaceFormat.CompatibilityProfile
+        if profile is not None:
+            profile_ = profile
+        new_format.setProfile(profile_)
+
         new_context = QOpenGLContext()
         new_context.setFormat(new_format)
         success = new_context.create()
         if success:
-            ctx = QOpenGLContext.currentContext()
-            Logger.log("d", "Context: %s" % ctx)
-            fmt = ctx.format()
-            profile = fmt.profile()
-            if profile == QSurfaceFormat.CompatibilityProfile:
-                xtra = "Compatibility profile"
-            elif profile == QSurfaceFormat.CoreProfile:
-                xtra = "Core profile"
-            elif profile == QSurfaceFormat.NoProfile:
-                xtra = "No profile"
-            else:
-                xtra = "Unknown profile"
-            Logger.log(
-                "d", "Successfully created OpenGL context, requested (%d, %d, core=%s), actual is (%d, %d, %s)" % (
-                    major_version, minor_version, core, fmt.majorVersion(), fmt.minorVersion(), xtra))
-            return ctx
+            return new_context
         else:
             Logger.log("e", "Failed creating OpenGL context (%d, %d, core=%s)" % (major_version, minor_version, core))
 
+    ##  Return whether the current context supports geometry shader
     @classmethod
-    def supportsGeometryShader(self, ctx=None):
+    def supportsGeometryShader(cls, ctx=None):
         if ctx is None:
             ctx = QOpenGLContext.currentContext()
         format = ctx.format()
@@ -61,21 +51,27 @@ class OpenGLContext(object):
             return False
 
     ##  Set the default format for each new OpenGL context
+    #   \param major_version
+    #   \param minor_version
+    #   \param core (optional) True for QSurfaceFormat.CoreProfile, False for CompatibilityProfile
+    #   \param profile (optional) QSurfaceFormat.CoreProfile, CompatibilityProfile or NoProfile, overrules option core
     @classmethod
-    def setDefaultFormat(cls, major_version, minor_version, core = False):
+    def setDefaultFormat(cls, major_version, minor_version, core = False, profile = None):
         new_format = QSurfaceFormat()
         new_format.setMajorVersion(major_version)
         new_format.setMinorVersion(minor_version)
         if core:
-            profile = QSurfaceFormat.CoreProfile
+            profile_ = QSurfaceFormat.CoreProfile
         else:
-            profile = QSurfaceFormat.CompatibilityProfile
-        new_format.setProfile(profile)
+            profile_ = QSurfaceFormat.CompatibilityProfile
+        if profile is not None:
+            profile_ = profile
+        new_format.setProfile(profile_)
 
         QSurfaceFormat.setDefaultFormat(new_format)
         cls.major_version = major_version
         cls.minor_version = minor_version
-        cls.profile = profile
+        cls.profile = profile_
 
     @classmethod
     def isLegacyOpenGL(cls):
@@ -84,6 +80,36 @@ class OpenGLContext(object):
         if cls.major_version == 4 and cls.minor_version < 1:
             return True
         return False
+
+    ##  Return "best" OpenGL to use, 4.1 core or 2.1.
+    #   result is <major_version>, <minor_version>, <profile>
+    #   The version depends on what versions are supported in Qt (4.1 and 2.1) and what
+    #   the GPU supports. If creating a context fails at all, (None, None, None) is returned
+    @classmethod
+    def detectBestOpenGLVersion(cls):
+        ctx = cls.setContext(4, 1, core = True)
+
+        if ctx is None:
+            return None, None, None
+        fmt = ctx.format()
+        profile = fmt.profile()
+        if fmt.majorVersion() >= 4 and fmt.minorVersion() >= 1 and profile == QSurfaceFormat.CoreProfile:
+            return fmt.majorVersion(), fmt.minorVersion(), profile
+        else:
+            return 2, 1, QSurfaceFormat.NoProfile
+
+    ##  Return OpenGL version number and profile as a nice formatted string
+    @classmethod
+    def versionAsText(cls, major_version, minor_version, profile):
+        if profile == QSurfaceFormat.CompatibilityProfile:
+            xtra = "Compatibility profile"
+        elif profile == QSurfaceFormat.CoreProfile:
+            xtra = "Core profile"
+        elif profile == QSurfaceFormat.NoProfile:
+            xtra = "No profile"
+        else:
+            xtra = "Unknown profile"
+        return "%s.%s %s" % (major_version, minor_version, xtra)
 
     major_version = 0
     minor_version = 0

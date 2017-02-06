@@ -59,13 +59,13 @@ class QtApplication(QApplication, Application):
 
         os.environ["QSG_RENDER_LOOP"] = "basic"
 
-        OpenGLContext.setDefaultFormat(4, 1, core = True)
-        # OpenGLContext.setDefaultFormat(2, 1, core = False)
-        # OpenGLContext.setContext(4, 1, core = True)
-
         super().__init__(sys.argv, **kwargs)
+        major_version, minor_version, profile = OpenGLContext.detectBestOpenGLVersion()
+        Logger.log("d", "Detected most suitable OpenGL context version: %s" % (
+            OpenGLContext.versionAsText(major_version, minor_version, profile)))
+        OpenGLContext.setDefaultFormat(major_version, minor_version, profile = profile)
 
-        self._plugins_loaded = False #Used to determine when it's safe to use the plug-ins.
+        self._plugins_loaded = False  # Used to determine when it's safe to use the plug-ins.
         self._main_qml = "main.qml"
         self._engine = None
         self._renderer = None

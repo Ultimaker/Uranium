@@ -143,8 +143,9 @@ class QtRenderer(Renderer):
             batch.releaseVAO()
         self._batches.clear()
 
-    ##  Render a full screen quad.
+    ##  Render a full screen quad (square).
     #
+    #   The function is used to draw render results on.
     #   \param shader The shader to use when rendering.
     def renderFullScreenQuad(self, shader):
         self._gl.glDisable(self._gl.GL_DEPTH_TEST)
@@ -167,12 +168,10 @@ class QtRenderer(Renderer):
         shader.disableAttribute("a_uvs")
         self._quad_buffer.release()
 
-
     def getSupportsGeometryShader(self):
         return self._supports_geometry_shader
 
     def _initialize(self):
-        #ctx = OpenGLContext.setContext(3, 3, core = True)
         self._supports_geometry_shader = OpenGLContext.supportsGeometryShader()
 
         OpenGL.setInstance(OpenGL())
