@@ -31,13 +31,20 @@ class OpenGLContext(object):
         else:
             Logger.log("e", "Failed creating OpenGL context (%d, %d, core=%s)" % (major_version, minor_version, core))
 
+    ##  Check to see if the current OpenGL implementation has a certain OpenGL extension.
+    #
+    #   \param extension_name \type{string} The name of the extension to query for.
+    #
+    #   \return True if the extension is available, False if not.
     @classmethod
     def hasExtension(cls, extension_name, ctx = None):
         if ctx is None:
             ctx = QOpenGLContext.currentContext()
         return ctx.hasExtension(bytearray(extension_name, "utf-8"))
 
-    ##  Return whether the current context supports geometry shader
+    ##  Return if the current (or provided) context supports geometry shader
+    #
+    #   \param ctx (optional) context.
     @classmethod
     def supportsGeometryShader(cls, ctx = None):
         if ctx is None:
@@ -59,6 +66,9 @@ class OpenGLContext(object):
         cls.properties["supportsGeometryShader"] = result
         return result
 
+    ##  Return if the current (or provided) context supports Vertex Array Objects
+    #
+    #   \param ctx (optional) context.
     @classmethod
     def supportsVertexArrayObjects(cls, ctx = None):
         if ctx is None:
@@ -101,7 +111,7 @@ class OpenGLContext(object):
 
     ##  Return "best" OpenGL to use, 4.1 core or 2.1.
     #   result is <major_version>, <minor_version>, <profile>
-    #   The version depends on what versions are supported in Qt (4.1 and 2.1) and what
+    #   The version depends on what versions are supported in Qt (4.1 and 2.0) and what
     #   the GPU supports. If creating a context fails at all, (None, None, None) is returned
     @classmethod
     def detectBestOpenGLVersion(cls):
@@ -114,7 +124,7 @@ class OpenGLContext(object):
         if fmt.majorVersion() >= 4 and fmt.minorVersion() >= 1 and profile == QSurfaceFormat.CoreProfile:
             return fmt.majorVersion(), fmt.minorVersion(), profile
         else:
-            return 2, 1, QSurfaceFormat.NoProfile
+            return 2, 0, QSurfaceFormat.NoProfile
 
     ##  Return OpenGL version number and profile as a nice formatted string
     @classmethod

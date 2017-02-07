@@ -83,14 +83,6 @@ class OpenGL(object):
     def hasFrameBufferObjects(self):
         return QOpenGLFramebufferObject.hasOpenGLFramebufferObjects()
 
-    ##  Check to see if the current OpenGL implementation has a certain OpenGL extension.
-    #
-    #   \param extension \type{string} The name of the extension to query for.
-    #
-    #   \return True if the extension is available, False if not.
-    def hasExtension(self, extension):
-        return QOpenGLContext.currentContext().hasExtension(extension)
-
     ##  Get the current GPU vendor.
     #
     #   \return One of the items of OpenGL.Vendor.
