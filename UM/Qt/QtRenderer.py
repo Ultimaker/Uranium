@@ -53,8 +53,6 @@ class QtRenderer(Renderer):
 
         self._camera = None
 
-        self._supports_geometry_shader = False
-
     initialized = Signal()
 
     ##  Get an integer multiplier that can be used to correct for screen DPI.
@@ -168,11 +166,7 @@ class QtRenderer(Renderer):
         shader.disableAttribute("a_uvs")
         self._quad_buffer.release()
 
-    def getSupportsGeometryShader(self):
-        return self._supports_geometry_shader
-
     def _initialize(self):
-        self._supports_geometry_shader = OpenGLContext.supportsGeometryShader()
         supports_vao = OpenGLContext.supportsVertexArrayObjects()  # fill the OpenGLContext.properties
         Logger.log("d", "Support for Vertex Array Objects: %s", supports_vao)
 

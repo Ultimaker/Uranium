@@ -42,30 +42,6 @@ class OpenGLContext(object):
             ctx = QOpenGLContext.currentContext()
         return ctx.hasExtension(bytearray(extension_name, "utf-8"))
 
-    ##  Return if the current (or provided) context supports geometry shader
-    #
-    #   \param ctx (optional) context.
-    @classmethod
-    def supportsGeometryShader(cls, ctx = None):
-        if ctx is None:
-            ctx = QOpenGLContext.currentContext()
-        format = ctx.format()
-        major = format.majorVersion()
-        minor = format.minorVersion()
-
-        if major >= 4 or (major == 3 and minor >= 3):
-            result = True
-        elif (cls.hasExtension("GL_EXT_geometry_shader4", ctx = ctx) or cls.hasExtension("GL_ARB_geometry_shader4", ctx = ctx)):
-            Logger.log("d", "Geometry shader is available on this machine, but don't know if it works.")
-            result = True
-        else:
-            Logger.log("d", "Not matching OpenGL version or extension for geometry shader.")
-            result = False
-
-        Logger.log("d", "Support for geometry shader: %s", result)
-        cls.properties["supportsGeometryShader"] = result
-        return result
-
     ##  Return if the current (or provided) context supports Vertex Array Objects
     #
     #   \param ctx (optional) context.
