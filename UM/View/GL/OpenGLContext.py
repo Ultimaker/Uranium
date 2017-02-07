@@ -90,6 +90,7 @@ class OpenGLContext(object):
         cls.minor_version = minor_version
         cls.profile = profile_
 
+    ##  Return if the OpenGL context version we ASKED for is legacy or not
     @classmethod
     def isLegacyOpenGL(cls):
         if cls.major_version < 4:
@@ -128,7 +129,7 @@ class OpenGLContext(object):
             xtra = "Unknown profile"
         return "%s.%s %s" % (major_version, minor_version, xtra)
 
-    # Global values
+    # Global values, OpenGL context versions we ASKED for (not per se what we got)
     major_version = 0
     minor_version = 0
     profile = None

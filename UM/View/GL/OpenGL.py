@@ -130,10 +130,10 @@ class OpenGL(object):
     def createShaderProgram(self, file_name):
         shader = ShaderProgram.ShaderProgram()
         # The version_string must match the keys in shader files.
-        if OpenGLContext.major_version == 4:
-            version_string = "41core"
-        else:
+        if OpenGLContext.isLegacyOpenGL():
             version_string = ""
+        else:
+            version_string = "41core"
         shader.load(file_name, version=version_string)
         return shader
 
