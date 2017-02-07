@@ -102,7 +102,7 @@ class OpenGLContext(object):
             Logger.log("d",
                 "Yay, we got at least OpenGL 4.1 core: %s",
                 cls.versionAsText(fmt.majorVersion(), fmt.minorVersion(), profile))
-            return fmt.majorVersion(), fmt.minorVersion(), profile
+            return 4, 1, QSurfaceFormat.CoreProfile
 
         # Fallback: check min spec
         ctx = cls.setContext(2, 0, profile = QSurfaceFormat.NoProfile)
@@ -116,7 +116,7 @@ class OpenGLContext(object):
             Logger.log("d",
                 "We got at least OpenGL context 2.0: %s",
                 cls.versionAsText(fmt.majorVersion(), fmt.minorVersion(), profile))
-            return fmt.majorVersion(), fmt.minorVersion(), profile
+            return 2, 0, QSurfaceFormat.NoProfile
 
         # Nooo, all failed
         Logger.log("d",
