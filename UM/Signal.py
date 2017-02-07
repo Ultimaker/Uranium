@@ -310,22 +310,18 @@ def postponeSignals(*signals, compress = False):
             signal._postponed = []
         signal._postponed.append((args, kwargs))
 
-    restore_emit = False
+    restore_emit = []
     for signal in signals:
-        if not hasattr(signal, "_old_emit"):
             signal._old_emit = signal.emit
             if compress:
                 signal.emit = postponedEmitCompressed.__get__(signal, Signal)
             else:
                 signal.emit = postponedEmit.__get__(signal, Signal)
-            restore_emit = True
+            restore_emit.append(signal)
 
     yield
 
-    if not restore_emit:
-        return
-
-    for signal in signals:
+    for signal in restore_emit:
         signal.emit = signal._old_emit
         delattr(signal, "_old_emit")
         if hasattr(signal, "_postponed"):
