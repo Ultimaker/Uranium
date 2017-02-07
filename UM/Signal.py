@@ -302,21 +302,31 @@ def strMethodSet(method_set):
 #   \param compress Whether to enable compression of emits or not.
 @contextlib.contextmanager
 def postponeSignals(*signals, compress = False):
+    # Function that should replace the emit() method when compress == True
     def postponedEmitCompressed(signal, *args, **kwargs):
         signal._postponed = (args, kwargs)
 
+    # Function that should replace the emit() method when compress == False
     def postponedEmit(signal, *args, **kwargs):
         if not hasattr(signal, "_postponed"):
             signal._postponed = []
         signal._postponed.append((args, kwargs))
 
+    # To allow for nested postpones on the same signals, we should check if we actually made changes
+    # to the signal's emit method. If not, we can ignore it.
     restore_emit = []
     for signal in signals:
+        if not hasattr(signal, "_old_emit"): # Do nothing if the signal has already been changed
+            # Store the method for later retrieval
             signal._old_emit = signal.emit
+
+            # Assign the relevant function, making sure it is seen as an instance method by Python.
             if compress:
                 signal.emit = postponedEmitCompressed.__get__(signal, Signal)
             else:
                 signal.emit = postponedEmit.__get__(signal, Signal)
+
+            # Since we made changes, make sure to restore the signal after exiting the context manager
             restore_emit.append(signal)
 
     yield
