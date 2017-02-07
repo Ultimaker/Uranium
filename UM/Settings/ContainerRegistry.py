@@ -23,6 +23,7 @@ from . import DefinitionContainer
 from . import InstanceContainer
 from . import ContainerStack
 
+from . import ContainerQuery
 
 CONFIG_LOCK_FILENAME = "uranium.lock"
 
@@ -90,7 +91,8 @@ class ContainerRegistry:
     def findContainers(self, container_type = None, ignore_case = False, **kwargs):
         containers = []
 
-        query = _ContainerQuery(self, container_type, ignore_case, **kwargs)
+        # Create the query object
+        query = ContainerQuery.ContainerQuery(self, container_type, ignore_case = ignore_case, **kwargs)
 
         if query.isIdOnly():
             # If we are just searching for a single container by ID, look it up from the container cache
@@ -104,15 +106,22 @@ class ContainerRegistry:
                     return [ container ]
 
         if query in self._query_cache:
-            self._query_cache.move_to_end(query, last = False) # Query was used, so make sure to update its position
-            return query.result
+            # If the exact same query is in the cache, we can re-use the query result
+            self._query_cache.move_to_end(query) # Query was used, so make sure to update its position
+            return self._query_cache[query].getResult()
 
         query.execute()
 
-        self._query_cache.insert(query, query)
+        self._query_cache[query] = query
 
         if len(self._query_cache) > MaxQueryCacheSize:
-            self._query_cache.pop()
+            # Since we use an OrderedDict, we can use a simple FIFO scheme
+            # to discard queries. As long as we properly update queries
+            # that are being used, this results in the least used queries
+            # to be discarded.
+            self._query_cache.popitem(last = False)
+
+        return query.getResult()
 
     ##  This is a small convenience to make it easier to support complex structures in ContainerStacks.
     def getEmptyInstanceContainer(self):
@@ -491,125 +500,3 @@ class _EmptyInstanceContainer(InstanceContainer.InstanceContainer):
     def serialize(self):
         return "[general]\n version = 2\n name = empty\n definition = fdmprinter\n"
 
-##  Simple container for
-class _ContainerQuery:
-    def __init__(self, registry, container_type = None, ignore_case = False, **kwargs):
-        self._registry = registry
-
-        self._container_type = container_type
-        self._ignore_case = ignore_case
-        self._kwargs = kwargs
-
-        self._result = None
-
-    def setResult(self, new_result):
-        self._result = new_result
-
-    def execute(self):
-        for container in registry._containers:
-            if container_type and not isinstance(container, container_type):
-                continue
-
-            matches_container = True
-            for key, value in kwargs.items():
-                try:
-                    if "*" in value:
-                        value = re.escape(value) #Escape for regex patterns.
-                        value = "^" + value.replace("\\*", ".*") + "$" #Instead of (now escaped) asterisks, match on any string. Also add anchors for a complete match.
-                        if ignore_case:
-                            value_pattern = re.compile(value, re.IGNORECASE)
-                        else:
-                            value_pattern = re.compile(value)
-
-                        if key == "id":
-                            if not value_pattern.match(container.getId()):
-                                matches_container = False
-                            continue
-                        elif key == "name":
-                            if not value_pattern.match(container.getName()):
-                                matches_container = False
-                            continue
-                        elif key == "definition":
-                            try:
-                                if not value_pattern.match(container.getDefinition().getId()):
-                                    matches_container = False
-                                continue
-                            except AttributeError:  # Only instanceContainers have a get definition. We can ignore all others.
-                                pass
-
-                        if not value_pattern.match(str(container.getMetaDataEntry(key))):
-                            matches_container = False
-                    elif not ignore_case:
-                        if key == "id":
-                            if value != container.getId():
-                                matches_container = False
-                            continue
-                        elif key == "name":
-                            if value != container.getName():
-                                matches_container = False
-                            continue
-                        elif key == "definition":
-                            try:
-                                if value != container.getDefinition().getId():
-                                    matches_container = False
-                                continue
-                            except AttributeError:  # Only instanceContainers have a get definition. We can ignore all others.
-                                pass
-
-                        if value != str(container.getMetaDataEntry(key)):
-                            matches_container = False
-                    else:
-                        if key == "id":
-                            if value.lower() != container.getId().lower():
-                                matches_container = False
-                            continue
-                        elif key == "name":
-                            if value.lower() != container.getName().lower():
-                                matches_container = False
-                            continue
-                        elif key == "definition":
-                            try:
-                                if value.lower() != container.getDefinition().getId().lower():
-                                    matches_container = False
-                                continue
-                            except AttributeError:  # Only instanceContainers have a get definition. We can ignore all others.
-                                pass
-
-                        if value.lower() != str(container.getMetaDataEntry(key)).lower():
-                            matches_container = False
-                except TypeError: #Value was not a string.
-                    if key == "id" or key == "name" or key == "definition":
-                        matches_container = False
-                        continue
-                    elif key == "read_only":
-                        try:
-                            if value != container.isReadOnly():
-                                matches_container = False
-                            continue
-                        except AttributeError:
-                            pass
-
-                    if value != container.getMetaDataEntry(key):
-                        matches_container = False
-                    continue
-
-            if matches_container:
-                containers.append(container)
-
-        return containers
-
-    @property
-    def result(self):
-        return self._result
-
-    def isIdOnly(self):
-        return not self._ignore_case and len(self._kwargs) == 1 and "id" in self._kwargs
-
-    def __key(self):
-        return (type(self), self._container_type, self._ignore_case, self._kwargs)
-
-    def __hash__(self):
-        return hash(self.__key())
-
-    def __eq__(self, other):
-        return self.__key() == other.__key()
