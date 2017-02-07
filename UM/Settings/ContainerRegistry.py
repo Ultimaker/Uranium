@@ -27,6 +27,7 @@ from . import ContainerQuery
 
 CONFIG_LOCK_FILENAME = "uranium.lock"
 
+# The maximum amount of query results we should cache
 MaxQueryCacheSize = 1000
 
 ##  Central class to manage all Setting containers.
@@ -86,16 +87,15 @@ class ContainerRegistry:
     #
     #   \return A list of containers matching the search criteria, or an empty
     #   list if nothing was found.
-    #@UM.FlameProfiler.profile
-    @profile
-    def findContainers(self, container_type = None, ignore_case = False, **kwargs):
+    @UM.FlameProfiler.profile
+    def findContainers(self, container_type = None, *, ignore_case = False, **kwargs):
         containers = []
 
         # Create the query object
         query = ContainerQuery.ContainerQuery(self, container_type, ignore_case = ignore_case, **kwargs)
 
         if query.isIdOnly():
-            # If we are just searching for a single container by ID, look it up from the container cache
+            # If we are just searching for a single container by ID, look it up from the ID-based cache
             container = self._id_container_cache.get(kwargs.get("id"))
             if container:
                 # Add an extra check to make sure the found container matches the requested container type.
@@ -110,8 +110,8 @@ class ContainerRegistry:
             self._query_cache.move_to_end(query) # Query was used, so make sure to update its position
             return self._query_cache[query].getResult()
 
+        # Execute the query, then add it to the cache
         query.execute()
-
         self._query_cache[query] = query
 
         if len(self._query_cache) > MaxQueryCacheSize:
