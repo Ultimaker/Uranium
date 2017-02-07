@@ -116,15 +116,37 @@ class OpenGLContext(object):
     @classmethod
     def detectBestOpenGLVersion(cls):
         ctx = cls.setContext(4, 1, core = True)
-
         if ctx is None:
             return None, None, None
         fmt = ctx.format()
         profile = fmt.profile()
+
+        # First test: we hope for this
         if fmt.majorVersion() >= 4 and fmt.minorVersion() >= 1 and profile == QSurfaceFormat.CoreProfile:
+            Logger.log("d",
+                "Yay, we got at least OpenGL 4.1 core: %s",
+                cls.versionAsText(fmt.majorVersion(), fmt.minorVersion(), profile))
             return fmt.majorVersion(), fmt.minorVersion(), profile
-        else:
-            return 2, 0, QSurfaceFormat.NoProfile
+
+        # Fallback: check min spec
+        ctx = cls.setContext(2, 0, profile = QSurfaceFormat.NoProfile)
+        if ctx is None:
+            Logger.log("d", "Failed to create OpenGL context 2.0.")
+            return None, None, None
+        fmt = ctx.format()
+        profile = fmt.profile()
+
+        if fmt.majorVersion() >= 2 and fmt.minorVersion() >= 0:
+            Logger.log("d",
+                "We got at least OpenGL context 2.0: %s",
+                cls.versionAsText(fmt.majorVersion(), fmt.minorVersion(), profile))
+            return fmt.majorVersion(), fmt.minorVersion(), profile
+
+        # Nooo, all failed
+        Logger.log("d",
+            "Current OpenGL context is too low: %s" %
+            cls.versionAsText(fmt.majorVersion(), fmt.minorVersion(), profile))
+        return None, None, None
 
     ##  Return OpenGL version number and profile as a nice formatted string
     @classmethod
