@@ -8,6 +8,7 @@ import inspect
 import threading
 import os
 import weakref
+import contextlib
 
 import functools
 
@@ -119,8 +120,6 @@ class Signal:
 
         self.__type = kwargs.get("type", Signal.Auto)
 
-        self.__enabled = True
-
         if _recordSignalNames():
             try:
                 if Platform.isWindows():
@@ -134,9 +133,6 @@ class Signal:
 
     def getName(self):
         return self.__name
-
-    def setEnabled(self, enable):
-        self.__enabled = enable
 
     ##  \exception NotImplementedError
     def __call__(self):
@@ -158,9 +154,6 @@ class Signal:
     @call_if_enabled(_traceEmit, _isTraceEnabled())
     @profileEmit
     def emit(self, *args, **kwargs):
-        if not self.__enabled:
-            return
-
         try:
             if self.__type == Signal.Queued:
                 Signal._app.functionEvent(CallFunctionEvent(self.__performEmit, args, kwargs))
@@ -292,6 +285,57 @@ class Signal:
 
 def strMethodSet(method_set):
     return "{" + ", ".join([str(m) for m in method_set]) + "}"
+
+##  A context manager that allows postponing of signal emissions
+#
+#   This context manager will collect any calls to emit() made for the provided signals
+#   and only emit them after exiting. This ensures more batched processing of signals.
+#
+#   The optional "compress" argument will limit the emit calls to 1. This means that
+#   when a bunch of calls are made to the signal's emit() method, only the last call
+#   will be emitted on exit.
+#
+#   \warning When compress is True, only the **last** call will be emitted. This means
+#   that any other calls will be ignored, _including their arguments_.
+#
+#   \param signals The signals to postpone emits for.
+#   \param compress Whether to enable compression of emits or not.
+@contextlib.contextmanager
+def postponeSignals(*signals, compress = False):
+    def postponedEmitCompressed(signal, *args, **kwargs):
+        signal._postponed = (args, kwargs)
+
+    def postponedEmit(signal, *args, **kwargs):
+        if not hasattr(signal, "_postponed"):
+            signal._postponed = []
+        signal._postponed.append((args, kwargs))
+
+    restore_emit = False
+    for signal in signals:
+        if not hasattr(signal, "_old_emit"):
+            signal._old_emit = signal.emit
+            if compress:
+                signal.emit = postponedEmitCompressed.__get__(signal, Signal)
+            else:
+                signal.emit = postponedEmit.__get__(signal, Signal)
+            restore_emit = True
+
+    yield
+
+    if not restore_emit:
+        return
+
+    for signal in signals:
+        signal.emit = signal._old_emit
+        delattr(signal, "_old_emit")
+        if hasattr(signal, "_postponed"):
+            if compress:
+                signal.emit(*signal._postponed[0], **signal._postponed[1])
+            else:
+                for args, kwargs in signal._postponed:
+                    signal.emit(*args, **kwargs)
+            delattr(signal, "_postponed")
+
 
 ##  Convenience class to simplify signal creation.
 #
