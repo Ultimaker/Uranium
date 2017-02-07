@@ -202,8 +202,13 @@ class ContainerRegistry:
             Logger.log("w", "Container of type %s and id %s already added", repr(container.__class__), container.getId())
             return
 
+        if hasattr(container, "metaDataChanged"):
+            # Since queries are based on metadata, we need to make sure to clear the cache when a container's metadata changes.
+            container.metaDataChanged.connect(self._clearQueryCache)
+
         self._containers.append(container)
         self._id_container_cache[container.getId()] = container
+        self._clearQueryCache()
         self.containerAdded.emit(container)
 
     @UM.FlameProfiler.profile
@@ -215,6 +220,11 @@ class ContainerRegistry:
             self._containers.remove(container)
             del self._id_container_cache[container.getId()]
             self._deleteFiles(container)
+
+            if hasattr(container, "metaDataChanged"):
+                container.metaDataChanged.disconnect(self._clearQueryCache)
+
+            self._clearQueryCache()
             self.containerRemoved.emit(container)
 
             Logger.log("d", "Removed container %s", container.getId())
@@ -246,6 +256,7 @@ class ContainerRegistry:
             container._id = new_id
             self._id_container_cache[container._id] = container # Keep cache up-to-date.
 
+        self._clearQueryCache()
         self.containerAdded.emit(container)
 
     def saveAll(self):
@@ -435,6 +446,10 @@ class ContainerRegistry:
 
         with open(cache_path, "wb") as f:
             pickle.dump(definition, f)
+
+    # Clear the internal query cache
+    def _clearQueryCache(self):
+        self._query_cache.clear()
 
     ##  Get the lock filename including full path
     #   Dependent on when you call this function, Resources.getConfigStoragePath may return different paths
