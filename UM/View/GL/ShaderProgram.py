@@ -4,7 +4,7 @@
 import configparser
 import ast
 
-from PyQt5.QtGui import QOpenGLShader, QOpenGLShaderProgram, QVector2D, QVector3D, QVector4D, QMatrix4x4, QColor, QImage, QOpenGLTexture
+from PyQt5.QtGui import QOpenGLShader, QOpenGLShaderProgram, QVector2D, QVector3D, QVector4D, QMatrix4x4, QColor, QImage, QOpenGLTexture, QOpenGLVertexArrayObject, QOpenGLBuffer
 from UM.Logger import Logger
 
 from UM.Math.Vector import Vector
@@ -35,6 +35,8 @@ class ShaderProgram(object):
         self._bound = False
         self._textures = {}
 
+        self._debug_shader = False  # Set this to true to enable extra logging concerning shaders
+
     ##  Load a shader program file.
     #
     #   This method loads shaders from a simple text file, using Python's configparser
@@ -45,38 +47,49 @@ class ShaderProgram(object):
     #   multiline string, make sure to indent them properly.
     #
     #   \param file_name The shader file to load.
+    #   \param version can be used for a special version of the shader. it will be appended
+    #          to the keys [vertex, fragment, geometry] in the shader file
     #
     #   \exception{InvalidShaderProgramError} Raised when the file provided does not contain any valid shaders.
-    def load(self, file_name):
+    def load(self, file_name, version = ""):
+        Logger.log("d", "Loading shader file [%s]...", file_name)
+
+        vertex_key = "vertex" + version
+        fragment_key = "fragment" + version
+        geometry_key = "geometry" + version
+
         # Hashtags should not be ignored, they are part of GLSL.
         parser = configparser.ConfigParser(interpolation = None, comment_prefixes = (';', ))
         parser.optionxform = lambda option: option
         parser.read(file_name)
 
         if "shaders" not in parser:
-            raise InvalidShaderProgramError("{0} is missing a vertex of fragment shader".format(file_name))
+            raise InvalidShaderProgramError("{0} is missing section [shaders]".format(file_name))
 
-        if "vertex" not in parser["shaders"] or "fragment" not in parser["shaders"]:
-            raise InvalidShaderProgramError("{0} is missing a vertex of fragment shader".format(file_name))
+        if vertex_key not in parser["shaders"] or fragment_key not in parser["shaders"]:
+            raise InvalidShaderProgramError("{0} is missing a shader [{1}, {2}]".format(file_name, vertex_key, fragment_key))
 
-        vertex_code = parser["shaders"]["vertex"]
-        # Enable when debugging shader code.
-        # vertex_code_str = "\n".join(["%4i %s" % (i, s) for i, s in enumerate(vertex_code.split("\n"))])
-        # Logger.log("d", "Vertex shader")
-        # Logger.log("d", vertex_code_str)
+        vertex_code = parser["shaders"][vertex_key]
+        if self._debug_shader:
+            vertex_code_str = "\n".join(["%4i %s" % (i, s) for i, s in enumerate(vertex_code.split("\n"))])
+            Logger.log("d", "Vertex shader")
+            Logger.log("d", vertex_code_str)
 
-        fragment_code = parser["shaders"]["fragment"]
-        # fragment_code_str = "\n".join(["%4i %s" % (i, s) for i, s in enumerate(fragment_code.split("\n"))])
-        # Logger.log("d", "Fragment shader")
-        # Logger.log("d", fragment_code_str)
+        fragment_code = parser["shaders"][fragment_key]
+        if self._debug_shader:
+            fragment_code_str = "\n".join(["%4i %s" % (i, s) for i, s in enumerate(fragment_code.split("\n"))])
+            Logger.log("d", "Fragment shader")
+            Logger.log("d", fragment_code_str)
 
         self.setVertexShader(vertex_code)
         self.setFragmentShader(fragment_code)
-        if "geometry" in parser["shaders"]:
-            code = parser["shaders"]["geometry"]
-            # code_str = "\n".join(["%4i %s" % (i, s) for i, s in enumerate(code.split("\n"))])
-            # Logger.log("d", "Loading geometry shader... \n")
-            # Logger.log("d", code_str)
+        # Geometry shader is optional and only since version OpenGL 3.2 or with extension ARB_geometry_shader4
+        if geometry_key in parser["shaders"]:
+            code = parser["shaders"][geometry_key]
+            if self._debug_shader:
+                code_str = "\n".join(["%4i %s" % (i, s) for i, s in enumerate(code.split("\n"))])
+                Logger.log("d", "Loading geometry shader... \n")
+                Logger.log("d", code_str)
             self.setGeometryShader(code)
 
         self.build()
@@ -320,3 +333,4 @@ class ShaderProgram(object):
             self._shader_program.setUniformValueArray(uniform, [QVector2D(i[0], i[1]) for i in value])
         else:
             self._shader_program.setUniformValue(uniform, value)
+

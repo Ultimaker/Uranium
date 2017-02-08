@@ -11,6 +11,7 @@ from UM.Logger import Logger
 from UM.View.GL import FrameBufferObject
 from UM.View.GL import ShaderProgram
 from UM.View.GL import Texture
+from UM.View.GL.OpenGLContext import OpenGLContext
 
 
 ##  Convenience methods for dealing with OpenGL.
@@ -33,7 +34,8 @@ class OpenGL(object):
 
     def __init__(self):
         profile = QOpenGLVersionProfile()
-        profile.setVersion(2, 0)
+        profile.setVersion(OpenGLContext.major_version, OpenGLContext.minor_version)
+        profile.setProfile(OpenGLContext.profile)
 
         self._gl = QOpenGLContext.currentContext().versionFunctions(profile)
         if not self._gl:
@@ -81,14 +83,6 @@ class OpenGL(object):
     def hasFrameBufferObjects(self):
         return QOpenGLFramebufferObject.hasOpenGLFramebufferObjects()
 
-    ##  Check to see if the current OpenGL implementation has a certain OpenGL extension.
-    #
-    #   \param extension \type{string} The name of the extension to query for.
-    #
-    #   \return True if the extension is available, False if not.
-    def hasExtension(self, extension):
-        return QOpenGLContext.currentContext().hasExtension(extension)
-
     ##  Get the current GPU vendor.
     #
     #   \return One of the items of OpenGL.Vendor.
@@ -127,7 +121,12 @@ class OpenGL(object):
     #   This should return an implementation-specifc ShaderProgram subclass.
     def createShaderProgram(self, file_name):
         shader = ShaderProgram.ShaderProgram()
-        shader.load(file_name)
+        # The version_string must match the keys in shader files.
+        if OpenGLContext.isLegacyOpenGL():
+            version_string = ""
+        else:
+            version_string = "41core"
+        shader.load(file_name, version=version_string)
         return shader
 
     ##  Create a Vertex buffer for a mesh.

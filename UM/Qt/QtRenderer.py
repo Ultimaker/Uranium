@@ -1,7 +1,7 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-from PyQt5.QtGui import QColor, QOpenGLBuffer, QOpenGLContext, QOpenGLFramebufferObject, QOpenGLFramebufferObjectFormat, QSurfaceFormat, QOpenGLVersionProfile, QImage
+from PyQt5.QtGui import QColor, QOpenGLBuffer, QOpenGLContext, QOpenGLFramebufferObject, QOpenGLFramebufferObjectFormat, QSurfaceFormat, QOpenGLVersionProfile, QImage, QOpenGLVertexArrayObject
 
 from UM.Application import Application
 from UM.View.Renderer import Renderer
@@ -16,8 +16,9 @@ from UM.View.GL.OpenGL import OpenGL
 from UM.View.GL.OpenGLContext import OpenGLContext
 from UM.View.RenderBatch import RenderBatch
 
-from UM.Logger import Logger
 from UM.Signal import Signal, signalemitter
+
+from UM.Logger import Logger
 
 import numpy
 
@@ -51,8 +52,6 @@ class QtRenderer(Renderer):
         self._quad_buffer = None
 
         self._camera = None
-
-        self._supports_geometry_shader = False
 
     initialized = Signal()
 
@@ -141,14 +140,20 @@ class QtRenderer(Renderer):
     def endRendering(self):
         self._batches.clear()
 
-    ##  Render a full screen quad.
+    ##  Render a full screen quad (square).
     #
+    #   The function is used to draw render results on.
     #   \param shader The shader to use when rendering.
     def renderFullScreenQuad(self, shader):
         self._gl.glDisable(self._gl.GL_DEPTH_TEST)
         self._gl.glDisable(self._gl.GL_BLEND)
 
         shader.setUniformValue("u_modelViewProjectionMatrix", Matrix())
+
+        if OpenGLContext.properties["supportsVertexArrayObjects"]:
+            vao = QOpenGLVertexArrayObject()
+            vao.create()
+            vao.bind()
 
         self._quad_buffer.bind()
 
@@ -161,12 +166,9 @@ class QtRenderer(Renderer):
         shader.disableAttribute("a_uvs")
         self._quad_buffer.release()
 
-    def getSupportsGeometryShader(self):
-        return self._supports_geometry_shader
-
     def _initialize(self):
-        ctx = OpenGLContext.setContext(4, 5, core = True)
-        self._supports_geometry_shader = OpenGLContext.supportsGeometryShader(ctx = ctx)
+        supports_vao = OpenGLContext.supportsVertexArrayObjects()  # fill the OpenGLContext.properties
+        Logger.log("d", "Support for Vertex Array Objects: %s", supports_vao)
 
         OpenGL.setInstance(OpenGL())
         self._gl = OpenGL.getInstance().getBindingsObject()

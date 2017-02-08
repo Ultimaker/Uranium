@@ -8,6 +8,9 @@ from UM.Logger import Logger
 from UM.Math.Vector import Vector
 
 from UM.View.GL.OpenGL import OpenGL
+from UM.View.GL.OpenGLContext import OpenGLContext
+
+from PyQt5.QtGui import QOpenGLVertexArrayObject
 
 vertexBufferProperty = "__gl_vertex_buffer"
 indexBufferProperty = "__gl_index_buffer"
@@ -20,6 +23,12 @@ indexBufferProperty = "__gl_index_buffer"
 #   individual objects. This means that for example the ShaderProgram used is
 #   only bound once, at the start of rendering. There are a few values, like
 #   the model-view-projection matrix that are updated for each object.
+#
+#   Currently RenderBatch objects are created each frame including the
+#   VertexArrayObject (VAO). This is done to greatly simplify managing
+#   RenderBatch-changes. Whenever (sets of) RenderBatches are managed throughout
+#   the lifetime of a session, crossing multiple frames, the usage of VAO's can
+#   improve performance by reusing them.
 class RenderBatch():
     ##  The type of render batch.
     #
@@ -191,6 +200,16 @@ class RenderBatch():
             view_position = camera.getWorldPosition(),
             light_0_position = camera.getWorldPosition() + Vector(0, 50, 0)
         )
+
+        # The VertexArrayObject (VAO) works like a VCR, recording buffer activities in the GPU.
+        # When the same buffers are used elsewhere, one can bind this VertexArrayObject to
+        # the context instead of uploading all buffers again.
+        if OpenGLContext.properties["supportsVertexArrayObjects"]:
+            vao = QOpenGLVertexArrayObject()
+            vao.create()
+            if not vao.isCreated():
+                Logger.log("e", "VAO not created. Hell breaks loose")
+            vao.bind()
 
         for item in self._items:
             self._renderItem(item)
