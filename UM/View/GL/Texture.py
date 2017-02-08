@@ -23,7 +23,7 @@ class Texture(object):
     ##  Bind the texture to a certain texture unit.
     #
     #   \param texture_unit The texture unit to bind to.
-    def bind(self, unit):
+    def bind(self, texture_unit):
         if not self._qt_texture.isCreated():
             if self._file_name != None:
                 self._image = QImage(self._file_name).mirrored()
@@ -33,12 +33,12 @@ class Texture(object):
             self._qt_texture.setData(self._image)
             self._qt_texture.setMinMagFilters(QOpenGLTexture.Linear, QOpenGLTexture.Linear)
 
-        self._qt_texture.bind(unit)
+        self._qt_texture.bind(texture_unit)
     ##  Release the texture from a certain texture unit.
     #
     #   \param texture_unit The texture unit to release from.
-    def release(self, unit):
-        self._qt_texture.release(unit)
+    def release(self, texture_unit):
+        self._qt_texture.release(texture_unit)
 
     ##  Load an image and upload it to the texture.
     #

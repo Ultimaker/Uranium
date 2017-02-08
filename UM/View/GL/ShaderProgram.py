@@ -23,7 +23,7 @@ class InvalidShaderProgramError(Exception):
 #   based on the Python configparser module. These files contain the shaders
 #   for the different shader program stages, in addition to defaults that should
 #   be used for uniform values and uniform and attribute bindings.
-class ShaderProgram(object):
+class ShaderProgram:
     def __init__(self):
         self._bindings = {}
         self._attribute_bindings = {}
