@@ -580,7 +580,7 @@ class SettingDefinition:
     def _toIntConversion(value):
         try:
             return ast.literal_eval(value)
-        except ValueError:
+        except SyntaxError:
             return 0
 
     ## Conversion of string to float.
