@@ -1,4 +1,4 @@
-# Copyright (c) 2016 Ultimaker B.V.
+# Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 import ast
@@ -574,6 +574,15 @@ class SettingDefinition:
         "comments": {"type": DefinitionPropertyType.String, "required": False, "read_only": True, "default": "", "depends_on" : None}
     }
 
+    ##  Conversion from string to integer.
+    #
+    #   \param value The string representation of an integer.
+    def _toIntConversion(value):
+        try:
+            return ast.literal_eval(value)
+        except SyntaxError:
+            return 0
+
     ## Conversion of string to float.
     def _toFloatConversion(value):
         ## Ensure that all , are replaced with . (so they are seen as floats)
@@ -595,7 +604,7 @@ class SettingDefinition:
 
     __type_definitions = {
         # An integer value
-        "int": {"from": lambda v: str(v) if v is not None else "", "to": ast.literal_eval, "validator": Validator.Validator},
+        "int": {"from": lambda v: str(v) if v is not None else "", "to": _toIntConversion, "validator": Validator.Validator},
         # A boolean value
         "bool": {"from": str, "to": ast.literal_eval, "validator": None},
         # Special case setting; Doesn't have a value. Display purposes only.
