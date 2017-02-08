@@ -158,8 +158,7 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     def getProperty(self, key, property_name):
         value = self.getRawProperty(key, property_name)
         if isinstance(value, SettingFunction.SettingFunction):
-            val = value(self)
-            return val
+            return value(self)
 
         return value
 
