@@ -7,7 +7,7 @@ from PyQt5.QtGui import QOpenGLFramebufferObject, QOpenGLFramebufferObjectFormat
 #
 #   This class describes a minimal interface that is expected of FrameBuffer Object
 #   classes.
-class FrameBufferObject(object):
+class FrameBufferObject:
     def __init__(self, width, height):
         super().__init__()
 

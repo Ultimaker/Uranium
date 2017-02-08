@@ -2,6 +2,7 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 import sys
+import ctypes
 
 from PyQt5.QtGui import QOpenGLVersionProfile, QOpenGLContext, QOpenGLFramebufferObject, QOpenGLBuffer, QSurfaceFormat
 from PyQt5.QtWidgets import QMessageBox
@@ -150,23 +151,26 @@ class OpenGL(object):
         buffer.create()
         buffer.bind()
 
-        buffer_size = mesh.getVertexCount() * 3 * 4 # Vertex count * number of components * sizeof(float32)
+        float_size = ctypes.sizeof(ctypes.c_float)
+        int_size = ctypes.sizeof(ctypes.c_int)
+
+        buffer_size = mesh.getVertexCount() * 3 * float_size # Vertex count * number of components * sizeof(float32)
         if mesh.hasNormals():
-            buffer_size += mesh.getVertexCount() * 3 * 4 # Vertex count * number of components * sizeof(float32)
+            buffer_size += mesh.getVertexCount() * 3 * float_size # Vertex count * number of components * sizeof(float32)
         if mesh.hasColors():
-            buffer_size += mesh.getVertexCount() * 4 * 4 # Vertex count * number of components * sizeof(float32)
+            buffer_size += mesh.getVertexCount() * 4 * float_size # Vertex count * number of components * sizeof(float32)
         if mesh.hasUVCoordinates():
-            buffer_size += mesh.getVertexCount() * 2 * 4 # Vertex count * number of components * sizeof(float32)
+            buffer_size += mesh.getVertexCount() * 2 * float_size # Vertex count * number of components * sizeof(float32)
         for attribute_name in mesh.attributeNames():
             attribute = mesh.getAttribute(attribute_name)
             if attribute["opengl_type"] == "vector2f":
-                buffer_size += mesh.getVertexCount() * 2 * 4
+                buffer_size += mesh.getVertexCount() * 2 * float_size
             elif attribute["opengl_type"] == "vector4f":
-                buffer_size += mesh.getVertexCount() * 4 * 4
+                buffer_size += mesh.getVertexCount() * 4 * float_size
             elif attribute["opengl_type"] == "int":
-                buffer_size += mesh.getVertexCount() * 4
+                buffer_size += mesh.getVertexCount() * int_size
             elif attribute["opengl_type"] == "float":
-                buffer_size += mesh.getVertexCount() * 4
+                buffer_size += mesh.getVertexCount() * float_size
             else:
                 Logger.log(
                     "e", "Could not determine buffer size for attribute [%s] with type [%s]" % (attribute_name, attribute["opengl_type"]))

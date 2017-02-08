@@ -140,7 +140,7 @@ class QtRenderer(Renderer):
     def endRendering(self):
         self._batches.clear()
 
-    ##  Render a full screen quad (square).
+    ##  Render a full screen quad (rectangle).
     #
     #   The function is used to draw render results on.
     #   \param shader The shader to use when rendering.
