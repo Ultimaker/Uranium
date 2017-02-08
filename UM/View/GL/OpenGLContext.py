@@ -34,6 +34,7 @@ class OpenGLContext(object):
     ##  Check to see if the current OpenGL implementation has a certain OpenGL extension.
     #
     #   \param extension_name \type{string} The name of the extension to query for.
+    #   \param ctx optionally provide context object to be used, or current context will be used.
     #
     #   \return True if the extension is available, False if not.
     @classmethod
@@ -98,7 +99,7 @@ class OpenGLContext(object):
         profile = fmt.profile()
 
         # First test: we hope for this
-        if fmt.majorVersion() >= 4 and fmt.minorVersion() >= 1 and profile == QSurfaceFormat.CoreProfile:
+        if ((fmt.majorVersion() == 4 and fmt.minorVersion() >= 1) or (fmt.majorVersion() > 4)) and profile == QSurfaceFormat.CoreProfile:
             Logger.log("d",
                 "Yay, we got at least OpenGL 4.1 core: %s",
                 cls.versionAsText(fmt.majorVersion(), fmt.minorVersion(), profile))
