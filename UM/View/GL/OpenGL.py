@@ -124,7 +124,7 @@ class OpenGL(object):
         shader = ShaderProgram.ShaderProgram()
         # The version_string must match the keys in shader files.
         if OpenGLContext.isLegacyOpenGL():
-            version_string = ""
+            version_string = ""  # Nothing is added to "fragment" and "vertex"
         else:
             version_string = "41core"
         shader.load(file_name, version=version_string)
