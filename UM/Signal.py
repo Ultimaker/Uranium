@@ -161,6 +161,9 @@ class Signal:
     def emit(self, *args, **kwargs):
         # Check to see if we need to postpone emits
         if self._postpone_emit:
+            if threading.current_thread() != self._postpone_thread:
+                Logger.log("w", "Tried to emit signal from thread %s while emits are being postponed by %s. This may cause errors!", threading.current_thread(), self._postpone_thread)
+
             if self._compress_postpone:
                 # If emits should be compressed, we only emit the last emit that was called
                 self._postponed_emits = (args, kwargs)
@@ -337,6 +340,7 @@ def postponeSignals(*signals, compress = False):
     for signal in signals:
         if not signal._postpone_emit: # Do nothing if the signal has already been changed
             signal._postpone_emit = True
+            signal._postpone_thread = threading.current_thread()
             if compress:
                 signal._compress_postpone = True
             # Since we made changes, make sure to restore the signal after exiting the context manager
@@ -358,6 +362,7 @@ def postponeSignals(*signals, compress = False):
                     signal.emit(*args, **kwargs)
             signal._postponed_emits = None
 
+        signal._postpone_thread = None
         signal._compress_postpone = False
 
 
