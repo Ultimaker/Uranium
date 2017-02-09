@@ -3,6 +3,8 @@
 
 import re
 
+from . import InstanceContainer
+
 ##  Wrapper class to perform a search for a certain set of containers.
 #
 #   This class is primarily intended to be used internally by
@@ -86,10 +88,8 @@ class ContainerQuery:
         elif property_name == "name":
             return value_pattern.match(container.getName())
         elif property_name == "definition":
-            try:
-                return value_pattern.match(container.getDefinition().getId())
-            except AttributeError:  # Only instanceContainers have a get definition. We can ignore all others.
-                pass
+            if isinstance(container, InstanceContainer.InstanceContainer):
+                return container.getDefinition() and value_pattern.match(container.getDefinition().getId())
 
         return value_pattern.match(str(container.getMetaDataEntry(property_name)))
 
@@ -102,10 +102,8 @@ class ContainerQuery:
         elif property_name == "name":
             return value == self._maybeLowercase(container.getName())
         elif property_name == "definition":
-            try:
-                return value == container.getDefinition().getId()
-            except AttributeError:
-                return False
+            if isinstance(container, InstanceContainer.InstanceContainer):
+                return container.getDefinition() and value == container.getDefinition().getId()
 
         return value == self._maybeLowercase(str(container.getMetaDataEntry(property_name)))
 
@@ -114,9 +112,9 @@ class ContainerQuery:
         if property_name == "id" or property_name == "name" or property_name == "definition":
             return False
         elif property_name == "read_only":
-            try:
+            if isinstance(container, InstanceContainer.InstanceContainer):
                 return value == container.isReadOnly()
-            except AttributeError:
+            else:
                 return False
 
         return value == container.getMetaDataEntry(property_name)
