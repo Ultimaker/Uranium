@@ -189,6 +189,10 @@ class Signal:
     #   \param connector The signal or slot (function) to connect.
     @call_if_enabled(_traceConnect, _isTraceEnabled())
     def connect(self, connector):
+        if self._postpone_emit:
+            Logger.log("w", "Tried to connect to signal %s that is currently being postponed, this is not possible", self.__name)
+            return
+
         with self.__lock:
             if isinstance(connector, Signal):
                 if connector == self:
@@ -209,6 +213,10 @@ class Signal:
     #   \param connector The signal or slot (function) to disconnect.
     @call_if_enabled(_traceDisconnect, _isTraceEnabled())
     def disconnect(self, connector):
+        if self._postpone_emit:
+            Logger.log("w", "Tried to disconnect from signal %s that is currently being postponed, this is not possible", self.__name)
+            return
+
         with self.__lock:
             if isinstance(connector, Signal):
                 self.__signals = self.__signals.remove(connector)
@@ -219,6 +227,10 @@ class Signal:
 
     ##  Disconnect all connected slots.
     def disconnectAll(self):
+        if self._postpone_emit:
+            Logger.log("w", "Tried to disconnect from signal %s that is currently being postponed, this is not possible", self.__name)
+            return
+
         with self.__lock:
             self.__functions = WeakImmutableList()
             self.__methods = WeakImmutablePairList()
