@@ -120,6 +120,11 @@ class Signal:
 
         self.__type = kwargs.get("type", Signal.Auto)
 
+        self._postpone_emit = False
+        self._postpone_thread = None
+        self._compress_postpone = False
+        self._postponed_emits = None
+
         if _recordSignalNames():
             try:
                 if Platform.isWindows():
@@ -154,6 +159,18 @@ class Signal:
     @call_if_enabled(_traceEmit, _isTraceEnabled())
     @profileEmit
     def emit(self, *args, **kwargs):
+        # Check to see if we need to postpone emits
+        if self._postpone_emit:
+            if self._compress_postpone:
+                # If emits should be compressed, we only emit the last emit that was called
+                self._postponed_emits = (args, kwargs)
+            else:
+                # If emits should not be compressed, we catch all calls to emit and put them in a list to be called later.
+                if not self._postponed_emits:
+                    self._postponed_emits = []
+                self._postponed_emits.append((args, kwargs))
+            return
+
         try:
             if self.__type == Signal.Queued:
                 Signal._app.functionEvent(CallFunctionEvent(self.__performEmit, args, kwargs))
@@ -302,45 +319,34 @@ def strMethodSet(method_set):
 #   \param compress Whether to enable compression of emits or not.
 @contextlib.contextmanager
 def postponeSignals(*signals, compress = False):
-    # Function that should replace the emit() method when compress == True
-    def postponedEmitCompressed(signal, *args, **kwargs):
-        signal._postponed = (args, kwargs)
-
-    # Function that should replace the emit() method when compress == False
-    def postponedEmit(signal, *args, **kwargs):
-        if not hasattr(signal, "_postponed"):
-            signal._postponed = []
-        signal._postponed.append((args, kwargs))
-
-    # To allow for nested postpones on the same signals, we should check if we actually made changes
-    # to the signal's emit method. If not, we can ignore it.
+    # To allow for nested postpones on the same signals, we should check if signals are not already
+    # postponed and only change those that are not yet postponed.
     restore_emit = []
     for signal in signals:
-        if not hasattr(signal, "_old_emit"): # Do nothing if the signal has already been changed
-            # Store the method for later retrieval
-            signal._old_emit = signal.emit
-
-            # Assign the relevant function, making sure it is seen as an instance method by Python.
+        if not signal._postpone_emit: # Do nothing if the signal has already been changed
+            signal._postpone_emit = True
             if compress:
-                signal.emit = postponedEmitCompressed.__get__(signal, Signal)
-            else:
-                signal.emit = postponedEmit.__get__(signal, Signal)
-
+                signal._compress_postpone = True
             # Since we made changes, make sure to restore the signal after exiting the context manager
             restore_emit.append(signal)
 
+    # Execute the code block in the "with" statement
     yield
 
     for signal in restore_emit:
-        signal.emit = signal._old_emit
-        delattr(signal, "_old_emit")
-        if hasattr(signal, "_postponed"):
-            if compress:
-                signal.emit(*signal._postponed[0], **signal._postponed[1])
+        # We are done with the code, restore all changed signals to their "normal" state
+        signal._postpone_emit = False
+
+        if signal._postponed_emits:
+            # Send any signal emits that were collected while emits were being postponed
+            if signal._compress_postpone:
+                signal.emit(*signal._postponed_emits[0], **signal._postponed_emits[1])
             else:
-                for args, kwargs in signal._postponed:
+                for args, kwargs in signal._postponed_emits:
                     signal.emit(*args, **kwargs)
-            delattr(signal, "_postponed")
+            signal._postponed_emits = None
+
+        signal._compress_postpone = False
 
 
 ##  Convenience class to simplify signal creation.
