@@ -68,7 +68,7 @@ class ContainerQuery:
         return hash(self.__key())
 
     def __eq__(self, other):
-        return self.__key() == other.__key()
+        return isinstance(other, ContainerQuery) and self.__key() == other.__key()
 
     # protected:
 
