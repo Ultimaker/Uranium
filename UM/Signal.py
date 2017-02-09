@@ -9,6 +9,7 @@ import threading
 import os
 import weakref
 import contextlib
+import traceback
 
 import functools
 
@@ -162,7 +163,10 @@ class Signal:
         # Check to see if we need to postpone emits
         if self._postpone_emit:
             if threading.current_thread() != self._postpone_thread:
-                Logger.log("w", "Tried to emit signal from thread %s while emits are being postponed by %s. This may cause errors!", threading.current_thread(), self._postpone_thread)
+                Logger.log("w", "Tried to emit signal from thread %s while emits are being postponed by %s. Traceback:", threading.current_thread(), self._postpone_thread)
+                tb = traceback.format_stack()
+                for line in tb:
+                    Logger.log("w", line)
 
             if self._compress_postpone:
                 # If emits should be compressed, we only emit the last emit that was called
