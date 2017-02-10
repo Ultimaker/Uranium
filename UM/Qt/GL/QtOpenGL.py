@@ -3,7 +3,7 @@
 
 import sys
 
-from PyQt5.QtGui import QOpenGLVersionProfile, QOpenGLContext, QOpenGLFramebufferObject, QOpenGLBuffer
+from PyQt5.QtGui import QOpenGLVersionProfile, QOpenGLContext, QOpenGLFramebufferObject, QOpenGLBuffer, QSurfaceFormat
 from PyQt5.QtWidgets import QMessageBox
 
 from UM.Logger import Logger
@@ -18,7 +18,8 @@ from . import QtShaderProgram
 class QtOpenGL(OpenGL):
     def __init__(self):
         profile = QOpenGLVersionProfile()
-        profile.setVersion(2, 0)
+        profile.setVersion(4, 1)
+        profile.setProfile(QSurfaceFormat.CoreProfile)  # required
         self._gl = QOpenGLContext.currentContext().versionFunctions(profile)
         if not self._gl:
             Logger.log("e", "Startup failed due to OpenGL initialization failing")
@@ -108,7 +109,19 @@ class QtOpenGL(OpenGL):
             buffer_size += mesh.getVertexCount() * 4 * 4 # Vertex count * number of components * sizeof(float32)
         if mesh.hasUVCoordinates():
             buffer_size += mesh.getVertexCount() * 2 * 4 # Vertex count * number of components * sizeof(float32)
-
+        for attribute_name in mesh.attributeNames():
+            attribute = mesh.getAttribute(attribute_name)
+            if attribute["opengl_type"] == "vector2f":
+                buffer_size += mesh.getVertexCount() * 2 * 4
+            elif attribute["opengl_type"] == "vector4f":
+                buffer_size += mesh.getVertexCount() * 4 * 4
+            elif attribute["opengl_type"] == "int":
+                buffer_size += mesh.getVertexCount() * 4
+            elif attribute["opengl_type"] == "float":
+                buffer_size += mesh.getVertexCount() * 4
+            else:
+                Logger.log(
+                    "e", "Could not determine buffer size for attribute [%s] with type [%s]" % (attribute_name, attribute["opengl_type"]))
         buffer.allocate(buffer_size)
 
         offset = 0
@@ -131,6 +144,12 @@ class QtOpenGL(OpenGL):
             uvs = mesh.getUVCoordinatesAsByteArray()
             buffer.write(offset, uvs, len(uvs))
             offset += len(uvs)
+
+        for attribute_name in mesh.attributeNames():
+            attribute = mesh.getAttribute(attribute_name)
+            attribute_byte_array = attribute["value"].tostring()
+            buffer.write(offset, attribute_byte_array, len(attribute_byte_array))
+            offset += len(attribute_byte_array)
 
         buffer.release()
 
