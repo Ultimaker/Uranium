@@ -102,6 +102,12 @@ class InstanceContainer(ContainerInterface.ContainerInterface, PluginObject):
 
     id = property(getId)
 
+    def setCachedValues(self, cached_values):
+        if not self._instances:
+            self._cached_values = cached_values
+        else:
+            Logger.log("w", "Unable set values to be lazy loaded when values are already loaded ")
+
     ##  \copydoc ContainerInterface::getPath.
     #
     #   Reimplemented from ContainerInterface
