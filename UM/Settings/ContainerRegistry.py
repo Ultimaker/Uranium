@@ -6,6 +6,7 @@ import re #For finding containers with asterisks in the constraints.
 import urllib #For ensuring container file names are proper file names
 import urllib.parse
 import pickle #For serializing/deserializing Python classes to binary files
+import collections
 
 import UM.FlameProfiler
 from UM.PluginRegistry import PluginRegistry
@@ -23,8 +24,12 @@ from . import InstanceContainer
 from . import ContainerStack
 import time
 
+from . import ContainerQuery
+
 CONFIG_LOCK_FILENAME = "uranium.lock"
 
+# The maximum amount of query results we should cache
+MaxQueryCacheSize = 1000
 
 ##  Central class to manage all Setting containers.
 #
@@ -39,6 +44,7 @@ class ContainerRegistry:
         self._containers = [self._emptyInstanceContainer]
         self._id_container_cache = {}
         self._resource_types = [Resources.DefinitionContainers]
+        self._query_cache = collections.OrderedDict() # This should really be an ordered set but that does not exist...
 
     containerAdded = Signal()
     containerRemoved = Signal()
@@ -83,11 +89,14 @@ class ContainerRegistry:
     #   \return A list of containers matching the search criteria, or an empty
     #   list if nothing was found.
     @UM.FlameProfiler.profile
-    def findContainers(self, container_type = None, ignore_case = False, **kwargs):
+    def findContainers(self, container_type = None, *, ignore_case = False, **kwargs):
         containers = []
 
-        if len(kwargs) == 1 and "id" in kwargs:
-            # If we are just searching for a single container by ID, look it up from the container cache
+        # Create the query object
+        query = ContainerQuery.ContainerQuery(self, container_type, ignore_case = ignore_case, **kwargs)
+
+        if query.isIdOnly():
+            # If we are just searching for a single container by ID, look it up from the ID-based cache
             container = self._id_container_cache.get(kwargs.get("id"))
             if container:
                 # Add an extra check to make sure the found container matches the requested container type.
@@ -97,97 +106,23 @@ class ContainerRegistry:
                 elif isinstance(container, container_type):
                     return [ container ]
 
-        for container in self._containers:
-            if container_type and not isinstance(container, container_type):
-                continue
+        if query in self._query_cache:
+            # If the exact same query is in the cache, we can re-use the query result
+            self._query_cache.move_to_end(query) # Query was used, so make sure to update its position
+            return self._query_cache[query].getResult()
 
-            matches_container = True
-            for key, value in kwargs.items():
-                try:
-                    if "*" in value:
-                        value = re.escape(value) #Escape for regex patterns.
-                        value = "^" + value.replace("\\*", ".*") + "$" #Instead of (now escaped) asterisks, match on any string. Also add anchors for a complete match.
-                        if ignore_case:
-                            value_pattern = re.compile(value, re.IGNORECASE)
-                        else:
-                            value_pattern = re.compile(value)
+        # Execute the query, then add it to the cache
+        query.execute()
+        self._query_cache[query] = query
 
-                        if key == "id":
-                            if not value_pattern.match(container.getId()):
-                                matches_container = False
-                            continue
-                        elif key == "name":
-                            if not value_pattern.match(container.getName()):
-                                matches_container = False
-                            continue
-                        elif key == "definition":
-                            try:
-                                if not value_pattern.match(container.getDefinition().getId()):
-                                    matches_container = False
-                                continue
-                            except AttributeError:  # Only instanceContainers have a get definition. We can ignore all others.
-                                pass
+        if len(self._query_cache) > MaxQueryCacheSize:
+            # Since we use an OrderedDict, we can use a simple FIFO scheme
+            # to discard queries. As long as we properly update queries
+            # that are being used, this results in the least used queries
+            # to be discarded.
+            self._query_cache.popitem(last = False)
 
-                        if not value_pattern.match(str(container.getMetaDataEntry(key))):
-                            matches_container = False
-                    elif not ignore_case:
-                        if key == "id":
-                            if value != container.getId():
-                                matches_container = False
-                            continue
-                        elif key == "name":
-                            if value != container.getName():
-                                matches_container = False
-                            continue
-                        elif key == "definition":
-                            try:
-                                if value != container.getDefinition().getId():
-                                    matches_container = False
-                                continue
-                            except AttributeError:  # Only instanceContainers have a get definition. We can ignore all others.
-                                pass
-
-                        if value != str(container.getMetaDataEntry(key)):
-                            matches_container = False
-                    else:
-                        if key == "id":
-                            if value.lower() != container.getId().lower():
-                                matches_container = False
-                            continue
-                        elif key == "name":
-                            if value.lower() != container.getName().lower():
-                                matches_container = False
-                            continue
-                        elif key == "definition":
-                            try:
-                                if value.lower() != container.getDefinition().getId().lower():
-                                    matches_container = False
-                                continue
-                            except AttributeError:  # Only instanceContainers have a get definition. We can ignore all others.
-                                pass
-
-                        if value.lower() != str(container.getMetaDataEntry(key)).lower():
-                            matches_container = False
-                except TypeError: #Value was not a string.
-                    if key == "id" or key == "name" or key == "definition":
-                        matches_container = False
-                        continue
-                    elif key == "read_only":
-                        try:
-                            if value != container.isReadOnly():
-                                matches_container = False
-                            continue
-                        except AttributeError:
-                            pass
-
-                    if value != container.getMetaDataEntry(key):
-                        matches_container = False
-                    continue
-
-            if matches_container:
-                containers.append(container)
-
-        return containers
+        return query.getResult()
 
     ##  This is a small convenience to make it easier to support complex structures in ContainerStacks.
     def getEmptyInstanceContainer(self):
@@ -232,7 +167,6 @@ class ContainerRegistry:
 
                 files.append((type_priority, container_id, path, read_only, container_type))
 
-
         # Sort the list of files by type_priority so we can ensure correct loading order.
         files = sorted(files, key = lambda i: i[0])
         resource_start_time = time.time()
@@ -270,8 +204,13 @@ class ContainerRegistry:
             Logger.log("w", "Container of type %s and id %s already added", repr(container.__class__), container.getId())
             return
 
+        if hasattr(container, "metaDataChanged"):
+            # Since queries are based on metadata, we need to make sure to clear the cache when a container's metadata changes.
+            container.metaDataChanged.connect(self._clearQueryCache)
+
         self._containers.append(container)
         self._id_container_cache[container.getId()] = container
+        self._clearQueryCache()
         self.containerAdded.emit(container)
 
     @UM.FlameProfiler.profile
@@ -283,6 +222,11 @@ class ContainerRegistry:
             self._containers.remove(container)
             del self._id_container_cache[container.getId()]
             self._deleteFiles(container)
+
+            if hasattr(container, "metaDataChanged"):
+                container.metaDataChanged.disconnect(self._clearQueryCache)
+
+            self._clearQueryCache()
             self.containerRemoved.emit(container)
 
             Logger.log("d", "Removed container %s", container.getId())
@@ -314,6 +258,7 @@ class ContainerRegistry:
             container._id = new_id
             self._id_container_cache[container._id] = container # Keep cache up-to-date.
 
+        self._clearQueryCache()
         self.containerAdded.emit(container)
 
     def saveAll(self):
@@ -504,6 +449,10 @@ class ContainerRegistry:
         with open(cache_path, "wb") as f:
             pickle.dump(definition, f)
 
+    # Clear the internal query cache
+    def _clearQueryCache(self):
+        self._query_cache.clear()
+
     ##  Get the lock filename including full path
     #   Dependent on when you call this function, Resources.getConfigStoragePath may return different paths
     def getLockFilename(self):
@@ -567,3 +516,4 @@ class _EmptyInstanceContainer(InstanceContainer.InstanceContainer):
 
     def serialize(self):
         return "[general]\n version = 2\n name = empty\n definition = fdmprinter\n"
+
