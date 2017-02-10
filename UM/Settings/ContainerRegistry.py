@@ -21,7 +21,7 @@ import UM.Dictionary
 from . import DefinitionContainer
 from . import InstanceContainer
 from . import ContainerStack
-
+import time
 
 CONFIG_LOCK_FILENAME = "uranium.lock"
 
@@ -232,9 +232,10 @@ class ContainerRegistry:
 
                 files.append((type_priority, container_id, path, read_only, container_type))
 
+
         # Sort the list of files by type_priority so we can ensure correct loading order.
         files = sorted(files, key = lambda i: i[0])
-
+        resource_start_time = time.time()
         for _, container_id, file_path, read_only, container_type in files:
             if container_id in self._id_container_cache:
                 Logger.log("c", "Found a container with a duplicate ID: %s", container_id)
@@ -260,6 +261,7 @@ class ContainerRegistry:
                 self.addContainer(new_container)
             except Exception as e:
                 Logger.logException("e", "Could not deserialize container %s", container_id)
+        Logger.log("d", "Loading data into container registry took %s seconds", time.time() - resource_start_time)
 
     @UM.FlameProfiler.profile
     def addContainer(self, container):
