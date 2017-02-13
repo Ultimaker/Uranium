@@ -149,6 +149,10 @@ class Application():
     def getVersion(self):
         return self._version
 
+    @classmethod
+    def getStaticVersion(cls):
+        return "unknown"
+
     ##  Get the buildtype of the application
     #   \returns version \type{string}
     def getBuildType(self):
@@ -328,8 +332,8 @@ class Application():
     #
     #   \param parser \type{argparse.ArgumentParser} The parser that will parse the command line.
     @classmethod
-    def addCommandLineOptions(self, parser):
-        parser.add_argument("--version", action="version", version="%(prog)s {0}".format(self.getVersion()))
+    def addCommandLineOptions(cls, parser):
+        parser.add_argument("--version", action="version", version="%(prog)s {0}".format(cls.getStaticVersion()))
         parser.add_argument("--external-backend",
                             dest="external-backend",
                             action="store_true", default=False,
