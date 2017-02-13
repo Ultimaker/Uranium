@@ -265,12 +265,16 @@ class MeshData:
     def hasAttribute(self, key):
         return key in self._attributes
 
-    #   the return value is a dict with at least keys opengl_name, opengl_type, value
+    ##  the return value is a dict with at least keys opengl_name, opengl_type, value
     def getAttribute(self, key):
         return self._attributes[key]
 
+    ##  Return attribute names in alphabetical order
+    #   The sorting assures that the order is always the same.
     def attributeNames(self):
-        return self._attributes.keys()
+        result = list(self._attributes.keys())
+        result.sort()
+        return result
 
     def toString(self):
         return "MeshData(_vertices=" + str(self._vertices) + ", _normals=" + str(self._normals) + ", _indices=" + \
