@@ -165,7 +165,9 @@ class QtApplication(QApplication, Application):
 
         return self._renderer
 
+    @classmethod
     def addCommandLineOptions(self, parser):
+        super().addCommandLineOptions(parser)
         parser.add_argument("--disable-textures",
                             dest="disable-textures",
                             action="store_true", default=False,

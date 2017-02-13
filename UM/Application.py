@@ -155,6 +155,10 @@ class Application():
     def getVersion(self):
         return self._version
 
+    @classmethod
+    def getStaticVersion(cls):
+        return "unknown"
+
     ##  Get the buildtype of the application
     #   \returns version \type{string}
     def getBuildType(self):
@@ -321,11 +325,6 @@ class Application():
 
     def parseCommandLine(self):
         parser = argparse.ArgumentParser(prog = self.getApplicationName()) #pylint: disable=bad-whitespace
-        parser.add_argument("--version", action="version", version="%(prog)s {0}".format(self.getVersion()))
-        parser.add_argument("--external-backend",
-                            dest="external-backend",
-                            action="store_true", default=False,
-                            help="Use an externally started backend instead of starting it automatically.")
         self.addCommandLineOptions(parser)
 
         self._parsed_command_line = vars(parser.parse_args())
@@ -333,8 +332,13 @@ class Application():
     ##  Can be overridden to add additional command line options to the parser.
     #
     #   \param parser \type{argparse.ArgumentParser} The parser that will parse the command line.
-    def addCommandLineOptions(self, parser):
-        pass
+    @classmethod
+    def addCommandLineOptions(cls, parser):
+        parser.add_argument("--version", action="version", version="%(prog)s {0}".format(cls.getStaticVersion()))
+        parser.add_argument("--external-backend",
+                            dest="external-backend",
+                            action="store_true", default=False,
+                            help="Use an externally started backend instead of starting it automatically.")
 
     def addExtension(self, extension):
         self._extensions.append(extension)
