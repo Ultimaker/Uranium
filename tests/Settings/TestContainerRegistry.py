@@ -10,6 +10,7 @@ from UM.Settings.ContainerRegistry import ContainerRegistry
 from UM.Settings.DefinitionContainer import DefinitionContainer
 from UM.Settings.InstanceContainer import InstanceContainer
 from UM.Settings.ContainerStack import ContainerStack
+from UM.Signal import Signal
 
 from UM.Resources import Resources
 from UM.MimeTypeDatabase import MimeType, MimeTypeDatabase
@@ -109,7 +110,7 @@ class MockContainer(ContainerInterface, UM.PluginObject.PluginObject):
     def deserialize(self, serialized):
         raise NotImplementedError()
 
-    metaDataChanged = None # type: Signal
+    metaDataChanged = Signal()
 
 ##  Tests adding a container to the registry.
 #
