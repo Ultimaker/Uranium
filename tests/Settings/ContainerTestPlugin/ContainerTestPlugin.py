@@ -85,3 +85,5 @@ class ContainerTestPlugin(ContainerInterface, PluginObject):
     #   This method is not implemented in the mock container.
     def deserialize(self, serialized):
         raise NotImplementedError()
+
+    metaDataChanged = None # type: Signal
