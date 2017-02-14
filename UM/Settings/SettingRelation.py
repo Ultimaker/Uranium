@@ -3,6 +3,10 @@
 
 import enum
 
+MYPY = False
+if MYPY:
+    from UM.Settings.SettingDefinition import SettingDefinition
+
 ##  The type of relation, i.e. what direction does this relation have.
 class RelationType(enum.IntEnum):
     RequiresTarget = 1 # The relation represents that the owner requires the target.
@@ -25,7 +29,7 @@ class SettingRelation:
     #   \param target \type{SettingDefinition} The target of the relation.
     #   \param type \type{RelationType} The type of the relation.
     #   \param role \type{string} The role of the relation, what property is it used for.
-    def __init__(self, owner, target, relation_type, role):
+    def __init__(self, owner: "SettingDefinition", target: "SettingDefinition", relation_type: RelationType, role: str) -> None:
         if owner is None or target is None:
             raise ValueError("owner or target cannot be None")
 

@@ -76,7 +76,7 @@ class Logger:
         for line in traceback.format_exc().rstrip().split("\n"):
             cls.log(log_type, line)
 
-    __loggers = []
+    __loggers = []  # type: List[Logger]
 
 ##  Abstract base class for log output classes.
 class LogOutput(PluginObject):

@@ -5,7 +5,8 @@ import pytest
 import os.path
 import uuid
 
-import UM.Settings
+import UM.Settings.SettingFunction
+import UM.Settings.DefinitionContainer
 from UM.Settings.DefinitionContainer import IncorrectDefinitionVersionError, InvalidDefinitionError
 from UM.Settings.SettingDefinition import SettingDefinition, DefinitionPropertyType
 from UM.Resources import Resources
@@ -18,7 +19,7 @@ Resources.addSearchPath(os.path.dirname(os.path.abspath(__file__)))
 @pytest.fixture
 def definition_container():
     uid = str(uuid.uuid4().int)
-    result = UM.Settings.DefinitionContainer(uid)
+    result = UM.Settings.DefinitionContainer.DefinitionContainer(uid)
     assert result.getId() == uid
     return result
 
@@ -44,7 +45,7 @@ test_deserialize_data = [
     }}),
     ("functions.def.json", { "name": "Test", "metadata": {}, "settings": {
         "test_setting_0": { "label": "Test 0", "default_value": 10, "description": "A Test Setting" },
-        "test_setting_1": { "label": "Test 1", "default_value": 10, "description": "A Test Setting", "value": UM.Settings.SettingFunction("test_setting_0 * 10") },
+        "test_setting_1": { "label": "Test 1", "default_value": 10, "description": "A Test Setting", "value": UM.Settings.SettingFunction.SettingFunction("test_setting_0 * 10") },
     }})
 ]
 @pytest.mark.parametrize("file,expected", test_deserialize_data)
@@ -295,7 +296,7 @@ def test_serialize(definition_container):
     _test_serialize_cycle(definition_container)
 
 def test_setting_function():
-    container = UM.Settings.DefinitionContainer("test")
+    container = UM.Settings.DefinitionContainer.DefinitionContainer("test")
     with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "definitions", "functions.def.json")) as data:
         container.deserialize(data.read())
 
@@ -320,7 +321,7 @@ def test_setting_function():
     assert relation_1.type == UM.Settings.SettingRelation.RelationType.RequiresTarget
     assert relation_1.role == "value"
 
-    assert isinstance(function, UM.Settings.SettingFunction)
+    assert isinstance(function, UM.Settings.SettingFunction.SettingFunction)
 
     result = function(container)
     assert result == (setting_0.default_value * 10)
@@ -360,7 +361,7 @@ def _test_serialize_cycle(definition_container):
     # No need to verify the internationalisation catalogue.
 
     serialised = definition_container.serialize()
-    deserialised = UM.Settings.DefinitionContainer(uuid.uuid4().int)
+    deserialised = UM.Settings.DefinitionContainer.DefinitionContainer(uuid.uuid4().int)
     deserialised.deserialize(serialised)
 
     assert name == deserialised.getName()

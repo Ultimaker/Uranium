@@ -13,9 +13,9 @@ import os
 import sys
 import json
 
-import UM.Settings
-
-from UM.Settings.SettingDefinition import DefinitionPropertyType
+from UM.Settings.SettingDefinition import SettingDefinition, DefinitionPropertyType
+from UM.Settings.Validator import Validator
+from UM.Settings.DefinitionContainer import DefinitionContainer
 
 if len(sys.argv) < 3:
     print("Usage: query.py [file] [query]")
@@ -24,15 +24,15 @@ if len(sys.argv) < 3:
 file_path = sys.argv[1]
 
 # These are defined by Cura but we would still like to be able to query them.
-UM.Settings.SettingDefinition.addSupportedProperty("settable_per_mesh", DefinitionPropertyType.Any, default = True, read_only = True)
-UM.Settings.SettingDefinition.addSupportedProperty("settable_per_extruder", DefinitionPropertyType.Any, default = True, read_only = True)
-UM.Settings.SettingDefinition.addSupportedProperty("settable_per_meshgroup", DefinitionPropertyType.Any, default = True, read_only = True)
-UM.Settings.SettingDefinition.addSupportedProperty("settable_globally", DefinitionPropertyType.Any, default = True, read_only = True)
-UM.Settings.SettingDefinition.addSupportedProperty("limit_to_extruder", DefinitionPropertyType.Function, default = "-1")
-UM.Settings.SettingDefinition.addSupportedProperty("resolve", DefinitionPropertyType.Function, default = None)
-UM.Settings.SettingDefinition.addSettingType("extruder", None, str, UM.Settings.Validator)
+SettingDefinition.addSupportedProperty("settable_per_mesh", DefinitionPropertyType.Any, default = True, read_only = True)
+SettingDefinition.addSupportedProperty("settable_per_extruder", DefinitionPropertyType.Any, default = True, read_only = True)
+SettingDefinition.addSupportedProperty("settable_per_meshgroup", DefinitionPropertyType.Any, default = True, read_only = True)
+SettingDefinition.addSupportedProperty("settable_globally", DefinitionPropertyType.Any, default = True, read_only = True)
+SettingDefinition.addSupportedProperty("limit_to_extruder", DefinitionPropertyType.Function, default = "-1")
+SettingDefinition.addSupportedProperty("resolve", DefinitionPropertyType.Function, default = None)
+SettingDefinition.addSettingType("extruder", None, str, Validator)
 
-definition = UM.Settings.DefinitionContainer(os.path.basename(file_path))
+definition = DefinitionContainer(os.path.basename(file_path))
 with open(file_path) as f:
     definition.deserialize(f.read())
 

@@ -8,6 +8,8 @@ import inspect
 import threading
 import os
 import weakref
+from weakref import ReferenceType
+from typing import Any, Union, Callable, TypeVar, Generic, List, Tuple, Iterable, cast, Optional
 import contextlib
 import traceback
 
@@ -19,15 +21,19 @@ from UM.Logger import Logger
 from UM.Platform import Platform
 from UM import FlameProfiler
 
+MYPY = False
+if MYPY:
+    from UM.Application import Application
+
 # Helper functions for tracing signal emission.
-def _traceEmit(signal, *args, **kwargs):
+def _traceEmit(signal: Any, *args: Any, **kwargs: Any) -> None:
     Logger.log("d", "Emitting %s with arguments %s", str(signal.getName()), str(args) + str(kwargs))
 
     if signal._Signal__type == Signal.Queued:
         Logger.log("d", "> Queued signal, postponing emit until next event loop run")
 
     if signal._Signal__type == Signal.Auto:
-        if Signal._app is not None and threading.current_thread() is not Signal._app.getMainThread():
+        if Signal._signalQueue is not None and threading.current_thread() is not Signal._signalQueue.getMainThread():
             Logger.log("d", "> Auto signal and not on main thread, postponing emit until next event loop run")
 
     for func in signal._Signal__functions:
@@ -40,14 +46,18 @@ def _traceEmit(signal, *args, **kwargs):
         Logger.log("d", "> Emitting %s", str(signal._Signal__name))
 
 
-def _traceConnect(signal, *args, **kwargs):
+def _traceConnect(signal: Any, *args: Any, **kwargs: Any) -> None:
     Logger.log("d", "Connecting signal %s to %s", str(signal._Signal__name), str(args[0]))
 
-def _traceDisconnect(signal, *args, **kwargs):
+def _traceDisconnect(signal: Any, *args: Any, **kwargs: Any) -> None:
     Logger.log("d", "Connecting signal %s from %s", str(signal._Signal__name), str(args[0]))
 
-def _isTraceEnabled():
+def _isTraceEnabled() -> bool:
     return "URANIUM_TRACE_SIGNALS" in os.environ
+
+class SignalQueue:
+    def functionEvent(self, event): pass
+    def getMainThread(self): pass
 
 ###########################################################################
 # Integration with the Flame Profiler.
@@ -111,20 +121,19 @@ class Signal:
     #   \param kwargs Keyword arguments.
     #                 Possible keywords:
     #                 - type: The signal type. Defaults to Auto.
-    def __init__(self, **kwargs):
+    def __init__(self, type: int = Auto) -> None:
         # These collections must be treated as immutable otherwise we lose thread safety.
-        self.__functions = WeakImmutableList()
-        self.__methods = WeakImmutablePairList()
-        self.__signals = WeakImmutableList()
+        self.__functions = WeakImmutableList()      # type: "WeakImmutableList"
+        self.__methods = WeakImmutablePairList()    # type: "WeakImmutablePairList"
+        self.__signals = WeakImmutableList()        # type: "WeakImmutableList"
 
         self.__lock = threading.Lock()  # Guards access to the fields above.
-
-        self.__type = kwargs.get("type", Signal.Auto)
+        self.__type = type
 
         self._postpone_emit = False
-        self._postpone_thread = None
+        self._postpone_thread = None    # type: threading.Thread
         self._compress_postpone = False
-        self._postponed_emits = None
+        self._postponed_emits = None    # type: Any
 
         if _recordSignalNames():
             try:
@@ -141,12 +150,12 @@ class Signal:
         return self.__name
 
     ##  \exception NotImplementedError
-    def __call__(self):
+    def __call__(self) -> None:
         raise NotImplementedError("Call emit() to emit a signal")
 
     ##  Get type of the signal
     #   \return \type{int} Direct(1), Auto(2) or Queued(3)
-    def getType(self):
+    def getType(self) -> int:
         return self.__type
 
     ##  Emit the signal which indirectly calls all of the connected slots.
@@ -159,7 +168,7 @@ class Signal:
     #   function will be called on the next application event loop tick.
     @call_if_enabled(_traceEmit, _isTraceEnabled())
     @profileEmit
-    def emit(self, *args, **kwargs):
+    def emit(self, *args: Any, **kwargs: Any) -> None:
         # Check to see if we need to postpone emits
         if self._postpone_emit:
             if threading.current_thread() != self._postpone_thread:
@@ -195,7 +204,7 @@ class Signal:
     ##  Connect to this signal.
     #   \param connector The signal or slot (function) to connect.
     @call_if_enabled(_traceConnect, _isTraceEnabled())
-    def connect(self, connector):
+    def connect(self, connector: Union['Signal', Callable[[],None]]) -> None:
         if self._postpone_emit:
             Logger.log("w", "Tried to connect to signal %s that is currently being postponed, this is not possible", self.__name)
             return
@@ -208,7 +217,7 @@ class Signal:
             elif inspect.ismethod(connector):
                 # if SIGNAL_PROFILE:
                 #     Logger.log('d', "Connector method qual name: " + connector.__func__.__qualname__)
-                self.__methods = self.__methods.append(connector.__self__, connector.__func__)
+                self.__methods = self.__methods.append(cast(Any, connector).__self__, cast(Any, connector).__func__)
             else:
                 # Once again, update the list of functions using a whole new list.
                 # if SIGNAL_PROFILE:
@@ -239,9 +248,9 @@ class Signal:
             return
 
         with self.__lock:
-            self.__functions = WeakImmutableList()
-            self.__methods = WeakImmutablePairList()
-            self.__signals = WeakImmutableList()
+            self.__functions = WeakImmutableList()      # type: "WeakImmutableList"
+            self.__methods = WeakImmutablePairList()    # type: "WeakImmutablePairList"
+            self.__signals = WeakImmutableList()        # type: "WeakImmutableList"
 
     ##  To support Pickle
     #
@@ -271,7 +280,9 @@ class Signal:
 
     #   To avoid circular references when importing Application, this should be
     #   set by the Application instance.
-    _app = None
+    _app = None # type: Application
+
+    _signalQueue = None # type: SignalQueue
 
     # Private implementation of the actual emit.
     # This is done to make it possible to freely push function events without needing to maintain state.
@@ -418,23 +429,25 @@ def signalemitter(cls):
     cls.__new__ = new_new
     return cls
 
+T = TypeVar('T')
+
 ##  Minimal implementation of a weak reference list with immutable tendencies.
 #
 #   Strictly speaking this isn't immutable because the garbage collector can modify
 #   it, but no application code can. Also, this class doesn't implement the Python
 #   list API, only the handful of methods we actually need in the code above.
-class WeakImmutableList:
-    def __init__(self):
-        self.__list = []
+class WeakImmutableList(Generic[T], Iterable):
+    def __init__(self) -> None:
+        self.__list = []    # type: List[ReferenceType[Optional[T]]]
 
     ## Append an item and return a new list
     #
     #  \param item the item to append
     #  \return a new list
-    def append(self, item):
-        new_instance = WeakImmutableList()
+    def append(self, item: T) -> "WeakImmutableList[T]":
+        new_instance = WeakImmutableList()   # type: WeakImmutableList[T]
         new_instance.__list = self.__cleanList()
-        new_instance.__list.append(weakref.ref(item))
+        new_instance.__list.append(ReferenceType(item))
         return new_instance
 
     ## Remove an item and return a list
@@ -443,10 +456,10 @@ class WeakImmutableList:
     #  doesn't throw a ValueError if the item isn't in the list.
     #  \param item item to remove
     #  \return a list which does not have the item.
-    def remove(self, item):
+    def remove(self, item: T) -> "WeakImmutableList[T]":
         for item_ref in self.__list:
             if item_ref() is item:
-                new_instance = WeakImmutableList()
+                new_instance = WeakImmutableList()   # type: WeakImmutableList[T]
                 new_instance.__list = self.__cleanList()
                 new_instance.__list.remove(item_ref)
                 return new_instance
@@ -454,7 +467,7 @@ class WeakImmutableList:
             return self # No changes needed
 
     # Create a new list with the missing values removed.
-    def __cleanList(self):
+    def __cleanList(self) -> "List[ReferenceType[Optional[T]]]":
         return [item_ref for item_ref in self.__list if item_ref() is not None]
 
     def __iter__(self):
@@ -464,7 +477,7 @@ class WeakImmutableList:
 #
 # It dereferences each weak reference object and filters out the objects
 # which have already disappeared via GC.
-class WeakImmutableListIterator:
+class WeakImmutableListIterator(Generic[T], Iterable):
     def __init__(self, list_):
         self.__it = list_.__iter__()
 
@@ -477,17 +490,20 @@ class WeakImmutableListIterator:
             next_item = self.__it.__next__()()
         return next_item
 
+
+U = TypeVar('U')
+
 ##  A variation of WeakImmutableList which holds a pair of values using weak refernces.
-class WeakImmutablePairList:
-    def __init__(self):
-        self.__list = []
+class WeakImmutablePairList(Generic[T,U], Iterable):
+    def __init__(self) -> None:
+        self.__list = []    # type: List[Tuple[ReferenceType[T],ReferenceType[U]]]
 
     ## Append an item and return a new list
     #
     #  \param item the item to append
     #  \return a new list
-    def append(self, left_item, right_item):
-        new_instance = WeakImmutablePairList()
+    def append(self, left_item: T, right_item: U) -> "WeakImmutablePairList[T,U]":
+        new_instance = WeakImmutablePairList() # type: WeakImmutablePairList[T,U]
         new_instance.__list = self.__cleanList()
         new_instance.__list.append( (weakref.ref(left_item), weakref.ref(right_item)) )
         return new_instance
@@ -498,13 +514,13 @@ class WeakImmutablePairList:
     #  doesn't throw a ValueError if the item isn't in the list.
     #  \param item item to remove
     #  \return a list which does not have the item.
-    def remove(self, left_item, right_item):
+    def remove(self, left_item: T, right_item: U) -> "WeakImmutablePairList[T,U]":
         for pair in self.__list:
             left = pair[0]()
             right = pair[1]()
 
             if left is left_item and right is right_item:
-                new_instance = WeakImmutablePairList()
+                new_instance = WeakImmutablePairList() # type: WeakImmutablePairList[T,U]
                 new_instance.__list = self.__cleanList()
                 new_instance.__list.remove(pair)
                 return new_instance
@@ -512,7 +528,7 @@ class WeakImmutablePairList:
             return self # No changes needed
 
     # Create a new list with the missing values removed.
-    def __cleanList(self):
+    def __cleanList(self) -> List[Tuple[ReferenceType,ReferenceType]]:
         return [pair for pair in self.__list if pair[0]() is not None and pair[1]() is not None]
 
     def __iter__(self):
@@ -521,7 +537,7 @@ class WeakImmutablePairList:
 # A small iterator wrapper which dereferences the weak ref objects and filters
 # out the objects which have already disappeared via GC.
 class WeakImmutablePairListIterator:
-    def __init__(self, list_):
+    def __init__(self, list_) -> None:
         self.__it = list_.__iter__()
 
     def __iter__(self):

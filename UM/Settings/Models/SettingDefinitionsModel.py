@@ -11,11 +11,11 @@ from UM.FlameProfiler import pyqtSlot
 from UM.Logger import Logger
 from UM.Preferences import Preferences
 from UM.Resources import Resources
+from UM.Settings import SettingRelation
 from UM.i18n import i18nCatalog
 
-import UM.Settings
-
-from UM.Settings.SettingDefinition import DefinitionPropertyType
+from UM.Settings.ContainerRegistry import ContainerRegistry
+from UM.Settings.SettingDefinition import SettingDefinition, DefinitionPropertyType
 
 ##  Model that provides a flattened list of the tree of SettingDefinition objects in a DefinitionContainer
 #
@@ -61,7 +61,7 @@ class SettingDefinitionsModel(QAbstractListModel):
             self.ExpandedRole: b"expanded",
         }
         index = self.ExpandedRole + 1
-        for name in UM.Settings.SettingDefinition.getPropertyNames():
+        for name in SettingDefinition.getPropertyNames():
             self._role_names[index] = name.encode()
             index += 1
 
@@ -84,7 +84,7 @@ class SettingDefinitionsModel(QAbstractListModel):
         if container_id != self._container_id:
             self._container_id = container_id
 
-            containers = UM.Settings.ContainerRegistry.getInstance().findDefinitionContainers(id = self._container_id)
+            containers = ContainerRegistry.getInstance().findDefinitionContainers(id = self._container_id)
             if containers:
                 self._container = containers[0]
             else:
@@ -361,7 +361,7 @@ class SettingDefinitionsModel(QAbstractListModel):
 
         result = []
         for relation in definitions[0].relations:
-            if relation.type is not UM.Settings.SettingRelation.RelationType.RequiresTarget:
+            if relation.type is not SettingRelation.RelationType.RequiresTarget:
                 continue
 
             if role and role != relation.role:
@@ -386,7 +386,7 @@ class SettingDefinitionsModel(QAbstractListModel):
 
         result = []
         for relation in definitions[0].relations:
-            if relation.type is not UM.Settings.SettingRelation.RelationType.RequiredByTarget:
+            if relation.type is not SettingRelation.RelationType.RequiredByTarget:
                 continue
 
             if role and role != relation.role:

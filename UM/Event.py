@@ -7,6 +7,9 @@
 
 ##  Base event class.
 #   Defines the most basic interface for events and several constants to identify event types.
+from typing import List, Any, Callable
+
+
 class Event:
     MousePressEvent = 1
     MouseMoveEvent = 2
@@ -21,13 +24,13 @@ class Event:
     ViewActivateEvent = 11
     ViewDeactivateEvent = 12
 
-    def __init__(self, event_type):
+    def __init__(self, event_type: int) -> None:
         super().__init__()
         self._type = event_type
 
     ##  The type of event.
     @property
-    def type(self):
+    def type(self) -> int:
         return self._type
 
 
@@ -47,39 +50,39 @@ class MouseEvent(Event):
     #   \param last_x The X coordinate of the previous mouse event. Can be None. It is used to calculate deltaX.
     #   \param last_y The Y coordinate of the previous mouse event. Cam be None. It is used to calculate deltaY.
     #   \param buttons The buttons that are associated with this event.
-    def __init__(self, event_type, x = 0, y = 0, last_x = None, last_y = None, buttons = None): #pylint: disable=bad-whitespace
+    def __init__(self, event_type: int, x: int = 0, y: int = 0, last_x: int = None, last_y: int = None, buttons: List = None) -> None: #pylint: disable=bad-whitespace
         super().__init__(event_type)
         self._x = x
         self._y = y
         self._last_x = last_x
         self._last_y = last_y
-        self._buttons = []
+        self._buttons = []  # type: List
         if buttons:
             self._buttons = buttons
 
     ##  The X coordinate of the event.
     @property
-    def x(self):
+    def x(self) -> int:
         return self._x
 
     ##  The Y coordinate of the event.
     @property
-    def y(self):
+    def y(self) -> int:
         return self._y
 
     ##  The X coordinate of the previous event.
     @property
-    def lastX(self):
+    def lastX(self) -> int:
         return self._last_x
 
     ##  The Y coordinate of the previous event.
     @property
-    def lastY(self):
+    def lastY(self) -> int:
         return self._last_y
 
     ##  The change in X position between this event and the previous event.
     @property
-    def deltaX(self):
+    def deltaX(self) -> int:
         if self._last_x != None:
             return self._x - self._last_x
 
@@ -87,7 +90,7 @@ class MouseEvent(Event):
 
     ##  The change in Y position between this event and the previous event.
     @property
-    def deltaY(self):
+    def deltaY(self) -> int:
         if self._last_y != None:
             return self._y - self._last_y
 
@@ -95,7 +98,7 @@ class MouseEvent(Event):
 
     ##  The list of buttons associated with this event.
     @property
-    def buttons(self):
+    def buttons(self) -> List:
         return self._buttons
 
 ##  Event relating to what's happening with the scroll wheel of a mouse.
@@ -106,7 +109,7 @@ class WheelEvent(Event):
     #   eighths of a degree. To the right is positive. To the left is negative.
     #   \param vertical How far the scroll wheel scrolled vertically, in eighths
     #   of a degree. Up is positive. Down is negative.
-    def __init__(self, horizontal, vertical):
+    def __init__(self, horizontal: int, vertical: int) -> None:
         super().__init__(Event.MouseWheelEvent)
         self._horizontal = horizontal
         self._vertical = vertical
@@ -116,7 +119,7 @@ class WheelEvent(Event):
     #
     #   To the right is positive. To the left is negative.
     @property
-    def horizontal(self):
+    def horizontal(self) -> int:
         return self._horizontal
 
     ##  How far the scroll wheel was scrolled vertically, in eighths of a
@@ -124,7 +127,7 @@ class WheelEvent(Event):
     #
     #   Up is positive. Down is negative.
     @property
-    def vertical(self):
+    def vertical(self) -> int:
         return self._vertical
 
 
@@ -156,7 +159,7 @@ class KeyEvent(Event):
 
     ##  Creates a new key event, passing the event type on to the ``Event``
     #   parent class.
-    def __init__(self, event_type, key):
+    def __init__(self, event_type: int, key: int) -> None:
         super().__init__(event_type)
         self._key = key
 
@@ -164,7 +167,7 @@ class KeyEvent(Event):
     #
     #   Compare this with ``KeyEvent.AltKey``, ``KeyEvent.EnterKey``, etc.
     @property
-    def key(self):
+    def key(self) -> int:
         return self._key
 
 
@@ -174,13 +177,13 @@ class ToolEvent(Event):
 
 ##  Event used to call a function.
 class CallFunctionEvent(Event):
-    def __init__(self, function, args, kwargs):
+    def __init__(self, function: Callable, args: Any, kwargs: Any) -> None:
         super().__init__(Event.CallFunctionEvent)
         self._function = function
         self._args = args
         self._kwargs = kwargs
 
-    def call(self):
+    def call(self) -> None:
         self._function(*self._args, **self._kwargs)
 
 

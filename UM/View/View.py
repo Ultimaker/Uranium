@@ -10,7 +10,7 @@ class View(PluginObject):
     def __init__(self):
         super().__init__()
         self._renderer = None
-        self._controller = UM.Application.getInstance().getController()
+        self._controller = UM.Application.Application.getInstance().getController()
 
     ##  Get the controller object associated with this View.
     #   \sa Controller

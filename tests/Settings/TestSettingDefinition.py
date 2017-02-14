@@ -3,12 +3,11 @@
 
 import pytest
 
-import UM.Settings
-
+import UM.Settings.SettingDefinition
 from UM.Settings.SettingFunction import SettingFunction
 
 def test_create():
-    definition = UM.Settings.SettingDefinition("test", None)
+    definition = UM.Settings.SettingDefinition.SettingDefinition("test", None)
 
     assert definition is not None
     assert definition.key is "test"
@@ -22,7 +21,7 @@ test_basic_properties_data = [
 ]
 @pytest.mark.parametrize("data,expected", test_basic_properties_data)
 def test_basic_properties(data, expected):
-    definition = UM.Settings.SettingDefinition("test", None)
+    definition = UM.Settings.SettingDefinition.SettingDefinition("test", None)
 
     definition.deserialize(data)
 
@@ -30,13 +29,13 @@ def test_basic_properties(data, expected):
         assert getattr(definition, key) == value
 
 def test_missing_properties():
-    definition = UM.Settings.SettingDefinition("test", None)
+    definition = UM.Settings.SettingDefinition.SettingDefinition("test", None)
 
     with pytest.raises(AttributeError):
         definition.deserialize({})
 
 def test_children():
-    definition = UM.Settings.SettingDefinition("test", None)
+    definition = UM.Settings.SettingDefinition.SettingDefinition("test", None)
 
     definition.deserialize({
         "label": "Test",

@@ -96,7 +96,7 @@ class JobQueue():
 
         return cls._instance
 
-    _instance = None
+    _instance = None    # type: JobQueue
 
 
 ##  Internal

@@ -26,7 +26,6 @@ from UM.Signal import Signal, signalemitter
 
 import numpy
 import copy
-from ctypes import c_void_p
 
 vertexBufferProperty = "__qtgl2_vertex_buffer"
 indexBufferProperty = "__qtgl2_index_buffer"

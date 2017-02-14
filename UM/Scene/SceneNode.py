@@ -37,8 +37,8 @@ class SceneNode():
     def __init__(self, parent = None, **kwargs):
         super().__init__()  # Call super to make multiple inheritance work.
 
-        self._children = []
-        self._mesh_data = None
+        self._children = []     # type: List[SceneNode]
+        self._mesh_data = None  # type: MeshData
 
         # Local transformation (from parent to local)
         self._transformation = Matrix()
@@ -293,7 +293,7 @@ class SceneNode():
 
     ##  \brief Add a child to this node and set it's parent as this node.
     #   \params scene_node SceneNode to add.
-    def addChild(self, scene_node):
+    def addChild(self, scene_node: "SceneNode"):
         if scene_node not in self._children:
             scene_node.transformationChanged.connect(self.transformationChanged)
             scene_node.childrenChanged.connect(self.childrenChanged)
@@ -310,7 +310,7 @@ class SceneNode():
 
     ##  \brief remove a single child
     #   \param child Scene node that needs to be removed.
-    def removeChild(self, child):
+    def removeChild(self, child: "SceneNode"):
         if child not in self._children:
             return
 

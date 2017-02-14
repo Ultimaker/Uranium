@@ -301,11 +301,11 @@ class Resources:
 
         cls.__paths.insert(0, cls.__data_storage_path)
 
-    __config_storage_path = None
-    __data_storage_path = None
-    __cache_storage_path = None
+    __config_storage_path = None    # type: str
+    __data_storage_path = None      # type: str
+    __cache_storage_path = None     # type: str
 
-    __paths = []
+    __paths = []    # type: List[str]
     __types = {
         Resources: "",
         Preferences: "",
