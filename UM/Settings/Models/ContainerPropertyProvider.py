@@ -1,4 +1,4 @@
-# Copyright (c) 2016 Ultimaker B.V.
+# Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 from PyQt5.QtCore import QObject, QVariant, pyqtProperty, pyqtSignal
@@ -32,7 +32,7 @@ class ContainerPropertyProvider(QObject):
             self._container.propertyChanged.disconnect(self._onPropertyChanged)
 
         if self._container_id:
-            containers = UM.Settings.ContainerRegistry.getInstance().findContainers(id = self._container_id)
+            containers = UM.Settings.ContainerRegistry.ContainerRegistry.getInstance().findContainers(id = self._container_id)
             if containers:
                 self._container = containers[0]
 
