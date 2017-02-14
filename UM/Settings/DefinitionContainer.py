@@ -166,6 +166,8 @@ class DefinitionContainer(DefinitionContainerInterface, PluginObject):
     ##  This signal is unused since the definition container is immutable, but is provided for API consistency.
     propertyChanged = Signal()
 
+    metaDataChanged = Signal()
+
     ##  \copydoc ContainerInterface::serialize
     #
     #   TODO: This implementation flattens the definition container, since the

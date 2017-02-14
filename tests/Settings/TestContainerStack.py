@@ -84,6 +84,8 @@ class MockContainer(ContainerInterface):
 
     propertyChanged = Signal()
 
+    metaDataChanged = Signal()
+
     def hasProperty(self, key, property_name):
         return key in self.items
 

@@ -211,6 +211,8 @@ class ContainerStack(ContainerInterface, PluginObject):
 
     propertyChanged = Signal()
 
+    metaDataChanged = Signal()
+
     propertiesChanged = Signal()
 
     ##  \copydoc ContainerInterface::serialize

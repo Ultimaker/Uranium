@@ -266,6 +266,8 @@ class InstanceContainer(ContainerInterface, PluginObject):
 
     propertyChanged = Signal()
 
+    metaDataChanged = Signal()
+
     ##  Remove all instances from this container.
     def clear(self):
         self._instantiateCachedValues()
