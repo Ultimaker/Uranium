@@ -95,8 +95,6 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   list if nothing was found.
     @UM.FlameProfiler.profile
     def findContainers(self, container_type = None, *, ignore_case = False, **kwargs) -> List[ContainerInterface]:
-        containers = []
-
         # Create the query object
         query = ContainerQuery.ContainerQuery(self, container_type, ignore_case = ignore_case, **kwargs)
 

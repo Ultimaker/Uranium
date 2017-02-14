@@ -131,9 +131,9 @@ class Signal:
         self.__type = type
 
         self._postpone_emit = False
-        self._postpone_thread = None
+        self._postpone_thread = None    # type: threading.Thread
         self._compress_postpone = False
-        self._postponed_emits = None
+        self._postponed_emits = None    # type: Any
 
         if _recordSignalNames():
             try:

@@ -105,6 +105,8 @@ class ContainerInterface:
 
     propertyChanged = None   # type: Signal
 
+    metaDataChanged = None # type: Signal
+
 class DefinitionContainerInterface(ContainerInterface): pass
 
 ##  Shared interface between setting container types
