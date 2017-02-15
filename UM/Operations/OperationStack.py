@@ -12,7 +12,7 @@ import threading
 #   re-doing these operations.
 @signalemitter
 class OperationStack():
-    def __init__(self):
+    def __init__(self, controller):
         self._operations = [] #List of operations.
         self._current_index = -1 #Index of the most recently executed operation.
         self._lock = threading.Lock() #Lock to make sure only one thread can modify the operation stack at a time.
@@ -20,7 +20,7 @@ class OperationStack():
         # The merge behaviour must only occur when an operation is in the middle of a user action.
         # So, whenever an operation is started or ended, we do not want this auto-merge.
         self._merge_operations = False
-        self._controller = UM.Application.getInstance().getController()  # Circular dependency blah
+        self._controller = controller
         self._controller.toolOperationStarted.connect(self._onToolOperationStarted)
         self._controller.toolOperationStopped.connect(self._onToolOperationStopped)
 

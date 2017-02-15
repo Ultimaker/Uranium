@@ -4,7 +4,7 @@
 import uuid
 
 from UM.PluginObject import PluginObject
-from UM.Settings.ContainerInterface import ContainerInterface
+from UM.Settings.Interfaces import ContainerInterface
 
 ##  Test container type to test adding new container types with.
 class ContainerTestPlugin(ContainerInterface, PluginObject):
@@ -85,3 +85,5 @@ class ContainerTestPlugin(ContainerInterface, PluginObject):
     #   This method is not implemented in the mock container.
     def deserialize(self, serialized):
         raise NotImplementedError()
+
+    metaDataChanged = None # type: Signal

@@ -2,8 +2,14 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 from enum import Enum
+from typing import Any
 
+from UM.Settings.Interfaces import ContainerInterface
 from UM.Logger import Logger
+
+MYPY = False
+if MYPY:
+    from UM.Settings.SettingInstance import SettingInstance
 
 from . import SettingFunction
 
@@ -24,16 +30,16 @@ class Validator(SettingFunction.SettingFunction):
     ##  Constructor
     #
     #   \param instance The instance this Validator validates.
-    def __init__(self, key, *args, **kwargs):
+    def __init__(self, key: str) -> None:
         if key is None:
             raise ValueError("Instance should not be None")
 
-        super().__init__("None", *args, **kwargs)
+        super().__init__("None")
 
         self._key = key
 
     ##  Perform the actual validation.
-    def __call__(self, value_provider, *args, **kwargs):
+    def __call__(self, value_provider: "ContainerInterface") -> Any:
         if not value_provider:
             return
 

@@ -14,7 +14,7 @@ import UM.Application  # Circular dependency blah
 class Tool(PluginObject):
     def __init__(self):
         super().__init__()
-        self._controller = UM.Application.getInstance().getController() # Circular dependency blah
+        self._controller = UM.Application.Application.getInstance().getController() # Circular dependency blah
         self._enabled = True
 
         self._handle = None
@@ -52,7 +52,7 @@ class Tool(PluginObject):
     #   \sa Event
     def event(self, event):
         if not self._selection_pass:
-            self._selection_pass = UM.Application.getInstance().getRenderer().getRenderPass("selection")
+            self._selection_pass = UM.Application.Application.getInstance().getRenderer().getRenderPass("selection")
 
         if event.type == Event.ToolActivateEvent:
             if Selection.hasSelection() and self._handle:

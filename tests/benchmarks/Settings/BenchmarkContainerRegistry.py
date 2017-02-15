@@ -1,10 +1,12 @@
+# Copyright (c) 2017 Ultimaker B.V.
+# Uranium is released under the terms of the AGPLv3 or higher.
 
 import os.path
 import pytest
 
 from UM.MimeTypeDatabase import MimeType, MimeTypeDatabase
 import UM
-import UM.Settings
+import UM.Settings.ContainerRegistry
 
 @pytest.fixture
 def container_registry(application):
@@ -36,9 +38,9 @@ def container_registry(application):
     UM.Settings.ContainerRegistry._ContainerRegistry__instance = None # Reset the private instance variable every time
     UM.PluginRegistry.getInstance().removeType("settings_container")
 
-    UM.Settings.ContainerRegistry.getInstance().load()
+    UM.Settings.ContainerRegistry.ContainerRegistry.getInstance().load()
 
-    return UM.Settings.ContainerRegistry.getInstance()
+    return UM.Settings.ContainerRegistry.ContainerRegistry.getInstance()
 
 
 benchmark_findContainers_data = [

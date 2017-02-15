@@ -177,7 +177,7 @@ class Preferences:
 
         del self._parser["general"]["version"]
 
-    _instance = None
+    _instance = None    # type: Preferences
 
 class _Preference:
     def __init__(self, name, default = None, value = None): #pylint: disable=bad-whitespace

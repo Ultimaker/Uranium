@@ -61,11 +61,6 @@ def call_if_enabled(function, condition):
 #   excluding builtin functions like __getattr__. It is also expected to match the signature of
 #   those functions.
 def interface(cls):
-    # First, sanity check the interface declaration to make sure it only contains methods
-    invalid_properties = list(filter(lambda i: not i[0].startswith("__") and not inspect.isfunction(i[1]), inspect.getmembers(cls)))
-    if invalid_properties:
-        raise TypeError("Class {0} is declared as interface but includes non-method properties: {1}".format(cls, invalid_properties))
-
     # Then, replace the new method with a method that checks if all methods have been reimplemented
     old_new = cls.__new__
     def new_new(subclass, *args, **kwargs):
@@ -74,7 +69,7 @@ def interface(cls):
             if sub_method == method[1]:
                 raise NotImplementedError("Class {0} does not implement the complete interface of {1}: Missing method {2}".format(subclass, cls, method[0]))
 
-            if inspect.signature(sub_method) != inspect.signature(method[1]):
+            if not sameSignature(inspect.signature(sub_method), inspect.signature(method[1])):
                 raise NotImplementedError("Method {0} of class {1} does not have the same signature as method {2} in interface {3}: {4} vs {5}".format(sub_method, subclass, method[1], cls, inspect.signature(sub_method), inspect.signature(method[1])))
 
         if old_new == object.__new__:
@@ -89,3 +84,6 @@ def immutable(cls):
     property_names = list(filter(lambda i: isinstance(i, property), inspect.getmembers(cls)))
     cls.__slots__ = property_names
     return cls
+
+def sameSignature(a: inspect.Signature, b: inspect.Signature) -> bool:
+    return len(a.parameters) == len(b.parameters)

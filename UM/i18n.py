@@ -2,6 +2,7 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 import gettext
+from typing import Any, Dict
 
 from UM.Resources import Resources
 
@@ -32,10 +33,10 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
     #
     #   \note When `language` is `default`, the language to load can be
     #   overridden using the "LANGUAGE" environment variable.
-    def __init__(self, name = None, language = "default"): #pylint: disable=bad-whitespace
+    def __init__(self, name: str = None, language: str = "default") -> None: #pylint: disable=bad-whitespace
         self.__name = name
         self.__language = language
-        self.__translation = None
+        self.__translation = None   # type: gettext.NullTranslations
 
         self._update() #Load the actual translation document now that the language is set.
 
@@ -46,7 +47,7 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
     #
     #   \return ``True`` if texts are loaded into this catalogue, or ``False``
     #   if they aren't.
-    def hasTranslationLoaded(self):
+    def hasTranslationLoaded(self) -> bool:
         return self.__translation is not None
 
     ##  Mark a string as translateable.
@@ -56,7 +57,8 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
     #   in the translated string. See python ``str.format()``.
     #   \return The translated text or the untranslated text if no translation
     #   was found.
-    def i18n(self, text, *args):
+    def i18n(self, text: str, *args: Any) -> str:
+
         if self.__require_update:
             self._update()
 
@@ -77,7 +79,7 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
     #   in the translated string. See python ``str.format()``.
     #   \return The translated text or the untranslated text if it was not found
     #   in this catalog.
-    def i18nc(self, context, text, *args):
+    def i18nc(self, context: str, text: str, *args: Any) -> str:
         if self.__require_update:
             self._update()
 
@@ -108,7 +110,7 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
     #   exist. The counter is at all times used to determine what form to use,
     #   with the language files specifying what plural forms are available.
     #   Additionally, counter is passed as first argument to format the string.
-    def i18np(self, single, multiple, counter, *args):
+    def i18np(self, single: str, multiple: str, counter: int, *args: Any) -> str:
         if self.__require_update:
             self._update()
 
@@ -137,7 +139,7 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
     #   exist. The counter is at all times used to determine what form to use,
     #   with the language files specifying what plural forms are available.
     #   Additionally, counter is passed as first argument to format the string.
-    def i18ncp(self, context, single, multiple, counter, *args):
+    def i18ncp(self, context: str, single: str, multiple: str, counter: int, *args: Any) -> str:
         if self.__require_update:
             self._update()
 
@@ -160,7 +162,7 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
     #
     #   \param string The text to replace tags in.
     #   \return The text with its tags replaced.
-    def _replaceTags(self, string):
+    def _replaceTags(self, string: str) -> str:
         output = string
         for key, value in self.__tag_replacements.items():
             source_open = "<{0}>".format(key)
@@ -178,15 +180,15 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
         return output
 
     ##  Fill the catalogue by loading the translated texts from file (again).
-    def _update(self):
-        if not self.__application:
+    def _update(self) -> None:
+        if not self.__name:
             self.__require_update = True
             return
 
         if not self.__name:
-            self.__name = self.__application.getApplicationName()
+            self.__name = self.__name
         if self.__language == "default":
-            self.__language = self.__application.getApplicationLanguage()
+            self.__language = self.__language
 
         #Ask gettext for all the translations in the .mo files.
         for path in Resources.getAllPathsForType(Resources.i18n):
@@ -205,7 +207,7 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
     #   \param replacements A dictionary of strings to strings, indicating which
     #   words between tags should get replaced.
     @classmethod
-    def setTagReplacements(cls, replacements):
+    def setTagReplacements(cls, replacements: Dict[str, str]) -> None:
         cls.__tag_replacements = replacements
 
     ##  Set the ``Application`` instance to request the language and application
@@ -214,12 +216,19 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
     #   \param application The ``Application`` instance of the application that
     #   is running.
     @classmethod
-    def setApplication(cls, application):
-        cls.__application = application
+    def setApplicationName(cls, applicationName: str) -> None:
+        cls.__name = applicationName
+        cls.__require_update = True
+
+    @classmethod
+    def setLanguage(cls, language: str) -> None:
+        cls.__language = language
+        cls.__require_update = True
 
     # Default replacements discards all tags
     __tag_replacements = {
         "filename": None,
         "message": None
-    }
-    __application = None
+    }   # type: Dict[str, str]
+
+

@@ -3,8 +3,14 @@
 
 import UM.Decorators
 
+from typing import List, Dict, Any
+
+
 ##  Shared interface between setting container types
 #
+from UM.Signal import Signal
+
+
 @UM.Decorators.interface
 class ContainerInterface:
     ##  Get the ID of the container.
@@ -14,7 +20,7 @@ class ContainerInterface:
     #   configuration files or when writing a file to disk.
     #
     #   \return \type{string} The unique ID of this container.
-    def getId(self):
+    def getId(self) -> str:
         pass
 
     ##  Get the human-readable name of this container.
@@ -23,14 +29,14 @@ class ContainerInterface:
     #   used in the interface.
     #
     #   \return \type{string} The name of this container.
-    def getName(self):
+    def getName(self) -> str:
         pass
 
     ##  Get whether the container item is stored on a read only location in the filesystem.
     #
     #   \return True if the specified item is stored on a read-only location
     #   in the filesystem
-    def isReadOnly(self):
+    def isReadOnly(self) -> bool:
         pass
 
     ##  Get all metadata of this container.
@@ -39,7 +45,7 @@ class ContainerInterface:
     #   How this metadata is used depends on the application.
     #
     #   \return \type{dict} The metadata for this container.
-    def getMetaData(self):
+    def getMetaData(self) -> Dict[str, Any]:
         pass
 
     ##  Get the value of a single metadata entry.
@@ -49,7 +55,7 @@ class ContainerInterface:
     #
     #   \return The value of the metadata corresponding to `name`, or `default`
     #           when the entry could not be found.
-    def getMetaDataEntry(self, entry, default = None):
+    def getMetaDataEntry(self, entry: str, default: Any = None) -> Any:
         pass
 
     ##  Get the value of a property of the container item.
@@ -58,7 +64,7 @@ class ContainerInterface:
     #   \param name \type{string} The name of the property to retrieve.
     #
     #   \return The specified property value of the container item corresponding to key, or None if not found.
-    def getProperty(self, key, property_name):
+    def getProperty(self, key: str, property_name: str) -> Any:
         pass
 
     ##  Get whether the container item has a specific property.
@@ -68,7 +74,7 @@ class ContainerInterface:
     #
     #   \return True if the specified item has the property, or False if it
     #   doesn't.
-    def hasProperty(self, key, property_name):
+    def hasProperty(self, key: str, property_name: str) -> bool:
         pass
 
     ##  Serialize this container to a string.
@@ -77,7 +83,7 @@ class ContainerInterface:
     #   container to disk or send it over the network.
     #
     #   \return \type{string} A string representation of this container.
-    def serialize(self):
+    def serialize(self) -> str:
         pass
 
     ##  Deserialize the container from a string representation.
@@ -86,13 +92,25 @@ class ContainerInterface:
     #   represenation.
     #
     #   \param serialized A serialized string containing a container that should be deserialized.
-    def deserialize(self, serialized):
+    def deserialize(self, serialized: str) -> None:
         pass
 
     ##  Get the path used to create this InstanceContainer.
-    def getPath(self):
+    def getPath(self) -> str:
         pass
 
     ##  Set the path used to create this InstanceContainer
-    def setPath(self, path):
+    def setPath(self, path: str) -> None:
         pass
+
+    propertyChanged = None   # type: Signal
+
+    metaDataChanged = None # type: Signal
+
+class DefinitionContainerInterface(ContainerInterface): pass
+
+##  Shared interface between setting container types
+#
+@UM.Decorators.interface
+class ContainerRegistryInterface:
+    def findDefinitionContainers(self, **kwargs: Any) -> List[DefinitionContainerInterface]: pass

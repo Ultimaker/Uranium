@@ -14,9 +14,11 @@ numpy.seterr(divide="ignore")
 #
 #   This class represents an immutable 3-dimensional vector.
 class Vector(object):
-    Unit_X = None
-    Unit_Y = None
-    Unit_Z = None
+    # These fields are filled in below. This is needed to help static analysis tools (read: PyCharm)
+    Null = None     # type: Vector
+    Unit_X = None   # type: Vector
+    Unit_Y = None   # type: Vector
+    Unit_Z = None   # type: Vector
 
     ##  Initialize a new vector
     #   \param x X coordinate of vector.
@@ -208,11 +210,6 @@ class Vector(object):
     def __ge__(self, other):
         return self._data[0] >= other._data[0] and self._data[1] >= other._data[1] and self._data[2] >= other._data[2]
 
-    # These fields are filled in below. This is needed to help static analysis tools (read: PyCharm)
-    Null = None
-    Unit_Y = None
-    Unit_X = None
-    Unit_Z = None
 
 def isNumber(value):
     return type(value) in [float, int, numpy.float32, numpy.float64]

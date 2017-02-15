@@ -11,10 +11,12 @@ from UM.Logger import Logger
 from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType
 from UM.Signal import Signal
 
-from . import ContainerInterface
-from . import SettingDefinition
-from . import SettingRelation
-from . import SettingFunction
+from UM.Settings.Interfaces import DefinitionContainerInterface
+from UM.Settings.SettingDefinition import SettingDefinition
+from UM.Settings.SettingDefinition import DefinitionPropertyType
+from UM.Settings.SettingRelation import SettingRelation
+from UM.Settings.SettingRelation import RelationType
+from UM.Settings.SettingFunction import SettingFunction
 
 class InvalidDefinitionError(Exception):
     pass
@@ -36,7 +38,7 @@ MimeTypeDatabase.addMimeType(
 ##  A container for SettingDefinition objects.
 #
 #
-class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
+class DefinitionContainer(DefinitionContainerInterface, PluginObject):
     Version = 2
 
     ##  Constructor
@@ -45,14 +47,14 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
     def __init__(self, container_id, i18n_catalog = None, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self._id = str(container_id)
-        self._name = container_id
-        self._metadata = {}
-        self._definitions = []
-        self._inherited_files = []
+        self._id = str(container_id)    # type: str
+        self._name = container_id       # type: str
+        self._metadata = {}             # type: Dict[str, Any]
+        self._definitions = []          # type: List[SettingDefinition]
+        self._inherited_files = []      # type: List[str]
         self._i18n_catalog = i18n_catalog
 
-        self._definition_cache = {}
+        self._definition_cache = {}     # type: Dict[str, SettingDefinition]
         self._path = ""
 
     ##  Reimplement __setattr__ so we can make sure the definition remains unchanged after creation.
@@ -63,7 +65,7 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
     ##  \copydoc ContainerInterface::getId
     #
     #   Reimplemented from ContainerInterface
-    def getId(self):
+    def getId(self) -> str:
         return self._id
 
     id = property(getId)
@@ -71,7 +73,7 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
     ##  \copydoc ContainerInterface::getName
     #
     #   Reimplemented from ContainerInterface
-    def getName(self):
+    def getName(self) -> str:
         return self._name
 
     name = property(getName)
@@ -79,10 +81,10 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
     ##  \copydoc ContainerInterface::isReadOnly
     #
     #   Reimplemented from ContainerInterface
-    def isReadOnly(self):
+    def isReadOnly(self) -> bool:
         return True
 
-    def setReadOnly(self, read_only):
+    def setReadOnly(self, read_only: bool) -> None:
         pass
 
     ##  \copydoc ContainerInterface::getPath.
@@ -164,6 +166,8 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
     ##  This signal is unused since the definition container is immutable, but is provided for API consistency.
     propertyChanged = Signal()
 
+    metaDataChanged = Signal()
+
     ##  \copydoc ContainerInterface::serialize
     #
     #   TODO: This implementation flattens the definition container, since the
@@ -215,7 +219,7 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
         self._metadata = parsed["metadata"]
 
         for key, value in parsed["settings"].items():
-            definition = SettingDefinition.SettingDefinition(key, self, None, self._i18n_catalog)
+            definition = SettingDefinition(key, self, None, self._i18n_catalog)
             definition.deserialize(value)
             self._definitions.append(definition)
 
@@ -299,7 +303,7 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
 
     # Recursively update relations of settings
     def _updateRelations(self, definition):
-        for property in SettingDefinition.SettingDefinition.getPropertyNames(SettingDefinition.DefinitionPropertyType.Function):
+        for property in SettingDefinition.getPropertyNames(DefinitionPropertyType.Function):
             self._processFunction(definition, property)
 
         for child in definition.children:
@@ -312,7 +316,7 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
         except AttributeError:
             return
 
-        if not isinstance(function, SettingFunction.SettingFunction):
+        if not isinstance(function, SettingFunction):
             return
 
         for setting in function.getUsedSettingKeys():
@@ -324,10 +328,10 @@ class DefinitionContainer(ContainerInterface.ContainerInterface, PluginObject):
             if not other:
                 continue
 
-            relation = SettingRelation.SettingRelation(definition, other, SettingRelation.RelationType.RequiresTarget, property)
+            relation = SettingRelation(definition, other, RelationType.RequiresTarget, property)
             definition.relations.append(relation)
 
-            relation = SettingRelation.SettingRelation(other, definition, SettingRelation.RelationType.RequiredByTarget, property)
+            relation = SettingRelation(other, definition, RelationType.RequiredByTarget, property)
             other.relations.append(relation)
 
     def _getDefinition(self, key):

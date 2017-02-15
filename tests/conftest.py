@@ -11,7 +11,7 @@ class FixtureApplication(Application):
     def __init__(self):
         Application._instance = None
         super().__init__("test", "1.0")
-        Signal._app = self
+        Signal._signalQueue = self
 
     def functionEvent(self, event):
         event.call()

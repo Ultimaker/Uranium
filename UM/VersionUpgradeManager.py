@@ -5,10 +5,10 @@ import collections #For deque, for breadth-first search and to track tasks, and 
 import os #To get the configuration file names and to rename files.
 import traceback
 
+from UM.Application import Application
 from UM.Logger import Logger
 from UM.PluginRegistry import PluginRegistry #To find plug-ins.
 from UM.Resources import Resources #To load old versions from.
-import UM.Application #To get the name of the application for a message.
 import UM.i18n #To translate the "upgrade succeeded" message.
 import UM.Message #To show the "upgrade succeeded" message.
 import UM.MimeTypeDatabase #To know how to save the resulting files.
@@ -45,7 +45,7 @@ UpgradeTask = collections.namedtuple("UpgradeTask", ["storage_path", "file_name"
 #   the user manually retrieves the files.
 class VersionUpgradeManager:
     ##  The singleton instance of this class.
-    __instance = None
+    __instance = None   # type: VersionUpgradeManager
 
     ##  Gets the instance of the VersionUpgradeManager, or creates one.
     @classmethod
@@ -107,7 +107,7 @@ class VersionUpgradeManager:
             self._upgradeFile(upgrade_task.storage_path, upgrade_task.file_name, upgrade_task.configuration_type) #Upgrade this file.
 
         if upgraded:
-            message = UM.Message(text=catalogue.i18nc("@info:version-upgrade", "A configuration from an older version of {0} was imported.", UM.Application.getInstance().getApplicationName()))
+            message = UM.Message(text=catalogue.i18nc("@info:version-upgrade", "A configuration from an older version of {0} was imported.", Application.getInstance().getApplicationName()))
             message.show()
         return upgraded
 
@@ -291,7 +291,7 @@ class VersionUpgradeManager:
         configuration_type = old_configuration_type
 
         try:
-            mime_type = UM.MimeTypeDatabase.getMimeTypeForFile(configuration_file)  # Get the actual MIME type object, from the name.
+            mime_type = UM.MimeTypeDatabase.MimeTypeDatabase.getMimeTypeForFile(configuration_file)  # Get the actual MIME type object, from the name.
         except UM.MimeTypeDatabase.MimeTypeNotFoundError:
             return False
 
@@ -331,7 +331,7 @@ class VersionUpgradeManager:
             #Finding out where to store these files.
             resource_type, mime_type = self._current_versions[(configuration_type, version)]
             storage_path = Resources.getStoragePathForType(resource_type)
-            mime_type = UM.MimeTypeDatabase.getMimeType(mime_type) #Get the actual MIME type object, from the name.
+            mime_type = UM.MimeTypeDatabase.MimeTypeDatabase.getMimeType(mime_type) #Get the actual MIME type object, from the name.
             if mime_type.preferredSuffix:
                 extension = "." + mime_type.preferredSuffix
             elif mime_type.suffixes:

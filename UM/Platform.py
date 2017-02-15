@@ -14,22 +14,22 @@ class Platform:
 
     ##  Check to see if we are currently running on OSX.
     @classmethod
-    def isOSX(cls):
+    def isOSX(cls) -> bool:
         return cls.__platform_type == cls.PlatformType.OSX
 
     ##  Check to see if we are currently running on Windows.
     @classmethod
-    def isWindows(cls):
+    def isWindows(cls) -> bool:
         return cls.__platform_type == cls.PlatformType.Windows
 
     ##  Check to see if we are currently running on Linux.
     @classmethod
-    def isLinux(cls):
+    def isLinux(cls) -> bool:
         return cls.__platform_type == cls.PlatformType.Linux
 
     ##  Get the platform type.
     @classmethod
-    def getType(cls):
+    def getType(cls) -> int:
         return cls.__platform_type
 
     __platform_type = PlatformType.Other

@@ -2,17 +2,17 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 import configparser
 import io
+from typing import Set, List, Optional, cast
 
+from UM.Settings.SettingDefinition import SettingDefinition
 from UM.Signal import Signal, signalemitter
 from UM.PluginObject import PluginObject
 from UM.Logger import Logger
 from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType
 from UM.Settings.DefinitionContainer import DefinitionContainer #For getting all definitions in this stack.
-
-import UM.Settings.ContainerRegistry
-
-from . import ContainerInterface
-from . import SettingFunction
+from UM.Settings.Interfaces import ContainerInterface, ContainerRegistryInterface
+from UM.Settings.SettingFunction import SettingFunction
+from UM.Settings.Validator import ValidatorState
 
 class IncorrectVersionError(Exception):
     pass
@@ -39,7 +39,7 @@ MimeTypeDatabase.addMimeType(
 
 ##  A stack of setting containers to handle setting value retrieval.
 @signalemitter
-class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
+class ContainerStack(ContainerInterface, PluginObject):
     Version = 3
 
     ##  Constructor
@@ -64,13 +64,13 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     ##  \copydoc ContainerInterface::getId
     #
     #   Reimplemented from ContainerInterface
-    def getId(self):
+    def getId(self) -> str:
         return self._id
 
     ##  \copydoc ContainerInterface::getName
     #
     #   Reimplemented from ContainerInterface
-    def getName(self):
+    def getName(self) -> str:
         return str(self._name)
 
     ##  Emitted whenever the name of this stack changes.
@@ -81,7 +81,7 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     ##  Set the name of this stack.
     #
     #   \param name \type{string} The new name of the stack.
-    def setName(self, name):
+    def setName(self, name: str) -> None:
         if name != self._name:
             self._name = name
             self.nameChanged.emit()
@@ -136,10 +136,10 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
         if key in self._metadata:
             del self._metadata[key]
 
-    def isDirty(self):
+    def isDirty(self) -> bool:
         return self._dirty
 
-    def setDirty(self, dirty):
+    def setDirty(self, dirty: bool) -> None:
         self._dirty = dirty
 
     ##  \copydoc ContainerInterface::getProperty
@@ -155,9 +155,9 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     #   Note that if the property value is a function, this method will return the
     #   result of evaluating that property with the current stack. If you need the
     #   actual function, use getRawProperty()
-    def getProperty(self, key, property_name):
+    def getProperty(self, key: str, property_name: str):
         value = self.getRawProperty(key, property_name)
-        if isinstance(value, SettingFunction.SettingFunction):
+        if isinstance(value, SettingFunction):
             return value(self)
 
         return value
@@ -200,7 +200,7 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     #   hasProperty will check if any of the containers in the stack has the
     #   specified property. If it does, it stops and returns True. If it gets to
     #   the end of the stack, it returns False.
-    def hasProperty(self, key, property_name):
+    def hasProperty(self, key: str, property_name: str) -> bool:
         for container in self._containers:
             if container.hasProperty(key, property_name):
                 return True
@@ -210,6 +210,8 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
         return False
 
     propertyChanged = Signal()
+
+    metaDataChanged = Signal()
 
     propertiesChanged = Signal()
 
@@ -268,7 +270,7 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
 
         if "containers" in parser:
             for index, container_id in parser.items("containers"):
-                containers = UM.Settings.ContainerRegistry.getInstance().findContainers(id = container_id)
+                containers = _containerRegistry.findContainers(id = container_id)
                 if containers:
                     containers[0].propertyChanged.connect(self._collectPropertyChanges)
                     self._containers.append(containers[0])
@@ -282,7 +284,7 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
             container_id_list = container_string.split(",")
             for container_id in container_id_list:
                 if container_id != "":
-                    containers = UM.Settings.ContainerRegistry.getInstance().findContainers(id = container_id)
+                    containers = _containerRegistry.findContainers(id = container_id)
                     if containers:
                         containers[0].propertyChanged.connect(self._collectPropertyChanges)
                         self._containers.append(containers[0])
@@ -297,10 +299,10 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     #   values of all settings.
     #
     #   \return A set of all setting keys in this container stack.
-    def getAllKeys(self):
-        keys = set()
+    def getAllKeys(self) -> Set[str]:
+        keys = set()    # type: Set[str]
         definition_containers = [container for container in self.getContainers() if container.__class__ == DefinitionContainer] #To get all keys, get all definitions from all definition containers.
-        for definition_container in definition_containers:
+        for definition_container in cast(List[DefinitionContainer], definition_containers):
             keys |= definition_container.getAllKeys()
         if self._next_stack:
             keys |= self._next_stack.getAllKeys()
@@ -311,10 +313,10 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     #   Note that it returns a shallow copy of the container list, as it's only allowed to change the order or entries
     #   in this list by the proper functions.
     #   \return \type{list} A list of all containers in this stack.
-    def getContainers(self):
+    def getContainers(self) -> List[ContainerInterface]:
         return self._containers[:]
 
-    def getContainerIndex(self, container):
+    def getContainerIndex(self, container: ContainerInterface) -> int:
         return self._containers.index(container)
 
     ##  Get a container by index.
@@ -324,7 +326,7 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     #   \return The container at the specified index.
     #
     #   \exception IndexError Raised when the specified index is out of bounds.
-    def getContainer(self, index):
+    def getContainer(self, index: int) -> ContainerInterface:
         if index < 0:
             raise IndexError
         return self._containers[index]
@@ -334,7 +336,7 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     #   This is a convenience method that will always return the top of the stack.
     #
     #   \return The container at the top of the stack, or None if no containers have been added.
-    def getTop(self):
+    def getTop(self) -> ContainerInterface:
         if self._containers:
             return self._containers[0]
 
@@ -345,7 +347,7 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     #   This is a convenience method that will always return the bottom of the stack.
     #
     #   \return The container at the bottom of the stack, or None if no containers have been added.
-    def getBottom(self):
+    def getBottom(self) -> ContainerInterface:
         if self._containers:
             return self._containers[-1]
 
@@ -364,7 +366,7 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
         self._path = path
 
     ##  Get the SettingDefinition object for a specified key
-    def getSettingDefinition(self, key):
+    def getSettingDefinition(self, key: str):
         for container in self._containers:
             if not isinstance(container, DefinitionContainer):
                 continue
@@ -387,7 +389,7 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
     #   \param container_type \type{class} An optional type of container to
     #   filter on.
     #   \return The first container that matches the filter criteria or None if not found.
-    def findContainer(self, criteria = None, container_type = None, **kwargs):
+    def findContainer(self, criteria = None, container_type = None, **kwargs) -> Optional[ContainerInterface]:
         if not criteria and kwargs:
             criteria = kwargs
 
@@ -514,11 +516,11 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
                 # We do need to validate it, because a setting defintions value can be set by a function, which could
                 # be an invalid setting.
                 definition = self.getSettingDefinition(key)
-                validator_type = UM.Settings.SettingDefinition.getValidatorForType(definition.type)
+                validator_type = SettingDefinition.getValidatorForType(definition.type)
                 if validator_type:
                     validator = validator_type(key)
                     validation_state = validator(self)
-            if validation_state in (UM.Settings.ValidatorState.Exception, UM.Settings.ValidatorState.MaximumError, UM.Settings.ValidatorState.MinimumError):
+            if validation_state in (ValidatorState.Exception, ValidatorState.MaximumError, ValidatorState.MinimumError):
                 return True
         return False
 
@@ -532,11 +534,11 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
                 # We do need to validate it, because a setting defintions value can be set by a function, which could
                 # be an invalid setting.
                 definition = self.getSettingDefinition(key)
-                validator_type = UM.Settings.SettingDefinition.getValidatorForType(definition.type)
+                validator_type = SettingDefinition.getValidatorForType(definition.type)
                 if validator_type:
                     validator = validator_type(key)
                     validation_state = validator(self)
-            if validation_state in (UM.Settings.ValidatorState.Exception, UM.Settings.ValidatorState.MaximumError, UM.Settings.ValidatorState.MinimumError):
+            if validation_state in (ValidatorState.Exception, ValidatorState.MaximumError, ValidatorState.MinimumError):
                 error_keys.append(key)
         return error_keys
 
@@ -553,7 +555,7 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
         self._property_changes[key].add(property_name)
 
         if not self._emit_property_changed_queued:
-            UM.Settings.ContainerRegistry.getApplication().callLater(self._emitCollectedPropertyChanges)
+            _containerRegistry.getApplication().callLater(self._emitCollectedPropertyChanges)
             self._emit_property_changed_queued = True
 
     # Perform the emission of the change signals that were collected in a previous step.
@@ -566,3 +568,9 @@ class ContainerStack(ContainerInterface.ContainerInterface, PluginObject):
 
         self._property_changes = {}
         self._emit_property_changed_queued = False
+
+_containerRegistry = None   # type:  ContainerRegistryInterface
+
+def setContainerRegistry(registry: ContainerRegistryInterface) -> None:
+    global _containerRegistry
+    _containerRegistry = registry

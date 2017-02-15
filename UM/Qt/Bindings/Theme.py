@@ -210,7 +210,7 @@ class Theme(QObject):
             Theme.__instance = cls(engine)
         return Theme.__instance
 
-    __instance = None
+    __instance = None   # type: 'Theme'
 
 def createTheme(engine, script_engine = None):
     return Theme.getInstance(engine)

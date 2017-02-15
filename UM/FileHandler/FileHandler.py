@@ -6,18 +6,20 @@ from UM.Logger import Logger
 from .FileWriter import FileWriter
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSlot, QUrl
 
-import platform
-import UM.Platform
+from UM.Platform import Platform
 
 from UM.i18n import i18nCatalog
 i18n_catalog = i18nCatalog("uranium")
 
+MYPY = False
+if MYPY:
+    from UM.Application import Application
 
 ##  Central class for reading and writing meshes.
 #   This class is created by Application and handles reading and writing mesh files.
 class FileHandler(QObject):
-    _instance = None
-    _application = None
+    _instance = None    # type: FileHandler
+    _application = None # type: Application
 
     def __init__(self, writer_type, reader_type, parent = None):
         super().__init__(parent)
@@ -52,7 +54,7 @@ class FileHandler(QObject):
         file_types = []
         all_types = []
 
-        if UM.Platform.isLinux():
+        if Platform.isLinux():
             for ext, desc in self.getSupportedFileTypesRead().items():
                 file_types.append("{0} (*.{1} *.{2})".format(desc, ext.lower(), ext.upper()))
                 all_types.append("*.{0} *.{1}".format(ext.lower(), ext.upper()))
@@ -86,19 +88,6 @@ class FileHandler(QObject):
 
     def _readLocalFile(self, file):
         raise NotImplementedError("_readLocalFile needs to be implemented by subclasses")
-
-    ##  Get a writer object that supports writing the specified mime type
-    #
-    #   \param mime The mime type that should be supported.
-    #   \return A |type{Writer} instance or None if no writer supports the specified mime type. If there are multiple
-    #           writers that support the specified mime type, the first entry is returned.
-    def getWriterByMimeType(self, mime):
-        writer_data = PluginRegistry.getInstance().getAllMetaData(filter={self._writer_type: {}}, active_only=True)
-        for entry in writer_data:
-            for output in entry["mesh_writer"].get("output", []):
-                if mime == output["mime_type"]:
-                    return self._mesh_writers[entry["id"]]
-        return None
 
     ##  Get list of all supported filetypes for writing.
     #   \return List of dicts containing id, extension, description and mime_type for all supported file types.

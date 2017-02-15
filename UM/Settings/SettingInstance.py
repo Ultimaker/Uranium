@@ -3,24 +3,28 @@
 
 import enum
 import os
+from typing import Any, List, Set, KeysView
 
+from UM.Settings.Interfaces import ContainerInterface
 from UM.Signal import Signal, signalemitter
 from UM.Logger import Logger
 from UM.Decorators import call_if_enabled
 
-from . import SettingRelation
-from . import Validator
+MYPY = False
+if MYPY:
+    from UM.Settings.SettingRelation import SettingRelation
+from UM.Settings.SettingRelation import RelationType
 from . import SettingFunction
 from .SettingDefinition import SettingDefinition
 
 # Helper functions for SettingInstance tracing
-def _traceSetProperty(instance, property_name, property_value, container):
+def _traceSetProperty(instance: "SettingInstance", property_name: str, property_value: Any, container: ContainerInterface) -> None:
     Logger.log("d", "Set property '{0}' of '{1}' to '{2}', updating using values from {3}".format(property_name, instance, property_value, container))
 
-def _traceUpdateProperty(instance, property_name, container):
+def _traceUpdateProperty(instance: "SettingInstance", property_name: str, container: ContainerInterface) -> None:
     Logger.log("d", "Updating property '{0}' of '{1}' using container {2}".format(property_name, instance, container))
 
-def _isTraceEnabled():
+def _isTraceEnabled() -> bool:
     return "URANIUM_TRACE_SETTINGINSTANCE" in os.environ
 
 
@@ -43,11 +47,11 @@ class SettingInstance:
     #
     #   \param definition The SettingDefinition object this is an instance of.
     #   \param container The container of this instance. Needed for relation handling.
-    def __init__(self, definition, container, *args, **kwargs):
+    def __init__(self, definition: SettingDefinition, container: ContainerInterface, *args: Any, **kwargs: Any) -> None:
         if container is None:
             raise ValueError("Cannot create a setting instance without a container")
 
-        super().__init__(*args, **kwargs)
+        super().__init__()
 
         self._definition = definition
         self._container = container
@@ -60,13 +64,13 @@ class SettingInstance:
 
         self._state = InstanceState.Default
 
-        self.__property_values = {}
+        self.__property_values = {} # type: Dict[str, Any]
 
     ##  Get a list of all supported property names
-    def getPropertyNames(self):
+    def getPropertyNames(self) -> KeysView[str]:
         return self.__property_values.keys()
 
-    def __eq__(self, other):
+    def __eq__(self, other: Any) -> bool:
         if type(self) != type(other):
             return False  # Type mismatch
 
@@ -78,10 +82,10 @@ class SettingInstance:
                 return False  # Other does not have the property
         return True
 
-    def __ne__(self, other):
+    def __ne__(self, other: Any) -> bool:
         return not (self == other)
 
-    def __getattr__(self, name):
+    def __getattr__(self, name: str) -> Any:
         if name == "_SettingInstance__property_values":
             # Prevent infinite recursion when __property_values is not set.
             # This happens primarily with Pickle
@@ -100,7 +104,7 @@ class SettingInstance:
         raise AttributeError("'SettingInstance' object has no attribute '{0}'".format(name))
 
     @call_if_enabled(_traceSetProperty, _isTraceEnabled())
-    def setProperty(self, name, value, container = None):
+    def setProperty(self, name: str, value: Any, container: ContainerInterface = None) -> None:
         if SettingDefinition.hasProperty(name):
             if SettingDefinition.isReadOnlyProperty(name):
                 Logger.log("e", "Tried to set property %s which is a read-only property", name)
@@ -138,7 +142,7 @@ class SettingInstance:
                 raise AttributeError("No property {0} defined".format(name))
 
     @call_if_enabled(_traceUpdateProperty, _isTraceEnabled())
-    def updateProperty(self, name, container = None):
+    def updateProperty(self, name: str, container: ContainerInterface = None) -> None:
         if not SettingDefinition.hasProperty(name):
             Logger.log("e", "Trying to update unknown property %s", name)
             return
@@ -160,12 +164,12 @@ class SettingInstance:
 
     ##  The SettingDefinition this instance maintains state for.
     @property
-    def definition(self):
+    def definition(self) -> SettingDefinition:
         return self._definition
 
     ##  The container of this instance.
     @property
-    def container(self):
+    def container(self) -> ContainerInterface:
         return self._container
 
     ##  Get the state of validation of this instance.
@@ -177,17 +181,17 @@ class SettingInstance:
         return None
 
     @property
-    def state(self):
+    def state(self) -> InstanceState:
         return self._state
 
-    def resetState(self):
+    def resetState(self) -> None:
         self._state = InstanceState.Default
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "<SettingInstance (0x{0:x}) definition={1} container={2}>".format(id(self), self._definition, self._container)
 
     ## protected:
-    def updateRelations(self, container):
+    def updateRelations(self, container: ContainerInterface) -> None:
         property_names = SettingDefinition.getPropertyNames()
         property_names.remove("value")  # Move "value" to the front of the list so we always update that first.
         property_names.insert(0, "value")
@@ -196,7 +200,7 @@ class SettingInstance:
             if SettingDefinition.isReadOnlyProperty(property_name):
                 continue
 
-            changed_relations = set()
+            changed_relations = set()   # type: Set[SettingRelation]
             self._addRelations(changed_relations, self._definition.relations, property_name)
 
             # TODO: We should send this as a single change event instead of several of them.
@@ -211,9 +215,9 @@ class SettingInstance:
     #   \param relations_set \type{set} Set of keys (strings) of settings that are influenced
     #   \param relations list of relation objects that need to be checked.
     #   \param role name of the property value of the settings
-    def _addRelations(self, relations_set, relations, role):
+    def _addRelations(self, relations_set: Set["SettingRelation"], relations: List["SettingRelation"], role: str) -> None:
         for relation in filter(lambda r: r.role == role, relations):
-            if relation.type == SettingRelation.RelationType.RequiresTarget:
+            if relation.type == RelationType.RequiresTarget:
                 continue
             # Do not add relation to self.
             if relation.target.key == self.definition.key:
