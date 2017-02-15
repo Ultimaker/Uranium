@@ -19,6 +19,7 @@ class MirrorToolHandle(ToolHandle):
     def buildMesh(self):
         mb = MeshBuilder()
 
+        #SOLIDMESH
         mb.addPyramid(
             width = self._handle_width,
             height = self._handle_height,
@@ -76,6 +77,66 @@ class MirrorToolHandle(ToolHandle):
             axis = Vector.Unit_X,
             angle = -90
         )
-        mesh = mb.build()
-        self.setSolidMesh(mesh)
-        self.setSelectionMesh(mesh)
+
+        self.setSolidMesh(mb.build())
+
+        #SELECTIONMESH
+        mb.addPyramid(
+            width = self._handle_width,
+            height = self._handle_height,
+            depth = self._handle_width,
+            center = Vector(0, self._handle_position, 0),
+            color = ToolHandle.YAxisSelectionColor
+        )
+
+        mb.addPyramid(
+            width = self._handle_width,
+            height = self._handle_height,
+            depth = self._handle_width,
+            center = Vector(0, -self._handle_position, 0),
+            color = ToolHandle.YAxisSelectionColor,
+            axis = Vector.Unit_X,
+            angle = 180
+        )
+
+        mb.addPyramid(
+            width = self._handle_width,
+            height = self._handle_height,
+            depth = self._handle_width,
+            center = Vector(self._handle_position, 0, 0),
+            color = ToolHandle.XAxisSelectionColor,
+            axis = Vector.Unit_Z,
+            angle = 90
+        )
+
+        mb.addPyramid(
+            width = self._handle_width,
+            height = self._handle_height,
+            depth = self._handle_width,
+            center = Vector(-self._handle_position, 0, 0),
+            color = ToolHandle.XAxisSelectionColor,
+            axis = Vector.Unit_Z,
+            angle = -90
+        )
+
+        mb.addPyramid(
+            width = self._handle_width,
+            height = self._handle_height,
+            depth = self._handle_width,
+            center = Vector(0, 0, -self._handle_position),
+            color = ToolHandle.ZAxisSelectionColor,
+            axis = Vector.Unit_X,
+            angle = 90
+        )
+
+        mb.addPyramid(
+            width = self._handle_width,
+            height = self._handle_height,
+            depth = self._handle_width,
+            center = Vector(0, 0, self._handle_position),
+            color = ToolHandle.ZAxisSelectionColor,
+            axis = Vector.Unit_X,
+            angle = -90
+        )
+
+        self.setSelectionMesh(mb.build())

@@ -2,7 +2,8 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 from UM.Job import Job
-
+import time
+from UM.Logger import Logger
 
 ##  A Job subclass that performs writing.
 #
@@ -34,4 +35,7 @@ class WriteFileJob(Job):
 
     def run(self):
         Job.yieldThread()
+        begin_time = time.time()
         self.setResult(self._writer.write(self._stream, self._data, self._mode))
+        end_time = time.time()
+        Logger.log("d", "Writing file took %s seconds", end_time - begin_time)

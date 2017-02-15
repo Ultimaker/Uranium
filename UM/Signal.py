@@ -8,6 +8,8 @@ import inspect
 import threading
 import os
 import weakref
+import contextlib
+import traceback
 
 import functools
 
@@ -119,6 +121,11 @@ class Signal:
 
         self.__type = kwargs.get("type", Signal.Auto)
 
+        self._postpone_emit = False
+        self._postpone_thread = None
+        self._compress_postpone = False
+        self._postponed_emits = None
+
         if _recordSignalNames():
             try:
                 if Platform.isWindows():
@@ -153,6 +160,24 @@ class Signal:
     @call_if_enabled(_traceEmit, _isTraceEnabled())
     @profileEmit
     def emit(self, *args, **kwargs):
+        # Check to see if we need to postpone emits
+        if self._postpone_emit:
+            if threading.current_thread() != self._postpone_thread:
+                Logger.log("w", "Tried to emit signal from thread %s while emits are being postponed by %s. Traceback:", threading.current_thread(), self._postpone_thread)
+                tb = traceback.format_stack()
+                for line in tb:
+                    Logger.log("w", line)
+
+            if self._compress_postpone:
+                # If emits should be compressed, we only emit the last emit that was called
+                self._postponed_emits = (args, kwargs)
+            else:
+                # If emits should not be compressed, we catch all calls to emit and put them in a list to be called later.
+                if not self._postponed_emits:
+                    self._postponed_emits = []
+                self._postponed_emits.append((args, kwargs))
+            return
+
         try:
             if self.__type == Signal.Queued:
                 Signal._app.functionEvent(CallFunctionEvent(self.__performEmit, args, kwargs))
@@ -171,6 +196,10 @@ class Signal:
     #   \param connector The signal or slot (function) to connect.
     @call_if_enabled(_traceConnect, _isTraceEnabled())
     def connect(self, connector):
+        if self._postpone_emit:
+            Logger.log("w", "Tried to connect to signal %s that is currently being postponed, this is not possible", self.__name)
+            return
+
         with self.__lock:
             if isinstance(connector, Signal):
                 if connector == self:
@@ -191,6 +220,10 @@ class Signal:
     #   \param connector The signal or slot (function) to disconnect.
     @call_if_enabled(_traceDisconnect, _isTraceEnabled())
     def disconnect(self, connector):
+        if self._postpone_emit:
+            Logger.log("w", "Tried to disconnect from signal %s that is currently being postponed, this is not possible", self.__name)
+            return
+
         with self.__lock:
             if isinstance(connector, Signal):
                 self.__signals = self.__signals.remove(connector)
@@ -201,6 +234,10 @@ class Signal:
 
     ##  Disconnect all connected slots.
     def disconnectAll(self):
+        if self._postpone_emit:
+            Logger.log("w", "Tried to disconnect from signal %s that is currently being postponed, this is not possible", self.__name)
+            return
+
         with self.__lock:
             self.__functions = WeakImmutableList()
             self.__methods = WeakImmutablePairList()
@@ -284,6 +321,54 @@ class Signal:
 
 def strMethodSet(method_set):
     return "{" + ", ".join([str(m) for m in method_set]) + "}"
+
+##  A context manager that allows postponing of signal emissions
+#
+#   This context manager will collect any calls to emit() made for the provided signals
+#   and only emit them after exiting. This ensures more batched processing of signals.
+#
+#   The optional "compress" argument will limit the emit calls to 1. This means that
+#   when a bunch of calls are made to the signal's emit() method, only the last call
+#   will be emitted on exit.
+#
+#   \warning When compress is True, only the **last** call will be emitted. This means
+#   that any other calls will be ignored, _including their arguments_.
+#
+#   \param signals The signals to postpone emits for.
+#   \param compress Whether to enable compression of emits or not.
+@contextlib.contextmanager
+def postponeSignals(*signals, compress = False):
+    # To allow for nested postpones on the same signals, we should check if signals are not already
+    # postponed and only change those that are not yet postponed.
+    restore_emit = []
+    for signal in signals:
+        if not signal._postpone_emit: # Do nothing if the signal has already been changed
+            signal._postpone_emit = True
+            signal._postpone_thread = threading.current_thread()
+            if compress:
+                signal._compress_postpone = True
+            # Since we made changes, make sure to restore the signal after exiting the context manager
+            restore_emit.append(signal)
+
+    # Execute the code block in the "with" statement
+    yield
+
+    for signal in restore_emit:
+        # We are done with the code, restore all changed signals to their "normal" state
+        signal._postpone_emit = False
+
+        if signal._postponed_emits:
+            # Send any signal emits that were collected while emits were being postponed
+            if signal._compress_postpone:
+                signal.emit(*signal._postponed_emits[0], **signal._postponed_emits[1])
+            else:
+                for args, kwargs in signal._postponed_emits:
+                    signal.emit(*args, **kwargs)
+            signal._postponed_emits = None
+
+        signal._postpone_thread = None
+        signal._compress_postpone = False
+
 
 ##  Convenience class to simplify signal creation.
 #

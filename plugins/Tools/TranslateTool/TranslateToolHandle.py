@@ -93,7 +93,7 @@ class TranslateToolHandle(ToolHandle):
         self.setSolidMesh(mb.build())
 
         mb = MeshBuilder()
-        #ACTIVEMESH -> LINES
+        #SELECTIONMESH -> LINES
         if self.YAxis in self._enabled_axis:
             mb.addCube(
                 width = self._active_line_width,
@@ -126,7 +126,7 @@ class TranslateToolHandle(ToolHandle):
             height = self._active_handle_width,
             depth = self._active_handle_width,
             center = Vector(0, 0, 0),
-            color = self._all_axis_color
+            color = ToolHandle.AllAxisSelectionColor
         )
 
         mb.addCube(
@@ -134,7 +134,7 @@ class TranslateToolHandle(ToolHandle):
             height = self._active_handle_width,
             depth = self._active_handle_width,
             center = Vector(0, self._active_handle_position, 0),
-            color = self._y_axis_color
+            color = ToolHandle.YAxisSelectionColor
         )
 
         mb.addCube(
@@ -142,7 +142,7 @@ class TranslateToolHandle(ToolHandle):
             height = self._active_handle_width,
             depth = self._active_handle_width,
             center = Vector(self._active_handle_position, 0, 0),
-            color = self._x_axis_color
+            color = ToolHandle.XAxisSelectionColor
         )
 
         mb.addCube(
@@ -150,6 +150,6 @@ class TranslateToolHandle(ToolHandle):
             height = self._active_handle_width,
             depth = self._active_handle_width,
             center = Vector(0, 0, self._active_handle_position),
-            color = self._z_axis_color
+            color = ToolHandle.ZAxisSelectionColor
         )
         self.setSelectionMesh(mb.build())
