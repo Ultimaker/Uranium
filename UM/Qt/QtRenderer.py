@@ -1,34 +1,31 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-from PyQt5.QtGui import QColor, QOpenGLBuffer, QOpenGLContext, QOpenGLFramebufferObject, QOpenGLFramebufferObjectFormat, QSurfaceFormat, QOpenGLVersionProfile, QImage
+from PyQt5.QtGui import QColor, QOpenGLBuffer, QOpenGLContext, QOpenGLFramebufferObject, QOpenGLFramebufferObjectFormat, QSurfaceFormat, QOpenGLVersionProfile, QImage, QOpenGLVertexArrayObject
 
 from UM.Application import Application
 from UM.View.Renderer import Renderer
 from UM.Math.Vector import Vector
 from UM.Math.Matrix import Matrix
 from UM.Resources import Resources
-from UM.Logger import Logger
-from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator
-from UM.Scene.Selection import Selection
-from UM.Scene.PointCloudNode import PointCloudNode
-from UM.Math.Color import Color
 
-from UM.Mesh.MeshBuilder import MeshBuilder
 from UM.View.CompositePass import CompositePass
 from UM.View.DefaultPass import DefaultPass
 from UM.View.SelectionPass import SelectionPass
 from UM.View.GL.OpenGL import OpenGL
+from UM.View.GL.OpenGLContext import OpenGLContext
 from UM.View.RenderBatch import RenderBatch
-from UM.Qt.GL.QtOpenGL import QtOpenGL
 
 from UM.Signal import Signal, signalemitter
 
+from UM.Logger import Logger
+
 import numpy
-import copy
+
 
 vertexBufferProperty = "__qtgl2_vertex_buffer"
 indexBufferProperty = "__qtgl2_index_buffer"
+
 
 ##  A Renderer implementation using PyQt's OpenGL implementation to render.
 @signalemitter
@@ -144,14 +141,20 @@ class QtRenderer(Renderer):
     def endRendering(self):
         self._batches.clear()
 
-    ##  Render a full screen quad.
+    ##  Render a full screen quad (rectangle).
     #
+    #   The function is used to draw render results on.
     #   \param shader The shader to use when rendering.
     def renderFullScreenQuad(self, shader):
         self._gl.glDisable(self._gl.GL_DEPTH_TEST)
         self._gl.glDisable(self._gl.GL_BLEND)
 
         shader.setUniformValue("u_modelViewProjectionMatrix", Matrix())
+
+        if OpenGLContext.properties["supportsVertexArrayObjects"]:
+            vao = QOpenGLVertexArrayObject()
+            vao.create()
+            vao.bind()
 
         self._quad_buffer.bind()
 
@@ -165,7 +168,10 @@ class QtRenderer(Renderer):
         self._quad_buffer.release()
 
     def _initialize(self):
-        OpenGL.setInstance(QtOpenGL())
+        supports_vao = OpenGLContext.supportsVertexArrayObjects()  # fill the OpenGLContext.properties
+        Logger.log("d", "Support for Vertex Array Objects: %s", supports_vao)
+
+        OpenGL.setInstance(OpenGL())
         self._gl = OpenGL.getInstance().getBindingsObject()
 
         self._default_material = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "default.shader"))

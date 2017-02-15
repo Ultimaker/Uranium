@@ -19,6 +19,7 @@ from UM.Mesh.MeshFileHandler import MeshFileHandler
 from UM.Workspace.WorkspaceFileHandler import WorkspaceFileHandler
 from . import PreferencesProxy
 from . import Theme
+from . import OpenGLContextProxy
 from . import AngledCornerRectangle
 from . import PointingRectangle
 from . import ActiveToolProxy
@@ -68,6 +69,10 @@ class Bindings:
         return OperationStackProxy.OperationStackProxy()
 
     @classmethod
+    def createOpenGLContextProxy(cls, engine, script_engine):
+        return OpenGLContextProxy.OpenGLContextProxy()
+
+    @classmethod
     def register(self):
         qmlRegisterType(MainWindow.MainWindow, "UM", 1, 0, "MainWindow")
         qmlRegisterType(ViewModel.ViewModel, "UM", 1, 0, "ViewModel")
@@ -114,3 +119,4 @@ class Bindings:
 
         # Additions after 2.3;
         qmlRegisterSingletonType(WorkspaceFileHandler, "UM", 1, 3, "WorkspaceFileHandler", WorkspaceFileHandler.getInstance)
+        qmlRegisterSingletonType(OpenGLContextProxy.OpenGLContextProxy, "UM", 1, 3, "OpenGLContextProxy", Bindings.createOpenGLContextProxy)
