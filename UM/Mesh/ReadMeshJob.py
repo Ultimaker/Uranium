@@ -52,7 +52,11 @@ class ReadMeshJob(ReadFileJob):
                         pass
                     elif Preferences.getInstance().getValue("mesh/scale_tiny_meshes") == True and (scale_factor_width > 100 and scale_factor_height > 100 and scale_factor_depth > 100):
                         # Round scale factor to lower factor of 10 to scale tiny object up (eg convert m to mm units)
-                        scale_factor = math.pow(10, math.floor(math.log(scale_factor) / math.log(10)))
+                        try:
+                            scale_factor = math.pow(10, math.floor(math.log(scale_factor) / math.log(10)))
+                        except:
+                            # In certain cases the scale_factor can be inf which can make this fail. Just use 1 instead.
+                            scale_factor = 1
                     else:
                         scale_factor = 1
 
