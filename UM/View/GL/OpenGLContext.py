@@ -50,7 +50,13 @@ class OpenGLContext(object):
     def supportsVertexArrayObjects(cls, ctx = None):
         if ctx is None:
             ctx = QOpenGLContext.currentContext()
-        result = cls.hasExtension("GL_ARB_vertex_array_object", ctx = ctx)
+        result = False
+        if cls.major_version == 4 and cls.minor_version >= 1:
+            result = True
+        if not result and cls.major_version > 4:
+            result = True
+        if not result and cls.hasExtension("GL_ARB_vertex_array_object", ctx = ctx):
+            result = True
         cls.properties["supportsVertexArrayObjects"] = result
         return result
 
