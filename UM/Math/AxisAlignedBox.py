@@ -70,7 +70,7 @@ class AxisAlignedBox:
 
     @property
     def center(self):
-        return self._min + ((self._max - self._min) / 2.0)
+        return self._min.getData() + ((self._max.getData() - self._min.getData()) / 2.0)
 
     @property
     def left(self):
@@ -98,11 +98,11 @@ class AxisAlignedBox:
 
     @property
     def minimum(self):
-        return self._min
+        return self._min.getData()
 
     @property
     def maximum(self):
-        return self._max
+        return self._max.getData()
 
     ##  Check if the bounding box is valid.
     #   Uses fuzzycompare to validate.
