@@ -184,6 +184,7 @@ class QtApplication(QApplication, Application):
                             dest="disable-textures",
                             action="store_true", default=False,
                             help="Disable Qt texture loading as a workaround for certain crashes.")
+        parser.add_argument("-qmljsdebugger", help="For Qt's QML debugger compatibility")
 
     mainWindowChanged = Signal()
 
