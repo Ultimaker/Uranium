@@ -8,6 +8,7 @@ from UM.Scene.Selection import Selection
 from UM.Message import Message
 from UM.OutputDevice import OutputDeviceError
 
+
 class OutputDeviceManagerProxy(QObject):
     def __init__(self, parent = None):
         super().__init__(parent)

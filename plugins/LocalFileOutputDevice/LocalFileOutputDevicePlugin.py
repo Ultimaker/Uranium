@@ -119,6 +119,7 @@ class LocalFileOutputDevice(OutputDevice):
         Preferences.getInstance().setValue("local_file/last_used_type", selected_type["mime_type"])
 
         file_name = dialog.selectedFiles()[0]
+        Logger.log("d", "Writing to [%s]..." % file_name)
 
         if os.path.exists(file_name):
             result = QMessageBox.question(None, catalog.i18nc("@title:window", "File Already Exists"), catalog.i18nc("@label", "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?").format(file_name))
