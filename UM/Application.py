@@ -338,7 +338,7 @@ class Application():
         parser.add_argument("--external-backend",
                             dest="external-backend",
                             action="store_true", default=False,
-                            help="Use an externally started backend instead of starting it automatically.")
+                            help="Use an externally started backend instead of starting it automatically. This is a debug feature to make it possible to run the engine with debug options enabled.")
 
     def addExtension(self, extension):
         self._extensions.append(extension)
