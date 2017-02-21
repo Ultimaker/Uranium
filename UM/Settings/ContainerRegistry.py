@@ -453,7 +453,7 @@ class ContainerRegistry(ContainerRegistryInterface):
             pickle.dump(definition, f)
 
     # Clear the internal query cache
-    def _clearQueryCache(self):
+    def _clearQueryCache(self, *args, **kwargs):
         self._query_cache.clear()
 
     ##  Get the lock filename including full path
