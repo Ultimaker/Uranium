@@ -15,9 +15,11 @@ from UM.Logger import Logger
 from UM.Mesh.MeshWriter import MeshWriter
 from UM.FileHandler.WriteFileJob import WriteFileJob
 from UM.Message import Message
+from UM.MimeTypeDatabase import MimeType
 from UM.OutputDevice.OutputDevicePlugin import OutputDevicePlugin
 from UM.OutputDevice.OutputDevice import OutputDevice
 from UM.OutputDevice import OutputDeviceError
+from UM.Platform import Platform
 
 from UM.i18n import i18nCatalog
 catalog = i18nCatalog("uranium")
@@ -60,6 +62,7 @@ class LocalFileOutputDevice(OutputDevice):
         if self._writing:
             raise OutputDeviceError.DeviceBusyError()
 
+        # Set up and display file dialog
         dialog = QFileDialog()
 
         dialog.setWindowTitle(catalog.i18nc("@title:window", "Save to File"))
@@ -118,7 +121,16 @@ class LocalFileOutputDevice(OutputDevice):
         selected_type = file_types[filters.index(dialog.selectedNameFilter())]
         Preferences.getInstance().setValue("local_file/last_used_type", selected_type["mime_type"])
 
+        # Get file name from file dialog
         file_name = dialog.selectedFiles()[0]
+        Logger.log("d", "Writing to [%s]..." % file_name)
+        # OSX does not handle extensions with multiple periods correctly.
+        if Platform.isOSX():
+            mime_types = MimeType("", "", [t['extension'] for t in file_types])
+            # Check if an extension is added multiple times.
+            if mime_types.stripExtension(file_name) != mime_types.stripExtension(mime_types.stripExtension(file_name)):
+                file_name = mime_types.stripExtension(file_name)
+                Logger.log("d", "Multi extension detected, setting filename to [%s]" % file_name)
 
         if os.path.exists(file_name):
             result = QMessageBox.question(None, catalog.i18nc("@title:window", "File Already Exists"), catalog.i18nc("@label", "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?").format(file_name))
@@ -127,6 +139,7 @@ class LocalFileOutputDevice(OutputDevice):
 
         self.writeStarted.emit(self)
 
+        # Actually writing file
         if file_handler:
             file_writer = file_handler.getWriter(selected_type["id"])
         else:
