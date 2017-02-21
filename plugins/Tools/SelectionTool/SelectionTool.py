@@ -66,6 +66,8 @@ class SelectionTool(Tool):
                 self._pixelSelection(event)
             else:
                 self._boundingBoxSelection(event)
+        elif event.type == MouseEvent.MouseReleaseEvent and MouseEvent.LeftButton in event.buttons:
+            Application.getInstance().getController().toolOperationStopped.emit(self)
         return False
 
     ##  Handle mouse and keyboard events for bounding box selection
