@@ -26,7 +26,7 @@ class SettingPropertyProvider(QObject):
     def __init__(self, parent = None, *args, **kwargs):
         super().__init__(parent = parent, *args, **kwargs)
 
-        self._property_map = None
+        self._property_map = QQmlPropertyMap(self)
 
         self._stack_id = ""
         self._stack = None
@@ -63,6 +63,7 @@ class SettingPropertyProvider(QObject):
                 self._stack.containersChanged.connect(self._update)
         else:
             self._stack = None
+
         self._validator = None
         self._update()
         self.containerStackIdChanged.emit()
@@ -292,12 +293,8 @@ class SettingPropertyProvider(QObject):
             for relation in filter(lambda r: r.type == RelationType.RequiredByTarget and r.role == "value", relations):
                 self._relations.add(relation.target.key)
 
-        self._property_map = QQmlPropertyMap(self)
-
         for property_name in self._watched_properties:
             self._property_map.insert(property_name, self._getPropertyValue(property_name))
-
-        self.propertiesChanged.emit()
 
         # Force update of value_used
         self._value_used = None
@@ -318,6 +315,7 @@ class SettingPropertyProvider(QObject):
                 index += 1
             # If there is a next stack, check that one as well.
             current_stack = current_stack.getNextStack()
+
         if levels != self._stack_levels:
             self._stack_levels = levels
             self.stackLevelChanged.emit()
