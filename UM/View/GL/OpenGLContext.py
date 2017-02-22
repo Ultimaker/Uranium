@@ -1,6 +1,7 @@
 # Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
+from typing import Dict
 from PyQt5.QtGui import QOpenGLContext, QSurfaceFormat
 
 from UM.Logger import Logger
@@ -147,5 +148,7 @@ class OpenGLContext(object):
     # Global values, OpenGL context versions we ASKED for (not per se what we got)
     major_version = 0
     minor_version = 0
-    profile = None
-    properties = {}  # to be filled by helper functions
+    profile = None  # type: QSurfaceFormat
+
+    # to be filled by helper functions
+    properties = {} # type: Dict[str, bool]
