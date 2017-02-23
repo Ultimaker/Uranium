@@ -24,18 +24,22 @@ class Vector(object):
     #   \param x X coordinate of vector.
     #   \param y Y coordinate of vector.
     #   \param z Z coordinate of vector.
-    def __init__(self, x=None, y=None, z=None, data=None):
+    def __init__(self, x=None, y=None, z=None, data=None, round_digits=None):
         if x is not None and y is not None and z is not None:
             self._data = numpy.array([x, y, z], dtype = numpy.float64)
         elif data is not None:
             self._data = data.copy()
         else:
             self._data = numpy.zeros(3, dtype = numpy.float64)
+        self.round_digits = round_digits  # for comparisons
 
     ##  Get numpy array with the data
     #   \returns numpy array of length 3 holding xyz data.
     def getData(self):
         return self._data.astype(numpy.float64)
+
+    def setRoundDigits(self, digits):
+        self.round_digits = digits
 
     ##  Return the x component of this vector
     @property
@@ -205,10 +209,22 @@ class Vector(object):
         return self._data[0] > other._data[0] and self._data[1] > other._data[1] and self._data[2] > other._data[2]
 
     def __le__(self, other):
-        return self._data[0] <= other._data[0] and self._data[1] <= other._data[1] and self._data[2] <= other._data[2]
+        if self.round_digits is None:
+            return self._data[0] <= other._data[0] and self._data[1] <= other._data[1] and self._data[2] <= other._data[2]
+        else:
+            return (
+                round(self._data[0], self.round_digits) <= round(other._data[0], self.round_digits) and
+                round(self._data[1], self.round_digits) <= round(other._data[1], self.round_digits) and
+                round(self._data[2], self.round_digits) <= round(other._data[2], self.round_digits))
 
     def __ge__(self, other):
-        return self._data[0] >= other._data[0] and self._data[1] >= other._data[1] and self._data[2] >= other._data[2]
+        if self.round_digits is None:
+            return self._data[0] >= other._data[0] and self._data[1] >= other._data[1] and self._data[2] >= other._data[2]
+        else:
+            return (
+                round(self._data[0], self.round_digits) >= round(other._data[0], self.round_digits) and
+                round(self._data[1], self.round_digits) >= round(other._data[1], self.round_digits) and
+                round(self._data[2], self.round_digits) >= round(other._data[2], self.round_digits))
 
 
 def isNumber(value):

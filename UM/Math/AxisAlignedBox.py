@@ -19,6 +19,8 @@ class AxisAlignedBox:
             swapped_maximum = Vector(max(minimum.x, maximum.x), max(minimum.y, maximum.y), max(minimum.z, maximum.z))
             minimum = swapped_minimum
             maximum = swapped_maximum
+        minimum.setRoundDigits(3)
+        maximum.setRoundDigits(3)
         self._min = minimum
         self._max = maximum
 
