@@ -49,7 +49,11 @@ class Platform(SceneNode.SceneNode):
             container = self._global_container_stack.findContainer({ "platform": "*" })
             if container:
                 mesh_file = container.getMetaDataEntry("platform")
-                path = Resources.getPath(Resources.Meshes, mesh_file)
+                try:
+                    path = Resources.getPath(Resources.Meshes, mesh_file)
+                except FileNotFoundError:
+                    Logger.log("w", "Unable to find the platform mesh %s", mesh_file)
+                    path = ""
 
                 if self._load_platform_job:
                     # This prevents a previous load job from triggering texture loads.

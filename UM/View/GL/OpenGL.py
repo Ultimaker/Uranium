@@ -2,7 +2,7 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 import sys
-import ctypes
+import ctypes   # type: ignore
 
 from PyQt5.QtGui import QOpenGLVersionProfile, QOpenGLContext, QOpenGLFramebufferObject, QOpenGLBuffer, QSurfaceFormat
 from PyQt5.QtWidgets import QMessageBox
