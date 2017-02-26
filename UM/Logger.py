@@ -4,6 +4,7 @@
 import sys
 import traceback
 import inspect
+from typing import List
 
 from UM.PluginObject import PluginObject
 

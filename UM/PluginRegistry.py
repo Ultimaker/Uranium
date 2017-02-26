@@ -3,6 +3,7 @@
 
 import imp
 import os
+from typing import Dict
 
 from UM.PluginError import PluginNotFoundError, InvalidMetaDataError
 from UM.Logger import Logger

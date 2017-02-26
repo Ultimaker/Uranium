@@ -4,6 +4,7 @@
 import enum
 import os
 from typing import Any, List, Set, KeysView
+from typing import Dict
 
 from UM.Settings.Interfaces import ContainerInterface
 from UM.Signal import Signal, signalemitter

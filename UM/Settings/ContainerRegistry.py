@@ -21,7 +21,10 @@ from UM.Signal import Signal, signalemitter
 from UM.LockFile import LockFile
 
 import UM.Dictionary
-from UM.Application import Application
+
+MYPY = False
+if MYPY:
+    from UM.Application import Application
 
 from UM.Settings.DefinitionContainer import DefinitionContainer
 from UM.Settings.ContainerStack import ContainerStack

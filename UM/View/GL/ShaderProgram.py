@@ -309,7 +309,7 @@ class ShaderProgram:
         if key not in self._attribute_bindings:
             return
 
-        self._attribute_bindings.remove(key)
+        del self._attribute_bindings[key]
 
     def _matrixToQMatrix4x4(self, m):
         return QMatrix4x4(m.at(0, 0), m.at(0, 1), m.at(0, 2), m.at(0, 3), m.at(1, 0), m.at(1, 1), m.at(1, 2), m.at(1, 3),
