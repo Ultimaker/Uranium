@@ -126,6 +126,7 @@ class LocalFileOutputDevice(OutputDevice):
         Logger.log("d", "Writing to [%s]..." % file_name)
         # OSX does not handle extensions with multiple periods correctly.
         if Platform.isOSX():
+            Logger.log("d", "OS X: checking for double extension...")
             mime_types = MimeType("", "", [t['extension'] for t in file_types])
             # Check if an extension is added multiple times.
             if mime_types.stripExtension(file_name) != mime_types.stripExtension(mime_types.stripExtension(file_name)):
