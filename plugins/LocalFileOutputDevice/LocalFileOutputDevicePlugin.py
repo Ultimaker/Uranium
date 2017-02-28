@@ -129,7 +129,7 @@ class LocalFileOutputDevice(OutputDevice):
             Logger.log("d", "OS X: checking for double extension...")
             mime_types = MimeType("", "", [t['extension'] for t in file_types])
             # Check if an extension is added multiple times.
-            if mime_types.stripExtension(file_name) != mime_types.stripExtension(mime_types.stripExtension(file_name)):
+            while mime_types.stripExtension(file_name) != mime_types.stripExtension(mime_types.stripExtension(file_name)):
                 file_name = mime_types.stripExtension(file_name)
                 Logger.log("d", "Multi extension detected, setting filename to [%s]" % file_name)
 
