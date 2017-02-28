@@ -9,7 +9,7 @@ import platform
 from PyQt5.QtCore import Qt, QObject, QCoreApplication, QEvent, pyqtSlot, QLocale, QTranslator, QLibraryInfo, QT_VERSION_STR, PYQT_VERSION_STR
 from PyQt5.QtQml import QQmlApplicationEngine, qmlRegisterType, qmlRegisterSingletonType
 from PyQt5.QtWidgets import QApplication, QSplashScreen, QMessageBox
-from PyQt5.QtGui import QGuiApplication, QPixmap
+from PyQt5.QtGui import QGuiApplication, QPixmap, QSurfaceFormat
 from PyQt5.QtCore import QTimer
 
 from UM.Application import Application
@@ -66,9 +66,8 @@ class QtApplication(QApplication, Application):
 
         if major_version is None and minor_version is None and profile is None:
             Logger.log("e", "Startup failed due to OpenGL initialization failing")
-            QMessageBox.critical(None, "Failed to initialize OpenGL", "Could not initialize OpenGL. This program requires OpenGL 2.0 or higher. Please check your video card drivers.")
-            sys.exit(1)
-
+            QMessageBox.critical(None, "Failed to probe OpenGL", "Could not create a OpenGL 2.0 or a 4.1 context. This program requires OpenGL 2.0 or higher. Please check your video card drivers, but I'm feeling lucky.")
+            major_version, minor_version, profile = 2, 0, QSurfaceFormat.NoProfile
         Logger.log("d", "Detected most suitable OpenGL context version: %s" % (
             OpenGLContext.versionAsText(major_version, minor_version, profile)))
         OpenGLContext.setDefaultFormat(major_version, minor_version, profile = profile)
