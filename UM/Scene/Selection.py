@@ -1,5 +1,6 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
+from typing import List
 
 from UM.Signal import Signal
 from UM.Math.Vector import Vector

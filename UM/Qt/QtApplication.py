@@ -110,7 +110,7 @@ class QtApplication(QApplication, Application):
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Updating configuration..."))
         upgraded = UM.VersionUpgradeManager.VersionUpgradeManager.getInstance().upgrade()
         if upgraded:
-            preferences = UM.Preferences.getInstance() #Preferences might have changed. Load them again.
+            preferences = Preferences.getInstance() #Preferences might have changed. Load them again.
                                                        #Note that the language can't be updated, so that will always revert to English.
             try:
                 preferences.readFromFile(Resources.getPath(Resources.Preferences, self._application_name + ".cfg"))

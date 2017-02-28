@@ -46,7 +46,7 @@ node ('linux && cura') {
         // Publish the pylint results to Jenkins.
         step([
             $class: 'WarningsPublisher',
-            parserConfigurations: [[parserName: 'PyLint', pattern: 'pylint.log']],
+            parserConfigurations: [[parserName: 'PyLint', pattern: 'build/pylint.log']],
         ])
 
         // If the job was not successful, send an email about it

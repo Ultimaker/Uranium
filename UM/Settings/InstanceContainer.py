@@ -4,8 +4,10 @@
 import configparser
 import io
 import copy
+from typing import Dict
 from typing import List
 
+from UM.Settings.Interfaces import DefinitionContainerInterface
 from UM.Signal import Signal, signalemitter
 from UM.PluginObject import PluginObject
 from UM.Logger import Logger
@@ -463,14 +465,14 @@ class InstanceContainer(ContainerInterface, PluginObject):
         instance.updateRelations(self)
 
     ##  Get the DefinitionContainer used for new instance creation.
-    def getDefinition(self) -> DefinitionContainer:
+    def getDefinition(self) -> DefinitionContainerInterface:
         return self._definition
 
     ##  Set the DefinitionContainer to use for new instance creation.
     #
     #   Since SettingInstance needs a SettingDefinition to work properly, we need some
     #   way of figuring out what SettingDefinition to use when creating a new SettingInstance.
-    def setDefinition(self, definition: DefinitionContainer):
+    def setDefinition(self, definition: DefinitionContainerInterface):
         self._definition = definition
 
     def __lt__(self, other):

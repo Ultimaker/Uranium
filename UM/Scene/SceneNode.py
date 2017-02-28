@@ -1,10 +1,12 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
+from typing import List
 
 from UM.Math.Matrix import Matrix
 from UM.Math.Vector import Vector
 from UM.Math.Quaternion import Quaternion
 from UM.Math.AxisAlignedBox import AxisAlignedBox
+from UM.Mesh.MeshData import MeshData
 
 from UM.Signal import Signal, signalemitter
 from UM.Mesh.MeshBuilder import MeshBuilder

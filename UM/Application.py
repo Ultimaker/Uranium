@@ -12,6 +12,9 @@ from UM.Mesh.MeshFileHandler import MeshFileHandler
 from UM.Resources import Resources
 from UM.Operations.OperationStack import OperationStack
 from UM.Event import CallFunctionEvent
+from UM.Settings.ContainerRegistry import ContainerRegistry
+import UM.Settings.ContainerStack
+import UM.Settings.InstanceContainer
 from UM.Signal import Signal, signalemitter, SignalQueue
 from UM.Logger import Logger
 from UM.Preferences import Preferences
@@ -111,7 +114,7 @@ class Application():
 
         self._plugin_registry.setApplication(self)
 
-        UM.Settings.ContainerRegistry.ContainerRegistry.setApplication(self)
+        ContainerRegistry.setApplication(self)
         UM.Settings.InstanceContainer.setContainerRegistry(self.getContainerRegistry())
         UM.Settings.ContainerStack.setContainerRegistry(self.getContainerRegistry())
 
@@ -126,7 +129,7 @@ class Application():
         self._global_container_stack = None
 
     def getContainerRegistry(self):
-        return UM.Settings.ContainerRegistry.ContainerRegistry.getInstance()
+        return ContainerRegistry.getInstance()
 
     ##  Emitted when the application window was closed and we need to shut down the application
     applicationShuttingDown = Signal()
