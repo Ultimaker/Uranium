@@ -47,10 +47,6 @@ class RotateTool(Tool):
         self.setExposedProperties("ToolHint", "RotationSnap", "RotationSnapAngle")
         self._saved_node_positions = []
 
-    def _sendSceneChanged(self):
-        for node in Selection.getAllSelectedObjects():
-            Application.getInstance().getController().getScene().sceneChanged.emit(node)
-
     ##  Handle mouse and keyboard events
     #
     #   \param event type(Event)
@@ -172,8 +168,6 @@ class RotateTool(Tool):
                 self.propertyChanged.emit()
                 if self._rotating:
                     self.operationStopped.emit(self)
-                # Force scene changed event. Some plugins choose to ignore move events when operation is in progress.
-                self._sendSceneChanged()
                 return True
 
     ##  Return a formatted angle of the current rotate operation
@@ -213,7 +207,6 @@ class RotateTool(Tool):
     ##  Reset the orientation of the mesh(es) to their original orientation(s)
     def resetRotation(self):
         Selection.applyOperation(SetTransformOperation, None, Quaternion(), None)
-        self._sendSceneChanged()
 
     ##  Initialise and start a LayFlatOperation
     #
@@ -259,7 +252,6 @@ class RotateTool(Tool):
             self._progress_message = None
 
         self.operationStopped.emit(self)
-        self._sendSceneChanged()
 
 ##  A LayFlatJob bundles multiple LayFlatOperations for multiple selected objects
 #

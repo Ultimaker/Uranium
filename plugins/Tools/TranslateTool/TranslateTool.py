@@ -230,11 +230,6 @@ class TranslateTool(Tool):
                 self.operationStopped.emit(self)
                 self._distance = None
                 self.propertyChanged.emit()
-                # Force scene changed event. Some plugins choose to ignore move events when operation is in progress.
-                if self._moved:
-                    for node in Selection.getAllSelectedObjects():
-                        Application.getInstance().getController().getScene().sceneChanged.emit(node)
-                    self._moved = False
                 self.setLockedAxis(None)
                 self.setDragPlane(None)
                 self.setDragStart(None, None)
