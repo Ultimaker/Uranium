@@ -385,7 +385,7 @@ class InstanceContainer(ContainerInterface, PluginObject):
             self._metadata = dict(parser["metadata"])
 
         if "values" in parser:
-            self._cached_values = parser["values"]
+            self._cached_values = dict(parser["values"])
 
         self._dirty = False
 
