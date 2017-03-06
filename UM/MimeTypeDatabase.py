@@ -4,6 +4,7 @@
 from PyQt5.QtCore import QMimeDatabase
 
 from UM.Decorators import ascopy
+from typing import List
 
 ##  Raised when a MIME type can not be found.
 class MimeTypeNotFoundError(Exception):

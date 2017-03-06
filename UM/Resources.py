@@ -4,6 +4,7 @@
 import os
 import os.path
 import platform
+from typing import List
 
 
 class ResourceTypeError(Exception):
