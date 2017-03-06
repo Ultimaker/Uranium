@@ -351,6 +351,7 @@ class SettingDefinition:
                 return self._key == other.key
             else:
                 Logger.log("w", "Trying to compare equality of SettingDefinition and something that is no SettingDefinition.")
+                return False
         except:  # Has no key. Not the same type of object.
             Logger.log("w", "Trying to compare equality of SettingDefinition and something that is no SettingDefinition.")
             return False
