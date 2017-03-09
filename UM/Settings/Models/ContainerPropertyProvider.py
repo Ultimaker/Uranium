@@ -122,7 +122,7 @@ class ContainerPropertyProvider(QObject):
 
         value = self._getPropertyValue(property_name)
 
-        if self._property_values[property_name] != value:
+        if self._property_values.get(property_name, None) != value:
             self._property_values[property_name] = value
             self.propertiesChanged.emit()
 
