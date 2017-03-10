@@ -201,20 +201,17 @@ class VersionUpgradeManager:
     #   \param directory The directory to read the files from.
     #   \return The filename of each file relative to the specified directory.
     def _getFilesInDirectory(self, directory):
-        result = []
-        for (path, directory_names, filenames) in os.walk(directory, topdown=True):
+        for (path, directory_names, filenames) in os.walk(directory, topdown = True):
             directory_names[:] = [] # Only go to one level.
             for filename in filenames:
                 relative_path = os.path.relpath(path, directory)
-                result.append(os.path.join(relative_path, filename))
-        return result
+                yield os.path.join(relative_path, filename)
 
     ##  Gets all files that need to be upgraded.
     #
-    #   \return A list of UpgradeTasks of files to upgrade.
+    #   \return A sequence of UpgradeTasks of files to upgrade.
     def _getUpgradeTasks(self):
-        result = []
-        storage_path_prefixes = set(Resources.getSearchPaths())
+        storage_path_prefixes = set()
         storage_path_prefixes.add(Resources.getConfigStoragePath())
         storage_path_prefixes.add(Resources.getDataStoragePath())
         for old_configuration_type, storage_paths in self._storage_paths.items():
@@ -222,8 +219,7 @@ class VersionUpgradeManager:
                 for storage_path in storage_paths:
                     path = os.path.join(prefix, storage_path)
                     for configuration_file in self._getFilesInDirectory(path):
-                        result.append(UpgradeTask(storage_path = path, file_name = configuration_file, configuration_type = old_configuration_type))
-        return result
+                        yield UpgradeTask(storage_path = path, file_name = configuration_file, configuration_type = old_configuration_type)
 
     ##  Stores an old version of a configuration file away.
     #
