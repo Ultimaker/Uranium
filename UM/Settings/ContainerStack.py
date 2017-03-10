@@ -2,6 +2,7 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 import configparser
 import io
+import threading
 from typing import Set, List, Optional, cast
 
 from UM.Settings.SettingDefinition import SettingDefinition
@@ -59,6 +60,7 @@ class ContainerStack(ContainerInterface, PluginObject):
         self._postponed_emits = []  # gets filled with 2-tuples: signal, signal_argument(s)
 
         self._property_changes = {}
+        self._property_changes_lock = threading.Lock()
         self._emit_property_changed_queued = False
 
     ##  \copydoc ContainerInterface::getId
@@ -549,25 +551,27 @@ class ContainerStack(ContainerInterface, PluginObject):
     # In addition, it allows us to emit a single signal that reports all properties that
     # have changed.
     def _collectPropertyChanges(self, key, property_name):
-        if key not in self._property_changes:
-            self._property_changes[key] = set()
+        with self._property_changes_lock:
+            if key not in self._property_changes:
+                self._property_changes[key] = set()
 
-        self._property_changes[key].add(property_name)
+            self._property_changes[key].add(property_name)
 
-        if not self._emit_property_changed_queued:
-            _containerRegistry.getApplication().callLater(self._emitCollectedPropertyChanges)
-            self._emit_property_changed_queued = True
+            if not self._emit_property_changed_queued:
+                _containerRegistry.getApplication().callLater(self._emitCollectedPropertyChanges)
+                self._emit_property_changed_queued = True
 
     # Perform the emission of the change signals that were collected in a previous step.
     def _emitCollectedPropertyChanges(self):
-        for key, property_names in self._property_changes.items():
-            self.propertiesChanged.emit(key, property_names)
+        with self._property_changes_lock:
+            for key, property_names in self._property_changes.items():
+                self.propertiesChanged.emit(key, property_names)
 
-            for property_name in property_names:
-                self.propertyChanged.emit(key, property_name)
+                for property_name in property_names:
+                    self.propertyChanged.emit(key, property_name)
 
-        self._property_changes = {}
-        self._emit_property_changed_queued = False
+            self._property_changes = {}
+            self._emit_property_changed_queued = False
 
 _containerRegistry = None   # type:  ContainerRegistryInterface
 
