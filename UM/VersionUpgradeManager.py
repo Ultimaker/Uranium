@@ -214,8 +214,9 @@ class VersionUpgradeManager:
     #   \return A list of UpgradeTasks of files to upgrade.
     def _getUpgradeTasks(self):
         result = []
-        storage_path_prefixes = set()
+        storage_path_prefixes = set(Resources.getSearchPaths())
         storage_path_prefixes.add(Resources.getConfigStoragePath())
+        storage_path_prefixes.add(Resources.getDataStoragePath())
         for old_configuration_type, storage_paths in self._storage_paths.items():
             for prefix in storage_path_prefixes:
                 for storage_path in storage_paths:
