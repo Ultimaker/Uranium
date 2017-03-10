@@ -66,7 +66,6 @@ class SceneNode():
 
         self._calculate_aabb = True  # Should the AxisAlignedBounxingBox be re-calculated?
         self._aabb = None  # The AxisAligned bounding box.
-        self._original_aabb = None  # The AxisAligned bounding box, without transformations.
         self._bounding_box_mesh = None
 
         self._visible = kwargs.get("visible", True)
@@ -581,14 +580,6 @@ class SceneNode():
             self._calculateAABB()
         return self._aabb
 
-    ##  Get the bounding box of this node and its children. Without taking any transformation into account
-    def getOriginalBoundingBox(self):
-        if not self._calculate_aabb:
-            return None
-        if self._original_aabb is None:
-            self._calculateAABB()
-        return self._original_aabb
-
     ##  Set whether or not to calculate the bounding box for this node.
     #
     #   \param calculate True if the bounding box should be calculated, False if not.
@@ -643,21 +634,15 @@ class SceneNode():
 
     def _calculateAABB(self):
         aabb = None
-        original_aabb = None
         if self._mesh_data:
             aabb = self._mesh_data.getExtents(self.getWorldTransformation())
-            original_aabb = self._mesh_data.getExtents()
         else: # If there is no mesh_data, use a boundingbox that encompasses the local (0,0,0)
             position = self.getWorldPosition()
             aabb = AxisAlignedBox(minimum = position, maximum = position)
-            original_aabb = AxisAlignedBox(minimum = position, maximum = position)
 
         for child in self._children:
             if aabb is None:
                 aabb = child.getBoundingBox()
-                original_aabb = child.getOriginalBoundingBox()
             else:
                 aabb = aabb + child.getBoundingBox()
-                original_aabb = original_aabb + child.getOriginalBoundingBox()
         self._aabb = aabb
-        self._original_aabb = original_aabb
