@@ -209,12 +209,12 @@ class ContainerStack(ContainerInterface, PluginObject):
             return self._next_stack.hasProperty(key, property_name)
         return False
 
-    propertyChanged = Signal()
-
     metaDataChanged = Signal()
 
-    # NOTE: we make propertiesChanged as a queued signal because otherwise, the emits in _emitCollectedPropertyChanges()
-    # will be direct calls which modify the dict we are iterating over, and then everything crashes.
+    # NOTE: we make propertyChanged and propertiesChanged as queued signals because otherwise, the emits in
+    # _emitCollectedPropertyChanges() will be direct calls which modify the dict we are iterating over, and then
+    # everything crashes.
+    propertyChanged = Signal(Signal.Queued)
     propertiesChanged = Signal(Signal.Queued)
 
     ##  \copydoc ContainerInterface::serialize
@@ -566,7 +566,7 @@ class ContainerStack(ContainerInterface, PluginObject):
             self.propertiesChanged.emit(key, property_names)
 
             for property_name in property_names:
-                self.propertiesChanged.emit(key, property_name)
+                self.propertyChanged.emit(key, property_name)
 
         self._property_changes = {}
         self._emit_property_changed_queued = False
