@@ -126,7 +126,7 @@ class OpenGLContext(object):
                 Logger.log("d",
                     "We got at least OpenGL context 2.0: %s",
                     cls.versionAsText(fmt.majorVersion(), fmt.minorVersion(), profile))
-                return None, None, None
+                return 2, 0, QSurfaceFormat.NoProfile
             else:
                 Logger.log("d",
                     "Current OpenGL context is too low: %s" % cls.versionAsText(fmt.majorVersion(), fmt.minorVersion(),

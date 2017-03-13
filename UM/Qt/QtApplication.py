@@ -62,18 +62,18 @@ class QtApplication(QApplication, Application):
 
         super().__init__(sys.argv, **kwargs)
 
+        self.setAttribute(Qt.AA_UseDesktopOpenGL)
         major_version, minor_version, profile = OpenGLContext.detectBestOpenGLVersion()
 
         if major_version is None and minor_version is None and profile is None:
-            Logger.log("e", "OpenGL version probing has failed: tried to create a 2.0 and 4.1 context. Something unexpected could happen.")
-            # Setting the versions for getting version functions in OpenGL.py
-            OpenGLContext.major_version = 2
-            OpenGLContext.minor_version = 0
-            OpenGLContext.profile = QSurfaceFormat.NoProfile
+            Logger.log("e", "Startup failed because OpenGL version probing has failed: tried to create a 2.0 and 4.1 context. Exiting")
+            QMessageBox.critical(None, "Failed to probe OpenGL",
+                "Could not probe OpenGL. This program requires OpenGL 2.0 or higher. Please check your video card drivers.")
+            sys.exit(1)
         else:
             Logger.log("d", "Detected most suitable OpenGL context version: %s" % (
                 OpenGLContext.versionAsText(major_version, minor_version, profile)))
-            OpenGLContext.setDefaultFormat(major_version, minor_version, profile = profile)
+        OpenGLContext.setDefaultFormat(major_version, minor_version, profile = profile)
 
         self._plugins_loaded = False  # Used to determine when it's safe to use the plug-ins.
         self._main_qml = "main.qml"
@@ -86,8 +86,6 @@ class QtApplication(QApplication, Application):
         self._qml_import_paths = []
         self._qml_import_paths.append(os.path.join(os.path.dirname(sys.executable), "qml"))
         self._qml_import_paths.append(os.path.join(Application.getInstallPrefix(), "Resources", "qml"))
-
-        self.setAttribute(Qt.AA_UseDesktopOpenGL)
 
         try:
             self._splash = self._createSplashScreen()
