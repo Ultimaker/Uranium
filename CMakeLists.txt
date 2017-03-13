@@ -23,18 +23,7 @@ add_custom_target(typecheck)
 add_custom_command(TARGET typecheck POST_BUILD COMMAND ${PYTHON_EXECUTABLE} run_mypy.py WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
 # # Tests
-enable_testing()
-add_test(NAME pytest COMMAND ${PYTHON_EXECUTABLE} -m pytest -r a --junitxml=${CMAKE_BINARY_DIR}/junit.xml ${CMAKE_SOURCE_DIR})
-# Using untranslated strings on Linux
-if(UNIX AND NOT APPLE) 
-    set_tests_properties(pytest PROPERTIES ENVIRONMENT LANG=C)
-endif()
-# Adding PYTHONPATH on every OS
-set_tests_properties(pytest PROPERTIES ENVIRONMENT PYTHONPATH=${CMAKE_SOURCE_DIR})
-# Adding compatibility with our old tests target
-add_custom_target(tests
-                  COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target test
-                  COMMENT "Notice: tests target is deprecated, please use the test target")
+include(UraniumTests)
 
 # # Benchmarks
 # add_custom_target(benchmark)
