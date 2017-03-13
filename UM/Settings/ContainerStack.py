@@ -60,7 +60,7 @@ class ContainerStack(ContainerInterface, PluginObject):
         self._postponed_emits = []  # gets filled with 2-tuples: signal, signal_argument(s)
 
         self._property_changes = {}
-        self._property_changes_lock = threading.Lock()
+        self._property_changes_lock = threading.RLock()
         self._emit_property_changed_queued = False
 
     ##  \copydoc ContainerInterface::getId

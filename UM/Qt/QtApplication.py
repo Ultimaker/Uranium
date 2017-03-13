@@ -66,10 +66,14 @@ class QtApplication(QApplication, Application):
 
         if major_version is None and minor_version is None and profile is None:
             Logger.log("e", "OpenGL version probing has failed: tried to create a 2.0 and 4.1 context. Something unexpected could happen.")
-            major_version, minor_version, profile = 2, 0, QSurfaceFormat.NoProfile
-        Logger.log("d", "Detected most suitable OpenGL context version: %s" % (
-            OpenGLContext.versionAsText(major_version, minor_version, profile)))
-        OpenGLContext.setDefaultFormat(major_version, minor_version, profile = profile)
+            # Setting the versions for getting version functions in OpenGL.py
+            OpenGLContext.major_version = 2
+            OpenGLContext.minor_version = 0
+            OpenGLContext.profile = QSurfaceFormat.NoProfile
+        else:
+            Logger.log("d", "Detected most suitable OpenGL context version: %s" % (
+                OpenGLContext.versionAsText(major_version, minor_version, profile)))
+            OpenGLContext.setDefaultFormat(major_version, minor_version, profile = profile)
 
         self._plugins_loaded = False  # Used to determine when it's safe to use the plug-ins.
         self._main_qml = "main.qml"
