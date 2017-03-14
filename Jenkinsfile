@@ -1,4 +1,4 @@
-node ('linux && cura') {
+parallel_nodes(['linux && cura', 'windows && cura']) {
     // Prepare building
     stage('Prepare') {
         // Ensure we start with a clean build directory.
@@ -15,13 +15,13 @@ node ('linux && cura') {
             // Perform the "build". Since Uranium is Python code, this basically only ensures CMake is setup.
             stage('Build') {
                 // Ensure CMake is setup. Note that since this is Python code we do not really "build" it.
-                sh 'cmake .. -DCMAKE_PREFIX_PATH=/opt/ultimaker/cura-build-environment -DCMAKE_BUILD_TYPE=Release'
+                cmake '..', "-DCMAKE_PREFIX_PATH=${env.CURA_ENVIRONMENT_PATH} -DCMAKE_BUILD_TYPE=Release"
             }
 
             // Try and run the unit tests. If this stage fails, we consider the build to be "unstable".
             stage('Unit Test') {
                 try {
-                    sh 'make test'
+                    make 'test'
                 } catch(e) {
                     currentBuild.result = "UNSTABLE"
                 }
@@ -30,7 +30,10 @@ node ('linux && cura') {
             // Perform pylint checks on the source code. If this step fails, we do not consider it an error.
             stage('Lint') {
                 try {
-                    sh 'make check'
+                    if(isUnix()) {
+                        // "Check" target currently does not work on Windows
+                        sh 'make check'
+                    }
                 } catch(e) {
                     currentBuild.result = "SUCCESS"
                 }
@@ -41,13 +44,15 @@ node ('linux && cura') {
     // Perform any post-build actions like notification and publishing of unit tests.
     stage('Finalize') {
         // Publish the test results to Jenkins.
-        junit 'build/junit*.xml'
+        junit allowEmptyResults: true, testResults: 'build/junit*.xml'
 
         // Publish the pylint results to Jenkins.
-        step([
-            $class: 'WarningsPublisher',
-            parserConfigurations: [[parserName: 'PyLint', pattern: 'build/pylint.log']],
-        ])
+        if(isUnix()) {
+            step([
+                $class: 'WarningsPublisher',
+                parserConfigurations: [[parserName: 'PyLint', pattern: 'build/pylint.log']],
+            ])
+        }
 
         // Send notifications about the build result
         notify_build_result(env.CURA_EMAIL_RECIPIENTS, '#cura-dev', ['master', '2.'])
