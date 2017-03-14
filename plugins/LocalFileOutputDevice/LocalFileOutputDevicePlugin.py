@@ -58,7 +58,8 @@ class LocalFileOutputDevice(OutputDevice):
     #   to. Can be freely ignored if providing a file name makes no sense.
     #   \param limit_mimetypes Should we limit the available MIME types to the
     #   MIME types available to the currently active machine?
-    def requestWrite(self, nodes, file_name = None, limit_mimetypes = None, file_handler = None):
+    #   \param kwargs Keyword arguments.
+    def requestWrite(self, nodes, file_name = None, limit_mimetypes = None, file_handler = None, **kwargs):
         if self._writing:
             raise OutputDeviceError.DeviceBusyError()
 

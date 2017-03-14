@@ -124,9 +124,10 @@ class OutputDevice():
     #   \param file_name \type{string} A suggestion for the file name to write
     #   to. Can be freely ignored if providing a file name makes no sense.
     #   \param limit_mimetype Limit output to these mime types.
-    #
+    #   \param file_handler The filehandler to use to write the file with.
+    #   \param kwargs Keyword arguments.
     #   \exception OutputDeviceError.WriteRequestFailedError
-    def requestWrite(self, nodes, file_name = None, limit_mimetypes = False, file_handler = None):
+    def requestWrite(self, nodes, file_name = None, limit_mimetypes = False, file_handler = None, **kwargs):
         raise NotImplementedError("requestWrite needs to be implemented")
 
     writeStarted = Signal()
