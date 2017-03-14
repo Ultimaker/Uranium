@@ -49,41 +49,7 @@ node ('linux && cura') {
             parserConfigurations: [[parserName: 'PyLint', pattern: 'build/pylint.log']],
         ])
 
-        // If the job was not successful, send an email about it
-        if(currentBuild.result && currentBuild.result != "SUCCESS")
-        {
-            // If our situation changed, send a different mail than if we are simply warning about the build still being broken.
-            if(currentBuild.previousBuild && currentBuild.previousBuild.result != currentBuild.result)
-            {
-                emailext(
-                    subject: "[Jenkins] Build ${currentBuild.fullDisplayName} has become ${currentBuild.result}",
-                    body: "Jenkins build ${currentBuild.fullDisplayName} changed from ${currentBuild.previousBuild.result} to ${currentBuild.result}.\n\nPlease check the build output at ${env.BUILD_URL} for details.",
-                    to: env.CURA_EMAIL_RECIPIENTS // Note: Using an environment variable for security reasons.
-                )
-            }
-            else
-            {
-                emailext (
-                    subject: "[Jenkins] Build ${currentBuild.fullDisplayName} is ${currentBuild.result}",
-                    body: "Jenkins build ${currentBuild.fullDisplayName} is ${currentBuild.result}\n\nPlease check the build output at ${env.BUILD_URL} for details.",
-                    to: env.CURA_EMAIL_RECIPIENTS
-                )
-            }
-        }
-        else
-        {
-            // Send an email to indicate build was fixed
-            if(currentBuild.previousBuild && currentBuild.previousBuild.result != currentBuild.result)
-            {
-                emailext(
-                    subject: "[Jenkins] Build ${currentBuild.fullDisplayName} was fixed!",
-                    body: "Jenkins build ${currentBuild.fullDisplayName} was ${currentBuild.previousBuild.result} but is now stable again.\n\nPlease check the build output at ${env.BUILD_URL} for details.",
-                    to: env.CURA_EMAIL_RECIPIENTS
-                )
-            }
-
-//             // Otherwise, trigger a build of cura-build
-//             build "../../cura-build/master", wait: false
-        }
+        // Send notifications about the build result
+        notify_build_result(env.CURA_EMAIL_RECIPIENTS, '#cura-dev', ['master', '2.'])
     }
 }
