@@ -79,7 +79,11 @@ class LocalFileOutputDevice(OutputDevice):
         filters = []
         mime_types = []
         selected_filter = None
-        last_used_type = Preferences.getInstance().getValue("local_file/last_used_type")
+
+        if "preferred_mimetype" in kwargs and kwargs["preferred_mimetype"] is not None:
+            preferred_mimetype = kwargs["preferred_mimetype"]
+        else:
+            preferred_mimetype = Preferences.getInstance().getValue("local_file/last_used_type")
 
         if not file_handler:
             file_handler = Application.getInstance().getMeshFileHandler()
@@ -98,7 +102,7 @@ class LocalFileOutputDevice(OutputDevice):
             type_filter = "{0} (*.{1})".format(item["description"], item["extension"])
             filters.append(type_filter)
             mime_types.append(item["mime_type"])
-            if last_used_type == item["mime_type"]:
+            if preferred_mimetype == item["mime_type"]:
                 selected_filter = type_filter
                 if file_name:
                     file_name += "." + item["extension"]
