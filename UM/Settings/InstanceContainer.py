@@ -172,14 +172,14 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     def getMetaData(self):
         return self._metadata
 
-    metaData = property(getMetaData)
-    metaDataChanged = Signal()
-
     def setMetaData(self, metadata):
         if metadata != self._metadata:
             self._metadata = metadata
             self._dirty = True
-            self.metaDataChanged.emit(self)
+            self.metaDataChanged.emit()
+
+    metaDataChanged = pyqtSignal()
+    metaData = pyqtProperty("QVariantMap", fget = getMetaData, fset = setMetaData, notify = metaDataChanged)
 
     ##  \copydoc ContainerInterface::getMetaDataEntry
     #
@@ -197,7 +197,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         if key not in self._metadata:
             self._metadata[key] = value
             self._dirty = True
-            self.metaDataChanged.emit(self)
+            self.metaDataChanged.emit()
         else:
             Logger.log("w", "Meta data with key %s was already added.", key)
 
@@ -211,7 +211,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         if key in self._metadata:
             self._metadata[key] = value
             self._dirty = True
-            self.metaDataChanged.emit(self)
+            self.metaDataChanged.emit()
         else:
             Logger.log("w", "Meta data with key %s was not found. Unable to change.", key)
 
@@ -285,8 +285,6 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
             self.setDirty(True)
 
     propertyChanged = Signal()
-
-    metaDataChanged = Signal()
 
     ##  Remove all instances from this container.
     def clear(self):

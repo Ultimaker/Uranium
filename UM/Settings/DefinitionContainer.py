@@ -123,7 +123,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     def getMetaData(self):
         return self._metadata
 
-    metaData = property(getMetaData)
+    metaData = pyqtProperty("QVariantMap", fget = getMetaData, constant = True)
 
     @property
     def definitions(self):
