@@ -41,7 +41,7 @@ MimeTypeDatabase.addMimeType(
 #
 @signalemitter
 class InstanceContainer(ContainerInterface, PluginObject):
-    Version = 3
+    Version = 2
 
     ##  Constructor
     #
