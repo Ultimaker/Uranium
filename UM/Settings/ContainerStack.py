@@ -4,6 +4,8 @@ import configparser
 import io
 from typing import Set, List, Optional, cast
 
+from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
+
 from UM.Settings.SettingDefinition import SettingDefinition
 from UM.Signal import Signal, signalemitter
 from UM.PluginObject import PluginObject
@@ -39,14 +41,16 @@ MimeTypeDatabase.addMimeType(
 
 ##  A stack of setting containers to handle setting value retrieval.
 @signalemitter
-class ContainerStack(ContainerInterface, PluginObject):
+class ContainerStack(QObject, ContainerInterface, PluginObject):
     Version = 3
 
     ##  Constructor
     #
     #   \param stack_id \type{string} A unique, machine readable/writable ID.
     def __init__(self, stack_id, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        # Note that we explicitly pass None as QObject parent here. This is to be able
+        # to support pickling.
+        super().__init__(parent = None, *args, **kwargs)
 
         self._id = str(stack_id)
         self._name = stack_id
@@ -60,6 +64,18 @@ class ContainerStack(ContainerInterface, PluginObject):
 
         self._property_changes = {}
         self._emit_property_changed_queued = False
+
+    ##  For pickle support
+    def __getnewargs__(self):
+        return (self._id,)
+
+    ##  For pickle support
+    def __getstate__(self):
+        return self.__dict__
+
+    ##  For pickle support
+    def __setstate__(self, state):
+        self.__dict__.update(state)
 
     ##  \copydoc ContainerInterface::getId
     #
