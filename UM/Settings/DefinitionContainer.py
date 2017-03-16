@@ -5,6 +5,8 @@ import json
 import collections
 import copy
 
+from PyQt5.QtCore import QObject, pyqtProperty
+
 from UM.Resources import Resources
 from UM.PluginObject import PluginObject
 from UM.Logger import Logger
@@ -38,14 +40,16 @@ MimeTypeDatabase.addMimeType(
 ##  A container for SettingDefinition objects.
 #
 #
-class DefinitionContainer(DefinitionContainerInterface, PluginObject):
+class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     Version = 2
 
     ##  Constructor
     #
     #   \param container_id A unique, machine readable/writable ID for this container.
     def __init__(self, container_id, i18n_catalog = None, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        # Note that we explicitly pass None as QObject parent here. This is to be able
+        # to support pickling.
+        super().__init__(parent = None, *args, **kwargs)
 
         self._id = str(container_id)    # type: str
         self._name = container_id       # type: str
@@ -61,6 +65,18 @@ class DefinitionContainer(DefinitionContainerInterface, PluginObject):
     def __setattr__(self, name, value):
         super().__setattr__(name, value)
         #raise NotImplementedError()
+
+    ##  For pickle support
+    def __getnewargs__(self):
+        return (self._id, self._i18n_catalog)
+
+    ##  For pickle support
+    def __getstate__(self):
+        return self.__dict__
+
+    ##  For pickle support
+    def __setstate__(self, state):
+        self.__dict__.update(state)
 
     ##  \copydoc ContainerInterface::getId
     #
