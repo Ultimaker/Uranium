@@ -123,6 +123,15 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     def getMetaData(self):
         return self._metadata
 
+    ##  Set the complete set of metadata
+    def setMetaData(self, meta_data):
+        if meta_data != self._meta_data:
+            self._meta_data = meta_data
+            self.metaDataChanged.emit()
+
+    metaDataChanged = pyqtSignal()
+    metaData = pyqtProperty("QVariantMap", fget = getMetaData, fset = setMetaData, notify = metaDataChanged)
+
     ##  \copydoc ContainerInterface::getMetaDataEntry
     #
     #   Reimplemented from ContainerInterface
@@ -144,6 +153,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         if key not in self._metadata:
             self._dirty = True
             self._metadata[key] = value
+            self.metaDataChanged.emit()
         else:
             Logger.log("w", "Meta data with key %s was already added.", key)
 
@@ -151,12 +161,14 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         if key in self._metadata:
             self._dirty = True
             self._metadata[key] = value
+            self.metaDataChanged.emit()
         else:
             Logger.log("w", "Meta data with key %s was not found. Unable to change.", key)
 
     def removeMetaDataEntry(self, key):
         if key in self._metadata:
             del self._metadata[key]
+            self.metaDataChanged.emit()
 
     def isDirty(self) -> bool:
         return self._dirty
@@ -232,8 +244,6 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         if self._next_stack:
             return self._next_stack.hasProperty(key, property_name)
         return False
-
-    metaDataChanged = Signal()
 
     # NOTE: we make propertyChanged and propertiesChanged as queued signals because otherwise, the emits in
     # _emitCollectedPropertyChanges() will be direct calls which modify the dict we are iterating over, and then
