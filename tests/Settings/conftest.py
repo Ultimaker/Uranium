@@ -5,12 +5,12 @@ import os.path
 
 import pytest
 
-import UM.Resources
-import UM.Settings
+from UM.Resources import Resources
 from UM.PluginRegistry import PluginRegistry
-from UM.Settings.ContainerRegistry import ContainerRegistry
-
 from UM.MimeTypeDatabase import MimeType, MimeTypeDatabase
+from UM.Settings.ContainerRegistry import ContainerRegistry
+import UM.Settings.ContainerStack
+import UM.Settings.InstanceContainer
 
 ##  Creates a brand new container registry.
 #
@@ -19,7 +19,7 @@ from UM.MimeTypeDatabase import MimeType, MimeTypeDatabase
 #
 #   \return A brand new container registry.
 @pytest.fixture
-def container_registry():
+def container_registry(application):
     MimeTypeDatabase.addMimeType(
         MimeType(
             name = "application/x-uranium-definitioncontainer",
@@ -44,9 +44,11 @@ def container_registry():
         )
     )
 
-    UM.Resources.Resources.addSearchPath(os.path.dirname(os.path.abspath(__file__)))
+    Resources.addSearchPath(os.path.dirname(os.path.abspath(__file__)))
     ContainerRegistry._ContainerRegistry__instance = None # Reset the private instance variable every time
     PluginRegistry.getInstance().removeType("settings_container")
+
+    ContainerRegistry.setApplication(application)
 
     UM.Settings.ContainerStack.setContainerRegistry(ContainerRegistry.getInstance())
     UM.Settings.InstanceContainer.setContainerRegistry(ContainerRegistry.getInstance())
@@ -55,7 +57,7 @@ def container_registry():
 @pytest.fixture
 def loaded_container_registry(container_registry):
     instance = ContainerRegistry.getInstance()
-    instance.addResourceType(UM.Resources.Resources.InstanceContainers)
+    instance.addResourceType(Resources.InstanceContainers)
     instance.load()
 
     return instance
