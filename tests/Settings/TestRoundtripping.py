@@ -14,6 +14,7 @@ import multiprocessing
 from UM.SaveFile import SaveFile
 from UM.Settings.ContainerStack import ContainerStack
 from UM.Settings.InstanceContainer import InstanceContainer
+from UM.Settings.DefinitionContainer import DefinitionContainer
 
 @pytest.fixture(params = [1, 2, 5, 10])
 def process_count(request):
@@ -114,3 +115,22 @@ def test_roundtrip_stack(tmpdir, process_count, loaded_container_registry):
         assert deserialized_stack.getMetaData() == container_stack.getMetaData()
         assert deserialized_stack.getBottom() == container_stack.getBottom()
         assert deserialized_stack.getTop() == container_stack.getTop()
+
+
+def test_roundtrip_stack(tmpdir, process_count, loaded_container_registry):
+    definition = loaded_container_registry.findDefinitionContainers(id = "multiple_settings")[0]
+
+    temp_file = tmpdir.join("container_stack_test")
+
+    mp_run(process_count, write_data, temp_file, definition)
+
+    assert len(list(tmpdir.listdir())) == 1
+
+    results = mp_run(process_count, read_data, temp_file)
+
+    for result in results:
+        deserialized_definition = DefinitionContainer("test_definition")
+        deserialized_definition.deserialize(result)
+
+        assert deserialized_definition.getName() == definition.getName()
+        assert deserialized_definition.getMetaData() == definition.getMetaData()
