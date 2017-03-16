@@ -7,6 +7,8 @@ import copy
 from typing import Dict
 from typing import List
 
+from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
+
 from UM.Settings.Interfaces import DefinitionContainerInterface
 from UM.Signal import Signal, signalemitter
 from UM.PluginObject import PluginObject
@@ -40,14 +42,14 @@ MimeTypeDatabase.addMimeType(
 #
 #
 @signalemitter
-class InstanceContainer(ContainerInterface, PluginObject):
+class InstanceContainer(QObject, ContainerInterface, PluginObject):
     Version = 2
 
     ##  Constructor
     #
     #   \param container_id A unique, machine readable/writable ID for this container.
     def __init__(self, container_id, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super().__init__(parent = None, *args, **kwargs)
 
         self._id = str(container_id)    # type: str
         self._name = container_id       # type: str
@@ -96,6 +98,18 @@ class InstanceContainer(ContainerInterface, PluginObject):
 
     def __ne__(self, other):
         return not (self == other)
+
+    ##  For pickle support
+    def __getnewargs__(self):
+        return (self._id,)
+
+    ##  For pickle support
+    def __getstate__(self):
+        return self.__dict__
+
+    ##  For pickle support
+    def __setstate__(self, state):
+        self.__dict__.update(state)
 
     ##  \copydoc ContainerInterface::getId
     #
