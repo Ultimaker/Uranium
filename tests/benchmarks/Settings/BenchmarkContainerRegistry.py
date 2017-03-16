@@ -5,8 +5,9 @@ import os.path
 import pytest
 
 from UM.MimeTypeDatabase import MimeType, MimeTypeDatabase
-import UM
-import UM.Settings.ContainerRegistry
+from UM.Resources import Resources
+from UM.PluginRegistry import PluginRegistry
+from UM.Settings.ContainerRegistry import ContainerRegistry
 
 @pytest.fixture
 def container_registry(application):
@@ -34,13 +35,13 @@ def container_registry(application):
         )
     )
 
-    UM.Resources.addSearchPath(os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "..", "Settings")))
-    UM.Settings.ContainerRegistry._ContainerRegistry__instance = None # Reset the private instance variable every time
-    UM.PluginRegistry.getInstance().removeType("settings_container")
+    Resources.addSearchPath(os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "..", "Settings")))
+    ContainerRegistry._ContainerRegistry__instance = None # Reset the private instance variable every time
+    PluginRegistry.getInstance().removeType("settings_container")
 
-    UM.Settings.ContainerRegistry.ContainerRegistry.getInstance().load()
+    ContainerRegistry.getInstance().load()
 
-    return UM.Settings.ContainerRegistry.ContainerRegistry.getInstance()
+    return ContainerRegistry.getInstance()
 
 
 benchmark_findContainers_data = [

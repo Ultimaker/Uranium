@@ -3,7 +3,7 @@
 
 import pytest
 
-import UM.Settings
+from UM.Settings.SettingDefinition import SettingDefinition
 
 benchmark_matches_filter_data = [
     ({ "key": "test" }, True),
@@ -15,7 +15,7 @@ benchmark_matches_filter_data = [
 
 @pytest.mark.parametrize("filter,matches", benchmark_matches_filter_data)
 def benchmark_matchesFilter(benchmark, filter, matches):
-    definition = UM.Settings.SettingDefinition("test", None)
+    definition = SettingDefinition("test", None)
     definition.deserialize({
         "label": "Test",
         "type": "int",
@@ -53,7 +53,7 @@ benchmark_matches_filter_data = [
 
 @pytest.mark.parametrize("filter,match_count", benchmark_matches_filter_data)
 def benchmark_findDefinitions(benchmark, filter, match_count):
-    definition = UM.Settings.SettingDefinition("test", None)
+    definition = SettingDefinition("test", None)
     definition.deserialize({
         "label": "Test",
         "type": "int",
