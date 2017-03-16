@@ -35,7 +35,7 @@ class FileReader(PluginObject):
     #   this function should block until it has been closed.
     #
     #   \return \type{PreReadResult} indicating if the user accepted or canceled the dialog.
-    def preRead(self, file_name):
+    def preRead(self, file_name, *args, **kwargs):
         return FileReader.PreReadResult.accepted
 
     ##  Read mesh data from file and returns a node that contains the data
