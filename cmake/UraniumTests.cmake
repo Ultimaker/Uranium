@@ -17,19 +17,19 @@ function(uranium_add_test)
         set(_PYTHONPATH ${_DIRECTORY})
     endif()
 
+    if(WIN32)
+        string(REPLACE "|" "\\;" _PYTHONPATH ${_PYTHONPATH})
+    else()
+        string(REPLACE "|" ":" _PYTHONPATH ${_PYTHONPATH})
+    endif()
+
     add_test(
         NAME ${_NAME}
         COMMAND ${PYTHON_EXECUTABLE} -m pytest --junitxml=${CMAKE_BINARY_DIR}/junit-${_NAME}.xml ${_DIRECTORY}
     )
     set_tests_properties(${_NAME} PROPERTIES ENVIRONMENT LANG=C)
-    set_tests_properties(${_NAME} PROPERTIES ENVIRONMENT PYTHONPATH=${_PYTHONPATH})
+    set_tests_properties(${_NAME} PROPERTIES ENVIRONMENT "PYTHONPATH=${_PYTHONPATH}")
 endfunction()
-
-if(WIN32)
-    set(_path_sep ";")
-else()
-    set(_path_sep ":")
-endif()
 
 uranium_add_test(NAME pytest-main DIRECTORY ${CMAKE_SOURCE_DIR}/tests PYTHONPATH ${CMAKE_SOURCE_DIR})
 
@@ -38,6 +38,6 @@ foreach(_plugin ${_plugins})
     get_filename_component(_plugin_directory ${_plugin} DIRECTORY)
     if(EXISTS ${_plugin_directory}/tests)
         get_filename_component(_plugin_name ${_plugin_directory} NAME)
-        uranium_add_test(NAME pytest-${_plugin_name} DIRECTORY ${_plugin_directory} PYTHONPATH "${CMAKE_SOURCE_DIR}${_path_sep}${_plugin_directory}")
+        uranium_add_test(NAME pytest-${_plugin_name} DIRECTORY ${_plugin_directory} PYTHONPATH "${CMAKE_SOURCE_DIR}|${_plugin_directory}")
     endif()
 endforeach()
