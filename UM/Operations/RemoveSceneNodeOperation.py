@@ -33,7 +33,7 @@ class RemoveSceneNodeOperation(Operation.Operation):
         # We can't do it the right way as most remove changes don't need to trigger
         # a reslice (eg; removing hull nodes don't need to trigger reslice).
         try:
-            Application.getInstance().getBackend().forceSlice()
+            Application.getInstance().getBackend().needsSlicing()
         except:
             pass
         if Selection.isSelected(self._node):  # Also remove the selection.
