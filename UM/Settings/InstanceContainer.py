@@ -117,7 +117,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     def getId(self) -> str:
         return self._id
 
-    id = property(getId)
+    id = pyqtProperty(str, fget = getId, constant = True)
 
     def setCachedValues(self, cached_values):
         if not self._instances:
@@ -143,15 +143,14 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     def getName(self) -> str:
         return self._name
 
-    name = property(getName)
-
-    nameChanged = Signal()
-
     def setName(self, name):
         if name != self._name:
             self._name = name
             self._dirty = True
             self.nameChanged.emit()
+
+    nameChanged = pyqtSignal()
+    name = pyqtProperty(str, fget = getName, fset = setName, notify = nameChanged)
 
     ##  \copydoc ContainerInterface::isReadOnly
     #
@@ -160,7 +159,12 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         return self._read_only
 
     def setReadOnly(self, read_only):
-        self._read_only = read_only
+        if read_only != self._read_only:
+            self._read_only = read_only
+            self.readOnlyChanged.emit()
+
+    readOnlyChanged = pyqtSignal()
+    readOnly = pyqtProperty(bool, fget = isReadOnly, fset = setReadOnly, notify = readOnlyChanged)
 
     ##  \copydoc ContainerInterface::getMetaData
     #

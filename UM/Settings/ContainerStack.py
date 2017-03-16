@@ -83,16 +83,13 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     def getId(self) -> str:
         return self._id
 
+    id = pyqtProperty(str, fget = getId, constant = True)
+
     ##  \copydoc ContainerInterface::getName
     #
     #   Reimplemented from ContainerInterface
     def getName(self) -> str:
         return str(self._name)
-
-    ##  Emitted whenever the name of this stack changes.
-    nameChanged = Signal()
-
-    containersChanged = Signal()
 
     ##  Set the name of this stack.
     #
@@ -102,6 +99,10 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
             self._name = name
             self.nameChanged.emit()
 
+    ##  Emitted whenever the name of this stack changes.
+    nameChanged = pyqtSignal()
+    name = pyqtProperty(str, fget = getName, fset = setName, notify = nameChanged)
+
     ##  \copydoc ContainerInterface::isReadOnly
     #
     #   Reimplemented from ContainerInterface
@@ -109,7 +110,12 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         return self._read_only
 
     def setReadOnly(self, read_only):
-        self._read_only = read_only
+        if read_only != self._read_only:
+            self._read_only = read_only
+            self.readOnlyChanged.emit()
+
+    readOnlyChanged = pyqtSignal()
+    readOnly = pyqtProperty(bool, fget = isReadOnly, fset = setReadOnly, notify = readOnlyChanged)
 
     ##  \copydoc ContainerInterface::getMetaData
     #
@@ -157,6 +163,8 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
     def setDirty(self, dirty: bool) -> None:
         self._dirty = dirty
+
+    containersChanged = Signal()
 
     ##  \copydoc ContainerInterface::getProperty
     #

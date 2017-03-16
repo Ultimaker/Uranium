@@ -84,7 +84,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     def getId(self) -> str:
         return self._id
 
-    id = property(getId)
+    id = pyqtProperty(str, fget = getId, constant = True)
 
     ##  \copydoc ContainerInterface::getName
     #
@@ -92,7 +92,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     def getName(self) -> str:
         return self._name
 
-    name = property(getName)
+    name = pyqtProperty(str, fget = getName, constant = True)
 
     ##  \copydoc ContainerInterface::isReadOnly
     #
@@ -102,6 +102,8 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
     def setReadOnly(self, read_only: bool) -> None:
         pass
+
+    readOnly = pyqtProperty(bool, fget = isReadOnly, constant = True)
 
     ##  \copydoc ContainerInterface::getPath.
     #
