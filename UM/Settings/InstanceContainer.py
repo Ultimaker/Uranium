@@ -111,6 +111,18 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     def __setstate__(self, state):
         self.__dict__.update(state)
 
+    def __deepcopy__(self, memo):
+        new_container = self.__class__(self._id)
+        new_container._name = self._name
+        new_container._definition = self._definition
+        new_container._metadata = copy.deepcopy(self._metadata, memo)
+        new_container._instances = copy.deepcopy(self._instances, memo)
+        new_container._read_only = self._read_only
+        new_container._dirty = self._dirty
+        new_container._path = self._path
+        new_container._cached_values = copy.deepcopy(self._cached_values, memo)
+        return new_container
+
     ##  \copydoc ContainerInterface::getId
     #
     #   Reimplemented from ContainerInterface
