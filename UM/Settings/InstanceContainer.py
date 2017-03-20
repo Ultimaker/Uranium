@@ -160,9 +160,21 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
             self._name = name
             self._dirty = True
             self.nameChanged.emit()
+            self.pyqtNameChanged.emit()
 
-    nameChanged = pyqtSignal()
-    name = pyqtProperty(str, fget = getName, fset = setName, notify = nameChanged)
+
+    # Because we want to expose the properties of InstanceContainer as Qt properties for
+    # CURA-3497, the nameChanged signal should be changed to a pyqtSignal. However,
+    # pyqtSignal throws TypeError when calling disconnect() when there are no connections.
+    # This causes a lot of errors in Cura code when we try to disconnect from nameChanged.
+    # Therefore, rather than change the type of nameChanged, we add an extra signal that
+    # is used as notify for the property.
+    #
+    # TODO: Remove this once the Cura code has been refactored to not use nameChanged anymore.
+    pyqtNameChanged = pyqtSignal()
+
+    nameChanged = Signal()
+    name = pyqtProperty(str, fget = getName, fset = setName, notify = pyqtNameChanged)
 
     ##  \copydoc ContainerInterface::isReadOnly
     #
