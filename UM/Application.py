@@ -194,6 +194,12 @@ class Application():
     ##  Hide message by ID (as provided by built-in id function)
     #   \param message_id \type{long}
     def hideMessageById(self, message_id):
+        # If a user and Cura tries to close same message dialog simultaneously, message_id could become an empty
+        # string, and then Cura will raise an error when trying to do "int(message_id)".
+        # So we check the message_id here.
+        if not message_id:
+            return
+
         found_message = None
         with self._message_lock:
             for message in self._visible_messages:
