@@ -145,6 +145,9 @@ class MeshData:
     def hasUVCoordinates(self):
         return self._uvs is not None
 
+    def setFileName(self, filename):
+        self._file_name = filename
+
     def getFileName(self):
         return self._file_name
 
