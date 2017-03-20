@@ -84,7 +84,7 @@ class UpdateCheckerJob(Job):
                 Logger.log("w", "Did not find any version information for %s." % application_name)
         except Exception:
             Logger.logException("e", "Exception in update checker while parsing the JSON file.")
-            Message(i18n_catalog.i18nc("@info", "An exception occured while parsing the JSON file.")).show()
+            Message(i18n_catalog.i18nc("@info", "An error occured while parsing the JSON file.")).show()
             no_new_version = False # Just to suppress the message below.
 
         if no_new_version and not self.silent:
