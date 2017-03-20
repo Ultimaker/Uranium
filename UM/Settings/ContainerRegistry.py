@@ -355,10 +355,13 @@ class ContainerRegistry(ContainerRegistryInterface):
     @classmethod
     def addContainerType(cls, container):
         plugin_id = container.getPluginId()
-        cls.__container_types[plugin_id] = container.__class__
+        mimetype = PluginRegistry.getInstance().getMetaData(plugin_id)["settings_container"]["mimetype"]
+        cls.addContainerTypeByName(container.__class__, plugin_id, mimetype)
 
-        metadata = PluginRegistry.getInstance().getMetaData(plugin_id)
-        cls.__mime_type_map[metadata["settings_container"]["mimetype"]] = container.__class__
+    @classmethod
+    def addContainerTypeByName(cls, container_type, type_name, mime_type):
+        cls.__container_types[type_name] = container_type
+        cls.__mime_type_map[mime_type] = container_type
 
     ##  Retrieve the mime type corresponding to a certain container type
     #
