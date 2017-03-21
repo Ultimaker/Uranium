@@ -54,6 +54,23 @@ def call_if_enabled(function, condition):
             return decorated_function
         return call_direct
 
+##  Raised when the override decorator does not find the function it claims to override.
+class InvalidOverrideError(Exception):
+    pass
+
+##  Function decorator that can be used to mark a function as an override.
+#
+#   This works basically the same as the override attribute in C++ functions.
+#
+#   \param cls The class this function overrides a function from.
+def override(cls):
+    def override_decorator(function):
+        function_signature = inspect.signature(function)
+        if not inspect.getmembers(cls, lambda i: inspect.isfunction(i) and sameSignature(inspect.signature(i), function_signature)):
+            raise InvalidOverrideError("Method {method} is marked as override but was not found in base class {cls}".format(method = function.__qualname__, cls = cls.__qualname__))
+        return function
+    return override_decorator
+
 ##  Class decorator that checks to see if all methods of the base class have been reimplemented
 #
 #   This is meant as a simple sanity check. An interface here is defined as a class with
