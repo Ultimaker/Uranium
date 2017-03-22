@@ -27,6 +27,7 @@ def application():
 def plugin_registry(application):
     PluginRegistry._PluginRegistry__instance = None
     plugin_registry = PluginRegistry.getInstance()
+    plugin_registry._plugin_locations = [] # Clear pre-defined plugin locations
     plugin_registry.setApplication(application)
     return plugin_registry
 
