@@ -184,9 +184,14 @@ class Controller:
             self._active_tool.event(ToolEvent(ToolEvent.ToolDeactivateEvent))
 
         if isinstance(tool, Tool) or tool is None:
-            self._active_tool = tool
+            new_tool = tool
         else:
-            self._active_tool = self.getTool(tool)
+            new_tool = self.getTool(tool)
+
+        tool_changed = False
+        if self._active_tool is not new_tool:
+            self._active_tool = new_tool
+            tool_changed = True
 
         if self._active_tool:
             self._active_tool.event(ToolEvent(ToolEvent.ToolActivateEvent))
@@ -196,10 +201,12 @@ class Controller:
             if "TranslateTool" in self._tools:
                 self._active_tool = self._tools["TranslateTool"]  # Then default to the translation tool.
                 self._active_tool.event(ToolEvent(ToolEvent.ToolActivateEvent))
+                tool_changed = True
             else:
                 Logger.log("w", "Controller does not have an active tool and could not default to Translate tool.")
 
-        self.activeToolChanged.emit()
+        if tool_changed:
+            self.activeToolChanged.emit()
 
     ##  Emitted when the list of tools changes.
     toolsChanged = Signal()
