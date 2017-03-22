@@ -177,7 +177,11 @@ class SceneNode():
     #   \param \type{SceneNodeDecorator} decorator The decorator to add.
     #   TODO: GetDecorator seems to imply that a scne node can only have a single decorator of a type, but we never enforce this.
     def addDecorator(self, decorator):
-        decorator.setNode(self)
+        try:
+            decorator.setNode(self)
+        except AttributeError:
+            Logger.logException("e", "Unable to add decorator.")
+            return
         self._decorators.append(decorator)
         self.decoratorsChanged.emit(self)
 
