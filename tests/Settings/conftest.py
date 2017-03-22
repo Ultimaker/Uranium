@@ -46,7 +46,6 @@ def container_registry(application):
 
     Resources.addSearchPath(os.path.dirname(os.path.abspath(__file__)))
     ContainerRegistry._ContainerRegistry__instance = None # Reset the private instance variable every time
-    PluginRegistry.getInstance().removeType("settings_container")
 
     ContainerRegistry.setApplication(application)
 
