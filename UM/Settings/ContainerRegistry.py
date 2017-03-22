@@ -355,8 +355,10 @@ class ContainerRegistry(ContainerRegistryInterface):
     @classmethod
     def addContainerType(cls, container):
         plugin_id = container.getPluginId()
-        mimetype = PluginRegistry.getInstance().getMetaData(plugin_id)["settings_container"]["mimetype"]
-        cls.addContainerTypeByName(container.__class__, plugin_id, mimetype)
+        metadata = PluginRegistry.getInstance().getMetaData(plugin_id)
+        if "settings_container" not in metadata or "mimetype" not in metadata["settings_container"]:
+            raise Exception("Plugin {plugin} has incorrect metadata: Expected a 'settings_container' block with a 'mimetype' entry".format(plugin = plugin_id))
+        cls.addContainerTypeByName(container.__class__, plugin_id, metadata["settings_container"]["mimetype"])
 
     @classmethod
     def addContainerTypeByName(cls, container_type, type_name, mime_type):
