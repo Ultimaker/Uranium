@@ -10,7 +10,6 @@ from UM.Job import Job
 
 import os
 import struct
-import time
 import numpy
 
 use_numpystl = False
