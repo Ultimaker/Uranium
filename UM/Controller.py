@@ -193,8 +193,11 @@ class Controller:
 
         from UM.Scene.Selection import Selection  # Imported here to prevent a circular dependency.
         if not self._active_tool and Selection.getCount() > 0:  # If something is selected, a tool must always be active.
-            self._active_tool = self._tools["TranslateTool"]  # Then default to the translation tool.
-            self._active_tool.event(ToolEvent(ToolEvent.ToolActivateEvent))
+            if "TranslateTool" in self._tools:
+                self._active_tool = self._tools["TranslateTool"]  # Then default to the translation tool.
+                self._active_tool.event(ToolEvent(ToolEvent.ToolActivateEvent))
+            else:
+                Logger.log("w", "Controller does not have an active tool and could not default to Translate tool.")
 
         self.activeToolChanged.emit()
 
