@@ -11,7 +11,7 @@ class TheAmazingTestDecorator(SceneNodeDecorator):
     def theAmazingDecoration(self):
         return "Amazing!"
 
-    def theEvenMoreAamazingDecoration(self, test, more_test = "Wow", much_test = "so wow"):
+    def theEvenMoreAmazingDecoration(self, test, more_test ="Wow", much_test ="so wow"):
         return test, more_test, much_test
 
 
@@ -82,8 +82,8 @@ if __name__ == '__main__':
 
         # Calling the decorations with args / kwargs
         assert test_node.callDecoration("theOkayDecoration", None) is None
-        assert test_node.callDecoration("theEvenMoreAamazingDecoration", "beep") == ("beep", "Wow", "so wow")
-        assert test_node.callDecoration("theEvenMoreAamazingDecoration", "beep", much_test = "Wow") == ("beep", "Wow", "Wow")
+        assert test_node.callDecoration("theEvenMoreAmazingDecoration", "beep") == ("beep", "Wow", "so wow")
+        assert test_node.callDecoration("theEvenMoreAmazingDecoration", "beep", much_test = "Wow") == ("beep", "Wow", "Wow")
 
         # Calling decoration that is "double"
         assert test_node.callDecoration("theAmazingDecoration") == "Amazing!"
