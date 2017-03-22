@@ -11,8 +11,9 @@ from .UpdateCheckerJob import UpdateCheckerJob
 
 i18n_catalog = i18nCatalog("uranium")
 
-## This extention checks for new versions of the application based on the application name and the version number.
-#  The plugin is currently only usuable for applications maintained by Ultimaker. But it should be relatively easy
+
+## This Extension checks for new versions of the application based on the application name and the version number.
+#  The plugin is currently only usable for applications maintained by Ultimaker. But it should be relatively easy
 #  to change it to work for other applications.
 class UpdateChecker(Extension):
     url = "http://software.ultimaker.com/latest.json"

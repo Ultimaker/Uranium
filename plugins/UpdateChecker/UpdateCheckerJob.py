@@ -24,16 +24,18 @@ class UpdateCheckerJob(Job):
     def __init__(self, silent = False, url = None):
         super().__init__()
         self.silent = silent
-        self.url = url
+        self._url = url
+        self._download_url = None  # If an update was found, the download_url will be set to the location of the new version.
 
     ##  Callback for the message that is spawned when there is a new version.
     def actionTriggered(self, message, action):
         if action == "download":
-            if self._url is not None:
-                webbrowser.open(self._url)
+            if self._download_url is not None:
+                webbrowser.open(self._download_url)
 
     def run(self):
-        if not self.url:
+        self._download_url = None  # Reset download ur.
+        if not self._url:
             Logger.log("e", "Can not check for a new release. URL not set!")
         no_new_version = True
 
@@ -41,7 +43,7 @@ class UpdateCheckerJob(Job):
         Logger.log("i", "Checking for new version of %s" % application_name)
 
         try:
-            latest_version_file = urllib.request.urlopen(self.url)
+            latest_version_file = urllib.request.urlopen(self._url)
         except Exception as e:
             Logger.log("w", "Failed to check for new version: %s" % e)
             if not self.silent:
@@ -74,7 +76,7 @@ class UpdateCheckerJob(Job):
                                 Logger.log("i", "Found a new version of the software. Spawning message")
                                 message = Message(i18n_catalog.i18nc("@info", "A new version is available!"))
                                 message.addAction("download", i18n_catalog.i18nc("@action:button", "Download"), "[no_icon]", "[no_description]")
-                                self._url = value["url"]
+                                self._download_url = value["url"]
                                 message.actionTriggered.connect(self.actionTriggered)
                                 message.show()
                                 no_new_version = False
