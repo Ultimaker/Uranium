@@ -159,6 +159,9 @@ class LocalFileOutputDevice(OutputDevice):
             elif mode == MeshWriter.OutputMode.BinaryMode:
                 Logger.log("d", "Writing to Local File %s in binary mode", file_name)
                 stream = open(file_name, "wb")
+            else:
+                Logger.log("e", "Unrecognised OutputMode.")
+                return None
 
             job = WriteFileJob(file_writer, stream, nodes, mode)
             job.setFileName(file_name)
