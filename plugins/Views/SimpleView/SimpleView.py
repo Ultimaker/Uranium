@@ -2,16 +2,12 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 from UM.Resources import Resources
-from UM.Application import Application
-from UM.Math.Color import Color
-from UM.Preferences import Preferences
 
 from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator
 
 from UM.View.View import View
 from UM.View.GL.OpenGL import OpenGL
 
-import math
 
 ## Standard view for mesh models.
 class SimpleView(View):
