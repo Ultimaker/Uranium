@@ -43,6 +43,8 @@ class ScaleTool(Tool):
         self._scale_sum = 0.0  # a memory for uniform drag with snap scaling
         self._last_event = None  # for uniform drag
 
+        self._saved_node_positions = []
+
         self.setExposedProperties(
             "ScaleSnap",
             "NonUniformScale",
