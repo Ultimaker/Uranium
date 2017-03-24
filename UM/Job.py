@@ -15,30 +15,13 @@ from UM.JobQueue import JobQueue
 #   use of the JobQueue for the actual threading.
 #   \sa JobQueue
 @signalemitter
-class Job():
-    ##  Initialize.
-    #
-    #   \param kwargs Keyword arguments.
-    #                 Possible keywords:
-    #                 - description \type{string} A short description of the job that can be displayed in the UI. Defaults to an empty string.
-    #                 - visible \type{bool} True if this job should be shown in the UI, False if not. Defaults to False
-    def __init__(self, **kwargs):
+class Job:
+    def __init__(self):
         super().__init__()
         self._running = False
         self._finished = False
         self._result = None
-        self._description = kwargs.get("description", "")
-        self._visible = kwargs.get("visible", False)
         self._error = None
-
-    ##  Get the description for this job.
-    def getDescription(self):
-        return self._description
-
-    ##  Should this job be shown in the UI
-    #   \return \type{bool}
-    def isVisible(self):
-        return self._visible
 
     ##  Perform the actual task of this job. Should be reimplemented by subclasses.
     #   \exception NotImplementedError
