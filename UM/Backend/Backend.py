@@ -199,7 +199,7 @@ class Backend(PluginObject):
             return
         else:
             Logger.log("w", "Unhandled socket error %s", str(error))
-            
+
         self._createSocket()
 
     ##  Creates a socket and attaches listeners.
