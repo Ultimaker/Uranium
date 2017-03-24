@@ -199,8 +199,7 @@ class Backend(PluginObject):
             return
         else:
             Logger.log("w", "Unhandled socket error %s", str(error))
-
-        sleep(0.1)  # Hack: Without a sleep this can deadlock the application spamming error messages.
+            
         self._createSocket()
 
     ##  Creates a socket and attaches listeners.
