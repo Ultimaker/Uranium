@@ -17,18 +17,39 @@ PreferencesPage
     resetEnabled: false;
 
     title: catalog.i18nc("@title:tab", "Plugins");
-    contents: ScrollView
+    contents: Item
     {
-        anchors.fill:parent
-        frameVisible: true
-        ListView
+        anchors.fill: parent
+
+        ScrollView
         {
-            id:pluginList
-            delegate: pluginDelegate
-            model: UM.PluginsModel { }
-            section.delegate: Label { text: section }
-            section.property: "type"
-            anchors.fill:parent
+            anchors
+            {
+                left: parent.left
+                right: parent.right
+                top: parent.top
+                bottom: pluginsNote.top
+            }
+            frameVisible: true
+            ListView
+            {
+                id:pluginList
+                delegate: pluginDelegate
+                model: UM.PluginsModel { }
+                section.delegate: Label { text: section }
+                section.property: "type"
+                anchors.fill:parent
+            }
+        }
+        Label
+        {
+            id: pluginsNote
+
+            text: catalog.i18nc("@label", "You will need to restart the application before changes in plugins have effect.")
+            wrapMode: Text.WordWrap
+            font.italic: true
+
+            anchors.bottom: parent.bottom
         }
     }
     Item
@@ -48,15 +69,20 @@ PreferencesPage
                 {
                     id: pluginCheckbox
                     checked: model.enabled
-                    onClicked: pluginList.model.setEnabled(model.name, checked)
+                    onClicked: pluginList.model.setEnabled(model.id, checked)
                     enabled: !model.required
-                    visible: false
+                    anchors.verticalCenter: pluginText.verticalCenter
+                    x: y
                 }
                 Button
                 {
                     id: pluginText //is a button so the user doesn't have te click inconvenientley precise to enable or disable the checkbox
                     text: model.name
-                    onClicked: pluginList.model.setEnabled(model.name, checked)
+                    onClicked:
+                    {
+                        pluginCheckbox.checked = !pluginCheckbox.checked;
+                        pluginList.model.setEnabled(model.id, checked);
+                    }
                     tooltip: model.description
                     anchors.left: pluginCheckbox.visible ? pluginCheckbox.right : parent.left
                     anchors.right: pluginIcon.left
@@ -91,8 +117,8 @@ PreferencesPage
                     }
                 }
             }
-
         }
+
         Dialog
         {
             id: about_window
@@ -181,5 +207,4 @@ PreferencesPage
             }
         }
     }
-
 }

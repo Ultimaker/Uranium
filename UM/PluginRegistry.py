@@ -5,6 +5,7 @@ import imp
 import os
 from typing import Dict
 
+from UM.Preferences import Preferences
 from UM.PluginError import PluginNotFoundError, InvalidMetaDataError
 from UM.Logger import Logger
 from typing import Callable, Any
@@ -30,6 +31,10 @@ class PluginRegistry(object):
         self._folder_cache = {}
         self._application = None
         self._active_plugins = []
+
+        preferences = Preferences.getInstance()
+        preferences.addPreference("general/disabled_plugins", "")
+        self._disabled_plugins = None
 
     ##  Check if all required plugins are loaded.
     #   \param required_plugins \type{list} List of ids of plugins that ''must'' be activated.
@@ -57,6 +62,9 @@ class PluginRegistry(object):
     def removeActivePlugin(self, plugin_id):
         if plugin_id in self._active_plugins:
             self._active_plugins.remove(plugin_id)
+        if plugin_id not in self._disabled_plugins:
+            self._disabled_plugins.append(plugin_id)
+            Preferences.getInstance().setValue("general/disabled_plugins", ",".join(self._disabled_plugins))
 
     ##  Add a plugin to the list of active plugins.
     #
@@ -64,6 +72,9 @@ class PluginRegistry(object):
     def addActivePlugin(self, plugin_id):
         if plugin_id not in self._active_plugins:
             self._active_plugins.append(plugin_id)
+        if plugin_id in self._disabled_plugins:
+            self._disabled_plugins.remove(plugin_id)
+            Preferences.getInstance().setValue("general/disabled_plugins", ",".join(self._disabled_plugins))
 
     ##  Load a single plugin by id
     #   \param plugin_id \type{string} The ID of the plugin, i.e. its directory name.
@@ -72,6 +83,12 @@ class PluginRegistry(object):
         if plugin_id in self._plugins:
             # Already loaded, do not load again
             Logger.log("w", "Plugin %s was already loaded", plugin_id)
+            return
+
+        if not self._disabled_plugins:
+            self._disabled_plugins = Preferences.getInstance().getValue("general/disabled_plugins").split(",")
+        if plugin_id in self._disabled_plugins:
+            Logger.log("d", "Plugin %s was disabled", plugin_id)
             return
 
         plugin = self._findPlugin(plugin_id)
