@@ -34,13 +34,16 @@ PreferencesPage
             currentIndex:
             {
                 var code = UM.Preferences.getValue("general/language");
+                var index = 0;
                 for(var i = 0; i < languageList.count; ++i)
                 {
                     if(model.get(i).code == code)
                     {
-                        return i
+                        index = i;
+                        break;
                     }
                 }
+                return index;
             }
 
             onActivated: UM.Preferences.setValue("general/language", model.get(index).code)
