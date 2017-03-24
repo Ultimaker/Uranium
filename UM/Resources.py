@@ -269,7 +269,7 @@ class Resources:
         storage_dir_name = os.path.join(cls.ApplicationIdentifier, cls.ApplicationVersion)
 
         if platform.system() == "Windows":
-            cls.__config_storage_path = os.path.join(os.getenv("LOCALAPPDATA"), storage_dir_name)
+            cls.__config_storage_path = os.path.join(os.getenv("APPDATA"), storage_dir_name)
         elif platform.system() == "Darwin":
             cls.__config_storage_path = os.path.join(os.path.expanduser("~/Library/Application Support"), storage_dir_name)
             # For backward compatibility, support loading files from the old storage location
