@@ -40,7 +40,7 @@ MimeTypeDatabase.addMimeType(
 ##  A stack of setting containers to handle setting value retrieval.
 @signalemitter
 class ContainerStack(ContainerInterface, PluginObject):
-    Version = 3
+    Version = 3  # type: int
 
     ##  Constructor
     #
@@ -48,18 +48,18 @@ class ContainerStack(ContainerInterface, PluginObject):
     def __init__(self, stack_id, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self._id = str(stack_id)
-        self._name = stack_id
+        self._id = str(stack_id)  # type: str
+        self._name = stack_id  # type: str
         self._metadata = {}
-        self._containers = []
-        self._next_stack = None
-        self._read_only = False
-        self._dirty = True
-        self._path = ""
+        self._containers = []  # type: List[ContainerInterface]
+        self._next_stack = None  # type: Optional[ContainerStack]
+        self._read_only = False  # type: bool
+        self._dirty = True  # type: bool
+        self._path = ""  # type: str
         self._postponed_emits = []  # gets filled with 2-tuples: signal, signal_argument(s)
 
         self._property_changes = {}
-        self._emit_property_changed_queued = False
+        self._emit_property_changed_queued = False  # type: bool
 
     ##  \copydoc ContainerInterface::getId
     #
@@ -89,10 +89,10 @@ class ContainerStack(ContainerInterface, PluginObject):
     ##  \copydoc ContainerInterface::isReadOnly
     #
     #   Reimplemented from ContainerInterface
-    def isReadOnly(self):
+    def isReadOnly(self) -> bool:
         return self._read_only
 
-    def setReadOnly(self, read_only):
+    def setReadOnly(self, read_only: bool):
         self._read_only = read_only
 
     ##  \copydoc ContainerInterface::getMetaData
@@ -104,7 +104,7 @@ class ContainerStack(ContainerInterface, PluginObject):
     ##  \copydoc ContainerInterface::getMetaDataEntry
     #
     #   Reimplemented from ContainerInterface
-    def getMetaDataEntry(self, entry, default = None):
+    def getMetaDataEntry(self, entry: str, default = None):
         value = self._metadata.get(entry, None)
 
         if value is None:
@@ -118,7 +118,7 @@ class ContainerStack(ContainerInterface, PluginObject):
         else:
             return value
 
-    def addMetaDataEntry(self, key, value):
+    def addMetaDataEntry(self, key: str, value):
         if key not in self._metadata:
             self._dirty = True
             self._metadata[key] = value
@@ -338,7 +338,7 @@ class ContainerStack(ContainerInterface, PluginObject):
     #   This is a convenience method that will always return the top of the stack.
     #
     #   \return The container at the top of the stack, or None if no containers have been added.
-    def getTop(self) -> ContainerInterface:
+    def getTop(self) -> Optional[ContainerInterface]:
         if self._containers:
             return self._containers[0]
 
@@ -349,7 +349,7 @@ class ContainerStack(ContainerInterface, PluginObject):
     #   This is a convenience method that will always return the bottom of the stack.
     #
     #   \return The container at the bottom of the stack, or None if no containers have been added.
-    def getBottom(self) -> ContainerInterface:
+    def getBottom(self) -> Optional[ContainerInterface]:
         if self._containers:
             return self._containers[-1]
 
@@ -441,7 +441,7 @@ class ContainerStack(ContainerInterface, PluginObject):
     #
     #   \exception IndexError Raised when the specified index is out of bounds.
     #   \exception Exception when trying to replace container ContainerStack.
-    def replaceContainer(self, index, container, postpone_emit=False):
+    def replaceContainer(self, index: int, container: ContainerInterface, postpone_emit=False):
         if index < 0:
             raise IndexError
         if container is self:
@@ -461,7 +461,7 @@ class ContainerStack(ContainerInterface, PluginObject):
     #   \param index \type{int} The index of the container to remove.
     #
     #   \exception IndexError Raised when the specified index is out of bounds.
-    def removeContainer(self, index = 0):
+    def removeContainer(self, index: int = 0):
         if index < 0:
             raise IndexError
         try:
@@ -478,7 +478,7 @@ class ContainerStack(ContainerInterface, PluginObject):
     #   bottom of the stack is reached when searching for a value.
     #
     #   \return \type{ContainerStack} The next stack or None if not set.
-    def getNextStack(self):
+    def getNextStack(self) -> Optional["ContainerStack"]:
         return self._next_stack
 
     ##  Set the next stack
@@ -486,7 +486,7 @@ class ContainerStack(ContainerInterface, PluginObject):
     #   \param stack \type{ContainerStack} The next stack to set. Can be None.
     #   Raises Exception when trying to set itself as next stack (to prevent infinite loops)
     #   \sa getNextStack
-    def setNextStack(self, stack):
+    def setNextStack(self, stack: "ContainerStack"):
         if self is stack:
             raise Exception("Next stack can not be itself")
         if self._next_stack == stack:
@@ -507,7 +507,7 @@ class ContainerStack(ContainerInterface, PluginObject):
             signal.emit(signal_arg)
 
     ##  Check if the container stack has errors
-    def hasErrors(self):
+    def hasErrors(self) -> bool:
         for key in self.getAllKeys():
             enabled = self.getProperty(key, "enabled")
             if not enabled:

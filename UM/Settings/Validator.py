@@ -36,10 +36,10 @@ class Validator(SettingFunction.SettingFunction):
 
         super().__init__("None")
 
-        self._key = key
+        self._key = key  # type: str
 
     ##  Perform the actual validation.
-    def __call__(self, value_provider: "ContainerInterface") -> Any:
+    def __call__(self, value_provider: ContainerInterface) -> Any:
         if not value_provider:
             return
 

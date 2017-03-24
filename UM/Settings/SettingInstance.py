@@ -3,8 +3,7 @@
 
 import enum
 import os
-from typing import Any, List, Set, KeysView
-from typing import Dict
+from typing import Any, List, Set, Dict, Optional, Iterable
 
 from UM.Settings.Interfaces import ContainerInterface
 from UM.Signal import Signal, signalemitter
@@ -54,21 +53,21 @@ class SettingInstance:
 
         super().__init__()
 
-        self._definition = definition
-        self._container = container
+        self._definition = definition  # type: SettingDefinition
+        self._container = container  # type: ContainerInterface
 
-        self._visible = True
-        self._validator = None
+        self._visible = True  # type: bool
+        self._validator = None  # type: Optional[Validator]
         validator_type = SettingDefinition.getValidatorForType(self._definition.type)
         if validator_type:
             self._validator = validator_type(self._definition.key)
 
         self._state = InstanceState.Default
 
-        self.__property_values = {} # type: Dict[str, Any]
+        self.__property_values = {}  # type: Dict[str, Any]
 
     ##  Get a list of all supported property names
-    def getPropertyNames(self) -> KeysView[str]:
+    def getPropertyNames(self) -> Iterable[str]:
         return self.__property_values.keys()
 
     def __eq__(self, other: Any) -> bool:
@@ -105,7 +104,7 @@ class SettingInstance:
         raise AttributeError("'SettingInstance' object has no attribute '{0}'".format(name))
 
     @call_if_enabled(_traceSetProperty, _isTraceEnabled())
-    def setProperty(self, name: str, value: Any, container: ContainerInterface = None) -> None:
+    def setProperty(self, name: str, value: Any, container: ContainerInterface = None):
         if SettingDefinition.hasProperty(name):
             if SettingDefinition.isReadOnlyProperty(name):
                 Logger.log("e", "Tried to set property %s which is a read-only property", name)
@@ -143,7 +142,7 @@ class SettingInstance:
                 raise AttributeError("No property {0} defined".format(name))
 
     @call_if_enabled(_traceUpdateProperty, _isTraceEnabled())
-    def updateProperty(self, name: str, container: ContainerInterface = None) -> None:
+    def updateProperty(self, name: str, container: Optional[ContainerInterface] = None):
         if not SettingDefinition.hasProperty(name):
             Logger.log("e", "Trying to update unknown property %s", name)
             return
@@ -216,7 +215,7 @@ class SettingInstance:
     #   \param relations_set \type{set} Set of keys (strings) of settings that are influenced
     #   \param relations list of relation objects that need to be checked.
     #   \param role name of the property value of the settings
-    def _addRelations(self, relations_set: Set["SettingRelation"], relations: List["SettingRelation"], role: str) -> None:
+    def _addRelations(self, relations_set: Set["SettingRelation"], relations: List["SettingRelation"], role: str):
         for relation in filter(lambda r: r.role == role, relations):
             if relation.type == RelationType.RequiresTarget:
                 continue

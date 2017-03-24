@@ -33,7 +33,7 @@ class SettingFunction:
         self._settings = frozenset()  # type: frozenset[str]
 
         self._compiled = None
-        self._valid = False
+        self._valid = False  # type: str
 
         try:
             tree = ast.parse(self._code, "eval")

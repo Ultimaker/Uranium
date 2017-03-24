@@ -6,7 +6,7 @@ import json
 import enum
 import collections
 import re
-from typing import Any, List, Dict, Callable, Match, Set, Union
+from typing import Any, List, Dict, Callable, Match, Set, Union, Optional
 
 from UM.Logger import Logger
 from UM.Settings.Interfaces import DefinitionContainerInterface
@@ -31,6 +31,7 @@ class DefinitionPropertyType(enum.IntEnum):
     TranslatedString = 3  ## Value is converted to string then passed through an i18nCatalog object to get a translated version of that string.
     Function = 4  ## Value is a python function. It is passed to SettingFunction's constructor which will parse and analyze it.
 
+
 ## Conversion of string to float.
 def _toFloatConversion(value: str) -> float:
     ## Ensure that all , are replaced with . (so they are seen as floats)
@@ -49,6 +50,7 @@ def _toFloatConversion(value: str) -> float:
         return ast.literal_eval(value)
     except:
         return 0
+
 
 ##  Defines a single Setting with its properties.
 #
@@ -75,25 +77,25 @@ class SettingDefinition:
     #   \param container \type{DefinitionContainerInterface} The container of this setting. Defaults to None.
     #   \param parent \type{SettingDefinition} The parent of this setting. Defaults to None.
     #   \param i18n_catalog \type{i18nCatalog} The translation catalog to use for this setting. Defaults to None.
-    def __init__(self, key: str, container: DefinitionContainerInterface = None, parent: "SettingDefinition" = None, i18n_catalog: i18nCatalog = None) -> None:
+    def __init__(self, key: str, container: Optional[DefinitionContainerInterface] = None, parent: Optional["SettingDefinition"] = None, i18n_catalog: i18nCatalog = None) -> None:
         super().__init__()
 
-        self._key = key
-        self._container = container
-        self._parent = parent
+        self._key = key  # type: str
+        self._container = container # type: Optional[DefinitionContainerInterface]
+        self._parent = parent   # type:  Optional["SettingDefinition"]
 
-        self._i18n_catalog = i18n_catalog
+        self._i18n_catalog = i18n_catalog  # type: i18nCatalog
 
         self._children = []     # type: List[SettingDefinition]
         self._relations = []    # type: List[SettingRelation]
 
         # Cached set of keys of ancestors. Used for fast lookups of ancestors.
-        self.__ancestors = set() # type: Set[str]
+        self.__ancestors = set()  # type: Set[str]
 
         # Cached set of key - definition pairs of descendants. Used for fast lookup of descendants by key.
-        self.__descendants = {} # type: Dict[str, "SettingDefinition"]
+        self.__descendants = {}  # type: Dict[str, "SettingDefinition"]
 
-        self.__property_values = {} # type: Dict[str, Any]
+        self.__property_values = {}  # type: Dict[str, Any]
 
     ##  Override __getattr__ to provide access to definition properties.
     def __getattr__(self, name: str) -> Any:
@@ -123,14 +125,14 @@ class SettingDefinition:
     #
     #   \return
     @property
-    def container(self) -> DefinitionContainerInterface:
+    def container(self) -> Optional[DefinitionContainerInterface]:
         return self._container
 
     ##  The parent of this setting.
     #
     #   \return \type{SettingDefinition}
     @property
-    def parent(self) -> "SettingDefinition":
+    def parent(self) -> Optional["SettingDefinition"]:
         return self._parent
 
     ##  A list of children of this setting.
@@ -194,7 +196,7 @@ class SettingDefinition:
     #   \param key \type{string} The key of the child to get.
     #
     #   \return \type{SettingDefinition} The child with the specified key or None if not found.
-    def getChild(self, key: str) -> "SettingDefinition":
+    def getChild(self, key: str) -> Optional["SettingDefinition"]:
         if not self.__descendants:
             self.__descendants = self._updateDescendants()
 
@@ -371,7 +373,7 @@ class SettingDefinition:
     #   \param default      The default value for this property. This will be returned when the specified property is not defined for this definition.
     #   \param depends_on   Key to another property that this property depends on; eg; if that value changes, this value should be re-evaluated.
     @classmethod
-    def addSupportedProperty(cls, name: str, property_type: DefinitionPropertyType, required: bool=False, read_only: bool=False, default: Any=None, depends_on: str=None) -> None:
+    def addSupportedProperty(cls, name: str, property_type: DefinitionPropertyType, required: bool=False, read_only: bool=False, default: Any=None, depends_on: Optional[str]=None) -> None:
         cls.__property_definitions[name] = {"type": property_type, "required": required, "read_only": read_only,
                                             "default": default, "depends_on": depends_on}
 
@@ -403,7 +405,7 @@ class SettingDefinition:
     #
     #   \return DefinitionPropertyType corresponding to the type of the property or None if not found.
     @classmethod
-    def getPropertyType(cls, name: str) -> DefinitionPropertyType:
+    def getPropertyType(cls, name: str) -> Optional[str]:
         if name in cls.__property_definitions:
             return cls.__property_definitions[name]["type"]
 

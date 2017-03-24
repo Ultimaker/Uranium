@@ -3,9 +3,7 @@
 
 import enum
 
-MYPY = False
-if MYPY:
-    from UM.Settings.SettingDefinition import SettingDefinition
+from UM.Settings.SettingDefinition import SettingDefinition
 
 ##  The type of relation, i.e. what direction does this relation have.
 class RelationType(enum.IntEnum):
@@ -29,7 +27,7 @@ class SettingRelation:
     #   \param target \type{SettingDefinition} The target of the relation.
     #   \param type \type{RelationType} The type of the relation.
     #   \param role \type{string} The role of the relation, what property is it used for.
-    def __init__(self, owner: "SettingDefinition", target: "SettingDefinition", relation_type: RelationType, role: str) -> None:
+    def __init__(self, owner: SettingDefinition, target: SettingDefinition, relation_type: RelationType, role: str) -> None:
         if owner is None or target is None:
             raise ValueError("owner or target cannot be None")
 
@@ -44,23 +42,23 @@ class SettingRelation:
 
     ##  The owner of this relation.
     @property
-    def owner(self):
+    def owner(self) -> SettingDefinition:
         return self._owner
 
     ##  The target of this relation.
     @property
-    def target(self):
+    def target(self) -> SettingDefinition:
         return self._target
 
     ##  The type of this relation.
     @property
-    def type(self):
+    def type(self) -> RelationType:
         return self._type
 
     ##  The role of this relation.
     @property
-    def role(self):
+    def role(self) -> str:
         return self._role
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "<SettingRelation owner={0} target={1} type={2} role={3}>".format(self._owner, self._target, self._type, self._role)
