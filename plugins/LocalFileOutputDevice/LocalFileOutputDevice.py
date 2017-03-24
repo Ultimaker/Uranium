@@ -158,7 +158,7 @@ class LocalFileOutputDevice(OutputDevice):
             message = Message(catalog.i18nc("@info:progress", "Saving to <filename>{0}</filename>").format(file_name), 0, False, -1)
             message.show()
 
-            job._message = message
+            job.setMessage(message)
             self._writing = True
             job.start()
         except PermissionError as e:
@@ -169,15 +169,9 @@ class LocalFileOutputDevice(OutputDevice):
             raise OutputDeviceError.WriteRequestFailedError(catalog.i18nc("@info:status", "Could not save to <filename>{0}</filename>: <message>{1}</message>").format()) from e
 
     def _onJobProgress(self, job, progress):
-        if hasattr(job, "_message"):
-            job._message.setProgress(progress)
         self.writeProgress.emit(self, progress)
 
     def _onWriteJobFinished(self, job):
-        if hasattr(job, "_message"):
-            job._message.hide()
-            job._message = None
-
         self._writing = False
         self.writeFinished.emit(self)
         if job.getResult():
