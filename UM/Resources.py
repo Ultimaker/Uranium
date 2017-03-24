@@ -44,6 +44,7 @@ class Resources:
     UserType = 128
 
     ApplicationIdentifier = "UM"
+    ApplicationVersion = "unknown"
 
     ##  Get the path to a certain resource file
     #
@@ -264,33 +265,36 @@ class Resources:
 
     @classmethod
     def __initializeStoragePaths(cls):
+        # use nested structure: cura/<version>/...
+        storage_dir_name = os.path.join(cls.ApplicationIdentifier, cls.ApplicationVersion)
+
         if platform.system() == "Windows":
-            cls.__config_storage_path = os.path.join(os.getenv("LOCALAPPDATA"), cls.ApplicationIdentifier)
+            cls.__config_storage_path = os.path.join(os.getenv("LOCALAPPDATA"), storage_dir_name)
         elif platform.system() == "Darwin":
-            cls.__config_storage_path = os.path.join(os.path.expanduser("~/Library/Application Support"), cls.ApplicationIdentifier)
+            cls.__config_storage_path = os.path.join(os.path.expanduser("~/Library/Application Support"), storage_dir_name)
             # For backward compatibility, support loading files from the old storage location
-            cls.addSearchPath(os.path.expanduser("~/.{0}".format(cls.ApplicationIdentifier)))
+            cls.addSearchPath(os.path.expanduser("~/.{0}".format(storage_dir_name)))
         elif platform.system() == "Linux":
             xdg_config_home = ""
             try:
                 xdg_config_home = os.environ["XDG_CONFIG_HOME"]
             except KeyError:
                 xdg_config_home = os.path.expanduser("~/.config")
-            cls.__config_storage_path = os.path.join(xdg_config_home, cls.ApplicationIdentifier)
+            cls.__config_storage_path = os.path.join(xdg_config_home, storage_dir_name)
 
             xdg_data_home = ""
             try:
                 xdg_data_home = os.environ["XDG_DATA_HOME"]
             except KeyError:
                 xdg_data_home = os.path.expanduser("~/.local/share")
-            cls.__data_storage_path = os.path.join(xdg_data_home, cls.ApplicationIdentifier)
+            cls.__data_storage_path = os.path.join(xdg_data_home, storage_dir_name)
 
             xdg_cache_home = ""
             try:
                 xdg_cache_home = os.environ["XDG_CACHE_HOME"]
             except KeyError:
                 xdg_cache_home = os.path.expanduser("~/.cache")
-            cls.__cache_storage_path = os.path.join(xdg_cache_home, cls.ApplicationIdentifier)
+            cls.__cache_storage_path = os.path.join(xdg_cache_home, storage_dir_name)
         else:
             cls.__config_storage_path = "."
 

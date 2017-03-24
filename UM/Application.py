@@ -52,6 +52,7 @@ class Application():
         Signal._app = self
         Signal._signalQueue = self
         Resources.ApplicationIdentifier = name
+        Resources.ApplicationVersion = version
 
         Resources.addSearchPath(os.path.join(os.path.dirname(sys.executable), "resources"))
         Resources.addSearchPath(os.path.join(Application.getInstallPrefix(), "share", "uranium", "resources"))
