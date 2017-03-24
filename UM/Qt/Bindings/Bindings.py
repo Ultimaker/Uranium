@@ -14,7 +14,6 @@ from . import BackendProxy
 from . import SceneProxy
 from . import ResourcesProxy
 from . import OperationStackProxy
-from . import JobsModel
 from UM.Mesh.MeshFileHandler import MeshFileHandler
 from UM.Workspace.WorkspaceFileHandler import WorkspaceFileHandler
 from . import PreferencesProxy
@@ -77,7 +76,6 @@ class Bindings:
         qmlRegisterType(MainWindow.MainWindow, "UM", 1, 0, "MainWindow")
         qmlRegisterType(ViewModel.ViewModel, "UM", 1, 0, "ViewModel")
         qmlRegisterType(ToolModel.ToolModel, "UM", 1, 0, "ToolModel")
-        qmlRegisterType(JobsModel.JobsModel, "UM", 1, 0, "JobsModel")
         qmlRegisterType(AngledCornerRectangle.AngledCornerRectangle, "UM", 1, 0, "AngledCornerRectangle")
         qmlRegisterType(PointingRectangle.PointingRectangle, "UM", 1, 0, "PointingRectangle")
         qmlRegisterType(ExtensionModel.ExtensionModel, "UM", 1, 0, "ExtensionModel")
