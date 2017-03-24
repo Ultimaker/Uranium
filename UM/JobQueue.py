@@ -39,7 +39,7 @@ class JobQueue():
         self._threads = [_Worker(self) for t in range(thread_count)]
 
         self._semaphore = threading.Semaphore(0)
-        self._jobs = []
+        self._jobs = []  # type: List[Job]
         self._jobs_lock = threading.Lock()
 
         for thread in self._threads:
@@ -49,7 +49,7 @@ class JobQueue():
     ##  Add a Job to the queue.
     #
     #   \param job \type{Job} The Job to add.
-    def add(self, job):
+    def add(self, job: "Job"):
         with self._jobs_lock:
             self._jobs.append(job)
             self._semaphore.release()
@@ -60,7 +60,7 @@ class JobQueue():
     #
     #   \note If a job has already begun processing it is already removed from the queue
     #   and thus can no longer be cancelled.
-    def remove(self, job):
+    def remove(self, job: "Job"):
         with self._jobs_lock:
             if job in self._jobs:
                 self._jobs.remove(job)
