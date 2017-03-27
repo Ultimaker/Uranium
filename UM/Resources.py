@@ -266,7 +266,12 @@ class Resources:
     @classmethod
     def __initializeStoragePaths(cls):
         # use nested structure: cura/<version>/...
-        storage_dir_name = os.path.join(cls.ApplicationIdentifier, cls.ApplicationVersion)
+        if cls.ApplicationVersion == "master" or cls.ApplicationVersion == "unknown":
+            storage_dir_name = os.path.join(cls.ApplicationIdentifier, cls.ApplicationVersion)
+        else:
+            from UM.Version import Version
+            version = Version(cls.ApplicationVersion)
+            storage_dir_name = os.path.join(cls.ApplicationIdentifier, "%s.%s" % (version.getMajor(), version.getMinor()))
 
         if platform.system() == "Windows":
             cls.__config_storage_path = os.path.join(os.getenv("LOCALAPPDATA"), storage_dir_name)
