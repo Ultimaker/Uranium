@@ -80,19 +80,18 @@ PreferencesPage
                     text: model.name
                     onClicked:
                     {
-                        pluginCheckbox.checked = !pluginCheckbox.checked;
-                        pluginList.model.setEnabled(model.id, checked);
+                        if(pluginCheckbox.enabled)
+                        {
+                            pluginCheckbox.checked = !pluginCheckbox.checked;
+                            pluginList.model.setEnabled(model.id, checked);
+                        }
                     }
-                    tooltip: model.description
+                    tooltip: model.description + (model.required ? ("\n" + catalog.i18nc("@label", "This plugin is required for the application to run.")) : "")
                     anchors.left: pluginCheckbox.visible ? pluginCheckbox.right : parent.left
                     anchors.right: pluginIcon.left
                     style: ButtonStyle
                     {
-                        background: Rectangle
-                        {
-                            border.width: 0
-                            color: "transparent"
-                        }
+                        background: Item {}
                         label: Label
                         {
                             renderType: Text.NativeRendering
