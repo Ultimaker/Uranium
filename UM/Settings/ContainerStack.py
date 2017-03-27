@@ -14,6 +14,7 @@ from UM.Settings.Interfaces import ContainerInterface, ContainerRegistryInterfac
 from UM.Settings.SettingFunction import SettingFunction
 from UM.Settings.Validator import ValidatorState
 
+
 class IncorrectVersionError(Exception):
     pass
 
@@ -36,6 +37,7 @@ MimeTypeDatabase.addMimeType(
         suffixes = [ "stack.cfg" ]
     )
 )
+
 
 ##  A stack of setting containers to handle setting value retrieval.
 @signalemitter
@@ -282,7 +284,7 @@ class ContainerStack(ContainerInterface, PluginObject):
         elif parser.has_option("general", "containers"):
             # Backward compatibility with 2.3.1: The containers used to be saved in a single comma-separated list.
             container_string = parser["general"].get("containers", "")
-            Logger.log("d", "While deserializing, we got the following container string: %s", container_string)
+            Logger.log("d", "While deserializeing, we got the following container string: %s", container_string)
             container_id_list = container_string.split(",")
             for container_id in container_id_list:
                 if container_id != "":
@@ -358,13 +360,13 @@ class ContainerStack(ContainerInterface, PluginObject):
     ##  \copydoc ContainerInterface::getPath.
     #
     #   Reimplemented from ContainerInterface
-    def getPath(self):
+    def getPath(self) -> str:
         return self._path
 
     ##  \copydoc ContainerInterface::setPath
     #
     #   Reimplemented from ContainerInterface
-    def setPath(self, path):
+    def setPath(self, path: str):
         self._path = path
 
     ##  Get the SettingDefinition object for a specified key
@@ -527,7 +529,7 @@ class ContainerStack(ContainerInterface, PluginObject):
         return False
 
     ##  Get all the keys that are in an error state in this stack
-    def getErrorKeys(self):
+    def getErrorKeys(self) -> List[str]:
         error_keys = []
         for key in self.getAllKeys():
             validation_state = self.getProperty(key, "validationState")
@@ -550,7 +552,7 @@ class ContainerStack(ContainerInterface, PluginObject):
     # loop can run. This prevents us from sending the same change signal multiple times.
     # In addition, it allows us to emit a single signal that reports all properties that
     # have changed.
-    def _collectPropertyChanges(self, key, property_name):
+    def _collectPropertyChanges(self, key: str, property_name: str):
         if key not in self._property_changes:
             self._property_changes[key] = set()
 

@@ -4,6 +4,7 @@
 import json
 import collections
 import copy
+from typing import List
 
 from UM.Resources import Resources
 from UM.PluginObject import PluginObject
@@ -18,11 +19,14 @@ from UM.Settings.SettingRelation import SettingRelation
 from UM.Settings.SettingRelation import RelationType
 from UM.Settings.SettingFunction import SettingFunction
 
+
 class InvalidDefinitionError(Exception):
     pass
 
+
 class IncorrectDefinitionVersionError(Exception):
     pass
+
 
 class InvalidOverrideError(Exception):
     pass
@@ -35,6 +39,7 @@ MimeTypeDatabase.addMimeType(
     )
 )
 
+
 ##  A container for SettingDefinition objects.
 #
 #
@@ -44,7 +49,7 @@ class DefinitionContainer(DefinitionContainerInterface, PluginObject):
     ##  Constructor
     #
     #   \param container_id A unique, machine readable/writable ID for this container.
-    def __init__(self, container_id, i18n_catalog = None, *args, **kwargs):
+    def __init__(self, container_id: str, i18n_catalog = None, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self._id = str(container_id)    # type: str
@@ -126,7 +131,7 @@ class DefinitionContainer(DefinitionContainerInterface, PluginObject):
     ##  Gets all keys of settings in this container.
     #
     #   \return A set of all keys of settings in this container.
-    def getAllKeys(self):
+    def getAllKeys(self) -> List[str]:
         keys = set()
         for definition in self.definitions:
             keys |= definition.getAllKeys()
@@ -175,7 +180,7 @@ class DefinitionContainer(DefinitionContainerInterface, PluginObject):
     #
     #   Reimplemented from ContainerInterface
     def serialize(self):
-        data = { } # The data to write to a JSON file.
+        data = {} # The data to write to a JSON file.
         data["name"] = self.getName()
         data["version"] = DefinitionContainer.Version
         data["metadata"] = self.getMetaData()
@@ -229,7 +234,7 @@ class DefinitionContainer(DefinitionContainerInterface, PluginObject):
     ##  Find definitions matching certain criteria.
     #
     #   \param kwargs \type{dict} A dictionary of keyword arguments containing key-value pairs which should match properties of the definition.
-    def findDefinitions(self, **kwargs):
+    def findDefinitions(self, **kwargs) -> List[SettingDefinition]:
         if len(kwargs) == 1 and "key" in kwargs:
             # If we are searching for a single definition by exact key, we can speed up things by retrieving from the cache.
             key = kwargs.get("key")
@@ -245,7 +250,7 @@ class DefinitionContainer(DefinitionContainerInterface, PluginObject):
     # protected:
 
     # Load a file from disk, used to handle inheritance and includes
-    def _loadFile(self, file_name):
+    def _loadFile(self, file_name: str) -> dict:
         path = Resources.getPath(Resources.DefinitionContainers, file_name + ".def.json")
         contents = {}
         with open(path, encoding = "utf-8") as f:
@@ -255,31 +260,31 @@ class DefinitionContainer(DefinitionContainerInterface, PluginObject):
         return contents
 
     # Recursively resolve loading inherited files
-    def _resolveInheritance(self, file_name):
+    def _resolveInheritance(self, file_name: str) -> dict:
         result = {}
 
-        json = self._loadFile(file_name)
-        self._verifyJson(json)
+        json_dict = self._loadFile(file_name)
+        self._verifyJson(json_dict)
 
-        if "inherits" in json:
-            inherited = self._resolveInheritance(json["inherits"])
-            json = self._mergeDicts(inherited, json)
+        if "inherits" in json_dict:
+            inherited = self._resolveInheritance(json_dict["inherits"])
+            json_dict = self._mergeDicts(inherited, json_dict)
 
-        return json
+        return json_dict
 
     # Verify that a loaded json matches our basic expectations.
-    def _verifyJson(self, json):
-        if not "version" in json:
+    def _verifyJson(self, json_dict: dict):
+        if "version" not in json_dict:
             raise InvalidDefinitionError("Missing required property 'version'")
 
-        if not "name" in json:
+        if "name" not in json_dict:
             raise InvalidDefinitionError("Missing required property 'name'")
 
-        if json["version"] != self.Version:
-            raise IncorrectDefinitionVersionError("Definition uses version {0} but expected version {1}".format(json["version"], self.Version))
+        if json_dict["version"] != self.Version:
+            raise IncorrectDefinitionVersionError("Definition uses version {0} but expected version {1}".format(json_dict["version"], self.Version))
 
     # Recursively find a key in a dictionary
-    def _findInDict(self, dictionary, key):
+    def _findInDict(self, dictionary: dict, key: str):
         if key in dictionary: return dictionary[key]
         for k, v in dictionary.items():
             if isinstance(v, dict):
@@ -288,7 +293,7 @@ class DefinitionContainer(DefinitionContainerInterface, PluginObject):
                     return item
 
     # Recursively merge two dictionaries, returning a new dictionary
-    def _mergeDicts(self, first, second):
+    def _mergeDicts(self, first: dict, second: dict):
         result = copy.deepcopy(first)
         for key, value in second.items():
             if key in result:
@@ -302,7 +307,7 @@ class DefinitionContainer(DefinitionContainerInterface, PluginObject):
         return result
 
     # Recursively update relations of settings
-    def _updateRelations(self, definition):
+    def _updateRelations(self, definition: SettingDefinition):
         for property in SettingDefinition.getPropertyNames(DefinitionPropertyType.Function):
             self._processFunction(definition, property)
 
@@ -310,7 +315,7 @@ class DefinitionContainer(DefinitionContainerInterface, PluginObject):
             self._updateRelations(child)
 
     # Create relation objects for all settings used by a certain function
-    def _processFunction(self, definition, property):
+    def _processFunction(self, definition: SettingDefinition, property: str):
         try:
             function = getattr(definition, property)
         except AttributeError:
@@ -334,7 +339,7 @@ class DefinitionContainer(DefinitionContainerInterface, PluginObject):
             relation = SettingRelation(other, definition, RelationType.RequiredByTarget, property)
             other.relations.append(relation)
 
-    def _getDefinition(self, key):
+    def _getDefinition(self, key: str) -> SettingDefinition:
         definition = None
         if key in self._definition_cache:
             definition = self._definition_cache[key]
