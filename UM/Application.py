@@ -64,8 +64,7 @@ class Application():
         self._main_thread = threading.current_thread()
 
         super().__init__()  # Call super to make multiple inheritance work.
-        i18nCatalog.setApplicationName(self.getApplicationName())
-        i18nCatalog.setLanguage(self.getApplicationLanguage())
+        i18nCatalog.setApplication(self)
 
         self._renderer = None
 

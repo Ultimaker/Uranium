@@ -181,14 +181,14 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
 
     ##  Fill the catalogue by loading the translated texts from file (again).
     def _update(self) -> None:
-        if not self.__name:
+        if not self.__application:
             self.__require_update = True
             return
 
         if not self.__name:
-            self.__name = self.__name
+            self.__name = self.__application.getApplicationName()
         if self.__language == "default":
-            self.__language = self.__language
+            self.__language = self.__application.getApplicationLanguage()
 
         #Ask gettext for all the translations in the .mo files.
         for path in Resources.getAllPathsForType(Resources.i18n):
@@ -216,6 +216,10 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
     #   \param application The ``Application`` instance of the application that
     #   is running.
     @classmethod
+    def setApplication(cls, application):
+        cls.__application = application
+
+    @classmethod
     def setApplicationName(cls, applicationName: str) -> None:
         cls.__name = applicationName
         cls.__require_update = True
@@ -230,5 +234,4 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
         "filename": None,
         "message": None
     }   # type: Dict[str, str]
-
-
+    __application = None
