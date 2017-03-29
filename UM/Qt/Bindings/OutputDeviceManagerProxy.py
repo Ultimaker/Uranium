@@ -122,8 +122,8 @@ class OutputDeviceManagerProxy(QObject):
         except OutputDeviceError.WriteRequestFailedError as e:
             message = Message(str(e))
             message.show()
-        except:
-            Logger.logException("e", "Unable to write")
+        except Exception as e:
+            Logger.logException("e", "Unable to write to file %s: %s", file_name, e)
 
 
 def createOutputDeviceManagerProxy(engine, script_engine):
