@@ -1,14 +1,14 @@
 # English translations for PACKAGE package.
-# Copyright (C) 2016 THE PACKAGE'S COPYRIGHT HOLDER
+# Copyright (C) 2017 THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# Automatically generated, 2016.
+# Automatically generated, 2017.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-28 11:00+0100\n"
-"PO-Revision-Date: 2016-12-28 11:00+0100\n"
+"POT-Creation-Date: 2017-03-27 17:40+0200\n"
+"PO-Revision-Date: 2017-03-27 17:40+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: en\n"
@@ -165,68 +165,68 @@ msgctxt "@item:inmenu"
 msgid "Check for Updates"
 msgstr "Check for Updates"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:44
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:46
 msgctxt "@item:inmenu"
 msgid "Local File"
 msgstr "Local File"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:45
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:47
 msgctxt "@action:button Preceded by 'Ready to'."
 msgid "Save to File"
 msgstr "Save to File"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:46
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:48
 msgctxt "@info:tooltip"
 msgid "Save to File"
 msgstr "Save to File"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:65
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:68
 msgctxt "@title:window"
 msgid "Save to File"
 msgstr "Save to File"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:124
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:137
 msgctxt "@title:window"
 msgid "File Already Exists"
 msgstr "File Already Exists"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:124
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:137
 #, python-brace-format
 msgctxt "@label"
 msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
 msgstr "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:149
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:163
 #, python-brace-format
 msgctxt "@info:progress"
 msgid "Saving to <filename>{0}</filename>"
 msgstr "Saving to <filename>{0}</filename>"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:157
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:171
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Permission denied when trying to save <filename>{0}</filename>"
 msgstr "Permission denied when trying to save <filename>{0}</filename>"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:160
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:182
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:174
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:196
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
 msgstr "Could not save to <filename>{0}</filename>: <message>{1}</message>"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:176
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:190
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Saved to <filename>{0}</filename>"
 msgstr "Saved to <filename>{0}</filename>"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:177
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:191
 msgctxt "@action:button"
 msgid "Open Folder"
 msgstr "Open Folder"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:177
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:191
 msgctxt "@info:tooltip"
 msgid "Open the folder containing the file"
 msgstr "Open the folder containing the file"
@@ -341,34 +341,34 @@ msgctxt "@info:tooltip"
 msgid "Mirror Model"
 msgstr "Mirror Model"
 
-#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:157
+#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:161
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:48
-#: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:65
+#: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:67
 #, python-brace-format
 msgctxt "@item:inlistbox"
 msgid "All Supported Types ({0})"
 msgstr "All Supported Types ({0})"
 
-#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:160
+#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:164
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:49
-#: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:66
+#: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:68
 msgctxt "@item:inlistbox"
 msgid "All Files (*)"
 msgstr "All Files (*)"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:95
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:96
 #, python-brace-format
 msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
 msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
 msgstr "{0:0>2}d {1:0>2}h {2:0>2}min"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:97
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:98
 #, python-brace-format
 msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
 msgid "{0:0>2}h {1:0>2}min"
 msgstr "{0:0>2}h {1:0>2}min"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:100
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:101
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is days"
 msgid "{0} day"
@@ -376,8 +376,8 @@ msgid_plural "{0} days"
 msgstr[0] "{0} day"
 msgstr[1] "{0} days"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:100
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:102
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:101
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:103
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is hours"
 msgid "{0} hour"
@@ -385,9 +385,9 @@ msgid_plural "{0} hours"
 msgstr[0] "{0} hour"
 msgstr[1] "{0} hours"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:100
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:102
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:104
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:101
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:103
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:105
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is minutes"
 msgid "{0} minute"
@@ -395,32 +395,42 @@ msgid_plural "{0} minutes"
 msgstr[0] "{0} minute"
 msgstr[1] "{0} minutes"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:87
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:104
 msgctxt "@info:progress"
 msgid "Loading plugins..."
 msgstr "Loading plugins..."
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:93
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:110
 msgctxt "@info:progress"
 msgid "Updating configuration..."
 msgstr "Updating configuration..."
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:104
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:120
 msgctxt "@info:progress"
 msgid "Loading preferences..."
 msgstr "Loading preferences..."
 
-#: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:63
+#: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:67
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled object to {0}% of original size"
 msgstr "Auto scaled object to {0}% of original size"
 
-#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:109
+#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:110
 #, python-brace-format
 msgctxt "@info:version-upgrade"
 msgid "A configuration from an older version of {0} was imported."
 msgstr "A configuration from an older version of {0} was imported."
+
+#: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:45
+msgctxt "@message"
+msgid "Failed to Initialize OpenGL"
+msgstr "Failed to Initialize OpenGL"
+
+#: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:55
+msgctxt "Critical OpenGL Extensions Missing"
+msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
+msgstr "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:36
 #, python-brace-format
@@ -428,14 +438,14 @@ msgctxt "@info:status"
 msgid "Cannot open file type <filename>{0}</filename>"
 msgstr "Cannot open file type <filename>{0}</filename>"
 
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:45
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:65
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:49
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:69
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Failed to load <filename>{0}</filename>"
 msgstr "Failed to load <filename>{0}</filename>"
 
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:49
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:53
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Loading <filename>{0}</filename>"

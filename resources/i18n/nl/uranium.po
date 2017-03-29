@@ -2,12 +2,12 @@
 # Copyright (C) 2017 Ultimaker
 # This file is distributed under the same license as the Uranium package.
 # Ruben Dulek <r.dulek@ultimaker.com>, 2017.
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: 2.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-28 11:00+0100\n"
+"POT-Creation-Date: 2017-03-27 17:40+0200\n"
 "PO-Revision-Date: 2017-01-27 16:32+0100\n"
 "Last-Translator: Ruben Dulek <r.dulek@ultimaker.com>\n"
 "Language-Team: Ultimaker <info@ultimaker.com>\n"
@@ -16,16 +16,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:45
-msgctxt "@action:button Preceded by 'Ready to'."
-msgid "Save to File"
-msgstr "Opslaan als bestand"
-
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:92
-msgctxt "@action:button"
-msgid "Discard current changes"
-msgstr "Huidige wijzigingen verwijderen"
 
 #: /home/ruben/Projects/Uranium/plugins/Views/WireframeView/__init__.py:13
 msgctxt "@label"
@@ -148,9 +138,7 @@ msgstr "Geen toegang tot update-informatie."
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:63
 msgctxt "@info"
 msgid "The version you are using does not support checking for updates."
-msgstr ""
-"Het controleren op updates wordt in de door u gebruikte versie niet "
-"ondersteund."
+msgstr "Het controleren op updates wordt in de door u gebruikte versie niet ondersteund."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:74
 msgctxt "@info"
@@ -165,8 +153,7 @@ msgstr "Downloaden"
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:87
 msgctxt "@info"
 msgid "An exception occured while parsing the JSON file."
-msgstr ""
-"Er is een uitzondering opgetreden tijdens het parseren van het JSON-bestand."
+msgstr "Er is een uitzondering opgetreden tijdens het parseren van het JSON-bestand."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:91
 msgctxt "@info"
@@ -178,67 +165,68 @@ msgctxt "@item:inmenu"
 msgid "Check for Updates"
 msgstr "Controleren op Updates"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:44
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:46
 msgctxt "@item:inmenu"
 msgid "Local File"
 msgstr "Lokaal Bestand"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:46
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:47
+msgctxt "@action:button Preceded by 'Ready to'."
+msgid "Save to File"
+msgstr "Opslaan als bestand"
+
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:48
 msgctxt "@info:tooltip"
 msgid "Save to File"
 msgstr "Opslaan als Bestand"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:65
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:68
 msgctxt "@title:window"
 msgid "Save to File"
 msgstr "Opslaan als Bestand"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:124
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:137
 msgctxt "@title:window"
 msgid "File Already Exists"
 msgstr "Het Bestand Bestaat Al"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:124
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:137
 #, python-brace-format
 msgctxt "@label"
-msgid ""
-"The file <filename>{0}</filename> already exists. Are you sure you want to "
-"overwrite it?"
-msgstr ""
-"Het bestand <filename>{0}</filename> bestaat al. Weet u zeker dat u dit "
-"bestand wilt overschrijven?"
+msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
+msgstr "Het bestand <filename>{0}</filename> bestaat al. Weet u zeker dat u dit bestand wilt overschrijven?"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:149
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:163
 #, python-brace-format
 msgctxt "@info:progress"
 msgid "Saving to <filename>{0}</filename>"
 msgstr "Opslaan als <filename>{0}</filename>"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:157
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:171
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Permission denied when trying to save <filename>{0}</filename>"
 msgstr "Toegang geweigerd tijdens opslaan als <filename>{0}</filename>"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:160
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:182
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:174
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:196
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
 msgstr "Kan niet opslaan als <filename>{0}</filename>: <message>{1}</message>"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:176
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:190
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Saved to <filename>{0}</filename>"
 msgstr "Opgeslagen als <filename>{0}</filename>"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:177
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:191
 msgctxt "@action:button"
 msgid "Open Folder"
 msgstr "Map Openen"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:177
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:191
 msgctxt "@info:tooltip"
 msgid "Open the folder containing the file"
 msgstr "De map met het bestand openen"
@@ -353,36 +341,34 @@ msgctxt "@info:tooltip"
 msgid "Mirror Model"
 msgstr "Model Spiegelen"
 
-#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:157
+#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:161
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:48
-#: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:65
+#: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:67
 #, python-brace-format
 msgctxt "@item:inlistbox"
 msgid "All Supported Types ({0})"
 msgstr "Alle Ondersteunde Typen ({0})"
 
-#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:160
+#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:164
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:49
-#: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:66
+#: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:68
 msgctxt "@item:inlistbox"
 msgid "All Files (*)"
 msgstr "Alle Bestanden (*)"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:95
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:96
 #, python-brace-format
-msgctxt ""
-"@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is "
-"minutes"
+msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
 msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
 msgstr "{0:0>2}d {1:0>2}u {2:0>2}min"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:97
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:98
 #, python-brace-format
 msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
 msgid "{0:0>2}h {1:0>2}min"
 msgstr "{0:0>2}u {1:0>2}min"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:100
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:101
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is days"
 msgid "{0} day"
@@ -390,8 +376,8 @@ msgid_plural "{0} days"
 msgstr[0] "{0} dag"
 msgstr[1] "{0} dagen"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:100
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:102
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:101
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:103
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is hours"
 msgid "{0} hour"
@@ -399,9 +385,9 @@ msgid_plural "{0} hours"
 msgstr[0] "{0} uur"
 msgstr[1] "{0} uur"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:100
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:102
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:104
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:101
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:103
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:105
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is minutes"
 msgid "{0} minute"
@@ -409,33 +395,42 @@ msgid_plural "{0} minutes"
 msgstr[0] "{0} minuut"
 msgstr[1] "{0} minuten"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:87
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:104
 msgctxt "@info:progress"
 msgid "Loading plugins..."
 msgstr "Invoegtoepassingen laden..."
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:93
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:110
 msgctxt "@info:progress"
 msgid "Updating configuration..."
 msgstr "Configuratie bijwerken..."
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:104
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:120
 msgctxt "@info:progress"
 msgid "Loading preferences..."
 msgstr "Voorkeuren laden..."
 
-#: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:63
+#: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:67
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled object to {0}% of original size"
-msgstr ""
-"Het object is automatisch geschaald naar {0}% van het oorspronkelijke formaat"
+msgstr "Het object is automatisch geschaald naar {0}% van het oorspronkelijke formaat"
 
-#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:109
+#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:110
 #, python-brace-format
 msgctxt "@info:version-upgrade"
 msgid "A configuration from an older version of {0} was imported."
 msgstr "Er is een configuratie van een oudere versie van {0} geïmporteerd."
+
+#: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:45
+msgctxt "@message"
+msgid "Failed to Initialize OpenGL"
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:55
+msgctxt "Critical OpenGL Extensions Missing"
+msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
+msgstr ""
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:36
 #, python-brace-format
@@ -443,14 +438,14 @@ msgctxt "@info:status"
 msgid "Cannot open file type <filename>{0}</filename>"
 msgstr "Kan het bestandstype <filename>{0}</filename> niet openen"
 
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:45
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:65
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:49
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:69
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Failed to load <filename>{0}</filename>"
 msgstr "Kan <filename>{0}</filename> niet laden"
 
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:49
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:53
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Loading <filename>{0}</filename>"
@@ -557,25 +552,15 @@ msgstr "OK"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:31
 msgctxt "@item:tooltip"
-msgid ""
-"This setting has been hidden by the active machine and will not be visible."
-msgstr ""
-"Deze instelling is door de actieve machine verborgen en wordt niet zichtbaar."
+msgid "This setting has been hidden by the active machine and will not be visible."
+msgstr "Deze instelling is door de actieve machine verborgen en wordt niet zichtbaar."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:48
 msgctxt "@item:tooltip %1 is list of setting names"
-msgid ""
-"This setting has been hidden by the value of %1. Change the value of that "
-"setting to make this setting visible."
-msgid_plural ""
-"This setting has been hidden by the values of %1. Change the values of those "
-"settings to make this setting visible."
-msgstr[0] ""
-"Deze instelling is verborgen vanwege de waarde van %1. Wijzig de waarde van "
-"die instelling om deze instelling zichtbaar te maken."
-msgstr[1] ""
-"Deze instelling is verborgen vanwege de waarden van %1. Wijzig de waarden "
-"van die instellingen om deze instelling zichtbaar te maken."
+msgid "This setting has been hidden by the value of %1. Change the value of that setting to make this setting visible."
+msgid_plural "This setting has been hidden by the values of %1. Change the values of those settings to make this setting visible."
+msgstr[0] "Deze instelling is verborgen vanwege de waarde van %1. Wijzig de waarde van die instelling om deze instelling zichtbaar te maken."
+msgstr[1] "Deze instelling is verborgen vanwege de waarden van %1. Wijzig de waarden van die instellingen om deze instelling zichtbaar te maken."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityPage.qml:12
 msgctxt "@title:tab"
@@ -610,9 +595,7 @@ msgstr "Verwijderen Bevestigen"
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:17
 msgctxt "@label (%1 is object name)"
 msgid "Are you sure you wish to remove %1? This cannot be undone!"
-msgstr ""
-"Weet u zeker dat u %1 wilt verwijderen? Deze bewerking kan niet ongedaan "
-"worden gemaakt."
+msgstr "Weet u zeker dat u %1 wilt verwijderen? Deze bewerking kan niet ongedaan worden gemaakt."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:14
 msgctxt "@title:tab"
@@ -638,6 +621,11 @@ msgstr "\"%1\" bijwerken"
 msgctxt "@action:button"
 msgid "Update profile"
 msgstr "Profiel bijwerken"
+
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:92
+msgctxt "@action:button"
+msgid "Discard current changes"
+msgstr "Huidige wijzigingen verwijderen"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:93
 msgctxt "@action:button"
