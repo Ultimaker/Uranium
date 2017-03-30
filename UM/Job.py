@@ -18,9 +18,9 @@ from UM.JobQueue import JobQueue
 class Job:
     def __init__(self):
         super().__init__()
-        self._running = False
-        self._finished = False
-        self._result = None
+        self._running = False   # type: bool
+        self._finished = False  # type: bool
+        self._result = None     # type: any
         self._error = None
 
     ##  Perform the actual task of this job. Should be reimplemented by subclasses.
