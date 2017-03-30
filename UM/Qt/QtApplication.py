@@ -6,10 +6,10 @@ import os
 import signal
 
 
-from PyQt5.QtCore import Qt, QObject, QCoreApplication, QEvent, QUrl, pyqtProperty, pyqtSignal, pyqtSlot, QLocale, QTranslator, QLibraryInfo, QT_VERSION_STR, PYQT_VERSION_STR
-from PyQt5.QtQml import QQmlApplicationEngine, qmlRegisterType, qmlRegisterSingletonType
+from PyQt5.QtCore import Qt, QCoreApplication, QEvent, QUrl, pyqtProperty, pyqtSignal, pyqtSlot, QLocale, QTranslator, QLibraryInfo, QT_VERSION_STR, PYQT_VERSION_STR
+from PyQt5.QtQml import QQmlApplicationEngine
 from PyQt5.QtWidgets import QApplication, QSplashScreen, QMessageBox
-from PyQt5.QtGui import QGuiApplication, QPixmap, QSurfaceFormat
+from PyQt5.QtGui import QGuiApplication, QPixmap
 from PyQt5.QtCore import QTimer
 
 from UM.FileHandler.ReadFileJob import ReadFileJob
@@ -23,13 +23,14 @@ from UM.Preferences import Preferences
 from UM.i18n import i18nCatalog
 from UM.JobQueue import JobQueue
 from UM.View.GL.OpenGLContext import OpenGLContext
-import UM.Settings.InstanceContainer #For version upgrade to know the version number.
-import UM.Settings.ContainerStack #For version upgrade to know the version number.
-import UM.Preferences #For version upgrade to know the version number.
+import UM.Settings.InstanceContainer  # For version upgrade to know the version number.
+import UM.Settings.ContainerStack  # For version upgrade to know the version number.
+import UM.Preferences  # For version upgrade to know the version number.
 import UM.VersionUpgradeManager
 from UM.Mesh.ReadMeshJob import ReadMeshJob
 
 import UM.Qt.Bindings.Theme
+
 
 # Raised when we try to use an unsupported version of a dependency.
 class UnsupportedVersionError(Exception):
@@ -39,6 +40,7 @@ class UnsupportedVersionError(Exception):
 major, minor = PYQT_VERSION_STR.split(".")[0:2]
 if int(major) < 5 or int(minor) < 4:
     raise UnsupportedVersionError("This application requires at least PyQt 5.4.0")
+
 
 ##  Application subclass that provides a Qt application object.
 @signalemitter
@@ -113,8 +115,9 @@ class QtApplication(QApplication, Application):
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Updating configuration..."))
         upgraded = UM.VersionUpgradeManager.VersionUpgradeManager.getInstance().upgrade()
         if upgraded:
-            preferences = Preferences.getInstance() #Preferences might have changed. Load them again.
-                                                       #Note that the language can't be updated, so that will always revert to English.
+            # Preferences might have changed. Load them again.
+            # Note that the language can't be updated, so that will always revert to English.
+            preferences = Preferences.getInstance()
             try:
                 preferences.readFromFile(Resources.getPath(Resources.Preferences, self._application_name + ".cfg"))
             except FileNotFoundError:
@@ -304,7 +307,7 @@ class QtApplication(QApplication, Application):
     #   \note When `language` is `default`, the language to load can be changed with the
     #         environment variable "LANGUAGE".
     def loadQtTranslation(self, file, language = "default"):
-        #TODO Add support for specifying a language from preferences
+        # TODO Add support for specifying a language from preferences
         path = None
         if language == "default":
             path = self._getDefaultLanguage(file)
@@ -398,6 +401,7 @@ class QtApplication(QApplication, Application):
             pass
 
         return None
+
 
 ##  Internal.
 #
