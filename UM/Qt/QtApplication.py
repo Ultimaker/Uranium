@@ -281,6 +281,13 @@ class QtApplication(QApplication, Application):
 
         self.quit()
 
+    ##  Get the backend of the application (the program that does the heavy lifting).
+    #   The backend is also a QObject, which can be used from qml.
+    #   \returns Backend \type{Backend}
+    @pyqtSlot(result="QObject*")
+    def getBackend(self):
+        return self._backend
+
     ##  Load a Qt translation catalog.
     #
     #   This method will locate, load and install a Qt message catalog that can be used
