@@ -4,14 +4,15 @@
 import sys
 import os
 import signal
-import platform
 
-from PyQt5.QtCore import Qt, QObject, QCoreApplication, QEvent, pyqtSlot, QLocale, QTranslator, QLibraryInfo, QT_VERSION_STR, PYQT_VERSION_STR
-from PyQt5.QtQml import QQmlApplicationEngine, qmlRegisterType, qmlRegisterSingletonType
+
+from PyQt5.QtCore import Qt, QCoreApplication, QEvent, QUrl, pyqtProperty, pyqtSignal, pyqtSlot, QLocale, QTranslator, QLibraryInfo, QT_VERSION_STR, PYQT_VERSION_STR
+from PyQt5.QtQml import QQmlApplicationEngine
 from PyQt5.QtWidgets import QApplication, QSplashScreen, QMessageBox
-from PyQt5.QtGui import QGuiApplication, QPixmap, QSurfaceFormat
+from PyQt5.QtGui import QGuiApplication, QPixmap
 from PyQt5.QtCore import QTimer
 
+from UM.FileHandler.ReadFileJob import ReadFileJob
 from UM.Application import Application
 from UM.Qt.QtRenderer import QtRenderer
 from UM.Qt.Bindings.Bindings import Bindings
@@ -20,13 +21,16 @@ from UM.Resources import Resources
 from UM.Logger import Logger
 from UM.Preferences import Preferences
 from UM.i18n import i18nCatalog
+from UM.JobQueue import JobQueue
 from UM.View.GL.OpenGLContext import OpenGLContext
-import UM.Settings.InstanceContainer #For version upgrade to know the version number.
-import UM.Settings.ContainerStack #For version upgrade to know the version number.
-import UM.Preferences #For version upgrade to know the version number.
+import UM.Settings.InstanceContainer  # For version upgrade to know the version number.
+import UM.Settings.ContainerStack  # For version upgrade to know the version number.
+import UM.Preferences  # For version upgrade to know the version number.
 import UM.VersionUpgradeManager
+from UM.Mesh.ReadMeshJob import ReadMeshJob
 
 import UM.Qt.Bindings.Theme
+
 
 # Raised when we try to use an unsupported version of a dependency.
 class UnsupportedVersionError(Exception):
@@ -36,6 +40,7 @@ class UnsupportedVersionError(Exception):
 major, minor = PYQT_VERSION_STR.split(".")[0:2]
 if int(major) < 5 or int(minor) < 4:
     raise UnsupportedVersionError("This application requires at least PyQt 5.4.0")
+
 
 ##  Application subclass that provides a Qt application object.
 @signalemitter
@@ -110,8 +115,9 @@ class QtApplication(QApplication, Application):
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Updating configuration..."))
         upgraded = UM.VersionUpgradeManager.VersionUpgradeManager.getInstance().upgrade()
         if upgraded:
-            preferences = Preferences.getInstance() #Preferences might have changed. Load them again.
-                                                       #Note that the language can't be updated, so that will always revert to English.
+            # Preferences might have changed. Load them again.
+            # Note that the language can't be updated, so that will always revert to English.
+            preferences = Preferences.getInstance()
             try:
                 preferences.readFromFile(Resources.getPath(Resources.Preferences, self._application_name + ".cfg"))
             except FileNotFoundError:
@@ -123,6 +129,45 @@ class QtApplication(QApplication, Application):
             Preferences.getInstance().readFromFile(file)
         except FileNotFoundError:
             pass
+
+        self.getApplicationName()
+
+        Preferences.getInstance().addPreference("%s/recent_files" % self.getApplicationName(), "")
+
+        self._recent_files = []
+        files = Preferences.getInstance().getValue("%s/recent_files" % self.getApplicationName()).split(";")
+        for f in files:
+            if not os.path.isfile(f):
+                continue
+
+            self._recent_files.append(QUrl.fromLocalFile(f))
+
+        JobQueue.getInstance().jobFinished.connect(self._onJobFinished)
+
+    recentFilesChanged = pyqtSignal()
+
+    @pyqtProperty("QVariantList", notify=recentFilesChanged)
+    def recentFiles(self):
+        return self._recent_files
+
+    def _onJobFinished(self, job):
+        if (not isinstance(job, ReadMeshJob) and not isinstance(job, ReadFileJob)) or not job.getResult():
+            return
+
+        f = QUrl.fromLocalFile(job.getFileName())
+        if f in self._recent_files:
+            self._recent_files.remove(f)
+
+        self._recent_files.insert(0, f)
+        if len(self._recent_files) > 10:
+            del self._recent_files[10]
+
+        pref = ""
+        for path in self._recent_files:
+            pref += path.toLocalFile() + ";"
+
+        Preferences.getInstance().setValue("%s/recent_files" % self.getApplicationName(), pref)
+        self.recentFilesChanged.emit()
 
     def run(self):
         pass
@@ -239,6 +284,13 @@ class QtApplication(QApplication, Application):
 
         self.quit()
 
+    ##  Get the backend of the application (the program that does the heavy lifting).
+    #   The backend is also a QObject, which can be used from qml.
+    #   \returns Backend \type{Backend}
+    @pyqtSlot(result="QObject*")
+    def getBackend(self):
+        return self._backend
+
     ##  Load a Qt translation catalog.
     #
     #   This method will locate, load and install a Qt message catalog that can be used
@@ -255,7 +307,7 @@ class QtApplication(QApplication, Application):
     #   \note When `language` is `default`, the language to load can be changed with the
     #         environment variable "LANGUAGE".
     def loadQtTranslation(self, file, language = "default"):
-        #TODO Add support for specifying a language from preferences
+        # TODO Add support for specifying a language from preferences
         path = None
         if language == "default":
             path = self._getDefaultLanguage(file)
@@ -349,6 +401,7 @@ class QtApplication(QApplication, Application):
             pass
 
         return None
+
 
 ##  Internal.
 #
