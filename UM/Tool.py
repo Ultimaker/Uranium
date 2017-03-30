@@ -7,6 +7,11 @@ from UM.Event import Event
 from UM.Scene.Selection import Selection
 import UM.Application  # Circular dependency blah
 
+from UM.Controller import Controller
+from UM.Scene.ToolHandle import ToolHandle
+
+from typing import Optional
+
 
 ##  Abstract base class for tools that manipulate (or otherwise interact with) the scene.
 #
@@ -14,10 +19,10 @@ import UM.Application  # Circular dependency blah
 class Tool(PluginObject):
     def __init__(self):
         super().__init__()
-        self._controller = UM.Application.Application.getInstance().getController() # Circular dependency blah
+        self._controller = UM.Application.Application.getInstance().getController()  # Circular dependency blah
         self._enabled = True
 
-        self._handle = None
+        self._handle = None  # type: Optional[ToolHandle]
         self._locked_axis = None
         self._drag_plane = None
         self._drag_start = None
@@ -50,7 +55,7 @@ class Tool(PluginObject):
     #   \return \type{bool} true if this event has been handled and requires
     #           no further processing.
     #   \sa Event
-    def event(self, event):
+    def event(self, event: Event) -> Optional[bool]:
         if not self._selection_pass:
             self._selection_pass = UM.Application.Application.getInstance().getRenderer().getRenderPass("selection")
 
@@ -75,21 +80,21 @@ class Tool(PluginObject):
         return False
 
     ##  Convenience function
-    def getController(self):
+    def getController(self) -> Controller:
         return self._controller
 
     ##  Get the enabled state of the tool
-    def getEnabled(self):
+    def getEnabled(self) -> bool:
         return self._enabled
 
     ##  Get the associated handle
     #   \return \type{ToolHandle}
-    def getHandle(self):
+    def getHandle(self) -> Optional[ToolHandle]:
         return self._handle
 
     ##  set the associated handle
     #   \param \type{ToolHandle}
-    def setHandle(self, handle):
+    def setHandle(self, handle: ToolHandle):
         self._handle = handle
 
     def getLockedAxis(self):
@@ -138,6 +143,6 @@ class Tool(PluginObject):
 
         return None
 
-    def _onToolEnabledChanged(self, tool_id, enabled):
+    def _onToolEnabledChanged(self, tool_id: str, enabled: bool):
         if tool_id == self._plugin_id:
             self._enabled = enabled

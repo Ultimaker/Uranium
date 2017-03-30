@@ -17,6 +17,7 @@ class VersionUpgrade(PluginObject):
     def __init__(self):
         super().__init__()
 
+
 ##  An exception to throw if the formatting of a file is wrong.
 class FormatException(Exception):
     ##  Creates the exception instance.
@@ -32,6 +33,7 @@ class FormatException(Exception):
     #   \return A human-readable representation of this exception.
     def __str__(self):
         return "Exception parsing " + self._file + ": " + self._message
+
 
 ##  An exception to throw if the version number of a file is wrong.
 class InvalidVersionException(Exception):
