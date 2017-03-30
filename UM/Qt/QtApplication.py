@@ -4,14 +4,15 @@
 import sys
 import os
 import signal
-import platform
 
-from PyQt5.QtCore import Qt, QObject, QCoreApplication, QEvent, pyqtSlot, QLocale, QTranslator, QLibraryInfo, QT_VERSION_STR, PYQT_VERSION_STR
+
+from PyQt5.QtCore import Qt, QObject, QCoreApplication, QEvent, QUrl, pyqtProperty, pyqtSignal, pyqtSlot, QLocale, QTranslator, QLibraryInfo, QT_VERSION_STR, PYQT_VERSION_STR
 from PyQt5.QtQml import QQmlApplicationEngine, qmlRegisterType, qmlRegisterSingletonType
 from PyQt5.QtWidgets import QApplication, QSplashScreen, QMessageBox
 from PyQt5.QtGui import QGuiApplication, QPixmap, QSurfaceFormat
 from PyQt5.QtCore import QTimer
 
+from UM.FileHandler.ReadFileJob import ReadFileJob
 from UM.Application import Application
 from UM.Qt.QtRenderer import QtRenderer
 from UM.Qt.Bindings.Bindings import Bindings
@@ -20,11 +21,13 @@ from UM.Resources import Resources
 from UM.Logger import Logger
 from UM.Preferences import Preferences
 from UM.i18n import i18nCatalog
+from UM.JobQueue import JobQueue
 from UM.View.GL.OpenGLContext import OpenGLContext
 import UM.Settings.InstanceContainer #For version upgrade to know the version number.
 import UM.Settings.ContainerStack #For version upgrade to know the version number.
 import UM.Preferences #For version upgrade to know the version number.
 import UM.VersionUpgradeManager
+from UM.Mesh.ReadMeshJob import ReadMeshJob
 
 import UM.Qt.Bindings.Theme
 
@@ -123,6 +126,45 @@ class QtApplication(QApplication, Application):
             Preferences.getInstance().readFromFile(file)
         except FileNotFoundError:
             pass
+
+        self.getApplicationName()
+
+        Preferences.getInstance().addPreference("%s/recent_files" % self.getApplicationName(), "")
+
+        self._recent_files = []
+        files = Preferences.getInstance().getValue("%s/recent_files" % self.getApplicationName()).split(";")
+        for f in files:
+            if not os.path.isfile(f):
+                continue
+
+            self._recent_files.append(QUrl.fromLocalFile(f))
+
+        JobQueue.getInstance().jobFinished.connect(self._onJobFinished)
+
+    recentFilesChanged = pyqtSignal()
+
+    @pyqtProperty("QVariantList", notify=recentFilesChanged)
+    def recentFiles(self):
+        return self._recent_files
+
+    def _onJobFinished(self, job):
+        if (not isinstance(job, ReadMeshJob) and not isinstance(job, ReadFileJob)) or not job.getResult():
+            return
+
+        f = QUrl.fromLocalFile(job.getFileName())
+        if f in self._recent_files:
+            self._recent_files.remove(f)
+
+        self._recent_files.insert(0, f)
+        if len(self._recent_files) > 10:
+            del self._recent_files[10]
+
+        pref = ""
+        for path in self._recent_files:
+            pref += path.toLocalFile() + ";"
+
+        Preferences.getInstance().setValue("%s/recent_files" % self.getApplicationName(), pref)
+        self.recentFilesChanged.emit()
 
     def run(self):
         pass
