@@ -57,7 +57,7 @@ class Resources:
     #
     #   \exception FileNotFoundError Raised when the file could not be found.
     @classmethod
-    def getPath(cls, resource_type, *args):
+    def getPath(cls, resource_type: int, *args) -> str:
         try:
             path = cls.getStoragePath(resource_type, *args)
             if os.path.exists(path):
@@ -73,13 +73,13 @@ class Resources:
 
     ##  Get a list of paths to all resources of a certain resource type.
     #
-    #   \param type The resource type to get the paths for.
+    #   \param resource_type The resource type to get the paths for.
     #
     #   \return A list of absolute paths to resources of the specified type.
     @classmethod
-    def getAllResourcesOfType(cls, type):
+    def getAllResourcesOfType(cls, resource_type: int) -> List[str]:
         files = {}
-        search_dirs = cls.getAllPathsForType(type)
+        search_dirs = cls.getAllPathsForType(resource_type)
 
         for directory in search_dirs:
             if not os.path.isdir(directory):
@@ -110,7 +110,7 @@ class Resources:
     #
     #   \note This method does not check whether a given file exists.
     @classmethod
-    def getStoragePath(cls, resource_type, *args):
+    def getStoragePath(cls, resource_type: int, *args) -> str:
         return os.path.join(cls.getStoragePathForType(resource_type), *args)
 
     ##  Return a list of paths for a certain resource type.
@@ -120,7 +120,7 @@ class Resources:
     #
     #   \exception TypeError Raised when type is an unknown value.
     @classmethod
-    def getAllPathsForType(cls, resource_type):
+    def getAllPathsForType(cls, resource_type: int) -> List[str]:
         if resource_type not in cls.__types:
             raise ResourceTypeError("Unknown type {0}".format(resource_type))
 
@@ -143,7 +143,7 @@ class Resources:
     #
     #   \exception UnsupportedStorageTypeError Raised when writing type is not supported.
     @classmethod
-    def getStoragePathForType(cls, resource_type):
+    def getStoragePathForType(cls, resource_type: int) -> str:
         if resource_type not in cls.__types_storage:
             raise UnsupportedStorageTypeError("Unknown storage type {0}".format(resource_type))
 
@@ -171,13 +171,13 @@ class Resources:
     #
     #   \param path The path to add.
     @classmethod
-    def addSearchPath(cls, path):
+    def addSearchPath(cls, path: str):
         if os.path.isdir(path) and path not in cls.__paths:
             cls.__paths.append(path)
 
     ##  Remove a resource search path.
     @classmethod
-    def removeSearchPath(cls, path):
+    def removeSearchPath(cls, path: str):
         if path in cls.__paths:
             del cls.__paths[cls.__paths.index(path)]
 
@@ -186,7 +186,7 @@ class Resources:
     #   \param type \type{int} An integer that can be used to identify the type. Should be greater than UserType.
     #   \param path \type{string} The path relative to the search paths where resources of this type can be found./
     @classmethod
-    def addType(cls, resource_type, path):
+    def addType(cls, resource_type: int, path: str):
         if resource_type in cls.__types:
             raise ResourceTypeError("Type {0} already exists".format(resource_type))
 
@@ -200,7 +200,7 @@ class Resources:
     #   \param type The type to add a storage path for.
     #   \param path The path to add as storage path. Should be relative to the resources storage path.
     @classmethod
-    def addStorageType(cls, resource_type, path):
+    def addStorageType(cls, resource_type: int, path: str):
         if resource_type in cls.__types:
             raise ResourceTypeError("Type {0} already exists".format(resource_type))
 
@@ -212,7 +212,7 @@ class Resources:
     #   This is where the application stores user configuration, such as
     #   preferences.
     @classmethod
-    def getConfigStoragePath(cls):
+    def getConfigStoragePath(cls) -> str:
         if not cls.__config_storage_path:
             cls.__initializeStoragePaths()
         return cls.__config_storage_path
@@ -221,7 +221,7 @@ class Resources:
     #
     #   This is where the application stores user files, such as profiles.
     @classmethod
-    def getDataStoragePath(cls):
+    def getDataStoragePath(cls) -> str:
         if not cls.__data_storage_path:
             cls.__initializeStoragePaths()
         return cls.__data_storage_path
@@ -235,7 +235,7 @@ class Resources:
 
     ##  Remove a custom resource type.
     @classmethod
-    def removeType(cls, resource_type):
+    def removeType(cls, resource_type: int):
         if resource_type not in cls.__types:
             return
 
@@ -251,7 +251,7 @@ class Resources:
 
     # Returns a list of paths where args was found.
     @classmethod
-    def __find(cls, resource_type, *args):
+    def __find(cls, resource_type: int, *args) -> List[str]:
         suffix = cls.__types.get(resource_type, None)
         if suffix is None:
             return None
