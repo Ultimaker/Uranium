@@ -7,6 +7,11 @@ from UM.Signal import Signal, signalemitter
 from UM.Logger import Logger
 from UM.PluginRegistry import PluginRegistry
 
+# Type hinting imports
+from UM.View.View import View
+from UM.InputDevice import InputDevice
+from typing import Optional, Dict
+
 
 ##      Glue class that holds the scene, (active) view(s), (active) tool(s) and possible user inputs.
 #
@@ -45,11 +50,10 @@ class Controller:
     ##  Add a view by name if it"s not already added.
     #   \param name \type{string} Unique identifier of view (usually the plugin name)
     #   \param view \type{View} The view to be added
-    def addView(self, view):
+    def addView(self, view: View):
         name = view.getPluginId()
         if name not in self._views:
             self._views[name] = view
-            #view.setController(self)
             view.setRenderer(self._application.getRenderer())
             self.viewsChanged.emit()
         else:
@@ -58,7 +62,7 @@ class Controller:
     ##  Request view by name. Returns None if no view is found.
     #   \param name \type{string} Unique identifier of view (usually the plugin name)
     #   \return View \type{View} if name was found, none otherwise.
-    def getView(self, name):
+    def getView(self, name: str) -> Optional[View]:
         try:
             return self._views[name]
         except KeyError:  # No such view
@@ -66,18 +70,18 @@ class Controller:
             return None
 
     ##  Return all views.
-    #   \return views \type{list}
-    def getAllViews(self):
+    #   \return views \type{dict}
+    def getAllViews(self) -> Dict[str, View]:
         return self._views
 
     ##  Request active view. Returns None if there is no active view
     #   \return view \type{View} if an view is active, None otherwise.
-    def getActiveView(self):
+    def getActiveView(self) -> Optional[View]:
         return self._active_view
 
     ##  Set the currently active view.
     #   \param name \type{string} The name of the view to set as active
-    def setActiveView(self, name):
+    def setActiveView(self, name: str):
         Logger.log("d", "Setting active view to %s", name)
         try:
             if self._active_view:
@@ -102,7 +106,7 @@ class Controller:
 
     ##  Add an input device (e.g. mouse, keyboard, etc) if it's not already added.
     #   \param device The input device to be added
-    def addInputDevice(self, device):
+    def addInputDevice(self, device: InputDevice):
         name = device.getPluginId()
         if name not in self._input_devices:
             self._input_devices[name] = device
@@ -113,17 +117,17 @@ class Controller:
     ##  Request input device by name. Returns None if no device is found.
     #   \param name \type{string} Unique identifier of input device (usually the plugin name)
     #   \return input \type{InputDevice} device if name was found, none otherwise.
-    def getInputDevice(self, name):
+    def getInputDevice(self, name: str) -> Optional[InputDevice]:
         try:
             return self._input_devices[name]
-        except KeyError: #No such device
+        except KeyError:  # No such device
             Logger.log("e", "Unable to find %s in input devices", name)
             return None
 
     ##  Remove an input device from the list of input devices.
     #   Does nothing if the input device is not in the list.
     #   \param name \type{string} The name of the device to remove.
-    def removeInputDevice(self, name):
+    def removeInputDevice(self, name: str):
         if name in self._input_devices:
             self._input_devices[name].event.disconnect(self.event)
             del self._input_devices[name]
@@ -131,15 +135,15 @@ class Controller:
     ##  Request tool by name. Returns None if no view is found.
     #   \param name \type{string} Unique identifier of tool (usually the plugin name)
     #   \return tool \type{Tool} if name was found, none otherwise.
-    def getTool(self, name):
+    def getTool(self, name: str):
         try:
             return self._tools[name]
-        except KeyError: #No such tool
+        except KeyError:  # No such tool
             Logger.log("e", "Unable to find %s in tools", name)
             return None
 
     ##  Get all tools
-    #   \return tools \type{list}
+    #   \return tools \type{dict}
     def getAllTools(self):
         return self._tools
 
@@ -167,7 +171,7 @@ class Controller:
 
     ##  Gets whether a tool is currently in use
     #   \return \type{bool} true if a tool current being used.
-    def isToolOperationActive(self):
+    def isToolOperationActive(self) -> bool:
         return self._tool_operation_active
 
     ##  Request active tool. Returns None if there is no active tool
@@ -231,7 +235,7 @@ class Controller:
 
     ##  Get the scene
     #   \return scene \type{Scene}
-    def getScene(self):
+    def getScene(self) -> Scene:
         return self._scene
 
     ##  Process an event
@@ -239,7 +243,7 @@ class Controller:
     #   The event is first passed to the camera tool, then active tool and finally selection tool.
     #   If none of these events handle it (when they return something that does not evaluate to true)
     #   a context menu signal is emitted.
-    def event(self, event):
+    def event(self, event: Event):
         # First, try to perform camera control
         if self._camera_tool and self._camera_tool.event(event):
             return
