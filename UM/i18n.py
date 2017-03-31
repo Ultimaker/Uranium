@@ -36,7 +36,7 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
     def __init__(self, name: str = None, language: str = "default") -> None: #pylint: disable=bad-whitespace
         self.__name = name
         self.__language = language
-        self.__translation = None   # type: gettext.NullTranslations
+        self.__translation = None   # type: Optional[gettext.NullTranslations]
 
         self._update() #Load the actual translation document now that the language is set.
 
@@ -62,13 +62,13 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
         if self.__require_update:
             self._update()
 
-        translated = text #Default to hard-coded text if no translation catalogue is loaded.
+        translated = text  # Default to hard-coded text if no translation catalogue is loaded.
         if self.hasTranslationLoaded():
             translated = self.__translation.gettext(text)
 
         if args:
-            translated = translated.format(*args) #Positional arguments are replaced in the (translated) text.
-        return self._replaceTags(translated) #Also replace the global keys.
+            translated = translated.format(*args)  # Positional arguments are replaced in the (translated) text.
+        return self._replaceTags(translated)  # Also replace the global keys.
 
     ##  Mark a string as translatable and provide a context for translators.
     #
@@ -83,16 +83,16 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
         if self.__require_update:
             self._update()
 
-        translated = text #Default to hard-coded text if no translation catalogue is loaded.
+        translated = text  # Default to hard-coded text if no translation catalogue is loaded.
         if self.hasTranslationLoaded():
-            message_with_context = "{0}\x04{1}".format(context, text) #\x04 is "end of transmission" byte, indicating to gettext that they are two different texts.
+            message_with_context = "{0}\x04{1}".format(context, text)  # \x04 is "end of transmission" byte, indicating to gettext that they are two different texts.
             message = self.__translation.gettext(message_with_context)
             if message != message_with_context:
                 translated = message
 
         if args:
-            translated = translated.format(*args) #Positional arguments are replaced in the (translated) text.
-        return self._replaceTags(translated) #Also replace the global keys.
+            translated = translated.format(*args)  # Positional arguments are replaced in the (translated) text.
+        return self._replaceTags(translated)  # Also replace the global keys.
 
     ##  Mark a string as translatable with plural forms.
     #
@@ -114,12 +114,12 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
         if self.__require_update:
             self._update()
 
-        translated = multiple if counter != 1 else single #Default to hard-coded texts if no translation catalogue is loaded.
+        translated = multiple if counter != 1 else single  # Default to hard-coded texts if no translation catalogue is loaded.
         if self.hasTranslationLoaded():
             translated = self.__translation.ngettext(single, multiple, counter)
 
-        translated = translated.format(counter, args) #Positional arguments are replaced in the (translated) text, but this time the counter is treated as the first argument.
-        return self._replaceTags(translated) #Also replace the global keys.
+        translated = translated.format(counter, args)  # Positional arguments are replaced in the (translated) text, but this time the counter is treated as the first argument.
+        return self._replaceTags(translated)  # Also replace the global keys.
 
     ##  Mark a string as translatable with plural forms and a context for
     #   translators.
@@ -143,9 +143,9 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
         if self.__require_update:
             self._update()
 
-        translated = multiple if counter != 1 else single #Default to hard-coded texts if no translation catalogue is loaded.
+        translated = multiple if counter != 1 else single  # Default to hard-coded texts if no translation catalogue is loaded.
         if self.hasTranslationLoaded():
-            message_with_context = "{0}\x04{1}".format(context, single) #\x04 is "end of transmission" byte, indicating to gettext that they are two different texts.
+            message_with_context = "{0}\x04{1}".format(context, single)  # \x04 is "end of transmission" byte, indicating to gettext that they are two different texts.
             message = self.__translation.ngettext(message_with_context, multiple, counter)
 
             if message != message_with_context:
@@ -190,7 +190,7 @@ class i18nCatalog: # [CodeStyle: Ultimaker code style requires classes to start 
         if self.__language == "default":
             self.__language = self.__application.getApplicationLanguage()
 
-        #Ask gettext for all the translations in the .mo files.
+        # Ask gettext for all the translations in the .mo files.
         for path in Resources.getAllPathsForType(Resources.i18n):
             if gettext.find(self.__name, path, languages = [self.__language]):
                 self.__translation = gettext.translation(self.__name, path, languages = [self.__language])
