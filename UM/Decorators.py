@@ -7,6 +7,7 @@ import inspect
 
 from UM.Logger import Logger
 
+
 ##  Decorator that can be used to indicate a method has been deprecated
 #
 #   \param message The message to display when the method is called. Should include a suggestion about what to use.
@@ -33,6 +34,7 @@ def ascopy(function):
 
     return copy_function
 
+
 ##  Decorator to conditionally call an extra function before calling the actual function.
 #
 #   This is primarily intended for conditional debugging, to make it possible to add extra
@@ -53,6 +55,7 @@ def call_if_enabled(function, condition):
         def call_direct(decorated_function):
             return decorated_function
         return call_direct
+
 
 ##  Class decorator that checks to see if all methods of the base class have been reimplemented
 #
@@ -80,10 +83,12 @@ def interface(cls):
     cls.__new__ = new_new
     return cls
 
+
 def immutable(cls):
     property_names = list(filter(lambda i: isinstance(i, property), inspect.getmembers(cls)))
     cls.__slots__ = property_names
     return cls
+
 
 def sameSignature(a: inspect.Signature, b: inspect.Signature) -> bool:
     return len(a.parameters) == len(b.parameters)
