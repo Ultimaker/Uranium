@@ -3,12 +3,14 @@
 
 import imp
 import os
-from typing import Dict
 
 from UM.Preferences import Preferences
 from UM.PluginError import PluginNotFoundError, InvalidMetaDataError
 from UM.Logger import Logger
-from typing import Callable, Any
+from typing import Callable, Any, Optional, types, Dict, List
+
+from UM.PluginObject import PluginObject  # For type hinting
+
 
 ##  A central object to dynamically load modules as plugins.
 #
@@ -19,28 +21,28 @@ from typing import Callable, Any
 #   For more details, see the [plugins] file.
 #
 #   [plugins]: docs/plugins.md
-class PluginRegistry(object):
+class PluginRegistry:
     APIVersion = 3
 
     def __init__(self):
         super().__init__()
-        self._plugins = {}
-        self._plugin_objects = {}
-        self._meta_data = {}
-        self._plugin_locations = []
-        self._folder_cache = {}
+        self._plugins = {}  # type: Dict[str, types.ModuleType]
+        self._plugin_objects = {}  # type: Dict[str, PluginObject]
+        self._meta_data = {}  # type: Dict[str, Dict[str, any]]
+        self._plugin_locations = []  # type: List[str]
+        self._folder_cache = {}  # type: Dict[str, str]
         self._application = None
-        self._active_plugins = []
+        self._active_plugins = []  # type: List[str]
 
         preferences = Preferences.getInstance()
         preferences.addPreference("general/disabled_plugins", "")
         # The disabled_plugins is explicitly set to None. When actually loading the preferences, it's set to a list.
         # This way we can see the difference between no list and an empty one.
-        self._disabled_plugins = None
+        self._disabled_plugins = None  # type: Optional[List[str]]
 
     ##  Check if all required plugins are loaded.
     #   \param required_plugins \type{list} List of ids of plugins that ''must'' be activated.
-    def checkRequiredPlugins(self, required_plugins):
+    def checkRequiredPlugins(self, required_plugins: List[str]) -> bool:
         plugins = self._findAllPlugins()
         for plugin_id in required_plugins:
             if plugin_id not in plugins:
@@ -49,19 +51,19 @@ class PluginRegistry(object):
         return True
 
     ##  Get the list of active plugins.
-    def getActivePlugins(self):
+    def getActivePlugins(self) -> List[str]:
         return self._active_plugins
 
     ##  Ask whether plugin_name is an active plugin.
     #
     #   \param plugin_id \type{string} The id of the plugin which might be active or not.
-    def isActivePlugin(self, plugin_id):
+    def isActivePlugin(self, plugin_id: str) -> bool:
         return plugin_id in self._active_plugins
 
     ##  Remove plugin from the list of active plugins.
     #
     #   \param plugin_id \type{string} The id of the plugin to remove.
-    def removeActivePlugin(self, plugin_id):
+    def removeActivePlugin(self, plugin_id: str):
         if plugin_id in self._active_plugins:
             self._active_plugins.remove(plugin_id)
         if plugin_id not in self._disabled_plugins:
@@ -71,7 +73,7 @@ class PluginRegistry(object):
     ##  Add a plugin to the list of active plugins.
     #
     #   \param plugin_id \type{string} The id of the plugin to add.
-    def addActivePlugin(self, plugin_id):
+    def addActivePlugin(self, plugin_id: str):
         if plugin_id not in self._active_plugins:
             self._active_plugins.append(plugin_id)
         if plugin_id in self._disabled_plugins:
@@ -81,7 +83,7 @@ class PluginRegistry(object):
     ##  Load a single plugin by id
     #   \param plugin_id \type{string} The ID of the plugin, i.e. its directory name.
     #   \exception PluginNotFoundError Raised when the plugin could not be found.
-    def loadPlugin(self, plugin_id):
+    def loadPlugin(self, plugin_id: str):
         if plugin_id in self._plugins:
             # Already loaded, do not load again
             Logger.log("w", "Plugin %s was already loaded", plugin_id)
@@ -126,7 +128,7 @@ class PluginRegistry(object):
         except Exception as e:
             Logger.logException("e", "Error loading plugin %s:", plugin_id)
 
-    def _addPluginObject(self, plugin_object, plugin_id, plugin_type):
+    def _addPluginObject(self, plugin_object: PluginObject, plugin_id: str, plugin_type: str):
         plugin_object.setPluginId(plugin_id)
         self._plugin_objects[plugin_id] = plugin_object
         try:
@@ -137,7 +139,7 @@ class PluginRegistry(object):
     ##  Load all plugins matching a certain set of metadata
     #   \param meta_data \type{dict} The meta data that needs to be matched.
     #   \sa loadPlugin
-    def loadPlugins(self, meta_data = None): #pylint: disable=bad-whitespace
+    def loadPlugins(self, meta_data: Optional[dict] = None):
         plugins = self._findAllPlugins()
 
         for plugin_id in plugins:
@@ -150,7 +152,7 @@ class PluginRegistry(object):
 
     ##  Get a plugin object
     #   \param plugin_id \type{string} The ID of the plugin object to get.
-    def getPluginObject(self, plugin_id):
+    def getPluginObject(self, plugin_id: str) -> PluginObject:
         if plugin_id not in self._plugins:
             self.loadPlugin(plugin_id)
         return self._plugin_objects[plugin_id]
@@ -159,7 +161,7 @@ class PluginRegistry(object):
     #   \param plugin_id \type{string} The ID of the plugin
     #   \return \type{dict} The metadata of the plugin. Can be an empty dict.
     #   \exception InvalidMetaDataError Raised when no metadata can be found or the metadata misses the right keys.
-    def getMetaData(self, plugin_id):
+    def getMetaData(self, plugin_id: str) -> Dict:
         if plugin_id not in self._meta_data:
             if not self._populateMetaData(plugin_id):
                 return {}
@@ -170,8 +172,7 @@ class PluginRegistry(object):
     #
     #   \param plugin_id \type{string} The ID of the plugin.
     #   \return \type{string} The absolute path to the plugin or an empty string if the plugin could not be found.
-    def getPluginPath(self, plugin_id):
-        plugin = None
+    def getPluginPath(self, plugin_id: str) -> Optional[str]:
         if plugin_id in self._plugins:
             plugin = self._plugins[plugin_id]
         else:
@@ -192,7 +193,7 @@ class PluginRegistry(object):
     #                 - filter: \type{dict} The subset of metadata that should be matched.
     #                 - active_only: Boolean, True when only active plugin metadata should be returned.
     #   \sa getMetaData
-    def getAllMetaData(self, **kwargs):
+    def getAllMetaData(self, **kwargs) -> List:
         data_filter = kwargs.get("filter", {})
         active_only = kwargs.get("active_only", False)
 
@@ -210,12 +211,12 @@ class PluginRegistry(object):
 
     ##  Get the list of plugin locations
     #   \return \type{list} The plugin locations
-    def getPluginLocations(self):
+    def getPluginLocations(self) -> List:
         return self._plugin_locations
 
     ##  Add a plugin location to the list of locations to search
     #   \param location \type{string} The location to add to the list
-    def addPluginLocation(self, location):
+    def addPluginLocation(self, location: str):
         #TODO: Add error checking!
         self._plugin_locations.append(location)
 
@@ -240,21 +241,21 @@ class PluginRegistry(object):
     #   \param type \type{string} The name of the plugin type to add.
     #   \param register_function \type{callable} A callable that takes an object as parameter.
     @classmethod
-    def addType(cls, plugin_type, register_function):
+    def addType(cls, plugin_type: str, register_function: Callable[[Any], None]):
         cls._type_register_map[plugin_type] = register_function
 
     ##  Remove a plugin type.
     #
     #   \param type \type{string} The plugin type to remove.
     @classmethod
-    def removeType(cls, plugin_type):
+    def removeType(cls, plugin_type: str):
         if plugin_type in cls._type_register_map:
             del cls._type_register_map[plugin_type]
 
     ##  Get the singleton instance of this class.
     ##  \return instance \type{PluginRegistry}
     @classmethod
-    def getInstance(cls):
+    def getInstance(cls) -> "PluginRegistry":
         if not cls._instance:
             cls._instance = PluginRegistry()
         return cls._instance
@@ -262,7 +263,8 @@ class PluginRegistry(object):
     ##  private:
     #   Populate the list of metadata
     #   \param plugin_id \type{string}
-    def _populateMetaData(self, plugin_id):
+    #   \return
+    def _populateMetaData(self, plugin_id: str) -> bool:
         plugin = self._findPlugin(plugin_id)
         if not plugin:
             Logger.log("e", "Could not find plugin %s", plugin_id)
@@ -272,7 +274,7 @@ class PluginRegistry(object):
         try:
             meta_data = plugin.getMetaData()
         except AttributeError as e:
-            Logger.log("e", "An error occured getting metadata from plugin %s: %s", plugin_id, str(e))
+            Logger.log("e", "An error occurred getting metadata from plugin %s: %s", plugin_id, str(e))
             raise InvalidMetaDataError(plugin_id)
 
         if not meta_data:
@@ -292,7 +294,7 @@ class PluginRegistry(object):
     ##   Try to find a module implementing a plugin
     #   \param plugin_id \type{string} The name of the plugin to find
     #   \returns module \type{module} if it was found None otherwise
-    def _findPlugin(self, plugin_id):
+    def _findPlugin(self, plugin_id: str) -> types.ModuleType:
         location = None
         for folder in self._plugin_locations:
             location = self._locatePlugin(plugin_id, folder)
@@ -320,7 +322,7 @@ class PluginRegistry(object):
         return module
 
     #   Returns a list of all possible plugin ids in the plugin locations
-    def _findAllPlugins(self, paths = None): #pylint: disable=bad-whitespace
+    def _findAllPlugins(self, paths = None):
         ids = []
 
         if not paths:
@@ -343,33 +345,33 @@ class PluginRegistry(object):
     #   Try to find a directory we can use to load a plugin from
     #   \param plugin_id \type{string} The id of the plugin to locate
     #   \param folder The base folder to look into
-    def _locatePlugin(self, plugin_id, folder):
+    def _locatePlugin(self, plugin_id: str, folder: str) -> Optional[str]:
         if not os.path.isdir(folder):
             return None
 
         if folder not in self._folder_cache:
             sub_folders = []
             for file in os.listdir(folder):
-                filepath = os.path.join(folder, file)
-                if os.path.isdir(filepath):
-                    entry = (file, filepath)
+                file_path = os.path.join(folder, file)
+                if os.path.isdir(file_path):
+                    entry = (file, file_path)
                     sub_folders.append(entry)
             self._folder_cache[folder] = sub_folders
 
-        for (file, filepath) in self._folder_cache[folder]:
-            if file == plugin_id and os.path.exists(os.path.join(filepath, "__init__.py")):
+        for (file, file_path) in self._folder_cache[folder]:
+            if file == plugin_id and os.path.exists(os.path.join(file_path, "__init__.py")):
                 return folder
             else:
-                filepath = self._locatePlugin(plugin_id, filepath)
-                if filepath:
-                    return filepath
+                file_path = self._locatePlugin(plugin_id, file_path)
+                if file_path:
+                    return file_path
 
         return None
 
     #   Check if a certain dictionary contains a certain subset of key/value pairs
     #   \param dictionary \type{dict} The dictionary to search
     #   \param subset \type{dict} The subset to search for
-    def _subsetInDict(self, dictionary, subset):
+    def _subsetInDict(self, dictionary: Dict, subset: Dict) -> bool:
         for key in subset:
             if key not in dictionary:
                 return False
@@ -377,6 +379,6 @@ class PluginRegistry(object):
                 return False
         return True
 
-    _type_register_map = {} # type: Dict[str, Callable[[Any], None]]
+    _type_register_map = {}  # type: Dict[str, Callable[[Any], None]]
     _instance = None    # type: PluginRegistry
 
