@@ -34,7 +34,7 @@ class PluginRegistry(object):
 
         preferences = Preferences.getInstance()
         preferences.addPreference("general/disabled_plugins", "")
-        self._disabled_plugins = None
+        self._disabled_plugins = []
 
     ##  Check if all required plugins are loaded.
     #   \param required_plugins \type{list} List of ids of plugins that ''must'' be activated.
