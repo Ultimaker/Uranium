@@ -3,6 +3,7 @@
 
 from UM.PluginObject import PluginObject
 
+
 ##  A type of plug-in that upgrades the configuration from an old file format to
 #   a newer one.
 #

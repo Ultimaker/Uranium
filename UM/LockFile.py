@@ -24,7 +24,7 @@ class LockFile:
     #   \param wait_msg A message to log when the thread is blocked by the lock.
     #   It is intended that you modify this to better indicate what lock file is
     #   blocking the thread.
-    def __init__(self, filename, timeout = 10, wait_msg = "Waiting for lock file to disappear..."):
+    def __init__(self, filename: str, timeout: int = 10, wait_msg: str = "Waiting for lock file to disappear..."):
         self._filename = filename
         self._wait_msg = wait_msg
         self._timeout = timeout
