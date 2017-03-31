@@ -34,6 +34,8 @@ class PluginRegistry(object):
 
         preferences = Preferences.getInstance()
         preferences.addPreference("general/disabled_plugins", "")
+        # The disabled_plugins is explicitly set to None. When actually loading the preferences, it's set to a list.
+        # This way we can see the difference between no list and an empty one.
         self._disabled_plugins = None
 
     ##  Check if all required plugins are loaded.
