@@ -429,12 +429,20 @@ msgstr "Была импортирована конфигурация от ста
 #: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:45
 msgctxt "@message"
 msgid "Failed to Initialize OpenGL"
+<<<<<<< HEAD
 msgstr "Не удалось инициализировать OpenGL"
+=======
+msgstr ""
+>>>>>>> 2.5
 
 #: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:55
 msgctxt "Critical OpenGL Extensions Missing"
 msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
+<<<<<<< HEAD
 msgstr "Важные дополнения OpenGL отсутствуют. Данная программа требует поддержки для объектов фреймбуфера. Пожалуйста, проверьте драйвер своей видеокарты."
+=======
+msgstr ""
+>>>>>>> 2.5
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:36
 #, python-brace-format

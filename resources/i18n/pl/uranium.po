@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-11 22:22+0100\n"
+"POT-Creation-Date: 2017-03-27 17:40+0200\n"
 "PO-Revision-Date: 2017-02-11 22:23+0100\n"
 "Last-Translator: Marek Pikuła <marek.pikula@sent.tech>\n"
 "Language-Team: \n"
@@ -16,8 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.8.11\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
-"|| n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #: /home/ruben/Projects/Uranium/plugins/Views/WireframeView/__init__.py:13
 msgctxt "@label"
@@ -167,72 +166,68 @@ msgctxt "@item:inmenu"
 msgid "Check for Updates"
 msgstr "Sprawdź aktualizacje"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:44
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:46
 msgctxt "@item:inmenu"
 msgid "Local File"
 msgstr "Plik lokalny"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:45
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:47
 msgctxt "@action:button Preceded by 'Ready to'."
 msgid "Save to File"
 msgstr "zapisania do pliku"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:46
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:48
 msgctxt "@info:tooltip"
 msgid "Save to File"
 msgstr "Zapisz do pliku"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:65
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:68
 msgctxt "@title:window"
 msgid "Save to File"
 msgstr "Zapisz do pliku"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:124
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:137
 msgctxt "@title:window"
 msgid "File Already Exists"
 msgstr "Plik już istnieje"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:124
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:137
 #, python-brace-format
 msgctxt "@label"
-msgid ""
-"The file <filename>{0}</filename> already exists. Are you sure you want to "
-"overwrite it?"
-msgstr ""
-"Plik <filename>{0}</filename> już istnieje. Czy jesteś pewny, że chcesz go "
-"nadpisać?"
+msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
+msgstr "Plik <filename>{0}</filename> już istnieje. Czy jesteś pewny, że chcesz go nadpisać?"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:149
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:163
 #, python-brace-format
 msgctxt "@info:progress"
 msgid "Saving to <filename>{0}</filename>"
 msgstr "Zapisywanie do <filename>{0}</filename>"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:157
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:171
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Permission denied when trying to save <filename>{0}</filename>"
 msgstr "Brak uprawnień do zapisu pliku <filename>{0}</filename>"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:160
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:182
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:174
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:196
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
 msgstr "Nie można zapisać do <filename>{0}</filename>: <message>{1}</message>"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:176
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:190
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Saved to <filename>{0}</filename>"
 msgstr "Zapisano do <filename>{0}</filename>"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:177
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:191
 msgctxt "@action:button"
 msgid "Open Folder"
 msgstr "Otwórz folder"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:177
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:191
 msgctxt "@info:tooltip"
 msgid "Open the folder containing the file"
 msgstr "Otwórz folder zawierający ten plik"
@@ -347,36 +342,34 @@ msgctxt "@info:tooltip"
 msgid "Mirror Model"
 msgstr "Odbij model"
 
-#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:157
+#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:161
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:48
-#: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:65
+#: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:67
 #, python-brace-format
 msgctxt "@item:inlistbox"
 msgid "All Supported Types ({0})"
 msgstr "Wszystkie wspierane typy plików ({0})"
 
-#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:160
+#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:164
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:49
-#: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:66
+#: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:68
 msgctxt "@item:inlistbox"
 msgid "All Files (*)"
 msgstr "Wszystkie pliki (*)"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:95
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:96
 #, python-brace-format
-msgctxt ""
-"@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is "
-"minutes"
+msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
 msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
 msgstr "{0:0>2}d {1:0>2}h {2:0>2}min"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:97
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:98
 #, python-brace-format
 msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
 msgid "{0:0>2}h {1:0>2}min"
 msgstr "{0:0>2}h {1:0>2}min"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:100
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:101
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is days"
 msgid "{0} day"
@@ -385,8 +378,8 @@ msgstr[0] "{0} dzień"
 msgstr[1] "{0} dni"
 msgstr[2] "{0} dni"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:100
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:102
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:101
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:103
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is hours"
 msgid "{0} hour"
@@ -395,9 +388,9 @@ msgstr[0] "{0} godzina"
 msgstr[1] "{0} godziny"
 msgstr[2] "{0} godzin"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:100
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:102
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:104
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:101
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:103
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:105
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is minutes"
 msgid "{0} minute"
@@ -406,32 +399,42 @@ msgstr[0] "{0} minuta"
 msgstr[1] "{0} minuty"
 msgstr[2] "{0} minut"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:87
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:104
 msgctxt "@info:progress"
 msgid "Loading plugins..."
 msgstr "Ładowaniu pluginów…"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:93
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:110
 msgctxt "@info:progress"
 msgid "Updating configuration..."
 msgstr "Aktualizowanie konfiguracji…"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:104
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:120
 msgctxt "@info:progress"
 msgid "Loading preferences..."
 msgstr "Ładowanie preferencji…"
 
-#: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:63
+#: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:67
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled object to {0}% of original size"
 msgstr "Automatyczne skalowanie obiektu do {0}% oryginalnego rozmiaru"
 
-#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:109
+#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:110
 #, python-brace-format
 msgctxt "@info:version-upgrade"
 msgid "A configuration from an older version of {0} was imported."
 msgstr "Zaimportowano plik konfiguracyjny ze starszej wersji ({0})."
+
+#: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:45
+msgctxt "@message"
+msgid "Failed to Initialize OpenGL"
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:55
+msgctxt "Critical OpenGL Extensions Missing"
+msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
+msgstr ""
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:36
 #, python-brace-format
@@ -439,14 +442,14 @@ msgctxt "@info:status"
 msgid "Cannot open file type <filename>{0}</filename>"
 msgstr "Nie można otworzyć typu pliku <filename>{0}</filename>"
 
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:45
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:65
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:49
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:69
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Failed to load <filename>{0}</filename>"
 msgstr "Nie udało się załadować <filename>{0}</filename>"
 
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:49
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:53
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Loading <filename>{0}</filename>"
@@ -553,28 +556,16 @@ msgstr "Ok"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:31
 msgctxt "@item:tooltip"
-msgid ""
-"This setting has been hidden by the active machine and will not be visible."
-msgstr ""
-"Ten parametr został ukryty dla aktywnego urządzenia i nie będzie widoczny."
+msgid "This setting has been hidden by the active machine and will not be visible."
+msgstr "Ten parametr został ukryty dla aktywnego urządzenia i nie będzie widoczny."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:48
 msgctxt "@item:tooltip %1 is list of setting names"
-msgid ""
-"This setting has been hidden by the value of %1. Change the value of that "
-"setting to make this setting visible."
-msgid_plural ""
-"This setting has been hidden by the values of %1. Change the values of those "
-"settings to make this setting visible."
-msgstr[0] ""
-"Ten parametr został ukryty przez wartość pola %1. Zmień ją, żeby parametr "
-"stał się aktywny."
-msgstr[1] ""
-"Ten parametr został ukryty przez wartości pól %1. Zmień je, żeby parametr "
-"stał się aktywny."
-msgstr[2] ""
-"Ten parametr został ukryty przez wartości pól %1. Zmień je, żeby parametr "
-"stał się aktywny."
+msgid "This setting has been hidden by the value of %1. Change the value of that setting to make this setting visible."
+msgid_plural "This setting has been hidden by the values of %1. Change the values of those settings to make this setting visible."
+msgstr[0] "Ten parametr został ukryty przez wartość pola %1. Zmień ją, żeby parametr stał się aktywny."
+msgstr[1] "Ten parametr został ukryty przez wartości pól %1. Zmień je, żeby parametr stał się aktywny."
+msgstr[2] "Ten parametr został ukryty przez wartości pól %1. Zmień je, żeby parametr stał się aktywny."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityPage.qml:12
 msgctxt "@title:tab"
@@ -730,9 +721,7 @@ msgstr "Dalej"
 #~ msgstr[2] "{0} godzin"
 
 #, fuzzy
-#~ msgctxt ""
-#~ "@label Days-hours-minutes duration format. {0} is days, {1} is hours, {2} "
-#~ "is minutes"
+#~ msgctxt "@label Days-hours-minutes duration format. {0} is days, {1} is hours, {2} is minutes"
 #~ msgid "{0} days {1} hours {2} minutes"
 #~ msgid_plural "{0} days {1} hours {2} minutes"
 #~ msgstr[0] "{0} dni {1} godzin {2} minut"
@@ -755,28 +744,15 @@ msgstr "Dalej"
 #~ msgstr[2] "{0} minut"
 
 #~ msgctxt "@item:tooltip"
-#~ msgid ""
-#~ "This setting has been disabled by the active machine and will not be "
-#~ "visible."
-#~ msgstr ""
-#~ "Ten parametr został wyłączony w aktywnym urządzeniu i nie będzie widoczny."
+#~ msgid "This setting has been disabled by the active machine and will not be visible."
+#~ msgstr "Ten parametr został wyłączony w aktywnym urządzeniu i nie będzie widoczny."
 
 #~ msgctxt "@item:tooltip %1 is list of setting names"
-#~ msgid ""
-#~ "This setting has been disabled by the value of %1. Change the value of "
-#~ "that setting to make this setting visible."
-#~ msgid_plural ""
-#~ "This setting has been disabled by the values of %1. Change the values of "
-#~ "those settings to make this setting visible."
-#~ msgstr[0] ""
-#~ "Ten parametr został wyłączony przez wartość opcji %1. Zmień ją, żeby "
-#~ "przywrócić ten parametr."
-#~ msgstr[1] ""
-#~ "Ten parametr został wyłączony przez wartości opcji %1. Zmień je, żeby "
-#~ "przywrócić ten parametr."
-#~ msgstr[2] ""
-#~ "Ten parametr został wyłączony przez wartości opcji %1. Zmień je, żeby "
-#~ "przywrócić ten parametr."
+#~ msgid "This setting has been disabled by the value of %1. Change the value of that setting to make this setting visible."
+#~ msgid_plural "This setting has been disabled by the values of %1. Change the values of those settings to make this setting visible."
+#~ msgstr[0] "Ten parametr został wyłączony przez wartość opcji %1. Zmień ją, żeby przywrócić ten parametr."
+#~ msgstr[1] "Ten parametr został wyłączony przez wartości opcji %1. Zmień je, żeby przywrócić ten parametr."
+#~ msgstr[2] "Ten parametr został wyłączony przez wartości opcji %1. Zmień je, żeby przywrócić ten parametr."
 
 #~ msgctxt "@info:tooltip"
 #~ msgid "Scale Object"
@@ -798,8 +774,7 @@ msgstr "Dalej"
 #~ msgid "Mirror Object"
 #~ msgstr "Odbij obiekt"
 
-#~ msgctxt ""
-#~ "@item:intext appended to customised profiles ({0} is old profile name)"
+#~ msgctxt "@item:intext appended to customised profiles ({0} is old profile name)"
 #~ msgid "{0} (Customised)"
 #~ msgstr "{0} (Użytkownika)"
 
@@ -828,12 +803,8 @@ msgstr "Dalej"
 #~ msgstr "Czy chcesz zapisać swoje ustawienia jako profil użytkownika?"
 
 #~ msgctxt "@label"
-#~ msgid ""
-#~ "Do you want to update profile \"{0}\" or save your settings in a new "
-#~ "custom profile?"
-#~ msgstr ""
-#~ "Chcesz zaktualizować profil \"{0}\", czy zapisać jako nowy profil "
-#~ "użytkownika?"
+#~ msgid "Do you want to update profile \"{0}\" or save your settings in a new custom profile?"
+#~ msgstr "Chcesz zaktualizować profil \"{0}\", czy zapisać jako nowy profil użytkownika?"
 
 #~ msgctxt "@label"
 #~ msgid "Update \"{0}\""
@@ -860,12 +831,8 @@ msgstr "Dalej"
 #~ msgstr "Ładowanie urządzeń…"
 
 #~ msgctxt "@info:status"
-#~ msgid ""
-#~ "Failed to import profile from <filename>{0}</filename>: <message>{1}</"
-#~ "message>"
-#~ msgstr ""
-#~ "Nie udało się zaimportować profilu z <filename>{0}</filename>: "
-#~ "<message>{1}</message>"
+#~ msgid "Failed to import profile from <filename>{0}</filename>: <message>{1}</message>"
+#~ msgstr "Nie udało się zaimportować profilu z <filename>{0}</filename>: <message>{1}</message>"
 
 #~ msgctxt "@info:status"
 #~ msgid "Successfully imported profile {0}"
@@ -876,20 +843,12 @@ msgstr "Dalej"
 #~ msgstr "Nieznany typ pliku profilu {0}."
 
 #~ msgctxt "@info:status"
-#~ msgid ""
-#~ "Failed to export profile to <filename>{0}</filename>: <message>{1}</"
-#~ "message>"
-#~ msgstr ""
-#~ "Nie udało się wyeksportować profilu do <filename>{0}</filename>: "
-#~ "<message>{1}</message>"
+#~ msgid "Failed to export profile to <filename>{0}</filename>: <message>{1}</message>"
+#~ msgstr "Nie udało się wyeksportować profilu do <filename>{0}</filename>: <message>{1}</message>"
 
 #~ msgctxt "@info:status"
-#~ msgid ""
-#~ "Failed to export profile to <filename>{0}</filename>: Writer plugin "
-#~ "reported failure."
-#~ msgstr ""
-#~ "Nie udało się wyeksportować profilu do <filename>{0}</filename>: Plugin "
-#~ "zapisu zgłosił błąd."
+#~ msgid "Failed to export profile to <filename>{0}</filename>: Writer plugin reported failure."
+#~ msgstr "Nie udało się wyeksportować profilu do <filename>{0}</filename>: Plugin zapisu zgłosił błąd."
 
 #~ msgctxt "@info:status"
 #~ msgid "Exported profile to <filename>{0}</filename>"
@@ -944,26 +903,22 @@ msgstr "Dalej"
 
 #~ msgctxt "@label"
 #~ msgid ""
-#~ "This setting is normally calculated, but it currently has an absolute "
-#~ "value set.\n"
+#~ "This setting is normally calculated, but it currently has an absolute value set.\n"
 #~ "\n"
 #~ "Click to restore the calculated value."
 #~ msgstr ""
-#~ "To ustawienie jest zwykle przeliczane – aktualnie ustawiona jest wartość "
-#~ "stała.\n"
+#~ "To ustawienie jest zwykle przeliczane – aktualnie ustawiona jest wartość stała.\n"
 #~ "\n"
 #~ "Naciśnij, żeby przywrócić wartość automatycznie przeliczaną."
 
 #, fuzzy
 #~ msgctxt "@label"
 #~ msgid ""
-#~ "Some hidden settings use values different from their normal calculated "
-#~ "value.\n"
+#~ "Some hidden settings use values different from their normal calculated value.\n"
 #~ "\n"
 #~ "Click to make these settings visible."
 #~ msgstr ""
-#~ "Niektóre ukryte ustawienia używają innych wartości od ich normalnie "
-#~ "przeliczonych wartości.\n"
+#~ "Niektóre ukryte ustawienia używają innych wartości od ich normalnie przeliczonych wartości.\n"
 #~ "\n"
 #~ "Naciśnij, żeby zobaczyć te ustawienia."
 
