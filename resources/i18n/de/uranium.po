@@ -1,17 +1,17 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Uranium
+# Copyright (C) 2017 Ultimaker
+# This file is distributed under the same license as the Uranium package.
+# Ruben Dulek <r.dulek@ultimaker.com>, 2017.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
+"Project-Id-Version: 2.5\n"
+"Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2017-03-27 17:40+0200\n"
-"PO-Revision-Date: 2017-01-27 16:32+0100\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2017-04-04 11:27+0200\n"
+"Last-Translator: Bothof <EMAIL@ADDRESS>\n"
+"Language-Team: German <LL@li.org>\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -425,12 +425,12 @@ msgstr "Eine Konfiguration einer älteren Version von {0} wurde importiert."
 #: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:45
 msgctxt "@message"
 msgid "Failed to Initialize OpenGL"
-msgstr ""
+msgstr "OpenGL konnte nicht initialisiert werden."
 
 #: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:55
 msgctxt "Critical OpenGL Extensions Missing"
 msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
-msgstr ""
+msgstr "Wichtige OpenGL-Erweiterungen fehlen. Dieses Programm erfordert Support für Framebuffer-Objekte. Überprüfen Sie bitte Ihre Videokartentreiber."
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:36
 #, python-brace-format

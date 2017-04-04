@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-27 17:40+0200\n"
-"PO-Revision-Date: 2017-01-27 16:32+0100\n"
+"PO-Revision-Date: 2017-04-04 11:27+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -425,12 +425,12 @@ msgstr "Eski {0} versiyonundan bir yapılandırma içe aktarıldı."
 #: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:45
 msgctxt "@message"
 msgid "Failed to Initialize OpenGL"
-msgstr ""
+msgstr "OpenGL Başlatılamadı"
 
 #: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:55
 msgctxt "Critical OpenGL Extensions Missing"
 msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
-msgstr ""
+msgstr "Kritik OpenGL uzantıları eksik. Bu program Framebuffer Objects desteği gerektirir. Lütfen ekran kartı sürücülerinizi kontrol edin."
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:36
 #, python-brace-format

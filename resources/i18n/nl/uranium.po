@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: 2.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-27 17:40+0200\n"
-"PO-Revision-Date: 2017-01-27 16:32+0100\n"
+"PO-Revision-Date: 2017-04-04 11:27+0200\n"
 "Last-Translator: Ruben Dulek <r.dulek@ultimaker.com>\n"
 "Language-Team: Ultimaker <info@ultimaker.com>\n"
 "Language: nl-NL\n"
@@ -425,12 +425,12 @@ msgstr "Er is een configuratie van een oudere versie van {0} geïmporteerd."
 #: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:45
 msgctxt "@message"
 msgid "Failed to Initialize OpenGL"
-msgstr ""
+msgstr "Kan OpenGL niet initialiseren"
 
 #: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:55
 msgctxt "Critical OpenGL Extensions Missing"
 msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
-msgstr ""
+msgstr "Er ontbreken essentiële OpenGL-extensies. Voor dit programma is ondersteuning voor Framebuffer-objecten vereist. Controleer het stuurprogramma voor uw videokaart."
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:36
 #, python-brace-format
