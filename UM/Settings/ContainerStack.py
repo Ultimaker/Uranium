@@ -51,6 +51,7 @@ class ContainerStack(ContainerInterface, PluginObject):
         self._id = str(stack_id)
         self._name = stack_id
         self._metadata = {}
+        self._metadata_serialization_excluded_keys = set()
         self._containers = []
         self._next_stack = None
         self._read_only = False
@@ -100,6 +101,9 @@ class ContainerStack(ContainerInterface, PluginObject):
     #   Reimplemented from ContainerInterface
     def getMetaData(self):
         return self._metadata
+
+    def addMetaDataSerializationExcludedKey(self, key):
+        self._metadata_serialization_excluded_keys.add(key)
 
     ##  \copydoc ContainerInterface::getMetaDataEntry
     #
@@ -232,6 +236,10 @@ class ContainerStack(ContainerInterface, PluginObject):
 
         parser["metadata"] = {}
         for key, value in self._metadata.items():
+            # skip the key-values that we don't want to save
+            if key in self._metadata_serialization_excluded_keys:
+                continue
+
             parser["metadata"][key] = str(value)
 
         parser.add_section("containers")
