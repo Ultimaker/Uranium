@@ -80,11 +80,8 @@ PreferencesPage
                     text: model.name
                     onClicked:
                     {
-                        if(pluginCheckbox.enabled)
-                        {
-                            pluginCheckbox.checked = !pluginCheckbox.checked;
-                            pluginList.model.setEnabled(model.id, checked);
-                        }
+                        pluginCheckbox.checked = !pluginCheckbox.checked;
+                        pluginCheckbox.clicked();
                     }
                     tooltip: model.description + (model.required ? ("\n" + catalog.i18nc("@label", "This plugin is required for the application to run.")) : "")
                     anchors.left: pluginCheckbox.visible ? pluginCheckbox.right : parent.left
