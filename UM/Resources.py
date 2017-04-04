@@ -276,7 +276,7 @@ class Resources:
         if platform.system() == "Windows":
             cls.__config_storage_path = os.path.join(os.getenv("APPDATA"), storage_dir_name)
             # cache is machine-specific so we put it in "LOCAL"
-            cls.__cache_storage_path = os.path.join(os.getenv("LOCALAPPDATA"), "cache")
+            cls.__cache_storage_path = os.path.join(os.getenv("LOCALAPPDATA"), storage_dir_name, "cache")
         elif platform.system() == "Darwin":
             cls.__config_storage_path = os.path.join(os.path.expanduser("~/Library/Application Support"), storage_dir_name)
             # For backward compatibility, support loading files from the old storage location
