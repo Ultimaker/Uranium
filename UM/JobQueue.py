@@ -7,6 +7,9 @@ import threading
 from UM.Signal import Signal, signalemitter
 from UM.Logger import Logger
 
+from typing import TYPE_CHECKING, List, Callable, Any
+if TYPE_CHECKING:
+    from UM.Job import Job
 
 ##  A thread pool and queue manager for Jobs.
 #
@@ -19,7 +22,7 @@ class JobQueue():
     #
     #   \param thread_count The amount of threads to use. Can be a positive integer or 'auto'.
     #                       When 'auto', the number of threads is based on the number of processors and cores on the machine.
-    def __init__(self, thread_count = "auto"): #pylint: disable=bad-whitespace
+    def __init__(self, thread_count: (str, int) = "auto"): #pylint: disable=bad-whitespace
         if JobQueue._instance is None:
             JobQueue._instance = self
         else:

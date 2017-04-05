@@ -71,13 +71,13 @@ class Message:
     #
     #   \param text The new text for the message. Please ensure that this text
     #   is internationalised.
-    def setText(self, text):
+    def setText(self, text: str):
         self._text = text
 
     ##  Returns the text in the message.
     #
     #   \return The text in the message.
-    def getText(self):
+    def getText(self) -> str:
         return self._text
 
     ##  Sets the maximum numerical value of the progress bar on the message.

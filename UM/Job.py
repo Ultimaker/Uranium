@@ -37,7 +37,7 @@ class Job:
     ##  Set the result of this job.
     #
     #   This should be called by run() to set the actual result of the Job.
-    def setResult(self, result):
+    def setResult(self, result: any):
         self._result = result
 
     ##  Set an exception that was thrown while the job was being executed.
@@ -46,7 +46,7 @@ class Job:
     #   to execute properly.
     #
     #   \param error \type{Exception} The exception to set.
-    def setError(self, error):
+    def setError(self, error: Exception):
         self._error = error
 
     ##  Start the job.
@@ -67,25 +67,25 @@ class Job:
     ##  Check whether the job is currently running.
     #
     #   \return \type{bool}
-    def isRunning(self):
+    def isRunning(self) -> bool:
         return self._running
 
     ##  Check whether the job has finished processing.
     #
     #   \return \type{bool}
-    def isFinished(self):
+    def isFinished(self) -> bool:
         return self._finished
 
     ##  Check whether the Job has encountered an error during execution.
     #
     #   \return \type{bool} True if an error was set, False if not.
-    def hasError(self):
+    def hasError(self) -> bool:
         return self._error is not None
 
     ##  Get the error that was encountered during execution.
     #
     #   \return \type{Exception} The error encountered during execution or None if there was no error.
-    def getError(self):
+    def getError(self) -> Exception:
         return self._error
 
     ##  Emitted when the job has finished processing.

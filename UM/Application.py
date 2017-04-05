@@ -24,18 +24,24 @@ from UM.Workspace.WorkspaceFileHandler import WorkspaceFileHandler
 
 import UM.Settings
 
+from typing import TYPE_CHECKING, List, Callable, Any
+if TYPE_CHECKING:
+    from UM.Settings.ContainerStack import ContainerStack
+    from UM.Backend import Backend
+    from UM.Extension import Extension
+
 ##  Central object responsible for running the main event loop and creating other central objects.
 #
 #   The Application object is a central object for accessing other important objects. It is also
 #   responsible for starting the main event loop. It is passed on to plugins so it can be easily
 #   used to access objects required for those plugins.
 @signalemitter
-class Application():
+class Application:
     ##  Init method
     #
     #   \param name \type{string} The name of the application.
     #   \param version \type{string} Version, formatted as major.minor.rev
-    def __init__(self, name, version, buildtype = "", **kwargs):
+    def __init__(self, name: str, version: str, build_type: str = "", **kwargs):
         if Application._instance != None:
             raise ValueError("Duplicate singleton creation")
 
@@ -45,7 +51,7 @@ class Application():
 
         self._application_name = name
         self._version = version
-        self._buildtype = buildtype
+        self._build_type = build_type
 
         os.putenv("UBUNTU_MENUPROXY", "0")  # For Ubuntu Unity this makes Qt use its own menu bar rather than pass it on to Unity.
 
@@ -58,6 +64,7 @@ class Application():
         Resources.addSearchPath(os.path.join(Application.getInstallPrefix(), "share", "uranium", "resources"))
         Resources.addSearchPath(os.path.join(Application.getInstallPrefix(), "Resources", "uranium", "resources"))
         Resources.addSearchPath(os.path.join(Application.getInstallPrefix(), "Resources", self.getApplicationName(), "resources"))
+
         if not hasattr(sys, "frozen"):
             Resources.addSearchPath(os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "resources"))
 
@@ -140,11 +147,11 @@ class Application():
 
     globalContainerStackChanged = Signal()
 
-    def setGlobalContainerStack(self, stack):
+    def setGlobalContainerStack(self, stack: "ContainerStack"):
         self._global_container_stack = stack
         self.globalContainerStackChanged.emit()
 
-    def getGlobalContainerStack(self):
+    def getGlobalContainerStack(self) -> "ContainerStack":
         return self._global_container_stack
 
     def hideMessage(self, message):
@@ -155,7 +162,7 @@ class Application():
 
     ##  Get the version of the application
     #   \returns version \type{string}
-    def getVersion(self):
+    def getVersion(self) -> str:
         return self._version
 
     @classmethod
@@ -164,38 +171,16 @@ class Application():
 
     ##  Get the buildtype of the application
     #   \returns version \type{string}
-    def getBuildType(self):
-        return self._buildtype
-
-    ##  Add a message to the visible message list so it will be displayed.
-    #   This should only be called by message object itself.
-    #   To show a message, simply create it and call its .show() function.
-    #   \param message \type{Message} message object
-    #   \sa Message::show()
-    #def showMessage(self, message):
-    #    with self._message_lock:
-    #        if message not in self._visible_messages:
-    #            self._visible_messages.append(message)
-    #            self.visibleMessageAdded.emit(message)
+    def getBuildType(self) -> str:
+        return self._build_type
 
     visibleMessageAdded = Signal()
-
-    ##  Remove a message from the visible message list so it will no longer be displayed.
-    #   This should only be called by message object itself.
-    #   in principle, this should only be called by the message itself (hide)
-    #   \param message \type{Message} message object
-    #   \sa Message::hide()
-    #def hideMessage(self, message):
-    #    with self._message_lock:
-    #        if message in self._visible_messages:
-    #            self._visible_messages.remove(message)
-    #            self.visibleMessageRemoved.emit(message)
 
     ##  Hide message by ID (as provided by built-in id function)
     #   \param message_id \type{long}
     def hideMessageById(self, message_id):
-        # If a user and Cura tries to close same message dialog simultaneously, message_id could become an empty
-        # string, and then Cura will raise an error when trying to do "int(message_id)".
+        # If a user and the application tries to close same message dialog simultaneously, message_id could become an empty
+        # string, and then the application will raise an error when trying to do "int(message_id)".
         # So we check the message_id here.
         if not message_id:
             return
@@ -220,7 +205,7 @@ class Application():
     def _loadPlugins(self):
         pass
 
-    def getCommandLineOption(self, name, default = None): #pylint: disable=bad-whitespace
+    def getCommandLineOption(self, name, default = None):
         if not self._parsed_command_line:
             self.parseCommandLine()
             Logger.log("d", "Command line options: %s", str(self._parsed_command_line))
@@ -229,7 +214,7 @@ class Application():
 
     ##  Get name of the application.
     #   \returns application_name \type{string}
-    def getApplicationName(self):
+    def getApplicationName(self) -> str:
         return self._application_name
 
     def getApplicationLanguage(self):
@@ -255,41 +240,41 @@ class Application():
 
     ##  Set the plugins that the application *must* have in order to function.
     #   \param plugin_names \type{list} List of strings with the names of the required plugins
-    def setRequiredPlugins(self, plugin_names):
+    def setRequiredPlugins(self, plugin_names: List[str]):
         self._required_plugins = plugin_names
 
     ##  Set the backend of the application (the program that does the heavy lifting).
     #   \param backend \type{Backend}
-    def setBackend(self, backend):
+    def setBackend(self, backend: "Backend"):
         self._backend = backend
 
     ##  Get the backend of the application (the program that does the heavy lifting).
     #   \returns Backend \type{Backend}
-    def getBackend(self):
+    def getBackend(self) -> "Backend":
         return self._backend
 
     ##  Get the PluginRegistry of this application.
     #   \returns PluginRegistry \type{PluginRegistry}
-    def getPluginRegistry(self):
+    def getPluginRegistry(self) -> PluginRegistry:
         return self._plugin_registry
 
     ##  Get the Controller of this application.
     #   \returns Controller \type{Controller}
-    def getController(self):
+    def getController(self) -> Controller:
         return self._controller
 
     ##  Get the MeshFileHandler of this application.
     #   \returns MeshFileHandler \type{MeshFileHandler}
-    def getMeshFileHandler(self):
+    def getMeshFileHandler(self) -> MeshFileHandler:
         return self._mesh_file_handler
 
-    def getWorkspaceFileHandler(self):
+    def getWorkspaceFileHandler(self) -> WorkspaceFileHandler:
         return self._workspace_file_handler
 
-    def getOperationStack(self):
+    def getOperationStack(self) -> OperationStack:
         return self._operation_stack
 
-    def getOutputDeviceManager(self):
+    def getOutputDeviceManager(self) -> OutputDeviceManager:
         return self._output_device_manager
 
     ##  Run the main event loop.
@@ -315,8 +300,8 @@ class Application():
     #   \param function The function to call.
     #   \param args The positional arguments to pass to the function.
     #   \param kwargs The keyword arguments to pass to the function.
-    def callLater(self, function, *args, **kwargs):
-        event = CallFunctionEvent(function, args, kwargs)
+    def callLater(self, func: Callable[[Any], Any], *args, **kwargs):
+        event = CallFunctionEvent(func, args, kwargs)
         self.functionEvent(event)
 
     ##  Get the application"s main thread.
@@ -349,10 +334,10 @@ class Application():
                             action="store_true", default=False,
                             help="Use an externally started backend instead of starting it automatically. This is a debug feature to make it possible to run the engine with debug options enabled.")
 
-    def addExtension(self, extension):
+    def addExtension(self, extension: "Extension"):
         self._extensions.append(extension)
 
-    def getExtensions(self):
+    def getExtensions(self) -> List["Extension"]:
         return self._extensions
 
     @staticmethod

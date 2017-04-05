@@ -3,7 +3,7 @@
 
 from UM.PluginObject import PluginObject
 import collections
-from typing import Optional
+from typing import Optional, Any, Callable, List
 
 
 ##  Base class for plugins that extend the functionality of Uranium.
@@ -18,7 +18,7 @@ class Extension(PluginObject):
     ##  Add an item to the sub-menu of the extension
     #   \param name \type{string}
     #   \param function \type{function}
-    def addMenuItem(self, name: str, func):
+    def addMenuItem(self, name: str, func: Callable[[], Any]):
         self._menu_function_dict[name] = func
 
     ##  Set name of the menu where all menu items are placed in
@@ -39,5 +39,5 @@ class Extension(PluginObject):
 
     ##  Get list of all menu item names
     #   \return \type{list}
-    def getMenuItemList(self):
+    def getMenuItemList(self) -> List[str]:
         return list(self._menu_function_dict.keys())
