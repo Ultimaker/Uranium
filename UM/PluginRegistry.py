@@ -81,15 +81,15 @@ class PluginRegistry(QObject):
         except OSError:
             # The directory is already there. This means the plugin is already installed.
             Logger.log("w", "The plugin was already installed. Unable to install it again!")
-            return {"status": "duplicate", "message": i18n_catalog.i18nc("@info:status", "Failed to install plugin from <filename>{0}</filename>:\n <message>{1}</message>", plugin_folder, "Plugin was already installed")}
+            return {"status": "duplicate", "message": i18n_catalog.i18nc("@info:status", "Failed to install plugin from <filename>{0}</filename>:\n<message>{1}</message>", plugin_folder, "Plugin was already installed")}
 
         try:
             with zipfile.ZipFile(plugin_path, "r") as zip_ref:
                 zip_ref.extractall(plugin_folder)
         except:  # Installing a new plugin should never crash the application.
             Logger.logException("d", "An exception occurred while installing plugin ")
-            
-            return {"status": "error", "message": i18n_catalog.i18nc("@info:status", "Failed to install plugin from <filename>{0}</filename>:\n <message>{1}</message>", plugin_folder, "Invalid plugin file")}
+            os.rmdir(plugin_folder)  # Clean up after ourselves.
+            return {"status": "error", "message": i18n_catalog.i18nc("@info:status", "Failed to install plugin from <filename>{0}</filename>:\n<message>{1}</message>", plugin_folder, "Invalid plugin file")}
 
         return {"status": "ok", "message": i18n_catalog.i18nc("@info:status", "The plugin has been installed.\n Please re-start the application to active the plugin.")}
 
