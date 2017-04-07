@@ -75,11 +75,14 @@ class PluginRegistry(QObject):
         plugin_id = os.path.splitext(os.path.basename(plugin_path))[0]
         plugin_folder = os.path.join(local_plugin_path, plugin_id)
 
-        # Ensure the local plugins directory exists
+        # Check if the local plugins directory exists
         try:
             os.makedirs(plugin_folder)
         except OSError:
-            pass
+            # The directory is already there. This means the plugin is already installed.
+            Logger.log("w", "The plugin was already installed. Unable to install it again!")
+            return
+
         try:
             with zipfile.ZipFile(plugin_path, "r") as zip_ref:
                 zip_ref.extractall(plugin_folder)
