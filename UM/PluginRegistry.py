@@ -3,14 +3,21 @@
 
 import imp
 import os
+import zipfile
 
 from UM.Preferences import Preferences
 from UM.PluginError import PluginNotFoundError, InvalidMetaDataError
 from UM.Logger import Logger
 from typing import Callable, Any, Optional, types, Dict, List
 
-from UM.PluginObject import PluginObject  # For type hinting
+from PyQt5.QtCore import QObject, pyqtSlot, QUrl, pyqtProperty
 
+from UM.Resources import Resources
+from UM.PluginObject import PluginObject  # For type hinting
+from UM.Platform import Platform
+
+from UM.i18n import i18nCatalog
+i18n_catalog = i18nCatalog("uranium")
 
 ##  A central object to dynamically load modules as plugins.
 #
@@ -21,11 +28,11 @@ from UM.PluginObject import PluginObject  # For type hinting
 #   For more details, see the [plugins] file.
 #
 #   [plugins]: docs/plugins.md
-class PluginRegistry:
+class PluginRegistry(QObject):
     APIVersion = 3
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent = None):
+        super().__init__(parent)
         self._plugins = {}  # type: Dict[str, types.ModuleType]
         self._plugin_objects = {}  # type: Dict[str, PluginObject]
         self._meta_data = {}  # type: Dict[str, Dict[str, any]]
@@ -34,11 +41,52 @@ class PluginRegistry:
         self._application = None
         self._active_plugins = []  # type: List[str]
 
+        self._supported_file_types = {"plugin": "Uranium Plugin"}
         preferences = Preferences.getInstance()
         preferences.addPreference("general/disabled_plugins", "")
         # The disabled_plugins is explicitly set to None. When actually loading the preferences, it's set to a list.
         # This way we can see the difference between no list and an empty one.
         self._disabled_plugins = None  # type: Optional[List[str]]
+
+    @pyqtProperty("QStringList", constant=True)
+    def supportedPluginExtensions(self):
+        file_types = []
+        all_types = []
+
+        if Platform.isLinux():
+            for ext, desc in self._supported_file_types.items():
+                file_types.append("{0} (*.{1} *.{2})".format(desc, ext.lower(), ext.upper()))
+                all_types.append("*.{0} *.{1}".format(ext.lower(), ext.upper()))
+        else:
+            for ext, desc in self._supported_file_types.items():
+                file_types.append("{0} (*.{1})".format(desc, ext))
+                all_types.append("*.{0}".format(ext))
+
+        file_types.sort()
+        file_types.insert(0, i18n_catalog.i18nc("@item:inlistbox", "All Supported Types ({0})", " ".join(all_types)))
+        file_types.append(i18n_catalog.i18nc("@item:inlistbox", "All Files (*)"))
+        print(file_types)
+        return file_types
+
+    @pyqtSlot(str)
+    def installPlugin(self, plugin_path: str):
+        plugin_path = QUrl(plugin_path).toLocalFile()
+        Logger.log("d", "Attempting to install a new plugin %s", plugin_path)
+        local_plugin_path = os.path.join(Resources.getStoragePath(Resources.Resources), "plugins")
+        plugin_id = os.path.splitext(os.path.basename(plugin_path))[0]
+        plugin_folder = os.path.join(local_plugin_path, plugin_id)
+
+        # Ensure the local plugins directory exists
+        try:
+            os.makedirs(plugin_folder)
+        except OSError:
+            pass
+        try:
+            with zipfile.ZipFile(plugin_path, "r") as zip_ref:
+                zip_ref.extractall(plugin_folder)
+        except:
+            Logger.logException("d", "An exception occurred while installing plugin ")
+            pass  # Installing a new plugin should never crash the application.
 
     ##  Check if all required plugins are loaded.
     #   \param required_plugins \type{list} List of ids of plugins that ''must'' be activated.

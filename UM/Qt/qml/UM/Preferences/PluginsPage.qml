@@ -5,6 +5,7 @@ import QtQuick 2.1
 import QtQuick.Controls 1.1
 import QtQuick.Window 2.1
 import QtQuick.Controls.Styles 1.1
+import QtQuick.Dialogs 1.2
 
 import UM 1.0 as UM
 
@@ -20,14 +21,20 @@ PreferencesPage
     contents: Item
     {
         anchors.fill: parent
+        Button
+        {
+            id: installButton
+            onClicked: openDialog.open()
+            text: catalog.i18nc("@action:button", "Install new plugin")
 
+        }
         ScrollView
         {
             anchors
             {
                 left: parent.left
                 right: parent.right
-                top: parent.top
+                top: installButton.bottom
                 bottom: pluginsNote.top
             }
             frameVisible: true
@@ -112,6 +119,24 @@ PreferencesPage
                         about_window.visibility = 1
                     }
                 }
+            }
+        }
+
+        FileDialog
+        {
+            id: openDialog;
+
+            title: catalog.i18nc("@title:window", "Open file(s)")
+            modality: UM.Application.platform == "linux" ? Qt.NonModal : Qt.WindowModal;
+            nameFilters: PluginRegistry.supportedPluginExtensions
+            onAccepted:
+            {
+                PluginRegistry.installPlugin(fileUrl)
+
+            }
+            onRejected:
+            {
+                console.log("Canceled")
             }
         }
 

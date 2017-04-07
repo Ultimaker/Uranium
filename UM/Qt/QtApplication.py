@@ -30,7 +30,7 @@ import UM.VersionUpgradeManager
 from UM.Mesh.ReadMeshJob import ReadMeshJob
 
 import UM.Qt.Bindings.Theme
-
+from UM.PluginRegistry import PluginRegistry
 
 # Raised when we try to use an unsupported version of a dependency.
 class UnsupportedVersionError(Exception):
@@ -214,7 +214,7 @@ class QtApplication(QApplication, Application):
         return self._shutting_down
 
     def registerObjects(self, engine):
-        pass
+        engine.rootContext().setContextProperty("PluginRegistry", PluginRegistry.getInstance())
 
     def getRenderer(self):
         if not self._renderer:
