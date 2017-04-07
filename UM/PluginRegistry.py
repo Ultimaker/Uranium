@@ -65,7 +65,6 @@ class PluginRegistry(QObject):
         file_types.sort()
         file_types.insert(0, i18n_catalog.i18nc("@item:inlistbox", "All Supported Types ({0})", " ".join(all_types)))
         file_types.append(i18n_catalog.i18nc("@item:inlistbox", "All Files (*)"))
-        print(file_types)
         return file_types
 
     @pyqtSlot(str)
