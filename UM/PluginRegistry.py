@@ -67,7 +67,7 @@ class PluginRegistry(QObject):
         file_types.append(i18n_catalog.i18nc("@item:inlistbox", "All Files (*)"))
         return file_types
 
-    @pyqtSlot(str)
+    @pyqtSlot(str, result="QVariantMap")
     def installPlugin(self, plugin_path: str):
         plugin_path = QUrl(plugin_path).toLocalFile()
         Logger.log("d", "Attempting to install a new plugin %s", plugin_path)
@@ -81,14 +81,17 @@ class PluginRegistry(QObject):
         except OSError:
             # The directory is already there. This means the plugin is already installed.
             Logger.log("w", "The plugin was already installed. Unable to install it again!")
-            return
+            return {"status": "duplicate", "message": i18n_catalog.i18nc("@info:status", "Failed to install plugin from <filename>{0}</filename>:\n <message>{1}</message>", plugin_folder, "Plugin was already installed")}
 
         try:
             with zipfile.ZipFile(plugin_path, "r") as zip_ref:
                 zip_ref.extractall(plugin_folder)
-        except:
+        except:  # Installing a new plugin should never crash the application.
             Logger.logException("d", "An exception occurred while installing plugin ")
-            pass  # Installing a new plugin should never crash the application.
+            
+            return {"status": "error", "message": i18n_catalog.i18nc("@info:status", "Failed to install plugin from <filename>{0}</filename>:\n <message>{1}</message>", plugin_folder, "Invalid plugin file")}
+
+        return {"status": "ok", "message": i18n_catalog.i18nc("@info:status", "The plugin has been installed.\n Please re-start the application to active the plugin.")}
 
     ##  Check if all required plugins are loaded.
     #   \param required_plugins \type{list} List of ids of plugins that ''must'' be activated.

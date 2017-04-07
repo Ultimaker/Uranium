@@ -122,6 +122,14 @@ PreferencesPage
             }
         }
 
+        MessageDialog
+        {
+            id: messageDialog
+            title: catalog.i18nc("@window:title", "Install Plugin");
+            standardButtons: StandardButton.Ok
+            modality: Qt.ApplicationModal
+        }
+
         FileDialog
         {
             id: openDialog;
@@ -131,7 +139,22 @@ PreferencesPage
             nameFilters: PluginRegistry.supportedPluginExtensions
             onAccepted:
             {
-                PluginRegistry.installPlugin(fileUrl)
+                var result = PluginRegistry.installPlugin(fileUrl)
+
+                messageDialog.text = result.message
+                if(result.status == "ok")
+                {
+                    messageDialog.icon = StandardIcon.Information
+                }
+                else if(result.status == "duplicate")
+                {
+                    messageDialog.icon = StandardIcon.Warning
+                }
+                else
+                {
+                    messageDialog.icon = StandardIcon.Critical
+                }
+                messageDialog.open()
 
             }
             onRejected:
