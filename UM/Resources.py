@@ -4,7 +4,10 @@
 import os
 import os.path
 import platform
+import shutil
 from typing import List
+
+from UM.Logger import Logger
 
 
 class ResourceTypeError(Exception):
@@ -264,6 +267,62 @@ class Resources:
         return files
 
     @classmethod
+    def getConfigStorageRootPath(cls):
+        # Returns the path where we store different versions of Cura configurations
+        config_path = None
+        if platform.system() == "Windows":
+            config_path = os.getenv("APPDATA")
+        elif platform.system() == "Darwin":
+            config_path = os.path.expanduser("~/Library/Application Support")
+        elif platform.system() == "Linux":
+            try:
+                config_path = os.environ["XDG_CONFIG_HOME"]
+            except KeyError:
+                config_path = os.path.expanduser("~/.config")
+        else:
+            config_path = "."
+
+        return config_path
+
+    @classmethod
+    def getPossibleConfigStorageRootPathList(cls):
+        # Returns all possible root paths for storing Cura configurations (in old and new versions)
+        config_root_list = [Resources.getConfigStorageRootPath()]
+        if platform.system() == "Windows":
+            # it used to be in LOCALAPPDATA on Windows
+            config_root_list.append(os.getenv("LOCALAPPDATA"))
+
+        config_root_list = [os.path.join(n, cls.ApplicationIdentifier) for n in config_root_list]
+        return config_root_list
+
+    @classmethod
+    def getDataStorageRootPath(cls):
+        # Returns the path where we store different versions of Cura data
+        data_path = None
+        if platform.system() == "Linux":
+            try:
+                data_path = os.environ["XDG_DATA_HOME"]
+            except KeyError:
+                data_path = os.path.expanduser("~/.local/share")
+        return data_path
+
+    @classmethod
+    def getCacheStorageRootPath(cls):
+        # Returns the path where we store different versions of Cura configurations
+        cache_path = None
+        if platform.system() == "Windows":
+            cache_path = os.getenv("LOCALAPPDATA")
+        elif platform.system() == "Darwin":
+            cache_path = None
+        elif platform.system() == "Linux":
+            try:
+                cache_path = os.environ["XDG_CACHE_HOME"]
+            except KeyError:
+                cache_path = os.path.expanduser("~/.cache")
+
+        return cache_path
+
+    @classmethod
     def __initializeStoragePaths(cls):
         # use nested structure: cura/<version>/...
         if cls.ApplicationVersion == "master" or cls.ApplicationVersion == "unknown":
@@ -273,45 +332,114 @@ class Resources:
             version = Version(cls.ApplicationVersion)
             storage_dir_name = os.path.join(cls.ApplicationIdentifier, "%s.%s" % (version.getMajor(), version.getMinor()))
 
-        if platform.system() == "Windows":
-            cls.__config_storage_path = os.path.join(os.getenv("APPDATA"), storage_dir_name)
-            # cache is machine-specific so we put it in "LOCAL"
-            cls.__cache_storage_path = os.path.join(os.getenv("LOCALAPPDATA"), storage_dir_name, "cache")
-        elif platform.system() == "Darwin":
-            cls.__config_storage_path = os.path.join(os.path.expanduser("~/Library/Application Support"), storage_dir_name)
-            # For backward compatibility, support loading files from the old storage location
-            cls.addSearchPath(os.path.expanduser("~/.{0}".format(storage_dir_name)))
-        elif platform.system() == "Linux":
-            xdg_config_home = ""
-            try:
-                xdg_config_home = os.environ["XDG_CONFIG_HOME"]
-            except KeyError:
-                xdg_config_home = os.path.expanduser("~/.config")
-            cls.__config_storage_path = os.path.join(xdg_config_home, storage_dir_name)
+        # config is saved in "<CONFIG_ROOT>/<storage_dir_name>"
+        cls.__config_storage_path = os.path.join(Resources.getConfigStorageRootPath(), storage_dir_name)
 
-            xdg_data_home = ""
-            try:
-                xdg_data_home = os.environ["XDG_DATA_HOME"]
-            except KeyError:
-                xdg_data_home = os.path.expanduser("~/.local/share")
-            cls.__data_storage_path = os.path.join(xdg_data_home, storage_dir_name)
+        # data is saved in
+        #  - on Linux: "<DATA_ROOT>/<storage_dir_name>"
+        #  - on other: "<CONFIG_DIR>" (in the config directory)
+        data_root_path = Resources.getDataStorageRootPath()
+        cls.__data_storage_path = cls.__config_storage_path if data_root_path is None else \
+            os.path.join(data_root_path, storage_dir_name)
 
-            xdg_cache_home = ""
-            try:
-                xdg_cache_home = os.environ["XDG_CACHE_HOME"]
-            except KeyError:
-                xdg_cache_home = os.path.expanduser("~/.cache")
-            cls.__cache_storage_path = os.path.join(xdg_cache_home, storage_dir_name)
-        else:
-            cls.__config_storage_path = "."
-
-        if not cls.__data_storage_path:
-            cls.__data_storage_path = cls.__config_storage_path
-
-        if not cls.__cache_storage_path:
+        # cache is saved in
+        #  - on Linux:   "<CACHE_DIR>/<storage_dir_name>"
+        #  - on Windows: "<CACHE_DIR>/<storage_dir_name>/cache"
+        #  - on Mac:     "<CONFIG_DIR>/cache" (in the config directory)
+        cache_root_path = Resources.getCacheStorageRootPath()
+        if cache_root_path is None:
             cls.__cache_storage_path = os.path.join(cls.__config_storage_path, "cache")
+        else:
+            cls.__cache_storage_path = os.path.join(cache_root_path, storage_dir_name)
+            if platform.system() == "Windows":
+                cls.__cache_storage_path = os.path.join(cls.__cache_storage_path, "cache")
+
+        if not os.path.exists(cls.__config_storage_path):
+            cls._copyLatestDirsIfPresent()
 
         cls.__paths.insert(0, cls.__data_storage_path)
+
+    ##  Copies the directories of the latest version on this machine if present, so the upgrade will use the copies
+    #   as the base for upgrade
+    @classmethod
+    def _copyLatestDirsIfPresent(cls):
+        # paths for the version we are running right now
+        this_version_config_path = Resources.getConfigStoragePath()
+        this_version_data_path = Resources.getDataStoragePath()
+
+        # find the latest existing directories on this machine
+        config_root_path_list = Resources.getPossibleConfigStorageRootPathList()
+        data_root_path = Resources.getDataStorageRootPath()
+
+        latest_config_path = Resources._findLatestCuraDirInPaths(config_root_path_list)
+        if not latest_config_path:
+            # no earlier cura dirs found, do nothing
+            return
+
+        if latest_config_path == this_version_config_path:
+            # if the directory found matches the current version, do nothing
+            return
+
+        # copy "config" to the new folder
+        config_path = latest_config_path
+        Logger.log("i", "Copying config directory from '%s' to '%s'", config_path, this_version_config_path)
+        shutil.copytree(config_path, this_version_config_path)
+
+        # if "data" is a different directory, copy it too.
+        if data_root_path is not None:
+            data_path = os.path.join(data_root_path, os.path.basename(latest_config_path))
+            if os.path.exists(data_path):
+                Logger.log("i", "Copying data directory from '%s' to '%s'", data_path, this_version_data_path)
+                shutil.copytree(data_path, this_version_data_path)
+
+        # remove "cache" if we copied it together with config
+        suspected_cache_path = os.path.join(this_version_config_path, "cache")
+        if os.path.exists(suspected_cache_path):
+            shutil.rmtree(suspected_cache_path)
+
+    @classmethod
+    def _findLatestCuraDirInPaths(cls, search_path_list):
+        # finds the latest Cura directory in the given search path list.
+        latest_cura_dir_path = None
+        for search_path in search_path_list:
+            if not os.path.exists(search_path):
+                continue
+            # first check if it is an older Cura version (< 2.6) dir
+            if Resources._isConfigDirForCuraBefore26(search_path):
+                latest_cura_dir_path = search_path
+                break
+
+            cura_dir_name_list = next(os.walk(search_path))[1]
+
+            if cura_dir_name_list:
+                cura_dir_name_list = sorted(cura_dir_name_list, reverse=True)
+                # for now we use alphabetically ordering to determine the latest version (excluding master)
+                for dir_name in cura_dir_name_list:
+                    if not dir_name.endswith("master"):
+                        latest_cura_dir_path = os.path.join(search_path, dir_name)
+                        break
+            if latest_cura_dir_path is not None:
+                break
+        return latest_cura_dir_path
+
+    @classmethod
+    def _isConfigDirForCuraBefore26(cls, check_path):
+        # checks if the given path is (probably) a valid Cura directory for a version earlier than 2.6
+        dirs, files = next(os.walk(check_path))[1:]
+        valid_dir_names = [dn for dn in dirs if dn in Resources.__DIRS_BEFORE_CURA_26]
+        valid_file_names = [fn for fn in files if not fn.endswith('.log')]  # do not include log files
+
+        return valid_dir_names and valid_file_names
+
+    # all directory names Cura 2.6
+    __DIRS_BEFORE_CURA_26 = ["extruders",
+                             "machine_instances",
+                             "materials",
+                             "plugins",
+                             "quality",
+                             "user",
+                             "variants",
+                             ]  # type: List[str]
 
     __config_storage_path = None    # type: str
     __data_storage_path = None      # type: str
