@@ -3,7 +3,8 @@
 
 import ast
 import math # Imported here so it can be used easily by the setting functions.
-from typing import Any, Dict
+from typing import Any, Dict, Callable, Set, FrozenSet, NamedTuple
+
 from UM.Settings.Interfaces import ContainerInterface
 from UM.Logger import Logger
 
@@ -14,7 +15,7 @@ if MYPY:
 class IllegalMethodError(Exception):
     pass
 
-def _debug_value(value):
+def _debug_value(value: Any) -> Any:
     Logger.log("d", "Setting Function: %s", value)
     return value
 
@@ -88,8 +89,8 @@ class SettingFunction:
     ##  Retrieve a set of the keys (strings) of all the settings used in this function.
     #
     #   \return A set of the keys (strings) of all the settings used in this functions.
-    def getUsedSettingKeys(self):
-        return self._settings
+    def getUsedSettingKeys(self) -> FrozenSet[str]:
+        return self._used_keys
 
     def __str__(self) -> str:
         return "={0}".format(self._code)
@@ -115,7 +116,7 @@ class SettingFunction:
     #   \param name What identifier to use in the executed code.
     #   \param operator A callable that implements the actual logic to execute.
     @classmethod
-    def registerOperator(cls, name: str, operator) -> None:
+    def registerOperator(cls, name: str, operator: Callable) -> None:
         cls.__operators[name] = operator
         _SettingExpressionVisitor._knownNames.append(name)
 
@@ -133,14 +134,14 @@ class _SettingExpressionVisitor(ast.NodeVisitor):
         super().visit(node)
         return self.names
 
-    def visit_Name(self, node): # [CodeStyle: ast.NodeVisitor requires this function name]
+    def visit_Name(self, node: ast.AST) -> None: # [CodeStyle: ast.NodeVisitor requires this function name]
         if node.id in self._blacklist:
             raise IllegalMethodError(node.id)
 
         if node.id not in self._knownNames and node.id not in __builtins__:
             self.names.append(node.id)
 
-    def visit_Str(self, node):
+    def visit_Str(self, node: ast.AST) -> None:
         if node.s not in self._knownNames and node.s not in __builtins__:
             self.names.append(node.s)
 
