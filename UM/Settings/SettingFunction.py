@@ -132,7 +132,12 @@ class SettingFunction:
 
 _VisitResult = NamedTuple("_VisitResult", [("values", Set[str]), ("keys", Set[str])])
 
-# Helper class used to analyze a parsed function
+# Helper class used to analyze a parsed function.
+#
+# It walks a Python AST generated from a Python expression. It will analyze the AST and
+# produce two sets, one set of "used keys" and one set of "used values". "used keys" are
+# setting keys (strings) that are used by the expression, whereas "used values" are
+# actual variable references that are needed for the function to be executed.
 class _SettingExpressionVisitor(ast.NodeVisitor):
     def __init__(self):
         super().__init__()
