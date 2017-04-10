@@ -118,7 +118,7 @@ class SettingFunction:
     @classmethod
     def registerOperator(cls, name: str, operator: Callable) -> None:
         cls.__operators[name] = operator
-        _SettingExpressionVisitor._knownNames.append(name)
+        _SettingExpressionVisitor._knownNames.add(name)
 
     __operators = {
         "debug": _debug_value
@@ -145,16 +145,16 @@ class _SettingExpressionVisitor(ast.NodeVisitor):
         if node.s not in self._knownNames and node.s not in __builtins__:
             self.names.append(node.s)
 
-    _knownNames = [
+    _knownNames = {
         "math",
         "max",
         "min",
         "debug",
         "sum",
         "len"
-    ]
+    }
 
-    _blacklist = [
+    _blacklist = {
         "sys",
         "os",
         "import",
@@ -162,4 +162,4 @@ class _SettingExpressionVisitor(ast.NodeVisitor):
         "eval",
         "exec",
         "subprocess",
-    ]
+    }
