@@ -31,14 +31,19 @@ class SettingFunction:
         self._code = code
 
         #  Keys of all settings that are referenced to in this function.
-        self._settings = frozenset()  # type: frozenset[str]
+        self._used_keys = frozenset()  # type: frozenset[str]
+        self._used_values = frozenset()
 
         self._compiled = None
         self._valid = False
 
         try:
             tree = ast.parse(self._code, "eval")
-            self._settings = frozenset(_SettingExpressionVisitor().visit(tree))
+
+            result = _SettingExpressionVisitor().visit(tree)
+            self._used_keys = frozenset(result.keys)
+            self._used_values = frozenset(result.values)
+
             self._compiled = compile(self._code, repr(self), "eval")
             self._valid = True
         except (SyntaxError, TypeError) as e:
@@ -56,8 +61,8 @@ class SettingFunction:
         if not self._valid:
             return None
 
-        locals = { }    # type: Dict[str, Any]
-        for name in self._settings:
+        locals = {} # type: Dict[str, Any]
+        for name in self._used_values:
             value = value_provider.getProperty(name, "value")
             if value is None:
                 continue
@@ -124,26 +129,31 @@ class SettingFunction:
         "debug": _debug_value
     }
 
+
+_VisitResult = NamedTuple("_VisitResult", [("values", Set[str]), ("keys", Set[str])])
+
 # Helper class used to analyze a parsed function
 class _SettingExpressionVisitor(ast.NodeVisitor):
     def __init__(self):
         super().__init__()
-        self.names = []
+        self.values = set()
+        self.keys = set()
 
-    def visit(self, node):
+    def visit(self, node: ast.AST) -> _VisitResult:
         super().visit(node)
-        return self.names
+        return _VisitResult(values = self.values, keys = self.keys)
 
     def visit_Name(self, node: ast.AST) -> None: # [CodeStyle: ast.NodeVisitor requires this function name]
         if node.id in self._blacklist:
             raise IllegalMethodError(node.id)
 
         if node.id not in self._knownNames and node.id not in __builtins__:
-            self.names.append(node.id)
+            self.values.add(node.id)
+            self.keys.add(node.id)
 
     def visit_Str(self, node: ast.AST) -> None:
         if node.s not in self._knownNames and node.s not in __builtins__:
-            self.names.append(node.s)
+            self.keys.add(node.s)
 
     _knownNames = {
         "math",
