@@ -293,6 +293,8 @@ class Resources:
         if Platform.isWindows():
             # it used to be in LOCALAPPDATA on Windows
             config_root_list.append(os.getenv("LOCALAPPDATA"))
+        elif Platform.isOSX():
+            config_root_list.append(os.path.expanduser("~"))
 
         config_root_list = [os.path.join(n, cls.ApplicationIdentifier) for n in config_root_list]
         return config_root_list
