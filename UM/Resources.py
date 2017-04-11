@@ -9,6 +9,7 @@ import tempfile
 from typing import List
 
 from UM.Logger import Logger
+from UM.Platform import Platform
 
 
 class ResourceTypeError(Exception):
@@ -271,11 +272,11 @@ class Resources:
     def getConfigStorageRootPath(cls):
         # Returns the path where we store different versions of app configurations
         config_path = None
-        if platform.system() == "Windows":
+        if Platform.isWindows():
             config_path = os.getenv("APPDATA")
-        elif platform.system() == "Darwin":
+        elif Platform.isOSX():
             config_path = os.path.expanduser("~/Library/Application Support")
-        elif platform.system() == "Linux":
+        elif Platform.isLinux():
             try:
                 config_path = os.environ["XDG_CONFIG_HOME"]
             except KeyError:
@@ -289,7 +290,7 @@ class Resources:
     def getPossibleConfigStorageRootPathList(cls):
         # Returns all possible root paths for storing app configurations (in old and new versions)
         config_root_list = [Resources.getConfigStorageRootPath()]
-        if platform.system() == "Windows":
+        if Platform.isWindows():
             # it used to be in LOCALAPPDATA on Windows
             config_root_list.append(os.getenv("LOCALAPPDATA"))
 
@@ -300,7 +301,7 @@ class Resources:
     def getDataStorageRootPath(cls):
         # Returns the path where we store different versions of app data
         data_path = None
-        if platform.system() == "Linux":
+        if Platform.isLinux():
             try:
                 data_path = os.environ["XDG_DATA_HOME"]
             except KeyError:
@@ -311,11 +312,11 @@ class Resources:
     def getCacheStorageRootPath(cls):
         # Returns the path where we store different versions of app configurations
         cache_path = None
-        if platform.system() == "Windows":
+        if Platform.isWindows():
             cache_path = os.getenv("LOCALAPPDATA")
-        elif platform.system() == "Darwin":
+        elif Platform.isOSX():
             cache_path = None
-        elif platform.system() == "Linux":
+        elif Platform.isLinux():
             try:
                 cache_path = os.environ["XDG_CACHE_HOME"]
             except KeyError:
@@ -352,7 +353,7 @@ class Resources:
             cls.__cache_storage_path = os.path.join(cls.__config_storage_path, "cache")
         else:
             cls.__cache_storage_path = os.path.join(cache_root_path, storage_dir_name)
-            if platform.system() == "Windows":
+            if Platform.isWindows():
                 cls.__cache_storage_path = os.path.join(cls.__cache_storage_path, "cache")
 
         if not os.path.exists(cls.__config_storage_path):
