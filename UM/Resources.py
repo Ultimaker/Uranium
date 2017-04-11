@@ -300,6 +300,19 @@ class Resources:
         return config_root_list
 
     @classmethod
+    def _getPossibleDataStorageRootPathList(cls):
+        # Returns all possible root paths for storing app configurations (in old and new versions)
+        data_root_list = [Resources._getDataStorageRootPath()]
+        if Platform.isWindows():
+            # it used to be in LOCALAPPDATA on Windows
+            data_root_list.append(os.getenv("LOCALAPPDATA"))
+        elif Platform.isOSX():
+            data_root_list.append(os.path.expanduser("~"))
+
+        data_root_list = [os.path.join(n, cls.ApplicationIdentifier) for n in data_root_list]
+        return data_root_list
+
+    @classmethod
     def _getDataStorageRootPath(cls):
         # Returns the path where we store different versions of app data
         data_path = None
@@ -328,6 +341,7 @@ class Resources:
 
     @classmethod
     def __initializeStoragePaths(cls):
+        Logger.log("d", "Initializing storage paths")
         # use nested structure: <app-name>/<version>/...
         if cls.ApplicationVersion == "master" or cls.ApplicationVersion == "unknown":
             storage_dir_name = os.path.join(cls.ApplicationIdentifier, cls.ApplicationVersion)
@@ -338,6 +352,8 @@ class Resources:
 
         # config is saved in "<CONFIG_ROOT>/<storage_dir_name>"
         cls.__config_storage_path = os.path.join(Resources._getConfigStorageRootPath(), storage_dir_name)
+        Logger.log("d", "Config storage path is %s", cls.__config_storage_path)
+
 
         # data is saved in
         #  - on Linux: "<DATA_ROOT>/<storage_dir_name>"
@@ -345,7 +361,7 @@ class Resources:
         data_root_path = Resources._getDataStorageRootPath()
         cls.__data_storage_path = cls.__config_storage_path if data_root_path is None else \
             os.path.join(data_root_path, storage_dir_name)
-
+        Logger.log("d", "Data storage path is %s", cls.__data_storage_path)
         # cache is saved in
         #  - on Linux:   "<CACHE_DIR>/<storage_dir_name>"
         #  - on Windows: "<CACHE_DIR>/<storage_dir_name>/cache"
@@ -357,7 +373,7 @@ class Resources:
             cls.__cache_storage_path = os.path.join(cache_root_path, storage_dir_name)
             if Platform.isWindows():
                 cls.__cache_storage_path = os.path.join(cls.__cache_storage_path, "cache")
-
+        Logger.log("d", "Cache storage path is %s", cls.__cache_storage_path)
         if not os.path.exists(cls.__config_storage_path):
             cls._copyLatestDirsIfPresent()
 
@@ -371,11 +387,17 @@ class Resources:
         this_version_config_path = Resources.getConfigStoragePath()
         this_version_data_path = Resources.getDataStoragePath()
 
+        Logger.log("d", "Setting up new paths, either because this is a new install or a upgrade.")
+
         # find the latest existing directories on this machine
         config_root_path_list = Resources._getPossibleConfigStorageRootPathList()
-        data_root_path = Resources._getDataStorageRootPath()
+        data_root_path_list = Resources._getPossibleDataStorageRootPathList()
 
-        latest_config_path = Resources._findLatestStorageDirInPaths(config_root_path_list)
+        Logger.log("d", "Found config: %s and data: %s", config_root_path_list, data_root_path_list)
+
+        latest_data_path = Resources._findLatestStorageDirInPaths(data_root_path_list)
+        latest_config_path = Resources._findLatestConfigDirInPaths(config_root_path_list)
+        Logger.log("d", "Latest config path: %s and latest data path: %s", latest_config_path, latest_data_path)
         if not latest_config_path:
             # no earlier storage dirs found, do nothing
             return
@@ -399,16 +421,38 @@ class Resources:
         _copyDirToDirViaTempDir(config_path, this_version_config_path)
 
         # if "data" is a different directory, copy it too.
-        if data_root_path is not None:
-            data_path = os.path.join(data_root_path, os.path.basename(latest_config_path))
-            if os.path.exists(data_path):
-                Logger.log("i", "Copying data directory from '%s' to '%s'", data_path, this_version_data_path)
-                _copyDirToDirViaTempDir(data_path, this_version_data_path)
+        if latest_data_path is not None:
+            if os.path.exists(latest_data_path):
+                Logger.log("i", "Copying data directory from '%s' to '%s'", latest_data_path, this_version_data_path)
+                _copyDirToDirViaTempDir(latest_data_path, this_version_data_path)
 
         # remove "cache" if we copied it together with config
         suspected_cache_path = os.path.join(this_version_config_path, "cache")
         if os.path.exists(suspected_cache_path):
             shutil.rmtree(suspected_cache_path)
+
+    @classmethod
+    def _findLatestConfigDirInPaths(cls, search_path_list):
+        latest_config_path = None
+        for search_path in search_path_list:
+            if not os.path.exists(search_path):
+                continue
+
+            if Resources._isNonVersionedConfigDir(search_path):
+                latest_config_path = search_path
+                break
+            storage_dir_name_list = next(os.walk(search_path))[1]
+
+            if storage_dir_name_list:
+                storage_dir_name_list = sorted(storage_dir_name_list, reverse=True)
+                # for now we use alphabetically ordering to determine the latest version (excluding master)
+                for dir_name in storage_dir_name_list:
+                    if not dir_name.endswith("master"):
+                        latest_config_path = os.path.join(search_path, dir_name)
+                        break
+            if latest_config_path is not None:
+                break
+        return latest_config_path
 
     @classmethod
     def _findLatestStorageDirInPaths(cls, search_path_list):
@@ -418,7 +462,7 @@ class Resources:
             if not os.path.exists(search_path):
                 continue
             # first check if it is an older application version dir
-            if Resources._isNonVersionedConfigDir(search_path):
+            if Resources._isNonVersionedDataDir(search_path):
                 latest_storage_dir_path = search_path
                 break
 
@@ -428,7 +472,7 @@ class Resources:
                 storage_dir_name_list = sorted(storage_dir_name_list, reverse=True)
                 # for now we use alphabetically ordering to determine the latest version (excluding master)
                 for dir_name in storage_dir_name_list:
-                    if not dir_name.endswith("master"):
+                    if not dir_name.endswith("master") and dir_name not in Resources.__expected_dir_names_in_data:
                         latest_storage_dir_path = os.path.join(search_path, dir_name)
                         break
             if latest_storage_dir_path is not None:
@@ -436,22 +480,27 @@ class Resources:
         return latest_storage_dir_path
 
     @classmethod
-    def _isNonVersionedConfigDir(cls, check_path):
+    def _isNonVersionedDataDir(cls, check_path):
         # checks if the given path is (probably) a valid app directory for a version earlier than 2.6
-        if not cls.__expected_dir_names_in_config:
+        if not cls.__expected_dir_names_in_data:
             return True
 
         dirs, files = next(os.walk(check_path))[1:]
-        valid_dir_names = [dn for dn in dirs if dn in Resources.__expected_dir_names_in_config]
-        valid_file_names = [fn for fn in files if not fn.endswith('.log')]  # do not include log files
-
-        return valid_dir_names and valid_file_names
+        valid_dir_names = [dn for dn in dirs if dn in Resources.__expected_dir_names_in_data]
+        return valid_dir_names
 
     @classmethod
-    def addExpectedDirNameInConfig(cls, dir_name):
-        cls.__expected_dir_names_in_config.append(dir_name)
+    def _isNonVersionedConfigDir(cls, check_path):
+        dirs, files = next(os.walk(check_path))[1:]
+        valid_file_names = [fn for fn in files if fn.endswith(".cfg")]
 
-    __expected_dir_names_in_config = []  # type: List[str]
+        return bool(valid_file_names)
+
+    @classmethod
+    def addExpectedDirNameInData(cls, dir_name):
+        cls.__expected_dir_names_in_data.append(dir_name)
+
+    __expected_dir_names_in_data = []  # type: List[str]
 
     __config_storage_path = None    # type: str
     __data_storage_path = None      # type: str

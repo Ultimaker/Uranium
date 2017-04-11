@@ -15,6 +15,7 @@ import UM.MimeTypeDatabase #To know how to save the resulting files.
 
 catalogue = UM.i18n.i18nCatalog("uranium")
 
+
 ##  File that needs upgrading, with all the required info to upgrade it.
 #
 #   Fields are:
@@ -24,6 +25,7 @@ catalogue = UM.i18n.i18nCatalog("uranium")
 #     storage path.
 #   - configuration_type: The configuration type of the file before upgrading.
 UpgradeTask = collections.namedtuple("UpgradeTask", ["storage_path", "file_name", "configuration_type"])
+
 
 ##  Regulates the upgrading of configuration from one application version to the
 #   next.
