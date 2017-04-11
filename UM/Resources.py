@@ -268,7 +268,7 @@ class Resources:
 
     @classmethod
     def getConfigStorageRootPath(cls):
-        # Returns the path where we store different versions of Cura configurations
+        # Returns the path where we store different versions of app configurations
         config_path = None
         if platform.system() == "Windows":
             config_path = os.getenv("APPDATA")
@@ -286,7 +286,7 @@ class Resources:
 
     @classmethod
     def getPossibleConfigStorageRootPathList(cls):
-        # Returns all possible root paths for storing Cura configurations (in old and new versions)
+        # Returns all possible root paths for storing app configurations (in old and new versions)
         config_root_list = [Resources.getConfigStorageRootPath()]
         if platform.system() == "Windows":
             # it used to be in LOCALAPPDATA on Windows
@@ -297,7 +297,7 @@ class Resources:
 
     @classmethod
     def getDataStorageRootPath(cls):
-        # Returns the path where we store different versions of Cura data
+        # Returns the path where we store different versions of app data
         data_path = None
         if platform.system() == "Linux":
             try:
@@ -308,7 +308,7 @@ class Resources:
 
     @classmethod
     def getCacheStorageRootPath(cls):
-        # Returns the path where we store different versions of Cura configurations
+        # Returns the path where we store different versions of app configurations
         cache_path = None
         if platform.system() == "Windows":
             cache_path = os.getenv("LOCALAPPDATA")
@@ -324,7 +324,7 @@ class Resources:
 
     @classmethod
     def __initializeStoragePaths(cls):
-        # use nested structure: cura/<version>/...
+        # use nested structure: <app-name>/<version>/...
         if cls.ApplicationVersion == "master" or cls.ApplicationVersion == "unknown":
             storage_dir_name = os.path.join(cls.ApplicationIdentifier, cls.ApplicationVersion)
         else:
@@ -371,9 +371,9 @@ class Resources:
         config_root_path_list = Resources.getPossibleConfigStorageRootPathList()
         data_root_path = Resources.getDataStorageRootPath()
 
-        latest_config_path = Resources._findLatestCuraDirInPaths(config_root_path_list)
+        latest_config_path = Resources._findLatestStorageDirInPaths(config_root_path_list)
         if not latest_config_path:
-            # no earlier cura dirs found, do nothing
+            # no earlier storage dirs found, do nothing
             return
 
         if latest_config_path == this_version_config_path:
@@ -398,48 +398,47 @@ class Resources:
             shutil.rmtree(suspected_cache_path)
 
     @classmethod
-    def _findLatestCuraDirInPaths(cls, search_path_list):
-        # finds the latest Cura directory in the given search path list.
-        latest_cura_dir_path = None
+    def _findLatestStorageDirInPaths(cls, search_path_list):
+        # finds the latest storage directory in the given search path list.
+        latest_storage_dir_path = None
         for search_path in search_path_list:
             if not os.path.exists(search_path):
                 continue
-            # first check if it is an older Cura version (< 2.6) dir
-            if Resources._isConfigDirForCuraBefore26(search_path):
-                latest_cura_dir_path = search_path
+            # first check if it is an older application version dir
+            if Resources._isConfigDirForAppBefore26(search_path):
+                latest_storage_dir_path = search_path
                 break
 
-            cura_dir_name_list = next(os.walk(search_path))[1]
+            storage_dir_name_list = next(os.walk(search_path))[1]
 
-            if cura_dir_name_list:
-                cura_dir_name_list = sorted(cura_dir_name_list, reverse=True)
+            if storage_dir_name_list:
+                storage_dir_name_list = sorted(storage_dir_name_list, reverse=True)
                 # for now we use alphabetically ordering to determine the latest version (excluding master)
-                for dir_name in cura_dir_name_list:
+                for dir_name in storage_dir_name_list:
                     if not dir_name.endswith("master"):
-                        latest_cura_dir_path = os.path.join(search_path, dir_name)
+                        latest_storage_dir_path = os.path.join(search_path, dir_name)
                         break
-            if latest_cura_dir_path is not None:
+            if latest_storage_dir_path is not None:
                 break
-        return latest_cura_dir_path
+        return latest_storage_dir_path
 
     @classmethod
-    def _isConfigDirForCuraBefore26(cls, check_path):
-        # checks if the given path is (probably) a valid Cura directory for a version earlier than 2.6
+    def _isConfigDirForAppBefore26(cls, check_path):
+        # checks if the given path is (probably) a valid app directory for a version earlier than 2.6
+        if not cls.__expected_dir_names_in_config:
+            return True
+
         dirs, files = next(os.walk(check_path))[1:]
-        valid_dir_names = [dn for dn in dirs if dn in Resources.__DIRS_BEFORE_CURA_26]
+        valid_dir_names = [dn for dn in dirs if dn in Resources.__expected_dir_names_in_config]
         valid_file_names = [fn for fn in files if not fn.endswith('.log')]  # do not include log files
 
         return valid_dir_names and valid_file_names
 
-    # all directory names Cura 2.6
-    __DIRS_BEFORE_CURA_26 = ["extruders",
-                             "machine_instances",
-                             "materials",
-                             "plugins",
-                             "quality",
-                             "user",
-                             "variants",
-                             ]  # type: List[str]
+    @classmethod
+    def addExpectedDirNameInConfig(cls, dir_name):
+        cls.__expected_dir_names_in_config.append(dir_name)
+
+    __expected_dir_names_in_config = []  # type: List[str]
 
     __config_storage_path = None    # type: str
     __data_storage_path = None      # type: str
