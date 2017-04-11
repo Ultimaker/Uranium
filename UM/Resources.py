@@ -269,7 +269,7 @@ class Resources:
         return files
 
     @classmethod
-    def getConfigStorageRootPath(cls):
+    def _getConfigStorageRootPath(cls):
         # Returns the path where we store different versions of app configurations
         config_path = None
         if Platform.isWindows():
@@ -287,9 +287,9 @@ class Resources:
         return config_path
 
     @classmethod
-    def getPossibleConfigStorageRootPathList(cls):
+    def _getPossibleConfigStorageRootPathList(cls):
         # Returns all possible root paths for storing app configurations (in old and new versions)
-        config_root_list = [Resources.getConfigStorageRootPath()]
+        config_root_list = [Resources._getConfigStorageRootPath()]
         if Platform.isWindows():
             # it used to be in LOCALAPPDATA on Windows
             config_root_list.append(os.getenv("LOCALAPPDATA"))
@@ -300,7 +300,7 @@ class Resources:
         return config_root_list
 
     @classmethod
-    def getDataStorageRootPath(cls):
+    def _getDataStorageRootPath(cls):
         # Returns the path where we store different versions of app data
         data_path = None
         if Platform.isLinux():
@@ -311,7 +311,7 @@ class Resources:
         return data_path
 
     @classmethod
-    def getCacheStorageRootPath(cls):
+    def _getCacheStorageRootPath(cls):
         # Returns the path where we store different versions of app configurations
         cache_path = None
         if Platform.isWindows():
@@ -337,12 +337,12 @@ class Resources:
             storage_dir_name = os.path.join(cls.ApplicationIdentifier, "%s.%s" % (version.getMajor(), version.getMinor()))
 
         # config is saved in "<CONFIG_ROOT>/<storage_dir_name>"
-        cls.__config_storage_path = os.path.join(Resources.getConfigStorageRootPath(), storage_dir_name)
+        cls.__config_storage_path = os.path.join(Resources._getConfigStorageRootPath(), storage_dir_name)
 
         # data is saved in
         #  - on Linux: "<DATA_ROOT>/<storage_dir_name>"
         #  - on other: "<CONFIG_DIR>" (in the config directory)
-        data_root_path = Resources.getDataStorageRootPath()
+        data_root_path = Resources._getDataStorageRootPath()
         cls.__data_storage_path = cls.__config_storage_path if data_root_path is None else \
             os.path.join(data_root_path, storage_dir_name)
 
@@ -350,7 +350,7 @@ class Resources:
         #  - on Linux:   "<CACHE_DIR>/<storage_dir_name>"
         #  - on Windows: "<CACHE_DIR>/<storage_dir_name>/cache"
         #  - on Mac:     "<CONFIG_DIR>/cache" (in the config directory)
-        cache_root_path = Resources.getCacheStorageRootPath()
+        cache_root_path = Resources._getCacheStorageRootPath()
         if cache_root_path is None:
             cls.__cache_storage_path = os.path.join(cls.__config_storage_path, "cache")
         else:
@@ -372,8 +372,8 @@ class Resources:
         this_version_data_path = Resources.getDataStoragePath()
 
         # find the latest existing directories on this machine
-        config_root_path_list = Resources.getPossibleConfigStorageRootPathList()
-        data_root_path = Resources.getDataStorageRootPath()
+        config_root_path_list = Resources._getPossibleConfigStorageRootPathList()
+        data_root_path = Resources._getDataStorageRootPath()
 
         latest_config_path = Resources._findLatestStorageDirInPaths(config_root_path_list)
         if not latest_config_path:
