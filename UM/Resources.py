@@ -418,7 +418,7 @@ class Resources:
             if not os.path.exists(search_path):
                 continue
             # first check if it is an older application version dir
-            if Resources._isConfigDirForAppBefore26(search_path):
+            if Resources._isNonVersionedConfigDir(search_path):
                 latest_storage_dir_path = search_path
                 break
 
@@ -436,7 +436,7 @@ class Resources:
         return latest_storage_dir_path
 
     @classmethod
-    def _isConfigDirForAppBefore26(cls, check_path):
+    def _isNonVersionedConfigDir(cls, check_path):
         # checks if the given path is (probably) a valid app directory for a version earlier than 2.6
         if not cls.__expected_dir_names_in_config:
             return True
