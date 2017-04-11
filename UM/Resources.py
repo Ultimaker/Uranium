@@ -5,6 +5,7 @@ import os
 import os.path
 import platform
 import shutil
+import tempfile
 from typing import List
 
 from UM.Logger import Logger
@@ -380,17 +381,26 @@ class Resources:
             # if the directory found matches the current version, do nothing
             return
 
+        # we first copy everything to a temporary folder, and then move it to the new folder
+        def _copyDirToDirViaTempDir(src_path, dest_path):
+            base_dir_name = os.path.basename(src_path)
+            temp_root_dir_path = tempfile.mkdtemp("cura-copy-config")
+            temp_dir_path = os.path.join(temp_root_dir_path, base_dir_name)
+            # src -> temp -> dest
+            shutil.copytree(src_path, temp_dir_path)
+            shutil.move(temp_dir_path, dest_path)
+
         # copy "config" to the new folder
         config_path = latest_config_path
         Logger.log("i", "Copying config directory from '%s' to '%s'", config_path, this_version_config_path)
-        shutil.copytree(config_path, this_version_config_path)
+        _copyDirToDirViaTempDir(config_path, this_version_config_path)
 
         # if "data" is a different directory, copy it too.
         if data_root_path is not None:
             data_path = os.path.join(data_root_path, os.path.basename(latest_config_path))
             if os.path.exists(data_path):
                 Logger.log("i", "Copying data directory from '%s' to '%s'", data_path, this_version_data_path)
-                shutil.copytree(data_path, this_version_data_path)
+                _copyDirToDirViaTempDir(data_path, this_version_data_path)
 
         # remove "cache" if we copied it together with config
         suspected_cache_path = os.path.join(this_version_config_path, "cache")
