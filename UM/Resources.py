@@ -3,14 +3,12 @@
 
 import os
 import os.path
-import platform
 import shutil
-import tempfile
 from typing import List
 
 from UM.Logger import Logger
 from UM.Platform import Platform
-
+import UM.VersionUpgradeManager
 
 class ResourceTypeError(Exception):
     pass
@@ -383,13 +381,11 @@ class Resources:
     #   as the base for upgrade
     @classmethod
     def _copyLatestDirsIfPresent(cls):
-        # paths for the version we are running right now
+        # Paths for the version we are running right now
         this_version_config_path = Resources.getConfigStoragePath()
         this_version_data_path = Resources.getDataStoragePath()
 
-        Logger.log("d", "Setting up new paths, either because this is a new install or a upgrade.")
-
-        # find the latest existing directories on this machine
+        # Find the latest existing directories on this machine
         config_root_path_list = Resources._getPossibleConfigStorageRootPathList()
         data_root_path_list = Resources._getPossibleDataStorageRootPathList()
 
@@ -399,34 +395,18 @@ class Resources:
         latest_config_path = Resources._findLatestConfigDirInPaths(config_root_path_list)
         Logger.log("d", "Latest config path: %s and latest data path: %s", latest_config_path, latest_data_path)
         if not latest_config_path:
-            # no earlier storage dirs found, do nothing
+            # No earlier storage dirs found, do nothing
             return
 
         if latest_config_path == this_version_config_path:
-            # if the directory found matches the current version, do nothing
+            # If the directory found matches the current version, do nothing
             return
 
-        # we first copy everything to a temporary folder, and then move it to the new folder
-        def _copyDirToDirViaTempDir(src_path, dest_path):
-            base_dir_name = os.path.basename(src_path)
-            temp_root_dir_path = tempfile.mkdtemp("cura-copy-config")
-            temp_dir_path = os.path.join(temp_root_dir_path, base_dir_name)
-            # src -> temp -> dest
-            shutil.copytree(src_path, temp_dir_path)
-            shutil.move(temp_dir_path, dest_path)
+        UM.VersionUpgradeManager.VersionUpgradeManager.getInstance().copyVersionFolder(latest_config_path, this_version_config_path)
+        if latest_data_path is not None and os.path.exists(latest_data_path):
+            UM.VersionUpgradeManager.VersionUpgradeManager.getInstance().copyVersionFolder(latest_data_path, this_version_data_path)
 
-        # copy "config" to the new folder
-        config_path = latest_config_path
-        Logger.log("i", "Copying config directory from '%s' to '%s'", config_path, this_version_config_path)
-        _copyDirToDirViaTempDir(config_path, this_version_config_path)
-
-        # if "data" is a different directory, copy it too.
-        if latest_data_path is not None:
-            if os.path.exists(latest_data_path):
-                Logger.log("i", "Copying data directory from '%s' to '%s'", latest_data_path, this_version_data_path)
-                _copyDirToDirViaTempDir(latest_data_path, this_version_data_path)
-
-        # remove "cache" if we copied it together with config
+        # Remove "cache" if we copied it together with config
         suspected_cache_path = os.path.join(this_version_config_path, "cache")
         if os.path.exists(suspected_cache_path):
             shutil.rmtree(suspected_cache_path)

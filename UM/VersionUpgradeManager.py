@@ -1,17 +1,19 @@
 # Copyright (c) 2016 Ultimaker B.V.
 # Cura is released under the terms of the AGPLv3 or higher.
 
-import collections #For deque, for breadth-first search and to track tasks, and namedtuple.
-import os #To get the configuration file names and to rename files.
+import collections  # For deque, for breadth-first search and to track tasks, and namedtuple.
+import os  # To get the configuration file names and to rename files.
 import traceback
 
 from UM.Application import Application
 from UM.Logger import Logger
-from UM.PluginRegistry import PluginRegistry #To find plug-ins.
-from UM.Resources import Resources #To load old versions from.
-import UM.i18n #To translate the "upgrade succeeded" message.
-import UM.Message #To show the "upgrade succeeded" message.
-import UM.MimeTypeDatabase #To know how to save the resulting files.
+from UM.PluginRegistry import PluginRegistry  # To find plug-ins.
+from UM.Resources import Resources  # To load old versions from.
+import UM.i18n  # To translate the "upgrade succeeded" message.
+import UM.Message  # To show the "upgrade succeeded" message.
+import UM.MimeTypeDatabase  # To know how to save the resulting files.
+import tempfile
+import shutil
 
 catalogue = UM.i18n.i18nCatalog("uranium")
 
@@ -222,6 +224,16 @@ class VersionUpgradeManager:
                     path = os.path.join(prefix, storage_path)
                     for configuration_file in self._getFilesInDirectory(path):
                         yield UpgradeTask(storage_path = path, file_name = configuration_file, configuration_type = old_configuration_type)
+
+    def copyVersionFolder(self, src_path, dest_path):
+        Logger.log("i", "Copying directory from '%s' to '%s'", src_path, dest_path)
+        # we first copy everything to a temporary folder, and then move it to the new folder
+        base_dir_name = os.path.basename(src_path)
+        temp_root_dir_path = tempfile.mkdtemp("cura-copy")
+        temp_dir_path = os.path.join(temp_root_dir_path, base_dir_name)
+        # src -> temp -> dest
+        shutil.copytree(src_path, temp_dir_path)
+        shutil.move(temp_dir_path, dest_path)
 
     ##  Stores an old version of a configuration file away.
     #
