@@ -294,33 +294,11 @@ class VersionUpgradeManager:
             return False
 
         filenames_without_extension = [self._stripMimeTypeExtension(mime_type, configuration_file)]
-
-        # Keep converting the file until it's at one of the current versions.
-        while (configuration_type, version) not in self._current_versions:
-            if (configuration_type, version) not in self._upgrade_routes:
-                # No version upgrade plug-in claims to be able to upgrade this file.
-                return False
-            new_type, new_version, upgrade_step = self._upgrade_routes[(configuration_type, version)]
-            new_filenames_without_extension = []
-            new_files_data = []
-            for file_idx, file_data in enumerate(files_data):
-                try:
-                    upgrade_step_result = upgrade_step(file_data, filenames_without_extension[file_idx])
-                except Exception as e:  # Upgrade failed due to a coding error in the plug-in.
-                    Logger.logException("w", "Exception in %s upgrade with %s: %s", old_configuration_type,
-                                        upgrade_step.__module__, traceback.format_exc())
-                    return False
-                if upgrade_step_result:
-                    this_filenames_without_extension, this_files_data = upgrade_step_result
-                else:  # Upgrade failed.
-                    Logger.log("w", "Unable to upgrade the file %s with %s.%s. Skipping it.", filenames_without_extension[file_idx], upgrade_step.__module__, upgrade_step.__name__)
-                    return False
-                new_filenames_without_extension += this_filenames_without_extension
-                new_files_data += this_files_data
-            filenames_without_extension = new_filenames_without_extension
-            files_data = new_files_data
-            version = new_version
-            configuration_type = new_type
+        result_data = self.convertFilesDataToCurrentVersion(configuration_type, version,
+                                                            files_data, filenames_without_extension)
+        if not result_data:
+            return False
+        configuration_type, version, files_data, filenames_without_extension = result_data
 
         # If the version changed, save the new files.
         if version != old_version or configuration_type != old_configuration_type:
