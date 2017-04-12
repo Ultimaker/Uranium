@@ -67,6 +67,18 @@ class InstanceContainer(ContainerInterface, PluginObject):
         # the same hash. The way we use it, it is acceptable for objects with the same value to return a different hash.
         return id(self)
 
+    def __deepcopy__(self, memo):
+        new_container = self.__class__(self._id)
+        new_container._name = self._name
+        new_container._definition = self._definition
+        new_container._metadata = copy.deepcopy(self._metadata, memo)
+        new_container._instances = copy.deepcopy(self._instances, memo)
+        new_container._read_only = self._read_only
+        new_container._dirty = self._dirty
+        new_container._path = copy.deepcopy(self._path, memo)
+        new_container._cached_values = copy.deepcopy(self._cached_values, memo)
+        return new_container
+
     def __eq__(self, other):
         self._instantiateCachedValues()
         if type(self) != type(other):
