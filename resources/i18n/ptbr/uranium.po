@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-03-27 17:40+0200\n"
-"PO-Revision-Date: 2017-01-25 05:24-0300\n"
+"PO-Revision-Date: 2017-04-11 02:02-0300\n"
 "Last-Translator: Cláudio Sampaio <patola@makerlinux.com.b>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ptbr\n"
@@ -88,22 +88,22 @@ msgstr "Arquivo Wavefront OBJ"
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:13
 msgctxt "@label"
 msgid "Wavefront OBJ Writer"
-msgstr "Gravador de Wavefront OBJ"
+msgstr "Gerador de Wavefront OBJ"
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:16
 msgctxt "@info:whatsthis"
 msgid "Makes it possbile to write Wavefront OBJ files."
-msgstr "Faz com que seja possível gravar arquivos no formato OBJ da Wavefront."
+msgstr "Faz com que seja possível salvar arquivos no formato OBJ da Wavefront."
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:13
 msgctxt "@label"
 msgid "STL Writer"
-msgstr "Gravador STL"
+msgstr "Gerador STL"
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:16
 msgctxt "@info:whatsthis"
 msgid "Provides support for writing STL files."
-msgstr "Provê suorte a gravação de arquivos STL."
+msgstr "Provê suporte a salvamento de arquivos STL."
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:25
 msgctxt "@item:inlistbox"
@@ -174,17 +174,17 @@ msgstr "Arquivo Local"
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:47
 msgctxt "@action:button Preceded by 'Ready to'."
 msgid "Save to File"
-msgstr "Gravar em Arquivo"
+msgstr "Salvar em Arquivo"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:48
 msgctxt "@info:tooltip"
 msgid "Save to File"
-msgstr "Gravar em Arquivo"
+msgstr "Salvar em Arquivo"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:68
 msgctxt "@title:window"
 msgid "Save to File"
-msgstr "Gravar em Arquivo"
+msgstr "Salvar em Arquivo"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:137
 msgctxt "@title:window"
@@ -201,7 +201,7 @@ msgstr "O arquivo <filename>{0}</filename> já existe. Tem certeza que deseja so
 #, python-brace-format
 msgctxt "@info:progress"
 msgid "Saving to <filename>{0}</filename>"
-msgstr "Gravando em <filename>{0}</filename>"
+msgstr "Salvando em <filename>{0}</filename>"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:171
 #, python-brace-format
@@ -220,7 +220,7 @@ msgstr "Não foi possível salvar <filename>{0}</filename>: <message>{1}</messag
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Saved to <filename>{0}</filename>"
-msgstr "Gravado em <filename>{0}</filename>"
+msgstr "Salvo em <filename>{0}</filename>"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:191
 msgctxt "@action:button"
@@ -240,17 +240,17 @@ msgstr "Dispositivo de Saída do Arquivo Local"
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/__init__.py:13
 msgctxt "@info:whatsthis"
 msgid "Enables saving to local files."
-msgstr "Habilita gravar em arquivos locais."
+msgstr "Habilita salvar em arquivos locais."
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:13
 msgctxt "@label"
 msgid "Scale Tool"
-msgstr "Ferramenta de Redimensionamento"
+msgstr "Ferramenta de Escala"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:16
 msgctxt "@info:whatsthis"
 msgid "Provides the Scale tool."
-msgstr "Provê a Ferramenta de dimensionamento."
+msgstr "Provê a Ferramenta de Escala / Redimensionamento."
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:20
 msgctxt "@label"
@@ -300,7 +300,7 @@ msgstr "Ferramenta de Câmera"
 #: /home/ruben/Projects/Uranium/plugins/Tools/CameraTool/__init__.py:15
 msgctxt "@info:whatsthis"
 msgid "Provides the tool to manipulate the camera."
-msgstr "Provê a ferramenta para manipular a câmera."
+msgstr "Provê a ferramenta de manipulação da câmera."
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:12
 msgctxt "@label"
@@ -415,7 +415,7 @@ msgstr "Carregando preferências..."
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled object to {0}% of original size"
-msgstr "Objeto autorredimensionado para {0}%% do tamanho original"
+msgstr "Objeto autorredimensionado para {0}% do tamanho original"
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:110
 #, python-brace-format
@@ -426,12 +426,12 @@ msgstr "A configuração da versão antiga de {0} foi importada."
 #: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:45
 msgctxt "@message"
 msgid "Failed to Initialize OpenGL"
-msgstr ""
+msgstr "Falha em inicializar OpenGL"
 
 #: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:55
 msgctxt "Critical OpenGL Extensions Missing"
 msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
-msgstr ""
+msgstr "Extensões OpenGL críticas estão faltando. Este programa exige suporte a Objetos de Framebuffer. Por favor verifique os drivers de sua placa de vídeo."
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:36
 #, python-brace-format
@@ -461,7 +461,7 @@ msgstr "Resetar"
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:77
 msgctxt "@option:check"
 msgid "Snap Scaling"
-msgstr "Discretizar Redimensionamento"
+msgstr "Alinhar Redimensionamento"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:94
 msgctxt "@option:check"
@@ -476,7 +476,7 @@ msgstr "Assentar no plano"
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:53
 msgctxt "@action:checkbox"
 msgid "Snap Rotation"
-msgstr "Discretizar Rotação"
+msgstr "Alinhar Rotação"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:19
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:148
