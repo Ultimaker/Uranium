@@ -6,6 +6,9 @@ from UM.Math.Float import Float
 
 import numpy
 
+from typing import Optional
+
+
 ## Axis aligned bounding box.
 class AxisAlignedBox:
     class IntersectionResult:
@@ -13,7 +16,7 @@ class AxisAlignedBox:
         PartialIntersection = 2
         FullIntersection = 3
 
-    def __init__(self, minimum=Vector.Null, maximum=Vector.Null):
+    def __init__(self, minimum: Vector = Vector.Null, maximum: Vector = Vector.Null):
         if minimum.x > maximum.x or minimum.y > maximum.y or minimum.z > maximum.z:
             swapped_minimum = Vector(min(minimum.x, maximum.x), min(minimum.y, maximum.y), min(minimum.z, maximum.z))
             swapped_maximum = Vector(max(minimum.x, maximum.x), max(minimum.y, maximum.y), max(minimum.z, maximum.z))
@@ -24,7 +27,9 @@ class AxisAlignedBox:
         self._min = minimum
         self._max = maximum
 
-    def set(self, minimum=None, maximum=None, left=None, right=None, top=None, bottom=None, front=None, back=None):
+    def set(self, minimum: Optional[Vector] = None, maximum: Optional[Vector] = None, left: Optional[Vector] = None,
+            right: Optional[Vector] = None, top: Optional[Vector] = None, bottom: Optional[Vector] = None,
+            front: Optional[Vector] = None, back: Optional[Vector] = None) -> "AxisAlignedBox":
         if minimum is None:
             minimum = self._min
 
@@ -109,7 +114,7 @@ class AxisAlignedBox:
     ##  Check if the bounding box is valid.
     #   Uses fuzzycompare to validate.
     #   \sa Float::fuzzyCompare()
-    def isValid(self):
+    def isValid(self) -> bool:
         return not(Float.fuzzyCompare(self._min.x, self._max.x) or
                    Float.fuzzyCompare(self._min.y, self._max.y) or
                    Float.fuzzyCompare(self._min.z, self._max.z))
@@ -143,7 +148,7 @@ class AxisAlignedBox:
     #
     #   \param box \type{AxisAlignedBox} The box to check for intersection.
     #   \return \type{IntersectionResult} NoIntersection when no intersection occurs, PartialIntersection when partially intersected, FullIntersection when box is fully contained inside this box.
-    def intersectsBox(self, box):
+    def intersectsBox(self, box: "AxisAlignedBox") -> int:
         if self._min.x > box._max.x or box._min.x > self._max.x:
             return self.IntersectionResult.NoIntersection
 
@@ -163,5 +168,5 @@ class AxisAlignedBox:
         return "AxisAlignedBox(min = {0}, max = {1})".format(self._min, self._max)
 
     # This field is filled in below. This is needed to help static analysis tools (read: PyCharm)
-    Null = None # type: AxisAlignedBox
+    Null = None  # type: AxisAlignedBox
 AxisAlignedBox.Null = AxisAlignedBox()
