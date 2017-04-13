@@ -67,7 +67,7 @@ def interface(cls):
     # Then, replace the new method with a method that checks if all methods have been reimplemented
     old_new = cls.__new__
     def new_new(subclass, *args, **kwargs):
-        for method in filter(lambda i: not i[0].startswith("__") and inspect.isfunction(i[1]), inspect.getmembers(cls)):
+        for method in filter(lambda i: inspect.isfunction(i[1]) and not i[1].__name__.startswith("__") and not i[0].startswith("__"), inspect.getmembers(cls)):
             sub_method = getattr(subclass, method[0])
             if sub_method == method[1]:
                 raise NotImplementedError("Class {0} does not implement the complete interface of {1}: Missing method {2}".format(subclass, cls, method[0]))

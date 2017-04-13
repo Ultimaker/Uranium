@@ -83,3 +83,20 @@ def test_interface():
 
     with pytest.raises(NotImplementedError):
         declare_bad_signature()
+
+    #
+    # private functions should be ignored
+    #
+    def should_ignore_private_functions():
+        @interface
+        class TestInterface:
+            def __should_be_ignored(self):
+                pass
+
+        class TestSubClass(TestInterface):
+            pass
+
+        return TestSubClass()
+
+    sub = should_ignore_private_functions()
+    assert sub is not None
