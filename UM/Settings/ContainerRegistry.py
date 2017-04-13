@@ -474,9 +474,9 @@ class ContainerRegistry(ContainerRegistryInterface):
 
     ##  Get the singleton instance for this class.
     @classmethod
-    def getInstance(cls):
+    def getInstance(cls) -> "ContainerRegistry":
         # Note: Explicit use of class name to prevent issues with inheritance.
-        if ContainerRegistry.__instance is None:
+        if not ContainerRegistry.__instance:
             ContainerRegistry.__instance = cls()
         return ContainerRegistry.__instance
 

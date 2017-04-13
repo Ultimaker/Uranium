@@ -93,8 +93,8 @@ class JobQueue():
 
     ##  Get the singleton instance of the JobQueue.
     @classmethod
-    def getInstance(cls):
-        if cls._instance is None:
+    def getInstance(cls) -> "JobQueue":
+        if not cls._instance:
             cls._instance = JobQueue()
 
         return cls._instance

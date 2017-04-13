@@ -248,7 +248,7 @@ class OpenGL(object):
     #
     #   \return The singleton instance.
     @classmethod
-    def getInstance(cls):
+    def getInstance(cls) -> "OpenGL":
         return cls._instance
 
     ##  Set the singleton instance.

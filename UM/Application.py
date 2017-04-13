@@ -310,9 +310,9 @@ class Application:
 
     ##  Return the singleton instance of the application object
     @classmethod
-    def getInstance(cls):
+    def getInstance(cls) -> "Application":
         # Note: Explicit use of class name to prevent issues with inheritance.
-        if Application._instance is None:
+        if not Application._instance:
             Application._instance = cls()
 
         return Application._instance

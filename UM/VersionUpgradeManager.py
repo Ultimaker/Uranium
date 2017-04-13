@@ -49,7 +49,7 @@ class VersionUpgradeManager:
 
     ##  Gets the instance of the VersionUpgradeManager, or creates one.
     @classmethod
-    def getInstance(cls):
+    def getInstance(cls) -> "VersionUpgradeManager":
         if not cls.__instance:
             cls.__instance = VersionUpgradeManager()
         return cls.__instance
