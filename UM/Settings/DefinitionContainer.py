@@ -191,14 +191,37 @@ class DefinitionContainer(DefinitionContainerInterface, PluginObject):
 
         return json.dumps(data, separators = (", ", ": "), indent = 4) # Pretty print the JSON.
 
-    ##  \copydoc ContainerInterface::deserialize
-    #
-    #   Reimplemented from ContainerInterface
-    def deserialize(self, serialized):
+    def getConfigurationTypeFromSerialized(self, serialized: str) -> str:
+        configuration_type = None
+        try:
+            parsed = self._readAndValidateSerialized(serialized)
+            configuration_type = parsed['metadata']['type']
+        except Exception as e:
+            Logger.log("d", "Could not get configuration type: %s", e)
+        return configuration_type
+
+    def _readAndValidateSerialized(self, serialized: str) -> dict:
         parsed = json.loads(serialized, object_pairs_hook=collections.OrderedDict)
 
         self._verifyJson(parsed)
 
+        parsed = self._preprocessParsedJson(parsed)
+
+        # If we do not have metadata or settings the file is invalid
+        if "metadata" not in parsed:
+            raise InvalidDefinitionError("Missing required metadata section")
+        if "version" not in parsed:
+            raise InvalidDefinitionError("Missing required version section")
+        if "settings" not in parsed:
+            raise InvalidDefinitionError("Missing required settings section")
+
+        return parsed
+
+    def getVersionFromSerialized(self, serialized: str) -> int:
+        parsed = self._readAndValidateSerialized(serialized)
+        return int(parsed["version"])
+
+    def _preprocessParsedJson(self, parsed):
         # Pre-process the JSON data to include inherited data and overrides
         if "inherits" in parsed:
             inherited = self._resolveInheritance(parsed["inherits"])
@@ -208,16 +231,16 @@ class DefinitionContainer(DefinitionContainerInterface, PluginObject):
             for key, value in parsed["overrides"].items():
                 setting = self._findInDict(parsed["settings"], key)
                 if setting is None:
-                    Logger.log("w","Unable to override setting %s", key)
-                else:
-                    setting.update(value)
+                    Logger.log("w", "Unable to override setting %s", key)
+        return parsed
 
-        # If we do not have metadata or settings the file is invalid
-        if not "metadata" in parsed:
-            raise InvalidDefinitionError("Missing required metadata section")
-
-        if not "settings" in parsed:
-            raise InvalidDefinitionError("Missing required settings section")
+    ##  \copydoc ContainerInterface::deserialize
+    #
+    #   Reimplemented from ContainerInterface
+    def deserialize(self, serialized):
+        # update the serialized data first
+        serialized = super().deserialize(serialized)
+        parsed = self._readAndValidateSerialized(serialized)
 
         # Update properties with the data from the JSON
         self._name = parsed["name"]

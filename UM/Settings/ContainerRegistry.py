@@ -506,6 +506,7 @@ class ContainerRegistry(ContainerRegistryInterface):
 
 PluginRegistry.addType("settings_container", ContainerRegistry.addContainerType)
 
+
 class _EmptyInstanceContainer(InstanceContainer):
     def isDirty(self) -> bool:
         return False
@@ -520,6 +521,8 @@ class _EmptyInstanceContainer(InstanceContainer):
         Logger.log("e", "Setting property %s of container %s which should remain empty", key, self.getName())
         return
 
+    def getConfigurationType(self) -> str:
+        return ""  # FIXME: not sure if this is correct
+
     def serialize(self) -> str:
         return "[general]\n version = 2\n name = empty\n definition = fdmprinter\n"
-

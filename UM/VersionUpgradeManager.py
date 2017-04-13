@@ -25,6 +25,10 @@ catalogue = UM.i18n.i18nCatalog("uranium")
 #   - configuration_type: The configuration type of the file before upgrading.
 UpgradeTask = collections.namedtuple("UpgradeTask", ["storage_path", "file_name", "configuration_type"])
 
+FilesDataUpdateResult = collections.namedtuple("FilesDataUpdateResult",
+                                               ["configuration_type", "version", "files_data",
+                                                "file_names_without_extension"])
+
 ##  Regulates the upgrading of configuration from one application version to the
 #   next.
 #
@@ -294,7 +298,7 @@ class VersionUpgradeManager:
             return False
 
         filenames_without_extension = [self._stripMimeTypeExtension(mime_type, configuration_file)]
-        result_data = self.convertFilesDataToCurrentVersion(configuration_type, version,
+        result_data = self.updateFilesData(configuration_type, version,
                                                             files_data, filenames_without_extension)
         if not result_data:
             return False
@@ -328,7 +332,7 @@ class VersionUpgradeManager:
             return True
         return False  # Version didn't change. Was already current.
 
-    def convertFilesDataToCurrentVersion(self, configuration_type, version, files_data, file_names_without_extension):
+    def updateFilesData(self, configuration_type, version, files_data, file_names_without_extension):
         old_configuration_type = configuration_type
 
         # Keep converting the file until it's at one of the current versions.
@@ -359,7 +363,10 @@ class VersionUpgradeManager:
             version = new_version
             configuration_type = new_type
 
-        return configuration_type, version, files_data, file_names_without_extension
+        return FilesDataUpdateResult(configuration_type=configuration_type,
+                                     version=version,
+                                     files_data=files_data,
+                                     file_names_without_extension=file_names_without_extension)
 
     def _stripMimeTypeExtension(self, mime_type, file_name):
         suffixes = mime_type.suffixes[:]

@@ -13,10 +13,7 @@ from UM.PluginObject import PluginObject
 from UM.Logger import Logger
 from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType
 
-from UM.Settings.Interfaces import ContainerRegistryInterface
-from UM.Settings.DefinitionContainer import DefinitionContainer
-
-from UM.Settings.Interfaces import ContainerInterface
+from UM.Settings.Interfaces import ContainerInterface, ContainerRegistryInterface
 from UM.Settings.SettingInstance import SettingInstance
 
 class InvalidInstanceError(Exception):
@@ -35,6 +32,7 @@ MimeTypeDatabase.addMimeType(
         suffixes = [ "inst.cfg" ]
     )
 )
+
 
 ##  A container for SettingInstance objects.
 #
@@ -356,11 +354,8 @@ class InstanceContainer(ContainerInterface, PluginObject):
         parser.write(stream)
         return stream.getvalue()
 
-    ##  \copydoc ContainerInterface::deserialize
-    #
-    #   Reimplemented from ContainerInterface
-    def deserialize(self, serialized: str) -> None:
-        parser = configparser.ConfigParser(interpolation = None)
+    def _readAndValidateSerialized(self, serialized: str) -> configparser.ConfigParser:
+        parser = configparser.ConfigParser(interpolation=None)
         parser.read_string(serialized)
 
         has_general = "general" in parser
@@ -376,6 +371,28 @@ class InstanceContainer(ContainerInterface, PluginObject):
             if not has_version:
                 exception_string += " property 'version'"
             raise InvalidInstanceError(exception_string)
+        return parser
+
+    def getConfigurationTypeFromSerialized(self, serialized: str) -> str:
+        configuration_type = None
+        try:
+            parser = self._readAndValidateSerialized(serialized)
+            configuration_type = parser['metadata'].get('type')
+        except Exception as e:
+            Logger.log("d", "Could not get configuration type: %s", e)
+        return configuration_type
+
+    def getVersionFromSerialized(self, serialized: str) -> int:
+        parser = self._readAndValidateSerialized(serialized)
+        return parser["general"].getint("version")
+
+    ##  \copydoc ContainerInterface::deserialize
+    #
+    #   Reimplemented from ContainerInterface
+    def deserialize(self, serialized: str) -> str:
+        # update the serialized data first
+        serialized = super().deserialize(serialized)
+        parser = self._readAndValidateSerialized(serialized)
 
         if int(parser["general"]["version"]) != self.Version:
             raise IncorrectInstanceVersionError("Reported version {0} but expected version {1}".format(int(parser["general"]["version"]), self.Version))

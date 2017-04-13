@@ -244,17 +244,37 @@ class ContainerStack(ContainerInterface, PluginObject):
         parser.write(stream)
         return stream.getvalue()
 
+    def _readAndValidateSerialized(self, serialized: str) -> configparser.ConfigParser:
+        parser = configparser.ConfigParser(interpolation=None, empty_lines_in_values=False)
+        parser.read_string(serialized)
+
+        if "general" not in parser or any(pn not in parser["general"] for pn in ("version", "name", "id")):
+            raise InvalidContainerStackError("Missing required section 'general' or 'version' property")
+
+        return parser
+
+    def getConfigurationTypeFromSerialized(self, serialized: str) -> str:
+        configuration_type = None
+        try:
+            parser = self._readAndValidateSerialized(serialized)
+            configuration_type = parser['metadata'].get('type')
+        except Exception as e:
+            Logger.log("d", "Could not get configuration type: %s", e)
+        return configuration_type
+
+    def getVersionFromSerialized(self, serialized: str) -> int:
+        parser = self._readAndValidateSerialized(serialized)
+        return parser["general"].getint("version")
+
     ##  \copydoc ContainerInterface::deserialize
     #
     #   Reimplemented from ContainerInterface
     #
     #   TODO: Expand documentation here, include the fact that this should _not_ include all containers
     def deserialize(self, serialized):
-        parser = configparser.ConfigParser(interpolation=None, empty_lines_in_values=False)
-        parser.read_string(serialized)
-
-        if not "general" in parser or not "version" in parser["general"] or not "name" in parser["general"] or not "id" in parser["general"]:
-            raise InvalidContainerStackError("Missing required section 'general' or 'version' property")
+        # update the serialized data first
+        serialized = super().deserialize(serialized)
+        parser = self._readAndValidateSerialized(serialized)
 
         if parser["general"].getint("version") != self.Version:
             raise IncorrectVersionError
