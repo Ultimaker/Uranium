@@ -46,7 +46,7 @@ ListView {
         property variant actions: model.actions;
         property variant model_id: model.id
 
-        Label {
+        Text {
             id: messageLabel
             anchors {
                 left: parent.left;
