@@ -244,6 +244,10 @@ class ContainerStack(ContainerInterface, PluginObject):
         parser.write(stream)
         return stream.getvalue()
 
+    ##  Deserializes the given data and checks if the required fields are present.
+    #
+    #   The profile upgrading code depends on information such as "configuration_type" and "version", which come from
+    #   the serialized data. Due to legacy problem, those data may not be available if it comes from an ancient Cura.
     def _readAndValidateSerialized(self, serialized: str) -> configparser.ConfigParser:
         parser = configparser.ConfigParser(interpolation=None, empty_lines_in_values=False)
         parser.read_string(serialized)
@@ -253,18 +257,23 @@ class ContainerStack(ContainerInterface, PluginObject):
 
         return parser
 
-    def getConfigurationTypeFromSerialized(self, serialized: str) -> str:
+    def getConfigurationTypeFromSerialized(self, serialized: str) -> Optional[str]:
         configuration_type = None
         try:
             parser = self._readAndValidateSerialized(serialized)
-            configuration_type = parser['metadata'].get('type')
+            configuration_type = parser["metadata"].get("type")
         except Exception as e:
-            Logger.log("d", "Could not get configuration type: %s", e)
+            Logger.log("e", "Could not get configuration type: %s", e)
         return configuration_type
 
-    def getVersionFromSerialized(self, serialized: str) -> int:
+    def getVersionFromSerialized(self, serialized: str) -> Optional[int]:
+        version = None
         parser = self._readAndValidateSerialized(serialized)
-        return parser["general"].getint("version")
+        try:
+            version = parser["general"].getint("version")
+        except Exception as e:
+            Logger.log("e", "Could not get version from serialized: %s", e)
+        return version
 
     ##  \copydoc ContainerInterface::deserialize
     #

@@ -4,7 +4,7 @@
 import json
 import collections
 import copy
-from typing import List
+from typing import List, Optional
 
 from UM.Resources import Resources
 from UM.PluginObject import PluginObject
@@ -191,11 +191,11 @@ class DefinitionContainer(DefinitionContainerInterface, PluginObject):
 
         return json.dumps(data, separators = (", ", ": "), indent = 4) # Pretty print the JSON.
 
-    def getConfigurationTypeFromSerialized(self, serialized: str) -> str:
+    def getConfigurationTypeFromSerialized(self, serialized: str) -> Optional[str]:
         configuration_type = None
         try:
             parsed = self._readAndValidateSerialized(serialized)
-            configuration_type = parsed['metadata']['type']
+            configuration_type = parsed["metadata"]["type"]
         except Exception as e:
             Logger.log("d", "Could not get configuration type: %s", e)
         return configuration_type
@@ -217,9 +217,14 @@ class DefinitionContainer(DefinitionContainerInterface, PluginObject):
 
         return parsed
 
-    def getVersionFromSerialized(self, serialized: str) -> int:
+    def getVersionFromSerialized(self, serialized: str) -> Optional[int]:
+        version = None
         parsed = self._readAndValidateSerialized(serialized)
-        return int(parsed["version"])
+        try:
+            version = int(parsed["version"])
+        except Exception as e:
+            Logger.log("e", "Could not get version from serialized: %s", e)
+        return version
 
     def _preprocessParsedJson(self, parsed):
         # Pre-process the JSON data to include inherited data and overrides

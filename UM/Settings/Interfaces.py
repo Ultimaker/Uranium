@@ -1,7 +1,7 @@
 # Copyright (c) 2016 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 
 import UM.Decorators
 from UM.Signal import Signal
@@ -97,7 +97,7 @@ class ContainerInterface:
     def __updateSerialized(self, serialized: str) -> str:
         configuration_type = self.getConfigurationTypeFromSerialized(serialized)
         version = self.getVersionFromSerialized(serialized)
-        if configuration_type and version:
+        if configuration_type is not None and version is not None:
             from UM.VersionUpgradeManager import VersionUpgradeManager
             result = VersionUpgradeManager.getInstance().updateFilesData(configuration_type, version,
                                                                          [serialized], [""])
@@ -105,11 +105,12 @@ class ContainerInterface:
                 serialized = result.files_data[0]
         return serialized
 
-    def getConfigurationTypeFromSerialized(self, serialized: str) -> str:
+    ##  Gets the configuration type of the given serialized data. (used by __updateSerialized())
+    def getConfigurationTypeFromSerialized(self, serialized: str) -> Optional[str]:
         pass
 
-    ##  Gets the version of the given serialized data.
-    def getVersionFromSerialized(self, serialized: str) -> int:
+    ##  Gets the version of the given serialized data. (used by __updateSerialized())
+    def getVersionFromSerialized(self, serialized: str) -> Optional[int]:
         pass
 
     ##  Get the path used to create this InstanceContainer.

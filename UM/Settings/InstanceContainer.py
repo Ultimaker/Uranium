@@ -4,8 +4,7 @@
 import configparser
 import io
 import copy
-from typing import Dict
-from typing import List
+from typing import List, Dict, Optional
 
 from UM.Settings.Interfaces import DefinitionContainerInterface
 from UM.Signal import Signal, signalemitter
@@ -373,7 +372,7 @@ class InstanceContainer(ContainerInterface, PluginObject):
             raise InvalidInstanceError(exception_string)
         return parser
 
-    def getConfigurationTypeFromSerialized(self, serialized: str) -> str:
+    def getConfigurationTypeFromSerialized(self, serialized: str) -> Optional[str]:
         configuration_type = None
         try:
             parser = self._readAndValidateSerialized(serialized)
@@ -382,9 +381,14 @@ class InstanceContainer(ContainerInterface, PluginObject):
             Logger.log("d", "Could not get configuration type: %s", e)
         return configuration_type
 
-    def getVersionFromSerialized(self, serialized: str) -> int:
+    def getVersionFromSerialized(self, serialized: str) -> Optional[int]:
+        version = None
         parser = self._readAndValidateSerialized(serialized)
-        return parser["general"].getint("version")
+        try:
+            version = parser["general"].getint("version")
+        except Exception as e:
+            Logger.log("e", "Could not get version from serialized: %s", e)
+        return version
 
     ##  \copydoc ContainerInterface::deserialize
     #
