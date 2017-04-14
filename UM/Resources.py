@@ -3,6 +3,7 @@
 
 import os
 import os.path
+import re
 import shutil
 from typing import List
 
@@ -413,6 +414,9 @@ class Resources:
 
     @classmethod
     def _findLatestConfigDirInPaths(cls, search_path_list):
+        # version dir name must match: <digit(s)>.<digit(s)><whatever>
+        version_regex = re.compile(r'^[0-9]+\.[0-9]+.*$')
+
         latest_config_path = None
         for search_path in search_path_list:
             if not os.path.exists(search_path):
@@ -427,9 +431,19 @@ class Resources:
                 storage_dir_name_list = sorted(storage_dir_name_list, reverse=True)
                 # for now we use alphabetically ordering to determine the latest version (excluding master)
                 for dir_name in storage_dir_name_list:
-                    if not dir_name.endswith("master"):
-                        latest_config_path = os.path.join(search_path, dir_name)
-                        break
+                    if dir_name.endswith("master"):
+                        continue
+                    if version_regex.match(dir_name) is None:
+                        continue
+
+                    # make sure that the version we found is not newer than the current version
+                    if version_regex.match(cls.ApplicationVersion):
+                        later_version = sorted([cls.ApplicationVersion, dir_name], reverse=True)[0]
+                        if cls.ApplicationVersion != later_version:
+                            continue
+
+                    latest_config_path = os.path.join(search_path, dir_name)
+                    break
             if latest_config_path is not None:
                 break
         return latest_config_path
