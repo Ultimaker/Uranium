@@ -298,19 +298,17 @@ class Resources:
         return config_root_list
 
     @classmethod
-    def _getPossibleDataStorageRootPathList(cls):
-        # Returns all possible root paths for storing app configurations (in old and new versions)
-        data_root_list = []
-        if Resources._getDataStorageRootPath() is not None:
-            data_root_list.append(Resources._getDataStorageRootPath())
-        if Platform.isWindows():
-            # it used to be in LOCALAPPDATA on Windows
-            data_root_list.append(os.getenv("APPDATA"))
-            data_root_list.append(os.getenv("LOCALAPPDATA"))
-        elif Platform.isOSX():
-            data_root_list.append(os.path.expanduser("~"))
+    def _getPossibleDataStorageRootPathList(cls) -> List[str]:
+        data_root_list = None
 
-        data_root_list = [os.path.join(n, cls.ApplicationIdentifier) for n in data_root_list]
+        # Returns all possible root paths for storing app configurations (in old and new versions)
+        if Platform.isLinux():
+            data_root_list = Resources._getDataStorageRootPath()
+            data_root_list = [os.path.join(n, cls.ApplicationIdentifier) for n in data_root_list]
+        else:
+            # on Windows and Mac, data and config are saved in the same place
+            data_root_list = Resources._getPossibleConfigStorageRootPathList()
+
         return data_root_list
 
     @classmethod
@@ -355,7 +353,6 @@ class Resources:
         cls.__config_storage_path = os.path.join(Resources._getConfigStorageRootPath(), storage_dir_name)
         Logger.log("d", "Config storage path is %s", cls.__config_storage_path)
 
-
         # data is saved in
         #  - on Linux: "<DATA_ROOT>/<storage_dir_name>"
         #  - on other: "<CONFIG_DIR>" (in the config directory)
@@ -394,8 +391,8 @@ class Resources:
 
         Logger.log("d", "Found config: %s and data: %s", config_root_path_list, data_root_path_list)
 
-        latest_data_path = Resources._findLatestStorageDirInPaths(data_root_path_list)
-        latest_config_path = Resources._findLatestConfigDirInPaths(config_root_path_list)
+        latest_config_path = Resources._findLatestDirInPaths(config_root_path_list, dir_type="config")
+        latest_data_path = Resources._findLatestDirInPaths(data_root_path_list, dir_type="data")
         Logger.log("d", "Latest config path: %s and latest data path: %s", latest_config_path, latest_data_path)
         if not latest_config_path:
             # No earlier storage dirs found, do nothing
@@ -418,20 +415,24 @@ class Resources:
             shutil.rmtree(suspected_cache_path)
 
     @classmethod
-    def _findLatestConfigDirInPaths(cls, search_path_list):
+    def _findLatestDirInPaths(cls, search_path_list, dir_type="config"):
         # version dir name must match: <digit(s)>.<digit(s)><whatever>
         version_regex = re.compile(r'^[0-9]+\.[0-9]+.*$')
+        check_dir_type_func_dict = {"config": Resources._isNonVersionedConfigDir,
+                                    "data": Resources._isNonVersionedDataDir,
+                                    }
+        check_dir_type_func = check_dir_type_func_dict[dir_type]
 
         latest_config_path = None
         for search_path in search_path_list:
             if not os.path.exists(search_path):
                 continue
 
-            if Resources._isNonVersionedConfigDir(search_path):
+            if check_dir_type_func(cls, search_path):
                 latest_config_path = search_path
                 break
-            storage_dir_name_list = next(os.walk(search_path))[1]
 
+            storage_dir_name_list = next(os.walk(search_path))[1]
             if storage_dir_name_list:
                 storage_dir_name_list = sorted(storage_dir_name_list, reverse=True)
                 # for now we use alphabetically ordering to determine the latest version (excluding master)
@@ -453,32 +454,6 @@ class Resources:
                 break
         return latest_config_path
 
-    @classmethod
-    def _findLatestStorageDirInPaths(cls, search_path_list):
-        # finds the latest storage directory in the given search path list.
-        latest_storage_dir_path = None
-        for search_path in search_path_list:
-            if not os.path.exists(search_path):
-                continue
-            # first check if it is an older application version dir
-            if Resources._isNonVersionedDataDir(search_path):
-                latest_storage_dir_path = search_path
-                break
-
-            storage_dir_name_list = next(os.walk(search_path))[1]
-
-            if storage_dir_name_list:
-                storage_dir_name_list = sorted(storage_dir_name_list, reverse=True)
-                # for now we use alphabetically ordering to determine the latest version (excluding master)
-                for dir_name in storage_dir_name_list:
-                    if not dir_name.endswith("master") and dir_name not in Resources.__expected_dir_names_in_data:
-                        latest_storage_dir_path = os.path.join(search_path, dir_name)
-                        break
-            if latest_storage_dir_path is not None:
-                break
-        return latest_storage_dir_path
-
-    @classmethod
     def _isNonVersionedDataDir(cls, check_path):
         # checks if the given path is (probably) a valid app directory for a version earlier than 2.6
         if not cls.__expected_dir_names_in_data:
@@ -488,7 +463,6 @@ class Resources:
         valid_dir_names = [dn for dn in dirs if dn in Resources.__expected_dir_names_in_data]
         return valid_dir_names
 
-    @classmethod
     def _isNonVersionedConfigDir(cls, check_path):
         dirs, files = next(os.walk(check_path))[1:]
         valid_file_names = [fn for fn in files if fn.endswith(".cfg")]
