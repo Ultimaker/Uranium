@@ -9,7 +9,6 @@ from typing import List
 
 from UM.Logger import Logger
 from UM.Platform import Platform
-import UM.VersionUpgradeManager
 
 class ResourceTypeError(Exception):
     pass
@@ -301,9 +300,12 @@ class Resources:
     @classmethod
     def _getPossibleDataStorageRootPathList(cls):
         # Returns all possible root paths for storing app configurations (in old and new versions)
-        data_root_list = [Resources._getDataStorageRootPath()]
+        data_root_list = []
+        if Resources._getDataStorageRootPath() is not None:
+            data_root_list.append(Resources._getDataStorageRootPath())
         if Platform.isWindows():
             # it used to be in LOCALAPPDATA on Windows
+            data_root_list.append(os.getenv("APPDATA"))
             data_root_list.append(os.getenv("LOCALAPPDATA"))
         elif Platform.isOSX():
             data_root_list.append(os.path.expanduser("~"))
@@ -403,8 +405,11 @@ class Resources:
             # If the directory found matches the current version, do nothing
             return
 
+        # Prevent circular import
+        import UM.VersionUpgradeManager
         UM.VersionUpgradeManager.VersionUpgradeManager.getInstance().copyVersionFolder(latest_config_path, this_version_config_path)
-        if latest_data_path is not None and os.path.exists(latest_data_path):
+        # If the data dir is the same as the config dir, don't copy again
+        if latest_data_path is not None and os.path.exists(latest_data_path) and latest_data_path != latest_config_path:
             UM.VersionUpgradeManager.VersionUpgradeManager.getInstance().copyVersionFolder(latest_data_path, this_version_data_path)
 
         # Remove "cache" if we copied it together with config
