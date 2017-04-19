@@ -110,6 +110,12 @@ class MockContainer(ContainerInterface, UM.PluginObject.PluginObject):
     def deserialize(self, serialized):
         raise NotImplementedError()
 
+    def getConfigurationTypeFromSerialized(self, serialized):
+        raise NotImplementedError()
+
+    def getVersionFromSerialized(self, serialized):
+        raise NotImplementedError()
+
     metaDataChanged = Signal()
 
 ##  Tests adding a container to the registry.
