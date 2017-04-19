@@ -378,7 +378,7 @@ class Resources:
         cls.__paths.insert(0, cls.__data_storage_path)
 
     ##  Copies the directories of the latest version on this machine if present, so the upgrade will use the copies
-    #   as the base for upgrade
+    #   as the base for upgrade. See CURA-3529 for more details.
     @classmethod
     def _copyLatestDirsIfPresent(cls):
         # Paths for the version we are running right now
