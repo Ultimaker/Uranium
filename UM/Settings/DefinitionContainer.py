@@ -237,6 +237,16 @@ class DefinitionContainer(DefinitionContainerInterface, PluginObject):
                 setting = self._findInDict(parsed["settings"], key)
                 if setting is None:
                     Logger.log("w", "Unable to override setting %s", key)
+                else:
+                    setting.update(value)
+
+        # If we do not have metadata or settings the file is invalid
+        if "metadata" not in parsed:
+            raise InvalidDefinitionError("Missing required metadata section")
+
+        if "settings" not in parsed:
+            raise InvalidDefinitionError("Missing required settings section")
+
         return parsed
 
     ##  \copydoc ContainerInterface::deserialize
