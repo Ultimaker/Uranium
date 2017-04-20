@@ -27,20 +27,21 @@ class TestResources(TestCase):
             self.skipTest("not on Linux")
 
         # no XDG_CONFIG_HOME defined
-        os.unsetenv("XDG_CONFIG_HOME")
+        if "XDG_CONFIG_HOME" in os.environ:
+            del os.environ["XDG_CONFIG_HOME"]
         config_root_path = Resources._getConfigStorageRootPath()
         expected_config_root_path = os.path.expanduser("~/.config")
         self.assertEqual(expected_config_root_path, config_root_path,
                          "expected %s, got %s" % (expected_config_root_path, config_root_path))
 
         # XDG_CONFIG_HOME defined
-        os.putenv("XDG_CONFIG_HOME", "/tmp")
+        os.environ["XDG_CONFIG_HOME"] = "/tmp"
         config_root_path = Resources._getConfigStorageRootPath()
         expected_config_root_path = "/tmp"
         self.assertEqual(expected_config_root_path, config_root_path,
                          "expected %s, got %s" % (expected_config_root_path, config_root_path))
 
-    def test_getConfigtorageRootPath_Mac(self):
+    def test_getConfigStorageRootPath_Mac(self):
         if platform.system() != "Darwin":
             self.skipTest("not on mac")
 
@@ -64,14 +65,15 @@ class TestResources(TestCase):
             self.skipTest("not on Linux")
 
         # no XDG_CONFIG_HOME defined
-        os.unsetenv("XDG_DATA_HOME")
+        if "XDG_DATA_HOME" in os.environ:
+            del os.environ["XDG_DATA_HOME"]
         data_root_path = Resources._getConfigStorageRootPath()
         expected_data_root_path = os.path.expanduser("~/.local/share")
         self.assertEqual(expected_data_root_path, data_root_path,
                          "expected %s, got %s" % (expected_data_root_path, data_root_path))
 
         # XDG_CONFIG_HOME defined
-        os.putenv("XDG_DATA_HOME", "/tmp")
+        os.environ["XDG_DATA_HOME"] = "/tmp"
         data_root_path = Resources._getDataStorageRootPath()
         expected_data_root_path = "/tmp"
         self.assertEqual(expected_data_root_path, data_root_path,
