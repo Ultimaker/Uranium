@@ -166,7 +166,7 @@ class CameraTool(Tool):
             elif self.rotateEvent(event) == True:
                 self._rotate = True
                 self._start_drag = (event.x, event.y)
-                return True
+                return False
 
         elif event.type is Event.MouseMoveEvent:
             if self._rotate or self._move:
