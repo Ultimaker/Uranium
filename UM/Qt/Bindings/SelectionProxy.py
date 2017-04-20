@@ -17,6 +17,10 @@ class SelectionProxy(QObject):
     def hasSelection(self):
         return Selection.hasSelection()
 
+    @pyqtProperty(int, notify = selectionChanged)
+    def selectionCount(self):
+        return Selection.getCount()
+
     def _onSelectionChanged(self):
         self.selectionChanged.emit()
 
