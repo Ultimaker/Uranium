@@ -360,6 +360,10 @@ class ContainerRegistry(ContainerRegistryInterface):
             raise Exception("Plugin {plugin} has incorrect metadata: Expected a 'settings_container' block with a 'mimetype' entry".format(plugin = plugin_id))
         cls.addContainerTypeByName(container.__class__, plugin_id, metadata["settings_container"]["mimetype"])
 
+    ##  Used to associate mime types with object to be created
+    #   \param container_type  ContainerStack or derivative
+    #   \param type_name
+    #   \param mime_type
     @classmethod
     def addContainerTypeByName(cls, container_type, type_name, mime_type):
         cls.__container_types[type_name] = container_type
