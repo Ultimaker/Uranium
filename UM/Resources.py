@@ -7,6 +7,8 @@ import re
 import shutil
 from typing import List
 
+from PyQt5.QtCore import QStandardPaths
+
 from UM.Logger import Logger
 from UM.Platform import Platform
 
@@ -266,111 +268,72 @@ class Resources:
                 files.append(file_path)
         return files
 
-    @classmethod
-    def _getConfigStorageRootPath(cls):
-        # Returns the path where we store different versions of app configurations
-        config_path = None
-        if Platform.isWindows():
-            config_path = os.getenv("APPDATA")
-        elif Platform.isOSX():
-            config_path = os.path.expanduser("~/Library/Application Support")
-        elif Platform.isLinux():
-            try:
-                config_path = os.environ["XDG_CONFIG_HOME"]
-            except KeyError:
-                config_path = os.path.expanduser("~/.config")
-        else:
-            config_path = "."
-
-        return config_path
-
+    # Returns all possible root paths for storing app configurations (in old and new versions)
     @classmethod
     def _getPossibleConfigStorageRootPathList(cls):
-        # Returns all possible root paths for storing app configurations (in old and new versions)
         config_root_list = [Resources._getConfigStorageRootPath()]
-        if Platform.isWindows():
-            # it used to be in LOCALAPPDATA on Windows
-            config_root_list.append(os.getenv("LOCALAPPDATA"))
-        elif Platform.isOSX():
-            config_root_list.append(os.path.expanduser("~"))
 
-        config_root_list = [os.path.join(n, cls.ApplicationIdentifier) for n in config_root_list]
+        if Platform.isOSX():
+            # Config storage path on OSX used to be ~/.cura but changed to ~/Library/Application Support/Cura for 2.3 and later.
+            config_root_list.append(os.path.join(os.path.expanduser("~"), cls.ApplicationIdentifier))
+            # Config storage path on OSX used to be ~/Library/Application Support/cura but changed to ~/Library/Preferences/cura for 2.6.
+            config_root_list.append(QStandardPaths.writableLocation(QStandardPaths.AppDataLocation))
+
         return config_root_list
 
+    # Returns all possible root paths for storing app data (in old and new versions)
     @classmethod
     def _getPossibleDataStorageRootPathList(cls) -> List[str]:
-        data_root_list = []
+        data_root_list = [Resources._getDataStorageRootPath()]
 
-        # Returns all possible root paths for storing app configurations (in old and new versions)
-        if Platform.isLinux():
-            data_root_list.append(os.path.join(Resources._getDataStorageRootPath(), cls.ApplicationIdentifier))
-        else:
-            # on Windows and Mac, data and config are saved in the same place
-            data_root_list = Resources._getPossibleConfigStorageRootPathList()
+        if Platform.isWindows():
+            # Data storage path on Windows is now ~/AppData/Roaming/cura but used to be ~/AppData/Local/cura (changed since 2.6)
+            data_root_list.append(QStandardPaths.writableLocation(QStandardPaths.AppLocalDataLocation))
+        elif Platform.isOSX():
+            # Data storage path on OSX used to be ~/.cura but is now ~/Library/Application Support/Cura (changed since 2.3)
+            data_root_list.append(os.path.join(os.path.expanduser("~"), cls.ApplicationIdentifier))
 
         return data_root_list
 
+    # Returns the path where we store different versions of app configurations
+    @classmethod
+    def _getConfigStorageRootPath(cls):
+        # Equals ~/.config/<appname> on Linux, ~/Library/Preferences/<appname> on OSX, ~/AppData/Local/<appname> on Windows.
+        return QStandardPaths.writableLocation(QStandardPaths.AppConfigLocation)
+
+    # Returns the path where we store different versions of app data
     @classmethod
     def _getDataStorageRootPath(cls):
-        # Returns the path where we store different versions of app data
-        data_path = None
-        if Platform.isLinux():
-            try:
-                data_path = os.environ["XDG_DATA_HOME"]
-            except KeyError:
-                data_path = os.path.expanduser("~/.local/share")
-        return data_path
+        # Equals ~/.local/share/<appname> on Linux, ~/Library/Application Support/<appname> on OSX, ~/AppData/Roaming/<appname> on Windows.
+        return QStandardPaths.writableLocation(QStandardPaths.AppDataLocation)
 
+    # Returns the path where we store different versions of app configurations
     @classmethod
     def _getCacheStorageRootPath(cls):
-        # Returns the path where we store different versions of app configurations
-        cache_path = None
-        if Platform.isWindows():
-            cache_path = os.getenv("LOCALAPPDATA")
-        elif Platform.isOSX():
-            cache_path = None
-        elif Platform.isLinux():
-            try:
-                cache_path = os.environ["XDG_CACHE_HOME"]
-            except KeyError:
-                cache_path = os.path.expanduser("~/.cache")
-
-        return cache_path
+        # Equals ~/.cache/<appname> on Linux, ~/Library/Caches/<appname> on OSX, ~/AppData/Local/<appname>/cache on Windows.
+        return QStandardPaths.writableLocation(QStandardPaths.CacheLocation)
 
     @classmethod
     def __initializeStoragePaths(cls):
         Logger.log("d", "Initializing storage paths")
         # use nested structure: <app-name>/<version>/...
         if cls.ApplicationVersion == "master" or cls.ApplicationVersion == "unknown":
-            storage_dir_name = os.path.join(cls.ApplicationIdentifier, cls.ApplicationVersion)
+            storage_dir_name = cls.ApplicationVersion
         else:
             from UM.Version import Version
             version = Version(cls.ApplicationVersion)
-            storage_dir_name = os.path.join(cls.ApplicationIdentifier, "%s.%s" % (version.getMajor(), version.getMinor()))
+            storage_dir_name = "%s.%s" % (version.getMajor(), version.getMinor())
 
-        # config is saved in "<CONFIG_ROOT>/<storage_dir_name>"
         cls.__config_storage_path = os.path.join(Resources._getConfigStorageRootPath(), storage_dir_name)
         Logger.log("d", "Config storage path is %s", cls.__config_storage_path)
 
-        # data is saved in
-        #  - on Linux: "<DATA_ROOT>/<storage_dir_name>"
-        #  - on other: "<CONFIG_DIR>" (in the config directory)
         data_root_path = Resources._getDataStorageRootPath()
-        cls.__data_storage_path = cls.__config_storage_path if data_root_path is None else \
-            os.path.join(data_root_path, storage_dir_name)
+        cls.__data_storage_path = os.path.join(data_root_path, storage_dir_name)
         Logger.log("d", "Data storage path is %s", cls.__data_storage_path)
-        # cache is saved in
-        #  - on Linux:   "<CACHE_DIR>/<storage_dir_name>"
-        #  - on Windows: "<CACHE_DIR>/<storage_dir_name>/cache"
-        #  - on Mac:     "<CONFIG_DIR>/cache" (in the config directory)
+
         cache_root_path = Resources._getCacheStorageRootPath()
-        if cache_root_path is None:
-            cls.__cache_storage_path = os.path.join(cls.__config_storage_path, "cache")
-        else:
-            cls.__cache_storage_path = os.path.join(cache_root_path, storage_dir_name)
-            if Platform.isWindows():
-                cls.__cache_storage_path = os.path.join(cls.__cache_storage_path, "cache")
         Logger.log("d", "Cache storage path is %s", cls.__cache_storage_path)
+
         if not os.path.exists(cls.__config_storage_path):
             cls._copyLatestDirsIfPresent()
 
