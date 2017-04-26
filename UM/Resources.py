@@ -327,11 +327,10 @@ class Resources:
         cls.__config_storage_path = os.path.join(Resources._getConfigStorageRootPath(), storage_dir_name)
         Logger.log("d", "Config storage path is %s", cls.__config_storage_path)
 
-        data_root_path = Resources._getDataStorageRootPath()
-        cls.__data_storage_path = os.path.join(data_root_path, storage_dir_name)
+        cls.__data_storage_path = os.path.join(Resources._getDataStorageRootPath(), storage_dir_name)
         Logger.log("d", "Data storage path is %s", cls.__data_storage_path)
 
-        cache_root_path = Resources._getCacheStorageRootPath()
+        cls.__cache_storage_path = os.path.join(Resources._getCacheStorageRootPath(), storage_dir_name)
         Logger.log("d", "Cache storage path is %s", cls.__cache_storage_path)
 
         if not os.path.exists(cls.__config_storage_path):
