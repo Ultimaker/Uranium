@@ -299,12 +299,11 @@ class Resources:
 
     @classmethod
     def _getPossibleDataStorageRootPathList(cls) -> List[str]:
-        data_root_list = None
+        data_root_list = []
 
         # Returns all possible root paths for storing app configurations (in old and new versions)
         if Platform.isLinux():
-            data_root_list = Resources._getDataStorageRootPath()
-            data_root_list = [os.path.join(n, cls.ApplicationIdentifier) for n in data_root_list]
+            data_root_list.append(os.path.join(Resources._getDataStorageRootPath(), cls.ApplicationIdentifier))
         else:
             # on Windows and Mac, data and config are saved in the same place
             data_root_list = Resources._getPossibleConfigStorageRootPathList()
