@@ -278,6 +278,9 @@ class Resources:
             config_root_list.append(os.path.join(os.path.expanduser("~"), cls.ApplicationIdentifier))
             # Config storage path on OSX used to be ~/Library/Application Support/cura but changed to ~/Library/Preferences/cura for 2.6.
             config_root_list.append(os.path.normpath(QStandardPaths.writableLocation(QStandardPaths.AppDataLocation)))
+        elif Platform.isWindows():
+            # Config used to be in AppData/Local, so make sure to include that.
+            config_root_list.append(os.path.normpath(QStandardPaths.writableLocation(QStandardPaths.AppLocalDataLocation)))
 
         return config_root_list
 
@@ -298,7 +301,11 @@ class Resources:
     # Returns the path where we store different versions of app configurations
     @classmethod
     def _getConfigStorageRootPath(cls):
-        # Equals ~/.config/<appname> on Linux, ~/Library/Preferences/<appname> on OSX, ~/AppData/Local/<appname> on Windows.
+        if Platform.isWindows():
+            # Special case for Windows, since Qt treats Config as local data but we want config in Roaming.
+            return os.path.normpath(QStandardPaths.writableLocation(QStandardPaths.AppDataLocation))
+
+        # Equals ~/.config/<appname> on Linux, ~/Library/Preferences/<appname> on OSX
         return os.path.normpath(QStandardPaths.writableLocation(QStandardPaths.AppConfigLocation))
 
     # Returns the path where we store different versions of app data
