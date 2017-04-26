@@ -67,6 +67,9 @@ class QtApplication(QApplication, Application):
 
         super().__init__(sys.argv, **kwargs)
 
+        # Set the QCoreApplication applicationName property
+        self.setApplicationName(self.getApplicationName())
+
         self.setAttribute(Qt.AA_UseDesktopOpenGL)
         major_version, minor_version, profile = OpenGLContext.detectBestOpenGLVersion()
 
