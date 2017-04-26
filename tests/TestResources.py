@@ -24,7 +24,7 @@ class TestResources(TestCase):
             self.skipTest("not on Windows")
 
         config_root_path = Resources._getConfigStorageRootPath()
-        expected_config_root_path = os.path.join(os.getenv("LOCALAPPDATA"), "test")
+        expected_config_root_path = os.path.join(os.getenv("APPDATA"), "test")
         self.assertEqual(expected_config_root_path, config_root_path)
 
     def test_getConfigStorageRootPath_Linux(self):
