@@ -277,7 +277,7 @@ class Resources:
             # Config storage path on OSX used to be ~/.cura but changed to ~/Library/Application Support/Cura for 2.3 and later.
             config_root_list.append(os.path.join(os.path.expanduser("~"), cls.ApplicationIdentifier))
             # Config storage path on OSX used to be ~/Library/Application Support/cura but changed to ~/Library/Preferences/cura for 2.6.
-            config_root_list.append(QStandardPaths.writableLocation(QStandardPaths.AppDataLocation))
+            config_root_list.append(os.path.normpath(QStandardPaths.writableLocation(QStandardPaths.AppDataLocation)))
 
         return config_root_list
 
@@ -288,7 +288,7 @@ class Resources:
 
         if Platform.isWindows():
             # Data storage path on Windows is now ~/AppData/Roaming/cura but used to be ~/AppData/Local/cura (changed since 2.6)
-            data_root_list.append(QStandardPaths.writableLocation(QStandardPaths.AppLocalDataLocation))
+            data_root_list.append(os.path.normpath(QStandardPaths.writableLocation(QStandardPaths.AppLocalDataLocation)))
         elif Platform.isOSX():
             # Data storage path on OSX used to be ~/.cura but is now ~/Library/Application Support/Cura (changed since 2.3)
             data_root_list.append(os.path.join(os.path.expanduser("~"), cls.ApplicationIdentifier))
@@ -299,19 +299,19 @@ class Resources:
     @classmethod
     def _getConfigStorageRootPath(cls):
         # Equals ~/.config/<appname> on Linux, ~/Library/Preferences/<appname> on OSX, ~/AppData/Local/<appname> on Windows.
-        return QStandardPaths.writableLocation(QStandardPaths.AppConfigLocation)
+        return os.path.normpath(QStandardPaths.writableLocation(QStandardPaths.AppConfigLocation))
 
     # Returns the path where we store different versions of app data
     @classmethod
     def _getDataStorageRootPath(cls):
         # Equals ~/.local/share/<appname> on Linux, ~/Library/Application Support/<appname> on OSX, ~/AppData/Roaming/<appname> on Windows.
-        return QStandardPaths.writableLocation(QStandardPaths.AppDataLocation)
+        return os.path.normpath(QStandardPaths.writableLocation(QStandardPaths.AppDataLocation))
 
     # Returns the path where we store different versions of app configurations
     @classmethod
     def _getCacheStorageRootPath(cls):
         # Equals ~/.cache/<appname> on Linux, ~/Library/Caches/<appname> on OSX, ~/AppData/Local/<appname>/cache on Windows.
-        return QStandardPaths.writableLocation(QStandardPaths.CacheLocation)
+        return os.path.normpath(QStandardPaths.writableLocation(QStandardPaths.CacheLocation))
 
     @classmethod
     def __initializeStoragePaths(cls):
