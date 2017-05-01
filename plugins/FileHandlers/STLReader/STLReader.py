@@ -30,8 +30,8 @@ class STLReader(MeshReader):
         super(STLReader, self).__init__()
         self._supported_extensions = [".stl"]
 
-    def load_file(self, file_name, mesh_builder, use_numpystl = False):
-        if use_numpystl:
+    def load_file(self, file_name, mesh_builder, _use_numpystl = False):
+        if _use_numpystl:
             self._loadWithNumpySTL(file_name, mesh_builder)
         else:
             f = open(file_name, "rb")
@@ -53,7 +53,7 @@ class STLReader(MeshReader):
         mesh_builder = MeshBuilder()
         scene_node = SceneNode()
 
-        self.load_file(file_name, mesh_builder, use_numpystl = use_numpystl)
+        self.load_file(file_name, mesh_builder, _use_numpystl = use_numpystl)
 
         mesh = mesh_builder.build()
 
@@ -65,7 +65,7 @@ class STLReader(MeshReader):
                 # Something may have gone wrong in numpy stl, start over without numpy stl
                 Logger.log("w", "All Z coordinates are the same using numpystl, trying again without numpy stl.")
                 mesh_builder = MeshBuilder()
-                self.load_file(file_name, mesh_builder, use_numpystl = False)
+                self.load_file(file_name, mesh_builder, _use_numpystl = False)
                 mesh = mesh_builder.build()
 
                 verts = mesh.getVertices()
