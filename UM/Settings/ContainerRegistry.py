@@ -282,10 +282,11 @@ class ContainerRegistry(ContainerRegistryInterface):
                 continue
 
             mime_type = self.getMimeTypeForContainer(type(instance))
-            file_name = urllib.parse.quote_plus(instance.getId()) + "." + mime_type.preferredSuffix
-            path = Resources.getStoragePath(Resources.InstanceContainers, file_name)
-            with SaveFile(path, "wt") as f:
-                f.write(data)
+            if mime_type is not None:
+                file_name = urllib.parse.quote_plus(instance.getId()) + "." + mime_type.preferredSuffix
+                path = Resources.getStoragePath(Resources.InstanceContainers, file_name)
+                with SaveFile(path, "wt") as f:
+                    f.write(data)
 
         for stack in self.findContainerStacks():
             if not stack.isDirty():
@@ -301,10 +302,11 @@ class ContainerRegistry(ContainerRegistryInterface):
                 continue
 
             mime_type = self.getMimeTypeForContainer(type(stack))
-            file_name = urllib.parse.quote_plus(stack.getId()) + "." + mime_type.preferredSuffix
-            path = Resources.getStoragePath(Resources.ContainerStacks, file_name)
-            with SaveFile(path, "wt") as f:
-                f.write(data)
+            if mime_type is not None:
+                file_name = urllib.parse.quote_plus(stack.getId()) + "." + mime_type.preferredSuffix
+                path = Resources.getStoragePath(Resources.ContainerStacks, file_name)
+                with SaveFile(path, "wt") as f:
+                    f.write(data)
 
         for definition in self.findDefinitionContainers():
             try:
@@ -317,10 +319,11 @@ class ContainerRegistry(ContainerRegistryInterface):
                 continue
 
             mime_type = self.getMimeTypeForContainer(type(definition))
-            file_name = urllib.parse.quote_plus(definition.getId()) + "." + mime_type.preferredSuffix
-            path = Resources.getStoragePath(Resources.DefinitionContainers, file_name)
-            with SaveFile(path, "wt") as f:
-                f.write(data)
+            if mime_type is not None:
+                file_name = urllib.parse.quote_plus(definition.getId()) + "." + mime_type.preferredSuffix
+                path = Resources.getStoragePath(Resources.DefinitionContainers, file_name)
+                with SaveFile(path, "wt") as f:
+                    f.write(data)
 
     ##  Creates a new unique name for a container that doesn't exist yet.
     #
@@ -376,10 +379,12 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   \return A MimeType object that matches the mime type of the container or None if not found.
     @classmethod
     def getMimeTypeForContainer(cls, container_type):
-        mime_type_name = UM.Dictionary.findKey(cls.__mime_type_map, container_type)
-        if mime_type_name:
-            return MimeTypeDatabase.getMimeType(mime_type_name)
-
+        try:
+            mime_type_name = UM.Dictionary.findKey(cls.__mime_type_map, container_type)
+            if mime_type_name:
+                return MimeTypeDatabase.getMimeType(mime_type_name)
+        except ValueError:
+            Logger.log("w", "Unable to find mimetype for container %s", container_type)
         return None
 
     ##  Get the container type corresponding to a certain mime type.
