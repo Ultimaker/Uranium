@@ -270,7 +270,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
         parser.add_section("containers")
         for index in range(len(self._containers)):
-            parser["containers"][str(index)] = self._containers[index].getId()
+            parser["containers"][str(index)] = str(self._containers[index].getId())
 
         stream = io.StringIO()
         parser.write(stream)
