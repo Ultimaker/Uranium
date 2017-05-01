@@ -67,7 +67,7 @@ class TestResources(TestCase):
         # no XDG_CONFIG_HOME defined
         if "XDG_DATA_HOME" in os.environ:
             del os.environ["XDG_DATA_HOME"]
-        data_root_path = Resources._getConfigStorageRootPath()
+        data_root_path = Resources._getDataStorageRootPath()
         expected_data_root_path = os.path.expanduser("~/.local/share")
         self.assertEqual(expected_data_root_path, data_root_path,
                          "expected %s, got %s" % (expected_data_root_path, data_root_path))

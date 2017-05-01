@@ -41,9 +41,10 @@ class UpdateCheckerJob(Job):
 
         application_name = Application.getInstance().getApplicationName()
         Logger.log("i", "Checking for new version of %s" % application_name)
-
         try:
-            latest_version_file = urllib.request.urlopen(self._url)
+            headers = {"User-Agent": "%s - %s" % (application_name, Application.getInstance().getVersion())}
+            request = urllib.request.Request(self._url, headers = headers)
+            latest_version_file = urllib.request.urlopen(request)
         except Exception as e:
             Logger.log("w", "Failed to check for new version: %s" % e)
             if not self.silent:
