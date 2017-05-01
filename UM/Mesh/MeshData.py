@@ -364,7 +364,14 @@ def approximateConvexHull(vertex_data: numpy.ndarray, target_count: int) -> Opti
 
     # Round off vertices and extract the uniques until the number of vertices is below the input_max.
     while len(vertex_data) > input_max:
-        vertex_data = uniqueVertices(roundVertexArray(vertex_data, unit_size))
+        new_vertex_data = uniqueVertices(roundVertexArray(vertex_data, unit_size))
+        # Check if there is variance in Z value, we need it for the convex hull calculation
+        if numpy.amin(new_vertex_data[:, 1]) != numpy.amax(new_vertex_data[:, 1]):
+            vertex_data = new_vertex_data
+        else:
+            # Prevent convex hull calculation from crashing
+            Logger.log("w", "Stopped shrinking data because otherwise the convex hull calculation will crash. Vertices: %s (target: %s)" % (len(vertex_data), input_max))
+            break
         unit_size *= 2
 
     if len(vertex_data) < 4:

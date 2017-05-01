@@ -30,11 +30,7 @@ class STLReader(MeshReader):
         super(STLReader, self).__init__()
         self._supported_extensions = [".stl"]
 
-    ## Decide if we need to use ascii or binary in order to read file
-    def read(self, file_name):
-        mesh_builder = MeshBuilder()
-        scene_node = SceneNode()
-
+    def load_file(self, file_name, mesh_builder, use_numpystl = False):
         if use_numpystl:
             self._loadWithNumpySTL(file_name, mesh_builder)
         else:
@@ -47,13 +43,34 @@ class STLReader(MeshReader):
                 except UnicodeDecodeError:
                     return None
                 f.close()
-
-            Job.yieldThread() # Yield somewhat to ensure the GUI has time to update a bit.
+            Job.yieldThread()  # Yield somewhat to ensure the GUI has time to update a bit.
 
         mesh_builder.calculateNormals(fast = True)
         mesh_builder.setFileName(file_name)
 
+    ## Decide if we need to use ascii or binary in order to read file
+    def read(self, file_name):
+        mesh_builder = MeshBuilder()
+        scene_node = SceneNode()
+
+        self.load_file(file_name, mesh_builder, use_numpystl = use_numpystl)
+
         mesh = mesh_builder.build()
+
+        if use_numpystl:
+            verts = mesh.getVertices()
+            # In some cases numpy stl reads incorrectly and the result is that the Z values are all 0
+            # Add new error cases if you find them.
+            if numpy.amin(verts[:, 1]) == numpy.amax(verts[:, 1]):
+                # Something may have gone wrong in numpy stl, start over without numpy stl
+                Logger.log("w", "All Z coordinates are the same using numpystl, trying again without numpy stl.")
+                mesh_builder = MeshBuilder()
+                self.load_file(file_name, mesh_builder, use_numpystl = False)
+                mesh = mesh_builder.build()
+
+                verts = mesh.getVertices()
+                if numpy.amin(verts[:, 1]) == numpy.amax(verts[:, 1]):
+                    Logger.log("e", "All Z coordinates are still the same without numpy stl... let's hope for the best")
 
         if mesh_builder.getVertexCount() == 0:
             Logger.log("d", "File did not contain valid data, unable to read.")
