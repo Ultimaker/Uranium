@@ -20,6 +20,8 @@ from UM.Settings.SettingRelation import SettingRelation
 from UM.Settings.SettingRelation import RelationType
 from UM.Settings.SettingFunction import SettingFunction
 
+from typing import Dict, Any, List
+
 class InvalidDefinitionError(Exception):
     pass
 
