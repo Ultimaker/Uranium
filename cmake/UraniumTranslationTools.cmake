@@ -100,7 +100,7 @@ if(GETTEXT_FOUND)
     endif()
     message(STATUS "Creating target i18n-update-po")
     add_custom_target(i18n-update-po)
-    message(STATUS "Creating target i18n-update-mo")
+    message(STATUS "Creating target i18n-create-mo")
     add_custom_target(i18n-create-mo ALL)
 
     SUBDIRLIST(languages ${CMAKE_SOURCE_DIR}/resources/i18n/)

@@ -4,8 +4,7 @@
 import configparser
 import io
 import copy
-from typing import Dict
-from typing import List
+from typing import List, Dict, Optional
 
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
 
@@ -15,10 +14,7 @@ from UM.PluginObject import PluginObject
 from UM.Logger import Logger
 from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType
 
-from UM.Settings.Interfaces import ContainerRegistryInterface
-from UM.Settings.DefinitionContainer import DefinitionContainer
-
-from UM.Settings.Interfaces import ContainerInterface
+from UM.Settings.Interfaces import ContainerInterface, ContainerRegistryInterface
 from UM.Settings.SettingInstance import SettingInstance
 
 class InvalidInstanceError(Exception):
@@ -37,6 +33,7 @@ MimeTypeDatabase.addMimeType(
         suffixes = [ "inst.cfg" ]
     )
 )
+
 
 ##  A container for SettingInstance objects.
 #
@@ -68,6 +65,18 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         # According to some, returning the ID is technically not right, as objects with the same value should return
         # the same hash. The way we use it, it is acceptable for objects with the same value to return a different hash.
         return id(self)
+
+    def __deepcopy__(self, memo):
+        new_container = self.__class__(self._id)
+        new_container._name = self._name
+        new_container._definition = self._definition
+        new_container._metadata = copy.deepcopy(self._metadata, memo)
+        new_container._instances = copy.deepcopy(self._instances, memo)
+        new_container._read_only = self._read_only
+        new_container._dirty = self._dirty
+        new_container._path = copy.deepcopy(self._path, memo)
+        new_container._cached_values = copy.deepcopy(self._cached_values, memo)
+        return new_container
 
     def __eq__(self, other):
         self._instantiateCachedValues()
@@ -384,11 +393,8 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         parser.write(stream)
         return stream.getvalue()
 
-    ##  \copydoc ContainerInterface::deserialize
-    #
-    #   Reimplemented from ContainerInterface
-    def deserialize(self, serialized: str) -> None:
-        parser = configparser.ConfigParser(interpolation = None)
+    def _readAndValidateSerialized(self, serialized: str) -> configparser.ConfigParser:
+        parser = configparser.ConfigParser(interpolation=None)
         parser.read_string(serialized)
 
         has_general = "general" in parser
@@ -404,6 +410,33 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
             if not has_version:
                 exception_string += " property 'version'"
             raise InvalidInstanceError(exception_string)
+        return parser
+
+    def getConfigurationTypeFromSerialized(self, serialized: str) -> Optional[str]:
+        configuration_type = None
+        try:
+            parser = self._readAndValidateSerialized(serialized)
+            configuration_type = parser['metadata'].get('type')
+        except Exception as e:
+            Logger.log("d", "Could not get configuration type: %s", e)
+        return configuration_type
+
+    def getVersionFromSerialized(self, serialized: str) -> Optional[int]:
+        version = None
+        parser = self._readAndValidateSerialized(serialized)
+        try:
+            version = parser["general"].getint("version")
+        except Exception as e:
+            Logger.log("e", "Could not get version from serialized: %s", e)
+        return version
+
+    ##  \copydoc ContainerInterface::deserialize
+    #
+    #   Reimplemented from ContainerInterface
+    def deserialize(self, serialized: str) -> str:
+        # update the serialized data first
+        serialized = super().deserialize(serialized)
+        parser = self._readAndValidateSerialized(serialized)
 
         if int(parser["general"]["version"]) != self.Version:
             raise IncorrectInstanceVersionError("Reported version {0} but expected version {1}".format(int(parser["general"]["version"]), self.Version))

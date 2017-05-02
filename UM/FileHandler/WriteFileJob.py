@@ -5,6 +5,7 @@ from UM.Job import Job
 import time
 from UM.Logger import Logger
 
+
 ##  A Job subclass that performs writing.
 #
 #   The writer defines what the result of this job is.
@@ -23,6 +24,18 @@ class WriteFileJob(Job):
         self._data = data
         self._file_name = ""
         self._mode = mode
+        self._message = None
+        self.progress.connect(self._onProgress)
+        self.finished.connect(self._onFinished)
+
+    def _onFinished(self, job):
+        if self == job and self._message is not None:
+            self._message.hide()
+            self._message = None
+
+    def _onProgress(self, job, amount):
+        if self == job and self._message:
+            self._message.setProgress(amount)
 
     def setFileName(self, name):
         self._file_name = name
@@ -32,6 +45,13 @@ class WriteFileJob(Job):
 
     def getStream(self):
         return self._stream
+
+    ##  Set the message associated with this job
+    def setMessage(self, message):
+        self._message = message
+
+    def getMessage(self):
+        return self._message
 
     def run(self):
         Job.yieldThread()

@@ -11,19 +11,21 @@ from UM.PluginObject import PluginObject
 
 ##  Static class used for logging purposes. This class is only meant to be used as a static class.
 class Logger:
+    __loggers = []  # type: List[Logger]
+
     def __init__(self):
         raise Exception("This class is static only")
 
     ##  Add a logger to the list.
     #   \param logger \type{Logger}
     @classmethod
-    def addLogger(cls, logger):
+    def addLogger(cls, logger: "Logger"):
         cls.__loggers.append(logger)
 
     ##  Get all loggers
     #   \returns \type{list} List of Loggers
     @classmethod
-    def getLoggers(cls):
+    def getLoggers(cls) -> List["Logger"]:
         return cls.__loggers
 
     ##  Send a message of certain type to all loggers to be handled.
@@ -40,7 +42,7 @@ class Logger:
     #   \param *args \type{list} List of placeholder replacements that will be passed to str.format() or %.
     #   \param **kwargs \type{dict} List of placeholder replacements that will be passed to str.format().
     @classmethod
-    def log(cls, log_type, message, *args, **kwargs):
+    def log(cls, log_type: str, message: str, *args, **kwargs):
         caller_frame = inspect.currentframe().f_back
         frame_info = inspect.getframeinfo(caller_frame)
         try:
@@ -70,14 +72,13 @@ class Logger:
     #   \param log_type The importance level of the log (warning, info, etc.).
     #   \param message The message to go along with the exception.
     @classmethod
-    def logException(cls, log_type, message, *args):
+    def logException(cls, log_type: str, message: str, *args):
         cls.log(log_type, "Exception: " + message, *args)
         # The function traceback.format_exception gives a list of strings, but those are not properly split on newlines.
         # traceback.format_exc only gives back a single string, but we can properly split that. It does add an extra newline at the end, so strip that.
         for line in traceback.format_exc().rstrip().split("\n"):
             cls.log(log_type, line)
 
-    __loggers = []  # type: List[Logger]
 
 ##  Abstract base class for log output classes.
 class LogOutput(PluginObject):
@@ -85,8 +86,8 @@ class LogOutput(PluginObject):
     #
     #   This is called during the plug-in loading stage.
     def __init__(self):
-        super().__init__() # Call super to make multiple inheritance work.
-        self._name = type(self).__name__ # Set name of the logger to it's class name
+        super().__init__()  # Call super to make multiple inheritance work.
+        self._name = type(self).__name__  # Set name of the logger to it's class name
 
     ##  Log a message.
     #
@@ -100,5 +101,5 @@ class LogOutput(PluginObject):
     #   \param log_type \type{string} A value describing the type of message.
     #   \param message \type{string} The message to log.
     #   \exception NotImplementedError
-    def log(self, log_type, message):
+    def log(self, log_type: str, message: str):
         raise NotImplementedError("Logger was not correctly implemented")

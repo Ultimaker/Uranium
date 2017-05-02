@@ -1,19 +1,22 @@
 # Copyright (c) 2016 Ultimaker B.V.
 # Cura is released under the terms of the AGPLv3 or higher.
 
-import collections #For deque, for breadth-first search and to track tasks, and namedtuple.
-import os #To get the configuration file names and to rename files.
+import collections  # For deque, for breadth-first search and to track tasks, and namedtuple.
+import os  # To get the configuration file names and to rename files.
 import traceback
 
 from UM.Application import Application
 from UM.Logger import Logger
-from UM.PluginRegistry import PluginRegistry #To find plug-ins.
-from UM.Resources import Resources #To load old versions from.
-import UM.i18n #To translate the "upgrade succeeded" message.
-import UM.Message #To show the "upgrade succeeded" message.
-import UM.MimeTypeDatabase #To know how to save the resulting files.
+from UM.PluginRegistry import PluginRegistry  # To find plug-ins.
+from UM.Resources import Resources  # To load old versions from.
+import UM.i18n  # To translate the "upgrade succeeded" message.
+import UM.Message  # To show the "upgrade succeeded" message.
+import UM.MimeTypeDatabase  # To know how to save the resulting files.
+import tempfile
+import shutil
 
 catalogue = UM.i18n.i18nCatalog("uranium")
+
 
 ##  File that needs upgrading, with all the required info to upgrade it.
 #
@@ -24,6 +27,10 @@ catalogue = UM.i18n.i18nCatalog("uranium")
 #     storage path.
 #   - configuration_type: The configuration type of the file before upgrading.
 UpgradeTask = collections.namedtuple("UpgradeTask", ["storage_path", "file_name", "configuration_type"])
+
+FilesDataUpdateResult = collections.namedtuple("FilesDataUpdateResult",
+                                               ["configuration_type", "version", "files_data",
+                                                "file_names_without_extension"])
 
 ##  Regulates the upgrading of configuration from one application version to the
 #   next.
@@ -49,7 +56,7 @@ class VersionUpgradeManager:
 
     ##  Gets the instance of the VersionUpgradeManager, or creates one.
     @classmethod
-    def getInstance(cls):
+    def getInstance(cls) -> "VersionUpgradeManager":
         if not cls.__instance:
             cls.__instance = VersionUpgradeManager()
         return cls.__instance
@@ -221,6 +228,16 @@ class VersionUpgradeManager:
                     for configuration_file in self._getFilesInDirectory(path):
                         yield UpgradeTask(storage_path = path, file_name = configuration_file, configuration_type = old_configuration_type)
 
+    def copyVersionFolder(self, src_path, dest_path):
+        Logger.log("i", "Copying directory from '%s' to '%s'", src_path, dest_path)
+        # we first copy everything to a temporary folder, and then move it to the new folder
+        base_dir_name = os.path.basename(src_path)
+        temp_root_dir_path = tempfile.mkdtemp("cura-copy")
+        temp_dir_path = os.path.join(temp_root_dir_path, base_dir_name)
+        # src -> temp -> dest
+        shutil.copytree(src_path, temp_dir_path)
+        shutil.move(temp_dir_path, dest_path)
+
     ##  Stores an old version of a configuration file away.
     #
     #   This old file is intended as a back-up. It will be stored in the ./old
@@ -267,87 +284,102 @@ class VersionUpgradeManager:
     def _upgradeFile(self, storage_path_absolute, configuration_file, old_configuration_type):
         configuration_file_absolute = os.path.join(storage_path_absolute, configuration_file)
 
-        #Read the old file.
+        # Read the old file.
         try:
             with open(configuration_file_absolute, encoding = "utf-8", errors = "ignore") as file_handle:
                 files_data = [file_handle.read()]
-        except MemoryError: #File is too big. It might be the log.
+        except MemoryError:  # File is too big. It might be the log.
             return False
-        except FileNotFoundError: #File was already moved to an /old directory.
+        except FileNotFoundError:  # File was already moved to an /old directory.
             return False
         except IOError:
             Logger.log("w", "Can't open configuration file %s for reading.", configuration_file_absolute)
             return False
 
-        #Get the version number of the old file.
+        # Get the version number of the old file.
         try:
             old_version = self._get_version_functions[old_configuration_type](files_data[0])
-        except: #Version getter gives an exception. Not a valid file. Can't upgrade it then.
+        except:  # Version getter gives an exception. Not a valid file. Can't upgrade it then.
             return False
         version = old_version
         configuration_type = old_configuration_type
 
+        # Get the actual MIME type object, from the name.
         try:
-            mime_type = UM.MimeTypeDatabase.MimeTypeDatabase.getMimeTypeForFile(configuration_file)  # Get the actual MIME type object, from the name.
+            mime_type = UM.MimeTypeDatabase.MimeTypeDatabase.getMimeTypeForFile(configuration_file)
         except UM.MimeTypeDatabase.MimeTypeNotFoundError:
             return False
 
         filenames_without_extension = [self._stripMimeTypeExtension(mime_type, configuration_file)]
+        result_data = self.updateFilesData(configuration_type, version,
+                                                            files_data, filenames_without_extension)
+        if not result_data:
+            return False
+        configuration_type, version, files_data, filenames_without_extension = result_data
 
-        #Keep converting the file until it's at one of the current versions.
-        while (configuration_type, version) not in self._current_versions:
-            if (configuration_type, version) not in self._upgrade_routes:
-                #No version upgrade plug-in claims to be able to upgrade this file.
-                return False
-            new_type, new_version, upgrade_step = self._upgrade_routes[(configuration_type, version)]
-            new_filenames_without_extension = []
-            new_files_data = []
-            for file_idx, file_data in enumerate(files_data):
-                try:
-                    upgrade_step_result = upgrade_step(file_data, filenames_without_extension[file_idx])
-                except Exception as e: #Upgrade failed due to a coding error in the plug-in.
-                    Logger.logException("w", "Exception in %s upgrade with %s: %s", old_configuration_type,
-                                        upgrade_step.__module__, traceback.format_exc() )
-                    return False
-                if upgrade_step_result:
-                    this_filenames_without_extension, this_files_data = upgrade_step_result
-                else: #Upgrade failed.
-                    Logger.log("w", "Unable to upgrade the file %s with %s.%s. Skipping it.", filenames_without_extension[file_idx], upgrade_step.__module__, upgrade_step.__name__)
-                    return False
-                new_filenames_without_extension += this_filenames_without_extension
-                new_files_data += this_files_data
-            filenames_without_extension = new_filenames_without_extension
-            files_data = new_files_data
-            version = new_version
-            configuration_type = new_type
-
-        #If the version changed, save the new files.
+        # If the version changed, save the new files.
         if version != old_version or configuration_type != old_configuration_type:
             self._storeOldFile(storage_path_absolute, configuration_file, old_version)
 
-            #Finding out where to store these files.
+            # Finding out where to store these files.
             resource_type, mime_type = self._current_versions[(configuration_type, version)]
             storage_path = Resources.getStoragePathForType(resource_type)
-            mime_type = UM.MimeTypeDatabase.MimeTypeDatabase.getMimeType(mime_type) #Get the actual MIME type object, from the name.
+            mime_type = UM.MimeTypeDatabase.MimeTypeDatabase.getMimeType(mime_type)  # Get the actual MIME type object, from the name.
             if mime_type.preferredSuffix:
                 extension = "." + mime_type.preferredSuffix
             elif mime_type.suffixes:
                 extension = "." + mime_type.suffixes[0]
             else:
-                extension = "" #No known suffix. Put no extension behind it.
+                extension = ""  # No known suffix. Put no extension behind it.
             new_filenames = [filename + extension for filename in filenames_without_extension]
             configuration_files_absolute = [os.path.join(storage_path, filename) for filename in new_filenames]
 
             for file_idx, configuration_file_absolute in enumerate(configuration_files_absolute):
                 try:
                     with open(os.path.join(configuration_file_absolute), "w", encoding = "utf-8") as file_handle:
-                        file_handle.write(files_data[file_idx]) #Save the new file.
+                        file_handle.write(files_data[file_idx])  # Save the new file.
                 except IOError:
                     Logger.log("w", "Couldn't write new configuration file to %s.", configuration_file_absolute)
                     return False
             Logger.log("i", "Upgraded %s to version %s.", configuration_file, str(version))
             return True
-        return False #Version didn't change. Was already current.
+        return False  # Version didn't change. Was already current.
+
+    def updateFilesData(self, configuration_type, version, files_data, file_names_without_extension):
+        old_configuration_type = configuration_type
+
+        # Keep converting the file until it's at one of the current versions.
+        while (configuration_type, version) not in self._current_versions:
+            if (configuration_type, version) not in self._upgrade_routes:
+                # No version upgrade plug-in claims to be able to upgrade this file.
+                return None
+            new_type, new_version, upgrade_step = self._upgrade_routes[(configuration_type, version)]
+            new_file_names_without_extension = []
+            new_files_data = []
+            for file_idx, file_data in enumerate(files_data):
+                try:
+                    upgrade_step_result = upgrade_step(file_data, file_names_without_extension[file_idx])
+                except Exception as e:  # Upgrade failed due to a coding error in the plug-in.
+                    Logger.logException("w", "Exception in %s upgrade with %s: %s", old_configuration_type,
+                                        upgrade_step.__module__, traceback.format_exc())
+                    return None
+                if upgrade_step_result:
+                    this_file_names_without_extension, this_files_data = upgrade_step_result
+                else:  # Upgrade failed.
+                    Logger.log("w", "Unable to upgrade the file %s with %s.%s. Skipping it.",
+                               file_names_without_extension[file_idx], upgrade_step.__module__, upgrade_step.__name__)
+                    return None
+                new_file_names_without_extension += this_file_names_without_extension
+                new_files_data += this_files_data
+            file_names_without_extension = new_file_names_without_extension
+            files_data = new_files_data
+            version = new_version
+            configuration_type = new_type
+
+        return FilesDataUpdateResult(configuration_type=configuration_type,
+                                     version=version,
+                                     files_data=files_data,
+                                     file_names_without_extension=file_names_without_extension)
 
     def _stripMimeTypeExtension(self, mime_type, file_name):
         suffixes = mime_type.suffixes[:]
@@ -355,6 +387,6 @@ class VersionUpgradeManager:
             suffixes.append(mime_type.preferredSuffix)
         for suffix in suffixes:
             if file_name.endswith(suffix):
-                return file_name[: -len(suffix) -1] # last -1 is for the dot separating name and extension.
+                return file_name[: -len(suffix) - 1]  # last -1 is for the dot separating name and extension.
 
         return file_name

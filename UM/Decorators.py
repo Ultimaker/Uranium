@@ -7,6 +7,7 @@ import inspect
 
 from UM.Logger import Logger
 
+
 ##  Decorator that can be used to indicate a method has been deprecated
 #
 #   \param message The message to display when the method is called. Should include a suggestion about what to use.
@@ -32,6 +33,7 @@ def ascopy(function):
         return copy.deepcopy(function(*args, **kwargs))
 
     return copy_function
+
 
 ##  Decorator to conditionally call an extra function before calling the actual function.
 #
@@ -81,7 +83,7 @@ def interface(cls):
     # Then, replace the new method with a method that checks if all methods have been reimplemented
     old_new = cls.__new__
     def new_new(subclass, *args, **kwargs):
-        for method in filter(lambda i: not i[0].startswith("__") and inspect.isfunction(i[1]), inspect.getmembers(cls)):
+        for method in filter(lambda i: inspect.isfunction(i[1]) and not i[1].__name__.startswith("__") and not i[0].startswith("__"), inspect.getmembers(cls)):
             sub_method = getattr(subclass, method[0])
             if sub_method == method[1]:
                 raise NotImplementedError("Class {0} does not implement the complete interface of {1}: Missing method {2}".format(subclass, cls, method[0]))
@@ -97,10 +99,12 @@ def interface(cls):
     cls.__new__ = new_new
     return cls
 
+
 def immutable(cls):
     property_names = list(filter(lambda i: isinstance(i, property), inspect.getmembers(cls)))
     cls.__slots__ = property_names
     return cls
+
 
 def sameSignature(a: inspect.Signature, b: inspect.Signature) -> bool:
     return len(a.parameters) == len(b.parameters)

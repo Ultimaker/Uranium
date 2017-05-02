@@ -13,7 +13,7 @@ def getMetaData():
             "name": i18n_catalog.i18nc("@label", "File Logger"),
             "author": "Ultimaker",
             "version": "1.0",
-            "description": i18n_catalog.i18nc("@info:whatsthis", "Outputs log information to the console."),
+            "description": i18n_catalog.i18nc("@info:whatsthis", "Outputs log information to a file in your settings folder."),
             "api": 3
         }
     }

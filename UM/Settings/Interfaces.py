@@ -1,16 +1,14 @@
 # Copyright (c) 2016 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
-import UM.Decorators
+from typing import List, Dict, Any, Optional
 
-from typing import List, Dict, Any
+import UM.Decorators
+from UM.Signal import Signal
 
 
 ##  Shared interface between setting container types
 #
-from UM.Signal import Signal
-
-
 @UM.Decorators.interface
 class ContainerInterface:
     ##  Get the ID of the container.
@@ -92,7 +90,27 @@ class ContainerInterface:
     #   represenation.
     #
     #   \param serialized A serialized string containing a container that should be deserialized.
-    def deserialize(self, serialized: str) -> None:
+    def deserialize(self, serialized: str) -> str:
+        return self.__updateSerialized(serialized)
+
+    ##  Updates the given serialized data to the latest version.
+    def __updateSerialized(self, serialized: str) -> str:
+        configuration_type = self.getConfigurationTypeFromSerialized(serialized)
+        version = self.getVersionFromSerialized(serialized)
+        if configuration_type is not None and version is not None:
+            from UM.VersionUpgradeManager import VersionUpgradeManager
+            result = VersionUpgradeManager.getInstance().updateFilesData(configuration_type, version,
+                                                                         [serialized], [""])
+            if result is not None:
+                serialized = result.files_data[0]
+        return serialized
+
+    ##  Gets the configuration type of the given serialized data. (used by __updateSerialized())
+    def getConfigurationTypeFromSerialized(self, serialized: str) -> Optional[str]:
+        pass
+
+    ##  Gets the version of the given serialized data. (used by __updateSerialized())
+    def getVersionFromSerialized(self, serialized: str) -> Optional[int]:
         pass
 
     ##  Get the path used to create this InstanceContainer.
@@ -105,9 +123,12 @@ class ContainerInterface:
 
     propertyChanged = None   # type: Signal
 
-    metaDataChanged = None # type: Signal
+    metaDataChanged = None  # type: Signal
 
-class DefinitionContainerInterface(ContainerInterface): pass
+
+class DefinitionContainerInterface(ContainerInterface):
+    pass
+
 
 ##  Shared interface between setting container types
 #

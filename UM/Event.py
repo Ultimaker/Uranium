@@ -83,7 +83,7 @@ class MouseEvent(Event):
     ##  The change in X position between this event and the previous event.
     @property
     def deltaX(self) -> int:
-        if self._last_x != None:
+        if self._last_x is not None:
             return self._x - self._last_x
 
         return 0
@@ -91,7 +91,7 @@ class MouseEvent(Event):
     ##  The change in Y position between this event and the previous event.
     @property
     def deltaY(self) -> int:
-        if self._last_y != None:
+        if self._last_y is not None:
             return self._y - self._last_y
 
         return 0
@@ -100,6 +100,7 @@ class MouseEvent(Event):
     @property
     def buttons(self) -> List:
         return self._buttons
+
 
 ##  Event relating to what's happening with the scroll wheel of a mouse.
 class WheelEvent(Event):
@@ -175,11 +176,12 @@ class KeyEvent(Event):
 class ToolEvent(Event):
     pass
 
+
 ##  Event used to call a function.
 class CallFunctionEvent(Event):
-    def __init__(self, function: Callable, args: Any, kwargs: Any) -> None:
+    def __init__(self, func: Callable, args: Any, kwargs: Any) -> None:
         super().__init__(Event.CallFunctionEvent)
-        self._function = function
+        self._function = func
         self._args = args
         self._kwargs = kwargs
 

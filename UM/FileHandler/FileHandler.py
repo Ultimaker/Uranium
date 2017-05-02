@@ -43,8 +43,8 @@ class FileHandler(QObject):
 
     ##  Return the singleton instance of the filehandler.
     @classmethod
-    def getInstance(cls, *args, **kwargs):
-        if cls._instance is None:
+    def getInstance(cls, *args, **kwargs) -> "FileHandler":
+        if not cls._instance:
             cls._instance = cls()
 
         return cls._instance

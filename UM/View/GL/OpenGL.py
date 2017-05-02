@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 import sys
@@ -13,7 +13,8 @@ from UM.View.GL import FrameBufferObject
 from UM.View.GL import ShaderProgram
 from UM.View.GL import Texture
 from UM.View.GL.OpenGLContext import OpenGLContext
-
+from UM.i18n import i18nCatalog #To make dialogs translateable.
+i18n_catalog = i18nCatalog("uranium")
 
 ##  Convenience methods for dealing with OpenGL.
 #
@@ -41,7 +42,7 @@ class OpenGL(object):
         self._gl = QOpenGLContext.currentContext().versionFunctions(profile)
         if not self._gl:
             Logger.log("e", "Startup failed due to OpenGL initialization failing")
-            QMessageBox.critical(None, "Failed to Initialize OpenGL", "Could not initialize OpenGL. This program requires OpenGL 2.0 or higher. Please check your video card drivers.")
+            QMessageBox.critical(None, i18n_catalog.i18nc("@message", "Failed to Initialize OpenGL", "Could not initialize OpenGL. This program requires OpenGL 2.0 or higher. Please check your video card drivers."))
             sys.exit(1)
 
         # It would be nice to be able to not necessarily need OpenGL Framebuffer Object support, but
@@ -51,7 +52,7 @@ class OpenGL(object):
         # hard-depend on Framebuffer Objects.
         if not self.hasFrameBufferObjects():
             Logger.log("e", "Starup failed, OpenGL does not support Frame Buffer Objects")
-            QMessageBox.critical(None, "Critical OpenGL Extensions Missing", "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers.")
+            QMessageBox.critical(None, i18n_catalog.i18nc("Critical OpenGL Extensions Missing", "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."))
             sys.exit(1)
 
         self._gl.initializeOpenGLFunctions()
@@ -247,7 +248,7 @@ class OpenGL(object):
     #
     #   \return The singleton instance.
     @classmethod
-    def getInstance(cls):
+    def getInstance(cls) -> "OpenGL":
         return cls._instance
 
     ##  Set the singleton instance.

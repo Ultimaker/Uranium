@@ -130,7 +130,7 @@ class Preferences:
     preferenceChanged = Signal()
 
     @classmethod
-    def getInstance(cls):
+    def getInstance(cls) -> "Preferences":
         if not cls._instance:
             cls._instance = Preferences()
 

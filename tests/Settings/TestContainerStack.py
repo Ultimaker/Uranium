@@ -109,6 +109,13 @@ class MockContainer(ContainerInterface):
     def deserialize(self, serialized):
         self._id = int(serialized)
 
+    def getConfigurationTypeFromSerialized(self, serialized):
+        raise NotImplementedError()
+
+    def getVersionFromSerialized(self, serialized):
+        raise NotImplementedError()
+
+
 ##  Creates a brand new container stack to test with.
 #
 #   The container stack will get a new, unique ID.
