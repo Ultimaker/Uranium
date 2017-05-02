@@ -428,13 +428,17 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     def findContainer(self, criteria = None, container_type = None, **kwargs) -> Optional[ContainerInterface]:
         if not criteria and kwargs:
             criteria = kwargs
+        elif criteria is None:
+            criteria = {}
 
         for container in self._containers:
             meta_data = container.getMetaData()
-            match = True
+            match = container.__class__ == container_type or container_type == None
             for key in criteria:
+                if not match:
+                    break
                 try:
-                    if (meta_data[key] == criteria[key] or criteria[key] == "*") and (container.__class__ == container_type or container_type == None):
+                    if meta_data[key] == criteria[key] or criteria[key] == "*":
                         continue
                     else:
                         match = False
