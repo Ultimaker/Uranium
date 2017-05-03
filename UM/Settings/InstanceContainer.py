@@ -146,6 +146,10 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         else:
             Logger.log("w", "Unable set values to be lazy loaded when values are already loaded ")
 
+    @classmethod
+    def getLoadingPriority(cls) -> int:
+        return 1
+
     ##  \copydoc ContainerInterface::getPath.
     #
     #   Reimplemented from ContainerInterface

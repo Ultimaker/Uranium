@@ -303,6 +303,10 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
         return definitions
 
+    @classmethod
+    def getLoadingPriority(cls) -> int:
+        return 0
+
     # protected:
 
     # Load a file from disk, used to handle inheritance and includes

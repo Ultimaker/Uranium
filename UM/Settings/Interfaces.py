@@ -105,6 +105,10 @@ class ContainerInterface:
                 serialized = result.files_data[0]
         return serialized
 
+    @classmethod
+    def getLoadingPriority(cls) -> int:
+        return 9001
+
     ##  Gets the configuration type of the given serialized data. (used by __updateSerialized())
     def getConfigurationTypeFromSerialized(self, serialized: str) -> Optional[str]:
         pass

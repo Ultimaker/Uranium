@@ -158,13 +158,7 @@ class ContainerRegistry(ContainerRegistryInterface):
                     Logger.log("w", "Could not determine container type for file %s, ignoring", path)
                     continue
 
-                type_priority = 2
-
-                if issubclass(container_type, DefinitionContainer):
-                    type_priority = 0
-
-                if issubclass(container_type, InstanceContainer):
-                    type_priority = 1
+                type_priority = container_type.getLoadingPriority()
 
                 # Since we have the mime type and resource type here, process these two properties so we do not
                 # need to look up mime types etc. again.
