@@ -52,7 +52,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     #
     #   \param container_id A unique, machine readable/writable ID for this container.
     def __init__(self, container_id: str, i18n_catalog = None, *args, **kwargs):
-	# Note that we explicitly pass None as QObject parent here. This is to be able
+        # Note that we explicitly pass None as QObject parent here. This is to be able
         # to support pickling.
         super().__init__(parent = None, *args, **kwargs)        
 
