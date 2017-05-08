@@ -464,7 +464,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
         for container in self._containers:
             meta_data = container.getMetaData()
-            match = container.__class__ == container_type or container_type == None
+            match = container.__class__ == container_type or container_type is None
             for key in criteria:
                 if not match:
                     break
