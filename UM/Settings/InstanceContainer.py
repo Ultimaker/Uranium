@@ -203,9 +203,9 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         if metadata != self._metadata:
             self._metadata = metadata
             self._dirty = True
-            self.metaDataChanged.emit()
+            self.metaDataChanged.emit(self)
 
-    metaDataChanged = pyqtSignal()
+    metaDataChanged = pyqtSignal(QObject)
     metaData = pyqtProperty("QVariantMap", fget = getMetaData, fset = setMetaData, notify = metaDataChanged)
 
     ##  \copydoc ContainerInterface::getMetaDataEntry
@@ -224,7 +224,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         if key not in self._metadata:
             self._metadata[key] = value
             self._dirty = True
-            self.metaDataChanged.emit()
+            self.metaDataChanged.emit(self)
         else:
             Logger.log("w", "Meta data with key %s was already added.", key)
 
@@ -238,7 +238,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         if key in self._metadata:
             self._metadata[key] = value
             self._dirty = True
-            self.metaDataChanged.emit()
+            self.metaDataChanged.emit(self)
         else:
             Logger.log("w", "Meta data with key %s was not found. Unable to change.", key)
 

@@ -129,9 +129,9 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     def setMetaData(self, meta_data):
         if meta_data != self._meta_data:
             self._meta_data = meta_data
-            self.metaDataChanged.emit()
+            self.metaDataChanged.emit(self)
 
-    metaDataChanged = pyqtSignal()
+    metaDataChanged = pyqtSignal(QObject)
     metaData = pyqtProperty("QVariantMap", fget = getMetaData, fset = setMetaData, notify = metaDataChanged)
 
     ##  \copydoc ContainerInterface::getMetaDataEntry
@@ -155,7 +155,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         if key not in self._metadata:
             self._dirty = True
             self._metadata[key] = value
-            self.metaDataChanged.emit()
+            self.metaDataChanged.emit(self)
         else:
             Logger.log("w", "Meta data with key %s was already added.", key)
 
@@ -163,14 +163,14 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         if key in self._metadata:
             self._dirty = True
             self._metadata[key] = value
-            self.metaDataChanged.emit()
+            self.metaDataChanged.emit(self)
         else:
             Logger.log("w", "Meta data with key %s was not found. Unable to change.", key)
 
     def removeMetaDataEntry(self, key):
         if key in self._metadata:
             del self._metadata[key]
-            self.metaDataChanged.emit()
+            self.metaDataChanged.emit(self)
 
     def isDirty(self) -> bool:
         return self._dirty
