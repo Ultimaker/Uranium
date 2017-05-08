@@ -75,17 +75,25 @@ class TranslateTool(Tool):
             return float(Selection.getBoundingBox().bottom)
         return 0.0
 
+    def _parseInt(self, str_value):
+        try:
+            parsed_value = float(str_value)
+        except ValueError:
+            parsed_value = float(0)
+        return parsed_value
+
     ##  Set the x-location of the selected object(s) by translating relative to the selection bounding box center
     #
     #   \param x type(float) location in mm
     def setX(self, x):
+        parsed_x = self._parseInt(x)
         bounding_box = Selection.getBoundingBox()
 
         op = GroupedOperation()
-        if not Float.fuzzyCompare(float(x), float(bounding_box.center.x), DIMENSION_TOLERANCE):
+        if not Float.fuzzyCompare(parsed_x, float(bounding_box.center.x), DIMENSION_TOLERANCE):
             for selected_node in Selection.getAllSelectedObjects():
                 world_position = selected_node.getWorldPosition()
-                new_position = world_position.set(x=float(x) + (world_position.x - bounding_box.center.x))
+                new_position = world_position.set(x=parsed_x + (world_position.x - bounding_box.center.x))
                 node_op = TranslateOperation(selected_node, new_position, set_position = True)
                 op.addOperation(node_op)
             op.push()
@@ -95,15 +103,16 @@ class TranslateTool(Tool):
     #
     #   \param y type(float) location in mm
     def setY(self, y):
+        parsed_y = self._parseInt(y)
         bounding_box = Selection.getBoundingBox()
 
         op = GroupedOperation()
-        if not Float.fuzzyCompare(float(y), float(bounding_box.center.z), DIMENSION_TOLERANCE):
+        if not Float.fuzzyCompare(parsed_y, float(bounding_box.center.z), DIMENSION_TOLERANCE):
             for selected_node in Selection.getAllSelectedObjects():
                 # Note; The switching of z & y is intentional. We display z as up for the user,
                 # But store the data in openGL space.
                 world_position = selected_node.getWorldPosition()
-                new_position = world_position.set(z=float(y) + (world_position.z - bounding_box.center.z))
+                new_position = world_position.set(z=parsed_y + (world_position.z - bounding_box.center.z))
 
                 node_op = TranslateOperation(selected_node, new_position, set_position = True)
                 op.addOperation(node_op)
@@ -114,15 +123,16 @@ class TranslateTool(Tool):
     #
     #   \param z type(float) location in mm
     def setZ(self, z):
+        parsed_z = self._parseInt(z)
         bounding_box = Selection.getBoundingBox()
 
         op = GroupedOperation()
-        if not Float.fuzzyCompare(float(z), float(bounding_box.center.y), DIMENSION_TOLERANCE):
+        if not Float.fuzzyCompare(parsed_z, float(bounding_box.center.y), DIMENSION_TOLERANCE):
             for selected_node in Selection.getAllSelectedObjects():
                 # Note: The switching of z & y is intentional. We display z as up for the user,
                 # But store the data in openGL space.
                 world_position = selected_node.getWorldPosition()
-                new_position = world_position.set(y=float(z) + (world_position.y - bounding_box.bottom))
+                new_position = world_position.set(y=parsed_z + (world_position.y - bounding_box.bottom))
                 node_op = TranslateOperation(selected_node, new_position, set_position = True)
                 op.addOperation(node_op)
             op.push()
