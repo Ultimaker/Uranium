@@ -311,10 +311,14 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
     ##  \copydoc ContainerInterface::deserialize
     #
-    #   Reimplemented from ContainerInterface
+    #   Reimplemented from ContainerInterface. Disconnects propertyChanged and find container in
+    #   container registry to connect with (the container must already be in the container registry).
+    #
+    #   \param serialized
+    #   \param connect_signals  connect propertyChanged or not. Only disable if you know what you're doing
     #
     #   TODO: Expand documentation here, include the fact that this should _not_ include all containers
-    def deserialize(self, serialized):
+    def deserialize(self, serialized, connect_signals=True):
         # update the serialized data first
         serialized = super().deserialize(serialized)
         parser = self._readAndValidateSerialized(serialized)
@@ -323,8 +327,9 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
             raise IncorrectVersionError
 
         # Clear all data before starting.
-        for container in self._containers:
-            container.propertyChanged.disconnect(self._collectPropertyChanges)
+        if connect_signals:
+            for container in self._containers:
+                container.propertyChanged.disconnect(self._collectPropertyChanges)
 
         self._containers = []
         self._metadata = {}
@@ -335,28 +340,34 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         if "metadata" in parser:
             self._metadata = dict(parser["metadata"])
 
-        if "containers" in parser:
-            for index, container_id in parser.items("containers"):
-                containers = _containerRegistry.findContainers(id = container_id)
-                if containers:
-                    containers[0].propertyChanged.connect(self._collectPropertyChanges)
-                    self._containers.append(containers[0])
-                else:
-                    raise Exception("When trying to deserialize %s, we received an unknown ID (%s) for container" % (self._id, container_id))
-
-        elif parser.has_option("general", "containers"):
-            # Backward compatibility with 2.3.1: The containers used to be saved in a single comma-separated list.
-            container_string = parser["general"].get("containers", "")
-            Logger.log("d", "While deserializeing, we got the following container string: %s", container_string)
-            container_id_list = container_string.split(",")
-            for container_id in container_id_list:
-                if container_id != "":
+        if connect_signals:
+            if "containers" in parser:
+                for index, container_id in parser.items("containers"):
+                    # try to find the container
+                    container = None
                     containers = _containerRegistry.findContainers(id = container_id)
                     if containers:
+                        container = containers[0]
+
+                    if container is not None:
                         containers[0].propertyChanged.connect(self._collectPropertyChanges)
                         self._containers.append(containers[0])
                     else:
                         raise Exception("When trying to deserialize %s, we received an unknown ID (%s) for container" % (self._id, container_id))
+
+            elif parser.has_option("general", "containers"):
+                # Backward compatibility with 2.3.1: The containers used to be saved in a single comma-separated list.
+                container_string = parser["general"].get("containers", "")
+                Logger.log("d", "While deserializeing, we got the following container string: %s", container_string)
+                container_id_list = container_string.split(",")
+                for container_id in container_id_list:
+                    if container_id != "":
+                        containers = _containerRegistry.findContainers(id = container_id)
+                        if containers:
+                            containers[0].propertyChanged.connect(self._collectPropertyChanges)
+                            self._containers.append(containers[0])
+                        else:
+                            raise Exception("When trying to deserialize %s, we received an unknown ID (%s) for container" % (self._id, container_id))
 
         ## TODO; Deserialize the containers.
 
