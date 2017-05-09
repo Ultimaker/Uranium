@@ -1,6 +1,7 @@
-# Copyright (c) 2016 Ultimaker B.V.
+# Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
+import copy #To implement deepcopy.
 import enum
 import os
 from typing import Any, List, Set, Dict, Optional, Iterable
@@ -69,6 +70,20 @@ class SettingInstance:
     ##  Get a list of all supported property names
     def getPropertyNames(self) -> Iterable[str]:
         return self.__property_values.keys()
+
+    ##  Copies the setting instance and all its properties and state.
+    #
+    #   The definition and the instance container containing this instance are
+    #   not deep-copied but just taken over from the original, since they are
+    #   seen as back-links. Please set them correctly after deep-copying this
+    #   instance.
+    def __deepcopy__(self, memo):
+        result = SettingInstance(self._definition, self._container)
+        result._visible = self._visible
+        result._validator = copy.deepcopy(self._validator, memo)
+        result._state = self._state
+        result.__property_values = copy.deepcopy(self.__property_values, memo)
+        return result
 
     def __eq__(self, other: Any) -> bool:
         if type(self) != type(other):
