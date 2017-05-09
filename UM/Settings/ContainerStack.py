@@ -311,7 +311,11 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
     ##  \copydoc ContainerInterface::deserialize
     #
-    #   Reimplemented from ContainerInterface
+    #   Reimplemented from ContainerInterface. Disconnects propertyChanged and find container in
+    #   container registry to connect with (the container must already be in the container registry).
+    #
+    #   \param serialized
+    #   \param connect_signals  connect propertyChanged or not. Only disable if you know what you're doing
     #
     #   TODO: Expand documentation here, include the fact that this should _not_ include all containers
     def deserialize(self, serialized, connect_signals=True):
