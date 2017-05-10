@@ -517,8 +517,6 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
             raise IndexError
         if container is self:
             raise Exception("Unable to replace container with ContainerStack (self) ")
-        if self._containers[index] == container:
-            return  # Nothing to do; Trying to replace container with the same one.
 
         self._containers[index].propertyChanged.disconnect(self._collectPropertyChanges)
         container.propertyChanged.connect(self._collectPropertyChanges)
