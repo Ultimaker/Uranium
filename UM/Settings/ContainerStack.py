@@ -5,6 +5,7 @@ import io
 from typing import Set, List, Optional, cast
 
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
+import UM.FlameProfiler
 
 from UM.Settings.SettingDefinition import SettingDefinition
 from UM.Signal import Signal, signalemitter
@@ -456,6 +457,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     #   \param container_type \type{class} An optional type of container to
     #   filter on.
     #   \return The first container that matches the filter criteria or None if not found.
+    @UM.FlameProfiler.profile
     def findContainer(self, criteria = None, container_type = None, **kwargs) -> Optional[ContainerInterface]:
         if not criteria and kwargs:
             criteria = kwargs
@@ -578,6 +580,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
             signal.emit(signal_arg)
 
     ##  Check if the container stack has errors
+    @UM.FlameProfiler.profile
     def hasErrors(self) -> bool:
         for key in self.getAllKeys():
             enabled = self.getProperty(key, "enabled")
@@ -598,6 +601,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         return False
 
     ##  Get all the keys that are in an error state in this stack
+    @UM.FlameProfiler.profile
     def getErrorKeys(self) -> List[str]:
         error_keys = []
         for key in self.getAllKeys():
