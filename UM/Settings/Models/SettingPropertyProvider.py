@@ -326,8 +326,11 @@ class SettingPropertyProvider(QObject):
             property_value = property_value(self._stack)
 
         if property_name == "value":
-            property_value = SettingDefinition.settingValueToString(
-                self._stack.getProperty(self._key, "type"), property_value)
+            setting_type =self._stack.getProperty(self._key, "type")
+            if setting_type is not None:
+                property_value = SettingDefinition.settingValueToString(setting_type, property_value)
+            else:
+                property_value = ""
         elif property_name == "validationState":
             # Setting is not validated. This can happen if there is only a setting definition.
             # We do need to validate it, because a setting defintions value can be set by a function, which could
