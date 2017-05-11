@@ -107,3 +107,7 @@ class Duration(QObject):
             return "%02d:%02d:%02d" % (self._days * 24 + self._hours, self._minutes, self._seconds)
 
         return ""
+
+    @pyqtProperty(int, notify = durationChanged)
+    def totalSeconds(self):
+        return self._days * 3600 * 24 + self._hours * 3600 + self._minutes * 60 + self._seconds
