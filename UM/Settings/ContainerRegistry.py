@@ -220,7 +220,8 @@ class ContainerRegistry(ContainerRegistryInterface):
             container = containers[0]
 
             self._containers.remove(container)
-            del self._id_container_cache[container.getId()]
+            if container.getId() in self._id_container_cache:
+                del self._id_container_cache[container.getId()]
             self._deleteFiles(container)
 
             if hasattr(container, "metaDataChanged"):
