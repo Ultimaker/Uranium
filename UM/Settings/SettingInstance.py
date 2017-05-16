@@ -234,8 +234,14 @@ class SettingInstance:
         for relation in filter(lambda r: r.role == role, relations):
             if relation.type == RelationType.RequiresTarget:
                 continue
+
             # Do not add relation to self.
             if relation.target.key == self.definition.key:
+                continue
+
+            # Don't add it to list if it's already there.
+            # We do need to continue, as it might cause recursion issues otherwise.
+            if relation in relations_set:
                 continue
 
             relations_set.add(relation)
@@ -243,6 +249,7 @@ class SettingInstance:
             property_names = SettingDefinition.getPropertyNames()
             property_names.remove("value")  # Move "value" to the front of the list so we always update that first.
             property_names.insert(0, "value")
+
             # Ensure that all properties of related settings are added.
             for property_name in property_names:
                 self._addRelations(relations_set, relation.target.relations, property_name)
