@@ -416,12 +416,16 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         return configuration_type
 
     def getVersionFromSerialized(self, serialized: str) -> Optional[int]:
+        configuration_type = self.getConfigurationTypeFromSerialized(serialized)
+        # get version
         version = None
-        parser = self._readAndValidateSerialized(serialized)
         try:
-            version = parser["general"].getint("version")
+            import UM.VersionUpgradeManager
+            version = UM.VersionUpgradeManager.VersionUpgradeManager.getInstance().getFileVersion(configuration_type,
+                                                                                                  serialized)
         except Exception as e:
-            Logger.log("e", "Could not get version from serialized: %s", e)
+            Logger.log("d", "Could not get version from serialized: %s", e)
+            pass
         return version
 
     ##  \copydoc ContainerInterface::deserialize

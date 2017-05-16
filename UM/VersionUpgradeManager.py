@@ -271,6 +271,10 @@ class VersionUpgradeManager:
         except FileExistsError:
             pass
 
+    ##  Gets the version of the given file data
+    def getFileVersion(self, configuration_type, file_data):
+        return self._get_version_functions[configuration_type](file_data)
+
     ##  Upgrades a single file to any version in self._current_versions.
     #
     #   A single file will be taken as source file, but may result in any number

@@ -241,7 +241,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
         try:
             version = int(parsed["version"])
         except Exception as e:
-            Logger.log("e", "Could not get version from serialized: %s", e)
+            Logger.log("d", "Could not get version from serialized: %s", e)
         return version
 
     def _preprocessParsedJson(self, parsed):
