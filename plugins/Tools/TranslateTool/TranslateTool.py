@@ -97,7 +97,7 @@ class TranslateTool(Tool):
                 node_op = TranslateOperation(selected_node, new_position, set_position = True)
                 op.addOperation(node_op)
             op.push()
-        self.operationStopped.emit(self)
+        self._controller.toolOperationStopped.emit(self)
 
     ##  Set the y-location of the selected object(s) by translating relative to the selection bounding box center
     #
@@ -117,7 +117,7 @@ class TranslateTool(Tool):
                 node_op = TranslateOperation(selected_node, new_position, set_position = True)
                 op.addOperation(node_op)
             op.push()
-        self.operationStopped.emit(self)
+        self._controller.toolOperationStopped.emit(self)
 
     ##  Set the y-location of the selected object(s) by translating relative to the selection bounding box bottom
     #
@@ -136,7 +136,7 @@ class TranslateTool(Tool):
                 node_op = TranslateOperation(selected_node, new_position, set_position = True)
                 op.addOperation(node_op)
             op.push()
-        self.operationStopped.emit(self)
+        self._controller.toolOperationStopped.emit(self)
 
     ##  Set which axis/axes are enabled for the current translate operation
     #

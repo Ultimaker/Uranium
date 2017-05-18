@@ -85,11 +85,7 @@ Item
                 decimals: 4
                 locale: "en_US"
             }
-            onTextChanged:
-            {
-                var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                UM.ActiveTool.setProperty("X", modified_text);
-            }
+
             onEditingFinished:
             {
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
@@ -108,11 +104,7 @@ Item
                 decimals: 4
                 locale: "en_US"
             }
-            onTextChanged:
-            {
-                var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                UM.ActiveTool.setProperty("Y", modified_text);
-            }
+
             onEditingFinished:
             {
                 var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
@@ -130,11 +122,6 @@ Item
             {
                 decimals: 4
                 locale: "en_US"
-            }
-            onTextChanged:
-            {
-                var modified_text = text.replace(",", ".") // User convenience. We use dots for decimal values
-                UM.ActiveTool.setProperty("Z", modified_text);
             }
             onEditingFinished:
             {
