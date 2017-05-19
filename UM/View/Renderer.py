@@ -12,11 +12,6 @@ from UM.SortedList import SortedListWithKey
 #   objects should be rendered but the actual rendering process happening after a
 #   sorting step.
 class Renderer():
-    RenderTriangles = 1
-    RenderLines = 2
-    RenderPoints = 3
-    RenderWireframe = 4
-    RenderLineLoop = 5
 
     def __init__(self):
         super().__init__()
