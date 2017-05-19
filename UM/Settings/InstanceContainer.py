@@ -424,7 +424,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
             version = UM.VersionUpgradeManager.VersionUpgradeManager.getInstance().getFileVersion(configuration_type,
                                                                                                   serialized)
         except Exception as e:
-            Logger.log("d", "Could not get version from serialized: %s", e)
+            #Logger.log("d", "Could not get version from serialized: %s", e)
             pass
         return version
 
