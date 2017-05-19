@@ -95,6 +95,11 @@ class VersionUpgradeManager:
     def setCurrentVersions(self, current_versions):
         self._current_versions = current_versions
 
+    def setCurrentVersion(self, version_info, type_info):
+        if version_info in self._current_versions:
+            Logger.log("d", "Overwriting current version info: %s", repr(version_info))
+        self._current_versions[version_info] = type_info
+
     ##  Performs the version upgrades of all configuration files to the most
     #   recent version.
     #
