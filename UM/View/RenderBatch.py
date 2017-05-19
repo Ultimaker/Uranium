@@ -49,6 +49,10 @@ class RenderBatch():
         Triangles = 0x0004
         TriangleStrip = 0x0005
         TriangleFan = 0x0006
+        LinesAdjacency = 0x000a
+        LineStripAdjacency = 0x000b
+        TrianglesAdjacency = 0x000c
+        TriangleStripAdjacency = 0x000d
 
     ##  Blending mode.
     class BlendMode:
@@ -288,10 +292,12 @@ class RenderBatch():
 
         if mesh.hasIndices():
             if self._render_range is None:
+                element_count = mesh.getFaceCount();
                 if self._render_mode == self.RenderMode.Triangles:
-                    self._gl.glDrawElements(self._render_mode, mesh.getFaceCount() * 3 , self._gl.GL_UNSIGNED_INT, None)
-                else:
-                    self._gl.glDrawElements(self._render_mode, mesh.getFaceCount(), self._gl.GL_UNSIGNED_INT, None)
+                    element_count = mesh.getFaceCount() * 3
+                elif self._render_mode == self.RenderMode.TrianglesAdjacency:
+                    element_count = mesh.getFaceCount() * 3 * 4
+                self._gl.glDrawElements(self._render_mode, element_count, self._gl.GL_UNSIGNED_INT, None)
             else:
                 if self._render_mode == self.RenderMode.Triangles:
                     self._gl.glDrawRangeElements(self._render_mode, self._render_range[0], self._render_range[1], self._render_range[1] - self._render_range[0], self._gl.GL_UNSIGNED_INT, None)
