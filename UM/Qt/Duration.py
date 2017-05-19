@@ -74,6 +74,14 @@ class Duration(QObject):
             self._seconds = -1
         else:
             duration = round(duration)
+            # If a Python int goes above the upper bound of C++ int, which is 2^16 - 1, you will get a error when Qt
+            # tries to convert the Python int to C++ int:
+            #    TypeError: unable to convert a Python 'int' object to a C++ 'int' instance
+            # So we make sure here that the number won't exceed the limit due to CuraEngine bug or whatever, and
+            # Cura won't crash.
+            if int(duration) >= (2**16):
+                duration = 0
+
             self._days = math.floor(duration / (3600 * 24))
             duration -= self._days * 3600 * 24
             self._hours = math.floor(duration / 3600)
