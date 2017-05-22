@@ -47,8 +47,10 @@ class ListModel(QAbstractListModel):
         except:
             return {}
 
+    itemsChanged = pyqtSignal()
+
     ##  The list of items in this model.
-    @pyqtProperty("QVariantList")
+    @pyqtProperty("QVariantList", notify = itemsChanged)
     def items(self):
         return self._items
 
@@ -58,12 +60,14 @@ class ListModel(QAbstractListModel):
         self.beginResetModel()
         self._items = items
         self.endResetModel()
+        self.itemsChanged.emit()
 
     ##  Add an item to the list.
     #   \param item The item to add.
     @pyqtSlot(dict)
     def appendItem(self, item):
         self.insertItem(len(self._items), item)
+        self.itemsChanged.emit()
 
     ##  Insert an item into the list at an index.
     #   \param index The index where to insert.
@@ -73,6 +77,7 @@ class ListModel(QAbstractListModel):
         self.beginInsertRows(QModelIndex(), index, index)
         self._items.insert(index, item)
         self.endInsertRows()
+        self.itemsChanged.emit()
 
     ##  Remove an item from the list.
     #   \param index The index of the item to remove.
@@ -81,6 +86,7 @@ class ListModel(QAbstractListModel):
         self.beginRemoveRows(QModelIndex(), index, index)
         del self._items[index]
         self.endRemoveRows()
+        self.itemsChanged.emit()
 
     ##  Clear the list.
     @pyqtSlot()
@@ -88,6 +94,7 @@ class ListModel(QAbstractListModel):
         self.beginResetModel()
         self._items.clear()
         self.endResetModel()
+        self.itemsChanged.emit()
 
     @pyqtSlot(int, str, QVariant)
     def setProperty(self, index, property, value):
