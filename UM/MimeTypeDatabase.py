@@ -1,6 +1,8 @@
 # Copyright (c) 2016 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
+import os.path
+
 from PyQt5.QtCore import QMimeDatabase
 
 from UM.Decorators import ascopy
@@ -146,6 +148,9 @@ class MimeTypeDatabase:
     #   for the specified file.
     @classmethod
     def getMimeTypeForFile(cls, file_name):
+        # Properly normalize the file name to only be the base name of a path if we pass a path.
+        file_name = os.path.basename(os.path.realpath(file_name))
+
         matches = []
         for mime_type in cls.__custom_mimetypes:
             # Check if the file name ends with the suffixes, starting at the first . encountered.
