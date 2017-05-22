@@ -1,9 +1,10 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2017 Ultimaker B.V.
 # Copyright (c) Thiago Marcos P. Santos
 # Copyright (c) Christopher S. Case
 # Copyright (c) David H. Bronke
 # Uranium is released under the terms of the AGPLv3 or higher.
 
+import enum #For the compress parameter of postponeSignals.
 import inspect
 import threading
 import os
@@ -187,11 +188,11 @@ class Signal:
                 for line in tb:
                     Logger.log("w", line)
 
-            if self._compress_postpone:
+            if self._compress_postpone == CompressTechnique.CompressSingle:
                 # If emits should be compressed, we only emit the last emit that was called
                 self._postponed_emits = (args, kwargs)
             else:
-                # If emits should not be compressed, we catch all calls to emit and put them in a list to be called later.
+                # If emits should not be compressed or compressed per parameter value, we catch all calls to emit and put them in a list to be called later.
                 if not self._postponed_emits:
                     self._postponed_emits = []
                 self._postponed_emits.append((args, kwargs))
@@ -343,6 +344,10 @@ class Signal:
 def strMethodSet(method_set):
     return "{" + ", ".join([str(m) for m in method_set]) + "}"
 
+class CompressTechnique(enum.Enum):
+    NoCompression = 0
+    CompressSingle = 1
+    CompressPerParameterValue = 2
 
 ##  A context manager that allows postponing of signal emissions
 #
@@ -359,7 +364,7 @@ def strMethodSet(method_set):
 #   \param signals The signals to postpone emits for.
 #   \param compress Whether to enable compression of emits or not.
 @contextlib.contextmanager
-def postponeSignals(*signals, compress = False):
+def postponeSignals(*signals, compress: CompressTechnique = CompressTechnique.NoCompression):
     # To allow for nested postpones on the same signals, we should check if signals are not already
     # postponed and only change those that are not yet postponed.
     restore_emit = []
@@ -367,8 +372,7 @@ def postponeSignals(*signals, compress = False):
         if not signal._postpone_emit: # Do nothing if the signal has already been changed
             signal._postpone_emit = True
             signal._postpone_thread = threading.current_thread()
-            if compress:
-                signal._compress_postpone = True
+            signal._compress_postpone = compress
             # Since we made changes, make sure to restore the signal after exiting the context manager
             restore_emit.append(signal)
 
@@ -381,8 +385,12 @@ def postponeSignals(*signals, compress = False):
 
         if signal._postponed_emits:
             # Send any signal emits that were collected while emits were being postponed
-            if signal._compress_postpone:
+            if signal._compress_postpone == CompressTechnique.CompressSingle:
                 signal.emit(*signal._postponed_emits[0], **signal._postponed_emits[1])
+            elif signal._compress_postpone == CompressTechnique.CompressPerParameterValue:
+                uniques = {(tuple(args), tuple(kwargs.items())) for args, kwargs in signal._postponed_emits} #Have to make them tuples in order to make them hashable.
+                for args, kwargs in uniques:
+                    signal.emit(*args, **dict(kwargs))
             else:
                 for args, kwargs in signal._postponed_emits:
                     signal.emit(*args, **kwargs)
