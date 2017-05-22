@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 import threading
@@ -24,7 +24,7 @@ from UM.Workspace.WorkspaceFileHandler import WorkspaceFileHandler
 
 import UM.Settings
 
-from typing import TYPE_CHECKING, List, Callable, Any
+from typing import TYPE_CHECKING, List, Callable, Any, Optional
 if TYPE_CHECKING:
     from UM.Settings.ContainerStack import ContainerStack
     from UM.Backend import Backend
@@ -151,7 +151,7 @@ class Application:
         self._global_container_stack = stack
         self.globalContainerStackChanged.emit()
 
-    def getGlobalContainerStack(self) -> "ContainerStack":
+    def getGlobalContainerStack(self) -> Optional["ContainerStack"]:
         return self._global_container_stack
 
     def hideMessage(self, message):
