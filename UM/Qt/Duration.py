@@ -79,7 +79,7 @@ class Duration(QObject):
             #    TypeError: unable to convert a Python 'int' object to a C++ 'int' instance
             # So we make sure here that the number won't exceed the limit due to CuraEngine bug or whatever, and
             # Cura won't crash.
-            if int(duration) >= (2**16):
+            if int(duration) >= (2**31):
                 duration = 0
 
             self._days = math.floor(duration / (3600 * 24))
