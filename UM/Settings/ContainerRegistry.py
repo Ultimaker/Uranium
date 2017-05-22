@@ -152,7 +152,12 @@ class ContainerRegistry(ContainerRegistryInterface):
             # Pre-process the list of files to insert relevant data
             # Most importantly, we need to ensure the loading order is DefinitionContainer, InstanceContainer, ContainerStack
             for path in resources:
-                mime = MimeTypeDatabase.getMimeTypeForFile(path)
+                try:
+                    mime = MimeTypeDatabase.getMimeTypeForFile(path)
+                except MimeTypeDatabase.MimeTypeNotFoundError:
+                    # No valid mime type found for file, ignore it.
+                    continue
+
                 container_type = self.__mime_type_map.get(mime.name)
                 if not container_type:
                     Logger.log("w", "Could not determine container type for file %s, ignoring", path)
