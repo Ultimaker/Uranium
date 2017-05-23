@@ -448,7 +448,6 @@ class ContainerRegistry(ContainerRegistryInterface):
 
             for file_path in definition.getInheritedFiles():
                 if os.path.getmtime(file_path) > cache_mtime:
-                    Logger.log("d", "Definition file %s is newer than cache, ignoring cached version", file_path)
                     return None
 
             return definition
