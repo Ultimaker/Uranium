@@ -160,7 +160,14 @@ class Theme(QObject):
             Logger.log("d", "Loading theme file: %s", os.path.join(self._path, "theme.json"))
             data = json.load(f)
 
-        self._initializeDefaults()
+        # Iteratively load inherited themes
+        try:
+            theme_id = data["metadata"]["inherits"]
+            self.load(Resources.getPath(Resources.Themes, theme_id))
+        except FileNotFoundError:
+            Logger.log("e", "Could not find inherited theme %s", theme_id)
+        except KeyError:
+            pass # No metadata or no inherits keyword in the theme.json file
 
         if "colors" in data:
             for name, color in data["colors"].items():
