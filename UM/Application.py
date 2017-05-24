@@ -101,6 +101,12 @@ class Application:
 
         self._operation_stack = OperationStack(self.getController())
 
+        # Ensure configuration folder has a folder for themes
+        try:
+            os.makedirs(os.path.join(Resources.getStoragePath(Resources.Resources), "themes"))
+        except OSError:
+            pass
+
         self._plugin_registry = PluginRegistry.getInstance()
 
         self._plugin_registry.addPluginLocation(os.path.join(Application.getInstallPrefix(), "lib", "uranium"))
