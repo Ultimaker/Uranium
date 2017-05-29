@@ -292,7 +292,7 @@ class RenderBatch():
 
         if mesh.hasIndices():
             if self._render_range is None:
-                element_count = mesh.getFaceCount();
+                element_count = mesh.getFaceCount()
                 if self._render_mode == self.RenderMode.Triangles:
                     element_count = mesh.getFaceCount() * 3
                 elif self._render_mode == self.RenderMode.TrianglesAdjacency:
