@@ -14,8 +14,13 @@ parallel_nodes(['linux && cura', 'windows && cura']) {
         dir('build') {
             // Perform the "build". Since Uranium is Python code, this basically only ensures CMake is setup.
             stage('Build') {
+                def branch = env.BRANCH_NAME
+                if(!(branch =~ /^2.\d+$/)) {
+                    branch = "master"
+                }
+
                 // Ensure CMake is setup. Note that since this is Python code we do not really "build" it.
-                cmake '..', "-DCMAKE_PREFIX_PATH=${env.CURA_ENVIRONMENT_PATH} -DCMAKE_BUILD_TYPE=Release"
+                cmake '..', "-DCMAKE_PREFIX_PATH=${env.CURA_ENVIRONMENT_PATH}/${branch} -DCMAKE_BUILD_TYPE=Release"
             }
 
             // Try and run the unit tests. If this stage fails, we consider the build to be "unstable".
