@@ -54,7 +54,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     def __init__(self, container_id: str, i18n_catalog = None, *args, **kwargs):
         # Note that we explicitly pass None as QObject parent here. This is to be able
         # to support pickling.
-        super().__init__(parent = None, *args, **kwargs)        
+        super().__init__(parent = None, *args, **kwargs)
 
         self._id = str(container_id)    # type: str
         self._name = container_id       # type: str
@@ -81,6 +81,9 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
     ##  For pickle support
     def __setstate__(self, state):
+        # We need to call QObject.__init__() in order to initialize the underlying C++ object.
+        # pickle doesn't do that so we have to do this here.
+        QObject.__init__(self, parent = None)
         self.__dict__.update(state)
 
     ##  \copydoc ContainerInterface::getId

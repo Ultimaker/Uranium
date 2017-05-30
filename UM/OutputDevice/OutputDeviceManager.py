@@ -132,6 +132,7 @@ class OutputDeviceManager():
         device.writeFinished.disconnect(self.writeFinished)
         device.writeError.disconnect(self.writeError)
         device.writeSuccess.disconnect(self.writeSuccess)
+        device.stopCamera()
         self.outputDevicesChanged.emit()
 
         if self._active_device.getId() == device_id:

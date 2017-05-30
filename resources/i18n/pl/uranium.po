@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-27 17:40+0200\n"
+"POT-Creation-Date: 2017-05-30 15:41+0200\n"
 "PO-Revision-Date: 2017-02-11 22:23+0100\n"
 "Last-Translator: Marek Pikuła <marek.pikula@sent.tech>\n"
 "Language-Team: \n"
@@ -17,16 +17,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.8.11\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-
-#: /home/ruben/Projects/Uranium/plugins/Views/WireframeView/__init__.py:13
-msgctxt "@label"
-msgid "Wireframe View"
-msgstr "Widok szkieletu"
-
-#: /home/ruben/Projects/Uranium/plugins/Views/WireframeView/__init__.py:16
-msgctxt "@info:whatsthis"
-msgid "Provides a simple wireframe view."
-msgstr "Zapewnia prosty widok szkieletu."
 
 #: /home/ruben/Projects/Uranium/plugins/Views/SimpleView/__init__.py:13
 msgctxt "@label"
@@ -49,10 +39,9 @@ msgid "File Logger"
 msgstr "Dziennik do pliku"
 
 #: /home/ruben/Projects/Uranium/plugins/FileLogger/__init__.py:16
-#: /home/ruben/Projects/Uranium/plugins/ConsoleLogger/__init__.py:16
 msgctxt "@info:whatsthis"
-msgid "Outputs log information to the console."
-msgstr "Zwraca informacje dziennika na konsolę."
+msgid "Outputs log information to a file in your settings folder."
+msgstr ""
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLReader/__init__.py:12
 msgctxt "@label"
@@ -120,6 +109,11 @@ msgctxt "@label"
 msgid "Console Logger"
 msgstr "Dziennik na konsolę"
 
+#: /home/ruben/Projects/Uranium/plugins/ConsoleLogger/__init__.py:16
+msgctxt "@info:whatsthis"
+msgid "Outputs log information to the console."
+msgstr "Zwraca informacje dziennika na konsolę."
+
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/__init__.py:12
 msgctxt "@label"
 msgid "Update Checker"
@@ -130,107 +124,41 @@ msgctxt "@info:whatsthis"
 msgid "Checks for updates of the software."
 msgstr "Sprawdza aktualizacje oprogramowania."
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:47
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:51
 msgctxt "@info"
 msgid "Could not access update information."
 msgstr "Brak dostępu do informacji o aktualizacji."
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:58
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:63
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:62
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:67
 msgctxt "@info"
 msgid "The version you are using does not support checking for updates."
 msgstr "Wersja, której używasz, nie wspiera sprawdzania aktualizacji."
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:74
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:78
 msgctxt "@info"
 msgid "A new version is available!"
 msgstr "Dostępna nowa wersja!"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:75
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:79
 msgctxt "@action:button"
 msgid "Download"
 msgstr "Pobierz"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:87
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:91
 msgctxt "@info"
-msgid "An exception occured while parsing the JSON file."
-msgstr "Wystąpił błąd podczas parsowania pliku JSON."
+msgid "An exception occurred while checking for updates."
+msgstr ""
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:91
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:95
 msgctxt "@info"
 msgid "No new version was found."
 msgstr "Brak nowej wersji."
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:102
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:23
 msgctxt "@item:inmenu"
 msgid "Check for Updates"
 msgstr "Sprawdź aktualizacje"
-
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:46
-msgctxt "@item:inmenu"
-msgid "Local File"
-msgstr "Plik lokalny"
-
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:47
-msgctxt "@action:button Preceded by 'Ready to'."
-msgid "Save to File"
-msgstr "zapisania do pliku"
-
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:48
-msgctxt "@info:tooltip"
-msgid "Save to File"
-msgstr "Zapisz do pliku"
-
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:68
-msgctxt "@title:window"
-msgid "Save to File"
-msgstr "Zapisz do pliku"
-
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:137
-msgctxt "@title:window"
-msgid "File Already Exists"
-msgstr "Plik już istnieje"
-
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:137
-#, python-brace-format
-msgctxt "@label"
-msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
-msgstr "Plik <filename>{0}</filename> już istnieje. Czy jesteś pewny, że chcesz go nadpisać?"
-
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:163
-#, python-brace-format
-msgctxt "@info:progress"
-msgid "Saving to <filename>{0}</filename>"
-msgstr "Zapisywanie do <filename>{0}</filename>"
-
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:171
-#, python-brace-format
-msgctxt "@info:status"
-msgid "Permission denied when trying to save <filename>{0}</filename>"
-msgstr "Brak uprawnień do zapisu pliku <filename>{0}</filename>"
-
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:174
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:196
-#, python-brace-format
-msgctxt "@info:status"
-msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
-msgstr "Nie można zapisać do <filename>{0}</filename>: <message>{1}</message>"
-
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:190
-#, python-brace-format
-msgctxt "@info:status"
-msgid "Saved to <filename>{0}</filename>"
-msgstr "Zapisano do <filename>{0}</filename>"
-
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:191
-msgctxt "@action:button"
-msgid "Open Folder"
-msgstr "Otwórz folder"
-
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevicePlugin.py:191
-msgctxt "@info:tooltip"
-msgid "Open the folder containing the file"
-msgstr "Otwórz folder zawierający ten plik"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/__init__.py:12
 msgctxt "@label"
@@ -241,6 +169,72 @@ msgstr "Zapisywanie do lokalnego pliku"
 msgctxt "@info:whatsthis"
 msgid "Enables saving to local files."
 msgstr "Pozwala na zapisywanie do lokalnych plików."
+
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:33
+msgctxt "@item:inmenu"
+msgid "Local File"
+msgstr "Plik lokalny"
+
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:34
+msgctxt "@action:button Preceded by 'Ready to'."
+msgid "Save to File"
+msgstr "zapisania do pliku"
+
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:35
+msgctxt "@info:tooltip"
+msgid "Save to File"
+msgstr "Zapisz do pliku"
+
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:56
+msgctxt "@title:window"
+msgid "Save to File"
+msgstr "Zapisz do pliku"
+
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:129
+msgctxt "@title:window"
+msgid "File Already Exists"
+msgstr "Plik już istnieje"
+
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:129
+#, python-brace-format
+msgctxt "@label"
+msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
+msgstr "Plik <filename>{0}</filename> już istnieje. Czy jesteś pewny, że chcesz go nadpisać?"
+
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:158
+#, python-brace-format
+msgctxt "@info:progress"
+msgid "Saving to <filename>{0}</filename>"
+msgstr "Zapisywanie do <filename>{0}</filename>"
+
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:166
+#, python-brace-format
+msgctxt "@info:status"
+msgid "Permission denied when trying to save <filename>{0}</filename>"
+msgstr "Brak uprawnień do zapisu pliku <filename>{0}</filename>"
+
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:169
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:185
+#, python-brace-format
+msgctxt "@info:status"
+msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
+msgstr "Nie można zapisać do <filename>{0}</filename>: <message>{1}</message>"
+
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:179
+#, python-brace-format
+msgctxt "@info:status"
+msgid "Saved to <filename>{0}</filename>"
+msgstr "Zapisano do <filename>{0}</filename>"
+
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:180
+msgctxt "@action:button"
+msgid "Open Folder"
+msgstr "Otwórz folder"
+
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:180
+msgctxt "@info:tooltip"
+msgid "Open the folder containing the file"
+msgstr "Otwórz folder zawierający ten plik"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:13
 msgctxt "@label"
@@ -344,6 +338,7 @@ msgstr "Odbij model"
 
 #: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:161
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:48
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:66
 #: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:67
 #, python-brace-format
 msgctxt "@item:inlistbox"
@@ -352,24 +347,25 @@ msgstr "Wszystkie wspierane typy plików ({0})"
 
 #: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:164
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:49
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:67
 #: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:68
 msgctxt "@item:inlistbox"
 msgid "All Files (*)"
 msgstr "Wszystkie pliki (*)"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:96
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:104
 #, python-brace-format
 msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
 msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
 msgstr "{0:0>2}d {1:0>2}h {2:0>2}min"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:98
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:106
 #, python-brace-format
 msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
 msgid "{0:0>2}h {1:0>2}min"
 msgstr "{0:0>2}h {1:0>2}min"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:101
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:109
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is days"
 msgid "{0} day"
@@ -378,8 +374,8 @@ msgstr[0] "{0} dzień"
 msgstr[1] "{0} dni"
 msgstr[2] "{0} dni"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:101
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:103
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:109
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:111
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is hours"
 msgid "{0} hour"
@@ -388,9 +384,9 @@ msgstr[0] "{0} godzina"
 msgstr[1] "{0} godziny"
 msgstr[2] "{0} godzin"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:101
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:103
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:105
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:109
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:111
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:113
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is minutes"
 msgid "{0} minute"
@@ -399,17 +395,17 @@ msgstr[0] "{0} minuta"
 msgstr[1] "{0} minuty"
 msgstr[2] "{0} minut"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:104
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:109
 msgctxt "@info:progress"
 msgid "Loading plugins..."
 msgstr "Ładowaniu pluginów…"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:110
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:115
 msgctxt "@info:progress"
 msgid "Updating configuration..."
 msgstr "Aktualizowanie konfiguracji…"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:120
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:126
 msgctxt "@info:progress"
 msgid "Loading preferences..."
 msgstr "Ładowanie preferencji…"
@@ -420,7 +416,23 @@ msgctxt "@info:status"
 msgid "Auto scaled object to {0}% of original size"
 msgstr "Automatyczne skalowanie obiektu do {0}% oryginalnego rozmiaru"
 
-#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:110
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:84
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:92
+#, python-brace-format
+msgctxt "@info:status"
+msgid ""
+"Failed to install plugin from <filename>{0}</filename>:\n"
+"<message>{1}</message>"
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:94
+msgctxt "@info:status"
+msgid ""
+"The plugin has been installed.\n"
+" Please re-start the application to active the plugin."
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:122
 #, python-brace-format
 msgctxt "@info:version-upgrade"
 msgid "A configuration from an older version of {0} was imported."
@@ -481,38 +493,63 @@ msgctxt "@action:checkbox"
 msgid "Snap Rotation"
 msgstr "Proste obracanie"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:19
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:20
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:148
 msgctxt "@title:tab"
 msgid "Plugins"
 msgstr "Rozszerzenia"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:81
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:28
+msgctxt "@action:button"
+msgid "Install new plugin"
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:55
+msgctxt "@label"
+msgid "You will need to restart the application before changes in plugins have effect."
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:93
+msgctxt "@label"
+msgid "This plugin is required for the application to run."
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:110
 msgctxt "@label"
 msgid "Info..."
 msgstr "Informacje…"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:101
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:128
+msgctxt "@window:title"
+msgid "Install Plugin"
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:137
+msgctxt "@title:window"
+msgid "Open file(s)"
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:171
 msgctxt "@label"
 msgid "No text available"
 msgstr "Brak dostępnego opisu"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:107
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:177
 msgctxt "@title:window"
 msgid "About %1"
 msgstr "Informacje o %1"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:139
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:209
 msgctxt "@label"
 msgid "Author:"
 msgstr "Autor:"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:161
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:231
 msgctxt "@label"
 msgid "Version:"
 msgstr "Wersja:"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:179
+#: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:249
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:113
 msgctxt "@action:button"
 msgid "Close"
@@ -696,6 +733,18 @@ msgstr "Zakończ"
 msgctxt "@action:button"
 msgid "Next"
 msgstr "Dalej"
+
+#~ msgctxt "@label"
+#~ msgid "Wireframe View"
+#~ msgstr "Widok szkieletu"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides a simple wireframe view."
+#~ msgstr "Zapewnia prosty widok szkieletu."
+
+#~ msgctxt "@info"
+#~ msgid "An exception occured while parsing the JSON file."
+#~ msgstr "Wystąpił błąd podczas parsowania pliku JSON."
 
 #~ msgctxt "@label"
 #~ msgid "3MF Writer"
