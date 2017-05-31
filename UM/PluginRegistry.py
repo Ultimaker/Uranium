@@ -75,6 +75,13 @@ class PluginRegistry(QObject):
         file_types.append(i18n_catalog.i18nc("@item:inlistbox", "All Files (*)"))
         return file_types
 
+    @pyqtSlot(str, result = bool)
+    def isPluginFile(self, plugin_path: str):
+        extension = os.path.splitext(plugin_path)[1].strip(".")
+        if extension.lower() in self._supported_file_types.keys():
+            return True
+        return False
+
     @pyqtSlot(str, result="QVariantMap")
     def installPlugin(self, plugin_path: str):
         plugin_path = QUrl(plugin_path).toLocalFile()
@@ -84,7 +91,7 @@ class PluginRegistry(QObject):
 
         if plugin_id in self._plugins:
             # Plugin is already installed.
-            # TODO: Handle version number in some way. 
+            # TODO: Handle version number in some way.
             Logger.log("w", "The plugin was already installed. Unable to install it again!")
             return {"status": "duplicate", "message": i18n_catalog.i18nc("@info:status", "Failed to install the plugin; \n<message>{0}</message>", "Plugin was already installed")}
 
