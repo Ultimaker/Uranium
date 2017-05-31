@@ -81,6 +81,13 @@ class PluginRegistry(QObject):
         Logger.log("d", "Attempting to install a new plugin %s", plugin_path)
         local_plugin_path = os.path.join(Resources.getStoragePath(Resources.Resources), "plugins")
         plugin_id = os.path.splitext(os.path.basename(plugin_path))[0]
+
+        if plugin_id in self._plugins:
+            # Plugin is already installed.
+            # TODO: Handle version number in some way. 
+            Logger.log("w", "The plugin was already installed. Unable to install it again!")
+            return {"status": "duplicate", "message": i18n_catalog.i18nc("@info:status", "Failed to install the plugin; \n<message>{0}</message>", "Plugin was already installed")}
+
         plugin_folder = os.path.join(local_plugin_path, plugin_id)
 
         # Check if the local plugins directory exists
@@ -88,7 +95,6 @@ class PluginRegistry(QObject):
             os.makedirs(plugin_folder)
         except OSError:
             # The directory is already there. This means the plugin is already installed.
-            # TODO; Handle updating plugin versions.
             Logger.log("w", "The plugin was already installed. Unable to install it again!")
             return {"status": "duplicate", "message": i18n_catalog.i18nc("@info:status", "Failed to install plugin from <filename>{0}</filename>:\n<message>{1}</message>", plugin_folder, "Plugin was already installed")}
 
