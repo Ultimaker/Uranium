@@ -10,7 +10,7 @@ from UM.PluginError import PluginNotFoundError, InvalidMetaDataError
 from UM.Logger import Logger
 from typing import Callable, Any, Optional, types, Dict, List
 
-from PyQt5.QtCore import QObject, pyqtSlot, QUrl, pyqtProperty
+from PyQt5.QtCore import QObject, pyqtSlot, QUrl, pyqtProperty, pyqtSignal
 
 from UM.Resources import Resources
 from UM.PluginObject import PluginObject  # For type hinting
@@ -18,6 +18,7 @@ from UM.Platform import Platform
 
 from UM.i18n import i18nCatalog
 i18n_catalog = i18nCatalog("uranium")
+
 
 ##  A central object to dynamically load modules as plugins.
 #
@@ -41,14 +42,21 @@ class PluginRegistry(QObject):
         self._application = None
         self._active_plugins = []  # type: List[str]
 
-        self._supported_file_types = {"plugin": "Uranium Plugin"}
+        self._supported_file_types = {"umplugin": "Uranium Plugin"}
         preferences = Preferences.getInstance()
         preferences.addPreference("general/disabled_plugins", "")
         # The disabled_plugins is explicitly set to None. When actually loading the preferences, it's set to a list.
         # This way we can see the difference between no list and an empty one.
         self._disabled_plugins = None  # type: Optional[List[str]]
 
-    @pyqtProperty("QStringList", constant=True)
+    def addSupportedPluginExtension(self, extension, description):
+        if extension not in self._supported_file_types:
+            self._supported_file_types[extension] = description
+            self.supportedPluginExtensionsChanged.emit()
+
+    supportedPluginExtensionsChanged = pyqtSignal()
+
+    @pyqtProperty("QStringList", notify=supportedPluginExtensionsChanged)
     def supportedPluginExtensions(self):
         file_types = []
         all_types = []
@@ -80,6 +88,7 @@ class PluginRegistry(QObject):
             os.makedirs(plugin_folder)
         except OSError:
             # The directory is already there. This means the plugin is already installed.
+            # TODO; Handle updating plugin versions.
             Logger.log("w", "The plugin was already installed. Unable to install it again!")
             return {"status": "duplicate", "message": i18n_catalog.i18nc("@info:status", "Failed to install plugin from <filename>{0}</filename>:\n<message>{1}</message>", plugin_folder, "Plugin was already installed")}
 
