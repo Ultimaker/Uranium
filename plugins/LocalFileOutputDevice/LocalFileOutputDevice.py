@@ -116,15 +116,7 @@ class LocalFileOutputDevice(OutputDevice):
         # Get file name from file dialog
         file_name = dialog.selectedFiles()[0]
         Logger.log("d", "Writing to [%s]..." % file_name)
-        # OSX does not handle extensions with multiple periods correctly.
-        if Platform.isOSX():
-            Logger.log("d", "OS X: checking for double extension...")
-            mime_types = MimeType("", "", [t['extension'] for t in file_types])
-            # Check if an extension is added multiple times.
-            while mime_types.stripExtension(file_name) != mime_types.stripExtension(mime_types.stripExtension(file_name)):
-                file_name = mime_types.stripExtension(file_name)
-                Logger.log("d", "Multi extension detected, setting filename to [%s]" % file_name)
-
+        
         if os.path.exists(file_name):
             result = QMessageBox.question(None, catalog.i18nc("@title:window", "File Already Exists"), catalog.i18nc("@label", "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?").format(file_name))
             if result == QMessageBox.No:
