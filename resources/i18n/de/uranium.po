@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Uranium 2.6\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2017-05-30 15:41+0200\n"
-"PO-Revision-Date: 2017-04-04 11:27+0200\n"
+"PO-Revision-Date: 2017-06-07 16:04+0200\n"
 "Last-Translator: Bothof <info@bothof.nl>\n"
 "Language-Team: German <info@bothof.nl>\n"
 "Language: German\n"
@@ -42,7 +42,7 @@ msgstr "Datei-Protokolleinrichtung"
 #: /home/ruben/Projects/Uranium/plugins/FileLogger/__init__.py:16
 msgctxt "@info:whatsthis"
 msgid "Outputs log information to a file in your settings folder."
-msgstr ""
+msgstr "Überträgt Protokoll-Informationen in eine Datei in Ihrem Ordner „Einstellungen“."
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLReader/__init__.py:12
 msgctxt "@label"
@@ -149,7 +149,7 @@ msgstr "Download"
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:91
 msgctxt "@info"
 msgid "An exception occurred while checking for updates."
-msgstr ""
+msgstr "Bei der Suche nach Aktualisierungen ist ein Ausnahmefehler aufgetreten."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:95
 msgctxt "@info"
@@ -421,14 +421,14 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install plugin from <filename>{0}</filename>:\n"
 "<message>{1}</message>"
-msgstr ""
+msgstr "Plugin von <filename>{0}</filename>:\n<message>{1}</message> konnte nicht installiert werden."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:94
 msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 " Please re-start the application to active the plugin."
-msgstr ""
+msgstr "Das Plugin wurde installiert.\n Starten Sie die Anwendung bitte neu, um das Plugin zu aktivieren."
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:122
 #, python-brace-format
@@ -500,17 +500,17 @@ msgstr "Plugins"
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:28
 msgctxt "@action:button"
 msgid "Install new plugin"
-msgstr ""
+msgstr "Neues Plugin installieren"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:55
 msgctxt "@label"
 msgid "You will need to restart the application before changes in plugins have effect."
-msgstr ""
+msgstr "Die Anwendung muss neu gestartet werden, um die Änderungen des Plugins zu übernehmen."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:93
 msgctxt "@label"
 msgid "This plugin is required for the application to run."
-msgstr ""
+msgstr "Dieses Plugin ist für die Ausführung der Anwendung erforderlich."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:110
 msgctxt "@label"
@@ -520,12 +520,12 @@ msgstr "Infos..."
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:128
 msgctxt "@window:title"
 msgid "Install Plugin"
-msgstr ""
+msgstr "Plugin installieren"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:137
 msgctxt "@title:window"
 msgid "Open file(s)"
-msgstr ""
+msgstr "Datei(en) öffnen"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:171
 msgctxt "@label"

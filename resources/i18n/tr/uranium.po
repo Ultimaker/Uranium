@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Uranium 2.6\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2017-05-30 15:41+0200\n"
-"PO-Revision-Date: 2017-04-04 11:27+0200\n"
+"PO-Revision-Date: 2017-06-07 16:04+0200\n"
 "Last-Translator: Bothof <info@bothof.nl>\n"
 "Language-Team: Turkish <info@bothof.nl>\n"
 "Language: Turkish\n"
@@ -42,7 +42,7 @@ msgstr "Dosya Günlükçüsü"
 #: /home/ruben/Projects/Uranium/plugins/FileLogger/__init__.py:16
 msgctxt "@info:whatsthis"
 msgid "Outputs log information to a file in your settings folder."
-msgstr ""
+msgstr "Ayarlar klasörünüzde bulunan bir dosyaya oturum açma bilgilerini gönderir."
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLReader/__init__.py:12
 msgctxt "@label"
@@ -149,7 +149,7 @@ msgstr "İndir"
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:91
 msgctxt "@info"
 msgid "An exception occurred while checking for updates."
-msgstr ""
+msgstr "Güncellemelerin kontrolü sırasında olağanüstü bir durum oluştu."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:95
 msgctxt "@info"
@@ -421,14 +421,14 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install plugin from <filename>{0}</filename>:\n"
 "<message>{1}</message>"
-msgstr ""
+msgstr "<filename>{0}</filename>:\n<message>{1}</message> üzerinden eklenti kurulumu başarısız oldu"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:94
 msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 " Please re-start the application to active the plugin."
-msgstr ""
+msgstr "Eklenti kurulumu yapıldı.\n Eklentiyi aktif hale getirmek uygulamayı yeniden başlatınız."
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:122
 #, python-brace-format
@@ -500,17 +500,17 @@ msgstr "Eklentiler"
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:28
 msgctxt "@action:button"
 msgid "Install new plugin"
-msgstr ""
+msgstr "Yeni eklenti kur"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:55
 msgctxt "@label"
 msgid "You will need to restart the application before changes in plugins have effect."
-msgstr ""
+msgstr "Eklentilerde yapılan değişikliklerin geçerli olması için uygulamayı yeniden başlatmanız gerekecektir."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:93
 msgctxt "@label"
 msgid "This plugin is required for the application to run."
-msgstr ""
+msgstr "Bu eklenti uygulamanın çalışması için gereklidir."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:110
 msgctxt "@label"
@@ -520,12 +520,12 @@ msgstr "Bilgi..."
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:128
 msgctxt "@window:title"
 msgid "Install Plugin"
-msgstr ""
+msgstr "Eklenti Kur"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:137
 msgctxt "@title:window"
 msgid "Open file(s)"
-msgstr ""
+msgstr "Dosya aç"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:171
 msgctxt "@label"
