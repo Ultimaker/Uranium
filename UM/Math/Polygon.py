@@ -322,7 +322,7 @@ class Polygon:
             except scipy.spatial.qhull.QhullError:
                 return Polygon(numpy.zeros((0, 2), numpy.float64))
 
-            return Polygon(numpy.flipud(self._points[hull.vertices]))
+            return Polygon(numpy.flipud(hull.points[hull.vertices]))
     else:
         def getConvexHull(self):
             unique = {}
