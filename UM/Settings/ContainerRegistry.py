@@ -141,7 +141,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   that were already added when the first call to this method happened will not be re-added.
     def load(self) -> None:
         files = []
-        old_file_expression = re.compile("\\" + os.sep + "old\\" + os.sep + "\d+\\" + os.sep)
+        old_file_expression = re.compile(r"\{sep}old\{sep}\d+\{sep}".format(sep = os.sep))
 
         for resource_type in self._resource_types:
             resources = Resources.getAllResourcesOfType(resource_type)
