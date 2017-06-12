@@ -2,7 +2,7 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 import os
-import re #For finding containers with asterisks in the constraints.
+import re #For finding containers with asterisks in the constraints and for detecting backup files.
 import urllib #For ensuring container file names are proper file names
 import urllib.parse
 import pickle #For serializing/deserializing Python classes to binary files
@@ -141,6 +141,8 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   that were already added when the first call to this method happened will not be re-added.
     def load(self) -> None:
         files = []
+        old_file_expression = re.compile(r"\{sep}old\{sep}\d+\{sep}".format(sep = os.sep))
+
         for resource_type in self._resource_types:
             resources = Resources.getAllResourcesOfType(resource_type)
 
@@ -152,6 +154,10 @@ class ContainerRegistry(ContainerRegistryInterface):
             # Pre-process the list of files to insert relevant data
             # Most importantly, we need to ensure the loading order is DefinitionContainer, InstanceContainer, ContainerStack
             for path in resources:
+                if old_file_expression.search(path):
+                    # This is a backup file, ignore it.
+                    continue
+
                 try:
                     mime = MimeTypeDatabase.getMimeTypeForFile(path)
                 except MimeTypeDatabase.MimeTypeNotFoundError:
