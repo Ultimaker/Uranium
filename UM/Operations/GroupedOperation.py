@@ -69,3 +69,9 @@ class GroupedOperation(Operation.Operation):
                 return False
             op.addOperation(child_op)
         return op
+
+    def __repr__(self):
+        output = "GroupedOperation(children = {0})\n".format(len(self._children))
+        for child in self._children:
+            output += "  {0!r}\n".format(child)
+        return output

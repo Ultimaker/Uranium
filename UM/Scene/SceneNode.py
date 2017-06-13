@@ -389,7 +389,7 @@ class SceneNode():
         return deepcopy(self._transformation)
 
     def setTransformation(self, transformation: Matrix):
-        self._transformation = transformation
+        self._transformation = deepcopy(transformation) # Make a copy to ensure we never change the given transformation
         self._transformChanged()
 
     ##  Get the local orientation value.
