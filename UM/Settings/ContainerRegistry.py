@@ -349,7 +349,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         if not name: #Wait, that deleted everything!
             name = "Profile"
         elif not self.findContainers(id = name, ignore_case = True) and not self.findContainers(name = name):
-            return original.strip()
+            return name
 
         unique_name = name
         i = 1
