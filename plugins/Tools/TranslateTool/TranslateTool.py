@@ -10,10 +10,11 @@ from UM.Math.Float import Float
 
 from UM.Operations.TranslateOperation import TranslateOperation
 from UM.Operations.GroupedOperation import GroupedOperation
-from UM.Application import Application
 
 from UM.Scene.Selection import Selection
 from UM.Scene.ToolHandle import ToolHandle
+
+from PyQt5.QtCore import Qt
 
 from . import TranslateToolHandle
 
@@ -35,6 +36,8 @@ class TranslateTool(Tool):
         self._grid_snap = False
         self._grid_size = 10
         self._moved = False
+
+        self._shortcut_key = Qt.Key_Q
 
         self._distance_update_time = None
         self._distance = None

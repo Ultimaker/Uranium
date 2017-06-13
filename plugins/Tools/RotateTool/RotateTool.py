@@ -3,9 +3,7 @@
 
 from UM.Tool import Tool
 from UM.Job import Job
-from UM.Logger import Logger
 from UM.Event import Event, MouseEvent, KeyEvent
-from UM.Application import Application
 from UM.Message import Message
 from UM.Scene.ToolHandle import ToolHandle
 from UM.Scene.Selection import Selection
@@ -13,7 +11,8 @@ from UM.Scene.Selection import Selection
 from UM.Math.Plane import Plane
 from UM.Math.Vector import Vector
 from UM.Math.Quaternion import Quaternion
-from UM.Math.Float import Float
+
+from PyQt5.QtCore import Qt
 
 from UM.Operations.RotateOperation import RotateOperation
 from UM.Operations.GroupedOperation import GroupedOperation
@@ -39,6 +38,8 @@ class RotateTool(Tool):
 
         self._angle = None
         self._angle_update_time = None
+
+        self._shortcut_key = Qt.Key_Z
 
         self._progress_message = None
         self._iterations = 0
