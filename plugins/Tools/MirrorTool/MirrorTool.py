@@ -12,6 +12,8 @@ from UM.Operations.GroupedOperation import GroupedOperation
 from UM.Scene.Selection import Selection
 from UM.Scene.ToolHandle import ToolHandle
 
+from PyQt5.QtCore import Qt
+
 from . import MirrorToolHandle
 
 ##  Provides the tool to mirror meshes and groups
@@ -21,6 +23,7 @@ class MirrorTool(Tool):
         super().__init__()
 
         self._handle = MirrorToolHandle.MirrorToolHandle()
+        self._shortcut_key = Qt.Key_W
 
         self._operation_started = False
 
