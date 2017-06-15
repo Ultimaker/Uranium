@@ -31,6 +31,7 @@ class Tool(PluginObject):
         self._selection_pass = None
 
         self._controller.toolEnabledChanged.connect(self._onToolEnabledChanged)
+        self._shortcut_key = None
 
     ##  Should be emitted whenever a longer running operation is started, like a drag to scale an object.
     #
@@ -49,6 +50,9 @@ class Tool(PluginObject):
 
     def setExposedProperties(self, *args):
         self._exposed_properties = args
+
+    def getShortcutKey(self):
+        return self._shortcut_key
 
     ##  Handle an event.
     #   \param event \type{Event} The event to handle.

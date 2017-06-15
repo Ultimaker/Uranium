@@ -12,7 +12,6 @@ from UM.View.View import View
 from UM.InputDevice import InputDevice
 from typing import Optional, Dict
 
-
 ##      Glue class that holds the scene, (active) view(s), (active) tool(s) and possible user inputs.
 #
 #       The different types of views / tools / inputs are defined by plugins.
@@ -247,6 +246,13 @@ class Controller:
         # First, try to perform camera control
         if self._camera_tool and self._camera_tool.event(event):
             return
+
+        if self._tools and event.type == Event.KeyPressEvent:
+            from UM.Scene.Selection import Selection  # Imported here to prevent a circular dependency.
+            if Selection.hasSelection():
+                for key, tool in self._tools.items():
+                    if tool.getShortcutKey() is not None and event.key == tool.getShortcutKey():
+                        self.setActiveTool(tool)
 
         if self._selection_tool and self._selection_tool.event(event):
             return
