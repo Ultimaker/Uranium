@@ -38,7 +38,13 @@ Item
         //First convert to fixed-point notation to round the number to 4 decimals and not introduce new floating point errors.
         //Then convert to a string (is implicit). The fixed-point notation will be something like "3.200".
         //Then remove any trailing zeroes and the radix.
-        return input.toFixed(decimals).replace(/\.?0*$/, ""); //Match on periods, if any ( \.? ), followed by any number of zeros ( 0* ), then the end of string ( $ ).
+        if(input)
+        {
+            return input.toFixed(decimals).replace(/\.?0*$/, ""); //Match on periods, if any ( \.? ), followed by any number of zeros ( 0* ), then the end of string ( $ ).
+        } else
+        {
+            return 0
+        }
     }
 
     Button
