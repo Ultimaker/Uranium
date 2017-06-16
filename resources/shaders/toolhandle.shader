@@ -1,6 +1,5 @@
 [shaders]
 vertex =
-    #version 120
     uniform highp mat4 u_modelViewProjectionMatrix;
 
     attribute highp vec4 a_vertex;
@@ -15,7 +14,6 @@ vertex =
     }
 
 fragment =
-    #version 120
     uniform lowp vec4 u_disabledColor;
     uniform lowp vec4 u_activeColor;
     uniform lowp float u_disabledMultiplier;
