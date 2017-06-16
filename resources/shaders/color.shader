@@ -1,5 +1,6 @@
 [shaders]
 vertex =
+    #version 120
     uniform highp mat4 u_modelViewProjectionMatrix;
 
     attribute highp vec4 a_vertex; //Vertex coordinate.
@@ -9,6 +10,7 @@ vertex =
     }
 
 fragment =
+    #version 120
     uniform lowp vec4 u_color;
 
     void main()
