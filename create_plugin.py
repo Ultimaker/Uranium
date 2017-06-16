@@ -13,11 +13,15 @@ def checkValidPlugin(path):
 
     return True
 
-def zip_directory(path, zip_handle):
+def zipDirectory(path, zip_handle):
     # zip_handle is zipfile handle
     for root, dirs, files in os.walk(path):
         for file in files:
-            zip_handle.write(os.path.join(root, file))
+            filename = os.path.join(root, file)
+            if os.path.isfile(filename):
+                _, extension = os.path.splitext(filename)
+                if extension not in excluded_extentions:
+                    zip_handle.write(os.path.join(root, file), os.path.relpath(os.path.join(root, file), os.path.join(path, '..')))
 
 excluded_extentions = [".pyc"]
 
@@ -29,17 +33,10 @@ if __name__ == "__main__":
     full_plugin_path = os.path.join(os.getcwd(), args.plugin_location)
 
     if checkValidPlugin(full_plugin_path):
-        plugin_name = os.path.basename(os.path.normpath(full_plugin_path)) + ".plugin"
-        with zipfile.ZipFile(plugin_name, "w") as plugin_zip:
-            print("Creating  plugin file %s" % plugin_name)
-            for root, dirs, files in os.walk(args.plugin_location):
-                for file in files:
-                    filename = os.path.join(root, file)
-                    if os.path.isfile(filename):
-                        _, extension = os.path.splitext(filename)
-                        if extension not in excluded_extentions:
-                            arcname = os.path.join(os.path.relpath(root, full_plugin_path), file)
-                            plugin_zip.write(filename, arcname)
-            print("Done!")
+        plugin_name = os.path.basename(os.path.normpath(full_plugin_path))
+        plugin_file_location = plugin_name + ".plugin"
+        with zipfile.ZipFile(plugin_file_location, "w") as plugin_zip:
+            zipDirectory(full_plugin_path, plugin_zip)
+        print("Done!")
     else:
         print("Provided plugin location is not a valid plugin folder")
