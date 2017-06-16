@@ -1,4 +1,4 @@
-# Copyright (c) 2016 Ultimaker B.V.
+# Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 import configparser
@@ -410,7 +410,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         configuration_type = None
         try:
             parser = self._readAndValidateSerialized(serialized)
-            configuration_type = parser['metadata'].get('type')
+            configuration_type = parser["metadata"].get("type")
         except Exception as e:
             Logger.log("d", "Could not get configuration type: %s", e)
         return configuration_type
