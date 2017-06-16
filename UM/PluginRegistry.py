@@ -87,31 +87,34 @@ class PluginRegistry(QObject):
         plugin_path = QUrl(plugin_path).toLocalFile()
         Logger.log("d", "Attempting to install a new plugin %s", plugin_path)
         local_plugin_path = os.path.join(Resources.getStoragePath(Resources.Resources), "plugins")
-        plugin_id = os.path.splitext(os.path.basename(plugin_path))[0]
-
-        if plugin_id in self._plugins:
-            # Plugin is already installed.
-            # TODO: Handle version number in some way.
-            Logger.log("w", "The plugin was already installed. Unable to install it again!")
-            return {"status": "duplicate", "message": i18n_catalog.i18nc("@info:status", "Failed to install the plugin; \n<message>{0}</message>", "Plugin was already installed")}
-
-        plugin_folder = os.path.join(local_plugin_path, plugin_id)
-
-        # Check if the local plugins directory exists
-        try:
-            os.makedirs(plugin_folder)
-        except OSError:
-            # The directory is already there. This means the plugin is already installed.
-            Logger.log("w", "The plugin was already installed. Unable to install it again!")
-            return {"status": "duplicate", "message": i18n_catalog.i18nc("@info:status", "Failed to install plugin from <filename>{0}</filename>:\n<message>{1}</message>", plugin_folder, "Plugin was already installed")}
-
+        plugin_folder = ""
         try:
             with zipfile.ZipFile(plugin_path, "r") as zip_ref:
+                plugin_id = None
+                for file in zip_ref.infolist():
+                    if file.filename.endswith("/"):
+                        plugin_id = file.filename.strip("/")
+                        break
+
+                if plugin_id is None:
+                    return {"status": "error", "message": i18n_catalog.i18nc("@info:status",
+                                                                             "Failed to install plugin from <filename>{0}</filename>:\n<message>{1}</message>",
+                                                                             plugin_path, "Invalid plugin file")}
+                if plugin_id in self._plugins:
+                    # TODO: Handle version number in some way.
+                    Logger.log("w", "The plugin was already installed. Unable to install it again!")
+                    return {"status": "duplicate", "message": i18n_catalog.i18nc("@info:status", "Failed to install the plugin; \n<message>{0}</message>", "Plugin was already installed")}
+
+                plugin_folder = os.path.join(local_plugin_path, plugin_id)
+
                 zip_ref.extractall(plugin_folder)
-        except:  # Installing a new plugin should never crash the application.
+
+
+        except: # Installing a new plugin should never crash the application.
             Logger.logException("d", "An exception occurred while installing plugin ")
-            os.rmdir(plugin_folder)  # Clean up after ourselves.
-            return {"status": "error", "message": i18n_catalog.i18nc("@info:status", "Failed to install plugin from <filename>{0}</filename>:\n<message>{1}</message>", plugin_folder, "Invalid plugin file")}
+            return {"status": "error", "message": i18n_catalog.i18nc("@info:status",
+                                                                     "Failed to install plugin from <filename>{0}</filename>:\n<message>{1}</message>",
+                                                                     plugin_folder, "Invalid plugin file")}
 
         return {"status": "ok", "message": i18n_catalog.i18nc("@info:status", "The plugin has been installed.\n Please re-start the application to active the plugin.")}
 
