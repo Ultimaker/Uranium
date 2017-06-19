@@ -46,6 +46,40 @@ class Theme(QObject):
 
     themeLoaded = pyqtSignal()
 
+    @pyqtSlot(result = "QVariantList")
+    def getThemes(self):
+        themes = []
+        for path in Resources.getAllPathsForType(Resources.Themes):
+            try:
+                for file in os.listdir(path):
+                    folder = os.path.join(path, file)
+                    theme_file = os.path.join(folder, "theme.json")
+                    if os.path.isdir(folder) and os.path.isfile(theme_file):
+                        theme_id = os.path.basename(folder)
+
+                        with open(theme_file) as f:
+                            try:
+                                data = json.load(f)
+                            except json.decoder.JSONDecodeError:
+                                Logger.log("w", "Could not parse theme %s", theme_id)
+                                continue # do not add this theme to the list, but continue looking for other themes
+
+                            try:
+                                theme_name = data["metadata"]["name"]
+                            except KeyError:
+                                Logger.log("w", "Theme %s does not have a name; using its id instead", theme_id)
+                                theme_name = theme_id # fallback if no name is specified in json
+
+                        themes.append({
+                            "id": theme_id,
+                            "name": theme_name
+                        })
+            except FileNotFoundError:
+                pass
+        themes.sort(key = lambda k: k["name"])
+
+        return themes
+
     @pyqtSlot(str, result = "QColor")
     def getColor(self, color):
         if color in self._colors:
@@ -126,7 +160,14 @@ class Theme(QObject):
             Logger.log("d", "Loading theme file: %s", os.path.join(self._path, "theme.json"))
             data = json.load(f)
 
-        self._initializeDefaults()
+        # Iteratively load inherited themes
+        try:
+            theme_id = data["metadata"]["inherits"]
+            self.load(Resources.getPath(Resources.Themes, theme_id))
+        except FileNotFoundError:
+            Logger.log("e", "Could not find inherited theme %s", theme_id)
+        except KeyError:
+            pass # No metadata or no inherits keyword in the theme.json file
 
         if "colors" in data:
             for name, color in data["colors"].items():
