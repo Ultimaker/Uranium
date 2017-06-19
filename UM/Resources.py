@@ -498,4 +498,5 @@ class Resources:
         Cache: "",
         InstanceContainers: "instances",
         ContainerStacks: "stacks",
+        Themes: "themes",
     }
