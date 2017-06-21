@@ -386,7 +386,12 @@ class PluginRegistry(QObject):
             metadata_file = os.path.join(location, "plugin.json")
             try:
                 with open(metadata_file, "r") as f:
-                    meta_data["plugin"] = json.loads(f.read())
+                    try:
+                        meta_data["plugin"] = json.loads(f.read())
+                    except json.decoder.JSONDecodeError:
+                        Logger.logException("e", "Failed to parse plugin.json for plugin %s", plugin_id)
+                        raise InvalidMetaDataError(plugin_id)
+
                     # Check if metadata is valid;
                     if "version" not in meta_data["plugin"]:
                         Logger.log("e", "Version must be set!")
