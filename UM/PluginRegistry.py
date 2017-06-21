@@ -115,7 +115,7 @@ class PluginRegistry(QObject):
                         if new_version > old_version:
                             zip_ref.extractall(plugin_folder)
                             return {"status": "ok", "message": i18n_catalog.i18nc("@info:status",
-                                                                                  "The plugin has been installed.\n Please re-start the application to active the plugin.")}
+                                                                                  "The plugin has been installed.\n Please re-start the application to activate the plugin.")}
 
                     Logger.log("w", "The plugin was already installed. Unable to install it again!")
                     return {"status": "duplicate", "message": i18n_catalog.i18nc("@info:status",
@@ -136,7 +136,7 @@ class PluginRegistry(QObject):
                                                                      "Failed to install plugin from <filename>{0}</filename>:\n<message>{1}</message>",
                                                                      plugin_folder, "Invalid plugin file")}
 
-        return {"status": "ok", "message": i18n_catalog.i18nc("@info:status", "The plugin has been installed.\n Please re-start the application to active the plugin.")}
+        return {"status": "ok", "message": i18n_catalog.i18nc("@info:status", "The plugin has been installed.\n Please re-start the application to activate the plugin.")}
 
     ##  Check if all required plugins are loaded.
     #   \param required_plugins \type{list} List of ids of plugins that ''must'' be activated.
