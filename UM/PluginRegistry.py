@@ -15,6 +15,7 @@ from PyQt5.QtCore import QObject, pyqtSlot, QUrl, pyqtProperty, pyqtSignal
 from UM.Resources import Resources
 from UM.PluginObject import PluginObject  # For type hinting
 from UM.Platform import Platform
+from UM.Version import Version
 
 from UM.i18n import i18nCatalog
 import json
@@ -101,15 +102,25 @@ class PluginRegistry(QObject):
                     return {"status": "error", "message": i18n_catalog.i18nc("@info:status",
                                                                              "Failed to install plugin from <filename>{0}</filename>:\n<message>{1}</message>",
                                                                              plugin_path, "Invalid plugin file")}
+                plugin_folder = os.path.join(local_plugin_path, plugin_id)
+
                 if plugin_id in self._plugins:
                     # TODO: Handle version number in some way.
+                    metadata = {}
+                    with zip_ref.open(plugin_id + "/plugin.json") as metadata_file:
+                        metadata = json.loads(metadata_file.read().decode("utf-8"))
+
+                    if "version" in metadata:
+                        new_version = Version(metadata["version"])
+                        old_version = Version(self.getMetaData(plugin_id)["plugin"]["version"])
+                        if new_version > old_version:
+                            zip_ref.extractall(plugin_folder)
+                            return {"status": "ok", "message": i18n_catalog.i18nc("@info:status", "The plugin has been installed.\n Please re-start the application to active the plugin.")}
+
                     Logger.log("w", "The plugin was already installed. Unable to install it again!")
                     return {"status": "duplicate", "message": i18n_catalog.i18nc("@info:status", "Failed to install the plugin; \n<message>{0}</message>", "Plugin was already installed")}
 
-                plugin_folder = os.path.join(local_plugin_path, plugin_id)
-
                 zip_ref.extractall(plugin_folder)
-
 
         except: # Installing a new plugin should never crash the application.
             Logger.logException("d", "An exception occurred while installing plugin ")
