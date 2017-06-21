@@ -179,7 +179,11 @@ class PluginRegistry(QObject):
             raise PluginNotFoundError(plugin_id)
 
         if plugin_id not in self._meta_data:
-            self._populateMetaData(plugin_id)
+            try:
+                self._populateMetaData(plugin_id)
+            except InvalidMetaDataError:
+                return
+
 
         if self._meta_data[plugin_id].get("plugin", {}).get("api", 0) != self.APIVersion:
             Logger.log("i", "Plugin %s uses an incompatible API version, ignoring", plugin_id)
@@ -242,7 +246,10 @@ class PluginRegistry(QObject):
     #   \exception InvalidMetaDataError Raised when no metadata can be found or the metadata misses the right keys.
     def getMetaData(self, plugin_id: str) -> Dict:
         if plugin_id not in self._meta_data:
-            if not self._populateMetaData(plugin_id):
+            try:
+                if not self._populateMetaData(plugin_id):
+                    return {}
+            except InvalidMetaDataError:
                 return {}
 
         return self._meta_data[plugin_id]
