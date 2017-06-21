@@ -1,0 +1,8 @@
+{
+    "name":  "Wavefront OBJ Writer",
+    "author": "Ultimaker",
+    "version": "1.0",
+    "description": "Makes it possbile to write Wavefront OBJ files.",
+    "api": 4,
+    "catalog": "uranium"
+}

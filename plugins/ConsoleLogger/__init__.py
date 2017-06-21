@@ -7,16 +7,10 @@ from . import ConsoleLogger
 from UM.i18n import i18nCatalog
 i18n_catalog = i18nCatalog("uranium")
 
+
 def getMetaData():
-    return {
-        "plugin": {
-            "name": i18n_catalog.i18nc("@label", "Console Logger"),
-            "author": "Ultimaker",
-            "version": "1.0",
-            "description": i18n_catalog.i18nc("@info:whatsthis", "Outputs log information to the console."),
-            "api": 3
-        }
-    }
+    return {}
+
 
 def register(app):
     return { "logger": ConsoleLogger.ConsoleLogger() }

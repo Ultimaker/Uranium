@@ -8,14 +8,6 @@ i18n_catalog = i18nCatalog("uranium")
 
 def getMetaData():
     return {
-        "type": "tool",
-        "plugin": {
-            "name": i18n_catalog.i18nc("@label", "Selection Tool"),
-            "author": "Ultimaker",
-            "version": "1.0",
-            "description": i18n_catalog.i18nc("@info:whatsthis", "Provides the Selection tool."),
-            "api": 3
-        },
         "tool": {
             "visible": False
         }
