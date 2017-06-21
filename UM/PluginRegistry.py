@@ -17,6 +17,7 @@ from UM.PluginObject import PluginObject  # For type hinting
 from UM.Platform import Platform
 
 from UM.i18n import i18nCatalog
+import json
 i18n_catalog = i18nCatalog("uranium")
 
 
@@ -30,7 +31,7 @@ i18n_catalog = i18nCatalog("uranium")
 #
 #   [plugins]: docs/plugins.md
 class PluginRegistry(QObject):
-    APIVersion = 3
+    APIVersion = 4
 
     def __init__(self, parent = None):
         super().__init__(parent)
@@ -349,8 +350,42 @@ class PluginRegistry(QObject):
             return False
 
         meta_data = None
+
+        location = None
+        for folder in self._plugin_locations:
+            location = self._locatePlugin(plugin_id, folder)
+            if location:
+                break
+
+        if not location:
+            Logger.log("e", "Could not find plugin %s", plugin_id)
+            return False
+        location = os.path.join(location, plugin_id)
+
         try:
             meta_data = plugin.getMetaData()
+
+            metadata_file = os.path.join(location, "plugin.json")
+            try:
+                with open(metadata_file, "r") as f:
+                    meta_data["plugin"] = json.loads(f.read())
+                    # Check if metadata is valid;
+                    if "version" not in meta_data["plugin"]:
+                        Logger.log("e", "Version must be set!")
+                        raise InvalidMetaDataError(plugin_id)
+
+                    if "catalog" in meta_data["plugin"]:
+                        # A catalog was set, try to translate a few strings
+                        i18n_catalog = i18nCatalog(meta_data["plugin"]["catalog"])
+                        if "name" in meta_data["plugin"]:
+                             meta_data["plugin"]["name"] = i18n_catalog.i18n(meta_data["plugin"]["name"])
+                        if "description" in meta_data["plugin"]:
+                            meta_data["plugin"]["description"] = i18n_catalog.i18n(meta_data["plugin"]["description"])
+
+            except FileNotFoundError as e:
+                Logger.logException("e", "Unable to find the required plugin.json file  for plugin %s", plugin_id)
+                raise InvalidMetaDataError(plugin_id)
+
         except AttributeError as e:
             Logger.log("e", "An error occurred getting metadata from plugin %s: %s", plugin_id, str(e))
             raise InvalidMetaDataError(plugin_id)
