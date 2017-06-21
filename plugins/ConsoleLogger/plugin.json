@@ -4,5 +4,5 @@
   "version": "1.0",
   "description": "Outputs log information to the console.",
   "api": 4,
-  "catalog": "uranium"
+  "i18n-catalog": "uranium"
 }

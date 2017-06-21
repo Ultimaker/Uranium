@@ -381,9 +381,9 @@ class PluginRegistry(QObject):
                         Logger.log("e", "Version must be set!")
                         raise InvalidMetaDataError(plugin_id)
 
-                    if "catalog" in meta_data["plugin"]:
+                    if "i18n-catalog" in meta_data["plugin"]:
                         # A catalog was set, try to translate a few strings
-                        i18n_catalog = i18nCatalog(meta_data["plugin"]["catalog"])
+                        i18n_catalog = i18nCatalog(meta_data["plugin"]["i18n-catalog"])
                         if "name" in meta_data["plugin"]:
                              meta_data["plugin"]["name"] = i18n_catalog.i18n(meta_data["plugin"]["name"])
                         if "description" in meta_data["plugin"]:

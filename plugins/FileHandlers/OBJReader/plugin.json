@@ -4,5 +4,5 @@
     "version": "1.0",
     "description": "Makes it possbile to read Wavefront OBJ files.",
     "api": 4,
-    "catalog": "uranium"
+    "i18n-catalog": "uranium"
 }

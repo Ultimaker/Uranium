@@ -4,5 +4,5 @@
     "version": "1.0",
     "description": "Provides the Rotate tool.",
     "api": 4,
-    "catalog": "uranium"
+    "i18n-catalog": "uranium"
 }

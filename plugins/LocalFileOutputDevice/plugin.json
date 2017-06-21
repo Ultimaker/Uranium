@@ -4,5 +4,5 @@
     "author": "Ultimaker B.V.",
     "version": "1.0",
     "api": 4,
-    "catalog": "uranium"
+    "i18n-catalog": "uranium"
 }
