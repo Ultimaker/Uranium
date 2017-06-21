@@ -104,8 +104,7 @@ class PluginRegistry(QObject):
                                                                              plugin_path, "Invalid plugin file")}
                 plugin_folder = os.path.join(local_plugin_path, plugin_id)
 
-                if plugin_id in self._plugins:
-                    # TODO: Handle version number in some way.
+                if os.path.isdir(plugin_folder):  # Plugin is already installed by user (so not a bundled plugin)
                     metadata = {}
                     with zip_ref.open(plugin_id + "/plugin.json") as metadata_file:
                         metadata = json.loads(metadata_file.read().decode("utf-8"))
@@ -115,10 +114,19 @@ class PluginRegistry(QObject):
                         old_version = Version(self.getMetaData(plugin_id)["plugin"]["version"])
                         if new_version > old_version:
                             zip_ref.extractall(plugin_folder)
-                            return {"status": "ok", "message": i18n_catalog.i18nc("@info:status", "The plugin has been installed.\n Please re-start the application to active the plugin.")}
+                            return {"status": "ok", "message": i18n_catalog.i18nc("@info:status",
+                                                                                  "The plugin has been installed.\n Please re-start the application to active the plugin.")}
 
                     Logger.log("w", "The plugin was already installed. Unable to install it again!")
-                    return {"status": "duplicate", "message": i18n_catalog.i18nc("@info:status", "Failed to install the plugin; \n<message>{0}</message>", "Plugin was already installed")}
+                    return {"status": "duplicate", "message": i18n_catalog.i18nc("@info:status",
+                                                                                 "Failed to install the plugin; \n<message>{0}</message>",
+                                                                                 "Plugin was already installed")}
+                elif plugin_id in self._plugins:
+                    # Plugin is already installed, but not by the user (eg; this is a bundled plugin)
+                    # TODO: Right now we don't support upgrading bundled plugins at all, but we might do so in the future.
+                    return {"status": "duplicate", "message": i18n_catalog.i18nc("@info:status",
+                                                                                 "Failed to install the plugin; \n<message>{0}</message>",
+                                                                                 "Unable to upgrade or instal bundled plugins.")}
 
                 zip_ref.extractall(plugin_folder)
 
