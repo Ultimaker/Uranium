@@ -105,6 +105,8 @@ class PointingRectangle(QQuickItem):
         target_offset = self._target - QPoint(self.x(), self.y())
 
         arrow_on_side = -1 # no arrow
+        arrow_size = 0
+        arrow_offset = 0
 
         if target_offset.x() >= 0 and target_offset.x() <= self.width():
             arrow_size = min(self._arrow_size, self.width()/2)
@@ -163,18 +165,26 @@ class PointingRectangle(QQuickItem):
             border_node = paint_node.firstChild()
 
             border_vertices = []
-            border_vertices.append((0, self.height()))
+            border_vertices.append((0, 0))
             if arrow_on_side == 0:
-                pass
-            border_vertices.append((self.width(), self.height()))
-            if arrow_on_side == 1:
-                pass
+                border_vertices.append((arrow_offset - arrow_size, 0))
+                border_vertices.append((arrow_offset, - arrow_size))
+                border_vertices.append((arrow_offset + arrow_size, 0))
             border_vertices.append((self.width(), 0))
+            if arrow_on_side == 1:
+                border_vertices.append((self.width(), arrow_offset - arrow_size))
+                border_vertices.append((self.width() + arrow_size, arrow_offset))
+                border_vertices.append((self.width(), arrow_offset + arrow_size))
+            border_vertices.append((self.width(), self.height()))
             if arrow_on_side == 2:
-                pass
-            border_vertices.append((0,0))
+                border_vertices.append((arrow_offset + arrow_size, self.height()))
+                border_vertices.append((arrow_offset, self.height() + arrow_size))
+                border_vertices.append((arrow_offset - arrow_size, self.height()))
+            border_vertices.append((0,self.height()))
             if arrow_on_side == 3:
-                pass
+                border_vertices.append((0, arrow_offset + arrow_size))
+                border_vertices.append((- arrow_size, arrow_offset))
+                border_vertices.append((0, arrow_offset - arrow_size))
 
             border_geometry = QSGGeometry(QSGGeometry.defaultAttributes_Point2D(), 2 * len(border_vertices), 0)
             border_geometry.setDrawingMode(QSGGeometry.GL_LINES)
