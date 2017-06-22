@@ -15,11 +15,15 @@ class PointingRectangle(QQuickItem):
         self._arrow_size = 0
         self._color = QColor(255, 255, 255, 255)
         self._target = QPoint(0,0)
+        self._border_width = 0
+        self._border_color = QColor(0, 0, 0, 255)
 
         self._geometry = None
         self._material = None
         self._node = None
-        self._attributes = None
+        self._border_geometry = None
+        self._border_material = None
+        self._border_node = None
 
     def getArrowSize(self):
         return self._arrow_size
@@ -55,9 +59,31 @@ class PointingRectangle(QQuickItem):
             self.colorChanged.emit()
 
     colorChanged = pyqtSignal()
-
-    colorChanged = pyqtSignal()
     color = pyqtProperty(QColor, fget=getColor, fset=setColor, notify=colorChanged)
+
+    def getBorderWidth(self):
+        return self._border_width
+
+    def setBorderWidth(self, size):
+        if size != self._border_width:
+            self._border_width = size
+            self.update()
+            self.borderWidthChanged.emit()
+
+    borderWidthChanged = pyqtSignal()
+    borderWidth = pyqtProperty(float, fget=getBorderWidth, fset=setBorderWidth, notify=borderWidthChanged)
+
+    def getBorderColor(self):
+        return self._border_color
+
+    def setBorderColor(self, color):
+        if color != self._border_color:
+            self._border_color = color
+            self.update()
+            self.borderColorChanged.emit()
+
+    borderColorChanged = pyqtSignal()
+    borderColor = pyqtProperty(QColor, fget=getBorderColor, fset=setBorderColor, notify=borderColorChanged)
 
     def updatePaintNode(self, paint_node, update_data):
         if paint_node is None:
@@ -69,7 +95,7 @@ class PointingRectangle(QQuickItem):
         geometry.vertexDataAsPoint2D()[1].set(0, self.height())
         geometry.vertexDataAsPoint2D()[2].set(self.width(), self.height())
         geometry.vertexDataAsPoint2D()[3].set(self.width(), 0)
-        
+
         # no arrow by default
         geometry.vertexDataAsPoint2D()[4].set(0, 0)
         geometry.vertexDataAsPoint2D()[5].set(0, 0)
@@ -103,7 +129,7 @@ class PointingRectangle(QQuickItem):
                 geometry.vertexDataAsPoint2D()[4].set(self.width(), arrow_offset - arrow_size)
                 geometry.vertexDataAsPoint2D()[5].set(self.width() + arrow_size, arrow_offset)
                 geometry.vertexDataAsPoint2D()[6].set(self.width(), arrow_offset + arrow_size)
-                
+
         geometry.indexDataAsUShort()[0] = 0
         geometry.indexDataAsUShort()[1] = 1
         geometry.indexDataAsUShort()[2] = 2
@@ -123,10 +149,42 @@ class PointingRectangle(QQuickItem):
 
         paint_node.setMaterial(material)
 
+        if self._border_width > 0:
+            if paint_node.childCount() == 0:
+                paint_node.appendChildNode(QSGGeometryNode())
+            border_node = paint_node.firstChild()
+
+            border_geometry = QSGGeometry(QSGGeometry.defaultAttributes_Point2D(), 8, 0)
+            border_geometry.setDrawingMode(QSGGeometry.GL_LINES)
+            border_geometry.setLineWidth(self._border_width)
+            border_geometry.vertexDataAsPoint2D()[0].set(0, 0)
+            border_geometry.vertexDataAsPoint2D()[1].set(0, self.height())
+            border_geometry.vertexDataAsPoint2D()[2].set(0, self.height())
+            border_geometry.vertexDataAsPoint2D()[3].set(self.width(), self.height())
+            border_geometry.vertexDataAsPoint2D()[4].set(self.width(), self.height())
+            border_geometry.vertexDataAsPoint2D()[5].set(self.width(), 0)
+            border_geometry.vertexDataAsPoint2D()[6].set(self.width(), 0)
+            border_geometry.vertexDataAsPoint2D()[7].set(0, 0)
+
+            border_node.setGeometry(border_geometry)
+
+            border_material = QSGFlatColorMaterial()
+            border_material.setColor(self._border_color)
+
+            border_node.setMaterial(border_material)
+        else:
+            border_node = None
+            border_geometry = None
+            border_material = None
+            paint_node.removeAllChildNodes()
+
         # For PyQt 5.4, I need to store these otherwise they will be garbage collected before rendering
         # and never show up, but otherwise never crash.
-        self._paint_node = paint_node
+        self._node = paint_node
         self._geometry = geometry
         self._material = material
+        self._border_node = border_node
+        self._border_geometry = border_geometry
+        self._border_material = border_material
 
         return paint_node
