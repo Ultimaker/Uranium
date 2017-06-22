@@ -91,56 +91,64 @@ class PointingRectangle(QQuickItem):
 
         geometry = QSGGeometry(QSGGeometry.defaultAttributes_Point2D(), 7, 9)
         geometry.setDrawingMode(QSGGeometry.GL_TRIANGLES)
-        geometry.vertexDataAsPoint2D()[0].set(0, 0)
-        geometry.vertexDataAsPoint2D()[1].set(0, self.height())
-        geometry.vertexDataAsPoint2D()[2].set(self.width(), self.height())
-        geometry.vertexDataAsPoint2D()[3].set(self.width(), 0)
+        vertex_data = geometry.vertexDataAsPoint2D()
+        vertex_data[0].set(0, 0)
+        vertex_data[1].set(0, self.height())
+        vertex_data[2].set(self.width(), self.height())
+        vertex_data[3].set(self.width(), 0)
 
         # no arrow by default
-        geometry.vertexDataAsPoint2D()[4].set(0, 0)
-        geometry.vertexDataAsPoint2D()[5].set(0, 0)
-        geometry.vertexDataAsPoint2D()[6].set(0, 0)
+        vertex_data[4].set(0, 0)
+        vertex_data[5].set(0, 0)
+        vertex_data[6].set(0, 0)
 
         target_offset = self._target - QPoint(self.x(), self.y())
+
+        arrow_on_side = -1 # no arrow
 
         if target_offset.x() >= 0 and target_offset.x() <= self.width():
             arrow_size = min(self._arrow_size, self.width()/2)
             arrow_offset = max(arrow_size, min(self.width() - arrow_size, target_offset.x()))
             if target_offset.y() < 0:
                 # top
-                geometry.vertexDataAsPoint2D()[4].set(arrow_offset - arrow_size, 0)
-                geometry.vertexDataAsPoint2D()[5].set(arrow_offset, - arrow_size)
-                geometry.vertexDataAsPoint2D()[6].set(arrow_offset + arrow_size, 0)
+                vertex_data[4].set(arrow_offset - arrow_size, 0)
+                vertex_data[5].set(arrow_offset, - arrow_size)
+                vertex_data[6].set(arrow_offset + arrow_size, 0)
+                arrow_on_side = 0
             elif target_offset.y() > self.height():
                 # bottom
-                geometry.vertexDataAsPoint2D()[4].set(arrow_offset - arrow_size, self.height())
-                geometry.vertexDataAsPoint2D()[5].set(arrow_offset, self.height() +arrow_size)
-                geometry.vertexDataAsPoint2D()[6].set(arrow_offset + arrow_size, self.height())
+                vertex_data[4].set(arrow_offset - arrow_size, self.height())
+                vertex_data[5].set(arrow_offset, self.height() +arrow_size)
+                vertex_data[6].set(arrow_offset + arrow_size, self.height())
+                arrow_on_side = 2
         elif target_offset.y() >= 0 and target_offset.y() <= self.height():
             arrow_size = min(self._arrow_size, self.height()/2)
             arrow_offset = max(arrow_size, min(self.height() - arrow_size, target_offset.y()))
             if target_offset.x() < 0:
                 # left
-                geometry.vertexDataAsPoint2D()[4].set(0, arrow_offset - arrow_size)
-                geometry.vertexDataAsPoint2D()[5].set(-arrow_size, arrow_offset)
-                geometry.vertexDataAsPoint2D()[6].set(0, arrow_offset + arrow_size)
+                vertex_data[4].set(0, arrow_offset - arrow_size)
+                vertex_data[5].set(-arrow_size, arrow_offset)
+                vertex_data[6].set(0, arrow_offset + arrow_size)
+                arrow_on_side = 3
             elif target_offset.x() > self.width():
                 # right
-                geometry.vertexDataAsPoint2D()[4].set(self.width(), arrow_offset - arrow_size)
-                geometry.vertexDataAsPoint2D()[5].set(self.width() + arrow_size, arrow_offset)
-                geometry.vertexDataAsPoint2D()[6].set(self.width(), arrow_offset + arrow_size)
+                vertex_data[4].set(self.width(), arrow_offset - arrow_size)
+                vertex_data[5].set(self.width() + arrow_size, arrow_offset)
+                vertex_data[6].set(self.width(), arrow_offset + arrow_size)
+                arrow_on_side = 1
 
-        geometry.indexDataAsUShort()[0] = 0
-        geometry.indexDataAsUShort()[1] = 1
-        geometry.indexDataAsUShort()[2] = 2
+        index_data = geometry.indexDataAsUShort()
+        index_data[0] = 0
+        index_data[1] = 1
+        index_data[2] = 2
 
-        geometry.indexDataAsUShort()[3] = 0
-        geometry.indexDataAsUShort()[4] = 2
-        geometry.indexDataAsUShort()[5] = 3
+        index_data[3] = 0
+        index_data[4] = 2
+        index_data[5] = 3
 
-        geometry.indexDataAsUShort()[6] = 4
-        geometry.indexDataAsUShort()[7] = 5
-        geometry.indexDataAsUShort()[8] = 6
+        index_data[6] = 4
+        index_data[7] = 5
+        index_data[8] = 6
 
         paint_node.setGeometry(geometry)
 
@@ -154,17 +162,30 @@ class PointingRectangle(QQuickItem):
                 paint_node.appendChildNode(QSGGeometryNode())
             border_node = paint_node.firstChild()
 
-            border_geometry = QSGGeometry(QSGGeometry.defaultAttributes_Point2D(), 8, 0)
+            border_vertices = []
+            border_vertices.append((0, self.height()))
+            if arrow_on_side == 0:
+                pass
+            border_vertices.append((self.width(), self.height()))
+            if arrow_on_side == 1:
+                pass
+            border_vertices.append((self.width(), 0))
+            if arrow_on_side == 2:
+                pass
+            border_vertices.append((0,0))
+            if arrow_on_side == 3:
+                pass
+
+            border_geometry = QSGGeometry(QSGGeometry.defaultAttributes_Point2D(), 2 * len(border_vertices), 0)
             border_geometry.setDrawingMode(QSGGeometry.GL_LINES)
             border_geometry.setLineWidth(self._border_width)
-            border_geometry.vertexDataAsPoint2D()[0].set(0, 0)
-            border_geometry.vertexDataAsPoint2D()[1].set(0, self.height())
-            border_geometry.vertexDataAsPoint2D()[2].set(0, self.height())
-            border_geometry.vertexDataAsPoint2D()[3].set(self.width(), self.height())
-            border_geometry.vertexDataAsPoint2D()[4].set(self.width(), self.height())
-            border_geometry.vertexDataAsPoint2D()[5].set(self.width(), 0)
-            border_geometry.vertexDataAsPoint2D()[6].set(self.width(), 0)
-            border_geometry.vertexDataAsPoint2D()[7].set(0, 0)
+
+            border_vertex_data = border_geometry.vertexDataAsPoint2D()
+            for index in range(len(border_vertices)):
+                start_vertex = border_vertices[index]
+                end_vertex = border_vertices[index + 1] if index < len(border_vertices) -1 else border_vertices[0]
+                border_vertex_data[2 * index].set(start_vertex[0], start_vertex[1])
+                border_vertex_data[2 * index + 1].set(end_vertex[0], end_vertex[1])
 
             border_node.setGeometry(border_geometry)
 
