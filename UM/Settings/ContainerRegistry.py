@@ -1,4 +1,4 @@
-    # Copyright (c) 2016 Ultimaker B.V.
+# Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 import os
@@ -54,8 +54,12 @@ class ContainerRegistry(ContainerRegistryInterface):
         self._resource_types = [Resources.DefinitionContainers] # type: List[int]
         self._query_cache = collections.OrderedDict() # This should really be an ordered set but that does not exist...
 
+        #Since queries are based on metadata, we need to make sure to clear the cache when a container's metadata changes.
+        self.containerMetaDataChanged.connect(self._clearQueryCache)
+
     containerAdded = Signal()
     containerRemoved = Signal()
+    containerMetaDataChanged = Signal()
 
     def addResourceType(self, type: int) -> None:
         self._resource_types.append(type)
@@ -216,8 +220,7 @@ class ContainerRegistry(ContainerRegistryInterface):
             return
 
         if hasattr(container, "metaDataChanged"):
-            # Since queries are based on metadata, we need to make sure to clear the cache when a container's metadata changes.
-            container.metaDataChanged.connect(self._clearQueryCache)
+            container.metaDataChanged.connect(self._onContainerMetaDataChanged)
 
         self._containers.append(container)
         self._id_container_cache[container.getId()] = container
@@ -236,7 +239,7 @@ class ContainerRegistry(ContainerRegistryInterface):
             self._deleteFiles(container)
 
             if hasattr(container, "metaDataChanged"):
-                container.metaDataChanged.disconnect(self._clearQueryCache)
+                container.metaDataChanged.disconnect(self._onContainerMetaDataChanged)
 
             self._clearQueryCache()
             self.containerRemoved.emit(container)
@@ -477,6 +480,13 @@ class ContainerRegistry(ContainerRegistryInterface):
     # Clear the internal query cache
     def _clearQueryCache(self, *args, **kwargs):
         self._query_cache.clear()
+
+    ##  Called when any container's metadata changed.
+    #
+    #   This function passes it on to the containerMetaDataChanged signal. Sadly
+    #   that doesn't work automatically between pyqtSignal and UM.Signal.
+    def _onContainerMetaDataChanged(self, *args, **kwargs):
+        self.containerMetaDataChanged.emit(*args, **kwargs)
 
     ##  Get the lock filename including full path
     #   Dependent on when you call this function, Resources.getConfigStoragePath may return different paths
