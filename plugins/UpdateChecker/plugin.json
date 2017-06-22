@@ -1,7 +1,7 @@
 {
     "name": "Update Checker",
     "author": "Ultimaker",
-    "version": "1.0",
+    "version": "1.0.0",
     "description": "Checks for updates of the software.",
     "api": 4,
     "i18n-catalog": "uranium"
