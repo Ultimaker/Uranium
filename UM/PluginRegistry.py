@@ -90,6 +90,9 @@ class PluginRegistry(QObject):
         Logger.log("d", "Attempting to install a new plugin %s", plugin_path)
         local_plugin_path = os.path.join(Resources.getStoragePath(Resources.Resources), "plugins")
         plugin_folder = ""
+        result = {"status": "error", "message": "", "id": ""}
+        success_message = i18n_catalog.i18nc("@info:status", "The plugin has been installed.\n Please re-start the application to activate the plugin.")
+
         try:
             with zipfile.ZipFile(plugin_path, "r") as zip_ref:
                 plugin_id = None
@@ -99,9 +102,9 @@ class PluginRegistry(QObject):
                         break
 
                 if plugin_id is None:
-                    return {"status": "error", "message": i18n_catalog.i18nc("@info:status",
-                                                                             "Failed to install plugin from <filename>{0}</filename>:\n<message>{1}</message>",
-                                                                             plugin_path, "Invalid plugin file")}
+                    result["message"] = i18n_catalog.i18nc("@info:status", "Failed to install plugin from <filename>{0}</filename>:\n<message>{1}</message>", plugin_path, "Invalid plugin file")
+                    return result
+                result["id"] = plugin_id
                 plugin_folder = os.path.join(local_plugin_path, plugin_id)
 
                 if os.path.isdir(plugin_folder):  # Plugin is already installed by user (so not a bundled plugin)
@@ -114,29 +117,31 @@ class PluginRegistry(QObject):
                         old_version = Version(self.getMetaData(plugin_id)["plugin"]["version"])
                         if new_version > old_version:
                             zip_ref.extractall(plugin_folder)
-                            return {"status": "ok", "message": i18n_catalog.i18nc("@info:status",
-                                                                                  "The plugin has been installed.\n Please re-start the application to activate the plugin.")}
+                            result["status"] = "ok"
+                            result["message"] = success_message
+                            return result
 
                     Logger.log("w", "The plugin was already installed. Unable to install it again!")
-                    return {"status": "duplicate", "message": i18n_catalog.i18nc("@info:status",
-                                                                                 "Failed to install the plugin; \n<message>{0}</message>",
-                                                                                 "Plugin was already installed")}
+                    result["status"] = "duplicate"
+                    result["message"] = i18n_catalog.i18nc("@info:status", "Failed to install the plugin; \n<message>{0}</message>", "Plugin was already installed")
+                    return result
                 elif plugin_id in self._plugins:
                     # Plugin is already installed, but not by the user (eg; this is a bundled plugin)
                     # TODO: Right now we don't support upgrading bundled plugins at all, but we might do so in the future.
-                    return {"status": "duplicate", "message": i18n_catalog.i18nc("@info:status",
-                                                                                 "Failed to install the plugin; \n<message>{0}</message>",
-                                                                                 "Unable to upgrade or instal bundled plugins.")}
+                    result["message"] = i18n_catalog.i18nc("@info:status", "Failed to install the plugin; \n<message>{0}</message>", "Unable to upgrade or instal bundled plugins.")
+                    return result
 
                 zip_ref.extractall(plugin_folder)
 
         except: # Installing a new plugin should never crash the application.
             Logger.logException("d", "An exception occurred while installing plugin ")
-            return {"status": "error", "message": i18n_catalog.i18nc("@info:status",
-                                                                     "Failed to install plugin from <filename>{0}</filename>:\n<message>{1}</message>",
-                                                                     plugin_folder, "Invalid plugin file")}
 
-        return {"status": "ok", "message": i18n_catalog.i18nc("@info:status", "The plugin has been installed.\n Please re-start the application to activate the plugin.")}
+            result["message"] = i18n_catalog.i18nc("@info:status", "Failed to install plugin from <filename>{0}</filename>:\n<message>{1}</message>", plugin_folder, "Invalid plugin file")
+            return result
+
+        result["status"] = "ok"
+        result["message"] = success_message
+        return result
 
     ##  Check if all required plugins are loaded.
     #   \param required_plugins \type{list} List of ids of plugins that ''must'' be activated.
