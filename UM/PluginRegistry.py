@@ -418,8 +418,8 @@ class PluginRegistry(QObject):
                         if "description" in meta_data["plugin"]:
                             meta_data["plugin"]["description"] = i18n_catalog.i18n(meta_data["plugin"]["description"])
 
-            except FileNotFoundError as e:
-                Logger.logException("e", "Unable to find the required plugin.json file  for plugin %s", plugin_id)
+            except FileNotFoundError:
+                Logger.logException("e", "Unable to find the required plugin.json file for plugin %s", plugin_id)
                 raise InvalidMetaDataError(plugin_id)
 
         except AttributeError as e:
