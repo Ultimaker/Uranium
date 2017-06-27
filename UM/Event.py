@@ -103,15 +103,15 @@ class MouseEvent(Event):
 
 
 ##  Event relating to what's happening with the scroll wheel of a mouse.
-class WheelEvent(Event):
+class WheelEvent(MouseEvent):
     ##  Create a new scroll wheel event.
     #
     #   \param horizontal How far the scroll wheel scrolled horizontally, in
     #   eighths of a degree. To the right is positive. To the left is negative.
     #   \param vertical How far the scroll wheel scrolled vertically, in eighths
     #   of a degree. Up is positive. Down is negative.
-    def __init__(self, horizontal: int, vertical: int) -> None:
-        super().__init__(Event.MouseWheelEvent)
+    def __init__(self, horizontal: int, vertical: int, x: int = 0, y: int = 0) -> None:
+        super().__init__(Event.MouseWheelEvent, x, y)
         self._horizontal = horizontal
         self._vertical = vertical
 

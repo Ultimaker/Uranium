@@ -42,13 +42,16 @@ class CameraTool(Tool):
         self._drag_distance = 0.05
 
         Preferences.getInstance().addPreference("view/invert_zoom", False)
+        Preferences.getInstance().addPreference("view/zoom_to_mouse", False)
         self._invert_zoom = Preferences.getInstance().getValue("view/invert_zoom")
+        self._zoom_to_mouse = Preferences.getInstance().getValue("view/zoom_to_mouse")
         Preferences.getInstance().preferenceChanged.connect(self._onPreferencesChanged)
 
     def _onPreferencesChanged(self, name):
-        if name != "view/invert_zoom":
+        if name != "view/invert_zoom" and name != "view/zoom_to_mouse":
             return
         self._invert_zoom = Preferences.getInstance().getValue("view/invert_zoom")
+        self._zoom_to_mouse = Preferences.getInstance().getValue("view/zoom_to_mouse")
 
     ##  Set the minimum and maximum distance from the origin used for "zooming" the camera
     #
@@ -128,7 +131,7 @@ class CameraTool(Tool):
                     self._zoomCamera(_diff_y * _zoom_speed)
                     self._start_y = None
         elif event.type is Event.MouseWheelEvent:
-            self._zoomCamera(event.vertical)
+            self._zoomCamera(event.vertical, event)
             return True
         elif event.type is Event.KeyPressEvent:
             if event.key == KeyEvent.MinusKey or event.key == KeyEvent.UnderscoreKey:  # checks for both the minus and underscore key because they usually share a button on the keyboard and are sometimes interchanged
@@ -216,7 +219,7 @@ class CameraTool(Tool):
     #
     #   Note that the camera field of view is left unaffected, but instead the camera moves closer to the origin
     #   \param zoom_range type(int) factor by which the distance to the origin is multiplied, multiplied by 1280
-    def _zoomCamera(self, zoom_range):
+    def _zoomCamera(self, zoom_range, event = None):
         camera = self._scene.getActiveCamera()
         if not camera or not camera.isEnabled():
             return
@@ -230,12 +233,28 @@ class CameraTool(Tool):
         if self._invert_zoom:
             delta *= -1
 
+        move_vector = Vector(0.0, 0.0, 1.0)
+        if event is not None and self._zoom_to_mouse:
+            viewport_center_x = Application.getInstance().getRenderer().getViewportWidth() / 2
+            viewport_center_y = Application.getInstance().getRenderer().getViewportHeight() / 2
+
+            mouse_diff_center_x = viewport_center_x - Application.getInstance().getMainWindow().mouseX
+            mouse_diff_center_y = viewport_center_y - Application.getInstance().getMainWindow().mouseY
+
+            x_component = mouse_diff_center_x / Application.getInstance().getRenderer().getViewportWidth()
+            y_component = mouse_diff_center_y / Application.getInstance().getRenderer().getViewportHeight()
+
+            move_vector = Vector(x_component, -y_component, 1)
+            move_vector = move_vector.normalized()
+
+        move_vector = -delta * move_vector
+
         if delta > 0:
             if r > self._min_zoom:
-                camera.translate(Vector(0.0, 0.0, -delta))
+                camera.translate(move_vector)
         else:
             if r < self._max_zoom:
-                camera.translate(Vector(0.0, 0.0, -delta))
+                camera.translate(move_vector)
 
         self._scene.releaseLock()
 
