@@ -134,7 +134,7 @@ class PluginRegistry(QObject):
                 zip_ref.extractall(plugin_folder)
 
         except: # Installing a new plugin should never crash the application.
-            Logger.logException("d", "An exception occurred while installing plugin ")
+            Logger.logException("d", "An exception occurred while installing plugin {path}".format(path = plugin_path))
 
             result["message"] = i18n_catalog.i18nc("@info:status", "Failed to install plugin from <filename>{0}</filename>:\n<message>{1}</message>", plugin_folder, "Invalid plugin file")
             return result
