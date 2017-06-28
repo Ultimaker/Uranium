@@ -45,13 +45,16 @@ class TestPluginRegistry():
         
     def test_findAllPlugins(self, registry):
         names = registry._findAllPlugins()
-        assert sorted(names) == ["OldTestPlugin", "TestPlugin", "TestPlugin2"]
+        assert sorted(names) == ["OldTestPlugin", "PluginNoVersionNumber", "TestPlugin", "TestPlugin2"]
         
     def test_pluginNotFound(self, registry):
         with pytest.raises(PluginNotFoundError):
             registry.loadPlugin("NoSuchPlugin")
 
+    def test_invalidVersionNumber(self, registry):
+        registry.loadPlugin("PluginNoVersionNumber")
+        assert registry.getTestPlugin() is None
+
     def test_ignoreOldApi(self, registry):
         registry.loadPlugin("OldTestPlugin")
-
         assert registry.getTestPlugin() is None
