@@ -234,6 +234,7 @@ class CameraTool(Tool):
             delta *= -1
 
         move_vector = Vector(0.0, 0.0, 1.0)
+
         if event is not None and self._zoom_to_mouse:
             viewport_center_x = Application.getInstance().getRenderer().getViewportWidth() / 2
             viewport_center_y = Application.getInstance().getRenderer().getViewportHeight() / 2
@@ -248,13 +249,17 @@ class CameraTool(Tool):
             move_vector = move_vector.normalized()
 
         move_vector = -delta * move_vector
-
         if delta > 0:
             if r > self._min_zoom:
                 camera.translate(move_vector)
-        else:
+                if self._zoom_to_mouse:
+                    # Set the origin of the camera to the new distance, right in front of the new camera position.
+                    self._origin = (r * Vector(0.0, 0.0, -1.0)).preMultiply(camera.getWorldTransformation())
             if r < self._max_zoom:
                 camera.translate(move_vector)
+                if self._zoom_to_mouse:
+                    # Set the origin of the camera to the new distance, right in front of the new camera position.
+                    self._origin = (r * Vector(0.0, 0.0, -1.0)).preMultiply(camera.getWorldTransformation())
 
         self._scene.releaseLock()
 
