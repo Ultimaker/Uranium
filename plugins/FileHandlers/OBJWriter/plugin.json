@@ -1,6 +1,6 @@
 {
     "name": "Wavefront OBJ Writer",
-    "author": "Ultimaker",
+    "author": "Ultimaker B.V.",
     "version": "1.0.0",
     "description": "Makes it possible to write Wavefront OBJ files.",
     "api": 4,

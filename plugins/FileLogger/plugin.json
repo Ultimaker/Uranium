@@ -1,6 +1,6 @@
 {
     "name": "File Logger",
-    "author": "Ultimaker",
+    "author": "Ultimaker B.V.",
     "version": "1.0.0",
     "description": "Outputs log information to a file in your settings folder.",
     "api": 4,
