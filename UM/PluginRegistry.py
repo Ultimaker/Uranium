@@ -91,7 +91,7 @@ class PluginRegistry(QObject):
         local_plugin_path = os.path.join(Resources.getStoragePath(Resources.Resources), "plugins")
         plugin_folder = ""
         result = {"status": "error", "message": "", "id": ""}
-        success_message = i18n_catalog.i18nc("@info:status", "The plugin has been installed.\n Please re-start the application to activate the plugin.")
+        success_message = i18n_catalog.i18nc("@info:status", "The plugin has been installed.\nPlease re-start the application to activate the plugin.")
 
         try:
             with zipfile.ZipFile(plugin_path, "r") as zip_ref:
@@ -123,12 +123,12 @@ class PluginRegistry(QObject):
 
                     Logger.log("w", "The plugin was already installed. Unable to install it again!")
                     result["status"] = "duplicate"
-                    result["message"] = i18n_catalog.i18nc("@info:status", "Failed to install the plugin; \n<message>{0}</message>", "Plugin was already installed")
+                    result["message"] = i18n_catalog.i18nc("@info:status", "Failed to install the plugin;\n<message>{0}</message>", "Plugin was already installed")
                     return result
                 elif plugin_id in self._plugins:
                     # Plugin is already installed, but not by the user (eg; this is a bundled plugin)
                     # TODO: Right now we don't support upgrading bundled plugins at all, but we might do so in the future.
-                    result["message"] = i18n_catalog.i18nc("@info:status", "Failed to install the plugin; \n<message>{0}</message>", "Unable to upgrade or instal bundled plugins.")
+                    result["message"] = i18n_catalog.i18nc("@info:status", "Failed to install the plugin;\n<message>{0}</message>", "Unable to upgrade or install bundled plugins.")
                     return result
 
                 zip_ref.extractall(plugin_folder)
