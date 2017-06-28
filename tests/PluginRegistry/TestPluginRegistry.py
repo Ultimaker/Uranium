@@ -51,6 +51,16 @@ class TestPluginRegistry():
         with pytest.raises(PluginNotFoundError):
             registry.loadPlugin("NoSuchPlugin")
 
+    def test_disabledPlugin(self, registry):
+        # Disabled plugin should not be loaded
+        registry._disabled_plugins = ["TestPlugin"]
+        registry.loadPlugin("TestPlugin")
+        assert registry.getTestPlugin() is None
+
+        # Other plugins should load.
+        registry.loadPlugin("TestPlugin2")
+        assert registry.getTestPlugin().getPluginId() == "TestPlugin2"
+
     def test_invalidVersionNumber(self, registry):
         registry.loadPlugin("PluginNoVersionNumber")
         assert registry.getTestPlugin() is None
