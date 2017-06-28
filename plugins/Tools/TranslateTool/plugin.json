@@ -1,6 +1,6 @@
 {
     "name": "Translate Tool",
-    "author": "Ultimaker",
+    "author": "Ultimaker B.V.",
     "version": "1.0.0",
     "description": "Provides the Translate tool.",
     "api": 4,

@@ -1,6 +1,6 @@
 {
     "name": "Camera Tool",
-    "author": "Ultimaker",
+    "author": "Ultimaker B.V.",
     "version": "1.0.0",
     "description": "Provides the tool to manipulate the camera.",
     "api": 4,
