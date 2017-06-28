@@ -45,7 +45,7 @@ class TestPluginRegistry():
         
     def test_findAllPlugins(self, registry):
         names = registry._findAllPlugins()
-        assert sorted(names) == ["OldTestPlugin", "PluginNoVersionNumber", "TestPlugin", "TestPlugin2"]
+        assert sorted(names) == ["EmptyPlugin","OldTestPlugin", "PluginNoVersionNumber", "TestPlugin", "TestPlugin2"]
         
     def test_pluginNotFound(self, registry):
         with pytest.raises(PluginNotFoundError):
@@ -60,6 +60,11 @@ class TestPluginRegistry():
         # Other plugins should load.
         registry.loadPlugin("TestPlugin2")
         assert registry.getTestPlugin().getPluginId() == "TestPlugin2"
+
+    def test_emptyPlugin(self, registry):
+        registry.loadPlugin("EmptyPlugin")
+        with pytest.raises(KeyError):
+            registry.getPluginObject("EmptyPlugin")
 
     def test_invalidVersionNumber(self, registry):
         registry.loadPlugin("PluginNoVersionNumber")
