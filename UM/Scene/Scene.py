@@ -29,6 +29,11 @@ class Scene():
         self._root.childrenChanged.connect(self.sceneChanged)
         self._root.meshDataChanged.connect(self.sceneChanged)
 
+    def _disconnectSignalsRoot(self):
+        self._root.transformationChanged.disconnect(self.sceneChanged)
+        self._root.childrenChanged.disconnect(self.sceneChanged)
+        self._root.meshDataChanged.disconnect(self.sceneChanged)
+
     ##  Acquire the global scene lock.
     #
     #   This will prevent any read or write actions on the scene from other threads,
@@ -57,9 +62,11 @@ class Scene():
 
     ##  Change the root node of the scene
     def setRoot(self, node):
-        self._root = node
-        self._connectSignalsRoot()
-        self.rootChanged.emit()
+        if self._root != node:
+            self._disconnectSignalsRoot()
+            self._root = node
+            self._connectSignalsRoot()
+            self.rootChanged.emit()
 
     rootChanged = Signal()
 
