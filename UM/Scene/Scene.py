@@ -87,7 +87,7 @@ class Scene():
     def getAllCameras(self):
         cameras = []
         for node in BreadthFirstIterator(self._root):
-            if type(node) is Camera:
+            if isinstance(node, Camera):
                 cameras.append(node)
 
         return cameras
@@ -117,5 +117,5 @@ class Scene():
     ## private:
     def _findCamera(self, name):
         for node in BreadthFirstIterator(self._root):
-            if type(node) is Camera and node.getName() == name:
+            if isinstance(node, Camera) and node.getName() == name:
                 return node
