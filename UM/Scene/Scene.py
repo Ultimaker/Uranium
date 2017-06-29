@@ -21,7 +21,7 @@ class Scene():
         self._root.setCalculateBoundingBox(False)
         self._connectSignalsRoot()
         self._active_camera = None
-
+        self._ignore_scene_changes = False
         self._lock = threading.Lock()
 
     def _connectSignalsRoot(self):
@@ -33,6 +33,14 @@ class Scene():
         self._root.transformationChanged.disconnect(self.sceneChanged)
         self._root.childrenChanged.disconnect(self.sceneChanged)
         self._root.meshDataChanged.disconnect(self.sceneChanged)
+
+    def setIgnoreSceneChanges(self, ignore_scene_changes):
+        if self._ignore_scene_changes != ignore_scene_changes:
+            self._ignore_scene_changes = ignore_scene_changes
+            if self._ignore_scene_changes:
+                self._disconnectSignalsRoot()
+            else:
+                self._connectSignalsRoot()
 
     ##  Acquire the global scene lock.
     #
@@ -63,9 +71,11 @@ class Scene():
     ##  Change the root node of the scene
     def setRoot(self, node):
         if self._root != node:
-            self._disconnectSignalsRoot()
+            if not self._ignore_scene_changes:
+                self._disconnectSignalsRoot()
             self._root = node
-            self._connectSignalsRoot()
+            if not self._ignore_scene_changes:
+                self._connectSignalsRoot()
             self.rootChanged.emit()
 
     rootChanged = Signal()
