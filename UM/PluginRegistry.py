@@ -377,7 +377,7 @@ class PluginRegistry(QObject):
     def _populateMetaData(self, plugin_id: str) -> bool:
         plugin = self._findPlugin(plugin_id)
         if not plugin:
-            Logger.log("e", "Could not find plugin %s", plugin_id)
+            Logger.log("w", "Could not find plugin %s", plugin_id)
             return False
 
         meta_data = None
@@ -389,7 +389,7 @@ class PluginRegistry(QObject):
                 break
 
         if not location:
-            Logger.log("e", "Could not find plugin %s", plugin_id)
+            Logger.log("w", "Could not find plugin %s", plugin_id)
             return False
         location = os.path.join(location, plugin_id)
 
