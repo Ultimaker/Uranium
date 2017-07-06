@@ -23,12 +23,13 @@ MimeTypeDatabase.addMimeType(
 class Preferences:
     Version = 4
 
-    def __init__(self):
+    def __init__(self, setting_version = None):
         super().__init__()
 
         self._file = None
         self._parser = None
         self._preferences = {}
+        self._setting_version = setting_version
 
     def addPreference(self, key, default_value):
         preference = self._findPreference(key)
@@ -41,6 +42,9 @@ class Preferences:
             self._preferences[group] = {}
 
         self._preferences[group][key] = _Preference(key, default_value)
+
+    def setSettingVersion(self, setting_version):
+        self._setting_version = setting_version
 
     ##  Changes the default value of a preference.
     #
@@ -117,6 +121,10 @@ class Preferences:
                     parser[group][key] = str(pref.getValue())
 
         parser["general"]["version"] = str(Preferences.Version)
+        if self._setting_version is not None:
+            if "metadata" not in parser:
+                parser["metadata"] = {}
+            parser["metadata"]["setting_version"] = str(self._setting_version)
 
         try:
             if hasattr(file, "read"):  # If it already is a stream like object, write right away
