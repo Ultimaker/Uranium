@@ -249,7 +249,7 @@ class CameraTool(Tool):
             move_vector = move_vector.normalized()
 
         move_vector = -delta * move_vector
-        if delta > 0:
+        if delta != 0:
             if r > self._min_zoom:
                 camera.translate(move_vector)
                 if self._zoom_to_mouse:
