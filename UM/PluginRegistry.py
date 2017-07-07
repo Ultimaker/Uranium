@@ -86,8 +86,9 @@ class PluginRegistry(QObject):
 
     @pyqtSlot(str, result="QVariantMap")
     def installPlugin(self, plugin_path: str):
+        Logger.log("d", "Install plugin got path: %s", plugin_path)
         plugin_path = QUrl(plugin_path).toLocalFile()
-        Logger.log("d", "Attempting to install a new plugin %s", plugin_path)
+        Logger.log("i", "Attempting to install a new plugin %s", plugin_path)
         local_plugin_path = os.path.join(Resources.getStoragePath(Resources.Resources), "plugins")
         plugin_folder = ""
         result = {"status": "error", "message": "", "id": ""}
