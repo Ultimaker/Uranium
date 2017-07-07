@@ -454,6 +454,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
         if "metadata" in parser:
             self._metadata = dict(parser["metadata"])
+        self.metaDataChanged.emit(self) #In case this instance was re-used.
 
         if "values" in parser:
             self._cached_values = dict(parser["values"])

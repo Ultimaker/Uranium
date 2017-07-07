@@ -6,10 +6,6 @@ from UM.Settings.ContainerRegistry import ContainerRegistry
 
 def getMetaData():
     return {
-        "plugin": {
-            "name": "TestContainerPlugin",
-            "api": 3
-        },
         "settings_container": {
             "mimetype": "application/x-uranium-test"
         }

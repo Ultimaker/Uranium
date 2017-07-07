@@ -5,10 +5,6 @@ from UM.PluginObject import PluginObject
 
 def getMetaData():
     return {
-        "plugin": {
-            "name": "TestPlugin",
-            "api": 3
-        }
     }
 
 def register(app):

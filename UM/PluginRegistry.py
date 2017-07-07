@@ -86,12 +86,13 @@ class PluginRegistry(QObject):
 
     @pyqtSlot(str, result="QVariantMap")
     def installPlugin(self, plugin_path: str):
+        Logger.log("d", "Install plugin got path: %s", plugin_path)
         plugin_path = QUrl(plugin_path).toLocalFile()
-        Logger.log("d", "Attempting to install a new plugin %s", plugin_path)
+        Logger.log("i", "Attempting to install a new plugin %s", plugin_path)
         local_plugin_path = os.path.join(Resources.getStoragePath(Resources.Resources), "plugins")
         plugin_folder = ""
         result = {"status": "error", "message": "", "id": ""}
-        success_message = i18n_catalog.i18nc("@info:status", "The plugin has been installed.\n Please re-start the application to activate the plugin.")
+        success_message = i18n_catalog.i18nc("@info:status", "The plugin has been installed.\nPlease re-start the application to activate the plugin.")
 
         try:
             with zipfile.ZipFile(plugin_path, "r") as zip_ref:
@@ -123,18 +124,18 @@ class PluginRegistry(QObject):
 
                     Logger.log("w", "The plugin was already installed. Unable to install it again!")
                     result["status"] = "duplicate"
-                    result["message"] = i18n_catalog.i18nc("@info:status", "Failed to install the plugin; \n<message>{0}</message>", "Plugin was already installed")
+                    result["message"] = i18n_catalog.i18nc("@info:status", "Failed to install the plugin;\n<message>{0}</message>", "Plugin was already installed")
                     return result
                 elif plugin_id in self._plugins:
                     # Plugin is already installed, but not by the user (eg; this is a bundled plugin)
                     # TODO: Right now we don't support upgrading bundled plugins at all, but we might do so in the future.
-                    result["message"] = i18n_catalog.i18nc("@info:status", "Failed to install the plugin; \n<message>{0}</message>", "Unable to upgrade or instal bundled plugins.")
+                    result["message"] = i18n_catalog.i18nc("@info:status", "Failed to install the plugin;\n<message>{0}</message>", "Unable to upgrade or install bundled plugins.")
                     return result
 
                 zip_ref.extractall(plugin_folder)
 
         except: # Installing a new plugin should never crash the application.
-            Logger.logException("d", "An exception occurred while installing plugin ")
+            Logger.logException("d", "An exception occurred while installing plugin {path}".format(path = plugin_path))
 
             result["message"] = i18n_catalog.i18nc("@info:status", "Failed to install plugin from <filename>{0}</filename>:\n<message>{1}</message>", plugin_folder, "Invalid plugin file")
             return result
@@ -377,7 +378,7 @@ class PluginRegistry(QObject):
     def _populateMetaData(self, plugin_id: str) -> bool:
         plugin = self._findPlugin(plugin_id)
         if not plugin:
-            Logger.log("e", "Could not find plugin %s", plugin_id)
+            Logger.log("w", "Could not find plugin %s", plugin_id)
             return False
 
         meta_data = None
@@ -389,7 +390,7 @@ class PluginRegistry(QObject):
                 break
 
         if not location:
-            Logger.log("e", "Could not find plugin %s", plugin_id)
+            Logger.log("w", "Could not find plugin %s", plugin_id)
             return False
         location = os.path.join(location, plugin_id)
 

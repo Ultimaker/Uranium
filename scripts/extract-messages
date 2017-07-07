@@ -15,6 +15,7 @@ catalogname=$2
 mkdir -p $basedir/resources/i18n
 $scriptdir/extract-json $basedir/resources/definitions/ $basedir/resources/i18n
 $scriptdir/extract-all $basedir $basedir/resources/i18n/$catalogname.pot
+$scriptdir/extract-plugins $basedir/plugins/ $basedir/resources/i18n/$catalogname.pot
 msgconv --to-code=UTF-8 $basedir/resources/i18n/$catalogname.pot -o $basedir/resources/i18n/$catalogname.pot
 
 for pot in $basedir/resources/i18n/*.pot; do

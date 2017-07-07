@@ -21,13 +21,26 @@ class Scene():
         self._root.setCalculateBoundingBox(False)
         self._connectSignalsRoot()
         self._active_camera = None
-
+        self._ignore_scene_changes = False
         self._lock = threading.Lock()
 
     def _connectSignalsRoot(self):
         self._root.transformationChanged.connect(self.sceneChanged)
         self._root.childrenChanged.connect(self.sceneChanged)
         self._root.meshDataChanged.connect(self.sceneChanged)
+
+    def _disconnectSignalsRoot(self):
+        self._root.transformationChanged.disconnect(self.sceneChanged)
+        self._root.childrenChanged.disconnect(self.sceneChanged)
+        self._root.meshDataChanged.disconnect(self.sceneChanged)
+
+    def setIgnoreSceneChanges(self, ignore_scene_changes):
+        if self._ignore_scene_changes != ignore_scene_changes:
+            self._ignore_scene_changes = ignore_scene_changes
+            if self._ignore_scene_changes:
+                self._disconnectSignalsRoot()
+            else:
+                self._connectSignalsRoot()
 
     ##  Acquire the global scene lock.
     #
@@ -57,9 +70,13 @@ class Scene():
 
     ##  Change the root node of the scene
     def setRoot(self, node):
-        self._root = node
-        self._connectSignalsRoot()
-        self.rootChanged.emit()
+        if self._root != node:
+            if not self._ignore_scene_changes:
+                self._disconnectSignalsRoot()
+            self._root = node
+            if not self._ignore_scene_changes:
+                self._connectSignalsRoot()
+            self.rootChanged.emit()
 
     rootChanged = Signal()
 
@@ -70,7 +87,7 @@ class Scene():
     def getAllCameras(self):
         cameras = []
         for node in BreadthFirstIterator(self._root):
-            if type(node) is Camera:
+            if isinstance(node, Camera):
                 cameras.append(node)
 
         return cameras
@@ -100,5 +117,5 @@ class Scene():
     ## private:
     def _findCamera(self, name):
         for node in BreadthFirstIterator(self._root):
-            if type(node) is Camera and node.getName() == name:
+            if isinstance(node, Camera) and node.getName() == name:
                 return node
