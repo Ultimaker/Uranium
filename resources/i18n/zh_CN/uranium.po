@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Uranium 2.6\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2017-05-30 15:41+0200\n"
-"PO-Revision-Date: 2017-06-27 20:18+0800\n"
+"PO-Revision-Date: 2017-07-08 09:18+0800\n"
 "Last-Translator: PCDotFan <pc@edu.ax>\n"
 "Language-Team: PCDotFan <pc@edu.ax>\n"
 "Lang-Code: xx\n"
@@ -485,12 +485,12 @@ msgstr "重置"
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:77
 msgctxt "@option:check"
 msgid "Snap Scaling"
-msgstr "Snap Scaling"
+msgstr "等距缩放（Snap Scaling）"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:94
 msgctxt "@option:check"
 msgid "Uniform Scaling"
-msgstr "按比例缩放"
+msgstr "等比例缩放"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:38
 msgctxt "@action:button"
@@ -500,7 +500,7 @@ msgstr "放平"
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:53
 msgctxt "@action:checkbox"
 msgid "Snap Rotation"
-msgstr "Snap Rotation"
+msgstr "等距旋转（Snap Rotation）"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:20
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:148
@@ -518,7 +518,7 @@ msgctxt "@label"
 msgid ""
 "You will need to restart the application before changes in plugins have "
 "effect."
-msgstr "需重新启动程序，新的插件才能生效。"
+msgstr "﻿在插件发生变化之前，您需要重新启动应用程序。"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:93
 msgctxt "@label"
