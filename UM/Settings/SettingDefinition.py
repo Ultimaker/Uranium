@@ -114,6 +114,20 @@ class SettingDefinition:
 
         super().__setattr__(name, value)
 
+    ##  For Pickle support.
+    #
+    #   This should be identical to Pickle's default behaviour but the default
+    #   behaviour doesn't combine well with a non-default __getattr__.
+    def __getstate__(self):
+        return self.__dict__
+
+    ##  For Pickle support.
+    #
+    #   This should be identical to Pickle's default behaviour but the default
+    #   behaviour doesn't combine well with a non-default __getattr__.
+    def __setstate__(self, state):
+        self.__dict__.update(state)
+
     ##  The key of this setting.
     #
     #   \return \type{string}
