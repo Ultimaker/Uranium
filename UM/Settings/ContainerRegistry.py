@@ -185,32 +185,33 @@ class ContainerRegistry(ContainerRegistryInterface):
         # Sort the list of files by type_priority so we can ensure correct loading order.
         files = sorted(files, key = lambda i: i[0])
         resource_start_time = time.time()
-        for _, container_id, file_path, read_only, container_type in files:
-            if container_id in self._id_container_cache:
-                Logger.log("c", "Found a container with a duplicate ID: %s", container_id)
-                Logger.log("c", "Existing container is %s, trying to load %s from %s", self._id_container_cache[container_id], container_type, file_path)
-                continue
+        with self.lockCache(): #Because we might be writing cache files.
+            for _, container_id, file_path, read_only, container_type in files:
+                if container_id in self._id_container_cache:
+                    Logger.log("c", "Found a container with a duplicate ID: %s", container_id)
+                    Logger.log("c", "Existing container is %s, trying to load %s from %s", self._id_container_cache[container_id], container_type, file_path)
+                    continue
 
-            try:
-                if issubclass(container_type, DefinitionContainer):
-                    definition = self._loadCachedDefinition(container_id, file_path)
-                    if definition:
-                        self.addContainer(definition)
-                        continue
+                try:
+                    if issubclass(container_type, DefinitionContainer):
+                        definition = self._loadCachedDefinition(container_id, file_path)
+                        if definition:
+                            self.addContainer(definition)
+                            continue
 
-                new_container = container_type(container_id)
-                with open(file_path, encoding = "utf-8") as f:
-                    new_container.deserialize(f.read())
-                new_container.setReadOnly(read_only)
-                new_container.setPath(file_path)
+                    new_container = container_type(container_id)
+                    with open(file_path, encoding = "utf-8") as f:
+                        new_container.deserialize(f.read())
+                    new_container.setReadOnly(read_only)
+                    new_container.setPath(file_path)
 
-                if issubclass(container_type, DefinitionContainer):
-                    self._saveCachedDefinition(new_container)
+                    if issubclass(container_type, DefinitionContainer):
+                        self._saveCachedDefinition(new_container)
 
-                self.addContainer(new_container)
-            except Exception as e:
-                Logger.logException("e", "Could not deserialize container %s", container_id)
-        Logger.log("d", "Loading data into container registry took %s seconds", time.time() - resource_start_time)
+                    self.addContainer(new_container)
+                except Exception as e:
+                    Logger.logException("e", "Could not deserialize container %s", container_id)
+            Logger.log("d", "Loading data into container registry took %s seconds", time.time() - resource_start_time)
 
     @UM.FlameProfiler.profile
     def addContainer(self, container: ContainerInterface) -> None:
@@ -494,6 +495,10 @@ class ContainerRegistry(ContainerRegistryInterface):
     def getLockFilename(self):
         return Resources.getStoragePath(Resources.Resources, CONFIG_LOCK_FILENAME)
 
+    ##  Get the cache lock filename including full path.
+    def getCacheLockFilename(self):
+        return Resources.getStoragePath(Resources.Cache, CONFIG_LOCK_FILENAME)
+
     ##  Contextmanager to create a lock file and remove it afterwards.
     def lockFile(self):
         return LockFile(
@@ -501,6 +506,15 @@ class ContainerRegistry(ContainerRegistryInterface):
             timeout = 10,
             wait_msg = "Waiting for lock file in local config dir to disappear..."
             )
+
+    ##  Context manager to create a lock file for the cache directory and remove
+    #   it afterwards.
+    def lockCache(self):
+        return LockFile(
+            self.getCacheLockFilename(),
+            timeout = 10,
+            wait_msg = "Waiting for lock file in cache directory to disappear."
+        )
 
     ##  Get the singleton instance for this class.
     @classmethod
