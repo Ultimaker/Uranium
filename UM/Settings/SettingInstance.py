@@ -25,6 +25,28 @@ def _traceSetProperty(instance: "SettingInstance", property_name: str, property_
 def _traceUpdateProperty(instance: "SettingInstance", property_name: str, container: ContainerInterface) -> None:
     Logger.log("d", "Updating property '{0}' of '{1}' using container {2}".format(property_name, instance, container))
 
+def _traceRelations(instance: "SettingInstance", container: ContainerInterface) -> None:
+    Logger.log("d", "Updating relations of '{0}'", instance)
+
+    property_names = SettingDefinition.getPropertyNames()
+    property_names.remove("value")  # Move "value" to the front of the list so we always update that first.
+    property_names.insert(0, "value")
+
+    for property_name in property_names:
+        if SettingDefinition.isReadOnlyProperty(property_name):
+            continue
+
+        changed_relations = set()   # type: Set[SettingRelation]
+        instance._addRelations(changed_relations, instance.definition.relations, property_name)
+
+        for relation in changed_relations:
+            Logger.log("d", "Emitting property change for relation {0}", relation)
+            #container.propertyChanged.emit(relation.target.key, relation.role)
+            # If the value/minimum value/etc state is updated, the validation state must be re-evaluated
+            if relation.role in {"value", "minimum_value", "maximum_value", "minimum_value_warning", "maximum_value_warning"}:
+                Logger.log("d", "Emitting validationState changed for {0}", relation)
+                container.propertyChanged.emit(relation.target.key, "validationState")
+
 def _isTraceEnabled() -> bool:
     return "URANIUM_TRACE_SETTINGINSTANCE" in os.environ
 
@@ -206,6 +228,7 @@ class SettingInstance:
         return "<SettingInstance (0x{0:x}) definition={1} container={2}>".format(id(self), self._definition, self._container)
 
     ## protected:
+    @call_if_enabled(_traceRelations, _isTraceEnabled())
     def updateRelations(self, container: ContainerInterface) -> None:
         property_names = SettingDefinition.getPropertyNames()
         property_names.remove("value")  # Move "value" to the front of the list so we always update that first.
