@@ -388,8 +388,11 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
             return
 
         for setting in function.getUsedSettingKeys():
-            # Do not create relation on self
-            if setting == definition.key:
+            # Prevent circular relations between the same setting and the same property
+            # Note that the only property used by SettingFunction is the "value" property, which
+            # is why this is hard coded here.
+            if setting == definition.key and property == "value":
+                Logger.log("w", "Found circular relation for property 'value' between {0} and {1}", definition.key, setting)
                 continue
 
             other = self._getDefinition(setting)
