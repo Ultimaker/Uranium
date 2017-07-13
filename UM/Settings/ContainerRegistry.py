@@ -476,8 +476,17 @@ class ContainerRegistry(ContainerRegistryInterface):
         # Ensure the cache path exists
         os.makedirs(os.path.dirname(cache_path), exist_ok=True)
 
-        with open(cache_path, "wb") as f:
-            pickle.dump(definition, f)
+        try:
+            with open(cache_path, "wb") as f:
+                pickle.dump(definition, f)
+        except RecursionError:
+            #Sometimes a recursion error in pickling occurs here.
+            #The cause is unknown. It must be some circular reference in the definition instances or definition containers.
+            #Instead of saving a partial cache and raising an exception, simply fail to save the cache.
+            #See CURA-4024.
+            Logger.log("w", "The definition cache for definition {definition_id} failed to pickle.".format(definition_id = definition.getId()))
+            if os.path.exists(cache_path):
+                os.remove(cache_path) #The pickling might be half-complete, which causes EOFError in Pickle when you load it later.
 
     # Clear the internal query cache
     def _clearQueryCache(self, *args, **kwargs):
