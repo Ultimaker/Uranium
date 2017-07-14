@@ -121,7 +121,7 @@ UM.Dialog
                                 border.width: 0
                                 color: "transparent"
                             }
-                            label: Text
+                            label: Label
                             {
                                 id: progressText
                                 horizontalAlignment: Text.AlignHCenter
