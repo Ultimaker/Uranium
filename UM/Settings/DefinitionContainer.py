@@ -200,11 +200,16 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     #   data about inheritance and overrides was lost when deserialising.
     #
     #   Reimplemented from ContainerInterface
-    def serialize(self):
+    def serialize(self, ignore_metadata_keys=[]):
         data = { } # The data to write to a JSON file.
         data["name"] = self.getName()
         data["version"] = DefinitionContainer.Version
         data["metadata"] = self.getMetaData()
+
+        # remove the keys that we want to ignore in the metadata
+        for key in ignore_metadata_keys:
+            if key in data["metadata"]:
+                del data["metadata"][key]
 
         data["settings"] = { }
         for definition in self.definitions:

@@ -577,5 +577,5 @@ class _EmptyInstanceContainer(InstanceContainer):
     def getConfigurationType(self) -> str:
         return ""  # FIXME: not sure if this is correct
 
-    def serialize(self) -> str:
+    def serialize(self, ignore_metadata_keys=[]) -> str:
         return "[general]\n version = 2\n name = empty\n definition = fdmprinter\n"

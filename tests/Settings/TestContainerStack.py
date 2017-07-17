@@ -96,7 +96,7 @@ class MockContainer(ContainerInterface):
     #   creates different instances (which is desired).
     #
     #   \return A static string representing a container.
-    def serialize(self):
+    def serialize(self, ignore_metadata_keys=[]):
         return str(self._id)
 
     ##  Deserialises a string to a container.
