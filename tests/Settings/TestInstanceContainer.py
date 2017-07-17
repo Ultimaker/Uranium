@@ -89,6 +89,38 @@ def test_serialize(container_data, equals_file, loaded_container_registry):
     with open(path) as data:
         assert data.readline() in result
 
+
+test_serialize_with_ignored_metadata_keys_data = [
+    ({"definition": "basic", "name": "Basic"}, "basic.inst.cfg"),
+    ({"definition": "basic", "name": "Metadata", "metadata": {"author": "Ultimaker", "bool": False, "integer": 6, "secret": "something", "secret2": "something2"}}, "metadata.inst.cfg"),
+    ({"definition": "multiple_settings", "name": "Setting Values",
+      "values": {
+        "test_setting_0": 20, "test_setting_1": 20, "test_setting_2": 20, "test_setting_3": 20, "test_setting_4": 20
+    }}, "setting_values.inst.cfg"),
+]
+@pytest.mark.parametrize("container_data,equals_file", test_serialize_with_ignored_metadata_keys_data)
+def test_serialize_with_ignored_metadata_keys(container_data, equals_file, loaded_container_registry):
+    instance_container = UM.Settings.InstanceContainer.InstanceContainer("test")
+    definition = loaded_container_registry.findDefinitionContainers(id = container_data["definition"])[0]
+    instance_container.setDefinition(definition)
+
+    instance_container.setName(container_data["name"])
+
+    if "metadata" in container_data:
+        instance_container.setMetaData(container_data["metadata"])
+
+    if "values" in container_data:
+        for key, value in container_data["values"].items():
+            instance_container.setProperty(key, "value", value)
+
+    ignore_metadata_keys = ["secret", "secret2"]
+    result = instance_container.serialize(ignore_metadata_keys = ignore_metadata_keys)
+
+    path = Resources.getPath(Resources.InstanceContainers, equals_file)
+    with open(path) as data:
+
+        assert data.readline() in result
+
 test_deserialize_data = [
     ("basic.inst.cfg", {"name": "Basic"}),
     ("metadata.inst.cfg", {"name": "Metadata", "metaData": { "author": "Ultimaker", "bool": "False", "integer": "6" } }),

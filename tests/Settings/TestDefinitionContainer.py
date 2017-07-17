@@ -295,6 +295,20 @@ def test_serialize(definition_container):
     definition_container.definitions.append(subsetting)
     _test_serialize_cycle(definition_container)
 
+##  Tests the serialisation with certain metadata keys ignored.
+#
+#   \param definition_container A new definition container from a fixture.
+def test_serialize_with_ignored_metadata_keys(definition_container):
+    ignore_metadata_keys = ["secret", "secret2"]
+    # Add some metadata.
+    definition_container.getMetaData()["author"] = "Testy McTesticle"
+    definition_container.getMetaData()["escape_test"] = "[\"\n{':"
+    # Add metadata that should be ignored
+    for key in ignore_metadata_keys:
+        definition_container.getMetaData()[key] = "something"
+
+    _test_serialize_cycle(definition_container, ignore_metadata_keys = ignore_metadata_keys)
+
 def test_setting_function():
     container = UM.Settings.DefinitionContainer.DefinitionContainer("test")
     with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "definitions", "functions.def.json")) as data:
@@ -353,16 +367,23 @@ def _createSettingDefinition(properties):
 #
 #   \param definition_container A defintion container to test the serialisation
 #   of.
-def _test_serialize_cycle(definition_container):
+#   \param ignore_metadata_keys A list of keys in metadata that will be
+#   ignored during serialization.
+def _test_serialize_cycle(definition_container, ignore_metadata_keys = []):
     # Don't verify the ID. It must be unique, so it must be different.
     name = definition_container.getName()
     metadata = definition_container.getMetaData()
     definitions = definition_container.definitions
     # No need to verify the internationalisation catalogue.
 
-    serialised = definition_container.serialize()
+    serialised = definition_container.serialize(ignore_metadata_keys = ignore_metadata_keys)
     deserialised = UM.Settings.DefinitionContainer.DefinitionContainer(uuid.uuid4().int)
     deserialised.deserialize(serialised)
+
+    # remove ignored keys from metadata dict
+    for key in ignore_metadata_keys:
+        if key in metadata:
+            del metadata[key]
 
     assert name == deserialised.getName()
     assert metadata == deserialised.getMetaData()

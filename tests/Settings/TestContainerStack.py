@@ -601,6 +601,58 @@ def test_serialize(container_stack):
     with pytest.raises(Exception):
         container_stack.deserialize(serialised)
 
+
+##  Tests serialising and deserialising the container stack with certain metadata keys ignored.
+#
+#   \param container_stack A new container stack from a fixture.
+def test_serialize_with_ignored_metadata_keys(container_stack):
+    ignore_metadata_keys = ["secret"]
+    registry = ContainerRegistry.getInstance()  # All containers need to be registered in order to be recovered again after deserialising.
+
+    # Case with one subcontainer.
+    container = InstanceContainer(uuid.uuid4().int)
+    registry.addContainer(container)
+    container_stack.addContainer(container)
+
+    # Case with two subcontainers.
+    container = InstanceContainer(uuid.uuid4().int)
+    registry.addContainer(container)
+    container_stack.addContainer(container)  # Already had one, if all previous assertions were correct.
+
+    # Case with all types of subcontainers.
+    container = DefinitionContainer(uuid.uuid4().int)
+    registry.addContainer(container)
+    container_stack.addContainer(container)
+    container = ContainerStack(uuid.uuid4().int)
+    registry.addContainer(container)
+    container_stack.addContainer(container)
+
+    # With some metadata.
+    container_stack.getMetaData()["foo"] = "bar"
+    for key in ignore_metadata_keys:
+        container_stack.getMetaData()[key] = "something"
+    _test_serialize_cycle(container_stack, ignore_metadata_keys = ignore_metadata_keys)
+
+    # With a changed name.
+    container_stack.setName("Fred")
+    _test_serialize_cycle(container_stack, ignore_metadata_keys = ignore_metadata_keys)
+
+    # A name with special characters, to test the encoding.
+    container_stack.setName("ルベン")
+    _test_serialize_cycle(container_stack, ignore_metadata_keys = ignore_metadata_keys)
+
+    # Just to bully the one who implements this, a name with special characters in JSON and CFG.
+    container_stack.setName("=,\"")
+    _test_serialize_cycle(container_stack, ignore_metadata_keys = ignore_metadata_keys)
+
+    # A container that is not in the registry.
+    container_stack.addContainer(DefinitionContainer(uuid.uuid4().int))
+    serialised = container_stack.serialize()
+    container_stack = ContainerStack(uuid.uuid4().int)  # Completely fresh container stack.
+    with pytest.raises(Exception):
+        container_stack.deserialize(serialised)
+
+
 ##  Tests whether changing the name of the stack has the proper effects.
 #
 #   \param container_stack A new container stack from a fixture.
@@ -739,14 +791,20 @@ def test_idSpecialCharacters(container_stack, container_registry):
 #   the deserialised container stack is the same as the original one.
 #
 #   \param container_stack The container stack to serialise and deserialise.
-def _test_serialize_cycle(container_stack):
+#   \param ignore_metadata_keys The list of keys that should be ignored when serializing the container stack.
+def _test_serialize_cycle(container_stack, ignore_metadata_keys = []):
     name = container_stack.getName()
     metadata = container_stack.getMetaData()
     containers = container_stack.getContainers()
 
-    serialised = container_stack.serialize()
+    serialised = container_stack.serialize(ignore_metadata_keys = ignore_metadata_keys)
     container_stack = ContainerStack(uuid.uuid4().int) # Completely fresh container stack.
     container_stack.deserialize(serialised)
+
+    # remove ignored keys from metadata dict
+    for key in ignore_metadata_keys:
+        if key in metadata:
+            del metadata[key]
 
     #ID and nextStack are allowed to be different.
     assert name == container_stack.getName()
