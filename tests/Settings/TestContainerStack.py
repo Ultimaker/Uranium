@@ -25,7 +25,7 @@ from UM.Settings.ContainerStack import InvalidContainerStackError
 class MockContainer(ContainerInterface):
     ##  Creates a mock container with a new unique ID.
     def __init__(self, container_id = None):
-        self._id = uuid.uuid4().int if container_id == None else container_id
+        self._id = uuid.uuid4().int if container_id is None else container_id
         self._metadata = {}
         self.items = {}
 
@@ -96,7 +96,7 @@ class MockContainer(ContainerInterface):
     #   creates different instances (which is desired).
     #
     #   \return A static string representing a container.
-    def serialize(self, ignored_metadata_keys=[]):
+    def serialize(self, ignored_metadata_keys = None):
         return str(self._id)
 
     ##  Deserialises a string to a container.
@@ -129,7 +129,7 @@ def container_stack():
 #
 #   \param container_stack A new container stack from a fixture.
 def test_container_stack(container_stack):
-    assert container_stack != None
+    assert container_stack is not None
 
 ##  Tests adding a container to the stack.
 #
@@ -418,7 +418,7 @@ def test_getContainer(container_stack):
 #   \param container_stack A new container stack from a fixture.
 def test_getMetaData(container_stack):
     meta_data = container_stack.getMetaData()
-    assert meta_data != None
+    assert meta_data is not None
 
     meta_data["foo"] = "bar" #Try adding an entry.
     assert container_stack.getMetaDataEntry("foo") == "bar"

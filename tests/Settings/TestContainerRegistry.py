@@ -170,7 +170,7 @@ def test_addContainerType(container_registry, plugin_registry):
 #   \param container_registry A newly created container registry instance, from
 #   a fixture.
 def test_create(container_registry):
-    assert container_registry != None
+    assert container_registry is not None
 
 ##  Individual test cases for test_findDefinitionContainers as well as
 #   test_findInstanceContainers.
