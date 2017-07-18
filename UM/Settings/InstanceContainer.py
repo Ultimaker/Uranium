@@ -45,11 +45,11 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     ##  Constructor
     #
     #   \param container_id A unique, machine readable/writable ID for this container.
-    def __init__(self, container_id, *args, **kwargs):
+    def __init__(self, container_id: str, *args, **kwargs):
         super().__init__(parent = None, *args, **kwargs)
 
         self._id = str(container_id)    # type: str
-        self._name = container_id       # type: str
+        self._name = str(container_id)  # type: str
         self._definition = None         # type: DefinitionContainerInterface
         self._metadata = {}
         self._instances = {}            # type: Dict[str, SettingInstance]

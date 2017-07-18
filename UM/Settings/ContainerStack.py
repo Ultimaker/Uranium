@@ -50,13 +50,13 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     ##  Constructor
     #
     #   \param stack_id \type{string} A unique, machine readable/writable ID.
-    def __init__(self, stack_id, *args, **kwargs):
+    def __init__(self, stack_id: str, *args, **kwargs):
         # Note that we explicitly pass None as QObject parent here. This is to be able
         # to support pickling.
         super().__init__(parent = None, *args, **kwargs)
 
         self._id = str(stack_id)  # type: str
-        self._name = stack_id  # type: str
+        self._name = str(stack_id)  # type: str
         self._metadata = {}
         self._containers = []  # type: List[ContainerInterface]
         self._next_stack = None  # type: Optional[ContainerStack]

@@ -57,7 +57,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
         super().__init__(parent = None, *args, **kwargs)
 
         self._id = str(container_id)    # type: str
-        self._name = container_id       # type: str
+        self._name = str(container_id)  # type: str
         self._metadata = {}             # type: Dict[str, Any]
         self._definitions = []          # type: List[SettingDefinition]
         self._inherited_files = []      # type: List[str]
