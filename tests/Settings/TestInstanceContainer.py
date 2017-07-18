@@ -113,13 +113,13 @@ def test_serialize_with_ignored_metadata_keys(container_data, equals_file, loade
         for key, value in container_data["values"].items():
             instance_container.setProperty(key, "value", value)
 
-    ignore_metadata_keys = ["secret", "secret2"]
-    result = instance_container.serialize(ignore_metadata_keys = ignore_metadata_keys)
+    ignored_metadata_keys = ["secret", "secret2"]
+    result = instance_container.serialize(ignored_metadata_keys = ignored_metadata_keys)
 
     path = Resources.getPath(Resources.InstanceContainers, equals_file)
     with open(path) as data:
-
         assert data.readline() in result
+
 
 test_deserialize_data = [
     ("basic.inst.cfg", {"name": "Basic"}),

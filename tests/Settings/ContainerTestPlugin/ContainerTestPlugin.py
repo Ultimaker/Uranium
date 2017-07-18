@@ -77,7 +77,7 @@ class ContainerTestPlugin(ContainerInterface, PluginObject):
     ##  Serializes the container to a string representation.
     #
     #   This method is not implemented in the mock container.
-    def serialize(self, ignore_metadata_keys=[]):
+    def serialize(self, ignored_metadata_keys=[]):
         raise NotImplementedError()
 
     ##  Deserializes the container from a string representation.

@@ -96,7 +96,7 @@ class MockContainer(ContainerInterface):
     #   creates different instances (which is desired).
     #
     #   \return A static string representing a container.
-    def serialize(self, ignore_metadata_keys=[]):
+    def serialize(self, ignored_metadata_keys=[]):
         return str(self._id)
 
     ##  Deserialises a string to a container.
@@ -606,7 +606,7 @@ def test_serialize(container_stack):
 #
 #   \param container_stack A new container stack from a fixture.
 def test_serialize_with_ignored_metadata_keys(container_stack):
-    ignore_metadata_keys = ["secret"]
+    ignored_metadata_keys = ["secret"]
     registry = ContainerRegistry.getInstance()  # All containers need to be registered in order to be recovered again after deserialising.
 
     # Case with one subcontainer.
@@ -629,21 +629,21 @@ def test_serialize_with_ignored_metadata_keys(container_stack):
 
     # With some metadata.
     container_stack.getMetaData()["foo"] = "bar"
-    for key in ignore_metadata_keys:
+    for key in ignored_metadata_keys:
         container_stack.getMetaData()[key] = "something"
-    _test_serialize_cycle(container_stack, ignore_metadata_keys = ignore_metadata_keys)
+    _test_serialize_cycle(container_stack, ignored_metadata_keys = ignored_metadata_keys)
 
     # With a changed name.
     container_stack.setName("Fred")
-    _test_serialize_cycle(container_stack, ignore_metadata_keys = ignore_metadata_keys)
+    _test_serialize_cycle(container_stack, ignored_metadata_keys = ignored_metadata_keys)
 
     # A name with special characters, to test the encoding.
     container_stack.setName("ルベン")
-    _test_serialize_cycle(container_stack, ignore_metadata_keys = ignore_metadata_keys)
+    _test_serialize_cycle(container_stack, ignored_metadata_keys = ignored_metadata_keys)
 
     # Just to bully the one who implements this, a name with special characters in JSON and CFG.
     container_stack.setName("=,\"")
-    _test_serialize_cycle(container_stack, ignore_metadata_keys = ignore_metadata_keys)
+    _test_serialize_cycle(container_stack, ignored_metadata_keys = ignored_metadata_keys)
 
     # A container that is not in the registry.
     container_stack.addContainer(DefinitionContainer(uuid.uuid4().int))
@@ -791,20 +791,21 @@ def test_idSpecialCharacters(container_stack, container_registry):
 #   the deserialised container stack is the same as the original one.
 #
 #   \param container_stack The container stack to serialise and deserialise.
-#   \param ignore_metadata_keys The list of keys that should be ignored when serializing the container stack.
-def _test_serialize_cycle(container_stack, ignore_metadata_keys = []):
+#   \param ignored_metadata_keys The list of keys that should be ignored when serializing the container stack.
+def _test_serialize_cycle(container_stack, ignored_metadata_keys = None):
     name = container_stack.getName()
     metadata = container_stack.getMetaData()
     containers = container_stack.getContainers()
 
-    serialised = container_stack.serialize(ignore_metadata_keys = ignore_metadata_keys)
-    container_stack = ContainerStack(uuid.uuid4().int) # Completely fresh container stack.
+    serialised = container_stack.serialize(ignored_metadata_keys = ignored_metadata_keys)
+    container_stack = ContainerStack(uuid.uuid4().int)  # Completely fresh container stack.
     container_stack.deserialize(serialised)
 
     # remove ignored keys from metadata dict
-    for key in ignore_metadata_keys:
-        if key in metadata:
-            del metadata[key]
+    if ignored_metadata_keys:
+        for key in ignored_metadata_keys:
+            if key in metadata:
+                del metadata[key]
 
     #ID and nextStack are allowed to be different.
     assert name == container_stack.getName()

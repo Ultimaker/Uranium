@@ -6,7 +6,7 @@ import re #For finding containers with asterisks in the constraints and for dete
 import urllib #For ensuring container file names are proper file names
 import urllib.parse
 import pickle #For serializing/deserializing Python classes to binary files
-from typing import List, cast
+from typing import List, Optional, cast
 import collections
 import time
 
@@ -577,5 +577,5 @@ class _EmptyInstanceContainer(InstanceContainer):
     def getConfigurationType(self) -> str:
         return ""  # FIXME: not sure if this is correct
 
-    def serialize(self, ignore_metadata_keys=[]) -> str:
+    def serialize(self, ignored_metadata_keys: Optional[List] = None) -> str:
         return "[general]\n version = 2\n name = empty\n definition = fdmprinter\n"

@@ -101,7 +101,7 @@ class MockContainer(ContainerInterface, UM.PluginObject.PluginObject):
     ##  Serializes the container to a string representation.
     #
     #   This method is not implemented in the mock container.
-    def serialize(self, ignore_metadata_keys=[]):
+    def serialize(self, ignored_metadata_keys = None):
         raise NotImplementedError()
 
     ##  Deserializes the container from a string representation.
