@@ -91,12 +91,13 @@ def test_serialize(container_data, equals_file, loaded_container_registry):
 
 
 test_serialize_with_ignored_metadata_keys_data = [
-    ({"definition": "basic", "name": "Basic"}, "basic.inst.cfg"),
+    ({"definition": "basic", "name": "Basic", "metadata": {"secret": "something", "secret2": "something2"}}, "basic.inst.cfg"),
     ({"definition": "basic", "name": "Metadata", "metadata": {"author": "Ultimaker", "bool": False, "integer": 6, "secret": "something", "secret2": "something2"}}, "metadata.inst.cfg"),
     ({"definition": "multiple_settings", "name": "Setting Values",
+      "metadata": {"secret": "something", "secret2": "something2"},
       "values": {
         "test_setting_0": 20, "test_setting_1": 20, "test_setting_2": 20, "test_setting_3": 20, "test_setting_4": 20
-    }}, "setting_values.inst.cfg"),
+      }}, "setting_values.inst.cfg"),
 ]
 @pytest.mark.parametrize("container_data,equals_file", test_serialize_with_ignored_metadata_keys_data)
 def test_serialize_with_ignored_metadata_keys(container_data, equals_file, loaded_container_registry):
@@ -116,9 +117,12 @@ def test_serialize_with_ignored_metadata_keys(container_data, equals_file, loade
     ignored_metadata_keys = ["secret", "secret2"]
     result = instance_container.serialize(ignored_metadata_keys = ignored_metadata_keys)
 
-    path = Resources.getPath(Resources.InstanceContainers, equals_file)
-    with open(path) as data:
-        assert data.readline() in result
+    instance_container.deserialize(result)
+    new_metadata = instance_container.getMetaData()
+
+    # the ignored keys should not be in the serialised metadata
+    for key in ignored_metadata_keys:
+        assert key not in new_metadata
 
 
 test_deserialize_data = [
@@ -141,4 +145,3 @@ def test_deserialize(filename, expected, loaded_container_registry):
 
         for key, value in value.items():
             assert instance_container.getProperty(key, "value") == value
-
