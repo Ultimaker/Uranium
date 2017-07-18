@@ -1,24 +1,22 @@
-# Uranium
-# Copyright (C) 2017 Ultimaker
-# This file is distributed under the same license as the Uranium package.
-# Ruben Dulek <r.dulek@ultimaker.com>, 2017.
+# English translations for PACKAGE package.
+# Copyright (C) 2017 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Automatically generated, 2017.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Uranium 2.6\n"
-"Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-30 15:41+0200\n"
-"PO-Revision-Date: 2017-02-11 22:23+0100\n"
-"Last-Translator: Marek Pikuła <marek.pikula@sent.tech>\n"
-"Language-Team: Marek Pikuła\n"
-"Language: Polish\n"
-"Lang-Code: pl\n"
-"Country-Code: PL\n"
+"PO-Revision-Date: 2017-07-13 15:50+0200\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: pl_PL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.11\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 2.0.2\n"
 
 #: /home/ruben/Projects/Uranium/plugins/Views/SimpleView/__init__.py:13
 msgctxt "@label"
@@ -28,7 +26,7 @@ msgstr "Prosty widok"
 #: /home/ruben/Projects/Uranium/plugins/Views/SimpleView/__init__.py:16
 msgctxt "@info:whatsthis"
 msgid "Provides a simple solid mesh view."
-msgstr "Zapewnia prosty widok bryły."
+msgstr "Zapewnia prosty widok siatki."
 
 #: /home/ruben/Projects/Uranium/plugins/Views/SimpleView/__init__.py:20
 msgctxt "@item:inmenu"
@@ -38,22 +36,22 @@ msgstr "Prosty"
 #: /home/ruben/Projects/Uranium/plugins/FileLogger/__init__.py:13
 msgctxt "@label"
 msgid "File Logger"
-msgstr "Dziennik do pliku"
+msgstr "Rejestrator plików"
 
 #: /home/ruben/Projects/Uranium/plugins/FileLogger/__init__.py:16
 msgctxt "@info:whatsthis"
 msgid "Outputs log information to a file in your settings folder."
-msgstr ""
+msgstr "Wypisuje informacje o pliku z folderem ustawień."
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLReader/__init__.py:12
 msgctxt "@label"
 msgid "STL Reader"
-msgstr "Wczytywanie STL"
+msgstr "STL Czytnik"
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLReader/__init__.py:15
 msgctxt "@info:whatsthis"
 msgid "Provides support for reading STL files."
-msgstr "Umożliwia wczytywanie plików STL."
+msgstr "Zapewnia obsługę czytania plików STL."
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLReader/__init__.py:21
 msgctxt "@item:inlistbox"
@@ -63,63 +61,63 @@ msgstr "Plik STL"
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/OBJReader/__init__.py:13
 msgctxt "@label"
 msgid "Wavefront OBJ Reader"
-msgstr "Wczytywanie Wavefront OBJ"
+msgstr "Czytnik OBJ dla Wavefront"
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/OBJReader/__init__.py:16
 msgctxt "@info:whatsthis"
 msgid "Makes it possbile to read Wavefront OBJ files."
-msgstr "Umożliwia wczytywanie plików Wavefront OBJ."
+msgstr "Umożliwia odczytywanie plików Wavefront OBJ."
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/OBJReader/__init__.py:22
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:22
 msgctxt "@item:inlistbox"
 msgid "Wavefront OBJ File"
-msgstr "Plik Wavefront OBJ"
+msgstr "Plik Wavefront OBJ "
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:13
 msgctxt "@label"
 msgid "Wavefront OBJ Writer"
-msgstr "Zapisywanie Wavefront OBJ"
+msgstr "Wavefront OBJ autor"
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:16
 msgctxt "@info:whatsthis"
 msgid "Makes it possbile to write Wavefront OBJ files."
-msgstr "Umożliwia zapisywanie plików Wavefront OBJ."
+msgstr "Umożliwia pisanie plików Wavefront OBJ."
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:13
 msgctxt "@label"
 msgid "STL Writer"
-msgstr "Zapisywanie STL"
+msgstr "STL Autor"
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:16
 msgctxt "@info:whatsthis"
 msgid "Provides support for writing STL files."
-msgstr "Umożliwia zapisywanie plików STL."
+msgstr "Zapewnia obsługę pisania plików STL."
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:25
 msgctxt "@item:inlistbox"
 msgid "STL File (Ascii)"
-msgstr "Plik STL (ASCII)"
+msgstr "Plik STL  (Ascii)"
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:31
 msgctxt "@item:inlistbox"
 msgid "STL File (Binary)"
-msgstr "Plik STL (binarny)"
+msgstr "Plik STL  (Binary)"
 
 #: /home/ruben/Projects/Uranium/plugins/ConsoleLogger/__init__.py:13
 msgctxt "@label"
 msgid "Console Logger"
-msgstr "Dziennik na konsolę"
+msgstr "Konsola Logger"
 
 #: /home/ruben/Projects/Uranium/plugins/ConsoleLogger/__init__.py:16
 msgctxt "@info:whatsthis"
 msgid "Outputs log information to the console."
-msgstr "Zwraca informacje dziennika na konsolę."
+msgstr "Wypisuje informacje o dzienniku do konsoli."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/__init__.py:12
 msgctxt "@label"
 msgid "Update Checker"
-msgstr "Sprawdzanie aktualizacji"
+msgstr "Aktualizuj Checker"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/__init__.py:15
 msgctxt "@info:whatsthis"
@@ -129,33 +127,33 @@ msgstr "Sprawdza aktualizacje oprogramowania."
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:51
 msgctxt "@info"
 msgid "Could not access update information."
-msgstr "Brak dostępu do informacji o aktualizacji."
+msgstr "Nie można uzyskać dostępu do informacji o aktualizacji."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:62
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:67
 msgctxt "@info"
 msgid "The version you are using does not support checking for updates."
-msgstr "Wersja, której używasz, nie wspiera sprawdzania aktualizacji."
+msgstr "Nie można uzyskać dostępu do informacji o aktualizacji."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:78
 msgctxt "@info"
 msgid "A new version is available!"
-msgstr "Dostępna nowa wersja!"
+msgstr "Dostępna jest nowa wersja!"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:79
 msgctxt "@action:button"
 msgid "Download"
-msgstr "Pobierz"
+msgstr "Pobieranie"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:91
 msgctxt "@info"
 msgid "An exception occurred while checking for updates."
-msgstr ""
+msgstr "Wystąpił wyjątek podczas sprawdzania aktualizacji."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:95
 msgctxt "@info"
 msgid "No new version was found."
-msgstr "Brak nowej wersji."
+msgstr "Nie znaleziono nowej wersji."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:23
 msgctxt "@item:inmenu"
@@ -165,12 +163,12 @@ msgstr "Sprawdź aktualizacje"
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/__init__.py:12
 msgctxt "@label"
 msgid "Local File Output Device"
-msgstr "Zapisywanie do lokalnego pliku"
+msgstr "Lokalny plik wyjściowy urządzenia"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/__init__.py:13
 msgctxt "@info:whatsthis"
 msgid "Enables saving to local files."
-msgstr "Pozwala na zapisywanie do lokalnych plików."
+msgstr "Umożliwia zapisywanie plików lokalnych."
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:33
 msgctxt "@item:inmenu"
@@ -180,7 +178,7 @@ msgstr "Plik lokalny"
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:34
 msgctxt "@action:button Preceded by 'Ready to'."
 msgid "Save to File"
-msgstr "zapisania do pliku"
+msgstr "Zapisz do pliku"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:35
 msgctxt "@info:tooltip"
@@ -201,7 +199,7 @@ msgstr "Plik już istnieje"
 #, python-brace-format
 msgctxt "@label"
 msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
-msgstr "Plik <filename>{0}</filename> już istnieje. Czy jesteś pewny, że chcesz go nadpisać?"
+msgstr "Plik <filename>{0}</filename> już istnieje. Czy na pewno chcesz go nadpisać?"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:158
 #, python-brace-format
@@ -213,21 +211,22 @@ msgstr "Zapisywanie do <filename>{0}</filename>"
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Permission denied when trying to save <filename>{0}</filename>"
-msgstr "Brak uprawnień do zapisu pliku <filename>{0}</filename>"
+msgstr "Zezwolenie jest zabronione przy próbie zapisania <filename>{0}</filename>"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:169
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:185
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
-msgstr "Nie można zapisać do <filename>{0}</filename>: <message>{1}</message>"
+msgstr "Nie mogłem zapisać <filename>{0}</filename>: <message>{1}</message>"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:179
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Saved to <filename>{0}</filename>"
-msgstr "Zapisano do <filename>{0}</filename>"
+msgstr "Saved to <filename>{0}</filename>"
 
+# otwórz folder
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:180
 msgctxt "@action:button"
 msgid "Open Folder"
@@ -236,7 +235,7 @@ msgstr "Otwórz folder"
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:180
 msgctxt "@info:tooltip"
 msgid "Open the folder containing the file"
-msgstr "Otwórz folder zawierający ten plik"
+msgstr "Otwórz folder zawierający plik"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:13
 msgctxt "@label"
@@ -246,12 +245,12 @@ msgstr "Narzędzie skalowania"
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:16
 msgctxt "@info:whatsthis"
 msgid "Provides the Scale tool."
-msgstr "Zapewnia narzędzie skalowania."
+msgstr "Dostarcza narzędzia Skala."
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:20
 msgctxt "@label"
 msgid "Scale"
-msgstr "Skaluj"
+msgstr "Skala"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:21
 msgctxt "@info:tooltip"
@@ -261,57 +260,57 @@ msgstr "Skaluj model"
 #: /home/ruben/Projects/Uranium/plugins/Tools/SelectionTool/__init__.py:13
 msgctxt "@label"
 msgid "Selection Tool"
-msgstr "Narzędzie zaznaczanie"
+msgstr "Narzędzie wyboru"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/SelectionTool/__init__.py:16
 msgctxt "@info:whatsthis"
 msgid "Provides the Selection tool."
-msgstr "Zapewnia narzędzie zaznaczania."
+msgstr "Dostarcza narzędzia Zaznaczanie."
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:13
 msgctxt "@label"
 msgid "Translate Tool"
-msgstr "Narzędzie translacji"
+msgstr "Narzędzie tłumaczeń"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:16
 msgctxt "@info:whatsthis"
 msgid "Provides the Translate tool."
-msgstr "Zapewnia narzędzie translacji."
+msgstr "Dostarcza narzędzia Tłumacz."
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:20
 msgctxt "@action:button"
 msgid "Move"
-msgstr "Przesuń"
+msgstr "Przenieść"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:21
 msgctxt "@info:tooltip"
 msgid "Move Model"
-msgstr "Przesuń model"
+msgstr "Przenieść model"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/CameraTool/__init__.py:12
 msgctxt "@label"
 msgid "Camera Tool"
-msgstr "Narzędzie kamery"
+msgstr "Narzędzia kamery"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/CameraTool/__init__.py:15
 msgctxt "@info:whatsthis"
 msgid "Provides the tool to manipulate the camera."
-msgstr "Zapewnia narzędzie do przemieszczania kamery."
+msgstr "Dostarcza narzędzia do manipulowania kamerą."
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:12
 msgctxt "@label"
 msgid "Rotate Tool"
-msgstr "Narzędzie obracania"
+msgstr "Obróć narzędzie"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:15
 msgctxt "@info:whatsthis"
 msgid "Provides the Rotate tool."
-msgstr "Zapewnia narzędzie obracania."
+msgstr "Dostarcza narzędzia Obracanie."
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:19
 msgctxt "@label"
 msgid "Rotate"
-msgstr "Obróć"
+msgstr "Obracać"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:20
 msgctxt "@info:tooltip"
@@ -321,22 +320,22 @@ msgstr "Obróć model"
 #: /home/ruben/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:12
 msgctxt "@label"
 msgid "Mirror Tool"
-msgstr "Narzędzie odbicia lustrzanego"
+msgstr "Narzędzie lustrzane"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:15
 msgctxt "@info:whatsthis"
 msgid "Provides the Mirror tool."
-msgstr "Zapewnia narzędzie odbicia."
+msgstr "Dostarcza narzędzie Lustro."
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:19
 msgctxt "@label"
 msgid "Mirror"
-msgstr "Odbij"
+msgstr "Lustro"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:20
 msgctxt "@info:tooltip"
 msgid "Mirror Model"
-msgstr "Odbij model"
+msgstr "Model lustra"
 
 #: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:161
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:48
@@ -345,7 +344,7 @@ msgstr "Odbij model"
 #, python-brace-format
 msgctxt "@item:inlistbox"
 msgid "All Supported Types ({0})"
-msgstr "Wszystkie wspierane typy plików ({0})"
+msgstr "Wszystkie obsługiwane typy ({0})"
 
 #: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:164
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:49
@@ -374,7 +373,6 @@ msgid "{0} day"
 msgid_plural "{0} days"
 msgstr[0] "{0} dzień"
 msgstr[1] "{0} dni"
-msgstr[2] "{0} dni"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:109
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:111
@@ -384,7 +382,6 @@ msgid "{0} hour"
 msgid_plural "{0} hours"
 msgstr[0] "{0} godzina"
 msgstr[1] "{0} godziny"
-msgstr[2] "{0} godzin"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:109
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:111
@@ -395,28 +392,27 @@ msgid "{0} minute"
 msgid_plural "{0} minutes"
 msgstr[0] "{0} minuta"
 msgstr[1] "{0} minuty"
-msgstr[2] "{0} minut"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:109
 msgctxt "@info:progress"
 msgid "Loading plugins..."
-msgstr "Ładowaniu pluginów…"
+msgstr "Wczytywanie wtyczek ..."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:115
 msgctxt "@info:progress"
 msgid "Updating configuration..."
-msgstr "Aktualizowanie konfiguracji…"
+msgstr "Aktualizowanie konfiguracji ..."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:126
 msgctxt "@info:progress"
 msgid "Loading preferences..."
-msgstr "Ładowanie preferencji…"
+msgstr "Ładowanie preferencji ..."
 
 #: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:67
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled object to {0}% of original size"
-msgstr "Automatyczne skalowanie obiektu do {0}% oryginalnego rozmiaru"
+msgstr "Obiekt skalowany do {0}%oryginalnego rozmiaru"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:84
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:92
@@ -426,6 +422,8 @@ msgid ""
 "Failed to install plugin from <filename>{0}</filename>:\n"
 "<message>{1}</message>"
 msgstr ""
+"Nie można zainstalować wtyczki z <filename>{0}</filename>:\n"
+"<message>{1}</message>"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:94
 msgctxt "@info:status"
@@ -433,28 +431,30 @@ msgid ""
 "The plugin has been installed.\n"
 " Please re-start the application to active the plugin."
 msgstr ""
+"Wtyczka została zainstalowana.\n"
+"Proszę ponownie uruchomić aplikację, aby aktywować wtyczkę."
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:122
 #, python-brace-format
 msgctxt "@info:version-upgrade"
 msgid "A configuration from an older version of {0} was imported."
-msgstr "Zaimportowano plik konfiguracyjny ze starszej wersji ({0})."
+msgstr "Zainstalowano konfigurację ze starszej wersji {0}."
 
 #: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:45
 msgctxt "@message"
 msgid "Failed to Initialize OpenGL"
-msgstr ""
+msgstr "Nie można zainicjować OpenGL"
 
 #: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:55
 msgctxt "Critical OpenGL Extensions Missing"
 msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
-msgstr ""
+msgstr "Nie znaleziono rozszerzeń krytycznych OpenGL. Ten program wymaga wsparcia obiektów Framebuffera. Sprawdź sterowniki karty graficznej."
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:36
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Cannot open file type <filename>{0}</filename>"
-msgstr "Nie można otworzyć typu pliku <filename>{0}</filename>"
+msgstr "Nie można otworzyć pliku <filename>{0}</filename>"
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:49
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:69
@@ -467,79 +467,79 @@ msgstr "Nie udało się załadować <filename>{0}</filename>"
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Loading <filename>{0}</filename>"
-msgstr "Ładowanie pliku <filename>{0}</filename>"
+msgstr "Ładuję<filename>{0}</filename>"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:54
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:21
 msgctxt "@action:button"
 msgid "Reset"
-msgstr "Resetuj"
+msgstr "Reset"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:77
 msgctxt "@option:check"
 msgid "Snap Scaling"
-msgstr "Przyciągaj skalowanie"
+msgstr "Skalowanie przyciągania"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:94
 msgctxt "@option:check"
 msgid "Uniform Scaling"
-msgstr "Proporcjonalne skalowanie"
+msgstr "Jednolite skalowanie"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:38
 msgctxt "@action:button"
 msgid "Lay flat"
-msgstr "Połóż płasko"
+msgstr "Nakładać płaskie"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:53
 msgctxt "@action:checkbox"
 msgid "Snap Rotation"
-msgstr "Proste obracanie"
+msgstr "Obrót wiązki"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:20
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:148
 msgctxt "@title:tab"
 msgid "Plugins"
-msgstr "Rozszerzenia"
+msgstr "Wtyczki"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:28
 msgctxt "@action:button"
 msgid "Install new plugin"
-msgstr ""
+msgstr "Zainstaluj nową wtyczkę"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:55
 msgctxt "@label"
 msgid "You will need to restart the application before changes in plugins have effect."
-msgstr ""
+msgstr "Trzeba ponownie uruchomić aplikację, zanim zmiany w wtyczkach okażą się skuteczne."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:93
 msgctxt "@label"
 msgid "This plugin is required for the application to run."
-msgstr ""
+msgstr "Ta wtyczka jest wymagana do uruchomienia aplikacji."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:110
 msgctxt "@label"
 msgid "Info..."
-msgstr "Informacje…"
+msgstr "Info..."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:128
 msgctxt "@window:title"
 msgid "Install Plugin"
-msgstr ""
+msgstr "Zainstaluj wtyczkę"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:137
 msgctxt "@title:window"
 msgid "Open file(s)"
-msgstr ""
+msgstr "Otwórz plik(i)"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:171
 msgctxt "@label"
 msgid "No text available"
-msgstr "Brak dostępnego opisu"
+msgstr "Brak tekstu"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:177
 msgctxt "@title:window"
 msgid "About %1"
-msgstr "Informacje o %1"
+msgstr "About %1"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:209
 msgctxt "@label"
@@ -549,7 +549,7 @@ msgstr "Autor:"
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:231
 msgctxt "@label"
 msgid "Version:"
-msgstr "Wersja:"
+msgstr "Wersia:"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:249
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:113
@@ -596,30 +596,29 @@ msgstr "Ok"
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:31
 msgctxt "@item:tooltip"
 msgid "This setting has been hidden by the active machine and will not be visible."
-msgstr "Ten parametr został ukryty dla aktywnego urządzenia i nie będzie widoczny."
+msgstr "To ustawienie zostało ukryte przez aktywną drukarkę i nie będzie widoczne."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:48
 msgctxt "@item:tooltip %1 is list of setting names"
 msgid "This setting has been hidden by the value of %1. Change the value of that setting to make this setting visible."
 msgid_plural "This setting has been hidden by the values of %1. Change the values of those settings to make this setting visible."
-msgstr[0] "Ten parametr został ukryty przez wartość pola %1. Zmień ją, żeby parametr stał się aktywny."
-msgstr[1] "Ten parametr został ukryty przez wartości pól %1. Zmień je, żeby parametr stał się aktywny."
-msgstr[2] "Ten parametr został ukryty przez wartości pól %1. Zmień je, żeby parametr stał się aktywny."
+msgstr[0] "To ustawienie zostało ukryte przez wartość%1. Zmienić wartość tego ustawienia, aby to ustawienie było widoczne."
+msgstr[1] "To ustawienie zostało ukryte przez wartości%1. Zmień te wartości, aby to ustawienie było widoczne."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityPage.qml:12
 msgctxt "@title:tab"
 msgid "Setting Visibility"
-msgstr "Widoczność ustawień"
+msgstr "Ustaw widoczność"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityPage.qml:42
 msgctxt "@label:textbox"
 msgid "Check all"
-msgstr "Sprawdź wszystkie"
+msgstr "Zaznacz wszystkie"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityPage.qml:89
 msgctxt "@label:textbox"
 msgid "Filter..."
-msgstr "Filtruj…"
+msgstr "Filtr..."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:12
 msgctxt "@title:tab"
@@ -629,17 +628,17 @@ msgstr "Drukarki"
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:39
 msgctxt "@label"
 msgid "Type"
-msgstr "Rodzaj"
+msgstr "Model"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:16
 msgctxt "@title:window"
 msgid "Confirm Remove"
-msgstr "Potwierdź usunięcie"
+msgstr "Potwierdź Usuń"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:17
 msgctxt "@label (%1 is object name)"
 msgid "Are you sure you wish to remove %1? This cannot be undone!"
-msgstr "Czy masz pewność, że chcesz usunąć %1? Nie można tego cofnąć!"
+msgstr "Czy na pewno chcesz usunąć%1? Tego nie da się cofnąć!"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:14
 msgctxt "@title:tab"
@@ -649,7 +648,7 @@ msgstr "Profile"
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:15
 msgctxt "@label"
 msgid "Duplicate"
-msgstr "Duplikuj"
+msgstr "Duplikat"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:45
 msgctxt "@label %1 is printer name"
@@ -659,32 +658,32 @@ msgstr "Drukarka: %1"
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:83
 msgctxt "@action:button"
 msgid "Update \"%1\""
-msgstr "Aktualizuj \"%1\""
+msgstr "Aktualizacja \"%1\""
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:84
 msgctxt "@action:button"
 msgid "Update profile"
-msgstr "Aktualizuj profil"
+msgstr "Zaktualizować profil"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:92
 msgctxt "@action:button"
 msgid "Discard current changes"
-msgstr "Porzuć aktualne zmiany"
+msgstr "Odrzuć bieżące zmiany"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:93
 msgctxt "@action:button"
 msgid "Reload profile"
-msgstr "Załaduj ponownie profil"
+msgstr "Przeładuj ponownie profil"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:107
 msgctxt "@label"
 msgid "Based on"
-msgstr "Bazuje na"
+msgstr "Oparte na"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:107
 msgctxt "@label"
 msgid "Profile type"
-msgstr "Rodzaj profilu"
+msgstr "Typ profilu"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:112
 msgctxt "@label"
@@ -694,305 +693,44 @@ msgstr "Chroniony profil"
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:112
 msgctxt "@label"
 msgid "Custom profile"
-msgstr "Profil użytkownika"
+msgstr "Profil niestandardowy"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:139
 msgctxt "@action:button"
 msgid "Import"
-msgstr "Importuj"
+msgstr "Import"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:146
 msgctxt "@action:button"
 msgid "Export"
-msgstr "Eksportuj"
+msgstr "Export"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:184
 msgctxt "@window:title"
 msgid "Import Profile"
-msgstr "Importuj profil"
+msgstr "Import Profil"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:192
 msgctxt "@title:window"
 msgid "Import Profile"
-msgstr "Importuj profil"
+msgstr "Import Profil"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:219
 msgctxt "@title:window"
 msgid "Export Profile"
-msgstr "Eksportuj profil"
+msgstr "Export Profil"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:215
 msgctxt "@action:button"
 msgid "Back"
-msgstr "Wstecz"
+msgstr "Cofnij"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:231
 msgctxt "@action:button"
 msgid "Finish"
-msgstr "Zakończ"
+msgstr "Koniec"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:231
 msgctxt "@action:button"
 msgid "Next"
 msgstr "Dalej"
-
-#~ msgctxt "@label"
-#~ msgid "Wireframe View"
-#~ msgstr "Widok szkieletu"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Provides a simple wireframe view."
-#~ msgstr "Zapewnia prosty widok szkieletu."
-
-#~ msgctxt "@info"
-#~ msgid "An exception occured while parsing the JSON file."
-#~ msgstr "Wystąpił błąd podczas parsowania pliku JSON."
-
-#~ msgctxt "@label"
-#~ msgid "3MF Writer"
-#~ msgstr "Zapisywanie 3MF"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Provides support for writing 3MF files."
-#~ msgstr "Umożliwia zapisywanie plików 3MF."
-
-#~ msgctxt "@item:inlistbox"
-#~ msgid "3MF file"
-#~ msgstr "Plik 3MF"
-
-#~ msgctxt "@action:button"
-#~ msgid "Scale to Max"
-#~ msgstr "Skaluj do maksymalnych rozmiarów"
-
-#~ msgctxt "@label Long  duration format. {0} is hours"
-#~ msgid "{0} hour"
-#~ msgid_plural "{0} hours"
-#~ msgstr[0] "{0} godzina"
-#~ msgstr[1] "{0} godziny"
-#~ msgstr[2] "{0} godzin"
-
-#, fuzzy
-#~ msgctxt "@label Days-hours-minutes duration format. {0} is days, {1} is hours, {2} is minutes"
-#~ msgid "{0} days {1} hours {2} minutes"
-#~ msgid_plural "{0} days {1} hours {2} minutes"
-#~ msgstr[0] "{0} dni {1} godzin {2} minut"
-#~ msgstr[1] "{0} dni {1} godzin {2} minut"
-#~ msgstr[2] "{0} dni {1} godzin {2} minut"
-
-#, fuzzy
-#~ msgctxt "@label Hours-minutes duration fromat. {0} is hours, {1} is minutes"
-#~ msgid "{0} hours {1} minutes"
-#~ msgid_plural "{0} hours {1} minutes"
-#~ msgstr[0] "{0} godzin {1} minut"
-#~ msgstr[1] "{0} godzin {1} minut"
-#~ msgstr[2] "{0} godzin {1} minut"
-
-#~ msgctxt "@label Minutes only duration format, {0} is minutes"
-#~ msgid "{0} minutes"
-#~ msgid_plural "{0} minutes"
-#~ msgstr[0] "{0} minuta"
-#~ msgstr[1] "{0} minuty"
-#~ msgstr[2] "{0} minut"
-
-#~ msgctxt "@item:tooltip"
-#~ msgid "This setting has been disabled by the active machine and will not be visible."
-#~ msgstr "Ten parametr został wyłączony w aktywnym urządzeniu i nie będzie widoczny."
-
-#~ msgctxt "@item:tooltip %1 is list of setting names"
-#~ msgid "This setting has been disabled by the value of %1. Change the value of that setting to make this setting visible."
-#~ msgid_plural "This setting has been disabled by the values of %1. Change the values of those settings to make this setting visible."
-#~ msgstr[0] "Ten parametr został wyłączony przez wartość opcji %1. Zmień ją, żeby przywrócić ten parametr."
-#~ msgstr[1] "Ten parametr został wyłączony przez wartości opcji %1. Zmień je, żeby przywrócić ten parametr."
-#~ msgstr[2] "Ten parametr został wyłączony przez wartości opcji %1. Zmień je, żeby przywrócić ten parametr."
-
-#~ msgctxt "@info:tooltip"
-#~ msgid "Scale Object"
-#~ msgstr "Skaluj obiekt"
-
-#~ msgctxt "@action:button"
-#~ msgid "Translate"
-#~ msgstr "Przemieść"
-
-#~ msgctxt "@info:tooltip"
-#~ msgid "Translate Object"
-#~ msgstr "Przemieść obiekt"
-
-#~ msgctxt "@info:tooltip"
-#~ msgid "Rotate Object"
-#~ msgstr "Obróć obiekt"
-
-#~ msgctxt "@info:tooltip"
-#~ msgid "Mirror Object"
-#~ msgstr "Odbij obiekt"
-
-#~ msgctxt "@item:intext appended to customised profiles ({0} is old profile name)"
-#~ msgid "{0} (Customised)"
-#~ msgstr "{0} (Użytkownika)"
-
-#~ msgctxt "@item:profile name"
-#~ msgid "Custom profile"
-#~ msgstr "Profil użytkownika"
-
-#~ msgctxt "@title:window"
-#~ msgid "Replace profile"
-#~ msgstr "Zastąp profil"
-
-#~ msgctxt "@label"
-#~ msgid "Selecting \"{0}\" replaces your current settings."
-#~ msgstr "Wybierając \"{0}\" zastępujesz obecne ustawienia."
-
-#~ msgctxt "@label"
-#~ msgid "Create profile"
-#~ msgstr "Stwórz profil"
-
-#~ msgctxt "@label"
-#~ msgid "Discard changes"
-#~ msgstr "Porzuć zmiany"
-
-#~ msgctxt "@label"
-#~ msgid "Do you want to save your settings in a custom profile?"
-#~ msgstr "Czy chcesz zapisać swoje ustawienia jako profil użytkownika?"
-
-#~ msgctxt "@label"
-#~ msgid "Do you want to update profile \"{0}\" or save your settings in a new custom profile?"
-#~ msgstr "Chcesz zaktualizować profil \"{0}\", czy zapisać jako nowy profil użytkownika?"
-
-#~ msgctxt "@label"
-#~ msgid "Update \"{0}\""
-#~ msgstr "Zaktualizuj \"{0}\""
-
-#~ msgctxt "@info:status"
-#~ msgid "Added a new profile named \"{0}\""
-#~ msgstr "Dodano nowy profil o nazwie \"{0}\""
-
-#~ msgctxt "@label"
-#~ msgid "Unknown Manufacturer"
-#~ msgstr "Nieznany producent"
-
-#~ msgctxt "@label"
-#~ msgid "Unknown Author"
-#~ msgstr "Nieznany autor"
-
-#~ msgctxt "@label"
-#~ msgid "Current settings"
-#~ msgstr "Aktualne ustawienia"
-
-#~ msgctxt "@info:progress"
-#~ msgid "Loading machines..."
-#~ msgstr "Ładowanie urządzeń…"
-
-#~ msgctxt "@info:status"
-#~ msgid "Failed to import profile from <filename>{0}</filename>: <message>{1}</message>"
-#~ msgstr "Nie udało się zaimportować profilu z <filename>{0}</filename>: <message>{1}</message>"
-
-#~ msgctxt "@info:status"
-#~ msgid "Successfully imported profile {0}"
-#~ msgstr "Zaimportowano profil {0}"
-
-#~ msgctxt "@info:status"
-#~ msgid "Profile {0} has an unknown file type."
-#~ msgstr "Nieznany typ pliku profilu {0}."
-
-#~ msgctxt "@info:status"
-#~ msgid "Failed to export profile to <filename>{0}</filename>: <message>{1}</message>"
-#~ msgstr "Nie udało się wyeksportować profilu do <filename>{0}</filename>: <message>{1}</message>"
-
-#~ msgctxt "@info:status"
-#~ msgid "Failed to export profile to <filename>{0}</filename>: Writer plugin reported failure."
-#~ msgstr "Nie udało się wyeksportować profilu do <filename>{0}</filename>: Plugin zapisu zgłosił błąd."
-
-#~ msgctxt "@info:status"
-#~ msgid "Exported profile to <filename>{0}</filename>"
-#~ msgstr "Wyeksportowano profil do pliku <filename>{0}</filename>"
-
-#~ msgctxt "@item:inlistbox"
-#~ msgid "All supported files"
-#~ msgstr "Wszystkie wspierane pliki"
-
-#~ msgctxt "@item:inlistbox"
-#~ msgid "- Use Global Profile -"
-#~ msgstr "- Użyj globalnego profilu -"
-
-#~ msgctxt "@item:inlistbox"
-#~ msgid "Current settings"
-#~ msgstr "Aktualne ustawienia"
-
-#~ msgctxt "@action:button"
-#~ msgid "Add"
-#~ msgstr "Dodaj"
-
-#~ msgctxt "@action:button"
-#~ msgid "Remove"
-#~ msgstr "Usuń"
-
-#~ msgctxt "@action:button"
-#~ msgid "Rename"
-#~ msgstr "Zmień nazwę"
-
-#~ msgctxt "@label"
-#~ msgid "Starter profile (protected)"
-#~ msgstr "Profil startowy (chroniony)"
-
-#, fuzzy
-#~ msgctxt "@label"
-#~ msgid "<i><br/>Affects:<br/></i>"
-#~ msgstr "<i><br/>Wpływa na:<br/></i>"
-
-#~ msgctxt "@label"
-#~ msgid "<i><br/>Is affected by:<br/></i>"
-#~ msgstr "<i><br/>Zależne od:<br/></i>"
-
-#~ msgctxt "@label"
-#~ msgid ""
-#~ "This setting has a value that is different from the profile.\n"
-#~ "\n"
-#~ "Click to restore the value of the profile."
-#~ msgstr ""
-#~ "To ustawienie ma inną wartość niż w profilu.\n"
-#~ "\n"
-#~ "Naciśnij, żeby przywrócić wartość z profilu."
-
-#~ msgctxt "@label"
-#~ msgid ""
-#~ "This setting is normally calculated, but it currently has an absolute value set.\n"
-#~ "\n"
-#~ "Click to restore the calculated value."
-#~ msgstr ""
-#~ "To ustawienie jest zwykle przeliczane – aktualnie ustawiona jest wartość stała.\n"
-#~ "\n"
-#~ "Naciśnij, żeby przywrócić wartość automatycznie przeliczaną."
-
-#, fuzzy
-#~ msgctxt "@label"
-#~ msgid ""
-#~ "Some hidden settings use values different from their normal calculated value.\n"
-#~ "\n"
-#~ "Click to make these settings visible."
-#~ msgstr ""
-#~ "Niektóre ukryte ustawienia używają innych wartości od ich normalnie przeliczonych wartości.\n"
-#~ "\n"
-#~ "Naciśnij, żeby zobaczyć te ustawienia."
-
-#~ msgctxt "@action:menu"
-#~ msgid "Hide this setting"
-#~ msgstr "Ukryj ten parametr"
-
-#~ msgctxt "@action:menu"
-#~ msgid "Configure setting visiblity..."
-#~ msgstr "Konfiguruj widoczność ustawień…"
-
-#~ msgctxt "@title:tab"
-#~ msgid "Machine"
-#~ msgstr "Urządzenie"
-
-#~ msgctxt "@label:listbox"
-#~ msgid "Active Machine:"
-#~ msgstr "Aktywne urządzenie:"
-
-#~ msgctxt "@title:window"
-#~ msgid "Confirm Machine Deletion"
-#~ msgstr "Potwierdź usunięcie urządzenia"
-
-#~ msgctxt "@label"
-#~ msgid "Are you sure you wish to remove the machine?"
-#~ msgstr "Czy jesteś pewny, że chcesz usunąć urządzenie?"
