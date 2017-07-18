@@ -414,7 +414,7 @@ msgstr "Ładowanie preferencji ..."
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled object to {0}% of original size"
-msgstr "Obiekt skalowany do {0}%oryginalnego rozmiaru"
+msgstr "Obiekt skalowany do {0}% oryginalnego rozmiaru"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:84
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:92
@@ -640,7 +640,7 @@ msgstr "Potwierdź Usuń"
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:17
 msgctxt "@label (%1 is object name)"
 msgid "Are you sure you wish to remove %1? This cannot be undone!"
-msgstr "Czy na pewno chcesz usunąć%1? Tego nie da się cofnąć!"
+msgstr "Czy na pewno chcesz usunąć %1? Tego nie da się cofnąć!"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:14
 msgctxt "@title:tab"
