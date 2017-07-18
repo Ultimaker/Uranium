@@ -372,7 +372,7 @@ def _createSettingDefinition(properties):
 def _test_serialize_cycle(definition_container, ignored_metadata_keys = None):
     # Don't verify the ID. It must be unique, so it must be different.
     name = definition_container.getName()
-    metadata = definition_container.getMetaData()
+    metadata = {key: value for key, value in definition_container.getMetaData().items()}
     definitions = definition_container.definitions
     # No need to verify the internationalisation catalogue.
 
