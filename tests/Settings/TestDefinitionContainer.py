@@ -18,7 +18,7 @@ Resources.addSearchPath(os.path.dirname(os.path.abspath(__file__)))
 #   The container will have a unique ID.
 @pytest.fixture
 def definition_container():
-    uid = str(uuid.uuid4().int)
+    uid = str(uuid.uuid4())
     result = UM.Settings.DefinitionContainer.DefinitionContainer(uid)
     assert result.getId() == uid
     return result
@@ -377,7 +377,7 @@ def _test_serialize_cycle(definition_container, ignored_metadata_keys = None):
     # No need to verify the internationalisation catalogue.
 
     serialised = definition_container.serialize(ignored_metadata_keys = ignored_metadata_keys)
-    deserialised = UM.Settings.DefinitionContainer.DefinitionContainer(uuid.uuid4().int)
+    deserialised = UM.Settings.DefinitionContainer.DefinitionContainer(str(uuid.uuid4()))
     deserialised.deserialize(serialised)
 
     # remove ignored keys from metadata dict

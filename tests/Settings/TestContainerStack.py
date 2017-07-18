@@ -24,8 +24,8 @@ from UM.Settings.ContainerStack import InvalidContainerStackError
 #   actual implementations, the tests in this suite are unaffected.
 class MockContainer(ContainerInterface):
     ##  Creates a mock container with a new unique ID.
-    def __init__(self, container_id = None):
-        self._id = uuid.uuid4().int if container_id is None else container_id
+    def __init__(self, container_id: str = None):
+        self._id = str(uuid.uuid4() if container_id is None else container_id)
         self._metadata = {}
         self.items = {}
 
@@ -121,7 +121,7 @@ class MockContainer(ContainerInterface):
 #   The container stack will get a new, unique ID.
 @pytest.fixture
 def container_stack():
-    return ContainerStack(uuid.uuid4().int)
+    return ContainerStack(str(uuid.uuid4()))
 
 ##  Tests the creation of a container stack.
 #
@@ -256,7 +256,7 @@ def test_deserialize_containers(container_stack, container_registry):
     container_stack.deserialize(serialised)
     assert container_stack.getContainers() == [container]
 
-    container_stack = ContainerStack(uuid.uuid4().int)
+    container_stack = ContainerStack(str(uuid.uuid4()))
     serialised = """
     [general]
     name = Test
@@ -269,7 +269,7 @@ def test_deserialize_containers(container_stack, container_registry):
     container_stack.deserialize(serialised)
     assert container_stack.getContainers() == []
 
-    container_stack = ContainerStack(uuid.uuid4().int)
+    container_stack = ContainerStack(str(uuid.uuid4()))
     serialised = """
     [general]
     name = Test
@@ -284,7 +284,7 @@ def test_deserialize_containers(container_stack, container_registry):
     container_stack.deserialize(serialised)
     assert container_stack.getContainers() == [container, container]
 
-    container_stack = ContainerStack(uuid.uuid4().int)
+    container_stack = ContainerStack(str(uuid.uuid4()))
     serialised = """
     [general]
     name = Test
@@ -299,7 +299,7 @@ def test_deserialize_containers(container_stack, container_registry):
     with pytest.raises(Exception):
         container_stack.deserialize(serialised)
 
-    container_stack = ContainerStack(uuid.uuid4().int)
+    container_stack = ContainerStack(str(uuid.uuid4()))
     container_b = InstanceContainer("b") # Add the missing container and try again.
     ContainerRegistry.getInstance().addContainer(container_b)
     container_stack.deserialize(serialised)
@@ -558,22 +558,22 @@ def test_serialize(container_stack):
     _test_serialize_cycle(container_stack)
 
     # Case with one subcontainer.
-    container = InstanceContainer(uuid.uuid4().int)
+    container = InstanceContainer(str(uuid.uuid4()))
     registry.addContainer(container)
     container_stack.addContainer(container)
     _test_serialize_cycle(container_stack)
 
     # Case with two subcontainers.
-    container = InstanceContainer(uuid.uuid4().int)
+    container = InstanceContainer(str(uuid.uuid4()))
     registry.addContainer(container)
     container_stack.addContainer(container) # Already had one, if all previous assertions were correct.
     _test_serialize_cycle(container_stack)
 
     # Case with all types of subcontainers.
-    container = DefinitionContainer(uuid.uuid4().int)
+    container = DefinitionContainer(str(uuid.uuid4()))
     registry.addContainer(container)
     container_stack.addContainer(container)
-    container = ContainerStack(uuid.uuid4().int)
+    container = ContainerStack(str(uuid.uuid4()))
     registry.addContainer(container)
     container_stack.addContainer(container)
     _test_serialize_cycle(container_stack)
@@ -595,9 +595,9 @@ def test_serialize(container_stack):
     _test_serialize_cycle(container_stack)
 
     # A container that is not in the registry.
-    container_stack.addContainer(DefinitionContainer(uuid.uuid4().int))
+    container_stack.addContainer(DefinitionContainer(str(uuid.uuid4())))
     serialised = container_stack.serialize()
-    container_stack = ContainerStack(uuid.uuid4().int) # Completely fresh container stack.
+    container_stack = ContainerStack(str(uuid.uuid4())) # Completely fresh container stack.
     with pytest.raises(Exception):
         container_stack.deserialize(serialised)
 
@@ -610,20 +610,20 @@ def test_serialize_with_ignored_metadata_keys(container_stack):
     registry = ContainerRegistry.getInstance()  # All containers need to be registered in order to be recovered again after deserialising.
 
     # Case with one subcontainer.
-    container = InstanceContainer(uuid.uuid4().int)
+    container = InstanceContainer(str(uuid.uuid4()))
     registry.addContainer(container)
     container_stack.addContainer(container)
 
     # Case with two subcontainers.
-    container = InstanceContainer(uuid.uuid4().int)
+    container = InstanceContainer(str(uuid.uuid4()))
     registry.addContainer(container)
     container_stack.addContainer(container)  # Already had one, if all previous assertions were correct.
 
     # Case with all types of subcontainers.
-    container = DefinitionContainer(uuid.uuid4().int)
+    container = DefinitionContainer(str(uuid.uuid4()))
     registry.addContainer(container)
     container_stack.addContainer(container)
-    container = ContainerStack(uuid.uuid4().int)
+    container = ContainerStack(str(uuid.uuid4()))
     registry.addContainer(container)
     container_stack.addContainer(container)
 
@@ -646,9 +646,9 @@ def test_serialize_with_ignored_metadata_keys(container_stack):
     _test_serialize_cycle(container_stack, ignored_metadata_keys = ignored_metadata_keys)
 
     # A container that is not in the registry.
-    container_stack.addContainer(DefinitionContainer(uuid.uuid4().int))
+    container_stack.addContainer(DefinitionContainer(str(uuid.uuid4())))
     serialised = container_stack.serialize()
-    container_stack = ContainerStack(uuid.uuid4().int)  # Completely fresh container stack.
+    container_stack = ContainerStack(str(uuid.uuid4()))  # Completely fresh container stack.
     with pytest.raises(Exception):
         container_stack.deserialize(serialised)
 
@@ -798,7 +798,7 @@ def _test_serialize_cycle(container_stack, ignored_metadata_keys = None):
     containers = container_stack.getContainers()
 
     serialised = container_stack.serialize(ignored_metadata_keys = ignored_metadata_keys)
-    container_stack = ContainerStack(uuid.uuid4().int)  # Completely fresh container stack.
+    container_stack = ContainerStack(str(uuid.uuid4()))  # Completely fresh container stack.
     container_stack.deserialize(serialised)
 
     # remove ignored keys from metadata dict
