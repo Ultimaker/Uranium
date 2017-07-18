@@ -14,7 +14,7 @@ def getMetaData():
                     "mime_type": "application/x-stl-ascii",
                     "mode": STLWriter.STLWriter.OutputMode.TextMode,
                     "extension": "stl",
-                    "description": i18n_catalog.i18nc("@item:inlistbox", "STL File (Ascii)")
+                    "description": i18n_catalog.i18nc("@item:inlistbox", "STL File (ASCII)")
                 },
                 {
                     "mime_type": "application/x-stl-binary",
