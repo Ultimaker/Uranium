@@ -267,12 +267,13 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         parser["general"]["name"] = str(self._name)
         parser["general"]["id"] = str(self._id)
 
+        if ignored_metadata_keys is None:
+            ignored_metadata_keys = []
         parser["metadata"] = {}
-        if ignored_metadata_keys:
-            for key, value in self._metadata.items():
-                # only serialize the data that's not in the ignore list
-                if key not in ignored_metadata_keys:
-                    parser["metadata"][key] = str(value)
+        for key, value in self._metadata.items():
+            # only serialize the data that's not in the ignore list
+            if key not in ignored_metadata_keys:
+                parser["metadata"][key] = str(value)
 
         parser.add_section("containers")
         for index in range(len(self._containers)):

@@ -372,11 +372,12 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         parser["general"]["name"] = str(self._name)
         parser["general"]["definition"] = str(self._definition.getId())
 
+        if ignored_metadata_keys is None:
+            ignored_metadata_keys = []
         parser["metadata"] = {}
-        if ignored_metadata_keys:
-            for key, value in self._metadata.items():
-                if key not in ignored_metadata_keys:
-                    parser["metadata"][key] = str(value)
+        for key, value in self._metadata.items():
+            if key not in ignored_metadata_keys:
+                parser["metadata"][key] = str(value)
 
         parser["values"] = {}
         for key, instance in sorted(self._instances.items()):
