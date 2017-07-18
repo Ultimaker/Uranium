@@ -99,12 +99,12 @@ msgstr "Zapewnia obsługę pisania plików STL."
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:25
 msgctxt "@item:inlistbox"
 msgid "STL File (Ascii)"
-msgstr "Plik STL  (Ascii)"
+msgstr "Plik STL (Ascii)"
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:31
 msgctxt "@item:inlistbox"
 msgid "STL File (Binary)"
-msgstr "Plik STL  (Binary)"
+msgstr "Plik STL (Binary)"
 
 #: /home/ruben/Projects/Uranium/plugins/ConsoleLogger/__init__.py:13
 msgctxt "@label"
