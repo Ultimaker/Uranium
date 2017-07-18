@@ -13,6 +13,7 @@ from UM.Preferences import Preferences
 from UM.Resources import Resources
 from UM.Settings import SettingRelation
 from UM.i18n import i18nCatalog
+from UM.Application import Application
 
 from UM.Settings.ContainerRegistry import ContainerRegistry
 from UM.Settings.SettingDefinition import SettingDefinition, DefinitionPropertyType
@@ -599,7 +600,8 @@ class SettingDefinitionsModel(QAbstractListModel):
                 continue
 
             if child.key in self._visible:
-                return True
+                if Application.getInstance().getGlobalContainerStack().getProperty(child.key, "enabled"):
+                    return True
 
             if self._isAnyDescendantVisible(child):
                 return True
