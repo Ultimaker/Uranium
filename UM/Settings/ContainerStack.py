@@ -336,8 +336,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
         self._containers = []
         self._metadata = {}
-
-        self._name = parser["general"].get("name")
+        self.setName(parser["general"].get("name"))
         self._id = parser["general"].get("id")
 
         if "metadata" in parser:
