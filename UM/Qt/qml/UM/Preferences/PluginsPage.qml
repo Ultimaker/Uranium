@@ -207,7 +207,7 @@ PreferencesPage
                 id: pluginAuthorLabel
                 //: About plugin dialog author label
                 text: catalog.i18nc("@label", "Author:");
-                width: 0.4 * parent.width
+                width: (0.4 * parent.width) | 0
                 wrapMode: Text.WordWrap
                 anchors.top: pluginCaption.bottom
                 anchors.topMargin: 10
@@ -217,7 +217,7 @@ PreferencesPage
             {
                 id: pluginAuthor;
                 text: about_window.author_text
-                width: 0.6 * parent.width
+                width: (0.6 * parent.width) | 0
                 wrapMode: Text.WordWrap
                 anchors.top: pluginCaption.bottom
                 anchors.left: pluginAuthorLabel.right

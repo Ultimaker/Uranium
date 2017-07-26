@@ -32,7 +32,7 @@ Item {
         }
     }
 
-    Text {
+    Label {
         id: titleLabel;
 
         anchors {

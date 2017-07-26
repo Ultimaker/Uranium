@@ -82,7 +82,7 @@ PreferencesPage
                 left: parent.left;
             }
 
-            width: base.detailsVisible ? parent.width * 0.4 : parent.width;
+            width: base.detailsVisible ? (parent.width * 0.4) | 0 : parent.width;
             frameVisible: true;
 
             Rectangle {

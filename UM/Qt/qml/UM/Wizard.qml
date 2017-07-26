@@ -121,7 +121,7 @@ UM.Dialog
                                 border.width: 0
                                 color: "transparent"
                             }
-                            label: Text
+                            label: Label
                             {
                                 id: progressText
                                 horizontalAlignment: Text.AlignHCenter
@@ -148,7 +148,7 @@ UM.Dialog
                     {
                         id: progressArrow
                         anchors.top: progressButton.bottom
-                        x: (wizardProgress.width-progressArrow.width)/2
+                        x: ((wizardProgress.width - progressArrow.width) / 2) | 0
                         visible: pagesModel.get(pagesModel.count - 1) && title != pagesModel.get(pagesModel.count - 1).title ? true : false
                         UM.RecolorImage {
                             id: downArrow
