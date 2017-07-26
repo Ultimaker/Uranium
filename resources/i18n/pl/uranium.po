@@ -74,7 +74,7 @@ msgstr "Umożliwia odczytywanie plików Wavefront OBJ."
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:22
 msgctxt "@item:inlistbox"
 msgid "Wavefront OBJ File"
-msgstr "Plik Wavefront OBJ "
+msgstr "Plik Wavefront OBJ"
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:13
 #, fuzzy
@@ -309,7 +309,7 @@ msgstr "Narzędzie obrotu"
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:15
 msgctxt "@info:whatsthis"
 msgid "Provides the Rotate tool."
-msgstr "Zapewnia narzędzia obrotu.."
+msgstr "Zapewnia narzędzia obrotu."
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:19
 msgctxt "@label"
@@ -400,17 +400,17 @@ msgstr[1] "{0} minuty"
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:109
 msgctxt "@info:progress"
 msgid "Loading plugins..."
-msgstr "Wczytywanie wtyczek ..."
+msgstr "Wczytywanie wtyczek..."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:115
 msgctxt "@info:progress"
 msgid "Updating configuration..."
-msgstr "Aktualizowanie konfiguracji ..."
+msgstr "Aktualizowanie konfiguracji..."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:126
 msgctxt "@info:progress"
 msgid "Loading preferences..."
-msgstr "Ładowanie preferencji ..."
+msgstr "Ładowanie preferencji..."
 
 #: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:67
 #, python-format, python-brace-format
@@ -436,7 +436,7 @@ msgid ""
 " Please re-start the application to active the plugin."
 msgstr ""
 "Wtyczka została zainstalowana.\n"
-"Proszę ponownie uruchomić aplikację, aby aktywować wtyczkę."
+" Proszę ponownie uruchomić aplikację, aby aktywować wtyczkę."
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:122
 #, python-brace-format
