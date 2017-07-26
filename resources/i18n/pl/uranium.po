@@ -1,19 +1,17 @@
-# Uranium
-# Copyright (C) 2017 Ultimaker
-# This file is distributed under the same license as the Uranium package.
-# Ruben Dulek <r.dulek@ultimaker.com>, 2017.
+# English translations for PACKAGE package.
+# Copyright (C) 2017 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Automatically generated, 2017.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Uranium 2.6\n"
-"Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-30 15:41+0200\n"
-"PO-Revision-Date: 2017-07-13 15:50+0200\n"
-"Last-Translator: jagus85\n"
-"Language-Team: reprapy.pl\n"
-"Language: Polish\n"
-"Lang-Code: pl\n"
-"Country-Code: PL\n"
+"PO-Revision-Date: 2017-07-20 12:18+0200\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: pl_PL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -43,12 +41,12 @@ msgstr "Rejestrator plików"
 #: /home/ruben/Projects/Uranium/plugins/FileLogger/__init__.py:16
 msgctxt "@info:whatsthis"
 msgid "Outputs log information to a file in your settings folder."
-msgstr "Wypisuje informacje o pliku z folderem ustawień."
+msgstr "Wyjścia zapisują informację do pliku w folderze ustawień."
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLReader/__init__.py:12
 msgctxt "@label"
 msgid "STL Reader"
-msgstr "STL Czytnik"
+msgstr "Czytnik STL"
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLReader/__init__.py:15
 msgctxt "@info:whatsthis"
@@ -63,7 +61,7 @@ msgstr "Plik STL"
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/OBJReader/__init__.py:13
 msgctxt "@label"
 msgid "Wavefront OBJ Reader"
-msgstr "Czytnik OBJ dla Wavefront"
+msgstr "Czytnik Wavefront OBJ"
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/OBJReader/__init__.py:16
 msgctxt "@info:whatsthis"
@@ -74,27 +72,29 @@ msgstr "Umożliwia odczytywanie plików Wavefront OBJ."
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:22
 msgctxt "@item:inlistbox"
 msgid "Wavefront OBJ File"
-msgstr "Plik Wavefront OBJ"
+msgstr "Plik Wavefront OBJ "
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:13
+#, fuzzy
 msgctxt "@label"
 msgid "Wavefront OBJ Writer"
-msgstr "Wavefront OBJ autor"
+msgstr "Wavefront OBJ Writer"
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:16
 msgctxt "@info:whatsthis"
 msgid "Makes it possbile to write Wavefront OBJ files."
-msgstr "Umożliwia pisanie plików Wavefront OBJ."
+msgstr "Umożliwia tworzenie plików Wavefront OBJ."
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:13
+#, fuzzy
 msgctxt "@label"
 msgid "STL Writer"
-msgstr "STL Autor"
+msgstr "STL Writer"
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:16
 msgctxt "@info:whatsthis"
 msgid "Provides support for writing STL files."
-msgstr "Zapewnia obsługę pisania plików STL."
+msgstr "Zapewnia obsługę tworzenia plików STL."
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:25
 msgctxt "@item:inlistbox"
@@ -104,22 +104,22 @@ msgstr "Plik STL (Ascii)"
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:31
 msgctxt "@item:inlistbox"
 msgid "STL File (Binary)"
-msgstr "Plik STL (Binary)"
+msgstr "Plik STL (Binarny)"
 
 #: /home/ruben/Projects/Uranium/plugins/ConsoleLogger/__init__.py:13
 msgctxt "@label"
 msgid "Console Logger"
-msgstr "Konsola Logger"
+msgstr "Rejestrator konsoli"
 
 #: /home/ruben/Projects/Uranium/plugins/ConsoleLogger/__init__.py:16
 msgctxt "@info:whatsthis"
 msgid "Outputs log information to the console."
-msgstr "Wypisuje informacje o dzienniku do konsoli."
+msgstr "Wyjścia zapisują informację do konsoli."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/__init__.py:12
 msgctxt "@label"
 msgid "Update Checker"
-msgstr "Aktualizuj Checker"
+msgstr "Sprawdzacz aktualizacji"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/__init__.py:15
 msgctxt "@info:whatsthis"
@@ -129,13 +129,13 @@ msgstr "Sprawdza aktualizacje oprogramowania."
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:51
 msgctxt "@info"
 msgid "Could not access update information."
-msgstr "Nie można uzyskać dostępu do informacji o aktualizacji."
+msgstr "Nie można uzyskać informacji o aktualizacji."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:62
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:67
 msgctxt "@info"
 msgid "The version you are using does not support checking for updates."
-msgstr "Nie można uzyskać dostępu do informacji o aktualizacji."
+msgstr "Wersja, której używasz nie wspiera sprawdzania aktualizacji."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:78
 msgctxt "@info"
@@ -145,12 +145,12 @@ msgstr "Dostępna jest nowa wersja!"
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:79
 msgctxt "@action:button"
 msgid "Download"
-msgstr "Pobieranie"
+msgstr "Pobierz"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:91
 msgctxt "@info"
 msgid "An exception occurred while checking for updates."
-msgstr "Wystąpił wyjątek podczas sprawdzania aktualizacji."
+msgstr "Wystąpił błąd podczas sprawdzania aktualizacji."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:95
 msgctxt "@info"
@@ -165,12 +165,12 @@ msgstr "Sprawdź aktualizacje"
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/__init__.py:12
 msgctxt "@label"
 msgid "Local File Output Device"
-msgstr "Lokalny plik wyjściowy urządzenia"
+msgstr "Lokalny plik urządzenia wyjściowego"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/__init__.py:13
 msgctxt "@info:whatsthis"
 msgid "Enables saving to local files."
-msgstr "Umożliwia zapisywanie plików lokalnych."
+msgstr "Umożliwia zapisywanie do plików lokalnych."
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:33
 msgctxt "@item:inmenu"
@@ -213,20 +213,20 @@ msgstr "Zapisywanie do <filename>{0}</filename>"
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Permission denied when trying to save <filename>{0}</filename>"
-msgstr "Zezwolenie jest zabronione przy próbie zapisania <filename>{0}</filename>"
+msgstr "Odmówiono dostęp podczas zapisu <filename>{0}</filename>"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:169
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:185
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
-msgstr "Nie mogłem zapisać <filename>{0}</filename>: <message>{1}</message>"
+msgstr "Nie można zapisać do <filename>{0}</filename>: <message>{1}</message>"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:179
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Saved to <filename>{0}</filename>"
-msgstr "Saved to <filename>{0}</filename>"
+msgstr "Zapisano do <filename>{0}</filename>"
 
 # otwórz folder
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:180
@@ -247,7 +247,7 @@ msgstr "Narzędzie skalowania"
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:16
 msgctxt "@info:whatsthis"
 msgid "Provides the Scale tool."
-msgstr "Dostarcza narzędzia Skala."
+msgstr "Zapewnia narzędzia Skala."
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:20
 msgctxt "@label"
@@ -262,32 +262,32 @@ msgstr "Skaluj model"
 #: /home/ruben/Projects/Uranium/plugins/Tools/SelectionTool/__init__.py:13
 msgctxt "@label"
 msgid "Selection Tool"
-msgstr "Narzędzie wyboru"
+msgstr "Narzędzie zaznaczenia"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/SelectionTool/__init__.py:16
 msgctxt "@info:whatsthis"
 msgid "Provides the Selection tool."
-msgstr "Dostarcza narzędzia Zaznaczanie."
+msgstr "Zapewnia narzędzia Zaznaczanie."
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:13
 msgctxt "@label"
 msgid "Translate Tool"
-msgstr "Narzędzie tłumaczeń"
+msgstr "Narzędzie tłumaczenia"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:16
 msgctxt "@info:whatsthis"
 msgid "Provides the Translate tool."
-msgstr "Dostarcza narzędzia Tłumacz."
+msgstr "Zapewnia narzędzie tłumaczenia"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:20
 msgctxt "@action:button"
 msgid "Move"
-msgstr "Przenieść"
+msgstr "Przenieś"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:21
 msgctxt "@info:tooltip"
 msgid "Move Model"
-msgstr "Przenieść model"
+msgstr "Przenieś model"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/CameraTool/__init__.py:12
 msgctxt "@label"
@@ -297,22 +297,22 @@ msgstr "Narzędzia kamery"
 #: /home/ruben/Projects/Uranium/plugins/Tools/CameraTool/__init__.py:15
 msgctxt "@info:whatsthis"
 msgid "Provides the tool to manipulate the camera."
-msgstr "Dostarcza narzędzia do manipulowania kamerą."
+msgstr "Zapewnia narzędzia do poruszania kamerą."
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:12
 msgctxt "@label"
 msgid "Rotate Tool"
-msgstr "Obróć narzędzie"
+msgstr "Narzędzie obrotu"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:15
 msgctxt "@info:whatsthis"
 msgid "Provides the Rotate tool."
-msgstr "Dostarcza narzędzia Obracanie."
+msgstr "Zapewnia narzędzia obrotu.."
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:19
 msgctxt "@label"
 msgid "Rotate"
-msgstr "Obracać"
+msgstr "Obróć"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:20
 msgctxt "@info:tooltip"
@@ -322,22 +322,22 @@ msgstr "Obróć model"
 #: /home/ruben/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:12
 msgctxt "@label"
 msgid "Mirror Tool"
-msgstr "Narzędzie lustrzane"
+msgstr "Narzędzie lustrzane odbicie"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:15
 msgctxt "@info:whatsthis"
 msgid "Provides the Mirror tool."
-msgstr "Dostarcza narzędzie Lustro."
+msgstr "Zapewnia narzędzie lustrzane odbicie."
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:19
 msgctxt "@label"
 msgid "Mirror"
-msgstr "Lustro"
+msgstr "Lustrzane odbicie"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:20
 msgctxt "@info:tooltip"
 msgid "Mirror Model"
-msgstr "Model lustra"
+msgstr "Odwróć model w lustrzanym odbiciu"
 
 #: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:161
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:48
@@ -414,7 +414,7 @@ msgstr "Ładowanie preferencji ..."
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled object to {0}% of original size"
-msgstr "Obiekt skalowany do {0}% oryginalnego rozmiaru"
+msgstr "Obiekt przeskalowany do {0}% oryginalnego rozmiaru"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:84
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:92
@@ -450,13 +450,13 @@ msgstr "Nie można zainicjować OpenGL"
 #: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:55
 msgctxt "Critical OpenGL Extensions Missing"
 msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
-msgstr "Nie znaleziono rozszerzeń krytycznych OpenGL. Ten program wymaga wsparcia obiektów Framebuffera. Sprawdź sterowniki karty graficznej."
+msgstr "Nie znaleziono ważnych rozszerzeń OpenGL. Ten program wymaga wsparcia dla Framebuffer Objects. Sprawdź sterowniki karty graficznej."
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:36
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Cannot open file type <filename>{0}</filename>"
-msgstr "Nie można otworzyć pliku <filename>{0}</filename>"
+msgstr "Nie można otworzyć typu pliku <filename>{0}</filename>"
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:49
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:69
@@ -469,13 +469,13 @@ msgstr "Nie udało się załadować <filename>{0}</filename>"
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Loading <filename>{0}</filename>"
-msgstr "Ładuję<filename>{0}</filename>"
+msgstr "Ładowanie <filename>{0}</filename>"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:54
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:21
 msgctxt "@action:button"
 msgid "Reset"
-msgstr "Reset"
+msgstr "Resetuj"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:77
 msgctxt "@option:check"
@@ -490,12 +490,12 @@ msgstr "Jednolite skalowanie"
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:38
 msgctxt "@action:button"
 msgid "Lay flat"
-msgstr "Nakładać płaskie"
+msgstr "Ułóż płasko"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:53
 msgctxt "@action:checkbox"
 msgid "Snap Rotation"
-msgstr "Obrót wiązki"
+msgstr "Obrót myszką"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:20
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:148
@@ -541,7 +541,7 @@ msgstr "Brak tekstu"
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:177
 msgctxt "@title:window"
 msgid "About %1"
-msgstr "About %1"
+msgstr "Około %1"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:209
 msgctxt "@label"
@@ -604,8 +604,8 @@ msgstr "To ustawienie zostało ukryte przez aktywną drukarkę i nie będzie wid
 msgctxt "@item:tooltip %1 is list of setting names"
 msgid "This setting has been hidden by the value of %1. Change the value of that setting to make this setting visible."
 msgid_plural "This setting has been hidden by the values of %1. Change the values of those settings to make this setting visible."
-msgstr[0] "To ustawienie zostało ukryte przez wartość%1. Zmienić wartość tego ustawienia, aby to ustawienie było widoczne."
-msgstr[1] "To ustawienie zostało ukryte przez wartości%1. Zmień te wartości, aby to ustawienie było widoczne."
+msgstr[0] "To ustawienie zostało ukryte przez wartość %1. Zmień te wartość, aby to ustawienie było widoczne."
+msgstr[1] "To ustawienie zostało ukryte przez wartości %1. Zmień te wartości, aby to ustawienie było widoczne."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityPage.qml:12
 msgctxt "@title:tab"
@@ -630,12 +630,12 @@ msgstr "Drukarki"
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:39
 msgctxt "@label"
 msgid "Type"
-msgstr "Model"
+msgstr "Model/Typ"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:16
 msgctxt "@title:window"
 msgid "Confirm Remove"
-msgstr "Potwierdź Usuń"
+msgstr "Potwierdź usunięcie"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:17
 msgctxt "@label (%1 is object name)"
@@ -650,7 +650,7 @@ msgstr "Profile"
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:15
 msgctxt "@label"
 msgid "Duplicate"
-msgstr "Duplikat"
+msgstr "Duplikuj"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:45
 msgctxt "@label %1 is printer name"
@@ -665,7 +665,7 @@ msgstr "Aktualizacja \"%1\""
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:84
 msgctxt "@action:button"
 msgid "Update profile"
-msgstr "Zaktualizować profil"
+msgstr "Zaktualizuj profil"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:92
 msgctxt "@action:button"
@@ -700,32 +700,32 @@ msgstr "Profil niestandardowy"
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:139
 msgctxt "@action:button"
 msgid "Import"
-msgstr "Import"
+msgstr "Importuj"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:146
 msgctxt "@action:button"
 msgid "Export"
-msgstr "Export"
+msgstr "Eksportuj"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:184
 msgctxt "@window:title"
 msgid "Import Profile"
-msgstr "Import Profil"
+msgstr "Importuj profil"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:192
 msgctxt "@title:window"
 msgid "Import Profile"
-msgstr "Import Profil"
+msgstr "Importuj profil"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:219
 msgctxt "@title:window"
 msgid "Export Profile"
-msgstr "Export Profil"
+msgstr "Eksportuj profil"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:215
 msgctxt "@action:button"
 msgid "Back"
-msgstr "Cofnij"
+msgstr "Wstecz"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:231
 msgctxt "@action:button"
