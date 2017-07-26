@@ -77,7 +77,6 @@ msgid "Wavefront OBJ File"
 msgstr "Plik Wavefront OBJ"
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:13
-#, fuzzy
 msgctxt "@label"
 msgid "Wavefront OBJ Writer"
 msgstr "Wavefront OBJ Writer"
@@ -88,7 +87,6 @@ msgid "Makes it possbile to write Wavefront OBJ files."
 msgstr "Umożliwia tworzenie plików Wavefront OBJ."
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:13
-#, fuzzy
 msgctxt "@label"
 msgid "STL Writer"
 msgstr "STL Writer"
