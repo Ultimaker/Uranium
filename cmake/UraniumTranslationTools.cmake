@@ -4,21 +4,21 @@
 # There is no function in cmake as far as I know.
 # Found at: http://stackoverflow.com/a/7788165
 MACRO(SUBDIRLIST result curdir)
-  FILE(GLOB children RELATIVE ${curdir} ${curdir}/*)
-  SET(dirlist "")
-  FOREACH(child ${children})
-    IF(IS_DIRECTORY ${curdir}/${child})
-        STRING(REPLACE "/" "" child ${child})
-        LIST(APPEND dirlist ${child})
-    ENDIF()
-  ENDFOREACH()
-  SET(${result} ${dirlist})
+    FILE(GLOB children RELATIVE ${curdir} ${curdir}/*)
+    SET(dirlist "")
+    FOREACH(child ${children})
+        IF(IS_DIRECTORY ${curdir}/${child})
+            STRING(REPLACE "/" "" child ${child})
+            LIST(APPEND dirlist ${child})
+        ENDIF()
+    ENDFOREACH()
+    SET(${result} ${dirlist})
 ENDMACRO()
 
 
 ## Translation tools:
 
-option(CURA_BINARY_DATA_DIRECTORY "Directory to the cura-binary-data repository")
+SET(CURA_BINARY_DATA_DIRECTORY CACHE PATH "Directory to the cura-binary-data repository")
 
 if(NOT CURA_BINARY_DATA_DIRECTORY AND NOT DEFINED $ENV{CURA_BINARY_DATA_DIRECTORY})
     message(STATUS "Using CURA_BINARY_DATA_DIRECTORY from set of environment variables...")
