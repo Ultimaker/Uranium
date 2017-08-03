@@ -1,21 +1,36 @@
 #Creates the Pirate translation files.
 
 import sys #To get command line arguments.
+import pirateofdoom #Contains our translation dictionary.
+import re #Case insensitive search and replace.
 
 pot_file = sys.argv[1]
 po_file = sys.argv[2]
 
 #Translates English to Pirate.
 def translate(english):
-    import pirateofdoom
-    result = []
-    for word in english.split(" "):
-        if word in pirateofdoom.pirate:
-            result.append(pirateofdoom.pirate[word])
-        else:
-            print("Untranslated word: {word}".format(word = word))
-            result.append(word)
-    return " ".join(result)
+    for eng, pir in pirateofdoom.pirate.items():
+        position = 0
+        while True:
+            position = english.lower().find(eng.lower(), position)
+            if position < 0:
+                break
+
+            #Make sure the case is correct.
+            if english[position].lower() != english[position]:
+                uppercase = True
+            else:
+                uppercase = False
+            first_character = pir[0]
+            rest_characters = pir[1:]
+            if uppercase:
+                first_character = first_character.upper()
+            else:
+                first_character = first_character.lower()
+            pir = first_character + rest_characters
+
+            english = english[:position] + pir + english[position + len(eng):]
+    return english
 
 translations = {}
 
