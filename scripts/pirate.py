@@ -17,10 +17,7 @@ def translate(english):
                 break
 
             #Make sure the case is correct.
-            if english[position].lower() != english[position]:
-                uppercase = True
-            else:
-                uppercase = False
+            uppercase = english[position].lower() != english[position]:
             first_character = pir[0]
             rest_characters = pir[1:]
             if uppercase:
