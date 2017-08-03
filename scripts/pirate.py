@@ -10,14 +10,12 @@ po_file = sys.argv[2]
 #Translates English to Pirate.
 def translate(english):
     for eng, pir in pirateofdoom.pirate.items():
-        position = 0
-        while True:
-            position = english.lower().find(eng.lower(), position)
-            if position < 0:
-                break
-
+        matches = list(re.finditer(r"\b" + eng.lower() + r"\b", english.lower()))
+        matches = [match.start(0) for match in matches]
+        matches = reversed(sorted(matches))
+        for position in matches:
             #Make sure the case is correct.
-            uppercase = english[position].lower() != english[position]:
+            uppercase = english[position].lower() != english[position]
             first_character = pir[0]
             rest_characters = pir[1:]
             if uppercase:
