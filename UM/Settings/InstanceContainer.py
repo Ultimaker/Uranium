@@ -270,8 +270,38 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     #
     #   Reimplemented from ContainerInterface.
     def hasProperty(self, key, property_name):
-        self._instantiateCachedValues()
+        # --- Kinda a hack:
+        # When we check if a property exists, it is not necessary to flush the cache because we simply want to know
+        # whether it is there. Flushing the cache can cause propertyChanged signals being emitted, and, as a result,
+        # may cause undesired behaviours.
+        #
+        # So, in this case, we only instantiate the missing setting instances that are present in the cache (if any)
+        # **WITHOUT** applying the cached values. This way there won't be any property changed signals when we are
+        # just checking if a property exists.
+        #
+        self._instantiateMissingSettingInstancesInCache()
         return key in self._instances and hasattr(self._instances[key], property_name)
+
+    ##  Creates SettingInstances that are missing in this InstanceContainer from the cache if any.
+    #   This function will **ONLY instantiate SettingInstances. The cached values will not be applied.**
+    def _instantiateMissingSettingInstancesInCache(self):
+        if not self._cached_values:
+            return
+
+        for key, value in self._cached_values.items():
+            if key not in self._instances:
+                if not self._definition:
+                    Logger.log("w", "Tried to set value of setting %s that has no instance in container %s and the container has no definition", key, self._name)
+                    return
+
+                setting_definition = self._definition.findDefinitions(key = key)
+                if not setting_definition:
+                    Logger.log("w", "Tried to set value of setting %s that has no instance in container %s or its definition %s", key, self._name, self._definition.getName())
+                    return
+
+                instance = SettingInstance(setting_definition[0], self)
+                instance.propertyChanged.connect(self.propertyChanged)
+                self._instances[instance.definition.key] = instance
 
     ##  Set the value of a property of a SettingInstance.
     #
