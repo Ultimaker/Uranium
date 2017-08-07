@@ -5,125 +5,45 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Uranium 2.6\n"
+"Project-Id-Version: Uranium 2.7\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
-"POT-Creation-Date: 2017-05-30 15:41+0200\n"
+"POT-Creation-Date: 2017-08-02 14:05+0200\n"
 "PO-Revision-Date: 2017-06-07 16:04+0200\n"
 "Last-Translator: Bothof <info@bothof.nl>\n"
 "Language-Team: Spanish <info@bothof.nl>\n"
 "Language: Spanish\n"
-"Lang-Code: es\n"
-"Country-Code: ES\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Lang-Code: es\n"
+"Country-Code: ES\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: /home/ruben/Projects/Uranium/plugins/Views/SimpleView/__init__.py:13
-msgctxt "@label"
-msgid "Simple View"
-msgstr "Vista básica"
-
-#: /home/ruben/Projects/Uranium/plugins/Views/SimpleView/__init__.py:16
-msgctxt "@info:whatsthis"
-msgid "Provides a simple solid mesh view."
-msgstr "Proporciona una vista básica de malla sólida."
-
-#: /home/ruben/Projects/Uranium/plugins/Views/SimpleView/__init__.py:20
+#: /home/ruben/Projects/Uranium/plugins/Views/SimpleView/__init__.py:12
 msgctxt "@item:inmenu"
 msgid "Simple"
 msgstr "Básica"
 
-#: /home/ruben/Projects/Uranium/plugins/FileLogger/__init__.py:13
-msgctxt "@label"
-msgid "File Logger"
-msgstr "Registro de archivos"
-
-#: /home/ruben/Projects/Uranium/plugins/FileLogger/__init__.py:16
-msgctxt "@info:whatsthis"
-msgid "Outputs log information to a file in your settings folder."
-msgstr "Proporciona información de registro a un archivo en la carpeta de ajustes."
-
-#: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLReader/__init__.py:12
-msgctxt "@label"
-msgid "STL Reader"
-msgstr "Lector de STL"
-
-#: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLReader/__init__.py:15
-msgctxt "@info:whatsthis"
-msgid "Provides support for reading STL files."
-msgstr "Permite leer archivos STL."
-
-#: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLReader/__init__.py:21
+#: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLReader/__init__.py:14
 msgctxt "@item:inlistbox"
 msgid "STL File"
 msgstr "Archivo STL"
 
-#: /home/ruben/Projects/Uranium/plugins/FileHandlers/OBJReader/__init__.py:13
-msgctxt "@label"
-msgid "Wavefront OBJ Reader"
-msgstr "Lector de Wavefront OBJ"
-
-#: /home/ruben/Projects/Uranium/plugins/FileHandlers/OBJReader/__init__.py:16
-msgctxt "@info:whatsthis"
-msgid "Makes it possbile to read Wavefront OBJ files."
-msgstr "Permite leer archivos Wavefront OBJ."
-
-#: /home/ruben/Projects/Uranium/plugins/FileHandlers/OBJReader/__init__.py:22
-#: /home/ruben/Projects/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:22
+#: /home/ruben/Projects/Uranium/plugins/FileHandlers/OBJReader/__init__.py:15
+#: /home/ruben/Projects/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:15
 msgctxt "@item:inlistbox"
 msgid "Wavefront OBJ File"
 msgstr "Archivo Wavefront OBJ"
 
-#: /home/ruben/Projects/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:13
-msgctxt "@label"
-msgid "Wavefront OBJ Writer"
-msgstr "Escritor de Wavefront OBJ"
-
-#: /home/ruben/Projects/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:16
-msgctxt "@info:whatsthis"
-msgid "Makes it possbile to write Wavefront OBJ files."
-msgstr "Permite escribir archivos Wavefront OBJ."
-
-#: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:13
-msgctxt "@label"
-msgid "STL Writer"
-msgstr "Escritor de STL"
-
-#: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:16
-msgctxt "@info:whatsthis"
-msgid "Provides support for writing STL files."
-msgstr "Permite la escritura de archivos STL."
-
-#: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:25
+#: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:17
 msgctxt "@item:inlistbox"
-msgid "STL File (Ascii)"
-msgstr "Archivo STL (ASCII)"
+msgid "STL File (ASCII)"
+msgstr ""
 
-#: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:31
+#: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:23
 msgctxt "@item:inlistbox"
 msgid "STL File (Binary)"
 msgstr "Archivo STL (binario)"
-
-#: /home/ruben/Projects/Uranium/plugins/ConsoleLogger/__init__.py:13
-msgctxt "@label"
-msgid "Console Logger"
-msgstr "Registro de la consola"
-
-#: /home/ruben/Projects/Uranium/plugins/ConsoleLogger/__init__.py:16
-msgctxt "@info:whatsthis"
-msgid "Outputs log information to the console."
-msgstr "Proporciona información de registro a la consola."
-
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/__init__.py:12
-msgctxt "@label"
-msgid "Update Checker"
-msgstr "Comprobador de actualizaciones"
-
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/__init__.py:15
-msgctxt "@info:whatsthis"
-msgid "Checks for updates of the software."
-msgstr "Comprueba si hay actualizaciones de software."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:51
 msgctxt "@info"
@@ -161,16 +81,6 @@ msgctxt "@item:inmenu"
 msgid "Check for Updates"
 msgstr "Buscar actualizaciones"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/__init__.py:12
-msgctxt "@label"
-msgid "Local File Output Device"
-msgstr "Dispositivo de salida del archivo local"
-
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/__init__.py:13
-msgctxt "@info:whatsthis"
-msgid "Enables saving to local files."
-msgstr "Permite guardar en archivos locales."
-
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:33
 msgctxt "@item:inmenu"
 msgid "Local File"
@@ -191,155 +101,95 @@ msgctxt "@title:window"
 msgid "Save to File"
 msgstr "Guardar en archivo"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:129
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:121
 msgctxt "@title:window"
 msgid "File Already Exists"
 msgstr "El archivo ya existe"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:129
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:121
 #, python-brace-format
 msgctxt "@label"
 msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
 msgstr "El archivo <filename>{0}</filename> ya existe. ¿Está seguro de que desea sobrescribirlo?"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:158
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:150
 #, python-brace-format
 msgctxt "@info:progress"
 msgid "Saving to <filename>{0}</filename>"
 msgstr "Guardar en <filename>{0}</filename>"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:166
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:158
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Permission denied when trying to save <filename>{0}</filename>"
 msgstr "Permiso denegado al intentar guardar en <filename>{0}</filename>"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:169
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:185
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:161
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:177
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
 msgstr "No se pudo guardar en <filename>{0}</filename>: <message>{1}</message>"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:179
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:171
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Saved to <filename>{0}</filename>"
 msgstr "Guardado en <filename>{0}</filename>"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:180
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:172
 msgctxt "@action:button"
 msgid "Open Folder"
 msgstr "Abrir carpeta"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:180
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:172
 msgctxt "@info:tooltip"
 msgid "Open the folder containing the file"
 msgstr "Abre la carpeta que contiene el archivo"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:13
-msgctxt "@label"
-msgid "Scale Tool"
-msgstr "Herramienta Escala"
-
-#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:16
-msgctxt "@info:whatsthis"
-msgid "Provides the Scale tool."
-msgstr "Proporciona la herramienta Escala."
-
-#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:20
+#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:12
 msgctxt "@label"
 msgid "Scale"
 msgstr "Escalar"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:21
+#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:13
 msgctxt "@info:tooltip"
 msgid "Scale Model"
 msgstr "Modelo Escalar"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/SelectionTool/__init__.py:13
-msgctxt "@label"
-msgid "Selection Tool"
-msgstr "Herramienta Selección"
-
-#: /home/ruben/Projects/Uranium/plugins/Tools/SelectionTool/__init__.py:16
-msgctxt "@info:whatsthis"
-msgid "Provides the Selection tool."
-msgstr "Proporciona la herramienta Selección."
-
-#: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:13
-msgctxt "@label"
-msgid "Translate Tool"
-msgstr "Herramienta Traducir"
-
-#: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:16
-msgctxt "@info:whatsthis"
-msgid "Provides the Translate tool."
-msgstr "Proporciona la herramienta Traducir."
-
-#: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:20
+#: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:12
 msgctxt "@action:button"
 msgid "Move"
 msgstr "Mover"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:21
+#: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:13
 msgctxt "@info:tooltip"
 msgid "Move Model"
 msgstr "Modelo Mover"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/CameraTool/__init__.py:12
-msgctxt "@label"
-msgid "Camera Tool"
-msgstr "Herramienta Cámara"
-
-#: /home/ruben/Projects/Uranium/plugins/Tools/CameraTool/__init__.py:15
-msgctxt "@info:whatsthis"
-msgid "Provides the tool to manipulate the camera."
-msgstr "Proporciona la herramienta para controlar la cámara."
-
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:12
-msgctxt "@label"
-msgid "Rotate Tool"
-msgstr "Herramienta Rotar"
-
-#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:15
-msgctxt "@info:whatsthis"
-msgid "Provides the Rotate tool."
-msgstr "Proporciona la herramienta Rotar."
-
-#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:19
 msgctxt "@label"
 msgid "Rotate"
 msgstr "Rotar"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:20
+#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:13
 msgctxt "@info:tooltip"
 msgid "Rotate Model"
 msgstr "Modelo Rotar"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:12
 msgctxt "@label"
-msgid "Mirror Tool"
-msgstr "Herramienta Espejo"
-
-#: /home/ruben/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:15
-msgctxt "@info:whatsthis"
-msgid "Provides the Mirror tool."
-msgstr "Proporciona la herramienta Espejo."
-
-#: /home/ruben/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:19
-msgctxt "@label"
 msgid "Mirror"
 msgstr "Espejo"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:20
+#: /home/ruben/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:13
 msgctxt "@info:tooltip"
 msgid "Mirror Model"
 msgstr "Modelo Espejo"
 
 #: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:161
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:48
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:66
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:76
 #: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:67
 #, python-brace-format
 msgctxt "@item:inlistbox"
@@ -348,7 +198,7 @@ msgstr "Todos los tipos compatibles ({0})"
 
 #: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:164
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:49
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:67
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:77
 #: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:68
 msgctxt "@item:inlistbox"
 msgid "All Files (*)"
@@ -414,21 +264,32 @@ msgctxt "@info:status"
 msgid "Auto scaled object to {0}% of original size"
 msgstr "Escalado automático del objeto al {0}% del tamaño original"
 
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:84
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:92
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:95
+msgctxt "@info:status"
+msgid ""
+"The plugin has been installed.\n"
+"Please re-start the application to activate the plugin."
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:106
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:140
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
 "Failed to install plugin from <filename>{0}</filename>:\n"
 "<message>{1}</message>"
-msgstr "No se ha podido instalar el complemento desde <filename>{0}</filename>:\n<message>{1}</message>"
+msgstr ""
+"No se ha podido instalar el complemento desde <filename>{0}</filename>:\n"
+"<message>{1}</message>"
 
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:94
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:127
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:132
+#, python-brace-format
 msgctxt "@info:status"
 msgid ""
-"The plugin has been installed.\n"
-" Please re-start the application to active the plugin."
-msgstr "El complemento se ha instalado.\n Reinicie la aplicación para activarlo."
+"Failed to install the plugin;\n"
+"<message>{0}</message>"
+msgstr ""
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:122
 #, python-brace-format
@@ -436,12 +297,12 @@ msgctxt "@info:version-upgrade"
 msgid "A configuration from an older version of {0} was imported."
 msgstr "Se ha importado una versión anterior de {0}."
 
-#: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:45
+#: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:46
 msgctxt "@message"
 msgid "Failed to Initialize OpenGL"
 msgstr "Error al inicializar OpenGL"
 
-#: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:55
+#: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:56
 msgctxt "Critical OpenGL Extensions Missing"
 msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
 msgstr "Faltan extensiones críticas de OpenGL. Este programa debe ser compatible con Framebuffer Objects. Compruebe los controladores de las tarjetas de vídeo."
@@ -465,18 +326,18 @@ msgctxt "@info:status"
 msgid "Loading <filename>{0}</filename>"
 msgstr "Cargando <filename>{0}</filename>"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:54
+#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:60
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:21
 msgctxt "@action:button"
 msgid "Reset"
 msgstr "Restablecer"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:77
+#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:83
 msgctxt "@option:check"
 msgid "Snap Scaling"
 msgstr "Ajustar escala"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:94
+#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:100
 msgctxt "@option:check"
 msgid "Uniform Scaling"
 msgstr "Escala uniforme"
@@ -730,6 +591,288 @@ msgstr "Finalizar"
 msgctxt "@action:button"
 msgid "Next"
 msgstr "Siguiente"
+
+#: Views/SimpleView/plugin.json
+msgctxt "description"
+msgid "Provides a simple solid mesh view."
+msgstr ""
+
+#: Views/SimpleView/plugin.json
+msgctxt "name"
+msgid "Simple View"
+msgstr ""
+
+#: FileLogger/plugin.json
+msgctxt "description"
+msgid "Outputs log information to a file in your settings folder."
+msgstr ""
+
+#: FileLogger/plugin.json
+msgctxt "name"
+msgid "File Logger"
+msgstr ""
+
+#: FileHandlers/STLReader/plugin.json
+msgctxt "description"
+msgid "Provides support for reading STL files."
+msgstr ""
+
+#: FileHandlers/STLReader/plugin.json
+msgctxt "name"
+msgid "STL Reader"
+msgstr ""
+
+#: FileHandlers/OBJReader/plugin.json
+msgctxt "description"
+msgid "Makes it possible to read Wavefront OBJ files."
+msgstr ""
+
+#: FileHandlers/OBJReader/plugin.json
+msgctxt "name"
+msgid "Wavefront OBJ Reader"
+msgstr ""
+
+#: FileHandlers/OBJWriter/plugin.json
+msgctxt "description"
+msgid "Makes it possible to write Wavefront OBJ files."
+msgstr ""
+
+#: FileHandlers/OBJWriter/plugin.json
+msgctxt "name"
+msgid "Wavefront OBJ Writer"
+msgstr ""
+
+#: FileHandlers/STLWriter/plugin.json
+msgctxt "description"
+msgid "Provides support for writing STL files."
+msgstr ""
+
+#: FileHandlers/STLWriter/plugin.json
+msgctxt "name"
+msgid "STL Writer"
+msgstr ""
+
+#: ConsoleLogger/plugin.json
+msgctxt "description"
+msgid "Outputs log information to the console."
+msgstr ""
+
+#: ConsoleLogger/plugin.json
+msgctxt "name"
+msgid "Console Logger"
+msgstr ""
+
+#: UpdateChecker/plugin.json
+msgctxt "description"
+msgid "Checks for updates of the software."
+msgstr ""
+
+#: UpdateChecker/plugin.json
+msgctxt "name"
+msgid "Update Checker"
+msgstr ""
+
+#: LocalFileOutputDevice/plugin.json
+msgctxt "description"
+msgid "Enables saving to local files."
+msgstr ""
+
+#: LocalFileOutputDevice/plugin.json
+msgctxt "name"
+msgid "Local File Output Device"
+msgstr ""
+
+#: Tools/ScaleTool/plugin.json
+msgctxt "description"
+msgid "Provides the Scale tool."
+msgstr ""
+
+#: Tools/ScaleTool/plugin.json
+msgctxt "name"
+msgid "Scale Tool"
+msgstr ""
+
+#: Tools/SelectionTool/plugin.json
+msgctxt "description"
+msgid "Provides the Selection tool."
+msgstr ""
+
+#: Tools/SelectionTool/plugin.json
+msgctxt "name"
+msgid "Selection Tool"
+msgstr ""
+
+#: Tools/TranslateTool/plugin.json
+msgctxt "description"
+msgid "Provides the Translate tool."
+msgstr ""
+
+#: Tools/TranslateTool/plugin.json
+msgctxt "name"
+msgid "Translate Tool"
+msgstr ""
+
+#: Tools/CameraTool/plugin.json
+msgctxt "description"
+msgid "Provides the tool to manipulate the camera."
+msgstr ""
+
+#: Tools/CameraTool/plugin.json
+msgctxt "name"
+msgid "Camera Tool"
+msgstr ""
+
+#: Tools/RotateTool/plugin.json
+msgctxt "description"
+msgid "Provides the Rotate tool."
+msgstr ""
+
+#: Tools/RotateTool/plugin.json
+msgctxt "name"
+msgid "Rotate Tool"
+msgstr ""
+
+#: Tools/MirrorTool/plugin.json
+msgctxt "description"
+msgid "Provides the Mirror tool."
+msgstr ""
+
+#: Tools/MirrorTool/plugin.json
+msgctxt "name"
+msgid "Mirror Tool"
+msgstr ""
+
+#~ msgctxt "@label"
+#~ msgid "Simple View"
+#~ msgstr "Vista básica"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides a simple solid mesh view."
+#~ msgstr "Proporciona una vista básica de malla sólida."
+
+#~ msgctxt "@label"
+#~ msgid "File Logger"
+#~ msgstr "Registro de archivos"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Outputs log information to a file in your settings folder."
+#~ msgstr "Proporciona información de registro a un archivo en la carpeta de ajustes."
+
+#~ msgctxt "@label"
+#~ msgid "STL Reader"
+#~ msgstr "Lector de STL"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides support for reading STL files."
+#~ msgstr "Permite leer archivos STL."
+
+#~ msgctxt "@label"
+#~ msgid "Wavefront OBJ Reader"
+#~ msgstr "Lector de Wavefront OBJ"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Makes it possbile to read Wavefront OBJ files."
+#~ msgstr "Permite leer archivos Wavefront OBJ."
+
+#~ msgctxt "@label"
+#~ msgid "Wavefront OBJ Writer"
+#~ msgstr "Escritor de Wavefront OBJ"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Makes it possbile to write Wavefront OBJ files."
+#~ msgstr "Permite escribir archivos Wavefront OBJ."
+
+#~ msgctxt "@label"
+#~ msgid "STL Writer"
+#~ msgstr "Escritor de STL"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides support for writing STL files."
+#~ msgstr "Permite la escritura de archivos STL."
+
+#~ msgctxt "@item:inlistbox"
+#~ msgid "STL File (Ascii)"
+#~ msgstr "Archivo STL (ASCII)"
+
+#~ msgctxt "@label"
+#~ msgid "Console Logger"
+#~ msgstr "Registro de la consola"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Outputs log information to the console."
+#~ msgstr "Proporciona información de registro a la consola."
+
+#~ msgctxt "@label"
+#~ msgid "Update Checker"
+#~ msgstr "Comprobador de actualizaciones"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Checks for updates of the software."
+#~ msgstr "Comprueba si hay actualizaciones de software."
+
+#~ msgctxt "@label"
+#~ msgid "Local File Output Device"
+#~ msgstr "Dispositivo de salida del archivo local"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Enables saving to local files."
+#~ msgstr "Permite guardar en archivos locales."
+
+#~ msgctxt "@label"
+#~ msgid "Scale Tool"
+#~ msgstr "Herramienta Escala"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides the Scale tool."
+#~ msgstr "Proporciona la herramienta Escala."
+
+#~ msgctxt "@label"
+#~ msgid "Selection Tool"
+#~ msgstr "Herramienta Selección"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides the Selection tool."
+#~ msgstr "Proporciona la herramienta Selección."
+
+#~ msgctxt "@label"
+#~ msgid "Translate Tool"
+#~ msgstr "Herramienta Traducir"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides the Translate tool."
+#~ msgstr "Proporciona la herramienta Traducir."
+
+#~ msgctxt "@label"
+#~ msgid "Camera Tool"
+#~ msgstr "Herramienta Cámara"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides the tool to manipulate the camera."
+#~ msgstr "Proporciona la herramienta para controlar la cámara."
+
+#~ msgctxt "@label"
+#~ msgid "Rotate Tool"
+#~ msgstr "Herramienta Rotar"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides the Rotate tool."
+#~ msgstr "Proporciona la herramienta Rotar."
+
+#~ msgctxt "@label"
+#~ msgid "Mirror Tool"
+#~ msgstr "Herramienta Espejo"
+
+#~ msgctxt "@info:whatsthis"
+#~ msgid "Provides the Mirror tool."
+#~ msgstr "Proporciona la herramienta Espejo."
+
+#~ msgctxt "@info:status"
+#~ msgid ""
+#~ "The plugin has been installed.\n"
+#~ " Please re-start the application to active the plugin."
+#~ msgstr ""
+#~ "El complemento se ha instalado.\n"
+#~ " Reinicie la aplicación para activarlo."
 
 #~ msgctxt "@label"
 #~ msgid "Wireframe View"
