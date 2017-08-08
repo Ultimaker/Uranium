@@ -280,6 +280,8 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         # just checking if a property exists.
         #
         self._instantiateMissingSettingInstancesInCache()
+        if self._cached_values and key in self._cached_values and property_name == "value":
+            return True
         return key in self._instances and hasattr(self._instances[key], property_name)
 
     ##  Creates SettingInstances that are missing in this InstanceContainer from the cache if any.
