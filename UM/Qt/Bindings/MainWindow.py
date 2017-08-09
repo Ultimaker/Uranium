@@ -201,11 +201,6 @@ class MainWindow(QQuickWindow):
             self._preferences.setValue("general/window_state", Qt.WindowMaximized)
 
     def _updateViewportGeometry(self, width, height):
-        # A window resize signal may get triggered on Mac OS X when the main window gets closed.
-        # This triggers a viewport update which causes a crash when it tries to do something with OpenGL.
-        # This check makes sure this won't happen.
-        if self._app.isShuttingDown():
-            return
         view_width = width * self._viewport_rect.width()
         view_height = height * self._viewport_rect.height()
 

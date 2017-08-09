@@ -1,5 +1,7 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
+
+from UM.Application import Application
 
 from UM.Logger import Logger
 
@@ -118,6 +120,10 @@ class RenderPass:
     ## private:
 
     def _updateRenderStorage(self):
+        # On Mac OS X, this function may get called by a main window resize signal during closing.
+        # This will cause a crash, so don't do anything when it is shutting down.
+        if Application.getInstance().isShuttingDown():
+            return
         if self._width <= 0 or self._height <= 0:
             Logger.log("w", "Tried to create render pass with size <= 0")
             return
