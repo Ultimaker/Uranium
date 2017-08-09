@@ -82,10 +82,11 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         return new_container
 
     def __eq__(self, other):
-        self._instantiateCachedValues()
         if type(self) != type(other):
             return False  # Type mismatch
 
+        self._instantiateCachedValues()
+        other._instantiateCachedValues()
         if self._id != other.getId():
             return False  # ID mismatch
 
