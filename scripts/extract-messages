@@ -32,4 +32,11 @@ for pot in $basedir/resources/i18n/*.pot; do
     msginit --no-translator -l en -i $pot -o $po
     msgfilter --keep-header -i $po -o $po sed -e "s/.*/xx&xx/"
     msgfilter -i $po -o $po sed -e "s/Language: en/Language: x-test/"
+
+    #Auto-translate the translation files to Pirate.
+    dir=$basedir/resources/i18n/7s
+    mkdir -p $dir
+    po=$dir/${filename/.pot/.po}
+    python3 $scriptdir/pirate.py $pot $po
+    echo Created $po.
 done
