@@ -39,6 +39,18 @@ class LayFlatOperation(Operation.Operation):
         else:
             self._new_orientation = self._old_orientation
 
+        self._transformed_vertices = None
+
+    def _getTransformedVerticesFromNode(self, node):
+        for child in node.getChildren():
+            if not child.callDecoration("isGroup"):
+                if self._transformed_vertices is None:
+                    self._transformed_vertices = child.getMeshDataTransformed().getVertices()
+                else:
+                    self._transformed_vertices = numpy.concatenate((self._transformed_vertices, child.getMeshDataTransformed().getVertices()), axis = 0)
+            else:
+                self._getTransformedVerticesFromNode(child)
+
     ##  Computes some orientation to hopefully lay the object flat.
     #
     #   No promises! This algorithm finds the lowest three vertices and lays
@@ -48,16 +60,13 @@ class LayFlatOperation(Operation.Operation):
         # Note: Y & Z axis are swapped
 
         #Transform mesh first to get the current positions of the vertices.
-        transformed_vertices = None
+        self._transformed_vertices = None
         if not self._node.callDecoration("isGroup"):
-            transformed_vertices = self._node.getMeshDataTransformed().getVertices()
+            self._transformed_vertices = self._node.getMeshDataTransformed().getVertices()
         else:
             #For groups, get the vertices of all children and process them as a single mesh
-            for child in self._node.getChildren():
-                if transformed_vertices is None:
-                    transformed_vertices = child.getMeshDataTransformed().getVertices()
-                else:
-                    transformed_vertices = numpy.concatenate((transformed_vertices, child.getMeshDataTransformed().getVertices()), axis = 0)
+            self._getTransformedVerticesFromNode(self._node)
+        transformed_vertices = self._transformed_vertices
 
         min_y_vertex = transformed_vertices[transformed_vertices.argmin(0)[1]]
         dot_min = 1.0 #Minimum y-component of direction vector.
@@ -86,16 +95,14 @@ class LayFlatOperation(Operation.Operation):
         self._node.rotate(Quaternion.fromAngleAxis(rad, Vector.Unit_Z), SceneNode.TransformSpace.Parent)
 
         #Apply the transformation so we get new vertex coordinates.
-        transformed_vertices = None
+        self._transformed_vertices = None
         if not self._node.callDecoration("isGroup"):
-            transformed_vertices = self._node.getMeshDataTransformed().getVertices()
+            self._transformed_vertices = self._node.getMeshDataTransformed().getVertices()
         else:
-            #For groups, get the vertices of all children and process them as a single mesh
-            for child in self._node.getChildren():
-                if transformed_vertices is None:
-                    transformed_vertices = child.getMeshDataTransformed().getVertices()
-                else:
-                    transformed_vertices = numpy.concatenate((transformed_vertices, child.getMeshDataTransformed().getVertices()), axis = 0)
+            # For groups, get the vertices of all children and process them as a single mesh
+            self._getTransformedVerticesFromNode(self._node)
+        transformed_vertices = self._transformed_vertices
+
         min_y_vertex = transformed_vertices[transformed_vertices.argmin(0)[1]]
         dot_min = 1.0
         dot_v = None

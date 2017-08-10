@@ -220,11 +220,7 @@ class RotateTool(Tool):
         self._iterations = 0
         self._total_iterations = 0
         for selected_object in Selection.getAllSelectedObjects():
-            if not selected_object.callDecoration("isGroup"):
-                self._total_iterations += len(selected_object.getMeshDataTransformed().getVertices()) * 2
-            else:
-                for child in selected_object.getChildren():
-                    self._total_iterations += len(child.getMeshDataTransformed().getVertices()) * 2
+            self._layObjectFlat(selected_object)
 
         self._progress_message.show()
 
@@ -235,6 +231,14 @@ class RotateTool(Tool):
         job = LayFlatJob(operations)
         job.finished.connect(self._layFlatFinished)
         job.start()
+
+    ##  Lays the given object flat. The given object can be a group or not.
+    def _layObjectFlat(self, selected_object):
+        if not selected_object.callDecoration("isGroup"):
+            self._total_iterations += len(selected_object.getMeshDataTransformed().getVertices()) * 2
+        else:
+            for child in selected_object.getChildren():
+                self._layObjectFlat(child)
 
     ##  Called while performing the LayFlatOperation so progress can be shown
     #
