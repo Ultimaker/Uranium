@@ -30,7 +30,9 @@ pirate = {
     "shield": "sail",
     "your": "yer",
     "the": "th'",
+    "travel": "sail",
     "wireframe": "ropey",
+    "wire": "rope",
     "are": "be",
     "is": "be",
     "there": "thar",
@@ -40,5 +42,9 @@ pirate = {
     "print": "scribble",
     "printing": "scribblin'",
     "load": "haul",
-    "connect to": "commandeer",
+    "connect to": "board",
+    "collects": "hoards",
+    "prime tower": "buoy",
+    "change log": "captain's log",
+    "my": "me"
 }
