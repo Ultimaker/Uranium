@@ -570,7 +570,7 @@ class _EmptyInstanceContainer(InstanceContainer):
     def getProperty(self, key, property_name):
         return None
 
-    def setProperty(self, key, property_name, property_value, container = None):
+    def setProperty(self, key, property_name, property_value, container = None, set_from_cache = False):
         Logger.log("e", "Setting property %s of container %s which should remain empty", key, self.getName())
         return
 
