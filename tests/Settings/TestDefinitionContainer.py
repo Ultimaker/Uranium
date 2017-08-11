@@ -39,7 +39,7 @@ test_deserialize_data = [
         "test_child_0": { "label": "Test Child 0", "default_value": 10, "description": "A Test Setting"},
         "test_child_1": { "label": "Test Child 1", "default_value": 10, "description": "A Test Setting"},
     }}),
-    ("inherits.def.json", { "name": "Inherits", "metadata": {"author": "Ultimaker", "category": "Other", "manufacturer": "Ultimaker" }, "settings": {
+    ("inherits.def.json", { "name": "Inherits", "metadata": {"author": "Ultimaker", "category": "Other", "manufacturer": "Ultimaker B.V." }, "settings": {
         "test_setting": { "label": "Test", "default_value": 11, "description": "A Test Setting" },
         "test_setting_1": { "label": "Test 1", "default_value": 10, "description": "A Test Setting" },
     }}),
