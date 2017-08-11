@@ -2,13 +2,13 @@
 # Copyright (C) 2017 Ultimaker
 # This file is distributed under the same license as the Uranium package.
 # Ruben Dulek <r.dulek@ultimaker.com>, 2017.
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Uranium 2.7\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2017-08-02 14:05+0200\n"
-"PO-Revision-Date: 2017-05-31 20:12+0300\n"
+"PO-Revision-Date: 2017-08-09 08:55+0300\n"
 "Last-Translator: Ruslan Popov <ruslan.popov@gmail.com>\n"
 "Language-Team: Ruslan Popov\n"
 "Language: ru\n"
@@ -39,7 +39,7 @@ msgstr "Wavefront OBJ File"
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:17
 msgctxt "@item:inlistbox"
 msgid "STL File (ASCII)"
-msgstr ""
+msgstr "Файл STL (ASCII)"
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:23
 msgctxt "@item:inlistbox"
@@ -274,6 +274,8 @@ msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
 msgstr ""
+"Плагин был установлен\n"
+"Пожалуйста, перезапустите приложение для активации плагина."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:106
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:140
@@ -294,6 +296,8 @@ msgid ""
 "Failed to install the plugin;\n"
 "<message>{0}</message>"
 msgstr ""
+"Не удалось установить плагин;\n"
+"<message>{0}</message>"
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:122
 #, python-brace-format
@@ -600,152 +604,152 @@ msgstr "Следующий"
 #: Views/SimpleView/plugin.json
 msgctxt "description"
 msgid "Provides a simple solid mesh view."
-msgstr ""
+msgstr "Предоставляет просмотр в виде целого тела."
 
 #: Views/SimpleView/plugin.json
 msgctxt "name"
 msgid "Simple View"
-msgstr ""
+msgstr "Обычный вид"
 
 #: FileLogger/plugin.json
 msgctxt "description"
 msgid "Outputs log information to a file in your settings folder."
-msgstr ""
+msgstr "Выводит содержимое журнала в файл, который располагается в каталоге с вашими настройками."
 
 #: FileLogger/plugin.json
 msgctxt "name"
 msgid "File Logger"
-msgstr ""
+msgstr "Запись журнала в файл"
 
 #: FileHandlers/STLReader/plugin.json
 msgctxt "description"
 msgid "Provides support for reading STL files."
-msgstr ""
+msgstr "Предоставляет поддержку для чтения STL файлов."
 
 #: FileHandlers/STLReader/plugin.json
 msgctxt "name"
 msgid "STL Reader"
-msgstr ""
+msgstr "Чтение STL"
 
 #: FileHandlers/OBJReader/plugin.json
 msgctxt "description"
 msgid "Makes it possible to read Wavefront OBJ files."
-msgstr ""
+msgstr "Позволяет читать файлы Wavefront OBJ."
 
 #: FileHandlers/OBJReader/plugin.json
 msgctxt "name"
 msgid "Wavefront OBJ Reader"
-msgstr ""
+msgstr "Чтение Wavefront OBJ"
 
 #: FileHandlers/OBJWriter/plugin.json
 msgctxt "description"
 msgid "Makes it possible to write Wavefront OBJ files."
-msgstr ""
+msgstr "Позволяет записывать файлы Wavefront OBJ."
 
 #: FileHandlers/OBJWriter/plugin.json
 msgctxt "name"
 msgid "Wavefront OBJ Writer"
-msgstr ""
+msgstr "Запись Wavefront OBJ"
 
 #: FileHandlers/STLWriter/plugin.json
 msgctxt "description"
 msgid "Provides support for writing STL files."
-msgstr ""
+msgstr "Предоставляет поддержку для записи STL файлов."
 
 #: FileHandlers/STLWriter/plugin.json
 msgctxt "name"
 msgid "STL Writer"
-msgstr ""
+msgstr "Запись STL"
 
 #: ConsoleLogger/plugin.json
 msgctxt "description"
 msgid "Outputs log information to the console."
-msgstr ""
+msgstr "Выводит содержимое журнала на консоль."
 
 #: ConsoleLogger/plugin.json
 msgctxt "name"
 msgid "Console Logger"
-msgstr ""
+msgstr "Консольный журнал"
 
 #: UpdateChecker/plugin.json
 msgctxt "description"
 msgid "Checks for updates of the software."
-msgstr ""
+msgstr "Проверяет наличие обновлений ПО."
 
 #: UpdateChecker/plugin.json
 msgctxt "name"
 msgid "Update Checker"
-msgstr ""
+msgstr "Проверка обновлений"
 
 #: LocalFileOutputDevice/plugin.json
 msgctxt "description"
 msgid "Enables saving to local files."
-msgstr ""
+msgstr "Разрешает сохранение в локальные файлы."
 
 #: LocalFileOutputDevice/plugin.json
 msgctxt "name"
 msgid "Local File Output Device"
-msgstr ""
+msgstr "Устройство вывода локальных файлов"
 
 #: Tools/ScaleTool/plugin.json
 msgctxt "description"
 msgid "Provides the Scale tool."
-msgstr ""
+msgstr "Предоставляет инструмент \"Масштабирование\"."
 
 #: Tools/ScaleTool/plugin.json
 msgctxt "name"
 msgid "Scale Tool"
-msgstr ""
+msgstr "Инструмент \"Масштабирование\""
 
 #: Tools/SelectionTool/plugin.json
 msgctxt "description"
 msgid "Provides the Selection tool."
-msgstr ""
+msgstr "Предоставляет инструмент \"Выбор\"."
 
 #: Tools/SelectionTool/plugin.json
 msgctxt "name"
 msgid "Selection Tool"
-msgstr ""
+msgstr "Инструмент \"Выбор\""
 
 #: Tools/TranslateTool/plugin.json
 msgctxt "description"
 msgid "Provides the Translate tool."
-msgstr ""
+msgstr "Предоставляет инструмент \"Перемещение\"."
 
 #: Tools/TranslateTool/plugin.json
 msgctxt "name"
 msgid "Translate Tool"
-msgstr ""
+msgstr "Инструмент \"Перемещение\"."
 
 #: Tools/CameraTool/plugin.json
 msgctxt "description"
 msgid "Provides the tool to manipulate the camera."
-msgstr ""
+msgstr "Предоставляет возможность управлять камерой."
 
 #: Tools/CameraTool/plugin.json
 msgctxt "name"
 msgid "Camera Tool"
-msgstr ""
+msgstr "Инструмент \"Камера\""
 
 #: Tools/RotateTool/plugin.json
 msgctxt "description"
 msgid "Provides the Rotate tool."
-msgstr ""
+msgstr "Предоставляет инструмент \"Вращение\"."
 
 #: Tools/RotateTool/plugin.json
 msgctxt "name"
 msgid "Rotate Tool"
-msgstr ""
+msgstr "Инструмент \"Вращение\""
 
 #: Tools/MirrorTool/plugin.json
 msgctxt "description"
 msgid "Provides the Mirror tool."
-msgstr ""
+msgstr "Предоставляет инструмент \"Зеркало\"."
 
 #: Tools/MirrorTool/plugin.json
 msgctxt "name"
 msgid "Mirror Tool"
-msgstr ""
+msgstr "Инструмент \"Зеркало\""
 
 #~ msgctxt "@label"
 #~ msgid "Simple View"
