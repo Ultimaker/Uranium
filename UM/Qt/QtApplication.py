@@ -28,6 +28,7 @@ import UM.Settings.ContainerStack  # For version upgrade to know the version num
 import UM.Preferences  # For version upgrade to know the version number.
 import UM.VersionUpgradeManager
 from UM.Mesh.ReadMeshJob import ReadMeshJob
+from UM.SystemTrayController import SystemTrayController
 
 import UM.Qt.Bindings.Theme
 from UM.PluginRegistry import PluginRegistry
@@ -105,6 +106,8 @@ class QtApplication(QApplication, Application):
         # these checks need to be done in your <framework>Application.py class __init__().
 
         i18n_catalog = i18nCatalog("uranium")
+
+        SystemTrayController.initSystemTrayController(self.checkWindowMinimizedState)
 
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Loading plugins..."))
         self._loadPlugins()
@@ -283,6 +286,12 @@ class QtApplication(QApplication, Application):
             Logger.log("e", "Exception while closing backend: %s", repr(e))
 
         self.quit()
+
+    def checkWindowMinimizedState(self):
+        if self._main_window is not None and self._main_window.windowState() == Qt.WindowMinimized:
+            return True
+        else:
+            return False
 
     ##  Get the backend of the application (the program that does the heavy lifting).
     #   The backend is also a QObject, which can be used from qml.
