@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Uranium 2.7\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2017-08-02 14:05+0200\n"
-"PO-Revision-Date: 2017-06-07 16:04+0200\n"
+"PO-Revision-Date: 2017-08-11 14:31+0200\n"
 "Last-Translator: Bothof <info@bothof.nl>\n"
 "Language-Team: Finnish <info@bothof.nl>\n"
 "Language: Finnish\n"
@@ -38,7 +38,7 @@ msgstr "Wavefront OBJ -tiedosto"
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:17
 msgctxt "@item:inlistbox"
 msgid "STL File (ASCII)"
-msgstr ""
+msgstr "STL-tiedosto (ASCII)"
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:23
 msgctxt "@item:inlistbox"
@@ -269,7 +269,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr ""
+msgstr "Laajennus on asennettu.\nOta laajennus käyttöön käynnistämällä sovellus uudelleen."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:106
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:140
@@ -278,9 +278,7 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install plugin from <filename>{0}</filename>:\n"
 "<message>{1}</message>"
-msgstr ""
-"Laajennuksen asennus kohteesta <filename>{0}</filename> epäonnistui:\n"
-"<message>{1}</message>"
+msgstr "Laajennuksen asennus kohteesta <filename>{0}</filename> epäonnistui:\n<message>{1}</message>"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:127
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:132
@@ -289,7 +287,7 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install the plugin;\n"
 "<message>{0}</message>"
-msgstr ""
+msgstr "Laajennuksen asennus epäonnistui;\n<message>{0}</message>"
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:122
 #, python-brace-format
@@ -595,152 +593,152 @@ msgstr "Seuraava"
 #: Views/SimpleView/plugin.json
 msgctxt "description"
 msgid "Provides a simple solid mesh view."
-msgstr ""
+msgstr "Näyttää yksinkertaisen kiinteän verkkonäkymän."
 
 #: Views/SimpleView/plugin.json
 msgctxt "name"
 msgid "Simple View"
-msgstr ""
+msgstr "Yksinkertainen näkymä"
 
 #: FileLogger/plugin.json
 msgctxt "description"
 msgid "Outputs log information to a file in your settings folder."
-msgstr ""
+msgstr "Lähettää lokitiedot asetuskansion tiedostoon."
 
 #: FileLogger/plugin.json
 msgctxt "name"
 msgid "File Logger"
-msgstr ""
+msgstr "Tiedonkeruuohjelma"
 
 #: FileHandlers/STLReader/plugin.json
 msgctxt "description"
 msgid "Provides support for reading STL files."
-msgstr ""
+msgstr "Tukee STL-tiedostojen lukemista."
 
 #: FileHandlers/STLReader/plugin.json
 msgctxt "name"
 msgid "STL Reader"
-msgstr ""
+msgstr "STL-lukija"
 
 #: FileHandlers/OBJReader/plugin.json
 msgctxt "description"
 msgid "Makes it possible to read Wavefront OBJ files."
-msgstr ""
+msgstr "Mahdollistaa Wavefront OBJ -tiedostojen lukemisen."
 
 #: FileHandlers/OBJReader/plugin.json
 msgctxt "name"
 msgid "Wavefront OBJ Reader"
-msgstr ""
+msgstr "Wavefront OBJ -lukija"
 
 #: FileHandlers/OBJWriter/plugin.json
 msgctxt "description"
 msgid "Makes it possible to write Wavefront OBJ files."
-msgstr ""
+msgstr "Mahdollistaa Wavefront OBJ -tiedostojen kirjoittamisen."
 
 #: FileHandlers/OBJWriter/plugin.json
 msgctxt "name"
 msgid "Wavefront OBJ Writer"
-msgstr ""
+msgstr "Wavefront OBJ -kirjoitin"
 
 #: FileHandlers/STLWriter/plugin.json
 msgctxt "description"
 msgid "Provides support for writing STL files."
-msgstr ""
+msgstr "Tukee STL-tiedostojen kirjoittamista."
 
 #: FileHandlers/STLWriter/plugin.json
 msgctxt "name"
 msgid "STL Writer"
-msgstr ""
+msgstr "STL-kirjoitin"
 
 #: ConsoleLogger/plugin.json
 msgctxt "description"
 msgid "Outputs log information to the console."
-msgstr ""
+msgstr "Lähettää lokitiedot konsoliin."
 
 #: ConsoleLogger/plugin.json
 msgctxt "name"
 msgid "Console Logger"
-msgstr ""
+msgstr "Konsolin tiedonkeruu"
 
 #: UpdateChecker/plugin.json
 msgctxt "description"
 msgid "Checks for updates of the software."
-msgstr ""
+msgstr "Tarkistaa, onko ohjelmistopäivityksiä saatavilla."
 
 #: UpdateChecker/plugin.json
 msgctxt "name"
 msgid "Update Checker"
-msgstr ""
+msgstr "Päivitysten tarkistin"
 
 #: LocalFileOutputDevice/plugin.json
 msgctxt "description"
 msgid "Enables saving to local files."
-msgstr ""
+msgstr "Mahdollistaa tallennuksen paikallisiin tiedostoihin."
 
 #: LocalFileOutputDevice/plugin.json
 msgctxt "name"
 msgid "Local File Output Device"
-msgstr ""
+msgstr "Paikallisen tiedoston tulostusväline"
 
 #: Tools/ScaleTool/plugin.json
 msgctxt "description"
 msgid "Provides the Scale tool."
-msgstr ""
+msgstr "Näyttää skaalaustyökalun."
 
 #: Tools/ScaleTool/plugin.json
 msgctxt "name"
 msgid "Scale Tool"
-msgstr ""
+msgstr "Skaalaustyökalu"
 
 #: Tools/SelectionTool/plugin.json
 msgctxt "description"
 msgid "Provides the Selection tool."
-msgstr ""
+msgstr "Näyttää valintatyökalun."
 
 #: Tools/SelectionTool/plugin.json
 msgctxt "name"
 msgid "Selection Tool"
-msgstr ""
+msgstr "Valintatyökalu"
 
 #: Tools/TranslateTool/plugin.json
 msgctxt "description"
 msgid "Provides the Translate tool."
-msgstr ""
+msgstr "Näyttää käännöstyökalun."
 
 #: Tools/TranslateTool/plugin.json
 msgctxt "name"
 msgid "Translate Tool"
-msgstr ""
+msgstr "Käännöstyökalu"
 
 #: Tools/CameraTool/plugin.json
 msgctxt "description"
 msgid "Provides the tool to manipulate the camera."
-msgstr ""
+msgstr "Työkalu kameran käsittelyyn."
 
 #: Tools/CameraTool/plugin.json
 msgctxt "name"
 msgid "Camera Tool"
-msgstr ""
+msgstr "Kameratyökalu"
 
 #: Tools/RotateTool/plugin.json
 msgctxt "description"
 msgid "Provides the Rotate tool."
-msgstr ""
+msgstr "Näyttää pyöritystyökalun."
 
 #: Tools/RotateTool/plugin.json
 msgctxt "name"
 msgid "Rotate Tool"
-msgstr ""
+msgstr "Pyöritystyökalu"
 
 #: Tools/MirrorTool/plugin.json
 msgctxt "description"
 msgid "Provides the Mirror tool."
-msgstr ""
+msgstr "Näyttää peilaustyökalun."
 
 #: Tools/MirrorTool/plugin.json
 msgctxt "name"
 msgid "Mirror Tool"
-msgstr ""
+msgstr "Peilaustyökalu"
 
 #~ msgctxt "@label"
 #~ msgid "Simple View"
