@@ -110,32 +110,32 @@ msgstr "Dosya Zaten Mevcut"
 #, python-brace-format
 msgctxt "@label"
 msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
-msgstr "Dosya <dosya adı>{0}</dosya adı> zaten mevcut. Üstüne yazmak istediğinizden emin misiniz?"
+msgstr "Dosya <filename>{0}</filename> zaten mevcut. Üstüne yazmak istediğinizden emin misiniz?"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:150
 #, python-brace-format
 msgctxt "@info:progress"
 msgid "Saving to <filename>{0}</filename>"
-msgstr "<Dosya adı>{0}</dosya adı>na kaydediliyor"
+msgstr "<filename>{0}</filename>na kaydediliyor"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:158
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Permission denied when trying to save <filename>{0}</filename>"
-msgstr "<Dosya adı>{0}</dosya adı> dosyasını kaydetmeye çalışırken izin reddedildi"
+msgstr "<filename>{0}</filename> dosyasını kaydetmeye çalışırken izin reddedildi"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:161
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:177
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
-msgstr "<Dosya adı>{0}</dosya adı>na kaydedilemedi: <ileti>{1}</ileti>"
+msgstr "<filename>{0}</filename>na kaydedilemedi: <message>{1}</message>"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:171
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Saved to <filename>{0}</filename>"
-msgstr "<Dosya adı>{0}</dosya adı>na kaydedildi"
+msgstr "<filename>{0}</filename>na kaydedildi"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:172
 msgctxt "@action:button"
@@ -278,7 +278,7 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install plugin from <filename>{0}</filename>:\n"
 "<message>{1}</message>"
-msgstr "<filename>{0}</filename>:\n<message>{1}</message> üzerinden eklenti kurulumu başarısız oldu"
+msgstr "<filename>{0}</filename> üzerinden eklenti kurulumu başarısız oldu:\n<message>{1}</message>"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:127
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:132
@@ -309,20 +309,20 @@ msgstr "Kritik OpenGL uzantıları eksik. Bu program Framebuffer Objects desteğ
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Cannot open file type <filename>{0}</filename>"
-msgstr "<Dosya adı>{0}</dosya adı> dosya türünü açılamıyor"
+msgstr "<filename>{0}</filename> dosya türünü açılamıyor"
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:49
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:69
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Failed to load <filename>{0}</filename>"
-msgstr "<Dosya adı>{0}</dosya adı> yüklemesi başarısız oldu"
+msgstr "<filename>{0}</filename> yüklemesi başarısız oldu"
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:53
 #, python-brace-format
 msgctxt "@info:status"
 msgid "Loading <filename>{0}</filename>"
-msgstr "<Dosya adı>{0}</dosya adı> yükleniyor"
+msgstr "<filename>{0}</filename> yükleniyor"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:60
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:21
