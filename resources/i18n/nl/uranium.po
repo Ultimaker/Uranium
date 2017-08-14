@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Uranium 2.7\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2017-08-02 14:05+0200\n"
-"PO-Revision-Date: 2017-06-07 16:04+0200\n"
+"PO-Revision-Date: 2017-08-11 14:31+0200\n"
 "Last-Translator: Ruben Dulek <r.dulek@ultimaker.com>\n"
 "Language-Team: Ultimaker <info@ultimaker.com>\n"
 "Language: Dutch\n"
@@ -38,7 +38,7 @@ msgstr "Wavefront OBJ-bestand"
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:17
 msgctxt "@item:inlistbox"
 msgid "STL File (ASCII)"
-msgstr ""
+msgstr "STL-bestand (ASCII)"
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:23
 msgctxt "@item:inlistbox"
@@ -269,7 +269,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr ""
+msgstr "De invoegtoepassing is geïnstalleerd.\nStart de toepassing opnieuw om de invoegtoepassing te activeren."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:106
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:140
@@ -278,9 +278,7 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install plugin from <filename>{0}</filename>:\n"
 "<message>{1}</message>"
-msgstr ""
-"Kan de invoegtoepassing van <filename>{0}</filename>:\n"
-"<message>{1}</message> niet installeren"
+msgstr "Kan de invoegtoepassing van <filename>{0}</filename> niet installeren:\n<message>{1}</message>"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:127
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:132
@@ -289,7 +287,7 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install the plugin;\n"
 "<message>{0}</message>"
-msgstr ""
+msgstr "Kan de invoegtoepassing niet installeren;\n<message>{0}</message>"
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:122
 #, python-brace-format
@@ -595,152 +593,152 @@ msgstr "Volgende"
 #: Views/SimpleView/plugin.json
 msgctxt "description"
 msgid "Provides a simple solid mesh view."
-msgstr ""
+msgstr "Biedt een eenvoudige, solide rasterweergave."
 
 #: Views/SimpleView/plugin.json
 msgctxt "name"
 msgid "Simple View"
-msgstr ""
+msgstr "Eenvoudige Weergave"
 
 #: FileLogger/plugin.json
 msgctxt "description"
 msgid "Outputs log information to a file in your settings folder."
-msgstr ""
+msgstr "Voert logboekinformatie uit naar een bestand in de instellingenmap."
 
 #: FileLogger/plugin.json
 msgctxt "name"
 msgid "File Logger"
-msgstr ""
+msgstr "Bestandenlogger"
 
 #: FileHandlers/STLReader/plugin.json
 msgctxt "description"
 msgid "Provides support for reading STL files."
-msgstr ""
+msgstr "Biedt ondersteuning voor het lezen van STL-bestanden."
 
 #: FileHandlers/STLReader/plugin.json
 msgctxt "name"
 msgid "STL Reader"
-msgstr ""
+msgstr "STL-lezer"
 
 #: FileHandlers/OBJReader/plugin.json
 msgctxt "description"
 msgid "Makes it possible to read Wavefront OBJ files."
-msgstr ""
+msgstr "Maakt het mogelijk Wavefront OBJ-bestanden te lezen."
 
 #: FileHandlers/OBJReader/plugin.json
 msgctxt "name"
 msgid "Wavefront OBJ Reader"
-msgstr ""
+msgstr "Wavefront OBJ-lezer"
 
 #: FileHandlers/OBJWriter/plugin.json
 msgctxt "description"
 msgid "Makes it possible to write Wavefront OBJ files."
-msgstr ""
+msgstr "Maakt het mogelijk Wavefront OBJ-bestanden te schrijven."
 
 #: FileHandlers/OBJWriter/plugin.json
 msgctxt "name"
 msgid "Wavefront OBJ Writer"
-msgstr ""
+msgstr "Wavefront OBJ-schrijver"
 
 #: FileHandlers/STLWriter/plugin.json
 msgctxt "description"
 msgid "Provides support for writing STL files."
-msgstr ""
+msgstr "Biedt ondersteuning voor het schrijven van STL-bestanden."
 
 #: FileHandlers/STLWriter/plugin.json
 msgctxt "name"
 msgid "STL Writer"
-msgstr ""
+msgstr "STL-schrijver"
 
 #: ConsoleLogger/plugin.json
 msgctxt "description"
 msgid "Outputs log information to the console."
-msgstr ""
+msgstr "Voert logboekinformatie uit naar de console."
 
 #: ConsoleLogger/plugin.json
 msgctxt "name"
 msgid "Console Logger"
-msgstr ""
+msgstr "Consolelogger"
 
 #: UpdateChecker/plugin.json
 msgctxt "description"
 msgid "Checks for updates of the software."
-msgstr ""
+msgstr "Controleert of er updates zijn voor de software."
 
 #: UpdateChecker/plugin.json
 msgctxt "name"
 msgid "Update Checker"
-msgstr ""
+msgstr "Updatecontrole"
 
 #: LocalFileOutputDevice/plugin.json
 msgctxt "description"
 msgid "Enables saving to local files."
-msgstr ""
+msgstr "Maakt opslaan als lokaal bestand mogelijk."
 
 #: LocalFileOutputDevice/plugin.json
 msgctxt "name"
 msgid "Local File Output Device"
-msgstr ""
+msgstr "Uitvoerapparaat voor lokaal bestand"
 
 #: Tools/ScaleTool/plugin.json
 msgctxt "description"
 msgid "Provides the Scale tool."
-msgstr ""
+msgstr "Biedt het Schaalgereedschap."
 
 #: Tools/ScaleTool/plugin.json
 msgctxt "name"
 msgid "Scale Tool"
-msgstr ""
+msgstr "Schaalgereedschap"
 
 #: Tools/SelectionTool/plugin.json
 msgctxt "description"
 msgid "Provides the Selection tool."
-msgstr ""
+msgstr "Biedt het Selectiegereedschap."
 
 #: Tools/SelectionTool/plugin.json
 msgctxt "name"
 msgid "Selection Tool"
-msgstr ""
+msgstr "Selectiegereedschap"
 
 #: Tools/TranslateTool/plugin.json
 msgctxt "description"
 msgid "Provides the Translate tool."
-msgstr ""
+msgstr "Biedt het Verplaatsgereedschap."
 
 #: Tools/TranslateTool/plugin.json
 msgctxt "name"
 msgid "Translate Tool"
-msgstr ""
+msgstr "Verplaatsgereedschap"
 
 #: Tools/CameraTool/plugin.json
 msgctxt "description"
 msgid "Provides the tool to manipulate the camera."
-msgstr ""
+msgstr "Biedt het gereedschap waarmee u de camera kunt verplaatsen."
 
 #: Tools/CameraTool/plugin.json
 msgctxt "name"
 msgid "Camera Tool"
-msgstr ""
+msgstr "Cameragereedschap"
 
 #: Tools/RotateTool/plugin.json
 msgctxt "description"
 msgid "Provides the Rotate tool."
-msgstr ""
+msgstr "Biedt het Rotatiegereedschap."
 
 #: Tools/RotateTool/plugin.json
 msgctxt "name"
 msgid "Rotate Tool"
-msgstr ""
+msgstr "Rotatiegereedschap"
 
 #: Tools/MirrorTool/plugin.json
 msgctxt "description"
 msgid "Provides the Mirror tool."
-msgstr ""
+msgstr "Biedt het Spiegelgereedschap."
 
 #: Tools/MirrorTool/plugin.json
 msgctxt "name"
 msgid "Mirror Tool"
-msgstr ""
+msgstr "Spiegelgereedschap"
 
 #~ msgctxt "@label"
 #~ msgid "Simple View"

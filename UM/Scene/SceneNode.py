@@ -15,6 +15,7 @@ from UM.Logger import Logger
 from UM.Scene.SceneNodeDecorator import SceneNodeDecorator
 
 from copy import deepcopy
+import numpy
 
 ##  A scene node object.
 #
@@ -289,11 +290,26 @@ class SceneNode():
         return self._mesh_data
 
     ##  \brief Get the transformed mesh data from the scene node/object, based on the transformation of scene nodes wrt root.
+    #          If this node is a group, it will recursively concatenate all child nodes/objects.
     #   \returns MeshData
     def getMeshDataTransformed(self) -> Optional[MeshData]:
-        if self._mesh_data:
-            return self._mesh_data.getTransformed(self.getWorldTransformation())
-        return self._mesh_data
+        return MeshData(vertices = self.getMeshDataTransformedVertices())
+
+    ##  \brief Get the transformed vertices from this scene node/object, based on the transformation of scene nodes wrt root.
+    #          If this node is a group, it will recursively concatenate all child nodes/objects.
+    #   \return numpy.ndarray
+    def getMeshDataTransformedVertices(self) -> numpy.ndarray:
+        transformed_vertices = None
+        if self.callDecoration("isGroup"):
+            for child in self._children:
+                tv = child.getMeshDataTransformedVertices()
+                if transformed_vertices is None:
+                    transformed_vertices = tv
+                else:
+                    transformed_vertices = numpy.concatenate((transformed_vertices, tv), axis = 0)
+        else:
+            transformed_vertices = self._mesh_data.getTransformed(self.getWorldTransformation()).getVertices()
+        return transformed_vertices
 
     ##  \brief Set the mesh of this node/object
     #   \param mesh_data MeshData object
