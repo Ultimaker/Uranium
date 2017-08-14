@@ -160,7 +160,7 @@ class Application:
     def showMessage(self, message):
         raise NotImplementedError
 
-    def showToastMessage(self, message):
+    def showToastMessage(self, title: str, message: str):
         raise NotImplementedError
 
     ##  Get the version of the application

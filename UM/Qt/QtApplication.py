@@ -8,8 +8,8 @@ import signal
 
 from PyQt5.QtCore import Qt, QCoreApplication, QEvent, QUrl, pyqtProperty, pyqtSignal, pyqtSlot, QLocale, QTranslator, QLibraryInfo, QT_VERSION_STR, PYQT_VERSION_STR
 from PyQt5.QtQml import QQmlApplicationEngine
-from PyQt5.QtWidgets import QApplication, QSplashScreen, QMessageBox
-from PyQt5.QtGui import QGuiApplication, QPixmap
+from PyQt5.QtWidgets import QApplication, QSplashScreen, QMessageBox, QSystemTrayIcon
+from PyQt5.QtGui import QGuiApplication, QIcon, QPixmap
 from PyQt5.QtCore import QTimer
 
 from UM.FileHandler.ReadFileJob import ReadFileJob
@@ -32,7 +32,6 @@ from UM.Mesh.ReadMeshJob import ReadMeshJob
 import UM.Qt.Bindings.Theme
 from UM.PluginRegistry import PluginRegistry
 
-from PyQt5 import QtGui, QtWidgets
 
 # Raised when we try to use an unsupported version of a dependency.
 class UnsupportedVersionError(Exception):
@@ -48,7 +47,7 @@ if int(major) < 5 or int(minor) < 4:
 @signalemitter
 class QtApplication(QApplication, Application):
 
-    def __init__(self, **kwargs):
+    def __init__(self, tray_icon_name = None, **kwargs):
         plugin_path = ""
         if sys.platform == "win32":
             if hasattr(sys, "frozen"):
@@ -148,19 +147,14 @@ class QtApplication(QApplication, Application):
         JobQueue.getInstance().jobFinished.connect(self._onJobFinished)
 
         # Initialize System tray icon and make it invisible because it is used only to show pop up messages
-        self._trayIconPath = self.getTrayIconPath()
-        self._trayIcon = QtWidgets.QSystemTrayIcon(QtGui.QIcon(self._trayIconPath))
-        self._trayIcon.show()
-        self._trayIcon.setVisible(False)
+        self._tray_icon = None
+        self._tray_icon_widget = None
+        if tray_icon_name:
+            self._tray_icon = QIcon(Resources.getPath(Resources.Images, tray_icon_name))
+            self._tray_icon_widget = QSystemTrayIcon(self._tray_icon)
+            self._tray_icon_widget.setVisible(False)
 
     recentFilesChanged = pyqtSignal()
-
-    def getTrayIconPath(self):
-        dirPath = os.path.dirname(os.path.realpath(__file__))
-        dirPaths = dirPath.split(os.sep)
-        dirPaths = dirPaths[:-3 or None]
-        dirPaths.extend(["cura", "icons", "cura-32.png"])
-        return os.path.join(os.path.sep, *dirPaths)
 
     @pyqtProperty("QVariantList", notify=recentFilesChanged)
     def recentFiles(self):
@@ -202,11 +196,13 @@ class QtApplication(QApplication, Application):
                 self.visibleMessageAdded.emit(message)
 
     # Show toast message using System tray widget.
-    def showToastMessage(self, title, message):
-        if self.checkWindowMinimizedState():
-            self._trayIcon.setVisible(True)
-            self._trayIcon.showMessage(title, message, QtGui.QIcon(self._trayIconPath))
-            self._trayIcon.setVisible(False)
+    def showToastMessage(self, title: str, message: str):
+        if self.checkWindowMinimizedState() and self._tray_icon:
+            self._tray_icon_widget.setVisible(True)
+            # NOTE: Qt 5.8 don't support custom icon for the system tray messages, but Qt 5.9 does.
+            #       We should use the custom icon when we switch to Qt 5.9
+            self._tray_icon_widget.showMessage(title, message)
+            self._tray_icon_widget.setVisible(False)
 
     def setMainQml(self, path):
         self._main_qml = path
