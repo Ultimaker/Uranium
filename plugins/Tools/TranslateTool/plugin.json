@@ -1,8 +1,8 @@
 {
-    "name": "Translate Tool",
+    "name": "Move Tool",
     "author": "Ultimaker B.V.",
     "version": "1.0.0",
-    "description": "Provides the Translate tool.",
+    "description": "Provides the Move tool.",
     "api": 4,
     "i18n-catalog": "uranium"
 }
