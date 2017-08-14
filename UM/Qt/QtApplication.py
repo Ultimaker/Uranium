@@ -28,10 +28,11 @@ import UM.Settings.ContainerStack  # For version upgrade to know the version num
 import UM.Preferences  # For version upgrade to know the version number.
 import UM.VersionUpgradeManager
 from UM.Mesh.ReadMeshJob import ReadMeshJob
-from UM.SystemTrayController import SystemTrayController
 
 import UM.Qt.Bindings.Theme
 from UM.PluginRegistry import PluginRegistry
+
+from PyQt5 import QtGui, QtWidgets
 
 # Raised when we try to use an unsupported version of a dependency.
 class UnsupportedVersionError(Exception):
@@ -46,6 +47,7 @@ if int(major) < 5 or int(minor) < 4:
 ##  Application subclass that provides a Qt application object.
 @signalemitter
 class QtApplication(QApplication, Application):
+
     def __init__(self, **kwargs):
         plugin_path = ""
         if sys.platform == "win32":
@@ -107,8 +109,6 @@ class QtApplication(QApplication, Application):
 
         i18n_catalog = i18nCatalog("uranium")
 
-        SystemTrayController.initSystemTrayController(self.checkWindowMinimizedState)
-
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Loading plugins..."))
         self._loadPlugins()
         self.parseCommandLine()
@@ -147,7 +147,20 @@ class QtApplication(QApplication, Application):
 
         JobQueue.getInstance().jobFinished.connect(self._onJobFinished)
 
+        # Initialize System tray icon and make it invisible because it is used only to show pop up messages
+        self._trayIconPath = self.getTrayIconPath()
+        self._trayIcon = QtWidgets.QSystemTrayIcon(QtGui.QIcon(self._trayIconPath))
+        self._trayIcon.show()
+        self._trayIcon.setVisible(False)
+
     recentFilesChanged = pyqtSignal()
+
+    def getTrayIconPath(self):
+        dirPath = os.path.dirname(os.path.realpath(__file__))
+        dirPaths = dirPath.split(os.sep)
+        dirPaths = dirPaths[:-3 or None]
+        dirPaths.extend(["cura", "icons", "cura-32.png"])
+        return os.path.join(os.path.sep, *dirPaths)
 
     @pyqtProperty("QVariantList", notify=recentFilesChanged)
     def recentFiles(self):
@@ -187,6 +200,13 @@ class QtApplication(QApplication, Application):
                 self._visible_messages.append(message)
                 message.setTimer(QTimer())
                 self.visibleMessageAdded.emit(message)
+
+    # Show toast message using System tray widget.
+    def showToastMessage(self, title, message):
+        if self.checkWindowMinimizedState():
+            self._trayIcon.setVisible(True)
+            self._trayIcon.showMessage(title, message, QtGui.QIcon(self._trayIconPath))
+            self._trayIcon.setVisible(False)
 
     def setMainQml(self, path):
         self._main_qml = path

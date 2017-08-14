@@ -160,6 +160,9 @@ class Application:
     def showMessage(self, message):
         raise NotImplementedError
 
+    def showToastMessage(self, message):
+        raise NotImplementedError
+
     ##  Get the version of the application
     #   \returns version \type{string}
     def getVersion(self) -> str:
