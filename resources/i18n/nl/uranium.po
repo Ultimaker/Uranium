@@ -278,7 +278,7 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install plugin from <filename>{0}</filename>:\n"
 "<message>{1}</message>"
-msgstr "Kan de invoegtoepassing van <filename>{0}</filename>:\n<message>{1}</message> niet installeren"
+msgstr "Kan de invoegtoepassing van <filename>{0}</filename> niet installeren:\n<message>{1}</message>"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:127
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:132
@@ -287,7 +287,7 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install the plugin;\n"
 "<message>{0}</message>"
-msgstr "Kan de invoegtoepassing;\n<message>{0}</message> niet installeren"
+msgstr "Kan de invoegtoepassing niet installeren;\n<message>{0}</message>"
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:122
 #, python-brace-format
