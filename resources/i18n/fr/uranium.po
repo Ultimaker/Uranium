@@ -718,7 +718,7 @@ msgstr "Accès à l'outil de manipulation de la caméra."
 #: Tools/CameraTool/plugin.json
 msgctxt "name"
 msgid "Camera Tool"
-msgstr "Caméra"
+msgstr "Outil de caméra"
 
 #: Tools/RotateTool/plugin.json
 msgctxt "description"
