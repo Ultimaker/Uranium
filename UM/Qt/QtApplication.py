@@ -195,14 +195,17 @@ class QtApplication(QApplication, Application):
                 message.setTimer(QTimer())
                 self.visibleMessageAdded.emit(message)
 
+    def _onMainWindowStateChanged(self, window_state):
+        if self._tray_icon:
+            visible = window_state == Qt.WindowMinimized
+            self._tray_icon_widget.setVisible(visible)
+
     # Show toast message using System tray widget.
     def showToastMessage(self, title: str, message: str):
-        if self.checkWindowMinimizedState() and self._tray_icon:
-            self._tray_icon_widget.setVisible(True)
+        if self.checkWindowMinimizedState() and self._tray_icon_widget:
             # NOTE: Qt 5.8 don't support custom icon for the system tray messages, but Qt 5.9 does.
             #       We should use the custom icon when we switch to Qt 5.9
             self._tray_icon_widget.showMessage(title, message)
-            self._tray_icon_widget.setVisible(False)
 
     def setMainQml(self, path):
         self._main_qml = path
@@ -257,7 +260,14 @@ class QtApplication(QApplication, Application):
 
     def setMainWindow(self, window):
         if window != self._main_window:
+            if self._main_window is not None:
+                self._main_window.windowStateChanged.disconnect(self._onMainWindowStateChanged)
+
             self._main_window = window
+
+            if self._main_window is not None:
+                self._main_window.windowStateChanged.connect(self._onMainWindowStateChanged)
+
             self.mainWindowChanged.emit()
 
     def getTheme(self, *args):
