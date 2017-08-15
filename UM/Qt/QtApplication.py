@@ -8,8 +8,8 @@ import signal
 
 from PyQt5.QtCore import Qt, QCoreApplication, QEvent, QUrl, pyqtProperty, pyqtSignal, pyqtSlot, QLocale, QTranslator, QLibraryInfo, QT_VERSION_STR, PYQT_VERSION_STR
 from PyQt5.QtQml import QQmlApplicationEngine
-from PyQt5.QtWidgets import QApplication, QSplashScreen, QMessageBox
-from PyQt5.QtGui import QGuiApplication, QPixmap
+from PyQt5.QtWidgets import QApplication, QSplashScreen, QMessageBox, QSystemTrayIcon
+from PyQt5.QtGui import QGuiApplication, QIcon, QPixmap
 from PyQt5.QtCore import QTimer
 
 from UM.FileHandler.ReadFileJob import ReadFileJob
@@ -32,6 +32,7 @@ from UM.Mesh.ReadMeshJob import ReadMeshJob
 import UM.Qt.Bindings.Theme
 from UM.PluginRegistry import PluginRegistry
 
+
 # Raised when we try to use an unsupported version of a dependency.
 class UnsupportedVersionError(Exception):
     pass
@@ -45,7 +46,8 @@ if int(major) < 5 or int(minor) < 4:
 ##  Application subclass that provides a Qt application object.
 @signalemitter
 class QtApplication(QApplication, Application):
-    def __init__(self, **kwargs):
+
+    def __init__(self, tray_icon_name = None, **kwargs):
         plugin_path = ""
         if sys.platform == "win32":
             if hasattr(sys, "frozen"):
@@ -144,6 +146,14 @@ class QtApplication(QApplication, Application):
 
         JobQueue.getInstance().jobFinished.connect(self._onJobFinished)
 
+        # Initialize System tray icon and make it invisible because it is used only to show pop up messages
+        self._tray_icon = None
+        self._tray_icon_widget = None
+        if tray_icon_name:
+            self._tray_icon = QIcon(Resources.getPath(Resources.Images, tray_icon_name))
+            self._tray_icon_widget = QSystemTrayIcon(self._tray_icon)
+            self._tray_icon_widget.setVisible(False)
+
     recentFilesChanged = pyqtSignal()
 
     @pyqtProperty("QVariantList", notify=recentFilesChanged)
@@ -184,6 +194,18 @@ class QtApplication(QApplication, Application):
                 self._visible_messages.append(message)
                 message.setTimer(QTimer())
                 self.visibleMessageAdded.emit(message)
+
+    def _onMainWindowStateChanged(self, window_state):
+        if self._tray_icon:
+            visible = window_state == Qt.WindowMinimized
+            self._tray_icon_widget.setVisible(visible)
+
+    # Show toast message using System tray widget.
+    def showToastMessage(self, title: str, message: str):
+        if self.checkWindowMinimizedState() and self._tray_icon_widget:
+            # NOTE: Qt 5.8 don't support custom icon for the system tray messages, but Qt 5.9 does.
+            #       We should use the custom icon when we switch to Qt 5.9
+            self._tray_icon_widget.showMessage(title, message)
 
     def setMainQml(self, path):
         self._main_qml = path
@@ -238,7 +260,14 @@ class QtApplication(QApplication, Application):
 
     def setMainWindow(self, window):
         if window != self._main_window:
+            if self._main_window is not None:
+                self._main_window.windowStateChanged.disconnect(self._onMainWindowStateChanged)
+
             self._main_window = window
+
+            if self._main_window is not None:
+                self._main_window.windowStateChanged.connect(self._onMainWindowStateChanged)
+
             self.mainWindowChanged.emit()
 
     def getTheme(self, *args):
@@ -283,6 +312,12 @@ class QtApplication(QApplication, Application):
             Logger.log("e", "Exception while closing backend: %s", repr(e))
 
         self.quit()
+
+    def checkWindowMinimizedState(self):
+        if self._main_window is not None and self._main_window.windowState() == Qt.WindowMinimized:
+            return True
+        else:
+            return False
 
     ##  Get the backend of the application (the program that does the heavy lifting).
     #   The backend is also a QObject, which can be used from qml.
