@@ -64,7 +64,6 @@ with open(pot_file) as f:
             elif state == "str":
                 last_str += line #Or the actual string.
 
-import pirateofdoom #The translation dictionary.
 for key, _ in translations.items():
     context, english, english_plural = key
     pirate = translate(english)
