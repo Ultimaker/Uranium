@@ -567,7 +567,7 @@ class _EmptyInstanceContainer(InstanceContainer):
     def isReadOnly(self) -> bool:
         return True
 
-    def getProperty(self, key, property_name):
+    def getProperty(self, key, property_name, context = None):
         return None
 
     def setProperty(self, key, property_name, property_value, container = None, set_from_cache = False):

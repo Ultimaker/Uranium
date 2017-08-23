@@ -80,7 +80,7 @@ class MockContainer(ContainerInterface, UM.PluginObject.PluginObject):
     ##  Gets the value of a property of a container item.
     #
     #   This method is not implemented in the mock container.
-    def getProperty(self, key, property_name):
+    def getProperty(self, key, property_name, context = None):
         raise NotImplementedError()
 
     ##  Get the value of a container item.

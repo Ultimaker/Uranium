@@ -3,9 +3,9 @@
 
 import ast
 import math # Imported here so it can be used easily by the setting functions.
-from typing import Any, Dict, Callable, Set, FrozenSet, NamedTuple
+from typing import Any, Dict, Callable, Set, FrozenSet, NamedTuple, Optional
 
-from UM.Settings.Interfaces import ContainerInterface
+from UM.Settings.Interfaces import ContainerInterface, PropertyEvaluationContext
 from UM.Logger import Logger
 
 MYPY = False
@@ -54,7 +54,7 @@ class SettingFunction:
             Logger.log("e", "Exception in function ({0}) for setting: {1}".format(str(e), self._code))
 
     ##  Call the actual function to calculate the value.
-    def __call__(self, value_provider: ContainerInterface) -> Any:
+    def __call__(self, value_provider: ContainerInterface, context: Optional[PropertyEvaluationContext] = None) -> Any:
         if not value_provider:
             return None
 
@@ -62,6 +62,8 @@ class SettingFunction:
             return None
 
         locals = {} # type: Dict[str, Any]
+        if context:
+            value_provider = context.root_stack
         for name in self._used_values:
             value = value_provider.getProperty(name, "value")
             if value is None:

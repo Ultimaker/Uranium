@@ -1,10 +1,39 @@
 # Copyright (c) 2016 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
+from collections import deque
 from typing import List, Dict, Any, Optional
 
 import UM.Decorators
 from UM.Signal import Signal
+
+##  Context for evaluating a property value
+#   It contains:
+#     1. a stack of containers during the evaluation in the function call stack fashion
+#     2. a context dictionary which contains all the current context
+#
+class PropertyEvaluationContext:
+
+    def __init__(self, source_stack = None):
+        self._stack_of_containers = deque()
+        if source_stack is not None:
+            self._stack_of_containers.append(source_stack)
+        self._context = {}
+
+    @property
+    def root_stack(self):
+        if self._stack_of_containers:
+            return self._stack_of_containers[0]
+
+    @property
+    def stack_of_containers(self):
+        return self._stack_of_containers
+
+    def pushContainer(self, container):
+        self._stack_of_containers.append(container)
+
+    def popContainer(self):
+        return self._stack_of_containers.pop()
 
 
 ##  Shared interface between setting container types
@@ -62,7 +91,7 @@ class ContainerInterface:
     #   \param name \type{string} The name of the property to retrieve.
     #
     #   \return The specified property value of the container item corresponding to key, or None if not found.
-    def getProperty(self, key: str, property_name: str) -> Any:
+    def getProperty(self, key: str, property_name: str, context: Optional[PropertyEvaluationContext] = None) -> Any:
         pass
 
     ##  Get whether the container item has a specific property.

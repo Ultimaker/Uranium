@@ -257,7 +257,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     ##  \copydoc ContainerInterface::getProperty
     #
     #   Reimplemented from ContainerInterface
-    def getProperty(self, key, property_name):
+    def getProperty(self, key, property_name, context = None):
         self._instantiateCachedValues()
         if key in self._instances:
             try:

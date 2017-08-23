@@ -68,7 +68,7 @@ class ContainerTestPlugin(ContainerInterface, PluginObject):
     #   None.
     #
     #   \return Always returns None.
-    def getProperty(self, key, property_name):
+    def getProperty(self, key, property_name, context = None):
         pass
 
     def hasProperty(self, key, property_name):

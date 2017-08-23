@@ -27,6 +27,7 @@ class BackendState(IntEnum):
     Error = 4
     Disabled = 5
 
+
 ##      Base class for any backend communication (separate piece of software).
 #       It makes use of the Socket class from libArcus for the actual communication bits.
 #       The message_handlers dict should be filled with string (full name of proto message), function pairs.
@@ -71,7 +72,7 @@ class Backend(PluginObject):
             self._process = self._runEngineProcess(command)
             if self._process is None: #Failed to start engine.
                 return
-            Logger.log("i", "Started engine process: %s" % (self.getEngineCommand()[0]))
+            Logger.log("i", "Started engine process: %s", self.getEngineCommand()[0])
             self._backendLog(bytes("Calling engine with: %s\n" % self.getEngineCommand(), "utf-8"))
             t = threading.Thread(target = self._storeOutputToLogThread, args = (self._process.stdout,))
             t.daemon = True
@@ -80,7 +81,7 @@ class Backend(PluginObject):
             t.daemon = True
             t.start()
         except FileNotFoundError as e:
-            Logger.log("e", "Unable to find backend executable: %s" % (self.getEngineCommand()[0]))
+            Logger.log("e", "Unable to find backend executable: %s", self.getEngineCommand()[0])
 
     def close(self):
         if self._socket:
@@ -89,7 +90,7 @@ class Backend(PluginObject):
             self._socket.close()
 
     def _backendLog(self, line):
-        Logger.log('d', "[Backend] " + str(line, encoding="utf-8").strip())
+        #Logger.log('d', "[Backend] " + str(line, encoding="utf-8").strip())
         self._backend_log.append(line)
 
     ##  Get the logging messages of the backend connection.

@@ -13,7 +13,7 @@ from UM.PluginObject import PluginObject
 from UM.Logger import Logger
 from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType
 from UM.Settings.DefinitionContainer import DefinitionContainer #For getting all definitions in this stack.
-from UM.Settings.Interfaces import ContainerInterface, ContainerRegistryInterface
+from UM.Settings.Interfaces import ContainerInterface, ContainerRegistryInterface, PropertyEvaluationContext
 from UM.Settings.SettingFunction import SettingFunction
 from UM.Settings.Validator import ValidatorState
 
@@ -194,10 +194,14 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     #   Note that if the property value is a function, this method will return the
     #   result of evaluating that property with the current stack. If you need the
     #   actual function, use getRawProperty()
-    def getProperty(self, key: str, property_name: str):
+    def getProperty(self, key: str, property_name: str, context: Optional[PropertyEvaluationContext] = None):
         value = self.getRawProperty(key, property_name)
         if isinstance(value, SettingFunction):
-            return value(self)
+            if context is None:
+                context = PropertyEvaluationContext(self)
+            context.pushContainer(self)
+            value = value(self, context)
+            context.popContainer()
 
         return value
 
