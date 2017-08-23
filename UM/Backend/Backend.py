@@ -90,7 +90,7 @@ class Backend(PluginObject):
             self._socket.close()
 
     def _backendLog(self, line):
-        #Logger.log('d', "[Backend] " + str(line, encoding="utf-8").strip())
+        Logger.log('d', "[Backend] " + str(line, encoding="utf-8").strip())
         self._backend_log.append(line)
 
     ##  Get the logging messages of the backend connection.
