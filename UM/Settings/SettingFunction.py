@@ -65,7 +65,7 @@ class SettingFunction:
         if context:
             value_provider = context.root_stack
         for name in self._used_values:
-            value = value_provider.getProperty(name, "value")
+            value = value_provider.getProperty(name, "value", context)
             if value is None:
                 continue
 

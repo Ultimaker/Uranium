@@ -35,6 +35,10 @@ class PropertyEvaluationContext:
     def popContainer(self):
         return self._stack_of_containers.pop()
 
+    @property
+    def context(self):
+        return self._context
+
 
 ##  Shared interface between setting container types
 #
