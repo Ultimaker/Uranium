@@ -62,6 +62,7 @@ class SettingFunction:
             return None
 
         locals = {} # type: Dict[str, Any]
+        # if there is a context, evaluate the values from the perspective of the original caller
         if context:
             value_provider = context.root_stack
         for name in self._used_values:
