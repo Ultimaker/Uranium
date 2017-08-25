@@ -11,8 +11,9 @@ import urllib.request
 import platform
 import json
 import codecs
-import webbrowser
 
+from PyQt5.QtCore import QUrl
+from PyQt5.QtGui import QDesktopServices
 
 
 from UM.i18n import i18nCatalog
@@ -31,7 +32,7 @@ class UpdateCheckerJob(Job):
     def actionTriggered(self, message, action):
         if action == "download":
             if self._download_url is not None:
-                webbrowser.open(self._download_url)
+                QDesktopServices.openUrl(QUrl(self._download_url))
 
     def run(self):
         self._download_url = None  # Reset download ur.
