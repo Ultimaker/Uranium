@@ -496,6 +496,7 @@ class Resources:
         Resources: "",
         Preferences: "",
         Cache: "",
+        DefinitionContainers: "definitions",
         InstanceContainers: "instances",
         ContainerStacks: "stacks",
         Themes: "themes",
