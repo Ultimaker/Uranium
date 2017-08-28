@@ -12,26 +12,17 @@ from collections import deque
 class PropertyEvaluationContext:
 
     def __init__(self, source_stack = None):
-        self._stack_of_containers = deque()
+        self.stack_of_containers = deque()
         if source_stack is not None:
-            self._stack_of_containers.append(source_stack)
-        self._context = {}
+            self.stack_of_containers.append(source_stack)
+        self.context = {}
 
-    @property
-    def root_stack(self):
-        if self._stack_of_containers:
-            return self._stack_of_containers[0]
-
-    @property
-    def stack_of_containers(self):
-        return self._stack_of_containers
+    def rootStack(self):
+        if self.stack_of_containers:
+            return self.stack_of_containers[0]
 
     def pushContainer(self, container):
-        self._stack_of_containers.append(container)
+        self.stack_of_containers.append(container)
 
     def popContainer(self):
-        return self._stack_of_containers.pop()
-
-    @property
-    def context(self):
-        return self._context
+        return self.stack_of_containers.pop()
