@@ -2,9 +2,10 @@
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 from enum import Enum
-from typing import Any
+from typing import Any, Optional
 
 from UM.Settings.Interfaces import ContainerInterface
+from UM.Settings.PropertyEvaluationContext import PropertyEvaluationContext
 from UM.Logger import Logger
 
 MYPY = False
@@ -39,7 +40,7 @@ class Validator(SettingFunction.SettingFunction):
         self._key = key  # type: str
 
     ##  Perform the actual validation.
-    def __call__(self, value_provider: ContainerInterface) -> Any:
+    def __call__(self, value_provider: ContainerInterface, context: Optional[PropertyEvaluationContext] = None) -> Any:
         if not value_provider:
             return
 
@@ -52,6 +53,9 @@ class Validator(SettingFunction.SettingFunction):
 
             if minimum is not None and maximum is not None and minimum > maximum:
                 raise ValueError("Cannot validate a state of setting {0} with minimum > maximum".format(self._key))
+
+            if context is not None:
+                value_provider = context.rootStack()
 
             value = value_provider.getProperty(self._key, "value")
             if value is None or value != value:

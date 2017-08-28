@@ -77,7 +77,7 @@ class MockContainer(ContainerInterface):
     #   If the key doesn't exist, returns None.
     #
     #   \param key The key of the item to get.
-    def getProperty(self, key, property_name):
+    def getProperty(self, key, property_name, context = None):
         if key in self.items:
             return self.items[key]
         return None
