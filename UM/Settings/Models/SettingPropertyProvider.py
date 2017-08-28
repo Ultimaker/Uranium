@@ -275,13 +275,17 @@ class SettingPropertyProvider(QObject):
                 self.isValueUsedChanged.emit()
             return
 
+        has_values_changed = False
         for property_name in property_names:
             if property_name not in self._watched_properties:
                 continue
 
+            has_values_changed = True
             self._property_map.insert(property_name, self._getPropertyValue(property_name))
 
         self._updateStackLevels()
+        if has_values_changed:
+            self.propertiesChanged.emit()
 
     def _update(self, container = None):
         if not self._stack or not self._watched_properties or not self._key:

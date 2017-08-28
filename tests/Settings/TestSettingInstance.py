@@ -18,7 +18,7 @@ class MockContainer():
 
         self._instances = []
 
-    def getProperty(self, key, property_name):
+    def getProperty(self, key, property_name, context = None):
         for instance in self._instances:
             if instance.definition.key == key:
                 try:

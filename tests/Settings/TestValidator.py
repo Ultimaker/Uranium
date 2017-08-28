@@ -19,7 +19,7 @@ class MockSettingInstance:
         self.maximum_value_warning = None
         self.value = value
 
-    def getProperty(self, key, property_name):
+    def getProperty(self, key, property_name, context = None):
         return getattr(self, property_name)
 
 ##  Called before the first test function is executed.

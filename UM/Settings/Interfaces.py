@@ -5,6 +5,7 @@ from typing import List, Dict, Any, Optional
 
 import UM.Decorators
 from UM.Signal import Signal
+from UM.Settings.PropertyEvaluationContext import PropertyEvaluationContext
 
 
 ##  Shared interface between setting container types
@@ -62,7 +63,7 @@ class ContainerInterface:
     #   \param name \type{string} The name of the property to retrieve.
     #
     #   \return The specified property value of the container item corresponding to key, or None if not found.
-    def getProperty(self, key: str, property_name: str) -> Any:
+    def getProperty(self, key: str, property_name: str, context: Optional[PropertyEvaluationContext] = None) -> Any:
         pass
 
     ##  Get whether the container item has a specific property.

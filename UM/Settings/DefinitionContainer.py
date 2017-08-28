@@ -167,7 +167,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     ##  \copydoc ContainerInterface::getProperty
     #
     #   Reimplemented from ContainerInterface.
-    def getProperty(self, key, property_name):
+    def getProperty(self, key, property_name, context = None):
         definition = self._getDefinition(key)
         if not definition:
             return None
