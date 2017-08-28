@@ -198,11 +198,11 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     def getProperty(self, key: str, property_name: str, context: Optional[PropertyEvaluationContext] = None):
         value = self.getRawProperty(key, property_name)
         if isinstance(value, SettingFunction):
-            if context is None:
-                context = PropertyEvaluationContext(self)
-            context.pushContainer(self)
+            if context is not None:
+                context.pushContainer(self)
             value = value(self, context)
-            context.popContainer()
+            if context is not None:
+                context.popContainer()
 
         return value
 
