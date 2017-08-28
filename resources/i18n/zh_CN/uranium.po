@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Uranium 2.7\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2017-08-02 14:05+0200\n"
-"PO-Revision-Date: 2017-08-16 08:30+0200\n"
+"PO-Revision-Date: 2017-08-28 11:00+0200\n"
 "Last-Translator: Bothof <info@bothof.nl>\n"
 "Language-Team: PCDotFan <pc@edu.ax>, Bothof <info@bothof.nl>\n"
 "Language: zh_CN\n"
@@ -38,7 +38,7 @@ msgstr "Wavefront OBJ 文件"
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:17
 msgctxt "@item:inlistbox"
 msgid "STL File (ASCII)"
-msgstr ""
+msgstr "STL 文件 (ASCII)"
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:23
 msgctxt "@item:inlistbox"
@@ -266,7 +266,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr ""
+msgstr "插件已安装。\n请重新启动应用程序以激活插件。"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:106
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:140
@@ -275,9 +275,7 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install plugin from <filename>{0}</filename>:\n"
 "<message>{1}</message>"
-msgstr ""
-"无法从 <filename>{0}</filename> 中安装插件：\n"
-"<message>{1}</message>"
+msgstr "无法从 <filename>{0}</filename> 中安装插件：\n<message>{1}</message>"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:127
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:132
@@ -286,7 +284,7 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install the plugin;\n"
 "<message>{0}</message>"
-msgstr ""
+msgstr "无法安装插件；\n<message>{0}</message>"
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:122
 #, python-brace-format
@@ -591,152 +589,152 @@ msgstr "下一步"
 #: Views/SimpleView/plugin.json
 msgctxt "description"
 msgid "Provides a simple solid mesh view."
-msgstr ""
+msgstr "提供简单实体网格视图。"
 
 #: Views/SimpleView/plugin.json
 msgctxt "name"
 msgid "Simple View"
-msgstr ""
+msgstr "简单视图"
 
 #: FileLogger/plugin.json
 msgctxt "description"
 msgid "Outputs log information to a file in your settings folder."
-msgstr ""
+msgstr "将日志信息输出到设置文件夹中的一个文件。"
 
 #: FileLogger/plugin.json
 msgctxt "name"
 msgid "File Logger"
-msgstr ""
+msgstr "文件日志记录"
 
 #: FileHandlers/STLReader/plugin.json
 msgctxt "description"
 msgid "Provides support for reading STL files."
-msgstr ""
+msgstr "提供对读取 STL 文件的支持。"
 
 #: FileHandlers/STLReader/plugin.json
 msgctxt "name"
 msgid "STL Reader"
-msgstr ""
+msgstr "STL 文件读取器"
 
 #: FileHandlers/OBJReader/plugin.json
 msgctxt "description"
 msgid "Makes it possible to read Wavefront OBJ files."
-msgstr ""
+msgstr "提供对读取 Wavefront OBJ 文件的支持。"
 
 #: FileHandlers/OBJReader/plugin.json
 msgctxt "name"
 msgid "Wavefront OBJ Reader"
-msgstr ""
+msgstr "Wavefront OBJ 文件读取器"
 
 #: FileHandlers/OBJWriter/plugin.json
 msgctxt "description"
 msgid "Makes it possible to write Wavefront OBJ files."
-msgstr ""
+msgstr "提供对写入 Wavefront OBJ 文件的支持。"
 
 #: FileHandlers/OBJWriter/plugin.json
 msgctxt "name"
 msgid "Wavefront OBJ Writer"
-msgstr ""
+msgstr "Wavefront OBJ 文件写入器"
 
 #: FileHandlers/STLWriter/plugin.json
 msgctxt "description"
 msgid "Provides support for writing STL files."
-msgstr ""
+msgstr "提供对写入 STL 文件的支持。"
 
 #: FileHandlers/STLWriter/plugin.json
 msgctxt "name"
 msgid "STL Writer"
-msgstr ""
+msgstr "STL 文件写入器"
 
 #: ConsoleLogger/plugin.json
 msgctxt "description"
 msgid "Outputs log information to the console."
-msgstr ""
+msgstr "输出日志信息至控制台。"
 
 #: ConsoleLogger/plugin.json
 msgctxt "name"
 msgid "Console Logger"
-msgstr ""
+msgstr "控制台日志记录"
 
 #: UpdateChecker/plugin.json
 msgctxt "description"
 msgid "Checks for updates of the software."
-msgstr ""
+msgstr "检查软件更新。"
 
 #: UpdateChecker/plugin.json
 msgctxt "name"
 msgid "Update Checker"
-msgstr ""
+msgstr "固件更新检查"
 
 #: LocalFileOutputDevice/plugin.json
 msgctxt "description"
 msgid "Enables saving to local files."
-msgstr ""
+msgstr "开启保存到本地文件的功能。"
 
 #: LocalFileOutputDevice/plugin.json
 msgctxt "name"
 msgid "Local File Output Device"
-msgstr ""
+msgstr "本地文件输出设备"
 
 #: Tools/ScaleTool/plugin.json
 msgctxt "description"
 msgid "Provides the Scale tool."
-msgstr ""
+msgstr "提供缩放工具。"
 
 #: Tools/ScaleTool/plugin.json
 msgctxt "name"
 msgid "Scale Tool"
-msgstr ""
+msgstr "缩放工具"
 
 #: Tools/SelectionTool/plugin.json
 msgctxt "description"
 msgid "Provides the Selection tool."
-msgstr ""
+msgstr "提供选择工具。"
 
 #: Tools/SelectionTool/plugin.json
 msgctxt "name"
 msgid "Selection Tool"
-msgstr ""
+msgstr "选择工具"
 
 #: Tools/TranslateTool/plugin.json
 msgctxt "description"
 msgid "Provides the Translate tool."
-msgstr ""
+msgstr "提供翻译工具。"
 
 #: Tools/TranslateTool/plugin.json
 msgctxt "name"
 msgid "Translate Tool"
-msgstr ""
+msgstr "翻译工具"
 
 #: Tools/CameraTool/plugin.json
 msgctxt "description"
 msgid "Provides the tool to manipulate the camera."
-msgstr ""
+msgstr "提供变换视角功能。"
 
 #: Tools/CameraTool/plugin.json
 msgctxt "name"
 msgid "Camera Tool"
-msgstr ""
+msgstr "视角工具"
 
 #: Tools/RotateTool/plugin.json
 msgctxt "description"
 msgid "Provides the Rotate tool."
-msgstr ""
+msgstr "提供旋转工具。"
 
 #: Tools/RotateTool/plugin.json
 msgctxt "name"
 msgid "Rotate Tool"
-msgstr ""
+msgstr "旋转工具"
 
 #: Tools/MirrorTool/plugin.json
 msgctxt "description"
 msgid "Provides the Mirror tool."
-msgstr ""
+msgstr "提供镜像工具。"
 
 #: Tools/MirrorTool/plugin.json
 msgctxt "name"
 msgid "Mirror Tool"
-msgstr ""
+msgstr "镜像工具"
 
 #~ msgctxt "@label"
 #~ msgid "Simple View"
