@@ -5,7 +5,8 @@ import ast
 import math # Imported here so it can be used easily by the setting functions.
 from typing import Any, Dict, Callable, Set, FrozenSet, NamedTuple, Optional
 
-from UM.Settings.Interfaces import ContainerInterface, PropertyEvaluationContext
+from UM.Settings.Interfaces import ContainerInterface
+from UM.Settings.PropertyEvaluationContext import PropertyEvaluationContext
 from UM.Logger import Logger
 
 MYPY = False

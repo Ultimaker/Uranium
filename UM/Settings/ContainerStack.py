@@ -13,7 +13,8 @@ from UM.PluginObject import PluginObject
 from UM.Logger import Logger
 from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType
 from UM.Settings.DefinitionContainer import DefinitionContainer #For getting all definitions in this stack.
-from UM.Settings.Interfaces import ContainerInterface, ContainerRegistryInterface, PropertyEvaluationContext
+from UM.Settings.Interfaces import ContainerInterface, ContainerRegistryInterface
+from UM.Settings.PropertyEvaluationContext import PropertyEvaluationContext
 from UM.Settings.SettingFunction import SettingFunction
 from UM.Settings.Validator import ValidatorState
 

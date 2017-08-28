@@ -4,7 +4,8 @@
 from enum import Enum
 from typing import Any, Optional
 
-from UM.Settings.Interfaces import ContainerInterface, PropertyEvaluationContext
+from UM.Settings.Interfaces import ContainerInterface
+from UM.Settings.PropertyEvaluationContext import PropertyEvaluationContext
 from UM.Logger import Logger
 
 MYPY = False
