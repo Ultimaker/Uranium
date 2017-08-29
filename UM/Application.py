@@ -79,6 +79,8 @@ class Application:
         PluginRegistry.addType("logger", Logger.addLogger)
         PluginRegistry.addType("extension", self.addExtension)
 
+        self.default_theme = self.getApplicationName()
+
         preferences = Preferences.getInstance()
         preferences.addPreference("general/language", "en")
         preferences.addPreference("general/visible_settings", "")
