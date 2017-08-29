@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 import sys
@@ -273,7 +273,7 @@ class QtApplication(QApplication, Application):
 
             self.mainWindowChanged.emit()
 
-    def getTheme(self, *args):
+    def getTheme(self):
         if self._theme is None:
             if self._engine is None:
                 Logger.log("e", "The theme cannot be accessed before the engine is initialised")
