@@ -294,7 +294,12 @@ class ScaleTool(Tool):
                     scale_vector = Vector(scale_factor, 1, 1)
                 else:
                     scale_vector = Vector(scale_factor, scale_factor, scale_factor)
-                Selection.applyOperation(ScaleOperation, scale_vector, scale_around_point = obj.getWorldPosition())
+
+                op = GroupedOperation()
+                for node in Selection.getAllSelectedObjects():
+                    op.addOperation(
+                        ScaleOperation(node, scale_vector, scale_around_point=node.getWorldPosition()))
+                op.push()
 
     ##  Set the height of the selected object(s) by scaling the first selected object to a certain height
     #
@@ -310,7 +315,12 @@ class ScaleTool(Tool):
                     scale_vector = Vector(1, scale_factor, 1)
                 else:
                     scale_vector = Vector(scale_factor, scale_factor, scale_factor)
-                Selection.applyOperation(ScaleOperation, scale_vector, scale_around_point = obj.getWorldPosition())
+
+                op = GroupedOperation()
+                for node in Selection.getAllSelectedObjects():
+                    op.addOperation(
+                        ScaleOperation(node, scale_vector, scale_around_point=node.getWorldPosition()))
+                op.push()
 
     ##  Set the depth of the selected object(s) by scaling the first selected object to a certain depth
     #
@@ -326,7 +336,12 @@ class ScaleTool(Tool):
                     scale_vector = Vector(1, 1, scale_factor)
                 else:
                     scale_vector = Vector(scale_factor, scale_factor, scale_factor)
-                Selection.applyOperation(ScaleOperation, scale_vector, scale_around_point = obj.getWorldPosition())
+
+                op = GroupedOperation()
+                for node in Selection.getAllSelectedObjects():
+                    op.addOperation(
+                        ScaleOperation(node, scale_vector, scale_around_point=node.getWorldPosition()))
+                op.push()
 
     ##  Set the x-scale of the selected object(s) by scaling the first selected object to a certain factor
     #
@@ -341,7 +356,12 @@ class ScaleTool(Tool):
                     scale_vector = Vector(scale_factor, 1, 1)
                 else:
                     scale_vector = Vector(scale_factor, scale_factor, scale_factor)
-                Selection.applyOperation(ScaleOperation, scale_vector, scale_around_point = obj.getWorldPosition())
+
+                op = GroupedOperation()
+                for node in Selection.getAllSelectedObjects():
+                    op.addOperation(
+                        ScaleOperation(node, scale_vector, scale_around_point=node.getWorldPosition()))
+                op.push()
 
     ##  Set the y-scale of the selected object(s) by scaling the first selected object to a certain factor
     #
@@ -356,7 +376,12 @@ class ScaleTool(Tool):
                     scale_vector = Vector(1, scale_factor, 1)
                 else:
                     scale_vector = Vector(scale_factor, scale_factor, scale_factor)
-                Selection.applyOperation(ScaleOperation, scale_vector, scale_around_point = obj.getWorldPosition())
+
+                op = GroupedOperation()
+                for node in Selection.getAllSelectedObjects():
+                    op.addOperation(
+                        ScaleOperation(node, scale_vector, scale_around_point=node.getWorldPosition()))
+                op.push()
 
     ##  Set the z-scale of the selected object(s) by scaling the first selected object to a certain factor
     #
@@ -371,7 +396,12 @@ class ScaleTool(Tool):
                     scale_vector = Vector(1, 1, scale_factor)
                 else:
                     scale_vector = Vector(scale_factor, scale_factor, scale_factor)
-                Selection.applyOperation(ScaleOperation, scale_vector, scale_around_point = obj.getWorldPosition())
+
+                op = GroupedOperation()
+                for node in Selection.getAllSelectedObjects():
+                    op.addOperation(
+                        ScaleOperation(node, scale_vector, scale_around_point=node.getWorldPosition()))
+                op.push()
 
     ##  Convenience function that gives the scale of an object in the coordinate space of the world.
     #
