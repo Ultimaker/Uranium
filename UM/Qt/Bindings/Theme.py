@@ -37,7 +37,7 @@ class Theme(QObject):
 
         self._initializeDefaults()
 
-        Preferences.getInstance().addPreference("general/theme", Application.getInstance().getApplicationName())
+        Preferences.getInstance().addPreference("general/theme", Application.getInstance().default_theme)
         try:
             theme_path = Resources.getPath(Resources.Themes, Preferences.getInstance().getValue("general/theme"))
             self.load(theme_path)
@@ -45,7 +45,7 @@ class Theme(QObject):
             Logger.log("e", "Could not find theme file, resetting to the default theme.")
 
             # cannot the current theme, so go back to the default
-            Preferences.getInstance().setValue("general/theme", Application.getInstance().getApplicationName())
+            Preferences.getInstance().setValue("general/theme", Application.getInstance().default_theme)
             theme_path = Resources.getPath(Resources.Themes, Preferences.getInstance().getValue("general/theme"))
             self.load(theme_path)
 
