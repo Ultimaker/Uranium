@@ -155,7 +155,7 @@ class Theme(QObject):
         return self._sizes
 
     @pyqtSlot(str)
-    def load(self, path):
+    def load(self, path, is_first_call = True):
         if path == self._path:
             return
 
@@ -166,7 +166,7 @@ class Theme(QObject):
         # Iteratively load inherited themes
         try:
             theme_id = data["metadata"]["inherits"]
-            self.load(Resources.getPath(Resources.Themes, theme_id))
+            self.load(Resources.getPath(Resources.Themes, theme_id), is_first_call = False)
         except FileNotFoundError:
             Logger.log("e", "Could not find inherited theme %s", theme_id)
         except KeyError:
@@ -229,7 +229,10 @@ class Theme(QObject):
 
         Logger.log("d", "Loaded theme %s", path)
         self._path = path
-        self.themeLoaded.emit()
+
+        # only emit the theme loaded signal once after all the themes in the inheritance chain have been loaded
+        if is_first_call:
+            self.themeLoaded.emit()
 
     def _initializeDefaults(self):
         self._fonts = {
