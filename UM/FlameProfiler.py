@@ -101,6 +101,8 @@ def clearProfileData():
 ##  Start recording profile data.
 def startRecordingProfileData():
     global record_profile_requested
+    global stop_record_profile_requested
+    stop_record_profile_requested = False
     record_profile_requested = True
 
 ##  Stop recording profile data.
