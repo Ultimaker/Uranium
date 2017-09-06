@@ -20,6 +20,7 @@ Item
         //: Reset Rotation tool button
         text: catalog.i18nc("@action:button","Reset")
         iconSource: UM.Theme.getIcon("rotate_reset");
+        property bool needBorder: true
 
         style: UM.Theme.styles.tool_button;
         z: 1
@@ -37,6 +38,7 @@ Item
         //: Lay Flat tool button
         text: catalog.i18nc("@action:button","Lay flat")
         iconSource: UM.Theme.getIcon("rotate_layflat");
+        property bool needBorder: true
 
         style: UM.Theme.styles.tool_button;
 
