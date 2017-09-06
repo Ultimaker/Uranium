@@ -155,20 +155,18 @@ class Theme(QObject):
         return self._sizes
 
     @pyqtSlot(str)
-    def load(self, path):
+    def load(self, path, is_first_call = True):
         if path == self._path:
             return
 
-        self._path = path
-
-        with open(os.path.join(self._path, "theme.json")) as f:
-            Logger.log("d", "Loading theme file: %s", os.path.join(self._path, "theme.json"))
+        with open(os.path.join(path, "theme.json")) as f:
+            Logger.log("d", "Loading theme file: %s", os.path.join(path, "theme.json"))
             data = json.load(f)
 
         # Iteratively load inherited themes
         try:
             theme_id = data["metadata"]["inherits"]
-            self.load(Resources.getPath(Resources.Themes, theme_id))
+            self.load(Resources.getPath(Resources.Themes, theme_id), is_first_call = False)
         except FileNotFoundError:
             Logger.log("e", "Could not find inherited theme %s", theme_id)
         except KeyError:
@@ -179,7 +177,7 @@ class Theme(QObject):
                 c = QColor(color[0], color[1], color[2], color[3])
                 self._colors[name] = c
 
-        fontsdir = os.path.join(self._path, "fonts")
+        fontsdir = os.path.join(path, "fonts")
         if os.path.isdir(fontsdir):
             for file in os.listdir(fontsdir):
                 if "ttf" in file:
@@ -206,19 +204,19 @@ class Theme(QObject):
 
                 self._sizes[name] = s
 
-        iconsdir = os.path.join(self._path, "icons")
+        iconsdir = os.path.join(path, "icons")
         if os.path.isdir(iconsdir):
             for icon in os.listdir(iconsdir):
                 name = os.path.splitext(icon)[0]
                 self._icons[name] = QUrl.fromLocalFile(os.path.join(iconsdir, icon))
 
-        imagesdir = os.path.join(self._path, "images")
+        imagesdir = os.path.join(path, "images")
         if os.path.isdir(imagesdir):
             for image in os.listdir(imagesdir):
                 name = os.path.splitext(image)[0]
                 self._images[name] = QUrl.fromLocalFile(os.path.join(imagesdir, image))
 
-        styles = os.path.join(self._path, "styles.qml")
+        styles = os.path.join(path, "styles.qml")
         if os.path.isfile(styles):
             c = QQmlComponent(self._engine, styles)
             context = QQmlContext(self._engine, self._engine)
@@ -229,8 +227,12 @@ class Theme(QObject):
                 for error in c.errors():
                     Logger.log("e", error.toString())
 
-        Logger.log("d", "Loaded theme %s", self._path)
-        self.themeLoaded.emit()
+        Logger.log("d", "Loaded theme %s", path)
+        self._path = path
+
+        # only emit the theme loaded signal once after all the themes in the inheritance chain have been loaded
+        if is_first_call:
+            self.themeLoaded.emit()
 
     def _initializeDefaults(self):
         self._fonts = {

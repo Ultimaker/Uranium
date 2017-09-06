@@ -107,6 +107,8 @@ class RotateTool(Tool):
 
             if not self.getDragStart():
                 self.setDragStart(event.x, event.y)
+                if not self.getDragStart(): #May have set it to None.
+                    return False
 
             if not self._rotating:
                 self._rotating = True
