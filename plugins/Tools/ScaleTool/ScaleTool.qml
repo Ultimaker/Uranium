@@ -59,6 +59,7 @@ Item
         //: Reset scale tool button
         text: catalog.i18nc("@action:button","Reset")
         iconSource: UM.Theme.getIcon("scale_reset");
+        property bool needBorder: true
 
         style: UM.Theme.styles.tool_button;
 
