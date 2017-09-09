@@ -15,7 +15,7 @@ LC_MESSAGES
 *.qmlc
 resources/i18n/en_US
 resources/i18n/x-test
-resources/i18n/7s
+resources/i18n/en_7S
 
 # JUnit
 junit.xml

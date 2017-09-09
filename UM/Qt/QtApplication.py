@@ -435,6 +435,8 @@ class QtApplication(QApplication, Application):
         lang = locale.uiLanguages()[0]
         lang = lang[0:lang.find("-")]
         for subdirectory in os.path.listdir(Resources.getPath(Resources.i18n)):
+            if subdirectory == "en_7S": #Never automatically go to Pirate.
+                continue
             if not os.path.isdir(Resources.getPath(Resources.i18n, subdirectory)):
                 continue
             if subdirectory.startswith(lang + "_"): #Only match the language code, not the country code.
