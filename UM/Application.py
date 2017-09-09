@@ -82,7 +82,7 @@ class Application:
         self.default_theme = self.getApplicationName()
 
         preferences = Preferences.getInstance()
-        preferences.addPreference("general/language", "en")
+        preferences.addPreference("general/language", "en_US")
         preferences.addPreference("general/visible_settings", "")
 
         try:
@@ -235,7 +235,7 @@ class Application:
         if env_lang:
             return env_lang
 
-        return "en"
+        return "en_US"
 
     ##  Application has a list of plugins that it *must* have. If it does not have these, it cannot function.
     #   These plugins can not be disabled in any way.
