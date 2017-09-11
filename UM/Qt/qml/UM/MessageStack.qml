@@ -5,6 +5,7 @@ import QtQuick 2.2
 import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.3
 import QtQuick.Layouts 1.1
+import QtGraphicalEffects 1.0
 
 import UM 1.0 as UM
 import "."
@@ -16,16 +17,23 @@ ListView {
     visible: true
 
     model: UM.VisibleMessagesModel { }
-    spacing: UM.Theme.getSize("default_lining").height
+    spacing: UM.Theme.getSize("message_margin").height
+
+    anchors.bottomMargin: UM.Theme.getSize("message_margin").height
 
     interactive: false;
     delegate: Rectangle
     {
         id: message
-        width: UM.Theme.getSize("message").width
+
         property int labelHeight: messageLabel.height + (UM.Theme.getSize("default_margin").height * 2)
         property int progressBarHeight: totalProgressBar.height + UM.Theme.getSize("default_margin").height
         property int actionButtonsHeight: actionButtons.height > 0 ? actionButtons.height + UM.Theme.getSize("default_margin").height : 0
+        property variant actions: model.actions
+        property variant model_id: model.id
+
+        width: UM.Theme.getSize("message").width
+
         height:
         {
             if (model.progress == null)
@@ -37,14 +45,21 @@ ListView {
                 return message.labelHeight + message.progressBarHeight + message.actionButtonsHeight
             }
         }
-        anchors.horizontalCenter: parent.horizontalCenter;
+
+        anchors.horizontalCenter: parent.horizontalCenter
 
         color: UM.Theme.getColor("message_background")
-        border.width: UM.Theme.getSize("default_lining").width
-        border.color: UM.Theme.getColor("message_border")
 
-        property variant actions: model.actions;
-        property variant model_id: model.id
+        layer.enabled: true
+        layer.effect: DropShadow {
+            transparentBorder: true
+            horizontalOffset: 0
+            verticalOffset: 0
+            samples: 9
+            radius: 6
+            color: UM.Theme.getColor("message_shadow")
+            source: message
+        }
 
         Text {
             id: messageLabel
@@ -56,7 +71,7 @@ ListView {
                 topMargin: UM.Theme.getSize("default_margin").width;
 
                 right: actionButtons.left;
-                rightMargin: UM.Theme.getSize("default_margin").width;
+                rightMargin: UM.Theme.getSize("default_margin").width * 2;
 
                 verticalCenter: model.progress != null ? undefined : parent.verticalCenter;
                 bottomMargin: UM.Theme.getSize("default_margin").width;
@@ -101,37 +116,26 @@ ListView {
             id: closeButton;
             width: UM.Theme.getSize("message_close").width;
             height: UM.Theme.getSize("message_close").height;
+
             anchors {
                 right: parent.right;
-                rightMargin: UM.Theme.getSize("default_margin").width / 2;
+                rightMargin: UM.Theme.getSize("default_margin").width;
                 top: parent.top;
-                topMargin: UM.Theme.getSize("default_margin").width / 2;
+                topMargin: UM.Theme.getSize("default_margin").width;
             }
+
             UM.RecolorImage {
                 anchors.fill: parent;
                 sourceSize.width: width
                 sourceSize.height: width
-                color:
-                {
-                    if(closeButton.pressed)
-                    {
-                        return UM.Theme.getColor("message_button_active");
-                    }
-                    else if(closeButton.hovered)
-                    {
-                        return UM.Theme.getColor("message_button_hover");
-                    }
-                    else
-                    {
-                        return UM.Theme.getColor("message_button");
-                    }
-                }
-                source: UM.Theme.getIcon("cross2")
+                color: UM.Theme.getColor("message_text")
+                source: UM.Theme.getIcon("cross1")
             }
 
             onClicked: base.model.hideMessage(model.id)
             visible: model.dismissable
             enabled: model.dismissable
+
             style: ButtonStyle {
                 background: Rectangle {
                     color: UM.Theme.getColor("message_background")
