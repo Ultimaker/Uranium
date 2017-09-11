@@ -28,7 +28,7 @@ PreferencesPage
             id: languageComboBox
             model: ListModel {
                 id: languageList
-                ListElement { text: "English"; code: "en" }
+                ListElement { text: "English"; code: "en_US" }
             }
 
             currentIndex:
