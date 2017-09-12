@@ -356,7 +356,7 @@ class QtApplication(QApplication, Application):
         if not path:
             Logger.log("w", "Could not find any translations matching {0} for file {1}, falling back to english".format(language, file))
             try:
-                path = Resources.getPath(Resources.i18n, "en", "LC_MESSAGES", file + ".qm")
+                path = Resources.getPath(Resources.i18n, "en_US", "LC_MESSAGES", file + ".qm")
             except FileNotFoundError:
                 Logger.log("w", "Could not find English translations for file {0}. Switching to developer english.".format(file))
                 return
@@ -429,14 +429,18 @@ class QtApplication(QApplication, Application):
             except FileNotFoundError:
                 pass
 
-        # If that fails, see if we can extract a language "class" from the
-        # preferred language. This will turn "en-GB" into "en" for example.
+        # If that fails, see if we can extract a language code from the
+        # preferred language, regardless of the country code. This will turn
+        # "en-GB" into "en" for example.
         lang = locale.uiLanguages()[0]
         lang = lang[0:lang.find("-")]
-        try:
-            return Resources.getPath(Resources.i18n, lang, "LC_MESSAGES", file + ".qm")
-        except FileNotFoundError:
-            pass
+        for subdirectory in os.path.listdir(Resources.getPath(Resources.i18n)):
+            if subdirectory == "en_7S": #Never automatically go to Pirate.
+                continue
+            if not os.path.isdir(Resources.getPath(Resources.i18n, subdirectory)):
+                continue
+            if subdirectory.startswith(lang + "_"): #Only match the language code, not the country code.
+                return Resources.getPath(Resources.i18n, lang, "LC_MESSAGES", file + ".qm")
 
         return None
 

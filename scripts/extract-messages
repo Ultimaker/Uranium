@@ -34,7 +34,7 @@ for pot in $basedir/resources/i18n/*.pot; do
     msgfilter -i $po -o $po sed -e "s/Language: en/Language: x-test/"
 
     #Auto-translate the translation files to Pirate.
-    dir=$basedir/resources/i18n/7s
+    dir=$basedir/resources/i18n/en_7S
     mkdir -p $dir
     po=$dir/${filename/.pot/.po}
     python3 $scriptdir/pirate.py $pot $po
