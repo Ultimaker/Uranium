@@ -168,12 +168,12 @@ ListView {
             Repeater
             {
                 model: message.actions
-                delegate: Button{
+                delegate: Button {
                     id: messageStackButton
                     onClicked: base.model.actionTriggered(message.model_id, model.action_id)
                     text: model.name
                     style: ButtonStyle {
-                        background: Item{
+                        background: Item {
                             property int standardWidth: UM.Theme.getSize("message_button").width
                             property int responsiveWidth: messageStackButtonText.width + UM.Theme.getSize("default_margin").width
                             implicitWidth: responsiveWidth > standardWidth ? responsiveWidth : standardWidth
