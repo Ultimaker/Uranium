@@ -5,7 +5,6 @@ import QtQuick 2.2
 import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.3
 import QtQuick.Layouts 1.1
-import QtGraphicalEffects 1.0
 
 import UM 1.0 as UM
 import "."
@@ -50,16 +49,8 @@ ListView {
 
         color: UM.Theme.getColor("message_background")
 
-        layer.enabled: true
-        layer.effect: DropShadow {
-            transparentBorder: true
-            horizontalOffset: 0
-            verticalOffset: 0
-            samples: 9
-            radius: 5
-            color: UM.Theme.getColor("message_shadow")
-            source: message
-        }
+        border.width: UM.Theme.getSize("default_lining").width
+        border.color: UM.Theme.getColor("message_border")
 
         Text {
             id: messageLabel
