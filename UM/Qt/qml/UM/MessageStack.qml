@@ -56,7 +56,7 @@ ListView {
             horizontalOffset: 0
             verticalOffset: 0
             samples: 9
-            radius: 6
+            radius: 5
             color: UM.Theme.getColor("message_shadow")
             source: message
         }
