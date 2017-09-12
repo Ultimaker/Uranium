@@ -1,8 +1,9 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 import imp
 import os
+import stat #To set file permissions correctly.
 import zipfile
 
 from UM.Preferences import Preferences
@@ -117,7 +118,10 @@ class PluginRegistry(QObject):
                         new_version = Version(metadata["version"])
                         old_version = Version(self.getMetaData(plugin_id)["plugin"]["version"])
                         if new_version > old_version:
-                            zip_ref.extractall(plugin_folder)
+                            for info in zip_ref.infolist():
+                                extracted_path = zip_ref.extract(info.filename, path = plugin_folder)
+                                permissions = os.stat(extracted_path).st_mode
+                                os.chmod(extracted_path, permissions | stat.S_IEXEC) #Make these files executable.
                             result["status"] = "ok"
                             result["message"] = success_message
                             return result
@@ -132,7 +136,10 @@ class PluginRegistry(QObject):
                     result["message"] = i18n_catalog.i18nc("@info:status", "Failed to install the plugin;\n<message>{0}</message>", "Unable to upgrade or install bundled plugins.")
                     return result
 
-                zip_ref.extractall(plugin_folder)
+                for info in zip_ref.infolist():
+                    extracted_path = zip_ref.extract(info.filename, path = plugin_folder)
+                    permissions = os.stat(extracted_path).st_mode
+                    os.chmod(extracted_path, permissions | stat.S_IEXEC) #Make these files executable.
 
         except: # Installing a new plugin should never crash the application.
             Logger.logException("d", "An exception occurred while installing plugin {path}".format(path = plugin_path))
