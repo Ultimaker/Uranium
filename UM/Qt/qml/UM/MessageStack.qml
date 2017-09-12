@@ -25,47 +25,32 @@ ListView {
     {
         id: message
 
-        property int labelHeight: messageLabel.height + (UM.Theme.getSize("default_margin").height * 2)
+        property int labelHeight: messageLabel.height + (UM.Theme.getSize("message_inner_margin").height * 2)
         property int progressBarHeight: totalProgressBar.height + UM.Theme.getSize("default_margin").height
         property int actionButtonsHeight: actionButtons.height > 0 ? actionButtons.height + UM.Theme.getSize("default_margin").height : 0
         property variant actions: model.actions
         property variant model_id: model.id
 
         width: UM.Theme.getSize("message").width
-
-        height:
-        {
-            if (model.progress == null)
-            {
-                return Math.max(message.labelHeight, actionButtons.y + message.actionButtonsHeight)
-            }
-            else
-            {
-                return message.labelHeight + message.progressBarHeight + message.actionButtonsHeight
-            }
-        }
-
+        height: (model.progress == null) ? Math.max(message.labelHeight, actionButtons.y + message.actionButtonsHeight) : Math.max(message.labelHeight + message.progressBarHeight + message.actionButtonsHeight)
         anchors.horizontalCenter: parent.horizontalCenter
 
         color: UM.Theme.getColor("message_background")
-
         border.width: UM.Theme.getSize("default_lining").width
         border.color: UM.Theme.getColor("message_border")
 
         Text {
             id: messageLabel
+
             anchors {
                 left: parent.left;
-                leftMargin: UM.Theme.getSize("default_margin").width;
-
+                leftMargin: UM.Theme.getSize("message_inner_margin").width
                 top: model.progress != null ? parent.top : undefined;
-                topMargin: UM.Theme.getSize("default_margin").width;
-
+                topMargin: UM.Theme.getSize("message_inner_margin").height
                 right: actionButtons.left;
-                rightMargin: UM.Theme.getSize("default_margin").width * 2;
-
+                rightMargin: UM.Theme.getSize("message_inner_margin").width + closeButton.width
                 verticalCenter: model.progress != null ? undefined : parent.verticalCenter;
-                bottomMargin: UM.Theme.getSize("default_margin").width;
+                bottomMargin: UM.Theme.getSize("message_inner_margin").height
             }
 
             function getProgressText(){
@@ -97,10 +82,12 @@ ListView {
             property string backgroundColor: UM.Theme.getColor("message_progressbar_background")
             property string controlColor: UM.Theme.getColor("message_progressbar_control")
 
-            anchors.top: messageLabel.bottom;
-            anchors.topMargin: UM.Theme.getSize("default_margin").width;
-            anchors.left: parent.left;
-            anchors.leftMargin: UM.Theme.getSize("default_margin").width;
+            anchors.top: messageLabel.bottom
+            anchors.topMargin: UM.Theme.getSize("message_inner_margin").height
+            anchors.left: parent.left
+            anchors.leftMargin: UM.Theme.getSize("message_inner_margin").width
+            anchors.right: parent.right
+            anchors.rightMargin: UM.Theme.getSize("message_inner_margin").width
         }
 
         Button {
@@ -140,7 +127,7 @@ ListView {
 
             anchors {
                 right: parent.right
-                rightMargin: UM.Theme.getSize("default_margin").width
+                rightMargin: UM.Theme.getSize("message_inner_margin").width
                 top:
                 {
                     if (totalProgressBar.visible)
@@ -153,7 +140,7 @@ ListView {
                     }
                     return message.top;
                 }
-                topMargin: UM.Theme.getSize("default_margin").height
+                topMargin: UM.Theme.getSize("message_inner_margin").height
             }
 
             Repeater
@@ -166,7 +153,7 @@ ListView {
                     style: ButtonStyle {
                         background: Item {
                             property int standardWidth: UM.Theme.getSize("message_button").width
-                            property int responsiveWidth: messageStackButtonText.width + UM.Theme.getSize("default_margin").width
+                            property int responsiveWidth: messageStackButtonText.width + UM.Theme.getSize("message_inner_margin").width
                             implicitWidth: responsiveWidth > standardWidth ? responsiveWidth : standardWidth
                             implicitHeight: UM.Theme.getSize("message_button").height
                             Rectangle {
