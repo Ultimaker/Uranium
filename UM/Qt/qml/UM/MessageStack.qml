@@ -32,11 +32,11 @@ ListView {
         property variant actions: model.actions
         property variant model_id: model.id
 
-        property int total_message : Math.max(message.labelHeight, message.actionButtonsHeight) + message.labelTopBottomMargin
-        property int total_progressbar : message.labelHeight + message.progressBarHeight + message.actionButtonsHeight + UM.Theme.getSize("default_margin").height / 2
+        property int totalMessageHeight: Math.max(message.labelHeight, message.actionButtonsHeight) + message.labelTopBottomMargin
+        property int totalProgressBarHeight : message.labelHeight + message.progressBarHeight + message.actionButtonsHeight + UM.Theme.getSize("default_margin").height / 2
 
         width: UM.Theme.getSize("message").width
-        height: (model.progress == null) ? total_message : total_progressbar
+        height: (model.progress == null) ? totalMessageHeight : totalProgressBarHeight
         anchors.horizontalCenter: parent.horizontalCenter
 
         color: UM.Theme.getColor("message_background")
