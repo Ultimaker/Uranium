@@ -1,20 +1,19 @@
 # Copyright (c) 2016 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
-from typing import List
-
-from UM.Qt.ListModel import ListModel
+import os
+from typing import Dict, List
 
 from PyQt5.QtCore import pyqtProperty, Qt, pyqtSignal, pyqtSlot, QUrl
 
-from UM.PluginRegistry import PluginRegistry #For getting the possible profile readers and writers.
+from UM.Qt.ListModel import ListModel
+
+from UM.PluginRegistry import PluginRegistry  # For getting the possible profile readers and writers.
 from UM.Settings.ContainerRegistry import ContainerRegistry
 from UM.Settings.InstanceContainer import InstanceContainer
 
-import os
-from typing import Dict
-
 from UM.i18n import i18nCatalog
 catalog = i18nCatalog("uranium")
+
 
 ##  Model that holds instance containers. By setting the filter property the instances held by this model can be
 #   changed.
