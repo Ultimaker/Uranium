@@ -40,7 +40,7 @@ class InstanceContainersModel(ListModel):
         ContainerRegistry.getInstance().containerAdded.connect(self._onContainerChanged)
         ContainerRegistry.getInstance().containerRemoved.connect(self._onContainerChanged)
 
-        # List of fitlers for queries. The result is the union of the each list of results.
+        # List of filters for queries. The result is the union of the each list of results.
         self._filter_dicts = [{}]  # type: List[Dict[str,str]]
         self._update()
 
@@ -84,7 +84,7 @@ class InstanceContainersModel(ListModel):
 
     ##  Fetch the list of containers to display.
     #
-    #   This method is intended to be overrideable by subclasses.
+    #   This method is intended to be overridable by subclasses.
     #
     #   \return \type{List[ContainerInstance]}
     def _fetchInstanceContainers(self):
