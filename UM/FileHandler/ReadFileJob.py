@@ -33,7 +33,7 @@ class ReadFileJob(Job):
             return None
         reader = self._handler.getReaderForFile(self._filename)
         if not reader:
-            result_message = Message(i18n_catalog.i18nc("@info:status Don't translate the XML tag <filename>!", "Cannot open file type <filename>{0}</filename>", self._filename), lifetime=0)
+            result_message = Message(i18n_catalog.i18nc("@info:status Don't translate the XML tag <filename>!", "Cannot open file type <filename>{0}</filename>", self._filename), lifetime=0, title = i18n_catalog.i18nc("@info:title", "Invalid File"))
             result_message.show()
             return
 
@@ -46,11 +46,16 @@ class ReadFileJob(Job):
 
         if pre_read_result != MeshReader.PreReadResult.accepted:
             if pre_read_result == MeshReader.PreReadResult.failed:
-                result_message = Message(i18n_catalog.i18nc("@info:status Don't translate the XML tag <filename>!", "Failed to load <filename>{0}</filename>", self._filename), lifetime=0)
+                result_message = Message(i18n_catalog.i18nc("@info:status Don't translate the XML tag <filename>!", "Failed to load <filename>{0}</filename>", self._filename),
+                                         lifetime=0,
+                                         title = i18n_catalog.i18nc("@info:title", "Invalid File"))
                 result_message.show()
             return
 
-        self._loading_message = Message(i18n_catalog.i18nc("@info:status Don't translate the XML tag <filename>!", "Loading <filename>{0}</filename>", self._filename), lifetime=0, dismissable=False)
+        self._loading_message = Message(i18n_catalog.i18nc("@info:status Don't translate the XML tag <filename>!", "Loading <filename>{0}</filename>", self._filename),
+                                        lifetime=0,
+                                        dismissable=False,
+                                        title = i18n_catalog.i18nc("@info:title", "Loading"))
         self._loading_message.setProgress(-1)
         self._loading_message.show()
 
@@ -66,7 +71,7 @@ class ReadFileJob(Job):
         finally:
             if self._result is None:
                 self._loading_message.hide()
-                result_message = Message(i18n_catalog.i18nc("@info:status Don't translate the XML tag <filename>!", "Failed to load <filename>{0}</filename>", self._filename), lifetime=0)
+                result_message = Message(i18n_catalog.i18nc("@info:status Don't translate the XML tag <filename>!", "Failed to load <filename>{0}</filename>", self._filename), lifetime=0, title = i18n_catalog.i18nc("@info:title", "Invalid File"))
                 result_message.show()
                 return
             self._loading_message.hide()

@@ -49,7 +49,7 @@ class UpdateCheckerJob(Job):
         except Exception as e:
             Logger.log("w", "Failed to check for new version: %s" % e)
             if not self.silent:
-                Message(i18n_catalog.i18nc("@info", "Could not access update information.")).show()
+                Message(i18n_catalog.i18nc("@info", "Could not access update information."), title = i18n_catalog.i18nc("@info:title", "Version Upgrade")).show()
             return
 
         try:
@@ -60,12 +60,12 @@ class UpdateCheckerJob(Job):
                     local_version = Version(Application.getInstance().getVersion())
                 else:
                     if not self.silent:
-                        Message(i18n_catalog.i18nc("@info", "The version you are using does not support checking for updates.")).show()
+                        Message(i18n_catalog.i18nc("@info", "The version you are using does not support checking for updates."), title = i18n_catalog.i18nc("@info:title", "Warning")).show()
                     return
             except ValueError:
                 Logger.log("w", "Could not determine application version from string %s, not checking for updates", Application.getInstance().getVersion())
                 if not self.silent:
-                    Message(i18n_catalog.i18nc("@info", "The version you are using does not support checking for updates.")).show()
+                    Message(i18n_catalog.i18nc("@info", "The version you are using does not support checking for updates."), title = i18n_catalog.i18nc("@info:title", "Version Upgrade")).show()
                 return
 
             if application_name in data:
@@ -76,7 +76,7 @@ class UpdateCheckerJob(Job):
                             newest_version = Version([int(value["major"]), int(value["minor"]), int(value["revision"])])
                             if local_version < newest_version:
                                 Logger.log("i", "Found a new version of the software. Spawning message")
-                                message = Message(i18n_catalog.i18nc("@info", "A new version is available!"))
+                                message = Message(i18n_catalog.i18nc("@info", "A new version is available!"), title = i18n_catalog.i18nc("@info:title", "Version Upgrade"))
                                 message.addAction("download", i18n_catalog.i18nc("@action:button", "Download"), "[no_icon]", "[no_description]")
                                 self._download_url = value["url"]
                                 message.actionTriggered.connect(self.actionTriggered)
@@ -89,8 +89,8 @@ class UpdateCheckerJob(Job):
                 Logger.log("w", "Did not find any version information for %s." % application_name)
         except Exception:
             Logger.logException("e", "Exception in update checker while parsing the JSON file.")
-            Message(i18n_catalog.i18nc("@info", "An exception occurred while checking for updates.")).show()
+            Message(i18n_catalog.i18nc("@info", "An exception occurred while checking for updates."), title = i18n_catalog.i18nc("@info:title", "Error")).show()
             no_new_version = False  # Just to suppress the message below.
 
         if no_new_version and not self.silent:
-            Message(i18n_catalog.i18nc("@info", "No new version was found.")).show()
+            Message(i18n_catalog.i18nc("@info", "No new version was found."), title = i18n_catalog.i18nc("@info:title", "Version Upgrade")).show()

@@ -25,14 +25,18 @@ ListView {
     {
         id: message
 
+        property int labelTopBottomMargin: UM.Theme.getSize("default_margin").height / 2
         property int labelHeight: messageLabel.height + (UM.Theme.getSize("message_inner_margin").height * 2)
         property int progressBarHeight: totalProgressBar.height + UM.Theme.getSize("default_margin").height
         property int actionButtonsHeight: actionButtons.height > 0 ? actionButtons.height + UM.Theme.getSize("default_margin").height : 0
         property variant actions: model.actions
         property variant model_id: model.id
 
+        property int total_message : Math.max(message.labelHeight, message.actionButtonsHeight) + message.labelTopBottomMargin
+        property int total_progressbar : message.labelHeight + message.progressBarHeight + message.actionButtonsHeight + UM.Theme.getSize("default_margin").height / 2
+
         width: UM.Theme.getSize("message").width
-        height: (model.progress == null) ? Math.max(message.labelHeight, actionButtons.y + message.actionButtonsHeight) : Math.max(message.labelHeight + message.progressBarHeight + message.actionButtonsHeight)
+        height: (model.progress == null) ? total_message : total_progressbar
         anchors.horizontalCenter: parent.horizontalCenter
 
         color: UM.Theme.getColor("message_background")
@@ -40,17 +44,32 @@ ListView {
         border.color: UM.Theme.getColor("message_border")
 
         Text {
+            id: messageTitle
+
+            anchors {
+                left: parent.left;
+                leftMargin: UM.Theme.getSize("message_inner_margin").width
+                top: parent.top;
+                topMargin: model.title != undefined ? UM.Theme.getSize("default_margin").height / 2 : 0;
+            }
+
+            text: model.title == undefined ? "" : model.title
+            color: UM.Theme.getColor("message_text")
+            font: UM.Theme.getFont("default_bold")
+            wrapMode: Text.Wrap;
+        }
+
+        Text {
             id: messageLabel
 
             anchors {
                 left: parent.left;
                 leftMargin: UM.Theme.getSize("message_inner_margin").width
-                top: model.progress != null ? parent.top : undefined;
-                topMargin: UM.Theme.getSize("message_inner_margin").height
                 right: actionButtons.left;
                 rightMargin: UM.Theme.getSize("message_inner_margin").width + closeButton.width
-                verticalCenter: model.progress != null ? undefined : parent.verticalCenter;
-                bottomMargin: UM.Theme.getSize("message_inner_margin").height
+
+                top: model.progress != null ? messageTitle.bottom : messageTitle.bottom;
+                topMargin: message.labelTopBottomMargin;
             }
 
             function getProgressText(){
@@ -83,7 +102,7 @@ ListView {
             property string controlColor: UM.Theme.getColor("message_progressbar_control")
 
             anchors.top: messageLabel.bottom
-            anchors.topMargin: UM.Theme.getSize("message_inner_margin").height
+            anchors.topMargin: UM.Theme.getSize("message_inner_margin").height / 2
             anchors.left: parent.left
             anchors.leftMargin: UM.Theme.getSize("message_inner_margin").width
             anchors.right: parent.right
@@ -128,19 +147,7 @@ ListView {
             anchors {
                 right: parent.right
                 rightMargin: UM.Theme.getSize("message_inner_margin").width
-                top:
-                {
-                    if (totalProgressBar.visible)
-                    {
-                        return totalProgressBar.bottom;
-                    }
-                    else if (closeButton.visible)
-                    {
-                        return closeButton.bottom;
-                    }
-                    return message.top;
-                }
-                topMargin: UM.Theme.getSize("message_inner_margin").height
+                bottom: messageLabel.bottom
             }
 
             Repeater

@@ -13,8 +13,9 @@ class Message:
     #   \param lifetime How long should the message be displayed (in seconds).
     #                   if lifetime is 0, it will never automatically be destroyed.
     #   \param dismissible Can the user dismiss the message?
+    #   \param title Phrase that will be shown above the message
     #   \progress Is there nay progress to be displayed? if -1, it's seen as indeterminate
-    def __init__(self, text = "", lifetime = 30, dismissable = True, progress = None): #pylint: disable=bad-whitespace
+    def __init__(self, text = "", lifetime = 30, dismissable = True, progress = None, title = None): #pylint: disable=bad-whitespace
         super().__init__()
         self._application = Application.getInstance()
         self._visible = False
@@ -25,6 +26,7 @@ class Message:
         self._lifetime_timer = None
         self._dismissable = dismissable # Can the message be closed by user?
         self._actions = []
+        self._title = title
 
     actionTriggered = Signal()
 
@@ -113,6 +115,19 @@ class Message:
     #   This should be a value between 0 and the value of ``getMaxProgress()``.
     def getProgress(self):
         return self._progress
+
+    ##  Changes the message title.
+    #
+    #   \param text The new title for the message. Please ensure that this text
+    #   is internationalised.
+    def setTitle(self, title: str):
+        self._title = title
+
+    ##  Returns the message title.
+    #
+    #   \return The message title.
+    def getTitle(self) -> str:
+        return self._title
 
     ##  Hides this message.
     #
