@@ -70,7 +70,7 @@ class SceneNode():
         # Can this SceneNode be selected in any way?
         self._selectable = False  # type: bool
 
-        # Should the AxisAlignedBounxingBox be re-calculated?
+        # Should the AxisAlignedBoundingBox be re-calculated?
         self._calculate_aabb = True  # type: bool
 
         # The AxisAligned bounding box.
@@ -80,6 +80,9 @@ class SceneNode():
         self._visible = kwargs.get("visible", True)  # type: bool
         self._name = kwargs.get("name", "")  # type: str
         self._decorators = []  # type: List[SceneNodeDecorator]
+
+        # Store custom settings to be compatible with Savitar SceneNode
+        self._settings = {}
 
         ## Signals
         self.boundingBoxChanged.connect(self.calculateBoundingBoxMesh)
@@ -622,6 +625,15 @@ class SceneNode():
 
     def getShear(self) -> Vector:
         return self._shear
+
+    def setSetting(self, key, value):
+        self._settings[key] = value
+
+    def getSetting(self, key, defaultValue):
+        if (key in self._settings):
+            return self._settings[key]
+        return defaultValue
+
 
     ##  private:
     def _transformChanged(self):
