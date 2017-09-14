@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 from PyQt5.QtCore import QObject, pyqtProperty, Q_ENUMS, pyqtSignal
@@ -61,6 +61,10 @@ class Duration(QObject):
     def valid(self):
         return self._days != -1 and self._hours != -1 and self._minutes != -1 and self._seconds != -1
 
+    @pyqtProperty(bool, notify = durationChanged)
+    def isTotalDurationZero(self):
+        return self._days == 0 and self._hours == 0 and self._minutes == 0 and self._seconds == 0
+
     ##  Set the duration in seconds.
     #
     #   This will convert the given amount of seconds into an amount of days, hours, minutes and seconds.
@@ -115,7 +119,3 @@ class Duration(QObject):
             return "%02d:%02d:%02d" % (self._days * 24 + self._hours, self._minutes, self._seconds)
 
         return ""
-
-    @pyqtProperty(int, notify = durationChanged)
-    def totalSeconds(self):
-        return self._days * 3600 * 24 + self._hours * 3600 + self._minutes * 60 + self._seconds
