@@ -45,11 +45,14 @@ add_custom_target(extract-messages ${CMAKE_SOURCE_DIR}/scripts/extract-messages 
 # Build Translations
 CREATE_TRANSLATION_TARGETS()
 
-if(APPLE OR WIN32)
-    install(DIRECTORY UM DESTINATION lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/site-packages)
+if(EXISTS /etc/debian_version)
+    # Running on a debian-based system, which requires special handling for python modules.
+    set(PYTHON_SITE_PACKAGES_DIR lib/python${PYTHON_VERSION_MAJOR}/dist-packages CACHE STRING "Directory to install Python bindings to")
 else()
-    install(DIRECTORY UM DESTINATION lib/python${PYTHON_VERSION_MAJOR}/dist-packages)
+    set(PYTHON_SITE_PACKAGES_DIR lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/site-packages CACHE STRING "Directory to install Python bindings to")
 endif()
+
+install(DIRECTORY UM DESTINATION ${PYTHON_SITE_PACKAGES_DIR})
 install(FILES ${CMAKE_SOURCE_DIR}/cmake/UraniumTranslationTools.cmake
         DESTINATION ${CMAKE_INSTALL_DATADIR}/cmake-${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}/Modules/ )
 install(DIRECTORY resources DESTINATION ${CMAKE_INSTALL_DATADIR}/uranium)
