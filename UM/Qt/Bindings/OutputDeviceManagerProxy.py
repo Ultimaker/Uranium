@@ -1,14 +1,16 @@
-# Copyright (c) 2016 Ultimaker B.V.
+# Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal, pyqtSlot
 
 from UM.Application import Application
+from UM.i18n import i18nCatalog
 from UM.Scene.Selection import Selection
 from UM.Message import Message
 from UM.OutputDevice import OutputDeviceError
 from UM.Logger import Logger
 
+catalog = i18nCatalog("uranium")
 
 class OutputDeviceManagerProxy(QObject):
     def __init__(self, parent = None):
@@ -121,7 +123,7 @@ class OutputDeviceManagerProxy(QObject):
         except OutputDeviceError.DeviceBusyError:
             pass
         except OutputDeviceError.WriteRequestFailedError as e:
-            message = Message(str(e))
+            message = Message(str(e), title = catalog.i18nc("@info:title", "Error"))
             message.show()
         except Exception as e:
             Logger.logException("e", "Unable to write to file %s: %s", file_name, e)

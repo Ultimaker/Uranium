@@ -83,7 +83,7 @@ class LocalFileOutputDevice(OutputDevice):
 
         if len(file_types) == 0:
             Logger.log("e", "There are no file types available to write with!")
-            raise OutputDeviceError.WriteRequestFailedError()
+            raise OutputDeviceError.WriteRequestFailedError(catalog.i18nc("@info:warning", "There are no file types available to write with!"))
 
         for item in file_types:
             type_filter = "{0} (*.{1})".format(item["description"], item["extension"])
