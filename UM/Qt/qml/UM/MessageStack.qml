@@ -17,9 +17,7 @@ ListView {
 
     model: UM.VisibleMessagesModel { }
     spacing: UM.Theme.getSize("message_margin").height
-
-    anchors.bottomMargin: UM.Theme.getSize("message_margin").height
-
+    
     interactive: false;
     delegate: Rectangle
     {
