@@ -32,6 +32,7 @@ from UM.Settings.InstanceContainer import InstanceContainer
 from UM.Settings.Interfaces import ContainerRegistryInterface
 from UM.Settings.Interfaces import DefinitionContainerInterface
 
+import UM.Qt.QtApplication
 from . import ContainerQuery
 
 CONFIG_LOCK_FILENAME = "uranium.lock"
@@ -187,6 +188,9 @@ class ContainerRegistry(ContainerRegistryInterface):
         resource_start_time = time.time()
         with self.lockCache(): #Because we might be writing cache files.
             for _, container_id, file_path, read_only, container_type in files:
+                # Enable the rest of the application to get UI updates.
+                UM.Qt.QtApplication.QtApplication.processEvents()
+
                 if container_id in self._id_container_cache:
                     Logger.log("c", "Found a container with a duplicate ID: %s", container_id)
                     Logger.log("c", "Existing container is %s, trying to load %s from %s", self._id_container_cache[container_id], container_type, file_path)

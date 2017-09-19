@@ -626,14 +626,11 @@ class SceneNode():
     def getShear(self) -> Vector:
         return self._shear
 
+    def getSetting(self, key, default_value):
+        return self._settings.get(key, default_value)
+
     def setSetting(self, key, value):
         self._settings[key] = value
-
-    def getSetting(self, key, defaultValue):
-        if (key in self._settings):
-            return self._settings[key]
-        return defaultValue
-
 
     ##  private:
     def _transformChanged(self):
