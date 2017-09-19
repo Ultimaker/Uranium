@@ -45,33 +45,54 @@ msgctxt "@item:inlistbox"
 msgid "STL File (Binary)"
 msgstr "STL 文件 (二进制)"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:51
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:52
 msgctxt "@info"
 msgid "Could not access update information."
 msgstr "无法获取更新信息。"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:62
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:67
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:52
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:68
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:79
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:96
+#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:122
+msgctxt "@info:title"
+msgid "Version Upgrade"
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:63
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:68
 msgctxt "@info"
 msgid "The version you are using does not support checking for updates."
 msgstr "您正在使用的软件版本不支持检查更新。"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:78
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:63
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:178
+msgctxt "@info:title"
+msgid "Warning"
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:79
 msgctxt "@info"
 msgid "A new version is available!"
 msgstr "有新版本可用！"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:79
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:80
 msgctxt "@action:button"
 msgid "Download"
 msgstr "下载"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:91
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:92
 msgctxt "@info"
 msgid "An exception occurred while checking for updates."
 msgstr "在检查更新时出现异常情况。"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:95
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:92
+#: /home/ruben/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:126
+msgctxt "@info:title"
+msgid "Error"
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:96
 msgctxt "@info"
 msgid "No new version was found."
 msgstr "软件版本已是最新。"
@@ -101,6 +122,11 @@ msgctxt "@title:window"
 msgid "Save to File"
 msgstr "保存到文件"
 
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:86
+msgctxt "@info:warning"
+msgid "There are no file types available to write with!"
+msgstr ""
+
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:121
 msgctxt "@title:window"
 msgid "File Already Exists"
@@ -108,41 +134,51 @@ msgstr "文件已存在"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:121
 #, python-brace-format
-msgctxt "@label"
+msgctxt "@label Don't translate the XML tag <filename>!"
 msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
-msgstr "文件 <filename>{0}</filename> 已存在。你确定要替换它吗?"
+msgstr ""
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:150
 #, python-brace-format
-msgctxt "@info:progress"
+msgctxt "@info:progress Don't translate the XML tags <filename>!"
 msgid "Saving to <filename>{0}</filename>"
-msgstr "正在保存至 <filename>{0}</filename>"
+msgstr ""
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:158
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:151
+msgctxt "@info:title"
+msgid "Saving"
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:159
 #, python-brace-format
-msgctxt "@info:status"
+msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Permission denied when trying to save <filename>{0}</filename>"
-msgstr "保存 <filename>{0}</filename> 时发生错误：权限不足"
+msgstr ""
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:161
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:177
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:162
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:178
 #, python-brace-format
-msgctxt "@info:status"
+msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
 msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
-msgstr "无法保存到 <filename>{0}</filename>：<message>{1}</message>"
-
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:171
-#, python-brace-format
-msgctxt "@info:status"
-msgid "Saved to <filename>{0}</filename>"
-msgstr "已保存至 <filename>{0}</filename>"
+msgstr ""
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:172
+#, python-brace-format
+msgctxt "@info:status Don't translate the XML tags <filename>!"
+msgid "Saved to <filename>{0}</filename>"
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:172
+msgctxt "@info:title"
+msgid "File Saved"
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:173
 msgctxt "@action:button"
 msgid "Open Folder"
 msgstr "打开文件夹"
 
-#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:172
+#: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:173
 msgctxt "@info:tooltip"
 msgid "Open the folder containing the file"
 msgstr "打开包含相应文件的文件夹"
@@ -187,70 +223,70 @@ msgctxt "@info:tooltip"
 msgid "Mirror Model"
 msgstr "镜像模型"
 
-#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:161
+#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:160
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:48
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:76
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:77
 #: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:67
 #, python-brace-format
 msgctxt "@item:inlistbox"
 msgid "All Supported Types ({0})"
 msgstr "所有支持的文件类型 ({0})"
 
-#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:164
+#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:163
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:49
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:77
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:78
 #: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:68
 msgctxt "@item:inlistbox"
 msgid "All Files (*)"
 msgstr "所有文件 (*)"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:104
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:108
 #, python-brace-format
 msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
 msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
 msgstr "{0:0>2}天 {1:0>2}小时 {2:0>2}分钟"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:106
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:110
 #, python-brace-format
 msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
 msgid "{0:0>2}h {1:0>2}min"
 msgstr "{0:0>2}小时 {1:0>2}分钟"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:109
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:113
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is days"
 msgid "{0} day"
 msgid_plural "{0} days"
 msgstr[0] "{0} 天"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:109
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:111
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:113
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:115
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is hours"
 msgid "{0} hour"
 msgid_plural "{0} hours"
 msgstr[0] "{0} 小时"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:109
-#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:111
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:113
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:115
+#: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:117
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is minutes"
 msgid "{0} minute"
 msgid_plural "{0} minutes"
 msgstr[0] "{0} 分钟"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:109
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:111
 msgctxt "@info:progress"
 msgid "Loading plugins..."
 msgstr "正在载入插件..."
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:115
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:117
 msgctxt "@info:progress"
 msgid "Updating configuration..."
 msgstr "正在更新配置..."
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:126
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:128
 msgctxt "@info:progress"
 msgid "Loading preferences..."
 msgstr "正在加载偏好设置..."
@@ -261,30 +297,41 @@ msgctxt "@info:status"
 msgid "Auto scaled object to {0}% of original size"
 msgstr "自动缩放模型至原始大小的 {0}%"
 
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:95
+#: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:67
+msgctxt "@info:title"
+msgid "Scaling Object"
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:96
 msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr "插件已安装。\n请重新启动应用程序以激活插件。"
+msgstr ""
+"插件已安装。\n"
+"请重新启动应用程序以激活插件。"
 
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:106
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:140
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:107
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:147
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
 "Failed to install plugin from <filename>{0}</filename>:\n"
 "<message>{1}</message>"
-msgstr "无法从 <filename>{0}</filename> 中安装插件：\n<message>{1}</message>"
+msgstr ""
+"无法从 <filename>{0}</filename> 中安装插件：\n"
+"<message>{1}</message>"
 
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:127
-#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:132
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:131
+#: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:136
 #, python-brace-format
 msgctxt "@info:status"
 msgid ""
 "Failed to install the plugin;\n"
 "<message>{0}</message>"
-msgstr "无法安装插件；\n<message>{0}</message>"
+msgstr ""
+"无法安装插件；\n"
+"<message>{0}</message>"
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:122
 #, python-brace-format
@@ -304,22 +351,34 @@ msgstr "关键 OpenGL 拓展文件缺失。该程序需要对 Framebuffer Object
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:36
 #, python-brace-format
-msgctxt "@info:status"
+msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Cannot open file type <filename>{0}</filename>"
-msgstr "无法打开文件类型 <filename>{0}</filename>"
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:36
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:51
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:74
+msgctxt "@info:title"
+msgid "Invalid File"
+msgstr ""
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:49
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:69
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:74
 #, python-brace-format
-msgctxt "@info:status"
+msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>"
-msgstr "无法加载 <filename>{0}</filename>"
+msgstr ""
 
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:53
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:55
 #, python-brace-format
-msgctxt "@info:status"
+msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Loading <filename>{0}</filename>"
-msgstr "正在载入 <filename>{0}</filename>"
+msgstr ""
+
+#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:58
+msgctxt "@info:title"
+msgid "Loading"
+msgstr ""
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:60
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:21
@@ -327,22 +386,22 @@ msgctxt "@action:button"
 msgid "Reset"
 msgstr "重置"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:83
+#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:84
 msgctxt "@option:check"
 msgid "Snap Scaling"
 msgstr "等距缩放（Snap Scaling）"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:100
+#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:101
 msgctxt "@option:check"
 msgid "Uniform Scaling"
 msgstr "等比例缩放"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:38
+#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:39
 msgctxt "@action:button"
 msgid "Lay flat"
 msgstr "放平"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:53
+#: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:55
 msgctxt "@action:checkbox"
 msgid "Snap Rotation"
 msgstr "等距旋转（Snap Rotation）"
@@ -698,13 +757,13 @@ msgstr "选择工具"
 
 #: Tools/TranslateTool/plugin.json
 msgctxt "description"
-msgid "Provides the Translate tool."
-msgstr "提供翻译工具。"
+msgid "Provides the Move tool."
+msgstr ""
 
 #: Tools/TranslateTool/plugin.json
 msgctxt "name"
-msgid "Translate Tool"
-msgstr "翻译工具"
+msgid "Move Tool"
+msgstr ""
 
 #: Tools/CameraTool/plugin.json
 msgctxt "description"
@@ -735,6 +794,46 @@ msgstr "提供镜像工具。"
 msgctxt "name"
 msgid "Mirror Tool"
 msgstr "镜像工具"
+
+#~ msgctxt "@label"
+#~ msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
+#~ msgstr "文件 <filename>{0}</filename> 已存在。你确定要替换它吗?"
+
+#~ msgctxt "@info:progress"
+#~ msgid "Saving to <filename>{0}</filename>"
+#~ msgstr "正在保存至 <filename>{0}</filename>"
+
+#~ msgctxt "@info:status"
+#~ msgid "Permission denied when trying to save <filename>{0}</filename>"
+#~ msgstr "保存 <filename>{0}</filename> 时发生错误：权限不足"
+
+#~ msgctxt "@info:status"
+#~ msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
+#~ msgstr "无法保存到 <filename>{0}</filename>：<message>{1}</message>"
+
+#~ msgctxt "@info:status"
+#~ msgid "Saved to <filename>{0}</filename>"
+#~ msgstr "已保存至 <filename>{0}</filename>"
+
+#~ msgctxt "@info:status"
+#~ msgid "Cannot open file type <filename>{0}</filename>"
+#~ msgstr "无法打开文件类型 <filename>{0}</filename>"
+
+#~ msgctxt "@info:status"
+#~ msgid "Failed to load <filename>{0}</filename>"
+#~ msgstr "无法加载 <filename>{0}</filename>"
+
+#~ msgctxt "@info:status"
+#~ msgid "Loading <filename>{0}</filename>"
+#~ msgstr "正在载入 <filename>{0}</filename>"
+
+#~ msgctxt "description"
+#~ msgid "Provides the Translate tool."
+#~ msgstr "提供翻译工具。"
+
+#~ msgctxt "name"
+#~ msgid "Translate Tool"
+#~ msgstr "翻译工具"
 
 #~ msgctxt "@label"
 #~ msgid "Simple View"
