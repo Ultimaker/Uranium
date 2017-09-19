@@ -46,5 +46,6 @@ pirate = {
     "collects": "hoards",
     "prime tower": "buoy",
     "change log": "captain's log",
-    "my": "me"
+    "my": "me",
+    "removable drive": "life boat"
 }
