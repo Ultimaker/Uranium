@@ -10,6 +10,7 @@ from UM.Qt.ListModel import ListModel
 from UM.PluginRegistry import PluginRegistry  # For getting the possible profile readers and writers.
 from UM.Settings.ContainerRegistry import ContainerRegistry
 from UM.Settings.InstanceContainer import InstanceContainer
+from UM.Logger import Logger
 
 from UM.i18n import i18nCatalog
 catalog = i18nCatalog("uranium")
@@ -57,11 +58,14 @@ class InstanceContainersModel(ListModel):
             container.metaDataChanged.disconnect(self._updateMetaData)
 
         self._instance_containers = self._fetchInstanceContainers()
-        self._instance_containers.sort(key = self._sortKey)
 
         for container in self._instance_containers:
             container.nameChanged.connect(self._update)
             container.metaDataChanged.connect(self._updateMetaData)
+        try:
+            self._instance_containers.sort(key=self._sortKey)
+        except TypeError:
+            Logger.logException("w", "Sorting the InstanceContainers model went wrong.")
 
         self.setItems(list(self._recomputeItems()))
 
