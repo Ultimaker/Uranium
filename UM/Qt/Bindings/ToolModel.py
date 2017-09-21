@@ -15,6 +15,7 @@ class ToolModel(ListModel):
     ToolActiveRole = Qt.UserRole + 4
     ToolEnabledRole = Qt.UserRole + 5
     DescriptionRole = Qt.UserRole + 6
+    LocationRole = Qt.UserRole + 7
 
     def __init__(self, parent = None):
         super().__init__(parent)
@@ -31,6 +32,7 @@ class ToolModel(ListModel):
         self.addRoleName(self.ToolActiveRole, "active")
         self.addRoleName(self.ToolEnabledRole, "enabled")
         self.addRoleName(self.DescriptionRole, "description")
+        self.addRoleName(self.LocationRole, "location")
 
     def _onToolsChanged(self):
         items = []
@@ -38,6 +40,7 @@ class ToolModel(ListModel):
         tools = self._controller.getAllTools()
         for name in tools:
             toolMetaData = PluginRegistry.getInstance().getMetaData(name).get("tool", {})
+            location = PluginRegistry.getInstance().getMetaData(name).get("location", "")
 
             # Skip tools that are marked as not visible
             if "visible" in toolMetaData and not toolMetaData["visible"]:
@@ -46,6 +49,7 @@ class ToolModel(ListModel):
             # Optional metadata elements
             description = toolMetaData.get("description", "")
             iconName = toolMetaData.get("icon", "default.png")
+
             weight = toolMetaData.get("weight", 0)
 
             enabled = self._controller.getTool(name).getEnabled()
@@ -54,6 +58,7 @@ class ToolModel(ListModel):
                 "id": name,
                 "name": toolMetaData.get("name", name),
                 "icon": iconName,
+                "location": location,
                 "active": False,
                 "enabled": enabled,
                 "description": description,
