@@ -192,7 +192,8 @@ class QtApplication(QApplication, Application):
         with self._message_lock:
             if message not in self._visible_messages:
                 self._visible_messages.append(message)
-                message.setTimer(QTimer())
+                message.setLifetimeTimer(QTimer())
+                message.setInactivityTimer(QTimer())
                 self.visibleMessageAdded.emit(message)
 
         # also show toast message when the main window is minimized
