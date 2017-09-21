@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the AGPLv3 or higher.
 
 from PyQt5.QtCore import Qt
@@ -7,6 +7,7 @@ from UM.Application import Application
 
 from UM.Qt.ListModel import ListModel
 from UM.PluginRegistry import PluginRegistry
+
 
 class ToolModel(ListModel):
     IdRole = Qt.UserRole + 1
@@ -39,25 +40,25 @@ class ToolModel(ListModel):
 
         tools = self._controller.getAllTools()
         for name in tools:
-            toolMetaData = PluginRegistry.getInstance().getMetaData(name).get("tool", {})
+            tool_meta_data = PluginRegistry.getInstance().getMetaData(name).get("tool", {})
             location = PluginRegistry.getInstance().getMetaData(name).get("location", "")
 
             # Skip tools that are marked as not visible
-            if "visible" in toolMetaData and not toolMetaData["visible"]:
+            if "visible" in tool_meta_data and not tool_meta_data["visible"]:
                 continue
 
             # Optional metadata elements
-            description = toolMetaData.get("description", "")
-            iconName = toolMetaData.get("icon", "default.png")
+            description = tool_meta_data.get("description", "")
+            icon_name = tool_meta_data.get("icon", "default.png")
 
-            weight = toolMetaData.get("weight", 0)
+            weight = tool_meta_data.get("weight", 0)
 
             enabled = self._controller.getTool(name).getEnabled()
 
             items.append({
                 "id": name,
-                "name": toolMetaData.get("name", name),
-                "icon": iconName,
+                "name": tool_meta_data.get("name", name),
+                "icon": icon_name,
                 "location": location,
                 "active": False,
                 "enabled": enabled,
@@ -69,10 +70,10 @@ class ToolModel(ListModel):
         self.setItems(items)
 
     def _onActiveToolChanged(self):
-        activeTool = self._controller.getActiveTool()
+        active_tool = self._controller.getActiveTool()
 
         for index, value in enumerate(self.items):
-            if self._controller.getTool(value["id"]) == activeTool:
+            if self._controller.getTool(value["id"]) == active_tool:
                 self.setProperty(index, "active", True)
             else:
                 self.setProperty(index, "active", False)
