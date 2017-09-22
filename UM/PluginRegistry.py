@@ -438,6 +438,7 @@ class PluginRegistry(QObject):
             raise InvalidMetaDataError(plugin_id)
 
         meta_data["id"] = plugin_id
+        meta_data["location"] = location
 
         # Application-specific overrides
         appname = self._application.getApplicationName()
