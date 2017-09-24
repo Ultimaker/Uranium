@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Uranium 3.0\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2017-08-02 14:05+0200\n"
-"PO-Revision-Date: 2017-08-09 08:55+0300\n"
+"PO-Revision-Date: 2017-09-23 09:03+0300\n"
 "Last-Translator: Ruslan Popov <ruslan.popov@gmail.com>\n"
 "Language-Team: Ruslan Popov\n"
 "Language: ru_RU\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Poedit 2.0\n"
+"X-Generator: Poedit 2.0.4\n"
 
 #: /home/ruben/Projects/Uranium/plugins/Views/SimpleView/__init__.py:12
 msgctxt "@item:inmenu"
@@ -56,7 +56,7 @@ msgstr "Невозможно получить информацию об обно
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:122
 msgctxt "@info:title"
 msgid "Version Upgrade"
-msgstr ""
+msgstr "Обновление версии"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:63
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:68
@@ -68,7 +68,7 @@ msgstr "Используемая вами версия не поддержива
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:178
 msgctxt "@info:title"
 msgid "Warning"
-msgstr ""
+msgstr "Внимание"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:79
 msgctxt "@info"
@@ -89,7 +89,7 @@ msgstr "Произошло исключение во время проверки
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:126
 msgctxt "@info:title"
 msgid "Error"
-msgstr ""
+msgstr "Ошибка"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:96
 msgctxt "@info"
@@ -124,7 +124,7 @@ msgstr "Сохранить в файл"
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:86
 msgctxt "@info:warning"
 msgid "There are no file types available to write with!"
-msgstr ""
+msgstr "Ни один из типов файлов не доступен для записи!"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:121
 msgctxt "@title:window"
@@ -135,42 +135,42 @@ msgstr "Файл уже существует"
 #, python-brace-format
 msgctxt "@label Don't translate the XML tag <filename>!"
 msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
-msgstr ""
+msgstr "Файл <filename>{0}</filename> уже существует. Вы уверены, что желаете перезаписать его?"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:150
 #, python-brace-format
 msgctxt "@info:progress Don't translate the XML tags <filename>!"
 msgid "Saving to <filename>{0}</filename>"
-msgstr ""
+msgstr "Сохранение в <filename>{0}</filename>"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:151
 msgctxt "@info:title"
 msgid "Saving"
-msgstr ""
+msgstr "Сохранение"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:159
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Permission denied when trying to save <filename>{0}</filename>"
-msgstr ""
+msgstr "Недостаточно прав для записи <filename>{0}</filename>"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:162
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:178
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
 msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
-msgstr ""
+msgstr "Не могу записать <filename>{0}</filename>: <message>{1}</message>"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:172
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Saved to <filename>{0}</filename>"
-msgstr ""
+msgstr "Запись в <filename>{0}</filename>"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:172
 msgctxt "@info:title"
 msgid "File Saved"
-msgstr ""
+msgstr "Файл сохранён"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:173
 msgctxt "@action:button"
@@ -305,7 +305,7 @@ msgstr "Автоматическое масштабирование объект
 #: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:67
 msgctxt "@info:title"
 msgid "Scaling Object"
-msgstr ""
+msgstr "Масштабирование объекта"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:96
 msgctxt "@info:status"
@@ -358,32 +358,32 @@ msgstr "Важные дополнения OpenGL отсутствуют. Дан�
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Cannot open file type <filename>{0}</filename>"
-msgstr ""
+msgstr "Не могу открыть файл <filename>{0}</filename>"
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:36
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:51
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:74
 msgctxt "@info:title"
 msgid "Invalid File"
-msgstr ""
+msgstr "Неправильный файл"
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:49
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:74
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>"
-msgstr ""
+msgstr "Невозможно открыть <filename>{0}</filename>"
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:55
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Loading <filename>{0}</filename>"
-msgstr ""
+msgstr "Загрузка <filename>{0}</filename>"
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:58
 msgctxt "@info:title"
 msgid "Loading"
-msgstr ""
+msgstr "Загрузка"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:60
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:21
@@ -765,12 +765,12 @@ msgstr "Инструмент \"Выбор\""
 #: Tools/TranslateTool/plugin.json
 msgctxt "description"
 msgid "Provides the Move tool."
-msgstr ""
+msgstr "Предоставляет инструмент \"Перемещение\"."
 
 #: Tools/TranslateTool/plugin.json
 msgctxt "name"
 msgid "Move Tool"
-msgstr ""
+msgstr "Инструмент \"Перемещение\"."
 
 #: Tools/CameraTool/plugin.json
 msgctxt "description"
