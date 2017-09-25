@@ -16,7 +16,7 @@ Item {
         width: height;
         height: check.height;
         anchors.right: checkboxTooltipArea.left
-        anchors.rightMargin: 2
+        anchors.rightMargin: 2 * screenScaleFactor
 
         text:
         {

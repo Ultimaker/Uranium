@@ -39,7 +39,7 @@ Item {
             top: parent.top;
             left: parent.left;
             right: parent.right;
-            margins: 5;
+            margins: 5 * screenScaleFactor;
         }
 
         font.pointSize: 18;
@@ -53,7 +53,7 @@ Item {
             left: parent.left;
             right: parent.right;
             bottom: parent.bottom;
-            margins: 5;
+            margins: 5 * screenScaleFactor;
             bottomMargin: 0;
         }
 

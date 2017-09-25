@@ -176,8 +176,8 @@ PreferencesPage
 
             title: catalog.i18nc("@title:window", "About %1").arg(plugin_name)
 
-            minimumWidth: Screen.devicePixelRatio * 320
-            minimumHeight: Screen.devicePixelRatio * 240
+            minimumWidth: screenScaleFactor * 320
+            minimumHeight: screenScaleFactor * 240
             width: minimumWidth
             height: minimumHeight
 
@@ -210,7 +210,7 @@ PreferencesPage
                 width: (0.4 * parent.width) | 0
                 wrapMode: Text.WordWrap
                 anchors.top: pluginCaption.bottom
-                anchors.topMargin: 10
+                anchors.topMargin: 10 * screenScaleFactor
             }
 
             Label
@@ -221,7 +221,7 @@ PreferencesPage
                 wrapMode: Text.WordWrap
                 anchors.top: pluginCaption.bottom
                 anchors.left: pluginAuthorLabel.right
-                anchors.topMargin: 10
+                anchors.topMargin: 10 * screenScaleFactor
             }
 
             Label
