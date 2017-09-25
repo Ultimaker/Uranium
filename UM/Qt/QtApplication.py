@@ -390,10 +390,12 @@ class QtApplication(QApplication, Application):
         return QSplashScreen(QPixmap(Resources.getPath(Resources.Images, self.getApplicationName() + ".png")))
 
     def _screenScaleFactor(self):
-        physical_dpi = QGuiApplication.primaryScreen().physicalDotsPerInch()
-        # Typically 'normal' screens have a DPI around 96. Modern high DPI screens are up around 220.
-        # We scale the low DPI screens with a traditional 1, and double the high DPI ones.
-        return 1.0 if physical_dpi < 150 else 2.0
+        # OSX handles sizes of dialogs behind our backs, but other platforms need
+        # to know about the device pixel ratio
+        if sys.platform == "darwin":
+            return 1.0
+        else:
+            return 1.5 #self.devicePixelRatio()
 
     def _getDefaultLanguage(self, file):
         # If we have a language override set in the environment, try and use that.
