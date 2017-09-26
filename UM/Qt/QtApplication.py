@@ -395,7 +395,7 @@ class QtApplication(QApplication, Application):
         if sys.platform == "darwin":
             return 1.0
         else:
-            return 1.5 #self.devicePixelRatio()
+            return self.devicePixelRatio()
 
     def _getDefaultLanguage(self, file):
         # If we have a language override set in the environment, try and use that.
