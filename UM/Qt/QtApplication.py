@@ -9,7 +9,7 @@ import signal
 from PyQt5.QtCore import Qt, QCoreApplication, QEvent, QUrl, pyqtProperty, pyqtSignal, pyqtSlot, QLocale, QTranslator, QLibraryInfo, QT_VERSION_STR, PYQT_VERSION_STR
 from PyQt5.QtQml import QQmlApplicationEngine
 from PyQt5.QtWidgets import QApplication, QSplashScreen, QMessageBox, QSystemTrayIcon
-from PyQt5.QtGui import QGuiApplication, QIcon, QPixmap
+from PyQt5.QtGui import QGuiApplication, QIcon, QPixmap, QFontMetrics
 from PyQt5.QtCore import QTimer
 
 from UM.FileHandler.ReadFileJob import ReadFileJob
@@ -395,7 +395,11 @@ class QtApplication(QApplication, Application):
         if sys.platform == "darwin":
             return 1.0
         else:
-            return self.devicePixelRatio()
+            # determine a device pixel ratio from font metrics, using the same logic as UM.Theme
+            fontPixelRatio = QFontMetrics(QCoreApplication.instance().font()).ascent() / 11
+            # round the font pixel ratio to quarters
+            fontPixelRatio = int(fontPixelRatio * 4)/4
+            return fontPixelRatio
 
     def _getDefaultLanguage(self, file):
         # If we have a language override set in the environment, try and use that.
