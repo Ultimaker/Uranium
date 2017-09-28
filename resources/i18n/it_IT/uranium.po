@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Uranium 3.0\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2017-08-02 14:05+0200\n"
-"PO-Revision-Date: 2017-08-11 14:31+0200\n"
+"PO-Revision-Date: 2017-09-27 12:27+0200\n"
 "Last-Translator: Bothof <info@bothof.nl>\n"
 "Language-Team: Italian <info@bothof.nl>\n"
 "Language: it_IT\n"
@@ -55,7 +55,7 @@ msgstr "Non è possibile accedere alle informazioni di aggiornamento."
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:122
 msgctxt "@info:title"
 msgid "Version Upgrade"
-msgstr ""
+msgstr "Aggiornamento versione"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:63
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:68
@@ -67,7 +67,7 @@ msgstr "La versione che stai utilizzando non supporta la verifica della disponib
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:178
 msgctxt "@info:title"
 msgid "Warning"
-msgstr ""
+msgstr "Avvertenza"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:79
 msgctxt "@info"
@@ -88,7 +88,7 @@ msgstr "Si è verificata un'eccezione durante il controllo degli aggiornamenti."
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:126
 msgctxt "@info:title"
 msgid "Error"
-msgstr ""
+msgstr "Errore"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:96
 msgctxt "@info"
@@ -123,7 +123,7 @@ msgstr "Salva su File"
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:86
 msgctxt "@info:warning"
 msgid "There are no file types available to write with!"
-msgstr ""
+msgstr "Non ci sono tipi di file disponibili per la scrittura!"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:121
 msgctxt "@title:window"
@@ -134,42 +134,42 @@ msgstr "Il file esiste già"
 #, python-brace-format
 msgctxt "@label Don't translate the XML tag <filename>!"
 msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
-msgstr ""
+msgstr "Il file <filename>{0}</filename> esiste già. Sei sicuro di volerlo sovrascrivere?"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:150
 #, python-brace-format
 msgctxt "@info:progress Don't translate the XML tags <filename>!"
 msgid "Saving to <filename>{0}</filename>"
-msgstr ""
+msgstr "Salvataggio su <filename>{0}</filename>"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:151
 msgctxt "@info:title"
 msgid "Saving"
-msgstr ""
+msgstr "Salvataggio in corso"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:159
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Permission denied when trying to save <filename>{0}</filename>"
-msgstr ""
+msgstr "Autorizzazione negata quando si tenta di salvare <filename>{0}</filename>"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:162
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:178
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
 msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
-msgstr ""
+msgstr "Impossibile salvare <filename>{0}</filename>: <message>{1}</message>"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:172
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Saved to <filename>{0}</filename>"
-msgstr ""
+msgstr "Salvato su <filename>{0}</filename>"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:172
 msgctxt "@info:title"
 msgid "File Saved"
-msgstr ""
+msgstr "File salvato"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:173
 msgctxt "@action:button"
@@ -301,16 +301,14 @@ msgstr "Ridimensionamento automatico dell'oggetto a {0}% della dimensione origin
 #: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:67
 msgctxt "@info:title"
 msgid "Scaling Object"
-msgstr ""
+msgstr "Ridimensionamento oggetto"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:96
 msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr ""
-"Il plugin è stato installato.\n"
-"Riavviare l'applicazione per attivare il plugin."
+msgstr "Il plugin è stato installato.\nRiavviare l'applicazione per attivare il plugin."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:107
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:147
@@ -319,9 +317,7 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install plugin from <filename>{0}</filename>:\n"
 "<message>{1}</message>"
-msgstr ""
-"Installazione plugin da <filename>{0}</filename>:\n"
-"<message>{1} non riuscita</message>"
+msgstr "Installazione plugin da <filename>{0}</filename>:\n<message>{1} non riuscita</message>"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:131
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:136
@@ -330,9 +326,7 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install the plugin;\n"
 "<message>{0}</message>"
-msgstr ""
-"Installazione del plugin non riuscita;\n"
-"<message>{0}</message>"
+msgstr "Installazione del plugin non riuscita;\n<message>{0}</message>"
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:122
 #, python-brace-format
@@ -354,32 +348,32 @@ msgstr "Estensioni OpenGL fondamentali assenti. Questo programma richiede suppor
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Cannot open file type <filename>{0}</filename>"
-msgstr ""
+msgstr "Impossibile aprire il file tipo <filename>{0}</filename>"
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:36
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:51
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:74
 msgctxt "@info:title"
 msgid "Invalid File"
-msgstr ""
+msgstr "File non valido"
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:49
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:74
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>"
-msgstr ""
+msgstr "Impossibile caricare <filename>{0}</filename>"
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:55
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Loading <filename>{0}</filename>"
-msgstr ""
+msgstr "Caricamento <filename>{0}</filename>"
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:58
 msgctxt "@info:title"
 msgid "Loading"
-msgstr ""
+msgstr "Caricamento in corso"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:60
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:21
@@ -760,12 +754,12 @@ msgstr "Strumento selezione"
 #: Tools/TranslateTool/plugin.json
 msgctxt "description"
 msgid "Provides the Move tool."
-msgstr ""
+msgstr "Fornisce lo strumento Spostamento."
 
 #: Tools/TranslateTool/plugin.json
 msgctxt "name"
 msgid "Move Tool"
-msgstr ""
+msgstr "Strumento Spostamento"
 
 #: Tools/CameraTool/plugin.json
 msgctxt "description"
