@@ -3,7 +3,7 @@
 import os
 from typing import Dict, List
 
-from PyQt5.QtCore import pyqtProperty, Qt, pyqtSignal, pyqtSlot, QUrl
+from PyQt5.QtCore import pyqtProperty, Qt, pyqtSignal, pyqtSlot, QUrl, QTimer
 
 from UM.Qt.ListModel import ListModel
 
@@ -11,7 +11,6 @@ from UM.PluginRegistry import PluginRegistry  # For getting the possible profile
 from UM.Settings.ContainerRegistry import ContainerRegistry
 from UM.Settings.InstanceContainer import InstanceContainer
 from UM.Logger import Logger
-
 from UM.i18n import i18nCatalog
 catalog = i18nCatalog("uranium")
 
@@ -41,6 +40,12 @@ class InstanceContainersModel(ListModel):
         ContainerRegistry.getInstance().containerAdded.connect(self._onContainerChanged)
         ContainerRegistry.getInstance().containerRemoved.connect(self._onContainerChanged)
 
+        self._container_change_timer = QTimer()
+        self._container_change_timer.setInterval(150)
+        self._container_change_timer.setSingleShot(True)
+        self._container_change_timer.timeout.connect(self._update)
+
+
         # List of filters for queries. The result is the union of the each list of results.
         self._filter_dicts = [{}]  # type: List[Dict[str,str]]
         self._update()
@@ -49,7 +54,7 @@ class InstanceContainersModel(ListModel):
     def _onContainerChanged(self, container):
         # We only need to update when the changed container is a instanceContainer
         if isinstance(container, InstanceContainer):
-            self._update()
+            self._container_change_timer.start()
 
     ##  Private convenience function to reset & repopulate the model.
     def _update(self):

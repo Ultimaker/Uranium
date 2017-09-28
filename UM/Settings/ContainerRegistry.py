@@ -21,6 +21,7 @@ from UM.Signal import Signal, signalemitter
 from UM.LockFile import LockFile
 
 import UM.Dictionary
+import gc
 
 MYPY = False
 if MYPY:
@@ -148,7 +149,12 @@ class ContainerRegistry(ContainerRegistryInterface):
     #
     #   \note This method does not clear the internal list of containers. This means that any containers
     #   that were already added when the first call to this method happened will not be re-added.
+    @UM.FlameProfiler.profile
     def load(self) -> None:
+        # We disable the garbage collection while loading, as this speeds up the loading.
+        # Since there is so much going on (lots of objects being created), it's better to have it wait a bit until
+        # the dust settles down.
+        gc.disable()
         files = []
         old_file_expression = re.compile(r"\{sep}old\{sep}\d+\{sep}".format(sep = os.sep))
 
@@ -220,6 +226,7 @@ class ContainerRegistry(ContainerRegistryInterface):
                 except Exception as e:
                     Logger.logException("e", "Could not deserialize container %s", container_id)
             Logger.log("d", "Loading data into container registry took %s seconds", time.time() - resource_start_time)
+            gc.enable()
 
     @UM.FlameProfiler.profile
     def addContainer(self, container: ContainerInterface) -> None:
@@ -233,7 +240,7 @@ class ContainerRegistry(ContainerRegistryInterface):
 
         self._containers.append(container)
         self._id_container_cache[container.getId()] = container
-        self._clearQueryCacheByContainerType(type(container))
+        self._clearQueryCacheByContainer(container)
         self.containerAdded.emit(container)
 
     @UM.FlameProfiler.profile
@@ -249,7 +256,7 @@ class ContainerRegistry(ContainerRegistryInterface):
 
             if hasattr(container, "metaDataChanged"):
                 container.metaDataChanged.disconnect(self._onContainerMetaDataChanged)
-            self._clearQueryCacheByContainerType(type(container))
+            self._clearQueryCacheByContainer(container)
             self.containerRemoved.emit(container)
 
             Logger.log("d", "Removed container %s", container.getId())
@@ -280,7 +287,7 @@ class ContainerRegistry(ContainerRegistryInterface):
             del self._id_container_cache[container._id]
             container._id = new_id
             self._id_container_cache[container._id] = container # Keep cache up-to-date.
-        self._clearQueryCacheByContainerType(type(container))
+        self._clearQueryCacheByContainer(container)
         self.containerAdded.emit(container)
 
     def saveAll(self) -> None:
@@ -349,6 +356,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   \param original The original name that may not be unique.
     #   \return A unique name that looks a lot like the original but may have
     #   a number behind it to make it unique.
+    @UM.FlameProfiler.profile
     def uniqueName(self, original: str) -> str:
         name = original.strip()
 
@@ -501,7 +509,19 @@ class ContainerRegistry(ContainerRegistryInterface):
     ##  Clear the query cache by using container type.
     #   This is a slightly smarter way of clearing the cache. Only queries that are of the same type (or without one)
     #   are cleared.
-    def _clearQueryCacheByContainerType(self, container_type):
+    def _clearQueryCacheByContainer(self, container):
+        # Use the base classes to clear the
+        if isinstance(container, DefinitionContainer):
+            container_type = DefinitionContainer
+        elif isinstance(container, InstanceContainer):
+            container_type = InstanceContainer
+        elif isinstance(container, ContainerStack):
+            container_type = ContainerStack
+        else:
+            Logger.log("w", "While clearing query cache, we got an unrecognised base type (%s). Clearing entire cache instead", type(container))
+            self._clearQueryCache()
+            return
+
         for key in list(self._query_cache.keys()):
             if self._query_cache[key].getContainerType() == container_type or self._query_cache[key].getContainerType() is None:
                 del self._query_cache[key]
