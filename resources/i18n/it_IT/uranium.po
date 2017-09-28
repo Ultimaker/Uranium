@@ -301,7 +301,7 @@ msgstr "Ridimensionamento automatico dell'oggetto a {0}% della dimensione origin
 #: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:67
 msgctxt "@info:title"
 msgid "Scaling Object"
-msgstr "Ridimensionamento oggetto"
+msgstr "Ridimensionamento Oggetto"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:96
 msgctxt "@info:status"
@@ -754,7 +754,7 @@ msgstr "Strumento selezione"
 #: Tools/TranslateTool/plugin.json
 msgctxt "description"
 msgid "Provides the Move tool."
-msgstr "Fornisce lo strumento Spostamento."
+msgstr "Fornisce lo Strumento Spostamento."
 
 #: Tools/TranslateTool/plugin.json
 msgctxt "name"

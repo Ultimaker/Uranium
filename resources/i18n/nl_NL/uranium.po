@@ -348,7 +348,7 @@ msgstr "Er ontbreken essentiële OpenGL-extensies. Voor dit programma is onderst
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Cannot open file type <filename>{0}</filename>"
-msgstr "Kan het bestandstype <filename>{0}</filename> niet openen"
+msgstr "Kan het bestandstype van <filename>{0}</filename> niet openen."
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:36
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:51
