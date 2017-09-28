@@ -358,13 +358,13 @@ class ContainerRegistry(ContainerRegistryInterface):
 
         if not name: #Wait, that deleted everything!
             name = "Profile"
-        elif not self.findContainers(id = original.strip()) and not self.findContainers(name = original.strip()):
+        elif not self.findContainers(id = original.strip(), ignore_case = True) and not self.findContainers(name = original.strip()):
             # Check if the stripped version of the name is unique (note that this can still have the number in it)
             return original.strip()
 
         unique_name = name
         i = 1
-        while self.findContainers(id = unique_name) or self.findContainers(name = unique_name): #A container already has this name.
+        while self.findContainers(id = unique_name, ignore_case = True) or self.findContainers(name = unique_name): #A container already has this name.
             i += 1 #Try next numbering.
             unique_name = "%s #%d" % (name, i) #Fill name like this: "Extruder #2".
         return unique_name
