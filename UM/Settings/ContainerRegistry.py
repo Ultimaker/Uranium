@@ -21,6 +21,7 @@ from UM.Signal import Signal, signalemitter
 from UM.LockFile import LockFile
 
 import UM.Dictionary
+import gc
 
 MYPY = False
 if MYPY:
@@ -148,7 +149,12 @@ class ContainerRegistry(ContainerRegistryInterface):
     #
     #   \note This method does not clear the internal list of containers. This means that any containers
     #   that were already added when the first call to this method happened will not be re-added.
+    @UM.FlameProfiler.profile
     def load(self) -> None:
+        # We disable the garbage collection while loading, as this speeds up the loading.
+        # Since there is so much going on (lots of objects being created), it's better to have it wait a bit until
+        # the dust settles down.
+        gc.disable()
         files = []
         old_file_expression = re.compile(r"\{sep}old\{sep}\d+\{sep}".format(sep = os.sep))
 
@@ -220,6 +226,7 @@ class ContainerRegistry(ContainerRegistryInterface):
                 except Exception as e:
                     Logger.logException("e", "Could not deserialize container %s", container_id)
             Logger.log("d", "Loading data into container registry took %s seconds", time.time() - resource_start_time)
+            gc.enable()
 
     @UM.FlameProfiler.profile
     def addContainer(self, container: ContainerInterface) -> None:
@@ -349,6 +356,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   \param original The original name that may not be unique.
     #   \return A unique name that looks a lot like the original but may have
     #   a number behind it to make it unique.
+    @UM.FlameProfiler.profile
     def uniqueName(self, original: str) -> str:
         name = original.strip()
 
