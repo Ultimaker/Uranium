@@ -94,7 +94,13 @@ class MeshListModel(ListModel):
                             # Switch happend to dummy?
                             if old_index < new_index:
                                 # Move is such that parent needs to be reset.
-                                node.setParent(node.getParent().getParent())
+                                node.setParent(self._scene.getRoot())
+                                children = self._scene.getRoot().getChildren()
+                                new_index = children.index(parent_node) + 1
+                                children.insert(new_index, node)
+                                old_index = [i for i, child in enumerate(children) if child == node and i != new_index][0]
+                                del children[old_index]
+
                         self.updateList(node)
                         break
 
