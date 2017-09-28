@@ -29,6 +29,9 @@ class ContainerQuery:
 
         self._result = None
 
+    def getContainerType(self):
+        return self._container_type
+
     ##  Retrieve the result of this query.
     #
     #   \return A list of containers matching this query, or None if the query was not executed.

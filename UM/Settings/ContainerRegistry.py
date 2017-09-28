@@ -229,7 +229,7 @@ class ContainerRegistry(ContainerRegistryInterface):
 
         self._containers.append(container)
         self._id_container_cache[container.getId()] = container
-        self._clearQueryCache()
+        self._clearQueryCacheByContainerType(type(container))
         self.containerAdded.emit(container)
 
     @UM.FlameProfiler.profile
@@ -245,8 +245,7 @@ class ContainerRegistry(ContainerRegistryInterface):
 
             if hasattr(container, "metaDataChanged"):
                 container.metaDataChanged.disconnect(self._onContainerMetaDataChanged)
-
-            self._clearQueryCache()
+            self._clearQueryCacheByContainerType(type(container))
             self.containerRemoved.emit(container)
 
             Logger.log("d", "Removed container %s", container.getId())
@@ -277,8 +276,7 @@ class ContainerRegistry(ContainerRegistryInterface):
             del self._id_container_cache[container._id]
             container._id = new_id
             self._id_container_cache[container._id] = container # Keep cache up-to-date.
-
-        self._clearQueryCache()
+        self._clearQueryCacheByContainerType(type(container))
         self.containerAdded.emit(container)
 
     def saveAll(self) -> None:
@@ -495,6 +493,14 @@ class ContainerRegistry(ContainerRegistryInterface):
     # Clear the internal query cache
     def _clearQueryCache(self, *args, **kwargs):
         self._query_cache.clear()
+
+    ##  Clear the query cache by using container type.
+    #   This is a slightly smarter way of clearing the cache. Only queries that are of the same type (or without one)
+    #   are cleared.
+    def _clearQueryCacheByContainerType(self, container_type):
+        for key in list(self._query_cache.keys()):
+            if self._query_cache[key].getContainerType() == container_type or self._query_cache[key].getContainerType() is None:
+                del self._query_cache[key]
 
     ##  Called when any container's metadata changed.
     #
