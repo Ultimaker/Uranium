@@ -57,7 +57,7 @@ UM.Dialog
             onClicked: base.reject();
         },
         Button {
-            text: catalog.i18nc("@action:button", "Ok");
+            text: catalog.i18nc("@action:button", "OK");
             onClicked: base.accept();
             enabled: base.validName;
             isDefault: true;
