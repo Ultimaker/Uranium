@@ -484,7 +484,7 @@ class ContainerRegistry(ContainerRegistryInterface):
 
         try:
             with open(cache_path, "wb") as f:
-                pickle.dump(definition, f)
+                pickle.dump(definition, f, pickle.HIGHEST_PROTOCOL)
         except RecursionError:
             #Sometimes a recursion error in pickling occurs here.
             #The cause is unknown. It must be some circular reference in the definition instances or definition containers.
