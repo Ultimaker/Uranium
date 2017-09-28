@@ -2,7 +2,7 @@
 # Copyright (c) Thiago Marcos P. Santos
 # Copyright (c) Christopher S. Case
 # Copyright (c) David H. Bronke
-# Uranium is released under the terms of the AGPLv3 or higher.
+# Uranium is released under the terms of the LGPLv3 or higher.
 
 import enum #For the compress parameter of postponeSignals.
 import inspect

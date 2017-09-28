@@ -1,5 +1,5 @@
 # Copyright (c) 2015 Ultimaker B.V.
-# Uranium is released under the terms of the AGPLv3 or higher.
+# Uranium is released under the terms of the LGPLv3 or higher.
 
 
 ##      The point of a SceneNodeDecorator is that it can be added to a SceneNode, where it then provides decorations
