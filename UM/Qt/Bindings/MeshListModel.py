@@ -70,6 +70,17 @@ class MeshListModel(ListModel):
                                 self._collapsed_nodes.remove(node)
                             if parent_node in self._collapsed_nodes and node not in self._collapsed_nodes:
                                 self._collapsed_nodes.append(node)
+                        else:
+                            # A node was moved onto it's own parent. This means that the parent needs to be set to Root
+                            node.setParent(self._scene.getRoot())
+                            children = self._scene.getRoot().getChildren()
+                            new_index = children.index(parent_node) # Take the old place of the group node
+                            children.insert(new_index, node)
+                            old_index = [i for i, child in enumerate(children) if child == node and i != new_index][0]
+
+                            del children[old_index]
+                            self.updateList(node)
+                            return
                         # Magical move
                         for node2 in Application.getInstance().getController().getScene().getRoot().getAllChildren():
                             if id(node2) == new_model_entry["key"]:
