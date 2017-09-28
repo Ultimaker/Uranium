@@ -52,6 +52,8 @@ class ContainerRegistry(ContainerRegistryInterface):
 
         self._containers = [self._emptyInstanceContainer]   # type: List[ContainerInterface]
         self._id_container_cache = {}
+        # Ensure that the empty container is added to the ID cache.
+        self._id_container_cache["empty"] = self._emptyInstanceContainer
         self._resource_types = [Resources.DefinitionContainers] # type: List[int]
         self._query_cache = collections.OrderedDict() # This should really be an ordered set but that does not exist...
 
@@ -116,6 +118,8 @@ class ContainerRegistry(ContainerRegistryInterface):
                     return [ container ]
                 elif isinstance(container, container_type):
                     return [ container ]
+            else:
+                return [] # No result, so return an empty list.
 
         if query in self._query_cache:
             # If the exact same query is in the cache, we can re-use the query result
