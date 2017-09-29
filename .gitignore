@@ -50,3 +50,6 @@ tests/Settings/profiles/simple_machine_with_overrides_test.cfg
 .DS_Store
 UM/.DS_Store
 resources/.DS_Store
+
+#Common plug-ins
+plugins/UraniumExample*Plugin
