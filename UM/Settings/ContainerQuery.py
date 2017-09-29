@@ -50,7 +50,14 @@ class ContainerQuery:
     #   class' constructor. After it is done, the result can be retrieved with getResult().
     def execute(self):
         containers = []
-        for container in filter(lambda c: not self._container_type or isinstance(c, self._container_type), self._registry._containers):
+
+        # If no container type is specified, search through all containers.
+        if not self._container_type:
+            candidates = self._registry._containers
+        else:
+            candidates = filter(lambda c: isinstance(c, self._container_type), self._registry._containers)
+
+        for container in candidates:
             matches_container = True
             for key, value in self._kwargs.items():
                 if isinstance(value, str):
