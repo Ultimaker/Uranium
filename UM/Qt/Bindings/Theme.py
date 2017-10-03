@@ -184,6 +184,7 @@ class Theme(QObject):
                     QFontDatabase.addApplicationFont(os.path.join(fontsdir, file))
 
         if "fonts" in data:
+            system_font_size = QCoreApplication.instance().font().pointSize()
             for name, font in data["fonts"].items():
                 f = QFont()
                 f.setFamily(font.get("family", QCoreApplication.instance().font().family()))
@@ -191,7 +192,7 @@ class Theme(QObject):
                 f.setBold(font.get("bold", False))
                 f.setLetterSpacing(QFont.AbsoluteSpacing, font.get("letterSpacing", 0))
                 f.setItalic(font.get("italic", False))
-                f.setPointSize(font.get("size", 1) * self._em_height)
+                f.setPointSize(int(font.get("size", 1) * system_font_size))
                 f.setCapitalization(QFont.AllUppercase if font.get("capitalize", False) else QFont.MixedCase)
 
                 self._fonts[name] = f
