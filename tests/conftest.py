@@ -2,7 +2,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import pytest
-# QT application import is required, even though it isn't used. 
+# QT application import is required, even though it isn't used.
 from UM.Qt.QtApplication import QtApplication
 from UM.Application import Application
 from UM.Signal import Signal
