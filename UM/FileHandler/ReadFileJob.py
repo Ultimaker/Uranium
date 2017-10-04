@@ -33,7 +33,7 @@ class ReadFileJob(Job):
             return None
         reader = self._handler.getReaderForFile(self._filename)
         if not reader:
-            result_message = Message(i18n_catalog.i18nc("@info:status Don't translate the XML tag <filename>!", "Cannot open file type <filename>{0}</filename>", self._filename), lifetime=0, title = i18n_catalog.i18nc("@info:title", "Invalid File"))
+            result_message = Message(i18n_catalog.i18nc("@info:status Don't translate the XML tag <filename>!", "Cannot open files of the type of <filename>{0}</filename>", self._filename), lifetime=0, title = i18n_catalog.i18nc("@info:title", "Invalid File"))
             result_message.show()
             return
 
