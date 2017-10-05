@@ -15,7 +15,6 @@ class ListModel(QAbstractListModel):
         self._items = []
         self._role_names = {}
 
-
     # While it would be nice to expose rowCount() as a count property so
     # far implementing that only causes crashes due to an infinite recursion
     # in PyQt.

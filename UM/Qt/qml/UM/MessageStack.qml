@@ -41,7 +41,7 @@ ListView {
         border.width: UM.Theme.getSize("default_lining").width
         border.color: UM.Theme.getColor("message_border")
 
-        Text {
+        Label {
             id: messageTitle
 
             anchors {
@@ -57,7 +57,7 @@ ListView {
             wrapMode: Text.Wrap;
         }
 
-        Text {
+        Label {
             id: messageLabel
 
             anchors {
