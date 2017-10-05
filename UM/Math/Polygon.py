@@ -251,6 +251,8 @@ class Polygon:
     #   \param other \type{Polygon} The polygon to check for intersection.
     #   \return A tuple of the x and y distance of intersection, or None if no intersection occured.
     def intersectsPolygon(self, other):
+        if other is None:
+            return None
         if len(self._points) < 2 or len(other.getPoints()) < 2:  # Polygon has not enough points, so it cant intersect.
             return None
 
