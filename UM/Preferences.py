@@ -17,7 +17,7 @@ MimeTypeDatabase.addMimeType(
     )
 )
 
-##      Preferences are application based settings that are saved for future use. 
+##      Preferences are application based settings that are saved for future use.
 #       Typical preferences would be window size, standard machine, etc.
 @signalemitter
 class Preferences:
@@ -94,6 +94,9 @@ class Preferences:
         if not self._parser:
             return
 
+        self.__initializeSettings()
+
+    def __initializeSettings(self):
         for group, group_entries in self._parser.items():
             if group == "DEFAULT":
                 continue
@@ -177,7 +180,45 @@ class Preferences:
 
         del self._parser["general"]["version"]
 
-    _instance = None    # type: Preferences
+    _instance = None  # type: Preferences
+
+    ##  Extract data from string and store it in the Configuration parser.
+    def deserialize(self, serialized: str) -> str:
+        updated_preferences = self.__updateSerialized(serialized)
+        self._parser = configparser.ConfigParser(interpolation=None)
+        self._parser.read_string(updated_preferences)
+        has_version = "version" in self._parser["general"]
+
+        if has_version:
+            if self._parser["general"]["version"] != str(Preferences.Version):
+                Logger.log("w", "Could not deserialize preferences from loaded project")
+                self._parser = None
+                return
+        else:
+            return
+
+        self.__initializeSettings()
+
+    ##  Updates the given serialized data to the latest version.
+    def __updateSerialized(self, serialized: str) -> str:
+        configuration_type = "preferences"
+
+        version = None
+        try:
+            import UM.VersionUpgradeManager
+            version = UM.VersionUpgradeManager.VersionUpgradeManager.getInstance().getFileVersion(configuration_type,
+                                                                                                  serialized)
+            if version is not None:
+                from UM.VersionUpgradeManager import VersionUpgradeManager
+                result = VersionUpgradeManager.getInstance().updateFilesData(configuration_type, version,
+                                                                             [serialized], [""])
+                if result is not None:
+                    serialized = result.files_data[0]
+            return serialized
+
+        except Exception as e:
+            Logger.log("d", "Could not get version from serialized: %s", e)
+            pass
 
 class _Preference:
     def __init__(self, name, default = None, value = None): #pylint: disable=bad-whitespace
