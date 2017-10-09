@@ -93,6 +93,18 @@ class OpenGL(object):
     def hasFrameBufferObjects(self):
         return QOpenGLFramebufferObject.hasOpenGLFramebufferObjects()
 
+    ##  Get the current GPU version.
+    #
+    #   \return Version of current GPU
+    def getGPUVersion(self):
+        return self._gl.glGetString(self._gl.GL_VERSION)
+
+    ##  Get the current GPU vendor name.
+    #
+    #   \return Name of the vendor of current GPU
+    def getGPUVendorName(self):
+        return self._gl.glGetString(self._gl.GL_VENDOR)
+
     ##  Get the current GPU vendor.
     #
     #   \return One of the items of OpenGL.Vendor.
