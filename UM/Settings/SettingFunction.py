@@ -76,6 +76,9 @@ class SettingFunction:
         g = {}  # type: Dict[str, Any]
         g.update(globals())
         g.update(self.__operators)
+        # override operators if there is any in the context
+        if context is not None:
+            g.update(context.context.get("override_operators", {}))
 
         try:
             return eval(self._compiled, g, locals)
