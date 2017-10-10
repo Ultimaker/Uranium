@@ -79,11 +79,13 @@ class OpenGL(object):
             Logger.log("e", "DecodeError while getting GL_RENDERER via glGetString!")
             self._gpu_type = "Unknown"
 
+        self._opengl_version = self._gl.glGetString(self._gl.GL_VERSION)
+
         if not self.hasFrameBufferObjects():
             Logger.log("w", "No frame buffer support, falling back to texture copies.")
 
         Logger.log("d", "Initialized OpenGL subsystems.")
-        Logger.log("d", "OpenGL Version:  %s", self._gl.glGetString(self._gl.GL_VERSION))
+        Logger.log("d", "OpenGL Version:  %s", self._opengl_version)
         Logger.log("d", "OpenGL Vendor:   %s", self._gl.glGetString(self._gl.GL_VENDOR))
         Logger.log("d", "OpenGL Renderer: %s", self._gpu_type)
 
@@ -93,11 +95,11 @@ class OpenGL(object):
     def hasFrameBufferObjects(self):
         return QOpenGLFramebufferObject.hasOpenGLFramebufferObjects()
 
-    ##  Get the current GPU version.
+    ##  Get the current OpenGL version.
     #
-    #   \return Version of current GPU
-    def getGPUVersion(self):
-        return self._gl.glGetString(self._gl.GL_VERSION)
+    #   \return Version of OpenGL
+    def getOpenGLVersion(self):
+        return self._opengl_version
 
     ##  Get the current GPU vendor name.
     #
