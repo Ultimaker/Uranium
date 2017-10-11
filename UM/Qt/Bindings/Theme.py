@@ -2,7 +2,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal, QCoreApplication, QUrl, QSizeF
-from PyQt5.QtGui import QColor, QFont, QFontMetrics, QFontDatabase, QFontInfo
+from PyQt5.QtGui import QColor, QFont, QFontMetrics, QFontDatabase
 from PyQt5.QtQml import QQmlComponent, QQmlContext
 from UM.FlameProfiler import pyqtSlot
 import json
@@ -200,8 +200,8 @@ class Theme(QObject):
         if "sizes" in data:
             for name, size in data["sizes"].items():
                 s = QSizeF()
-                s.setWidth(round(size[0] * self._em_width))
-                s.setHeight(round(size[1] * self._em_height))
+                s.setWidth(int(size[0] * self._em_width))
+                s.setHeight(int(size[1] * self._em_height))
 
                 self._sizes[name] = s
 
