@@ -85,6 +85,7 @@ PreferencesPage
                 {
                     id: pluginText //is a button so the user doesn't have te click inconvenientley precise to enable or disable the checkbox
                     text: model.name
+                    enabled: !model.required
                     onClicked:
                     {
                         pluginCheckbox.checked = !pluginCheckbox.checked;
