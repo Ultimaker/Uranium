@@ -3,11 +3,14 @@
 
 from . import SceneNode
 
+from UM.Logger import Logger
 from UM.Math.Matrix import Matrix
 from UM.Math.Ray import Ray
 from UM.Math.Vector import Vector
+from UM.Preferences import Preferences #For the camera perspective mode preference.
 from UM.Signal import Signal #To notify people of the camera changing.
 
+import enum #For the perspective mode preference.
 import numpy
 import numpy.linalg
 import copy
@@ -18,6 +21,10 @@ import copy
 #   The camera provides a projection matrix and its transformation matrix
 #   can be used as view matrix.
 class Camera(SceneNode.SceneNode):
+    class PerspectiveMode(enum.Enum):
+        PERSPECTIVE = "perspective"
+        ORTHOGONAL = "orthogonal"
+
     def __init__(self, name, parent = None):
         super().__init__(parent)
         self._name = name
@@ -30,6 +37,7 @@ class Camera(SceneNode.SceneNode):
         self._window_height = 0
 
         self.setCalculateBoundingBox(False)
+        Preferences.getInstance().addPreference("general/camera_perspective_mode", default_value = self.PerspectiveMode.ORTHOGONAL)
         Preferences.getInstance().preferenceChanged.connect(self._preferencesChanged)
 
     ##  Get the projection matrix of this camera.
@@ -115,3 +123,19 @@ class Camera(SceneNode.SceneNode):
         position = position.preMultiply(projection)
 
         return position.x / position.z / 2.0, position.y / position.z / 2.0
+
+    ##  Updates the _perspective field if the preference was modified.
+    def _preferencesChanged(self, key):
+        if key != "general/camera_perspective_mode": #Only listen to camera_perspective_mode.
+            return
+        new_mode = Preferences.getInstance().getValue("general/camera_perspective_mode")
+
+        #Translate the selected mode to the camera state.
+        if new_mode == str(self.PerspectiveMode.ORTHOGONAL.value):
+            Logger.log("d", "Changing perspective mode to orthogonal.")
+            self.setPerspective(False)
+        elif new_mode == str(self.PerspectiveMode.PERSPECTIVE.value):
+            Logger.log("d", "Changing perspective mode to perspective.")
+            self.setPerspective(True)
+        else:
+            Logger.log("w", "Unknown perspective mode {new_mode}".format(new_mode = new_mode))
