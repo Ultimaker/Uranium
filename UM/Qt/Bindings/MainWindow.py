@@ -9,6 +9,7 @@ from UM.Math.Matrix import Matrix
 from UM.Qt.QtMouseDevice import QtMouseDevice
 from UM.Qt.QtKeyDevice import QtKeyDevice
 from UM.Application import Application
+from UM.Scene.Camera import Camera #To listen to the perspective changing.
 from UM.Preferences import Preferences
 from UM.Signal import Signal, signalemitter
 
@@ -61,6 +62,8 @@ class MainWindow(QQuickWindow):
         self._mouse_y = 0
 
         self._viewport_rect = QRectF(0, 0, 1.0, 1.0)
+
+        Camera.perspectiveChanged.connect(self._updatePerspective)
 
         Application.getInstance().setMainWindow(self)
         self._fullscreen = False

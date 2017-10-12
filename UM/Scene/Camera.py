@@ -6,6 +6,7 @@ from . import SceneNode
 from UM.Math.Matrix import Matrix
 from UM.Math.Ray import Ray
 from UM.Math.Vector import Vector
+from UM.Signal import Signal #To notify people of the camera changing.
 
 import numpy
 import numpy.linalg
@@ -29,6 +30,7 @@ class Camera(SceneNode.SceneNode):
         self._window_height = 0
 
         self.setCalculateBoundingBox(False)
+        Preferences.getInstance().preferenceChanged.connect(self._preferencesChanged)
 
     ##  Get the projection matrix of this camera.
     def getProjectionMatrix(self):
@@ -63,7 +65,11 @@ class Camera(SceneNode.SceneNode):
         return self._perspective
 
     def setPerspective(self, pers):
-        self._perspective = pers
+        if self._perspective != pers:
+            self._perspective = pers
+            self.perspectiveChanged.emit()
+
+    perspectiveChanged = Signal()
 
     ##  Get a ray from the camera into the world.
     #
