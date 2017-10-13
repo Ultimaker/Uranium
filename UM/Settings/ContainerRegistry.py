@@ -27,6 +27,7 @@ MYPY = False
 if MYPY:
     from UM.Application import Application
 
+from UM.Settings.ContainerProvider import ContainerProvider
 from UM.Settings.DefinitionContainer import DefinitionContainer
 from UM.Settings.ContainerStack import ContainerStack
 from UM.Settings.InstanceContainer import InstanceContainer
@@ -41,9 +42,12 @@ CONFIG_LOCK_FILENAME = "uranium.lock"
 # The maximum amount of query results we should cache
 MaxQueryCacheSize = 1000
 
-##  Central class to manage all Setting containers.
+##  Central class to manage all setting providers.
 #
-#
+#   This class aggregates all data from all container providers. If only the
+#   metadata is used, it requests the metadata lazily from the providers. If
+#   more than that is needed, the entire container is requested from the
+#   appropriate providers.
 @signalemitter
 class ContainerRegistry(ContainerRegistryInterface):
     def __init__(self, *args, **kwargs):
@@ -51,6 +55,7 @@ class ContainerRegistry(ContainerRegistryInterface):
 
         self._emptyInstanceContainer = _EmptyInstanceContainer("empty")
 
+        self._providers = [] # type: List[ContainerProvider]
         self._containers = [self._emptyInstanceContainer]   # type: List[ContainerInterface]
         self._id_container_cache = {}
         # Ensure that the empty container is added to the ID cache.
@@ -67,6 +72,10 @@ class ContainerRegistry(ContainerRegistryInterface):
 
     def addResourceType(self, type: int) -> None:
         self._resource_types.append(type)
+
+    ##  Adds a container provider to search through containers in.
+    def addProvider(self, provider):
+        self._providers.append(provider)
 
     ##  Find all DefinitionContainer objects matching certain criteria.
     #
