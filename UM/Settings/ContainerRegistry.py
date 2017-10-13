@@ -2,6 +2,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import os
+import queue #For priority sorting of container providers.
 import re #For finding containers with asterisks in the constraints and for detecting backup files.
 import urllib #For ensuring container file names are proper file names
 import urllib.parse
@@ -55,7 +56,7 @@ class ContainerRegistry(ContainerRegistryInterface):
 
         self._emptyInstanceContainer = _EmptyInstanceContainer("empty")
 
-        self._providers = [] # type: List[ContainerProvider]
+        self._providers = queue.PriorityQueue # type: queue.PriorityQueue[ContainerProvider]
         PluginRegistry.addType("container_provider", self.addProvider)
 
         self._containers = [self._emptyInstanceContainer]   # type: List[ContainerInterface]
@@ -77,7 +78,10 @@ class ContainerRegistry(ContainerRegistryInterface):
 
     ##  Adds a container provider to search through containers in.
     def addProvider(self, provider: "PluginObject"):
-        self._providers.append(provider)
+        metadata = PluginRegistry.getInstance().getMetaData(provider.getPluginId())
+        if "priority" not in metadata:
+            Logger.log("e", "Container provider {provider_id} missing required metadata field 'priority'.".format(provider_id = provider.getPluginId()))
+        self._providers.put(provider)
 
     ##  Find all DefinitionContainer objects matching certain criteria.
     #
