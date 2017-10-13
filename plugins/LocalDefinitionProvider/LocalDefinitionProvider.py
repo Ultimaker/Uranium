@@ -5,7 +5,7 @@ from typing import Any, Dict
 
 from UM.Settings.ContainerProvider import ContainerProvider
 
-class LocalContainerProvider(ContainerProvider):
+class LocalDefinitionProvider(ContainerProvider):
     def loadContainer(self, container_id) -> "ContainerInterface":
         pass
 
