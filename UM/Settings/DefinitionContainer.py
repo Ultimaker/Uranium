@@ -227,6 +227,22 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
             Logger.log("d", "Could not get configuration type: %s", e)
         return configuration_type
 
+    ##  Gets the metadata of a definition container from a serialised format.
+    #
+    #   This parses the entire JSON document and only extracts the metadata from
+    #   it.
+    #
+    #   \param serialized A JSON document, serialised as a string.
+    #   \return A dictionary of metadata that was in the JSON document. If
+    #   anything went wrong, this returns ``None`` instead.
+    def getMetadataFromSerialized(self, serialized: str) -> Optional[Dict[str, Any]]:
+        try:
+            parsed = self._readAndValidateSerialized(serialized)
+            return parsed["metadata"]
+        except Exception as e:
+            Logger.log("d", "Could not get metadata for definition: %s", e)
+            return None
+
     def _readAndValidateSerialized(self, serialized: str) -> dict:
         parsed = json.loads(serialized, object_pairs_hook=collections.OrderedDict)
 
