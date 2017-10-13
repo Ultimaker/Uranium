@@ -1,7 +1,7 @@
 # Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from typing import Dict
+from typing import Any, Dict
 
 from UM.PluginObject import PluginObject
 
@@ -33,7 +33,7 @@ class ContainerProvider(PluginObject):
     #
     #   This is intended to be called from the implementation of
     #   ``loadMetadata``.
-    def addMetadata(self, metadata: dict):
+    def addMetadata(self, metadata: Dict[str, Any]):
         if "id" not in metadata:
             raise ValueError("The specified metadata has no ID.")
         if metadata["id"] in self._metadata:
@@ -47,7 +47,7 @@ class ContainerProvider(PluginObject):
     #   loaded after this is completed, so it may take some time.
     #
     #   \return The fully loaded container.
-    def loadContainer(self, container_id: str):
+    def loadContainer(self, container_id: str) -> "InstanceContainer":
         raise NotImplementedError("The container provider {class_name} doesn't properly implement loadContainer.".format(class_name = self.__class__.__name__))
 
     ##  Loads the metadata of all available containers.
@@ -55,9 +55,9 @@ class ContainerProvider(PluginObject):
     #   This will be called during start-up. It should be efficient.
     #
     #   \return A dictionary of metadata dictionaries, indexed by their IDs.
-    def loadMetadata(self) -> Dict[str, dict]:
+    def loadMetadata(self) -> Dict[str, Dict[str, Any]]:
         raise NotImplementedError("The container provider {class_name} doesn't properly implement loadMetadata.".format(class_name = self.__class__.__name__))
 
     ##  Gets a dictionary of metadata of all containers, indexed by ID.
-    def metadata(self) -> Dict[str, dict]:
+    def metadata(self) -> Dict[str, Dict[str, Any]]:
         return self._metadata
