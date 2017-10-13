@@ -1,7 +1,7 @@
 # Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from typing import Any, Dict
+from typing import Any, Dict, Iterable
 
 from UM.PluginObject import PluginObject #We're implementing this.
 from UM.PluginRegistry import PluginRegistry #To get the priority metadata to sort by.
@@ -9,7 +9,7 @@ from UM.PluginRegistry import PluginRegistry #To get the priority metadata to so
 ##  This class serves as a database for containers.
 #
 #   A plug-in can define a new source for containers by implementing the
-#   ``loadMetadata`` and ``loadContainer`` methods.
+#   ``getAllIds``, ``loadMetadata`` and ``loadContainer`` methods.
 class ContainerProvider(PluginObject):
     ##  Initialises the provider, which creates a few empty fields.
     def __init__(self):
@@ -60,6 +60,27 @@ class ContainerProvider(PluginObject):
             raise KeyError("The specified metadata already exists.")
         self._metadata[metadata["id"]] = metadata
 
+    ##  Gets the metadata of a specified container.
+    #
+    #   If the metadata of the container doesn't exist yet, it is loaded from
+    #   the container source by the implementation of the provider.
+    #
+    #   Note that due to inheritance, this may also trigger the metadata of
+    #   other containers to load.
+    #
+    #   \param container_id The container to get the metadata of.
+    #   \return A dictionary of metadata for this container.
+    def getMetadata(self, container_id: str) -> Dict[str, Any]:
+        if container_id not in self._metadata:
+            self._metadata[container_id] = self.loadMetadata(container_id)
+        return self._metadata[container_id]
+
+    ##  Gets a list of IDs of all containers this provider provides.
+    #
+    #   \return A list of all container IDs.
+    def getAllIds(self) -> Iterable[str]:
+        raise NotImplementedError("The container provider {class_name} doesn't properly implement getAllIds.".format(class_name = self.__class__.__name__))
+
     ##  Loads the container with the specified ID.
     #
     #   This is called lazily, so it should only request to load each container
@@ -70,12 +91,13 @@ class ContainerProvider(PluginObject):
     def loadContainer(self, container_id: str) -> "ContainerInterface":
         raise NotImplementedError("The container provider {class_name} doesn't properly implement loadContainer.".format(class_name = self.__class__.__name__))
 
-    ##  Loads the metadata of all available containers.
+    ##  Loads the metadata of a specified container.
     #
     #   This will be called during start-up. It should be efficient.
     #
+    #   \param container_id The ID of the container to load the metadata of.
     #   \return A dictionary of metadata dictionaries, indexed by their IDs.
-    def loadMetadata(self) -> Dict[str, Dict[str, Any]]:
+    def loadMetadata(self, container_id: str) -> Dict[str, Any]:
         raise NotImplementedError("The container provider {class_name} doesn't properly implement loadMetadata.".format(class_name = self.__class__.__name__))
 
     ##  Gets a dictionary of metadata of all containers, indexed by ID.
