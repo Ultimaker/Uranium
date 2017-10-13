@@ -47,7 +47,7 @@ class ContainerProvider(PluginObject):
     #   loaded after this is completed, so it may take some time.
     #
     #   \return The fully loaded container.
-    def loadContainer(self, container_id: str) -> "InstanceContainer":
+    def loadContainer(self, container_id: str) -> "ContainerInterface":
         raise NotImplementedError("The container provider {class_name} doesn't properly implement loadContainer.".format(class_name = self.__class__.__name__))
 
     ##  Loads the metadata of all available containers.

@@ -6,7 +6,7 @@ from typing import Any, Dict
 from UM.Settings.ContainerProvider import ContainerProvider
 
 class LocalContainerProvider(ContainerProvider):
-    def loadContainer(self, container_id) -> "InstanceContainer":
+    def loadContainer(self, container_id) -> "ContainerInterface":
         pass
 
     def loadMetadata(self) -> Dict[str, Dict[str, Any]]:
