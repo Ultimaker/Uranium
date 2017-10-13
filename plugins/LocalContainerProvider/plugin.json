@@ -1,0 +1,8 @@
+{
+    "name": "Local Container Provider",
+    "author": "Ultimaker B.V.",
+    "version": "1.0.0",
+    "description": "Provides built-in setting containers that come with the installation of the application.",
+    "api": 4,
+    "i18n-catalog": "uranium"
+}
