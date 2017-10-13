@@ -358,15 +358,15 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
         return json_dict
 
     # Verify that a loaded json matches our basic expectations.
-    def _verifyJson(self, json_dict: dict):
+    def _verifyJson(cls, json_dict: dict):
         if "version" not in json_dict:
             raise InvalidDefinitionError("Missing required property 'version'")
 
         if "name" not in json_dict:
             raise InvalidDefinitionError("Missing required property 'name'")
 
-        if json_dict["version"] != self.Version:
-            raise IncorrectDefinitionVersionError("Definition uses version {0} but expected version {1}".format(json_dict["version"], self.Version))
+        if json_dict["version"] != cls.Version:
+            raise IncorrectDefinitionVersionError("Definition uses version {0} but expected version {1}".format(json_dict["version"], cls.Version))
 
     # Recursively find a key in a dictionary
     def _findInDict(self, dictionary: dict, key: str):
