@@ -11,7 +11,7 @@ import collections
 import time
 
 import UM.FlameProfiler
-from UM.PluginRegistry import PluginRegistry
+from UM.PluginRegistry import PluginRegistry #To register the container type plug-ins and container provider plug-ins.
 from UM.Resources import Resources, UnsupportedStorageTypeError
 from UM.MimeTypeDatabase import MimeType, MimeTypeDatabase
 from UM.Logger import Logger
@@ -56,6 +56,8 @@ class ContainerRegistry(ContainerRegistryInterface):
         self._emptyInstanceContainer = _EmptyInstanceContainer("empty")
 
         self._providers = [] # type: List[ContainerProvider]
+        PluginRegistry.addType("container_provider", self.addProvider)
+
         self._containers = [self._emptyInstanceContainer]   # type: List[ContainerInterface]
         self._id_container_cache = {}
         # Ensure that the empty container is added to the ID cache.
@@ -74,7 +76,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         self._resource_types.append(type)
 
     ##  Adds a container provider to search through containers in.
-    def addProvider(self, provider):
+    def addProvider(self, provider: "PluginObject"):
         self._providers.append(provider)
 
     ##  Find all DefinitionContainer objects matching certain criteria.
