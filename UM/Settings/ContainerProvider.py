@@ -3,7 +3,8 @@
 
 from typing import Any, Dict
 
-from UM.PluginObject import PluginObject
+from UM.PluginObject import PluginObject #We're implementing this.
+from UM.PluginRegistry import PluginRegistry #To get the priority metadata to sort by.
 
 ##  This class serves as a database for containers.
 #
@@ -28,6 +29,25 @@ class ContainerProvider(PluginObject):
         if container_id not in self._containers:
             self._containers[container_id] = self.loadContainer(container_id)
         return self._containers[container_id]
+
+    ##  Compares container providers by their priority so that they are easy to
+    #   sort.
+    #
+    #   \param other The other container provider to compare with.
+    #   \return A positive number if this provider has lower priority than the
+    #   other, or a negative number if this provider has higher priority than
+    #   the other.
+    def __lt__(self, other: "ContainerProvider"):
+        plugin_registry = PluginRegistry.getInstance()
+        my_metadata = plugin_registry.getMetaData(self.getPluginId())
+        other_metadata = plugin_registry.getMetaData(other.getPluginId())
+        return my_metadata["priority"] < other_metadata["priority"]
+
+    def __eq__(self, other: "ContainerProvider"):
+        plugin_registry = PluginRegistry.getInstance()
+        my_metadata = plugin_registry.getMetaData(self.getPluginId())
+        other_metadata = plugin_registry.getMetaData(other.getPluginId())
+        return my_metadata["priority"] == other_metadata["priority"]
 
     ##  Adds an item to the list of metadata.
     #
