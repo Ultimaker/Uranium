@@ -238,10 +238,13 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     def getMetadataFromSerialized(cls, serialized: str) -> Optional[Dict[str, Any]]:
         try:
             parsed = json.loads(serialized, object_pairs_hook=collections.OrderedDict) #TODO: Load only part of this JSON until we find the metadata. We need an external library for this though.
-            return parsed["metadata"]
-        except Exception as e:
-            Logger.log("d", "Could not get metadata for definition: %s", e)
+        except json.JSONDecodeError as e:
+            Logger.log("d", "Could not parse definition: %s", e)
             return None
+
+        metadata = parsed.get("metadata", {})
+        #TODO: Load metadata from container registry if there's inheritance.
+        return metadata
 
     def _readAndValidateSerialized(self, serialized: str) -> dict:
         parsed = json.loads(serialized, object_pairs_hook=collections.OrderedDict)
