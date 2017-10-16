@@ -42,7 +42,7 @@ class ContainerQuery:
     #
     #   \return True if this query is case sensitive, has only 1 thing to search for and that thing is "id".
     def isIdOnly(self):
-        return not self._ignore_case and len(self._kwargs) == 1 and "id" in self._kwargs
+        return len(self._kwargs) == 1 and not self._ignore_case and "id" in self._kwargs
 
     ##  Execute the actual query.
     #
