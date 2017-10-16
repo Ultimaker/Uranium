@@ -20,17 +20,13 @@ class ContainerQuery:
     #   \param container_type A specific container class that should be filtered for.
     #   \param ignore_case Whether or not the query should be case sensitive.
     #   \param kwargs A dict of key, value pairs that should be searched for.
-    def __init__(self, registry, container_type = None, *, ignore_case = False, **kwargs):
+    def __init__(self, registry, *, ignore_case = False, **kwargs):
         self._registry = registry
 
-        self._container_type = container_type
         self._ignore_case = ignore_case
         self._kwargs = kwargs
 
         self._result = None
-
-    def getContainerType(self):
-        return self._container_type
 
     ##  Retrieve the result of this query.
     #
@@ -51,10 +47,6 @@ class ContainerQuery:
     #   the result can be retrieved with getResult().
     def execute(self):
         candidates = self._registry.metadata
-
-        #Optionally filter by container type.
-        if self._container_type:
-            candidates = filter(lambda candidate: isinstance(candidate, self._container_type), candidates)
 
         #Filter on all the key-word arguments.
         for key, value in self._kwargs.items():
@@ -132,4 +124,4 @@ class ContainerQuery:
 
     # Private helper function for __hash__ and __eq__
     def __key(self):
-        return (type(self), self._container_type, self._ignore_case, tuple(self._kwargs.items()))
+        return (type(self), self._ignore_case, tuple(self._kwargs.items()))
