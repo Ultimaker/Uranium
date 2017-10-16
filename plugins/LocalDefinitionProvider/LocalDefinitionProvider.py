@@ -30,7 +30,14 @@ class LocalDefinitionProvider(ContainerProvider):
     #   \return The metadata of the specified container, or ``None`` if the
     #   metadata failed to load.
     def loadMetadata(self, container_id: str) -> Dict[str, Any]:
-        filename = self._id_to_path[container_id] #Raises KeyError if container ID does not exist in the (cache of the) files!
+        try:
+            filename = self._id_to_path[container_id] #Raises KeyError if container ID does not exist in the (cache of the) files!
+        except KeyError:
+            #Update the cache. This shouldn't happen or be necessary because the list of definitions never changes during runtime, but let's update the cache just to be sure.
+            self._updatePathCache()
+            filename = self._id_to_path[container_id]
+            #If we get another KeyError, pass that on up because that's a programming error for sure then.
+
         with open(filename) as f:
             metadata = DefinitionContainer.getMetadataFromSerialized(f.read())
             metadata["id"] = container_id #Always fill in the ID from the filename, rather than the ID in the metadata itself.
