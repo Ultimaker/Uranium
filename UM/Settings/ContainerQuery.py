@@ -50,7 +50,7 @@ class ContainerQuery:
     #   on the arguments provided to this class' constructor. After it is done,
     #   the result can be retrieved with getResult().
     def execute(self):
-        candidates = self._registry._metadata
+        candidates = self._registry.metadata
 
         #Optionally filter by container type.
         if self._container_type:

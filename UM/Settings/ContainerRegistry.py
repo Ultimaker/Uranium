@@ -60,7 +60,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         PluginRegistry.addType("container_provider", self.addProvider)
 
         self._containers = [self._emptyInstanceContainer]   # type: List[ContainerInterface]
-        self._metadata = {} # type: Dict[str, Dict[str, Any]]
+        self.metadata = {} # type: Dict[str, Dict[str, Any]]
         self._id_container_cache = {}
         # Ensure that the empty container is added to the ID cache.
         self._id_container_cache["empty"] = self._emptyInstanceContainer
@@ -179,8 +179,8 @@ class ContainerRegistry(ContainerRegistryInterface):
     def loadMetadata(self):
         for provider in list(self._providers): #Automatically sorted by the priority queue.
             for container_id in provider.getAllIds():
-                if container_id not in self._metadata:
-                    self._metadata[container_id] = provider.loadMetadata(container_id)
+                if container_id not in self.metadata:
+                    self.metadata[container_id] = provider.loadMetadata(container_id)
 
     ##  Load all available definition containers, instance containers and
     #   container stacks.
