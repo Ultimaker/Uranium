@@ -94,13 +94,17 @@ class QtApplication(QApplication, Application):
         self._qml_import_paths.append(os.path.join(os.path.dirname(sys.executable), "qml"))
         self._qml_import_paths.append(os.path.join(Application.getInstallPrefix(), "Resources", "qml"))
 
+        self.parseCommandLine()
+        Logger.log("i", "Command line arguments: %s", self._parsed_command_line)
+
         try:
             self._splash = self._createSplashScreen()
         except FileNotFoundError:
             self._splash = None
         else:
-            self._splash.show()
-            self.processEvents()
+            if self._splash:
+                self._splash.show()
+                self.processEvents()
 
         signal.signal(signal.SIGINT, signal.SIG_DFL)
         # This is done here as a lot of plugins require a correct gl context. If you want to change the framework,
@@ -110,8 +114,7 @@ class QtApplication(QApplication, Application):
 
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Loading plugins..."))
         self._loadPlugins()
-        self.parseCommandLine()
-        Logger.log("i", "Command line arguments: %s", self._parsed_command_line)
+
         self._plugin_registry.checkRequiredPlugins(self.getRequiredPlugins())
 
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Updating configuration..."))
