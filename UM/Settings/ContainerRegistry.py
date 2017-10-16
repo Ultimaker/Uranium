@@ -7,7 +7,7 @@ import re #For finding containers with asterisks in the constraints and for dete
 import urllib #For ensuring container file names are proper file names
 import urllib.parse
 import pickle #For serializing/deserializing Python classes to binary files
-from typing import List, Optional, cast
+from typing import Any, cast, Dict, List, Optional
 import collections
 import time
 
@@ -60,6 +60,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         PluginRegistry.addType("container_provider", self.addProvider)
 
         self._containers = [self._emptyInstanceContainer]   # type: List[ContainerInterface]
+        self._metadata = {} # type: Dict[str, Dict[str, Any]]
         self._id_container_cache = {}
         # Ensure that the empty container is added to the ID cache.
         self._id_container_cache["empty"] = self._emptyInstanceContainer
@@ -155,9 +156,31 @@ class ContainerRegistry(ContainerRegistryInterface):
 
         return query.getResult()
 
+    ##  Find the metadata of all container objects matching certain criteria.
+    #
+    #   \param container_type If provided, return only objects that are
+    #   instances or subclasses of ``container_type``.
+    #   \param kwargs A dictionary of keyword arguments containing keys and
+    #   values that need to match the metadata. An asterisk can be used to
+    #   denote a wildcard.
+    #   \return A list of metadata dictionaries matching the search criteria, or
+    #   an empty list if nothing was found.
+    def findContainersMetadata(self, container_type = None, *, ignore_case = False, **kwargs) -> List[Dict[str, Any]]:
+        #TODO: Use cached queries to find the metadata. This can be re-used for finding the actual containers too.
+        #TODO: Check ID field first.
+        pass
+
     ##  This is a small convenience to make it easier to support complex structures in ContainerStacks.
     def getEmptyInstanceContainer(self) -> InstanceContainer:
         return self._emptyInstanceContainer
+
+    ##  Load the metadata of all available definition containers, instance
+    #   containers and container stacks.
+    def loadMetadata(self):
+        for provider in list(self._providers): #Automatically sorted by the priority queue.
+            for container_id in provider.getAllIds():
+                if container_id not in self._metadata:
+                    self._metadata[container_id] = provider.loadMetadata(container_id)
 
     ##  Load all available definition containers, instance containers and
     #   container stacks.
