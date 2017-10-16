@@ -242,10 +242,14 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
             Logger.log("d", "Could not parse definition: %s", e)
             return None
 
-        metadata = parsed.get("metadata", {})
-        #TODO: Load metadata from container registry if there's inheritance.
-
+        metadata = parsed["metadata"]
         metadata["container_type"] = DefinitionContainer
+        metadata["id"] = parsed["id"] #Move required fields to metadata.
+        metadata["name"] = parsed["name"]
+        metadata["version"] = parsed["version"]
+        metadata["inherits"] = parsed["inherits"]
+
+        #TODO: Load metadata from container registry if there's inheritance.
         return metadata
 
     def _readAndValidateSerialized(self, serialized: str) -> dict:
