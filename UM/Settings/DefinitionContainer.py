@@ -235,7 +235,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     #   \param serialized A JSON document, serialised as a string.
     #   \return A dictionary of metadata that was in the JSON document. If
     #   anything went wrong, this returns ``None`` instead.
-    def getMetadataFromSerialized(self, serialized: str) -> Optional[Dict[str, Any]]:
+    def getMetadataFromSerialized(cls, serialized: str) -> Optional[Dict[str, Any]]:
         try:
             parsed = json.loads(serialized, object_pairs_hook=collections.OrderedDict) #TODO: Load only part of this JSON until we find the metadata. We need an external library for this though.
             return parsed["metadata"]
