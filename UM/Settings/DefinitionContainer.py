@@ -244,6 +244,8 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
         metadata = parsed.get("metadata", {})
         #TODO: Load metadata from container registry if there's inheritance.
+
+        metadata["container_type"] = DefinitionContainer
         return metadata
 
     def _readAndValidateSerialized(self, serialized: str) -> dict:
