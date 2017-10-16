@@ -93,6 +93,16 @@ class ContainerRegistry(ContainerRegistryInterface):
     def findDefinitionContainers(self, **kwargs) -> List[DefinitionContainerInterface]:
         return cast(List[DefinitionContainerInterface], self.findContainers(DefinitionContainer, **kwargs))
 
+    ##  Get the metadata of all definition containers matching certain criteria.
+    #
+    #   \param kwargs A dictionary of keyword arguments containing keys and
+    #   values that need to match the metadata. An asterisk in the values can be
+    #   used to denote a wildcard.
+    #   \return A list of metadata dictionaries matching the search criteria, or
+    #   an empty list if nothing was found.
+    def findDefinitionContainersMetadata(self, **kwargs: Dict[str, Any]) -> List[Dict[str, Any]]:
+        return cast(List[Dict[str, Any]], self.findContainersMetadata(container_type = DefinitionContainer, **kwargs))
+
     ##  Find all InstanceContainer objects matching certain criteria.
     #
     #   \param kwargs \type{dict} A dictionary of keyword arguments containing
@@ -102,6 +112,16 @@ class ContainerRegistry(ContainerRegistryInterface):
     def findInstanceContainers(self, **kwargs) -> List[InstanceContainer]:
         return cast(List[InstanceContainer], self.findContainers(InstanceContainer, **kwargs))
 
+    ##  Find the metadata of all instance containers matching certain criteria.
+    #
+    #   \param kwargs A dictionary of keyword arguments containing keys and
+    #   values that need to match the metadata. An asterisk in the values can be
+    #   used to denote a wildcard.
+    #   \return A list of metadata dictionaries matching the search criteria, or
+    #   an empty list if nothing was found.
+    def findInstanceContainersMetadata(self, **kwargs: Dict[str, Any]) -> List[Dict[str, Any]]:
+        return cast(List[Dict[str, Any]], self.findContainersMetadata(container_type = InstanceContainer, **kwargs))
+
     ##  Find all ContainerStack objects matching certain criteria.
     #
     #   \param kwargs \type{dict} A dictionary of keyword arguments containing
@@ -109,6 +129,16 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   An asterisk in the values can be used to denote a wildcard.
     def findContainerStacks(self, **kwargs) -> List[ContainerStack]:
         return cast(List[ContainerStack], self.findContainers(ContainerStack, **kwargs))
+
+    ##  Find the metadata of all container stacks matching certain criteria.
+    #
+    #   \param kwargs A dictionary of keyword arguments containing keys and
+    #   values that need to match the metadata. An asterisk in the values can be
+    #   used to denote a wildcard.
+    #   \return A list of metadata dictionaries matching the search criteria, or
+    #   an empty list if nothing was found.
+    def findContainerStacksMetadata(self, **kwargs) -> List[Dict[str, Any]]:
+        return cast(List[Dict[str, Any]], self.findContainersMetadata(container_type = ContainerStack, **kwargs))
 
     ##  Find all container objects matching certain criteria.
     #
@@ -165,7 +195,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   denote a wildcard.
     #   \return A list of metadata dictionaries matching the search criteria, or
     #   an empty list if nothing was found.
-    def findContainersMetadata(self, container_type = None, *, ignore_case = False, **kwargs) -> List[Dict[str, Any]]:
+    def findContainersMetadata(self, *, ignore_case = False, **kwargs) -> List[Dict[str, Any]]:
         #TODO: Use cached queries to find the metadata. This can be re-used for finding the actual containers too.
         #TODO: Check ID field first.
         pass
