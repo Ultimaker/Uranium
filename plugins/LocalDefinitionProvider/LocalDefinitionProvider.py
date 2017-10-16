@@ -4,6 +4,7 @@
 import os #To get the ID from a filename.
 from typing import Any, Dict
 
+from UM.Logger import Logger
 from UM.Settings.ContainerProvider import ContainerProvider #The class we're implementing.
 from UM.Settings.DefinitionContainer import DefinitionContainer #To parse JSON files and get their metadata.
 from UM.Resources import Resources
@@ -34,6 +35,7 @@ class LocalDefinitionProvider(ContainerProvider):
             filename = self._id_to_path[container_id] #Raises KeyError if container ID does not exist in the (cache of the) files!
         except KeyError:
             #Update the cache. This shouldn't happen or be necessary because the list of definitions never changes during runtime, but let's update the cache just to be sure.
+            Logger.log("w", "Couldn't find definition file with ID {container_id}. Refreshing cache from resources and trying again...".format(container_id = container_id))
             self._updatePathCache()
             filename = self._id_to_path[container_id]
             #If we get another KeyError, pass that on up because that's a programming error for sure then.
