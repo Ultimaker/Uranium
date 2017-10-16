@@ -9,6 +9,18 @@ from UM.Settings.DefinitionContainer import DefinitionContainer #To parse JSON f
 from UM.Resources import Resources
 
 class LocalDefinitionProvider(ContainerProvider):
+    ##  Creates the local definition provider.
+    #
+    #   This creates a cache which translates definition IDs to their file
+    #   names.
+    def __init__(self):
+        super().__init__()
+
+        #Translates definition IDs to the path to where the file is located.
+        self._id_to_path = {} # type: Dict[str, str]
+
+        self._updatePathCache()
+
     def loadContainer(self, container_id: str) -> "ContainerInterface":
         pass
 
@@ -26,3 +38,13 @@ class LocalDefinitionProvider(ContainerProvider):
             result[metadata["id"]] = metadata
 
         return result
+
+    ##  Updates the cache of paths to definitions.
+    #
+    #   This way we can more easily load the definition files we want lazily.
+    def _updatePathCache(self):
+        self._id_to_path = {} #Clear cache first.
+
+        for filename in Resources.getAllResourcesOfType(Resources.DefinitionContainers):
+            definition_id = ".".join(os.path.basename(filename).split(".")[:-2]) #Remove the last two extensions.
+            self._id_to_path[definition_id] = filename
