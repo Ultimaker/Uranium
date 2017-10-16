@@ -51,11 +51,11 @@ class ContainerQuery:
     def execute(self):
         containers = []
 
-        # If no container type is specified, search through all containers.
-        if not self._container_type:
-            candidates = self._registry._containers
-        else:
-            candidates = filter(lambda c: isinstance(c, self._container_type), self._registry._containers)
+        candidates = self._registry._containers
+
+        #Optionally filter by container type.
+        if self._container_type:
+            candidates = filter(lambda c: isinstance(c, self._container_type), candidates)
 
         for container in candidates:
             matches_container = True
