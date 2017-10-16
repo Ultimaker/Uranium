@@ -46,35 +46,29 @@ class ContainerQuery:
 
     ##  Execute the actual query.
     #
-    #   This will search the containers of the ContainerRegistry based on the arguments provided to this
-    #   class' constructor. After it is done, the result can be retrieved with getResult().
+    #   This will search the container metadata of the ContainerRegistry based
+    #   on the arguments provided to this class' constructor. After it is done,
+    #   the result can be retrieved with getResult().
     def execute(self):
-        containers = []
-
         candidates = self._registry._containers
 
         #Optionally filter by container type.
         if self._container_type:
-            candidates = filter(lambda c: isinstance(c, self._container_type), candidates)
+            candidates = filter(lambda candidate: isinstance(candidate, self._container_type), candidates)
 
-        for container in candidates:
-            matches_container = True
-            for key, value in self._kwargs.items():
-                if isinstance(value, str):
-                    if "*" in value:
-                        matches_container = self._matchRegExp(container, key, value)
-                    else:
-                        matches_container = self._matchString(container, key, value)
+        #Filter on all the key-word arguments.
+        for key, value in self._kwargs.items():
+            if isinstance(value, str):
+                if "*" in value:
+                    key_filter = lambda candidate: self._matchRegExp(candidate, key, value)
                 else:
-                    matches_container = self._matchType(container, key, value)
+                    key_filter = lambda candidate: self._matchString(candidate, key, value)
+            else:
+                key_filter = lambda candidate: self._matchType(candidate, key, value)
+            candidates = filter(key_filter, candidates)
 
-                if not matches_container: # For the moment, a query needs to match all specified criteria
-                    break
-
-            if matches_container:
-                containers.append(container)
-
-        self._result = containers
+        #Execute all filters.
+        self._result = list(candidates)
 
     def __hash__(self):
         return hash(self.__key())
