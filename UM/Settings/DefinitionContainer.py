@@ -247,9 +247,9 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
         metadata["id"] = parsed["id"] #Move required fields to metadata.
         metadata["name"] = parsed["name"]
         metadata["version"] = parsed["version"]
-        metadata["inherits"] = parsed["inherits"]
+        if "inherits" in parsed:
+            metadata["inherits"] = parsed["inherits"]
 
-        #TODO: Load metadata from container registry if there's inheritance.
         return metadata
 
     def _readAndValidateSerialized(self, serialized: str) -> dict:
