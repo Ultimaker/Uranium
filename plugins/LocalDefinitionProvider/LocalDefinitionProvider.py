@@ -24,20 +24,17 @@ class LocalDefinitionProvider(ContainerProvider):
     def loadContainer(self, container_id: str) -> "ContainerInterface":
         pass
 
-    def loadMetadata(self, container_id: str) -> Dict[str, Dict[str, Any]]:
-        result = {}
-
-        for filename in Resources.getAllResourcesOfType(Resources.DefinitionContainers):
-            with open(filename) as f:
-                metadata = DefinitionContainer.getMetadataFromSerialized(f.read())
-            if metadata is None:
-                continue
-
-            #Always fill in the ID from the filename, rather than the ID in the metadata itself.
-            metadata["id"] = os.path.basename(filename).split(".")[0] #Instead of using the default splitext function, we deal with multiple extensions differently: We always split on the first point.
-            result[metadata["id"]] = metadata
-
-        return result
+    ##  Load the metadata of a specified container.
+    #
+    #   \param container_id The ID of the container to load the metadata of.
+    #   \return The metadata of the specified container, or ``None`` if the
+    #   metadata failed to load.
+    def loadMetadata(self, container_id: str) -> Dict[str, Any]:
+        filename = self._id_to_path[container_id] #Raises KeyError if container ID does not exist in the (cache of the) files!
+        with open(filename) as f:
+            metadata = DefinitionContainer.getMetadataFromSerialized(f.read())
+            metadata["id"] = container_id #Always fill in the ID from the filename, rather than the ID in the metadata itself.
+        return metadata
 
     ##  Updates the cache of paths to definitions.
     #
