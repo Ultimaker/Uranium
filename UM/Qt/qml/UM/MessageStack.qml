@@ -23,7 +23,7 @@ ListView {
     {
         id: message
 
-        property int labelTopBottomMargin: UM.Theme.getSize("default_margin").height / 2
+        property int labelTopBottomMargin: Math.floor(UM.Theme.getSize("default_margin").height / 2)
         property int labelHeight: messageLabel.height + (UM.Theme.getSize("message_inner_margin").height * 2)
         property int progressBarHeight: totalProgressBar.height + UM.Theme.getSize("default_margin").height
         property int actionButtonsHeight: actionButtons.height > 0 ? actionButtons.height + UM.Theme.getSize("default_margin").height : 0
@@ -31,7 +31,7 @@ ListView {
         property variant model_id: model.id
 
         property int totalMessageHeight: Math.max(message.labelHeight, message.actionButtonsHeight) + message.labelTopBottomMargin
-        property int totalProgressBarHeight : message.labelHeight + message.progressBarHeight + message.actionButtonsHeight + UM.Theme.getSize("default_margin").height / 2
+        property int totalProgressBarHeight : Math.floor(message.labelHeight + message.progressBarHeight + message.actionButtonsHeight + UM.Theme.getSize("default_margin").height / 2)
 
         width: UM.Theme.getSize("message").width
         height: (model.progress == null) ? totalMessageHeight : totalProgressBarHeight
@@ -48,7 +48,7 @@ ListView {
                 left: parent.left;
                 leftMargin: UM.Theme.getSize("message_inner_margin").width
                 top: parent.top;
-                topMargin: model.title != undefined ? UM.Theme.getSize("default_margin").height / 2 : 0;
+                topMargin: model.title != undefined ? Math.floor(UM.Theme.getSize("default_margin").height / 2) : 0;
             }
 
             text: model.title == undefined ? "" : model.title
@@ -100,7 +100,7 @@ ListView {
             property string controlColor: UM.Theme.getColor("message_progressbar_control")
 
             anchors.top: messageLabel.bottom
-            anchors.topMargin: UM.Theme.getSize("message_inner_margin").height / 2
+            anchors.topMargin: Math.floor(UM.Theme.getSize("message_inner_margin").height / 2)
             anchors.left: parent.left
             anchors.leftMargin: UM.Theme.getSize("message_inner_margin").width
             anchors.right: parent.right
