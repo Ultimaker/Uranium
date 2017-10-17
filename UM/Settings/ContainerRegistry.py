@@ -249,7 +249,22 @@ class ContainerRegistry(ContainerRegistryInterface):
         if containers:
             container = containers[0]
 
-            self._containers.remove(container)
+            # Find container index
+            remove_index = None
+            for num, temp_container in enumerate(self._containers, start = 0):
+                if temp_container.getId() == container.getId():
+                    remove_index = num
+                    break
+
+            # Using the container index removes object from the list in more efficient way, because
+            # in Instance container overwrites compare function ( see __eq__) ant it has many steps for comparing
+            if remove_index:
+                self._containers.pop(num)
+            else:
+                # just in case keep it, theoretically it is not needed. Calling remove function will
+                # by default use __eq__ which is overwritten
+                self._containers.remove(container)
+
             if container.getId() in self._id_container_cache:
                 del self._id_container_cache[container.getId()]
             self._deleteFiles(container)
