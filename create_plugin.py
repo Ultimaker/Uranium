@@ -36,13 +36,14 @@ if __name__ == "__main__":
 
     full_plugin_path = os.path.join(os.getcwd(), args.plugin_location)
 
-    if checkValidPlugin(full_plugin_path):
-        plugin_name = os.path.basename(os.path.normpath(full_plugin_path))
-        plugin_file_location = plugin_name + ".umplugin"
-        with zipfile.ZipFile(plugin_file_location, "w") as plugin_zip:
-            # Ensure that the root folder is created correctly. We need to tell zip to not compress the folder!
-            plugin_zip.write(plugin_file_location, arcname = plugin_name, compress_type = zipfile.ZIP_STORED)
-            zipDirectory(full_plugin_path, plugin_zip)
-        print("Done!")
-    else:
-        print("Provided plugin location is not a valid plugin folder")
+    if not checkValidPlugin(full_plugin_path):
+        print("Provided plug-in location is not a valid plug-in folder.")
+        exit()
+
+    plugin_name = os.path.basename(os.path.normpath(full_plugin_path))
+    plugin_file_location = plugin_name + ".umplugin"
+    with zipfile.ZipFile(plugin_file_location, "w") as plugin_zip:
+        # Ensure that the root folder is created correctly. We need to tell zip to not compress the folder!
+        plugin_zip.write(plugin_file_location, arcname = plugin_name, compress_type = zipfile.ZIP_STORED)
+        zipDirectory(full_plugin_path, plugin_zip)
+    print("Done!")
