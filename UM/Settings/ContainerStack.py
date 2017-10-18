@@ -196,7 +196,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     #   result of evaluating that property with the current stack. If you need the
     #   actual function, use getRawProperty()
     def getProperty(self, key: str, property_name: str, context: Optional[PropertyEvaluationContext] = None):
-        value = self.getRawProperty(key, property_name)
+        value = self.getRawProperty(key, property_name, context = context)
         if isinstance(value, SettingFunction):
             if context is not None:
                 context.pushContainer(self)
@@ -222,18 +222,28 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     #   \return The raw property value of the property, or None if not found. Note that
     #           the value might be a SettingFunction instance.
     #
-    def getRawProperty(self, key, property_name, *, use_next = True, skip_until_container = None):
-        for container in self._containers:
+    def getRawProperty(self, key, property_name, *, context: Optional[PropertyEvaluationContext] = None,
+                       use_next = True, skip_until_container = None):
+        containers = self._containers
+        if context is not None:
+            # if context is provided, check if there is any container that needs to be skipped.
+            start_index = context.context.get("evaluate_from_container_index", 0)
+            if start_index >= len(self._containers):
+                return None
+            containers = self._containers[start_index:]
+
+        for container in containers:
             if skip_until_container and container.getId() != skip_until_container:
                 continue #Skip.
             skip_until_container = None #When we find the container, stop skipping.
 
-            value = container.getProperty(key, property_name)
+            value = container.getProperty(key, property_name, context)
             if value is not None:
                 return value
 
         if self._next_stack and use_next:
-            return self._next_stack.getRawProperty(key, property_name, use_next = use_next, skip_until_container = skip_until_container)
+            return self._next_stack.getRawProperty(key, property_name, context = context,
+                                                   use_next = use_next, skip_until_container = skip_until_container)
         else:
             return None
 
