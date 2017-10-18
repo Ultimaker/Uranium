@@ -18,7 +18,7 @@ def zipDirectory(path, zip_handle):
     for root, dirs, files in os.walk(path):
         for file in files:
             filename = os.path.join(root, file)
-            if os.path.isfile(filename):
+            if os.path.isfile(filename) and not file.startswith(".git") and ".git" not in root:
                 _, extension = os.path.splitext(filename)
                 if extension not in excluded_extentions:
                     zip_handle.write(os.path.join(root, file), os.path.relpath(os.path.join(root, file), os.path.join(path, '..')))
