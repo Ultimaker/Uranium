@@ -576,25 +576,13 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     ##  Update all instances from this container.
     def update(self):
         self._instantiateCachedValues()
-        all_keys = self._instances.copy()
-        for key in all_keys:
-            self.updateInstance(key)
-
-    ##  Update an instance from this container. The update involves checking: 'value', 'state' and 'validationState'
-    #   /param key Property setting key which need to be updated
-    def updateInstance(self, key: str):
-        self._instantiateCachedValues()
-        if key not in self._instances:
-            return
-        instance = self._instances[key]
-
-        instance.propertyChanged.emit(key, "value")
-        instance.propertyChanged.emit(key, "state")  # State is no longer user state, so signal is needed.
-        instance.propertyChanged.emit(key, "validationState")  # If the value was invalid, it should now no longer be invalid.
-        for property_name in instance.definition.getPropertyNames():
-            if instance.definition.dependsOnProperty(property_name) == "value":
-                self.propertyChanged.emit(key, property_name)
-
+        for key, instance in self._instances.items():
+            instance.propertyChanged.emit(key, "value")
+            instance.propertyChanged.emit(key, "state")  # State is no longer user state, so signal is needed.
+            instance.propertyChanged.emit(key, "validationState")  # If the value was invalid, it should now no longer be invalid.
+            for property_name in instance.definition.getPropertyNames():
+                if instance.definition.dependsOnProperty(property_name) == "value":
+                    self.propertyChanged.emit(key, property_name)
         self._dirty = True
 
     ##  Get the DefinitionContainer used for new instance creation.
