@@ -59,7 +59,6 @@ class ContainerRegistry(ContainerRegistryInterface):
         self._providers = queue.PriorityQueue # type: queue.PriorityQueue[ContainerProvider]
         PluginRegistry.addType("container_provider", self.addProvider)
 
-        self._containers = [self._emptyInstanceContainer]   # type: List[ContainerInterface]
         self.metadata = {} # type: Dict[str, Dict[str, Any]]
         self._id_container_cache = {}
         # Ensure that the empty container is added to the ID cache.
@@ -328,7 +327,6 @@ class ContainerRegistry(ContainerRegistryInterface):
         if hasattr(container, "metaDataChanged"):
             container.metaDataChanged.connect(self._onContainerMetaDataChanged)
 
-        self._containers.append(container)
         self._id_container_cache[container.getId()] = container
         self._clearQueryCacheByContainer(container)
         self.containerAdded.emit(container)
@@ -339,7 +337,6 @@ class ContainerRegistry(ContainerRegistryInterface):
         if containers:
             container = containers[0]
 
-            self._containers.remove(container)
             if container.getId() in self._id_container_cache:
                 del self._id_container_cache[container.getId()]
             self._deleteFiles(container)
