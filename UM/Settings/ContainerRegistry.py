@@ -150,40 +150,9 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   \return A list of containers matching the search criteria, or an empty
     #   list if nothing was found.
     @UM.FlameProfiler.profile
-    def findContainers(self, container_type = None, *, ignore_case = False, **kwargs) -> List[ContainerInterface]:
-        # Create the query object
-        query = ContainerQuery.ContainerQuery(self, container_type, ignore_case = ignore_case, **kwargs)
-
-        if query.isIdOnly():
-            # If we are just searching for a single container by ID, look it up from the ID-based cache
-            container = self._containers.get(kwargs.get("id"))
-            if container:
-                # Add an extra check to make sure the found container matches the requested container type.
-                # This should never occur but has happened with broken configurations.
-                if not container_type:
-                    return [ container ]
-                elif isinstance(container, container_type):
-                    return [ container ]
-            else:
-                return [] # No result, so return an empty list.
-
-        if query in self._query_cache:
-            # If the exact same query is in the cache, we can re-use the query result
-            self._query_cache.move_to_end(query) # Query was used, so make sure to update its position
-            return self._query_cache[query].getResult()
-
-        # Execute the query, then add it to the cache
-        query.execute()
-        self._query_cache[query] = query
-
-        if len(self._query_cache) > MaxQueryCacheSize:
-            # Since we use an OrderedDict, we can use a simple FIFO scheme
-            # to discard queries. As long as we properly update queries
-            # that are being used, this results in the least used queries
-            # to be discarded.
-            self._query_cache.popitem(last = False)
-
-        return query.getResult()
+    def findContainers(self, *, ignore_case = False, **kwargs) -> List[ContainerInterface]:
+        #Find the metadata of the containers and grab the actual containers from there.
+        return [self._containers[result["id"]] for result in self.findContainersMetadata(ignore_case = ignore_case, **kwargs)]
 
     ##  Find the metadata of all container objects matching certain criteria.
     #
