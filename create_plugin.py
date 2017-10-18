@@ -10,6 +10,10 @@ def checkValidPlugin(path):
     # A plugin must contain an __init__.py
     if not os.path.isfile(os.path.join(path, "__init__.py")):
         return False
+    
+    # .. and a plugin must contain an plugin.json!
+    if not os.path.isfile(os.path.join(path, "plugin.json")):
+        return False
 
     return True
 
