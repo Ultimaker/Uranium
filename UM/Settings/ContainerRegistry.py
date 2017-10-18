@@ -196,9 +196,31 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   \return A list of metadata dictionaries matching the search criteria, or
     #   an empty list if nothing was found.
     def findContainersMetadata(self, *, ignore_case = False, **kwargs) -> List[Dict[str, Any]]:
-        #TODO: Use cached queries to find the metadata. This can be re-used for finding the actual containers too.
-        #TODO: Check ID field first.
-        pass
+        #Create the query object.
+        query = ContainerQuery.ContainerQuery(self, ignore_case = ignore_case, **kwargs)
+
+        if query.isIdOnly(): #If we are just searching for a single container by ID, look it up from the ID-based cache.
+            metadata = self.metadata.get(kwargs["id"])
+            if metadata is not None:
+                return [metadata]
+            else:
+                return [] #No result, so return an empty list.
+
+        if query in self._query_cache:
+            #If the exact same query is in the cache, we can re-use the query result.
+            self._query_cache.move_to_end(query) #Query was used, so make sure to update its position so that it doesn't get pushed off as a rarely-used query.
+            return self._query_cache[query].getResult()
+
+        query.execute()
+
+        if len(self._query_cache) > MaxQueryCacheSize:
+            #Since we use an OrderedDict, we can use a simple FIFO scheme to
+            #discard queries. As long as we properly update the position of
+            #queries that are being used, this results in the least used queries
+            #to be discarded.
+            self._query_cache.popitem(last = False)
+
+        return query.getResult()
 
     ##  This is a small convenience to make it easier to support complex structures in ContainerStacks.
     def getEmptyInstanceContainer(self) -> InstanceContainer:
