@@ -228,7 +228,7 @@ class ContainerRegistry(ContainerRegistryInterface):
 
     ##  Load the metadata of all available definition containers, instance
     #   containers and container stacks.
-    def loadMetadata(self):
+    def loadAllMetadata(self):
         for provider in list(self._providers): #Automatically sorted by the priority queue.
             for container_id in provider.getAllIds():
                 if container_id not in self.metadata:
