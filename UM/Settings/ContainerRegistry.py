@@ -60,9 +60,9 @@ class ContainerRegistry(ContainerRegistryInterface):
         PluginRegistry.addType("container_provider", self.addProvider)
 
         self.metadata = {} # type: Dict[str, Dict[str, Any]]
-        self._id_container_cache = {}
+        self._containers = {} # type: Dict[str, ContainerInterface]
         # Ensure that the empty container is added to the ID cache.
-        self._id_container_cache["empty"] = self._emptyInstanceContainer
+        self._containers["empty"] = self._emptyInstanceContainer
         self._resource_types = [Resources.DefinitionContainers] # type: List[int]
         self._query_cache = collections.OrderedDict() # This should really be an ordered set but that does not exist...
 
@@ -156,7 +156,7 @@ class ContainerRegistry(ContainerRegistryInterface):
 
         if query.isIdOnly():
             # If we are just searching for a single container by ID, look it up from the ID-based cache
-            container = self._id_container_cache.get(kwargs.get("id"))
+            container = self._containers.get(kwargs.get("id"))
             if container:
                 # Add an extra check to make sure the found container matches the requested container type.
                 # This should never occur but has happened with broken configurations.
@@ -290,9 +290,9 @@ class ContainerRegistry(ContainerRegistryInterface):
                 # Enable the rest of the application to get UI updates.
                 UM.Qt.QtApplication.QtApplication.processEvents()
 
-                if container_id in self._id_container_cache:
+                if container_id in self._containers:
                     Logger.log("c", "Found a container with a duplicate ID: %s", container_id)
-                    Logger.log("c", "Existing container is %s, trying to load %s from %s", self._id_container_cache[container_id], container_type, file_path)
+                    Logger.log("c", "Existing container is %s, trying to load %s from %s", self._containers[container_id], container_type, file_path)
                     continue
 
                 try:
@@ -327,7 +327,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         if hasattr(container, "metaDataChanged"):
             container.metaDataChanged.connect(self._onContainerMetaDataChanged)
 
-        self._id_container_cache[container.getId()] = container
+        self._containers[container.getId()] = container
         self._clearQueryCacheByContainer(container)
         self.containerAdded.emit(container)
 
@@ -337,8 +337,8 @@ class ContainerRegistry(ContainerRegistryInterface):
         if containers:
             container = containers[0]
 
-            if container.getId() in self._id_container_cache:
-                del self._id_container_cache[container.getId()]
+            if container.getId() in self._containers:
+                del self._containers[container.getId()]
             self._deleteFiles(container)
 
             if hasattr(container, "metaDataChanged"):
@@ -371,9 +371,9 @@ class ContainerRegistry(ContainerRegistryInterface):
 
         container.setName(new_name)
         if new_id:
-            del self._id_container_cache[container._id]
+            del self._containers[container._id]
             container._id = new_id
-            self._id_container_cache[container._id] = container # Keep cache up-to-date.
+            self._containers[container._id] = container # Keep cache up-to-date.
         self._clearQueryCacheByContainer(container)
         self.containerAdded.emit(container)
 
