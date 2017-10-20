@@ -9,6 +9,7 @@ from UM.Settings.ContainerProvider import ContainerProvider #The class we're imp
 from UM.Settings.DefinitionContainer import DefinitionContainer #To parse JSON files and get their metadata.
 from UM.Resources import Resources
 
+##  Provides definition containers from the local installation.
 class LocalDefinitionProvider(ContainerProvider):
     ##  Creates the local definition provider.
     #
