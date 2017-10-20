@@ -123,27 +123,27 @@ class MockContainer(ContainerInterface, UM.PluginObject.PluginObject):
 #   \param container_registry A new container registry from a fixture.
 def test_addContainer(container_registry):
     definition_container_0 = DefinitionContainer("a", {})
-    assert definition_container_0 not in container_registry.findDefinitionContainers() # Sanity check.
+    assert definition_container_0 not in container_registry.findDefinitionContainersMetadata() # Sanity check.
     container_registry.addContainer(definition_container_0)
-    assert definition_container_0 in container_registry.findDefinitionContainers()
+    assert definition_container_0 in container_registry.findDefinitionContainersMetadata()
 
     # Add a second one of the same type.
     definition_container_1 = DefinitionContainer("b", {})
-    assert definition_container_1 not in container_registry.findDefinitionContainers() # Sanity check.
+    assert definition_container_1 not in container_registry.findDefinitionContainersMetadata() # Sanity check.
     container_registry.addContainer(definition_container_1)
-    assert definition_container_1 in container_registry.findDefinitionContainers()
-    assert definition_container_0 in container_registry.findDefinitionContainers()
+    assert definition_container_1 in container_registry.findDefinitionContainersMetadata()
+    assert definition_container_0 in container_registry.findDefinitionContainersMetadata()
 
     # Add a container with the same type and same ID.
     definition_container_1_clone = DefinitionContainer("b", {})
     container_registry.addContainer(definition_container_1_clone)
-    assert definition_container_1_clone not in container_registry.findDefinitionContainers() # Didn't get added!
+    assert definition_container_1_clone not in container_registry.findDefinitionContainersMetadata() # Didn't get added!
 
     # For good measure, add a container with a different type too.
     instance_container_1 = InstanceContainer("a")
-    assert instance_container_1 not in container_registry.findDefinitionContainers() # Sanity check.
+    assert instance_container_1 not in container_registry.findDefinitionContainersMetadata() # Sanity check.
     container_registry.addContainer(instance_container_1)
-    assert instance_container_1 not in container_registry.findDefinitionContainers()
+    assert instance_container_1 not in container_registry.findDefinitionContainersMetadata()
 
 ##  Tests adding a container type to the registry.
 #
@@ -324,13 +324,13 @@ def test_findContainerStacks(container_registry, data):
 def test_load(container_registry):
     container_registry.load()
 
-    definitions = container_registry.findDefinitionContainers(id = "single_setting")
+    definitions = container_registry.findDefinitionContainersMetadata(id = "single_setting")
     assert len(definitions) == 1
 
     definition = definitions[0]
     assert definition.getId() == "single_setting"
 
-    definitions = container_registry.findDefinitionContainers(author = "Ultimaker")
+    definitions = container_registry.findDefinitionContainersMetadata(author = "Ultimaker")
     assert len(definitions) == 3
 
     ids_found = []

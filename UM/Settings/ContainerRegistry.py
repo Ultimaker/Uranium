@@ -90,7 +90,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   DefinitionContainer. An asterisk in the values can be used to denote a
     #   wildcard.
     def findDefinitionContainers(self, **kwargs) -> List[DefinitionContainerInterface]:
-        return cast(List[DefinitionContainerInterface], self.findContainers(DefinitionContainer, **kwargs))
+        return cast(List[DefinitionContainerInterface], self.findContainers(container_type = DefinitionContainer, **kwargs))
 
     ##  Get the metadata of all definition containers matching certain criteria.
     #
@@ -99,7 +99,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   used to denote a wildcard.
     #   \return A list of metadata dictionaries matching the search criteria, or
     #   an empty list if nothing was found.
-    def findDefinitionContainersMetadata(self, **kwargs: Dict[str, Any]) -> List[Dict[str, Any]]:
+    def findDefinitionContainersMetadata(self, **kwargs) -> List[Dict[str, Any]]:
         return cast(List[Dict[str, Any]], self.findContainersMetadata(container_type = DefinitionContainer, **kwargs))
 
     ##  Find all InstanceContainer objects matching certain criteria.
@@ -109,7 +109,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   InstanceContainer. An asterisk in the values can be used to denote a
     #   wildcard.
     def findInstanceContainers(self, **kwargs) -> List[InstanceContainer]:
-        return cast(List[InstanceContainer], self.findContainers(InstanceContainer, **kwargs))
+        return cast(List[InstanceContainer], self.findContainers(container_type = InstanceContainer, **kwargs))
 
     ##  Find the metadata of all instance containers matching certain criteria.
     #
@@ -118,7 +118,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   used to denote a wildcard.
     #   \return A list of metadata dictionaries matching the search criteria, or
     #   an empty list if nothing was found.
-    def findInstanceContainersMetadata(self, **kwargs: Dict[str, Any]) -> List[Dict[str, Any]]:
+    def findInstanceContainersMetadata(self, **kwargs) -> List[Dict[str, Any]]:
         return cast(List[Dict[str, Any]], self.findContainersMetadata(container_type = InstanceContainer, **kwargs))
 
     ##  Find all ContainerStack objects matching certain criteria.
@@ -127,7 +127,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   keys and values that need to match the metadata of the ContainerStack.
     #   An asterisk in the values can be used to denote a wildcard.
     def findContainerStacks(self, **kwargs) -> List[ContainerStack]:
-        return cast(List[ContainerStack], self.findContainers(ContainerStack, **kwargs))
+        return cast(List[ContainerStack], self.findContainers(container_type = ContainerStack, **kwargs))
 
     ##  Find the metadata of all container stacks matching certain criteria.
     #
@@ -302,12 +302,10 @@ class ContainerRegistry(ContainerRegistryInterface):
 
     @UM.FlameProfiler.profile
     def removeContainer(self, container_id: str) -> None:
-        containers = self.findContainers(None, id = container_id)
-        if containers:
-            container = containers[0]
+        if container_id in self._containers:
+            container = self._containers[container_id]
 
-            if container.getId() in self._containers:
-                del self._containers[container.getId()]
+            del self._containers[container_id]
             self._deleteFiles(container)
 
             if hasattr(container, "metaDataChanged"):
@@ -323,12 +321,11 @@ class ContainerRegistry(ContainerRegistryInterface):
     @UM.FlameProfiler.profile
     def renameContainer(self, container_id, new_name, new_id = None):
         Logger.log("d", "Renaming container %s to %s", container_id, new_name)
-        containers = self.findContainers(None, id = container_id)
-        if not containers:
+        if container_id not in self._containers:
             Logger.log("w", "Unable to rename container %s, because it does not exist", container_id)
             return
 
-        container = containers[0]
+        container = self._containers[container_id]
 
         if new_name == container.getName():
             Logger.log("w", "Unable to rename container %s, because the name (%s) didn't change", container_id, new_name)
@@ -342,7 +339,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         if new_id:
             del self._containers[container._id]
             container._id = new_id
-            self._containers[container._id] = container # Keep cache up-to-date.
+            self._containers[container._id] = container
         self._clearQueryCacheByContainer(container)
         self.containerAdded.emit(container)
 
