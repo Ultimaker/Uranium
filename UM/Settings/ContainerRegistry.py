@@ -79,7 +79,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     ##  Adds a container provider to search through containers in.
     def addProvider(self, provider: "PluginObject"):
         metadata = PluginRegistry.getInstance().getMetaData(provider.getPluginId())
-        if "priority" not in metadata:
+        if "priority" not in metadata["container_provider"]:
             Logger.log("e", "Container provider {provider_id} missing required metadata field 'priority'.".format(provider_id = provider.getPluginId()))
         self._providers.put(provider)
 
