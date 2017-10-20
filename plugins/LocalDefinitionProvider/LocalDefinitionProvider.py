@@ -29,7 +29,21 @@ class LocalDefinitionProvider(ContainerProvider):
         return self._id_to_path.keys()
 
     def loadContainer(self, container_id: str) -> "ContainerInterface":
-        pass
+        #Find the file name from the cache.
+        try:
+            filename = self._id_to_path[container_id] #Raises KeyError if container ID does not exist in the (cache of the) files!
+        except KeyError:
+            #Update the cache. This shouldn't happen or be necessary because the list of definitions never changes during runtime, but let's update the cache just to be sure.
+            Logger.log("w", "Couldn't find definition file with ID {container_id}. Refreshing cache from resources and trying again...".format(container_id = container_id))
+            self._updatePathCache()
+            filename = self._id_to_path[container_id]
+            #If we get another KeyError, pass that on up because that's a programming error for sure then.
+
+        #The actual loading.
+        container = DefinitionContainer(container_id = container_id)
+        with open(filename) as f:
+            container.deserialize(f.read())
+        return container
 
     ##  Load the metadata of a specified container.
     #
