@@ -56,7 +56,7 @@ class ContainerRegistry(ContainerRegistryInterface):
 
         self._emptyInstanceContainer = _EmptyInstanceContainer("empty")
 
-        self._providers = queue.PriorityQueue # type: queue.PriorityQueue[ContainerProvider]
+        self._providers = queue.PriorityQueue() # type: queue.PriorityQueue[ContainerProvider]
         PluginRegistry.addType("container_provider", self.addProvider)
 
         self.metadata = {} # type: Dict[str, Dict[str, Any]]
