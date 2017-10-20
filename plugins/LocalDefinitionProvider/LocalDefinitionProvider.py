@@ -2,7 +2,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import os #To get the ID from a filename.
-from typing import Any, Dict
+from typing import Any, Dict, Iterable
 
 from UM.Logger import Logger
 from UM.Settings.ContainerProvider import ContainerProvider #The class we're implementing.
@@ -21,6 +21,12 @@ class LocalDefinitionProvider(ContainerProvider):
         self._id_to_path = {} # type: Dict[str, str]
 
         self._updatePathCache()
+
+    ##  Gets the IDs of all local definitions.
+    #
+    #   \return A sequence of all definition IDs.
+    def getAllIds(self) -> Iterable[str]:
+        return self._id_to_path.keys()
 
     def loadContainer(self, container_id: str) -> "ContainerInterface":
         pass
