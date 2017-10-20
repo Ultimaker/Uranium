@@ -1,3 +1,6 @@
+# Copyright (c) 2017 Ultimaker B.V.
+# Uranium is released under the terms of the LGPLv3 or higher.
+
 from UM.Qt.ListModel import ListModel
 
 from PyQt5.QtCore import pyqtProperty, Qt, pyqtSignal
@@ -19,8 +22,6 @@ class DefinitionContainersModel(ListModel):
         self.addRoleName(self.IdRole, "id")
         self.addRoleName(self.SectionRole, "section")
 
-        self._definition_containers = []
-
         # Listen to changes
         ContainerRegistry.getInstance().containerAdded.connect(self._onContainerChanged)
         ContainerRegistry.getInstance().containerRemoved.connect(self._onContainerChanged)
@@ -40,10 +41,10 @@ class DefinitionContainersModel(ListModel):
     ##  Private convenience function to reset & repopulate the model.
     def _update(self):
         items = []
-        self._definition_containers = ContainerRegistry.getInstance().findDefinitionContainers(**self._filter_dict)
-        self._definition_containers.sort(key = self._sortKey)
+        definition_containers = ContainerRegistry.getInstance().findDefinitionContainers(**self._filter_dict)
+        definition_containers.sort(key = self._sortKey)
 
-        for container in self._definition_containers:
+        for container in definition_containers:
             metadata = container.getMetaData().copy()
 
             items.append({
