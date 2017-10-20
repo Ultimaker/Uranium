@@ -1,0 +1,8 @@
+{
+    "name": "Local Instance Provider",
+    "author": "Ultimaker B.V.",
+    "version": "1.0.0",
+    "description": "Provides built-in setting instance containers that come with the installation of the application.",
+    "api": 4,
+    "i18n-catalog": "uranium"
+}
