@@ -2,7 +2,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import os #To get the ID from a filename.
-from typing import Any, Dict, Iterable
+from typing import Any, Dict, Iterable, Optional
 
 from UM.Logger import Logger
 from UM.Settings.ContainerProvider import ContainerProvider #The class we're implementing.
@@ -36,7 +36,7 @@ class LocalDefinitionProvider(ContainerProvider):
     #   \param container_id The ID of the container to load the metadata of.
     #   \return The metadata of the specified container, or ``None`` if the
     #   metadata failed to load.
-    def loadMetadata(self, container_id: str) -> Dict[str, Any]:
+    def loadMetadata(self, container_id: str) -> Optional[Dict[str, Any]]:
         try:
             filename = self._id_to_path[container_id] #Raises KeyError if container ID does not exist in the (cache of the) files!
         except KeyError:
@@ -48,7 +48,9 @@ class LocalDefinitionProvider(ContainerProvider):
 
         with open(filename) as f:
             metadata = DefinitionContainer.getMetadataFromSerialized(f.read())
-            metadata["id"] = container_id #Always fill in the ID from the filename, rather than the ID in the metadata itself.
+        if metadata is None:
+            return None
+        metadata["id"] = container_id #Always fill in the ID from the filename, rather than the ID in the metadata itself.
         return metadata
 
     ##  Updates the cache of paths to definitions.
