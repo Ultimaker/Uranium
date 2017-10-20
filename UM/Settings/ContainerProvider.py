@@ -41,13 +41,13 @@ class ContainerProvider(PluginObject):
         plugin_registry = PluginRegistry.getInstance()
         my_metadata = plugin_registry.getMetaData(self.getPluginId())
         other_metadata = plugin_registry.getMetaData(other.getPluginId())
-        return my_metadata["priority"] < other_metadata["priority"]
+        return my_metadata["container_provider"]["priority"] < other_metadata["container_provider"]["priority"]
 
     def __eq__(self, other: "ContainerProvider"):
         plugin_registry = PluginRegistry.getInstance()
         my_metadata = plugin_registry.getMetaData(self.getPluginId())
         other_metadata = plugin_registry.getMetaData(other.getPluginId())
-        return my_metadata["priority"] == other_metadata["priority"]
+        return my_metadata["container_provider"]["priority"] == other_metadata["container_provider"]["priority"]
 
     ##  Adds an item to the list of metadata.
     #
