@@ -249,7 +249,7 @@ class PluginRegistry(QObject):
         try:
             self._type_register_map[plugin_type](plugin_object)
         except Exception as e:
-            Logger.logException("e", "Unable to add plugin %s", id)
+            Logger.logException("e", "Unable to add plugin %s", plugin_id)
 
     ##  Load all plugins matching a certain set of metadata
     #   \param meta_data \type{dict} The meta data that needs to be matched.
