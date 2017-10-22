@@ -29,7 +29,7 @@ class Camera(SceneNode.SceneNode):
         super().__init__(parent)
         self._name = name
         self._projection_matrix = Matrix()
-        self._projection_matrix.setOrtho(-5, 5, 5, -5, -100, 100)
+        self._projection_matrix.setOrtho(-5, 5, -5, 5, -100, 100)
         self._perspective = False
         self._viewport_width = 0
         self._viewport_height = 0
