@@ -9,23 +9,23 @@ from UM.Settings.ContainerProvider import ContainerProvider #The class we're imp
 from UM.Settings.DefinitionContainer import DefinitionContainer #To parse JSON files and get their metadata.
 from UM.Resources import Resources
 
-##  Provides definition containers from the local installation.
-class LocalDefinitionProvider(ContainerProvider):
-    ##  Creates the local definition provider.
+##  Provides containers from the local installation.
+class LocalContainerProvider(ContainerProvider):
+    ##  Creates the local container provider.
     #
     #   This creates a cache which translates definition IDs to their file
     #   names.
     def __init__(self):
         super().__init__()
 
-        #Translates definition IDs to the path to where the file is located.
+        #Translates container IDs to the path to where the file is located.
         self._id_to_path = {} # type: Dict[str, str]
 
         self._updatePathCache()
 
-    ##  Gets the IDs of all local definitions.
+    ##  Gets the IDs of all local containers.
     #
-    #   \return A sequence of all definition IDs.
+    #   \return A sequence of all container IDs.
     def getAllIds(self) -> Iterable[str]:
         return self._id_to_path.keys()
 
@@ -68,9 +68,9 @@ class LocalDefinitionProvider(ContainerProvider):
         metadata["id"] = container_id #Always fill in the ID from the filename, rather than the ID in the metadata itself.
         return metadata
 
-    ##  Updates the cache of paths to definitions.
+    ##  Updates the cache of paths to containers.
     #
-    #   This way we can more easily load the definition files we want lazily.
+    #   This way we can more easily load the container files we want lazily.
     def _updatePathCache(self):
         self._id_to_path = {} #Clear cache first.
 

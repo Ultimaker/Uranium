@@ -1,7 +1,7 @@
 # Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from . import LocalDefinitionProvider
+from . import LocalContainerProvider
 
 def getMetaData():
     return {
@@ -11,4 +11,4 @@ def getMetaData():
     }
 
 def register(app):
-    return { "container_provider": LocalDefinitionProvider.LocalDefinitionProvider() }
+    return { "container_provider": LocalContainerProvider.LocalContainerProvider() }
