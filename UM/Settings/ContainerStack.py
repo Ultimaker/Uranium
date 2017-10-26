@@ -328,7 +328,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     #   Reimplemented from ContainerInterface
     #
     #   TODO: Expand documentation here, include the fact that this should _not_ include all containers
-    def deserialize(self, serialized):
+    def deserialize(self, serialized) -> str:
         # update the serialized data first
         serialized = super().deserialize(serialized)
         parser = self._readAndValidateSerialized(serialized)
@@ -372,6 +372,8 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
                         raise Exception("When trying to deserialize %s, we received an unknown ID (%s) for container" % (self._id, container_id))
 
         ## TODO; Deserialize the containers.
+
+        return serialized
 
     ##  Gets the metadata of a container stack from a serialised format.
     #

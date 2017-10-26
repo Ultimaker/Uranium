@@ -498,6 +498,8 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
         self._dirty = False
 
+        return serialized
+
     ##  Gets the metadata of an instance container from a serialised format.
     #
     #   This parses the entire CFG document and only extracts the metadata from

@@ -279,7 +279,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     ##  \copydoc ContainerInterface::deserialize
     #
     #   Reimplemented from ContainerInterface
-    def deserialize(self, serialized):
+    def deserialize(self, serialized) -> str:
         # update the serialized data first
         serialized = super().deserialize(serialized)
         parsed = self._readAndValidateSerialized(serialized)
@@ -295,6 +295,8 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
         for definition in self._definitions:
             self._updateRelations(definition)
+
+        return serialized
 
     ##  Gets the metadata of a definition container from a serialised format.
     #
