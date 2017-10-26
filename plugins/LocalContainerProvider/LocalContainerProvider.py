@@ -54,6 +54,9 @@ class LocalContainerProvider(ContainerProvider):
         read_only = os.path.commonpath([storage_path, os.path.realpath(file_path)]) != storage_path
         container.setReadOnly(read_only)
 
+        if issubclass(container_class, DefinitionContainer):
+            self._saveCachedDefinition(container)
+
         return container
 
     ##  Load the metadata of a specified container.
@@ -108,6 +111,30 @@ class LocalContainerProvider(ContainerProvider):
             return None #Cache for parent doesn't exist yet.
 
         return definition
+
+    ##  Cache a definition container on disk.
+    #
+    #   Definition containers can be quite expensive to parse and load, so this
+    #   pickles a container and saves the pre-parsed definition on disk.
+    #
+    #   \param definition The definition container to store.
+    def _saveCachedDefinition(self, definition: DefinitionContainer):
+        cache_path = Resources.getPath(Resources.Cache, "definitions", self.getApplication().getVersion, definition.id)
+
+        #Ensure the cache path exists.
+        os.makedirs(os.path.dirname(cache_path), exist_ok = True)
+
+        try:
+            with open(cache_path, "wb") as f:
+                pickle.dump(definition, f, pickle.HIGHEST_PROTOCOL)
+        except RecursionError:
+            #Sometimes a recursion error in pickling occurs here.
+            #The cause is unknown. It must be some circular reference in the definition instances or definition containers.
+            #Instead of saving a partial cache and raising an exception, simply fail to save the cache.
+            #See CURA-4024.
+            Logger.log("w", "The definition cache for definition {definition_id} failed to pickle.".format(definition_id = definition.getId()))
+            if os.path.exists(cache_path):
+                os.remove(cache_path) #The pickling might be half-complete, which causes EOFError in Pickle when you load it later.
 
     ##  Updates the cache of paths to containers.
     #
