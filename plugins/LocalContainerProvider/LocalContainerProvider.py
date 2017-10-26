@@ -2,6 +2,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import os #For getting the IDs from a filename.
+import re #To detect back-up files in the ".../old/#/..." folders.
 from typing import Any, Dict, Iterable, Optional
 import urllib.parse #For getting the IDs from a filename.
 
@@ -68,11 +69,16 @@ class LocalContainerProvider(ContainerProvider):
     def _updatePathCache(self):
         self._id_to_path = {} #Clear cache first.
 
+        old_file_expression = re.compile(r"{sep}old{sep}\d+{sep}".format(sep = os.sep)) #To detect files that are back-ups. Matches on .../old/#/...
+
         all_resources = set() #Remove duplicates, since the Resources only finds resources by their directories.
         all_resources.union(Resources.getAllResourcesOfType(Resources.DefinitionContainers))
         all_resources.union(Resources.getAllResourcesOfType(Resources.InstanceContainers))
         all_resources.union(Resources.getAllResourcesOfType(Resources.ContainerStacks))
         for filename in all_resources:
+            if re.search(old_file_expression, filename):
+                continue #This is a back-up file from an old version.
+
             mime = MimeTypeDatabase.getMimeTypeForFile(filename)
             container_id = mime.stripExtension(os.path.basename(filename))
             container_id = urllib.parse.unquote_plus(container_id)
