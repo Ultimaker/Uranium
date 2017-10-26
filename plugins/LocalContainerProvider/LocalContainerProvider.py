@@ -2,10 +2,13 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import os #For getting the IDs from a filename.
+import pickle #For caching definitions.
 import re #To detect back-up files in the ".../old/#/..." folders.
 from typing import Any, Dict, Iterable, Optional
 import urllib.parse #For getting the IDs from a filename.
 
+from UM.Application import Application #To get the current version for finding the cache directory.
+from UM.Logger import Logger
 from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType #To get the type of container we're loading.
 from UM.Settings.ContainerProvider import ContainerProvider #The class we're implementing.
 from UM.Settings.ContainerStack import ContainerStack #To parse CFG files and get their metadata, and to load ContainerStacks.
@@ -33,10 +36,15 @@ class LocalContainerProvider(ContainerProvider):
         return self._id_to_path.keys()
 
     def loadContainer(self, container_id: str) -> "ContainerInterface":
-        file_path = self._id_to_path[container_id] #Raises KeyError if container ID does not exist in the (cache of the) files!
+        container_class = self.__mime_to_class[self._id_to_mime[container_id].name]
+        if issubclass(container_class, DefinitionContainer): #We may need to load these from the definition cache.
+            container = self._loadCachedDefinition(container_id)
+            if container: #Yes, it was cached!
+                return container
 
-        #The actual loading.
-        container = self.__mime_to_class[self._id_to_mime[container_id].name](container_id)
+        #Not cached, so load by deserialising.
+        file_path = self._id_to_path[container_id] #Raises KeyError if container ID does not exist in the (cache of the) files.
+        container = container_class(container_id) #Construct the container!
         with open(file_path) as f:
             container.deserialize(f.read())
         container.setPath(file_path)
@@ -62,6 +70,44 @@ class LocalContainerProvider(ContainerProvider):
             return None
         metadata["id"] = container_id #Always fill in the ID from the filename, rather than the ID in the metadata itself.
         return metadata
+
+    ##  Load a pre-parsed definition container.
+    #
+    #   Definition containers can be quite expensive to load, so this loads a
+    #   pickled version of the definition if one is available.
+    #
+    #   \param definition_id The ID of the definition to load from the cache.
+    #   \return If a cached version was available, return it. If not, return
+    #   ``None``.
+    def _loadCachedDefinition(self, definition_id) -> Optional[DefinitionContainer]:
+        definition_path = self._id_to_path[definition_id]
+        cache_path = Resources.getPath(Resources.Cache, "definitions", Application.getInstance().getVersion(), definition_id)
+        try:
+            cache_mtime = os.path.getmtime(cache_path)
+            definition_mtime = os.path.getmtime(definition_path)
+        except FileNotFoundError: #Cache doesn't exist yet.
+            return None
+
+        if definition_mtime > cache_mtime:
+            # The definition is newer than the cached version, so ignore the cached version.
+            Logger.log("d", "Definition file {path} is newer than cache. Ignoring cached version.".format(path = definition_path))
+            return None
+
+        try:
+            with open(cache_path, "rb") as f:
+                definition = pickle.load(f)
+        except Exception as e: #TODO: Switch to multi-catch once we've upgraded to Python 3.6. Catch: OSError, IOError, AttributeError, EOFError, ImportError, IndexError and UnpicklingError.
+            Logger.log("w", "Failed to load definition {definition_id} from cached file: {error_msg}".format(definition_id = definition_id, error_msg = str(e)))
+            return None
+
+        try:
+            for file_path in definition.getInheritedFiles():
+                if os.path.getmtime(file_path) > cache_mtime:
+                    return None
+        except FileNotFoundError:
+            return None #Cache for parent doesn't exist yet.
+
+        return definition
 
     ##  Updates the cache of paths to containers.
     #
