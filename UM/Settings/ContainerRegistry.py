@@ -56,7 +56,8 @@ class ContainerRegistry(ContainerRegistryInterface):
 
         self._emptyInstanceContainer = _EmptyInstanceContainer("empty")
 
-        self._providers = queue.PriorityQueue() # type: queue.PriorityQueue[ContainerProvider]
+        #Sorted list of container providers (keep it sorted by sorting each time you add one!).
+        self._providers = [] # type: List[ContainerProvider]
         PluginRegistry.addType("container_provider", self.addProvider)
 
         self.metadata = {} # type: Dict[str, Dict[str, Any]]
@@ -78,10 +79,9 @@ class ContainerRegistry(ContainerRegistryInterface):
 
     ##  Adds a container provider to search through containers in.
     def addProvider(self, provider: "PluginObject"):
-        metadata = PluginRegistry.getInstance().getMetaData(provider.getPluginId())
-        if "priority" not in metadata["container_provider"]:
-            Logger.log("e", "Container provider {provider_id} missing required metadata field 'priority'.".format(provider_id = provider.getPluginId()))
-        self._providers.put(provider)
+        self._providers.append(provider)
+        #Re-sort every time. It's quadratic, but there shouldn't be that many providers anyway...
+        self._providers.sort(key = lambda provider: PluginRegistry.getInstance().getMetaData(provider.getPluginId())["container_provider"]["priority"])
 
     ##  Find all DefinitionContainer objects matching certain criteria.
     #
@@ -197,7 +197,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     ##  Load the metadata of all available definition containers, instance
     #   containers and container stacks.
     def loadAllMetadata(self):
-        for provider in list(self._providers): #Automatically sorted by the priority queue.
+        for provider in self._providers: #Automatically sorted by the priority queue.
             for container_id in provider.getAllIds():
                 if container_id not in self.metadata:
                     self.metadata[container_id] = provider.loadMetadata(container_id)
@@ -214,7 +214,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         resource_start_time = time.time()
 
         with self.lockCache(): #Because we might be writing cache files.
-            for provider in list(self._providers):
+            for provider in self._providers:
                 for container_id in provider.getAllIds():
                     if container_id not in self._containers:
                         #Update UI while loading.
