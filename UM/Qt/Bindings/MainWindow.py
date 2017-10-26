@@ -181,6 +181,7 @@ class MainWindow(QQuickWindow):
 
         renderer.beginRendering()
         view.beginRendering()
+        #self._app.getController().getIsModelRenderingEnabled():
         renderer.render()
         view.endRendering()
         renderer.endRendering()

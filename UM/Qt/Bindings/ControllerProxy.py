@@ -44,6 +44,14 @@ class ControllerProxy(QObject):
         op.push()
         Selection.clear()
 
+    @pyqtSlot()
+    def enableModelRendering(self):
+        self._controller.enableModelRendering()
+
+    @pyqtSlot()
+    def disableModelRendering(self):
+        self._controller.disableModelRendering()
+
     contextMenuRequested = pyqtSignal("quint64", arguments=["objectId"])
 
     def _onContextMenuRequested(self, x, y):
