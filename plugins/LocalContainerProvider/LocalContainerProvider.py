@@ -38,6 +38,7 @@ class LocalContainerProvider(ContainerProvider):
         container = self.__mime_to_class[self._id_to_mime[container_id].name](container_id)
         with open(file_path) as f:
             container.deserialize(f.read())
+        container.setPath(file_path)
 
         #If the file is not in a subdirectory of the data storage path, it's read-only.
         storage_path = os.path.realpath(Resources.getDataStoragePath())
