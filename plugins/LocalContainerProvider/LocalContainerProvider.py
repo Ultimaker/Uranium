@@ -1,25 +1,26 @@
 # Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-import os #To get the ID from a filename.
 from typing import Any, Dict, Iterable, Optional
 
 from UM.Logger import Logger
+from UM.MimeTypeDatabase import MimeTypeDatabase #To get the type of container we're loading.
 from UM.Settings.ContainerProvider import ContainerProvider #The class we're implementing.
-from UM.Settings.DefinitionContainer import DefinitionContainer #To parse JSON files and get their metadata.
+from UM.Settings.ContainerStack import ContainerStack #To parse CFG files and get their metadata, and to load ContainerStacks.
+from UM.Settings.DefinitionContainer import DefinitionContainer #To parse JSON files and get their metadata, and to load DefinitionContainers.
+from UM.Settings.InstanceContainer import InstanceContainer #To parse CFG files and get their metadata, and to load InstanceContainers.
 from UM.Resources import Resources
 
 ##  Provides containers from the local installation.
 class LocalContainerProvider(ContainerProvider):
     ##  Creates the local container provider.
     #
-    #   This creates a cache which translates definition IDs to their file
-    #   names.
+    #   This creates a cache which translates container IDs to their file names.
     def __init__(self):
         super().__init__()
 
-        #Translates container IDs to the path to where the file is located.
-        self._id_to_path = {} # type: Dict[str, str]
+        self._id_to_path = {} # type: Dict[str, str] #Translates container IDs to the path to where the file is located.
+        self._id_to_class = {} # type: Dict[str, type] #Translates container IDs to their class.
 
         self._updatePathCache()
 
@@ -31,17 +32,10 @@ class LocalContainerProvider(ContainerProvider):
 
     def loadContainer(self, container_id: str) -> "ContainerInterface":
         #Find the file name from the cache.
-        try:
-            filename = self._id_to_path[container_id] #Raises KeyError if container ID does not exist in the (cache of the) files!
-        except KeyError:
-            #Update the cache. This shouldn't happen or be necessary because the list of definitions never changes during runtime, but let's update the cache just to be sure.
-            Logger.log("w", "Couldn't find definition file with ID {container_id}. Refreshing cache from resources and trying again...".format(container_id = container_id))
-            self._updatePathCache()
-            filename = self._id_to_path[container_id]
-            #If we get another KeyError, pass that on up because that's a programming error for sure then.
+        filename = self._id_to_path[container_id] #Raises KeyError if container ID does not exist in the (cache of the) files!
 
         #The actual loading.
-        container = DefinitionContainer(container_id = container_id)
+        container = self._id_to_class[container_id](container_id)
         with open(filename) as f:
             container.deserialize(f.read())
         return container
@@ -74,6 +68,20 @@ class LocalContainerProvider(ContainerProvider):
     def _updatePathCache(self):
         self._id_to_path = {} #Clear cache first.
 
-        for filename in Resources.getAllResourcesOfType(Resources.DefinitionContainers):
-            definition_id = ".".join(os.path.basename(filename).split(".")[:-2]) #Remove the last two extensions.
-            self._id_to_path[definition_id] = filename
+        all_resources = set() #Remove duplicates, since the Resources only finds resources by their directories.
+        all_resources.union(Resources.getAllResourcesOfType(Resources.DefinitionContainers))
+        all_resources.union(Resources.getAllResourcesOfType(Resources.InstanceContainers))
+        all_resources.union(Resources.getAllResourcesOfType(Resources.ContainerStacks))
+        for filename in all_resources:
+            mime = MimeTypeDatabase.getMimeTypeForFile(filename)
+            container_id = mime.stripExtension(filename)
+            self._id_to_path[container_id] = filename
+            self._id_to_class[container_id] = self.__mime_to_class[mime.name]
+
+    ##  Maps MIME types to the class with which files of that type should be
+    #   constructed.
+    __mime_to_class = {
+        "application/x-uranium-definitioncontainer": DefinitionContainer,
+        "application/x-uranium-instancecontainer": InstanceContainer,
+        "application/x-uranium-containerstack": ContainerStack
+    }
