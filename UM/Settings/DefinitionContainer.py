@@ -227,32 +227,6 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
             Logger.log("d", "Could not get configuration type: %s", e)
         return configuration_type
 
-    ##  Gets the metadata of a definition container from a serialised format.
-    #
-    #   This parses the entire JSON document and only extracts the metadata from
-    #   it.
-    #
-    #   \param serialized A JSON document, serialised as a string.
-    #   \return A dictionary of metadata that was in the JSON document. If
-    #   anything went wrong, this returns ``None`` instead.
-    @classmethod
-    def getMetadataFromSerialized(cls, serialized: str) -> Optional[Dict[str, Any]]:
-        try:
-            parsed = json.loads(serialized, object_pairs_hook=collections.OrderedDict) #TODO: Load only part of this JSON until we find the metadata. We need an external library for this though.
-        except json.JSONDecodeError as e:
-            Logger.log("d", "Could not parse definition: %s", e)
-            return None
-
-        metadata = parsed["metadata"]
-        metadata["container_type"] = DefinitionContainer
-        metadata["id"] = parsed["id"] #Move required fields to metadata.
-        metadata["name"] = parsed["name"]
-        metadata["version"] = parsed["version"]
-        if "inherits" in parsed:
-            metadata["inherits"] = parsed["inherits"]
-
-        return metadata
-
     def _readAndValidateSerialized(self, serialized: str) -> dict:
         parsed = json.loads(serialized, object_pairs_hook=collections.OrderedDict)
 
@@ -321,6 +295,32 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
         for definition in self._definitions:
             self._updateRelations(definition)
+
+    ##  Gets the metadata of a definition container from a serialised format.
+    #
+    #   This parses the entire JSON document and only extracts the metadata from
+    #   it.
+    #
+    #   \param serialized A JSON document, serialised as a string.
+    #   \return A dictionary of metadata that was in the JSON document. If
+    #   anything went wrong, this returns ``None`` instead.
+    @classmethod
+    def deserializeMetadata(cls, serialized: str) -> Optional[Dict[str, Any]]:
+        try:
+            parsed = json.loads(serialized, object_pairs_hook = collections.OrderedDict) #TODO: Load only part of this JSON until we find the metadata. We need an external library for this though.
+        except json.JSONDecodeError as e:
+            Logger.log("d", "Could not parse definition: %s", e)
+            return None
+
+        metadata = parsed["metadata"]
+        metadata["container_type"] = DefinitionContainer
+        metadata["id"] = parsed["id"] #Move required fields to metadata.
+        metadata["name"] = parsed["name"]
+        metadata["version"] = parsed["version"]
+        if "inherits" in parsed:
+            metadata["inherits"] = parsed["inherits"]
+
+        return metadata
 
     ##  Find definitions matching certain criteria.
     #

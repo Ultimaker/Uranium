@@ -4,7 +4,7 @@
 import configparser
 import io
 import copy
-from typing import List, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
 
@@ -497,6 +497,27 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
             self._cached_values = dict(parser["values"])
 
         self._dirty = False
+
+    ##  Gets the metadata of an instance container from a serialised format.
+    #
+    #   This parses the entire CFG document and only extracts the metadata from
+    #   it.
+    #
+    #   \param serialized A CFG document, serialised as a string.
+    #   \return A dictionary of metadata that was in the CFG document. If
+    #   anything went wrong, this returns ``None`` instead.
+    @classmethod
+    def deserializeMetadata(cls, serialized: str) -> Optional[Dict[str, Any]]:
+        parser = configparser.ConfigParser(interpolation = None)
+        parser.read_string(serialized)
+
+        if "general" not in parser:
+            return None
+        metadata = parser["general"]
+        if "metadata" in parser:
+            metadata = {**metadata, **parser["metadata"]}
+
+        return metadata
 
     ##  Instance containers are lazy loaded. This function ensures that it happened.
     def _instantiateCachedValues(self):

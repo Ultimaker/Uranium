@@ -1,8 +1,9 @@
-# Copyright (c) 2016 Ultimaker B.V.
+# Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
+
 import configparser
 import io
-from typing import Set, List, Optional, cast
+from typing import Any, cast, Dict, List, Optional, Set
 
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
 import UM.FlameProfiler
@@ -371,6 +372,27 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
                         raise Exception("When trying to deserialize %s, we received an unknown ID (%s) for container" % (self._id, container_id))
 
         ## TODO; Deserialize the containers.
+
+    ##  Gets the metadata of a container stack from a serialised format.
+    #
+    #   This parses the entire CFG document and only extracts the metadata from
+    #   it.
+    #
+    #   \param serialized A CFG document, serialised as a string.
+    #   \return A dictionary of metadata that was in the CFG document. If
+    #   anything went wrong, this returns ``None`` instead.
+    @classmethod
+    def deserializeMetadata(cls, serialized: str) -> Optional[Dict[str, Any]]:
+        parser = configparser.ConfigParser(interpolation = None)
+        parser.read_string(serialized)
+
+        if "general" not in parser:
+            return None
+        metadata = parser["general"]
+        if "metadata" in parser:
+            metadata = {**metadata, **parser["metadata"]}
+
+        return metadata
 
     ##  Get all keys known to this container stack.
     #
