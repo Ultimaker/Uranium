@@ -119,7 +119,7 @@ class LocalContainerProvider(ContainerProvider):
     #
     #   \param definition The definition container to store.
     def _saveCachedDefinition(self, definition: DefinitionContainer):
-        cache_path = Resources.getPath(Resources.Cache, "definitions", self.getApplication().getVersion, definition.id)
+        cache_path = Resources.getPath(Resources.Cache, "definitions", Application.getInstance().getVersion, definition.id)
 
         #Ensure the cache path exists.
         os.makedirs(os.path.dirname(cache_path), exist_ok = True)
