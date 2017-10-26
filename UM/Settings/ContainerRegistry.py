@@ -220,7 +220,7 @@ class ContainerRegistry(ContainerRegistryInterface):
                         #Update UI while loading.
                         UM.Qt.QtApplication.QtApplication.processEvents()
 
-                        self._containers[container_id] = provider.load(container_id)
+                        self._containers[container_id] = provider.loadContainer(container_id)
 
         gc.enable()
         Logger.log("d", "Loading data into container registry took %s seconds", time.time() - resource_start_time)
