@@ -313,14 +313,17 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
             Logger.log("d", "Could not parse definition: %s", e)
             return None
 
-        metadata = parsed["metadata"]
-        metadata["container_type"] = DefinitionContainer
-        metadata["id"] = parsed["id"] #Move required fields to metadata.
-        metadata["name"] = parsed["name"]
-        metadata["version"] = parsed["version"]
+        metadata = {"container_type": DefinitionContainer}
+        try: #Move required fields to metadata.
+            metadata["id"] = parsed["id"] #Move required fields to metadata.
+            metadata["name"] = parsed["name"]
+            metadata["version"] = parsed["version"]
+        except KeyError: #Required fields not present!
+            return None
+        if "metadata" in parsed:
+            metadata = metadata.update(parsed["metadata"])
         if "inherits" in parsed:
             metadata["inherits"] = parsed["inherits"]
-
         return metadata
 
     ##  Find definitions matching certain criteria.
