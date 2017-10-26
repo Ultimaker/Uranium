@@ -81,7 +81,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     def addProvider(self, provider: "PluginObject"):
         self._providers.append(provider)
         #Re-sort every time. It's quadratic, but there shouldn't be that many providers anyway...
-        self._providers.sort(key = lambda provider: PluginRegistry.getInstance().getMetaData(provider.getPluginId())["container_provider"]["priority"])
+        self._providers.sort(key = lambda provider: PluginRegistry.getInstance().getMetaData(provider.getPluginId())["container_provider"].get("priority", 0))
 
     ##  Find all DefinitionContainer objects matching certain criteria.
     #
