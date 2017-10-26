@@ -306,6 +306,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     #   anything went wrong, this returns ``None`` instead.
     @classmethod
     def deserializeMetadata(cls, serialized: str) -> Optional[Dict[str, Any]]:
+        serialized = super().deserialize(serialized) #Update to most recent version.
         try:
             parsed = json.loads(serialized, object_pairs_hook = collections.OrderedDict) #TODO: Load only part of this JSON until we find the metadata. We need an external library for this though.
         except json.JSONDecodeError as e:

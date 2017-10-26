@@ -383,6 +383,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     #   anything went wrong, this returns ``None`` instead.
     @classmethod
     def deserializeMetadata(cls, serialized: str) -> Optional[Dict[str, Any]]:
+        serialized = super().deserialize(serialized)
         parser = configparser.ConfigParser(interpolation = None)
         parser.read_string(serialized)
 
