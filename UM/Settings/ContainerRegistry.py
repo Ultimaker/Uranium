@@ -13,8 +13,8 @@ import time
 
 import UM.FlameProfiler
 from UM.PluginRegistry import PluginRegistry #To register the container type plug-ins and container provider plug-ins.
-from UM.Resources import Resources, UnsupportedStorageTypeError
-from UM.MimeTypeDatabase import MimeType, MimeTypeDatabase
+from UM.Resources import Resources
+from UM.MimeTypeDatabase import MimeTypeDatabase
 from UM.Logger import Logger
 from UM.SaveFile import SaveFile
 from UM.Settings.Interfaces import ContainerInterface
