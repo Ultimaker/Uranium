@@ -209,82 +209,21 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   that were already added when the first call to this method happened will not be re-added.
     @UM.FlameProfiler.profile
     def load(self) -> None:
-        # We disable the garbage collection while loading, as this speeds up the loading.
-        # Since there is so much going on (lots of objects being created), it's better to have it wait a bit until
-        # the dust settles down.
+        #Disable garbage collection to speed up the loading (at the cost of memory usage).
         gc.disable()
-        files = []
-        old_file_expression = re.compile(r"\{sep}old\{sep}\d+\{sep}".format(sep = os.sep))
-
-        for resource_type in self._resource_types:
-            resources = Resources.getAllResourcesOfType(resource_type)
-
-            try:
-                resource_storage_path = Resources.getStoragePathForType(resource_type)
-            except UnsupportedStorageTypeError:
-                resource_storage_path = ""
-
-            # Pre-process the list of files to insert relevant data
-            # Most importantly, we need to ensure the loading order is DefinitionContainer, InstanceContainer, ContainerStack
-            for path in resources:
-                if old_file_expression.search(path):
-                    # This is a backup file, ignore it.
-                    continue
-
-                try:
-                    mime = MimeTypeDatabase.getMimeTypeForFile(path)
-                except MimeTypeDatabase.MimeTypeNotFoundError:
-                    # No valid mime type found for file, ignore it.
-                    continue
-
-                container_type = self.__mime_type_map.get(mime.name)
-                if not container_type:
-                    Logger.log("w", "Could not determine container type for file %s, ignoring", path)
-                    continue
-
-                type_priority = container_type.getLoadingPriority()
-
-                # Since we have the mime type and resource type here, process these two properties so we do not
-                # need to look up mime types etc. again.
-                container_id = urllib.parse.unquote_plus(mime.stripExtension(os.path.basename(path)))
-                read_only = os.path.realpath(os.path.dirname(path)) != os.path.realpath(resource_storage_path)
-
-                files.append((type_priority, container_id, path, read_only, container_type))
-
-        # Sort the list of files by type_priority so we can ensure correct loading order.
-        files = sorted(files, key = lambda i: i[0])
         resource_start_time = time.time()
+
         with self.lockCache(): #Because we might be writing cache files.
-            for _, container_id, file_path, read_only, container_type in files:
-                # Enable the rest of the application to get UI updates.
-                UM.Qt.QtApplication.QtApplication.processEvents()
+            for provider in list(self._providers):
+                for container_id in provider.getAllIds():
+                    if container_id not in self._containers:
+                        #Update UI while loading.
+                        UM.Qt.QtApplication.QtApplication.processEvents()
 
-                if container_id in self._containers:
-                    Logger.log("c", "Found a container with a duplicate ID: %s", container_id)
-                    Logger.log("c", "Existing container is %s, trying to load %s from %s", self._containers[container_id], container_type, file_path)
-                    continue
+                        self._containers[container_id] = provider.load(container_id)
 
-                try:
-                    if issubclass(container_type, DefinitionContainer):
-                        definition = self._loadCachedDefinition(container_id, file_path)
-                        if definition:
-                            self.addContainer(definition)
-                            continue
-
-                    new_container = container_type(container_id)
-                    with open(file_path, encoding = "utf-8") as f:
-                        new_container.deserialize(f.read())
-                    new_container.setReadOnly(read_only)
-                    new_container.setPath(file_path)
-
-                    if issubclass(container_type, DefinitionContainer):
-                        self._saveCachedDefinition(new_container)
-
-                    self.addContainer(new_container)
-                except Exception as e:
-                    Logger.logException("e", "Could not deserialize container %s", container_id)
-            Logger.log("d", "Loading data into container registry took %s seconds", time.time() - resource_start_time)
-            gc.enable()
+        gc.enable()
+        Logger.log("d", "Loading data into container registry took %s seconds", time.time() - resource_start_time)
 
     @UM.FlameProfiler.profile
     def addContainer(self, container: ContainerInterface) -> None:
