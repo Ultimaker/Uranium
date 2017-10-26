@@ -5,8 +5,7 @@ import os #For getting the IDs from a filename.
 from typing import Any, Dict, Iterable, Optional
 import urllib.parse #For getting the IDs from a filename.
 
-from UM.Logger import Logger
-from UM.MimeTypeDatabase import MimeTypeDatabase #To get the type of container we're loading.
+from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType #To get the type of container we're loading.
 from UM.Settings.ContainerProvider import ContainerProvider #The class we're implementing.
 from UM.Settings.ContainerStack import ContainerStack #To parse CFG files and get their metadata, and to load ContainerStacks.
 from UM.Settings.DefinitionContainer import DefinitionContainer #To parse JSON files and get their metadata, and to load DefinitionContainers.
@@ -22,7 +21,7 @@ class LocalContainerProvider(ContainerProvider):
         super().__init__()
 
         self._id_to_path = {} # type: Dict[str, str] #Translates container IDs to the path to where the file is located.
-        self._id_to_class = {} # type: Dict[str, type] #Translates container IDs to their class.
+        self._id_to_mime = {} # type: Dict[str, MimeType] #Translates container IDs to their MIME type.
 
         self._updatePathCache()
 
@@ -33,12 +32,18 @@ class LocalContainerProvider(ContainerProvider):
         return self._id_to_path.keys()
 
     def loadContainer(self, container_id: str) -> "ContainerInterface":
-        filename = self._id_to_path[container_id] #Raises KeyError if container ID does not exist in the (cache of the) files!
+        file_path = self._id_to_path[container_id] #Raises KeyError if container ID does not exist in the (cache of the) files!
 
         #The actual loading.
-        container = self._id_to_class[container_id](container_id)
-        with open(filename) as f:
+        container = self.__mime_to_class[self._id_to_mime[container_id].name](container_id)
+        with open(file_path) as f:
             container.deserialize(f.read())
+
+        #If the file is not in a subdirectory of the data storage path, it's read-only.
+        storage_path = os.path.realpath(Resources.getDataStoragePath())
+        read_only = os.path.commonpath([storage_path, os.path.realpath(file_path)]) != storage_path
+        container.setReadOnly(read_only)
+
         return container
 
     ##  Load the metadata of a specified container.
@@ -50,7 +55,7 @@ class LocalContainerProvider(ContainerProvider):
         filename = self._id_to_path[container_id] #Raises KeyError if container ID does not exist in the (cache of the) files!
 
         with open(filename) as f:
-            metadata = self._id_to_class[container_id].deserializeMetadata(f.read()) #pylint: disable=no-member
+            metadata = self.__mime_to_class[self._id_to_mime[container_id].name].deserializeMetadata(f.read()) #pylint: disable=no-member
         if metadata is None:
             return None
         metadata["id"] = container_id #Always fill in the ID from the filename, rather than the ID in the metadata itself.
@@ -71,7 +76,7 @@ class LocalContainerProvider(ContainerProvider):
             container_id = mime.stripExtension(os.path.basename(filename))
             container_id = urllib.parse.unquote_plus(container_id)
             self._id_to_path[container_id] = filename
-            self._id_to_class[container_id] = self.__mime_to_class[mime.name]
+            self._id_to_mime[container_id] = mime
 
     ##  Maps MIME types to the class with which files of that type should be
     #   constructed.
