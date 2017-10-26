@@ -1,7 +1,9 @@
 # Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
+import os #For getting the IDs from a filename.
 from typing import Any, Dict, Iterable, Optional
+import urllib.parse #For getting the IDs from a filename.
 
 from UM.Logger import Logger
 from UM.MimeTypeDatabase import MimeTypeDatabase #To get the type of container we're loading.
@@ -74,7 +76,8 @@ class LocalContainerProvider(ContainerProvider):
         all_resources.union(Resources.getAllResourcesOfType(Resources.ContainerStacks))
         for filename in all_resources:
             mime = MimeTypeDatabase.getMimeTypeForFile(filename)
-            container_id = mime.stripExtension(filename)
+            container_id = mime.stripExtension(os.path.basename(filename))
+            container_id = urllib.parse.unquote_plus(container_id)
             self._id_to_path[container_id] = filename
             self._id_to_class[container_id] = self.__mime_to_class[mime.name]
 
