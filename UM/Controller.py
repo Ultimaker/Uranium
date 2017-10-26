@@ -104,7 +104,7 @@ class Controller:
     def disableModelRendering(self):
         self._is_model_rendering_enabled = False
 
-    def getIsModelRenderingEnabled(self):
+    def isModelRenderingEnabled(self):
         return self._is_model_rendering_enabled
 
     ##  Emitted when the list of views changes.
