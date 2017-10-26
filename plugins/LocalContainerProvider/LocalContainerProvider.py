@@ -33,7 +33,6 @@ class LocalContainerProvider(ContainerProvider):
         return self._id_to_path.keys()
 
     def loadContainer(self, container_id: str) -> "ContainerInterface":
-        #Find the file name from the cache.
         filename = self._id_to_path[container_id] #Raises KeyError if container ID does not exist in the (cache of the) files!
 
         #The actual loading.
@@ -48,17 +47,10 @@ class LocalContainerProvider(ContainerProvider):
     #   \return The metadata of the specified container, or ``None`` if the
     #   metadata failed to load.
     def loadMetadata(self, container_id: str) -> Optional[Dict[str, Any]]:
-        try:
-            filename = self._id_to_path[container_id] #Raises KeyError if container ID does not exist in the (cache of the) files!
-        except KeyError:
-            #Update the cache. This shouldn't happen or be necessary because the list of definitions never changes during runtime, but let's update the cache just to be sure.
-            Logger.log("w", "Couldn't find definition file with ID {container_id}. Refreshing cache from resources and trying again...".format(container_id = container_id))
-            self._updatePathCache()
-            filename = self._id_to_path[container_id]
-            #If we get another KeyError, pass that on up because that's a programming error for sure then.
+        filename = self._id_to_path[container_id] #Raises KeyError if container ID does not exist in the (cache of the) files!
 
         with open(filename) as f:
-            metadata = DefinitionContainer.getMetadataFromSerialized(f.read())
+            metadata = self._id_to_class[container_id].deserializeMetadata(f.read()) #pylint: disable=no-member
         if metadata is None:
             return None
         metadata["id"] = container_id #Always fill in the ID from the filename, rather than the ID in the metadata itself.

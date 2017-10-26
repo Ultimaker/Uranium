@@ -1,4 +1,4 @@
-# Copyright (c) 2016 Ultimaker B.V.
+# Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from typing import List, Dict, Any, Optional
@@ -90,11 +90,19 @@ class ContainerInterface:
     ##  Deserialize the container from a string representation.
     #
     #   This should replace the contents of this container with those in the serialized
-    #   represenation.
+    #   representation.
     #
     #   \param serialized A serialized string containing a container that should be deserialized.
     def deserialize(self, serialized: str) -> str:
         return self.__updateSerialized(serialized)
+
+    ##  Deserialize just the metadata from a string representation.
+    #
+    #   \param serialized A string representing a container that should be
+    #   deserialized.
+    #   \return A dictionary of metadata of the container.
+    def deserializeMetadata(self, serialized: str) -> Dict[str, Any]:
+        pass
 
     ##  Updates the given serialized data to the latest version.
     def __updateSerialized(self, serialized: str) -> str:
