@@ -57,9 +57,12 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         # to support pickling.
         super().__init__(parent = None, *args, **kwargs)
 
-        self._id = str(stack_id)  # type: str
-        self._name = str(stack_id)  # type: str
-        self._metadata = {}
+        self._metadata = {
+            "id": stack_id,
+            "name": stack_id,
+            "version": self.Version,
+            "container_type": ContainerStack
+        }
         self._containers = []  # type: List[ContainerInterface]
         self._next_stack = None  # type: Optional[ContainerStack]
         self._read_only = False  # type: bool
@@ -72,7 +75,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
     ##  For pickle support
     def __getnewargs__(self):
-        return (self._id,)
+        return (self.getId(),)
 
     ##  For pickle support
     def __getstate__(self):
@@ -86,7 +89,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     #
     #   Reimplemented from ContainerInterface
     def getId(self) -> str:
-        return self._id
+        return self._metadata["id"]
 
     id = pyqtProperty(str, fget = getId, constant = True)
 
@@ -94,14 +97,14 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     #
     #   Reimplemented from ContainerInterface
     def getName(self) -> str:
-        return str(self._name)
+        return str(self._metadata["name"])
 
     ##  Set the name of this stack.
     #
     #   \param name \type{string} The new name of the stack.
     def setName(self, name: str) -> None:
-        if name != self._name:
-            self._name = name
+        if name != self.getName():
+            self._metadata["name"] = name
             self.nameChanged.emit()
 
     ##  Emitted whenever the name of this stack changes.
@@ -269,12 +272,13 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         parser = configparser.ConfigParser(interpolation = None, empty_lines_in_values = False)
 
         parser["general"] = {}
-        parser["general"]["version"] = str(self.Version)
-        parser["general"]["name"] = str(self._name)
-        parser["general"]["id"] = str(self._id)
+        parser["general"]["version"] = str(self._metadata["version"])
+        parser["general"]["name"] = str(self.getName())
+        parser["general"]["id"] = str(self.getId())
 
         if ignored_metadata_keys is None:
             ignored_metadata_keys = set()
+        ignored_metadata_keys |= {"id", "name", "version", "container_type"}
         parser["metadata"] = {}
         for key, value in self._metadata.items():
             # only serialize the data that's not in the ignore list
@@ -306,7 +310,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         configuration_type = None
         try:
             parser = self._readAndValidateSerialized(serialized)
-            configuration_type = parser["metadata"].get("type")
+            configuration_type = parser["metadata"]["type"]
         except Exception as e:
             Logger.log("e", "Could not get configuration type: %s", e)
         return configuration_type
@@ -343,7 +347,10 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         self._containers = []
         self._metadata = {}
         self.setName(parser["general"].get("name"))
-        self._id = parser["general"].get("id")
+        self._metadata["id"] = parser["general"].get("id", self.getId())
+        self._metadata["name"] = parser["general"].get("name", self.getId())
+        self._metadata["version"] = self.Version #Guaranteed to be equal to what's in the container. See above.
+        self._metadata["container_type"] = ContainerStack
 
         if "metadata" in parser:
             self._metadata = dict(parser["metadata"])
@@ -355,7 +362,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
                     containers[0].propertyChanged.connect(self._collectPropertyChanges)
                     self._containers.append(containers[0])
                 else:
-                    raise Exception("When trying to deserialize %s, we received an unknown ID (%s) for container" % (self._id, container_id))
+                    raise Exception("When trying to deserialize %s, we received an unknown ID (%s) for container" % (self.getId(), container_id))
 
         elif parser.has_option("general", "containers"):
             # Backward compatibility with 2.3.1: The containers used to be saved in a single comma-separated list.
@@ -369,7 +376,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
                         containers[0].propertyChanged.connect(self._collectPropertyChanges)
                         self._containers.append(containers[0])
                     else:
-                        raise Exception("When trying to deserialize %s, we received an unknown ID (%s) for container" % (self._id, container_id))
+                        raise Exception("When trying to deserialize %s, we received an unknown ID (%s) for container" % (self.getId(), container_id))
 
         ## TODO; Deserialize the containers.
 
@@ -385,13 +392,19 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     #   anything went wrong, this returns ``None`` instead.
     @classmethod
     def deserializeMetadata(cls, serialized: str) -> Optional[Dict[str, Any]]:
-        serialized = super().deserialize(serialized)
+        serialized = super().deserialize(serialized) #Update to most recent version.
         parser = configparser.ConfigParser(interpolation = None)
         parser.read_string(serialized)
 
-        if "general" not in parser:
+        metadata = {}
+        try:
+            #ID must get filled by whatever reads this, taken from the file name.
+            metadata["name"] = parser["general"]["name"]
+            metadata["container_type"] = ContainerStack
+            metadata["version"] = parser["general"]["version"]
+        except KeyError: #One of the keys or the General section itself is missing.
             return None
-        metadata = parser["general"]
+
         if "metadata" in parser:
             metadata = {**metadata, **parser["metadata"]}
 
