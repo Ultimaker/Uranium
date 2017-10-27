@@ -46,7 +46,7 @@ class ContainerQuery:
     #   on the arguments provided to this class' constructor. After it is done,
     #   the result can be retrieved with getResult().
     def execute(self):
-        candidates = self._registry.metadata
+        candidates = self._registry.metadata.values()
 
         #Filter on all the key-word arguments.
         for key, value in self._kwargs.items():
@@ -71,7 +71,7 @@ class ContainerQuery:
     # protected:
 
     # Check to see if a container matches with a regular expression
-    def _matchRegExp(self, container, property_name, value):
+    def _matchRegExp(self, metadata, property_name, value):
         value = re.escape(value) #Escape for regex patterns.
         value = "^" + value.replace("\\*", ".*") + "$" #Instead of (now escaped) asterisks, match on any string. Also add anchors for a complete match.
         if self._ignore_case:
@@ -79,41 +79,25 @@ class ContainerQuery:
         else:
             value_pattern = re.compile(value)
 
-        if property_name == "id":
-            return value_pattern.match(container.getId())
-        elif property_name == "name":
-            return value_pattern.match(container.getName())
-        elif property_name == "definition":
-            if isinstance(container, InstanceContainer.InstanceContainer):
-                return container.getDefinition() and value_pattern.match(container.getDefinition().getId())
+        if property_name == "definition":
+            if isinstance(metadata["container_type"], InstanceContainer.InstanceContainer):
+                return "definition" in metadata and value_pattern.match(metadata["definition"]["id"])
 
-        return value_pattern.match(str(container.getMetaDataEntry(property_name)))
+        return value_pattern.match(str(metadata[property_name]))
 
     # Check to see if a container matches with a string
-    def _matchString(self, container, property_name, value):
+    def _matchString(self, metadata, property_name, value):
         value = self._maybeLowercase(value)
 
-        if property_name == "id":
-            return value == self._maybeLowercase(container.getId())
-        elif property_name == "name":
-            return value == self._maybeLowercase(container.getName())
-        elif property_name == "definition":
-            if isinstance(container, InstanceContainer.InstanceContainer):
-                return container.getDefinition() and value == container.getDefinition().getId()
+        if property_name == "definition":
+            if isinstance(metadata["container_type"], InstanceContainer.InstanceContainer):
+                return "definition" in metadata and value == metadata["definition"]
 
-        return value == self._maybeLowercase(str(container.getMetaDataEntry(property_name)))
+        return value == self._maybeLowercase(str(metadata[property_name]))
 
     # Check to see if a container matches with a specific typed property
-    def _matchType(self, container, property_name, value):
-        if property_name == "id" or property_name == "name" or property_name == "definition":
-            return False
-        elif property_name == "read_only":
-            if isinstance(container, InstanceContainer.InstanceContainer):
-                return value == container.isReadOnly()
-            else:
-                return False
-
-        return value == container.getMetaDataEntry(property_name)
+    def _matchType(self, metadata, property_name, value):
+        return value == metadata[property_name]
 
     # Helper function to simplify ignore case handling
     def _maybeLowercase(self, value):
