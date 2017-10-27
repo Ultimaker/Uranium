@@ -84,11 +84,13 @@ class LocalContainerProvider(ContainerProvider):
     #   ``None``.
     def _loadCachedDefinition(self, definition_id) -> Optional[DefinitionContainer]:
         definition_path = self._id_to_path[definition_id]
-        cache_path = Resources.getPath(Resources.Cache, "definitions", Application.getInstance().getVersion(), definition_id)
         try:
+            cache_path = Resources.getPath(Resources.Cache, "definitions", Application.getInstance().getVersion(), definition_id)
             cache_mtime = os.path.getmtime(cache_path)
             definition_mtime = os.path.getmtime(definition_path)
         except FileNotFoundError: #Cache doesn't exist yet.
+            return None
+        except PermissionError: #No read permission.
             return None
 
         if definition_mtime > cache_mtime:
@@ -122,7 +124,11 @@ class LocalContainerProvider(ContainerProvider):
         cache_path = Resources.getPath(Resources.Cache, "definitions", Application.getInstance().getVersion, definition.id)
 
         #Ensure the cache path exists.
-        os.makedirs(os.path.dirname(cache_path), exist_ok = True)
+        try:
+            os.makedirs(os.path.dirname(cache_path), exist_ok = True)
+        except PermissionError:
+            Logger.log("w", "The definition cache for definition {definition_id} failed to save because you don't have permissions to write in the cache directory.".format(definition_id = definition.getId()))
+            return #No rights to save it. Better give up.
 
         try:
             with open(cache_path, "wb") as f:
