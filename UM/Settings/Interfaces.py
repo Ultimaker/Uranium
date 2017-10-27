@@ -119,7 +119,7 @@ class ContainerInterface:
 
     @classmethod
     def getLoadingPriority(cls) -> int:
-        return 9001
+        return 9001 #Goku wins!
 
     ##  Gets the configuration type of the given serialized data. (used by __updateSerialized())
     def getConfigurationTypeFromSerialized(self, serialized: str) -> Optional[str]:
