@@ -144,8 +144,7 @@ class LocalContainerProvider(ContainerProvider):
 
         old_file_expression = re.compile(r"{sep}old{sep}\d+{sep}".format(sep = os.sep)) #To detect files that are back-ups. Matches on .../old/#/...
 
-        all_resources = set() #Remove duplicates, since the Resources only finds resources by their directories.
-        all_resources |= set(Resources.getAllResourcesOfType(Resources.DefinitionContainers))
+        all_resources = set(Resources.getAllResourcesOfType(Resources.DefinitionContainers)) #Remove duplicates, since the Resources only finds resources by their directories.
         all_resources |= set(Resources.getAllResourcesOfType(Resources.InstanceContainers))
         all_resources |= set(Resources.getAllResourcesOfType(Resources.ContainerStacks))
         for filename in all_resources:
