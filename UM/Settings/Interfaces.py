@@ -81,10 +81,11 @@ class ContainerInterface:
     #   The serialized representation of the container can be used to write the
     #   container to disk or send it over the network.
     #
-    #   \param ignored_metadata_keys A list of keys that should be ignored when it serializes the metadata.
+    #   \param ignored_metadata_keys A set of keys that should be ignored when
+    #   it serializes the metadata.
     #
     #   \return \type{string} A string representation of this container.
-    def serialize(self, ignored_metadata_keys: Optional[List] = None) -> str:
+    def serialize(self, ignored_metadata_keys: Optional[set] = None) -> str:
         pass
 
     ##  Deserialize the container from a string representation.

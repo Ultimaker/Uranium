@@ -393,7 +393,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     ##  \copydoc ContainerInterface::serialize
     #
     #   Reimplemented from ContainerInterface
-    def serialize(self, ignored_metadata_keys: Optional[List] = None) -> str:
+    def serialize(self, ignored_metadata_keys: Optional[set] = None) -> str:
         self._instantiateCachedValues()
         parser = configparser.ConfigParser(interpolation = None)
 
@@ -407,7 +407,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         parser["general"]["definition"] = str(self._definition.getId())
 
         if ignored_metadata_keys is None:
-            ignored_metadata_keys = []
+            ignored_metadata_keys = set()
         parser["metadata"] = {}
         for key, value in self._metadata.items():
             if key not in ignored_metadata_keys:

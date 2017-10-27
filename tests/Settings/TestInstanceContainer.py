@@ -114,7 +114,7 @@ def test_serialize_with_ignored_metadata_keys(container_data, equals_file, loade
         for key, value in container_data["values"].items():
             instance_container.setProperty(key, "value", value)
 
-    ignored_metadata_keys = ["secret", "secret2"]
+    ignored_metadata_keys = {"secret", "secret2"}
     result = instance_container.serialize(ignored_metadata_keys = ignored_metadata_keys)
 
     instance_container.deserialize(result)

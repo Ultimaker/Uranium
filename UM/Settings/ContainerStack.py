@@ -265,7 +265,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     #   Reimplemented from ContainerInterface
     #
     #   TODO: Expand documentation here, include the fact that this should _not_ include all containers
-    def serialize(self, ignored_metadata_keys: Optional[List] = None):
+    def serialize(self, ignored_metadata_keys: Optional[set] = None):
         parser = configparser.ConfigParser(interpolation = None, empty_lines_in_values = False)
 
         parser["general"] = {}
@@ -274,7 +274,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         parser["general"]["id"] = str(self._id)
 
         if ignored_metadata_keys is None:
-            ignored_metadata_keys = []
+            ignored_metadata_keys = set()
         parser["metadata"] = {}
         for key, value in self._metadata.items():
             # only serialize the data that's not in the ignore list
