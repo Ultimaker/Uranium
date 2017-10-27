@@ -56,12 +56,12 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
         # to support pickling.
         super().__init__(parent = None, *args, **kwargs)
 
-        self._metadata = {}             # type: Dict[str, Any]
-        self._definitions = []          # type: List[SettingDefinition]
-        self._inherited_files = []      # type: List[str]
+        self._metadata = {"id": container_id} # type: Dict[str, Any]
+        self._definitions = []                # type: List[SettingDefinition]
+        self._inherited_files = []            # type: List[str]
         self._i18n_catalog = i18n_catalog
 
-        self._definition_cache = {}     # type: Dict[str, SettingDefinition]
+        self._definition_cache = {}           # type: Dict[str, SettingDefinition]
         self._path = ""
 
     ##  Reimplement __setattr__ so we can make sure the definition remains unchanged after creation.
@@ -269,7 +269,12 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
         parsed = self._readAndValidateSerialized(serialized)
 
         # Update properties with the data from the JSON
+        old_id = self.getId() #The ID must be set via the constructor. Retain it.
         self._metadata = parsed["metadata"]
+        self._metadata["id"] = old_id
+        self._metadata["name"] = parsed["name"]
+        self._metadata["version"] = self.Version #Guaranteed to be equal to what's in the parsed data by the validation.
+        self._metadata["container_type"] = DefinitionContainer
 
         for key, value in parsed["settings"].items():
             definition = SettingDefinition(key, self, None, self._i18n_catalog)
