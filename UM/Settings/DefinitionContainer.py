@@ -228,20 +228,15 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
         return configuration_type
 
     def _readAndValidateSerialized(self, serialized: str) -> dict:
-        parsed = json.loads(serialized, object_pairs_hook=collections.OrderedDict)
+        parsed = json.loads(serialized, object_pairs_hook = collections.OrderedDict)
+
+        if "inherits" in parsed:
+            inherited = self._resolveInheritance(parsed["inherits"])
+            parsed = self._mergeDicts(inherited, parsed)
 
         self._verifyJson(parsed)
 
         parsed = self._preprocessParsedJson(parsed)
-
-        # If we do not have metadata or settings the file is invalid
-        if "metadata" not in parsed:
-            raise InvalidDefinitionError("Missing required metadata section")
-        if "version" not in parsed:
-            raise InvalidDefinitionError("Missing required version section")
-        if "settings" not in parsed:
-            raise InvalidDefinitionError("Missing required settings section")
-
         return parsed
 
     def getVersionFromSerialized(self, serialized: str) -> Optional[int]:
@@ -254,11 +249,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
         return version
 
     def _preprocessParsedJson(self, parsed):
-        # Pre-process the JSON data to include inherited data and overrides
-        if "inherits" in parsed:
-            inherited = self._resolveInheritance(parsed["inherits"])
-            parsed = self._mergeDicts(inherited, parsed)
-
+        # Pre-process the JSON data to include the overrides.
         if "overrides" in parsed:
             for key, value in parsed["overrides"].items():
                 setting = self._findInDict(parsed["settings"], key)
@@ -266,13 +257,6 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
                     Logger.log("w","Unable to override setting %s", key)
                 else:
                     setting.update(value)
-
-        # If we do not have metadata or settings the file is invalid
-        if "metadata" not in parsed:
-            raise InvalidDefinitionError("Missing required metadata section")
-
-        if "settings" not in parsed:
-            raise InvalidDefinitionError("Missing required settings section")
 
         return parsed
 
@@ -374,12 +358,11 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
         return json_dict
 
     # Verify that a loaded json matches our basic expectations.
-    def _verifyJson(cls, json_dict: dict):
-        if "version" not in json_dict:
-            raise InvalidDefinitionError("Missing required property 'version'")
-
-        if "name" not in json_dict:
-            raise InvalidDefinitionError("Missing required property 'name'")
+    def _verifyJson(cls, json_dict: Dict[str, Any]):
+        required_fields = {"version", "name", "settings", "metadata"}
+        missing_fields = required_fields - json_dict.keys()
+        if missing_fields:
+            raise InvalidDefinitionError("Missing required properties: {properties}".format(properties = ", ".join(missing_fields)))
 
         if json_dict["version"] != cls.Version:
             raise IncorrectDefinitionVersionError("Definition uses version {0} but expected version {1}".format(json_dict["version"], cls.Version))
