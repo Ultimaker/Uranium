@@ -101,7 +101,7 @@ class LocalContainerProvider(ContainerProvider):
         try:
             with open(cache_path, "rb") as f:
                 definition = pickle.load(f)
-        except Exception as e: #TODO: Switch to multi-catch once we've upgraded to Python 3.6. Catch: OSError, IOError, AttributeError, EOFError, ImportError, IndexError and UnpicklingError.
+        except Exception as e: #TODO: Switch to multi-catch once we've upgraded to Python 3.6. Catch: OSError, PermissionError, IOError, AttributeError, EOFError, ImportError, IndexError and UnpicklingError.
             Logger.log("w", "Failed to load definition {definition_id} from cached file: {error_msg}".format(definition_id = definition_id, error_msg = str(e)))
             return None
 
@@ -121,7 +121,7 @@ class LocalContainerProvider(ContainerProvider):
     #
     #   \param definition The definition container to store.
     def _saveCachedDefinition(self, definition: DefinitionContainer):
-        cache_path = Resources.getPath(Resources.Cache, "definitions", Application.getInstance().getVersion, definition.id)
+        cache_path = Resources.getStoragePath(Resources.Cache, "definitions", Application.getInstance().getVersion(), definition.id)
 
         #Ensure the cache path exists.
         try:
