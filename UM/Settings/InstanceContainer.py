@@ -49,7 +49,12 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         super().__init__(parent = None, *args, **kwargs)
 
         self._definition = None         # type: DefinitionContainerInterface
-        self._metadata = {}
+        self._metadata = {
+            "id": container_id,
+            "name": container_id,
+            "version": self.Version,
+            "container_type": InstanceContainer
+        }
         self._instances = {}            # type: Dict[str, SettingInstance]
         self._read_only = False
         self._dirty = False
@@ -479,8 +484,6 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         self._metadata = {}
         self._instances = {}
 
-        self._metadata["name"] = parser["general"].get("name", self.getId())
-
         definition_id = parser["general"]["definition"]
 
         definitions = _containerRegistry.findDefinitionContainers(id = definition_id)
@@ -490,6 +493,10 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
         if "metadata" in parser:
             self._metadata = dict(parser["metadata"])
+        self._metadata["id"] = self.getId()
+        self._metadata["name"] = parser["general"].get("name", self.getId())
+        self._metadata["container_type"] = InstanceContainer
+        self._metadata["version"] = parser["general"]["version"]
         self.metaDataChanged.emit(self) #In case this instance was re-used.
 
         if "values" in parser:
@@ -513,9 +520,15 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         parser = configparser.ConfigParser(interpolation = None)
         parser.read_string(serialized)
 
-        if "general" not in parser:
+        metadata = {}
+        try:
+            #ID must get filled by whatever reads this, taken from the file name.
+            metadata["name"] = parser["general"]["name"]
+            metadata["container_type"] = InstanceContainer
+            metadata["version"] = parser["general"]["version"]
+        except KeyError: #One of the keys or the General section itself is missing.
             return None
-        metadata = parser["general"]
+
         if "metadata" in parser:
             metadata = {**metadata, **parser["metadata"]}
 
