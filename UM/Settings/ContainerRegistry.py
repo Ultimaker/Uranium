@@ -221,6 +221,7 @@ class ContainerRegistry(ContainerRegistryInterface):
                         UM.Qt.QtApplication.QtApplication.processEvents()
 
                         self._containers[container_id] = provider.loadContainer(container_id)
+                        self.metadata[container_id] = self._containers[container_id].getMetaData()
 
         gc.enable()
         Logger.log("d", "Loading data into container registry took %s seconds", time.time() - resource_start_time)
