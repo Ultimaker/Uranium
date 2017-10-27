@@ -56,8 +56,6 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
         # to support pickling.
         super().__init__(parent = None, *args, **kwargs)
 
-        self._id = str(container_id)    # type: str
-        self._name = str(container_id)  # type: str
         self._metadata = {}             # type: Dict[str, Any]
         self._definitions = []          # type: List[SettingDefinition]
         self._inherited_files = []      # type: List[str]
@@ -73,7 +71,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
     ##  For pickle support
     def __getnewargs__(self):
-        return (self._id, self._i18n_catalog)
+        return (self._i18n_catalog)
 
     ##  For pickle support
     def __getstate__(self):
@@ -90,7 +88,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     #
     #   Reimplemented from ContainerInterface
     def getId(self) -> str:
-        return self._id
+        return self._metadata["id"]
 
     id = pyqtProperty(str, fget = getId, constant = True)
 
@@ -98,7 +96,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     #
     #   Reimplemented from ContainerInterface
     def getName(self) -> str:
-        return self._name
+        return self._metadata["name"]
 
     name = pyqtProperty(str, fget = getName, constant = True)
 
@@ -200,17 +198,19 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     #   data about inheritance and overrides was lost when deserialising.
     #
     #   Reimplemented from ContainerInterface
-    def serialize(self, ignored_metadata_keys: Optional[List] = None):
+    def serialize(self, ignored_metadata_keys: Optional[set] = None):
         data = { } # The data to write to a JSON file.
         data["name"] = self.getName()
         data["version"] = DefinitionContainer.Version
         data["metadata"] = self.getMetaData()
 
         # remove the keys that we want to ignore in the metadata
-        if ignored_metadata_keys:
-            for key in ignored_metadata_keys:
-                if key in data["metadata"]:
-                    del data["metadata"][key]
+        if not ignored_metadata_keys:
+            ignored_metadata_keys = set()
+        ignored_metadata_keys |= {"name", "version", "id", "container_type"}
+        for key in ignored_metadata_keys:
+            if key in data["metadata"]:
+                del data["metadata"][key]
 
         data["settings"] = { }
         for definition in self.definitions:
@@ -269,7 +269,6 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
         parsed = self._readAndValidateSerialized(serialized)
 
         # Update properties with the data from the JSON
-        self._name = parsed["name"]
         self._metadata = parsed["metadata"]
 
         for key, value in parsed["settings"].items():
