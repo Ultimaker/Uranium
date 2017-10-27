@@ -548,7 +548,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     ##  Get an instance by key
     #
-    def getInstance(self, key: str) -> SettingInstance:
+    def getInstance(self, key: str) -> Optional[SettingInstance]:
         self._instantiateCachedValues()
         if key in self._instances:
             return self._instances[key]
