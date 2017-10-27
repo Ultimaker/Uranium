@@ -350,11 +350,12 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     # Recursively resolve loading inherited files
     def _resolveInheritance(self, file_name: str) -> dict:
         json_dict = self._loadFile(file_name)
-        self._verifyJson(json_dict)
 
         if "inherits" in json_dict:
             inherited = self._resolveInheritance(json_dict["inherits"])
             json_dict = self._mergeDicts(inherited, json_dict)
+
+        self._verifyJson(json_dict)
 
         return json_dict
 
