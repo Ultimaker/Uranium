@@ -71,7 +71,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
     ##  For pickle support
     def __getnewargs__(self):
-        return (self._i18n_catalog)
+        return (self.getId(), self._i18n_catalog)
 
     ##  For pickle support
     def __getstate__(self):
