@@ -240,10 +240,13 @@ class QtApplication(QApplication, Application):
     @pyqtSlot()
     def reloadQML(self):
 
+        self._engine.clearComponentCache()
         self._theme.reload()
         self._engine.load(self._main_qml)
         # Hide the window. For some reason we can't close it yet. This needs to be done in the onComponentCompleted.
-        self._engine.rootObjects()[0].hide()
+        for obj in self._engine.rootObjects():
+            if obj != self._engine.rootObjects()[-1]:
+                obj.hide()
 
 
     @pyqtSlot()
