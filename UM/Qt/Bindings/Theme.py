@@ -37,6 +37,15 @@ class Theme(QObject):
 
         self._initializeDefaults()
 
+        self.reload()
+
+    themeLoaded = pyqtSignal()
+
+    def reload(self):
+        self._styles = None
+        self._path = ""
+        self._icons = {}
+        self._images = {}
         Preferences.getInstance().addPreference("general/theme", Application.getInstance().default_theme)
         try:
             theme_path = Resources.getPath(Resources.Themes, Preferences.getInstance().getValue("general/theme"))
@@ -49,7 +58,6 @@ class Theme(QObject):
             theme_path = Resources.getPath(Resources.Themes, Preferences.getInstance().getValue("general/theme"))
             self.load(theme_path)
 
-    themeLoaded = pyqtSignal()
 
     @pyqtSlot(result = "QVariantList")
     def getThemes(self):

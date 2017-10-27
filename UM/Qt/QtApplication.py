@@ -237,6 +237,23 @@ class QtApplication(QApplication, Application):
         self._engine.load(self._main_qml)
         self.engineCreatedSignal.emit()
 
+    @pyqtSlot()
+    def reloadQML(self):
+
+        self._theme.reload()
+        self._engine.load(self._main_qml)
+        # Hide the window. For some reason we can't close it yet. This needs to be done in the onComponentCompleted.
+        self._engine.rootObjects()[0].hide()
+
+
+    @pyqtSlot()
+    def purgeWindows(self):
+        # Close all root objects except the last one.
+        # Should only be called by onComponentCompleted of the mainWindow.
+        for obj in self._engine.rootObjects():
+            if obj != self._engine.rootObjects()[-1]:
+                obj.close()
+
     engineCreatedSignal = Signal()
 
     def isShuttingDown(self):
@@ -271,7 +288,6 @@ class QtApplication(QApplication, Application):
                 self._main_window.windowStateChanged.disconnect(self._onMainWindowStateChanged)
 
             self._main_window = window
-
             if self._main_window is not None:
                 self._main_window.windowStateChanged.connect(self._onMainWindowStateChanged)
 
