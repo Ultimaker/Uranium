@@ -147,6 +147,7 @@ class LocalContainerProvider(ContainerProvider):
     #   This way we can more easily load the container files we want lazily.
     def _updatePathCache(self):
         self._id_to_path = {} #Clear cache first.
+        self._id_to_mime = {}
 
         old_file_expression = re.compile(r"{sep}old{sep}\d+{sep}".format(sep = os.sep)) #To detect files that are back-ups. Matches on .../old/#/...
 
