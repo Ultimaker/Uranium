@@ -12,9 +12,7 @@ from UM.Settings.ContainerRegistry import ContainerRegistry #To get the resource
 from UM.Logger import Logger
 from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType #To get the type of container we're loading.
 from UM.Settings.ContainerProvider import ContainerProvider #The class we're implementing.
-from UM.Settings.ContainerStack import ContainerStack #To parse CFG files and get their metadata, and to load ContainerStacks.
-from UM.Settings.DefinitionContainer import DefinitionContainer #To parse JSON files and get their metadata, and to load DefinitionContainers.
-from UM.Settings.InstanceContainer import InstanceContainer #To parse CFG files and get their metadata, and to load InstanceContainers.
+from UM.Settings.DefinitionContainer import DefinitionContainer #To check if we need to cache this container.
 from UM.Resources import Resources
 
 ##  Provides containers from the local installation.
