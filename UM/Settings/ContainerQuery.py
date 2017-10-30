@@ -72,6 +72,8 @@ class ContainerQuery:
 
     # Check to see if a container matches with a regular expression
     def _matchRegExp(self, metadata, property_name, value):
+        if property_name not in metadata:
+            return False
         value = re.escape(value) #Escape for regex patterns.
         value = "^" + value.replace("\\*", ".*") + "$" #Instead of (now escaped) asterisks, match on any string. Also add anchors for a complete match.
         if self._ignore_case:
@@ -87,6 +89,8 @@ class ContainerQuery:
 
     # Check to see if a container matches with a string
     def _matchString(self, metadata, property_name, value):
+        if property_name not in metadata:
+            return False
         value = self._maybeLowercase(value)
 
         if property_name == "definition":
@@ -97,7 +101,7 @@ class ContainerQuery:
 
     # Check to see if a container matches with a specific typed property
     def _matchType(self, metadata, property_name, value):
-        return value == metadata[property_name]
+        return value == metadata.get(property_name) #If the metadata entry doesn't exist, match on None.
 
     # Helper function to simplify ignore case handling
     def _maybeLowercase(self, value):
