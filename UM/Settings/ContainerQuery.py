@@ -52,11 +52,11 @@ class ContainerQuery:
         for key, value in self._kwargs.items():
             if isinstance(value, str):
                 if "*" in value:
-                    key_filter = lambda candidate: self._matchRegExp(candidate, key, value)
+                    key_filter = lambda candidate, key = key, value = value: self._matchRegExp(candidate, key, value)
                 else:
-                    key_filter = lambda candidate: self._matchString(candidate, key, value)
+                    key_filter = lambda candidate, key = key, value = value: self._matchString(candidate, key, value)
             else:
-                key_filter = lambda candidate: self._matchType(candidate, key, value)
+                key_filter = lambda candidate, key = key, value = value: self._matchType(candidate, key, value)
             candidates = filter(key_filter, candidates)
 
         #Execute all filters.
