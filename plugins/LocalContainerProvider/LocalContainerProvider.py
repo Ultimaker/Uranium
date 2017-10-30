@@ -8,6 +8,7 @@ from typing import Any, Dict, Iterable, Optional
 import urllib.parse #For getting the IDs from a filename.
 
 from UM.Application import Application #To get the current version for finding the cache directory.
+from UM.Settings.ContainerRegistry import ContainerRegistry #To get the resource types for containers.
 from UM.Logger import Logger
 from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType #To get the type of container we're loading.
 from UM.Settings.ContainerProvider import ContainerProvider #The class we're implementing.
@@ -151,9 +152,9 @@ class LocalContainerProvider(ContainerProvider):
 
         old_file_expression = re.compile(r"{sep}old{sep}\d+{sep}".format(sep = os.sep)) #To detect files that are back-ups. Matches on .../old/#/...
 
-        all_resources = set(Resources.getAllResourcesOfType(Resources.DefinitionContainers)) #Remove duplicates, since the Resources only finds resources by their directories.
-        all_resources |= set(Resources.getAllResourcesOfType(Resources.InstanceContainers))
-        all_resources |= set(Resources.getAllResourcesOfType(Resources.ContainerStacks))
+        all_resources = set()
+        for resource_type in ContainerRegistry.getInstance().getResourceTypes():
+            all_resources |= set(Resources.getAllResourcesOfType(resource_type)) #Remove duplicates, since the Resources only finds resources by their directories.
         for filename in all_resources:
             if re.search(old_file_expression, filename):
                 continue #This is a back-up file from an old version.

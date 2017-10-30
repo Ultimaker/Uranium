@@ -77,6 +77,10 @@ class ContainerRegistry(ContainerRegistryInterface):
     def addResourceType(self, type: int) -> None:
         self._resource_types.append(type)
 
+    ##  Returns all resource types.
+    def getResourceTypes(self) -> List[int]:
+        return self._resource_types
+
     ##  Adds a container provider to search through containers in.
     def addProvider(self, provider: "PluginObject"):
         self._providers.append(provider)
