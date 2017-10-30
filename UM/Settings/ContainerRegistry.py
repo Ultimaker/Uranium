@@ -391,7 +391,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     @classmethod
     def addContainerTypeByName(cls, container_type, type_name, mime_type):
         cls.__container_types[type_name] = container_type
-        cls.__mime_type_map[mime_type] = container_type
+        cls.mime_type_map[mime_type] = container_type
 
     ##  Retrieve the mime type corresponding to a certain container type
     #
@@ -401,7 +401,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     @classmethod
     def getMimeTypeForContainer(cls, container_type):
         try:
-            mime_type_name = UM.Dictionary.findKey(cls.__mime_type_map, container_type)
+            mime_type_name = UM.Dictionary.findKey(cls.mime_type_map, container_type)
             if mime_type_name:
                 return MimeTypeDatabase.getMimeType(mime_type_name)
         except ValueError:
@@ -415,7 +415,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   \return A class object of a container type that corresponds to the specified mime type or None if not found.
     @classmethod
     def getContainerForMimeType(cls, mime_type):
-        return cls.__mime_type_map.get(mime_type.name, None)
+        return cls.mime_type_map.get(mime_type.name, None)
 
     ##  Get all the registered container types
     #
@@ -433,7 +433,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     def _deleteFiles(self, container):
         for resource_type in self._resource_types:
             mime_type_name = ""
-            for name, container_type in self.__mime_type_map.items():
+            for name, container_type in self.mime_type_map.items():
                 if container_type == container.__class__:
                     mime_type_name = name
                     break
@@ -580,7 +580,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         "stack": ContainerStack,
     }
 
-    __mime_type_map = {
+    mime_type_map = {
         "application/x-uranium-definitioncontainer": DefinitionContainer,
         "application/x-uranium-instancecontainer": InstanceContainer,
         "application/x-uranium-containerstack": ContainerStack,

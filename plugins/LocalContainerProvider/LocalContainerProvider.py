@@ -37,7 +37,7 @@ class LocalContainerProvider(ContainerProvider):
         return self._id_to_path.keys()
 
     def loadContainer(self, container_id: str) -> "ContainerInterface":
-        container_class = self.__mime_to_class[self._id_to_mime[container_id].name]
+        container_class = ContainerRegistry.mime_type_map[self._id_to_mime[container_id].name]
         if issubclass(container_class, DefinitionContainer): #We may need to load these from the definition cache.
             container = self._loadCachedDefinition(container_id)
             if container: #Yes, it was cached!
@@ -69,7 +69,7 @@ class LocalContainerProvider(ContainerProvider):
         filename = self._id_to_path[container_id] #Raises KeyError if container ID does not exist in the (cache of the) files!
 
         with open(filename) as f:
-            metadata = self.__mime_to_class[self._id_to_mime[container_id].name].deserializeMetadata(f.read()) #pylint: disable=no-member
+            metadata = ContainerRegistry.mime_type_map[self._id_to_mime[container_id].name].deserializeMetadata(f.read()) #pylint: disable=no-member
         if metadata is None:
             return None
         metadata["id"] = container_id #Always fill in the ID from the filename, rather than the ID in the metadata itself.
@@ -167,11 +167,3 @@ class LocalContainerProvider(ContainerProvider):
             container_id = urllib.parse.unquote_plus(container_id)
             self._id_to_path[container_id] = filename
             self._id_to_mime[container_id] = mime
-
-    ##  Maps MIME types to the class with which files of that type should be
-    #   constructed.
-    __mime_to_class = {
-        "application/x-uranium-definitioncontainer": DefinitionContainer,
-        "application/x-uranium-instancecontainer": InstanceContainer,
-        "application/x-uranium-containerstack": ContainerStack
-    }
