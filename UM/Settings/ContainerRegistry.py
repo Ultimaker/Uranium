@@ -168,9 +168,8 @@ class ContainerRegistry(ContainerRegistryInterface):
         query = ContainerQuery.ContainerQuery(self, ignore_case = ignore_case, **kwargs)
 
         if query.isIdOnly(): #If we are just searching for a single container by ID, look it up from the ID-based cache.
-            metadata = self.metadata.get(kwargs["id"])
-            if metadata is not None:
-                return [metadata]
+            if kwargs["id"] in self.metadata:
+                return [self.metadata[kwargs["id"]]]
             else:
                 return [] #No result, so return an empty list.
 
