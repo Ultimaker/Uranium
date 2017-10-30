@@ -28,12 +28,12 @@ class LocalContainerProvider(ContainerProvider):
         self._id_to_path = {} # type: Dict[str, str] #Translates container IDs to the path to where the file is located.
         self._id_to_mime = {} # type: Dict[str, MimeType] #Translates container IDs to their MIME type.
 
-        self._updatePathCache()
-
     ##  Gets the IDs of all local containers.
     #
     #   \return A sequence of all container IDs.
     def getAllIds(self) -> Iterable[str]:
+        if not self._id_to_path:
+            self._updatePathCache()
         return self._id_to_path.keys()
 
     def loadContainer(self, container_id: str) -> "ContainerInterface":
