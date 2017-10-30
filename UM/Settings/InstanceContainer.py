@@ -481,7 +481,8 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
             raise IncorrectInstanceVersionError("Reported version {0} but expected version {1}".format(int(parser["general"]["version"]), self.Version))
 
         # Reset old data
-        self._metadata = {}
+        old_id = self.getId()
+        self._metadata = {"id": old_id}
         self._instances = {}
 
         definition_id = parser["general"]["definition"]
@@ -493,7 +494,6 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
         if "metadata" in parser:
             self._metadata = dict(parser["metadata"])
-        self._metadata["id"] = self.getId()
         self._metadata["name"] = parser["general"].get("name", self.getId())
         self._metadata["container_type"] = InstanceContainer
         self._metadata["version"] = parser["general"]["version"]
