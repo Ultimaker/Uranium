@@ -482,18 +482,19 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
         # Reset old data
         old_id = self.getId()
-        self._metadata = {"id": old_id}
+        self._metadata = {}
         self._instances = {}
 
         definition_id = parser["general"]["definition"]
 
         definitions = _containerRegistry.findDefinitionContainers(id = definition_id)
         if not definitions:
-            raise DefinitionNotFoundError("Could not find definition {0} required for instance {1}".format(definition_id, self.getId()))
+            raise DefinitionNotFoundError("Could not find definition {0} required for instance {1}".format(definition_id, old_id))
         self._definition = definitions[0]
 
         if "metadata" in parser:
             self._metadata = dict(parser["metadata"])
+        self._metadata["id"] = old_id
         self._metadata["name"] = parser["general"].get("name", self.getId())
         self._metadata["container_type"] = InstanceContainer
         self._metadata["version"] = parser["general"]["version"]
