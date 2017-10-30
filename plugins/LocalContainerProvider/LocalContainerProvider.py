@@ -159,7 +159,10 @@ class LocalContainerProvider(ContainerProvider):
             if re.search(old_file_expression, filename):
                 continue #This is a back-up file from an old version.
 
-            mime = MimeTypeDatabase.getMimeTypeForFile(filename)
+            try:
+                mime = MimeTypeDatabase.getMimeTypeForFile(filename)
+            except MimeTypeDatabase.MimeTypeNotFoundError:
+                Logger.log("w", "MIME type could not be found for file: {filename}, ignoring it.".format(filename = filename))
             container_id = mime.stripExtension(os.path.basename(filename))
             container_id = urllib.parse.unquote_plus(container_id)
             self._id_to_path[container_id] = filename
