@@ -222,6 +222,8 @@ class QtApplication(QApplication, Application):
         Bindings.register()
 
         self._engine = QQmlApplicationEngine()
+        self._engine.setOutputWarningsToStandardError(False)
+        engine.warnings.connect(self.__onQmlWarning)
 
         for path in self._qml_import_paths:
             self._engine.addImportPath(path)
@@ -236,6 +238,11 @@ class QtApplication(QApplication, Application):
 
         self._engine.load(self._main_qml)
         self.engineCreatedSignal.emit()
+
+    @pyqtSlot("QList<QQmlError>")
+    def __onQmlWarning(self, warnings):
+        for warning in warnings:
+            Logger.log("w", warning.toString())
 
     engineCreatedSignal = Signal()
 
