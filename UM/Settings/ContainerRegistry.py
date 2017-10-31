@@ -156,7 +156,20 @@ class ContainerRegistry(ContainerRegistryInterface):
     @UM.FlameProfiler.profile
     def findContainers(self, *, ignore_case = False, **kwargs) -> List[ContainerInterface]:
         #Find the metadata of the containers and grab the actual containers from there.
-        return [self._containers[result["id"]] for result in self.findContainersMetadata(ignore_case = ignore_case, **kwargs)]
+        results_metadata = self.findContainersMetadata(ignore_case = ignore_case, **kwargs)
+        result = []
+        for metadata in results_metadata:
+            if metadata["id"] in self._containers: #Already loaded, so just return that.
+                result.append(self._containers[metadata["id"]])
+            else: #Metadata is loaded, but not the actual data.
+                for provider in self._providers:
+                    if metadata["id"] in provider.getAllIds(): #This is the one we need to load it from!
+                        self._containers[metadata["id"]] = provider.loadContainer(metadata["id"])
+                        result.append(self._containers[metadata["id"]])
+                        break
+                else:
+                    Logger.log("w", "The metadata of container {container_id} was loaded, but no container provider seems to be able to load the actual container.".format(container_id = metadata["id"]))
+        return result
 
     ##  Find the metadata of all container objects matching certain criteria.
     #
