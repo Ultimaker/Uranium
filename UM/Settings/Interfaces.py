@@ -106,7 +106,8 @@ class ContainerInterface:
     #   \param serialized A string representing a container that should be
     #   deserialized.
     #   \return A dictionary of metadata of the container.
-    def deserializeMetadata(self, serialized: str) -> Dict[str, Any]:
+    @classmethod
+    def deserializeMetadata(cls, serialized: str) -> Dict[str, Any]:
         pass
 
     ##  Updates the given serialized data to the latest version.
