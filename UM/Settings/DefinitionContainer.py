@@ -221,8 +221,8 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     def getConfigurationTypeFromSerialized(self, serialized: str) -> Optional[str]:
         configuration_type = None
         try:
-            parsed = self._readAndValidateSerialized(serialized)
-            configuration_type = parsed["metadata"]["type"]
+            parsed = json.loads(serialized, object_pairs_hook = collections.OrderedDict)
+            configuration_type = parsed["metadata"].get("type", "machine") #TODO: Not all definitions have a type. They get this via inheritance but that requires an instance.
         except Exception as e:
             Logger.log("d", "Could not get configuration type: %s", e)
         return configuration_type
@@ -241,7 +241,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
     def getVersionFromSerialized(self, serialized: str) -> Optional[int]:
         version = None
-        parsed = self._readAndValidateSerialized(serialized)
+        parsed = json.loads(serialized, object_pairs_hook = collections.OrderedDict)
         try:
             version = int(parsed["version"])
         except Exception as e:
