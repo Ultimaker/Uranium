@@ -84,9 +84,11 @@ class MainWindow(QQuickWindow):
 
     mousePositionChanged = pyqtSignal()
 
+    @pyqtProperty(int, notify = mousePositionChanged)
     def mouseX(self):
         return self._mouse_x
 
+    @pyqtProperty(int, notify = mousePositionChanged)
     def mouseY(self):
         return self._mouse_y
 
