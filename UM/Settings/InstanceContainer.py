@@ -613,6 +613,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
             signal, signal_arg = self._postponed_emits.pop(0)
             signal.emit(*signal_arg)
 
+
 _containerRegistry = None   # type:  ContainerRegistryInterface
 
 def setContainerRegistry(registry: ContainerRegistryInterface) -> None:
