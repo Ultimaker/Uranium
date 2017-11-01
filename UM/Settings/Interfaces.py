@@ -1,9 +1,13 @@
 # Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
+import os #To get the IDs from file names.
 from typing import List, Dict, Any, Optional
+import urllib.parse #To get the IDs from file names.
 
 import UM.Decorators
+from UM.Logger import Logger
+from UM.MimeTypeDatabase import MimeTypeDatabase
 from UM.Signal import Signal
 from UM.Settings.PropertyEvaluationContext import PropertyEvaluationContext
 
@@ -116,6 +120,14 @@ class ContainerInterface:
             if result is not None:
                 serialized = result.files_data[0]
         return serialized
+
+    ##  Gets the IDs from the specified file name.
+    @classmethod
+    def getIdsFromFile(cls, file_name) -> List[str]:
+        mime = MimeTypeDatabase.getMimeTypeForFile(file_name)
+        container_id = mime.stripExtension(os.path.basename(file_name))
+        container_id = urllib.parse.unquote_plus(container_id)
+        return [container_id]
 
     @classmethod
     def getLoadingPriority(cls) -> int:

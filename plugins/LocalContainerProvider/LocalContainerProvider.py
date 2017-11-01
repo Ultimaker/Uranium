@@ -5,7 +5,6 @@ import os #For getting the IDs from a filename.
 import pickle #For caching definitions.
 import re #To detect back-up files in the ".../old/#/..." folders.
 from typing import Any, Dict, Iterable, Optional
-import urllib.parse #For getting the IDs from a filename.
 
 from UM.Application import Application #To get the current version for finding the cache directory.
 from UM.Settings.ContainerRegistry import ContainerRegistry #To get the resource types for containers.
@@ -161,7 +160,12 @@ class LocalContainerProvider(ContainerProvider):
                 mime = MimeTypeDatabase.getMimeTypeForFile(filename)
             except MimeTypeDatabase.MimeTypeNotFoundError:
                 Logger.log("w", "MIME type could not be found for file: {filename}, ignoring it.".format(filename = filename))
-            container_id = mime.stripExtension(os.path.basename(filename))
-            container_id = urllib.parse.unquote_plus(container_id)
-            self._id_to_path[container_id] = filename
-            self._id_to_mime[container_id] = mime
+                continue
+            try:
+                container_class = ContainerRegistry.mime_type_map[mime.name]
+            except KeyError: #MIME type is known, but it's not a container.
+                continue
+            container_ids = container_class.getIdsFromFile(filename)
+            for container_id in container_ids:
+                self._id_to_path[container_id] = filename
+                self._id_to_mime[container_id] = mime
