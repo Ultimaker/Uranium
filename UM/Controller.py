@@ -36,6 +36,7 @@ class Controller:
         self._selection_tool = None
 
         self._tools_enabled = True
+        self._is_model_rendering_enabled = True
 
         PluginRegistry.addType("view", self.addView)
         PluginRegistry.addType("tool", self.addTool)
@@ -96,6 +97,15 @@ class Controller:
             Logger.log("e", "No view named %s found", name)
         except Exception as e:
             Logger.log("e", "An exception occurred while switching views: %s", str(e))
+
+    def enableModelRendering(self):
+        self._is_model_rendering_enabled = True
+
+    def disableModelRendering(self):
+        self._is_model_rendering_enabled = False
+
+    def isModelRenderingEnabled(self):
+        return self._is_model_rendering_enabled
 
     ##  Emitted when the list of views changes.
     viewsChanged = Signal()
