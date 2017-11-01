@@ -99,7 +99,7 @@ class ContainerInterface:
     #
     #   \param serialized A serialized string containing a container that should be deserialized.
     def deserialize(self, serialized: str) -> str:
-        return self.__updateSerialized(serialized)
+        return self._updateSerialized(serialized)
 
     ##  Deserialize just the metadata from a string representation.
     #
@@ -111,9 +111,10 @@ class ContainerInterface:
         pass
 
     ##  Updates the given serialized data to the latest version.
-    def __updateSerialized(self, serialized: str) -> str:
-        configuration_type = self.getConfigurationTypeFromSerialized(serialized)
-        version = self.getVersionFromSerialized(serialized)
+    @classmethod
+    def _updateSerialized(cls, serialized: str) -> str:
+        configuration_type = cls.getConfigurationTypeFromSerialized(serialized)
+        version = cls.getVersionFromSerialized(serialized)
         if configuration_type is not None and version is not None:
             from UM.VersionUpgradeManager import VersionUpgradeManager
             result = VersionUpgradeManager.getInstance().updateFilesData(configuration_type, version,
@@ -135,11 +136,13 @@ class ContainerInterface:
         return 9001 #Goku wins!
 
     ##  Gets the configuration type of the given serialized data. (used by __updateSerialized())
-    def getConfigurationTypeFromSerialized(self, serialized: str) -> Optional[str]:
+    @classmethod
+    def getConfigurationTypeFromSerialized(cls, serialized: str) -> Optional[str]:
         pass
 
     ##  Gets the version of the given serialized data. (used by __updateSerialized())
-    def getVersionFromSerialized(self, serialized: str) -> Optional[int]:
+    @classmethod
+    def getVersionFromSerialized(cls, serialized: str) -> Optional[int]:
         pass
 
     ##  Get the path used to create this InstanceContainer.

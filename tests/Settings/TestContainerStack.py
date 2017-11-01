@@ -109,10 +109,12 @@ class MockContainer(ContainerInterface):
     def deserialize(self, serialized):
         self._id = int(serialized)
 
-    def getConfigurationTypeFromSerialized(self, serialized):
+    @classmethod
+    def getConfigurationTypeFromSerialized(cls, serialized: str):
         raise NotImplementedError()
 
-    def getVersionFromSerialized(self, serialized):
+    @classmethod
+    def getVersionFromSerialized(cls, serialized):
         raise NotImplementedError()
 
 

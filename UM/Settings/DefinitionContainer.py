@@ -218,7 +218,8 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
         return json.dumps(data, separators = (", ", ": "), indent = 4) # Pretty print the JSON.
 
-    def getConfigurationTypeFromSerialized(self, serialized: str) -> Optional[str]:
+    @classmethod
+    def getConfigurationTypeFromSerialized(cls, serialized: str) -> Optional[str]:
         configuration_type = None
         try:
             parsed = json.loads(serialized, object_pairs_hook = collections.OrderedDict)
@@ -239,7 +240,8 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
         parsed = self._preprocessParsedJson(parsed)
         return parsed
 
-    def getVersionFromSerialized(self, serialized: str) -> Optional[int]:
+    @classmethod
+    def getVersionFromSerialized(cls, serialized: str) -> Optional[int]:
         version = None
         parsed = json.loads(serialized, object_pairs_hook = collections.OrderedDict)
         try:
@@ -296,7 +298,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     #   anything went wrong, this returns ``None`` instead.
     @classmethod
     def deserializeMetadata(cls, serialized: str) -> Optional[Dict[str, Any]]:
-        serialized = super().deserialize(serialized) #Update to most recent version.
+        serialized = cls._updateSerialized(serialized) #Update to most recent version.
         try:
             parsed = json.loads(serialized, object_pairs_hook = collections.OrderedDict) #TODO: Load only part of this JSON until we find the metadata. We need an external library for this though.
         except json.JSONDecodeError as e:

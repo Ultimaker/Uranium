@@ -86,10 +86,12 @@ class ContainerTestPlugin(ContainerInterface, PluginObject):
     def deserialize(self, serialized):
         raise NotImplementedError()
 
-    def getConfigurationTypeFromSerialized(self, serialized):
+    @classmethod
+    def getConfigurationTypeFromSerialized(cls, serialized):
         raise NotImplementedError()
 
-    def getVersionFromSerialized(self, serialized):
+    @classmethod
+    def getVersionFromSerialized(cls, serialized):
         raise NotImplementedError()
 
     metaDataChanged = None  # type: Signal

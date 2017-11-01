@@ -428,7 +428,8 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         parser.write(stream)
         return stream.getvalue()
 
-    def _readAndValidateSerialized(self, serialized: str) -> configparser.ConfigParser:
+    @classmethod
+    def _readAndValidateSerialized(cls, serialized: str) -> configparser.ConfigParser:
         parser = configparser.ConfigParser(interpolation=None)
         parser.read_string(serialized)
 
@@ -447,17 +448,19 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
             raise InvalidInstanceError(exception_string)
         return parser
 
-    def getConfigurationTypeFromSerialized(self, serialized: str) -> Optional[str]:
+    @classmethod
+    def getConfigurationTypeFromSerialized(cls, serialized: str) -> Optional[str]:
         configuration_type = None
         try:
-            parser = self._readAndValidateSerialized(serialized)
+            parser = cls._readAndValidateSerialized(serialized)
             configuration_type = parser["metadata"].get("type")
         except Exception as e:
             Logger.log("d", "Could not get configuration type: %s", e)
         return configuration_type
 
-    def getVersionFromSerialized(self, serialized: str) -> Optional[int]:
-        configuration_type = self.getConfigurationTypeFromSerialized(serialized)
+    @classmethod
+    def getVersionFromSerialized(cls, serialized: str) -> Optional[int]:
+        configuration_type = cls.getConfigurationTypeFromSerialized(serialized)
         # get version
         version = None
         try:

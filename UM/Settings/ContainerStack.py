@@ -297,7 +297,8 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     #
     #   The profile upgrading code depends on information such as "configuration_type" and "version", which come from
     #   the serialized data. Due to legacy problem, those data may not be available if it comes from an ancient Cura.
-    def _readAndValidateSerialized(self, serialized: str) -> configparser.ConfigParser:
+    @classmethod
+    def _readAndValidateSerialized(cls, serialized: str) -> configparser.ConfigParser:
         parser = configparser.ConfigParser(interpolation=None, empty_lines_in_values=False)
         parser.read_string(serialized)
 
@@ -306,17 +307,19 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
         return parser
 
-    def getConfigurationTypeFromSerialized(self, serialized: str) -> Optional[str]:
+    @classmethod
+    def getConfigurationTypeFromSerialized(cls, serialized: str) -> Optional[str]:
         configuration_type = None
         try:
-            parser = self._readAndValidateSerialized(serialized)
+            parser = cls._readAndValidateSerialized(serialized)
             configuration_type = parser["metadata"]["type"]
         except Exception as e:
             Logger.log("e", "Could not get configuration type: %s", e)
         return configuration_type
 
-    def getVersionFromSerialized(self, serialized: str) -> Optional[int]:
-        configuration_type = self.getConfigurationTypeFromSerialized(serialized)
+    @classmethod
+    def getVersionFromSerialized(cls, serialized: str) -> Optional[int]:
+        configuration_type = cls.getConfigurationTypeFromSerialized(serialized)
         # get version
         version = None
         try:

@@ -110,10 +110,12 @@ class MockContainer(ContainerInterface, UM.PluginObject.PluginObject):
     def deserialize(self, serialized):
         raise NotImplementedError()
 
-    def getConfigurationTypeFromSerialized(self, serialized):
+    @classmethod
+    def getConfigurationTypeFromSerialized(cls, serialized: str):
         raise NotImplementedError()
 
-    def getVersionFromSerialized(self, serialized):
+    @classmethod
+    def getVersionFromSerialized(cls, serialized):
         raise NotImplementedError()
 
     metaDataChanged = Signal()
