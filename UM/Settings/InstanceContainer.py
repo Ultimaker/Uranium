@@ -520,7 +520,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     #   anything went wrong, this returns ``None`` instead.
     @classmethod
     def deserializeMetadata(cls, serialized: str) -> Optional[Dict[str, Any]]:
-        serialized = super().deserialize(serialized) #Update to most recent version.
+        serialized = cls._updateSerialized(serialized) #Update to most recent version.
         parser = configparser.ConfigParser(interpolation = None)
         parser.read_string(serialized)
 
