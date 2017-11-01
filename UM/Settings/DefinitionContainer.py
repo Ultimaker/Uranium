@@ -313,7 +313,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
         except KeyError: #Required fields not present!
             return None
         if "metadata" in parsed:
-            metadata = metadata.update(parsed["metadata"])
+            metadata.update(parsed["metadata"])
         if "inherits" in parsed:
             metadata["inherits"] = parsed["inherits"]
         return metadata
