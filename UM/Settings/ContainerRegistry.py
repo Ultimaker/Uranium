@@ -184,18 +184,19 @@ class ContainerRegistry(ContainerRegistryInterface):
         #Create the query object.
         query = ContainerQuery.ContainerQuery(self, ignore_case = ignore_case, **kwargs)
 
-        if "id" in kwargs and kwargs["id"] not in self.metadata: #If we're looking for an unknown ID, try to lazy-load that one.
-            for provider in self._providers:
-                if kwargs["id"] in provider.getAllIds():
-                    metadata = provider.loadMetadata(kwargs["id"])
-                    self.metadata[kwargs["id"]] = metadata
-                    break #Just need to find the first one.
+        if "id" in kwargs:
+            if kwargs["id"] not in self.metadata: #If we're looking for an unknown ID, try to lazy-load that one.
+                for provider in self._providers:
+                    if kwargs["id"] in provider.getAllIds():
+                        metadata = provider.loadMetadata(kwargs["id"])
+                        self.metadata[kwargs["id"]] = metadata
+                        break #Just need to find the first one.
 
-        if query.isIdOnly(): #If we are just searching for a single container by ID, look it up from the ID-based cache.
-            if kwargs["id"] in self.metadata:
-                return [self.metadata[kwargs["id"]]]
-            else:
-                return [] #No result, so return an empty list.
+            if query.isIdOnly(): #If we are just searching for a single container by ID, look it up from the ID-based cache.
+                if kwargs["id"] in self.metadata:
+                    return [self.metadata[kwargs["id"]]]
+                else:
+                    return [] #No result, so return an empty list.
 
         if query in self._query_cache:
             #If the exact same query is in the cache, we can re-use the query result.
