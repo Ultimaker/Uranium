@@ -516,19 +516,22 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     #   it.
     #
     #   \param serialized A CFG document, serialised as a string.
+    #   \param container_id The ID of the container to get the metadata of, as
+    #   obtained from the file name.
     #   \return A dictionary of metadata that was in the CFG document. If
     #   anything went wrong, this returns ``None`` instead.
     @classmethod
-    def deserializeMetadata(cls, serialized: str) -> Optional[Dict[str, Any]]:
+    def deserializeMetadata(cls, serialized: str, container_id: str) -> Optional[Dict[str, Any]]:
         serialized = cls._updateSerialized(serialized) #Update to most recent version.
         parser = configparser.ConfigParser(interpolation = None)
         parser.read_string(serialized)
 
-        metadata = {}
+        metadata = {
+            "id": container_id,
+            "container_type": InstanceContainer
+        }
         try:
-            #ID must get filled by whatever reads this, taken from the file name.
             metadata["name"] = parser["general"]["name"]
-            metadata["container_type"] = InstanceContainer
             metadata["version"] = parser["general"]["version"]
         except KeyError: #One of the keys or the General section itself is missing.
             return None

@@ -66,11 +66,7 @@ class LocalContainerProvider(ContainerProvider):
         filename = self._id_to_path[container_id] #Raises KeyError if container ID does not exist in the (cache of the) files!
 
         with open(filename) as f:
-            metadata = ContainerRegistry.mime_type_map[self._id_to_mime[container_id].name].deserializeMetadata(f.read()) #pylint: disable=no-member
-        if metadata is None:
-            return None
-        metadata["id"] = container_id #Always fill in the ID from the filename, rather than the ID in the metadata itself.
-        return metadata
+            return ContainerRegistry.mime_type_map[self._id_to_mime[container_id].name].deserializeMetadata(f.read(), container_id) #pylint: disable=no-member
 
     ##  Load a pre-parsed definition container.
     #

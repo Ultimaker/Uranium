@@ -294,10 +294,12 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     #   it.
     #
     #   \param serialized A JSON document, serialised as a string.
+    #   \param container_id The ID of the container (as obtained from the file
+    #   name).
     #   \return A dictionary of metadata that was in the JSON document. If
     #   anything went wrong, this returns ``None`` instead.
     @classmethod
-    def deserializeMetadata(cls, serialized: str) -> Optional[Dict[str, Any]]:
+    def deserializeMetadata(cls, serialized: str, container_id: str) -> Optional[Dict[str, Any]]:
         serialized = cls._updateSerialized(serialized) #Update to most recent version.
         try:
             parsed = json.loads(serialized, object_pairs_hook = collections.OrderedDict) #TODO: Load only part of this JSON until we find the metadata. We need an external library for this though.
@@ -305,9 +307,11 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
             Logger.log("d", "Could not parse definition: %s", e)
             return None
 
-        metadata = {"container_type": DefinitionContainer}
+        metadata = {
+            "id": container_id,
+            "container_type": DefinitionContainer
+        }
         try: #Move required fields to metadata.
-            metadata["id"] = parsed["id"] #Move required fields to metadata.
             metadata["name"] = parsed["name"]
             metadata["version"] = parsed["version"]
         except KeyError: #Required fields not present!
