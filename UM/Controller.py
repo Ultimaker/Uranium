@@ -324,24 +324,31 @@ class Controller:
     def rotateView(self, cooridnate = "x", angle = 0):
         camera = self._scene.getActiveCamera()
 
-        if angle != 0:
-
-            # for comparison is == used, because might not store them at the same location
-            # https://stackoverflow.com/questions/1504717/why-does-comparing-strings-in-python-using-either-or-is-sometimes-produce
-            if cooridnate == "x":
-                self.last_rotation_angle_x = self.last_rotation_angle_x + angle
-                camera.setPosition(Vector(0, 0, 700))
-                camera.setPerspective(True)
-                camera.lookAt(Vector(0, 100, 0))
-                camera_tool = self.getTool("CameraTool")
-                camera_tool.rotateCam(self.last_rotation_angle_x, 0)
-            else:
-                self.last_rotation_angle_x = self.last_rotation_angle_y + angle
-                camera_tool = self.getTool("CameraTool")
-                camera_tool.rotateCam(0, angle)
-        else:
-            # Move to home position
+        if cooridnate == "home":
             camera.setPosition(Vector(0, 300, 700))
             camera.setPerspective(True)
             camera.lookAt(Vector(0, 100, 100))
             print()
+        elif cooridnate == "3d":
+            #camera.setPosition(Vector(-80, 250, 700))
+            camera.setPosition(Vector(-180, 250, 1000))
+
+            camera.setPerspective(True)
+            camera.lookAt(Vector(0, 100, 100))
+
+        else:
+            # for comparison is == used, because might not store them at the same location
+            # https://stackoverflow.com/questions/1504717/why-does-comparing-strings-in-python-using-either-or-is-sometimes-produce
+            camera.setPosition(Vector(0, 0, 700))
+            camera.setPerspective(True)
+            camera.lookAt(Vector(0, 100, 0))
+
+            if cooridnate == "x":
+                camera_tool = self.getTool("CameraTool")
+                camera_tool.rotateCam(angle, 0)
+            elif cooridnate == "y":
+                camera_tool = self.getTool("CameraTool")
+                camera_tool.rotateCam(0, angle)
+
+            print()
+        print()
