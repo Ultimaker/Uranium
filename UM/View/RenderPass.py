@@ -61,7 +61,7 @@ class RenderPass:
         if self._width != width or self._height != height:
             self._width = width
             self._height = height
-            self._updateRenderStorage()
+            self._fbo = None  # Ensure the fbo is re-created next render pass.
 
     ##  Bind the render pass so it can be rendered to.
     #
