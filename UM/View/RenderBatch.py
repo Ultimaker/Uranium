@@ -161,6 +161,10 @@ class RenderBatch():
     #
     #   \param camera The camera to render from.
     def render(self, camera):
+        if camera is None:
+            Logger.log("e", "Unable to render batch without a camera.")
+            return
+
         self._shader.bind()
 
         if self._backface_cull:
