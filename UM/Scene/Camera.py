@@ -28,7 +28,7 @@ class Camera(SceneNode.SceneNode):
         self._name = name  # type: str
         self._projection_matrix = Matrix()  # type: Matrix
         self._projection_matrix.setOrtho(-5, 5, 5, -5, -100, 100)
-        self._perspective = False  # type: bool
+        self._perspective = True  # type: bool
         self._viewport_width = 0  # type: int
         self._viewport_height = 0  # type: int
         self._window_width = 0  # type: int
