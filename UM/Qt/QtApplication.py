@@ -269,11 +269,13 @@ class QtApplication(QApplication, Application):
         if window != self._main_window:
             if self._main_window is not None:
                 self._main_window.windowStateChanged.disconnect(self._onMainWindowStateChanged)
+                self.aboutToQuit.disconnect(self.closeApplication)
 
             self._main_window = window
 
             if self._main_window is not None:
                 self._main_window.windowStateChanged.connect(self._onMainWindowStateChanged)
+                self.aboutToQuit.connect(self.closeApplication)
 
             self.mainWindowChanged.emit()
 
@@ -299,14 +301,20 @@ class QtApplication(QApplication, Application):
 
         return super().event(event)
 
-    def windowClosed(self):
-        Logger.log("d", "Shutting down %s", self.getApplicationName())
+    ## The "Quit" button click event handler.
+    @pyqtSlot()
+    def closeApplication(self):
+        # don't do anything if it's already shutting down
+        if self._shutting_down:
+            return
+
+        Logger.log("i", "Close application")
         self._shutting_down = True
 
-        try:
-            Preferences.getInstance().writeToFile(Resources.getStoragePath(Resources.Preferences, self.getApplicationName() + ".cfg"))
-        except Exception as e:
-            Logger.log("e", "Exception while saving preferences: %s", repr(e))
+        # close
+        if self._main_window is not None:
+            self._main_window.close()
+            self._main_window = None
 
         try:
             self.applicationShuttingDown.emit()
@@ -317,6 +325,17 @@ class QtApplication(QApplication, Application):
             self.getBackend().close()
         except Exception as e:
             Logger.log("e", "Exception while closing backend: %s", repr(e))
+
+        try:
+            Preferences.getInstance().writeToFile(Resources.getStoragePath(Resources.Preferences, self.getApplicationName() + ".cfg"))
+        except Exception as e:
+            Logger.log("e", "Exception while saving preferences: %s", repr(e))
+
+        self.quit()
+
+    def windowClosed(self):
+        Logger.log("d", "Shutting down %s", self.getApplicationName())
+        self._shutting_down = True
 
         self.quit()
 
