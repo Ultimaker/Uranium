@@ -7,9 +7,15 @@ from UM.Math.Matrix import Matrix
 from UM.Math.Ray import Ray
 from UM.Math.Vector import Vector
 
+from typing import Optional
+
 import numpy
 import numpy.linalg
 import copy
+
+MYPY = False
+if MYPY:
+    from UM.Mesh.MeshData import MeshData
 
 
 ##  A SceneNode subclass that provides a camera object.
@@ -29,6 +35,9 @@ class Camera(SceneNode.SceneNode):
         self._window_height = 0  # type: int
         self._auto_adjust_view_port_size = True  # type: bool
         self.setCalculateBoundingBox(False)
+
+    def setMeshData(self, mesh_data: Optional["MeshData"]):
+        assert mesh_data is not None, "Camera's can't have mesh data"
 
     def getAutoAdjustViewPort(self):
         return self._auto_adjust_view_port_size
