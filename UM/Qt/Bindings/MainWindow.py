@@ -12,6 +12,11 @@ from UM.Application import Application
 from UM.Preferences import Preferences
 from UM.Signal import Signal, signalemitter
 
+from typing import Optional
+
+MYPY = False
+if MYPY:
+    from PyQt5.QtQuick import QQuickItem
 
 ##  QQuickWindow subclass that provides the main window.
 @signalemitter
@@ -28,7 +33,7 @@ class MainWindow(QQuickWindow):
         self._mouse_device.setPluginId("qt_mouse")
         self._key_device = QtKeyDevice()
         self._key_device.setPluginId("qt_key")
-        self._previous_focus = None
+        self._previous_focus = None  # type: Optional["QQuickItem"]
 
         self._app = QCoreApplication.instance()
         self._app.getController().addInputDevice(self._mouse_device)
@@ -198,7 +203,7 @@ class MainWindow(QQuickWindow):
         elif self.windowState() == Qt.WindowMaximized:
             self._preferences.setValue("general/window_state", Qt.WindowMaximized)
 
-    def _updateViewportGeometry(self, width, height):
+    def _updateViewportGeometry(self, width: int, height: int):
         view_width = width * self._viewport_rect.width()
         view_height = height * self._viewport_rect.height()
 
