@@ -323,7 +323,8 @@ class Controller:
     last_rotation_angle_y = 0
     def rotateView(self, cooridnate = "x", angle = 0):
         camera = self._scene.getActiveCamera()
-
+        camera_tool = self.getTool("CameraTool")
+        camera_tool.setOrigin(Vector(0, 100, 0))
         if cooridnate == "home":
             camera.setPosition(Vector(0, 300, 700))
             camera.setPerspective(True)
@@ -344,11 +345,6 @@ class Controller:
             camera.lookAt(Vector(0, 100, 0))
 
             if cooridnate == "x":
-                camera_tool = self.getTool("CameraTool")
                 camera_tool.rotateCam(angle, 0)
             elif cooridnate == "y":
-                camera_tool = self.getTool("CameraTool")
                 camera_tool.rotateCam(0, angle)
-
-            print()
-        print()
