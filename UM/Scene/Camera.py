@@ -27,8 +27,14 @@ class Camera(SceneNode.SceneNode):
         self._viewport_height = 0
         self._window_width = 0
         self._window_height = 0
-
+        self._auto_adjust_view_port_size = True
         self.setCalculateBoundingBox(False)
+
+    def getAutoAdjustViewPort(self):
+        return self._auto_adjust_view_port_size
+
+    def setAutoAdjustViewPort(self, auto_adjust):
+        self._auto_adjust_view_port_size = auto_adjust
 
     ##  Get the projection matrix of this camera.
     def getProjectionMatrix(self):
