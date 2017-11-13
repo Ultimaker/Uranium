@@ -329,6 +329,7 @@ class Controller:
             camera.setPosition(Vector(0, 300, 700))
             camera.setPerspective(True)
             camera.lookAt(Vector(0, 100, 100))
+            camera_tool.rotateCam(0, 0)
             print()
         elif cooridnate == "3d":
             #camera.setPosition(Vector(-80, 250, 700))
@@ -336,6 +337,8 @@ class Controller:
 
             camera.setPerspective(True)
             camera.lookAt(Vector(0, 100, 100))
+
+            camera_tool.rotateCam(0, 0)
 
         else:
             # for comparison is == used, because might not store them at the same location
