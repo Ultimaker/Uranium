@@ -222,6 +222,11 @@ class Application:
     def getApplicationName(self) -> str:
         return self._application_name
 
+    ##  Get version of the application.
+    #   \returns version \type{string}
+    def getApplicationVersion(self) -> str:
+        return self._version
+
     def getApplicationLanguage(self):
         override_lang = os.getenv("URANIUM_LANGUAGE")
         if override_lang:
