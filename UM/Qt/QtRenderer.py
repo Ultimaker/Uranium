@@ -23,6 +23,16 @@ from UM.Logger import Logger
 import numpy
 
 
+from typing import Optional, List
+
+MYPY = False
+if MYPY:
+    from UM.Scene.Camera import Camera
+    from UM.Scene.SceneNode import SceneNode
+    from UM.View.RenderPass import RenderPass
+    from UM.View.GL import ShaderProgram
+
+
 vertexBufferProperty = "__qtgl2_vertex_buffer"
 indexBufferProperty = "__qtgl2_index_buffer"
 
@@ -43,16 +53,16 @@ class QtRenderer(Renderer):
 
         self._light_position = Vector(0, 0, 0)
         self._background_color = QColor(128, 128, 128)
-        self._viewport_width = 0
-        self._viewport_height = 0
-        self._window_width = 0
-        self._window_height = 0
+        self._viewport_width = 0  # type: int
+        self._viewport_height = 0  # type: int
+        self._window_width = 0  # type: int
+        self._window_height = 0  # type: int
 
-        self._batches = []
+        self._batches = []  # type: List[RenderBatch]
 
-        self._quad_buffer = None
+        self._quad_buffer = None  # type: Optional[QOpenGLBuffer]
 
-        self._camera = None
+        self._camera = None  # type: Optional[Camera]
 
     initialized = Signal()
 
@@ -63,31 +73,31 @@ class QtRenderer(Renderer):
         return round(Application.getInstance().primaryScreen().physicalDotsPerInch() / 96.0)
 
     ##  Get the list of render batches.
-    def getBatches(self):
+    def getBatches(self) -> List[RenderBatch]:
         return self._batches
 
     ##  Overridden from Renderer.
     #
     #   This makes sure the added render pass has the right size.
-    def addRenderPass(self, render_pass):
+    def addRenderPass(self, render_pass: "RenderPass") -> None:
         super().addRenderPass(render_pass)
         render_pass.setSize(self._viewport_width, self._viewport_height)
 
     ##  Set background color used when rendering.
-    def setBackgroundColor(self, color):
+    def setBackgroundColor(self, color: QColor) -> None:
         self._background_color = color
 
-    def getViewportWidth(self):
+    def getViewportWidth(self) -> int:
         return self._viewport_width
 
-    def getViewportHeight(self):
+    def getViewportHeight(self) -> int:
         return self._viewport_height
 
     ##  Set the viewport size.
     #
     #   \param width The new width of the viewport.
     #   \param height The new height of the viewport.
-    def setViewportSize(self, width, height):
+    def setViewportSize(self, width: int, height: int) -> None:
         self._viewport_width = width
         self._viewport_height = height
 
@@ -95,15 +105,15 @@ class QtRenderer(Renderer):
             render_pass.setSize(width, height)
 
     ##  Set the window size.
-    def setWindowSize(self, width, height):
+    def setWindowSize(self, width: int, height: int):
         self._window_width = width
         self._window_height = height
 
     ##  Get the window size.
     #
     #   \return A tuple of (window_width, window_height)
-    def getWindowSize(self):
-        return (self._window_width, self._window_height)
+    def getWindowSize(self)-> (int, int):
+        return self._window_width, self._window_height
 
     ##  Overrides Renderer::beginRendering()
     def beginRendering(self):
@@ -116,7 +126,7 @@ class QtRenderer(Renderer):
         self._gl.glClearColor(0.0, 0.0, 0.0, 0.0)
 
     ##  Overrides Renderer::queueNode()
-    def queueNode(self, node, **kwargs):
+    def queueNode(self, node: "SceneNode", **kwargs) -> None:
         type = kwargs.pop("type", RenderBatch.RenderType.Solid)
         if kwargs.pop("transparent", False):
             type = RenderBatch.RenderType.Transparent
@@ -131,21 +141,21 @@ class QtRenderer(Renderer):
         self._batches.append(batch)
 
     ##  Overrides Renderer::render()
-    def render(self):
+    def render(self) -> None:
         self._batches.sort()
 
         for render_pass in self.getRenderPasses():
             render_pass.render()
 
     ##  Overrides Renderer::endRendering()
-    def endRendering(self):
+    def endRendering(self) -> None:
         self._batches.clear()
 
     ##  Render a full screen quad (rectangle).
     #
     #   The function is used to draw render results on.
     #   \param shader The shader to use when rendering.
-    def renderFullScreenQuad(self, shader):
+    def renderFullScreenQuad(self, shader: "ShaderProgram") -> None:
         self._gl.glDisable(self._gl.GL_DEPTH_TEST)
         self._gl.glDisable(self._gl.GL_BLEND)
 

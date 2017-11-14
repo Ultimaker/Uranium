@@ -12,6 +12,11 @@ from UM.Application import Application
 from UM.Preferences import Preferences
 from UM.Signal import Signal, signalemitter
 
+from typing import Optional
+
+MYPY = False
+if MYPY:
+    from PyQt5.QtQuick import QQuickItem
 
 ##  QQuickWindow subclass that provides the main window.
 @signalemitter
@@ -28,7 +33,7 @@ class MainWindow(QQuickWindow):
         self._mouse_device.setPluginId("qt_mouse")
         self._key_device = QtKeyDevice()
         self._key_device.setPluginId("qt_key")
-        self._previous_focus = None
+        self._previous_focus = None  # type: Optional["QQuickItem"]
 
         self._app = QCoreApplication.instance()
         self._app.getController().addInputDevice(self._mouse_device)
@@ -198,20 +203,22 @@ class MainWindow(QQuickWindow):
         elif self.windowState() == Qt.WindowMaximized:
             self._preferences.setValue("general/window_state", Qt.WindowMaximized)
 
-    def _updateViewportGeometry(self, width, height):
+    def _updateViewportGeometry(self, width: int, height: int):
         view_width = width * self._viewport_rect.width()
         view_height = height * self._viewport_rect.height()
 
         for camera in self._app.getController().getScene().getAllCameras():
-            camera.setViewportSize(view_width, view_height)
             camera.setWindowSize(width, height)
-            projection_matrix = Matrix()
-            if camera.isPerspective():
-                if view_width is not 0:
-                    projection_matrix.setPerspective(30, view_width / view_height, 1, 500)
-            else:
-                projection_matrix.setOrtho(-view_width / 2, view_width / 2, -view_height / 2, view_height / 2, -500, 500)
-            camera.setProjectionMatrix(projection_matrix)
+
+            if camera.getAutoAdjustViewPort():
+                camera.setViewportSize(view_width, view_height)
+                projection_matrix = Matrix()
+                if camera.isPerspective():
+                    if view_width is not 0:
+                        projection_matrix.setPerspective(30, view_width / view_height, 1, 500)
+                else:
+                    projection_matrix.setOrtho(-view_width / 2, view_width / 2, -view_height / 2, view_height / 2, -500, 500)
+                camera.setProjectionMatrix(projection_matrix)
 
         self._app.getRenderer().setViewportSize(view_width, view_height)
         self._app.getRenderer().setWindowSize(width, height)

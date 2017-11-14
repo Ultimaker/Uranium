@@ -17,6 +17,7 @@ from UM.Scene.SceneNodeDecorator import SceneNodeDecorator
 from copy import deepcopy
 import numpy
 
+
 ##  A scene node object.
 #
 #   These objects can hold a mesh and multiple children. Each node has a transformation matrix
@@ -27,7 +28,7 @@ import numpy
 #   \sa SceneNodeDecorator
 #   \todo Add unit testing
 @signalemitter
-class SceneNode():
+class SceneNode:
     class TransformSpace:
         Local = 1
         Parent = 2
@@ -39,11 +40,11 @@ class SceneNode():
     #                 Possible keywords:
     #                 - visible \type{bool} Is the SceneNode (and thus, all it's children) visible? Defaults to True
     #                 - name \type{string} Name of the SceneNode. Defaults to empty string.
-    def __init__(self, parent = None, **kwargs):
+    def __init__(self, parent: Optional["SceneNode"] = None, **kwargs):
         super().__init__()  # Call super to make multiple inheritance work.
 
         self._children = []     # type: List[SceneNode]
-        self._mesh_data = None  # type: MeshData
+        self._mesh_data = None  # type: Optional[MeshData]
 
         # Local transformation (from parent to local)
         self._transformation = Matrix()  # type: Matrix
@@ -626,10 +627,10 @@ class SceneNode():
     def getShear(self) -> Vector:
         return self._shear
 
-    def getSetting(self, key, default_value):
+    def getSetting(self, key: str, default_value: str = "") -> str:
         return self._settings.get(key, default_value)
 
-    def setSetting(self, key, value):
+    def setSetting(self, key: str, value: str):
         self._settings[key] = value
 
     ##  private:

@@ -33,8 +33,6 @@ class RenderPass:
 
         self._fbo = None
 
-        self._updateRenderStorage()
-
     ##  Get the name of this RenderPass.
     #
     #   \return \type{string} The name of the render pass.
@@ -63,7 +61,7 @@ class RenderPass:
         if self._width != width or self._height != height:
             self._width = width
             self._height = height
-            self._updateRenderStorage()
+            self._fbo = None  # Ensure the fbo is re-created next render pass.
 
     ##  Bind the render pass so it can be rendered to.
     #
@@ -74,6 +72,10 @@ class RenderPass:
     #   \note It is very important to call release() after a call to
     #   bind(), once done with rendering.
     def bind(self):
+        if self._fbo is None:
+            # Ensure that the fbo is created. This is done on (first) bind, as this needs to be done on the main thread.
+            self._updateRenderStorage()
+
         if self._fbo:
             self._fbo.bind()
 
