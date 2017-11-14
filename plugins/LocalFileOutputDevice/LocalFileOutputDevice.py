@@ -46,7 +46,7 @@ class LocalFileOutputDevice(OutputDevice):
     #   \param limit_mimetypes Should we limit the available MIME types to the
     #   MIME types available to the currently active machine?
     #   \param kwargs Keyword arguments.
-    def requestWrite(self, nodes, file_name = None, limit_mimetypes = None, file_handler = None, **kwargs):
+    def requestWrite(self, nodes, file_name = None, limit_mimetypes = None, silent = False, file_handler = None, **kwargs):
         if self._writing:
             raise OutputDeviceError.DeviceBusyError()
 
@@ -104,8 +104,9 @@ class LocalFileOutputDevice(OutputDevice):
         stored_directory = Preferences.getInstance().getValue("local_file/dialog_save_path")
         dialog.setDirectory(stored_directory)
 
-        if not dialog.exec_():
-            raise OutputDeviceError.UserCanceledError()
+        if not silent:
+            if not dialog.exec_():
+                raise OutputDeviceError.UserCanceledError()
 
         save_path = dialog.directory().absolutePath()
         Preferences.getInstance().setValue("local_file/dialog_save_path", save_path)
@@ -114,7 +115,9 @@ class LocalFileOutputDevice(OutputDevice):
         Preferences.getInstance().setValue("local_file/last_used_type", selected_type["mime_type"])
 
         # Get file name from file dialog
-        file_name = dialog.selectedFiles()[0]
+        if not silent:
+            file_name = dialog.selectedFiles()[0]
+
         Logger.log("d", "Writing to [%s]..." % file_name)
         
         if os.path.exists(file_name):

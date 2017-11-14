@@ -127,7 +127,7 @@ class OutputDevice():
     #   \param file_handler The filehandler to use to write the file with.
     #   \param kwargs Keyword arguments.
     #   \exception OutputDeviceError.WriteRequestFailedError
-    def requestWrite(self, nodes, file_name = None, limit_mimetypes = False, file_handler = None, **kwargs):
+    def requestWrite(self, nodes, file_name = None, *, limit_mimetypes = False, silent = False, file_handler = None, **kwargs):
         raise NotImplementedError("requestWrite needs to be implemented")
 
     writeStarted = Signal()
