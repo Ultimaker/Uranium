@@ -76,6 +76,12 @@ class CameraTool(Tool):
     def getOrigin(self):
         return self._origin
 
+    ##  Update the point around which the camera rotates
+    #
+    #   \new_origin type(Vector) a new origin point
+    def updateOrigin(self, new_origin):
+        self._origin = new_origin
+
     ##  Prepare modifier-key variables on each event
     #
     #   \param event type(Event) event passed from event handler
