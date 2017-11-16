@@ -196,7 +196,6 @@ class MeshData:
     def getVerticesAsByteArray(self) -> Optional[bytes]:
         if self._vertices is None:
             return None
-        # FIXME cache result
         return self._vertices.tostring()
 
     ##  Get all normals of this mesh as a bytearray
@@ -205,7 +204,6 @@ class MeshData:
     def getNormalsAsByteArray(self) -> Optional[bytes]:
         if self._normals is None:
             return None
-        # FIXME cache result
         return self._normals.tostring()
 
     ##  Get all indices as a bytearray
@@ -214,19 +212,16 @@ class MeshData:
     def getIndicesAsByteArray(self) -> Optional[bytes]:
         if self._indices is None:
             return None
-        # FIXME cache result
         return self._indices.tostring()
 
     def getColorsAsByteArray(self) -> Optional[bytes]:
         if self._colors is None:
             return None
-        # FIXME cache result
         return self._colors.tostring()
 
     def getUVCoordinatesAsByteArray(self) -> Optional[bytes]:
         if self._uvs is None:
             return None
-        # FIXME cache result
         return self._uvs.tostring()
 
     #######################################################################
