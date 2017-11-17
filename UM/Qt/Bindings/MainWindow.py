@@ -128,6 +128,9 @@ class MainWindow(QQuickWindow):
         self._mouse_x = event.x()
         self._mouse_y = event.y()
 
+        if self._app.getController().isModelRenderingEnabled():
+            self.mousePositionChanged.emit()
+
         super().mouseMoveEvent(event)
         if event.isAccepted():
             return
@@ -182,6 +185,7 @@ class MainWindow(QQuickWindow):
     def _render(self):
         renderer = self._app.getRenderer()
         view = self._app.getController().getActiveView()
+
         renderer.beginRendering()
         view.beginRendering()
         renderer.render()
