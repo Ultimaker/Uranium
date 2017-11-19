@@ -21,11 +21,6 @@ msgconv --to-code=UTF-8 $basedir/resources/i18n/$catalogname.pot -o $basedir/res
 for pot in $basedir/resources/i18n/*.pot; do
     filename=$(basename $pot)
 
-    dir=$basedir/resources/i18n/en
-    mkdir -p $dir
-    po=$dir/${filename/.pot/.po}
-    msginit --no-translator -l en -i $pot -o $po
-
     dir=$basedir/resources/i18n/x-test
     mkdir -p $dir
     po=$dir/${filename/.pot/.po}
