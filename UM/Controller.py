@@ -96,7 +96,7 @@ class Controller:
         except KeyError:
             Logger.log("e", "No view named %s found", name)
         except Exception as e:
-            Logger.log("e", "An exception occurred while switching views: %s", str(e))
+            Logger.logException("e", "An exception occurred while switching views: %s", str(e))
 
     def enableModelRendering(self):
         self._is_model_rendering_enabled = True
