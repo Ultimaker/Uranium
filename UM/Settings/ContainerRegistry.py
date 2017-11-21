@@ -222,7 +222,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   containers and container stacks.
     def loadAllMetadata(self):
         for provider in self._providers: #Automatically sorted by the priority queue.
-            for container_id in provider.getAllIds():
+            for container_id in list(provider.getAllIds()): #Make copy of all IDs since it might change during iteration.
                 if container_id not in self.metadata:
                     self.metadata[container_id] = provider.loadMetadata(container_id)
 
@@ -239,7 +239,7 @@ class ContainerRegistry(ContainerRegistryInterface):
 
         with self.lockCache(): #Because we might be writing cache files.
             for provider in self._providers:
-                for container_id in provider.getAllIds():
+                for container_id in list(provider.getAllIds()): #Make copy of all IDs since it might change during iteration.
                     if container_id not in self._containers:
                         #Update UI while loading.
                         UM.Qt.QtApplication.QtApplication.processEvents()
