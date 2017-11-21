@@ -46,7 +46,7 @@ if int(major) < 5 or int(minor) < 4:
 ##  Application subclass that provides a Qt application object.
 @signalemitter
 class QtApplication(QApplication, Application):
-
+    pluginsLoaded = Signal()
     def __init__(self, tray_icon_name = None, **kwargs):
         plugin_path = ""
         if sys.platform == "win32":
@@ -114,8 +114,8 @@ class QtApplication(QApplication, Application):
 
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Loading plugins..."))
         self._loadPlugins()
-
         self._plugin_registry.checkRequiredPlugins(self.getRequiredPlugins())
+        self.pluginsLoaded.emit()
 
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Updating configuration..."))
         upgraded = UM.VersionUpgradeManager.VersionUpgradeManager.getInstance().upgrade()
