@@ -10,8 +10,10 @@ from UM.FileHandler.FileHandler import FileHandler
 class WorkspaceFileHandler(FileHandler):
     def __init__(self):
         super().__init__("workspace_writer", "workspace_reader")
+        self.workspace_reader = None
 
     def readerRead(self, reader, file_name, **kwargs):
+        self.workspace_reader = reader
         try:
             results = reader.read(file_name)
             return results
@@ -33,6 +35,8 @@ class WorkspaceFileHandler(FileHandler):
         if nodes is not None:  # Job was not a failure.
             # Delete all old nodes.
             self._application.deleteAll()
+            # The name of the project is set after deleting all
+            self._application.workspaceLoaded.emit(self.workspace_reader.workspaceName())
 
             # Add the loaded nodes to the scene.
             nodes = job.getResult()
