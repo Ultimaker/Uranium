@@ -252,9 +252,8 @@ class ContainerRegistry(ContainerRegistryInterface):
 
     @UM.FlameProfiler.profile
     def addContainer(self, container: ContainerInterface) -> None:
-        containers = self.findContainers(container_type = container.__class__, id = container.getId())
-        if containers:
-            Logger.log("w", "Container of type %s and id %s already added", repr(container.__class__), container.getId())
+        if container.getId() in self._containers:
+            Logger.log("w", "Container with ID %s was already added.", container.getId())
             return
 
         if hasattr(container, "metaDataChanged"):
