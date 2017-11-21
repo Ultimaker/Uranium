@@ -36,7 +36,7 @@ class WorkspaceFileHandler(FileHandler):
             # Delete all old nodes.
             self._application.deleteAll()
             # The name of the project is set after deleting all
-            self._application.projectFileLoaded.emit(self.workspace_reader.workspaceName())
+            self._application.workspaceLoaded.emit(self.workspace_reader.workspaceName())
 
             # Add the loaded nodes to the scene.
             nodes = job.getResult()
