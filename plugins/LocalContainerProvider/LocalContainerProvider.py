@@ -14,6 +14,10 @@ from UM.Settings.ContainerProvider import ContainerProvider #The class we're imp
 from UM.Settings.DefinitionContainer import DefinitionContainer #To check if we need to cache this container.
 from UM.Resources import Resources
 
+MYPY = False
+if MYPY: #Things to import for type checking only.
+    from UM.Settings.Interfaces import ContainerInterface
+
 ##  Provides containers from the local installation.
 class LocalContainerProvider(ContainerProvider):
     ##  Creates the local container provider.
