@@ -392,10 +392,11 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     #   \param serialized A CFG document, serialised as a string.
     #   \param container_id The ID of the container that we're getting the
     #   metadata of, as obtained from the file name.
-    #   \return A dictionary of metadata that was in the CFG document. If
-    #   anything went wrong, this returns ``None`` instead.
+    #   \return A dictionary of metadata that was in the CFG document as a
+    #   singleton list. If anything went wrong, this returns an empty list
+    #   instead.
     @classmethod
-    def deserializeMetadata(cls, serialized: str, container_id: str) -> Optional[Dict[str, Any]]:
+    def deserializeMetadata(cls, serialized: str, container_id: str) -> List[Dict[str, Any]]:
         serialized = cls._updateSerialized(serialized) #Update to most recent version.
         parser = configparser.ConfigParser(interpolation = None)
         parser.read_string(serialized)
@@ -408,12 +409,12 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
             metadata["name"] = parser["general"]["name"]
             metadata["version"] = parser["general"]["version"]
         except KeyError: #One of the keys or the General section itself is missing.
-            return None
+            return []
 
         if "metadata" in parser:
             metadata = {**metadata, **parser["metadata"]}
 
-        return metadata
+        return [metadata]
 
     ##  Get all keys known to this container stack.
     #

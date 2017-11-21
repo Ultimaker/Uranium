@@ -296,16 +296,16 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     #   \param serialized A JSON document, serialised as a string.
     #   \param container_id The ID of the container (as obtained from the file
     #   name).
-    #   \return A dictionary of metadata that was in the JSON document. If
-    #   anything went wrong, this returns ``None`` instead.
+    #   \return A dictionary of metadata that was in the JSON document in a
+    #   singleton list. If anything went wrong, the list will be empty.
     @classmethod
-    def deserializeMetadata(cls, serialized: str, container_id: str) -> Optional[Dict[str, Any]]:
+    def deserializeMetadata(cls, serialized: str, container_id: str) -> List[Dict[str, Any]]:
         serialized = cls._updateSerialized(serialized) #Update to most recent version.
         try:
             parsed = json.loads(serialized, object_pairs_hook = collections.OrderedDict) #TODO: Load only part of this JSON until we find the metadata. We need an external library for this though.
         except json.JSONDecodeError as e:
             Logger.log("d", "Could not parse definition: %s", e)
-            return None
+            return []
 
         metadata = {
             "id": container_id,
@@ -315,12 +315,12 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
             metadata["name"] = parsed["name"]
             metadata["version"] = parsed["version"]
         except KeyError: #Required fields not present!
-            return None
+            return []
         if "metadata" in parsed:
             metadata.update(parsed["metadata"])
         if "inherits" in parsed:
             metadata["inherits"] = parsed["inherits"]
-        return metadata
+        return [metadata]
 
     ##  Find definitions matching certain criteria.
     #

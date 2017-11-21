@@ -103,14 +103,15 @@ class ContainerInterface:
 
     ##  Deserialize just the metadata from a string representation.
     #
-    #   \param serialized A string representing a container that should be
-    #   deserialized.
-    #   \param container_id The ID of the container is already known and
+    #   \param serialized A string representing one or more containers that
+    #   should be deserialized.
+    #   \param container_id The ID of the (base) container is already known and
     #   provided here.
-    #   \return A dictionary of metadata of the container.
+    #   \return A list of the metadata of all containers found in the document.
     @classmethod
-    def deserializeMetadata(cls, serialized: str, container_id: str) -> Dict[str, Any]:
-        pass
+    def deserializeMetadata(cls, serialized: str, container_id: str) -> List[Dict[str, Any]]:
+        Logger.log("w", "Class {class_name} hasn't implemented deserializeMetadata!".format(class_name = cls.__name__))
+        return []
 
     ##  Updates the given serialized data to the latest version.
     @classmethod
