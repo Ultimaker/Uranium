@@ -65,18 +65,21 @@ class LocalContainerProvider(ContainerProvider):
     def loadMetadata(self, container_id: str) -> Optional[Dict[str, Any]]:
         filename = self._id_to_path[container_id] #Raises KeyError if container ID does not exist in the (cache of the) files!
 
+        requested_metadata = None
         with open(filename) as f:
             clazz = ContainerRegistry.mime_type_map[self._id_to_mime[container_id].name]
-            result = clazz.deserializeMetadata(f.read(), container_id) #pylint: disable=no-member
-            for metadata in result:
+            result_metadatas = clazz.deserializeMetadata(f.read(), container_id) #pylint: disable=no-member
+            for metadata in result_metadatas:
                 if "id" not in metadata:
                     Logger.log("w", "Metadata obtained from deserializeMetadata of {class_name} didn't contain an ID.".format(class_name = clazz.__name__))
                     continue
+                if metadata["id"] == container_id:
+                    requested_metadata = metadata
                 #Side-load the metadata into the registry if we get multiple containers.
                 if metadata["id"] not in self._id_to_path: #This wouldn't get loaded normally.
                     self._id_to_path[metadata["id"]] = filename
                     ContainerRegistry.getInstance().metadata[metadata["id"]] = metadata
-            return result
+        return requested_metadata
 
     ##  Load a pre-parsed definition container.
     #
