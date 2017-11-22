@@ -356,7 +356,7 @@ msgstr "Nie znaleziono ważnych rozszerzeń OpenGL. Ten program wymaga wsparcia 
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Cannot open files of the type of <filename>{0}</filename>"
-msgstr "No można otworzyć plików typu <filename>{0}</filename>"
+msgstr "Nie można otworzyć plików typu <filename>{0}</filename>"
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:36
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:51
