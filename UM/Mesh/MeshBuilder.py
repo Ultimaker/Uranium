@@ -1,6 +1,7 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
+from UM.Application import Application
 from UM.Message import Message
 from UM.Mesh.MeshData import MeshData
 from UM.Mesh.MeshData import MeshType
@@ -40,14 +41,7 @@ class MeshBuilder:
         # original center position
         self._center_position = None
         
-        # File-changed notify timer
-        self._file_changed_timer = QTimer()
-        self._file_changed_timer.setInterval(1000)
-        self._file_changed_timer.setSingleShot(True)
-        self._file_changed_timer.timeout.connect(self._check_file_changed)
-        if self._file_name:
-            self._file_changed_stamp = os.path.getmtime(self._file_name)
-            self._file_changed_timer.start()
+        Application.getInstance().windowStateChanged.connect(self._check_file_changed)
 
     ##  Build a MeshData object.
     #
@@ -774,8 +768,8 @@ class MeshBuilder:
 
         return True
     
-    def _check_file_changed(self):
-        if os.path.isfile(self._file_name):
+    def _check_file_changed(self, window_state):
+        if os.path.isfile(self._file_name) and window_state == Qt.WindowActive:
             if self._file_changed_stamp is not os.path.getmtime(self._file_name):
                  message = Message(i18n_catalog.i18nc("@info", "Would you like to reload {filename}?").format(filename = os.path.split(self._file_name)[0]),
                                    title = i18n_catalog.i18nc("@info:title", "File has been modified"))
@@ -785,9 +779,7 @@ class MeshBuilder:
                                    "[no_description]")
                  message.actionTriggered.connect(self._callback)
                  message.show()
-            
-        self._container_change_timer.start()
-    
+        
     def _onActionTriggered(self, message, action):
         if action == "reload":
             if os.path.isfile(self._file_name):
