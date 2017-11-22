@@ -52,7 +52,7 @@ class ReadFileJob(Job):
                 result_message.show()
             return
 
-        self._loading_message = Message(i18n_catalog.i18nc("@info:status Don't translate the XML tag <filename>!", "Loading <filename>{0}</filename>", self._filename),
+        self._loading_message = Message(i18n_catalog.i18nc("@info:status Don't translate the XML tag <filename>!", "<filename>{0}</filename>", self._filename),
                                         lifetime=0,
                                         dismissable=False,
                                         title = i18n_catalog.i18nc("@info:title", "Loading"))
