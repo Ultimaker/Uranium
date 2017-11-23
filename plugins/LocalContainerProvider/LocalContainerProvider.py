@@ -185,6 +185,6 @@ class LocalContainerProvider(ContainerProvider):
                 continue
             if mime.name not in ContainerRegistry.mime_type_map: #The MIME type is known, but it's not a container.
                 continue
-            container_id = mime.stripExtension(filename)
+            container_id = mime.stripExtension(os.path.basename(filename))
             self._id_to_path[container_id] = filename
             self._id_to_mime[container_id] = mime
