@@ -223,7 +223,7 @@ class QtApplication(QApplication, Application):
 
         self._engine = QQmlApplicationEngine()
         self._engine.setOutputWarningsToStandardError(False)
-        engine.warnings.connect(self.__onQmlWarning)
+        self._engine.warnings.connect(self.__onQmlWarning)
 
         for path in self._qml_import_paths:
             self._engine.addImportPath(path)
