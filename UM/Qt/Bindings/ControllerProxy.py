@@ -52,6 +52,14 @@ class ControllerProxy(QObject):
     def disableModelRendering(self):
         self._controller.disableModelRendering()
 
+    @pyqtSlot(str, int)
+    def rotateView(self,coordinate, angle):
+        self._controller.rotateView(coordinate, angle)
+
+    @pyqtSlot()
+    def homeView(self, angle):
+        self._controller.homeView()
+
     contextMenuRequested = pyqtSignal("quint64", arguments=["objectId"])
 
     def _onContextMenuRequested(self, x, y):

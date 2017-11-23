@@ -11,6 +11,7 @@ from UM.PluginRegistry import PluginRegistry
 from UM.View.View import View
 from UM.InputDevice import InputDevice
 from typing import Optional, Dict
+from UM.Math.Vector import Vector
 
 ##      Glue class that holds the scene, (active) view(s), (active) tool(s) and possible user inputs.
 #
@@ -315,3 +316,38 @@ class Controller:
 
     def setToolsEnabled(self, enabled):
         self._tools_enabled = enabled
+
+    # Rotate camer view according defined angle
+
+    last_rotation_angle_x = 0
+    last_rotation_angle_y = 0
+    def rotateView(self, cooridnate = "x", angle = 0):
+        camera = self._scene.getActiveCamera()
+        camera_tool = self.getTool("CameraTool")
+        camera_tool.setOrigin(Vector(0, 100, 0))
+        if cooridnate == "home":
+            camera.setPosition(Vector(0, 300, 700))
+            camera.setPerspective(True)
+            camera.lookAt(Vector(0, 100, 100))
+            camera_tool.rotateCam(0, 0)
+            print()
+        elif cooridnate == "3d":
+            #camera.setPosition(Vector(-80, 250, 700))
+            camera.setPosition(Vector(-180, 250, 1000))
+
+            camera.setPerspective(True)
+            camera.lookAt(Vector(0, 100, 100))
+
+            camera_tool.rotateCam(0, 0)
+
+        else:
+            # for comparison is == used, because might not store them at the same location
+            # https://stackoverflow.com/questions/1504717/why-does-comparing-strings-in-python-using-either-or-is-sometimes-produce
+            camera.setPosition(Vector(0, 0, 700))
+            camera.setPerspective(True)
+            camera.lookAt(Vector(0, 100, 0))
+
+            if cooridnate == "x":
+                camera_tool.rotateCam(angle, 0)
+            elif cooridnate == "y":
+                camera_tool.rotateCam(0, angle)

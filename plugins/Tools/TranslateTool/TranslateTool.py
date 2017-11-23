@@ -26,6 +26,10 @@ DIMENSION_TOLERANCE = 0.0001  # Tolerance value used for comparing dimensions fr
 #
 #   The tool exposes a ToolHint to show the distance of the current operation
 
+class TranslateToolSettings:
+    LockPosition = "LockPosition"
+
+
 class TranslateTool(Tool):
     def __init__(self):
         super().__init__()
@@ -42,7 +46,11 @@ class TranslateTool(Tool):
         self._distance_update_time = None
         self._distance = None
 
-        self.setExposedProperties("ToolHint", "X", "Y", "Z")
+        self.setExposedProperties("ToolHint",
+                                  "X",
+                                  "Y",
+                                  "Z",
+                                  TranslateToolSettings.LockPosition)
 
         # Ensure that the properties (X, Y & Z) are updated whenever the selection center is changed.
         Selection.selectionCenterChanged.connect(self.propertyChanged)
@@ -148,6 +156,36 @@ class TranslateTool(Tool):
         self._enabled_axis = axis
         self._handle.setEnabledAxis(axis)
 
+
+    ##  Set lock setting to the object. This setting will be used to prevent model movement on the build plate
+    #
+    #   \param value type(bool) the setting state
+    def setLockPosition(self, value):
+        for selected_node in Selection.getAllSelectedObjects():
+            selected_node.setSetting(TranslateToolSettings.LockPosition, value)
+
+    def getLockPosition(self):
+        total_size = Selection.getCount()
+        false_state_counter = 0
+        true_state_counter = 0
+        if Selection.hasSelection():
+            for selected_node in Selection.getAllSelectedObjects():
+
+                if selected_node.getSetting(TranslateToolSettings.LockPosition, False):
+                    true_state_counter += 1
+                else:
+                    false_state_counter +=1
+
+            if  total_size == false_state_counter: # if no locked positions
+                return False
+            elif total_size == true_state_counter: # if all selected objects are locked
+                return True
+            else:
+                return "partially"  # if at least one is locked
+
+
+        return False
+
     ##  Handle mouse and keyboard events
     #
     #   \param event type(Event)
@@ -220,7 +258,10 @@ class TranslateTool(Tool):
 
                 op = GroupedOperation()
                 for node in Selection.getAllSelectedObjects():
-                    op.addOperation(TranslateOperation(node, drag))
+
+                    if not node.getSetting(TranslateToolSettings.LockPosition, False):
+                        op.addOperation(TranslateOperation(node, drag))
+
                 op.push()
 
                 self._distance += drag
