@@ -126,14 +126,6 @@ class ContainerInterface:
                 serialized = result.files_data[0]
         return serialized
 
-    ##  Gets the IDs from the specified file name.
-    @classmethod
-    def getIdsFromFile(cls, file_name) -> List[str]:
-        mime = MimeTypeDatabase.getMimeTypeForFile(file_name)
-        container_id = mime.stripExtension(os.path.basename(file_name))
-        container_id = urllib.parse.unquote_plus(container_id)
-        return [container_id]
-
     @classmethod
     def getLoadingPriority(cls) -> int:
         return 9001 #Goku wins!

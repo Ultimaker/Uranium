@@ -67,6 +67,10 @@ class LocalContainerProvider(ContainerProvider):
     #   \return The metadata of the specified container, or ``None`` if the
     #   metadata failed to load.
     def loadMetadata(self, container_id: str) -> Optional[Dict[str, Any]]:
+        registry = ContainerRegistry.getInstance()
+        if container_id in registry.metadata:
+            return registry.metadata[container_id]
+
         filename = self._id_to_path[container_id] #Raises KeyError if container ID does not exist in the (cache of the) files!
         clazz = ContainerRegistry.mime_type_map[self._id_to_mime[container_id].name]
 
@@ -77,6 +81,7 @@ class LocalContainerProvider(ContainerProvider):
         except IOError as e:
             Logger.log("w", "Unable to load metadata from file {filename}: {error_msg}".format(filename = filename, error_msg = str(e)))
             return None
+
         for metadata in result_metadatas:
             if "id" not in metadata:
                 Logger.log("w", "Metadata obtained from deserializeMetadata of {class_name} didn't contain an ID.".format(class_name = clazz.__name__))
@@ -84,9 +89,9 @@ class LocalContainerProvider(ContainerProvider):
             if metadata["id"] == container_id:
                 requested_metadata = metadata
             #Side-load the metadata into the registry if we get multiple containers.
-            if metadata["id"] not in self._id_to_path: #This wouldn't get loaded normally.
+            if metadata["id"] not in registry.metadata: #This wouldn't get loaded normally.
                 self._id_to_path[metadata["id"]] = filename
-                ContainerRegistry.getInstance().metadata[metadata["id"]] = metadata
+                registry.metadata[metadata["id"]] = metadata
         return requested_metadata
 
     ##  Load a pre-parsed definition container.
@@ -178,11 +183,8 @@ class LocalContainerProvider(ContainerProvider):
             except MimeTypeDatabase.MimeTypeNotFoundError:
                 Logger.log("w", "MIME type could not be found for file: {filename}, ignoring it.".format(filename = filename))
                 continue
-            try:
-                container_class = ContainerRegistry.mime_type_map[mime.name]
-            except KeyError: #MIME type is known, but it's not a container.
+            if mime.name not in ContainerRegistry.mime_type_map: #The MIME type is known, but it's not a container.
                 continue
-            container_ids = container_class.getIdsFromFile(filename)
-            for container_id in container_ids:
-                self._id_to_path[container_id] = filename
-                self._id_to_mime[container_id] = mime
+            container_id = mime.stripExtension(filename)
+            self._id_to_path[container_id] = filename
+            self._id_to_mime[container_id] = mime
