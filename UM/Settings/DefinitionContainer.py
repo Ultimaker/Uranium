@@ -279,9 +279,9 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     ##  \copydoc ContainerInterface::deserialize
     #
     #   Reimplemented from ContainerInterface
-    def deserialize(self, serialized):
+    def deserialize(self, serialized, file_name: Optional[str] = None):
         # update the serialized data first
-        serialized = super().deserialize(serialized)
+        serialized = super().deserialize(serialized, file_name)
         parsed = self._readAndValidateSerialized(serialized)
 
         # Update properties with the data from the JSON

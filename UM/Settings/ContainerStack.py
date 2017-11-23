@@ -337,9 +337,9 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     #   Reimplemented from ContainerInterface
     #
     #   TODO: Expand documentation here, include the fact that this should _not_ include all containers
-    def deserialize(self, serialized):
+    def deserialize(self, serialized, file_name = None):
         # update the serialized data first
-        serialized = super().deserialize(serialized)
+        serialized = super().deserialize(serialized, file_name)
         parser = self._readAndValidateSerialized(serialized)
 
         if parser["general"].getint("version") != self.Version:
