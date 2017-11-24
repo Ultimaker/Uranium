@@ -1,4 +1,4 @@
-# Copyright (c) 2016 Ultimaker B.V.
+# Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import json
@@ -13,6 +13,7 @@ from UM.Logger import Logger
 from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType
 from UM.Signal import Signal
 
+import UM.Settings.ContainerRegistry #To find the definitions we're inheriting from.
 from UM.Settings.Interfaces import DefinitionContainerInterface
 from UM.Settings.SettingDefinition import SettingDefinition
 from UM.Settings.SettingDefinition import DefinitionPropertyType
@@ -306,11 +307,19 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
         except json.JSONDecodeError as e:
             Logger.log("d", "Could not parse definition: %s", e)
             return []
+        metadata = {}
+        if "inherits" in parsed:
+            parent_metadata = UM.Settings.ContainerRegistry.ContainerRegistry.getInstance().findDefinitionContainersMetadata(id = parsed["inherits"])
+            if not parent_metadata:
+                Logger.log("e", "Could not load parent definition container {parent} of child {child}".format(parent = parsed["inherits"], child = container_id))
+                #Ignore the parent then.
+            else:
+                parent_metadata = parent_metadata[0]
+                metadata.update(parent_metadata)
+                metadata["inherits"] = parsed["inherits"]
 
-        metadata = {
-            "id": container_id,
-            "container_type": DefinitionContainer
-        }
+        metadata["container_type"] = DefinitionContainer
+        metadata["id"] = container_id
         try: #Move required fields to metadata.
             metadata["name"] = parsed["name"]
             metadata["version"] = parsed["version"]
@@ -318,8 +327,6 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
             return []
         if "metadata" in parsed:
             metadata.update(parsed["metadata"])
-        if "inherits" in parsed:
-            metadata["inherits"] = parsed["inherits"]
         return [metadata]
 
     ##  Find definitions matching certain criteria.

@@ -1,7 +1,7 @@
 # Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from typing import Any, Dict, Iterable
+from typing import Any, Dict, Iterable, Optional
 
 from UM.PluginObject import PluginObject #We're implementing this.
 from UM.PluginRegistry import PluginRegistry #To get the priority metadata to sort by.
@@ -69,10 +69,13 @@ class ContainerProvider(PluginObject):
     #   other containers to load.
     #
     #   \param container_id The container to get the metadata of.
-    #   \return A dictionary of metadata for this container.
-    def getMetadata(self, container_id: str) -> Dict[str, Any]:
+    #   \return A dictionary of metadata for this container, or ``None`` if it
+    #   failed to load.
+    def getMetadata(self, container_id: str) -> Optional[Dict[str, Any]]:
         if container_id not in self._metadata:
-            self._metadata[container_id] = self.loadMetadata(container_id)
+            metadata = self.loadMetadata(container_id)
+            if metadata is None:
+                return None
         return self._metadata[container_id]
 
     ##  Gets a list of IDs of all containers this provider provides.

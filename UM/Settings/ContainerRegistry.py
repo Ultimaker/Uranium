@@ -189,7 +189,7 @@ class ContainerRegistry(ContainerRegistryInterface):
                 for provider in self._providers:
                     if kwargs["id"] in provider.getAllIds():
                         metadata = provider.loadMetadata(kwargs["id"])
-                        self.metadata[kwargs["id"]] = metadata
+                        self.metadata[metadata["id"]] = metadata
                         break #Just need to find the first one.
 
             if query.isIdOnly(): #If we are just searching for a single container by ID, look it up from the ID-based cache.
