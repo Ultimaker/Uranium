@@ -68,6 +68,10 @@ class ContainerQuery:
     def __eq__(self, other):
         return isinstance(other, ContainerQuery) and self.__key() == other.__key()
 
+    ##  Human-readable string representation for debugging.
+    def __str__(self):
+        return str(self._kwargs)
+
     # protected:
 
     # Check to see if a container matches with a regular expression
