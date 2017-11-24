@@ -65,6 +65,8 @@ class MainWindow(QQuickWindow):
         self._mouse_x = 0
         self._mouse_y = 0
 
+        self._mouse_pressed = False
+
         self._viewport_rect = QRectF(0, 0, 1.0, 1.0)
 
         Application.getInstance().setMainWindow(self)
@@ -123,10 +125,14 @@ class MainWindow(QQuickWindow):
 
         self._previous_focus = self.activeFocusItem()
         self._mouse_device.handleEvent(event)
+        self._mouse_pressed = True
 
     def mouseMoveEvent(self, event):
         self._mouse_x = event.x()
         self._mouse_y = event.y()
+
+        if self._mouse_pressed and self._app.getController().isModelRenderingEnabled():
+            self.mousePositionChanged.emit()
 
         super().mouseMoveEvent(event)
         if event.isAccepted():
@@ -139,6 +145,7 @@ class MainWindow(QQuickWindow):
         if event.isAccepted():
             return
         self._mouse_device.handleEvent(event)
+        self._mouse_pressed = False
 
     def keyPressEvent(self, event):
         super().keyPressEvent(event)
@@ -182,6 +189,7 @@ class MainWindow(QQuickWindow):
     def _render(self):
         renderer = self._app.getRenderer()
         view = self._app.getController().getActiveView()
+
         renderer.beginRendering()
         view.beginRendering()
         renderer.render()

@@ -46,7 +46,7 @@ if int(major) < 5 or int(minor) < 4:
 ##  Application subclass that provides a Qt application object.
 @signalemitter
 class QtApplication(QApplication, Application):
-
+    pluginsLoaded = Signal()
     def __init__(self, tray_icon_name = None, **kwargs):
         plugin_path = ""
         if sys.platform == "win32":
@@ -114,8 +114,8 @@ class QtApplication(QApplication, Application):
 
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Loading plugins..."))
         self._loadPlugins()
-
         self._plugin_registry.checkRequiredPlugins(self.getRequiredPlugins())
+        self.pluginsLoaded.emit()
 
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Updating configuration..."))
         upgraded = UM.VersionUpgradeManager.VersionUpgradeManager.getInstance().upgrade()
@@ -222,6 +222,8 @@ class QtApplication(QApplication, Application):
         Bindings.register()
 
         self._engine = QQmlApplicationEngine()
+        self._engine.setOutputWarningsToStandardError(False)
+        self._engine.warnings.connect(self.__onQmlWarning)
 
         for path in self._qml_import_paths:
             self._engine.addImportPath(path)
@@ -236,6 +238,11 @@ class QtApplication(QApplication, Application):
 
         self._engine.load(self._main_qml)
         self.engineCreatedSignal.emit()
+
+    @pyqtSlot("QList<QQmlError>")
+    def __onQmlWarning(self, warnings):
+        for warning in warnings:
+            Logger.log("w", warning.toString())
 
     engineCreatedSignal = Signal()
 
