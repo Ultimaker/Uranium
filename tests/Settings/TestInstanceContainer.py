@@ -1,6 +1,7 @@
-# Copyright (c) 2016 Ultimaker B.V.
+# Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
+import unittest.mock #For MagicMock and patch.
 import pytest
 import os
 
@@ -71,8 +72,7 @@ test_serialize_data = [
 @pytest.mark.parametrize("container_data,equals_file", test_serialize_data)
 def test_serialize(container_data, equals_file, loaded_container_registry):
     instance_container = UM.Settings.InstanceContainer.InstanceContainer("test")
-    definition = loaded_container_registry.findDefinitionContainers(id = container_data["definition"])[0]
-    instance_container.setDefinition(definition)
+    instance_container.setDefinition(container_data["definition"])
 
     instance_container.setName(container_data["name"])
 
@@ -83,7 +83,8 @@ def test_serialize(container_data, equals_file, loaded_container_registry):
         for key, value in container_data["values"].items():
             instance_container.setProperty(key, "value", value)
 
-    result = instance_container.serialize()
+    with unittest.mock.patch("UM.ContainerRegistry.ContainerRegistry.getInstance", unittest.mock.MagicMock(return_value = loaded_container_registry)):
+        result = instance_container.serialize()
 
     path = Resources.getPath(Resources.InstanceContainers, equals_file)
     with open(path) as data:
@@ -102,8 +103,7 @@ test_serialize_with_ignored_metadata_keys_data = [
 @pytest.mark.parametrize("container_data,equals_file", test_serialize_with_ignored_metadata_keys_data)
 def test_serialize_with_ignored_metadata_keys(container_data, equals_file, loaded_container_registry):
     instance_container = UM.Settings.InstanceContainer.InstanceContainer("test")
-    definition = loaded_container_registry.findDefinitionContainers(id = container_data["definition"])[0]
-    instance_container.setDefinition(definition)
+    instance_container.setDefinition(container_data["definition"])
 
     instance_container.setName(container_data["name"])
 
@@ -115,7 +115,8 @@ def test_serialize_with_ignored_metadata_keys(container_data, equals_file, loade
             instance_container.setProperty(key, "value", value)
 
     ignored_metadata_keys = {"secret", "secret2"}
-    result = instance_container.serialize(ignored_metadata_keys = ignored_metadata_keys)
+    with unittest.mock.patch("UM.ContainerRegistry.ContainerRegistry.getInstance", unittest.mock.MagicMock(return_value = loaded_container_registry)):
+        result = instance_container.serialize(ignored_metadata_keys = ignored_metadata_keys)
 
     instance_container.deserialize(result)
     new_metadata = instance_container.getMetaData()

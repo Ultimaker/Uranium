@@ -85,10 +85,6 @@ class ContainerQuery:
         else:
             value_pattern = re.compile(value)
 
-        if property_name == "definition":
-            if isinstance(metadata["container_type"], InstanceContainer.InstanceContainer):
-                return "definition" in metadata and value_pattern.match(metadata["definition"]["id"])
-
         return value_pattern.match(str(metadata[property_name]))
 
     # Check to see if a container matches with a string
@@ -96,11 +92,6 @@ class ContainerQuery:
         if property_name not in metadata:
             return False
         value = self._maybeLowercase(value)
-
-        if property_name == "definition":
-            if isinstance(metadata["container_type"], InstanceContainer.InstanceContainer):
-                return "definition" in metadata and value == metadata["definition"]
-
         return value == self._maybeLowercase(str(metadata[property_name]))
 
     # Check to see if a container matches with a specific typed property
