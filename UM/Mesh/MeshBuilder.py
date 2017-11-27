@@ -41,7 +41,7 @@ class MeshBuilder:
         # original center position
         self._center_position = None
         
-        Application.getInstance().windowStateChanged.connect(self._check_file_changed)
+        Application.getInstance().windowStateChanged.connect(self._checkFileChanged)
 
     ##  Build a MeshData object.
     #
@@ -768,7 +768,7 @@ class MeshBuilder:
 
         return True
     
-    def _check_file_changed(self, window_state):
+    def _checkFileChanged(self, window_state):
         if os.path.isfile(self._file_name) and window_state == Qt.WindowActive:
             if self._file_changed_stamp is not os.path.getmtime(self._file_name):
                  message = Message(i18n_catalog.i18nc("@info", "Would you like to reload {filename}?").format(filename = os.path.split(self._file_name)[0]),
