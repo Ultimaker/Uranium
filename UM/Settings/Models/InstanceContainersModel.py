@@ -47,7 +47,7 @@ class InstanceContainersModel(ListModel):
 
 
         # List of filters for queries. The result is the union of the each list of results.
-        self._filter_dicts = [{}]  # type: List[Dict[str,str]]
+        self._filter_dicts = []  # type: List[Dict[str,str]]
         self._update()
 
     ##  Handler for container added / removed events from registry
