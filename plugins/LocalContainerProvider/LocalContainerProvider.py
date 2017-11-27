@@ -38,6 +38,7 @@ class LocalContainerProvider(ContainerProvider):
         return self._id_to_path.keys()
 
     def loadContainer(self, container_id: str) -> "ContainerInterface":
+        Logger.log("d", "Loading container {container_id}".format(container_id = container_id))
         container_class = ContainerRegistry.mime_type_map[self._id_to_mime[container_id].name]
         if issubclass(container_class, DefinitionContainer): #We may need to load these from the definition cache.
             container = self._loadCachedDefinition(container_id)
