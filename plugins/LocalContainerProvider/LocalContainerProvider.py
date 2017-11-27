@@ -91,6 +91,7 @@ class LocalContainerProvider(ContainerProvider):
             #Side-load the metadata into the registry if we get multiple containers.
             if metadata["id"] not in registry.metadata: #This wouldn't get loaded normally.
                 self._id_to_path[metadata["id"]] = filename
+                self._id_to_mime[metadata["id"]] = self._id_to_mime[container_id] #Assume that they only return one MIME type.
                 registry.metadata[metadata["id"]] = metadata
         return requested_metadata
 
