@@ -214,6 +214,40 @@ class ContainerRegistry(ContainerRegistryInterface):
 
         return query.getResult()
 
+    ##  Specialized find function to find only the modified container objects
+    #   that also match certain criteria.
+    #
+    #   This is faster than the normal find methods since it won't ever load all
+    #   containers, but only the modified ones. Since containers must be fully
+    #   loaded before they are modified, you are guaranteed that any operations
+    #   on the resulting containers will not trigger additional containers to
+    #   load lazily.
+    #
+    #   \param kwargs \type{dict} A dictionary of keyword arguments containing
+    #   keys and values that need to match the metadata of the container. An
+    #   asterisk can be used to denote a wildcard.
+    #   \param ignore_case Whether casing should be ignored when matching string
+    #   values of metadata.
+    #   \return A list of containers matching the search criteria, or an empty
+    #   list if nothing was found.
+    def findDirtyContainers(self, *, ignore_case = False, **kwargs) -> List[ContainerInterface]:
+        #Find the metadata of the containers and grab the actual containers from there.
+        #
+        #We could apply the "is in self._containers" filter and the "isDirty" filter
+        #to this metadata find function as well to filter earlier, but since the
+        #filters in findContainersMetadata are applied in arbitrary order anyway
+        #this will have very little effect except to prevent a list copy.
+        results_metadata = self.findContainersMetadata(ignore_case = ignore_case, **kwargs)
+
+        result = []
+        for metadata in results_metadata:
+            if metadata["id"] not in self._containers: #Not yet loaded, so it can't be dirty.
+                continue
+            candidate = self._containers[metadata["id"]]
+            if hasattr(candidate, "isDirty") and candidate.isDirty(): #Check for hasattr because only InstanceContainers and Stacks have this method.
+                result.append(self._containers[metadata["id"]])
+        return result
+
     ##  This is a small convenience to make it easier to support complex structures in ContainerStacks.
     def getEmptyInstanceContainer(self) -> InstanceContainer:
         return self._emptyInstanceContainer
