@@ -81,7 +81,6 @@ class InstanceContainersModel(ListModel):
     def _recomputeItems(self):
         for container in self._instance_containers:
             metadata = container.getMetaData().copy()
-            metadata["has_settings"] = len(container.getAllKeys()) > 0
 
             yield {
                 "name": container.getName(),
