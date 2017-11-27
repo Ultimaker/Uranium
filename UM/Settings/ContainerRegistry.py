@@ -306,64 +306,6 @@ class ContainerRegistry(ContainerRegistryInterface):
         self._clearQueryCacheByContainer(container)
         self.containerAdded.emit(container)
 
-    def saveAll(self) -> None:
-        for instance in self.findInstanceContainers():
-            if not instance.isDirty():
-                continue
-
-            try:
-                data = instance.serialize()
-            except NotImplementedError:
-                # Serializing is not supported so skip this container
-                continue
-            except Exception:
-                Logger.logException("e", "An exception occurred trying to serialize container %s", instance.getId())
-                continue
-
-            mime_type = self.getMimeTypeForContainer(type(instance))
-            if mime_type is not None:
-                file_name = urllib.parse.quote_plus(instance.getId()) + "." + mime_type.preferredSuffix
-                path = Resources.getStoragePath(Resources.InstanceContainers, file_name)
-                with SaveFile(path, "wt") as f:
-                    f.write(data)
-
-        for stack in self.findContainerStacks():
-            if not stack.isDirty():
-                continue
-
-            try:
-                data = stack.serialize()
-            except NotImplementedError:
-                # Serializing is not supported so skip this container
-                continue
-            except Exception:
-                Logger.logException("e", "An exception occurred trying to serialize container %s", stack.getId())
-                continue
-
-            mime_type = self.getMimeTypeForContainer(type(stack))
-            if mime_type is not None:
-                file_name = urllib.parse.quote_plus(stack.getId()) + "." + mime_type.preferredSuffix
-                path = Resources.getStoragePath(Resources.ContainerStacks, file_name)
-                with SaveFile(path, "wt") as f:
-                    f.write(data)
-
-        for definition in self.findDefinitionContainers():
-            try:
-                data = definition.serialize()
-            except NotImplementedError:
-                # Serializing is not supported so skip this container
-                continue
-            except Exception:
-                Logger.logException("e", "An exception occurred trying to serialize container %s", definition.getId())
-                continue
-
-            mime_type = self.getMimeTypeForContainer(type(definition))
-            if mime_type is not None:
-                file_name = urllib.parse.quote_plus(definition.getId()) + "." + mime_type.preferredSuffix
-                path = Resources.getStoragePath(Resources.DefinitionContainers, file_name)
-                with SaveFile(path, "wt") as f:
-                    f.write(data)
-
     ##  Creates a new unique name for a container that doesn't exist yet.
     #
     #   It tries if the original name you provide exists, and if it doesn't
