@@ -452,3 +452,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
                 self._definition_cache[key] = definition
 
         return definition
+
+    ##  Simple short string representation for debugging purposes.
+    def __str__(self):
+        return "<DefinitionContainer '{definition_id}' ('{name}')>".format(definition_id = self.getId(), name = self.getName())

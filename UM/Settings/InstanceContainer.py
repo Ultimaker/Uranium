@@ -631,6 +631,10 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
         return self.getName() < other.getName()
 
+    ##  Simple string representation for debugging.
+    def __str__(self):
+        return "<InstanceContainer '{container_id}' ('{name}')>".format(container_id = self.getId(), name = self.getName())
+
     ##  Send postponed emits
     #   These emits are collected from the option postpone_emit.
     #   Note: the option can be implemented for all functions modifying the container.
