@@ -63,6 +63,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         self.metadata = {} # type: Dict[str, Dict[str, Any]]
         self._containers = {} # type: Dict[str, ContainerInterface]
         # Ensure that the empty container is added to the ID cache.
+        self.metadata["empty"] = self._emptyInstanceContainer.getMetaData()
         self._containers["empty"] = self._emptyInstanceContainer
         self._resource_types = [Resources.DefinitionContainers] # type: List[int]
         self._query_cache = collections.OrderedDict() # This should really be an ordered set but that does not exist...
@@ -164,8 +165,10 @@ class ContainerRegistry(ContainerRegistryInterface):
             else: #Metadata is loaded, but not the actual data.
                 for provider in self._providers:
                     if metadata["id"] in provider.getAllIds(): #This is the one we need to load it from!
-                        self._containers[metadata["id"]] = provider.loadContainer(metadata["id"])
-                        result.append(self._containers[metadata["id"]])
+                        new_container = provider.loadContainer(metadata["id"])
+                        self._containers[new_container.getId()] = new_container
+                        self.metadata[new_container.getId()] = new_container.getMetaData() #Should be the same if deserializeMetadata results in the same metadata as deserialize, but link this by reference.
+                        result.append(new_container)
                         break
                 else:
                     Logger.log("w", "The metadata of container {container_id} was loaded, but no container provider seems to be able to load the actual container.".format(container_id = metadata["id"]))
@@ -293,6 +296,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         if hasattr(container, "metaDataChanged"):
             container.metaDataChanged.connect(self._onContainerMetaDataChanged)
 
+        self.metadata[container.getId()] = container.getMetaData()
         self._containers[container.getId()] = container
         self._clearQueryCacheByContainer(container)
         self.containerAdded.emit(container)
@@ -303,6 +307,7 @@ class ContainerRegistry(ContainerRegistryInterface):
             container = self._containers[container_id]
 
             del self._containers[container_id]
+            del self.metadata[container_id]
             self._deleteFiles(container)
 
             if hasattr(container, "metaDataChanged"):
@@ -334,9 +339,11 @@ class ContainerRegistry(ContainerRegistryInterface):
 
         container.setName(new_name)
         if new_id:
-            del self._containers[container._id]
-            container._id = new_id
-            self._containers[container._id] = container
+            del self._containers[container.getId()]
+            del self.metadata[container.getId()]
+            container.getMetaData()["id"] = new_id
+            self._containers[container.getId()] = container
+            self.metadata[container.getId()] = container.getMetaData()
         self._clearQueryCacheByContainer(container)
         self.containerAdded.emit(container)
 
