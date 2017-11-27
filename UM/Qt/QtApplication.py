@@ -32,6 +32,9 @@ from UM.Mesh.ReadMeshJob import ReadMeshJob
 
 import UM.Qt.Bindings.Theme
 from UM.PluginRegistry import PluginRegistry
+MYPY = False
+if MYPY:
+    from PyQt5.QtCore import QObject
 
 
 # Raised when we try to use an unsupported version of a dependency.
@@ -399,23 +402,25 @@ class QtApplication(QApplication, Application):
 
     ## Create a QML component from a qml file.
     #  \param qml_file_path: The absolute file path to the root qml file.
-    #  \param context_properties: Optional dictionary containing the properties that will be set on the context of the qml instance before creation.
+    #  \param context_properties: Optional dictionary containing the properties that will be set on the context of the
+    #                              qml instance before creation.
     #  \return None in case the creation failed (qml error), else it returns the qml instance.
     #  \note If the creation fails, this function will ensure any errors are logged to the logging service.
-    def createQmlComponent(self, qml_file_path: str, context_properties: Dict[str, "QObject"]=None) -> Optional["QObject"]
+    def createQmlComponent(self, qml_file_path: str, context_properties: Dict[str, "QObject"]=None) -> Optional["QObject"]:
         path = QUrl.fromLocalFile(qml_file_path)
         component = QQmlComponent(self._engine, path)
         result_context = QQmlContext(self._engine.rootContext())
         if context_properties is not None:
             for name, value in context_properties.items():
                 result_context.setContextProperty(name, value)
-        result = component.create(self.__dialog_context)
+        result = component.create(result_context)
         for err in component.errors():
             Logger.log("e", str(err.toString()))
         if result is None:
             return None
         
-        # We need to store the context with the qml object, else the context gets garbage collected and the qml objects no longer function correctly/application crashes.
+        # We need to store the context with the qml object, else the context gets garbage collected and the qml objects
+        # no longer function correctly/application crashes.
         result.attached_context = result_context
         return result
 
