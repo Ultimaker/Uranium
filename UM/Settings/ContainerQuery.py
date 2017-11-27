@@ -3,8 +3,6 @@
 
 import re
 
-from . import InstanceContainer
-
 ##  Wrapper class to perform a search for a certain set of containers.
 #
 #   This class is primarily intended to be used internally by
@@ -96,6 +94,8 @@ class ContainerQuery:
 
     # Check to see if a container matches with a specific typed property
     def _matchType(self, metadata, property_name, value):
+        if property_name == "container_type":
+            return issubclass(metadata.get(property_name), value) #Also allow subclasses.
         return value == metadata.get(property_name) #If the metadata entry doesn't exist, match on None.
 
     # Helper function to simplify ignore case handling
