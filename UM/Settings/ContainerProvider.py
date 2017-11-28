@@ -84,6 +84,14 @@ class ContainerProvider(PluginObject):
     def getAllIds(self) -> Iterable[str]:
         raise NotImplementedError("The container provider {class_name} doesn't properly implement getAllIds.".format(class_name = self.__class__.__name__))
 
+    ##  Returns whether a container is considered read-only by this provider.
+    #
+    #   Some providers don't allow modifying their containers at all. Some only
+    #   allow some containers to be modified.
+    #   \return Whether the specified container is read-only.
+    def isReadOnly(self, container_id: str) -> bool:
+        raise NotImplementedError("The container provider {class_name} doesn't properly implement isReadOnly.".format(class_name = self.__class__.__name__))
+
     ##  Loads the container with the specified ID.
     #
     #   This is called lazily, so it should only request to load each container

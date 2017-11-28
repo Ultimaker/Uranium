@@ -255,6 +255,17 @@ class ContainerRegistry(ContainerRegistryInterface):
     def getEmptyInstanceContainer(self) -> InstanceContainer:
         return self._emptyInstanceContainer
 
+    ##  Returns whether a profile is read-only or not.
+    #
+    #   Whether it is read-only depends on the source where the container is
+    #   obtained from.
+    def isReadOnly(self, container_id: str) -> bool:
+        #Find the source.
+        for provider in self._providers:
+            if container_id in provider.getAllIds():
+                return provider.isReadOnly(container_id)
+        return False #If no provider had the container, that means that the container was only in memory. Then it's always modifiable.
+
     ##  Load the metadata of all available definition containers, instance
     #   containers and container stacks.
     def loadAllMetadata(self):

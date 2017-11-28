@@ -96,6 +96,7 @@ class LocalContainerProvider(ContainerProvider):
     ##  Returns whether a container is read-only or not.
     #
     #   A container can only be modified if it is stored in the data directory.
+    #   \return Whether the specified container is read-only.
     def isReadOnly(self, container_id: str) -> bool:
         storage_path = os.path.realpath(Resources.getDataStoragePath())
         file_path = self._id_to_path[container_id] #If KeyError: We don't know this ID.
