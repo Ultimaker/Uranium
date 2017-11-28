@@ -66,7 +66,6 @@ class ListModel(QAbstractListModel):
     @pyqtSlot(dict)
     def appendItem(self, item):
         self.insertItem(len(self._items), item)
-        self.itemsChanged.emit()
 
     ##  Insert an item into the list at an index.
     #   \param index The index where to insert.

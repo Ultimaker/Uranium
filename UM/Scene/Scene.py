@@ -89,13 +89,12 @@ class Scene():
         for node in BreadthFirstIterator(self._root):
             if isinstance(node, Camera):
                 cameras.append(node)
-
         return cameras
 
     ##  Set the camera that should be used for rendering.
     #   \param name The name of the camera to use.
     def setActiveCamera(self, name):
-        camera = self._findCamera(name)
+        camera = self.findCamera(name)
         if camera:
             self._active_camera = camera
 
@@ -114,8 +113,7 @@ class Scene():
                 return node
         return None
 
-    ## private:
-    def _findCamera(self, name):
+    def findCamera(self, name):
         for node in BreadthFirstIterator(self._root):
             if isinstance(node, Camera) and node.getName() == name:
                 return node

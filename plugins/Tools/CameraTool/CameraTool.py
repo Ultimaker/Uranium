@@ -141,6 +141,14 @@ class CameraTool(Tool):
                 self._zoomCamera(self._manual_zoom)
                 return True
 
+    ## Rotate camera around origin
+    #
+    # \param angle type(int) rotation angle
+    def rotateCam(self, x, y):
+        temp_x = x / 180
+        temp_y = y / 180
+        self._rotateCamera(temp_x, temp_y)
+
     ##  Handle mouse and keyboard events
     #
     #   \param event type(Event)

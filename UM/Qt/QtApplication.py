@@ -4,10 +4,11 @@
 import sys
 import os
 import signal
+from typing import Dict, Optional
 
 
 from PyQt5.QtCore import Qt, QCoreApplication, QEvent, QUrl, pyqtProperty, pyqtSignal, pyqtSlot, QLocale, QTranslator, QLibraryInfo, QT_VERSION_STR, PYQT_VERSION_STR
-from PyQt5.QtQml import QQmlApplicationEngine
+from PyQt5.QtQml import QQmlApplicationEngine, QQmlComponent, QQmlContext
 from PyQt5.QtWidgets import QApplication, QSplashScreen, QMessageBox, QSystemTrayIcon
 from PyQt5.QtGui import QGuiApplication, QIcon, QPixmap, QFontMetrics
 from PyQt5.QtCore import QTimer
@@ -31,6 +32,9 @@ from UM.Mesh.ReadMeshJob import ReadMeshJob
 
 import UM.Qt.Bindings.Theme
 from UM.PluginRegistry import PluginRegistry
+MYPY = False
+if MYPY:
+    from PyQt5.QtCore import QObject
 
 
 # Raised when we try to use an unsupported version of a dependency.
@@ -46,7 +50,7 @@ if int(major) < 5 or int(minor) < 4:
 ##  Application subclass that provides a Qt application object.
 @signalemitter
 class QtApplication(QApplication, Application):
-
+    pluginsLoaded = Signal()
     def __init__(self, tray_icon_name = None, **kwargs):
         plugin_path = ""
         if sys.platform == "win32":
@@ -114,8 +118,8 @@ class QtApplication(QApplication, Application):
 
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Loading plugins..."))
         self._loadPlugins()
-
         self._plugin_registry.checkRequiredPlugins(self.getRequiredPlugins())
+        self.pluginsLoaded.emit()
 
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Updating configuration..."))
         upgraded = UM.VersionUpgradeManager.VersionUpgradeManager.getInstance().upgrade()
@@ -222,6 +226,8 @@ class QtApplication(QApplication, Application):
         Bindings.register()
 
         self._engine = QQmlApplicationEngine()
+        self._engine.setOutputWarningsToStandardError(False)
+        self._engine.warnings.connect(self.__onQmlWarning)
 
         for path in self._qml_import_paths:
             self._engine.addImportPath(path)
@@ -236,10 +242,9 @@ class QtApplication(QApplication, Application):
 
         self._engine.load(self._main_qml)
         self.engineCreatedSignal.emit()
-
+        
     @pyqtSlot()
     def reloadQML(self):
-
         self._engine.clearComponentCache()
         self._theme.reload()
         self._engine.load(self._main_qml)
@@ -248,7 +253,6 @@ class QtApplication(QApplication, Application):
             if obj != self._engine.rootObjects()[-1]:
                 obj.hide()
 
-
     @pyqtSlot()
     def purgeWindows(self):
         # Close all root objects except the last one.
@@ -256,6 +260,11 @@ class QtApplication(QApplication, Application):
         for obj in self._engine.rootObjects():
             if obj != self._engine.rootObjects()[-1]:
                 obj.close()
+
+    @pyqtSlot("QList<QQmlError>")
+    def __onQmlWarning(self, warnings):
+        for warning in warnings:
+            Logger.log("w", warning.toString())
 
     engineCreatedSignal = Signal()
 
@@ -407,6 +416,30 @@ class QtApplication(QApplication, Application):
         if self._splash:
             self._splash.close()
             self._splash = None
+
+    ## Create a QML component from a qml file.
+    #  \param qml_file_path: The absolute file path to the root qml file.
+    #  \param context_properties: Optional dictionary containing the properties that will be set on the context of the
+    #                              qml instance before creation.
+    #  \return None in case the creation failed (qml error), else it returns the qml instance.
+    #  \note If the creation fails, this function will ensure any errors are logged to the logging service.
+    def createQmlComponent(self, qml_file_path: str, context_properties: Dict[str, "QObject"]=None) -> Optional["QObject"]:
+        path = QUrl.fromLocalFile(qml_file_path)
+        component = QQmlComponent(self._engine, path)
+        result_context = QQmlContext(self._engine.rootContext())
+        if context_properties is not None:
+            for name, value in context_properties.items():
+                result_context.setContextProperty(name, value)
+        result = component.create(result_context)
+        for err in component.errors():
+            Logger.log("e", str(err.toString()))
+        if result is None:
+            return None
+        
+        # We need to store the context with the qml object, else the context gets garbage collected and the qml objects
+        # no longer function correctly/application crashes.
+        result.attached_context = result_context
+        return result
 
     def _createSplashScreen(self):
         return QSplashScreen(QPixmap(Resources.getPath(Resources.Images, self.getApplicationName() + ".png")))

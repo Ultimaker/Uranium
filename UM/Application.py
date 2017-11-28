@@ -149,6 +149,8 @@ class Application:
 
     globalContainerStackChanged = Signal()
 
+    workspaceLoaded = Signal()
+
     def setGlobalContainerStack(self, stack: "ContainerStack"):
         self._global_container_stack = stack
         self.globalContainerStackChanged.emit()
@@ -222,6 +224,9 @@ class Application:
     def getApplicationName(self) -> str:
         return self._application_name
 
+    ##  Get the currently used IETF language tag.
+    #   The returned tag is during runtime used to translate strings.
+    #   \returns language_tag  \type{string}
     def getApplicationLanguage(self):
         override_lang = os.getenv("URANIUM_LANGUAGE")
         if override_lang:

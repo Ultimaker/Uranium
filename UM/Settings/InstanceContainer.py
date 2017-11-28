@@ -468,9 +468,9 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     ##  \copydoc ContainerInterface::deserialize
     #
     #   Reimplemented from ContainerInterface
-    def deserialize(self, serialized: str) -> str:
+    def deserialize(self, serialized: str, file_name: Optional[str] = None) -> str:
         # update the serialized data first
-        serialized = super().deserialize(serialized)
+        serialized = super().deserialize(serialized, file_name)
         parser = self._readAndValidateSerialized(serialized)
 
         if int(parser["general"]["version"]) != self.Version:
@@ -612,6 +612,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         while self._postponed_emits:
             signal, signal_arg = self._postponed_emits.pop(0)
             signal.emit(*signal_arg)
+
 
 _containerRegistry = None   # type:  ContainerRegistryInterface
 

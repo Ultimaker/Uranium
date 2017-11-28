@@ -44,6 +44,15 @@ class ContainerQuery:
     def isIdOnly(self):
         return not self._ignore_case and len(self._kwargs) == 1 and "id" in self._kwargs
 
+    ##  Check to see if any of the kwargs is a Dict, which is not hashable for query caching.
+    #
+    #   \return True if this query is hashable.
+    def isHashable(self):
+        for kwarg in self._kwargs.values():
+            if isinstance(kwarg, dict):
+                return False
+        return True
+
     ##  Execute the actual query.
     #
     #   This will search the containers of the ContainerRegistry based on the arguments provided to this
