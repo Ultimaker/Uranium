@@ -412,7 +412,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
             return []
 
         if "metadata" in parser:
-            metadata = {**metadata, **parser["metadata"]}
+            metadata.update(parser["metadata"])
 
         return [metadata]
 
