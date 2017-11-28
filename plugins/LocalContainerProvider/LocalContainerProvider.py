@@ -52,10 +52,7 @@ class LocalContainerProvider(ContainerProvider):
             container.deserialize(f.read())
         container.setPath(file_path)
 
-        #If the file is not in a subdirectory of the data storage path, it's read-only.
-        storage_path = os.path.realpath(Resources.getDataStoragePath())
-        read_only = os.path.commonpath([storage_path, os.path.realpath(file_path)]) != storage_path
-        container.setReadOnly(read_only)
+        container.setReadOnly(self.isReadOnly(container_id))
 
         if issubclass(container_class, DefinitionContainer):
             self._saveCachedDefinition(container)
@@ -95,6 +92,14 @@ class LocalContainerProvider(ContainerProvider):
                 self._id_to_mime[metadata["id"]] = self._id_to_mime[container_id] #Assume that they only return one MIME type.
                 registry.metadata[metadata["id"]] = metadata
         return requested_metadata
+
+    ##  Returns whether a container is read-only or not.
+    #
+    #   A container can only be modified if it is stored in the data directory.
+    def isReadOnly(self, container_id: str) -> bool:
+        storage_path = os.path.realpath(Resources.getDataStoragePath())
+        file_path = self._id_to_path[container_id] #If KeyError: We don't know this ID.
+        return os.path.commonpath([storage_path, os.path.realpath(file_path)]) != storage_path #Read only if file_path is not a subdirectory of storage_path.
 
     ##  Load a pre-parsed definition container.
     #
