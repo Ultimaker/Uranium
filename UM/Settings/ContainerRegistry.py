@@ -261,12 +261,22 @@ class ContainerRegistry(ContainerRegistryInterface):
     #
     #   Whether it is read-only depends on the source where the container is
     #   obtained from.
+    #   \return True if the container is read-only, or False if it can be
+    #   modified.
     def isReadOnly(self, container_id: str) -> bool:
         #Find the source.
         for provider in self._providers:
             if container_id in provider.getAllIds():
                 return provider.isReadOnly(container_id)
         return False #If no provider had the container, that means that the container was only in memory. Then it's always modifiable.
+
+    ##  Returns whether a container is completely loaded or not.
+    #
+    #   If only its metadata is known, it is not yet completely loaded.
+    #   \return True if all data about this container is known, False if only
+    #   metadata is known or the container is completely unknown.
+    def isLoaded(self, container_id: str) -> bool:
+        return container_id in self._containers
 
     ##  Load the metadata of all available definition containers, instance
     #   containers and container stacks.
