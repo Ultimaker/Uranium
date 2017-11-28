@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from UM.Scene.Scene import Scene
@@ -317,11 +317,8 @@ class Controller:
     def setToolsEnabled(self, enabled):
         self._tools_enabled = enabled
 
-    # Rotate camer view according defined angle
-
-    last_rotation_angle_x = 0
-    last_rotation_angle_y = 0
-    def rotateView(self, coordinate ="x", angle = 0):
+    # Rotate camera view according defined angle
+    def rotateView(self, coordinate = "x", angle = 0):
         camera = self._scene.getActiveCamera()
         camera_tool = self.getTool("CameraTool")
         camera_tool.setOrigin(Vector(0, 100, 0))
