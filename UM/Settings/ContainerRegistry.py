@@ -74,6 +74,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     containerAdded = Signal()
     containerRemoved = Signal()
     containerMetaDataChanged = Signal()
+    containerLoadComplete = Signal()
 
     def addResourceType(self, type: int) -> None:
         self._resource_types.append(type)
@@ -168,6 +169,7 @@ class ContainerRegistry(ContainerRegistryInterface):
                         new_container = provider.loadContainer(metadata["id"])
                         self._containers[new_container.getId()] = new_container
                         self.metadata[new_container.getId()] = new_container.getMetaData() #Should be the same if deserializeMetadata results in the same metadata as deserialize, but link this by reference.
+                        self.containerLoadComplete.emit(new_container.getId())
                         result.append(new_container)
                         break
                 else:
@@ -294,6 +296,7 @@ class ContainerRegistry(ContainerRegistryInterface):
 
                         self._containers[container_id] = provider.loadContainer(container_id)
                         self.metadata[container_id] = self._containers[container_id].getMetaData()
+                        self.containerLoadComplete.emit(container_id)
 
         gc.enable()
         Logger.log("d", "Loading data into container registry took %s seconds", time.time() - resource_start_time)
