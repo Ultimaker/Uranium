@@ -253,3 +253,4 @@ class InstanceContainersModel(ListModel):
         if container_id in self._instance_containers_metadata:
             del self._instance_containers_metadata[container_id]
             self._instance_containers[container_id] = ContainerRegistry.getInstance().findContainers(id = container_id)[0]
+            self._instance_containers[container_id].metaDataChanged.connect(self._updateMetaData)
