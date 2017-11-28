@@ -1,7 +1,7 @@
-# Copyright (c) 2016 Ultimaker B.V.
+# Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 import os
-from typing import Dict, List
+from typing import Any, Dict, List, Tuple
 
 from PyQt5.QtCore import pyqtProperty, Qt, pyqtSignal, pyqtSlot, QUrl, QTimer
 
@@ -10,7 +10,6 @@ from UM.Qt.ListModel import ListModel
 from UM.PluginRegistry import PluginRegistry  # For getting the possible profile readers and writers.
 from UM.Settings.ContainerRegistry import ContainerRegistry
 from UM.Settings.InstanceContainer import InstanceContainer
-from UM.Logger import Logger
 from UM.i18n import i18nCatalog
 catalog = i18nCatalog("uranium")
 
@@ -32,13 +31,17 @@ class InstanceContainersModel(ListModel):
         self.addRoleName(self.ReadOnlyRole, "readOnly")
         self.addRoleName(self.SectionRole, "section")
 
-        self._instance_containers = []
+        #We keep track of two sets: One for normal containers that are already fully loaded, and one for containers of which only metadata is known.
+        #Both of these are indexed by their container ID.
+        self._instance_containers = {} #type: Dict[str, InstanceContainer]
+        self._instance_containers_metadata = {} # type: Dict[str, Dict[str, Any]]
 
         self._section_property = ""
 
         # Listen to changes
         ContainerRegistry.getInstance().containerAdded.connect(self._onContainerChanged)
         ContainerRegistry.getInstance().containerRemoved.connect(self._onContainerChanged)
+        ContainerRegistry.getInstance().containerLoadComplete.connect(self._onContainerLoadComplete)
 
         self._container_change_timer = QTimer()
         self._container_change_timer.setInterval(150)
@@ -58,19 +61,15 @@ class InstanceContainersModel(ListModel):
 
     ##  Private convenience function to reset & repopulate the model.
     def _update(self):
-        for container in self._instance_containers:
-            container.nameChanged.disconnect(self._update)
+        #You can only connect on the instance containers, not on the metadata.
+        #However the metadata can't be edited, so it's not needed.
+        for container in self._instance_containers.values():
             container.metaDataChanged.disconnect(self._updateMetaData)
 
-        self._instance_containers = self._fetchInstanceContainers()
+        self._instance_containers, self._instance_containers_metadata = self._fetchInstanceContainers()
 
-        for container in self._instance_containers:
-            container.nameChanged.connect(self._update)
+        for container in self._instance_containers.values():
             container.metaDataChanged.connect(self._updateMetaData)
-        try:
-            self._instance_containers.sort(key=self._sortKey)
-        except TypeError:
-            Logger.logException("w", "Sorting the InstanceContainers model went wrong.")
 
         self.setItems(list(self._recomputeItems()))
 
@@ -79,28 +78,46 @@ class InstanceContainersModel(ListModel):
     #   This does not set the items in the list itself. It is intended to be
     #   overwritten by subclasses that add their own roles to the model.
     def _recomputeItems(self):
-        for container in self._instance_containers:
-            metadata = container.getMetaData().copy()
-
-            yield {
+        result = []
+        for container in self._instance_containers.values():
+            result.append({
                 "name": container.getName(),
                 "id": container.getId(),
-                "metadata": metadata,
+                "metadata": container.getMetaData().copy(),
                 "readOnly": container.isReadOnly(),
                 "section": container.getMetaDataEntry(self._section_property, "")
-            }
+            })
+        registry = ContainerRegistry.getInstance()
+        for container_metadata in self._instance_containers_metadata.values():
+            result.append({
+                "name": container_metadata["name"],
+                "id": container_metadata["id"],
+                "metadata": container_metadata.copy(),
+                "readOnly": registry.isReadOnly(container_metadata["id"]),
+                "section": container_metadata.get(self._section_property, "")
+            })
+        yield from sorted(result, key = self._sortKey)
 
     ##  Fetch the list of containers to display.
     #
     #   This method is intended to be overridable by subclasses.
     #
-    #   \return \type{List[ContainerInstance]}
-    def _fetchInstanceContainers(self):
-        # Perform each query and assemble the union of all the results.
-        results = set()
+    #   \return A tuple of an ID-to-instance mapping that includes all fully
+    #   loaded containers, and an ID-to-metadata mapping that includes the
+    #   containers of which only the metadata is known.
+    def _fetchInstanceContainers(self) -> Tuple[Dict[str, InstanceContainer], Dict[str, Dict[str, Any]]]:
+        registry = ContainerRegistry.getInstance() #Cache this for speed.
+        containers = {} #Mapping from container ID to container.
+        metadatas = {} #Mapping from container ID to metadata.
         for filter_dict in self._filter_dicts:
-            results.update(ContainerRegistry.getInstance().findInstanceContainers(**filter_dict))
-        return list(results)
+            this_filter = registry.findInstanceContainersMetadata(**filter_dict)
+            for metadata in this_filter:
+                if metadata["id"] not in containers and metadata["id"] not in metadatas: #No duplicates please.
+                    if registry.isLoaded(metadata["id"]): #Only add it to the full containers if it's already fully loaded.
+                        containers[metadata["id"]] = registry.findContainers(id = metadata["id"])[0]
+                    else:
+                        metadatas[metadata["id"]] = metadata
+        return containers, metadatas
 
     def setSectionProperty(self, property_name):
         if self._section_property != property_name:
@@ -155,6 +172,7 @@ class InstanceContainersModel(ListModel):
     #   dialog.
     @pyqtSlot(str, result="QVariantList")
     def getFileNameFilters(self, io_type):
+        #TODO: This function should be in UM.Resources!
         filters = []
         all_types = []
         for plugin_id, meta_data in self._getIOPlugins(io_type):
@@ -209,11 +227,11 @@ class InstanceContainersModel(ListModel):
     def _sortKey(self, item):
         result = []
         if self._section_property:
-            result.append(item.getMetaDataEntry(self._section_property, ""))
+            result.append(item.get(self._section_property, ""))
 
-        result.append(not item.isReadOnly())
-        result.append(int(item.getMetaDataEntry("weight", 0)))
-        result.append(item.getName())
+        result.append(not ContainerRegistry.getInstance().isReadOnly(item["id"]))
+        result.append(int(item.get("weight", 0)))
+        result.append(item["name"])
 
         return result
 
@@ -224,3 +242,12 @@ class InstanceContainersModel(ListModel):
             self.setProperty(index, "section", container.getMetaDataEntry(self._section_property, ""))
 
         self.setProperty(index, "metadata", container.getMetaData())
+        self.setProperty(index, "name", container.getName())
+        self.setProperty(index, "id", container.getId())
+
+    ##  If a container has loaded fully (rather than just metadata) we need to
+    #   move it from the dict of metadata to the dict of full containers.
+    def _onContainerLoadComplete(self, container_id):
+        if container_id in self._instance_containers_metadata:
+            del self._instance_containers_metadata[container_id]
+            self._instance_containers[container_id] = ContainerRegistry.getInstance().findContainers(id = container_id)
