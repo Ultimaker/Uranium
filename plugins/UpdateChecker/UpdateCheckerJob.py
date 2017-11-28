@@ -39,7 +39,9 @@ class UpdateCheckerJob(Job):
         except Exception as e:
             Logger.log("w", "Failed to check for new version: %s" % e)
             if not self.silent:
-                Message(i18n_catalog.i18nc("@info", "Could not access update information."), title = i18n_catalog.i18nc("@info:title", "Version Upgrade")).show()
+                Message(i18n_catalog.i18nc("@info", "Could not access update information."),
+                        title = i18n_catalog.i18nc("@info:title", "Version Upgrade")
+                       ).show()
             return
 
         try:
