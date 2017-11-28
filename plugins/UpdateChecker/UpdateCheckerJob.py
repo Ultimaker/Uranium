@@ -40,8 +40,8 @@ class UpdateCheckerJob(Job):
             Logger.log("w", "Failed to check for new version: %s" % e)
             if not self.silent:
                 Message(i18n_catalog.i18nc("@info", "Could not access update information."),
-                        title = i18n_catalog.i18nc("@info:title", "Version Upgrade")
-                       ).show()
+                    title = i18n_catalog.i18nc("@info:title", "Version Upgrade")
+                ).show()
             return
 
         try:
