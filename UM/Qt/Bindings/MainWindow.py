@@ -36,6 +36,11 @@ class MainWindow(QQuickWindow):
         self._previous_focus = None  # type: Optional["QQuickItem"]
 
         self._app = QCoreApplication.instance()
+
+        # Remove previously added input devices (if any). This can happen if the window was re-loaded.
+        self._app.getController().removeInputDevice("qt_mouse")
+        self._app.getController().removeInputDevice("qt_key")
+
         self._app.getController().addInputDevice(self._mouse_device)
         self._app.getController().addInputDevice(self._key_device)
         self._app.getController().getScene().sceneChanged.connect(self._onSceneChanged)
@@ -182,7 +187,8 @@ class MainWindow(QQuickWindow):
         QMetaObject.invokeMethod(self, "_onWindowGeometryChanged", Qt.QueuedConnection)
 
     def hideEvent(self, event):
-        Application.getInstance().windowClosed()
+        if Application.getInstance().getMainWindow() == self:
+            Application.getInstance().windowClosed()
 
     renderCompleted = Signal(type = Signal.Queued)
 
