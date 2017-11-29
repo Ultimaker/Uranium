@@ -331,12 +331,15 @@ class ContainerRegistry(ContainerRegistryInterface):
 
     @UM.FlameProfiler.profile
     def removeContainer(self, container_id: str) -> None:
-        if container_id in self._containers:
-            container = self._containers[container_id]
+        if container_id not in self._containers:
+            Logger.log("w", "Tried to delete container {container_id}, which doesn't exist or isn't loaded.".format(container_id = container_id))
+            return #Ignore.
 
-            del self._containers[container_id]
-            del self.metadata[container_id]
-            self._deleteFiles(container)
+        container = self._containers[container_id]
+
+        del self._containers[container_id]
+        del self.metadata[container_id]
+        self._deleteFiles(container)
 
         if hasattr(container, "metaDataChanged"):
             container.metaDataChanged.disconnect(self._onContainerMetaDataChanged)
