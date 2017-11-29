@@ -245,6 +245,9 @@ class QtApplication(QApplication, Application):
         
     @pyqtSlot()
     def reloadQML(self):
+        # only reload when it is a release build
+        if not self._is_debug_mode:
+            return
         self._engine.clearComponentCache()
         self._theme.reload()
         self._engine.load(self._main_qml)

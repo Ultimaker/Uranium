@@ -41,7 +41,7 @@ class Application:
     #
     #   \param name \type{string} The name of the application.
     #   \param version \type{string} Version, formatted as major.minor.rev
-    def __init__(self, name: str, version: str, build_type: str = "", **kwargs):
+    def __init__(self, name: str, version: str, build_type: str = "", is_debug_mode = False, **kwargs):
         if Application._instance != None:
             raise ValueError("Duplicate singleton creation")
 
@@ -52,6 +52,7 @@ class Application:
         self._application_name = name
         self._version = version
         self._build_type = build_type
+        self._is_debug_mode = is_debug_mode
 
         os.putenv("UBUNTU_MENUPROXY", "0")  # For Ubuntu Unity this makes Qt use its own menu bar rather than pass it on to Unity.
 
@@ -320,10 +321,10 @@ class Application:
 
     ##  Return the singleton instance of the application object
     @classmethod
-    def getInstance(cls) -> "Application":
+    def getInstance(cls, **kwargs) -> "Application":
         # Note: Explicit use of class name to prevent issues with inheritance.
         if not Application._instance:
-            Application._instance = cls()
+            Application._instance = cls(**kwargs)
 
         return Application._instance
 
