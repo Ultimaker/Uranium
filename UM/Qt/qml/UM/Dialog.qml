@@ -26,6 +26,8 @@ Window {
     property alias leftButtons: leftButtonRow.children;
     property alias rightButtons: rightButtonRow.children;
 
+    property bool disableKeyButtons: false;
+
     signal accepted();
     signal rejected();
 
@@ -51,8 +53,17 @@ Window {
 
         focus: base.visible;
 
-        Keys.onEscapePressed: base.reject();
-        Keys.onReturnPressed: base.accept();
+        Keys.onEscapePressed:{
+            if (base.disableKeyButtons == false)
+                base.reject();
+        }
+
+        Keys.onReturnPressed: {
+            if (base.disableKeyButtons == false)
+                base.accept();
+        }
+
+
 
         Item {
             id: contentItem;
