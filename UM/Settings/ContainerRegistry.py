@@ -75,6 +75,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     containerRemoved = Signal()
     containerMetaDataChanged = Signal()
     containerLoadComplete = Signal()
+    allMetadataLoaded = Signal()
 
     def addResourceType(self, type: int) -> None:
         self._resource_types.append(type)
@@ -289,6 +290,7 @@ class ContainerRegistry(ContainerRegistryInterface):
             for container_id in list(provider.getAllIds()): #Make copy of all IDs since it might change during iteration.
                 if container_id not in self.metadata:
                     self.metadata[container_id] = provider.loadMetadata(container_id)
+        ContainerRegistry.allMetadataLoaded.emit()
 
     ##  Load all available definition containers, instance containers and
     #   container stacks.
