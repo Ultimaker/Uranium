@@ -515,6 +515,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         try:
             metadata["name"] = parser["general"]["name"]
             metadata["version"] = parser["general"]["version"]
+            metadata["definition"] = parser["general"]["definition"]
         except KeyError: #One of the keys or the General section itself is missing.
             return []
 
