@@ -2,6 +2,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import re
+from typing import Optional
 
 ##  Wrapper class to perform a search for a certain set of containers.
 #
@@ -25,6 +26,12 @@ class ContainerQuery:
         self._kwargs = kwargs
 
         self._result = None
+
+    ##  Get the class of the containers that this query should find, if any.
+    #
+    #   If the query doesn't filter on container type, `None` is returned.
+    def getContainerType(self) -> Optional[type]:
+        return self._kwargs.get("container_type")
 
     ##  Retrieve the result of this query.
     #
