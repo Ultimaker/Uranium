@@ -35,13 +35,6 @@ class ContainerInterface:
     def getName(self) -> str:
         pass
 
-    ##  Get whether the container item is stored on a read only location in the filesystem.
-    #
-    #   \return True if the specified item is stored on a read-only location
-    #   in the filesystem
-    def isReadOnly(self) -> bool:
-        pass
-
     ##  Get all metadata of this container.
     #
     #   This returns a dictionary containing all the metadata for this container.

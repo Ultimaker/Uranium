@@ -78,16 +78,16 @@ class InstanceContainersModel(ListModel):
     #   This does not set the items in the list itself. It is intended to be
     #   overwritten by subclasses that add their own roles to the model.
     def _recomputeItems(self):
+        registry = ContainerRegistry.getInstance()
         result = []
         for container in self._instance_containers.values():
             result.append({
                 "name": container.getName(),
                 "id": container.getId(),
                 "metadata": container.getMetaData().copy(),
-                "readOnly": container.isReadOnly(),
+                "readOnly": registry.isReadOnly(container.getId()),
                 "section": container.getMetaDataEntry(self._section_property, "")
             })
-        registry = ContainerRegistry.getInstance()
         for container_metadata in self._instance_containers_metadata.values():
             result.append({
                 "name": container_metadata["name"],

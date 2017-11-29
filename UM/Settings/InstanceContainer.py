@@ -8,6 +8,7 @@ from typing import Any, Dict, List, Optional
 
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
 
+from UM.Settings.ContainerRegistry import ContainerRegistry
 from UM.Settings.Interfaces import DefinitionContainerInterface
 from UM.Signal import Signal, signalemitter
 from UM.PluginObject import PluginObject
@@ -182,19 +183,9 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     nameChanged = Signal()
     name = pyqtProperty(str, fget = getName, fset = setName, notify = pyqtNameChanged)
 
-    ##  \copydoc ContainerInterface::isReadOnly
-    #
-    #   Reimplemented from ContainerInterface
-    def isReadOnly(self) -> bool:
-        return self._read_only
-
-    def setReadOnly(self, read_only):
-        if read_only != self._read_only:
-            self._read_only = read_only
-            self.readOnlyChanged.emit()
-
-    readOnlyChanged = pyqtSignal()
-    readOnly = pyqtProperty(bool, fget = isReadOnly, fset = setReadOnly, notify = readOnlyChanged)
+    def getReadOnly(self) -> bool:
+        return ContainerRegistry.getInstance().isReadOnly(self.getId())
+    readOnly = pyqtProperty(bool, fget = getReadOnly)
 
     ##  \copydoc ContainerInterface::getMetaData
     #
