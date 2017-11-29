@@ -117,8 +117,6 @@ class InstanceContainersModel(ListModel):
                         containers[metadata["id"]] = registry.findContainers(id = metadata["id"])[0]
                     else:
                         metadatas[metadata["id"]] = metadata
-        if not containers and not metadatas:
-            print("Filter of {class_name} returned nothing! Filters are: {filters}".format(class_name = self.__class__.__name__, filters = self._filter_dicts))
         return containers, metadatas
 
     def setSectionProperty(self, property_name):
