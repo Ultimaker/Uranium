@@ -54,12 +54,12 @@ Window {
         focus: base.visible;
 
         Keys.onEscapePressed:{
-            if (base.disableKeyButtons == false)
+            if (!base.disableKeyButtons)
                 base.reject();
         }
 
         Keys.onReturnPressed: {
-            if (base.disableKeyButtons == false)
+            if (!base.disableKeyButtons)
                 base.accept();
         }
 
