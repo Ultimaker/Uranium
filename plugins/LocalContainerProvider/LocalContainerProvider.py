@@ -39,16 +39,21 @@ class LocalContainerProvider(ContainerProvider):
         return self._id_to_path.keys()
 
     def loadContainer(self, container_id: str) -> "ContainerInterface":
-        Logger.log("d", "Loading container {container_id}".format(container_id = container_id))
-        container_class = ContainerRegistry.mime_type_map[self._id_to_mime[container_id].name]
+        #First get the actual (base) ID of the path we're going to read.
+        file_path = self._id_to_path[container_id] #Raises KeyError if container ID does not exist in the (cache of the) files.
+        base_id = self._pathToId(file_path)
+        if not base_id:
+            raise Exception("The file where container {container_id} supposedly comes from is not a container file.".format(container_id = container_id))
+
+        Logger.log("d", "Loading container {container_id}".format(container_id = base_id))
+        container_class = ContainerRegistry.mime_type_map[self._id_to_mime[base_id].name]
         if issubclass(container_class, DefinitionContainer): #We may need to load these from the definition cache.
             container = self._loadCachedDefinition(container_id)
             if container: #Yes, it was cached!
                 return container
 
         #Not cached, so load by deserialising.
-        file_path = self._id_to_path[container_id] #Raises KeyError if container ID does not exist in the (cache of the) files.
-        container = container_class(container_id) #Construct the container!
+        container = container_class(base_id) #Construct the container!
         with open(file_path) as f:
             container.deserialize(f.read())
         container.setPath(file_path)
@@ -56,7 +61,10 @@ class LocalContainerProvider(ContainerProvider):
         if issubclass(container_class, DefinitionContainer):
             self._saveCachedDefinition(container)
 
-        return container
+        if base_id == container_id:
+            return container
+        #If we're not requesting the base ID, the sub-container must have been side loaded.
+        return ContainerRegistry.getInstance().findContainers(id = container_id)[0]
 
     ##  Load the metadata of a specified container.
     #
@@ -185,13 +193,30 @@ class LocalContainerProvider(ContainerProvider):
             if re.search(old_file_expression, filename):
                 continue #This is a back-up file from an old version.
 
-            try:
-                mime = MimeTypeDatabase.getMimeTypeForFile(filename)
-            except MimeTypeDatabase.MimeTypeNotFoundError:
-                Logger.log("w", "MIME type could not be found for file: {filename}, ignoring it.".format(filename = filename))
+            container_id = self._pathToId(filename)
+            if not container_id:
                 continue
-            if mime.name not in ContainerRegistry.mime_type_map: #The MIME type is known, but it's not a container.
+            mime = self._pathToMime(filename)
+            if not mime:
                 continue
-            container_id = urllib.parse.unquote_plus(mime.stripExtension(os.path.basename(filename)))
             self._id_to_path[container_id] = filename
             self._id_to_mime[container_id] = mime
+
+    ##  Converts a file path to the MIME type of the container it represents.
+    #
+    #   \return The MIME type or None if it's not a container.
+    def _pathToMime(self, path) -> Optional[MimeType]:
+        try:
+            mime = MimeTypeDatabase.getMimeTypeForFile(path)
+        except MimeTypeDatabase.MimeTypeNotFoundError:
+            Logger.log("w", "MIME type could not be found for file: {path}, ignoring it.".format(path = path))
+            return None
+        if mime.name not in ContainerRegistry.mime_type_map: #The MIME type is known, but it's not a container.
+            return None
+        return mime
+
+    ##  Converts a file path to the ID of the container it represents.
+    def _pathToId(self, path) -> Optional[str]:
+        mime = self._pathToMime(path)
+        if mime:
+            return urllib.parse.unquote_plus(self._pathToMime(path).stripExtension(os.path.basename(path)))
