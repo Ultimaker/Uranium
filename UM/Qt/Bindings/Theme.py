@@ -106,7 +106,8 @@ class Theme(QObject):
         if icon_name in self._icons:
             return self._icons[icon_name]
 
-        Logger.log("w", "No icon %s defined in Theme", icon_name)
+        # We don't log this anymore since we have new fallback behavior to load the icon from a plugin folder
+        # Logger.log("w", "No icon %s defined in Theme", icon_name)
         return QUrl()
 
     @pyqtSlot(str, result = "QUrl")

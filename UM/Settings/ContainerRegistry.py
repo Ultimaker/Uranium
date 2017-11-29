@@ -203,19 +203,23 @@ class ContainerRegistry(ContainerRegistryInterface):
                 else:
                     return [] #No result, so return an empty list.
 
-        if query in self._query_cache:
+        if query.isHashable() and query in self._query_cache:
             #If the exact same query is in the cache, we can re-use the query result.
             self._query_cache.move_to_end(query) #Query was used, so make sure to update its position so that it doesn't get pushed off as a rarely-used query.
             return self._query_cache[query].getResult()
 
         query.execute()
 
-        if len(self._query_cache) > MaxQueryCacheSize:
-            #Since we use an OrderedDict, we can use a simple FIFO scheme to
-            #discard queries. As long as we properly update the position of
-            #queries that are being used, this results in the least used queries
-            #to be discarded.
-            self._query_cache.popitem(last = False)
+        # Only cache query result when it is hashable
+        if query.isHashable():
+            self._query_cache[query] = query
+
+            if len(self._query_cache) > MaxQueryCacheSize:
+                # Since we use an OrderedDict, we can use a simple FIFO scheme
+                # to discard queries. As long as we properly update queries
+                # that are being used, this results in the least used queries
+                # to be discarded.
+                self._query_cache.popitem(last = False)
 
         return query.getResult()
 
@@ -334,15 +338,13 @@ class ContainerRegistry(ContainerRegistryInterface):
             del self.metadata[container_id]
             self._deleteFiles(container)
 
-            if hasattr(container, "metaDataChanged"):
-                container.metaDataChanged.disconnect(self._onContainerMetaDataChanged)
-            self._clearQueryCacheByContainer(container)
-            self.containerRemoved.emit(container)
+        if hasattr(container, "metaDataChanged"):
+            container.metaDataChanged.disconnect(self._onContainerMetaDataChanged)
 
-            Logger.log("d", "Removed container %s", container.getId())
+        self._clearQueryCacheByContainer(container)
+        self.containerRemoved.emit(container)
 
-        else:
-            Logger.log("w", "Could not remove container with id %s, as no container with that ID is known", container_id)
+        Logger.log("d", "Removed container %s", container.getId())
 
     @UM.FlameProfiler.profile
     def renameContainer(self, container_id, new_name, new_id = None):

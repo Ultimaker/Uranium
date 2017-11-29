@@ -48,7 +48,6 @@ class InstanceContainersModel(ListModel):
         self._container_change_timer.setSingleShot(True)
         self._container_change_timer.timeout.connect(self._update)
 
-
         # List of filters for queries. The result is the union of the each list of results.
         self._filter_dicts = []  # type: List[Dict[str,str]]
         self._update()

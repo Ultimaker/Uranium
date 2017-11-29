@@ -91,8 +91,8 @@ class ContainerInterface:
     #   representation.
     #
     #   \param serialized A serialized string containing a container that should be deserialized.
-    def deserialize(self, serialized: str) -> str:
-        return self._updateSerialized(serialized)
+    def deserialize(self, serialized: str, file_name: Optional[str] = None) -> str:
+        return self.__updateSerialized(serialized)
 
     ##  Deserialize just the metadata from a string representation.
     #
@@ -108,13 +108,14 @@ class ContainerInterface:
 
     ##  Updates the given serialized data to the latest version.
     @classmethod
-    def _updateSerialized(cls, serialized: str) -> str:
+    def __updateSerialized(cls, serialized: str, file_name: Optional[str] = None) -> str:
         configuration_type = cls.getConfigurationTypeFromSerialized(serialized)
         version = cls.getVersionFromSerialized(serialized)
         if configuration_type is not None and version is not None:
             from UM.VersionUpgradeManager import VersionUpgradeManager
             result = VersionUpgradeManager.getInstance().updateFilesData(configuration_type, version,
-                                                                         [serialized], [""])
+                                                                         [serialized],
+                                                                         [file_name if file_name else ""])
             if result is not None:
                 serialized = result.files_data[0]
         return serialized

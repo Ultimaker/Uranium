@@ -108,6 +108,7 @@ class Platform(SceneNode.SceneNode):
 ##  Protected class that ensures that the mesh for the machine platform is loaded.
 class _LoadPlatformJob(Job):
     def __init__(self, file_name):
+        super().__init__()
         self._file_name = file_name
         self._mesh_handler = Application.getInstance().getMeshFileHandler()
 

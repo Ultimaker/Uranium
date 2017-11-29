@@ -104,7 +104,7 @@ class PluginRegistry(QObject):
                         break
 
                 if plugin_id is None:
-                    result["message"] = i18n_catalog.i18nc("@info:status", "Failed to install plugin from <filename>{0}</filename>:\n<message>{1}</message>", plugin_path, "Invalid plugin file")
+                    result["message"] = i18n_catalog.i18nc("@info:status", "Failed to install plugin from <filename>{0}</filename>:\n<message>{1}</message>", plugin_path, "Invalid plugin archive.")
                     return result
                 result["id"] = plugin_id
                 plugin_folder = os.path.join(local_plugin_path, plugin_id)

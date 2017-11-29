@@ -8,14 +8,21 @@ import numpy
 
 from UM.Math.Vector import Vector
 
+from typing import Union, Optional
+
 numpy.seterr(divide="ignore")
+
+
+MYPY = False
+if MYPY:
+    from UM.Math.Quaternion import Quaternion
 
 
 ## This class is a 4x4 homogeneous matrix wrapper around numpy.
 #
 # Heavily based (in most cases a straight copy with some refactoring) on the excellent
 # 'library' Transformations.py created by Christoph Gohlke.
-class Matrix(object):
+class Matrix:
     # epsilon for testing whether a number is close to zero
     _EPS = numpy.finfo(float).eps * 4.0
 
@@ -47,7 +54,7 @@ class Matrix(object):
 
     def __init__(self, data = None):
         if data is None:
-            self._data = numpy.identity(4,dtype = numpy.float64)
+            self._data = numpy.identity(4, dtype = numpy.float64)
         else:
             self._data = numpy.array(data, copy=True, dtype = numpy.float64)
 
@@ -61,12 +68,12 @@ class Matrix(object):
             return True
         return numpy.array_equal(self._data, other._data)
 
-    def at(self, x, y):
-        if(x >= 4 or y >= 4 or x < 0 or y < 0):
+    def at(self, x: int, y: int):
+        if x >= 4 or y >= 4 or x < 0 or y < 0:
             raise IndexError
         return self._data[x,y]
 
-    def setRow(self, index, value):
+    def setRow(self, index: int, value):
         if index < 0 or index > 3:
             raise IndexError()
 
@@ -79,7 +86,7 @@ class Matrix(object):
         else:
             self._data[3, index] = 0
 
-    def setColumn(self, index, value):
+    def setColumn(self, index: int, value):
         if index < 0 or index > 3:
             raise IndexError()
 
@@ -92,24 +99,23 @@ class Matrix(object):
         else:
             self._data[index, 3] = 0
 
-    def multiply(self, matrix, copy = False):
+    def multiply(self, other: Union[Vector, "Matrix"], copy: bool = False):
         if not copy:
-            self._data = numpy.dot(self._data, matrix.getData())
+            self._data = numpy.dot(self._data, other.getData())
             return self
         else:
             new_matrix = Matrix(data = self._data)
-            new_matrix.multiply(matrix)
+            new_matrix.multiply(other)
             return new_matrix
 
-    def preMultiply(self, matrix, copy = False):
+    def preMultiply(self, other: Union[Vector, "Matrix"], copy: bool = False):
         if not copy:
-            self._data = numpy.dot(matrix.getData(), self._data)
+            self._data = numpy.dot(other.getData(), self._data)
             return self
         else:
             new_matrix = Matrix(data = self._data)
-            new_matrix.preMultiply(matrix)
+            new_matrix.preMultiply(other)
             return new_matrix
-
 
     ##  Get raw data.
     #   \returns 4x4 numpy array
@@ -126,14 +132,14 @@ class Matrix(object):
 
     ##  Return a inverted copy of the matrix.
     #   \returns The invertex matrix.
-    def getInverse(self):
+    def getInverse(self) -> "Matrix":
         try:
             return Matrix(numpy.linalg.inv(self._data))
         except:
             return deepcopy(self)
 
     ##  Return the transpose of the matrix.
-    def getTransposed(self):
+    def getTransposed(self) -> "Matrix":
         try:
             return Matrix(numpy.transpose(self._data))
         except:
@@ -141,29 +147,29 @@ class Matrix(object):
 
     ##  Translate the matrix based on Vector.
     #   \param direction The vector by which the matrix needs to be translated.
-    def translate(self, direction):
+    def translate(self, direction: Vector):
         translation_matrix = Matrix()
         translation_matrix.setByTranslation(direction)
         self.multiply(translation_matrix)
 
     ##  Set the matrix by translation vector. This overwrites any existing data.
     #   \param direction The vector by which the (unit) matrix needs to be translated.
-    def setByTranslation(self, direction):
-        M = numpy.identity(4,dtype = numpy.float64)
+    def setByTranslation(self, direction: Vector):
+        M = numpy.identity(4, dtype = numpy.float64)
         M[:3, 3] = direction.getData()[:3]
         self._data = M
 
     def setTranslation(self, translation):
         self._data[:3, 3] = translation.getData()
 
-    def getTranslation(self):
+    def getTranslation(self) -> Vector:
         return Vector(data = self._data[:3, 3])
 
     ##  Rotate the matrix based on rotation axis
     #   \param angle The angle by which matrix needs to be rotated.
     #   \param direction Axis by which the matrix needs to be rotated about.
     #   \param point Point where from where the rotation happens. If None, origin is used.
-    def rotateByAxis(self, angle, direction, point = None):
+    def rotateByAxis(self, angle, direction: Vector, point: Optional[Vector] = None):
         rotation_matrix = Matrix()
         rotation_matrix.setByRotationAxis(angle, direction, point)
         self.multiply(rotation_matrix)
@@ -172,7 +178,7 @@ class Matrix(object):
     #   \param angle The angle by which matrix needs to be rotated in radians.
     #   \param direction Axis by which the matrix needs to be rotated about.
     #   \param point Point where from where the rotation happens. If None, origin is used.
-    def setByRotationAxis(self, angle, direction, point = None):
+    def setByRotationAxis(self, angle, direction: Vector, point: Optional[Vector] = None):
         sina = math.sin(angle)
         cosa = math.cos(angle)
         direction_data = self._unitVector(direction.getData())
@@ -199,7 +205,7 @@ class Matrix(object):
     #   @param translate : translation vector along x, y, z axes
     #   @param perspective : perspective partition of matrix
     #   @param mirror: vector with mirror factors (1 if that axis is not mirrored, -1 if it is)
-    def compose(self, scale = None, shear = None, angles = None, translate = None, perspective = None, mirror = None):
+    def compose(self, scale: Vector = None, shear: Vector = None, angles: Vector = None, translate: Vector = None, perspective = None, mirror: Vector = None):
         M = numpy.identity(4)
         if perspective is not None:
             P = numpy.identity(4)
@@ -328,7 +334,7 @@ class Matrix(object):
     #   \param factor The factor by which to scale
     #   \param origin From where does the scaling need to be done
     #   \param direction In what direction is the scaling (if None, it's uniform)
-    def scaleByFactor(self, factor, origin = None, direction = None):
+    def scaleByFactor(self, factor, origin: Optional[Vector] = None, direction: Optional[Vector] = None):
         scale_matrix = Matrix()
         scale_matrix.setByScaleFactor(factor, origin, direction)
         self.multiply(scale_matrix)
@@ -337,7 +343,7 @@ class Matrix(object):
     #   \param factor The factor by which to scale
     #   \param origin From where does the scaling need to be done
     #   \param direction In what direction is the scaling (if None, it's uniform)
-    def setByScaleFactor(self, factor, origin = None, direction = None):
+    def setByScaleFactor(self, factor, origin: Optional[Vector] = None, direction: Optional[Vector] = None):
         if direction is None:
             # uniform scaling
             M = numpy.diag([factor, factor, factor, 1.0])
@@ -354,10 +360,10 @@ class Matrix(object):
                 M[:3, 3] = (factor * numpy.dot(origin[:3], direction_data)) * direction_data
         self._data = M
 
-    def setByScaleVector(self, scale):
+    def setByScaleVector(self, scale: Vector):
         self._data = numpy.diag([scale.x, scale.y, scale.z, 1.0])
 
-    def getScale(self):
+    def getScale(self) -> Vector:
         x = numpy.linalg.norm(self._data[0,0:3])
         y = numpy.linalg.norm(self._data[1,0:3])
         z = numpy.linalg.norm(self._data[2,0:3])
@@ -502,7 +508,7 @@ class Matrix(object):
         return "Matrix( {0} )".format(self._data)
 
     @staticmethod
-    def fromPositionOrientationScale(position, orientation, scale):
+    def fromPositionOrientationScale(position: Vector, orientation: "Quaternion", scale: Vector) -> "Matrix":
         s = numpy.identity(4, dtype = numpy.float64)
         s[0, 0] = scale.x
         s[1, 1] = scale.y

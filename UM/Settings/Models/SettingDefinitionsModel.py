@@ -78,7 +78,7 @@ class SettingDefinitionsModel(QAbstractListModel):
     @pyqtProperty(bool, fset=setShowAncestors, notify=showAncestorsChanged)
     # Should we still show ancestors, even if filter says otherwise?
     def showAncestors(self):
-        self._show_ancestors
+        return self._show_ancestors
 
     ##  Set the containerId property.
     def setContainerId(self, container_id):
