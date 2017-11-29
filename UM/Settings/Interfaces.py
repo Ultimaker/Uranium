@@ -92,7 +92,7 @@ class ContainerInterface:
     #
     #   \param serialized A serialized string containing a container that should be deserialized.
     def deserialize(self, serialized: str, file_name: Optional[str] = None) -> str:
-        return self.__updateSerialized(serialized)
+        return self._updateSerialized(serialized)
 
     ##  Deserialize just the metadata from a string representation.
     #
@@ -108,7 +108,7 @@ class ContainerInterface:
 
     ##  Updates the given serialized data to the latest version.
     @classmethod
-    def __updateSerialized(cls, serialized: str, file_name: Optional[str] = None) -> str:
+    def _updateSerialized(cls, serialized: str, file_name: Optional[str] = None) -> str:
         configuration_type = cls.getConfigurationTypeFromSerialized(serialized)
         version = cls.getVersionFromSerialized(serialized)
         if configuration_type is not None and version is not None:
