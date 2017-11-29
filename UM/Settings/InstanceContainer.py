@@ -8,7 +8,6 @@ from typing import Any, Dict, List, Optional
 
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
 
-from UM.Settings.ContainerRegistry import ContainerRegistry
 from UM.Settings.Interfaces import DefinitionContainerInterface
 from UM.Signal import Signal, signalemitter
 from UM.PluginObject import PluginObject
@@ -184,7 +183,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     name = pyqtProperty(str, fget = getName, fset = setName, notify = pyqtNameChanged)
 
     def getReadOnly(self) -> bool:
-        return ContainerRegistry.getInstance().isReadOnly(self.getId())
+        return _containerRegistry.isReadOnly(self.getId())
     readOnly = pyqtProperty(bool, fget = getReadOnly)
 
     ##  \copydoc ContainerInterface::getMetaData

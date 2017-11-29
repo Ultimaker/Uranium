@@ -53,8 +53,6 @@ class LocalContainerProvider(ContainerProvider):
             container.deserialize(f.read())
         container.setPath(file_path)
 
-        container.setReadOnly(self.isReadOnly(container_id))
-
         if issubclass(container_class, DefinitionContainer):
             self._saveCachedDefinition(container)
 
