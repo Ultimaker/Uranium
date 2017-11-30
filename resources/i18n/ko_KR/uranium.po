@@ -2,13 +2,13 @@
 # Copyright (C) 2017 Ultimaker
 # This file is distributed under the same license as the Uranium package.
 # Ruben Dulek <r.dulek@ultimaker.com>, 2017.
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Uranium 3.0\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2017-08-02 14:05+0200\n"
-"PO-Revision-Date: 2017-11-14 23:16+0900\n"
+"PO-Revision-Date: 2017-11-30 13:05+0100\n"
 "Last-Translator: Brule\n"
 "Language-Team: Brule\n"
 "Language: ko_KR\n"
@@ -306,9 +306,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr ""
-"플러그인이 설치되었습니다.\n"
-"플러그인을 활성화하려면 응용 프로그램을 다시 시작하십시오."
+msgstr "플러그인이 설치되었습니다.\n플러그인을 활성화하려면 응용 프로그램을 다시 시작하십시오."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:107
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:147
@@ -348,7 +346,7 @@ msgstr "중요한 OpenGL 확장이 누락되었습니다. 이 프로그램은 Fr
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Cannot open files of the type of <filename>{0}</filename>"
-msgstr ""
+msgstr "<filename>{0}</filename> 형식의 파일을 열 수 없습니다."
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:36
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:51
@@ -497,7 +495,7 @@ msgstr "취소"
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:60
 msgctxt "@action:button"
 msgid "OK"
-msgstr ""
+msgstr "확인"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:31
 msgctxt "@item:tooltip"
@@ -643,12 +641,12 @@ msgstr "다음 것"
 #: UraniumExampleExtensionPlugin/plugin.json
 msgctxt "description"
 msgid "Example extension to instruct people on how to create Uranium extensions."
-msgstr ""
+msgstr "우라늄 확장을 만드는 방법을 보여주는 확장 예입니다."
 
 #: UraniumExampleExtensionPlugin/plugin.json
 msgctxt "name"
 msgid "Example Extension"
-msgstr ""
+msgstr "확장 예"
 
 #: Views/SimpleView/plugin.json
 msgctxt "description"
@@ -723,22 +721,22 @@ msgstr "콘솔 로거"
 #: UraniumExampleToolPlugin/plugin.json
 msgctxt "description"
 msgid "Example tool to instruct people on how to create Uranium tools."
-msgstr ""
+msgstr "우라늄 도구를 만드는 방법을 보여주는 도구 예입니다."
 
 #: UraniumExampleToolPlugin/plugin.json
 msgctxt "name"
 msgid "Example Tool"
-msgstr ""
+msgstr "도구 예"
 
 #: UraniumExampleOutputDevicePlugin/plugin.json
 msgctxt "description"
 msgid "Example output device to instruct people on how to create Uranium output devices."
-msgstr ""
+msgstr "우라늄 출력 장치를 만드는 방법을 보여주는 출력 장치 예입니다."
 
 #: UraniumExampleOutputDevicePlugin/plugin.json
 msgctxt "name"
 msgid "Example Output Device"
-msgstr ""
+msgstr "출력 장치 예"
 
 #: UpdateChecker/plugin.json
 msgctxt "description"
@@ -753,12 +751,12 @@ msgstr "업데이트 검사기"
 #: UraniumExampleFileReaderPlugin/plugin.json
 msgctxt "description"
 msgid "Example file reader to instruct people on how to create Uranium file readers."
-msgstr ""
+msgstr "우라늄 파일 판독기를 만드는 방법을 보여주는 파일 판독기 예입니다."
 
 #: UraniumExampleFileReaderPlugin/plugin.json
 msgctxt "name"
 msgid "Example File Reader"
-msgstr ""
+msgstr "파일 판독기 예"
 
 #: LocalFileOutputDevice/plugin.json
 msgctxt "description"
