@@ -626,10 +626,6 @@ PluginRegistry.addType("settings_container", ContainerRegistry.addContainerType)
 
 
 class _EmptyInstanceContainer(InstanceContainer):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self._metadata["definition"] = "fdmprinter"
-
     def isDirty(self) -> bool:
         return False
 
