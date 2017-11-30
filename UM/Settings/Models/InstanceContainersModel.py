@@ -86,7 +86,7 @@ class InstanceContainersModel(ListModel):
                 "metadata": container.getMetaData().copy(),
                 "readOnly": registry.isReadOnly(container.getId()),
                 "section": container.getMetaDataEntry(self._section_property, ""),
-                "weight": container.getMetaDataEntry("weight", 0)
+                "weight": int(container.getMetaDataEntry("weight", 0))
             })
         for container_metadata in self._instance_containers_metadata.values():
             result.append({
@@ -95,7 +95,7 @@ class InstanceContainersModel(ListModel):
                 "metadata": container_metadata.copy(),
                 "readOnly": registry.isReadOnly(container_metadata["id"]),
                 "section": container_metadata.get(self._section_property, ""),
-                "weight": container_metadata.get("weight", 0)
+                "weight": int(container_metadata.get("weight", 0))
             })
         yield from sorted(result, key = self._sortKey)
 
