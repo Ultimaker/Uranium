@@ -168,8 +168,7 @@ class ContainerRegistry(ContainerRegistryInterface):
                 for provider in self._providers:
                     if metadata["id"] in provider.getAllIds(): #This is the one we need to load it from!
                         new_container = provider.loadContainer(metadata["id"])
-                        self._containers[new_container.getId()] = new_container
-                        self.metadata[new_container.getId()] = new_container.getMetaData() #Should be the same if deserializeMetadata results in the same metadata as deserialize, but link this by reference.
+                        self.addContainer(new_container)
                         self.containerLoadComplete.emit(new_container.getId())
                         result.append(new_container)
                         break
