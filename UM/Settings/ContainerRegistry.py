@@ -289,6 +289,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         for provider in self._providers: #Automatically sorted by the priority queue.
             for container_id in list(provider.getAllIds()): #Make copy of all IDs since it might change during iteration.
                 if container_id not in self.metadata:
+                    UM.Qt.QtApplication.QtApplication.processEvents()
                     self.metadata[container_id] = provider.loadMetadata(container_id)
         ContainerRegistry.allMetadataLoaded.emit()
 
