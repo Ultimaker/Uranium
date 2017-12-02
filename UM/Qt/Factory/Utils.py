@@ -17,8 +17,8 @@ else:
     imported_binding = None
 
 if not imported_binding:
-    for binding in [QtBinding.PySide2,
-                    QtBinding.PyQt5,
+    for binding in [QtBinding.PyQt5,
+                    QtBinding.PySide2,
                     ]:
         try:
             __import__(binding)
