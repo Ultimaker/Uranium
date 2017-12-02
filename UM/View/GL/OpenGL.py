@@ -4,7 +4,7 @@
 import sys
 import ctypes   # type: ignore
 
-from PyQt5.QtGui import QOpenGLVersionProfile, QOpenGLContext, QOpenGLFramebufferObject, QOpenGLBuffer, QSurfaceFormat
+from UM.Qt.Factory.QtGui import QOpenGLVersionProfile, QOpenGLContext, QOpenGLFramebufferObject, QOpenGLBuffer, QSurfaceFormat
 from PyQt5.QtWidgets import QMessageBox
 
 from UM.Logger import Logger

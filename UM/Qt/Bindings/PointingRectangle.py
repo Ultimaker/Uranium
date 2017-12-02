@@ -3,7 +3,7 @@
 
 from UM.Qt.Factory.QtCore import pyqtSlot, pyqtProperty, pyqtSignal, PYQT_VERSION
 from UM.Qt.Factory.QtCore import QPoint
-from PyQt5.QtGui import QColor
+from UM.Qt.Factory.QtGui import QColor
 from PyQt5.QtQuick import QQuickItem, QSGGeometryNode, QSGGeometry, QSGFlatColorMaterial, QSGSimpleRectNode
 
 class PointingRectangle(QQuickItem):

@@ -10,7 +10,7 @@ from UM.Math.Vector import Vector
 from UM.View.GL.OpenGL import OpenGL
 from UM.View.GL.OpenGLContext import OpenGLContext
 
-from PyQt5.QtGui import QOpenGLVertexArrayObject
+from UM.Qt.Factory.QtGui import QOpenGLVertexArrayObject
 
 vertexBufferProperty = "__gl_vertex_buffer"
 indexBufferProperty = "__gl_index_buffer"

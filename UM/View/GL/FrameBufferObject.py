@@ -1,7 +1,7 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from PyQt5.QtGui import QOpenGLFramebufferObject, QOpenGLFramebufferObjectFormat
+from UM.Qt.Factory.QtGui import QOpenGLFramebufferObject, QOpenGLFramebufferObjectFormat
 
 ##  An interface for OpenGL FrameBuffer Objects.
 #

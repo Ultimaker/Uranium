@@ -2,7 +2,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from UM.Qt.Factory.QtCore import QObject, pyqtProperty, pyqtSignal, QCoreApplication, QUrl, QSizeF
-from PyQt5.QtGui import QColor, QFont, QFontMetrics, QFontDatabase, QFontInfo
+from UM.Qt.Factory.QtGui import QColor, QFont, QFontMetrics, QFontDatabase, QFontInfo
 from PyQt5.QtQml import QQmlComponent, QQmlContext
 from UM.FlameProfiler import pyqtSlot
 import json

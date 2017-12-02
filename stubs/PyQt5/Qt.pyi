@@ -5,7 +5,7 @@
 
 from UM.Qt.Factory.QtCore import *
 from PyQt5.QtDBus import *
-from PyQt5.QtGui import *
+from UM.Qt.Factory.QtGui import *
 from PyQt5.QtNetwork import *
 from PyQt5.QtQml import *
 from PyQt5.QtWidgets import *

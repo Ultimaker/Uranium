@@ -2,7 +2,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from UM.Qt.Factory.QtCore import Qt, QEvent, QObject
-from PyQt5.QtGui import QKeyEvent
+from UM.Qt.Factory.QtGui import QKeyEvent
 
 from UM.InputDevice import InputDevice
 from UM.Event import KeyEvent
