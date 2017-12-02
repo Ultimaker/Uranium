@@ -9,7 +9,7 @@ from UM.Scene.Iterator.BreadthFirstIterator import BreadthFirstIterator
 
 from UM.Logger import Logger
 
-from PyQt5 import QtCore, QtWidgets
+from UM.Qt.Factory import QtCore, QtWidgets
 
 ##  Provides the tool to select meshes and groups
 #
