@@ -23,10 +23,12 @@ except:
 if not imported_binding:
     raise ImportError("Could not find any Qt binding!")
 
-def importQtModule(name):
+def importQtModule(name, _globals = None):
+    if not _globals:
+        _globals = globals()
     name = "{}.{}".format(imported_binding, name)
     imported_module = importlib.import_module(name) # This could fail!
-    globals().update(imported_module.__dict__)
+    _globals.update(imported_module.__dict__)
     """
     test = __import__('os',globals(),locals())
     for k in dir(test):

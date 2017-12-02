@@ -2,4 +2,4 @@
 
 import Utils as Factory
 
-Factory.importQtModule("Qt")
+Factory.importQtModule("Qt", globals())

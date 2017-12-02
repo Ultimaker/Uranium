@@ -2,7 +2,7 @@
 
 import Utils as Factory
 
-Factory.importQtModule("QtCore")
+Factory.importQtModule("QtCore", globals())
 
 if Factory.imported_binding is Factory.QtBinding.PyQt5:
     Signal = pyqtSignal
