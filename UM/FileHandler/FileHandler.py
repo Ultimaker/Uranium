@@ -4,7 +4,7 @@
 from UM.PluginRegistry import PluginRegistry
 from UM.Logger import Logger
 from .FileWriter import FileWriter
-from PyQt5.QtCore import QObject, pyqtProperty, pyqtSlot, QUrl
+from UM.Qt.Factory.QtCore import QObject, pyqtProperty, pyqtSlot, QUrl
 
 from UM.Platform import Platform
 

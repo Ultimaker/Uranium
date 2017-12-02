@@ -11,7 +11,7 @@ from UM.PluginError import PluginNotFoundError, InvalidMetaDataError
 from UM.Logger import Logger
 from typing import Callable, Any, Optional, types, Dict, List
 
-from PyQt5.QtCore import QObject, pyqtSlot, QUrl, pyqtProperty, pyqtSignal
+from UM.Qt.Factory.QtCore import QObject, pyqtSlot, QUrl, pyqtProperty, pyqtSignal
 
 from UM.Resources import Resources
 from UM.PluginObject import PluginObject  # For type hinting

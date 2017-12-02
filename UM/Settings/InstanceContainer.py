@@ -6,7 +6,7 @@ import io
 import copy
 from typing import List, Dict, Optional
 
-from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
+from UM.Qt.Factory.QtCore import QObject, pyqtProperty, pyqtSignal
 
 from UM.Settings.Interfaces import DefinitionContainerInterface
 from UM.Signal import Signal, signalemitter

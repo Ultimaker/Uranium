@@ -3,7 +3,7 @@
 
 import os.path
 
-from PyQt5.QtCore import QMimeDatabase
+from UM.Qt.Factory.QtCore import QMimeDatabase
 
 from UM.Decorators import ascopy
 from typing import List

@@ -4,7 +4,7 @@
 from UM.Application import Application
 from UM.Signal import Signal, signalemitter
 from UM.Logger import Logger
-from PyQt5.QtCore import QTimer, pyqtSignal, QObject
+from UM.Qt.Factory.QtCore import QTimer, pyqtSignal, QObject
 
 ## Class for displaying messages to the user.
 @signalemitter

@@ -15,7 +15,7 @@ from UM.Operations.GroupedOperation import GroupedOperation
 from UM.Operations.SetTransformOperation import SetTransformOperation
 from UM.Operations.ScaleToBoundsOperation import ScaleToBoundsOperation
 
-from PyQt5.QtCore import Qt
+from UM.Qt.Factory.QtCore import Qt
 from . import ScaleToolHandle
 
 import scipy

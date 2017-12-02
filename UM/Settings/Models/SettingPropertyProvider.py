@@ -1,7 +1,7 @@
 # Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
+from UM.Qt.Factory.QtCore import QObject, pyqtProperty, pyqtSignal
 from PyQt5.QtQml import QQmlPropertyMap
 from UM.FlameProfiler import pyqtSlot
 

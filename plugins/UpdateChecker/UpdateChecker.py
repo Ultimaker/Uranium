@@ -7,7 +7,7 @@ from UM.i18n import i18nCatalog
 
 from UM.Preferences import Preferences
 
-from PyQt5.QtCore import QUrl
+from UM.Qt.Factory.QtCore import QUrl
 from PyQt5.QtGui import QDesktopServices
 
 from .UpdateCheckerJob import UpdateCheckerJob

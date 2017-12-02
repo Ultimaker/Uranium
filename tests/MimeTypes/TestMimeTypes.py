@@ -3,7 +3,7 @@
 
 import pytest
 import os.path
-import PyQt5.QtCore # For the test of converting QMimeType to MimeType.
+import UM.Qt.Factory.QtCore # For the test of converting QMimeType to MimeType.
 
 from UM.MimeTypeDatabase import MimeType, MimeTypeDatabase, MimeTypeNotFoundError
 
@@ -118,8 +118,8 @@ def test_custom_mimetypes(mime_database):
 
 ##  Tests creating a MIME type from a QMimeType object.
 def test_fromQMimeType():
-    database = PyQt5.QtCore.QMimeDatabase()
-    qmime = database.mimeTypeForFile(PyQt5.QtCore.QFileInfo(os.path.join(os.path.dirname(os.path.abspath(__file__)), "test.png"))) # Obtain some MIME type from the database (most likely image/png).
+    database = UM.Qt.Factory.QtCore.QMimeDatabase()
+    qmime = database.mimeTypeForFile(UM.Qt.Factory.QtCore.QFileInfo(os.path.join(os.path.dirname(os.path.abspath(__file__)), "test.png"))) # Obtain some MIME type from the database (most likely image/png).
     mime = MimeType.fromQMimeType(qmime)
     assert mime.name == qmime.name()
     assert mime.comment == qmime.comment()

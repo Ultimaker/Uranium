@@ -7,11 +7,11 @@ import signal
 from typing import Dict, Optional
 
 
-from PyQt5.QtCore import Qt, QCoreApplication, QEvent, QUrl, pyqtProperty, pyqtSignal, pyqtSlot, QLocale, QTranslator, QLibraryInfo, QT_VERSION_STR, PYQT_VERSION_STR
+from UM.Qt.Factory.QtCore import Qt, QCoreApplication, QEvent, QUrl, pyqtProperty, pyqtSignal, pyqtSlot, QLocale, QTranslator, QLibraryInfo, QT_VERSION_STR, PYQT_VERSION_STR
 from PyQt5.QtQml import QQmlApplicationEngine, QQmlComponent, QQmlContext
 from PyQt5.QtWidgets import QApplication, QSplashScreen, QMessageBox, QSystemTrayIcon
 from PyQt5.QtGui import QGuiApplication, QIcon, QPixmap, QFontMetrics
-from PyQt5.QtCore import QTimer
+from UM.Qt.Factory.QtCore import QTimer
 
 from UM.FileHandler.ReadFileJob import ReadFileJob
 from UM.Application import Application
@@ -34,7 +34,7 @@ import UM.Qt.Bindings.Theme
 from UM.PluginRegistry import PluginRegistry
 MYPY = False
 if MYPY:
-    from PyQt5.QtCore import QObject
+    from UM.Qt.Factory.QtCore import QObject
 
 
 # Raised when we try to use an unsupported version of a dependency.

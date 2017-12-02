@@ -1,6 +1,6 @@
 from UM.Qt.ListModel import ListModel
 
-from PyQt5.QtCore import pyqtSlot, pyqtProperty, Qt, pyqtSignal
+from UM.Qt.Factory.QtCore import pyqtSlot, pyqtProperty, Qt, pyqtSignal
 
 from UM.Settings.ContainerRegistry import ContainerRegistry
 from UM.Settings.ContainerStack import ContainerStack

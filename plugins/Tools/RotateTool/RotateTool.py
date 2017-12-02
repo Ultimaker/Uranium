@@ -12,7 +12,7 @@ from UM.Math.Plane import Plane
 from UM.Math.Vector import Vector
 from UM.Math.Quaternion import Quaternion
 
-from PyQt5.QtCore import Qt
+from UM.Qt.Factory.QtCore import Qt
 
 from UM.Operations.RotateOperation import RotateOperation
 from UM.Operations.GroupedOperation import GroupedOperation

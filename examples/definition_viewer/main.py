@@ -6,7 +6,7 @@ import os.path
 import signal
 import traceback
 
-from PyQt5.QtCore import QObject, QUrl, pyqtSlot, pyqtProperty, pyqtSignal
+from UM.Qt.Factory.QtCore import QObject, QUrl, pyqtSlot, pyqtProperty, pyqtSignal
 from PyQt5.QtQml import QQmlApplicationEngine, qmlRegisterType
 from PyQt5.QtWidgets import QApplication
 
