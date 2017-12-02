@@ -2,7 +2,7 @@
 
 import warnings
 
-import Utils as Factory
+import .Utils as Factory
 
 Factory.importQtModule("QtCore", globals())
 
