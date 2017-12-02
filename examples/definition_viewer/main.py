@@ -1,5 +1,5 @@
-# Copyright (c) 2016 Ultimaker B.V.
-# Uranium is released under the terms of the AGPLv3 or higher.
+# Copyright (c) 2017 Ultimaker B.V.
+# Uranium is released under the terms of the LGPLv3 or higher.
 
 import sys
 import os.path
@@ -37,7 +37,7 @@ class DefinitionLoader(QObject):
             self._metadata = dict(definition.metaData)
             self.metaDataChanged.emit()
 
-            UM.Settings.ContainerRegistry.getInstance().addContainer(definition)
+            UM.Settings.ContainerRegistry.ContainerRegistry.getInstance().addContainer(definition)
             self._definition_id = definition.id
             self.loaded.emit()
         except Exception as e:

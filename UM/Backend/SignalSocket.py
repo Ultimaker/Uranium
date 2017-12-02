@@ -1,5 +1,5 @@
 # Copyright (c) 2015 Ultimaker B.V.
-# Uranium is released under the terms of the AGPLv3 or higher.
+# Uranium is released under the terms of the LGPLv3 or higher.
 
 import Arcus
 
@@ -40,9 +40,14 @@ class _SocketListener(Arcus.SocketListener):
         self.errorCallback = None
 
     def stateChanged(self, state):
-        if self.stateChangedCallback:
-            self.stateChangedCallback(state)
-
+        try:
+            if self.stateChangedCallback:
+                self.stateChangedCallback(state)
+        except AttributeError:
+            # For some reason, every so often, it seems to feel that the attribute stateChangedCallback doesn't exist.
+            # Ignoring this prevents crashes.
+            pass
+        
     def messageReceived(self):
         if self.messageReceivedCallback:
             self.messageReceivedCallback()

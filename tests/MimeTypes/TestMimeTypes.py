@@ -1,5 +1,5 @@
 # Copyright (c) 2016 Ultimaker B.V.
-# Uranium is released under the terms of the AGPLv3 or higher.
+# Uranium is released under the terms of the LGPLv3 or higher.
 
 import pytest
 import os.path
@@ -43,7 +43,7 @@ def test_system_mimetypes(mime_database):
     mime = mime_database.getMimeTypeForFile(os.path.abspath(__file__))
     assert mime.name == "text/x-python"
     assert mime.comment == "Python script"
-    assert mime.suffixes == ["py", "pyx", "wsgi"]
+    assert "py" in mime.suffixes
     assert mime.preferredSuffix == "py"
 
 def test_compare(mime_database):
@@ -144,35 +144,48 @@ def test_getMimeType(mime_database):
     with pytest.raises(MimeTypeNotFoundError):
         mime_database.getMimeType("archive/x-file-that-your-mom-would-fit-in") # Try to fetch some non-existing MIME type.
 
+
+##  Data for test_getMimeTypeForFile
+#
+#   Each entry consists of a dict, with the following values:
+#   * path: Required. The path to check the mime type for.
+#   * expect_fail: Default False. Expect this entry to raise an error, so handle it appropriately. Will ignore all other properties.
+#   * description: Ignored. Used to have a human-readable description of the test data.
+#   All other entries in the dict will be checked as properties on the mime type object. For example, name = "test" will be checked
+#   that there is a "name" property on the mime type object that has the value "test".
+path_base = os.path.dirname(os.path.abspath(__file__))
+test_getMimeTypeForFile_data = [
+    dict(path = os.path.join(path_base, "test.jpg"), comment = "Custom JPEG MIME Type", description = "Customized Mime Types should override system mime types"),
+    dict(path = os.path.join(path_base, "test.png"), name = "image/png", description = "Valid Mime Types should return the proper system mime type"),
+    dict(path = os.path.join(path_base, "file.test"), name = "application/x-test", description = "New mime types should return the right values"),
+    dict(path = os.path.join(path_base, "file.long.test"), name = "application/x-long-test", description = "Multiple matches should prefer the longest match"),
+    dict(path = os.path.join(path_base, "filetest.test.test"), name = "application/x-test", description = "Files with double extensions should still match"),
+    dict(path = os.path.join(path_base, ".test"), name = "application/x-test", description = "Files with only an extension should still match"),
+    dict(path = os.path.join(path_base, "pink.unicorn"), expect_fail = True, description = "Unknown types should generate an error"),
+    dict(path = os.path.join(path_base, "filetest"), expect_fail = True, description = "File names with no extension should not match"),
+    # Same test but without absolute path.
+    dict(path = "test.jpg", comment = "Custom JPEG MIME Type", description = "Customized Mime Types should override system mime types"),
+    dict(path = "test.png", name = "image/png", description = "Valid Mime Types should return the proper system mime type"),
+    dict(path = "file.test", name = "application/x-test", description = "New mime types should return the right values"),
+    dict(path = "file.long.test", name = "application/x-long-test", description = "Multiple matches should prefer the longest match"),
+]
+
 ##  Tests the querying for MIME types for opening a specific file.
 #
 #   \param mime_database A MIME type database from a fixture.
-def test_getMimeTypeForFile(mime_database):
-    path_base = os.path.dirname(os.path.abspath(__file__))
-
-    mime = mime_database.getMimeTypeForFile(os.path.join(path_base, "test.jpg"))
-    assert mime.comment == "Custom JPEG MIME Type" # We must get the custom one, not Qt's MIME type.
-
-    mime = mime_database.getMimeTypeForFile(os.path.join(path_base, "test.png"))
-    assert mime.name == "image/png" # Getting a file type from the system.
-
-    mime = mime_database.getMimeTypeForFile(os.path.join(path_base, "file.test"))
-    assert mime.name == "application/x-test"
-
-    mime = mime_database.getMimeTypeForFile(os.path.join(path_base, "filetest.test.test")) # Double extension should still match
-    assert mime.name == "application/x-test"
-
-    mime = mime_database.getMimeTypeForFile(os.path.join(path_base, ".test")) # Only extension should still match
-    assert mime.name == "application/x-test"
-
-    with pytest.raises(MimeTypeNotFoundError):
-        mime_database.getMimeTypeForFile(os.path.join(path_base, "pink.unicorn")) # Non-existent file type.
-
-    with pytest.raises(MimeTypeNotFoundError):
-        mime_database.getMimeTypeForFile(os.path.join(path_base, "filetest")) # File that happens to end in the extension without being an extension.
-
-    mime = mime_database.getMimeTypeForFile(os.path.join(path_base, "file.long.test")) # Should prefer the longer extension.
-    assert mime.name == "application/x-long-test"
+#   \param data Test data supplied by pytest, see above.
+@pytest.mark.parametrize("data", test_getMimeTypeForFile_data)
+def test_getMimeTypeForFile(mime_database, data):
+    data.pop("description")
+    file_path = data.pop("path")
+    expect_fail = data.pop("expect_fail", False)
+    if not expect_fail:
+        mime = mime_database.getMimeTypeForFile(file_path)
+        for key, value in data.items():
+            assert getattr(mime, key) == value
+    else:
+        with pytest.raises(MimeTypeNotFoundError):
+            mime_database.getMimeTypeForFile(file_path)
 
 ##  Tests the utility function that strips a MIME type's extension from a
 #   filename.

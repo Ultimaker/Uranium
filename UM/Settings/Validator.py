@@ -1,9 +1,16 @@
 # Copyright (c) 2016 Ultimaker B.V.
-# Uranium is released under the terms of the AGPLv3 or higher.
+# Uranium is released under the terms of the LGPLv3 or higher.
 
 from enum import Enum
+from typing import Any, Optional
 
+from UM.Settings.Interfaces import ContainerInterface
+from UM.Settings.PropertyEvaluationContext import PropertyEvaluationContext
 from UM.Logger import Logger
+
+MYPY = False
+if MYPY:
+    from UM.Settings.SettingInstance import SettingInstance
 
 from . import SettingFunction
 
@@ -24,16 +31,16 @@ class Validator(SettingFunction.SettingFunction):
     ##  Constructor
     #
     #   \param instance The instance this Validator validates.
-    def __init__(self, key, *args, **kwargs):
+    def __init__(self, key: str) -> None:
         if key is None:
             raise ValueError("Instance should not be None")
 
-        super().__init__("None", *args, **kwargs)
+        super().__init__("None")
 
-        self._key = key
+        self._key = key  # type: str
 
     ##  Perform the actual validation.
-    def __call__(self, value_provider, *args, **kwargs):
+    def __call__(self, value_provider: ContainerInterface, context: Optional[PropertyEvaluationContext] = None) -> Any:
         if not value_provider:
             return
 
@@ -46,6 +53,9 @@ class Validator(SettingFunction.SettingFunction):
 
             if minimum is not None and maximum is not None and minimum > maximum:
                 raise ValueError("Cannot validate a state of setting {0} with minimum > maximum".format(self._key))
+
+            if context is not None:
+                value_provider = context.rootStack()
 
             value = value_provider.getProperty(self._key, "value")
             if value is None or value != value:

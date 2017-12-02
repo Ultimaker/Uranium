@@ -1,5 +1,5 @@
 # Copyright (c) 2016 Ultimaker B.V.
-# Uranium is released under the terms of the AGPLv3 or higher.
+# Uranium is released under the terms of the LGPLv3 or higher.
 
 import pytest
 import sys
@@ -19,7 +19,7 @@ class MockSettingInstance:
         self.maximum_value_warning = None
         self.value = value
 
-    def getProperty(self, key, property_name):
+    def getProperty(self, key, property_name, context = None):
         return getattr(self, property_name)
 
 ##  Called before the first test function is executed.

@@ -1,5 +1,5 @@
 # Copyright (c) 2015 Ultimaker B.V.
-# Uranium is released under the terms of the AGPLv3 or higher.
+# Uranium is released under the terms of the LGPLv3 or higher.
 
 import numpy
 import numpy.linalg
@@ -9,8 +9,8 @@ import numpy.linalg
 #
 #   This class represents a 2-dimensional vector.
 class Vector2(object):
-    Unit_X = None
-    Unit_Y = None
+    Unit_X = None   # type: Vector2
+    Unit_Y = None   # type: Vector2
 
     ##  Creates a new 2D vector.
     #

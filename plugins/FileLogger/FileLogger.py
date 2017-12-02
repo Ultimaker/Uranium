@@ -1,5 +1,5 @@
 # Copyright (c) 2015 Ultimaker B.V.
-# Uranium is released under the terms of the AGPLv3 or higher.
+# Uranium is released under the terms of the LGPLv3 or higher.
 
 from UM.Logger import LogOutput
 from UM.Resources import Resources
@@ -21,7 +21,7 @@ class FileLogger(LogOutput):
 
     def setFileName(self, file_name):
         if ".log" in file_name:
-            file_handler = logging.FileHandler(file_name)
+            file_handler = logging.FileHandler(file_name, encoding = "utf-8")
             format_handler = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
             file_handler.setFormatter(format_handler)
             self._logger.addHandler(file_handler)

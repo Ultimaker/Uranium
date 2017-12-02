@@ -1,5 +1,5 @@
 # Copyright (c) 2015 Ultimaker B.V.
-# Uranium is released under the terms of the AGPLv3 or higher.
+# Uranium is released under the terms of the LGPLv3 or higher.
 
 from UM.SortedList import SortedListWithKey
 
@@ -12,11 +12,6 @@ from UM.SortedList import SortedListWithKey
 #   objects should be rendered but the actual rendering process happening after a
 #   sorting step.
 class Renderer():
-    RenderTriangles = 1
-    RenderLines = 2
-    RenderPoints = 3
-    RenderWireframe = 4
-    RenderLineLoop = 5
 
     def __init__(self):
         super().__init__()

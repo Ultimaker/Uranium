@@ -1,5 +1,5 @@
 # Copyright (c) 2015 Ultimaker B.V.
-# Uranium is released under the terms of the AGPLv3 or higher.
+# Uranium is released under the terms of the LGPLv3 or higher.
 
 from UM.Event import MouseEvent, KeyEvent
 from UM.Tool import Tool
@@ -7,7 +7,8 @@ from UM.Application import Application
 from UM.Scene.Selection import Selection
 from UM.Scene.Iterator.BreadthFirstIterator import BreadthFirstIterator
 
-from PyQt5.QtGui import qAlpha, qRed, qGreen, qBlue
+from UM.Logger import Logger
+
 from PyQt5 import QtCore, QtWidgets
 
 ##  Provides the tool to select meshes and groups
@@ -66,6 +67,8 @@ class SelectionTool(Tool):
                 self._pixelSelection(event)
             else:
                 self._boundingBoxSelection(event)
+        elif event.type == MouseEvent.MouseReleaseEvent and MouseEvent.LeftButton in event.buttons:
+            Application.getInstance().getController().toolOperationStopped.emit(self)
         return False
 
     ##  Handle mouse and keyboard events for bounding box selection
@@ -99,7 +102,11 @@ class SelectionTool(Tool):
     #   \param event type(Event) passed from self.event()
     def _pixelSelection(self, event):
         # Find a node id by looking at a pixel value at the requested location
-        item_id = self._selection_pass.getIdAtPosition(event.x, event.y)
+        if self._selection_pass:
+            item_id = self._selection_pass.getIdAtPosition(event.x, event.y)
+        else:
+            Logger.log("w", "Selection pass is None. getRenderPass('selection') returned None")
+            return
 
         if not item_id and not self._shift_is_active:
             Selection.clear()

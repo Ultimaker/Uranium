@@ -1,5 +1,7 @@
 # Copyright (c) 2015 Ultimaker B.V.
-# Uranium is released under the terms of the AGPLv3 or higher.
+# Uranium is released under the terms of the LGPLv3 or higher.
+
+import copy
 
 from . import Operation
 from UM.Scene.SceneNode import SceneNode #To get the world transformation.
@@ -126,14 +128,19 @@ class ScaleOperation(Operation.Operation):
             return False
         if other._relative_scale and not self._relative_scale:
             return False
+        if other._scale_around_point != self._scale_around_point:
+            return False
+        if other._snap != self._snap:
+            return False
 
-        op = ScaleOperation(self._node, self._node.getScale())
-        op._old_transformation = other._old_transformation #Use the oldest transformation of the two.
+        op = ScaleOperation(self._node, self._scale + other._scale, set_scale = self._set_scale, add_scale = self._add_scale, relative_scale = self._relative_scale, scale_around_point = self._scale_around_point, snap = self._snap)
+        op._old_transformation = copy.deepcopy(other._old_transformation) #Use the oldest transformation of the two.
         return op
 
     ##  Returns a programmer-readable representation of this operation.
     #
     #   \return A programmer-readable representation of this operation.
     def __repr__(self):
-        return "ScaleOperation(node = {0}, scale={1})".format(self._node, self._scale)
+        mode = "set" if self._set_scale else "add" if self._add_scale else "relative"
+        return "ScaleOperation(node = {0}, scale={1}, mode={2})".format(self._node, self._scale, mode)
 

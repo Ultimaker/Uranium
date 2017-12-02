@@ -1,11 +1,18 @@
 # Copyright (c) 2015 Ultimaker B.V.
-# Uranium is released under the terms of the AGPLv3 or higher.
+# Uranium is released under the terms of the LGPLv3 or higher.
 
 from UM.Application import Application
 from UM.Resources import Resources
+from UM.Math.Color import Color
 
 from UM.View.RenderPass import RenderPass
 from UM.View.GL.OpenGL import OpenGL
+
+from typing import List
+
+MYPY = False
+if MYPY:
+    from UM.View.GL import ShaderProgram
 
 
 ##  A RenderPass subclass providing the final composition render.
@@ -26,21 +33,25 @@ class CompositePass(RenderPass):
         super().__init__("composite", width, height, RenderPass.MaximumPriority)
 
         self._shader = OpenGL.getInstance().createShaderProgram(Resources.getPath(Resources.Shaders, "composite.shader"))
+        theme = Application.getInstance().getTheme()
+        self._shader.setUniformValue("u_background_color", Color(*theme.getColor("viewport_background").getRgb()))
+        self._shader.setUniformValue("u_outline_color", Color(*theme.getColor("model_selection_outline").getRgb()))
+
         self._gl = OpenGL.getInstance().getBindingsObject()
         self._renderer = Application.getInstance().getRenderer()
 
-        self._layer_bindings = [ "default", "selection" ]
+        self._layer_bindings = ["default", "selection"]
 
     ##  Get the shader currently used for compositing.
-    def getCompositeShader(self):
+    def getCompositeShader(self) -> "ShaderProgram":
         return self._shader
 
     ##  Set the shader to use for compositing.
-    def setCompositeShader(self, shader):
+    def setCompositeShader(self, shader: "ShaderProgram") -> None:
         self._shader = shader
 
     ##  Get the current layer bindings.
-    def getLayerBindings(self):
+    def getLayerBindings(self) -> List[str]:
         return self._layer_bindings
 
     ##  Set the layer bindings to use.
@@ -51,11 +62,11 @@ class CompositePass(RenderPass):
     #   the "selection" RenderPass is bound to texture unit 1.
     #
     #   \param bindings The list of layer bindings to use.
-    def setLayerBindings(self, bindings):
+    def setLayerBindings(self, bindings: List[str]) -> None:
         self._layer_bindings = bindings
 
     ##  Perform the actual rendering of the render pass.
-    def render(self):
+    def render(self) -> None:
         self._shader.bind()
 
         outline_size = 2.0

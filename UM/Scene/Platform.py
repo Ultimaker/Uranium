@@ -1,5 +1,5 @@
 # Copyright (c) 2015 Ultimaker B.V.
-# Uranium is released under the terms of the AGPLv3 or higher.
+# Uranium is released under the terms of the LGPLv3 or higher.
 
 from . import SceneNode
 
@@ -49,7 +49,11 @@ class Platform(SceneNode.SceneNode):
             container = self._global_container_stack.findContainer({ "platform": "*" })
             if container:
                 mesh_file = container.getMetaDataEntry("platform")
-                path = Resources.getPath(Resources.Meshes, mesh_file)
+                try:
+                    path = Resources.getPath(Resources.Meshes, mesh_file)
+                except FileNotFoundError:
+                    Logger.log("w", "Unable to find the platform mesh %s", mesh_file)
+                    path = ""
 
                 if self._load_platform_job:
                     # This prevents a previous load job from triggering texture loads.
@@ -104,6 +108,7 @@ class Platform(SceneNode.SceneNode):
 ##  Protected class that ensures that the mesh for the machine platform is loaded.
 class _LoadPlatformJob(Job):
     def __init__(self, file_name):
+        super().__init__()
         self._file_name = file_name
         self._mesh_handler = Application.getInstance().getMeshFileHandler()
 

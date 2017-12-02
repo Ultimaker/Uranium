@@ -1,5 +1,5 @@
 # Copyright (c) 2015 Ultimaker B.V.
-# Uranium is released under the terms of the AGPLv3 or higher.
+# Uranium is released under the terms of the LGPLv3 or higher.
 
 from UM.Scene.ToolHandle import ToolHandle
 from UM.Mesh.MeshBuilder import MeshBuilder
@@ -19,6 +19,7 @@ class RotateToolHandle(ToolHandle):
         self._active_outer_radius = 44
         self._active_line_width = 3
 
+    def buildMesh(self):
         #SOLIDMESH
         mb = MeshBuilder()
 
@@ -26,7 +27,7 @@ class RotateToolHandle(ToolHandle):
             inner_radius = self._inner_radius,
             outer_radius = self._outer_radius,
             width = self._line_width,
-            color = ToolHandle.ZAxisColor
+            color = self._z_axis_color
         )
 
         mb.addDonut(
@@ -35,7 +36,7 @@ class RotateToolHandle(ToolHandle):
             width = self._line_width,
             axis = Vector.Unit_X,
             angle = math.pi / 2,
-            color = ToolHandle.YAxisColor
+            color = self._y_axis_color
         )
 
         mb.addDonut(
@@ -44,7 +45,7 @@ class RotateToolHandle(ToolHandle):
             width = self._line_width,
             axis = Vector.Unit_Y,
             angle = math.pi / 2,
-            color = ToolHandle.XAxisColor
+            color = self._x_axis_color
         )
         self.setSolidMesh(mb.build())
 
@@ -55,7 +56,7 @@ class RotateToolHandle(ToolHandle):
             inner_radius = self._active_inner_radius,
             outer_radius = self._active_outer_radius,
             width = self._active_line_width,
-            color = ToolHandle.ZAxisColor
+            color = ToolHandle.ZAxisSelectionColor
         )
 
         mb.addDonut(
@@ -64,7 +65,7 @@ class RotateToolHandle(ToolHandle):
             width = self._active_line_width,
             axis = Vector.Unit_X,
             angle = math.pi / 2,
-            color = ToolHandle.YAxisColor
+            color = ToolHandle.YAxisSelectionColor
         )
 
         mb.addDonut(
@@ -73,7 +74,7 @@ class RotateToolHandle(ToolHandle):
             width = self._active_line_width,
             axis = Vector.Unit_Y,
             angle = math.pi / 2,
-            color = ToolHandle.XAxisColor
+            color = ToolHandle.XAxisSelectionColor
         )
 
         self.setSelectionMesh(mb.build())

@@ -1,5 +1,5 @@
 // Copyright (c) 2015 Ultimaker B.V.
-// Uranium is released under the terms of the AGPLv3 or higher.
+// Uranium is released under the terms of the LGPLv3 or higher.
 
 import QtQuick 2.1
 import QtQuick.Controls 1.1
@@ -36,8 +36,8 @@ ManagementPage {
             elide: Text.ElideRight
         }
 
-        Label { text: catalog.i18nc("@label", "Type"); width: parent.width * 0.2; }
-        Label { text: base.currentItem && base.currentItem.typeName ? base.currentItem.typeName : ""; width: parent.width * 0.7; }
+        Label { text: catalog.i18nc("@label", "Type"); width: (parent.width * 0.2) | 0; }
+        Label { text: base.currentItem && base.currentItem.typeName ? base.currentItem.typeName : ""; width: (parent.width * 0.7) | 0; }
 
         UM.I18nCatalog { id: catalog; name: "uranium"; }
 

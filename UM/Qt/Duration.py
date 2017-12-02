@@ -1,7 +1,8 @@
-# Copyright (c) 2015 Ultimaker B.V.
-# Uranium is released under the terms of the AGPLv3 or higher.
+# Copyright (c) 2017 Ultimaker B.V.
+# Uranium is released under the terms of the LGPLv3 or higher.
 
-from PyQt5.QtCore import QObject, pyqtProperty, pyqtSlot, Q_ENUMS, pyqtSignal
+from PyQt5.QtCore import QObject, pyqtProperty, Q_ENUMS, pyqtSignal
+from UM.FlameProfiler import pyqtSlot
 
 from datetime import timedelta
 import math
@@ -60,6 +61,10 @@ class Duration(QObject):
     def valid(self):
         return self._days != -1 and self._hours != -1 and self._minutes != -1 and self._seconds != -1
 
+    @pyqtProperty(bool, notify = durationChanged)
+    def isTotalDurationZero(self):
+        return self._days == 0 and self._hours == 0 and self._minutes == 0 and self._seconds == 0
+
     ##  Set the duration in seconds.
     #
     #   This will convert the given amount of seconds into an amount of days, hours, minutes and seconds.
@@ -73,6 +78,14 @@ class Duration(QObject):
             self._seconds = -1
         else:
             duration = round(duration)
+            # If a Python int goes above the upper bound of C++ int, which is 2^16 - 1, you will get a error when Qt
+            # tries to convert the Python int to C++ int:
+            #    TypeError: unable to convert a Python 'int' object to a C++ 'int' instance
+            # So we make sure here that the number won't exceed the limit due to CuraEngine bug or whatever, and
+            # Cura won't crash.
+            if int(duration) >= (2**31):
+                duration = 0
+
             self._days = math.floor(duration / (3600 * 24))
             duration -= self._days * 3600 * 24
             self._hours = math.floor(duration / 3600)

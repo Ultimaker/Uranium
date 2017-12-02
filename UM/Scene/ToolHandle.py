@@ -1,5 +1,5 @@
 # Copyright (c) 2015 Ultimaker B.V.
-# Uranium is released under the terms of the AGPLv3 or higher.
+# Uranium is released under the terms of the LGPLv3 or higher.
 
 from . import SceneNode
 
@@ -25,14 +25,24 @@ class ToolHandle(SceneNode.SceneNode):
     ZAxis = 4
     AllAxis = 5
 
-    DisabledColor = Color(0.5, 0.5, 0.5, 1.0)
-    XAxisColor = Color(1.0, 0.0, 0.0, 1.0)
-    YAxisColor = Color(0.0, 0.0, 1.0, 1.0)
-    ZAxisColor = Color(0.0, 1.0, 0.0, 1.0)
-    AllAxisColor = Color(1.0, 1.0, 1.0, 1.0)
+    # These colors are used to draw the selection pass only. They must be unique, which is
+    # why we cannot rely on themed colors
+    DisabledSelectionColor = Color(0.5, 0.5, 0.5, 1.0)
+    XAxisSelectionColor = Color(1.0, 0.0, 0.0, 1.0)
+    YAxisSelectionColor = Color(0.0, 0.0, 1.0, 1.0)
+    ZAxisSelectionColor = Color(0.0, 1.0, 0.0, 1.0)
+    AllAxisSelectionColor = Color(1.0, 1.0, 1.0, 1.0)
 
     def __init__(self, parent = None):
         super().__init__(parent)
+
+        self._disabled_axis_color = None
+        self._x_axis_color = None
+        self._y_axis_color = None
+        self._z_axis_color = None
+        self._all_axis_color = None
+
+        self._axis_color_map = {}
 
         self._scene = Application.getInstance().getController().getScene()
 
@@ -48,6 +58,7 @@ class ToolHandle(SceneNode.SceneNode):
         self.setCalculateBoundingBox(False)
 
         Selection.selectionCenterChanged.connect(self._onSelectionCenterChanged)
+        Application.getInstance().engineCreatedSignal.connect(self._onEngineCreated)
 
     def getLineMesh(self):
         return self._line_mesh
@@ -90,36 +101,41 @@ class ToolHandle(SceneNode.SceneNode):
 
         return True
 
-    def getSelectionMap(self):
-        return {
-            self.XAxisColor: self.XAxis,
-            self.YAxisColor: self.YAxis,
-            self.ZAxisColor: self.ZAxis,
-            self.AllAxisColor: self.AllAxis
-        }
-
     def setActiveAxis(self, axis):
         if axis == self._active_axis or not self._shader:
             return
 
         if axis:
-            self._shader.setUniformValue("u_activeColor", self._axisColorMap[axis])
+            self._shader.setUniformValue("u_activeColor", self._axis_color_map[axis])
         else:
-            self._shader.setUniformValue("u_activeColor", self.DisabledColor)
+            self._shader.setUniformValue("u_activeColor", self._disabled_axis_color)
         self._active_axis = axis
         self._scene.sceneChanged.emit(self)
 
-    @classmethod
-    def isAxis(cls, value):
-        return value in cls._axisColorMap
+    def isAxis(self, value):
+        return value in self._axis_color_map
 
-    _axisColorMap = {
-        NoAxis: DisabledColor,
-        XAxis: XAxisColor,
-        YAxis: YAxisColor,
-        ZAxis: ZAxisColor,
-        AllAxis: AllAxisColor
-    }
+    def buildMesh(self):
+        # This method should be overridden by toolhandle implementations
+        pass
 
     def _onSelectionCenterChanged(self):
         self.setPosition(Selection.getSelectionCenter())
+
+    def _onEngineCreated(self):
+        theme = Application.getInstance().getTheme()
+        self._disabled_axis_color = Color(*theme.getColor("disabled_axis").getRgb())
+        self._x_axis_color = Color(*theme.getColor("x_axis").getRgb())
+        self._y_axis_color = Color(*theme.getColor("y_axis").getRgb())
+        self._z_axis_color = Color(*theme.getColor("z_axis").getRgb())
+        self._all_axis_color = Color(*theme.getColor("all_axis").getRgb())
+
+        self._axis_color_map = {
+            self.NoAxis: self._disabled_axis_color,
+            self.XAxis: self._x_axis_color,
+            self.YAxis: self._y_axis_color,
+            self.ZAxis: self._z_axis_color,
+            self.AllAxis: self._all_axis_color
+        }
+
+        self.buildMesh()

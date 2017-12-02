@@ -1,5 +1,5 @@
 // Copyright (c) 2015 Ultimaker B.V.
-// Uranium is released under the terms of the AGPLv3 or higher.
+// Uranium is released under the terms of the LGPLv3 or higher.
 
 import QtQuick 2.1
 import QtQuick.Controls 1.1
@@ -60,11 +60,11 @@ Dialog
         StackView {
             id: stackView
             anchors {
-                left: pagesList.right;
-                leftMargin: UM.Theme.getSize("default_margin").width / 2;
-                top: parent.top;
-                bottom: parent.bottom;
-                right: parent.right;
+                left: pagesList.right
+                leftMargin: (UM.Theme.getSize("default_margin").width / 2) | 0
+                top: parent.top
+                bottom: parent.bottom
+                right: parent.right
             }
 
             initialItem: Item { property bool resetEnabled: false; }

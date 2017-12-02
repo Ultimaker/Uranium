@@ -12,8 +12,10 @@ build
 LC_MESSAGES
 *.mo
 *.qm
-resources/i18n/en
+*.qmlc
+resources/i18n/en_US
 resources/i18n/x-test
+resources/i18n/en_7S
 
 # JUnit
 junit.xml
@@ -43,3 +45,11 @@ _eric6project/Uranium.e4t
 #Test results.
 tests/Settings/instances/machine_settings_with_overrides_test.cfg
 tests/Settings/profiles/simple_machine_with_overrides_test.cfg
+
+#MacOS
+.DS_Store
+UM/.DS_Store
+resources/.DS_Store
+
+#Common plug-ins
+plugins/UraniumExample*Plugin

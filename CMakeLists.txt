@@ -10,18 +10,20 @@ include(UraniumTranslationTools)
 
 include(GNUInstallDirs)
 
-find_package(PythonInterp 3.4.0 REQUIRED)
+find_package(PythonInterp 3.5.0 REQUIRED)
 
-# Checks using pylint
+# # Checks using pylint
 # Note that we use exit 0 here to not mark the build as a failure on check failure
 # In addition, the specified pylint configuration uses the spellchecker plugin. This required python-enchant to be installed.
 add_custom_target(check)
 add_custom_command(TARGET check POST_BUILD COMMAND "PYTHONPATH=${CMAKE_SOURCE_DIR}" ${PYTHON_EXECUTABLE} -m pylint --rcfile=${CMAKE_SOURCE_DIR}/pylint.cfg UM --msg-template=\"{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}\" > ${CMAKE_BINARY_DIR}/pylint.log || exit 0 WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
-# Tests
-# Note that we use exit 0 here to not mark the build as a failure on test failure
-add_custom_target(tests)
-add_custom_command(TARGET tests POST_BUILD COMMAND "LANG=C" "PYTHONPATH=${CMAKE_SOURCE_DIR}" ${PYTHON_EXECUTABLE} -m pytest -r a --junitxml=${CMAKE_BINARY_DIR}/junit.xml ${CMAKE_SOURCE_DIR} || exit 0)
+# # Check using Mypy
+add_custom_target(typecheck)
+add_custom_command(TARGET typecheck POST_BUILD COMMAND ${PYTHON_EXECUTABLE} run_mypy.py WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+
+# # Tests
+include(UraniumTests)
 
 # # Benchmarks
 # add_custom_target(benchmark)
@@ -43,14 +45,14 @@ add_custom_target(extract-messages ${CMAKE_SOURCE_DIR}/scripts/extract-messages 
 # Build Translations
 CREATE_TRANSLATION_TARGETS()
 
-if(APPLE OR WIN32)
-    install(DIRECTORY UM DESTINATION lib/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/site-packages)
+if(EXISTS /etc/debian_version)
+    install(DIRECTORY UM DESTINATION lib${LIB_SUFFIX}/python${PYTHON_VERSION_MAJOR}/dist-packages)
 else()
-    install(DIRECTORY UM DESTINATION lib/python${PYTHON_VERSION_MAJOR}/dist-packages)
+    install(DIRECTORY UM DESTINATION lib${LIB_SUFFIX}/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/site-packages)
 endif()
 install(FILES ${CMAKE_SOURCE_DIR}/cmake/UraniumTranslationTools.cmake
         DESTINATION ${CMAKE_INSTALL_DATADIR}/cmake-${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}/Modules/ )
 install(DIRECTORY resources DESTINATION ${CMAKE_INSTALL_DATADIR}/uranium)
-install(DIRECTORY plugins DESTINATION lib/uranium)
+install(DIRECTORY plugins DESTINATION lib${LIB_SUFFIX}/uranium)
 
 include(CPackConfig.cmake)

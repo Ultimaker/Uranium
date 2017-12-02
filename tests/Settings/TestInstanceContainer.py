@@ -1,22 +1,16 @@
 # Copyright (c) 2016 Ultimaker B.V.
-# Uranium is released under the terms of the AGPLv3 or higher.
+# Uranium is released under the terms of the LGPLv3 or higher.
 
 import pytest
 import os
 
-import UM.Settings
-
+import UM.Settings.InstanceContainer
+# import UM.Settings.SettingDefinition
 from UM.Resources import Resources
 Resources.addSearchPath(os.path.dirname(os.path.abspath(__file__)))
 
-@pytest.fixture
-def container_registry():
-    UM.Settings.ContainerRegistry._ContainerRegistry__instance = None
-    UM.Settings.ContainerRegistry.getInstance().load()
-    return UM.Settings.ContainerRegistry.getInstance()
-
 def test_create():
-    container = UM.Settings.InstanceContainer("test")
+    container = UM.Settings.InstanceContainer.InstanceContainer("test")
     assert container.getId() == "test"
 
 ##  Test whether setting a property on an instance correctly updates dependencies.
@@ -25,9 +19,9 @@ def test_create():
 #   from InstanceContainer that is not easily captured in a Mock object. Therefore
 #   it is included here.
 def test_instance_setProperty():
-    instance_container = UM.Settings.InstanceContainer("test")
+    instance_container = UM.Settings.InstanceContainer.InstanceContainer("test")
 
-    definition1 = UM.Settings.SettingDefinition("test_0", None)
+    definition1 = UM.Settings.SettingDefinition.SettingDefinition("test_0", None)
     definition1.deserialize({
         "label": "Test 0",
         "type": "float",
@@ -36,7 +30,7 @@ def test_instance_setProperty():
         "minimum_value": "test_1 / 10",
     })
 
-    definition2 = UM.Settings.SettingDefinition("test_1", None)
+    definition2 = UM.Settings.SettingDefinition.SettingDefinition("test_1", None)
     definition2.deserialize({
         "label": "Test 1",
         "type": "float",
@@ -55,7 +49,7 @@ def test_instance_setProperty():
     definition1.relations.append(UM.Settings.SettingRelation.SettingRelation(owner = definition1, target = definition2, relation_type = UM.Settings.SettingRelation.RelationType.RequiresTarget, role = "minimum_value"))
     definition2.relations.append(UM.Settings.SettingRelation.SettingRelation(owner = definition2, target = definition1, relation_type = UM.Settings.SettingRelation.RelationType.RequiredByTarget, role = "minimum_value"))
 
-    def1_instance = UM.Settings.SettingInstance(definition1, instance_container)
+    def1_instance = UM.Settings.SettingInstance.SettingInstance(definition1, instance_container)
     instance_container.addInstance(def1_instance)
     def1_instance.setProperty("value", 20.0)
 
@@ -75,9 +69,9 @@ test_serialize_data = [
     }}, "setting_values.inst.cfg"),
 ]
 @pytest.mark.parametrize("container_data,equals_file", test_serialize_data)
-def test_serialize(container_data, equals_file, container_registry):
-    instance_container = UM.Settings.InstanceContainer("test")
-    definition = container_registry.findDefinitionContainers(id = container_data["definition"])[0]
+def test_serialize(container_data, equals_file, loaded_container_registry):
+    instance_container = UM.Settings.InstanceContainer.InstanceContainer("test")
+    definition = loaded_container_registry.findDefinitionContainers(id = container_data["definition"])[0]
     instance_container.setDefinition(definition)
 
     instance_container.setName(container_data["name"])
@@ -95,14 +89,50 @@ def test_serialize(container_data, equals_file, container_registry):
     with open(path) as data:
         assert data.readline() in result
 
+
+test_serialize_with_ignored_metadata_keys_data = [
+    ({"definition": "basic", "name": "Basic", "metadata": {"secret": "something", "secret2": "something2"}}, "basic.inst.cfg"),
+    ({"definition": "basic", "name": "Metadata", "metadata": {"author": "Ultimaker", "bool": False, "integer": 6, "secret": "something", "secret2": "something2"}}, "metadata.inst.cfg"),
+    ({"definition": "multiple_settings", "name": "Setting Values",
+      "metadata": {"secret": "something", "secret2": "something2"},
+      "values": {
+        "test_setting_0": 20, "test_setting_1": 20, "test_setting_2": 20, "test_setting_3": 20, "test_setting_4": 20
+      }}, "setting_values.inst.cfg"),
+]
+@pytest.mark.parametrize("container_data,equals_file", test_serialize_with_ignored_metadata_keys_data)
+def test_serialize_with_ignored_metadata_keys(container_data, equals_file, loaded_container_registry):
+    instance_container = UM.Settings.InstanceContainer.InstanceContainer("test")
+    definition = loaded_container_registry.findDefinitionContainers(id = container_data["definition"])[0]
+    instance_container.setDefinition(definition)
+
+    instance_container.setName(container_data["name"])
+
+    if "metadata" in container_data:
+        instance_container.setMetaData(container_data["metadata"])
+
+    if "values" in container_data:
+        for key, value in container_data["values"].items():
+            instance_container.setProperty(key, "value", value)
+
+    ignored_metadata_keys = ["secret", "secret2"]
+    result = instance_container.serialize(ignored_metadata_keys = ignored_metadata_keys)
+
+    instance_container.deserialize(result)
+    new_metadata = instance_container.getMetaData()
+
+    # the ignored keys should not be in the serialised metadata
+    for key in ignored_metadata_keys:
+        assert key not in new_metadata
+
+
 test_deserialize_data = [
     ("basic.inst.cfg", {"name": "Basic"}),
     ("metadata.inst.cfg", {"name": "Metadata", "metaData": { "author": "Ultimaker", "bool": "False", "integer": "6" } }),
     ("setting_values.inst.cfg", {"name": "Setting Values", "values": { "test_setting_0": 20 } }),
 ]
 @pytest.mark.parametrize("filename,expected", test_deserialize_data)
-def test_deserialize(filename, expected, container_registry):
-    instance_container = UM.Settings.InstanceContainer(filename)
+def test_deserialize(filename, expected, loaded_container_registry):
+    instance_container = UM.Settings.InstanceContainer.InstanceContainer(filename)
 
     path = Resources.getPath(Resources.InstanceContainers, filename)
     with open(path) as data:
@@ -115,4 +145,3 @@ def test_deserialize(filename, expected, container_registry):
 
         for key, value in value.items():
             assert instance_container.getProperty(key, "value") == value
-

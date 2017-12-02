@@ -1,20 +1,22 @@
 # Copyright (c) 2016 Ultimaker B.V.
-# Uranium is released under the terms of the AGPLv3 or higher.
+# Uranium is released under the terms of the LGPLv3 or higher.
 
 import collections
 import itertools
 import os.path
 
-from PyQt5.QtCore import Qt, QAbstractListModel, QVariant, QModelIndex, QObject, pyqtProperty, pyqtSignal, pyqtSlot
+from PyQt5.QtCore import Qt, QAbstractListModel, QVariant, QModelIndex, QObject, pyqtProperty, pyqtSignal
+from UM.FlameProfiler import pyqtSlot
 
 from UM.Logger import Logger
 from UM.Preferences import Preferences
 from UM.Resources import Resources
+from UM.Settings import SettingRelation
 from UM.i18n import i18nCatalog
+from UM.Application import Application
 
-import UM.Settings
-
-from UM.Settings.SettingDefinition import DefinitionPropertyType
+from UM.Settings.ContainerRegistry import ContainerRegistry
+from UM.Settings.SettingDefinition import SettingDefinition, DefinitionPropertyType
 
 ##  Model that provides a flattened list of the tree of SettingDefinition objects in a DefinitionContainer
 #
@@ -48,7 +50,7 @@ class SettingDefinitionsModel(QAbstractListModel):
         self._exclude = set()
 
         self._show_all = False
-
+        self._show_ancestors = False
         self._visibility_handler = None
 
         self._filter_dict = {}
@@ -60,16 +62,30 @@ class SettingDefinitionsModel(QAbstractListModel):
             self.ExpandedRole: b"expanded",
         }
         index = self.ExpandedRole + 1
-        for name in UM.Settings.SettingDefinition.getPropertyNames():
+        for name in SettingDefinition.getPropertyNames():
             self._role_names[index] = name.encode()
             index += 1
+
+    ##  Emitted whenever the showAncestors property changes.
+    showAncestorsChanged = pyqtSignal()
+
+    def setShowAncestors(self, show_ancestors):
+        if show_ancestors != self._show_ancestors:
+            self._show_ancestors = show_ancestors
+            self._update()
+            self.showAncestorsChanged.emit()
+
+    @pyqtProperty(bool, fset=setShowAncestors, notify=showAncestorsChanged)
+    # Should we still show ancestors, even if filter says otherwise?
+    def showAncestors(self):
+        return self._show_ancestors
 
     ##  Set the containerId property.
     def setContainerId(self, container_id):
         if container_id != self._container_id:
             self._container_id = container_id
 
-            containers = UM.Settings.ContainerRegistry.getInstance().findDefinitionContainers(id = self._container_id)
+            containers = ContainerRegistry.getInstance().findDefinitionContainers(id = self._container_id)
             if containers:
                 self._container = containers[0]
             else:
@@ -225,9 +241,10 @@ class SettingDefinitionsModel(QAbstractListModel):
     ##  Show the children of a specified SettingDefinition.
     @pyqtSlot(str)
     def expand(self, key):
-        self._expanded.add(key)
-        self.expandedChanged.emit()
-        self._updateVisibleRows()
+        if key not in self._expanded:
+            self._expanded.add(key)
+            self.expandedChanged.emit()
+            self._updateVisibleRows()
 
     ##  Show the children of a specified SettingDefinition and all children of those settings as well.
     @pyqtSlot(str)
@@ -345,7 +362,7 @@ class SettingDefinitionsModel(QAbstractListModel):
 
         result = []
         for relation in definitions[0].relations:
-            if relation.type is not UM.Settings.SettingRelation.RelationType.RequiresTarget:
+            if relation.type is not SettingRelation.RelationType.RequiresTarget:
                 continue
 
             if role and role != relation.role:
@@ -370,7 +387,7 @@ class SettingDefinitionsModel(QAbstractListModel):
 
         result = []
         for relation in definitions[0].relations:
-            if relation.type is not UM.Settings.SettingRelation.RelationType.RequiredByTarget:
+            if relation.type is not SettingRelation.RelationType.RequiredByTarget:
                 continue
 
             if role and role != relation.role:
@@ -468,12 +485,9 @@ class SettingDefinitionsModel(QAbstractListModel):
 
         # Try and find a translation catalog for the definition
         for file_name in self._container.getInheritedFiles():
-            try:
-                # See if the file exist. TODO: proper check if the file is loadable as well.
-                i18n_file = Resources.getPath(Resources.i18n, "en", "LC_MESSAGES", os.path.basename(file_name) + ".mo")
-                self._i18n_catalog = i18nCatalog(os.path.basename(file_name))
-            except FileNotFoundError:
-                continue
+            catalog = i18nCatalog(os.path.basename(file_name))
+            if catalog.hasTranslationLoaded():
+                self._i18n_catalog = catalog
 
         self.beginResetModel()
 
@@ -544,7 +558,13 @@ class SettingDefinitionsModel(QAbstractListModel):
             return False
 
         # If it does not match the current filter, it should not be shown.
-        if self._filter_dict and not definition.matchesFilter(**self._filter_dict):
+        filter = self._filter_dict.copy()
+        filter["i18n_catalog"] = self._i18n_catalog
+
+        if self._filter_dict and not definition.matchesFilter(**filter):
+            if self._show_ancestors:
+                if self._isAnyDescendantFiltered(definition):
+                    return True
             return False
 
         # We should not show categories that are empty
@@ -554,20 +574,34 @@ class SettingDefinitionsModel(QAbstractListModel):
 
         return True
 
+    def _isAnyDescendantFiltered(self, definition):
+        filter = self._filter_dict.copy()
+        filter["i18n_catalog"] = self._i18n_catalog
+        for child in definition.children:
+            if self._isAnyDescendantFiltered(child):
+                return True
+            if self._filter_dict and child.matchesFilter(**filter):
+                return True
+        return False
+
+
     # Determines if any child of a definition is visible.
     def _isAnyDescendantVisible(self, definition):
         if self._show_all:
             return True
 
+        filter = self._filter_dict.copy()
+        filter["i18n_catalog"] = self._i18n_catalog
         for child in definition.children:
             if child.key in self._exclude:
                 continue
 
-            if self._filter_dict and not child.matchesFilter(**self._filter_dict):
+            if self._filter_dict and not child.matchesFilter(**filter):
                 continue
 
             if child.key in self._visible:
-                return True
+                if Application.getInstance().getGlobalContainerStack().getProperty(child.key, "enabled"):
+                    return True
 
             if self._isAnyDescendantVisible(child):
                 return True

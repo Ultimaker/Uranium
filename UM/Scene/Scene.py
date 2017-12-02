@@ -1,5 +1,5 @@
 # Copyright (c) 2015 Ultimaker B.V.
-# Uranium is released under the terms of the AGPLv3 or higher.
+# Uranium is released under the terms of the LGPLv3 or higher.
 
 from UM.Scene.SceneNode import SceneNode
 from UM.Scene.Camera import Camera
@@ -17,17 +17,30 @@ class Scene():
     def __init__(self):
         super().__init__() # Call super to make multiple inheritance work.
 
-        self._root = SceneNode()
+        self._root = SceneNode(name= "Root")
         self._root.setCalculateBoundingBox(False)
         self._connectSignalsRoot()
         self._active_camera = None
-
+        self._ignore_scene_changes = False
         self._lock = threading.Lock()
 
     def _connectSignalsRoot(self):
         self._root.transformationChanged.connect(self.sceneChanged)
         self._root.childrenChanged.connect(self.sceneChanged)
         self._root.meshDataChanged.connect(self.sceneChanged)
+
+    def _disconnectSignalsRoot(self):
+        self._root.transformationChanged.disconnect(self.sceneChanged)
+        self._root.childrenChanged.disconnect(self.sceneChanged)
+        self._root.meshDataChanged.disconnect(self.sceneChanged)
+
+    def setIgnoreSceneChanges(self, ignore_scene_changes):
+        if self._ignore_scene_changes != ignore_scene_changes:
+            self._ignore_scene_changes = ignore_scene_changes
+            if self._ignore_scene_changes:
+                self._disconnectSignalsRoot()
+            else:
+                self._connectSignalsRoot()
 
     ##  Acquire the global scene lock.
     #
@@ -57,9 +70,13 @@ class Scene():
 
     ##  Change the root node of the scene
     def setRoot(self, node):
-        self._root = node
-        self._connectSignalsRoot()
-        self.rootChanged.emit()
+        if self._root != node:
+            if not self._ignore_scene_changes:
+                self._disconnectSignalsRoot()
+            self._root = node
+            if not self._ignore_scene_changes:
+                self._connectSignalsRoot()
+            self.rootChanged.emit()
 
     rootChanged = Signal()
 
@@ -70,15 +87,14 @@ class Scene():
     def getAllCameras(self):
         cameras = []
         for node in BreadthFirstIterator(self._root):
-            if type(node) is Camera:
+            if isinstance(node, Camera):
                 cameras.append(node)
-
         return cameras
 
     ##  Set the camera that should be used for rendering.
     #   \param name The name of the camera to use.
     def setActiveCamera(self, name):
-        camera = self._findCamera(name)
+        camera = self.findCamera(name)
         if camera:
             self._active_camera = camera
 
@@ -97,8 +113,7 @@ class Scene():
                 return node
         return None
 
-    ## private:
-    def _findCamera(self, name):
+    def findCamera(self, name):
         for node in BreadthFirstIterator(self._root):
-            if type(node) is Camera and node.getName() == name:
+            if isinstance(node, Camera) and node.getName() == name:
                 return node

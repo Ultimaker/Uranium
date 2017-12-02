@@ -1,5 +1,6 @@
 # Copyright (c) 2015 Ultimaker B.V.
-# Uranium is released under the terms of the AGPLv3 or higher.
+# Uranium is released under the terms of the LGPLv3 or higher.
+from typing import List
 
 from UM.Signal import Signal
 from UM.Math.Vector import Vector
@@ -43,7 +44,7 @@ class Selection:
 
     @classmethod
     def getBoundingBox(cls):
-        bounding_box = None # don't start with an empty bounding box, because that includes (0,0,0)
+        bounding_box = None  # don't start with an empty bounding box, because that includes (0,0,0)
         for node in cls.__selection:
             if type(node) is not SceneNode:
                 continue
@@ -60,7 +61,7 @@ class Selection:
 
     @classmethod
     ##  Get selected object by index
-    #   \param index index of the objectto return
+    #   \param index index of the object to return
     #   \returns selected object or None if index was incorrect / not found
     def getSelectedObject(cls, index):
         try:
@@ -102,7 +103,7 @@ class Selection:
     #
     #   \param operation \type{Class} The operation to create and push. It should take a SceneNode as first positional parameter.
     #   \param args The additional positional arguments passed along to the operation constructor.
-    #   \param kwargs The additional keyword arguements that will be passed along to the operation constructor.
+    #   \param kwargs The additional keyword arguments that will be passed along to the operation constructor.
     #
     #   \return list of instantiated operations
     @classmethod
@@ -138,5 +139,5 @@ class Selection:
 
         cls.selectionCenterChanged.emit()
 
-    __selection = []
+    __selection = []    # type: List[SceneNode]
     __selection_center = Vector(0, 0, 0)

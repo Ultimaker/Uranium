@@ -1,5 +1,7 @@
-# Copyright (c) 2015 Ultimaker B.V.
-# Uranium is released under the terms of the AGPLv3 or higher.
+# Copyright (c) 2017 Ultimaker B.V.
+# Uranium is released under the terms of the LGPLv3 or higher.
+
+from UM.Application import Application
 
 from UM.Logger import Logger
 
@@ -31,8 +33,6 @@ class RenderPass:
 
         self._fbo = None
 
-        self._updateRenderStorage()
-
     ##  Get the name of this RenderPass.
     #
     #   \return \type{string} The name of the render pass.
@@ -61,7 +61,7 @@ class RenderPass:
         if self._width != width or self._height != height:
             self._width = width
             self._height = height
-            self._updateRenderStorage()
+            self._fbo = None  # Ensure the fbo is re-created next render pass.
 
     ##  Bind the render pass so it can be rendered to.
     #
@@ -72,6 +72,10 @@ class RenderPass:
     #   \note It is very important to call release() after a call to
     #   bind(), once done with rendering.
     def bind(self):
+        if self._fbo is None:
+            # Ensure that the fbo is created. This is done on (first) bind, as this needs to be done on the main thread.
+            self._updateRenderStorage()
+
         if self._fbo:
             self._fbo.bind()
 
@@ -118,6 +122,10 @@ class RenderPass:
     ## private:
 
     def _updateRenderStorage(self):
+        # On Mac OS X, this function may get called by a main window resize signal during closing.
+        # This will cause a crash, so don't do anything when it is shutting down.
+        if Application.getInstance().isShuttingDown():
+            return
         if self._width <= 0 or self._height <= 0:
             Logger.log("w", "Tried to create render pass with size <= 0")
             return

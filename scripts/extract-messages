@@ -15,20 +15,28 @@ catalogname=$2
 mkdir -p $basedir/resources/i18n
 $scriptdir/extract-json $basedir/resources/definitions/ $basedir/resources/i18n
 $scriptdir/extract-all $basedir $basedir/resources/i18n/$catalogname.pot
+$scriptdir/extract-plugins $basedir/plugins/ $basedir/resources/i18n/$catalogname.pot
 msgconv --to-code=UTF-8 $basedir/resources/i18n/$catalogname.pot -o $basedir/resources/i18n/$catalogname.pot
 
 for pot in $basedir/resources/i18n/*.pot; do
     filename=$(basename $pot)
 
-    dir=$basedir/resources/i18n/en
+    dir=$basedir/resources/i18n/en_US
     mkdir -p $dir
     po=$dir/${filename/.pot/.po}
-    msginit --no-translator -l en -i $pot -o $po
+    msginit --no-translator -l en_US -i $pot -o $po
 
     dir=$basedir/resources/i18n/x-test
     mkdir -p $dir
     po=$dir/${filename/.pot/.po}
-    msginit --no-translator -l en -i $pot -o $po
+    msginit --no-translator -l en_US -i $pot -o $po
     msgfilter --keep-header -i $po -o $po sed -e "s/.*/xx&xx/"
-    msgfilter -i $po -o $po sed -e "s/Language: en/Language: x-test/"
+    msgfilter -i $po -o $po sed -e "s/Language: en_US/Language: x-test/"
+
+    #Auto-translate the translation files to Pirate.
+    dir=$basedir/resources/i18n/en_7S
+    mkdir -p $dir
+    po=$dir/${filename/.pot/.po}
+    python3 $scriptdir/pirate.py $pot $po
+    echo Created $po.
 done

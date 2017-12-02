@@ -1,5 +1,5 @@
 # Copyright (c) 2015 Ultimaker B.V.
-# Uranium is released under the terms of the AGPLv3 or higher.
+# Uranium is released under the terms of the LGPLv3 or higher.
 
 from UM.Signal import Signal, signalemitter
 from UM.Logger import Logger
@@ -120,10 +120,11 @@ class OutputDeviceManager():
     #   \param device_id The ID of the device to remove.
     #
     #   \note This does nothing if the device_id does not correspond to a registered device.
-    def removeOutputDevice(self, device_id):
+    #   \return Whether the device was successfully removed or not.
+    def removeOutputDevice(self, device_id) -> bool:
         if device_id not in self._output_devices:
             Logger.log("w", "Could not find output device with id %s to remove", device_id)
-            return
+            return False
 
         device = self._output_devices[device_id]
         del self._output_devices[device_id]
@@ -137,6 +138,7 @@ class OutputDeviceManager():
         if self._active_device.getId() == device_id:
             self._write_in_progress = False
             self.resetActiveDevice()
+        return True
 
     ##  Emitted whenever the active device changes.
     activeDeviceChanged = Signal()

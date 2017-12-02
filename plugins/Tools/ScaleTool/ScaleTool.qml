@@ -1,5 +1,5 @@
 // Copyright (c) 2015 Ultimaker B.V.
-// Uranium is released under the terms of the AGPLv3 or higher.
+// Uranium is released under the terms of the LGPLv3 or higher.
 
 import QtQuick 2.2
 import QtQuick.Controls 1.2
@@ -38,40 +38,34 @@ Item
         //First convert to fixed-point notation to round the number to 4 decimals and not introduce new floating point errors.
         //Then convert to a string (is implicit). The fixed-point notation will be something like "3.200".
         //Then remove any trailing zeroes and the radix.
-        return input.toFixed(decimals).replace(/\.?0*$/, ""); //Match on periods, if any ( \.? ), followed by any number of zeros ( 0* ), then the end of string ( $ ).
+        if(input)
+        {
+            return input.toFixed(decimals).replace(/\.?0*$/, ""); //Match on periods, if any ( \.? ), followed by any number of zeros ( 0* ), then the end of string ( $ ).
+        } else
+        {
+            return 0
+        }
     }
 
     Button
     {
         id: resetScaleButton
-
-        anchors.top: scaleToMaxButton.bottom;
+        anchors.top: textfields.bottom
         anchors.topMargin: UM.Theme.getSize("default_margin").height;
+        anchors.left: textfields.left
+        anchors.leftMargin: UM.Theme.getSize("default_margin").width;
         z: 1
 
         //: Reset scale tool button
         text: catalog.i18nc("@action:button","Reset")
         iconSource: UM.Theme.getIcon("scale_reset");
+        property bool needBorder: true
 
         style: UM.Theme.styles.tool_button;
 
         onClicked: UM.ActiveTool.triggerAction("resetScale");
     }
 
-    Button
-    {
-        id: scaleToMaxButton
-
-        //: Scale to max tool button
-        text: catalog.i18nc("@action:button","Scale to Max");
-        iconSource: UM.Theme.getIcon("scale_max");
-
-        anchors.top: parent.top;
-        z: 1
-
-        style: UM.Theme.styles.tool_button;
-        onClicked: UM.ActiveTool.triggerAction("scaleToMax")
-    }
 
     Flow {
         id: checkboxes;
@@ -79,8 +73,7 @@ Item
         anchors.left: resetScaleButton.right;
         anchors.leftMargin: UM.Theme.getSize("default_margin").width;
         anchors.right: parent.right;
-        anchors.top: textfields.bottom;
-        anchors.topMargin: UM.Theme.getSize("default_margin").height;
+        anchors.top: resetScaleButton.top;
 
         spacing: UM.Theme.getSize("default_margin").height;
 
@@ -118,38 +111,36 @@ Item
     {
         id: textfields;
 
-        anchors.left: resetScaleButton.right;
-        anchors.leftMargin: UM.Theme.getSize("default_margin").width;
         anchors.top: parent.top;
 
         columns: 3;
         flow: Grid.TopToBottom;
         spacing: UM.Theme.getSize("default_margin").width / 2;
 
-        Label
+        Text
         {
             height: UM.Theme.getSize("setting_control").height;
             text: "X";
             font: UM.Theme.getFont("default");
-            color: "red"
+            color: UM.Theme.getColor("x_axis");
             verticalAlignment: Text.AlignVCenter;
         }
 
-        Label
+        Text
         {
             height: UM.Theme.getSize("setting_control").height;
             text: "Y";
             font: UM.Theme.getFont("default");
-            color: "green"
+            color: UM.Theme.getColor("z_axis"); // This is intentional. The internal axis are switched.
             verticalAlignment: Text.AlignVCenter;
         }
 
-        Label
+        Text
         {
             height: UM.Theme.getSize("setting_control").height;
             text: "Z";
             font: UM.Theme.getFont("default");
-            color: "blue"
+            color: UM.Theme.getColor("y_axis"); // This is intentional. The internal axis are switched.
             verticalAlignment: Text.AlignVCenter;
         }
 

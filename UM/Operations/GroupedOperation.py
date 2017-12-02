@@ -1,5 +1,5 @@
 # Copyright (c) 2015 Ultimaker B.V.
-# Uranium is released under the terms of the AGPLv3 or higher.
+# Uranium is released under the terms of the LGPLv3 or higher.
 
 from . import Operation
 
@@ -69,3 +69,9 @@ class GroupedOperation(Operation.Operation):
                 return False
             op.addOperation(child_op)
         return op
+
+    def __repr__(self):
+        output = "GroupedOperation(children = {0})\n".format(len(self._children))
+        for child in self._children:
+            output += "  {0!r}\n".format(child)
+        return output

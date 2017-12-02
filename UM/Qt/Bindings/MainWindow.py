@@ -1,18 +1,25 @@
 # Copyright (c) 2015 Ultimaker B.V.
-# Uranium is released under the terms of the AGPLv3 or higher.
+# Uranium is released under the terms of the LGPLv3 or higher.
 
-from PyQt5.QtCore import pyqtProperty, QObject, Qt, QCoreApplication, pyqtSignal, pyqtSlot, QMetaObject, QRectF
+from PyQt5.QtCore import pyqtProperty, Qt, QCoreApplication, pyqtSignal, pyqtSlot, QMetaObject, QRectF
 from PyQt5.QtGui import QColor
-from PyQt5.QtQuick import QQuickWindow, QQuickItem
+from PyQt5.QtQuick import QQuickWindow
 
-from UM.Math.Vector import Vector
 from UM.Math.Matrix import Matrix
 from UM.Qt.QtMouseDevice import QtMouseDevice
 from UM.Qt.QtKeyDevice import QtKeyDevice
 from UM.Application import Application
 from UM.Preferences import Preferences
+from UM.Signal import Signal, signalemitter
+
+from typing import Optional
+
+MYPY = False
+if MYPY:
+    from PyQt5.QtQuick import QQuickItem
 
 ##  QQuickWindow subclass that provides the main window.
+@signalemitter
 class MainWindow(QQuickWindow):
     def __init__(self, parent = None):
         super(MainWindow, self).__init__(parent)
@@ -20,15 +27,20 @@ class MainWindow(QQuickWindow):
         self._background_color = QColor(204, 204, 204, 255)
 
         self.setClearBeforeRendering(False)
-        self.beforeRendering.connect(self._render, type=Qt.DirectConnection)
+        self.beforeRendering.connect(self._render, type = Qt.DirectConnection)
 
         self._mouse_device = QtMouseDevice(self)
         self._mouse_device.setPluginId("qt_mouse")
         self._key_device = QtKeyDevice()
         self._key_device.setPluginId("qt_key")
-        self._previous_focus = None
+        self._previous_focus = None  # type: Optional["QQuickItem"]
 
         self._app = QCoreApplication.instance()
+
+        # Remove previously added input devices (if any). This can happen if the window was re-loaded.
+        self._app.getController().removeInputDevice("qt_mouse")
+        self._app.getController().removeInputDevice("qt_key")
+
         self._app.getController().addInputDevice(self._mouse_device)
         self._app.getController().addInputDevice(self._key_device)
         self._app.getController().getScene().sceneChanged.connect(self._onSceneChanged)
@@ -44,6 +56,7 @@ class MainWindow(QQuickWindow):
         self.setWidth(int(self._preferences.getValue("general/window_width")))
         self.setHeight(int(self._preferences.getValue("general/window_height")))
         self.setPosition(int(self._preferences.getValue("general/window_left")), int(self._preferences.getValue("general/window_top")))
+
         # Make sure restored geometry is not outside the currently available screens
         screen_found = False
         for s in range(0, self._app.desktop().screenCount()):
@@ -51,11 +64,13 @@ class MainWindow(QQuickWindow):
                 screen_found = True
                 break
         if not screen_found:
-            self.setPosition(50,50)
+            self.setPosition(50, 50)
 
         self.setWindowState(int(self._preferences.getValue("general/window_state")))
         self._mouse_x = 0
         self._mouse_y = 0
+
+        self._mouse_pressed = False
 
         self._viewport_rect = QRectF(0, 0, 1.0, 1.0)
 
@@ -65,9 +80,9 @@ class MainWindow(QQuickWindow):
     @pyqtSlot()
     def toggleFullscreen(self):
         if self._fullscreen:
-            self.setVisibility(QQuickWindow.Windowed) # Switch back to windowed
+            self.setVisibility(QQuickWindow.Windowed)  # Switch back to windowed
         else:
-            self.setVisibility(QQuickWindow.FullScreen) # Go to fullscreen
+            self.setVisibility(QQuickWindow.FullScreen)  # Go to fullscreen
         self._fullscreen = not self._fullscreen
 
     def getBackgroundColor(self):
@@ -110,16 +125,19 @@ class MainWindow(QQuickWindow):
         if event.isAccepted():
             return
 
-        if self.activeFocusItem() != None and self.activeFocusItem() != self._previous_focus:
+        if self.activeFocusItem() is not None and self.activeFocusItem() != self._previous_focus:
             self.activeFocusItem().setFocus(False)
 
         self._previous_focus = self.activeFocusItem()
         self._mouse_device.handleEvent(event)
+        self._mouse_pressed = True
 
     def mouseMoveEvent(self, event):
         self._mouse_x = event.x()
         self._mouse_y = event.y()
-        self.mousePositionChanged.emit()
+
+        if self._mouse_pressed and self._app.getController().isModelRenderingEnabled():
+            self.mousePositionChanged.emit()
 
         super().mouseMoveEvent(event)
         if event.isAccepted():
@@ -132,6 +150,7 @@ class MainWindow(QQuickWindow):
         if event.isAccepted():
             return
         self._mouse_device.handleEvent(event)
+        self._mouse_pressed = False
 
     def keyPressEvent(self, event):
         super().keyPressEvent(event)
@@ -155,7 +174,7 @@ class MainWindow(QQuickWindow):
         self._mouse_device.handleEvent(event)
 
     def moveEvent(self, event):
-        QMetaObject.invokeMethod(self, "_onWindowGeometryChanged", Qt.QueuedConnection);
+        QMetaObject.invokeMethod(self, "_onWindowGeometryChanged", Qt.QueuedConnection)
 
     def resizeEvent(self, event):
         super().resizeEvent(event)
@@ -165,10 +184,13 @@ class MainWindow(QQuickWindow):
 
         self._updateViewportGeometry(win_w, win_h)
 
-        QMetaObject.invokeMethod(self, "_onWindowGeometryChanged", Qt.QueuedConnection);
+        QMetaObject.invokeMethod(self, "_onWindowGeometryChanged", Qt.QueuedConnection)
 
     def hideEvent(self, event):
-        Application.getInstance().windowClosed()
+        if Application.getInstance().getMainWindow() == self:
+            Application.getInstance().windowClosed()
+
+    renderCompleted = Signal(type = Signal.Queued)
 
     def _render(self):
         renderer = self._app.getRenderer()
@@ -179,6 +201,7 @@ class MainWindow(QQuickWindow):
         renderer.render()
         view.endRendering()
         renderer.endRendering()
+        self.renderCompleted.emit()
 
     def _onSceneChanged(self, object):
         self.update()
@@ -194,19 +217,22 @@ class MainWindow(QQuickWindow):
         elif self.windowState() == Qt.WindowMaximized:
             self._preferences.setValue("general/window_state", Qt.WindowMaximized)
 
-    def _updateViewportGeometry(self, width, height):
-        view_w = width * self._viewport_rect.width()
-        view_h = height * self._viewport_rect.height()
+    def _updateViewportGeometry(self, width: int, height: int):
+        view_width = width * self._viewport_rect.width()
+        view_height = height * self._viewport_rect.height()
 
         for camera in self._app.getController().getScene().getAllCameras():
-            camera.setViewportSize(view_w, view_h)
             camera.setWindowSize(width, height)
-            proj = Matrix()
-            if camera.isPerspective():
-                proj.setPerspective(30, view_w / view_h, 1, 500)
-            else:
-                proj.setOrtho(-view_w / 2, view_w / 2, -view_h / 2, view_h / 2, -500, 500)
-            camera.setProjectionMatrix(proj)
 
-        self._app.getRenderer().setViewportSize(view_w, view_h)
+            if camera.getAutoAdjustViewPort():
+                camera.setViewportSize(view_width, view_height)
+                projection_matrix = Matrix()
+                if camera.isPerspective():
+                    if view_width is not 0:
+                        projection_matrix.setPerspective(30, view_width / view_height, 1, 500)
+                else:
+                    projection_matrix.setOrtho(-view_width / 2, view_width / 2, -view_height / 2, view_height / 2, -500, 500)
+                camera.setProjectionMatrix(projection_matrix)
+
+        self._app.getRenderer().setViewportSize(view_width, view_height)
         self._app.getRenderer().setWindowSize(width, height)

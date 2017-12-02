@@ -1,5 +1,5 @@
 # Copyright (c) 2015 Ultimaker B.V.
-# Uranium is released under the terms of the AGPLv3 or higher.
+# Uranium is released under the terms of the LGPLv3 or higher.
 
 import multiprocessing
 import threading
@@ -7,6 +7,9 @@ import threading
 from UM.Signal import Signal, signalemitter
 from UM.Logger import Logger
 
+from typing import TYPE_CHECKING, List, Callable, Any
+if TYPE_CHECKING:
+    from UM.Job import Job
 
 ##  A thread pool and queue manager for Jobs.
 #
@@ -19,7 +22,7 @@ class JobQueue():
     #
     #   \param thread_count The amount of threads to use. Can be a positive integer or 'auto'.
     #                       When 'auto', the number of threads is based on the number of processors and cores on the machine.
-    def __init__(self, thread_count = "auto"): #pylint: disable=bad-whitespace
+    def __init__(self, thread_count: (str, int) = "auto"): #pylint: disable=bad-whitespace
         if JobQueue._instance is None:
             JobQueue._instance = self
         else:
@@ -39,7 +42,7 @@ class JobQueue():
         self._threads = [_Worker(self) for t in range(thread_count)]
 
         self._semaphore = threading.Semaphore(0)
-        self._jobs = []
+        self._jobs = []  # type: List[Job]
         self._jobs_lock = threading.Lock()
 
         for thread in self._threads:
@@ -49,7 +52,7 @@ class JobQueue():
     ##  Add a Job to the queue.
     #
     #   \param job \type{Job} The Job to add.
-    def add(self, job):
+    def add(self, job: "Job"):
         with self._jobs_lock:
             self._jobs.append(job)
             self._semaphore.release()
@@ -60,7 +63,7 @@ class JobQueue():
     #
     #   \note If a job has already begun processing it is already removed from the queue
     #   and thus can no longer be cancelled.
-    def remove(self, job):
+    def remove(self, job: "Job"):
         with self._jobs_lock:
             if job in self._jobs:
                 self._jobs.remove(job)
@@ -90,13 +93,13 @@ class JobQueue():
 
     ##  Get the singleton instance of the JobQueue.
     @classmethod
-    def getInstance(cls):
-        if cls._instance is None:
+    def getInstance(cls) -> "JobQueue":
+        if not cls._instance:
             cls._instance = JobQueue()
 
         return cls._instance
 
-    _instance = None
+    _instance = None    # type: JobQueue
 
 
 ##  Internal

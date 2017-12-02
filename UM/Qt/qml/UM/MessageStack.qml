@@ -1,5 +1,5 @@
 // Copyright (c) 2015 Ultimaker B.V.
-// Uranium is released under the terms of the AGPLv3 or higher.
+// Uranium is released under the terms of the LGPLv3 or higher.
 
 import QtQuick 2.2
 import QtQuick.Controls 1.1
@@ -16,50 +16,59 @@ ListView {
     visible: true
 
     model: UM.VisibleMessagesModel { }
-    spacing: UM.Theme.getSize("default_lining").height
-
+    spacing: UM.Theme.getSize("message_margin").height
+    
     interactive: false;
     delegate: Rectangle
     {
         id: message
-        width: UM.Theme.getSize("message").width
-        property int labelHeight: messageLabel.height + (UM.Theme.getSize("default_margin").height * 2)
+
+        property int labelTopBottomMargin: Math.floor(UM.Theme.getSize("default_margin").height / 2)
+        property int labelHeight: messageLabel.height + (UM.Theme.getSize("message_inner_margin").height * 2)
         property int progressBarHeight: totalProgressBar.height + UM.Theme.getSize("default_margin").height
-        property int actionButtonsHeight: actionButtons.height > 0 ? actionButtons.height + UM.Theme.getSize("default_margin").height : 0
-        height:
-        {
-            if (model.progress == null)
-            {
-                return Math.max(message.labelHeight, actionButtons.y + message.actionButtonsHeight)
-            }
-            else
-            {
-                return message.labelHeight + message.progressBarHeight + message.actionButtonsHeight
-            }
-        }
-        anchors.horizontalCenter: parent.horizontalCenter;
+        property int actionButtonsHeight: (actionButtons.height > 0 ? actionButtons.height + UM.Theme.getSize("default_margin").height : 0) + UM.Theme.getSize("default_margin").height * 2
+        property int closeButtonHeight: UM.Theme.getSize("message_close").height
+        property variant actions: model.actions
+        property variant model_id: model.id
+
+        property int totalMessageHeight: Math.max(message.labelHeight, message.actionButtonsHeight + message.closeButtonHeight) + message.labelTopBottomMargin
+        property int totalProgressBarHeight : Math.floor(message.labelHeight + message.progressBarHeight + message.actionButtonsHeight + UM.Theme.getSize("default_margin").height / 2)
+
+        width: UM.Theme.getSize("message").width
+        height: (model.progress == null) ? totalMessageHeight : totalProgressBarHeight
+        anchors.horizontalCenter: parent.horizontalCenter
 
         color: UM.Theme.getColor("message_background")
         border.width: UM.Theme.getSize("default_lining").width
         border.color: UM.Theme.getColor("message_border")
 
-        property variant actions: model.actions;
-        property variant model_id: model.id
+        Label {
+            id: messageTitle
+
+            anchors {
+                left: parent.left;
+                leftMargin: UM.Theme.getSize("message_inner_margin").width
+                top: parent.top;
+                topMargin: model.title != undefined ? Math.floor(UM.Theme.getSize("default_margin").height / 2) : 0;
+            }
+
+            text: model.title == undefined ? "" : model.title
+            color: UM.Theme.getColor("message_text")
+            font: UM.Theme.getFont("default_bold")
+            wrapMode: Text.Wrap;
+        }
 
         Label {
             id: messageLabel
+
             anchors {
                 left: parent.left;
-                leftMargin: UM.Theme.getSize("default_margin").width;
-
-                top: model.progress != null ? parent.top : undefined;
-                topMargin: UM.Theme.getSize("default_margin").width;
-
+                leftMargin: UM.Theme.getSize("message_inner_margin").width
                 right: actionButtons.left;
-                rightMargin: UM.Theme.getSize("default_margin").width;
+                rightMargin: UM.Theme.getSize("message_inner_margin").width + closeButton.width
 
-                verticalCenter: model.progress != null ? undefined : parent.verticalCenter;
-                bottomMargin: UM.Theme.getSize("default_margin").width;
+                top: model.progress != null ? messageTitle.bottom : messageTitle.bottom;
+                topMargin: message.labelTopBottomMargin;
             }
 
             function getProgressText(){
@@ -91,47 +100,38 @@ ListView {
             property string backgroundColor: UM.Theme.getColor("message_progressbar_background")
             property string controlColor: UM.Theme.getColor("message_progressbar_control")
 
-            anchors.top: messageLabel.bottom;
-            anchors.topMargin: UM.Theme.getSize("default_margin").width;
-            anchors.left: parent.left;
-            anchors.leftMargin: UM.Theme.getSize("default_margin").width;
+            anchors.top: messageLabel.bottom
+            anchors.topMargin: Math.floor(UM.Theme.getSize("message_inner_margin").height / 2)
+            anchors.left: parent.left
+            anchors.leftMargin: UM.Theme.getSize("message_inner_margin").width
+            anchors.right: parent.right
+            anchors.rightMargin: UM.Theme.getSize("message_inner_margin").width
         }
 
         Button {
             id: closeButton;
             width: UM.Theme.getSize("message_close").width;
             height: UM.Theme.getSize("message_close").height;
+
             anchors {
                 right: parent.right;
-                rightMargin: UM.Theme.getSize("default_margin").width / 2;
+                rightMargin: UM.Theme.getSize("default_margin").width;
                 top: parent.top;
-                topMargin: UM.Theme.getSize("default_margin").width / 2;
+                topMargin: UM.Theme.getSize("default_margin").width;
             }
+
             UM.RecolorImage {
                 anchors.fill: parent;
                 sourceSize.width: width
                 sourceSize.height: width
-                color:
-                {
-                    if(closeButton.pressed)
-                    {
-                        return UM.Theme.getColor("message_button_active");
-                    }
-                    else if(closeButton.hovered)
-                    {
-                        return UM.Theme.getColor("message_button_hover");
-                    }
-                    else
-                    {
-                        return UM.Theme.getColor("message_button");
-                    }
-                }
-                source: UM.Theme.getIcon("cross2")
+                color: UM.Theme.getColor("message_text")
+                source: UM.Theme.getIcon("cross1")
             }
 
             onClicked: base.model.hideMessage(model.id)
             visible: model.dismissable
             enabled: model.dismissable
+
             style: ButtonStyle {
                 background: Rectangle {
                     color: UM.Theme.getColor("message_background")
@@ -145,33 +145,22 @@ ListView {
 
             anchors {
                 right: parent.right
-                rightMargin: UM.Theme.getSize("default_margin").width
-                top:
-                {
-                    if (totalProgressBar.visible)
-                    {
-                        return totalProgressBar.bottom;
-                    }
-                    else if (closeButton.visible)
-                    {
-                        return closeButton.bottom;
-                    }
-                    return message.top;
-                }
+                rightMargin: UM.Theme.getSize("message_inner_margin").width
+                top: closeButton.bottom
                 topMargin: UM.Theme.getSize("default_margin").height
             }
 
             Repeater
             {
                 model: message.actions
-                delegate: Button{
+                delegate: Button {
                     id: messageStackButton
                     onClicked: base.model.actionTriggered(message.model_id, model.action_id)
                     text: model.name
                     style: ButtonStyle {
-                        background: Item{
+                        background: Item {
                             property int standardWidth: UM.Theme.getSize("message_button").width
-                            property int responsiveWidth: messageStackButtonText.width + UM.Theme.getSize("default_margin").width
+                            property int responsiveWidth: messageStackButtonText.width + UM.Theme.getSize("message_inner_margin").width
                             implicitWidth: responsiveWidth > standardWidth ? responsiveWidth : standardWidth
                             implicitHeight: UM.Theme.getSize("message_button").height
                             Rectangle {

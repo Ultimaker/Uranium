@@ -1,5 +1,5 @@
 # Copyright (c) 2015 Ultimaker B.V.
-# Uranium is released under the terms of the AGPLv3 or higher.
+# Uranium is released under the terms of the LGPLv3 or higher.
 
 from PyQt5.QtCore import Qt, QCoreApplication, pyqtSlot
 
@@ -22,6 +22,7 @@ class PluginsModel(ListModel):
         super().__init__(parent)
         self._plugin_registery = PluginRegistry.getInstance()
         self._required_plugins = Application.getInstance().getRequiredPlugins()
+        self.addRoleName(self.IdRole, "id")
         self.addRoleName(self.NameRole, "name")
         self.addRoleName(self.RequiredRole, "required")
         self.addRoleName(self.EnabledRole, "enabled")
@@ -32,7 +33,7 @@ class PluginsModel(ListModel):
         self._update()
 
     def _update(self):
-        items = [] 
+        items = []
         active_plugins = self._plugin_registery.getActivePlugins()
         for plugin in self._plugin_registery.getAllMetaData():
             if "plugin" not in plugin:
@@ -59,4 +60,3 @@ class PluginsModel(ListModel):
             self._plugin_registery.addActivePlugin(name)
         else:
             self._plugin_registery.removeActivePlugin(name)
-        self._update()

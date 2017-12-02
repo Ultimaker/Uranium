@@ -1,28 +1,41 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2017 Ultimaker B.V.
 # Copyright (c) Thiago Marcos P. Santos
 # Copyright (c) Christopher S. Case
 # Copyright (c) David H. Bronke
-# Uranium is released under the terms of the AGPLv3 or higher.
+# Uranium is released under the terms of the LGPLv3 or higher.
 
+import enum #For the compress parameter of postponeSignals.
 import inspect
 import threading
 import os
 import weakref
+from weakref import ReferenceType
+from typing import Any, Union, Callable, TypeVar, Generic, List, Tuple, Iterable, cast, Optional
+import contextlib
+import traceback
+
+import functools
 
 from UM.Event import CallFunctionEvent
 from UM.Decorators import deprecated, call_if_enabled
 from UM.Logger import Logger
 from UM.Platform import Platform
+from UM import FlameProfiler
+
+MYPY = False
+if MYPY:
+    from UM.Application import Application
+
 
 # Helper functions for tracing signal emission.
-def _traceEmit(signal, *args, **kwargs):
-    Logger.log("d", "Emitting %s with arguments %s", str(signal._Signal__name), str(args) + str(kwargs))
+def _traceEmit(signal: Any, *args: Any, **kwargs: Any) -> None:
+    Logger.log("d", "Emitting %s with arguments %s", str(signal.getName()), str(args) + str(kwargs))
 
     if signal._Signal__type == Signal.Queued:
         Logger.log("d", "> Queued signal, postponing emit until next event loop run")
 
     if signal._Signal__type == Signal.Auto:
-        if Signal._app is not None and threading.current_thread() is not Signal._app.getMainThread():
+        if Signal._signalQueue is not None and threading.current_thread() is not Signal._signalQueue.getMainThread():
             Logger.log("d", "> Auto signal and not on main thread, postponing emit until next event loop run")
 
     for func in signal._Signal__functions:
@@ -35,14 +48,50 @@ def _traceEmit(signal, *args, **kwargs):
         Logger.log("d", "> Emitting %s", str(signal._Signal__name))
 
 
-def _traceConnect(signal, *args, **kwargs):
+def _traceConnect(signal: Any, *args: Any, **kwargs: Any) -> None:
     Logger.log("d", "Connecting signal %s to %s", str(signal._Signal__name), str(args[0]))
 
-def _traceDisconnect(signal, *args, **kwargs):
+
+def _traceDisconnect(signal: Any, *args: Any, **kwargs: Any) -> None:
     Logger.log("d", "Connecting signal %s from %s", str(signal._Signal__name), str(args[0]))
 
-def _isTraceEnabled():
+
+def _isTraceEnabled() -> bool:
     return "URANIUM_TRACE_SIGNALS" in os.environ
+
+
+class SignalQueue:
+    def functionEvent(self, event):
+        pass
+
+    def getMainThread(self):
+        pass
+
+###########################################################################
+# Integration with the Flame Profiler.
+
+
+def _recordSignalNames():
+    return FlameProfiler.enabled()
+
+
+def profileEmit(func):
+    if FlameProfiler.enabled():
+        @functools.wraps(func)
+        def wrapped(self, *args, **kwargs):
+            FlameProfiler.updateProfileConfig()
+            if FlameProfiler.isRecordingProfile():
+                with FlameProfiler.profileCall("[SIG] " + self.getName()):
+                    func(self, *args, **kwargs)
+            else:
+                func(self, *args, **kwargs)
+        return wrapped
+
+    else:
+        return func
+
+
+###########################################################################
 
 ##  Simple implementation of signals and slots.
 #
@@ -83,17 +132,21 @@ class Signal:
     #   \param kwargs Keyword arguments.
     #                 Possible keywords:
     #                 - type: The signal type. Defaults to Auto.
-    def __init__(self, **kwargs):
+    def __init__(self, type: int = Auto) -> None:
         # These collections must be treated as immutable otherwise we lose thread safety.
-        self.__functions = WeakImmutableList()
-        self.__methods = WeakImmutablePairList()
-        self.__signals = WeakImmutableList()
+        self.__functions = WeakImmutableList()      # type: "WeakImmutableList"
+        self.__methods = WeakImmutablePairList()    # type: "WeakImmutablePairList"
+        self.__signals = WeakImmutableList()        # type: "WeakImmutableList"
 
         self.__lock = threading.Lock()  # Guards access to the fields above.
+        self.__type = type
 
-        self.__type = kwargs.get("type", Signal.Auto)
+        self._postpone_emit = False
+        self._postpone_thread = None    # type: threading.Thread
+        self._compress_postpone = False
+        self._postponed_emits = None    # type: Any
 
-        if "URANIUM_TRACE_SIGNALS" in os.environ:
+        if _recordSignalNames():
             try:
                 if Platform.isWindows():
                     self.__name = inspect.stack()[1][0].f_locals["key"]
@@ -101,14 +154,19 @@ class Signal:
                     self.__name = inspect.stack()[1].frame.f_locals["key"]
             except KeyError:
                 self.__name = "Signal"
+        else:
+            self.__name = "Anon"
+
+    def getName(self):
+        return self.__name
 
     ##  \exception NotImplementedError
-    def __call__(self):
+    def __call__(self) -> None:
         raise NotImplementedError("Call emit() to emit a signal")
 
     ##  Get type of the signal
     #   \return \type{int} Direct(1), Auto(2) or Queued(3)
-    def getType(self):
+    def getType(self) -> int:
         return self.__type
 
     ##  Emit the signal which indirectly calls all of the connected slots.
@@ -120,58 +178,71 @@ class Signal:
     #   the call will be posted as an event to the application main thread, which means the
     #   function will be called on the next application event loop tick.
     @call_if_enabled(_traceEmit, _isTraceEnabled())
-    def emit(self, *args, **kwargs):
+    @profileEmit
+    def emit(self, *args: Any, **kwargs: Any) -> None:
+        # Check to see if we need to postpone emits
+        if self._postpone_emit:
+            if threading.current_thread() != self._postpone_thread:
+                Logger.log("w", "Tried to emit signal from thread %s while emits are being postponed by %s. Traceback:", threading.current_thread(), self._postpone_thread)
+                tb = traceback.format_stack()
+                for line in tb:
+                    Logger.log("w", line)
+
+            if self._compress_postpone == CompressTechnique.CompressSingle:
+                # If emits should be compressed, we only emit the last emit that was called
+                self._postponed_emits = (args, kwargs)
+            else:
+                # If emits should not be compressed or compressed per parameter value, we catch all calls to emit and put them in a list to be called later.
+                if not self._postponed_emits:
+                    self._postponed_emits = []
+                self._postponed_emits.append((args, kwargs))
+            return
+
         try:
             if self.__type == Signal.Queued:
-                Signal._app.functionEvent(CallFunctionEvent(self.emit, args, kwargs))
+                Signal._app.functionEvent(CallFunctionEvent(self.__performEmit, args, kwargs))
                 return
-
             if self.__type == Signal.Auto:
                 if threading.current_thread() is not Signal._app.getMainThread():
-                    Signal._app.functionEvent(CallFunctionEvent(self.emit, args, kwargs))
+                    Signal._app.functionEvent(CallFunctionEvent(self.__performEmit, args, kwargs))
                     return
         except AttributeError: # If Signal._app is not set
             return
 
-        # Quickly make some private references to the collections we need to process.
-        # Although the these fields are always safe to use read and use with regards to threading,
-        # we want to operate on a consistent snapshot of the whole set of fields.
-        with self.__lock:
-            functions = self.__functions
-            methods = self.__methods
-            signals = self.__signals
-
-        # Call handler functions
-        for func in functions:
-            func(*args, **kwargs)
-
-        # Call handler methods
-        for dest, func in methods:
-            func(dest, *args, **kwargs)
-
-        # Emit connected signals
-        for signal in signals:
-            signal.emit(*args, **kwargs)
+        self.__performEmit(*args, **kwargs)
 
     ##  Connect to this signal.
     #   \param connector The signal or slot (function) to connect.
     @call_if_enabled(_traceConnect, _isTraceEnabled())
-    def connect(self, connector):
+    def connect(self, connector: Union['Signal', Callable[[],None]]) -> None:
+        if self._postpone_emit:
+            Logger.log("w", "Tried to connect to signal %s that is currently being postponed, this is not possible", self.__name)
+            return
+
         with self.__lock:
             if isinstance(connector, Signal):
                 if connector == self:
                     return
                 self.__signals = self.__signals.append(connector)
             elif inspect.ismethod(connector):
-                self.__methods = self.__methods.append(connector.__self__, connector.__func__)
+                # if SIGNAL_PROFILE:
+                #     Logger.log('d', "Connector method qual name: " + connector.__func__.__qualname__)
+                self.__methods = self.__methods.append(cast(Any, connector).__self__, cast(Any, connector).__func__)
             else:
                 # Once again, update the list of functions using a whole new list.
+                # if SIGNAL_PROFILE:
+                #     Logger.log('d', "Connector function qual name: " + connector.__qualname__)
+
                 self.__functions = self.__functions.append(connector)
 
     ##  Disconnect from this signal.
     #   \param connector The signal or slot (function) to disconnect.
     @call_if_enabled(_traceDisconnect, _isTraceEnabled())
     def disconnect(self, connector):
+        if self._postpone_emit:
+            Logger.log("w", "Tried to disconnect from signal %s that is currently being postponed, this is not possible", self.__name)
+            return
+
         with self.__lock:
             if isinstance(connector, Signal):
                 self.__signals = self.__signals.remove(connector)
@@ -182,10 +253,14 @@ class Signal:
 
     ##  Disconnect all connected slots.
     def disconnectAll(self):
+        if self._postpone_emit:
+            Logger.log("w", "Tried to disconnect from signal %s that is currently being postponed, this is not possible", self.__name)
+            return
+
         with self.__lock:
-            self.__functions = WeakImmutableList()
-            self.__methods = WeakImmutablePairList()
-            self.__signals = WeakImmutableList()
+            self.__functions = WeakImmutableList()      # type: "WeakImmutableList"
+            self.__methods = WeakImmutablePairList()    # type: "WeakImmutablePairList"
+            self.__signals = WeakImmutableList()        # type: "WeakImmutableList"
 
     ##  To support Pickle
     #
@@ -193,7 +268,7 @@ class Signal:
     def __getstate__(self):
         return {}
 
-    ##  To proerly handle deepcopy in combination with __getstate__
+    ##  To properly handle deepcopy in combination with __getstate__
     #
     #   Apparently deepcopy uses __getstate__ internally, which is not documented. The reimplementation
     #   of __getstate__ then breaks deepcopy. On the other hand, if we do not reimplement it like that,
@@ -215,7 +290,48 @@ class Signal:
 
     #   To avoid circular references when importing Application, this should be
     #   set by the Application instance.
-    _app = None
+    _app = None  # type: Application
+
+    _signalQueue = None  # type: SignalQueue
+
+    # Private implementation of the actual emit.
+    # This is done to make it possible to freely push function events without needing to maintain state.
+    def __performEmit(self, *args, **kwargs):
+        # Quickly make some private references to the collections we need to process.
+        # Although the these fields are always safe to use read and use with regards to threading,
+        # we want to operate on a consistent snapshot of the whole set of fields.
+        with self.__lock:
+            functions = self.__functions
+            methods = self.__methods
+            signals = self.__signals
+
+        if not FlameProfiler.isRecordingProfile():
+            # Call handler functions
+            for func in functions:
+                func(*args, **kwargs)
+
+            # Call handler methods
+            for dest, func in methods:
+                func(dest, *args, **kwargs)
+
+            # Emit connected signals
+            for signal in signals:
+                signal.emit(*args, **kwargs)
+        else:
+            # Call handler functions
+            for func in functions:
+                with FlameProfiler.profileCall(func.__qualname__):
+                    func(*args, **kwargs)
+
+            # Call handler methods
+            for dest, func in methods:
+                with FlameProfiler.profileCall(func.__qualname__):
+                    func(dest, *args, **kwargs)
+
+            # Emit connected signals
+            for signal in signals:
+                with FlameProfiler.profileCall("[SIG]" + signal.getName()):
+                    signal.emit(*args, **kwargs)
 
     # This __str__() is useful for debugging.
     # def __str__(self):
@@ -224,8 +340,65 @@ class Signal:
     #     signal_str = ", ".join([str(signal) for signal in self.__signals])
     #     return "Signal<{}> {{ __functions={{ {} }}, __methods={{ {} }}, __signals={{ {} }} }}".format(id(self), function_str, method_str, signal_str)
 
+
 def strMethodSet(method_set):
     return "{" + ", ".join([str(m) for m in method_set]) + "}"
+
+class CompressTechnique(enum.Enum):
+    NoCompression = 0
+    CompressSingle = 1
+    CompressPerParameterValue = 2
+
+##  A context manager that allows postponing of signal emissions
+#
+#   This context manager will collect any calls to emit() made for the provided signals
+#   and only emit them after exiting. This ensures more batched processing of signals.
+#
+#   The optional "compress" argument will limit the emit calls to 1. This means that
+#   when a bunch of calls are made to the signal's emit() method, only the last call
+#   will be emitted on exit.
+#
+#   \warning When compress is True, only the **last** call will be emitted. This means
+#   that any other calls will be ignored, _including their arguments_.
+#
+#   \param signals The signals to postpone emits for.
+#   \param compress Whether to enable compression of emits or not.
+@contextlib.contextmanager
+def postponeSignals(*signals, compress: CompressTechnique = CompressTechnique.NoCompression):
+    # To allow for nested postpones on the same signals, we should check if signals are not already
+    # postponed and only change those that are not yet postponed.
+    restore_emit = []
+    for signal in signals:
+        if not signal._postpone_emit: # Do nothing if the signal has already been changed
+            signal._postpone_emit = True
+            signal._postpone_thread = threading.current_thread()
+            signal._compress_postpone = compress
+            # Since we made changes, make sure to restore the signal after exiting the context manager
+            restore_emit.append(signal)
+
+    # Execute the code block in the "with" statement
+    yield
+
+    for signal in restore_emit:
+        # We are done with the code, restore all changed signals to their "normal" state
+        signal._postpone_emit = False
+
+        if signal._postponed_emits:
+            # Send any signal emits that were collected while emits were being postponed
+            if signal._compress_postpone == CompressTechnique.CompressSingle:
+                signal.emit(*signal._postponed_emits[0], **signal._postponed_emits[1])
+            elif signal._compress_postpone == CompressTechnique.CompressPerParameterValue:
+                uniques = {(tuple(args), tuple(kwargs.items())) for args, kwargs in signal._postponed_emits} #Have to make them tuples in order to make them hashable.
+                for args, kwargs in uniques:
+                    signal.emit(*args, **dict(kwargs))
+            else:
+                for args, kwargs in signal._postponed_emits:
+                    signal.emit(*args, **kwargs)
+            signal._postponed_emits = None
+
+        signal._postpone_thread = None
+        signal._compress_postpone = False
+
 
 ##  Convenience class to simplify signal creation.
 #
@@ -241,9 +414,10 @@ class SignalEmitter:
     ##  Initialize method.
     @deprecated("Please use the new @signalemitter decorator", "2.2")
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+        super().__init__()
         for name, signal in inspect.getmembers(self, lambda i: isinstance(i, Signal)):
             setattr(self, name, Signal(type = signal.getType())) #pylint: disable=bad-whitespace
+
 
 ##  Class decorator that ensures a class has unique instances of signals.
 #
@@ -275,23 +449,26 @@ def signalemitter(cls):
     cls.__new__ = new_new
     return cls
 
+T = TypeVar('T')
+
+
 ##  Minimal implementation of a weak reference list with immutable tendencies.
 #
 #   Strictly speaking this isn't immutable because the garbage collector can modify
 #   it, but no application code can. Also, this class doesn't implement the Python
 #   list API, only the handful of methods we actually need in the code above.
-class WeakImmutableList:
+class WeakImmutableList(Generic[T], Iterable):
     def __init__(self):
-        self.__list = []
+        self.__list = []    # type: List[ReferenceType[Optional[T]]]
 
     ## Append an item and return a new list
     #
     #  \param item the item to append
     #  \return a new list
-    def append(self, item):
-        new_instance = WeakImmutableList()
+    def append(self, item: T) -> "WeakImmutableList[T]":
+        new_instance = WeakImmutableList()  # type: WeakImmutableList[T]
         new_instance.__list = self.__cleanList()
-        new_instance.__list.append(weakref.ref(item))
+        new_instance.__list.append(ReferenceType(item))
         return new_instance
 
     ## Remove an item and return a list
@@ -300,28 +477,29 @@ class WeakImmutableList:
     #  doesn't throw a ValueError if the item isn't in the list.
     #  \param item item to remove
     #  \return a list which does not have the item.
-    def remove(self, item):
+    def remove(self, item: T) -> "WeakImmutableList[T]":
         for item_ref in self.__list:
             if item_ref() is item:
-                new_instance = WeakImmutableList()
+                new_instance = WeakImmutableList()   # type: WeakImmutableList[T]
                 new_instance.__list = self.__cleanList()
                 new_instance.__list.remove(item_ref)
                 return new_instance
         else:
-            return self # No changes needed
+            return self  # No changes needed
 
     # Create a new list with the missing values removed.
-    def __cleanList(self):
+    def __cleanList(self) -> "List[ReferenceType[Optional[T]]]":
         return [item_ref for item_ref in self.__list if item_ref() is not None]
 
     def __iter__(self):
         return WeakImmutableListIterator(self.__list)
 
+
 ## Iterator wrapper which filters out missing values.
 #
 # It dereferences each weak reference object and filters out the objects
 # which have already disappeared via GC.
-class WeakImmutableListIterator:
+class WeakImmutableListIterator(Generic[T], Iterable):
     def __init__(self, list_):
         self.__it = list_.__iter__()
 
@@ -334,17 +512,21 @@ class WeakImmutableListIterator:
             next_item = self.__it.__next__()()
         return next_item
 
+
+U = TypeVar('U')
+
+
 ##  A variation of WeakImmutableList which holds a pair of values using weak refernces.
-class WeakImmutablePairList:
+class WeakImmutablePairList(Generic[T,U], Iterable):
     def __init__(self):
-        self.__list = []
+        self.__list = []    # type: List[Tuple[ReferenceType[T],ReferenceType[U]]]
 
     ## Append an item and return a new list
     #
     #  \param item the item to append
     #  \return a new list
-    def append(self, left_item, right_item):
-        new_instance = WeakImmutablePairList()
+    def append(self, left_item: T, right_item: U) -> "WeakImmutablePairList[T,U]":
+        new_instance = WeakImmutablePairList()  # type: WeakImmutablePairList[T,U]
         new_instance.__list = self.__cleanList()
         new_instance.__list.append( (weakref.ref(left_item), weakref.ref(right_item)) )
         return new_instance
@@ -355,13 +537,13 @@ class WeakImmutablePairList:
     #  doesn't throw a ValueError if the item isn't in the list.
     #  \param item item to remove
     #  \return a list which does not have the item.
-    def remove(self, left_item, right_item):
+    def remove(self, left_item: T, right_item: U) -> "WeakImmutablePairList[T,U]":
         for pair in self.__list:
             left = pair[0]()
             right = pair[1]()
 
             if left is left_item and right is right_item:
-                new_instance = WeakImmutablePairList()
+                new_instance = WeakImmutablePairList() # type: WeakImmutablePairList[T,U]
                 new_instance.__list = self.__cleanList()
                 new_instance.__list.remove(pair)
                 return new_instance
@@ -369,16 +551,17 @@ class WeakImmutablePairList:
             return self # No changes needed
 
     # Create a new list with the missing values removed.
-    def __cleanList(self):
+    def __cleanList(self) -> List[Tuple[ReferenceType,ReferenceType]]:
         return [pair for pair in self.__list if pair[0]() is not None and pair[1]() is not None]
 
     def __iter__(self):
         return WeakImmutablePairListIterator(self.__list)
 
+
 # A small iterator wrapper which dereferences the weak ref objects and filters
 # out the objects which have already disappeared via GC.
 class WeakImmutablePairListIterator:
-    def __init__(self, list_):
+    def __init__(self, list_) -> None:
         self.__it = list_.__iter__()
 
     def __iter__(self):

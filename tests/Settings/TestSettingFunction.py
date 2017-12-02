@@ -1,9 +1,9 @@
 # Copyright (c) 2016 Ultimaker B.V.
-# Uranium is released under the terms of the AGPLv3 or higher.
+# Uranium is released under the terms of the LGPLv3 or higher.
 
 import pytest
 
-import UM.Settings.SettingFunction
+from UM.Settings.SettingFunction import SettingFunction
 
 ##  Individual test cases for the good setting functions.
 #
@@ -24,7 +24,7 @@ setting_function_good_data = [
 #   should occur during the creation of the fixture.
 @pytest.fixture(params = setting_function_good_data)
 def setting_function_good(request):
-    return UM.Settings.SettingFunction(request.param)
+    return SettingFunction(request.param)
 
 ##  Individual test cases for the bad setting functions.
 #
@@ -43,7 +43,7 @@ setting_function_bad_data = [
 #   give an error when creating the fixture.
 @pytest.fixture(params = setting_function_bad_data)
 def setting_function_bad(request):
-    return UM.Settings.SettingFunction(request.param)
+    return SettingFunction(request.param)
 
 ##  Tests the initialisation of setting functions with good functions.
 #
@@ -72,7 +72,7 @@ class MockValueProvider:
     ##  Provides a value.
     #
     #   \param name The key of the value to provide.
-    def getProperty(self, key, property_name):
+    def getProperty(self, key, property_name, context = None):
         if not (key in self._values):
             return None
         return self._values[key]
@@ -87,7 +87,7 @@ test_call_data = [
     { "code": "",             "result": None },
     { "code": "os.read(os.open(\"/etc/passwd\", os.O_RDONLY), 10)", "result": None },
     { "code": "exec(\"os.read(os.open(\\\"/etc/passwd\\\", os.O_RDONLY), 10)\")", "result": None },
-    { "code": "boo",          "result": None } # Variable doesn't exist.
+    { "code": "boo",          "result": 0 } # Variable doesn't exist.
 ]
 
 ##  Tests the calling of a valid setting function.
@@ -96,22 +96,22 @@ test_call_data = [
 @pytest.mark.parametrize("data", test_call_data)
 def test_call(data):
     value_provider = MockValueProvider()
-    function = UM.Settings.SettingFunction(data["code"])
+    function = SettingFunction(data["code"])
     assert function(value_provider) == data["result"]
 
 ##  Tests the equality operator on setting functions.
 def test_eq():
-    setting_function = UM.Settings.SettingFunction("3 * 3")
+    setting_function = SettingFunction("3 * 3")
     assert not (setting_function == "some string") # Equality against something of a different type.
     assert setting_function != "some string"
     assert setting_function == setting_function # Equality against itself.
     assert not (setting_function != setting_function)
 
-    duplicate = UM.Settings.SettingFunction("3 * 3") # Different instance with the same code. Should be equal!
+    duplicate = SettingFunction("3 * 3") # Different instance with the same code. Should be equal!
     assert setting_function == duplicate
     assert not (setting_function != duplicate)
 
-    same_answer = UM.Settings.SettingFunction("9") # Different code but the result is the same. Should NOT be equal!
+    same_answer = SettingFunction("9") # Different code but the result is the same. Should NOT be equal!
     assert not (setting_function == same_answer)
     assert setting_function != same_answer
 
@@ -122,12 +122,13 @@ def test_eq():
 #   true variables in that function (the answer).
 test_getUsedSettings_data = [
     { "code": "0",       "variables": [] },
-    { "code": "\"x\"",   "variables": [] },
+    { "code": "\"x\"",   "variables": ["x"] },
     { "code": "x",       "variables": ["x"] },
     { "code": "x * y",   "variables": ["x", "y"] },
     { "code": "sqrt(4)", "variables": ["sqrt"] },
     { "code": "sqrt(x)", "variables": ["sqrt", "x"] },
-    { "code": "x * x",   "variables": ["x"] } # Use the same variable twice.
+    { "code": "x * x",   "variables": ["x"] }, # Use the same variable twice.
+    { "code": "sqrt('x')" , "variables": [ "sqrt", "x" ] }, # Calling functions with string parameters will mark the string parameter as a "used setting".
 ]
 
 ##  Tests if the function finds correctly which settings are used.
@@ -135,7 +136,7 @@ test_getUsedSettings_data = [
 #   \param data A test case to test.
 @pytest.mark.parametrize("data", test_getUsedSettings_data)
 def test_getUsedSettings(data):
-    function = UM.Settings.SettingFunction(data["code"])
+    function = SettingFunction(data["code"])
     answer = function.getUsedSettingKeys()
     assert len(answer) == len(data["variables"])
     for variable in data["variables"]: # Check for set equality regardless of the order.
@@ -144,7 +145,7 @@ def test_getUsedSettings(data):
 ##  Tests the conversion of a setting function to string.
 def test_str():
     # Due to the simplicity of the function, it's not really necessary to make a full-blown parametrised test for this. Just two simple tests:
-    function = UM.Settings.SettingFunction("3.14156") # Simple test case.
+    function = SettingFunction("3.14156") # Simple test case.
     assert str(function) == "=3.14156"
-    function = UM.Settings.SettingFunction("") # Also the edge case.
+    function = SettingFunction("") # Also the edge case.
     assert str(function) == "="

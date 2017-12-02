@@ -1,5 +1,5 @@
 # Copyright (c) 2015 Ultimaker B.V.
-# Uranium is released under the terms of the AGPLv3 or higher.
+# Uranium is released under the terms of the LGPLv3 or higher.
 
 from UM.PluginObject import PluginObject
 import UM.Application
@@ -10,7 +10,7 @@ class View(PluginObject):
     def __init__(self):
         super().__init__()
         self._renderer = None
-        self._controller = UM.Application.getInstance().getController()
+        self._controller = UM.Application.Application.getInstance().getController()
 
     ##  Get the controller object associated with this View.
     #   \sa Controller

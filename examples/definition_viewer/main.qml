@@ -8,8 +8,8 @@ import Example 1.0 as Example
 ApplicationWindow
 {
     visible: true
-    width: 640
-    height: 480
+    width: 640 * screenScaleFactor
+    height: 480 * screenScaleFactor
 
     toolBar: ToolBar
     {

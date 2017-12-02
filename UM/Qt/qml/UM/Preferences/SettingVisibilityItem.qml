@@ -1,5 +1,5 @@
 // Copyright (c) 2015 Ultimaker B.V.
-// Uranium is released under the terms of the AGPLv3 or higher.
+// Uranium is released under the terms of the LGPLv3 or higher.
 
 import QtQuick 2.1
 import QtQuick.Layouts 1.1
@@ -16,7 +16,7 @@ Item {
         width: height;
         height: check.height;
         anchors.right: checkboxTooltipArea.left
-        anchors.rightMargin: 2
+        anchors.rightMargin: 2 * screenScaleFactor
 
         text:
         {
@@ -54,7 +54,7 @@ Item {
         UM.RecolorImage
         {
             anchors.centerIn: parent
-            width: check.height * 0.75
+            width: (check.height * 0.75) | 0
             height: width
 
             source: UM.Theme.getIcon("notice")

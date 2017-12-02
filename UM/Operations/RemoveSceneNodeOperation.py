@@ -1,5 +1,5 @@
 # Copyright (c) 2015 Ultimaker B.V.
-# Uranium is released under the terms of the AGPLv3 or higher.
+# Uranium is released under the terms of the LGPLv3 or higher.
 
 from . import Operation
 
@@ -33,7 +33,7 @@ class RemoveSceneNodeOperation(Operation.Operation):
         # We can't do it the right way as most remove changes don't need to trigger
         # a reslice (eg; removing hull nodes don't need to trigger reslice).
         try:
-            Application.getInstance().getBackend().forceSlice()
+            Application.getInstance().getBackend().needsSlicing()
         except:
             pass
         if Selection.isSelected(self._node):  # Also remove the selection.

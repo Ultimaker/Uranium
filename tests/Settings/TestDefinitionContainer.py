@@ -1,11 +1,12 @@
 # Copyright (c) 2016 Ultimaker B.V.
-# Uranium is released under the terms of the AGPLv3 or higher.
+# Uranium is released under the terms of the LGPLv3 or higher.
 
 import pytest
 import os.path
 import uuid
 
-import UM.Settings
+import UM.Settings.SettingFunction
+import UM.Settings.DefinitionContainer
 from UM.Settings.DefinitionContainer import IncorrectDefinitionVersionError, InvalidDefinitionError
 from UM.Settings.SettingDefinition import SettingDefinition, DefinitionPropertyType
 from UM.Resources import Resources
@@ -17,8 +18,8 @@ Resources.addSearchPath(os.path.dirname(os.path.abspath(__file__)))
 #   The container will have a unique ID.
 @pytest.fixture
 def definition_container():
-    uid = str(uuid.uuid4().int)
-    result = UM.Settings.DefinitionContainer(uid)
+    uid = str(uuid.uuid4())
+    result = UM.Settings.DefinitionContainer.DefinitionContainer(uid)
     assert result.getId() == uid
     return result
 
@@ -38,13 +39,13 @@ test_deserialize_data = [
         "test_child_0": { "label": "Test Child 0", "default_value": 10, "description": "A Test Setting"},
         "test_child_1": { "label": "Test Child 1", "default_value": 10, "description": "A Test Setting"},
     }}),
-    ("inherits.def.json", { "name": "Inherits", "metadata": {"author": "Ultimaker", "category": "Other", "manufacturer": "Ultimaker" }, "settings": {
+    ("inherits.def.json", { "name": "Inherits", "metadata": {"author": "Ultimaker", "category": "Other", "manufacturer": "Ultimaker B.V." }, "settings": {
         "test_setting": { "label": "Test", "default_value": 11, "description": "A Test Setting" },
         "test_setting_1": { "label": "Test 1", "default_value": 10, "description": "A Test Setting" },
     }}),
     ("functions.def.json", { "name": "Test", "metadata": {}, "settings": {
         "test_setting_0": { "label": "Test 0", "default_value": 10, "description": "A Test Setting" },
-        "test_setting_1": { "label": "Test 1", "default_value": 10, "description": "A Test Setting", "value": UM.Settings.SettingFunction("test_setting_0 * 10") },
+        "test_setting_1": { "label": "Test 1", "default_value": 10, "description": "A Test Setting", "value": UM.Settings.SettingFunction.SettingFunction("test_setting_0 * 10") },
     }})
 ]
 @pytest.mark.parametrize("file,expected", test_deserialize_data)
@@ -294,8 +295,22 @@ def test_serialize(definition_container):
     definition_container.definitions.append(subsetting)
     _test_serialize_cycle(definition_container)
 
+##  Tests the serialisation with certain metadata keys ignored.
+#
+#   \param definition_container A new definition container from a fixture.
+def test_serialize_with_ignored_metadata_keys(definition_container):
+    ignored_metadata_keys = ["secret", "secret2"]
+    # Add some metadata.
+    definition_container.getMetaData()["author"] = "Testy McTesticle"
+    definition_container.getMetaData()["escape_test"] = "[\"\n{':"
+    # Add metadata that should be ignored
+    for key in ignored_metadata_keys:
+        definition_container.getMetaData()[key] = "something"
+
+    _test_serialize_cycle(definition_container, ignored_metadata_keys = ignored_metadata_keys)
+
 def test_setting_function():
-    container = UM.Settings.DefinitionContainer("test")
+    container = UM.Settings.DefinitionContainer.DefinitionContainer("test")
     with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "definitions", "functions.def.json")) as data:
         container.deserialize(data.read())
 
@@ -320,7 +335,7 @@ def test_setting_function():
     assert relation_1.type == UM.Settings.SettingRelation.RelationType.RequiresTarget
     assert relation_1.role == "value"
 
-    assert isinstance(function, UM.Settings.SettingFunction)
+    assert isinstance(function, UM.Settings.SettingFunction.SettingFunction)
 
     result = function(container)
     assert result == (setting_0.default_value * 10)
@@ -352,16 +367,24 @@ def _createSettingDefinition(properties):
 #
 #   \param definition_container A defintion container to test the serialisation
 #   of.
-def _test_serialize_cycle(definition_container):
+#   \param ignored_metadata_keys A list of keys in metadata that will be
+#   ignored during serialization.
+def _test_serialize_cycle(definition_container, ignored_metadata_keys = None):
     # Don't verify the ID. It must be unique, so it must be different.
     name = definition_container.getName()
-    metadata = definition_container.getMetaData()
+    metadata = {key: value for key, value in definition_container.getMetaData().items()}
     definitions = definition_container.definitions
     # No need to verify the internationalisation catalogue.
 
-    serialised = definition_container.serialize()
-    deserialised = UM.Settings.DefinitionContainer(uuid.uuid4().int)
+    serialised = definition_container.serialize(ignored_metadata_keys = ignored_metadata_keys)
+    deserialised = UM.Settings.DefinitionContainer.DefinitionContainer(str(uuid.uuid4()))
     deserialised.deserialize(serialised)
+
+    # remove ignored keys from metadata dict
+    if ignored_metadata_keys:
+        for key in ignored_metadata_keys:
+            if key in metadata:
+                del metadata[key]
 
     assert name == deserialised.getName()
     assert metadata == deserialised.getMetaData()

@@ -1,9 +1,8 @@
-from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
 from UM.Preferences import Preferences
 
 from . import SettingVisibilityHandler
 
-class SettingPreferenceVisibilityHandler(SettingVisibilityHandler):
+class SettingPreferenceVisibilityHandler(SettingVisibilityHandler.SettingVisibilityHandler):
     def __init__(self, parent = None, *args, **kwargs):
         super().__init__(parent = parent, *args, **kwargs)
 
@@ -18,6 +17,8 @@ class SettingPreferenceVisibilityHandler(SettingVisibilityHandler):
 
         new_visible = set()
         visibility_string = Preferences.getInstance().getValue("general/visible_settings")
+        if visibility_string is None:
+            return
         for key in visibility_string.split(";"):
             new_visible.add(key.strip())
 

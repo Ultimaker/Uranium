@@ -1,6 +1,6 @@
 # Copyright (c) 2016 Ultimaker B.V.
 # Copyright (c) 2013 David Braam
-# Uranium is released under the terms of the AGPLv3 or higher.
+# Uranium is released under the terms of the LGPLv3 or higher.
 
 from UM.Mesh.MeshWriter import MeshWriter
 from UM.Scene.SceneNode import SceneNode
@@ -80,6 +80,7 @@ class STLWriter(MeshWriter):
         stream.write("Uranium STLWriter {0}".format(time.strftime("%a %d %b %Y %H:%M:%S")).encode().ljust(80, b"\000"))
 
         face_count = 0
+        nodes = list(nodes)
         for node in nodes:
             if node.getMeshData().hasIndices():
                 face_count += node.getMeshData().getFaceCount()

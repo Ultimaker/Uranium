@@ -17,7 +17,7 @@ class ContainerStacksModel(ListModel):
         self.addRoleName(self.NameRole, "name")
         self.addRoleName(self.IdRole, "id")
         self.addRoleName(self.MetaDataRole, "metadata")
-        self._container_stacks = ContainerRegistry.getInstance().findContainerStacks()
+        self._container_stacks = []
 
         # Listen to changes
         ContainerRegistry.getInstance().containerAdded.connect(self._onContainerChanged)

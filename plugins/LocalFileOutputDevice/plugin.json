@@ -1,0 +1,8 @@
+{
+    "name": "Local File Output Device",
+    "description": "Enables saving to local files.",
+    "author": "Ultimaker B.V.",
+    "version": "1.0.0",
+    "api": 4,
+    "i18n-catalog": "uranium"
+}

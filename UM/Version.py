@@ -1,12 +1,18 @@
-# Copyright (c) 2015 Ultimaker B.V.
-# Uranium is released under the terms of the AGPLv3 or higher.
+# Copyright (c) 2017 Ultimaker B.V.
+# Uranium is released under the terms of the LGPLv3 or higher.
 
+import re #To replace parts of version strings with regex.
 
 class Version(object):
     def __init__(self, version):
         super().__init__()
         if isinstance(version, str):
-            version_list = version.replace("-", ".").replace("_", ".").split(".")
+            # Versions are in (MOD-)x.x.x(-x) format.
+            version = version.replace("MOD-", "")
+            version = version.replace("-", ".")
+            version = version.replace("_", ".")
+            version = re.sub(r"[A-Z]+", "", version)
+            version_list = version.split(".")
         else:
             version_list = version
         self._major = 0
@@ -17,6 +23,8 @@ class Version(object):
             self._minor = int(version_list[1])
             self._revision = int(version_list[2])
         except IndexError:
+            pass
+        except ValueError:
             pass
 
     def getMajor(self):

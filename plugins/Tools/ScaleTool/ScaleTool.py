@@ -1,5 +1,5 @@
 # Copyright (c) 2015 Ultimaker B.V.
-# Uranium is released under the terms of the AGPLv3 or higher.
+# Uranium is released under the terms of the LGPLv3 or higher.
 
 from UM.Tool import Tool
 from UM.Event import Event, MouseEvent, KeyEvent
@@ -15,6 +15,7 @@ from UM.Operations.GroupedOperation import GroupedOperation
 from UM.Operations.SetTransformOperation import SetTransformOperation
 from UM.Operations.ScaleToBoundsOperation import ScaleToBoundsOperation
 
+from PyQt5.QtCore import Qt
 from . import ScaleToolHandle
 
 import scipy
@@ -37,11 +38,15 @@ class ScaleTool(Tool):
         self._maximum_bounds = None
         self._move_up = True
 
+        self._shortcut_key = Qt.Key_A
+
         # We use the position of the scale handle when the operation starts.
         # This is done in order to prevent runaway reactions (drag changes of 100+)
         self._saved_handle_position = None  # for non uniform drag
         self._scale_sum = 0.0  # a memory for uniform drag with snap scaling
         self._last_event = None  # for uniform drag
+
+        self._saved_node_positions = []
 
         self.setExposedProperties(
             "ScaleSnap",
@@ -94,7 +99,7 @@ class ScaleTool(Tool):
             if not id:
                 return False
 
-            if ToolHandle.isAxis(id):
+            if self._handle.isAxis(id):
                 self.setLockedAxis(id)
             self._saved_handle_position = self._handle.getWorldPosition()
 
@@ -116,7 +121,6 @@ class ScaleTool(Tool):
                 self.setDragPlane(Plane(Vector(0, 1, 0), self._saved_handle_position.y))
 
             self.setDragStart(event.x, event.y)
-            self.operationStarted.emit(self)
 
         if event.type == Event.MouseMoveEvent:
             # Perform a scale operation
@@ -168,6 +172,7 @@ class ScaleTool(Tool):
                         op.push()
                         self._drag_length = (self._saved_handle_position - drag_position).length()
                 else:
+                    self.operationStarted.emit(self)
                     self._drag_length = (self._saved_handle_position - drag_position).length() #First move, do nothing but set right length.
                 self._last_event = event  # remember for uniform drag
                 return True
@@ -289,7 +294,12 @@ class ScaleTool(Tool):
                     scale_vector = Vector(scale_factor, 1, 1)
                 else:
                     scale_vector = Vector(scale_factor, scale_factor, scale_factor)
-                Selection.applyOperation(ScaleOperation, scale_vector)
+
+                op = GroupedOperation()
+                for node in Selection.getAllSelectedObjects():
+                    op.addOperation(
+                        ScaleOperation(node, scale_vector, scale_around_point=node.getWorldPosition()))
+                op.push()
 
     ##  Set the height of the selected object(s) by scaling the first selected object to a certain height
     #
@@ -305,7 +315,12 @@ class ScaleTool(Tool):
                     scale_vector = Vector(1, scale_factor, 1)
                 else:
                     scale_vector = Vector(scale_factor, scale_factor, scale_factor)
-                Selection.applyOperation(ScaleOperation, scale_vector)
+
+                op = GroupedOperation()
+                for node in Selection.getAllSelectedObjects():
+                    op.addOperation(
+                        ScaleOperation(node, scale_vector, scale_around_point=node.getWorldPosition()))
+                op.push()
 
     ##  Set the depth of the selected object(s) by scaling the first selected object to a certain depth
     #
@@ -321,7 +336,12 @@ class ScaleTool(Tool):
                     scale_vector = Vector(1, 1, scale_factor)
                 else:
                     scale_vector = Vector(scale_factor, scale_factor, scale_factor)
-                Selection.applyOperation(ScaleOperation, scale_vector)
+
+                op = GroupedOperation()
+                for node in Selection.getAllSelectedObjects():
+                    op.addOperation(
+                        ScaleOperation(node, scale_vector, scale_around_point=node.getWorldPosition()))
+                op.push()
 
     ##  Set the x-scale of the selected object(s) by scaling the first selected object to a certain factor
     #
@@ -336,7 +356,12 @@ class ScaleTool(Tool):
                     scale_vector = Vector(scale_factor, 1, 1)
                 else:
                     scale_vector = Vector(scale_factor, scale_factor, scale_factor)
-                Selection.applyOperation(ScaleOperation, scale_vector, scale_around_point = obj.getWorldPosition())
+
+                op = GroupedOperation()
+                for node in Selection.getAllSelectedObjects():
+                    op.addOperation(
+                        ScaleOperation(node, scale_vector, scale_around_point=node.getWorldPosition()))
+                op.push()
 
     ##  Set the y-scale of the selected object(s) by scaling the first selected object to a certain factor
     #
@@ -351,7 +376,12 @@ class ScaleTool(Tool):
                     scale_vector = Vector(1, scale_factor, 1)
                 else:
                     scale_vector = Vector(scale_factor, scale_factor, scale_factor)
-                Selection.applyOperation(ScaleOperation, scale_vector, scale_around_point = obj.getWorldPosition())
+
+                op = GroupedOperation()
+                for node in Selection.getAllSelectedObjects():
+                    op.addOperation(
+                        ScaleOperation(node, scale_vector, scale_around_point=node.getWorldPosition()))
+                op.push()
 
     ##  Set the z-scale of the selected object(s) by scaling the first selected object to a certain factor
     #
@@ -366,7 +396,12 @@ class ScaleTool(Tool):
                     scale_vector = Vector(1, 1, scale_factor)
                 else:
                     scale_vector = Vector(scale_factor, scale_factor, scale_factor)
-                Selection.applyOperation(ScaleOperation, scale_vector, scale_around_point = obj.getWorldPosition())
+
+                op = GroupedOperation()
+                for node in Selection.getAllSelectedObjects():
+                    op.addOperation(
+                        ScaleOperation(node, scale_vector, scale_around_point=node.getWorldPosition()))
+                op.push()
 
     ##  Convenience function that gives the scale of an object in the coordinate space of the world.
     #
@@ -375,9 +410,12 @@ class ScaleTool(Tool):
     def _getScaleInWorldCoordinates(self, node):
         aabb = node.getBoundingBox()
         original_aabb = self._getRotatedExtents(node)
-        scale = Vector(aabb.width / original_aabb.width, aabb.height / original_aabb.height,
-                       aabb.depth / original_aabb.depth)
-        return scale
+        if aabb is not None and original_aabb is not None:
+            scale = Vector(aabb.width / original_aabb.width, aabb.height / original_aabb.height,
+                           aabb.depth / original_aabb.depth)
+            return scale
+        else:
+            return Vector(1, 1, 1)
 
     def _getSVDRotationFromMatrix(self, matrix):
         result = Matrix()

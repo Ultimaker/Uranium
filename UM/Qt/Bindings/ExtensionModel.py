@@ -1,8 +1,8 @@
 # Copyright (c) 2015 Ultimaker B.V.
-# Uranium is released under the terms of the AGPLv3 or higher.
+# Uranium is released under the terms of the LGPLv3 or higher.
 
-from PyQt5.QtCore import Qt, pyqtSlot,QCoreApplication
-
+from PyQt5.QtCore import Qt
+from UM.FlameProfiler import pyqtSlot
 from UM.Application import Application
 from UM.Qt.ListModel import ListModel
 
@@ -16,32 +16,42 @@ class ExtensionModel(ListModel):
         self.addRoleName(self.NameRole, "name")
         self.addRoleName(self.ActionsRole, "actions")
         self.addRoleName(self.ExtensionRole, "extension")
-        self._updateExtentionList()
-        
-        #print(self._items)
+        self._updateExtensionList()
     
-    def _updateExtentionList(self):
-        #active_plugins = self._plugin_registery.getActivePlugins()
+    def _updateExtensionList(self):
+        # Active_plugins = self._plugin_registry.getActivePlugins()
         for extension in Application.getInstance().getExtensions():
-            meta_data =  Application.getInstance().getPluginRegistry().getMetaData(extension.getPluginId())
+            meta_data = Application.getInstance().getPluginRegistry().getMetaData(extension.getPluginId())
             
             if "plugin" in meta_data:
                 menu_name = extension.getMenuName()
+
                 if not menu_name:
                     menu_name = meta_data["plugin"].get("name", None)
-                self.appendItem({"name": menu_name, "actions":self.createActionsModel(extension.getMenuItemList()),"extension":extension})
+
+                self.appendItem({
+                    "name": menu_name,
+                    "actions": self.createActionsModel(extension.getMenuItemList()),
+                    "extension": extension
+                })
 
     def createActionsModel(self, options):
         model = ListModel()
-        model.addRoleName(self.NameRole,"text")
+        model.addRoleName(self.NameRole, "text")
         for option in options:
             model.appendItem({"text": str(option)})
         if len(options) != 0:
             return model
         return None
     
-    @pyqtSlot(str,str)
-    def subMenuTriggered(self,extention_name, option_name):
+    @pyqtSlot(str, str)
+    def subMenuTriggered(self, extension_name, option_name):
         for item in self._items:
-            if extention_name == item["name"]:
+            if extension_name == item["name"]:
                 item["extension"].activateMenuItem(option_name)
+
+    @pyqtSlot(str, str)
+    def callExtensionMethod(self, extension_name, method_name):
+        for item in self._items:
+            if extension_name == item["name"]:
+                getattr(item["extension"], method_name)()

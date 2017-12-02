@@ -1,5 +1,5 @@
 // Copyright (c) 2015 Ultimaker B.V.
-// Uranium is released under the terms of the AGPLv3 or higher.
+// Uranium is released under the terms of the LGPLv3 or higher.
 
 import QtQuick 2.2
 import QtQuick.Controls 1.2
@@ -20,6 +20,7 @@ Item
         //: Reset Rotation tool button
         text: catalog.i18nc("@action:button","Reset")
         iconSource: UM.Theme.getIcon("rotate_reset");
+        property bool needBorder: true
 
         style: UM.Theme.styles.tool_button;
         z: 1
@@ -37,6 +38,7 @@ Item
         //: Lay Flat tool button
         text: catalog.i18nc("@action:button","Lay flat")
         iconSource: UM.Theme.getIcon("rotate_layflat");
+        property bool needBorder: true
 
         style: UM.Theme.styles.tool_button;
 

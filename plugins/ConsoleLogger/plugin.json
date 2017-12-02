@@ -1,0 +1,8 @@
+{
+    "name": "Console Logger",
+    "author": "Ultimaker B.V.",
+    "version": "1.0.0",
+    "description": "Outputs log information to the console.",
+    "api": 4,
+    "i18n-catalog": "uranium"
+}

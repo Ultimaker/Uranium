@@ -1,5 +1,5 @@
 # Copyright (c) 2015 Ultimaker B.V.
-# Uranium is released under the terms of the AGPLv3 or higher.
+# Uranium is released under the terms of the LGPLv3 or higher.
 
 from PyQt5.QtCore import QObject, QCoreApplication, pyqtSlot, QUrl, pyqtSignal, pyqtProperty
 
@@ -43,6 +43,22 @@ class ControllerProxy(QObject):
             op.addOperation(RemoveSceneNodeOperation(node))
         op.push()
         Selection.clear()
+
+    @pyqtSlot()
+    def enableModelRendering(self):
+        self._controller.enableModelRendering()
+
+    @pyqtSlot()
+    def disableModelRendering(self):
+        self._controller.disableModelRendering()
+
+    @pyqtSlot(str, int)
+    def rotateView(self,coordinate, angle):
+        self._controller.rotateView(coordinate, angle)
+
+    @pyqtSlot()
+    def homeView(self, angle):
+        self._controller.homeView()
 
     contextMenuRequested = pyqtSignal("quint64", arguments=["objectId"])
 

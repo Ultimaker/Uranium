@@ -1,11 +1,14 @@
-# Copyright (c) 2016 Ultimaker B.V.
-# Uranium is released under the terms of the AGPLv3 or higher.
+# Copyright (c) 2017 Ultimaker B.V.
+# Uranium is released under the terms of the LGPLv3 or higher.
 
-from PyQt5.QtCore import QObject, QVariant, pyqtProperty, pyqtSlot, pyqtSignal
-
+from PyQt5.QtCore import QObject, QVariant, pyqtProperty, pyqtSignal
+from UM.FlameProfiler import pyqtSlot
 from UM.Logger import Logger
 
-import UM.Settings
+from UM.Settings.SettingFunction import SettingFunction
+from UM.Settings.ContainerRegistry import ContainerRegistry
+from UM.Settings.SettingDefinition import SettingDefinition
+from UM.Settings.DefinitionContainer import DefinitionContainer
 
 ##  This class provides the value and change notifications for the properties of a single setting
 #
@@ -32,7 +35,7 @@ class ContainerPropertyProvider(QObject):
             self._container.propertyChanged.disconnect(self._onPropertyChanged)
 
         if self._container_id:
-            containers = UM.Settings.ContainerRegistry.getInstance().findContainers(id = self._container_id)
+            containers = ContainerRegistry.getInstance().findContainers(id = self._container_id)
             if containers:
                 self._container = containers[0]
 
@@ -103,7 +106,7 @@ class ContainerPropertyProvider(QObject):
         if self._property_values[property_name] == property_value:
             return
 
-        if isinstance(self._container, UM.Settings.DefinitionContainer):
+        if isinstance(self._container, DefinitionContainer):
             return
 
         self._container.setProperty(self._key, property_name, property_value)
@@ -119,7 +122,7 @@ class ContainerPropertyProvider(QObject):
 
         value = self._getPropertyValue(property_name)
 
-        if self._property_values[property_name] != value:
+        if self._property_values.get(property_name, None) != value:
             self._property_values[property_name] = value
             self.propertiesChanged.emit()
 
@@ -135,9 +138,9 @@ class ContainerPropertyProvider(QObject):
             self._property_values = new_properties
             self.propertiesChanged.emit()
 
-    def _getPropertyValue(self, property_name):
+    def _getPropertyValue(self, property_name: str) -> str:
         property_value = self._container.getProperty(self._key, property_name)
-        if isinstance(property_value, UM.Settings.SettingFunction):
+        if isinstance(property_value, SettingFunction):
             property_value = property_value(self._container)
 
         if property_name == "value":
@@ -148,6 +151,6 @@ class ContainerPropertyProvider(QObject):
                     setting_type = instance.definition.type
 
             if setting_type:
-                property_value = UM.Settings.SettingDefinition.settingValueToString(setting_type, property_value)
+                property_value = SettingDefinition.settingValueToString(setting_type, property_value)
 
         return str(property_value)

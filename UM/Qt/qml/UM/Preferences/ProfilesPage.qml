@@ -1,5 +1,5 @@
 // Copyright (c) 2015 Ultimaker B.V.
-// Uranium is released under the terms of the AGPLv3 or higher.
+// Uranium is released under the terms of the LGPLv3 or higher.
 
 import QtQuick 2.1
 import QtQuick.Controls 1.1
@@ -89,7 +89,7 @@ ManagementPage
 
                     Button
                     {
-                        text: base.currentItem.id == -1 ? catalog.i18nc("@action:button", "Discard current settings") :
+                        text: base.currentItem.id == -1 ? catalog.i18nc("@action:button", "Discard current changes") :
                                 catalog.i18nc("@action:button", "Reload profile");
                         enabled: UM.ActiveProfile.hasCustomisedValues
                         onClicked: UM.ActiveProfile.discardChanges()

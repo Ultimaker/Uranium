@@ -1,11 +1,9 @@
 # Copyright (c) 2015 Ultimaker B.V.
-# Uranium is released under the terms of the AGPLv3 or higher.
+# Uranium is released under the terms of the LGPLv3 or higher.
 
 from UM.Tool import Tool
 from UM.Job import Job
-from UM.Logger import Logger
 from UM.Event import Event, MouseEvent, KeyEvent
-from UM.Application import Application
 from UM.Message import Message
 from UM.Scene.ToolHandle import ToolHandle
 from UM.Scene.Selection import Selection
@@ -13,7 +11,8 @@ from UM.Scene.Selection import Selection
 from UM.Math.Plane import Plane
 from UM.Math.Vector import Vector
 from UM.Math.Quaternion import Quaternion
-from UM.Math.Float import Float
+
+from PyQt5.QtCore import Qt
 
 from UM.Operations.RotateOperation import RotateOperation
 from UM.Operations.GroupedOperation import GroupedOperation
@@ -40,11 +39,14 @@ class RotateTool(Tool):
         self._angle = None
         self._angle_update_time = None
 
+        self._shortcut_key = Qt.Key_Z
+
         self._progress_message = None
         self._iterations = 0
         self._total_iterations = 0
-
+        self._rotating = False
         self.setExposedProperties("ToolHint", "RotationSnap", "RotationSnapAngle")
+        self._saved_node_positions = []
 
     ##  Handle mouse and keyboard events
     #
@@ -71,8 +73,12 @@ class RotateTool(Tool):
             if not id:
                 return False
 
-            if ToolHandle.isAxis(id):
+            if self._handle.isAxis(id):
                 self.setLockedAxis(id)
+            else:
+                # Not clicked on an axis: do nothing.
+                return False
+
             handle_position = self._handle.getWorldPosition()
 
             # Save the current positions of the node, as we want to rotate around their current centres
@@ -90,8 +96,9 @@ class RotateTool(Tool):
                 self.setDragPlane(Plane(Vector(0, 1, 0), handle_position.y))
 
             self.setDragStart(event.x, event.y)
+            self._rotating = False
             self._angle = 0
-            self.operationStarted.emit(self)
+
 
         if event.type == Event.MouseMoveEvent:
             # Perform a rotate operation
@@ -100,6 +107,12 @@ class RotateTool(Tool):
 
             if not self.getDragStart():
                 self.setDragStart(event.x, event.y)
+                if not self.getDragStart(): #May have set it to None.
+                    return False
+
+            if not self._rotating:
+                self._rotating = True
+                self.operationStarted.emit(self)
 
             handle_position = self._handle.getWorldPosition()
 
@@ -129,6 +142,8 @@ class RotateTool(Tool):
             elif self.getLockedAxis() == ToolHandle.ZAxis:
                 direction = 1 if Vector.Unit_Z.dot(drag_start.cross(drag_end)) > 0 else -1
                 rotation = Quaternion.fromAngleAxis(direction * angle, Vector.Unit_Z)
+            else:
+                direction = -1
 
             # Rate-limit the angle change notification
             # This is done to prevent the UI from being flooded with property change notifications,
@@ -154,7 +169,8 @@ class RotateTool(Tool):
                 self.setLockedAxis(None)
                 self._angle = None
                 self.propertyChanged.emit()
-                self.operationStopped.emit(self)
+                if self._rotating:
+                    self.operationStopped.emit(self)
                 return True
 
     ##  Return a formatted angle of the current rotate operation
@@ -200,17 +216,13 @@ class RotateTool(Tool):
     #   Note: The LayFlat functionality is mostly used for 3d printing and should probably be moved into the Cura project
     def layFlat(self):
         self.operationStarted.emit(self)
-        self._progress_message = Message("Laying object flat on buildplate...", lifetime = 0, dismissable = False)
+        self._progress_message = Message("Laying object flat on buildplate...", lifetime = 0, dismissable = False, title = "Object Rotation")
         self._progress_message.setProgress(0)
 
         self._iterations = 0
         self._total_iterations = 0
         for selected_object in Selection.getAllSelectedObjects():
-            if not selected_object.callDecoration("isGroup"):
-                self._total_iterations += len(selected_object.getMeshDataTransformed().getVertices()) * 2
-            else:
-                for child in selected_object.getChildren():
-                    self._total_iterations += len(child.getMeshDataTransformed().getVertices()) * 2
+            self._layObjectFlat(selected_object)
 
         self._progress_message.show()
 
@@ -221,6 +233,14 @@ class RotateTool(Tool):
         job = LayFlatJob(operations)
         job.finished.connect(self._layFlatFinished)
         job.start()
+
+    ##  Lays the given object flat. The given object can be a group or not.
+    def _layObjectFlat(self, selected_object):
+        if not selected_object.callDecoration("isGroup"):
+            self._total_iterations += len(selected_object.getMeshDataTransformed().getVertices()) * 2
+        else:
+            for child in selected_object.getChildren():
+                self._layObjectFlat(child)
 
     ##  Called while performing the LayFlatOperation so progress can be shown
     #

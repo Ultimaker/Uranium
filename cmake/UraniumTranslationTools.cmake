@@ -4,21 +4,21 @@
 # There is no function in cmake as far as I know.
 # Found at: http://stackoverflow.com/a/7788165
 MACRO(SUBDIRLIST result curdir)
-  FILE(GLOB children RELATIVE ${curdir} ${curdir}/*)
-  SET(dirlist "")
-  FOREACH(child ${children})
-    IF(IS_DIRECTORY ${curdir}/${child})
-        STRING(REPLACE "/" "" child ${child})
-        LIST(APPEND dirlist ${child})
-    ENDIF()
-  ENDFOREACH()
-  SET(${result} ${dirlist})
+    FILE(GLOB children RELATIVE ${curdir} ${curdir}/*)
+    SET(dirlist "")
+    FOREACH(child ${children})
+        IF(IS_DIRECTORY ${curdir}/${child})
+            STRING(REPLACE "/" "" child ${child})
+            LIST(APPEND dirlist ${child})
+        ENDIF()
+    ENDFOREACH()
+    SET(${result} ${dirlist})
 ENDMACRO()
 
 
 ## Translation tools:
 
-option(CURA_BINARY_DATA_DIRECTORY "Directory to the cura-binary-data repository")
+SET(CURA_BINARY_DATA_DIRECTORY CACHE PATH "Directory to the cura-binary-data repository")
 
 if(NOT CURA_BINARY_DATA_DIRECTORY AND NOT DEFINED $ENV{CURA_BINARY_DATA_DIRECTORY})
     message(STATUS "Using CURA_BINARY_DATA_DIRECTORY from set of environment variables...")
@@ -42,7 +42,7 @@ MACRO(TARGETS_FOR_PO_FILES language)
                                COMMAND ${GETTEXT_MSGINIT_EXECUTABLE} ARGS --no-wrap --no-translator -l ${language} -i ${pot_file} -o ${po_file})
         endif()
         add_custom_command(TARGET i18n-update-po-${language} POST_BUILD
-                           COMMAND ${GETTEXT_MSGMERGE_EXECUTABLE} ARGS --no-wrap -o ${po_file} ${po_file} ${pot_file})
+                           COMMAND ${GETTEXT_MSGMERGE_EXECUTABLE} ARGS --no-wrap --no-fuzzy-matching -o ${po_file} ${po_file} ${pot_file})
     endforeach()
 ENDMACRO()
 
@@ -73,6 +73,7 @@ MACRO(TARGETS_FOR_MO_FILES language)
 ENDMACRO()
 
 # Checks for availability of gettext and when found creates all targets 
+# TODO: Adding option to set the PROJECT_NAME externally!
 MACRO(CREATE_TRANSLATION_TARGETS)
 find_package(Gettext)
 
@@ -99,7 +100,7 @@ if(GETTEXT_FOUND)
     endif()
     message(STATUS "Creating target i18n-update-po")
     add_custom_target(i18n-update-po)
-    message(STATUS "Creating target i18n-update-mo")
+    message(STATUS "Creating target i18n-create-mo")
     add_custom_target(i18n-create-mo ALL)
 
     SUBDIRLIST(languages ${CMAKE_SOURCE_DIR}/resources/i18n/)
@@ -108,6 +109,6 @@ if(GETTEXT_FOUND)
         TARGETS_FOR_PO_FILES(${language})
         TARGETS_FOR_MO_FILES(${language})
     endforeach()
-    install(DIRECTORY ${CMAKE_BINARY_DIR}/resources DESTINATION ${CMAKE_INSTALL_DATADIR}/uranium/)
+    install(DIRECTORY ${CMAKE_BINARY_DIR}/resources DESTINATION ${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/)
 endif()
 ENDMACRO()

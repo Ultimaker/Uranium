@@ -1,5 +1,5 @@
 # Copyright (c) 2015 Ultimaker B.V.
-# Uranium is released under the terms of the AGPLv3 or higher.
+# Uranium is released under the terms of the LGPLv3 or higher.
 
 from . import Operation
 
@@ -48,16 +48,7 @@ class LayFlatOperation(Operation.Operation):
         # Note: Y & Z axis are swapped
 
         #Transform mesh first to get the current positions of the vertices.
-        transformed_vertices = None
-        if not self._node.callDecoration("isGroup"):
-            transformed_vertices = self._node.getMeshDataTransformed().getVertices()
-        else:
-            #For groups, get the vertices of all children and process them as a single mesh
-            for child in self._node.getChildren():
-                if transformed_vertices is None:
-                    transformed_vertices = child.getMeshDataTransformed().getVertices()
-                else:
-                    transformed_vertices = numpy.concatenate((transformed_vertices, child.getMeshDataTransformed().getVertices()), axis = 0)
+        transformed_vertices = self._node.getMeshDataTransformedVertices()
 
         min_y_vertex = transformed_vertices[transformed_vertices.argmin(0)[1]]
         dot_min = 1.0 #Minimum y-component of direction vector.
@@ -86,16 +77,8 @@ class LayFlatOperation(Operation.Operation):
         self._node.rotate(Quaternion.fromAngleAxis(rad, Vector.Unit_Z), SceneNode.TransformSpace.Parent)
 
         #Apply the transformation so we get new vertex coordinates.
-        transformed_vertices = None
-        if not self._node.callDecoration("isGroup"):
-            transformed_vertices = self._node.getMeshDataTransformed().getVertices()
-        else:
-            #For groups, get the vertices of all children and process them as a single mesh
-            for child in self._node.getChildren():
-                if transformed_vertices is None:
-                    transformed_vertices = child.getMeshDataTransformed().getVertices()
-                else:
-                    transformed_vertices = numpy.concatenate((transformed_vertices, child.getMeshDataTransformed().getVertices()), axis = 0)
+        transformed_vertices = self._node.getMeshDataTransformedVertices()
+
         min_y_vertex = transformed_vertices[transformed_vertices.argmin(0)[1]]
         dot_min = 1.0
         dot_v = None
