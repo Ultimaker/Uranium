@@ -8,7 +8,7 @@ from PyQt5.QtDBus import *
 from UM.Qt.Factory.QtGui import *
 from PyQt5.QtNetwork import *
 from PyQt5.QtQml import *
-from PyQt5.QtWidgets import *
+from UM.Qt.Factory.QtWidgets import *
 from PyQt5.QtXml import *
 from PyQt5.QtOpenGL import *
 from PyQt5.QtPrintSupport import *

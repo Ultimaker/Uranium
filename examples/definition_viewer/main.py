@@ -8,7 +8,7 @@ import traceback
 
 from UM.Qt.Factory.QtCore import QObject, QUrl, pyqtSlot, pyqtProperty, pyqtSignal
 from PyQt5.QtQml import QQmlApplicationEngine, qmlRegisterType
-from PyQt5.QtWidgets import QApplication
+from UM.Qt.Factory.QtWidgets import QApplication
 
 import UM.Resources
 import UM.Settings

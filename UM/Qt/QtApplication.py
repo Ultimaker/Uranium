@@ -9,7 +9,7 @@ from typing import Dict, Optional
 
 from UM.Qt.Factory.QtCore import Qt, QCoreApplication, QEvent, QUrl, pyqtProperty, pyqtSignal, pyqtSlot, QLocale, QTranslator, QLibraryInfo, QT_VERSION_STR, PYQT_VERSION_STR
 from PyQt5.QtQml import QQmlApplicationEngine, QQmlComponent, QQmlContext
-from PyQt5.QtWidgets import QApplication, QSplashScreen, QMessageBox, QSystemTrayIcon
+from UM.Qt.Factory.QtWidgets import QApplication, QSplashScreen, QMessageBox, QSystemTrayIcon
 from UM.Qt.Factory.QtGui import QGuiApplication, QIcon, QPixmap, QFontMetrics
 from UM.Qt.Factory.QtCore import QTimer
 
