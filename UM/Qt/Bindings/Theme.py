@@ -3,7 +3,7 @@
 
 from UM.Qt.Factory.QtCore import QObject, pyqtProperty, pyqtSignal, QCoreApplication, QUrl, QSizeF
 from UM.Qt.Factory.QtGui import QColor, QFont, QFontMetrics, QFontDatabase, QFontInfo
-from PyQt5.QtQml import QQmlComponent, QQmlContext
+from UM.Qt.Factory.QtQml import QQmlComponent, QQmlContext
 from UM.FlameProfiler import pyqtSlot
 import json
 import os
