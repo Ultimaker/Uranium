@@ -1,24 +1,28 @@
 # Copyright (c) 2017 Thomas Karl Pietrowski
 
 import importlib
+import os
 
 class QtBinding:
     PyQt5 = "PyQt5"
     PySide2 = "PySide2"
 
-imported_binding = None
+if "URANIUM_QT" in os.environ.keys():
+    __import__(os.environ["URANIUM_QT"])
+    imported_binding = os.environ["URANIUM_QT"]
+else:
+    imported_binding = None
 
-try:
-    import PyQt5
-    imported_binding = QtBinding.PyQt5
-except:
-    pass
-
-try:
-    import PySide2
-    imported_binding = QtBinding.PySide2
-except:
-    pass
+if not imported_binding:
+    for binding in [QtBinding.PyQt5,
+                    QtBinding.PySide2,
+                    ]:
+        try:
+            __import__(binding)
+            imported_binding = binding
+            break
+        except:
+            continue
 
 if not imported_binding:
     raise ImportError("Could not find any Qt binding!")
