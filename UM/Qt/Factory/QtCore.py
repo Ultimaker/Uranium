@@ -2,23 +2,34 @@
 
 import warnings
 
-import .Utils as Factory
+from UM.Qt.Factory import Utils
 
-Factory.importQtModule("QtCore", globals())
+Utils.importQtModule("QtCore", globals())
 
-if Factory.imported_binding is Factory.QtBinding.PyQt5:
+if Utils.imported_binding is Utils.QtBinding.PyQt5:
     Signal = pyqtSignal
-    Slot = pyqtSignal
+    Slot = pyqtSlot
     Property = pyqtProperty
     
-    def pyqtSignal(self, *args, **kwargs):
+    """
+    def pyqtSignal(*args, **kwargs):
         warnings.warn("Usage of pyqtSignal is deprecated! Please use Signal instead!")
         return Signal(*args, **kwargs)
     
-    def pyqtSlot(self, *args, **kwargs):
+    def pyqtSlot(*args, **kwargs):
         warnings.warn("Usage of pyqtSlot is deprecated! Please use Slot instead!")
         return Slot(*args, **kwargs)
     
-    def pyqtProperty(self, *args, **kwargs):
+    def pyqtProperty(*args, **kwargs):
         warnings.warn("Usage of pyqtProperty is deprecated! Please use Property instead!")
         return Property(*args, **kwargs)
+    """
+
+if Utils.imported_binding is Utils.QtBinding.PySide2:
+    import PySide2
+    pyqtSignal = Signal
+    pyqtSlot = Slot
+    pyqtProperty = Property
+    
+    PYQT_VERSION_STR = PySide2.__version__
+    QT_VERSION_STR = __version__

@@ -3,19 +3,22 @@
 import importlib
 import os
 
+from UM.Logger import Logger
+
 class QtBinding:
     PyQt5 = "PyQt5"
     PySide2 = "PySide2"
 
 if "URANIUM_QT" in os.environ.keys():
+    Logger.log("d", "Using URANIUM_QT: ", repr(os.environ["URANIUM_QT"]))
     __import__(os.environ["URANIUM_QT"])
     imported_binding = os.environ["URANIUM_QT"]
 else:
     imported_binding = None
 
 if not imported_binding:
-    for binding in [QtBinding.PyQt5,
-                    QtBinding.PySide2,
+    for binding in [QtBinding.PySide2,
+                    QtBinding.PyQt5,
                     ]:
         try:
             __import__(binding)
@@ -26,6 +29,8 @@ if not imported_binding:
 
 if not imported_binding:
     raise ImportError("Could not find any Qt binding!")
+else:
+    Logger.log("d", "Using Qt binding: {}".format(imported_binding))
 
 def importQtModule(name, _globals = None):
     if not _globals:

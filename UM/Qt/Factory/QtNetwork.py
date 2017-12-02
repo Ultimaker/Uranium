@@ -2,4 +2,4 @@
 
 from UM.Qt.Factory import Utils
 
-Utils.importQtModule("QtQuickWidgets", globals())
+Utils.importQtModule("QtNetwork", globals())

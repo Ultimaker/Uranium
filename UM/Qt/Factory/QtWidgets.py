@@ -1,5 +1,5 @@
 # Copyright (c) 2017 Thomas Karl Pietrowski
 
-import .Utils as Factory
+from UM.Qt.Factory import Utils
 
-Factory.importQtModule("QtWidgets", globals())
+Utils.importQtModule("QtWidgets", globals())

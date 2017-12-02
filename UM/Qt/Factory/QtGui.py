@@ -1,5 +1,5 @@
 # Copyright (c) 2017 Thomas Karl Pietrowski
 
-import .Utils as Factory
+from UM.Qt.Factory import Utils
 
-Factory.importQtModule("QtGui", globals())
+Utils.importQtModule("QtGui", globals())
