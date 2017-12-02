@@ -3,7 +3,7 @@
 
 from UM.Qt.Factory.QtCore import pyqtProperty, Qt, QCoreApplication, pyqtSignal, pyqtSlot, QMetaObject, QRectF
 from UM.Qt.Factory.QtGui import QColor
-from PyQt5.QtQuick import QQuickWindow
+from UM.Qt.Factory.QtQuick import QQuickWindow
 
 from UM.Math.Matrix import Matrix
 from UM.Qt.QtMouseDevice import QtMouseDevice
@@ -16,7 +16,7 @@ from typing import Optional
 
 MYPY = False
 if MYPY:
-    from PyQt5.QtQuick import QQuickItem
+    from UM.Qt.Factory.QtQuick import QQuickItem
 
 ##  QQuickWindow subclass that provides the main window.
 @signalemitter

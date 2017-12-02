@@ -12,9 +12,9 @@ from UM.Qt.Factory.QtWidgets import *
 from PyQt5.QtXml import *
 from PyQt5.QtOpenGL import *
 from PyQt5.QtPrintSupport import *
-from PyQt5.QtQuick import *
+from UM.Qt.Factory.QtQuick import *
 from PyQt5.QtSql import *
 from PyQt5.QtSvg import *
 from PyQt5.QtTest import *
 from PyQt5.QtX11Extras import *
-from PyQt5.QtQuickWidgets import *
+from UM.Qt.Factory.QtQuickWidgets import *

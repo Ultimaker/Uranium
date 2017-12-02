@@ -4,7 +4,7 @@
 import inspect
 
 from UM.Qt.Factory.QtCore import pyqtProperty, pyqtSignal, QObject, QUrl, QCoreApplication, pyqtSlot
-from PyQt5.QtQml import QJSValue
+from UM.Qt.Factory.QtQml import QJSValue
 # from UM.FlameProfiler import pyqtSlot
 
 from UM.i18n import i18nCatalog
