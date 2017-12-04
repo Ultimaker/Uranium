@@ -167,6 +167,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
             self._dirty = True
             self.nameChanged.emit()
             self.pyqtNameChanged.emit()
+            self.metaDataChanged.emit(self)
 
 
     # Because we want to expose the properties of InstanceContainer as Qt properties for

@@ -50,7 +50,7 @@ class InstanceContainersModel(ListModel):
 
         # List of filters for queries. The result is the union of the each list of results.
         self._filter_dicts = []  # type: List[Dict[str,str]]
-        self._update()
+        self._container_change_timer.start()
 
     ##  Handler for container added / removed events from registry
     def _onContainerChanged(self, container):
@@ -70,7 +70,9 @@ class InstanceContainersModel(ListModel):
         for container in self._instance_containers.values():
             container.metaDataChanged.connect(self._updateMetaData)
 
-        self.setItems(list(self._recomputeItems()))
+        new_items = list(self._recomputeItems())
+        if new_items != self._items:
+            self.setItems(new_items)
 
     ##  Computes the items that need to be in this list model.
     #
@@ -124,7 +126,7 @@ class InstanceContainersModel(ListModel):
         if self._section_property != property_name:
             self._section_property = property_name
             self.sectionPropertyChanged.emit()
-            self._update()
+            self._container_change_timer.start()
 
     sectionPropertyChanged = pyqtSignal()
     @pyqtProperty(str, fset = setSectionProperty, notify = sectionPropertyChanged)
@@ -149,7 +151,7 @@ class InstanceContainersModel(ListModel):
         if filter_list != self._filter_dicts:
             self._filter_dicts = filter_list
             self.filterChanged.emit()
-            self._update()
+            self._container_change_timer.start()
 
     @pyqtProperty("QVariantList", fset=setFilterList, notify=filterChanged)
     def filterList(self):
@@ -161,7 +163,7 @@ class InstanceContainersModel(ListModel):
             containers = ContainerRegistry.getInstance().findInstanceContainers(id = instance_id)
             if containers:
                 containers[0].setName(new_name)
-                self._update()
+                self._container_change_timer.start()
 
     ##  Gets a list of the possible file filters that the plugins have
     #   registered they can read or write. The convenience meta-filters
