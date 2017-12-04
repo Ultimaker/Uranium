@@ -64,8 +64,7 @@ class ReadFileJob(Job):
 
         try:
             begin_time = time.time()
-
-            sceneNode = self._handler.readerRead(reader, self._filename)
+            sceneNode = self.setResult(self._handler.readerRead(reader, self._filename))
             end_time = time.time()
             Logger.log("d", "Loading file took %0.1f seconds", end_time - begin_time)
 
@@ -76,8 +75,6 @@ class ReadFileJob(Job):
                                          title=i18n_catalog.i18nc("@info:title", "Invalid File"))
                 result_message.show()
                 return
-
-            self.setResult(sceneNode)
 
         except:
             Logger.logException("e", "Exception occurred while loading file %s", self._filename)
