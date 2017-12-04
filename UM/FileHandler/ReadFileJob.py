@@ -8,7 +8,6 @@ from UM.Math.Vector import Vector
 from UM.Preferences import Preferences
 from UM.Logger import Logger
 from UM.Mesh.MeshReader import MeshReader
-from UM.Scene.SceneNode import SceneNode
 
 import time
 import math
@@ -64,18 +63,9 @@ class ReadFileJob(Job):
 
         try:
             begin_time = time.time()
-            sceneNode = self.setResult(self._handler.readerRead(reader, self._filename))
+            self.setResult(self._handler.readerRead(reader, self._filename))
             end_time = time.time()
             Logger.log("d", "Loading file took %0.1f seconds", end_time - begin_time)
-
-            if sceneNode is None:
-                result_message = Message(i18n_catalog.i18nc("@info:status Don't translate the XML tag <filename>!",
-                                                            "Failed to load <filename>{0}</filename>", self._filename),
-                                         lifetime=0,
-                                         title=i18n_catalog.i18nc("@info:title", "Invalid File"))
-                result_message.show()
-                return
-
         except:
             Logger.logException("e", "Exception occurred while loading file %s", self._filename)
         finally:
