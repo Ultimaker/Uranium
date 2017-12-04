@@ -53,7 +53,9 @@ class OBJReader(MeshReader):
 
             mesh_builder.reserveVertexCount(3 * len(face_list))
             num_vertices = len(vertex_list)
-            num_normals = len(normal_list)
+
+            if num_vertices == 0:
+                return None
 
             for face in face_list:
                 # Substract 1 from index, as obj starts counting at 1 instead of 0
