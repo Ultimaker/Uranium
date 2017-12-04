@@ -62,9 +62,11 @@ class ContainerRegistry(ContainerRegistryInterface):
 
         self.metadata = {} # type: Dict[str, Dict[str, Any]]
         self._containers = {} # type: Dict[str, ContainerInterface]
+        self.source_provider = {} # type: Dict[str, Optional[ContainerProvider]] #Where each container comes from.
         # Ensure that the empty container is added to the ID cache.
         self.metadata["empty"] = self._emptyInstanceContainer.getMetaData()
         self._containers["empty"] = self._emptyInstanceContainer
+        self.source_provider["empty"] = None
         self._resource_types = [Resources.DefinitionContainers] # type: List[int]
         self._query_cache = collections.OrderedDict() # This should really be an ordered set but that does not exist...
 
@@ -165,15 +167,13 @@ class ContainerRegistry(ContainerRegistryInterface):
             if metadata["id"] in self._containers: #Already loaded, so just return that.
                 result.append(self._containers[metadata["id"]])
             else: #Metadata is loaded, but not the actual data.
-                for provider in self._providers:
-                    if metadata["id"] in provider.getAllIds(): #This is the one we need to load it from!
-                        new_container = provider.loadContainer(metadata["id"])
-                        self.addContainer(new_container)
-                        self.containerLoadComplete.emit(new_container.getId())
-                        result.append(new_container)
-                        break
-                else:
-                    Logger.log("w", "The metadata of container {container_id} was loaded, but no container provider seems to be able to load the actual container.".format(container_id = metadata["id"]))
+                provider = self.source_provider[metadata["id"]]
+                if not provider:
+                    Logger.log("w", "The metadata of container {container_id} was added during runtime, but no accompanying container was added.".format(container_id = metadata["id"]))
+                new_container = provider.loadContainer(metadata["id"])
+                self.addContainer(new_container)
+                self.containerLoadComplete.emit(new_container.getId())
+                result.append(new_container)
         return result
 
     ##  Find the metadata of all container objects matching certain criteria.
@@ -191,11 +191,17 @@ class ContainerRegistry(ContainerRegistryInterface):
 
         if "id" in kwargs:
             if kwargs["id"] not in self.metadata: #If we're looking for an unknown ID, try to lazy-load that one.
-                for provider in self._providers:
-                    if kwargs["id"] in provider.getAllIds():
-                        metadata = provider.loadMetadata(kwargs["id"])
-                        self.metadata[metadata["id"]] = metadata
-                        break #Just need to find the first one.
+                if kwargs["id"] not in self.source_provider:
+                    for provider in self._providers:
+                        if kwargs["id"] in provider.getAllIds():
+                            self.source_provider[kwargs["id"]] = provider
+                            break
+                    else:
+                        return []
+                provider = self.source_provider[kwargs["id"]]
+                metadata = provider.loadMetadata(kwargs["id"])
+                self.metadata[metadata["id"]] = metadata
+                self.source_provider[metadata["id"]] = provider
 
             if query.isIdOnly(): #If we are just searching for a single container by ID, look it up from the ID-based cache.
                 if kwargs["id"] in self.metadata:
@@ -268,11 +274,10 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   \return True if the container is read-only, or False if it can be
     #   modified.
     def isReadOnly(self, container_id: str) -> bool:
-        #Find the source.
-        for provider in self._providers:
-            if container_id in provider.getAllIds():
-                return provider.isReadOnly(container_id)
-        return False #If no provider had the container, that means that the container was only in memory. Then it's always modifiable.
+        provider = self.source_provider.get(container_id)
+        if not provider:
+            return False #If no provider had the container, that means that the container was only in memory. Then it's always modifiable.
+        return provider.isReadOnly(container_id)
 
     ##  Returns whether a container is completely loaded or not.
     #
@@ -288,8 +293,9 @@ class ContainerRegistry(ContainerRegistryInterface):
         for provider in self._providers: #Automatically sorted by the priority queue.
             for container_id in list(provider.getAllIds()): #Make copy of all IDs since it might change during iteration.
                 if container_id not in self.metadata:
-                    UM.Qt.QtApplication.QtApplication.processEvents()
+                    UM.Qt.QtApplication.QtApplication.getInstance().processEvents()
                     self.metadata[container_id] = provider.loadMetadata(container_id)
+                    self.source_provider[container_id] = provider
         ContainerRegistry.allMetadataLoaded.emit()
 
     ##  Load all available definition containers, instance containers and
@@ -312,6 +318,7 @@ class ContainerRegistry(ContainerRegistryInterface):
 
                         self._containers[container_id] = provider.loadContainer(container_id)
                         self.metadata[container_id] = self._containers[container_id].getMetaData()
+                        self.source_provider[container_id] = provider
                         self.containerLoadComplete.emit(container_id)
 
         gc.enable()
@@ -328,6 +335,8 @@ class ContainerRegistry(ContainerRegistryInterface):
 
         self.metadata[container.getId()] = container.getMetaData()
         self._containers[container.getId()] = container
+        if container.getId() not in self.source_provider:
+            self.source_provider[container.getId()] = None #Added during runtime.
         self._clearQueryCacheByContainer(container)
         self.containerAdded.emit(container)
 
@@ -341,6 +350,7 @@ class ContainerRegistry(ContainerRegistryInterface):
 
         del self._containers[container_id]
         del self.metadata[container_id]
+        del self.source_provider[container_id]
         self._deleteFiles(container)
 
         if hasattr(container, "metaDataChanged"):
@@ -370,11 +380,14 @@ class ContainerRegistry(ContainerRegistryInterface):
 
         container.setName(new_name)
         if new_id:
+            source_provider = self.source_provider[container.getId()]
             del self._containers[container.getId()]
             del self.metadata[container.getId()]
+            del self.source_provider[container.getId()]
             container.getMetaData()["id"] = new_id
             self._containers[container.getId()] = container
             self.metadata[container.getId()] = container.getMetaData()
+            self.source_provider[container.getId()] = source_provider
         self._clearQueryCacheByContainer(container)
         self.containerAdded.emit(container)
 
