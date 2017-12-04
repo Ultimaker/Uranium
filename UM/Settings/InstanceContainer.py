@@ -70,7 +70,6 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     def __deepcopy__(self, memo):
         new_container = self.__class__(self.getId())
-        new_container._name = self.getName()
         new_container._metadata = copy.deepcopy(self._metadata, memo)
         new_container._instances = copy.deepcopy(self._instances, memo)
         for instance in new_container._instances.values(): #Set the back-links of the new instances correctly to the copied container.
