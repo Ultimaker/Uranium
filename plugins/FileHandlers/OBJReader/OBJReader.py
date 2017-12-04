@@ -1,13 +1,15 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2017 Ultimaker B.V.
 # Copyright (c) 2013 David Braam
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from UM.Mesh.MeshReader import MeshReader
-from UM.Mesh.MeshBuilder import MeshBuilder
 import os
-from UM.Scene.SceneNode import SceneNode
 
 from UM.Job import Job
+from UM.Logger import Logger
+from UM.Mesh.MeshReader import MeshReader
+from UM.Mesh.MeshBuilder import MeshBuilder
+from UM.Scene.SceneNode import SceneNode
+
 
 class OBJReader(MeshReader):
     def __init__(self):
@@ -103,6 +105,12 @@ class OBJReader(MeshReader):
                 Job.yieldThread()
             if not mesh_builder.hasNormals():
                 mesh_builder.calculateNormals(fast = True)
+
+            # make sure that the mesh data is not empty
+            if mesh_builder.getVertexCount() == 0:
+                Logger.log("d", "File did not contain valid data, unable to read.")
+                return None  # We didn't load anything.
+
             scene_node.setMeshData(mesh_builder.build())
 
         return scene_node

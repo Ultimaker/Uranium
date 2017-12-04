@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Uranium 3.0\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2017-08-02 14:05+0200\n"
-"PO-Revision-Date: 2017-10-06 09:00-0300\n"
+"PO-Revision-Date: 2017-12-04 09:40-0300\n"
 "Last-Translator: Cláudio Sampaio <patola@makerlinux.com.b>\n"
 "Language-Team: Cláudio Sampaio\n"
 "Language: pt_BR\n"
@@ -354,7 +354,7 @@ msgstr "Extensões OpenGL críticas estão faltando. Este programa exige suporte
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Cannot open files of the type of <filename>{0}</filename>"
-msgstr ""
+msgstr "Não é possível abrir arquivos do tipo <filename>{0}</filename>"
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:36
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:51
@@ -503,7 +503,7 @@ msgstr "Cancelar"
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:60
 msgctxt "@action:button"
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:31
 msgctxt "@item:tooltip"
@@ -650,12 +650,12 @@ msgstr "Próximo"
 #: UraniumExampleExtensionPlugin/plugin.json
 msgctxt "description"
 msgid "Example extension to instruct people on how to create Uranium extensions."
-msgstr ""
+msgstr "Extensão de exemplo para instruir as pessoas em como criar extensões Uranium."
 
 #: UraniumExampleExtensionPlugin/plugin.json
 msgctxt "name"
 msgid "Example Extension"
-msgstr ""
+msgstr "Extensão de Exemplo"
 
 #: Views/SimpleView/plugin.json
 msgctxt "description"
@@ -730,22 +730,22 @@ msgstr "Registrador de Console"
 #: UraniumExampleToolPlugin/plugin.json
 msgctxt "description"
 msgid "Example tool to instruct people on how to create Uranium tools."
-msgstr ""
+msgstr "Ferramenta de exemplo para instruir as pessoas a criarem ferramentas Uranium."
 
 #: UraniumExampleToolPlugin/plugin.json
 msgctxt "name"
 msgid "Example Tool"
-msgstr ""
+msgstr "Ferramenta de Exemplo"
 
 #: UraniumExampleOutputDevicePlugin/plugin.json
 msgctxt "description"
 msgid "Example output device to instruct people on how to create Uranium output devices."
-msgstr ""
+msgstr "Dispositivo de saída exemplo para instruir as pessoas em como criar dispositivos de saída Uranium."
 
 #: UraniumExampleOutputDevicePlugin/plugin.json
 msgctxt "name"
 msgid "Example Output Device"
-msgstr ""
+msgstr "Dispositivo de Saída Exemplo"
 
 #: UpdateChecker/plugin.json
 msgctxt "description"
@@ -760,12 +760,12 @@ msgstr "Verificador de Atualizações"
 #: UraniumExampleFileReaderPlugin/plugin.json
 msgctxt "description"
 msgid "Example file reader to instruct people on how to create Uranium file readers."
-msgstr ""
+msgstr "Leitor de arquivo exemplo para instur as pessoas em como criar leitores de arquivo Uranium."
 
 #: UraniumExampleFileReaderPlugin/plugin.json
 msgctxt "name"
 msgid "Example File Reader"
-msgstr ""
+msgstr "Leitor de Arquivo Exemplo"
 
 #: LocalFileOutputDevice/plugin.json
 msgctxt "description"
