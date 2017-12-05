@@ -203,11 +203,14 @@ class ContainerRegistry(ContainerRegistryInterface):
                 self.metadata[metadata["id"]] = metadata
                 self.source_provider[metadata["id"]] = provider
 
-            if query.isIdOnly(): #If we are just searching for a single container by ID, look it up from the ID-based cache.
-                if kwargs["id"] in self.metadata:
-                    return [self.metadata[kwargs["id"]]]
-                else:
-                    return [] #No result, so return an empty list.
+            #Since IDs are the primary key and unique we can now simply request the candidate and check if it matches all requirements.
+            if kwargs["id"] not in self.metadata:
+                return [] #No result, so return an empty list.
+            candidate = self.metadata[kwargs["id"]]
+            if candidate.items() >= kwargs.items():
+                return [candidate]
+            else:
+                return []
 
         if query.isHashable() and query in self._query_cache:
             #If the exact same query is in the cache, we can re-use the query result.
@@ -293,7 +296,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         for provider in self._providers: #Automatically sorted by the priority queue.
             for container_id in list(provider.getAllIds()): #Make copy of all IDs since it might change during iteration.
                 if container_id not in self.metadata:
-                    UM.Qt.QtApplication.QtApplication.getInstance().processEvents()
+                    UM.Qt.QtApplication.QtApplication.getInstance().processEvents() #Update the user interface because loading takes a while. Specifically the loading screen.
                     self.metadata[container_id] = provider.loadMetadata(container_id)
                     self.source_provider[container_id] = provider
         ContainerRegistry.allMetadataLoaded.emit()
@@ -314,7 +317,7 @@ class ContainerRegistry(ContainerRegistryInterface):
                 for container_id in list(provider.getAllIds()): #Make copy of all IDs since it might change during iteration.
                     if container_id not in self._containers:
                         #Update UI while loading.
-                        UM.Qt.QtApplication.QtApplication.processEvents()
+                        UM.Qt.QtApplication.QtApplication.getInstance().processEvents() #Update the user interface because loading takes a while. Specifically the loading screen.
 
                         self._containers[container_id] = provider.loadContainer(container_id)
                         self.metadata[container_id] = self._containers[container_id].getMetaData()
