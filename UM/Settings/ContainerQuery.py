@@ -59,8 +59,9 @@ class ContainerQuery:
     #   This will search the container metadata of the ContainerRegistry based
     #   on the arguments provided to this class' constructor. After it is done,
     #   the result can be retrieved with getResult().
-    def execute(self):
-        candidates = self._registry.metadata.values()
+    def execute(self, candidates = None):
+        if candidates is None:
+            candidates = self._registry.metadata.values()
 
         #Filter on all the key-word arguments.
         for key, value in self._kwargs.items():

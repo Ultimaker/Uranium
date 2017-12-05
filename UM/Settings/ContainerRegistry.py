@@ -188,6 +188,7 @@ class ContainerRegistry(ContainerRegistryInterface):
     def findContainersMetadata(self, *, ignore_case = False, **kwargs) -> List[Dict[str, Any]]:
         #Create the query object.
         query = ContainerQuery.ContainerQuery(self, ignore_case = ignore_case, **kwargs)
+        candidates = None
 
         if "id" in kwargs and "*" not in kwargs["id"]:
             if kwargs["id"] not in self.metadata: #If we're looking for an unknown ID, try to lazy-load that one.
@@ -206,18 +207,14 @@ class ContainerRegistry(ContainerRegistryInterface):
             #Since IDs are the primary key and unique we can now simply request the candidate and check if it matches all requirements.
             if kwargs["id"] not in self.metadata:
                 return [] #No result, so return an empty list.
-            candidate = self.metadata[kwargs["id"]]
-            if candidate.items() >= kwargs.items():
-                return [candidate]
-            else:
-                return []
+            candidates = [self.metadata[kwargs["id"]]]
 
         if query.isHashable() and query in self._query_cache:
             #If the exact same query is in the cache, we can re-use the query result.
             self._query_cache.move_to_end(query) #Query was used, so make sure to update its position so that it doesn't get pushed off as a rarely-used query.
             return self._query_cache[query].getResult()
 
-        query.execute()
+        query.execute(candidates = candidates)
 
         # Only cache query result when it is hashable
         if query.isHashable():
