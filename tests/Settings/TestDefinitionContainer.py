@@ -364,27 +364,30 @@ def _createSettingDefinition(properties):
 #   serialises the container to a string and deserialises it again from that
 #   string. Then it verifies that all properties are still the same.
 #
-#   \param definition_container A defintion container to test the serialisation
+#   \param definition_container A definition container to test the serialisation
 #   of.
 #   \param ignored_metadata_keys A list of keys in metadata that will be
 #   ignored during serialization.
 def _test_serialize_cycle(definition_container, ignored_metadata_keys = None):
     # Don't verify the ID. It must be unique, so it must be different.
     name = definition_container.getName()
-    metadata = {key: value for key, value in definition_container.getMetaData().items()}
+    metadata = {key: value for key, value in definition_container.getMetaData().items() if key != "id"}
     definitions = definition_container.definitions
     # No need to verify the internationalisation catalogue.
 
     serialised = definition_container.serialize(ignored_metadata_keys = ignored_metadata_keys)
     deserialised = UM.Settings.DefinitionContainer.DefinitionContainer(str(uuid.uuid4()))
     deserialised.deserialize(serialised)
+    deserialised_metadata = {key: value for key, value in deserialised.getMetaData().items() if key != "id"}
 
-    # remove ignored keys from metadata dict
+    # remove ignored keys from metadata dicts
     if ignored_metadata_keys:
         for key in ignored_metadata_keys:
             if key in metadata:
                 del metadata[key]
+            if key in deserialised_metadata:
+                del deserialised_metadata[key]
 
     assert name == deserialised.getName()
-    assert metadata == deserialised.getMetaData()
+    assert metadata == deserialised_metadata
     assert definitions == deserialised.definitions
