@@ -44,6 +44,7 @@ class Controller:
 
         self._input_devices = {}
 
+        PluginRegistry.addType("stage", self.addStage)
         PluginRegistry.addType("view", self.addView)
         PluginRegistry.addType("tool", self.addTool)
         PluginRegistry.addType("input_device", self.addInputDevice)
@@ -149,7 +150,9 @@ class Controller:
     def getActiveStage(self) -> Optional[Stage]:
         return self._active_stage
 
-    def setActiveStage(self):
+    ##  Set the currently active stage.
+    #   \param name \type{string} The name of the stage to set as active
+    def setActiveStage(self, name: str):
         return None
         # TODO
 
