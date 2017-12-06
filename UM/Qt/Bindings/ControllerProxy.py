@@ -16,14 +16,21 @@ class ControllerProxy(QObject):
         self._selection_pass = None
         self._tools_enabled = True
 
+        # bind needed signals
         self._controller.toolOperationStarted.connect(self._onToolOperationStarted)
         self._controller.toolOperationStopped.connect(self._onToolOperationStopped)
+        self._controller.activeStageChanged.connect(self._onActiveStageChanged)
 
     toolsEnabledChanged = pyqtSignal()
+    activeStageChanged = pyqtSignal()
 
     @pyqtProperty(bool, notify = toolsEnabledChanged)
     def toolsEnabled(self):
         return self._tools_enabled
+
+    @pyqtProperty(QObject, notify = activeStageChanged)
+    def activeStage(self):
+        return self._controller.getActiveStage()
 
     @pyqtSlot(str)
     def setActiveView(self, view):
@@ -86,3 +93,6 @@ class ControllerProxy(QObject):
         self._tools_enabled = True
         self._controller.setToolsEnabled(True)
         self.toolsEnabledChanged.emit()
+
+    def _onActiveStageChanged(self):
+        self.activeStageChanged.emit()

@@ -75,7 +75,6 @@ class Bindings:
     def register(self):
         qmlRegisterType(MainWindow.MainWindow, "UM", 1, 0, "MainWindow")
         qmlRegisterType(ViewModel.ViewModel, "UM", 1, 0, "ViewModel")
-        qmlRegisterType(StageModel.StageModel, "UM", 1, 0, "StageModel")
         qmlRegisterType(ToolModel.ToolModel, "UM", 1, 0, "ToolModel")
         qmlRegisterType(PointingRectangle.PointingRectangle, "UM", 1, 0, "PointingRectangle")
         qmlRegisterType(ExtensionModel.ExtensionModel, "UM", 1, 0, "ExtensionModel")
@@ -118,3 +117,6 @@ class Bindings:
         # Additions after 2.3;
         qmlRegisterSingletonType(WorkspaceFileHandler, "UM", 1, 3, "WorkspaceFileHandler", WorkspaceFileHandler.getInstance)
         qmlRegisterSingletonType(OpenGLContextProxy.OpenGLContextProxy, "UM", 1, 3, "OpenGLContextProxy", Bindings.createOpenGLContextProxy)
+
+        # Additions after 3.1
+        qmlRegisterType(StageModel.StageModel, "UM", 1, 4, "StageModel")

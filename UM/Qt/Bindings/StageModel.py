@@ -13,8 +13,7 @@ class StageModel(ListModel):
     IdRole = Qt.UserRole + 1
     NameRole = Qt.UserRole + 2
     ActiveRole = Qt.UserRole + 3
-    DescriptionRole = Qt.UserRole + 4
-    IconRole = Qt.UserRole + 5
+    StageRole = Qt.UserRole + 4
 
     def __init__(self, parent = None):
         super().__init__(parent)
@@ -26,14 +25,14 @@ class StageModel(ListModel):
         self.addRoleName(self.IdRole, "id")
         self.addRoleName(self.NameRole, "name")
         self.addRoleName(self.ActiveRole, "active")
-        self.addRoleName(self.DescriptionRole, "description")
-        self.addRoleName(self.IconRole, "icon")
+        self.addRoleName(self.StageRole, "stage")
 
     def _onStagesChanged(self):
         items = []
         stages = self._controller.getAllStages()
+        current_stage = self._controller.getActiveStage()
 
-        for stage_id in stages:
+        for stage_id, stage in stages.items():
             view_meta_data = PluginRegistry.getInstance().getMetaData(stage_id).get("stage", {})
 
             # Skip view modes that are marked as not visible
@@ -42,17 +41,13 @@ class StageModel(ListModel):
 
             # Metadata elements
             name = view_meta_data.get("name", stage_id)
-            description = view_meta_data.get("description", "")
-            icon_name = view_meta_data.get("icon", "")
-            weight = view_meta_data.get("weight", 0)
+            weight = view_meta_data.get("weight", 99)
 
-            current_stage = self._controller.getActiveStage()
             items.append({
                 "id": stage_id,
                 "name": name,
                 "active": stage_id == current_stage.getPluginId(),
-                "description": description,
-                "icon": icon_name,
+                "stage": stage,
                 "weight": weight
             })
 

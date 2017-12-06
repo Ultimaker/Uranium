@@ -127,7 +127,6 @@ class Controller:
         name = stage.getPluginId()
         if name not in self._stages:
             self._stages[name] = stage
-            stage.setApplication(self._application)
             self.stagesChanged.emit()
 
     ##  Request stage by name. Returns None if no stage is found.
