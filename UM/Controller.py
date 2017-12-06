@@ -9,6 +9,7 @@ from UM.PluginRegistry import PluginRegistry
 
 # Type hinting imports
 from UM.View.View import View
+from UM.Stage import Stage
 from UM.InputDevice import InputDevice
 from typing import Optional, Dict
 from UM.Math.Vector import Vector
@@ -23,21 +24,25 @@ from UM.Math.Vector import Vector
 class Controller:
     def __init__(self, application):
         super().__init__()  # Call super to make multiple inheritance work.
-        self._active_tool = None
-        self._tool_operation_active = False
-        self._tools = {}
 
-        self._input_devices = {}
+        self._scene = Scene()
+        self._application = application
+        self._is_model_rendering_enabled = True
 
         self._active_view = None
         self._views = {}
-        self._scene = Scene()
-        self._application = application
+
+        self._active_tool = None
+        self._tool_operation_active = False
+        self._tools = {}
         self._camera_tool = None
         self._selection_tool = None
-
         self._tools_enabled = True
-        self._is_model_rendering_enabled = True
+
+        self._active_stage = None
+        self._stages = {}
+
+        self._input_devices = {}
 
         PluginRegistry.addType("view", self.addView)
         PluginRegistry.addType("tool", self.addTool)
@@ -113,6 +118,46 @@ class Controller:
 
     ##  Emitted when the active view changes.
     activeViewChanged = Signal()
+
+    ##  Add a stage by name if it's not already added.
+    #   \param name \type{string} Unique identifier of stage (usually the plugin name)
+    #   \param stage \type{Stage} The stage to be added
+    def addStage(self, stage: Stage):
+        name = stage.getPluginId()
+        if name not in self._stages:
+            self._stages[name] = stage
+            stage.setApplication(self._application)
+            self.stagesChanged.emit()
+
+    ##  Request stage by name. Returns None if no stage is found.
+    #   \param name \type{string} Unique identifier of stage (usually the plugin name)
+    #   \return Stage \type{Stage} if name was found, none otherwise.
+    def getStage(self, name: str) -> Optional[Stage]:
+        try:
+            return self._stages[name]
+        except KeyError:  # No such view
+            Logger.log("e", "Unable to find %s in stage list", name)
+            return None
+
+    ##  Return all stages.
+    #   \return stages \type{dict}
+    def getAllStages(self) -> Dict[str, Stage]:
+        return self._stages
+
+    ##  Request active stage. Returns None if there is no active stage
+    #   \return stage \type{Stage} if an stage is active, None otherwise.
+    def getActiveStage(self) -> Optional[Stage]:
+        return self._active_stage
+
+    def setActiveStage(self):
+        return None
+        # TODO
+
+    ##  Emitted when the list of stages changes.
+    stagesChanged = Signal()
+
+    ##  Emitted when the active stage changes.
+    activeStageChanged = Signal()
 
     ##  Add an input device (e.g. mouse, keyboard, etc) if it's not already added.
     #   \param device The input device to be added
