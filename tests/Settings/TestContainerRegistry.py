@@ -274,10 +274,7 @@ test_findContainers_data = [
 @pytest.mark.parametrize("data", test_findContainers_data)
 def test_findDefinitionContainers(container_registry, data):
     for container in data["containers"]: # Fill the registry with mock containers.
-        container = container.copy()
-        container_id = container["id"]
-        del container["id"]
-        definition_container = DefinitionContainer(container_id)
+        definition_container = DefinitionContainer(container["id"])
         for key, value in container.items(): # Copy data into metadata.
             definition_container.getMetaData()[key] = value
         container_registry.addContainer(definition_container)
@@ -399,12 +396,7 @@ def _verifyMetaDataMatches(answer, ground_truth):
 
     matches = 0
     for result in answer: # Go through all results and match them with our expected data.
-        for required in list(ground_truth): # Iterate over a copy of the list so we do not modify the original data.
-            if "id" in required: # Special casing for ID since that is not in the metadata.
-                if result.getId() != required["id"]:
-                    continue # No match.
-                del required["id"] # Remove ID from the expected metadata since it is not part of the metadata.
-
+        for required in ground_truth:
             if result.getMetaData() == required:
                 # If the metadata matches, we know this entry is valid.
                 # Note that this requires specifying all metadata in the expected results.
