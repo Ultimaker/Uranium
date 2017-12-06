@@ -397,7 +397,7 @@ def _verifyMetaDataMatches(answer, ground_truth):
     matches = 0
     for result in answer: # Go through all results and match them with our expected data.
         for required in ground_truth:
-            if result.getMetaData() == required:
+            if result.getMetaData().items() >= required.items():
                 # If the metadata matches, we know this entry is valid.
                 # Note that this requires specifying all metadata in the expected results.
                 matches += 1
