@@ -113,6 +113,7 @@ class LocalContainerProvider(ContainerProvider):
     ##  Remove or unregister an id.
     def removeContainer(self, container_id: str) -> None:
         if container_id in self._id_to_path:
+            path_to_delete = self._id_to_path[container_id]
             del self._id_to_path[container_id]
         else:
             Logger.log("w", "Tried to remove unknown container (1): %s", container_id)
@@ -120,6 +121,17 @@ class LocalContainerProvider(ContainerProvider):
             del self._id_to_mime[container_id]
         else:
             Logger.log("w", "Tried to remove unknown container (2): %s", container_id)
+
+        # Remove file related to a container
+        #
+        # Since we cannot assume we can write to any other path, we can only support removing from
+        # a storage path. This effectively "resets" a container that is located in another resource
+        # path.
+        try:
+            if os.path.isfile(path_to_delete):
+                os.remove(path_to_delete)
+        except Exception:
+            Logger.log("w", "Tried to delete file [%s], but it failed", path_to_delete)
 
     ##  Load a pre-parsed definition container.
     #

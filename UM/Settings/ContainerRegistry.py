@@ -354,8 +354,6 @@ class ContainerRegistry(ContainerRegistryInterface):
         del self.source_provider[container_id]
         if source_provider is not None:
             source_provider.removeContainer(container_id)
-        # TODO: move _deleteFiles to LocalContainerProvider
-        self._deleteFiles(container)
 
         if hasattr(container, "metaDataChanged"):
             container.metaDataChanged.disconnect(self._onContainerMetaDataChanged)
@@ -378,8 +376,6 @@ class ContainerRegistry(ContainerRegistryInterface):
             Logger.log("w", "Unable to rename container %s, because the name (%s) didn't change", container_id, new_name)
             return
 
-        # Remove all files relating to the old container
-        self._deleteFiles(container)
         self.containerRemoved.emit(container)
 
         container.setName(new_name)
@@ -388,10 +384,13 @@ class ContainerRegistry(ContainerRegistryInterface):
             del self._containers[container.getId()]
             del self.metadata[container.getId()]
             del self.source_provider[container.getId()]
+            if source_provider is not None:
+                source_provider.removeContainer(container.getId())
             container.getMetaData()["id"] = new_id
             self._containers[container.getId()] = container
             self.metadata[container.getId()] = container.getMetaData()
-            self.source_provider[container.getId()] = source_provider
+            self.source_provider[container.getId()] = None  # to be saved with saveSettings
+
         self._clearQueryCacheByContainer(container)
         self.containerAdded.emit(container)
 
@@ -475,31 +474,6 @@ class ContainerRegistry(ContainerRegistryInterface):
     @classmethod
     def getContainerTypes(cls):
         return cls.__container_types.items()
-
-    # Remove all files related to a container located in a storage path
-    #
-    # Since we cannot assume we can write to any other path, we can only support removing from
-    # a storage path. This effectively "resets" a container that is located in another resource
-    # path.
-    def _deleteFiles(self, container):
-        for resource_type in self._resource_types:
-            mime_type_name = ""
-            for name, container_type in self.mime_type_map.items():
-                if container_type == container.__class__:
-                    mime_type_name = name
-                    break
-            else:
-                return
-
-            mime_type = MimeTypeDatabase.getMimeType(mime_type_name)
-
-            for suffix in mime_type.suffixes:
-                try:
-                    path = Resources.getStoragePath(resource_type, urllib.parse.quote_plus(container.getId()) + "." + suffix)
-                    if os.path.isfile(path):
-                        os.remove(path)
-                except Exception:
-                    continue
 
     # Load a binary cached version of a DefinitionContainer
     def _loadCachedDefinition(self, definition_id, path):
