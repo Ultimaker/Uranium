@@ -1,19 +1,15 @@
-# Copyright (c) 2016 Ultimaker B.V.
+# Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-import pytest
 import os.path
+import pytest
+from typing import Optional
 
 import UM.PluginObject
-from UM.PluginRegistry import PluginRegistry
-from UM.Settings.ContainerRegistry import ContainerRegistry
 from UM.Settings.DefinitionContainer import DefinitionContainer
 from UM.Settings.InstanceContainer import InstanceContainer
 from UM.Settings.ContainerStack import ContainerStack
 from UM.Signal import Signal
-
-from UM.Resources import Resources
-from UM.MimeTypeDatabase import MimeType, MimeTypeDatabase
 
 ##  Fake container class to add to the container registry.
 #
@@ -107,7 +103,7 @@ class MockContainer(ContainerInterface, UM.PluginObject.PluginObject):
     ##  Deserializes the container from a string representation.
     #
     #   This method is not implemented in the mock container.
-    def deserialize(self, serialized):
+    def deserialize(self, serialized, file_name: Optional[str] = None):
         raise NotImplementedError()
 
     @classmethod
