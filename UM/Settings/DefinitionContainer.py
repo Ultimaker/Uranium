@@ -206,7 +206,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
         data = { } # The data to write to a JSON file.
         data["name"] = self.getName()
         data["version"] = DefinitionContainer.Version
-        data["metadata"] = self.getMetaData()
+        data["metadata"] = self.getMetaData().copy()
 
         # remove the keys that we want to ignore in the metadata
         if not ignored_metadata_keys:
