@@ -348,9 +348,13 @@ class ContainerRegistry(ContainerRegistryInterface):
 
         container = self._containers[container_id]
 
+        source_provider = self.source_provider[container_id]
         del self._containers[container_id]
         del self.metadata[container_id]
         del self.source_provider[container_id]
+        if source_provider is not None:
+            source_provider.removeContainer(container_id)
+        # TODO: move _deleteFiles to LocalContainerProvider
         self._deleteFiles(container)
 
         if hasattr(container, "metaDataChanged"):
@@ -409,13 +413,13 @@ class ContainerRegistry(ContainerRegistryInterface):
 
         if not name: #Wait, that deleted everything!
             name = "Profile"
-        elif not self.findContainers(id = original.strip(), ignore_case = True) and not self.findContainers(name = original.strip()):
+        elif not self.findContainersMetadata(id = original.strip(), ignore_case = True) and not self.findContainersMetadata(name = original.strip()):
             # Check if the stripped version of the name is unique (note that this can still have the number in it)
             return original.strip()
 
         unique_name = name
         i = 1
-        while self.findContainers(id = unique_name, ignore_case = True) or self.findContainers(name = unique_name): #A container already has this name.
+        while self.findContainersMetadata(id = unique_name, ignore_case = True) or self.findContainersMetadata(name = unique_name): #A container already has this name.
             i += 1 #Try next numbering.
             unique_name = "%s #%d" % (name, i) #Fill name like this: "Extruder #2".
         return unique_name

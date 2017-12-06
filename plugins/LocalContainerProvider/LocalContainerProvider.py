@@ -110,6 +110,17 @@ class LocalContainerProvider(ContainerProvider):
         file_path = self._id_to_path[container_id] #If KeyError: We don't know this ID.
         return os.path.commonpath([storage_path, os.path.realpath(file_path)]) != storage_path #Read only if file_path is not a subdirectory of storage_path.
 
+    ##  Remove or unregister an id.
+    def removeContainer(self, container_id: str) -> None:
+        if container_id in self._id_to_path:
+            del self._id_to_path[container_id]
+        else:
+            Logger.log("w", "Tried to remove unknown container (1): %s", container_id)
+        if container_id in self._id_to_mime:
+            del self._id_to_mime[container_id]
+        else:
+            Logger.log("w", "Tried to remove unknown container (2): %s", container_id)
+
     ##  Load a pre-parsed definition container.
     #
     #   Definition containers can be quite expensive to load, so this loads a
