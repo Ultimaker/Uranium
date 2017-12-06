@@ -7,7 +7,7 @@ import re #For finding containers with asterisks in the constraints and for dete
 import urllib #For ensuring container file names are proper file names
 import urllib.parse
 import pickle #For serializing/deserializing Python classes to binary files
-from typing import Any, cast, Dict, List, Optional
+from typing import Any, cast, Dict, Iterable, List, Optional
 import collections
 import time
 
@@ -67,7 +67,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         self.metadata["empty"] = self._emptyInstanceContainer.getMetaData()
         self._containers["empty"] = self._emptyInstanceContainer
         self.source_provider["empty"] = None
-        self._resource_types = [Resources.DefinitionContainers] # type: List[int]
+        self._resource_types = {"definition": Resources.DefinitionContainers}  # type: Dict[str, int]
         self._query_cache = collections.OrderedDict() # This should really be an ordered set but that does not exist...
 
         #Since queries are based on metadata, we need to make sure to clear the cache when a container's metadata changes.
@@ -79,12 +79,12 @@ class ContainerRegistry(ContainerRegistryInterface):
     containerLoadComplete = Signal()
     allMetadataLoaded = Signal()
 
-    def addResourceType(self, type: int) -> None:
-        self._resource_types.append(type)
+    def addResourceType(self, resource_type: int, name: str) -> None:
+        self._resource_types[name] = resource_type
 
     ##  Returns all resource types.
-    def getResourceTypes(self) -> List[int]:
-        return self._resource_types
+    def getResourceTypes(self) -> Iterable[int]:
+        return self._resource_types.values()
 
     ##  Adds a container provider to search through containers in.
     def addProvider(self, provider: "PluginObject"):
@@ -474,6 +474,58 @@ class ContainerRegistry(ContainerRegistryInterface):
     @classmethod
     def getContainerTypes(cls):
         return cls.__container_types.items()
+
+    ##  Save all the dirty containers by calling the appropriate container providers
+    def saveDirtyContainers(self):
+        # Lock file for "more" atomically loading and saving to/from config dir.
+        with self.lockFile():
+            for instance in self.findDirtyContainers(container_type = InstanceContainer):
+                try:
+                    data = instance.serialize()
+                except NotImplementedError:
+                    continue
+                except Exception:
+                    Logger.logException("e", "An exception occurred when serializing container %s", instance.getId())
+                    continue
+
+                mime_type = ContainerRegistry.getMimeTypeForContainer(type(instance))
+                file_name = urllib.parse.quote_plus(instance.getId()) + "." + mime_type.preferredSuffix
+                instance_type = instance.getMetaDataEntry("type")
+                path = None
+                if instance_type in self._resource_types:
+                    path = Resources.getStoragePath(self._resource_types[instance_type], file_name)
+
+                if path:
+                    instance.setPath(path)
+                    with SaveFile(path, "wt") as f:
+                        f.write(data)
+
+            for stack in self.findContainerStacks():
+                self.saveStack(stack)
+
+    def saveStack(self, stack):
+        if not stack.isDirty():
+            return
+        try:
+            data = stack.serialize()
+        except NotImplementedError:
+            return
+        except Exception:
+            Logger.logException("e", "An exception occurred when serializing container %s", stack.getId())
+            return
+
+        mime_type = ContainerRegistry.getMimeTypeForContainer(type(stack))
+        file_name = urllib.parse.quote_plus(stack.getId()) + "." + mime_type.preferredSuffix
+
+        container_type = stack.getMetaDataEntry("type")
+        if container_type in self._resource_types:
+            path = Resources.getStoragePath(self._resource_types[container_type], file_name)
+        else:
+            path = Resources.getStoragePath(Resources.ContainerStacks, file_name)
+
+        stack.setPath(path)
+        with SaveFile(path, "wt") as f:
+            f.write(data)
 
     # Load a binary cached version of a DefinitionContainer
     def _loadCachedDefinition(self, definition_id, path):
