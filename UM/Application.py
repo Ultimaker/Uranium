@@ -182,6 +182,9 @@ class Application:
     def getBuildType(self) -> str:
         return self._build_type
 
+    def getIsDebugMode(self) -> bool:
+        return self._is_debug_mode
+
     visibleMessageAdded = Signal()
 
     ##  Hide message by ID (as provided by built-in id function)
