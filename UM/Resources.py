@@ -371,7 +371,7 @@ class Resources:
             if Platform.isWindows():
                 cls.__cache_storage_path = os.path.join(cls.__cache_storage_path, "cache")
         Logger.log("d", "Cache storage path is %s", cls.__cache_storage_path)
-        if not os.path.exists(cls.__config_storage_path):
+        if not os.path.exists(cls.__config_storage_path) or not os.path.exists(cls.__data_storage_path):
             cls._copyLatestDirsIfPresent()
 
         cls.__paths.insert(0, cls.__data_storage_path)
