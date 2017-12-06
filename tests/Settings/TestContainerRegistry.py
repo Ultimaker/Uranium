@@ -121,27 +121,35 @@ class MockContainer(ContainerInterface, UM.PluginObject.PluginObject):
 #   \param container_registry A new container registry from a fixture.
 def test_addContainer(container_registry):
     definition_container_0 = DefinitionContainer("a")
-    assert definition_container_0 not in container_registry.findDefinitionContainersMetadata() # Sanity check.
+    assert definition_container_0.getMetaData() not in container_registry.findDefinitionContainersMetadata() # Sanity check.
+    assert definition_container_0 not in container_registry.findDefinitionContainers()
     container_registry.addContainer(definition_container_0)
-    assert definition_container_0 in container_registry.findDefinitionContainersMetadata()
+    assert definition_container_0.getMetaData() in container_registry.findDefinitionContainersMetadata()
+    assert definition_container_0 in container_registry.findDefinitionContainers()
 
     # Add a second one of the same type.
     definition_container_1 = DefinitionContainer("b")
-    assert definition_container_1 not in container_registry.findDefinitionContainersMetadata() # Sanity check.
+    assert definition_container_1.getMetaData() not in container_registry.findDefinitionContainersMetadata() # Sanity check.
+    assert definition_container_1 not in container_registry.findDefinitionContainers() # Sanity check.
     container_registry.addContainer(definition_container_1)
-    assert definition_container_1 in container_registry.findDefinitionContainersMetadata()
-    assert definition_container_0 in container_registry.findDefinitionContainersMetadata()
+    assert definition_container_1.getMetaData() in container_registry.findDefinitionContainersMetadata()
+    assert definition_container_1 in container_registry.findDefinitionContainers()
+    assert definition_container_0.getMetaData() in container_registry.findDefinitionContainersMetadata()
+    assert definition_container_0 in container_registry.findDefinitionContainers()
 
     # Add a container with the same type and same ID.
     definition_container_1_clone = DefinitionContainer("b")
     container_registry.addContainer(definition_container_1_clone)
-    assert definition_container_1_clone not in container_registry.findDefinitionContainersMetadata() # Didn't get added!
+    #Since comparing metadata is a deep comparison, you'll find that the metadata of the clone got in there. But it's not, it's just exactly the same as the original metadata so it appears as if it's in there.
+    assert definition_container_1_clone not in container_registry.findDefinitionContainers()
 
     # For good measure, add a container with a different type too.
     instance_container_1 = InstanceContainer("a")
-    assert instance_container_1 not in container_registry.findDefinitionContainersMetadata() # Sanity check.
+    assert instance_container_1.getMetaData() not in container_registry.findDefinitionContainersMetadata() # Sanity check.
+    assert instance_container_1 not in container_registry.findDefinitionContainers()
     container_registry.addContainer(instance_container_1)
-    assert instance_container_1 not in container_registry.findDefinitionContainersMetadata()
+    assert instance_container_1.getMetaData() not in container_registry.findDefinitionContainersMetadata()
+    assert instance_container_1 not in container_registry.findDefinitionContainers()
 
 ##  Tests adding a container type to the registry.
 #
