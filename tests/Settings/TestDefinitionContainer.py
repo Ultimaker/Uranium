@@ -1,4 +1,4 @@
-# Copyright (c) 2016 Ultimaker B.V.
+# Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import pytest
@@ -50,7 +50,6 @@ test_deserialize_data = [
 ]
 @pytest.mark.parametrize("file,expected", test_deserialize_data)
 def test_deserialize(file, expected, definition_container):
-    json = ""
     with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "definitions", file)) as data:
         json = data.read()
 
@@ -263,11 +262,11 @@ def test_serialize(definition_container):
     _test_serialize_cycle(definition_container)
 
     # Change the name.
-    definition_container._name = "Bla!"
+    definition_container._metadata["name"] = "Bla!"
     _test_serialize_cycle(definition_container)
-    definition_container._name = "[\"\n{':" # Some characters that might need to be escaped.
+    definition_container._metadata["name"] = " [\"\n{':" # Some characters that might need to be escaped.
     _test_serialize_cycle(definition_container)
-    definition_container._name = "ルベン" # From a different character set (UTF-8 test).
+    definition_container._metadata["name"] = "ルベン" # From a different character set (UTF-8 test).
     _test_serialize_cycle(definition_container)
 
     # Add some metadata.
