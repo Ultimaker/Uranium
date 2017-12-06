@@ -30,6 +30,10 @@ class ControllerProxy(QObject):
         self._controller.setActiveView(view)
 
     @pyqtSlot(str)
+    def setActiveStage(self, stage):
+        self._controller.setActiveStage(stage)
+
+    @pyqtSlot(str)
     def setActiveTool(self, tool):
         self._controller.setActiveTool(tool)
 
