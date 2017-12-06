@@ -19,8 +19,10 @@ function(uranium_add_test)
 
     if(WIN32)
         string(REPLACE "|" "\\;" _PYTHONPATH ${_PYTHONPATH})
+        set(_PYTHONPATH "${_PYTHONPATH}\\;$ENV{PYTHONPATH}")
     else()
         string(REPLACE "|" ":" _PYTHONPATH ${_PYTHONPATH})
+        set(_PYTHONPATH "${_PYTHONPATH}:$ENV{PYTHONPATH}")
     endif()
 
     add_test(
