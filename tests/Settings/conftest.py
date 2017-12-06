@@ -1,13 +1,16 @@
-# Copyright (c) 2016 Ultimaker B.V.
+# Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
+
+# The purpose of this class is to create fixtures or methods that can be shared
+# among all settings tests.
 
 import os.path
 
 import pytest
 
 from UM.Resources import Resources
-from UM.PluginRegistry import PluginRegistry
 from UM.MimeTypeDatabase import MimeType, MimeTypeDatabase
+from UM.Settings.ContainerProvider import ContainerProvider
 from UM.Settings.ContainerRegistry import ContainerRegistry
 import UM.Settings.ContainerStack
 import UM.Settings.InstanceContainer
@@ -60,3 +63,8 @@ def loaded_container_registry(container_registry):
     instance.load()
 
     return instance
+
+##  Empty container provider which returns nothing.
+@pytest.fixture
+def container_provider():
+    return ContainerProvider()
