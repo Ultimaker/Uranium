@@ -58,12 +58,14 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
         super().__init__(parent = None, *args, **kwargs)
 
         self._metadata = {"id": container_id,
-                          "name": container_id} # type: Dict[str, Any]
-        self._definitions = []                  # type: List[SettingDefinition]
-        self._inherited_files = []              # type: List[str]
+                          "name": container_id,
+                          "container_type": DefinitionContainer,
+                          "version": self.Version} # type: Dict[str, Any]
+        self._definitions = []                     # type: List[SettingDefinition]
+        self._inherited_files = []                 # type: List[str]
         self._i18n_catalog = i18n_catalog
 
-        self._definition_cache = {}             # type: Dict[str, SettingDefinition]
+        self._definition_cache = {}                # type: Dict[str, SettingDefinition]
         self._path = ""
 
     ##  Reimplement __setattr__ so we can make sure the definition remains unchanged after creation.
