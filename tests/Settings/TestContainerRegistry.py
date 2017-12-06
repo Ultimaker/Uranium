@@ -120,20 +120,20 @@ class MockContainer(ContainerInterface, UM.PluginObject.PluginObject):
 #
 #   \param container_registry A new container registry from a fixture.
 def test_addContainer(container_registry):
-    definition_container_0 = DefinitionContainer("a", {})
+    definition_container_0 = DefinitionContainer("a")
     assert definition_container_0 not in container_registry.findDefinitionContainersMetadata() # Sanity check.
     container_registry.addContainer(definition_container_0)
     assert definition_container_0 in container_registry.findDefinitionContainersMetadata()
 
     # Add a second one of the same type.
-    definition_container_1 = DefinitionContainer("b", {})
+    definition_container_1 = DefinitionContainer("b")
     assert definition_container_1 not in container_registry.findDefinitionContainersMetadata() # Sanity check.
     container_registry.addContainer(definition_container_1)
     assert definition_container_1 in container_registry.findDefinitionContainersMetadata()
     assert definition_container_0 in container_registry.findDefinitionContainersMetadata()
 
     # Add a container with the same type and same ID.
-    definition_container_1_clone = DefinitionContainer("b", {})
+    definition_container_1_clone = DefinitionContainer("b")
     container_registry.addContainer(definition_container_1_clone)
     assert definition_container_1_clone not in container_registry.findDefinitionContainersMetadata() # Didn't get added!
 
