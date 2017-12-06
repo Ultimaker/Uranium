@@ -298,7 +298,7 @@ def test_serialize(definition_container):
 #
 #   \param definition_container A new definition container from a fixture.
 def test_serialize_with_ignored_metadata_keys(definition_container):
-    ignored_metadata_keys = ["secret", "secret2"]
+    ignored_metadata_keys = {"secret", "secret2"}
     # Add some metadata.
     definition_container.getMetaData()["author"] = "Testy McTesticle"
     definition_container.getMetaData()["escape_test"] = "[\"\n{':"
