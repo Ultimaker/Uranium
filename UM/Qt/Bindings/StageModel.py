@@ -34,7 +34,7 @@ class StageModel(ListModel):
         stages = self._controller.getAllStages()
 
         for stage_id in stages:
-            view_meta_data = PluginRegistry.getInstance().getMetaData(stage_id).get("view", {})
+            view_meta_data = PluginRegistry.getInstance().getMetaData(stage_id).get("stage", {})
 
             # Skip view modes that are marked as not visible
             if "visible" in view_meta_data and not view_meta_data["visible"]:

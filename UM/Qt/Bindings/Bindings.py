@@ -3,6 +3,7 @@
 
 from PyQt5.QtQml import qmlRegisterType, qmlRegisterSingletonType, qmlRegisterUncreatableType
 
+from UM.Qt.Bindings import StageModel
 from UM.Qt.Duration import Duration, DurationFormat
 
 from . import MainWindow
@@ -74,6 +75,7 @@ class Bindings:
     def register(self):
         qmlRegisterType(MainWindow.MainWindow, "UM", 1, 0, "MainWindow")
         qmlRegisterType(ViewModel.ViewModel, "UM", 1, 0, "ViewModel")
+        qmlRegisterType(StageModel.StageModel, "UM", 1, 0, "StageModel")
         qmlRegisterType(ToolModel.ToolModel, "UM", 1, 0, "ToolModel")
         qmlRegisterType(PointingRectangle.PointingRectangle, "UM", 1, 0, "PointingRectangle")
         qmlRegisterType(ExtensionModel.ExtensionModel, "UM", 1, 0, "ExtensionModel")
