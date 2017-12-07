@@ -11,6 +11,7 @@ from UM.Application import Application #To get the current version for finding t
 from UM.Settings.ContainerRegistry import ContainerRegistry #To get the resource types for containers.
 from UM.Logger import Logger
 from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType #To get the type of container we're loading.
+from UM.SaveFile import SaveFile
 from UM.Settings.ContainerProvider import ContainerProvider #The class we're implementing.
 from UM.Settings.DefinitionContainer import DefinitionContainer #To check if we need to cache this container.
 from UM.Resources import Resources
@@ -65,6 +66,31 @@ class LocalContainerProvider(ContainerProvider):
             return container
         #If we're not requesting the base ID, the sub-container must have been side loaded.
         return ContainerRegistry.getInstance().findContainers(id = container_id)[0]
+
+    ##  Find out where to save a container and save it there
+    def saveContainer(self, container: "ContainerInterface") -> None:
+        try:
+            data = container.serialize()
+        except NotImplementedError:
+            return
+        except Exception:
+            Logger.logException("e", "An exception occurred when serializing container %s", container.getId())
+            return
+
+        mime_type = ContainerRegistry.getMimeTypeForContainer(type(container))
+        file_name = urllib.parse.quote_plus(container.getId()) + "." + mime_type.preferredSuffix
+        container_type = container.getMetaDataEntry("type")
+        resource_types = ContainerRegistry.getInstance().getResourceTypes()
+        if container_type in resource_types:
+            path = Resources.getStoragePath(resource_types[container_type], file_name)
+            with SaveFile(path, "wt") as f:
+                f.write(data)
+            container.setPath(path)
+            # Register it internally as being saved
+            self._id_to_path[container.getId()] = path
+            self._id_to_mime[container.getId()] = self._pathToMime(path)
+        else:
+            Logger.log("w", "Dirty container [%s] is not saved because the resource type is unknown in ContainerRegistry", container_type)
 
     ##  Load the metadata of a specified container.
     #
@@ -211,7 +237,7 @@ class LocalContainerProvider(ContainerProvider):
         old_file_expression = re.compile(r"{sep}old{sep}\d+{sep}".format(sep = os.sep)) #To detect files that are back-ups. Matches on .../old/#/...
 
         all_resources = set()
-        for resource_type in ContainerRegistry.getInstance().getResourceTypes():
+        for resource_type in ContainerRegistry.getInstance().getResourceTypes().values():
             all_resources |= set(Resources.getAllResourcesOfType(resource_type)) #Remove duplicates, since the Resources only finds resources by their directories.
         for filename in all_resources:
             if re.search(old_file_expression, filename):

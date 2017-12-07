@@ -16,7 +16,6 @@ from UM.PluginRegistry import PluginRegistry #To register the container type plu
 from UM.Resources import Resources
 from UM.MimeTypeDatabase import MimeTypeDatabase
 from UM.Logger import Logger
-from UM.SaveFile import SaveFile
 from UM.Settings.Interfaces import ContainerInterface
 from UM.Signal import Signal, signalemitter
 from UM.LockFile import LockFile
@@ -79,12 +78,17 @@ class ContainerRegistry(ContainerRegistryInterface):
     containerLoadComplete = Signal()
     allMetadataLoaded = Signal()
 
-    def addResourceType(self, resource_type: int, name: str) -> None:
-        self._resource_types[name] = resource_type
+    def addResourceType(self, resource_type: int, container_type: str) -> None:
+        self._resource_types[container_type] = resource_type
 
     ##  Returns all resource types.
-    def getResourceTypes(self) -> Iterable[int]:
-        return self._resource_types.values()
+    def getResourceTypes(self) -> Dict[str, int]:
+        return self._resource_types
+
+    def getDefaultSaveProvider(self) -> "ContainerProvider":
+        if len(self._providers) == 1:
+            return self._providers[0]
+        raise NotImplementedError("Not implemented default save provider for multiple providers")
 
     ##  Adds a container provider to search through containers in.
     def addProvider(self, provider: "PluginObject"):
@@ -476,28 +480,14 @@ class ContainerRegistry(ContainerRegistryInterface):
         return cls.__container_types.items()
 
     ##  Save single dirty container
-    def saveContainer(self, container: "ContainerInterface") -> None:
+    def saveContainer(self, container: "ContainerInterface", provider: Optional["ContainerProvider"] = None) -> None:
+        if provider is None:
+            provider = self.getDefaultSaveProvider()
         if not container.isDirty():
             return
 
-        try:
-            data = container.serialize()
-        except NotImplementedError:
-            return
-        except Exception:
-            Logger.logException("e", "An exception occurred when serializing container %s", container.getId())
-            return
-
-        mime_type = ContainerRegistry.getMimeTypeForContainer(type(container))
-        file_name = urllib.parse.quote_plus(container.getId()) + "." + mime_type.preferredSuffix
-        container_type = container.getMetaDataEntry("type")
-        if container_type in self._resource_types:
-            path = Resources.getStoragePath(self._resource_types[container_type], file_name)
-            container.setPath(path)
-            with SaveFile(path, "wt") as f:
-                f.write(data)
-        else:
-            Logger.log("w", "Dirty container [%s] is not saved because the resource type is unknown in ContainerRegistry", container_type)
+        provider.saveContainer(container)
+        self.source_provider[container.getId()] = provider
 
     ##  Save all the dirty containers by calling the appropriate container providers
     def saveDirtyContainers(self):
