@@ -57,12 +57,15 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
         # to support pickling.
         super().__init__(parent = None, *args, **kwargs)
 
-        self._metadata = {"id": container_id} # type: Dict[str, Any]
-        self._definitions = []                # type: List[SettingDefinition]
-        self._inherited_files = []            # type: List[str]
+        self._metadata = {"id": container_id,
+                          "name": container_id,
+                          "container_type": DefinitionContainer,
+                          "version": self.Version} # type: Dict[str, Any]
+        self._definitions = []                     # type: List[SettingDefinition]
+        self._inherited_files = []                 # type: List[str]
         self._i18n_catalog = i18n_catalog
 
-        self._definition_cache = {}           # type: Dict[str, SettingDefinition]
+        self._definition_cache = {}                # type: Dict[str, SettingDefinition]
         self._path = ""
 
     ##  Reimplement __setattr__ so we can make sure the definition remains unchanged after creation.
@@ -203,7 +206,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
         data = { } # The data to write to a JSON file.
         data["name"] = self.getName()
         data["version"] = DefinitionContainer.Version
-        data["metadata"] = self.getMetaData()
+        data["metadata"] = self.getMetaData().copy()
 
         # remove the keys that we want to ignore in the metadata
         if not ignored_metadata_keys:

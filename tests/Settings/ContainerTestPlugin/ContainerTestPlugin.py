@@ -1,6 +1,7 @@
-# Copyright (c) 2016 Ultimaker B.V.
+# Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
+from typing import Optional
 import uuid
 
 from UM.PluginObject import PluginObject
@@ -83,7 +84,7 @@ class ContainerTestPlugin(ContainerInterface, PluginObject):
     ##  Deserializes the container from a string representation.
     #
     #   This method is not implemented in the mock container.
-    def deserialize(self, serialized):
+    def deserialize(self, serialized, file_name: Optional[str] = None):
         raise NotImplementedError()
 
     @classmethod
