@@ -340,7 +340,7 @@ def test_load(container_registry):
     for definition in definitions:
         ids_found.append(definition["id"])
 
-    assert "metadata" in ids_found
+    assert "metadata_definition" in ids_found
     assert "single_setting" in ids_found
     assert "inherits" in ids_found
 
