@@ -331,14 +331,14 @@ def test_load(container_registry):
     assert len(definitions) == 1
 
     definition = definitions[0]
-    assert definition.getId() == "single_setting"
+    assert definition["id"] == "single_setting"
 
     definitions = container_registry.findDefinitionContainersMetadata(author = "Ultimaker")
     assert len(definitions) == 3
 
     ids_found = []
     for definition in definitions:
-        ids_found.append(definition.getId())
+        ids_found.append(definition["id"])
 
     assert "metadata" in ids_found
     assert "single_setting" in ids_found
