@@ -63,7 +63,7 @@ def container_registry(application, test_containers_provider):
 
 @pytest.fixture
 def loaded_container_registry(container_registry: ContainerRegistry, test_containers_provider: ContainerProvider):
-    container_registry.addResourceType(Resources.InstanceContainers)
+    container_registry.addResourceType(Resources.InstanceContainers, "test_type")
     container_registry.load()
 
     return container_registry
@@ -71,7 +71,7 @@ def loaded_container_registry(container_registry: ContainerRegistry, test_contai
 ##  Empty container provider which returns nothing.
 @pytest.fixture
 def container_provider():
-    return ContainerProvider()
+    return TestContainerProvider()
 
 ##  Container provider which provides the containers that are in the setting
 #   test directory.
@@ -93,22 +93,21 @@ def test_containers_provider(container_provider: ContainerProvider) -> Container
         container_provider._containers[instance_id] = container
         container_provider.addMetadata(container.getMetaData())
 
-    #Some replacement methods to put in our temporary provider.
+    return container_provider
 
-    def getAllIds(cls, self, *args, **kwargs):
+##  Extremely basic implementation of a container provider.
+#
+#   To add something to this provider, add it to its `_containers` and its
+#   `_metadata` fields.
+class TestContainerProvider(ContainerProvider):
+    def getAllIds(self, *args, **kwargs):
         return self._containers.keys()
-    container_provider.getAllIds = getAllIds
 
     def isReadOnly(self, *args, **kwargs):
         return True
-    container_provider.isReadOnly = isReadOnly
 
     def loadContainer(self, container_id, *args, **kwargs):
         return self._containers[container_id]
-    container_provider.loadContainer = loadContainer
 
     def loadMetadata(self, container_id, *args, **kwargs):
         return self._metadata[container_id]
-    container_provider.loadMetadata = loadMetadata
-
-    return container_provider
