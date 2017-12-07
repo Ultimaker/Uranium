@@ -475,57 +475,39 @@ class ContainerRegistry(ContainerRegistryInterface):
     def getContainerTypes(cls):
         return cls.__container_types.items()
 
+    ##  Save single dirty container
+    def saveContainer(self, container: "ContainerInterface") -> None:
+        if not container.isDirty():
+            return
+
+        try:
+            data = container.serialize()
+        except NotImplementedError:
+            return
+        except Exception:
+            Logger.logException("e", "An exception occurred when serializing container %s", container.getId())
+            return
+
+        mime_type = ContainerRegistry.getMimeTypeForContainer(type(container))
+        file_name = urllib.parse.quote_plus(container.getId()) + "." + mime_type.preferredSuffix
+        container_type = container.getMetaDataEntry("type")
+        if container_type in self._resource_types:
+            path = Resources.getStoragePath(self._resource_types[container_type], file_name)
+            container.setPath(path)
+            with SaveFile(path, "wt") as f:
+                f.write(data)
+        else:
+            Logger.log("w", "Dirty container [%s] is not saved because the resource type is unknown in ContainerRegistry", container_type)
+
     ##  Save all the dirty containers by calling the appropriate container providers
     def saveDirtyContainers(self):
         # Lock file for "more" atomically loading and saving to/from config dir.
         with self.lockFile():
             for instance in self.findDirtyContainers(container_type = InstanceContainer):
-                try:
-                    data = instance.serialize()
-                except NotImplementedError:
-                    continue
-                except Exception:
-                    Logger.logException("e", "An exception occurred when serializing container %s", instance.getId())
-                    continue
-
-                mime_type = ContainerRegistry.getMimeTypeForContainer(type(instance))
-                file_name = urllib.parse.quote_plus(instance.getId()) + "." + mime_type.preferredSuffix
-                instance_type = instance.getMetaDataEntry("type")
-                path = None
-                if instance_type in self._resource_types:
-                    path = Resources.getStoragePath(self._resource_types[instance_type], file_name)
-
-                if path:
-                    instance.setPath(path)
-                    with SaveFile(path, "wt") as f:
-                        f.write(data)
+                self.saveContainer(instance)
 
             for stack in self.findContainerStacks():
-                self.saveStack(stack)
-
-    def saveStack(self, stack):
-        if not stack.isDirty():
-            return
-        try:
-            data = stack.serialize()
-        except NotImplementedError:
-            return
-        except Exception:
-            Logger.logException("e", "An exception occurred when serializing container %s", stack.getId())
-            return
-
-        mime_type = ContainerRegistry.getMimeTypeForContainer(type(stack))
-        file_name = urllib.parse.quote_plus(stack.getId()) + "." + mime_type.preferredSuffix
-
-        container_type = stack.getMetaDataEntry("type")
-        if container_type in self._resource_types:
-            path = Resources.getStoragePath(self._resource_types[container_type], file_name)
-        else:
-            path = Resources.getStoragePath(Resources.ContainerStacks, file_name)
-
-        stack.setPath(path)
-        with SaveFile(path, "wt") as f:
-            f.write(data)
+                self.saveContainer(stack)
 
     # Load a binary cached version of a DefinitionContainer
     def _loadCachedDefinition(self, definition_id, path):
