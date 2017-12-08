@@ -481,8 +481,12 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         serialized = super().deserialize(serialized, file_name)
         parser = self._readAndValidateSerialized(serialized)
 
-        if int(parser["general"]["version"]) != self.Version:
-            raise IncorrectInstanceVersionError("Reported version {0} but expected version {1}".format(int(parser["general"]["version"]), self.Version))
+        try:
+            parser_version = int(parser["general"]["version"])
+        except ValueError: #Version number is not integer.
+            raise IncorrectInstanceVersionError("Reported version {0} is not an integer.".format(parser["general"]["version"]))
+        if parser_version != self.Version:
+            raise IncorrectInstanceVersionError("Reported version {0} but expected version {1}".format(str(parser_version), self.Version))
 
         # Reset old data
         old_id = self.getId()
@@ -494,7 +498,7 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         self._metadata["id"] = old_id
         self._metadata["name"] = parser["general"].get("name", self.getId())
         self._metadata["container_type"] = InstanceContainer
-        self._metadata["version"] = parser["general"]["version"]
+        self._metadata["version"] = parser_version
         self._metadata["definition"] = parser["general"]["definition"]
         self.metaDataChanged.emit(self) #In case this instance was re-used.
 
