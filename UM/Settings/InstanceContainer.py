@@ -408,6 +408,8 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
         if ignored_metadata_keys is None:
             ignored_metadata_keys = set()
+        else:
+            ignored_metadata_keys = ignored_metadata_keys.copy() #Don't modify the input set.
         ignored_metadata_keys |= {"id", "version", "name", "container_type", "definition"}
         parser["metadata"] = {}
         for key, value in self._metadata.items():
