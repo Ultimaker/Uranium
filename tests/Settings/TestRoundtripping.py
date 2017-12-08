@@ -82,7 +82,7 @@ def test_roundtrip_instance(tmpdir, process_count, loaded_container_registry):
     for result in results:
         deserialized_container = InstanceContainer("test_container")
         deserialized_container.setDefinition("inherits")
-        with unittest.mock.patch("UM.ContainerRegistry.ContainerRegistry.getInstance", unittest.mock.MagicMock(return_value = loaded_container_registry)):
+        with unittest.mock.patch("UM.Settings.ContainerRegistry.ContainerRegistry.getInstance", unittest.mock.MagicMock(return_value = loaded_container_registry)):
             deserialized_container.deserialize(result)
 
         assert deserialized_container.getName() == instance_container.getName()
