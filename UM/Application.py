@@ -331,8 +331,11 @@ class Application:
 
         return Application._instance
 
+    def getCommandlineParser(self):
+        return argparse.ArgumentParser(prog = self.getApplicationName()) #pylint: disable=bad-whitespace
+
     def parseCommandLine(self):
-        parser = argparse.ArgumentParser(prog = self.getApplicationName()) #pylint: disable=bad-whitespace
+        parser = self.getCommandlineParser()
         self.addCommandLineOptions(parser)
 
         self._parsed_command_line = vars(parser.parse_args())
@@ -342,10 +345,13 @@ class Application:
     #   \param parser \type{argparse.ArgumentParser} The parser that will parse the command line.
     @classmethod
     def addCommandLineOptions(cls, parser):
-        parser.add_argument("--version", action="version", version="%(prog)s {0}".format(cls.getStaticVersion()))
+        parser.add_argument("--version",
+                            action="version",
+                            version="%(prog)s {0}".format(cls.getStaticVersion()))
         parser.add_argument("--external-backend",
                             dest="external-backend",
-                            action="store_true", default=False,
+                            action="store_true",
+                            default=False,
                             help="Use an externally started backend instead of starting it automatically. This is a debug feature to make it possible to run the engine with debug options enabled.")
 
     def addExtension(self, extension: "Extension"):
