@@ -338,7 +338,7 @@ class Application:
         parser = self.getCommandlineParser()
         self.addCommandLineOptions(parser)
 
-        self._parsed_command_line = vars(parser.parse_args())
+        self._parsed_command_line = vars(parser.parse_known_args()[0])
 
     ##  Can be overridden to add additional command line options to the parser.
     #
