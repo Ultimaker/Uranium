@@ -74,12 +74,11 @@ test_serialize_data = [
 @pytest.mark.parametrize("container_data,equals_file", test_serialize_data)
 def test_serialize(container_data, equals_file, loaded_container_registry):
     instance_container = UM.Settings.InstanceContainer.InstanceContainer("test")
-    instance_container.setDefinition(container_data["definition"])
-
-    instance_container.setName(container_data["name"])
 
     if "metadata" in container_data:
         instance_container.setMetaData(container_data["metadata"])
+    instance_container.setDefinition(container_data["definition"])
+    instance_container.setName(container_data["name"])
 
     if "values" in container_data:
         for key, value in container_data["values"].items():
@@ -91,7 +90,6 @@ def test_serialize(container_data, equals_file, loaded_container_registry):
     path = Resources.getPath(Resources.InstanceContainers, equals_file)
     with open(path) as data:
         assert data.readline() in result
-
 
 test_serialize_with_ignored_metadata_keys_data = [
     ({"definition": "basic_definition", "name": "Basic", "metadata": {"secret": "something", "secret2": "something2"}}, "basic_instance.inst.cfg"),
@@ -105,12 +103,11 @@ test_serialize_with_ignored_metadata_keys_data = [
 @pytest.mark.parametrize("container_data,equals_file", test_serialize_with_ignored_metadata_keys_data)
 def test_serialize_with_ignored_metadata_keys(container_data, equals_file, loaded_container_registry):
     instance_container = UM.Settings.InstanceContainer.InstanceContainer("test")
-    instance_container.setDefinition(container_data["definition"])
-
-    instance_container.setName(container_data["name"])
 
     if "metadata" in container_data:
         instance_container.setMetaData(container_data["metadata"])
+    instance_container.setName(container_data["name"])
+    instance_container.setDefinition(container_data["definition"])
 
     if "values" in container_data:
         for key, value in container_data["values"].items():
@@ -126,7 +123,6 @@ def test_serialize_with_ignored_metadata_keys(container_data, equals_file, loade
     # the ignored keys should not be in the serialised metadata
     for key in ignored_metadata_keys:
         assert key not in new_metadata
-
 
 test_deserialize_data = [
     ("basic.inst.cfg", {"name": "Basic"}),
