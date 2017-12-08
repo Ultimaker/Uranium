@@ -134,8 +134,8 @@ class QtApplication(QApplication, Application):
 
         self.showSplashMessage(i18n_catalog.i18nc("@info:progress", "Loading preferences..."))
         try:
-            file = Resources.getPath(Resources.Preferences, self.getApplicationName() + ".cfg")
-            Preferences.getInstance().readFromFile(file)
+            file_name = Resources.getPath(Resources.Preferences, self.getApplicationName() + ".cfg")
+            Preferences.getInstance().readFromFile(file_name)
         except FileNotFoundError:
             pass
 
@@ -144,12 +144,12 @@ class QtApplication(QApplication, Application):
         Preferences.getInstance().addPreference("%s/recent_files" % self.getApplicationName(), "")
 
         self._recent_files = []
-        files = Preferences.getInstance().getValue("%s/recent_files" % self.getApplicationName()).split(";")
-        for f in files:
-            if not os.path.isfile(f):
+        file_names = Preferences.getInstance().getValue("%s/recent_files" % self.getApplicationName()).split(";")
+        for file_name in file_names:
+            if not os.path.isfile(file_name):
                 continue
 
-            self._recent_files.append(QUrl.fromLocalFile(f))
+            self._recent_files.append(QUrl.fromLocalFile(file_name))
 
         JobQueue.getInstance().jobFinished.connect(self._onJobFinished)
 
@@ -242,6 +242,27 @@ class QtApplication(QApplication, Application):
 
         self._engine.load(self._main_qml)
         self.engineCreatedSignal.emit()
+        
+    @pyqtSlot()
+    def reloadQML(self):
+        # only reload when it is a release build
+        if not self._is_debug_mode:
+            return
+        self._engine.clearComponentCache()
+        self._theme.reload()
+        self._engine.load(self._main_qml)
+        # Hide the window. For some reason we can't close it yet. This needs to be done in the onComponentCompleted.
+        for obj in self._engine.rootObjects():
+            if obj != self._engine.rootObjects()[-1]:
+                obj.hide()
+
+    @pyqtSlot()
+    def purgeWindows(self):
+        # Close all root objects except the last one.
+        # Should only be called by onComponentCompleted of the mainWindow.
+        for obj in self._engine.rootObjects():
+            if obj != self._engine.rootObjects()[-1]:
+                obj.close()
 
     @pyqtSlot("QList<QQmlError>")
     def __onQmlWarning(self, warnings):
@@ -282,7 +303,6 @@ class QtApplication(QApplication, Application):
                 self._main_window.windowStateChanged.disconnect(self._onMainWindowStateChanged)
 
             self._main_window = window
-
             if self._main_window is not None:
                 self._main_window.windowStateChanged.connect(self._onMainWindowStateChanged)
 
@@ -349,9 +369,9 @@ class QtApplication(QApplication, Application):
     #   This method will locate, load and install a Qt message catalog that can be used
     #   by Qt's translation system, like qsTr() in QML files.
     #
-    #   \param file The file name to load, without extension. It will be searched for in
-    #               the i18nLocation Resources directory. If it can not be found a warning
-    #               will be logged but no error will be thrown.
+    #   \param file_name The file name to load, without extension. It will be searched for in
+    #                    the i18nLocation Resources directory. If it can not be found a warning
+    #                    will be logged but no error will be thrown.
     #   \param language The language to load translations for. This can be any valid language code
     #                   or 'default' in which case the language is looked up based on system locale.
     #                   If the specified language can not be found, this method will fall back to
@@ -359,31 +379,31 @@ class QtApplication(QApplication, Application):
     #
     #   \note When `language` is `default`, the language to load can be changed with the
     #         environment variable "LANGUAGE".
-    def loadQtTranslation(self, file, language = "default"):
+    def loadQtTranslation(self, file_name, language = "default"):
         # TODO Add support for specifying a language from preferences
         path = None
         if language == "default":
-            path = self._getDefaultLanguage(file)
+            path = self._getDefaultLanguage(file_name)
         else:
-            path = Resources.getPath(Resources.i18n, language, "LC_MESSAGES", file + ".qm")
+            path = Resources.getPath(Resources.i18n, language, "LC_MESSAGES", file_name + ".qm")
 
         # If all else fails, fall back to english.
         if not path:
-            Logger.log("w", "Could not find any translations matching {0} for file {1}, falling back to english".format(language, file))
+            Logger.log("w", "Could not find any translations matching {0} for file {1}, falling back to english".format(language, file_name))
             try:
-                path = Resources.getPath(Resources.i18n, "en_US", "LC_MESSAGES", file + ".qm")
+                path = Resources.getPath(Resources.i18n, "en_US", "LC_MESSAGES", file_name + ".qm")
             except FileNotFoundError:
-                Logger.log("w", "Could not find English translations for file {0}. Switching to developer english.".format(file))
+                Logger.log("w", "Could not find English translations for file {0}. Switching to developer english.".format(file_name))
                 return
 
         translator = QTranslator()
         if not translator.load(path):
-            Logger.log("e", "Unable to load translations %s", file)
+            Logger.log("e", "Unable to load translations %s", file_name)
             return
 
         # Store a reference to the translator.
         # This prevents the translator from being destroyed before Qt has a chance to use it.
-        self._translators[file] = translator
+        self._translators[file_name] = translator
 
         # Finally, install the translator so Qt can use it.
         self.installTranslator(translator)
@@ -439,12 +459,12 @@ class QtApplication(QApplication, Application):
             fontPixelRatio = int(fontPixelRatio * 4)/4
             return fontPixelRatio
 
-    def _getDefaultLanguage(self, file):
+    def _getDefaultLanguage(self, file_name):
         # If we have a language override set in the environment, try and use that.
         lang = os.getenv("URANIUM_LANGUAGE")
         if lang:
             try:
-                return Resources.getPath(Resources.i18n, lang, "LC_MESSAGES", file + ".qm")
+                return Resources.getPath(Resources.i18n, lang, "LC_MESSAGES", file_name + ".qm")
             except FileNotFoundError:
                 pass
 
@@ -452,7 +472,7 @@ class QtApplication(QApplication, Application):
         lang = Preferences.getInstance().getValue("general/language")
         if lang:
             try:
-                return Resources.getPath(Resources.i18n, lang, "LC_MESSAGES", file + ".qm")
+                return Resources.getPath(Resources.i18n, lang, "LC_MESSAGES", file_name + ".qm")
             except FileNotFoundError:
                 pass
 
@@ -460,7 +480,7 @@ class QtApplication(QApplication, Application):
         lang = os.getenv("LANGUAGE")
         if lang:
             try:
-                return Resources.getPath(Resources.i18n, lang, "LC_MESSAGES", file + ".qm")
+                return Resources.getPath(Resources.i18n, lang, "LC_MESSAGES", file_name + ".qm")
             except FileNotFoundError:
                 pass
 
@@ -470,7 +490,7 @@ class QtApplication(QApplication, Application):
         # First, try and find a directory for any of the provided languages
         for lang in locale.uiLanguages():
             try:
-                return Resources.getPath(Resources.i18n, lang, "LC_MESSAGES", file + ".qm")
+                return Resources.getPath(Resources.i18n, lang, "LC_MESSAGES", file_name + ".qm")
             except FileNotFoundError:
                 pass
 
@@ -485,7 +505,7 @@ class QtApplication(QApplication, Application):
             if not os.path.isdir(Resources.getPath(Resources.i18n, subdirectory)):
                 continue
             if subdirectory.startswith(lang + "_"): #Only match the language code, not the country code.
-                return Resources.getPath(Resources.i18n, lang, "LC_MESSAGES", file + ".qm")
+                return Resources.getPath(Resources.i18n, lang, "LC_MESSAGES", file_name + ".qm")
 
         return None
 

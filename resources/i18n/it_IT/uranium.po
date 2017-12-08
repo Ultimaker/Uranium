@@ -2,13 +2,13 @@
 # Copyright (C) 2017 Ultimaker
 # This file is distributed under the same license as the Uranium package.
 # Ruben Dulek <r.dulek@ultimaker.com>, 2017.
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Uranium 3.0\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2017-08-02 14:05+0200\n"
-"PO-Revision-Date: 2017-09-27 12:27+0200\n"
+"PO-Revision-Date: 2017-11-30 13:05+0100\n"
 "Last-Translator: Bothof <info@bothof.nl>\n"
 "Language-Team: Italian <info@bothof.nl>\n"
 "Language: it_IT\n"
@@ -308,9 +308,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr ""
-"Il plugin è stato installato.\n"
-"Riavviare l'applicazione per attivare il plugin."
+msgstr "Il plugin è stato installato.\nRiavviare l'applicazione per attivare il plugin."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:107
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:147
@@ -319,9 +317,7 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install plugin from <filename>{0}</filename>:\n"
 "<message>{1}</message>"
-msgstr ""
-"Installazione plugin da <filename>{0}</filename>:\n"
-"<message>{1} non riuscita</message>"
+msgstr "Installazione plugin da <filename>{0}</filename>:\n<message>{1} non riuscita</message>"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:131
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:136
@@ -330,9 +326,7 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install the plugin;\n"
 "<message>{0}</message>"
-msgstr ""
-"Installazione del plugin non riuscita;\n"
-"<message>{0}</message>"
+msgstr "Installazione del plugin non riuscita;\n<message>{0}</message>"
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:122
 #, python-brace-format
@@ -354,7 +348,7 @@ msgstr "Estensioni OpenGL fondamentali assenti. Questo programma richiede suppor
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Cannot open files of the type of <filename>{0}</filename>"
-msgstr ""
+msgstr "Impossibile aprire i file tipo <filename>{0}</filename>"
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:36
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:51
@@ -503,7 +497,7 @@ msgstr "Annulla"
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:60
 msgctxt "@action:button"
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:31
 msgctxt "@item:tooltip"
@@ -650,12 +644,12 @@ msgstr "Avanti"
 #: UraniumExampleExtensionPlugin/plugin.json
 msgctxt "description"
 msgid "Example extension to instruct people on how to create Uranium extensions."
-msgstr ""
+msgstr "Estensione esemplificativa per insegnare come creare estensioni Uranium."
 
 #: UraniumExampleExtensionPlugin/plugin.json
 msgctxt "name"
 msgid "Example Extension"
-msgstr ""
+msgstr "Estensione esemplificativa"
 
 #: Views/SimpleView/plugin.json
 msgctxt "description"
@@ -730,22 +724,22 @@ msgstr "Logger di console"
 #: UraniumExampleToolPlugin/plugin.json
 msgctxt "description"
 msgid "Example tool to instruct people on how to create Uranium tools."
-msgstr ""
+msgstr "Strumento esemplificativo per insegnare come creare strumenti Uranium."
 
 #: UraniumExampleToolPlugin/plugin.json
 msgctxt "name"
 msgid "Example Tool"
-msgstr ""
+msgstr "Strumento esemplificativo"
 
 #: UraniumExampleOutputDevicePlugin/plugin.json
 msgctxt "description"
 msgid "Example output device to instruct people on how to create Uranium output devices."
-msgstr ""
+msgstr "Dispositivo di output esemplificativo per insegnare come creare dispositivi di output Uranium."
 
 #: UraniumExampleOutputDevicePlugin/plugin.json
 msgctxt "name"
 msgid "Example Output Device"
-msgstr ""
+msgstr "Dispositivo di output esemplificativo"
 
 #: UpdateChecker/plugin.json
 msgctxt "description"
@@ -760,12 +754,12 @@ msgstr "Controllo aggiornamenti"
 #: UraniumExampleFileReaderPlugin/plugin.json
 msgctxt "description"
 msgid "Example file reader to instruct people on how to create Uranium file readers."
-msgstr ""
+msgstr "Lettore di file esemplificativo per insegnare come creare lettori di file Uranium."
 
 #: UraniumExampleFileReaderPlugin/plugin.json
 msgctxt "name"
 msgid "Example File Reader"
-msgstr ""
+msgstr "Lettore di file esemplificativo"
 
 #: LocalFileOutputDevice/plugin.json
 msgctxt "description"

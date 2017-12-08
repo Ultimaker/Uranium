@@ -417,7 +417,9 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
 
     @classmethod
     def _readAndValidateSerialized(cls, serialized: str) -> configparser.ConfigParser:
-        parser = configparser.ConfigParser(interpolation=None)
+        # Disable comments in the ini files, so text values can start with a ;
+        # without being removed as a comment
+        parser = configparser.ConfigParser(interpolation=None, comment_prefixes = ())
         parser.read_string(serialized)
 
         has_general = "general" in parser

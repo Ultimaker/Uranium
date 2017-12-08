@@ -2,51 +2,54 @@
 # Copyright (C) 2017 Ultimaker
 # This file is distributed under the same license as the Uranium package.
 # Ruben Dulek <r.dulek@ultimaker.com>, 2017.
-# 
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Uranium 3.0\n"
+"Project-Id-Version: Uranium 3.1\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
 "POT-Creation-Date: 2017-08-02 14:05+0200\n"
-"PO-Revision-Date: 2017-11-30 13:05+0100\n"
-"Last-Translator: Bothof <info@bothof.nl>\n"
-"Language-Team: Turkish <info@bothof.nl>\n"
-"Language: tr_TR\n"
+"PO-Revision-Date: 2017-11-23 19:37+0800\n"
+"Last-Translator: Zhang Heh Ji <dinowchang@gmail.com>\n"
+"Language-Team: TEAM\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Lang-Code: xx\n"
+"Country-Code: XX\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 2.0.4\n"
 
 #: /home/ruben/Projects/Uranium/plugins/Views/SimpleView/__init__.py:12
 msgctxt "@item:inmenu"
 msgid "Simple"
-msgstr "Basit"
+msgstr "簡單"
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLReader/__init__.py:14
 msgctxt "@item:inlistbox"
 msgid "STL File"
-msgstr "STL Dosyası"
+msgstr "STL 檔案"
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/OBJReader/__init__.py:15
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/OBJWriter/__init__.py:15
 msgctxt "@item:inlistbox"
 msgid "Wavefront OBJ File"
-msgstr "Wavefront OBJ Dosyası"
+msgstr "Wavefront OBJ 檔案"
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:17
 msgctxt "@item:inlistbox"
 msgid "STL File (ASCII)"
-msgstr "STL Dosyası (ASCII)"
+msgstr "STL 檔案 (純文字)"
 
 #: /home/ruben/Projects/Uranium/plugins/FileHandlers/STLWriter/__init__.py:23
 msgctxt "@item:inlistbox"
 msgid "STL File (Binary)"
-msgstr "STL Dosyası (İkili)"
+msgstr "STL 檔案 (二進位)"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:42
 msgctxt "@info"
 msgid "Could not access update information."
-msgstr "Güncelleme bilgilerine erişilemedi."
+msgstr "無法獲取更新資訊。"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:42
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:58
@@ -55,171 +58,173 @@ msgstr "Güncelleme bilgilerine erişilemedi."
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:122
 msgctxt "@info:title"
 msgid "Version Upgrade"
-msgstr "Sürüm Yükseltme"
+msgstr "版本升級"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:53
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:58
 msgctxt "@info"
 msgid "The version you are using does not support checking for updates."
-msgstr "Kullandığınız sürüm güncellemeleri denetlemeyi desteklemiyor."
+msgstr "你正在使用的軟體版本不支援檢查更新。"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:53
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:178
 msgctxt "@info:title"
 msgid "Warning"
-msgstr "Uyarı"
+msgstr "警告"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:69
 msgctxt "@info"
 msgid "A new version is available!"
-msgstr "Yeni bir sürüm mevcut!"
+msgstr "有新版本可用！"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:70
 msgctxt "@action:button"
 msgid "Download"
-msgstr "İndir"
+msgstr "下載"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:83
 msgctxt "@info"
 msgid "An exception occurred while checking for updates."
-msgstr "Güncellemelerin kontrolü sırasında olağanüstü bir durum oluştu."
+msgstr "在檢查更新時出現異常情況。"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:83
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:126
 msgctxt "@info:title"
 msgid "Error"
-msgstr "Hata"
+msgstr "錯誤"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:87
 msgctxt "@info"
 msgid "No new version was found."
-msgstr "Yeni sürüm bulunamadı."
+msgstr "軟體版本已是最新。"
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateChecker.py:26
 msgctxt "@item:inmenu"
 msgid "Check for Updates"
-msgstr "Güncellemeleri Denetle"
+msgstr "檢查更新"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:33
 msgctxt "@item:inmenu"
 msgid "Local File"
-msgstr "Yerel Dosya"
+msgstr "本機檔案"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:34
 msgctxt "@action:button Preceded by 'Ready to'."
 msgid "Save to File"
-msgstr "Dosyaya Kaydet"
+msgstr "儲存檔案"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:35
 msgctxt "@info:tooltip"
 msgid "Save to File"
-msgstr "Dosyaya Kaydet"
+msgstr "儲存檔案"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:56
 msgctxt "@title:window"
 msgid "Save to File"
-msgstr "Dosyaya Kaydet"
+msgstr "儲存檔案"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:86
 msgctxt "@info:warning"
 msgid "There are no file types available to write with!"
-msgstr "Yazılacak dosya türleri mevcut değil!"
+msgstr "無可寫入的檔案類型！"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:121
 msgctxt "@title:window"
 msgid "File Already Exists"
-msgstr "Dosya Zaten Mevcut"
+msgstr "檔案已經存在"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:121
 #, python-brace-format
 msgctxt "@label Don't translate the XML tag <filename>!"
-msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
-msgstr "<filename>{0}</filename> dosyası zaten mevcut. Üstüne yazmak istediğinizden emin misiniz?"
+msgid ""
+"The file <filename>{0}</filename> already exists. Are you sure you want to "
+"overwrite it?"
+msgstr "檔案 <filename>{0}</filename> 已經存在。你確定要覆蓋檔案嗎？"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:150
 #, python-brace-format
 msgctxt "@info:progress Don't translate the XML tags <filename>!"
 msgid "Saving to <filename>{0}</filename>"
-msgstr "<filename>{0}</filename> dosyasına kaydediliyor"
+msgstr "正在儲存至 <filename>{0}</filename>"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:151
 msgctxt "@info:title"
 msgid "Saving"
-msgstr "Kaydediliyor"
+msgstr "儲存中"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:159
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Permission denied when trying to save <filename>{0}</filename>"
-msgstr "<filename>{0}</filename> dosyasını kaydetmeye çalışırken izin reddedildi"
+msgstr "儲存 <filename>{0}</filename> 時發生錯誤：權限不足"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:162
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:178
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename> or <message>!"
 msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
-msgstr "<filename>{0}</filename> dosyasına kaydedilemedi: <message>{1}</message>"
+msgstr "無法儲存到 <filename>{0}</filename>：<message>{1}</message>"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:172
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tags <filename>!"
 msgid "Saved to <filename>{0}</filename>"
-msgstr "<filename>{0}</filename> dosyasına kaydedildi"
+msgstr "已儲存至 <filename>{0}</filename>"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:172
 msgctxt "@info:title"
 msgid "File Saved"
-msgstr "Dosya Kaydedildi"
+msgstr "檔案已儲存"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:173
 msgctxt "@action:button"
 msgid "Open Folder"
-msgstr "Klasörü Aç"
+msgstr "開啟資料夾"
 
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:173
 msgctxt "@info:tooltip"
 msgid "Open the folder containing the file"
-msgstr "Dosyayı içeren klasörü açın"
+msgstr "開啟包含這個檔案的資料夾"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:12
 msgctxt "@label"
 msgid "Scale"
-msgstr "Ölçek"
+msgstr "縮放"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:13
 msgctxt "@info:tooltip"
 msgid "Scale Model"
-msgstr "Ölçek Modeli"
+msgstr "縮放模型"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:12
 msgctxt "@action:button"
 msgid "Move"
-msgstr "Taşıma"
+msgstr "移動"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:13
 msgctxt "@info:tooltip"
 msgid "Move Model"
-msgstr "Taşıma Modu"
+msgstr "移動模型"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:12
 msgctxt "@label"
 msgid "Rotate"
-msgstr "Döndürme"
+msgstr "旋轉"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:13
 msgctxt "@info:tooltip"
 msgid "Rotate Model"
-msgstr "Döndürme Modeli"
+msgstr "旋轉模型"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:12
 msgctxt "@label"
 msgid "Mirror"
-msgstr "Ayna"
+msgstr "鏡像"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:13
 msgctxt "@info:tooltip"
 msgid "Mirror Model"
-msgstr "Ayna Modeli"
+msgstr "鏡像模型"
 
 #: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:168
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:48
@@ -228,7 +233,7 @@ msgstr "Ayna Modeli"
 #, python-brace-format
 msgctxt "@item:inlistbox"
 msgid "All Supported Types ({0})"
-msgstr "Tüm desteklenen türler ({0})"
+msgstr "所有支援的檔案類型 ({0})"
 
 #: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:171
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:49
@@ -236,27 +241,28 @@ msgstr "Tüm desteklenen türler ({0})"
 #: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:71
 msgctxt "@item:inlistbox"
 msgid "All Files (*)"
-msgstr "Tüm Dosyalar (*)"
+msgstr "所有檔案 (*)"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:108
 #, python-brace-format
-msgctxt "@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is minutes"
+msgctxt ""
+"@label Short days-hours-minutes format. {0} is days, {1} is hours, {2} is "
+"minutes"
 msgid "{0:0>2}d {1:0>2}h {2:0>2}min"
-msgstr "{0:0>2}g {1:0>2}sa {2:0>2}dk"
+msgstr "{0:0>2}天 {1:0>2}時 {2:0>2}分"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:110
 #, python-brace-format
 msgctxt "@label Short hours-minutes format. {0} is hours, {1} is minutes"
 msgid "{0:0>2}h {1:0>2}min"
-msgstr "{0:0>2}sa {1:0>2}dk"
+msgstr "{0:0>2}時 {1:0>2}分"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:113
 #, python-brace-format
 msgctxt "@label Long duration format. {0} is days"
 msgid "{0} day"
 msgid_plural "{0} days"
-msgstr[0] "{0} gün"
-msgstr[1] "{0} gün"
+msgstr[0] "{0} 天"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:113
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:115
@@ -264,8 +270,7 @@ msgstr[1] "{0} gün"
 msgctxt "@label Long duration format. {0} is hours"
 msgid "{0} hour"
 msgid_plural "{0} hours"
-msgstr[0] "{0} saat"
-msgstr[1] "{0} saat"
+msgstr[0] "{0} 時"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:113
 #: /home/ruben/Projects/Uranium/UM/Qt/Duration.py:115
@@ -274,41 +279,42 @@ msgstr[1] "{0} saat"
 msgctxt "@label Long duration format. {0} is minutes"
 msgid "{0} minute"
 msgid_plural "{0} minutes"
-msgstr[0] "{0} dakika"
-msgstr[1] "{0} dakika"
+msgstr[0] "{0} 分"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:115
 msgctxt "@info:progress"
 msgid "Loading plugins..."
-msgstr "Eklentiler yükleniyor..."
+msgstr "正在載入外掛..."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:120
 msgctxt "@info:progress"
 msgid "Updating configuration..."
-msgstr "Yapılandırma güncelleniyor..."
+msgstr "正在更新設定..."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:131
 msgctxt "@info:progress"
 msgid "Loading preferences..."
-msgstr "Tercihler yükleniyor..."
+msgstr "正在載入偏好設定..."
 
 #: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:67
 #, python-format, python-brace-format
 msgctxt "@info:status"
 msgid "Auto scaled object to {0}% of original size"
-msgstr "Nesne özgün boyutun %{0}’sine kadar otomatik ölçeklendirildi"
+msgstr "自動將物件縮放到原始大小的 {0}% o"
 
 #: /home/ruben/Projects/Uranium/UM/Mesh/ReadMeshJob.py:67
 msgctxt "@info:title"
 msgid "Scaling Object"
-msgstr "Nesne Ölçeklendiriliyor"
+msgstr "縮放物件"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:96
 msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr "Eklenti kurulumu yapıldı.\n Eklentiyi aktif hale getirmek uygulamayı yeniden başlatın."
+msgstr ""
+"外掛已安裝。\n"
+"請重新啟動應用程式以啟動外掛。"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:107
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:147
@@ -317,7 +323,9 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install plugin from <filename>{0}</filename>:\n"
 "<message>{1}</message>"
-msgstr "<filename>{0}</filename> üzerinden eklenti kurulumu başarısız oldu:\n<message>{1}</message>"
+msgstr ""
+"無法從 <filename>{0}</filename> 中安裝外掛：\n"
+"<message>{1}</message>"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:131
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:136
@@ -326,723 +334,535 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install the plugin;\n"
 "<message>{0}</message>"
-msgstr "Eklenti kurulumu başarısız oldu;\n<message>{0}</message>"
+msgstr ""
+"無法安裝外掛；\n"
+"<message>{0}</message>"
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:122
 #, python-brace-format
 msgctxt "@info:version-upgrade"
 msgid "A configuration from an older version of {0} was imported."
-msgstr "Eski {0} versiyonundan bir yapılandırma içe aktarıldı."
+msgstr "已匯入舊版本 {0} 所使用的設定。"
 
 #: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:50
 msgctxt "@message"
 msgid "Failed to Initialize OpenGL"
-msgstr "OpenGL Başlatılamadı"
+msgstr "無法初始化 OpenGL"
 
 #: /home/ruben/Projects/Uranium/UM/View/GL/OpenGL.py:60
 msgctxt "Critical OpenGL Extensions Missing"
-msgid "Critical OpenGL extensions are missing. This program requires support for Framebuffer Objects. Please check your video card drivers."
-msgstr "Kritik OpenGL uzantıları eksik. Bu program Framebuffer Objects desteği gerektirir. Lütfen ekran kartı sürücülerinizi kontrol edin."
+msgid ""
+"Critical OpenGL extensions are missing. This program requires support for "
+"Framebuffer Objects. Please check your video card drivers."
+msgstr ""
+"關鍵的 OpenGL 擴充功能遺失。此程式需要 Framebuffer 物件支援，請檢查您的顯示卡"
+"驅動程式是否正常。"
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:36
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Cannot open files of the type of <filename>{0}</filename>"
-msgstr " <filename>{0}</filename> türündeki dosyalar açılamaz"
+msgstr "無法開啟的檔案類型 <filename>{0}</filename>"
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:36
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:51
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:74
 msgctxt "@info:title"
 msgid "Invalid File"
-msgstr "Geçersiz Dosya"
+msgstr "無效的檔案"
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:49
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:74
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>"
-msgstr "<filename>{0}</filename> yüklemesi başarısız oldu"
+msgstr "無法載入 <filename>{0}</filename>"
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:55
 #, python-brace-format
 msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Loading <filename>{0}</filename>"
-msgstr "<filename>{0}</filename> yükleniyor"
+msgstr "正在載入 <filename>{0}</filename>"
 
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:58
 msgctxt "@info:title"
 msgid "Loading"
-msgstr "Yükleniyor"
+msgstr "載入中"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:60
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:21
 msgctxt "@action:button"
 msgid "Reset"
-msgstr "Sıfırla"
+msgstr "重置"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:84
 msgctxt "@option:check"
 msgid "Snap Scaling"
-msgstr "Ölçeklendirmeyi Tuttur"
+msgstr "等距縮放（Snap Scaling）"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:101
 msgctxt "@option:check"
 msgid "Uniform Scaling"
-msgstr "Ölçeklendirmeyi Aynı Yap"
+msgstr "等比例縮放"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:39
 msgctxt "@action:button"
 msgid "Lay flat"
-msgstr "Düz Şekilde Yerleştir"
+msgstr "平放"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:55
 msgctxt "@action:checkbox"
 msgid "Snap Rotation"
-msgstr "Döndürmeyi Tuttur"
+msgstr "等距旋轉（Snap Rotation）"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:20
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:148
 msgctxt "@title:tab"
 msgid "Plugins"
-msgstr "Eklentiler"
+msgstr "外掛"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:28
 msgctxt "@action:button"
 msgid "Install new plugin"
-msgstr "Yeni eklenti kur"
+msgstr "安裝新外掛"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:55
 msgctxt "@label"
-msgid "You will need to restart the application before changes in plugins have effect."
-msgstr "Eklentilerde yapılan değişikliklerin geçerli olması için uygulamayı yeniden başlatmanız gerekecektir."
+msgid ""
+"You will need to restart the application before changes in plugins have "
+"effect."
+msgstr "你需要重新啟動應用程式讓外掛生效。"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:94
 msgctxt "@label"
 msgid "This plugin is required for the application to run."
-msgstr "Bu eklenti uygulamanın çalışması için gereklidir."
+msgstr "該外掛為程式運行必備外掛。"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:111
 msgctxt "@label"
 msgid "Info..."
-msgstr "Bilgi..."
+msgstr "信息..."
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:129
 msgctxt "@window:title"
 msgid "Install Plugin"
-msgstr "Eklenti Kur"
+msgstr "安裝外掛"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:138
 msgctxt "@title:window"
 msgid "Open file(s)"
-msgstr "Dosya aç"
+msgstr "開啟檔案"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:172
 msgctxt "@label"
 msgid "No text available"
-msgstr "Metin yok"
+msgstr "沒有文件可用"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:178
 msgctxt "@title:window"
 msgid "About %1"
-msgstr "Yaklaşık %1"
+msgstr "關於 %1"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:210
 msgctxt "@label"
 msgid "Author:"
-msgstr "Yazar:"
+msgstr "作者："
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:232
 msgctxt "@label"
 msgid "Version:"
-msgstr "Sürüm:"
+msgstr "版本："
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PluginsPage.qml:250
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:113
 msgctxt "@action:button"
 msgid "Close"
-msgstr "Kapat"
+msgstr "關閉"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:18
 msgctxt "@title:window"
 msgid "Preferences"
-msgstr "Tercihler"
+msgstr "偏好設定"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:106
 msgctxt "@action:button"
 msgid "Defaults"
-msgstr "Varsayılanlar"
+msgstr "預設"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:146
 msgctxt "@title:tab"
 msgid "General"
-msgstr "Genel"
+msgstr "一般"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/PreferencesDialog.qml:147
 msgctxt "@title:tab"
 msgid "Settings"
-msgstr "Ayarlar"
+msgstr "設定"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:19
 msgctxt "@title:window"
 msgid "Rename"
-msgstr "Yeniden Adlandır"
+msgstr "重新命名"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:56
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:241
 msgctxt "@action:button"
 msgid "Cancel"
-msgstr "İptal Et"
+msgstr "取消"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/RenameDialog.qml:60
 msgctxt "@action:button"
 msgid "OK"
-msgstr "Tamam"
+msgstr "確定"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:31
 msgctxt "@item:tooltip"
-msgid "This setting has been hidden by the active machine and will not be visible."
-msgstr "Bu ayar etkin makine tarafından saklanmış ve görünür olmayacak."
+msgid ""
+"This setting has been hidden by the active machine and will not be visible."
+msgstr "該設定已被當前機器所隱藏並不可見。"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityItem.qml:48
 msgctxt "@item:tooltip %1 is list of setting names"
-msgid "This setting has been hidden by the value of %1. Change the value of that setting to make this setting visible."
-msgid_plural "This setting has been hidden by the values of %1. Change the values of those settings to make this setting visible."
-msgstr[0] "Bu ayar %1 değerle saklanmış. Ayarı görünür yapmak için ayar değerini değiştirin."
-msgstr[1] "Bu ayar %1 değerle saklanmış. Ayarı görünür yapmak için bu ayarların değerini değiştirin."
+msgid ""
+"This setting has been hidden by the value of %1. Change the value of that "
+"setting to make this setting visible."
+msgid_plural ""
+"This setting has been hidden by the values of %1. Change the values of those "
+"settings to make this setting visible."
+msgstr[0] "該設定已被 %1 的值所隱藏，若需顯示，更改此值可使設定項重新可見。"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityPage.qml:12
 msgctxt "@title:tab"
 msgid "Setting Visibility"
-msgstr "Görünürlüğü Ayarlama"
+msgstr "參數顯示設定"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityPage.qml:42
 msgctxt "@label:textbox"
 msgid "Check all"
-msgstr "Tümünü Denetle"
+msgstr "全部勾選"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/SettingVisibilityPage.qml:89
 msgctxt "@label:textbox"
 msgid "Filter..."
-msgstr "Filtrele..."
+msgstr "篩選…"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:12
 msgctxt "@title:tab"
 msgid "Printers"
-msgstr "Yazıcılar"
+msgstr "印表機"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/MachinesPage.qml:39
 msgctxt "@label"
 msgid "Type"
-msgstr "Tür"
+msgstr "類型"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:16
 msgctxt "@title:window"
 msgid "Confirm Remove"
-msgstr "Kaldırmayı Onayla"
+msgstr "確認刪除"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ConfirmRemoveDialog.qml:17
 msgctxt "@label (%1 is object name)"
 msgid "Are you sure you wish to remove %1? This cannot be undone!"
-msgstr "%1’i kaldırmak istediğinizden emin misiniz? Bu eylem geri alınamaz!"
+msgstr "你確認要刪除 %1？該操作無法恢復！"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:14
 msgctxt "@title:tab"
 msgid "Profiles"
-msgstr "Profiller"
+msgstr "列印參數"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:15
 msgctxt "@label"
 msgid "Duplicate"
-msgstr "Çoğalt"
+msgstr "複製"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:45
 msgctxt "@label %1 is printer name"
 msgid "Printer: %1"
-msgstr "Yazıcı: %1"
+msgstr "印表機：%1"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:83
 msgctxt "@action:button"
 msgid "Update \"%1\""
-msgstr "“%1” güncelleme"
+msgstr "升級 \"%1\""
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:84
 msgctxt "@action:button"
 msgid "Update profile"
-msgstr "Profili güncelle"
+msgstr "升級列印參數"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:92
 msgctxt "@action:button"
 msgid "Discard current changes"
-msgstr "Geçerli değişiklikleri iptal et"
+msgstr "捨棄目前更改"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:93
 msgctxt "@action:button"
 msgid "Reload profile"
-msgstr "Profili yeniden yükle"
+msgstr "重新載入列印參數"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:107
 msgctxt "@label"
 msgid "Based on"
-msgstr "Başvuru stili"
+msgstr "基於"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:107
 msgctxt "@label"
 msgid "Profile type"
-msgstr "Profil türü"
+msgstr "列印參數類型"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:112
 msgctxt "@label"
 msgid "Protected profile"
-msgstr "Korumalı profil"
+msgstr "受保護的列印參數"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:112
 msgctxt "@label"
 msgid "Custom profile"
-msgstr "Özel profil"
+msgstr "自訂列印參數"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:139
 msgctxt "@action:button"
 msgid "Import"
-msgstr "İçe Aktar"
+msgstr "匯入"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:146
 msgctxt "@action:button"
 msgid "Export"
-msgstr "Dışa Aktar"
+msgstr "匯出"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:184
 msgctxt "@window:title"
 msgid "Import Profile"
-msgstr "Profili İçe Aktar"
+msgstr "匯入列印參數"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:192
 msgctxt "@title:window"
 msgid "Import Profile"
-msgstr "Profili İçe Aktar"
+msgstr "匯入列印參數"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Preferences/ProfilesPage.qml:219
 msgctxt "@title:window"
 msgid "Export Profile"
-msgstr "Profili Dışa Aktar"
+msgstr "匯出列印參數"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:215
 msgctxt "@action:button"
 msgid "Back"
-msgstr "Geri"
+msgstr "返回"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:231
 msgctxt "@action:button"
 msgid "Finish"
-msgstr "Bitir"
+msgstr "完成"
 
 #: /home/ruben/Projects/Uranium/UM/Qt/qml/UM/Wizard.qml:231
 msgctxt "@action:button"
 msgid "Next"
-msgstr "İleri"
+msgstr "下一步"
 
 #: UraniumExampleExtensionPlugin/plugin.json
 msgctxt "description"
-msgid "Example extension to instruct people on how to create Uranium extensions."
-msgstr "Uranium uzantıları oluşturma konusunda bilgilendirme amaçlı örnek uzantı."
+msgid ""
+"Example extension to instruct people on how to create Uranium extensions."
+msgstr "介紹如何建立 Uranium 擴充功能的範例。"
 
 #: UraniumExampleExtensionPlugin/plugin.json
 msgctxt "name"
 msgid "Example Extension"
-msgstr "Örnek Uzantı"
+msgstr "擴充功能範例"
 
 #: Views/SimpleView/plugin.json
 msgctxt "description"
 msgid "Provides a simple solid mesh view."
-msgstr "Basit gerçek bir ağ görünümü sağlar."
+msgstr "提供簡單實體網格檢視。"
 
 #: Views/SimpleView/plugin.json
 msgctxt "name"
 msgid "Simple View"
-msgstr "Basit Görünüm"
+msgstr "簡單檢視"
 
 #: FileLogger/plugin.json
 msgctxt "description"
 msgid "Outputs log information to a file in your settings folder."
-msgstr "Ayarlar klasörünüzde bulunan bir dosyaya günlük bilgilerini gönderir."
+msgstr "將日誌資訊輸出到設定資料夾中的一個檔案。"
 
 #: FileLogger/plugin.json
 msgctxt "name"
 msgid "File Logger"
-msgstr "Dosya Günlükçüsü"
+msgstr "檔案日誌記錄"
 
 #: FileHandlers/STLReader/plugin.json
 msgctxt "description"
 msgid "Provides support for reading STL files."
-msgstr "STL dosyalarının okunması için destek sağlar."
+msgstr "提供讀取 STL 檔案的支援。"
 
 #: FileHandlers/STLReader/plugin.json
 msgctxt "name"
 msgid "STL Reader"
-msgstr "STL Okuyucu"
+msgstr "STL 檔案閱讀器"
 
 #: FileHandlers/OBJReader/plugin.json
 msgctxt "description"
 msgid "Makes it possible to read Wavefront OBJ files."
-msgstr "Wavefront OBJ dosyalarının okunmasına olanak sağlar."
+msgstr "提供讀取 Wavefront OBJ 檔案的支援。"
 
 #: FileHandlers/OBJReader/plugin.json
 msgctxt "name"
 msgid "Wavefront OBJ Reader"
-msgstr "Wavefront OBJ Okuyucu"
+msgstr "Wavefront OBJ 檔案讀取器"
 
 #: FileHandlers/OBJWriter/plugin.json
 msgctxt "description"
 msgid "Makes it possible to write Wavefront OBJ files."
-msgstr "Wavefront OBJ dosyalarının yazılmasına olanak sağlar."
+msgstr "提供寫入 Wavefront OBJ 檔案的支援。"
 
 #: FileHandlers/OBJWriter/plugin.json
 msgctxt "name"
 msgid "Wavefront OBJ Writer"
-msgstr "Wavefront OBJ Yazıcı"
+msgstr "Wavefront OBJ 檔案寫入器"
 
 #: FileHandlers/STLWriter/plugin.json
 msgctxt "description"
 msgid "Provides support for writing STL files."
-msgstr "STL dosyalarının yazılması için destek sağlar."
+msgstr "提供寫入 STL 檔案的支援。"
 
 #: FileHandlers/STLWriter/plugin.json
 msgctxt "name"
 msgid "STL Writer"
-msgstr "STL Yazıcı"
+msgstr "STL 檔案寫入器"
 
 #: ConsoleLogger/plugin.json
 msgctxt "description"
 msgid "Outputs log information to the console."
-msgstr "Günlük bilgilerinin çıktısını konsola aktarır."
+msgstr "輸出日誌資訊至控制台。"
 
 #: ConsoleLogger/plugin.json
 msgctxt "name"
 msgid "Console Logger"
-msgstr "Konsol Günlükçüsü"
+msgstr "控制台日誌記錄器"
 
 #: UraniumExampleToolPlugin/plugin.json
 msgctxt "description"
 msgid "Example tool to instruct people on how to create Uranium tools."
-msgstr "Uranium araçları oluşturma konusunda kullanıcıları bilgilendirme amaçlı örnek araç."
+msgstr "介紹如何建立 Uranium 工具的範例。"
 
 #: UraniumExampleToolPlugin/plugin.json
 msgctxt "name"
 msgid "Example Tool"
-msgstr "Örnek Araç"
+msgstr "工具範例"
 
 #: UraniumExampleOutputDevicePlugin/plugin.json
 msgctxt "description"
-msgid "Example output device to instruct people on how to create Uranium output devices."
-msgstr "Uranium çıktı cihazları oluşturma konusunda kullanıcıları bilgilendirme amaçlı örnek çıktı cihazı."
+msgid ""
+"Example output device to instruct people on how to create Uranium output "
+"devices."
+msgstr "介紹如何建立 Uranium 輸出裝置的範例。"
 
 #: UraniumExampleOutputDevicePlugin/plugin.json
 msgctxt "name"
 msgid "Example Output Device"
-msgstr "Örnek Çıktı Cihazı"
+msgstr "輸出裝置範例"
 
 #: UpdateChecker/plugin.json
 msgctxt "description"
 msgid "Checks for updates of the software."
-msgstr "Yazılım güncellemelerini denetler."
+msgstr "檢查軟體更新。"
 
 #: UpdateChecker/plugin.json
 msgctxt "name"
 msgid "Update Checker"
-msgstr "Güncelleme Denetleyicisi"
+msgstr "韌體更新檢查"
 
 #: UraniumExampleFileReaderPlugin/plugin.json
 msgctxt "description"
-msgid "Example file reader to instruct people on how to create Uranium file readers."
-msgstr "Uranium dosya okuyucular oluşturma konusunda kullanıcıları bilgilendirme amaçlı örnek dosya okuyucu."
+msgid ""
+"Example file reader to instruct people on how to create Uranium file readers."
+msgstr "介紹如何建立 Uranium 檔案讀取器的範例。"
 
 #: UraniumExampleFileReaderPlugin/plugin.json
 msgctxt "name"
 msgid "Example File Reader"
-msgstr "Örnek Dosya Okuyucu"
+msgstr "檔案讀取器範例"
 
 #: LocalFileOutputDevice/plugin.json
 msgctxt "description"
 msgid "Enables saving to local files."
-msgstr "Yerel dosyalara kaydetmeyi sağlar."
+msgstr "啟用儲存到本機檔案的功能。"
 
 #: LocalFileOutputDevice/plugin.json
 msgctxt "name"
 msgid "Local File Output Device"
-msgstr "Yerel Dosya Çıkış Cihazı"
+msgstr "本機檔案輸出裝置"
 
 #: Tools/ScaleTool/plugin.json
 msgctxt "description"
 msgid "Provides the Scale tool."
-msgstr "Ölçeklendirme aracı sağlar."
+msgstr "提供縮放工具。"
 
 #: Tools/ScaleTool/plugin.json
 msgctxt "name"
 msgid "Scale Tool"
-msgstr "Ölçeklendirme Aracı"
+msgstr "縮放工具"
 
 #: Tools/SelectionTool/plugin.json
 msgctxt "description"
 msgid "Provides the Selection tool."
-msgstr "Seçim aracı sağlar."
+msgstr "提供選擇工具。"
 
 #: Tools/SelectionTool/plugin.json
 msgctxt "name"
 msgid "Selection Tool"
-msgstr "Seçim Aracı"
+msgstr "選擇工具"
 
 #: Tools/TranslateTool/plugin.json
 msgctxt "description"
 msgid "Provides the Move tool."
-msgstr "Taşıma aracını sağlar."
+msgstr "提供平移工具。"
 
 #: Tools/TranslateTool/plugin.json
 msgctxt "name"
 msgid "Move Tool"
-msgstr "Taşıma Aracı"
+msgstr "平移工具"
 
 #: Tools/CameraTool/plugin.json
 msgctxt "description"
 msgid "Provides the tool to manipulate the camera."
-msgstr "Aracın kamerayı yönlendirmesini sağlar."
+msgstr "提供變換視角功能。"
 
 #: Tools/CameraTool/plugin.json
 msgctxt "name"
 msgid "Camera Tool"
-msgstr "Kamera Aracı"
+msgstr "視角工具"
 
 #: Tools/RotateTool/plugin.json
 msgctxt "description"
 msgid "Provides the Rotate tool."
-msgstr "Döndürme aracı sağlar."
+msgstr "提供旋轉工具。"
 
 #: Tools/RotateTool/plugin.json
 msgctxt "name"
 msgid "Rotate Tool"
-msgstr "Döndürme Aracı"
+msgstr "旋轉工具"
 
 #: Tools/MirrorTool/plugin.json
 msgctxt "description"
 msgid "Provides the Mirror tool."
-msgstr "Ayna aracı sağlar."
+msgstr "提供鏡像工具。"
 
 #: Tools/MirrorTool/plugin.json
 msgctxt "name"
 msgid "Mirror Tool"
-msgstr "Ayna Aracı"
-
-#~ msgctxt "@info:status Don't translate the XML tag <filename>!"
-#~ msgid "Cannot open file type <filename>{0}</filename>"
-#~ msgstr "<filename>{0}</filename> dosya türü açılamıyor"
+msgstr "鏡像工具"
 
 #~ msgctxt "@action:button"
 #~ msgid "Ok"
-#~ msgstr "Tamam"
-
-#~ msgctxt "@label"
-#~ msgid "The file <filename>{0}</filename> already exists. Are you sure you want to overwrite it?"
-#~ msgstr "Dosya <filename>{0}</filename> zaten mevcut. Üstüne yazmak istediğinizden emin misiniz?"
-
-#~ msgctxt "@info:progress"
-#~ msgid "Saving to <filename>{0}</filename>"
-#~ msgstr "<filename>{0}</filename>na kaydediliyor"
-
-#~ msgctxt "@info:status"
-#~ msgid "Permission denied when trying to save <filename>{0}</filename>"
-#~ msgstr "<filename>{0}</filename> dosyasını kaydetmeye çalışırken izin reddedildi"
-
-#~ msgctxt "@info:status"
-#~ msgid "Could not save to <filename>{0}</filename>: <message>{1}</message>"
-#~ msgstr "<filename>{0}</filename>na kaydedilemedi: <message>{1}</message>"
-
-#~ msgctxt "@info:status"
-#~ msgid "Saved to <filename>{0}</filename>"
-#~ msgstr "<filename>{0}</filename>na kaydedildi"
-
-#~ msgctxt "@info:status"
-#~ msgid "Cannot open file type <filename>{0}</filename>"
-#~ msgstr "<filename>{0}</filename> dosya türünü açılamıyor"
-
-#~ msgctxt "@info:status"
-#~ msgid "Failed to load <filename>{0}</filename>"
-#~ msgstr "<filename>{0}</filename> yüklemesi başarısız oldu"
-
-#~ msgctxt "@info:status"
-#~ msgid "Loading <filename>{0}</filename>"
-#~ msgstr "<filename>{0}</filename> yükleniyor"
+#~ msgstr "確定"
 
 #~ msgctxt "description"
 #~ msgid "Provides the Translate tool."
-#~ msgstr "Çeviri aracı sağlar."
+#~ msgstr "提供翻譯工具。"
 
 #~ msgctxt "name"
 #~ msgid "Translate Tool"
-#~ msgstr "Çeviri Aracı"
-
-#~ msgctxt "@label"
-#~ msgid "Simple View"
-#~ msgstr "Basit Görünüm"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Provides a simple solid mesh view."
-#~ msgstr "Basit gerçek bir ağ görünümü sağlar."
-
-#~ msgctxt "@label"
-#~ msgid "File Logger"
-#~ msgstr "Dosya Günlükçüsü"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Outputs log information to a file in your settings folder."
-#~ msgstr "Ayarlar klasörünüzde bulunan bir dosyaya oturum açma bilgilerini gönderir."
-
-#~ msgctxt "@label"
-#~ msgid "STL Reader"
-#~ msgstr "STL Okuyucu"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Provides support for reading STL files."
-#~ msgstr "STL dosyalarının okunması için destek sağlar."
-
-#~ msgctxt "@label"
-#~ msgid "Wavefront OBJ Reader"
-#~ msgstr "Wavefront OBJ Okuyucu"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Makes it possbile to read Wavefront OBJ files."
-#~ msgstr "Wavefront OBJ dosyalarının okunmasına olanak sağlar."
-
-#~ msgctxt "@label"
-#~ msgid "Wavefront OBJ Writer"
-#~ msgstr "Wavefront OBJ Yazıcı"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Makes it possbile to write Wavefront OBJ files."
-#~ msgstr "Wavefront OBJ dosyalarının yazılmasına olanak sağlar."
-
-#~ msgctxt "@label"
-#~ msgid "STL Writer"
-#~ msgstr "STL Yazıcı"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Provides support for writing STL files."
-#~ msgstr "STL dosyalarının yazılması için destek sağlar."
-
-#~ msgctxt "@item:inlistbox"
-#~ msgid "STL File (Ascii)"
-#~ msgstr "STL Dosyası (Ascii)"
-
-#~ msgctxt "@label"
-#~ msgid "Console Logger"
-#~ msgstr "Konsol Günlükçüsü"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Outputs log information to the console."
-#~ msgstr "Günlük bilgilerinin çıktısını konsola verir."
-
-#~ msgctxt "@label"
-#~ msgid "Update Checker"
-#~ msgstr "Güncelleme Denetleyicisi"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Checks for updates of the software."
-#~ msgstr "Yazılım güncellemelerini denetler."
-
-#~ msgctxt "@label"
-#~ msgid "Local File Output Device"
-#~ msgstr "Yerel Dosya Çıkış Cihazı"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Enables saving to local files."
-#~ msgstr "Yerel dosyalara kaydetmeyi sağlar."
-
-#~ msgctxt "@label"
-#~ msgid "Scale Tool"
-#~ msgstr "Ölçek Aracı"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Provides the Scale tool."
-#~ msgstr "Ölçek aracı sağlar."
-
-#~ msgctxt "@label"
-#~ msgid "Selection Tool"
-#~ msgstr "Seçim Aracı"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Provides the Selection tool."
-#~ msgstr "Seçim aracı sağlar."
-
-#~ msgctxt "@label"
-#~ msgid "Translate Tool"
-#~ msgstr "Çeviri Aracı"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Provides the Translate tool."
-#~ msgstr "Çeviri aracı sağlar."
-
-#~ msgctxt "@label"
-#~ msgid "Camera Tool"
-#~ msgstr "Kamera Aracı"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Provides the tool to manipulate the camera."
-#~ msgstr "Aracın kamerayı yönlendirmesini sağlar."
-
-#~ msgctxt "@label"
-#~ msgid "Rotate Tool"
-#~ msgstr "Döndürme Aracı"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Provides the Rotate tool."
-#~ msgstr "Döndürme aracı sağlar."
-
-#~ msgctxt "@label"
-#~ msgid "Mirror Tool"
-#~ msgstr "Ayna Aracı"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Provides the Mirror tool."
-#~ msgstr "Ayna aracı sağlar."
-
-#~ msgctxt "@info:status"
-#~ msgid ""
-#~ "The plugin has been installed.\n"
-#~ " Please re-start the application to active the plugin."
-#~ msgstr ""
-#~ "Eklenti kurulumu yapıldı.\n"
-#~ " Eklentiyi aktif hale getirmek uygulamayı yeniden başlatınız."
-
-#~ msgctxt "@label"
-#~ msgid "Wireframe View"
-#~ msgstr "Tel Çerçeve Görünümü"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Provides a simple wireframe view."
-#~ msgstr "Basit bit tel çerçeve görünümü sunar."
-
-#~ msgctxt "@info"
-#~ msgid "An exception occured while parsing the JSON file."
-#~ msgstr "JSON dosyası ayrıştırılırken özel bir durum oluştu."
-
-#~ msgctxt "@label"
-#~ msgid "3MF Writer"
-#~ msgstr "3MF Yazıcı"
-
-#~ msgctxt "@info:whatsthis"
-#~ msgid "Provides support for writing 3MF files."
-#~ msgstr "3MF dosyalarının yazılması için destek sağlar."
-
-#~ msgctxt "@item:inlistbox"
-#~ msgid "3MF file"
-#~ msgstr "3MF dosyası"
-
-#~ msgctxt "@action:button"
-#~ msgid "Scale to Max"
-#~ msgstr "En Yükseğe ölçeklendir"
-
-#~ msgctxt "@action:button"
-#~ msgid "Center on Build Plate"
-#~ msgstr "Yapı Levhasında Ortala"
-
-#~ msgctxt "@action:button"
-#~ msgid "Drop to Build Plate"
-#~ msgstr "Yapı Levhasına Bırak"
+#~ msgstr "翻譯工具"
