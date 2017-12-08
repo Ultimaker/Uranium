@@ -129,7 +129,7 @@ def test_roundtrip_definition(tmpdir, process_count, loaded_container_registry):
     results = mp_run(process_count, read_data, temp_file)
 
     for result in results:
-        deserialized_definition = DefinitionContainer("test_definition")
+        deserialized_definition = DefinitionContainer("multiple_settings")
         deserialized_definition.deserialize(result)
 
         assert deserialized_definition.getName() == definition.getName()
