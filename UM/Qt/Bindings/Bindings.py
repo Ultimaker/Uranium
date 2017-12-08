@@ -3,6 +3,7 @@
 
 from PyQt5.QtQml import qmlRegisterType, qmlRegisterSingletonType, qmlRegisterUncreatableType
 
+from UM.Qt.Bindings import StageModel
 from UM.Qt.Duration import Duration, DurationFormat
 
 from . import MainWindow
@@ -116,3 +117,6 @@ class Bindings:
         # Additions after 2.3;
         qmlRegisterSingletonType(WorkspaceFileHandler, "UM", 1, 3, "WorkspaceFileHandler", WorkspaceFileHandler.getInstance)
         qmlRegisterSingletonType(OpenGLContextProxy.OpenGLContextProxy, "UM", 1, 3, "OpenGLContextProxy", Bindings.createOpenGLContextProxy)
+
+        # Additions after 3.1
+        qmlRegisterType(StageModel.StageModel, "UM", 1, 4, "StageModel")
