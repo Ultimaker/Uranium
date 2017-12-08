@@ -793,7 +793,7 @@ def test_idSpecialCharacters(container_stack, container_registry):
 #
 #   \param container_stack The container stack to serialise and deserialise.
 #   \param ignored_metadata_keys The list of keys that should be ignored when serializing the container stack.
-def _test_serialize_cycle(container_stack, ignored_metadata_keys = None):
+def _test_serialize_cycle(container_stack, ignored_metadata_keys: Optional[set] = None):
     name = container_stack.getName()
     metadata = {key: value for key, value in container_stack.getMetaData().items()}
     containers = container_stack.getContainers()
