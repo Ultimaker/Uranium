@@ -423,6 +423,8 @@ class QtApplication(QApplication, Application):
         if self._splash:
             self._splash.showMessage(message , Qt.AlignHCenter | Qt.AlignVCenter)
             self.processEvents()
+        elif self._splash_prevent:
+            Logger.log("d", "-> {}".format(message))
 
     ##  Close the splash screen after the application has started.
     def closeSplash(self):
