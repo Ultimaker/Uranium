@@ -60,8 +60,8 @@ class QtApplication(QApplication, Application):
                 QCoreApplication.addLibraryPath(plugin_path)
             else:
                 import site
-                for dir in site.getsitepackages():
-                    QCoreApplication.addLibraryPath(os.path.join(dir, "PyQt5", "plugins"))
+                for sitepackage_dir in site.getsitepackages():
+                    QCoreApplication.addLibraryPath(os.path.join(sitepackage_dir, "PyQt5", "plugins"))
         elif sys.platform == "darwin":
             plugin_path = os.path.join(Application.getInstallPrefix(), "Resources", "plugins")
 
