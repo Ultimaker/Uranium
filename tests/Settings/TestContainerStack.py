@@ -22,15 +22,15 @@ from UM.Signal import Signal
 class MockContainer(ContainerInterface):
     ##  Creates a mock container with a new unique ID.
     def __init__(self, container_id: str = None):
-        self._id = str(uuid.uuid4() if container_id is None else container_id)
         self._metadata = {}
+        self._metadata["id"] = str(uuid.uuid4() if container_id is None else container_id)
         self.items = {}
 
     ##  Gets the unique ID of the container.
     #
     #   \return A unique identifier for this container.
     def getId(self):
-        return self._id
+        return self._metadata["id"]
 
     ##  Gives an arbitrary name.
     #
@@ -94,7 +94,7 @@ class MockContainer(ContainerInterface):
     #
     #   \return A static string representing a container.
     def serialize(self, ignored_metadata_keys = None):
-        return str(self._id)
+        return str(self._metadata["id"])
 
     ##  Deserialises a string to a container.
     #
@@ -105,7 +105,7 @@ class MockContainer(ContainerInterface):
     #   \param serialized A serialised mock container.
     #   \param file_name The file name that the file originated from.
     def deserialize(self, serialized: str, file_name: Optional[str] = None) -> str:
-        self._id = int(serialized)
+        self._metadata["id"] = int(serialized)
         return serialized
 
     @classmethod
