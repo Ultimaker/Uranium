@@ -129,7 +129,7 @@ class Application:
         UM.Settings.ContainerStack.setContainerRegistry(self.getContainerRegistry())
 
         self._command_line_parser = None
-        self._parsed_command_line = None
+        self._parsed_command_line = {}
         self.parseCommandLine()
 
         self._visible_messages = []
