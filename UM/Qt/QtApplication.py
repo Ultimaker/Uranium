@@ -101,14 +101,8 @@ class QtApplication(QApplication, Application):
         self.parseCommandLine()
         Logger.log("i", "Command line arguments: %s", self._parsed_command_line)
 
-        try:
-            self._splash = self._createSplashScreen()
-        except FileNotFoundError:
-            self._splash = None
-        else:
-            if self._splash:
-                self._splash.show()
-                self.processEvents()
+        self._splash = None
+        self._splash_prevent = False
 
         signal.signal(signal.SIGINT, signal.SIG_DFL)
         # This is done here as a lot of plugins require a correct gl context. If you want to change the framework,
@@ -408,8 +402,22 @@ class QtApplication(QApplication, Application):
         # Finally, install the translator so Qt can use it.
         self.installTranslator(translator)
 
+    def createSplash(self):
+        if not self._splash_prevent:
+            try:
+                self._splash = self._createSplashScreen()
+            except FileNotFoundError:
+                self._splash = None
+            else:
+                if self._splash:
+                    self._splash.show()
+                    self.processEvents()
+
     ##  Display text on the splash screen.
     def showSplashMessage(self, message):
+        if not self._splash:
+            self.createSplash()
+        
         if self._splash:
             self._splash.showMessage(message , Qt.AlignHCenter | Qt.AlignVCenter)
             self.processEvents()
