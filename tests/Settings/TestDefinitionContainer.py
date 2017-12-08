@@ -24,8 +24,8 @@ def definition_container():
     return result
 
 test_deserialize_data = [
-    ("basic.def.json", { "name": "Test", "metadata": {}, "settings": {} }),
-    ("metadata.def.json", { "name": "Test", "metadata": { "author": "Ultimaker", "category": "Test" }, "settings": {} }),
+    ("basic_definition.def.json", { "name": "Test", "metadata": {}, "settings": {} }),
+    ("metadata_definition.def.json", { "name": "Test", "metadata": { "author": "Ultimaker", "category": "Test" }, "settings": {} }),
     ("single_setting.def.json", { "name": "Test", "metadata": {}, "settings": { "test_setting": { "label": "Test", "default_value": 10, "description": "A Test Setting" } } }),
     ("multiple_settings.def.json", { "name": "Test", "metadata": {}, "settings": {
         "test_setting_0": { "label": "Test 0", "default_value": 10, "description": "A Test Setting" },
