@@ -331,8 +331,8 @@ class Application:
 
         return Application._instance
 
-    def getCommandlineParser(self):
-        return argparse.ArgumentParser(prog = self.getApplicationName()) #pylint: disable=bad-whitespace
+    def getCommandlineParser(self, with_help = False):
+        return argparse.ArgumentParser(prog = self.getApplicationName(), add_help = with_help) #pylint: disable=bad-whitespace
 
     def parseCommandLine(self):
         parser = self.getCommandlineParser()
