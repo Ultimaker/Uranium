@@ -23,8 +23,7 @@ class MockContainer(ContainerInterface, UM.PluginObject.PluginObject):
     #
     #   The container will have the specified ID and all metadata in the
     #   provided dictionary.
-    def __init__(self, id, metadata):
-        self._id = id
+    def __init__(self, metadata):
         self._metadata = metadata
         self._plugin_id = "MockContainerPlugin"
 
@@ -32,7 +31,7 @@ class MockContainer(ContainerInterface, UM.PluginObject.PluginObject):
     #
     #   \return The ID of the container.
     def getId(self):
-        return self._id
+        return self._metadata["id"]
 
     ##  Gets all metadata of this container.
     #
@@ -350,14 +349,14 @@ def test_load(container_registry):
 def test_uniqueName(container_registry):
     assert container_registry.uniqueName("test") == "test" #No collisions.
 
-    mock_container = MockContainer(id = "test", metadata = { })
+    mock_container = MockContainer(metadata = {"id": "test"})
     container_registry.addContainer(mock_container)
     assert container_registry.uniqueName("test") == "test #2" #One collision.
     assert container_registry.uniqueName("test") == "test #2" #The check for unique name doesn't have influence on the registry.
     assert container_registry.uniqueName("test #2") == "test #2"
     assert container_registry.uniqueName("TEST").lower() == "test #2"
 
-    mock_container = MockContainer(id = "test #2", metadata = { })
+    mock_container = MockContainer(metadata = {"id": "test #2"})
     container_registry.addContainer(mock_container)
     assert container_registry.uniqueName("test") == "test #3" #Two collisions.
     assert container_registry.uniqueName("test #2") == "test #3" #The ' #2' shouldn't count towards the index.
@@ -366,18 +365,18 @@ def test_uniqueName(container_registry):
     assert container_registry.uniqueName("") == "Profile" #Empty base names should be filled in with a default base name 'profile'.
     assert container_registry.uniqueName(" #2") == "Profile"
 
-    mock_container = MockContainer(id = "Profile", metadata = { })
+    mock_container = MockContainer(metadata = {"id": "Profile"})
     container_registry.addContainer(mock_container)
     assert container_registry.uniqueName("") == "Profile #2" #Empty base names should be filled in with a default base name 'profile'.
     assert container_registry.uniqueName(" #2") == "Profile #2"
     assert container_registry.uniqueName("Profile #2") == "Profile #2"
 
     # Reproduce steps for issue CURA-2165 to verify the behaviour is still correct.
-    mock_container = MockContainer(id = "carlo #3", metadata = {})
+    mock_container = MockContainer(metadata = {"id": "carlo #3"})
     container_registry.addContainer(mock_container)
-    mock_container = MockContainer(id = "carlo #4", metadata = {})
+    mock_container = MockContainer(metadata = {"id": "carlo #4"})
     container_registry.addContainer(mock_container)
-    mock_container = MockContainer(id = "carlo #6", metadata = {})
+    mock_container = MockContainer(metadata = {"id": "carlo #7"})
     container_registry.addContainer(mock_container)
 
     assert container_registry.uniqueName("carlo #7") == "carlo #7"
