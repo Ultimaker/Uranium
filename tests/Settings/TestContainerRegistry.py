@@ -376,7 +376,7 @@ def test_uniqueName(container_registry):
     container_registry.addContainer(mock_container)
     mock_container = MockContainer(metadata = {"id": "carlo #4"})
     container_registry.addContainer(mock_container)
-    mock_container = MockContainer(metadata = {"id": "carlo #7"})
+    mock_container = MockContainer(metadata = {"id": "carlo #6"})
     container_registry.addContainer(mock_container)
 
     assert container_registry.uniqueName("carlo #7") == "carlo #7"
