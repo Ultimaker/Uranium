@@ -7,6 +7,7 @@ import traceback
 
 from UM.Application import Application
 from UM.Logger import Logger
+from UM.Platform import Platform
 from UM.PluginRegistry import PluginRegistry  # To find plug-ins.
 from UM.Resources import Resources  # To load old versions from.
 import UM.i18n  # To translate the "upgrade succeeded" message.
@@ -257,6 +258,14 @@ class VersionUpgradeManager:
     #   \param old_version The version number in the file in question.
     def _storeOldFile(self, resource_directory, relative_path, old_version):
         newpath = os.path.join(resource_directory, "old", str(old_version), relative_path)
+        newpath = os.path.abspath(newpath)
+        if Platform.isWindows():
+            # remove all unnecessary "\.\"s because it won't work with network storage on Windows
+            # os.abspath and os.normpath cannot remove all of them, so we need this manual step
+            while "\\.\\" in newpath:
+                newpath = newpath.replace("\\.\\", "\\")
+        newpath_dir = os.path.dirname(newpath)
+
         if os.path.exists(newpath): #If we've updated previously but this old version was launched again, overwrite the old configuration.
             try:
                 os.remove(newpath)
@@ -266,7 +275,7 @@ class VersionUpgradeManager:
             os.rename(os.path.join(resource_directory, relative_path), newpath) #Store the old file away.
         except FileNotFoundError: #Assume the target directory doesn't exist yet. The other case is that the file itself doesn't exist, but that's a coding error anyway.
             try:
-                os.makedirs(os.path.join(resource_directory, "old", str(old_version)))
+                os.makedirs(newpath_dir, exist_ok = True)
             except OSError: #Assume that the directory already existed. Otherwise it's probably a permission error or OS-internal error, in which case we can't write anyway.
                 pass
             try:
