@@ -1,21 +1,18 @@
-# Copyright (c) 2016 Ultimaker B.V.
+# Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import pytest
+from typing import Optional
 import uuid # For creating unique ID's for each container stack.
-import os
 
-from UM.PluginRegistry import PluginRegistry
 from UM.Settings.ContainerRegistry import ContainerRegistry
-from UM.Signal import Signal
-from UM.Resources import Resources
-
-from UM.Settings.Interfaces import ContainerInterface
-from UM.Settings.DefinitionContainer import DefinitionContainer
-from UM.Settings.InstanceContainer import InstanceContainer
 from UM.Settings.ContainerStack import ContainerStack
 from UM.Settings.ContainerStack import IncorrectVersionError
 from UM.Settings.ContainerStack import InvalidContainerStackError
+from UM.Settings.DefinitionContainer import DefinitionContainer
+from UM.Settings.InstanceContainer import InstanceContainer
+from UM.Settings.Interfaces import ContainerInterface
+from UM.Signal import Signal
 
 ##  A fake container class that implements ContainerInterface.
 #
@@ -106,8 +103,10 @@ class MockContainer(ContainerInterface):
     #   creates different instances (which is desired).
     #
     #   \param serialized A serialised mock container.
-    def deserialize(self, serialized):
+    #   \param file_name The file name that the file originated from.
+    def deserialize(self, serialized: str, file_name: Optional[str] = None) -> str:
         self._id = int(serialized)
+        return serialized
 
     @classmethod
     def getConfigurationTypeFromSerialized(cls, serialized: str):
