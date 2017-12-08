@@ -810,5 +810,5 @@ def _test_serialize_cycle(container_stack, ignored_metadata_keys: Optional[set] 
 
     #ID and nextStack are allowed to be different.
     assert name == container_stack.getName()
-    assert metadata == container_stack.getMetaData()
+    assert metadata.items() <= container_stack.getMetaData().items()
     assert containers == container_stack.getContainers()
