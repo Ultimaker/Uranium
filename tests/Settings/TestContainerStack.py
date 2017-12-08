@@ -389,7 +389,7 @@ def test_findContainer(container_stack, data):
         assert answer is None
     else:
         assert answer is not None
-        assert data["result"] == answer.getMetaData()
+        assert data["result"].items() <= answer.getMetaData().items()
 
 ##  Tests getting a container by index.
 #
