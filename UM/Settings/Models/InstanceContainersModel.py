@@ -3,7 +3,7 @@
 import os
 from typing import Dict, List
 
-from PyQt5.QtCore import pyqtProperty, Qt, pyqtSignal, pyqtSlot, QUrl, QTimer
+from UM.Qt.Factory.QtCore import pyqtProperty, Qt, pyqtSignal, pyqtSlot, QUrl, QTimer
 
 from UM.Qt.ListModel import ListModel
 

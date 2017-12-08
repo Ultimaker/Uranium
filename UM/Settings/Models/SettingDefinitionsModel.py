@@ -5,7 +5,7 @@ import collections
 import itertools
 import os.path
 
-from PyQt5.QtCore import Qt, QAbstractListModel, QVariant, QModelIndex, QObject, pyqtProperty, pyqtSignal
+from UM.Qt.Factory.QtCore import Qt, QAbstractListModel, QVariant, QModelIndex, QObject, pyqtProperty, pyqtSignal
 from UM.FlameProfiler import pyqtSlot
 
 from UM.Logger import Logger

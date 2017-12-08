@@ -12,7 +12,7 @@ from UM.Operations.GroupedOperation import GroupedOperation
 from UM.Scene.Selection import Selection
 from UM.Scene.ToolHandle import ToolHandle
 
-from PyQt5.QtCore import Qt
+from UM.Qt.Factory.QtCore import Qt
 
 from . import MirrorToolHandle
 

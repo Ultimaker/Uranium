@@ -7,7 +7,7 @@ from contextlib import contextmanager
 import functools
 from typing import List
 
-from PyQt5.QtCore import pyqtSlot as pyqt5PyqtSlot
+from UM.Qt.Factory.QtCore import pyqtSlot as pyqt5PyqtSlot
 from UM.Logger import Logger
 
 # A simple profiler which produces data suitable for viewing as a flame graph

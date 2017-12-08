@@ -5,7 +5,7 @@ import json
 import collections
 import copy
 
-from PyQt5.QtCore import QObject, pyqtProperty
+from UM.Qt.Factory.QtCore import QObject, pyqtProperty
 
 from UM.Resources import Resources
 from UM.PluginObject import PluginObject

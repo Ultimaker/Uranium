@@ -7,7 +7,7 @@ from UM.Event import Event, MouseEvent, KeyEvent
 from UM.Math.Vector import Vector
 from UM.Math.Matrix import Matrix
 from UM.Application import Application
-from PyQt5 import QtCore, QtWidgets
+from UM.Qt.Factory import QtCore, QtWidgets
 
 import math
 

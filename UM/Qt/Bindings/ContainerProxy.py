@@ -1,4 +1,4 @@
-from PyQt5.QtCore import QObject
+from UM.Qt.Factory.QtCore import QObject
 from UM.FlameProfiler import pyqtSlot
 
 # This class wraps a Python container and provides access to its elements

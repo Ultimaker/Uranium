@@ -5,9 +5,9 @@ import os
 import os.path
 import sys
 
-from PyQt5.QtCore import QUrl
-from PyQt5.QtGui import QDesktopServices
-from PyQt5.QtWidgets import QFileDialog, QMessageBox
+from UM.Qt.Factory.QtCore import QUrl
+from UM.Qt.Factory.QtGui import QDesktopServices
+from UM.Qt.Factory.QtWidgets import QFileDialog, QMessageBox
 
 from UM.Application import Application
 from UM.Preferences import Preferences

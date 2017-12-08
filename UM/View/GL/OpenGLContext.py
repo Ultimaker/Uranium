@@ -2,7 +2,7 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from typing import Dict
-from PyQt5.QtGui import QOpenGLContext, QSurfaceFormat
+from UM.Qt.Factory.QtGui import QOpenGLContext, QSurfaceFormat
 
 from UM.Logger import Logger
 

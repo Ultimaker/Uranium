@@ -4,7 +4,7 @@
 import configparser
 import ast
 
-from PyQt5.QtGui import QOpenGLShader, QOpenGLShaderProgram, QVector2D, QVector3D, QVector4D, QMatrix4x4, QColor, QImage, QOpenGLTexture, QOpenGLVertexArrayObject, QOpenGLBuffer
+from UM.Qt.Factory.QtGui import QOpenGLShader, QOpenGLShaderProgram, QVector2D, QVector3D, QVector4D, QMatrix4x4, QColor, QImage, QOpenGLTexture, QOpenGLVertexArrayObject, QOpenGLBuffer
 from UM.Logger import Logger
 
 from UM.Math.Vector import Vector

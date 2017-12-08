@@ -1,7 +1,7 @@
 # Copyright (c) 2016 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from PyQt5.QtCore import QObject, pyqtSignal
+from UM.Qt.Factory.QtCore import QObject, pyqtSignal
 
 class SettingVisibilityHandler(QObject):
     def __init__(self, parent = None, *args, **kwargs):

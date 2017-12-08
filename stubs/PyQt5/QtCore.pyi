@@ -6585,7 +6585,7 @@ class QSharedMemory(QObject):
 
 class QSignalMapper(QObject):
 
-    from PyQt5.QtWidgets import QWidget
+    from UM.Qt.Factory.QtWidgets import QWidget
 
     def __init__(self, parent: typing.Optional[QObject] = ...) -> None: ...
 

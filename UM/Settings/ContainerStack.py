@@ -4,7 +4,7 @@ import configparser
 import io
 from typing import Set, List, Optional, cast
 
-from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
+from UM.Qt.Factory.QtCore import QObject, pyqtProperty, pyqtSignal
 import UM.FlameProfiler
 
 from UM.Settings.SettingDefinition import SettingDefinition

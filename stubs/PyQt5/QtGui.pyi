@@ -1050,7 +1050,7 @@ class QWhatsThisClickedEvent(QtCore.QEvent):
 
 class QActionEvent(QtCore.QEvent):
 
-    from PyQt5.QtWidgets import QAction
+    from UM.Qt.Factory.QtWidgets import QAction
 
     @typing.overload
     def __init__(self, type: int, action: QAction, before: typing.Optional[QAction] = ...) -> None: ...
