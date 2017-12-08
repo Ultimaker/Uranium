@@ -117,7 +117,7 @@ def test_roundtrip_stack(tmpdir, process_count, loaded_container_registry):
         assert deserialized_stack.getTop() == container_stack.getTop()
 
 
-def test_roundtrip_stack(tmpdir, process_count, loaded_container_registry):
+def test_roundtrip_definition(tmpdir, process_count, loaded_container_registry):
     definition = loaded_container_registry.findDefinitionContainers(id = "multiple_settings")[0]
 
     temp_file = tmpdir.join("container_stack_test")
