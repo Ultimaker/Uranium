@@ -83,7 +83,7 @@ def test_serialize(container_data, equals_file, loaded_container_registry):
         for key, value in container_data["values"].items():
             instance_container.setProperty(key, "value", value)
 
-    with unittest.mock.patch("UM.ContainerRegistry.ContainerRegistry.getInstance", unittest.mock.MagicMock(return_value = loaded_container_registry)):
+    with unittest.mock.patch("UM.Settings.ContainerRegistry.ContainerRegistry.getInstance", unittest.mock.MagicMock(return_value = loaded_container_registry)):
         result = instance_container.serialize()
 
     path = Resources.getPath(Resources.InstanceContainers, equals_file)
@@ -115,7 +115,7 @@ def test_serialize_with_ignored_metadata_keys(container_data, equals_file, loade
             instance_container.setProperty(key, "value", value)
 
     ignored_metadata_keys = {"secret", "secret2"}
-    with unittest.mock.patch("UM.ContainerRegistry.ContainerRegistry.getInstance", unittest.mock.MagicMock(return_value = loaded_container_registry)):
+    with unittest.mock.patch("UM.Settings.ContainerRegistry.ContainerRegistry.getInstance", unittest.mock.MagicMock(return_value = loaded_container_registry)):
         result = instance_container.serialize(ignored_metadata_keys = ignored_metadata_keys)
 
     instance_container.deserialize(result)
