@@ -194,7 +194,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         query = ContainerQuery.ContainerQuery(self, ignore_case = ignore_case, **kwargs)
         candidates = None
 
-        if "id" in kwargs and "*" not in kwargs["id"]:
+        if "id" in kwargs and "*" not in kwargs["id"] and not ignore_case:
             if kwargs["id"] not in self.metadata: #If we're looking for an unknown ID, try to lazy-load that one.
                 if kwargs["id"] not in self.source_provider:
                     for provider in self._providers:
