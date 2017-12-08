@@ -128,6 +128,7 @@ class Application:
         UM.Settings.InstanceContainer.setContainerRegistry(self.getContainerRegistry())
         UM.Settings.ContainerStack.setContainerRegistry(self.getContainerRegistry())
 
+        self._command_line_parser = None
         self._parsed_command_line = None
         self.parseCommandLine()
 
@@ -332,13 +333,17 @@ class Application:
         return Application._instance
 
     def getCommandlineParser(self, with_help = False):
-        return argparse.ArgumentParser(prog = self.getApplicationName(), add_help = with_help) #pylint: disable=bad-whitespace
+        if not self._command_line_parser:
+            self._command_line_parser = argparse.ArgumentParser(prog = self.getApplicationName(), add_help = with_help) #pylint: disable=bad-whitespace
+        if self._command_line_parser.add_help is not with_help:
+            self._command_line_parser.add_help = with_help
+        return self._command_line_parser
 
     def parseCommandLine(self):
         parser = self.getCommandlineParser()
         self.addCommandLineOptions(parser)
 
-        self._parsed_command_line = vars(parser.parse_known_args()[0])
+        self._parsed_command_line += vars(parser.parse_known_args()[0])
 
     ##  Can be overridden to add additional command line options to the parser.
     #
