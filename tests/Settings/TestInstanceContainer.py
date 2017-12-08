@@ -63,8 +63,8 @@ def test_instance_setProperty():
     assert definition2.maximum_value(instance_container) == 200
 
 test_serialize_data = [
-    ({"definition": "basic", "name": "Basic"}, "basic.inst.cfg"),
-    ({"definition": "basic", "name": "Metadata", "metadata": {"author": "Ultimaker", "bool": False, "integer": 6 }}, "metadata.inst.cfg"),
+    ({"definition": "basic_definition", "name": "Basic"}, "basic_instance.inst.cfg"),
+    ({"definition": "basic_definition", "name": "Metadata", "metadata": {"author": "Ultimaker", "bool": False, "integer": 6 }}, "metadata_instance.inst.cfg"),
     ({"definition": "multiple_settings", "name": "Setting Values", "values": {
         "test_setting_0": 20, "test_setting_1": 20, "test_setting_2": 20, "test_setting_3": 20, "test_setting_4": 20
     }}, "setting_values.inst.cfg"),
@@ -92,8 +92,8 @@ def test_serialize(container_data, equals_file, loaded_container_registry):
 
 
 test_serialize_with_ignored_metadata_keys_data = [
-    ({"definition": "basic", "name": "Basic", "metadata": {"secret": "something", "secret2": "something2"}}, "basic.inst.cfg"),
-    ({"definition": "basic", "name": "Metadata", "metadata": {"author": "Ultimaker", "bool": False, "integer": 6, "secret": "something", "secret2": "something2"}}, "metadata.inst.cfg"),
+    ({"definition": "basic_definition", "name": "Basic", "metadata": {"secret": "something", "secret2": "something2"}}, "basic_instance.inst.cfg"),
+    ({"definition": "basic_definition", "name": "Metadata", "metadata": {"author": "Ultimaker", "bool": False, "integer": 6, "secret": "something", "secret2": "something2"}}, "metadata_instance.inst.cfg"),
     ({"definition": "multiple_settings", "name": "Setting Values",
       "metadata": {"secret": "something", "secret2": "something2"},
       "values": {
