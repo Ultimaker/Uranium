@@ -125,9 +125,9 @@ def test_serialize_with_ignored_metadata_keys(container_data, equals_file, loade
         assert key not in new_metadata
 
 test_deserialize_data = [
-    ("basic_instance.inst.cfg", {"name": "Basic"}),
-    ("metadata_instance.inst.cfg", {"name": "Metadata", "metaData": { "author": "Ultimaker", "bool": "False", "integer": "6" } }),
-    ("setting_values.inst.cfg", {"name": "Setting Values", "values": { "test_setting_0": 20 } }),
+    ("basic_instance.inst.cfg", {"metaData": {"name": "Basic"}}),
+    ("metadata_instance.inst.cfg", {"metaData": {"name": "Metadata", "author": "Ultimaker", "bool": "False", "integer": "6"}}),
+    ("setting_values.inst.cfg", {"metaData": {"name": "Setting Values"}, "values": {"test_setting_0": 20}}),
 ]
 @pytest.mark.parametrize("filename,expected", test_deserialize_data)
 def test_deserialize(filename, expected, loaded_container_registry):
@@ -138,9 +138,10 @@ def test_deserialize(filename, expected, loaded_container_registry):
         instance_container.deserialize(data.read())
 
     for key, value in expected.items():
-        if key != "values":
+        if key == "values":
+            for key, value in value.items():
+                assert instance_container.getProperty(key, "value") == value
+        elif key == "metaData":
+            assert instance_container.metaData.items() >= value.items()
+        else:
             assert getattr(instance_container, key) == value
-            continue
-
-        for key, value in value.items():
-            assert instance_container.getProperty(key, "value") == value
