@@ -66,7 +66,7 @@ def test_instance_setProperty():
 
 test_serialize_data = [
     ({"definition": "basic_definition", "name": "Basic"}, "basic_instance.inst.cfg"),
-    ({"definition": "basic_definition", "name": "Metadata", "metadata": {"author": "Ultimaker", "bool": False, "integer": 6 }}, "metadata_instance.inst.cfg"),
+    ({"definition": "basic_definition", "name": "Metadata", "metadata": {"author": "Ultimaker", "bool": False, "integer": 6}}, "metadata_instance.inst.cfg"),
     ({"definition": "multiple_settings", "name": "Setting Values", "values": {
         "test_setting_0": 20, "test_setting_1": 20, "test_setting_2": 20, "test_setting_3": 20, "test_setting_4": 20
     }}, "setting_values.inst.cfg"),
@@ -125,8 +125,8 @@ def test_serialize_with_ignored_metadata_keys(container_data, equals_file, loade
         assert key not in new_metadata
 
 test_deserialize_data = [
-    ("basic.inst.cfg", {"name": "Basic"}),
-    ("metadata.inst.cfg", {"name": "Metadata", "metaData": { "author": "Ultimaker", "bool": "False", "integer": "6" } }),
+    ("basic_instance.inst.cfg", {"name": "Basic"}),
+    ("metadata_instance.inst.cfg", {"name": "Metadata", "metaData": { "author": "Ultimaker", "bool": "False", "integer": "6" } }),
     ("setting_values.inst.cfg", {"name": "Setting Values", "values": { "test_setting_0": 20 } }),
 ]
 @pytest.mark.parametrize("filename,expected", test_deserialize_data)
