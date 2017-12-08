@@ -130,7 +130,7 @@ test_deserialize_data = [
     ("setting_values.inst.cfg", {"metaData": {"name": "Setting Values"}, "values": {"test_setting_0": 20}}),
 ]
 @pytest.mark.parametrize("filename,expected", test_deserialize_data)
-def test_deserialize(filename, expected, loaded_container_registry):
+def test_deserialize(filename, expected):
     instance_container = UM.Settings.InstanceContainer.InstanceContainer(filename)
 
     path = Resources.getPath(Resources.InstanceContainers, filename)
