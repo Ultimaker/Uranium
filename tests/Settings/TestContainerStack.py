@@ -607,7 +607,7 @@ def test_serialize(container_stack):
 #
 #   \param container_stack A new container stack from a fixture.
 def test_serialize_with_ignored_metadata_keys(container_stack):
-    ignored_metadata_keys = ["secret"]
+    ignored_metadata_keys = {"secret"}
     registry = ContainerRegistry.getInstance()  # All containers need to be registered in order to be recovered again after deserialising.
 
     # Case with one subcontainer.
