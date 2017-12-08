@@ -6,7 +6,9 @@ import pytest
 import os
 
 import UM.Settings.InstanceContainer
-# import UM.Settings.SettingDefinition
+import UM.Settings.SettingInstance
+import UM.Settings.SettingDefinition
+import UM.Settings.SettingRelation
 from UM.Resources import Resources
 Resources.addSearchPath(os.path.dirname(os.path.abspath(__file__)))
 
