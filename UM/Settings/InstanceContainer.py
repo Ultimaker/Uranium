@@ -193,10 +193,20 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
         return self._metadata
 
     def setMetaData(self, metadata):
-        if metadata != self._metadata:
-            self._metadata = metadata
-            self._dirty = True
-            self.metaDataChanged.emit(self)
+        if metadata == self._metadata:
+            return #No need to do anything or even emit the signal.
+
+        #We'll fill a temporary dictionary with all the required metadata and overwrite it with the new metadata.
+        #This way it is ensured that at least the required metadata is still there.
+        self._metadata = {
+            "id": self.getId(),
+            "name": self.getName(),
+            "definition": self.getMetaData().get("definition"),
+            "version": self.getMetaData().get("version", 0)
+        }
+        self._metadata.update(metadata)
+        self._dirty = True
+        self.metaDataChanged.emit(self)
 
     metaDataChanged = pyqtSignal(QObject)
     metaData = pyqtProperty("QVariantMap", fget = getMetaData, fset = setMetaData, notify = metaDataChanged)
