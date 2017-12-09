@@ -79,7 +79,7 @@ class QtApplication(QApplication, Application):
         if major_version is None and minor_version is None and profile is None:
             Logger.log("e", "Startup failed because OpenGL version probing has failed: tried to create a 2.0 and 4.1 context. Exiting")
             QMessageBox.critical(None, "Failed to probe OpenGL",
-                "Could not probe OpenGL. This program requires OpenGL 2.0 or higher. Please check your video card drivers.")
+                                "Could not probe OpenGL. This program requires OpenGL 2.0 or higher. Please check your video card drivers.")
             sys.exit(1)
         else:
             Logger.log("d", "Detected most suitable OpenGL context version: %s" % (
@@ -102,7 +102,6 @@ class QtApplication(QApplication, Application):
         Logger.log("i", "Command line arguments: %s", self._parsed_command_line)
 
         self._splash = None
-        self._splash_prevent = False
 
         signal.signal(signal.SIGINT, signal.SIG_DFL)
         # This is done here as a lot of plugins require a correct gl context. If you want to change the framework,
@@ -235,6 +234,7 @@ class QtApplication(QApplication, Application):
         self.registerObjects(self._engine)
 
         self._engine.load(self._main_qml)
+        self.getMainWindow().setVisible(not self.getCommandLineOption("invisible"))
         self.engineCreatedSignal.emit()
         
     @pyqtSlot()
@@ -405,7 +405,7 @@ class QtApplication(QApplication, Application):
         self.installTranslator(translator)
 
     def createSplash(self):
-        if not self._splash_prevent:
+        if not self.getCommandLineOption("invisible"):
             try:
                 self._splash = self._createSplashScreen()
             except FileNotFoundError:
@@ -423,7 +423,7 @@ class QtApplication(QApplication, Application):
         if self._splash:
             self._splash.showMessage(message , Qt.AlignHCenter | Qt.AlignVCenter)
             self.processEvents()
-        elif self._splash_prevent:
+        elif self.getCommandLineOption("invisible"):
             Logger.log("d", "-> {}".format(message))
 
     ##  Close the splash screen after the application has started.

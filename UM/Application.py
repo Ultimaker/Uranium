@@ -361,7 +361,11 @@ class Application:
                             action="store_true",
                             default=False,
                             help="Use an externally started backend instead of starting it automatically. This is a debug feature to make it possible to run the engine with debug options enabled.")
-        
+        parser.add_argument('--invisible',
+                            action='store_true',
+                            default = False,
+                            help="Hides all GUI elements."
+                            )
         if "debug" not in parsed_command_line.keys():
             parser.add_argument("--debug",
                                 action="store_true",
