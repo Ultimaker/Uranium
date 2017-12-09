@@ -41,7 +41,7 @@ class Application:
     #
     #   \param name \type{string} The name of the application.
     #   \param version \type{string} Version, formatted as major.minor.rev
-    def __init__(self, name: str, version: str, build_type: str = "", is_debug_mode = False, **kwargs):
+    def __init__(self, name: str, version: str, build_type: str = "", is_debug_mode = False, parser = None, parsed_command_line = {}, **kwargs):
         if Application._instance != None:
             raise ValueError("Duplicate singleton creation")
 
@@ -128,8 +128,8 @@ class Application:
         UM.Settings.InstanceContainer.setContainerRegistry(self.getContainerRegistry())
         UM.Settings.ContainerStack.setContainerRegistry(self.getContainerRegistry())
 
-        self._command_line_parser = None
-        self._parsed_command_line = {}
+        self._command_line_parser = parser
+        self._parsed_command_line = parsed_command_line
         self.parseCommandLine()
 
         self._visible_messages = []
@@ -184,6 +184,8 @@ class Application:
         return self._build_type
 
     def getIsDebugMode(self) -> bool:
+        if "debug" in self._parsed_command_line.keys():
+            return self.getCommandLineOption("debug")
         return self._is_debug_mode
 
     visibleMessageAdded = Signal()
@@ -357,6 +359,12 @@ class Application:
                             action="store_true",
                             default=False,
                             help="Use an externally started backend instead of starting it automatically. This is a debug feature to make it possible to run the engine with debug options enabled.")
+        
+        if "debug" not in cls._parsed_command_line:
+            parser.add_argument("--debug",
+                                action="store_true",
+                                default = cls._is_debug_mode,
+                                help="Debug")
 
     def addExtension(self, extension: "Extension"):
         self._extensions.append(extension)
