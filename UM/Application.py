@@ -52,7 +52,9 @@ class Application:
         self._application_name = name
         self._version = version
         self._build_type = build_type
-        self._is_debug_mode = is_debug_mode
+        if "debug" in parsed_command_line.keys():
+            if parsed_command_line["debug"] is None:
+                parsed_command_line["debug"] = is_debug_mode
 
         os.putenv("UBUNTU_MENUPROXY", "0")  # For Ubuntu Unity this makes Qt use its own menu bar rather than pass it on to Unity.
 
@@ -184,9 +186,7 @@ class Application:
         return self._build_type
 
     def getIsDebugMode(self) -> bool:
-        if "debug" in self._parsed_command_line.keys():
-            return self.getCommandLineOption("debug")
-        return self._is_debug_mode
+        return self.getCommandLineOption("debug")
 
     visibleMessageAdded = Signal()
 
@@ -220,7 +220,7 @@ class Application:
         pass
 
     def getCommandLineOption(self, name, default = None):
-        if not self._parsed_command_line:
+        if name not in self._parsed_command_line.keys():
             self.parseCommandLine()
             Logger.log("d", "Command line options: %s", str(self._parsed_command_line))
 
@@ -344,7 +344,9 @@ class Application:
 
     def parseCommandLine(self):
         parser = self.getCommandlineParser()
-        self._parsed_command_line.update(vars(parser.parse_known_args()[0]))
+        new_parsed_args = vars(parser.parse_known_args()[0])
+        new_parsed_args.update(self._parsed_command_line)
+        self._parsed_command_line = new_parsed_args
 
     ##  Can be overridden to add additional command line options to the parser.
     #
@@ -363,7 +365,7 @@ class Application:
         if "debug" not in parsed_command_line.keys():
             parser.add_argument("--debug",
                                 action="store_true",
-                                default = cls._is_debug_mode,
+                                default = None,
                                 help="Debug")
 
     def addExtension(self, extension: "Extension"):
