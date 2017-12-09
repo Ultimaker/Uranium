@@ -436,7 +436,7 @@ class QtApplication(QApplication, Application):
             self._splash.showMessage(message , Qt.AlignHCenter | Qt.AlignVCenter)
             self.processEvents()
         elif self.getCommandLineOption("invisible"):
-            Logger.log("d", "-> {}".format(message))
+            Logger.log("d", message)
 
     ##  Close the splash screen after the application has started.
     def closeSplash(self):
