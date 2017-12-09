@@ -53,7 +53,7 @@ class Application:
         self._version = version
         self._build_type = build_type
         if "debug" in parsed_command_line.keys():
-            if parsed_command_line["debug"] is None:
+            if not parsed_command_line["debug"] and is_debug_mode:
                 parsed_command_line["debug"] = is_debug_mode
 
         os.putenv("UBUNTU_MENUPROXY", "0")  # For Ubuntu Unity this makes Qt use its own menu bar rather than pass it on to Unity.
@@ -365,8 +365,8 @@ class Application:
         if "debug" not in parsed_command_line.keys():
             parser.add_argument("--debug",
                                 action="store_true",
-                                default = None,
-                                help="Debug")
+                                default = False,
+                                help="Turn on the debug mode by setting this option.")
 
     def addExtension(self, extension: "Extension"):
         self._extensions.append(extension)
