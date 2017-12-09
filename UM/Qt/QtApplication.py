@@ -304,6 +304,18 @@ class QtApplication(QApplication, Application):
 
             self.mainWindowChanged.emit()
 
+    def setVisible(self, visible):
+        if self._engine is None:
+            self.initializeEngine()
+        
+        if self._main_window is not None:
+            self._main_window.visible = visible
+
+    @property
+    def isVisible(self):
+        if self._main_window is not None:
+            return self._main_window.visible
+
     def getTheme(self):
         if self._theme is None:
             if self._engine is None:
