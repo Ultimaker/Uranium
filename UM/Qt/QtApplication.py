@@ -234,7 +234,6 @@ class QtApplication(QApplication, Application):
         self.registerObjects(self._engine)
 
         self._engine.load(self._main_qml)
-        self.getMainWindow().setVisible(not self.getCommandLineOption("invisible"))
         self.engineCreatedSignal.emit()
         
     @pyqtSlot()
