@@ -75,7 +75,6 @@ class MainWindow(QQuickWindow):
         self._viewport_rect = QRectF(0, 0, 1.0, 1.0)
 
         Application.getInstance().setMainWindow(self)
-        self.setVisible(Application.getInstance().getCommandLineOption("invisible"))
         self._fullscreen = False
 
     @pyqtSlot()
