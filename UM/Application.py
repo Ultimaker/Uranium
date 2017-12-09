@@ -335,14 +335,13 @@ class Application:
     def getCommandlineParser(self, with_help = False):
         if not self._command_line_parser:
             self._command_line_parser = argparse.ArgumentParser(prog = self.getApplicationName(), add_help = with_help) #pylint: disable=bad-whitespace
+            self.addCommandLineOptions(self._command_line_parser)
         if self._command_line_parser.add_help is not with_help:
             self._command_line_parser.add_help = with_help
         return self._command_line_parser
 
     def parseCommandLine(self):
         parser = self.getCommandlineParser()
-        self.addCommandLineOptions(parser)
-
         self._parsed_command_line.update(vars(parser.parse_known_args()[0]))
 
     ##  Can be overridden to add additional command line options to the parser.
