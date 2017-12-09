@@ -294,6 +294,11 @@ class Application:
     def getOutputDeviceManager(self) -> OutputDeviceManager:
         return self._output_device_manager
 
+    ##  Includes eg. last checks before entering the main event loop.
+    #   \returns None \type{None}
+    def preRun(self):
+        return None
+
     ##  Run the main event loop.
     #   This method should be re-implemented by subclasses to start the main event loop.
     #   \exception NotImplementedError
