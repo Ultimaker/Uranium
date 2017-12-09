@@ -51,6 +51,8 @@ if int(major) < 5 or int(minor) < 4:
 @signalemitter
 class QtApplication(QApplication, Application):
     pluginsLoaded = Signal()
+    applicationRunning = Signal()
+    
     def __init__(self, tray_icon_name = None, **kwargs):
         plugin_path = ""
         if sys.platform == "win32":
@@ -236,6 +238,10 @@ class QtApplication(QApplication, Application):
         self._engine.load(self._main_qml)
         self.engineCreatedSignal.emit()
         self.getController().setActiveStage("PrepareStage")
+    
+    def exec_(self, *args, **kwargs):
+        self.applicationRunning.emit()
+        super().exec_(*args, **kwargs)
         
     @pyqtSlot()
     def reloadQML(self):
