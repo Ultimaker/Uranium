@@ -235,6 +235,7 @@ class QtApplication(QApplication, Application):
 
         self._engine.load(self._main_qml)
         self.engineCreatedSignal.emit()
+        self.getController().setActiveStage("PrepareStage")
         
     @pyqtSlot()
     def reloadQML(self):
