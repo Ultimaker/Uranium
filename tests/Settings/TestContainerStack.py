@@ -106,7 +106,8 @@ class MockContainer(ContainerInterface):
     #   creates different instances (which is desired).
     #
     #   \param serialized A serialised mock container.
-    def deserialize(self, serialized):
+    #   \param file_name Unused param to match actual signatures.
+    def deserialize(self, serialized, file_name=None):
         self._id = int(serialized)
 
     def getConfigurationTypeFromSerialized(self, serialized):
