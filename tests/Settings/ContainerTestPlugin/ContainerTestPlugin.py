@@ -83,7 +83,7 @@ class ContainerTestPlugin(ContainerInterface, PluginObject):
     ##  Deserializes the container from a string representation.
     #
     #   This method is not implemented in the mock container.
-    def deserialize(self, serialized):
+    def deserialize(self, serialized, file_name=None):
         raise NotImplementedError()
 
     def getConfigurationTypeFromSerialized(self, serialized):
