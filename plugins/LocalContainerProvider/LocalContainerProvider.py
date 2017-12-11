@@ -89,6 +89,11 @@ class LocalContainerProvider(ContainerProvider):
             # Register it internally as being saved
             self._id_to_path[container.getId()] = path
             self._id_to_mime[container.getId()] = self._pathToMime(path)
+            base_file = container.getMetaData().get("base_file")
+            if base_file:
+                for container_md in ContainerRegistry.getInstance().findContainersMetadata(base_file = base_file):
+                    self._id_to_path[container_md["id"]] = path
+                    self._id_to_mime[container_md["id"]] = self._pathToMime(path)
         else:
             Logger.log("w", "Dirty container [%s] is not saved because the resource type is unknown in ContainerRegistry", container_type)
 
