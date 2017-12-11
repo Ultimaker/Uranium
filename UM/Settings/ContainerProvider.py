@@ -6,6 +6,10 @@ from typing import Any, Dict, Iterable, Optional
 from UM.PluginObject import PluginObject #We're implementing this.
 from UM.PluginRegistry import PluginRegistry #To get the priority metadata to sort by.
 
+MYPY = False
+if MYPY:
+    from UM.Settings.Interfaces import ContainerInterface
+
 ##  This class serves as a database for containers.
 #
 #   A plug-in can define a new source for containers by implementing the
@@ -114,3 +118,11 @@ class ContainerProvider(PluginObject):
     ##  Gets a dictionary of metadata of all containers, indexed by ID.
     def metadata(self) -> Dict[str, Dict[str, Any]]:
         return self._metadata
+
+    ##  Delete a container from this provider.
+    #
+    #   This deletes the container from the source. If it's read only, this
+    #   should give an exception.
+    #   \param container_id The ID of the container to remove.
+    def removeContainer(self, container_id):
+        raise NotImplementedError("The container provider {class_name} doesn't properly implement removeContainer.".format(class_name = self.__class__.__name__))

@@ -143,15 +143,12 @@ class LocalContainerProvider(ContainerProvider):
 
     ##  Remove or unregister an id.
     def removeContainer(self, container_id: str) -> None:
-        if container_id in self._id_to_path:
-            path_to_delete = self._id_to_path[container_id]
-            del self._id_to_path[container_id]
-        else:
-            Logger.log("w", "Tried to remove unknown container (1): %s", container_id)
-        if container_id in self._id_to_mime:
-            del self._id_to_mime[container_id]
-        else:
-            Logger.log("w", "Tried to remove unknown container (2): %s", container_id)
+        if container_id not in self._id_to_path:
+            Logger.log("w", "Tried to remove unknown container: {container_id}".format(container_id = container_id))
+            return
+        path_to_delete = self._id_to_path[container_id]
+        del self._id_to_path[container_id]
+        del self._id_to_mime[container_id]
 
         # Remove file related to a container
         #
