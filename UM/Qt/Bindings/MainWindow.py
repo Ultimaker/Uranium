@@ -52,6 +52,7 @@ class MainWindow(QQuickWindow):
         self._preferences.addPreference("general/window_top", 50)
         self._preferences.addPreference("general/window_state", Qt.WindowNoState)
 
+        self._preferences.addPreference("general/sidebar_collaps", False)
         # Restore window geometry
         self.setWidth(int(self._preferences.getValue("general/window_width")))
         self.setHeight(int(self._preferences.getValue("general/window_height")))
