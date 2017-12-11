@@ -6,6 +6,10 @@ from typing import Any, Dict, Iterable, Optional
 from UM.PluginObject import PluginObject #We're implementing this.
 from UM.PluginRegistry import PluginRegistry #To get the priority metadata to sort by.
 
+MYPY = False
+if MYPY:
+    from UM.Settings.Interfaces import ContainerInterface
+
 ##  This class serves as a database for containers.
 #
 #   A plug-in can define a new source for containers by implementing the
