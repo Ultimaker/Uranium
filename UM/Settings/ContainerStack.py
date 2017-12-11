@@ -1,8 +1,9 @@
-# Copyright (c) 2016 Ultimaker B.V.
+# Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
+
 import configparser
 import io
-from typing import Set, List, Optional, cast
+from typing import Any, cast, Dict, List, Optional, Set
 
 from PyQt5.QtCore import QObject, pyqtProperty, pyqtSignal
 import UM.FlameProfiler
@@ -56,9 +57,12 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
         # to support pickling.
         super().__init__(parent = None, *args, **kwargs)
 
-        self._id = str(stack_id)  # type: str
-        self._name = str(stack_id)  # type: str
-        self._metadata = {}
+        self._metadata = {
+            "id": stack_id,
+            "name": stack_id,
+            "version": self.Version,
+            "container_type": ContainerStack
+        }
         self._containers = []  # type: List[ContainerInterface]
         self._next_stack = None  # type: Optional[ContainerStack]
         self._read_only = False  # type: bool
@@ -71,7 +75,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
     ##  For pickle support
     def __getnewargs__(self):
-        return (self._id,)
+        return (self.getId(),)
 
     ##  For pickle support
     def __getstate__(self):
@@ -85,7 +89,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     #
     #   Reimplemented from ContainerInterface
     def getId(self) -> str:
-        return self._id
+        return self._metadata["id"]
 
     id = pyqtProperty(str, fget = getId, constant = True)
 
@@ -93,14 +97,14 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     #
     #   Reimplemented from ContainerInterface
     def getName(self) -> str:
-        return str(self._name)
+        return str(self._metadata["name"])
 
     ##  Set the name of this stack.
     #
     #   \param name \type{string} The new name of the stack.
     def setName(self, name: str) -> None:
-        if name != self._name:
-            self._name = name
+        if name != self.getName():
+            self._metadata["name"] = name
             self.nameChanged.emit()
 
     ##  Emitted whenever the name of this stack changes.
@@ -274,16 +278,17 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     #   Reimplemented from ContainerInterface
     #
     #   TODO: Expand documentation here, include the fact that this should _not_ include all containers
-    def serialize(self, ignored_metadata_keys: Optional[List] = None):
+    def serialize(self, ignored_metadata_keys: Optional[set] = None):
         parser = configparser.ConfigParser(interpolation = None, empty_lines_in_values = False)
 
         parser["general"] = {}
-        parser["general"]["version"] = str(self.Version)
-        parser["general"]["name"] = str(self._name)
-        parser["general"]["id"] = str(self._id)
+        parser["general"]["version"] = str(self._metadata["version"])
+        parser["general"]["name"] = str(self.getName())
+        parser["general"]["id"] = str(self.getId())
 
         if ignored_metadata_keys is None:
-            ignored_metadata_keys = []
+            ignored_metadata_keys = set()
+        ignored_metadata_keys |= {"id", "name", "version", "container_type"}
         parser["metadata"] = {}
         for key, value in self._metadata.items():
             # only serialize the data that's not in the ignore list
@@ -302,7 +307,8 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     #
     #   The profile upgrading code depends on information such as "configuration_type" and "version", which come from
     #   the serialized data. Due to legacy problem, those data may not be available if it comes from an ancient Cura.
-    def _readAndValidateSerialized(self, serialized: str) -> configparser.ConfigParser:
+    @classmethod
+    def _readAndValidateSerialized(cls, serialized: str) -> configparser.ConfigParser:
         parser = configparser.ConfigParser(interpolation=None, empty_lines_in_values=False)
         parser.read_string(serialized)
 
@@ -311,17 +317,19 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
         return parser
 
-    def getConfigurationTypeFromSerialized(self, serialized: str) -> Optional[str]:
+    @classmethod
+    def getConfigurationTypeFromSerialized(cls, serialized: str) -> Optional[str]:
         configuration_type = None
         try:
-            parser = self._readAndValidateSerialized(serialized)
-            configuration_type = parser["metadata"].get("type")
+            parser = cls._readAndValidateSerialized(serialized)
+            configuration_type = parser["metadata"]["type"]
         except Exception as e:
             Logger.log("e", "Could not get configuration type: %s", e)
         return configuration_type
 
-    def getVersionFromSerialized(self, serialized: str) -> Optional[int]:
-        configuration_type = self.getConfigurationTypeFromSerialized(serialized)
+    @classmethod
+    def getVersionFromSerialized(cls, serialized: str) -> Optional[int]:
+        configuration_type = cls.getConfigurationTypeFromSerialized(serialized)
         # get version
         version = None
         try:
@@ -337,7 +345,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
     #   Reimplemented from ContainerInterface
     #
     #   TODO: Expand documentation here, include the fact that this should _not_ include all containers
-    def deserialize(self, serialized, file_name = None):
+    def deserialize(self, serialized, file_name = None) -> str:
         # update the serialized data first
         serialized = super().deserialize(serialized, file_name)
         parser = self._readAndValidateSerialized(serialized)
@@ -351,11 +359,13 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
 
         self._containers = []
         self._metadata = {}
-        self.setName(parser["general"].get("name"))
-        self._id = parser["general"].get("id")
 
         if "metadata" in parser:
             self._metadata = dict(parser["metadata"])
+        self._metadata["id"] = parser["general"]["id"]
+        self._metadata["name"] = parser["general"].get("name", self.getId())
+        self._metadata["version"] = self.Version #Guaranteed to be equal to what's in the container. See above.
+        self._metadata["container_type"] = ContainerStack
 
         if "containers" in parser:
             for index, container_id in parser.items("containers"):
@@ -364,7 +374,7 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
                     containers[0].propertyChanged.connect(self._collectPropertyChanges)
                     self._containers.append(containers[0])
                 else:
-                    raise Exception("When trying to deserialize %s, we received an unknown ID (%s) for container" % (self._id, container_id))
+                    raise Exception("When trying to deserialize %s, we received an unknown ID (%s) for container" % (self.getId(), container_id))
 
         elif parser.has_option("general", "containers"):
             # Backward compatibility with 2.3.1: The containers used to be saved in a single comma-separated list.
@@ -378,9 +388,43 @@ class ContainerStack(QObject, ContainerInterface, PluginObject):
                         containers[0].propertyChanged.connect(self._collectPropertyChanges)
                         self._containers.append(containers[0])
                     else:
-                        raise Exception("When trying to deserialize %s, we received an unknown ID (%s) for container" % (self._id, container_id))
+                        raise Exception("When trying to deserialize %s, we received an unknown ID (%s) for container" % (self.getId(), container_id))
 
         ## TODO; Deserialize the containers.
+
+        return serialized
+
+    ##  Gets the metadata of a container stack from a serialised format.
+    #
+    #   This parses the entire CFG document and only extracts the metadata from
+    #   it.
+    #
+    #   \param serialized A CFG document, serialised as a string.
+    #   \param container_id The ID of the container that we're getting the
+    #   metadata of, as obtained from the file name.
+    #   \return A dictionary of metadata that was in the CFG document as a
+    #   singleton list. If anything went wrong, this returns an empty list
+    #   instead.
+    @classmethod
+    def deserializeMetadata(cls, serialized: str, container_id: str) -> List[Dict[str, Any]]:
+        serialized = cls._updateSerialized(serialized) #Update to most recent version.
+        parser = configparser.ConfigParser(interpolation = None)
+        parser.read_string(serialized)
+
+        metadata = {
+            "id": container_id,
+            "container_type": ContainerStack
+        }
+        try:
+            metadata["name"] = parser["general"]["name"]
+            metadata["version"] = parser["general"]["version"]
+        except KeyError: #One of the keys or the General section itself is missing.
+            return []
+
+        if "metadata" in parser:
+            metadata.update(parser["metadata"])
+
+        return [metadata]
 
     ##  Get all keys known to this container stack.
     #

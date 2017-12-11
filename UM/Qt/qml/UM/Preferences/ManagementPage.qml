@@ -179,6 +179,9 @@ PreferencesPage
             onItemsChanged:
             {
                 var itemIndex = -1;
+                if (base.currentItem === null) {
+                    return;
+                }
                 for (var i = 0; i < objectList.model.rowCount(); ++i)
                 {
                     if (objectList.model.getItem(i).id == base.currentItem.id)

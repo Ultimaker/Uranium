@@ -1,12 +1,11 @@
-# Copyright (c) 2016 Ultimaker B.V.
+# Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import os.path
 
-from PyQt5.QtCore import QMimeDatabase
+from PyQt5.QtCore import QMimeDatabase, QMimeType
 
-from UM.Decorators import ascopy
-from typing import List
+from typing import List, Optional
 
 ##  Raised when a MIME type can not be found.
 class MimeTypeNotFoundError(Exception):
@@ -21,7 +20,7 @@ class MimeType:
     #   \param suffixes A list of possible suffixes for the type.
     #   \param preferred_suffix The preferred suffix for the type. Defaults to
     #   ``suffixes[0]`` if not specified.
-    def __init__(self, name, comment, suffixes, preferred_suffix = None):
+    def __init__(self, name: str, comment: str, suffixes: Optional[List[str]], preferred_suffix: str = None):
         if name is None:
             raise ValueError("Name cannot be None")
 
@@ -44,28 +43,28 @@ class MimeType:
 
     ##  The name that identifies the MIME type.
     @property
-    def name(self):
+    def name(self) -> str:
         return self.__name
 
     ##  The comment that describes of the MIME type.
     @property
-    def comment(self):
+    def comment(self) -> str:
         return self.__comment
 
     ##  The list of file name suffixes for the MIME type.
     @property
-    def suffixes(self):
+    def suffixes(self) -> List[str]:
         return self.__suffixes
 
     ##  The preferred file name suffix for the MIME type.
     @property
-    def preferredSuffix(self):
+    def preferredSuffix(self) -> str:
         return self.__preferred_suffix
 
     ##  Gives a programmer-readable representation of the MIME type.
     #
     #   \return A string representing the MIME type.
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "<MimeType name={0}>".format(self.__name)
 
     ##  Indicates whether this MIME type is equal to another MIME type.
@@ -75,7 +74,7 @@ class MimeType:
     #
     #   \return ``True`` if the two MIME types are equal, or ``False``
     #   otherwise.
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         return self.__name == other.name
 
     ##  Strip the extension from a file name when it corresponds to one of the
@@ -84,7 +83,7 @@ class MimeType:
     #   \param file_name The file name to strip of extension.
     #   \return ``file_name`` without extension, or ``file_name`` when it does
     #   not match.
-    def stripExtension(self, file_name):
+    def stripExtension(self, file_name: str) -> str:
         suffixes = sorted(self.__suffixes.copy(), key = lambda i: len(i), reverse = True)
         for suffix in self.__suffixes:
             if file_name.endswith(suffix, file_name.find(".")):
@@ -100,7 +99,7 @@ class MimeType:
     #   \return A new ``MimeType`` object with properties equal to the
     #   ``QMimeType`` object.
     @staticmethod
-    def fromQMimeType(qt_mime):
+    def fromQMimeType(qt_mime: QMimeType) -> "MimeType":
         return MimeType(
             name = qt_mime.name(),
             comment = qt_mime.comment(),
@@ -126,7 +125,7 @@ class MimeTypeDatabase:
     #   \exception MimeTypeNotFoundError Raised when the specified MIME type
     #   cannot be found.
     @classmethod
-    def getMimeType(cls, name):
+    def getMimeType(cls, name) -> MimeType:
         for mime in cls.__custom_mimetypes:
             if mime.name == name:
                 return mime
@@ -147,7 +146,7 @@ class MimeTypeDatabase:
     #   \exception MimeTypeNotFoundError Raised when no MIME type can be found
     #   for the specified file.
     @classmethod
-    def getMimeTypeForFile(cls, file_name):
+    def getMimeTypeForFile(cls, file_name) -> MimeType:
         # Properly normalize the file name to only be the base name of a path if we pass a path.
         file_name = os.path.basename(os.path.realpath(file_name))
 
@@ -180,7 +179,7 @@ class MimeTypeDatabase:
     #
     #   \param mime_type \type{MimeType} The custom MIME type to add.
     @classmethod
-    def addMimeType(cls, mime_type):
+    def addMimeType(cls, mime_type) -> None:
         cls.__custom_mimetypes.append(mime_type)
 
     __system_database = QMimeDatabase()
