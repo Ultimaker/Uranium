@@ -236,7 +236,7 @@ class LocalContainerProvider(ContainerProvider):
         self._id_to_path = {} #Clear cache first.
         self._id_to_mime = {}
 
-        old_file_expression = re.compile(r"{sep}old{sep}\d+{sep}".format(sep = os.sep)) #To detect files that are back-ups. Matches on .../old/#/...
+        old_file_expression = re.compile(r"\{sep}old\{sep}\d+\{sep}".format(sep = os.sep)) #To detect files that are back-ups. Matches on .../old/#/...
 
         all_resources = set()
         for resource_type in ContainerRegistry.getInstance().getResourceTypes().values():
