@@ -360,7 +360,7 @@ class QtApplication(QApplication, Application):
     ##  Get the backend of the application (the program that does the heavy lifting).
     #   The backend is also a QObject, which can be used from qml.
     #   \returns Backend \type{Backend}
-    @pyqtSlot(result = "QObject")
+    @pyqtSlot(result = "QObject*")
     def getBackend(self):
         return self._backend
 
