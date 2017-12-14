@@ -155,6 +155,7 @@ class SettingDefinitionsModel(QAbstractListModel):
             self._onVisibilityChanged()
 
         self.visibilityHandlerChanged.emit()
+        self._onVisibilityChanged()
 
     ##  Emitted whenever the visibilityHandler property changes
     visibilityHandlerChanged = pyqtSignal()
