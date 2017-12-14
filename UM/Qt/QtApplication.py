@@ -364,6 +364,10 @@ class QtApplication(QApplication, Application):
     def getBackend(self):
         return self._backend
 
+    @pyqtProperty("QObject", constant = True)
+    def backend(self):
+        return self.getBackend()
+
     ##  Load a Qt translation catalog.
     #
     #   This method will locate, load and install a Qt message catalog that can be used
