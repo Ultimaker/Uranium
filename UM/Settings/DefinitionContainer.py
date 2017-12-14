@@ -185,9 +185,11 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     ##  \copydoc ContainerInterface::hasProperty
     #
     #   Reimplemented from ContainerInterface
-    def hasProperty(self, key, property_name):
+    def hasProperty(self, key, property_name, ignore_inherited: bool = False):
         definition = self._getDefinition(key)
         if not definition:
+            return False
+        if definition.parent is not None and ignore_inherited:
             return False
         return hasattr(definition, property_name)
 
