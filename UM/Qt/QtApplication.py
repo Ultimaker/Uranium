@@ -364,6 +364,10 @@ class QtApplication(QApplication, Application):
     def getBackend(self):
         return self._backend
 
+    ##  Property used to expose the backend
+    #   It is made static as the backend is not supposed to change during runtime.
+    #   This makes the connection between backend and QML more reliable than the pyqtSlot above.
+    #   \returns Backend \type{Backend}
     @pyqtProperty("QObject", constant = True)
     def backend(self):
         return self.getBackend()
