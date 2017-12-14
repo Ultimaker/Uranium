@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import os
@@ -257,7 +257,7 @@ class Resources:
     def __find(cls, resource_type: int, *args) -> List[str]:
         suffix = cls.__types.get(resource_type, None)
         if suffix is None:
-            return None
+            return []
 
         files = []
         for path in cls.__paths:

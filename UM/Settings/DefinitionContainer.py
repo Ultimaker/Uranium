@@ -1,4 +1,4 @@
-# Copyright (c) 2016 Ultimaker B.V.
+# Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 import json
@@ -13,6 +13,7 @@ from UM.Logger import Logger
 from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType
 from UM.Signal import Signal
 
+import UM.Settings.ContainerRegistry #To find the definitions we're inheriting from.
 from UM.Settings.Interfaces import DefinitionContainerInterface
 from UM.Settings.SettingDefinition import SettingDefinition
 from UM.Settings.SettingDefinition import DefinitionPropertyType
@@ -56,14 +57,15 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
         # to support pickling.
         super().__init__(parent = None, *args, **kwargs)
 
-        self._id = str(container_id)    # type: str
-        self._name = str(container_id)  # type: str
-        self._metadata = {}             # type: Dict[str, Any]
-        self._definitions = []          # type: List[SettingDefinition]
-        self._inherited_files = []      # type: List[str]
+        self._metadata = {"id": container_id,
+                          "name": container_id,
+                          "container_type": DefinitionContainer,
+                          "version": self.Version} # type: Dict[str, Any]
+        self._definitions = []                     # type: List[SettingDefinition]
+        self._inherited_files = []                 # type: List[str]
         self._i18n_catalog = i18n_catalog
 
-        self._definition_cache = {}     # type: Dict[str, SettingDefinition]
+        self._definition_cache = {}                # type: Dict[str, SettingDefinition]
         self._path = ""
 
     ##  Reimplement __setattr__ so we can make sure the definition remains unchanged after creation.
@@ -73,7 +75,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
     ##  For pickle support
     def __getnewargs__(self):
-        return (self._id, self._i18n_catalog)
+        return (self.getId(), self._i18n_catalog)
 
     ##  For pickle support
     def __getstate__(self):
@@ -90,7 +92,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     #
     #   Reimplemented from ContainerInterface
     def getId(self) -> str:
-        return self._id
+        return self._metadata["id"]
 
     id = pyqtProperty(str, fget = getId, constant = True)
 
@@ -98,7 +100,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     #
     #   Reimplemented from ContainerInterface
     def getName(self) -> str:
-        return self._name
+        return self._metadata["name"]
 
     name = pyqtProperty(str, fget = getName, constant = True)
 
@@ -200,17 +202,19 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     #   data about inheritance and overrides was lost when deserialising.
     #
     #   Reimplemented from ContainerInterface
-    def serialize(self, ignored_metadata_keys: Optional[List] = None):
+    def serialize(self, ignored_metadata_keys: Optional[set] = None):
         data = { } # The data to write to a JSON file.
         data["name"] = self.getName()
         data["version"] = DefinitionContainer.Version
-        data["metadata"] = self.getMetaData()
+        data["metadata"] = self.getMetaData().copy()
 
         # remove the keys that we want to ignore in the metadata
-        if ignored_metadata_keys:
-            for key in ignored_metadata_keys:
-                if key in data["metadata"]:
-                    del data["metadata"][key]
+        if not ignored_metadata_keys:
+            ignored_metadata_keys = set()
+        ignored_metadata_keys |= {"name", "version", "id", "container_type"}
+        for key in ignored_metadata_keys:
+            if key in data["metadata"]:
+                del data["metadata"][key]
 
         data["settings"] = { }
         for definition in self.definitions:
@@ -218,35 +222,32 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
         return json.dumps(data, separators = (", ", ": "), indent = 4) # Pretty print the JSON.
 
-    def getConfigurationTypeFromSerialized(self, serialized: str) -> Optional[str]:
+    @classmethod
+    def getConfigurationTypeFromSerialized(cls, serialized: str) -> Optional[str]:
         configuration_type = None
         try:
-            parsed = self._readAndValidateSerialized(serialized)
-            configuration_type = parsed["metadata"]["type"]
+            parsed = json.loads(serialized, object_pairs_hook = collections.OrderedDict)
+            configuration_type = parsed["metadata"].get("type", "machine") #TODO: Not all definitions have a type. They get this via inheritance but that requires an instance.
         except Exception as e:
             Logger.log("d", "Could not get configuration type: %s", e)
         return configuration_type
 
     def _readAndValidateSerialized(self, serialized: str) -> dict:
-        parsed = json.loads(serialized, object_pairs_hook=collections.OrderedDict)
+        parsed = json.loads(serialized, object_pairs_hook = collections.OrderedDict)
+
+        if "inherits" in parsed:
+            inherited = self._resolveInheritance(parsed["inherits"])
+            parsed = self._mergeDicts(inherited, parsed)
 
         self._verifyJson(parsed)
 
         parsed = self._preprocessParsedJson(parsed)
-
-        # If we do not have metadata or settings the file is invalid
-        if "metadata" not in parsed:
-            raise InvalidDefinitionError("Missing required metadata section")
-        if "version" not in parsed:
-            raise InvalidDefinitionError("Missing required version section")
-        if "settings" not in parsed:
-            raise InvalidDefinitionError("Missing required settings section")
-
         return parsed
 
-    def getVersionFromSerialized(self, serialized: str) -> Optional[int]:
+    @classmethod
+    def getVersionFromSerialized(cls, serialized: str) -> Optional[int]:
         version = None
-        parsed = self._readAndValidateSerialized(serialized)
+        parsed = json.loads(serialized, object_pairs_hook = collections.OrderedDict)
         try:
             version = int(parsed["version"])
         except Exception as e:
@@ -254,11 +255,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
         return version
 
     def _preprocessParsedJson(self, parsed):
-        # Pre-process the JSON data to include inherited data and overrides
-        if "inherits" in parsed:
-            inherited = self._resolveInheritance(parsed["inherits"])
-            parsed = self._mergeDicts(inherited, parsed)
-
+        # Pre-process the JSON data to include the overrides.
         if "overrides" in parsed:
             for key, value in parsed["overrides"].items():
                 setting = self._findInDict(parsed["settings"], key)
@@ -267,26 +264,23 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
                 else:
                     setting.update(value)
 
-        # If we do not have metadata or settings the file is invalid
-        if "metadata" not in parsed:
-            raise InvalidDefinitionError("Missing required metadata section")
-
-        if "settings" not in parsed:
-            raise InvalidDefinitionError("Missing required settings section")
-
         return parsed
 
     ##  \copydoc ContainerInterface::deserialize
     #
     #   Reimplemented from ContainerInterface
-    def deserialize(self, serialized, file_name: Optional[str] = None):
+    def deserialize(self, serialized, file_name: Optional[str] = None) -> str:
         # update the serialized data first
         serialized = super().deserialize(serialized, file_name)
         parsed = self._readAndValidateSerialized(serialized)
 
         # Update properties with the data from the JSON
-        self._name = parsed["name"]
+        old_id = self.getId() #The ID must be set via the constructor. Retain it.
         self._metadata = parsed["metadata"]
+        self._metadata["id"] = old_id
+        self._metadata["name"] = parsed["name"]
+        self._metadata["version"] = self.Version #Guaranteed to be equal to what's in the parsed data by the validation.
+        self._metadata["container_type"] = DefinitionContainer
 
         for key, value in parsed["settings"].items():
             definition = SettingDefinition(key, self, None, self._i18n_catalog)
@@ -295,6 +289,48 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
         for definition in self._definitions:
             self._updateRelations(definition)
+
+        return serialized
+
+    ##  Gets the metadata of a definition container from a serialised format.
+    #
+    #   This parses the entire JSON document and only extracts the metadata from
+    #   it.
+    #
+    #   \param serialized A JSON document, serialised as a string.
+    #   \param container_id The ID of the container (as obtained from the file
+    #   name).
+    #   \return A dictionary of metadata that was in the JSON document in a
+    #   singleton list. If anything went wrong, the list will be empty.
+    @classmethod
+    def deserializeMetadata(cls, serialized: str, container_id: str) -> List[Dict[str, Any]]:
+        serialized = cls._updateSerialized(serialized) #Update to most recent version.
+        try:
+            parsed = json.loads(serialized, object_pairs_hook = collections.OrderedDict) #TODO: Load only part of this JSON until we find the metadata. We need an external library for this though.
+        except json.JSONDecodeError as e:
+            Logger.log("d", "Could not parse definition: %s", e)
+            return []
+        metadata = {}
+        if "inherits" in parsed:
+            parent_metadata = UM.Settings.ContainerRegistry.ContainerRegistry.getInstance().findDefinitionContainersMetadata(id = parsed["inherits"])
+            if not parent_metadata:
+                Logger.log("e", "Could not load parent definition container {parent} of child {child}".format(parent = parsed["inherits"], child = container_id))
+                #Ignore the parent then.
+            else:
+                parent_metadata = parent_metadata[0]
+                metadata.update(parent_metadata)
+                metadata["inherits"] = parsed["inherits"]
+
+        metadata["container_type"] = DefinitionContainer
+        metadata["id"] = container_id
+        try: #Move required fields to metadata.
+            metadata["name"] = parsed["name"]
+            metadata["version"] = parsed["version"]
+        except KeyError: #Required fields not present!
+            return []
+        if "metadata" in parsed:
+            metadata.update(parsed["metadata"])
+        return [metadata]
 
     ##  Find definitions matching certain criteria.
     #
@@ -321,7 +357,6 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
     # Load a file from disk, used to handle inheritance and includes
     def _loadFile(self, file_name: str) -> dict:
         path = Resources.getPath(Resources.DefinitionContainers, file_name + ".def.json")
-        contents = {}
         with open(path, encoding = "utf-8") as f:
             contents = json.load(f, object_pairs_hook=collections.OrderedDict)
 
@@ -330,27 +365,25 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
     # Recursively resolve loading inherited files
     def _resolveInheritance(self, file_name: str) -> dict:
-        result = {}
-
         json_dict = self._loadFile(file_name)
-        self._verifyJson(json_dict)
 
         if "inherits" in json_dict:
             inherited = self._resolveInheritance(json_dict["inherits"])
             json_dict = self._mergeDicts(inherited, json_dict)
 
+        self._verifyJson(json_dict)
+
         return json_dict
 
     # Verify that a loaded json matches our basic expectations.
-    def _verifyJson(self, json_dict: dict):
-        if "version" not in json_dict:
-            raise InvalidDefinitionError("Missing required property 'version'")
+    def _verifyJson(cls, json_dict: Dict[str, Any]):
+        required_fields = {"version", "name", "settings", "metadata"}
+        missing_fields = required_fields - json_dict.keys()
+        if missing_fields:
+            raise InvalidDefinitionError("Missing required properties: {properties}".format(properties = ", ".join(missing_fields)))
 
-        if "name" not in json_dict:
-            raise InvalidDefinitionError("Missing required property 'name'")
-
-        if json_dict["version"] != self.Version:
-            raise IncorrectDefinitionVersionError("Definition uses version {0} but expected version {1}".format(json_dict["version"], self.Version))
+        if json_dict["version"] != cls.Version:
+            raise IncorrectDefinitionVersionError("Definition uses version {0} but expected version {1}".format(json_dict["version"], cls.Version))
 
     # Recursively find a key in a dictionary
     def _findInDict(self, dictionary: dict, key: str):
@@ -422,3 +455,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
                 self._definition_cache[key] = definition
 
         return definition
+
+    ##  Simple short string representation for debugging purposes.
+    def __str__(self):
+        return "<DefinitionContainer '{definition_id}' ('{name}')>".format(definition_id = self.getId(), name = self.getName())

@@ -1,9 +1,13 @@
-# Copyright (c) 2016 Ultimaker B.V.
+# Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
+import os #To get the IDs from file names.
 from typing import List, Dict, Any, Optional
+import urllib.parse #To get the IDs from file names.
 
 import UM.Decorators
+from UM.Logger import Logger
+from UM.MimeTypeDatabase import MimeTypeDatabase
 from UM.Signal import Signal
 from UM.Settings.PropertyEvaluationContext import PropertyEvaluationContext
 
@@ -29,13 +33,6 @@ class ContainerInterface:
     #
     #   \return \type{string} The name of this container.
     def getName(self) -> str:
-        pass
-
-    ##  Get whether the container item is stored on a read only location in the filesystem.
-    #
-    #   \return True if the specified item is stored on a read-only location
-    #   in the filesystem
-    def isReadOnly(self) -> bool:
         pass
 
     ##  Get all metadata of this container.
@@ -81,25 +78,39 @@ class ContainerInterface:
     #   The serialized representation of the container can be used to write the
     #   container to disk or send it over the network.
     #
-    #   \param ignored_metadata_keys A list of keys that should be ignored when it serializes the metadata.
+    #   \param ignored_metadata_keys A set of keys that should be ignored when
+    #   it serializes the metadata.
     #
     #   \return \type{string} A string representation of this container.
-    def serialize(self, ignored_metadata_keys: Optional[List] = None) -> str:
+    def serialize(self, ignored_metadata_keys: Optional[set] = None) -> str:
         pass
 
     ##  Deserialize the container from a string representation.
     #
     #   This should replace the contents of this container with those in the serialized
-    #   represenation.
+    #   representation.
     #
     #   \param serialized A serialized string containing a container that should be deserialized.
     def deserialize(self, serialized: str, file_name: Optional[str] = None) -> str:
-        return self.__updateSerialized(serialized, file_name)
+        return self._updateSerialized(serialized)
+
+    ##  Deserialize just the metadata from a string representation.
+    #
+    #   \param serialized A string representing one or more containers that
+    #   should be deserialized.
+    #   \param container_id The ID of the (base) container is already known and
+    #   provided here.
+    #   \return A list of the metadata of all containers found in the document.
+    @classmethod
+    def deserializeMetadata(cls, serialized: str, container_id: str) -> List[Dict[str, Any]]:
+        Logger.log("w", "Class {class_name} hasn't implemented deserializeMetadata!".format(class_name = cls.__name__))
+        return []
 
     ##  Updates the given serialized data to the latest version.
-    def __updateSerialized(self, serialized: str, file_name: Optional[str] = None) -> str:
-        configuration_type = self.getConfigurationTypeFromSerialized(serialized)
-        version = self.getVersionFromSerialized(serialized)
+    @classmethod
+    def _updateSerialized(cls, serialized: str, file_name: Optional[str] = None) -> str:
+        configuration_type = cls.getConfigurationTypeFromSerialized(serialized)
+        version = cls.getVersionFromSerialized(serialized)
         if configuration_type is not None and version is not None:
             from UM.VersionUpgradeManager import VersionUpgradeManager
             result = VersionUpgradeManager.getInstance().updateFilesData(configuration_type, version,
@@ -111,14 +122,16 @@ class ContainerInterface:
 
     @classmethod
     def getLoadingPriority(cls) -> int:
-        return 9001
+        return 9001 #Goku wins!
 
     ##  Gets the configuration type of the given serialized data. (used by __updateSerialized())
-    def getConfigurationTypeFromSerialized(self, serialized: str) -> Optional[str]:
+    @classmethod
+    def getConfigurationTypeFromSerialized(cls, serialized: str) -> Optional[str]:
         pass
 
     ##  Gets the version of the given serialized data. (used by __updateSerialized())
-    def getVersionFromSerialized(self, serialized: str) -> Optional[int]:
+    @classmethod
+    def getVersionFromSerialized(cls, serialized: str) -> Optional[int]:
         pass
 
     ##  Get the path used to create this InstanceContainer.

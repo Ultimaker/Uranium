@@ -60,8 +60,8 @@ class QtApplication(QApplication, Application):
                 QCoreApplication.addLibraryPath(plugin_path)
             else:
                 import site
-                for dir in site.getsitepackages():
-                    QCoreApplication.addLibraryPath(os.path.join(dir, "PyQt5", "plugins"))
+                for sitepackage_dir in site.getsitepackages():
+                    QCoreApplication.addLibraryPath(os.path.join(sitepackage_dir, "PyQt5", "plugins"))
         elif sys.platform == "darwin":
             plugin_path = os.path.join(Application.getInstallPrefix(), "Resources", "plugins")
 
@@ -360,7 +360,7 @@ class QtApplication(QApplication, Application):
     ##  Get the backend of the application (the program that does the heavy lifting).
     #   The backend is also a QObject, which can be used from qml.
     #   \returns Backend \type{Backend}
-    @pyqtSlot(result="QObject*")
+    @pyqtSlot(result = "QObject*")
     def getBackend(self):
         return self._backend
 
