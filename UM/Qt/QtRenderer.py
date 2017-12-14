@@ -145,6 +145,8 @@ class QtRenderer(Renderer):
         self._batches.sort()
 
         for render_pass in self.getRenderPasses():
+            width, height = render_pass.getSize()
+            self._gl.glViewport(0, 0, width, height)
             render_pass.render()
 
     ##  Overrides Renderer::endRendering()

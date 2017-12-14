@@ -39,6 +39,9 @@ class RenderPass:
     def getName(self):
         return self._name
 
+    def getSize(self):
+        return self._width, self._height
+
     ##  Get the priority of this RenderPass.
     #
     #   The priority is used for ordering the render passes. Lower priority render passes
