@@ -77,6 +77,22 @@ class MainWindow(QQuickWindow):
         Application.getInstance().setMainWindow(self)
         self._fullscreen = False
 
+        self._allow_resize = True
+
+    def setAllowResize(self, allow_resize: bool):
+        if self._allow_resize != allow_resize:
+            if not allow_resize:
+                self.setMaximumHeight(self.height())
+                self.setMinimumHeight(self.height())
+                self.setMaximumWidth(self.width())
+                self.setMinimumWidth(self.width())
+            else:
+                self.setMaximumHeight(16777215)
+                self.setMinimumHeight(0)
+                self.setMaximumWidth(16777215)
+                self.setMinimumWidth(0)
+            self._allow_resize = allow_resize
+
     @pyqtSlot()
     def toggleFullscreen(self):
         if self._fullscreen:
