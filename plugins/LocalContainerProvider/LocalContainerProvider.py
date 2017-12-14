@@ -55,7 +55,7 @@ class LocalContainerProvider(ContainerProvider):
 
         #Not cached, so load by deserialising.
         container = container_class(base_id) #Construct the container!
-        with open(file_path) as f:
+        with open(file_path, "r", encoding = "utf-8") as f:
             container.deserialize(f.read())
         container.setPath(file_path)
 
@@ -112,7 +112,7 @@ class LocalContainerProvider(ContainerProvider):
 
         requested_metadata = None
         try:
-            with open(filename) as f:
+            with open(filename, "r", encoding = "utf-8") as f:
                 result_metadatas = clazz.deserializeMetadata(f.read(), container_id) #pylint: disable=no-member
         except IOError as e:
             Logger.log("e", "Unable to load metadata from file {filename}: {error_msg}".format(filename = filename, error_msg = str(e)))
