@@ -15,6 +15,7 @@ from UM.SaveFile import SaveFile
 from UM.Settings.ContainerProvider import ContainerProvider #The class we're implementing.
 from UM.Settings.DefinitionContainer import DefinitionContainer #To check if we need to cache this container.
 from UM.Resources import Resources
+from UM.Platform import Platform
 
 MYPY = False
 if MYPY: #Things to import for type checking only.
@@ -142,7 +143,18 @@ class LocalContainerProvider(ContainerProvider):
     def isReadOnly(self, container_id: str) -> bool:
         storage_path = os.path.realpath(Resources.getDataStoragePath())
         file_path = self._id_to_path[container_id] #If KeyError: We don't know this ID.
-        return os.path.commonpath([storage_path, os.path.realpath(file_path)]) != storage_path #Read only if file_path is not a subdirectory of storage_path.
+
+        # The container is read-only if file_path is not a subdirectory of storage_path.
+        if Platform.isWindows():
+            # On Windows, if the paths provided to commonpath() don't come from the same drive,
+            # a ValueError will be raised.
+            try:
+                result = os.path.commonpath([storage_path, os.path.realpath(file_path)]) != storage_path
+            except ValueError:
+                result = False
+        else:
+            result = os.path.commonpath([storage_path, os.path.realpath(file_path)]) != storage_path
+        return result
 
     ##  Remove or unregister an id.
     def removeContainer(self, container_id: str) -> None:
