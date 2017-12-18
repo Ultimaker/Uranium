@@ -431,7 +431,7 @@ class QtApplication(QApplication, Application):
         self.installTranslator(translator)
 
     def createSplash(self):
-        if not self.getCommandLineOption("invisible"):
+        if not self.getCommandLineOption("headless"):
             try:
                 self._splash = self._createSplashScreen()
             except FileNotFoundError:
@@ -447,9 +447,9 @@ class QtApplication(QApplication, Application):
             self.createSplash()
         
         if self._splash:
-            self._splash.showMessage(message , Qt.AlignHCenter | Qt.AlignVCenter)
+            self._splash.showMessage(message, Qt.AlignHCenter | Qt.AlignVCenter)
             self.processEvents()
-        elif self.getCommandLineOption("invisible"):
+        elif self.getCommandLineOption("headless"):
             Logger.log("d", message)
 
     ##  Close the splash screen after the application has started.
