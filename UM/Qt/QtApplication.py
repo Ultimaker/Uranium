@@ -51,6 +51,8 @@ if int(major) < 5 or int(minor) < 4:
 @signalemitter
 class QtApplication(QApplication, Application):
     pluginsLoaded = Signal()
+    applicationRunning = Signal()
+    
     def __init__(self, tray_icon_name = None, **kwargs):
         plugin_path = ""
         if sys.platform == "win32":
@@ -79,7 +81,7 @@ class QtApplication(QApplication, Application):
         if major_version is None and minor_version is None and profile is None:
             Logger.log("e", "Startup failed because OpenGL version probing has failed: tried to create a 2.0 and 4.1 context. Exiting")
             QMessageBox.critical(None, "Failed to probe OpenGL",
-                "Could not probe OpenGL. This program requires OpenGL 2.0 or higher. Please check your video card drivers.")
+                                "Could not probe OpenGL. This program requires OpenGL 2.0 or higher. Please check your video card drivers.")
             sys.exit(1)
         else:
             Logger.log("d", "Detected most suitable OpenGL context version: %s" % (
@@ -101,14 +103,7 @@ class QtApplication(QApplication, Application):
         self.parseCommandLine()
         Logger.log("i", "Command line arguments: %s", self._parsed_command_line)
 
-        try:
-            self._splash = self._createSplashScreen()
-        except FileNotFoundError:
-            self._splash = None
-        else:
-            if self._splash:
-                self._splash.show()
-                self.processEvents()
+        self._splash = None
 
         signal.signal(signal.SIGINT, signal.SIG_DFL)
         # This is done here as a lot of plugins require a correct gl context. If you want to change the framework,
@@ -242,11 +237,16 @@ class QtApplication(QApplication, Application):
 
         self._engine.load(self._main_qml)
         self.engineCreatedSignal.emit()
+        self.getController().setActiveStage("PrepareStage")
+    
+    def exec_(self, *args, **kwargs):
+        self.applicationRunning.emit()
+        super().exec_(*args, **kwargs)
         
     @pyqtSlot()
     def reloadQML(self):
         # only reload when it is a release build
-        if not self._is_debug_mode:
+        if not self.getIsDebugMode():
             return
         self._engine.clearComponentCache()
         self._theme.reload()
@@ -284,13 +284,15 @@ class QtApplication(QApplication, Application):
         return self._renderer
 
     @classmethod
-    def addCommandLineOptions(self, parser):
-        super().addCommandLineOptions(parser)
+    def addCommandLineOptions(self, parser, parsed_command_line = {}):
+        super().addCommandLineOptions(parser, parsed_command_line = parsed_command_line)
         parser.add_argument("--disable-textures",
                             dest="disable-textures",
-                            action="store_true", default=False,
+                            action="store_true",
+                            default=False,
                             help="Disable Qt texture loading as a workaround for certain crashes.")
-        parser.add_argument("-qmljsdebugger", help="For Qt's QML debugger compatibility")
+        parser.add_argument("-qmljsdebugger",
+                            help="For Qt's QML debugger compatibility")
 
     mainWindowChanged = Signal()
 
@@ -307,6 +309,18 @@ class QtApplication(QApplication, Application):
                 self._main_window.windowStateChanged.connect(self._onMainWindowStateChanged)
 
             self.mainWindowChanged.emit()
+
+    def setVisible(self, visible):
+        if self._engine is None:
+            self.initializeEngine()
+        
+        if self._main_window is not None:
+            self._main_window.visible = visible
+
+    @property
+    def isVisible(self):
+        if self._main_window is not None:
+            return self._main_window.visible
 
     def getTheme(self):
         if self._theme is None:
@@ -416,11 +430,27 @@ class QtApplication(QApplication, Application):
         # Finally, install the translator so Qt can use it.
         self.installTranslator(translator)
 
+    def createSplash(self):
+        if not self.getCommandLineOption("invisible"):
+            try:
+                self._splash = self._createSplashScreen()
+            except FileNotFoundError:
+                self._splash = None
+            else:
+                if self._splash:
+                    self._splash.show()
+                    self.processEvents()
+
     ##  Display text on the splash screen.
     def showSplashMessage(self, message):
+        if not self._splash:
+            self.createSplash()
+        
         if self._splash:
             self._splash.showMessage(message , Qt.AlignHCenter | Qt.AlignVCenter)
             self.processEvents()
+        elif self.getCommandLineOption("invisible"):
+            Logger.log("d", message)
 
     ##  Close the splash screen after the application has started.
     def closeSplash(self):
