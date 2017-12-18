@@ -373,10 +373,16 @@ class InstanceContainer(QObject, ContainerInterface, PluginObject):
     def duplicate(self, new_id: str, new_name: str = None):
         self._instantiateCachedValues()
         new_container = self.__class__(new_id)
+        new_metadata = copy.deepcopy(self._metadata)
         if new_name:
             new_container.setName(new_name)
+        else:
+            new_container.setName(new_metadata.get("name", ""))
 
-        new_container.setMetaData(copy.deepcopy(self._metadata))
+        for key_to_remove in ["id", "name"]:
+            if key_to_remove in new_metadata:
+                del new_metadata[key_to_remove]
+        new_container.setMetaData(new_metadata)
 
         for instance_id in self._instances:
             instance = self._instances[instance_id]
