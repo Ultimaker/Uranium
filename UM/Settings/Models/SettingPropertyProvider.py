@@ -140,7 +140,7 @@ class SettingPropertyProvider(QObject):
     @pyqtProperty("QVariantList", notify = stackLevelChanged)
     def stackLevels(self):
         if not self._stack:
-            return -1
+            return [-1]
         return self._stack_levels
 
     ##  Set the value of a property.
