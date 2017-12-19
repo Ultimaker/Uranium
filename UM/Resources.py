@@ -397,16 +397,25 @@ class Resources:
             # No earlier storage dirs found, do nothing
             return
 
+        # Copy config folder if needed
         if latest_config_path == this_version_config_path:
             # If the directory found matches the current version, do nothing
-            return
+            Logger.log("d", "Same config path [%s], do nothing.", latest_config_path)
+        else:
+            # Prevent circular import
+            import UM.VersionUpgradeManager
+            UM.VersionUpgradeManager.VersionUpgradeManager.getInstance().copyVersionFolder(latest_config_path, this_version_config_path)
 
-        # Prevent circular import
-        import UM.VersionUpgradeManager
-        UM.VersionUpgradeManager.VersionUpgradeManager.getInstance().copyVersionFolder(latest_config_path, this_version_config_path)
-        # If the data dir is the same as the config dir, don't copy again
-        if latest_data_path is not None and os.path.exists(latest_data_path) and latest_data_path != latest_config_path:
-            UM.VersionUpgradeManager.VersionUpgradeManager.getInstance().copyVersionFolder(latest_data_path, this_version_data_path)
+        # Copy data folder if needed
+        if latest_data_path == this_version_data_path:
+            # If the directory found matches the current version, do nothing
+            Logger.log("d", "Same data path [%s], do nothing.", latest_config_path)
+        else:
+            # If the data dir is the same as the config dir, don't copy again
+            if latest_data_path is not None and os.path.exists(latest_data_path) and latest_data_path != latest_config_path:
+                # Prevent circular import
+                import UM.VersionUpgradeManager
+                UM.VersionUpgradeManager.VersionUpgradeManager.getInstance().copyVersionFolder(latest_data_path, this_version_data_path)
 
         # Remove "cache" if we copied it together with config
         suspected_cache_path = os.path.join(this_version_config_path, "cache")
