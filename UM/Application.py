@@ -42,7 +42,7 @@ class Application:
     #   \param name \type{string} The name of the application.
     #   \param version \type{string} Version, formatted as major.minor.rev
     def __init__(self, name: str, version: str, build_type: str = "", is_debug_mode = False, parser = None, parsed_command_line = {}, **kwargs):
-        if Application._instance != None:
+        if Application._instance is not None:
             raise ValueError("Duplicate singleton creation")
 
         # If the constructor is called and there is no instance, set the instance to self.
@@ -392,4 +392,3 @@ class Application:
             return os.path.abspath(os.path.join(os.path.dirname(sys.executable), ".."))
 
     _instance = None    # type: Application
-

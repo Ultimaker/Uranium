@@ -94,7 +94,7 @@ class Resources:
                     continue
                 for entry in entries:
                     if not entry.startswith('.') and os.path.isfile(os.path.join(root, entry)):
-                        if not entry in files:
+                        if entry not in files:
                             files[entry] = []
                         files[entry].append(os.path.join(root, entry))
 
@@ -462,6 +462,7 @@ class Resources:
                 break
         return latest_config_path
 
+    @classmethod
     def _isNonVersionedDataDir(cls, check_path):
         # checks if the given path is (probably) a valid app directory for a version earlier than 2.6
         if not cls.__expected_dir_names_in_data:
@@ -471,6 +472,7 @@ class Resources:
         valid_dir_names = [dn for dn in dirs if dn in Resources.__expected_dir_names_in_data]
         return valid_dir_names
 
+    @classmethod
     def _isNonVersionedConfigDir(cls, check_path):
         dirs, files = next(os.walk(check_path))[1:]
         valid_file_names = [fn for fn in files if fn.endswith(".cfg")]
