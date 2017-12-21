@@ -16,6 +16,7 @@ class VisibleMessagesModel(ListModel):
     DescriptionRole = Qt.UserRole + 7
     DismissableRole = Qt.UserRole + 8
     TileRole = Qt.UserRole + 9
+    StyleRole = Qt.UserRole + 10
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -43,6 +44,7 @@ class VisibleMessagesModel(ListModel):
             "actions": self.createActionsModel(message.getActions()),
             "dismissable": message.isDismissable(),
             "title": message.getTitle()
+
         })
         message.progressChanged.connect(self._onMessageProgress)
 
@@ -52,6 +54,7 @@ class VisibleMessagesModel(ListModel):
         model.addRoleName(self.TextRole,"name")
         model.addRoleName(self.IconRole, "icon")
         model.addRoleName(self.DescriptionRole, "description")
+        model.addRoleName(self.StyleRole, "button_style")
 
         for action in actions:
             model.appendItem(action)

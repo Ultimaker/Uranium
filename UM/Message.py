@@ -9,6 +9,12 @@ from PyQt5.QtCore import QTimer, pyqtSignal, QObject
 ## Class for displaying messages to the user.
 @signalemitter
 class Message(QObject):
+
+    class ActionButtonStyle:
+        DEFAULT = 0
+        LINK = 1
+
+
     ##  Class for displaying messages to the user.
     #   Even though the lifetime can be set, in certain cases it can still have a lifetime if nothing happens with the
     #   the message.
@@ -105,8 +111,8 @@ class Message(QObject):
     #   \param name The displayed name of the action
     #   \param icon Source of the icon to be used
     #   \param description Description of the item (used for mouse over, etc)
-    def addAction(self, action_id, name, icon, description):
-        self._actions.append({"action_id": action_id, "name": name, "icon": icon, "description": description})
+    def addAction(self, action_id, name, icon, description, button_style = ActionButtonStyle.DEFAULT):
+        self._actions.append({"action_id": action_id, "name": name, "icon": icon, "description": description, "button_style": button_style})
 
     ##  Get the list of actions to display buttons for on the message.
     #

@@ -169,17 +169,23 @@ ListView {
                                 height: parent.height
                                 color:
                                 {
-                                    if(control.pressed)
+                                    if (model.button_style == 0)
                                     {
-                                        return UM.Theme.getColor("message_button_active");
+                                        if(control.pressed)
+                                        {
+                                            return UM.Theme.getColor("message_button_active");
+                                        }
+                                        else if(control.hovered)
+                                        {
+                                            return UM.Theme.getColor("message_button_hover");
+                                        }
+                                        else
+                                        {
+                                            return UM.Theme.getColor("message_button");
+                                        }
                                     }
-                                    else if(control.hovered)
-                                    {
-                                        return UM.Theme.getColor("message_button_hover");
-                                    }
-                                    else
-                                    {
-                                        return UM.Theme.getColor("message_button");
+                                    else{
+                                        return "transparent";
                                     }
                                 }
                                 Behavior on color { ColorAnimation { duration: 50; } }
@@ -190,20 +196,37 @@ ListView {
                                 text: control.text
                                 color:
                                 {
-                                    if(control.pressed)
+                                    if (model.button_style == 0)
                                     {
-                                        return UM.Theme.getColor("message_button_text_active");
-                                    }
-                                    else if(control.hovered)
-                                    {
-                                        return UM.Theme.getColor("message_button_text_hover");
+                                        if(control.pressed)
+                                        {
+                                            return UM.Theme.getColor("message_button_text_active");
+                                        }
+                                        else if(control.hovered)
+                                        {
+                                            return UM.Theme.getColor("message_button_text_hover");
+                                        }
+                                        else
+                                        {
+                                            return UM.Theme.getColor("message_button_text");
+                                        }
                                     }
                                     else
                                     {
-                                        return UM.Theme.getColor("message_button_text");
+                                        return UM.Theme.getColor("black");
                                     }
                                 }
-                                font: UM.Theme.getFont("default")
+
+                                font: {
+                                    if (model.button_style == 0)
+                                        return UM.Theme.getFont("default")
+                                    else
+                                    {
+                                        var obj = UM.Theme.getFont("default")
+                                        obj.underline = true
+                                        return obj
+                                    }
+                                }
                             }
                         }
                         label: Label{
