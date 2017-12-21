@@ -70,7 +70,7 @@ class Backend(PluginObject):
                 Logger.log("d", "Engine process is killed. Received return code %s", self._process.wait())
 
             self._process = self._runEngineProcess(command)
-            if self._process is None: #Failed to start engine.
+            if self._process is None:  # Failed to start engine.
                 return
             Logger.log("i", "Started engine process: %s", self.getEngineCommand()[0])
             self._backendLog(bytes("Calling engine with: %s\n" % self.getEngineCommand(), "utf-8"))
@@ -80,8 +80,8 @@ class Backend(PluginObject):
             t = threading.Thread(target = self._storeStderrToLogThread, args = (self._process.stderr,))
             t.daemon = True
             t.start()
-        except FileNotFoundError as e:
-            Logger.log("e", "Unable to find backend executable: %s", self.getEngineCommand()[0])
+        except FileNotFoundError:
+            Logger.logException("e", "Unable to find backend executable: %s", self.getEngineCommand()[0])
 
     def close(self):
         if self._socket:
