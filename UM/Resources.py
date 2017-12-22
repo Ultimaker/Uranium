@@ -426,9 +426,10 @@ class Resources:
     def _findLatestDirInPaths(cls, search_path_list, dir_type="config"):
         # version dir name must match: <digit(s)>.<digit(s)><whatever>
         version_regex = re.compile(r'^[0-9]+\.[0-9]+.*$')
-        check_dir_type_func_dict = {"config": Resources._isNonVersionedConfigDir,
-                                    "data": Resources._isNonVersionedDataDir,
-                                    }
+        check_dir_type_func_dict = {
+            "data": Resources._isNonVersionedDataDir,
+            "config": Resources._isNonVersionedConfigDir
+        }
         check_dir_type_func = check_dir_type_func_dict[dir_type]
 
         latest_config_path = None
@@ -436,7 +437,7 @@ class Resources:
             if not os.path.exists(search_path):
                 continue
 
-            if check_dir_type_func(cls, search_path):
+            if check_dir_type_func(search_path):
                 latest_config_path = search_path
                 break
 
