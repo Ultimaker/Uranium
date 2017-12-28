@@ -141,7 +141,7 @@ class InstanceContainersModel(ListModel):
     filterChanged = pyqtSignal()
     @pyqtProperty("QVariantMap", fset = setFilter, notify = filterChanged)
     def filter(self) -> Dict[str, str]:
-        return self._filter_dicts[0] if len(self._filter_dicts) !=0 else None
+        return self._filter_dicts[0] if len(self._filter_dicts) != 0 else None
 
     ##  Set a list of filters to use when fetching containers.
     #
