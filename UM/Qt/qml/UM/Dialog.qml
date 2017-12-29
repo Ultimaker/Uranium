@@ -1,4 +1,4 @@
-// Copyright (c) 2015 Ultimaker B.V.
+// Copyright (c) 2017 Ultimaker B.V.
 // Uranium is released under the terms of the LGPLv3 or higher.
 
 import QtQuick 2.2
@@ -37,8 +37,12 @@ Window {
     }
 
     function reject() {
-        base.visible = false;
-        base.rejected();
+        //If we don't have a close button we don't want to allow the user to close the window by rejecting it (escape key).
+        if (base.flags & Qt.WindowCloseButtonHint)
+        {
+            base.visible = false;
+            base.rejected();
+        }
     }
 
     function open() {
