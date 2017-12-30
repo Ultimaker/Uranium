@@ -174,7 +174,11 @@ class ContainerRegistry(ContainerRegistryInterface):
                 provider = self.source_provider[metadata["id"]]
                 if not provider:
                     Logger.log("w", "The metadata of container {container_id} was added during runtime, but no accompanying container was added.".format(container_id = metadata["id"]))
-                new_container = provider.loadContainer(metadata["id"])
+                try:
+                    new_container = provider.loadContainer(metadata["id"])
+                except Exception as e:
+                    Logger.logException("e", "Error when loading container {container_id}".format(container_id = metadata["id"]), e)
+                    continue
                 self.addContainer(new_container)
                 self.containerLoadComplete.emit(new_container.getId())
                 result.append(new_container)
@@ -204,7 +208,11 @@ class ContainerRegistry(ContainerRegistryInterface):
                     else:
                         return []
                 provider = self.source_provider[kwargs["id"]]
-                metadata = provider.loadMetadata(kwargs["id"])
+                try:
+                    metadata = provider.loadMetadata(kwargs["id"])
+                except Exception as e:
+                    Logger.logException("e", "Error when loading metadata of container {container_id}".format(container_id = kwargs["id"]), e)
+                    return []
                 self.metadata[metadata["id"]] = metadata
                 self.source_provider[metadata["id"]] = provider
 
