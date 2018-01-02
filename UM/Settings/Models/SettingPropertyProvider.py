@@ -11,6 +11,7 @@ from UM.Settings.SettingFunction import SettingFunction
 from UM.Settings.ContainerRegistry import ContainerRegistry
 from UM.Settings.DefinitionContainer import DefinitionContainer
 from UM.Settings.InstanceContainer import InstanceContainer
+from UM.Settings.Interfaces import PropertyEvaluationContext
 from UM.Settings.SettingInstance import InstanceState
 from UM.Settings.SettingRelation import RelationType
 from UM.Settings.SettingDefinition import SettingDefinition
@@ -327,12 +328,16 @@ class SettingPropertyProvider(QObject):
             self.stackLevelChanged.emit()
 
     def _getPropertyValue(self, property_name):
-        property_value = self._stack.getProperty(self._key, property_name)
+        # Use the evaluation context to skip certain containers
+        context = PropertyEvaluationContext(self._stack)
+        context.context["evaluate_from_container_index"] = self._store_index
+
+        property_value = self._stack.getProperty(self._key, property_name, context = context)
         if isinstance(property_value, SettingFunction):
             property_value = property_value(self._stack)
 
         if property_name == "value":
-            setting_type =self._stack.getProperty(self._key, "type")
+            setting_type = self._stack.getProperty(self._key, "type")
             if setting_type is not None:
                 property_value = SettingDefinition.settingValueToString(setting_type, property_value)
             else:
