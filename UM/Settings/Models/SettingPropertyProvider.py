@@ -7,6 +7,7 @@ from UM.FlameProfiler import pyqtSlot
 
 from UM.Logger import Logger
 from UM.Application import Application
+from UM.Settings.Interfaces import PropertyEvaluationContext
 from UM.Settings.SettingFunction import SettingFunction
 from UM.Settings.ContainerRegistry import ContainerRegistry
 from UM.Settings.DefinitionContainer import DefinitionContainer
@@ -196,6 +197,7 @@ class SettingPropertyProvider(QObject):
         try:
             # Because we continue to count if there are multiple linked stacks, we need to check what stack is targeted
             current_stack = self._stack
+
             while current_stack:
                 num_containers = len(current_stack.getContainers())
                 if stack_level >= num_containers:
@@ -208,7 +210,11 @@ class SettingPropertyProvider(QObject):
                 Logger.log("w", "Could not find the right stack for setting %s at stack level %d while trying to get property %s", self._key, stack_level, property_name)
                 return None
 
-            value = current_stack.getContainers()[stack_level].getProperty(self._key, property_name)
+            # Use the evaluation context to skip certain containers
+            context = PropertyEvaluationContext(current_stack)
+            context.context["evaluate_from_container_index"] = stack_level
+
+            value = current_stack.getProperty(self._key, property_name, context)
         except IndexError:  # Requested stack level does not exist
             Logger.log("w", "Tried to get property of type %s from %s but it did not exist on requested index %d", property_name, self._key, stack_level)
             return None
