@@ -40,6 +40,8 @@ class SettingPropertyProvider(QObject):
         self._remove_unused_value = True
         self._validator = None
 
+        self.storeIndexChanged.connect(self._update)
+
     ##  Set the containerStackId property.
     def setContainerStackId(self, stack_id):
         if stack_id == self._stack_id:
