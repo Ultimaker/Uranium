@@ -254,7 +254,7 @@ class MeshData:
     ##  Gets transformed convex hull points
     #
     #   \return \type{numpy.ndarray} the vertices which describe the convex hull
-    def getConvexHullTransformedVertices(self, transformation: Matrix) -> numpy.ndarray:
+    def getConvexHullTransformedVertices(self, transformation: Matrix) -> Optional[numpy.ndarray]:
         vertices = self.getConvexHullVertices()
         if vertices is not None:
             return transformVertices(vertices, transformation)
