@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Copyright (c) 2013 David Braam
 # Uranium is released under the terms of the LGPLv3 or higher.
 
@@ -84,16 +84,16 @@ class STLReader(MeshReader):
         array[:, [frm, to]] = array[:, [to, frm]]
 
     def _loadWithNumpySTL(self, file_name, mesh_builder):
-        loaded_data = stl.mesh.Mesh.from_file(file_name)
-        vertices = numpy.resize(loaded_data.points.flatten(), (int(loaded_data.points.size / 3), 3))
+        for loaded_data in stl.mesh.Mesh.from_multi_file(file_name):
+            vertices = numpy.resize(loaded_data.points.flatten(), (int(loaded_data.points.size / 3), 3))
 
-        # Invert values of second column
-        vertices[:, 1] *= -1
+            # Invert values of second column
+            vertices[:, 1] *= -1
 
-        # Swap column 1 and 2 (We have a different coordinate system)
-        self._swapColumns(vertices, 1, 2)
+            # Swap column 1 and 2 (We have a different coordinate system)
+            self._swapColumns(vertices, 1, 2)
 
-        mesh_builder.setVertices(vertices)
+            mesh_builder.addVertices(vertices)
 
     # Private
     ## Load the STL data from file by consdering the data as ascii.
