@@ -1,9 +1,12 @@
 # Copyright (c) 2016 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-import sys
-import traceback
+from functools import wraps
 import inspect
+import sys
+import threading
+import time
+import traceback
 from typing import List
 
 from UM.PluginObject import PluginObject
@@ -79,6 +82,44 @@ class Logger:
         for line in traceback.format_exc().rstrip().split("\n"):
             cls.log(log_type, line)
 
+
+##  Decorator to time how long a function takes to execute.
+def timeIt(fn):
+    @wraps(fn)
+    def measure_time(*args, **kwargs):
+        t1 = time.time()
+        result = fn(*args, **kwargs)
+        t2 = time.time()
+        Logger.log("d", "@timeIt: {0} took {1:.3f}s".format(fn.__name__, t2-t1))
+        return result
+    return measure_time
+
+##  Decorator which logs the name of the current thread.
+def logThread(fn):
+    @wraps(fn)
+    def logIt(*args, **kwargs):
+        Logger.log("d", "@logThread: {0} running on thread {1}".format(fn.__name__, threading.current_thread().name))
+        return fn(*args, **kwargs)
+    return logIt
+
+##  Decorator which logs the parameters and start and end of a function/method.
+def spy(fn):
+    @wraps(fn)
+    def spyIt(*args, **kwargs):
+        arg_str = "{0}({1})".format(fn.__name__, ",".join( (repr(a) for a in args) ))
+        Logger.log("d", "@spy: -> " + arg_str)
+        result = fn(*args, **kwargs)
+        Logger.log("d", "@spy: <- " + arg_str + " returning " + repr(result))
+        return result
+    return spyIt
+
+##  Decorator which logs the current execution stack when the function/method is called.
+def logStack(fn):
+    @wraps(fn)
+    def logIt(*args, **kwargs):
+        Logger.log("d", "@logStack: {0} stack {1}".format(fn.__name__, traceback.format_stack()))
+        return fn(*args, **kwargs)
+    return logIt
 
 ##  Abstract base class for log output classes.
 class LogOutput(PluginObject):
