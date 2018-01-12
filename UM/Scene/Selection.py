@@ -46,7 +46,7 @@ class Selection:
     def getBoundingBox(cls):
         bounding_box = None  # don't start with an empty bounding box, because that includes (0,0,0)
         for node in cls.__selection:
-            if not issubclass(type(node), SceneNode):
+            if not isinstance(node, SceneNode):
                 continue
 
             if not bounding_box:
