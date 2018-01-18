@@ -351,9 +351,10 @@ class SettingPropertyProvider(QObject):
             if property_value is None:
                 if not self._validator:
                     definition = self._stack.getSettingDefinition(self._key)
-                    validator_type = SettingDefinition.getValidatorForType(definition.type)
-                    if validator_type:
-                        self._validator = validator_type(self._key)
+                    if definition:
+                        validator_type = SettingDefinition.getValidatorForType(definition.type)
+                        if validator_type:
+                            self._validator = validator_type(self._key)
                 if self._validator:
                     property_value = self._validator(self._stack)
         return str(property_value)
