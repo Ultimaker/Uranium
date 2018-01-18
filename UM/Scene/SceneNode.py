@@ -126,6 +126,9 @@ class SceneNode:
     def getMirror(self) -> Vector:
         return self._mirror
 
+    def setMirror(self, vector) -> Vector:
+        self._mirror = vector
+
     ##  Get the MeshData of the bounding box
     #   \returns \type{MeshData} Bounding box mesh.
     def getBoundingBoxMesh(self) -> Optional[MeshData]:
