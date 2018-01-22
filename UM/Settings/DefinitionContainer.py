@@ -267,6 +267,14 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
 
         return parsed
 
+    ##  Add a setting definition instance if it doesn't exist yet.
+    #
+    #   Warning: this might not work when there are relationships higher up in the stack.
+    def addDefinition(self, definition: SettingDefinition):
+        if definition.key not in [d.key for d in self._definitions]:
+            self._definitions.append(definition)
+            self._updateRelations(definition)
+
     ##  \copydoc ContainerInterface::deserialize
     #
     #   Reimplemented from ContainerInterface
