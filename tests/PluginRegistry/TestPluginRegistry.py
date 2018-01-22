@@ -31,7 +31,12 @@ def registry(application):
 class TestPluginRegistry():
     def test_metaData(self, registry):
         metadata = registry.getMetaData("TestPlugin")
-        assert metadata == { "id": "TestPlugin", "plugin": { "name": "TestPlugin", "api": 4, "version": "1.0.0" }, "location":os.path.dirname(os.path.abspath(__file__)) + "/TestPlugin"  }
+        assert metadata == {"id": "TestPlugin",
+                            "plugin": {"name": "TestPlugin",
+                                       "api": 4,
+                                       "version": "1.0.0"},
+                            "location": os.path.abspath(os.path.dirname(os.path.abspath(__file__)) + "/TestPlugin"),
+                            }
 
     def test_load(self, registry):
         registry.loadPlugin("TestPlugin")
