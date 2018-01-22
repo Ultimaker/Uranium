@@ -13,7 +13,6 @@ from UM.Logger import Logger
 from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType
 from UM.Signal import Signal
 
-import UM.Settings.ContainerRegistry #To find the definitions we're inheriting from.
 from UM.Settings.Interfaces import DefinitionContainerInterface
 from UM.Settings.SettingDefinition import SettingDefinition
 from UM.Settings.SettingDefinition import DefinitionPropertyType
@@ -314,6 +313,7 @@ class DefinitionContainer(QObject, DefinitionContainerInterface, PluginObject):
             return []
         metadata = {}
         if "inherits" in parsed:
+            import UM.Settings.ContainerRegistry #To find the definitions we're inheriting from.
             parent_metadata = UM.Settings.ContainerRegistry.ContainerRegistry.getInstance().findDefinitionContainersMetadata(id = parsed["inherits"])
             if not parent_metadata:
                 Logger.log("e", "Could not load parent definition container {parent} of child {child}".format(parent = parsed["inherits"], child = container_id))
