@@ -38,13 +38,14 @@ class PluginRegistry(QObject):
 
     def __init__(self, parent = None):
         super().__init__(parent)
-        self._plugins = {}  # type: Dict[str, types.ModuleType]
-        self._plugin_objects = {}  # type: Dict[str, PluginObject]
-        self._meta_data = {}  # type: Dict[str, Dict[str, any]]
-        self._plugin_locations = []  # type: List[str]
-        self._folder_cache = {}  # type: Dict[str, str]
+        self._plugins = {}          # type: Dict[str, types.ModuleType]
+        self._plugin_objects = {}   # type: Dict[str, PluginObject]
+        self._meta_data = {}        # type: Dict[str, Dict[str, any]]
+        self._plugin_locations = [] # type: List[str]
+        self._folder_cache = {}     # type: Dict[str, str]
         self._application = None
-        self._active_plugins = []  # type: List[str]
+        self._active_plugins = []   # type: List[str]
+        self._plugin_statuses = {}  # type: Dict[str, str]
 
         self._supported_file_types = {"umplugin": "Uranium Plugin"}
         preferences = Preferences.getInstance()
@@ -96,7 +97,15 @@ class PluginRegistry(QObject):
         success_message = i18n_catalog.i18nc("@info:status", "The plugin has been removed.\nPlease re-start the application to finish uninstall.")
 
         try:
+            # Remove the files from the plugins directory:
             shutil.rmtree(plugin_path)
+
+            # Remove the plugin object from the Plugin Registry:
+            self._plugins.pop(plugin_id, None)
+
+            # Remove the metadata from the Plugin Registry:
+            # self._meta_data[plugin_id] = {}
+
         except:
             Logger.logException("d", "An exception occurred while uninstalling %s", plugin_path)
 
@@ -169,6 +178,7 @@ class PluginRegistry(QObject):
             result["message"] = i18n_catalog.i18nc("@info:status", "Failed to install plugin from <filename>{0}</filename>:\n<message>{1}</message>", plugin_folder, "Invalid plugin file")
             return result
 
+        self._plugin_statuses[plugin_id] = "will_install"
         result["status"] = "ok"
         result["message"] = success_message
         return result
@@ -561,3 +571,11 @@ class PluginRegistry(QObject):
 
     _type_register_map = {}  # type: Dict[str, Callable[[Any], None]]
     _instance = None    # type: PluginRegistry
+
+
+    @pyqtSlot(str, result = str)
+    def getInstallStatus(self, plugin_id):
+        return self._plugin_statuses[plugin_id]
+
+    def _setInstallStatus(self, plugin_id, status):
+        self._plugin_statuses[plugin_id] = status

@@ -9,48 +9,61 @@ from UM.Logger import Logger
 from UM.PluginRegistry import PluginRegistry
 
 class PluginsModel(ListModel):
-    NameRole = Qt.UserRole + 1
-    RequiredRole = Qt.UserRole + 2
-    EnabledRole = Qt.UserRole + 3
-    TypeRole = Qt.UserRole + 4
-    DescriptionRole = Qt.UserRole + 5
-    AuthorRole = Qt.UserRole + 6
-    VersionRole = Qt.UserRole + 7
-    IdRole = Qt.UserRole + 8
-
     def __init__(self, parent = None):
         super().__init__(parent)
-        self._plugin_registery = PluginRegistry.getInstance()
-        self._required_plugins = Application.getInstance().getRequiredPlugins()
-        self.addRoleName(self.IdRole, "id")
-        self.addRoleName(self.NameRole, "name")
-        self.addRoleName(self.RequiredRole, "required")
-        self.addRoleName(self.EnabledRole, "enabled")
 
-        self.addRoleName(self.DescriptionRole, "description")
-        self.addRoleName(self.AuthorRole, "author")
-        self.addRoleName(self.VersionRole, "version")
+        self._registry = Application.getInstance().getPluginRegistry()
+        self._required_plugins = Application.getInstance().getRequiredPlugins()
+
+        # Static props:
+        self.addRoleName(Qt.UserRole + 1, "id")
+        self.addRoleName(Qt.UserRole + 2, "name")
+        self.addRoleName(Qt.UserRole + 3, "version")
+        self.addRoleName(Qt.UserRole + 4, "author")
+        self.addRoleName(Qt.UserRole + 5, "author_email")
+        self.addRoleName(Qt.UserRole + 6, "description")
+
+        # Computed props:
+        self.addRoleName(Qt.UserRole + 7, "file_location")
+        self.addRoleName(Qt.UserRole + 8, "status")
+        self.addRoleName(Qt.UserRole + 9, "enabled")
+        self.addRoleName(Qt.UserRole + 10, "required")
+        self.addRoleName(Qt.UserRole + 11, "can_upgrade")
+
         self._update()
 
     def _update(self):
         items = []
-        active_plugins = self._plugin_registery.getActivePlugins()
-        for plugin in self._plugin_registery.getAllMetaData():
+
+        # Get all active plugins from registry (list of strings):
+        active_plugins = self._registry.getActivePlugins()
+
+        # Metadata is used as the official list of "all plugins."
+        for plugin in self._registry.getAllMetaData():
+
             if "plugin" not in plugin:
                 Logger.log("e", "Plugin is missing a plugin metadata entry")
                 continue
 
-            aboutData = plugin["plugin"]
-            items.append({
-                "id": plugin["id"],
-                "required": plugin["id"] in self._required_plugins,
-                "enabled": plugin["id"] in active_plugins,
+            props = plugin["plugin"]
 
-                "name": aboutData.get("name", plugin["id"]),
-                "description": aboutData.get("description", ""),
-                "author": aboutData.get("author", "John Doe"),
-                "version": aboutData.get("version", "Unknown")
+            items.append({
+                # Static props from above are taken from the plugin's metadata:
+                "id": plugin["id"],
+                "name": props.get("name", plugin["id"]),
+                "version": props.get("version", "Unknown"),
+                "author": props.get("author", "John Doe"),
+                "author_email": "author@gmail.com",
+                "description": props.get("description", ""),
+
+                # Computed props from above are computed
+                "file_location": "/users/i.paschal",
+                "status": "installed",
+                "enabled": plugin["id"] in active_plugins,
+                "required": plugin["id"] in self._required_plugins,
+                "can_upgrade": True
             })
+
         items.sort(key = lambda k: k["name"])
         self.setItems(items)
 
