@@ -1,4 +1,4 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from UM.Math.Vector import Vector
@@ -27,9 +27,9 @@ class AxisAlignedBox:
         self._min = minimum
         self._max = maximum
 
-    def set(self, minimum: Optional[Vector] = None, maximum: Optional[Vector] = None, left: Optional[Vector] = None,
-            right: Optional[Vector] = None, top: Optional[Vector] = None, bottom: Optional[Vector] = None,
-            front: Optional[Vector] = None, back: Optional[Vector] = None) -> "AxisAlignedBox":
+    def set(self, minimum: Optional[Vector] = None, maximum: Optional[Vector] = None, left: Optional[float] = None,
+            right: Optional[float] = None, top: Optional[float] = None, bottom: Optional[float] = None,
+            front: Optional[float] = None, back: Optional[float] = None) -> "AxisAlignedBox":
         if minimum is None:
             minimum = self._min
 
