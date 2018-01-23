@@ -707,3 +707,8 @@ class SceneNode:
             else:
                 aabb = aabb + child.getBoundingBox()
         self._aabb = aabb
+
+    ##  String output for debugging.
+    def __str__(self):
+        name = self._name if self._name != "" else hex(id(self))
+        return "<" + self.__class__.__qualname__ + " object: '" + name + "'>"

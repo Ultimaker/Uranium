@@ -92,7 +92,7 @@ class ContainerInterface:
     #
     #   \param serialized A serialized string containing a container that should be deserialized.
     def deserialize(self, serialized: str, file_name: Optional[str] = None) -> str:
-        return self._updateSerialized(serialized)
+        return self._updateSerialized(serialized, file_name = file_name)
 
     ##  Deserialize just the metadata from a string representation.
     #
