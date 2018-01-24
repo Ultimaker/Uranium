@@ -1,7 +1,7 @@
-# Copyright (c) 2016 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-import sys
+import threading
 import traceback
 import inspect
 from typing import List
@@ -54,7 +54,13 @@ class Logger:
 
                 message = new_message
 
-            message = "{class_name}.{function} [{line}]: {message}".format(class_name = caller_frame.f_globals["__name__"], function = frame_info.function, line = frame_info.lineno, message = message)
+            current_thread = threading.current_thread()
+            thread_info = "(%s)-%s" % (current_thread.ident, current_thread.name)
+            message = "[{thread}] {class_name}.{function} [{line}]: {message}".format(thread = thread_info,
+                                                                                      class_name = caller_frame.f_globals["__name__"],
+                                                                                      function = frame_info.function,
+                                                                                      line = frame_info.lineno,
+                                                                                      message = message)
 
             for logger in cls.__loggers:
                 logger.log(log_type, message)
