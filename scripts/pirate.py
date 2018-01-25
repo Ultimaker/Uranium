@@ -3,6 +3,7 @@
 import sys #To get command line arguments.
 import pirateofdoom #Contains our translation dictionary.
 import re #Case insensitive search and replace.
+import random # Take random translation candidates
 
 pot_file = sys.argv[1]
 po_file = sys.argv[2]
@@ -16,6 +17,10 @@ def translate(english):
         for position in matches:
             #Make sure the case is correct.
             uppercase = english[position].lower() != english[position]
+
+            if isinstance(pir, list):
+                pir = random.choice(pir)
+
             first_character = pir[0]
             rest_characters = pir[1:]
             if uppercase:
