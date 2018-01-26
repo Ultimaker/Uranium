@@ -19,11 +19,24 @@ PreferencesPage {
     title: catalog.i18nc("@title:tab", "Plugins");
     contents: Item {
         anchors.fill: parent
+
+        Text {
+            id: movedMessage
+            width: parent.width
+            wrapMode: Text.WordWrap
+            text: "Plugins have moved!\nBuilt-in and 3rd-party plugins are now both installed amd managed via the plugin browser."
+        }
+
+        /*
         Button {
             id: installButton
+            anchors.top: movedMessage.bottom
+            anchors.topMargin: UM.Theme.getSize("default_margin").height
             onClicked: openDialog.open()
             text: catalog.i18nc("@action:button", "Install new plugin")
         }
+        */
+        /*
         ScrollView {
             anchors {
                 left: parent.left
@@ -50,7 +63,9 @@ PreferencesPage {
 
             anchors.bottom: parent.bottom
         }
+        */
     }
+    /*
     Item {
         SystemPalette { id: palette }
 
@@ -240,4 +255,5 @@ PreferencesPage {
             }
         }
     }
+    */
 }
