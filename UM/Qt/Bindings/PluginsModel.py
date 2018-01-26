@@ -40,7 +40,7 @@ class PluginsModel(ListModel):
             self._update(view)
 
         if view == "available":
-            self._plugins = self._registry.getAvailablePlugins()
+            self._plugins = self._registry.getExternalPlugins()
             self._update(view)
 
     def _update(self, view):
@@ -77,7 +77,6 @@ class PluginsModel(ListModel):
                 "required": metadata["id"] in self._required_plugins,
                 "can_upgrade": False, # Default, potentially overwritten by plugin browser
                 "update_url": None # Default, potentially overwritten by plugin browser
-
             })
 
         items.sort(key = lambda k: k["name"])
