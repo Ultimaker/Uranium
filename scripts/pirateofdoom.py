@@ -64,8 +64,5 @@ pirate = {
     "downloaded": "plundered",
     "caution hot surface": "fire in the hole!",
     "type": "sort",
-    "feeder": "mouth",
-    "material": "rum",
-    "materials": "rums",
     "spool": "barrel",
 }
