@@ -43,7 +43,7 @@ class Resources:
     ## Location of cached data
     Cache = 11
     ## Location of Visible settings preset
-    VisibilitySettingsPreset = 12
+    VisibilitySettingPresets = 12
 
     ## Any custom resource types should be greater than this to prevent collisions with standard types.
     UserType = 128
@@ -505,7 +505,7 @@ class Resources:
         DefinitionContainers: "definitions",
         InstanceContainers: "instances",
         ContainerStacks: "stacks",
-        VisibilitySettingsPreset: "visibility_presets",
+        VisibilitySettingPresets: "visibility_presets",
     }
     __types_storage = {
         Resources: "",
