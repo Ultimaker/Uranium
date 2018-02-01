@@ -1,16 +1,22 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
-
+from typing import Optional
+from UM.View.Renderer import Renderer
 from UM.PluginObject import PluginObject
+
 import UM.Application
+
+MYPY = False
+if MYPY:
+    from UM.Controller import Controller
 
 
 ## Abstract base class for view objects.
 class View(PluginObject):
     def __init__(self):
         super().__init__()
-        self._renderer = None
-        self._controller = UM.Application.Application.getInstance().getController()
+        self._renderer = None  # type: Optional[Renderer]
+        self._controller = UM.Application.Application.getInstance().getController()  # type: Controller
 
     ##  Get the controller object associated with this View.
     #   \sa Controller
@@ -20,7 +26,7 @@ class View(PluginObject):
     ##  Set the controller object associated with this View.
     #   \param controller The controller object to use.
     #   \sa Controller
-    def setController(self, controller):
+    def setController(self, controller: "Controller"):
         self._controller = controller
 
     ##  Get the Renderer instance for this View.
@@ -29,7 +35,7 @@ class View(PluginObject):
 
     ##  Set the renderer object to use with this View.
     #   \param renderer \type{Renderer} The renderer to use.
-    def setRenderer(self, renderer):
+    def setRenderer(self, renderer: Renderer):
         self._renderer = renderer
 
     ##  Begin the rendering process.

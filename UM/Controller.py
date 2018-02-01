@@ -1,6 +1,5 @@
 # Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
-
 from UM.Scene.Scene import Scene
 from UM.Event import Event, MouseEvent, ToolEvent, ViewEvent
 from UM.Signal import Signal, signalemitter
@@ -14,6 +13,11 @@ from UM.InputDevice import InputDevice
 from typing import Optional, Dict
 from UM.Math.Vector import Vector
 
+MYPY = False
+if MYPY:
+    from UM.Application import Application
+    from UM.Tool import Tool
+
 ##      Glue class that holds the scene, (active) view(s), (active) tool(s) and possible user inputs.
 #
 #       The different types of views / tools / inputs are defined by plugins.
@@ -22,19 +26,19 @@ from UM.Math.Vector import Vector
 #       \sa Scene
 @signalemitter
 class Controller:
-    def __init__(self, application):
+    def __init__(self, application: "Application"):
         super().__init__()  # Call super to make multiple inheritance work.
 
         self._scene = Scene()
         self._application = application
         self._is_model_rendering_enabled = True
 
-        self._active_view = None
-        self._views = {}
+        self._active_view = None  # type: Optional[View]
+        self._views = {}  # type: Dict[str, View]
 
-        self._active_tool = None
+        self._active_tool = None  # type: Optional[Tool]
         self._tool_operation_active = False
-        self._tools = {}
+        self._tools = {}  # type: Dict[str, Tool]
         self._camera_tool = None
         self._selection_tool = None
         self._tools_enabled = True
