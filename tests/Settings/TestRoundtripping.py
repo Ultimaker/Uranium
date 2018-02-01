@@ -9,7 +9,7 @@
 # This is not strictly a unit test but more of a systems test.
 
 import pytest
-import multiprocessing
+import multiprocessing.pool
 import unittest.mock #For MagicMock and patch.
 
 from UM.SaveFile import SaveFile
@@ -37,7 +37,7 @@ def read_data(path):
 ##  Run a function in one or more separate processes, waiting until all are finished.
 def mp_run(process_count, function, *args):
     results = []
-    with multiprocessing.Pool(process_count) as p:
+    with multiprocessing.pool.Pool(process_count) as p:
         for i in range(process_count):
             results.append(p.apply_async(function, args))
 

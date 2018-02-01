@@ -3,7 +3,8 @@
 
 import imp
 import os
-import stat #To set file permissions correctly.
+import shutil  # For deleting plugin directories;
+import stat    # For setting file permissions correctly;
 import zipfile
 
 from UM.Preferences import Preferences
@@ -84,6 +85,27 @@ class PluginRegistry(QObject):
         if extension.lower() in self._supported_file_types.keys():
             return True
         return False
+
+    @pyqtSlot(str, result="QVariantMap")
+    def uninstallPlugin(self, plugin_id: str):
+        Logger.log("d", "Uninstall plugin got ID: %s", plugin_id)
+        plugin_folder = os.path.join(Resources.getStoragePath(Resources.Resources), "plugins")
+        plugin_path = os.path.join(plugin_folder, plugin_id)
+        Logger.log("i", "Attempting to uninstall %s", plugin_path)
+        result = {"status": "error", "message": "", "id": plugin_id}
+        success_message = i18n_catalog.i18nc("@info:status", "The plugin has been removed.\nPlease re-start the application to finish uninstall.")
+
+        try:
+            shutil.rmtree(plugin_path)
+        except:
+            Logger.logException("d", "An exception occurred while uninstalling %s", plugin_path)
+
+            result["message"] = i18n_catalog.i18nc("@info:status", "Failed to uninstall plugin");
+            return result
+
+        result["status"] = "ok"
+        result["message"] = success_message
+        return result
 
     @pyqtSlot(str, result="QVariantMap")
     def installPlugin(self, plugin_path: str):
@@ -539,4 +561,3 @@ class PluginRegistry(QObject):
 
     _type_register_map = {}  # type: Dict[str, Callable[[Any], None]]
     _instance = None    # type: PluginRegistry
-

@@ -2,7 +2,7 @@
 # Copyright (C) 2017 Ultimaker
 # This file is distributed under the same license as the Uranium package.
 # Ruben Dulek <r.dulek@ultimaker.com>, 2017.
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Uranium 3.0\n"
@@ -48,49 +48,49 @@ msgctxt "@info"
 msgid "Could not access update information."
 msgstr "Non è possibile accedere alle informazioni di aggiornamento."
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:42
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:58
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:69
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:87
-#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:122
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:43
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:60
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:71
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:89
+#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:123
 msgctxt "@info:title"
 msgid "Version Upgrade"
 msgstr "Aggiornamento versione"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:53
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:58
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:55
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:60
 msgctxt "@info"
 msgid "The version you are using does not support checking for updates."
 msgstr "La versione che stai utilizzando non supporta la verifica della disponibilità di aggiornamenti."
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:53
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:55
 #: /home/ruben/Projects/Uranium/plugins/LocalFileOutputDevice/LocalFileOutputDevice.py:178
 msgctxt "@info:title"
 msgid "Warning"
 msgstr "Avvertenza"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:69
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:71
 msgctxt "@info"
 msgid "A new version is available!"
 msgstr "È disponibile una nuova versione!"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:70
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:72
 msgctxt "@action:button"
 msgid "Download"
 msgstr "Download"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:83
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:85
 msgctxt "@info"
-msgid "An exception occurred while checking for updates."
-msgstr "Si è verificata un'eccezione durante il controllo degli aggiornamenti."
+msgid "An error occurred while checking for updates."
+msgstr ""
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:83
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:85
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:126
 msgctxt "@info:title"
 msgid "Error"
 msgstr "Errore"
 
-#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:87
+#: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:89
 msgctxt "@info"
 msgid "No new version was found."
 msgstr "Non è stata trovata nessuna nuova versione."
@@ -221,7 +221,7 @@ msgctxt "@info:tooltip"
 msgid "Mirror Model"
 msgstr "Modello Immagine speculare"
 
-#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:168
+#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:189
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:48
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:77
 #: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:70
@@ -230,7 +230,7 @@ msgctxt "@item:inlistbox"
 msgid "All Supported Types ({0})"
 msgstr "Tutti i tipi supportati ({0})"
 
-#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:171
+#: /home/ruben/Projects/Uranium/UM/Settings/Models/InstanceContainersModel.py:192
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/MeshFileHandlerProxy.py:49
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:78
 #: /home/ruben/Projects/Uranium/UM/FileHandler/FileHandler.py:71
@@ -277,17 +277,17 @@ msgid_plural "{0} minutes"
 msgstr[0] "{0} minuto"
 msgstr[1] "{0} minuti"
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:115
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:114
 msgctxt "@info:progress"
 msgid "Loading plugins..."
 msgstr "Caricamento plugin in corso..."
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:120
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:119
 msgctxt "@info:progress"
 msgid "Updating configuration..."
 msgstr "Aggiornamento configurazione in corso..."
 
-#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:131
+#: /home/ruben/Projects/Uranium/UM/Qt/QtApplication.py:130
 msgctxt "@info:progress"
 msgid "Loading preferences..."
 msgstr "Caricamento preferenze in corso..."
@@ -308,7 +308,9 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr "Il plugin è stato installato.\nRiavviare l'applicazione per attivare il plugin."
+msgstr ""
+"Il plugin è stato installato.\n"
+"Riavviare l'applicazione per attivare il plugin."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:107
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:147
@@ -317,7 +319,9 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install plugin from <filename>{0}</filename>:\n"
 "<message>{1}</message>"
-msgstr "Installazione plugin da <filename>{0}</filename>:\n<message>{1} non riuscita</message>"
+msgstr ""
+"Installazione plugin da <filename>{0}</filename>:\n"
+"<message>{1} non riuscita</message>"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:131
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:136
@@ -326,9 +330,11 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install the plugin;\n"
 "<message>{0}</message>"
-msgstr "Installazione del plugin non riuscita;\n<message>{0}</message>"
+msgstr ""
+"Installazione del plugin non riuscita;\n"
+"<message>{0}</message>"
 
-#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:122
+#: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:123
 #, python-brace-format
 msgctxt "@info:version-upgrade"
 msgid "A configuration from an older version of {0} was imported."
@@ -364,12 +370,6 @@ msgctxt "@info:status Don't translate the XML tag <filename>!"
 msgid "Failed to load <filename>{0}</filename>"
 msgstr "Impossibile caricare <filename>{0}</filename>"
 
-#: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:55
-#, python-brace-format
-msgctxt "@info:status Don't translate the XML tag <filename>!"
-msgid "Loading <filename>{0}</filename>"
-msgstr "Caricamento <filename>{0}</filename>"
-
 #: /home/ruben/Projects/Uranium/UM/FileHandler/ReadFileJob.py:58
 msgctxt "@info:title"
 msgid "Loading"
@@ -381,15 +381,20 @@ msgctxt "@action:button"
 msgid "Reset"
 msgstr "Reset"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:84
+#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:86
 msgctxt "@option:check"
 msgid "Snap Scaling"
 msgstr "Ridimensionamento aggancio (Snap)"
 
-#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:101
+#: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/ScaleTool.qml:104
 msgctxt "@option:check"
 msgid "Uniform Scaling"
 msgstr "Ridimensionamento uniforme"
+
+#: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:177
+msgctxt "@option:check"
+msgid "Lock Model"
+msgstr ""
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:39
 msgctxt "@action:button"
@@ -771,6 +776,16 @@ msgctxt "name"
 msgid "Local File Output Device"
 msgstr "Periferica di output file locale"
 
+#: LocalContainerProvider/plugin.json
+msgctxt "description"
+msgid "Provides built-in setting containers that come with the installation of the application."
+msgstr ""
+
+#: LocalContainerProvider/plugin.json
+msgctxt "name"
+msgid "Local Container Provider"
+msgstr ""
+
 #: Tools/ScaleTool/plugin.json
 msgctxt "description"
 msgid "Provides the Scale tool."
@@ -830,6 +845,14 @@ msgstr "Fornisce lo strumento immagine speculare."
 msgctxt "name"
 msgid "Mirror Tool"
 msgstr "Strumento immagine speculare"
+
+#~ msgctxt "@info"
+#~ msgid "An exception occurred while checking for updates."
+#~ msgstr "Si è verificata un'eccezione durante il controllo degli aggiornamenti."
+
+#~ msgctxt "@info:status Don't translate the XML tag <filename>!"
+#~ msgid "Loading <filename>{0}</filename>"
+#~ msgstr "Caricamento <filename>{0}</filename>"
 
 #~ msgctxt "@info:status Don't translate the XML tag <filename>!"
 #~ msgid "Cannot open file type <filename>{0}</filename>"
