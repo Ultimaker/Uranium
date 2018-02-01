@@ -24,7 +24,7 @@ PreferencesPage {
             id: movedMessage
             width: parent.width
             wrapMode: Text.WordWrap
-            text: "Plugins have moved!\nBuilt-in and 3rd-party plugins are now both installed amd managed via the plugin browser."
+            text: "Plugins have moved!\nBuilt-in and 3rd-party plugins are now both installed and managed via the plugin browser."
         }
 
         /*
