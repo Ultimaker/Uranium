@@ -66,7 +66,7 @@ class PluginsModel(ListModel):
                 "name": props.get("name", props.get("label", metadata["id"])),
                 "version": props.get("version", "Unknown"),
                 "author": props.get("author", "Anonymous"),
-                "author_email": props.get("author_email", "author@gmail.com"),
+                "author_email": props.get("author_email", "plugins@ultimaker.com"),
                 "description": props.get("description", props.get("short_description", "No description provided...")),
 
                 # Computed props from above are computed
