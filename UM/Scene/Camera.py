@@ -68,6 +68,9 @@ class Camera(SceneNode.SceneNode):
     def setWindowSize(self, width, height):
         self._window_width = width
         self._window_height = height
+
+    def getWindowSize(self):
+        return self._window_width, self._window_height
     
     ##  Set the projection matrix of this camera.
     #   \param matrix The projection matrix to use for this camera.
