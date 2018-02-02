@@ -87,10 +87,8 @@ class PluginRegistry(QObject):
     def addExternalPlugins(self, plugin_list):
 
         for plugin in plugin_list:
-            print("Registered plugins:", self._all_plugins)
             # Add the plugin id to the the all plugins list if not already there:
             if plugin["id"] not in self._all_plugins:
-                print(plugin["id"], "was not found in registered plugins.")
                 self._all_plugins.append(plugin["id"])
 
                 # Does this look redundant?
@@ -98,11 +96,11 @@ class PluginRegistry(QObject):
                 # now may break other functionality.
                 if plugin["id"] not in self._plugins_available:
                     self._plugins_available.append(plugin["id"])
-                self._metadata[plugin["id"]] = {
-                    "id": plugin["id"],
-                    "plugin": plugin,
-                    "update_url": plugin["file_location"]
-                }
+            self._metadata[plugin["id"]] = {
+                "id": plugin["id"],
+                "plugin": plugin,
+                "update_url": plugin["file_location"]
+            }
 
             # Keep a note of plugins which are not Ultimaker plugins:
             if plugin["id"] not in self._plugins_external:
