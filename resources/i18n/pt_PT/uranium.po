@@ -1,16 +1,16 @@
 # Uranium
-# Copyright (C) 2017 Ultimaker
+# Copyright (C) 2018 Ultimaker
 # This file is distributed under the same license as the Uranium package.
-# Ruben Dulek <r.dulek@ultimaker.com>, 2017.
+# Ruben Dulek <r.dulek@ultimaker.com>, 2018.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Cura 3.1\n"
+"Project-Id-Version: Uranium 3.2\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
-"POT-Creation-Date: 2017-08-02 14:05+0200\n"
-"PO-Revision-Date: 2018-01-23 19:36+0000\n"
-"Last-Translator: Paulo Miranda <av@utopica3d.com>\n"
-"Language-Team: Bothof\n"
+"POT-Creation-Date: 2018-01-29 09:48+0000\n"
+"PO-Revision-Date: 2018-02-05 13:25+0100\n"
+"Last-Translator: Bothof <info@bothof.nl>\n"
+"Language-Team: Paulo Miranda <av@utopica3d.com>, Portuguese <info@bothof.nl>\n"
 "Language: pt_PT\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -87,7 +87,7 @@ msgstr "Transferir"
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:85
 msgctxt "@info"
 msgid "An error occurred while checking for updates."
-msgstr ""
+msgstr "Ocorreu um erro ao procurar atualizações."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:85
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:126
@@ -313,9 +313,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr ""
-"O plug-in foi instalado.\n"
-"Por favor reinicie a aplicação para ativar o plug-in."
+msgstr "O plug-in foi instalado.\nPor favor reinicie a aplicação para ativar o plug-in."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:107
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:147
@@ -324,9 +322,7 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install plugin from <filename>{0}</filename>:\n"
 "<message>{1}</message>"
-msgstr ""
-"Não foi possível instalar o plug-in em <filename>{0}</filename>:\n"
-"<message>{1}</message>"
+msgstr "Não foi possível instalar o plug-in em <filename>{0}</filename>:\n<message>{1}</message>"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:131
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:136
@@ -335,9 +331,7 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install the plugin;\n"
 "<message>{0}</message>"
-msgstr ""
-"Não foi possível instalar o plug-in;\n"
-"<message>{0}</message>"
+msgstr "Não foi possível instalar o plug-in;\n<message>{0}</message>"
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:123
 #, python-brace-format
@@ -399,7 +393,7 @@ msgstr "Manter Proporções"
 #: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:177
 msgctxt "@option:check"
 msgid "Lock Model"
-msgstr ""
+msgstr "Modelo de bloqueio"
 
 # rever!
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:39
@@ -792,12 +786,12 @@ msgstr "Dispositivo de Saída de ficheiros locais"
 #: LocalContainerProvider/plugin.json
 msgctxt "description"
 msgid "Provides built-in setting containers that come with the installation of the application."
-msgstr ""
+msgstr "Disponibiliza recipientes de fixação integrados fornecidos com a instalação da aplicação."
 
 #: LocalContainerProvider/plugin.json
 msgctxt "name"
 msgid "Local Container Provider"
-msgstr ""
+msgstr "Fornecedor de recipientes local"
 
 #: Tools/ScaleTool/plugin.json
 msgctxt "description"
