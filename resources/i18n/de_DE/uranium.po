@@ -82,7 +82,7 @@ msgstr "Download"
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:85
 msgctxt "@info"
 msgid "An error occurred while checking for updates."
-msgstr ""
+msgstr "Bei der Suche nach Aktualisierungen ist ein Fehler aufgetreten."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:85
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:126
@@ -308,9 +308,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr ""
-"Das Plugin wurde installiert. \n"
-"Starten Sie die Anwendung bitte neu, um das Plugin zu aktivieren."
+msgstr "Das Plugin wurde installiert. \nStarten Sie die Anwendung bitte neu, um das Plugin zu aktivieren."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:107
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:147
@@ -319,9 +317,7 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install plugin from <filename>{0}</filename>:\n"
 "<message>{1}</message>"
-msgstr ""
-"Plugin von <filename>{0}</filename>:\n"
-"<message>{1}</message> konnte nicht installiert werden."
+msgstr "Plugin von <filename>{0}</filename>:\n<message>{1}</message> konnte nicht installiert werden."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:131
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:136
@@ -330,9 +326,7 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install the plugin;\n"
 "<message>{0}</message>"
-msgstr ""
-"Die Installation des Plugin war nicht erfolgreich;\n"
-"<message>{0}</message>"
+msgstr "Die Installation des Plugin war nicht erfolgreich;\n<message>{0}</message>"
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:123
 #, python-brace-format
@@ -394,7 +388,7 @@ msgstr "Einheitliche Skalierung"
 #: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:177
 msgctxt "@option:check"
 msgid "Lock Model"
-msgstr ""
+msgstr "Modell sperren"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:39
 msgctxt "@action:button"
@@ -779,12 +773,12 @@ msgstr "Lokales Dateiausgabegerät"
 #: LocalContainerProvider/plugin.json
 msgctxt "description"
 msgid "Provides built-in setting containers that come with the installation of the application."
-msgstr ""
+msgstr "Bietet integrierte Einstellungscontainer, die bei der Installation der Anwendung bereitgestellt werden."
 
 #: LocalContainerProvider/plugin.json
 msgctxt "name"
 msgid "Local Container Provider"
-msgstr ""
+msgstr "Lokaler Containeranbieter"
 
 #: Tools/ScaleTool/plugin.json
 msgctxt "description"

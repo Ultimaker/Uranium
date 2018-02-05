@@ -82,7 +82,7 @@ msgstr "Descargar"
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:85
 msgctxt "@info"
 msgid "An error occurred while checking for updates."
-msgstr ""
+msgstr "Se ha producido un error mientras se comprobaban las actualizaciones."
 
 #: /home/ruben/Projects/Uranium/plugins/UpdateChecker/UpdateCheckerJob.py:85
 #: /home/ruben/Projects/Uranium/UM/Qt/Bindings/OutputDeviceManagerProxy.py:126
@@ -308,9 +308,7 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr ""
-"El complemento se ha instalado.\n"
-"Reinicie la aplicación para activarlo."
+msgstr "El complemento se ha instalado.\nReinicie la aplicación para activarlo."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:107
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:147
@@ -319,9 +317,7 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install plugin from <filename>{0}</filename>:\n"
 "<message>{1}</message>"
-msgstr ""
-"No se ha podido instalar el complemento desde <filename>{0}</filename>:\n"
-"<message>{1}</message>"
+msgstr "No se ha podido instalar el complemento desde <filename>{0}</filename>:\n<message>{1}</message>"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:131
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:136
@@ -330,9 +326,7 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install the plugin;\n"
 "<message>{0}</message>"
-msgstr ""
-"Se ha producido un error al instalar el complemento;\n"
-"<message>{0}</message>"
+msgstr "Se ha producido un error al instalar el complemento;\n<message>{0}</message>"
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:123
 #, python-brace-format
@@ -394,7 +388,7 @@ msgstr "Escala uniforme"
 #: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:177
 msgctxt "@option:check"
 msgid "Lock Model"
-msgstr ""
+msgstr "Modelo Bloquear"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:39
 msgctxt "@action:button"
@@ -779,12 +773,12 @@ msgstr "Dispositivo de salida del archivo local"
 #: LocalContainerProvider/plugin.json
 msgctxt "description"
 msgid "Provides built-in setting containers that come with the installation of the application."
-msgstr ""
+msgstr "Proporciona contenedores de ajustes integrados que vienen con la instalación de la aplicación."
 
 #: LocalContainerProvider/plugin.json
 msgctxt "name"
 msgid "Local Container Provider"
-msgstr ""
+msgstr "Proveedor de contenedor local"
 
 #: Tools/ScaleTool/plugin.json
 msgctxt "description"
