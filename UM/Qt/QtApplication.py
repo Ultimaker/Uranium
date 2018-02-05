@@ -103,8 +103,6 @@ class QtApplication(QApplication, Application):
         self.parseCommandLine()
         Logger.log("i", "Command line arguments: %s", self._parsed_command_line)
 
-        self._splash = None
-
         signal.signal(signal.SIGINT, signal.SIG_DFL)
         # This is done here as a lot of plugins require a correct gl context. If you want to change the framework,
         # these checks need to be done in your <framework>Application.py class __init__().
@@ -429,33 +427,37 @@ class QtApplication(QApplication, Application):
         # Finally, install the translator so Qt can use it.
         self.installTranslator(translator)
 
+    ## Create a class variable so we can manage the splash in the CrashHandler dialog when the Application instance
+    # is not yet created, e.g. when an error occurs during the initialization
+    splash = None
+
     def createSplash(self):
         if not self.getCommandLineOption("headless"):
             try:
-                self._splash = self._createSplashScreen()
+                QtApplication.splash = self._createSplashScreen()
             except FileNotFoundError:
-                self._splash = None
+                QtApplication.splash = None
             else:
-                if self._splash:
-                    self._splash.show()
+                if QtApplication.splash:
+                    QtApplication.splash.show()
                     self.processEvents()
 
     ##  Display text on the splash screen.
     def showSplashMessage(self, message):
-        if not self._splash:
+        if not QtApplication.splash:
             self.createSplash()
         
-        if self._splash:
-            self._splash.showMessage(message, Qt.AlignHCenter | Qt.AlignVCenter)
+        if QtApplication.splash:
+            QtApplication.splash.showMessage(message, Qt.AlignHCenter | Qt.AlignVCenter)
             self.processEvents()
         elif self.getCommandLineOption("headless"):
             Logger.log("d", message)
 
     ##  Close the splash screen after the application has started.
     def closeSplash(self):
-        if self._splash:
-            self._splash.close()
-            self._splash = None
+        if QtApplication.splash:
+            QtApplication.splash.close()
+            QtApplication.splash = None
 
     ## Create a QML component from a qml file.
     #  \param qml_file_path: The absolute file path to the root qml file.
