@@ -49,7 +49,7 @@ class TestPluginRegistry():
         assert registry.getTestPlugin().getPluginId() == "TestPlugin2"
         
     def test_findAllPlugins(self, registry):
-        names = registry._findAllPlugins()
+        names = registry._findInstalledPlugins()
         assert sorted(names) == ["EmptyPlugin","OldTestPlugin", "PluginNoVersionNumber", "TestPlugin", "TestPlugin2"]
         
     def test_pluginNotFound(self, registry):

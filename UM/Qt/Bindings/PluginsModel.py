@@ -55,10 +55,13 @@ class PluginsModel(ListModel):
             metadata = self._registry.getMetaData(plugin_id)
 
             if "plugin" not in metadata:
-                Logger.log("e", "Plugin is missing a plugin metadata entry")
+                Logger.log("e", "%s is missing a plugin metadata entry", plugin_id)
                 continue
 
             props = metadata["plugin"]
+
+
+
 
             items.append({
                 # Static props from above are taken from the plugin's metadata:
