@@ -229,6 +229,15 @@ class Resources:
             cls.__initializeStoragePaths()
         return cls.__data_storage_path
 
+    ##  Gets the cache storage path.
+    #
+    #   This is where the application stores cache files.
+    @classmethod
+    def getCacheStoragePath(cls) -> str:
+        if not cls.__cache_storage_path:
+            cls.__initializeStoragePaths()
+        return cls.__cache_storage_path
+
     ##  Gets the search paths for resources.
     #
     #   \return A sequence of paths where resources might be.
