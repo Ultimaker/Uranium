@@ -224,7 +224,6 @@ class PluginRegistry(QObject):
                 plugin_folder = os.path.join(local_plugin_path, plugin_id)
 
                 if os.path.isdir(plugin_folder):  # Plugin is already installed by user (so not a bundled plugin)
-                    metadata = {}
                     with zip_ref.open(plugin_id + "/plugin.json") as metadata_file:
                         metadata = json.loads(metadata_file.read().decode("utf-8"))
 
