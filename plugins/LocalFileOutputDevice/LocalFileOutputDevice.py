@@ -178,7 +178,13 @@ class LocalFileOutputDevice(OutputDevice):
             message = Message(catalog.i18nc("@info:status Don't translate the XML tags <filename> or <message>!", "Could not save to <filename>{0}</filename>: <message>{1}</message>").format(job.getFileName(), str(job.getError())), lifetime = 0, title = catalog.i18nc("@info:title", "Warning"))
             message.show()
             self.writeError.emit(self)
-        job.getStream().close()
+
+        try:
+            job.getStream().close()
+        except (OSError, PermissionError): #When you don't have the rights to do the final flush or the disk is full.
+            message = Message(catalog.i18nc("@info:status", "Something went wrong saving to <filename>{0}</filename>: <message>{1}</message>").format(job.getFileName(), str(job.getError())), title = catalog.i18nc("@info:title", "Error"))
+            message.show()
+            self.writeError.emit(self)
 
     def _onMessageActionTriggered(self, message, action):
         if action == "open_folder" and hasattr(message, "_folder"):
