@@ -117,10 +117,10 @@ class LocalContainerProvider(ContainerProvider):
                 result_metadatas = clazz.deserializeMetadata(f.read(), container_id) #pylint: disable=no-member
         except IOError as e:
             Logger.log("e", "Unable to load metadata from file {filename}: {error_msg}".format(filename = filename, error_msg = str(e)))
-            return None
+            raise RuntimeError("Unable to load metadata from file {filename}: {error_msg}".format(filename = filename, error_msg = str(e)))
         except Exception as e:
-            Logger.logException("e", "Unable to deserialize metadata for container {container_id}: {error_msg}".format(container_id = container_id, error_msg = str(e)))
-            return None
+            Logger.logException("e", "Unable to deserialize metadata for container {filename}: {container_id}: {error_msg}".format(filename = filename, container_id = container_id, error_msg = str(e)))
+            raise RuntimeError("Unable to deserialize metadata for container {filename}: {container_id}: {error_msg}".format(filename = filename, container_id = container_id, error_msg = str(e)))
 
         for metadata in result_metadatas:
             if "id" not in metadata:
