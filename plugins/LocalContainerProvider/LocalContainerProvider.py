@@ -1,25 +1,26 @@
 # Copyright (c) 2017 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-import os #For getting the IDs from a filename.
-import pickle #For caching definitions.
-import re #To detect back-up files in the ".../old/#/..." folders.
+import os  # For getting the IDs from a filename.
+import pickle  # For caching definitions.
+import re  # To detect back-up files in the ".../old/#/..." folders.
 from typing import Any, Dict, Iterable, Optional
-import urllib.parse #For interpreting escape characters using unquote_plus.
+import urllib.parse  # For interpreting escape characters using unquote_plus.
 
-from UM.Application import Application #To get the current version for finding the cache directory.
-from UM.Settings.ContainerRegistry import ContainerRegistry #To get the resource types for containers.
+from UM.Application import Application  # To get the current version for finding the cache directory.
+from UM.Settings.ContainerRegistry import ContainerRegistry  # To get the resource types for containers.
 from UM.Logger import Logger
-from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType #To get the type of container we're loading.
+from UM.MimeTypeDatabase import MimeTypeDatabase, MimeType  # To get the type of container we're loading.
 from UM.SaveFile import SaveFile
-from UM.Settings.ContainerProvider import ContainerProvider #The class we're implementing.
-from UM.Settings.DefinitionContainer import DefinitionContainer #To check if we need to cache this container.
+from UM.Settings.ContainerProvider import ContainerProvider  # The class we're implementing.
+from UM.Settings.DefinitionContainer import DefinitionContainer  # To check if we need to cache this container.
 from UM.Resources import Resources
 from UM.Platform import Platform
 
 MYPY = False
-if MYPY: #Things to import for type checking only.
+if MYPY:  # Things to import for type checking only.
     from UM.Settings.Interfaces import ContainerInterface
+
 
 ##  Provides containers from the local installation.
 class LocalContainerProvider(ContainerProvider):
@@ -29,8 +30,8 @@ class LocalContainerProvider(ContainerProvider):
     def __init__(self):
         super().__init__()
 
-        self._id_to_path = {} # type: Dict[str, str] #Translates container IDs to the path to where the file is located.
-        self._id_to_mime = {} # type: Dict[str, MimeType] #Translates container IDs to their MIME type.
+        self._id_to_path = {}  # type: Dict[str, str] #Translates container IDs to the path to where the file is located
+        self._id_to_mime = {}  # type: Dict[str, MimeType] #Translates container IDs to their MIME type.
 
     ##  Gets the IDs of all local containers.
     #
@@ -222,43 +223,43 @@ class LocalContainerProvider(ContainerProvider):
     #   pickles a container and saves the pre-parsed definition on disk.
     #
     #   \param definition The definition container to store.
-    def _saveCachedDefinition(self, definition: DefinitionContainer):
+    def _saveCachedDefinition(self, definition: DefinitionContainer) -> None:
         cache_path = Resources.getStoragePath(Resources.Cache, "definitions", Application.getInstance().getVersion(), definition.id)
 
-        #Ensure the cache path exists.
+        # Ensure the cache path exists.
         try:
             os.makedirs(os.path.dirname(cache_path), exist_ok = True)
         except PermissionError:
             Logger.log("w", "The definition cache for definition {definition_id} failed to save because you don't have permissions to write in the cache directory.".format(definition_id = definition.getId()))
-            return #No rights to save it. Better give up.
+            return  # No rights to save it. Better give up.
 
         try:
             with open(cache_path, "wb") as f:
                 pickle.dump(definition, f, pickle.HIGHEST_PROTOCOL)
         except RecursionError:
-            #Sometimes a recursion error in pickling occurs here.
-            #The cause is unknown. It must be some circular reference in the definition instances or definition containers.
-            #Instead of saving a partial cache and raising an exception, simply fail to save the cache.
-            #See CURA-4024.
+            # Sometimes a recursion error in pickling occurs here.
+            # The cause is unknown. It must be some circular reference in the definition instances or definition containers.
+            # Instead of saving a partial cache and raising an exception, simply fail to save the cache.
+            # See CURA-4024.
             Logger.log("w", "The definition cache for definition {definition_id} failed to pickle.".format(definition_id = definition.getId()))
             if os.path.exists(cache_path):
-                os.remove(cache_path) #The pickling might be half-complete, which causes EOFError in Pickle when you load it later.
+                os.remove(cache_path)  # The pickling might be half-complete, which causes EOFError in Pickle when you load it later.
 
     ##  Updates the cache of paths to containers.
     #
     #   This way we can more easily load the container files we want lazily.
-    def _updatePathCache(self):
-        self._id_to_path = {} #Clear cache first.
+    def _updatePathCache(self) -> None:
+        self._id_to_path = {}  # Clear cache first.
         self._id_to_mime = {}
 
-        old_file_expression = re.compile(r"\{sep}old\{sep}\d+\{sep}".format(sep = os.sep)) #To detect files that are back-ups. Matches on .../old/#/...
+        old_file_expression = re.compile(r"\{sep}old\{sep}\d+\{sep}".format(sep = os.sep))  # To detect files that are back-ups. Matches on .../old/#/...
 
         all_resources = set()
         for resource_type in ContainerRegistry.getInstance().getResourceTypes().values():
-            all_resources |= set(Resources.getAllResourcesOfType(resource_type)) #Remove duplicates, since the Resources only finds resources by their directories.
+            all_resources |= set(Resources.getAllResourcesOfType(resource_type))  # Remove duplicates, since the Resources only finds resources by their directories.
         for filename in all_resources:
             if re.search(old_file_expression, filename):
-                continue #This is a back-up file from an old version.
+                continue  # This is a back-up file from an old version.
 
             container_id = self._pathToId(filename)
             if not container_id:
@@ -278,7 +279,7 @@ class LocalContainerProvider(ContainerProvider):
         except MimeTypeDatabase.MimeTypeNotFoundError:
             Logger.log("w", "MIME type could not be found for file: {path}, ignoring it.".format(path = path))
             return None
-        if mime.name not in ContainerRegistry.mime_type_map: #The MIME type is known, but it's not a container.
+        if mime.name not in ContainerRegistry.mime_type_map:  # The MIME type is known, but it's not a container.
             return None
         return mime
 
