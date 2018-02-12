@@ -1,14 +1,14 @@
 # Uranium
-# Copyright (C) 2018 Ultimaker
+# Copyright (C) 2017 Ultimaker
 # This file is distributed under the same license as the Uranium package.
-# Ruben Dulek <r.dulek@ultimaker.com>, 2018.
+# Ruben Dulek <r.dulek@ultimaker.com>, 2017.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Uranium 3.2\n"
+"Project-Id-Version: Uranium 3.0\n"
 "Report-Msgid-Bugs-To: r.dulek@ultimaker.com\n"
-"POT-Creation-Date: 2018-01-29 09:48+0000\n"
-"PO-Revision-Date: 2018-02-05 13:25+0100\n"
+"POT-Creation-Date: 2017-08-02 14:05+0200\n"
+"PO-Revision-Date: 2018-02-07 12:10+0100\n"
 "Last-Translator: Bothof <info@bothof.nl>\n"
 "Language-Team: Spanish <info@bothof.nl>\n"
 "Language: es_ES\n"
@@ -16,6 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 2.0.6\n"
 
 #: /home/ruben/Projects/Uranium/plugins/Views/SimpleView/__init__.py:12
 msgctxt "@item:inmenu"
@@ -189,7 +190,7 @@ msgstr "Escalar"
 #: /home/ruben/Projects/Uranium/plugins/Tools/ScaleTool/__init__.py:13
 msgctxt "@info:tooltip"
 msgid "Scale Model"
-msgstr "Modelo Escalar"
+msgstr "Escalar modelo"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:12
 msgctxt "@action:button"
@@ -199,7 +200,7 @@ msgstr "Mover"
 #: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/__init__.py:13
 msgctxt "@info:tooltip"
 msgid "Move Model"
-msgstr "Modelo Mover"
+msgstr "Mover modelo"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:12
 msgctxt "@label"
@@ -209,7 +210,7 @@ msgstr "Rotar"
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/__init__.py:13
 msgctxt "@info:tooltip"
 msgid "Rotate Model"
-msgstr "Modelo Rotar"
+msgstr "Rotar modelo"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/MirrorTool/__init__.py:12
 msgctxt "@label"
@@ -308,7 +309,9 @@ msgctxt "@info:status"
 msgid ""
 "The plugin has been installed.\n"
 "Please re-start the application to activate the plugin."
-msgstr "El complemento se ha instalado.\nReinicie la aplicación para activarlo."
+msgstr ""
+"El complemento se ha instalado.\n"
+"Reinicie la aplicación para activarlo."
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:107
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:147
@@ -317,7 +320,9 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install plugin from <filename>{0}</filename>:\n"
 "<message>{1}</message>"
-msgstr "No se ha podido instalar el complemento desde <filename>{0}</filename>:\n<message>{1}</message>"
+msgstr ""
+"No se ha podido instalar el complemento desde <filename>{0}</filename>:\n"
+"<message>{1}</message>"
 
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:131
 #: /home/ruben/Projects/Uranium/UM/PluginRegistry.py:136
@@ -326,7 +331,9 @@ msgctxt "@info:status"
 msgid ""
 "Failed to install the plugin;\n"
 "<message>{0}</message>"
-msgstr "Se ha producido un error al instalar el complemento;\n<message>{0}</message>"
+msgstr ""
+"Se ha producido un error al instalar el complemento;\n"
+"<message>{0}</message>"
 
 #: /home/ruben/Projects/Uranium/UM/VersionUpgradeManager.py:123
 #, python-brace-format
@@ -388,7 +395,7 @@ msgstr "Escala uniforme"
 #: /home/ruben/Projects/Uranium/plugins/Tools/TranslateTool/TranslateTool.qml:177
 msgctxt "@option:check"
 msgid "Lock Model"
-msgstr "Modelo Bloquear"
+msgstr "Bloquear modelo"
 
 #: /home/ruben/Projects/Uranium/plugins/Tools/RotateTool/RotateTool.qml:39
 msgctxt "@action:button"
