@@ -230,7 +230,7 @@ PreferencesPage
                 id: pluginVersionLabel
                 //: About plugin dialog version label
                 text: catalog.i18nc("@label", "Version:");
-                width: Math.floor(0.4 * parent.width)
+                width: Math.round(0.4 * parent.width)
                 wrapMode: Text.WordWrap
                 anchors.top: pluginAuthor.bottom
             }
@@ -239,7 +239,7 @@ PreferencesPage
             {
                 id: pluginVersion
                 text: about_window.version_text
-                width: Math.floor(0.6 * parent.width)
+                width: Math.round(0.6 * parent.width)
                 anchors.top: pluginAuthor.bottom
                 anchors.left: pluginVersionLabel.right
             }

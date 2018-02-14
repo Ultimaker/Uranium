@@ -50,7 +50,7 @@ Item
 
         columns: 2;
         flow: Grid.TopToBottom;
-        spacing: Math.floor(UM.Theme.getSize("default_margin").width / 2);
+        spacing: Math.round(UM.Theme.getSize("default_margin").width / 2);
 
         Text
         {

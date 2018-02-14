@@ -38,12 +38,12 @@ ManagementPage {
 
         Label {
             text: catalog.i18nc("@label", "Type");
-            width: Math.floor(parent.width * 0.2);
+            width: Math.round(parent.width * 0.2);
         }
 
         Label {
             text: base.currentItem && base.currentItem.typeName ? base.currentItem.typeName : "";
-            width: Math.floor(parent.width * 0.7);
+            width: Math.round(parent.width * 0.7);
         }
 
         UM.I18nCatalog { id: catalog; name: "uranium"; }
