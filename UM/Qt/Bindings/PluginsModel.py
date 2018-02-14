@@ -12,7 +12,7 @@ from UM.PluginRegistry import PluginRegistry
 from UM.Resources import Resources
 
 class PluginsModel(ListModel):
-    def __init__(self, view, parent = None):
+    def __init__(self, parent = None, view = "installed"):
         super().__init__(parent)
 
         self._registry = Application.getInstance().getPluginRegistry()
