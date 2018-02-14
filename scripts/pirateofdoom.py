@@ -52,7 +52,6 @@ pirate = {
     "removable drive": "life boat",
     "print core": "scribbler",
     "printcore": "scribbler",
-    "start": "Sail ho!",
     "abort": ["maroon", "abandon"],
     "aborting": ["marooning", "abandoning"],
     "aborted": ["marooned", "abandoned"],
