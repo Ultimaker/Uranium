@@ -121,7 +121,6 @@ class LocalContainerProvider(ContainerProvider):
         except Exception as e:
             Logger.logException("e", "Unable to deserialize metadata for container {filename}: {container_id}: {error_msg}".format(filename = filename, container_id = container_id, error_msg = str(e)))
             raise RuntimeError("Unable to deserialize metadata for container {filename}: {container_id}: {error_msg}".format(filename = filename, container_id = container_id, error_msg = str(e)))
-
         for metadata in result_metadatas:
             if "id" not in metadata:
                 Logger.log("w", "Metadata obtained from deserializeMetadata of {class_name} didn't contain an ID.".format(class_name = clazz.__name__))
@@ -134,6 +133,8 @@ class LocalContainerProvider(ContainerProvider):
                 self._id_to_mime[metadata["id"]] = self._id_to_mime[container_id] #Assume that they only return one MIME type.
                 registry.metadata[metadata["id"]] = metadata
                 registry.source_provider[metadata["id"]] = self
+        if not requested_metadata:
+            raise RuntimeError("Unable to load metadata from file {filename}: no suitable metadata found.".format(filename = filename))
         return requested_metadata
 
     ##  Returns whether a container is read-only or not.
