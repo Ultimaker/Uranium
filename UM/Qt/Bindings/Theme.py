@@ -198,7 +198,8 @@ class Theme(QObject):
                 f = QFont()
                 f.setFamily(font.get("family", QCoreApplication.instance().font().family()))
 
-                f.setBold(font.get("bold", False))
+                f.setWeight(font.get("weight", 50))
+                # f.setBold(font.get("bold", False))
                 f.setLetterSpacing(QFont.AbsoluteSpacing, font.get("letterSpacing", 0))
                 f.setItalic(font.get("italic", False))
                 f.setPointSize(int(font.get("size", 1) * system_font_size))
