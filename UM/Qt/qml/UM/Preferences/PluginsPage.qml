@@ -20,14 +20,6 @@ PreferencesPage {
     contents: Item {
         anchors.fill: parent
 
-        Text {
-            id: movedMessage
-            width: parent.width
-            wrapMode: Text.WordWrap
-            text: "Plugins have moved!\nBuilt-in and 3rd-party plugins are now both installed and managed via the plugin browser."
-        }
-
-        /*
         Button {
             id: installButton
             anchors.top: movedMessage.bottom
@@ -35,8 +27,7 @@ PreferencesPage {
             onClicked: openDialog.open()
             text: catalog.i18nc("@action:button", "Install new plugin")
         }
-        */
-        /*
+
         ScrollView {
             anchors {
                 left: parent.left
@@ -63,9 +54,8 @@ PreferencesPage {
 
             anchors.bottom: parent.bottom
         }
-        */
     }
-    /*
+
     Item {
         SystemPalette { id: palette }
 
@@ -255,5 +245,4 @@ PreferencesPage {
             }
         }
     }
-    */
 }
