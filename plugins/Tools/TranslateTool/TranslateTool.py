@@ -83,7 +83,7 @@ class TranslateTool(Tool):
         if Selection.hasSelection():
             # Note; The switching of z & y is intentional. We display z as up for the user,
             # But store the data in openGL space.
-            return float(Selection.getBoundingBox().bottom)
+            return float(Selection.getBoundingBox().center.y)
         return 0.0
 
     def _parseInt(self, str_value):
@@ -143,7 +143,7 @@ class TranslateTool(Tool):
                 # Note: The switching of z & y is intentional. We display z as up for the user,
                 # But store the data in openGL space.
                 world_position = selected_node.getWorldPosition()
-                new_position = world_position.set(y=parsed_z + (world_position.y - bounding_box.bottom))
+                new_position = world_position.set(y=parsed_z + (world_position.y - bounding_box.center.y))
                 node_op = TranslateOperation(selected_node, new_position, set_position = True)
                 op.addOperation(node_op)
             op.push()
