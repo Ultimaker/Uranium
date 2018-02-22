@@ -354,14 +354,27 @@ class ContainerRegistry(ContainerRegistryInterface):
 
     @UM.FlameProfiler.profile
     def removeContainer(self, container_id: str) -> None:
-        if container_id not in self._containers:
+        # Here we only need to check metadata because a container may not be loaded but its metadata must have been
+        # loaded first.
+        if container_id not in self.metadata:
             Logger.log("w", "Tried to delete container {container_id}, which doesn't exist or isn't loaded.".format(container_id = container_id))
-            return #Ignore.
+            return  # Ignore.
 
-        container = self._containers[container_id]
+        # TODO: This is not efficient. Now we can load metadata before any container is loaded, operations such as
+        # removing a container and its resulting signals should not depend on having a container first. It should be
+        # possible to remove a container that exists in the provider without loading it first.
+        # For now, we load the container if it is not there to prevent breaking dependencies.
+        container = self._containers.get(container_id)
+        if container is None:
+            metadata = self.metadata[container_id]
+            if isinstance(metadata["container_type"], InstanceContainer):
+                container = self.findInstanceContainers(id = container_id)[0]
+            elif isinstance(metadata["container_type"], ContainerStack):
+                container = self.findContainerStacks(id = container_id)[0]
 
         source_provider = self.source_provider[container_id]
-        del self._containers[container_id]
+        if container_id in self._containers:
+            del self._containers[container_id]
         del self.metadata[container_id]
         del self.source_provider[container_id]
         if source_provider is not None:
@@ -373,7 +386,7 @@ class ContainerRegistry(ContainerRegistryInterface):
         self._clearQueryCacheByContainer(container)
         self.containerRemoved.emit(container)
 
-        Logger.log("d", "Removed container %s", container.getId())
+        Logger.log("d", "Removed container %s", container_id)
 
     @UM.FlameProfiler.profile
     def renameContainer(self, container_id, new_name, new_id = None):
