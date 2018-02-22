@@ -589,6 +589,8 @@ class ContainerRegistry(ContainerRegistryInterface):
     #   This function passes it on to the containerMetaDataChanged signal. Sadly
     #   that doesn't work automatically between pyqtSignal and UM.Signal.
     def _onContainerMetaDataChanged(self, *args, **kwargs):
+        container = args[0]
+        self.metadata[container.getId()] = container.getMetaData()  # refresh the metadata
         self.containerMetaDataChanged.emit(*args, **kwargs)
 
     ##  Get the lock filename including full path
