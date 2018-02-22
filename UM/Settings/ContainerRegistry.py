@@ -391,11 +391,18 @@ class ContainerRegistry(ContainerRegistryInterface):
     @UM.FlameProfiler.profile
     def renameContainer(self, container_id, new_name, new_id = None):
         Logger.log("d", "Renaming container %s to %s", container_id, new_name)
-        if container_id not in self._containers:
+        # Same as removeContainer(), metadata is always loaded but containers may not, so always check metadata.
+        if container_id not in self.metadata:
             Logger.log("w", "Unable to rename container %s, because it does not exist", container_id)
             return
 
-        container = self._containers[container_id]
+        container = self._containers.get(container_id)
+        if container is None:
+            metadata = self.metadata[container_id]
+            if isinstance(metadata["container_type"], InstanceContainer):
+                container = self.findInstanceContainers(id = container_id)[0]
+            elif isinstance(metadata["container_type"], ContainerStack):
+                container = self.findContainerStacks(id = container_id)[0]
 
         if new_name == container.getName():
             Logger.log("w", "Unable to rename container %s, because the name (%s) didn't change", container_id, new_name)
