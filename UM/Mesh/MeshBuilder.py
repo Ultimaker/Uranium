@@ -1,18 +1,24 @@
 # Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2017 Thomas Karl Pietrowski
 # Uranium is released under the terms of the LGPLv3 or higher.
 
+from UM.Message import Message
 from UM.Mesh.MeshData import MeshData
 from UM.Mesh.MeshData import MeshType
 from UM.Mesh.MeshData import calculateNormalsFromVertices
 from UM.Mesh.MeshData import calculateNormalsFromIndexedVertices
+from UM.Mesh.ReadMeshJob import ReadMeshJob
 from UM.Math.Vector import Vector
 from UM.Math.Matrix import Matrix
 from UM.Logger import Logger
+
+from PyQt5.QtCore import QFileSystemWatcher
 
 import numpy
 import math
 import numbers
 
+import os
 
 ##  Builds new meshes by adding primitives.
 #
@@ -32,8 +38,13 @@ class MeshBuilder:
         self._face_count = 0
         self._type = MeshType.faces
         self._file_name = None
+        self._file_watcher = QFileSystemWatcher()
+        self._file_watcher.fileChanged.connect(self._onFileChanged)
         # original center position
         self._center_position = None
+        
+        if self._file_name:
+            self._file_watcher.addPath(self._file_name)
 
     ##  Build a MeshData object.
     #
@@ -146,6 +157,9 @@ class MeshBuilder:
         return self._file_name
 
     def setFileName(self, file_name):
+        if self._file_name:
+            self._file_watcher.removePath(self._file_name)
+        self._file_watcher.addPath(self._file_name)
         self._file_name = file_name
 
     ##  Set the amount of faces before loading data to the mesh.
@@ -759,3 +773,30 @@ class MeshBuilder:
         self.addQuad(v0, v1, v2, v3, color=color, normal = normal)
 
         return True
+    
+    def _onFileChanged(self, file_path):
+        if os.path.isfile(self._file_name) and self._file_name is file_path:
+            message = Message(i18n_catalog.i18nc("@info", "Would you like to reload {filename}?").format(filename = os.path.split(self._file_name)[0]),
+                              title = i18n_catalog.i18nc("@info:title", "File has been modified"))
+            message.addAction("reload",
+                              i18n_catalog.i18nc("@action:button", "Reload"),
+                              "[no_icon]",
+                              "[no_description]")
+            message.actionTriggered.connect(self._callback)
+            message.show()
+        
+    def _onActionTriggered(self, message, action):
+        if action == "reload":
+            if os.path.isfile(self._file_name):
+                job = ReadMeshJob(self._file_name)
+                job._node = self
+                job.finished.connect(self._reloadJobFinished)
+                job.start()
+    
+    def _reloadJobFinished(self, job):
+        # TODO: This needs to be fixed properly. We now make the assumption that we only load a single mesh!
+        mesh_data = job.getResult()[0].getMeshData()
+        if mesh_data:
+            job._node.setMeshData(mesh_data)
+        else:
+            Logger.log("w", "Could not find a mesh in reloaded node.")
