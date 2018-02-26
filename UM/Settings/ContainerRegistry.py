@@ -367,9 +367,9 @@ class ContainerRegistry(ContainerRegistryInterface):
         container = self._containers.get(container_id)
         if container is None:
             metadata = self.metadata[container_id]
-            if isinstance(metadata["container_type"], InstanceContainer):
+            if issubclass(metadata["container_type"], InstanceContainer):
                 container = self.findInstanceContainers(id = container_id)[0]
-            elif isinstance(metadata["container_type"], ContainerStack):
+            elif issubclass(metadata["container_type"], ContainerStack):
                 container = self.findContainerStacks(id = container_id)[0]
 
         source_provider = self.source_provider[container_id]
@@ -399,9 +399,9 @@ class ContainerRegistry(ContainerRegistryInterface):
         container = self._containers.get(container_id)
         if container is None:
             metadata = self.metadata[container_id]
-            if isinstance(metadata["container_type"], InstanceContainer):
+            if issubclass(metadata["container_type"], InstanceContainer):
                 container = self.findInstanceContainers(id = container_id)[0]
-            elif isinstance(metadata["container_type"], ContainerStack):
+            elif issubclass(metadata["container_type"], ContainerStack):
                 container = self.findContainerStacks(id = container_id)[0]
 
         if new_name == container.getName():
