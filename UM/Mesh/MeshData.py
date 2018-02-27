@@ -1,6 +1,7 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
+import UM.Application
 from UM.Math.Vector import Vector
 from UM.Math.AxisAlignedBox import AxisAlignedBox
 from UM.Logger import Logger
@@ -51,7 +52,9 @@ class MeshData:
         self._vertex_count = len(self._vertices) if self._vertices is not None else 0
         self._face_count = len(self._indices) if self._indices is not None else 0
         self._type = type
-        self._file_name = file_name  # type: str
+        self._file_name = file_name  # type: Optional[str]
+        if file_name:
+            UM.Application.Application.getInstance().getController().getScene().addWatchedFile(file_name)
         # original center position
         self._center_position = center_position
         # original zero position, is changed after transformation
@@ -73,6 +76,13 @@ class MeshData:
                     else:
                         new_value[attribute_key] = attribute_value
                 self._attributes[key] = new_value
+
+    ##  Triggered when this file is deleted.
+    #
+    #   The file will then no longer be watched for changes.
+    def __del__(self):
+        if self._file_name:
+            UM.Application.Application.getInstance().getController().getScene().removeWatchedFile(self._file_name)
 
     ## Create a new MeshData with specified changes
     #   \return \type{MeshData}
