@@ -1,13 +1,10 @@
 # Copyright (c) 2015 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-from UM.Job import Job
-from UM.Application import Application
 from UM.Message import Message
 from UM.Math.Vector import Vector
 from UM.Preferences import Preferences
 from UM.Logger import Logger
-from UM.Mesh.MeshReader import MeshReader
 
 from UM.FileHandler.ReadFileJob import ReadFileJob
 
@@ -23,6 +20,7 @@ i18n_catalog = i18nCatalog("uranium")
 class ReadMeshJob(ReadFileJob):
     def __init__(self, filename):
         super().__init__(filename)
+        from UM.Application import Application
         self._handler = Application.getInstance().getMeshFileHandler()
 
     def run(self):
