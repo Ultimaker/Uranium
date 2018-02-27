@@ -1,5 +1,8 @@
-# Copyright (c) 2015 Ultimaker B.V.
+# Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
+
+from copy import deepcopy
+import numpy
 from typing import List, Optional
 
 from UM.Math.Matrix import Matrix
@@ -13,10 +16,6 @@ from UM.Mesh.MeshBuilder import MeshBuilder
 from UM.Logger import Logger
 
 from UM.Scene.SceneNodeDecorator import SceneNodeDecorator
-
-from copy import deepcopy
-import numpy
-
 
 ##  A scene node object.
 #
@@ -350,19 +349,21 @@ class SceneNode:
     ##  \brief Add a child to this node and set it's parent as this node.
     #   \params scene_node SceneNode to add.
     def addChild(self, scene_node: "SceneNode"):
-        if scene_node not in self._children:
-            scene_node.transformationChanged.connect(self.transformationChanged)
-            scene_node.childrenChanged.connect(self.childrenChanged)
-            scene_node.meshDataChanged.connect(self.meshDataChanged)
+        if scene_node in self._children:
+            return
 
-            self._children.append(scene_node)
-            self._resetAABB()
-            self.childrenChanged.emit(self)
+        scene_node.transformationChanged.connect(self.transformationChanged)
+        scene_node.childrenChanged.connect(self.childrenChanged)
+        scene_node.meshDataChanged.connect(self.meshDataChanged)
 
-            if not scene_node._parent is self:
-                scene_node._parent = self
-                scene_node._transformChanged()
-                scene_node.parentChanged.emit(self)
+        self._children.append(scene_node)
+        self._resetAABB()
+        self.childrenChanged.emit(self)
+
+        if not scene_node._parent is self:
+            scene_node._parent = self
+            scene_node._transformChanged()
+            scene_node.parentChanged.emit(self)
 
     ##  \brief remove a single child
     #   \param child Scene node that needs to be removed.
