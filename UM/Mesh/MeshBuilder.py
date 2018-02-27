@@ -1,6 +1,7 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
+from UM.i18n import i18nCatalog
 from UM.Message import Message
 from UM.Mesh.MeshData import MeshData
 from UM.Mesh.MeshData import MeshType
@@ -18,6 +19,8 @@ import math
 import numbers
 
 import os
+
+i18n_catalog = i18nCatalog("uranium")
 
 ##  Builds new meshes by adding primitives.
 #
