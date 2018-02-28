@@ -10,15 +10,13 @@ from UM.i18n import i18nCatalog
 from UM.Logger import Logger
 from UM.Mesh.ReadMeshJob import ReadMeshJob #To reload a mesh when its file was changed.
 from UM.Message import Message #To display a message for reloading files that were changed.
-from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator #To find which nodes to reload when files have changed.
-from UM.Scene.SceneNode import SceneNode
 from UM.Scene.Camera import Camera
 from UM.Signal import Signal, signalemitter
 from UM.Scene.Iterator.BreadthFirstIterator import BreadthFirstIterator
 
 i18n_catalog = i18nCatalog("uranium")
 
-##  Container object for the scene graph.
+##  Container object for the scene graph
 #
 #   The main purpose of this class is to provide the root SceneNode.
 @signalemitter
@@ -26,6 +24,7 @@ class Scene():
     def __init__(self):
         super().__init__() # Call super to make multiple inheritance work.
 
+        from UM.Scene.SceneNode import SceneNode
         self._root = SceneNode(name= "Root")
         self._root.setCalculateBoundingBox(False)
         self._connectSignalsRoot()
@@ -147,6 +146,7 @@ class Scene():
             return
 
         #Multiple nodes may be loaded from the same file at different stages. Reload them all.
+        from UM.Scene.Iterator.DepthFirstIterator import DepthFirstIterator #To find which nodes to reload when files have changed.
         modified_nodes = (node for node in DepthFirstIterator(self.getRoot()) if node.getMeshData() and node.getMeshData().getFileName() == file_path)
 
         if modified_nodes:

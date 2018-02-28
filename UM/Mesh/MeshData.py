@@ -1,7 +1,6 @@
 # Copyright (c) 2018 Ultimaker B.V.
 # Uranium is released under the terms of the LGPLv3 or higher.
 
-import UM.Application
 from UM.Math.Vector import Vector
 from UM.Math.AxisAlignedBox import AxisAlignedBox
 from UM.Logger import Logger
@@ -44,6 +43,8 @@ Reuse = object()
 class MeshData:
     def __init__(self, vertices=None, normals=None, indices=None, colors=None, uvs=None, file_name=None,
                  center_position=None, zero_position=None, type = MeshType.faces, attributes=None):
+        self._application = None  # Initialize this later otherwise unit tests break
+
         self._vertices = NumPyUtil.immutableNDArray(vertices)
         self._normals = NumPyUtil.immutableNDArray(normals)
         self._indices = NumPyUtil.immutableNDArray(indices)
@@ -54,7 +55,9 @@ class MeshData:
         self._type = type
         self._file_name = file_name  # type: Optional[str]
         if file_name:
-            UM.Application.Application.getInstance().getController().getScene().addWatchedFile(file_name)
+            from UM import Application
+            self._application = Application.getInstance()
+            self._application.getController().getScene().addWatchedFile(file_name)
         # original center position
         self._center_position = center_position
         # original zero position, is changed after transformation
@@ -82,7 +85,8 @@ class MeshData:
     #   The file will then no longer be watched for changes.
     def __del__(self):
         if self._file_name:
-            UM.Application.Application.getInstance().getController().getScene().removeWatchedFile(self._file_name)
+            if self._application:
+                self._application.getController().getScene().removeWatchedFile(self._file_name)
 
     ## Create a new MeshData with specified changes
     #   \return \type{MeshData}

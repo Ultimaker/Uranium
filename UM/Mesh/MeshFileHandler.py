@@ -2,7 +2,6 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from UM.Logger import Logger
-from UM.Scene.Scene import SceneNode
 from UM.Math.Matrix import Matrix
 from UM.Math.Vector import Vector
 from UM.FileHandler.FileHandler import FileHandler
