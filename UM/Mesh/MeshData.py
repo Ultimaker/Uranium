@@ -55,7 +55,7 @@ class MeshData:
         self._type = type
         self._file_name = file_name  # type: Optional[str]
         if file_name:
-            from UM import Application
+            from UM.Application import Application
             self._application = Application.getInstance()
             self._application.getController().getScene().addWatchedFile(file_name)
         # original center position
