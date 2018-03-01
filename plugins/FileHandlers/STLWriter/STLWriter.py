@@ -20,6 +20,7 @@ class STLWriter(MeshWriter):
         try:
             MeshWriter._meshNodes(nodes).__next__()
         except:
+            Logger.log("e", "There is no mesh to write.")
             return False #Don't try to write a file if there is no mesh.
 
         if mode == MeshWriter.OutputMode.TextMode:
