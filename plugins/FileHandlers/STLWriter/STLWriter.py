@@ -3,13 +3,10 @@
 # Uranium is released under the terms of the LGPLv3 or higher.
 
 from UM.Mesh.MeshWriter import MeshWriter
-from UM.Scene.SceneNode import SceneNode
-from UM.Scene.Iterator.BreadthFirstIterator import BreadthFirstIterator
 from UM.Logger import Logger
 
 import time
 import struct
-import os
 
 class STLWriter(MeshWriter):
     ##  Write the specified sequence of nodes to a stream in the STL format.
