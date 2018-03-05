@@ -49,7 +49,7 @@ class ActiveToolProxy(QObject):
             action()
 
     @pyqtSlot(str, QVariant)
-    def triggerAction(self, action, data):
+    def triggerActionWithData(self, action, data):
         if not self._active_tool:
             return
 
