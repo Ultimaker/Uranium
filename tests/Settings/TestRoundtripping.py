@@ -25,8 +25,6 @@ def write_data(path, data):
     if not isinstance(data, str):
         data = data.serialize()
 
-    print(data)
-
     with SaveFile(str(path), "wt") as f:
         f.write(data)
 

@@ -86,12 +86,9 @@ class MeshBuilder:
     #   \param index Either a single index or a list of indices to be removed.
     def removeVertex(self, index):
         try:
-            #print("deleting ", index)
-            #print( self._vertices)
             self._vertices = numpy.delete(self._vertices, index,0)
             if self.hasNormals():
                self._normals = numpy.delete(self._normals,index,0)
-            #print( self._vertices)
             self._vertex_count = len(self._vertices)
         except IndexError:
             pass
