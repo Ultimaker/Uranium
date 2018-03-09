@@ -338,19 +338,21 @@ class ContainerRegistry(ContainerRegistryInterface):
 
     @UM.FlameProfiler.profile
     def addContainer(self, container: ContainerInterface) -> None:
-        if container.getId() in self._containers:
-            Logger.log("w", "Container with ID %s was already added.", container.getId())
+        container_id = container.getId()
+        if container_id in self._containers:
+            Logger.log("w", "Container with ID %s was already added.", container_id)
             return
 
         if hasattr(container, "metaDataChanged"):
             container.metaDataChanged.connect(self._onContainerMetaDataChanged)
 
-        self.metadata[container.getId()] = container.getMetaData()
-        self._containers[container.getId()] = container
-        if container.getId() not in self.source_provider:
-            self.source_provider[container.getId()] = None #Added during runtime.
+        self.metadata[container_id] = container.getMetaData()
+        self._containers[container_id] = container
+        if container_id not in self.source_provider:
+            self.source_provider[container_id] = None #Added during runtime.
         self._clearQueryCacheByContainer(container)
         self.containerAdded.emit(container)
+        Logger.log("d", "Container [%s] added.", container_id)
 
     @UM.FlameProfiler.profile
     def removeContainer(self, container_id: str) -> None:
